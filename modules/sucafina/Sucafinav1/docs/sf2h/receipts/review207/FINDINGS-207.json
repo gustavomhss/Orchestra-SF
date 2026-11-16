@@ -1,0 +1,592 @@
+{
+  "schema": "sf2h.review207.findings.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 207,
+  "actor": "S1-R1",
+  "epoch": "cold-review-e1-browser207",
+  "effective_model": "GPT-6",
+  "runtime_session_id": null,
+  "review_phase": "PRE_FREEZE_REVIEW",
+  "source_branch": "sf2-stack",
+  "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "source_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "previous_146": {
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r01/preliminary146/FINDINGS-146.json",
+    "blob": "5342ec3da96c71375d59d0035779e82f11c2a970",
+    "count": 6
+  },
+  "inherited": [
+    {
+      "id": "PRE-R01-146-001",
+      "severity": "P1",
+      "kind": "FUNCTIONAL_COMPOSITION",
+      "title": "Meu trabalho: detalhe invocado sem projection.work-item no host instalado",
+      "status": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "owner": {
+        "writer": "N11/PR158 (UI30) + A12 projection producer",
+        "integrator": "132/PR65"
+      },
+      "affected": "UI30/U41, route projection.work-item, details and source navigation",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "blob": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+          "lines": "170-188",
+          "role": "UI calls projection.work-item on row selection",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx#L170-L188"
+        },
+        {
+          "path": "packages/client/src/sucafina/work.ts",
+          "blob": "f790637deb85ae93d85840dea625d953b73e619c",
+          "lines": "35-44",
+          "role": "client advertises work-item",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/client/src/sucafina/work.ts#L35-L44"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "blob": "402b8a4599807d403065e561a427e230ae5981cb",
+          "lines": "262-286",
+          "role": "handler list lacks work-item; comment states unavailable read+verify ports",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/apps/cli/src/sucafina-product/native-ui/work.ts#L262-L286"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+          "lines": "185-200",
+          "role": "only handlers returned from work adapter are mounted",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/modules/sucafina/Sucafinav1/local/entry.ts#L185-L200"
+        }
+      ],
+      "causal": "Click My Work row -> selectWork invokes projection.work-item, registered in client/schema but not returned by createSfWorkProjectionHandlers -> native router has no route for it; legacy fallback does not supply an explicitly admitted native handler. Exact HTTP outcome unexecuted.",
+      "expected": "Source-backed detail visible and destination independently reauthorized, with same owner/ref/version, both web and desktop.",
+      "correction": "132 obtain real workDestinations.read/verify producer with bounded authority, register route in native handler map; N11 preserve selection and display proper denied/stale/unavailable states. No stub or success simulation.",
+      "validation_request": "150/Q01/Q02 installed row selection, authorized work-item and denied/revoked/stale/cross-owner/desktop checks on final frozen C; 149 compile and SDK contract.",
+      "review207": {
+        "status": "SOURCE_CORRECTION_PRESENT_NOT_INSTALLED_PROVEN",
+        "criterion_ids": [
+          "U41-AC01",
+          "WP10.T03.CHK.01"
+        ],
+        "trigger": "Select real Meu Trabalho item then open its authorized source under current owner",
+        "evidence": [
+          {
+            "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+            "blob": "fde98b609f88d5bdb3ca472bddc4b373092da2a6",
+            "lines": "354-379",
+            "what": "projection.work-item handler returned",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+            "blob": "8dcafe957590c47f342786e6fb79cd231fe69714",
+            "lines": "5-13,190-201",
+            "what": "Only chosen native factories mounted, review factory excluded",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+            "blob": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+            "lines": "39-50,190-265",
+            "what": "Work item source and approved publicOrigin navigation",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          }
+        ],
+        "owner": "A12/work producer, UI30 + integrator189",
+        "expected": "Real workDestinations read/verify, authorized source navigation and scoped denial, not file-presence approval",
+        "recheck": "200 F04 installed positive/denied/revoked/stale/cross-owner/desktop; 190 SDK check on changed C",
+        "original_id": "PRE-R01-146-001",
+        "identity_preserved": true,
+        "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "previous_receipt_blob": "5342ec3da96c71375d59d0035779e82f11c2a970",
+        "proof_level": "STATIC_SOURCE_ONLY"
+      }
+    },
+    {
+      "id": "PRE-R01-146-002",
+      "severity": "P1",
+      "kind": "FUNCTIONAL_COMPOSITION",
+      "title": "Agenda de revisões depende de projection.review que não está montada no host",
+      "status": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "owner": {
+        "writer": "A07 producer/reviews seam + N28/PR152 UI",
+        "integrator": "132/PR65"
+      },
+      "affected": "UI47/U25 agenda preview and review-workspace",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "blob": "e420a6107d9bb6d4a96bcb58ed628269e5173d03",
+          "lines": "80-105",
+          "role": "agenda calls projection.review",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx#L80-L105"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+          "blob": "920ea5f414dfc87c939cbc12cff88d28481bf95a",
+          "lines": "47-56",
+          "role": "review handler factory provided",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/apps/cli/src/sucafina-product/native-ui/reviews.ts#L47-L56"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+          "blob": "920ea5f414dfc87c939cbc12cff88d28481bf95a",
+          "lines": "189-198",
+          "role": "factory returns projection.review handler",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/apps/cli/src/sucafina-product/native-ui/reviews.ts#L189-L198"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+          "lines": "185-200",
+          "role": "registered native handler list omits review factory",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/modules/sucafina/Sucafinav1/local/entry.ts#L185-L200"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+          "lines": "278-291",
+          "role": "unmatched projections fall through to business",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/modules/sucafina/Sucafinav1/local/entry.ts#L278-L291"
+        }
+      ],
+      "causal": "UI47 calls GET /api/ui/projections/review; metadata and server factory exist, but entry does not import or inject the factory and the native router only mounts the explicitly supplied array. Missing wired projection for agenda in inspected composition.",
+      "expected": "Authorized review agenda can discover real sections under original Request; cannot treat absence as empty list.",
+      "correction": "132 compose A07 factory using real scoped authority, source/business/review services (no fabricated ports); ensure route metadata/SDK and UI source schema match; do not overwrite other source areas.",
+      "validation_request": "150/Q01+Q02 installed agenda discover, source changes/revocation and successful preserve; 149 compiler. Same frozen C.",
+      "review207": {
+        "status": "FAIL_OPEN_MISSING_MOUNT",
+        "criterion_ids": [
+          "U25-AC01",
+          "WP10.T03.CHK.01"
+        ],
+        "trigger": "Real agenda opens projection.review on an installed host",
+        "evidence": [
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+            "blob": "e420a6107d9bb6d4a96bcb58ed628269e5173d03",
+            "lines": "83-105",
+            "what": "Agenda consumer invokes projection.review",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+            "blob": "920ea5f414dfc87c939cbc12cff88d28481bf95a",
+            "lines": "189-198",
+            "what": "Producer factory returns projection.review handler",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+            "blob": "8dcafe957590c47f342786e6fb79cd231fe69714",
+            "lines": "5-13,190-201",
+            "what": "Only chosen native factories mounted, review factory excluded",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          }
+        ],
+        "owner": "A07/N28 producer + integrator189",
+        "expected": "Mount factory with real scoped review ports, no fake ports or fake empty list",
+        "recheck": "200 authorized/denied/revoked agenda discover and preserve on accepted C",
+        "original_id": "PRE-R01-146-002",
+        "identity_preserved": true,
+        "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "previous_receipt_blob": "5342ec3da96c71375d59d0035779e82f11c2a970",
+        "proof_level": "STATIC_SOURCE_ONLY"
+      }
+    },
+    {
+      "id": "PRE-R01-146-003",
+      "severity": "P1",
+      "kind": "CONTRACT_PRIVACY",
+      "title": "Busca livre trafega como q em GET URL contra NAV-01",
+      "status": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "owner": {
+        "writer": "N10/PR147 UI search + A12/transport contract owner",
+        "integrator": "132/PR65"
+      },
+      "affected": "UI31/U42 search, text privacy, HTTP request path",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+          "blob": "f6c892046752446417e122dbaf740d3d69836ec0",
+          "lines": "87-105",
+          "role": "search submits raw q",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx#L87-L105"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "blob": "402b8a4599807d403065e561a427e230ae5981cb",
+          "lines": "18-25",
+          "role": "GET search query whitelist q",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/apps/cli/src/sucafina-product/native-ui/work.ts#L18-L25"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "blob": "402b8a4599807d403065e561a427e230ae5981cb",
+          "lines": "59-92",
+          "role": "query string q read and dispatched",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/apps/cli/src/sucafina-product/native-ui/work.ts#L59-L92"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "blob": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84",
+          "lines": "301-305",
+          "role": "search route metadata is GET",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/schema/src/sucafina/operation-registry.ts#L301-L305"
+        }
+      ],
+      "contract": {
+        "source_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/SURFACE-SPECS.md",
+        "section": "NAV-01 / Codec e contexto",
+        "rule": "Texto livre de busca fica fora da URL; compartilhamento somente por ação explícita e contrato"
+      },
+      "causal": "Free-form search term becomes q in GET URL. It is transported in request URI and potentially logged/cached outside the authorized data envelope despite no-store on the response; not necessarily browser address bar.",
+      "expected": "Free text kept out of URL on web and desktop, with current authorization, redacted logs and no unauthorized share links.",
+      "correction": "A12+132 freeze safe input/route contract (e.g. source-admitted POST read with bounded body and idempotency rule), adapt N10 UI and tests; avoid pretending transport-only change is semantically compatible.",
+      "validation_request": "150/Q01/Q02 verify HTTP/desktop URL and log/request capture contains no raw search content; 149 compile contract; final same C.",
+      "review207": {
+        "status": "SOURCE_CORRECTION_PRESENT_NOT_INSTALLED_PROVEN",
+        "criterion_ids": [
+          "U42-AC01",
+          "NAV-01"
+        ],
+        "trigger": "User submits free search text through browser and desktop",
+        "evidence": [
+          {
+            "path": "packages/client/src/sucafina/work.ts",
+            "blob": "c6092505e5e146775615da2d131f270d681cfc97",
+            "lines": "36-50",
+            "what": "Search fail-closed POST and V2 views fail closed",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "packages/schema/src/sucafina/operation-registry.ts",
+            "blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+            "lines": "294-313",
+            "what": "Search route POST body read metadata",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "packages/client/src/sucafina/transport.ts",
+            "blob": "c9fc831156c94f062f0493a14458f84f61f7dff3",
+            "lines": "133-185,245-253",
+            "what": "GET mismatch rejected, POST encoded body",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+            "blob": "e89fb68192660909865bb0f8b2e6a0b27c3f77d7",
+            "lines": "107-125",
+            "what": "Search consumer sends bounded private q",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+            "blob": "fde98b609f88d5bdb3ca472bddc4b373092da2a6",
+            "lines": "354-379",
+            "what": "projection.work-item handler returned",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          }
+        ],
+        "owner": "A12/F02 + 189",
+        "expected": "Private q only JSON POST body, no URL nor logs, retain scoped transport",
+        "recheck": "200 real HTTP/Desktop/log capture leak-free/denied/owner swap; 190 SDK typed",
+        "original_id": "PRE-R01-146-003",
+        "identity_preserved": true,
+        "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "previous_receipt_blob": "5342ec3da96c71375d59d0035779e82f11c2a970",
+        "proof_level": "STATIC_SOURCE_ONLY"
+      }
+    },
+    {
+      "id": "PRE-R01-146-004",
+      "severity": "P2",
+      "kind": "NAVIGATION_UX",
+      "title": "CAP06 CTA primária Abrir estrutura permanece sempre desabilitada",
+      "status": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "owner": {
+        "writer": "N14/PR146 CAP06/CAP07 leaf",
+        "integrator": "132/PR65 frozen route builders"
+      },
+      "affected": "CAP06/U03 -> CAP07/U47 navigation and keyboard users",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+          "blob": "df71763074fccb7dd6f26efba762dffc32c42c65",
+          "lines": "57-65",
+          "role": "open-team-structure disabled true, onInvoke no-op",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx#L57-L65"
+        }
+      ],
+      "causal": "Page advertises an 'open-team-structure' primary action while hard-disabling it regardless of allowed CAP07; the capability has an implemented structure leaf, so no keyboard or pointer transition through this control.",
+      "expected": "Action navigates to authorized CAP07 with owner-preserving route builder, or is not advertised as an available primary action when access is denied.",
+      "correction": "N14 wire actual frozen route builder and permission, preserve no implicit cross-owner fallback; 132 supply registry entry/ACK.",
+      "validation_request": "150/Q02 keyboard and screen-reader navigation CAP06 -> CAP07, denied role, deep-link/back with focus and at 320/400% reflow.",
+      "review207": {
+        "status": "FAIL_OPEN_DISABLED_CTA",
+        "criterion_ids": [
+          "U03-AC01",
+          "U03-AC03"
+        ],
+        "trigger": "CAP06 authorizes structure and user activates primary open-team-structure by keyboard",
+        "evidence": [
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+            "blob": "71d5028ed37864ad98cb767687e354a32730cfbd",
+            "lines": "66-74",
+            "what": "Primary open-team-structure disabled true and no-op",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          }
+        ],
+        "owner": "N14 CAP06/CAP07 + 189 routing",
+        "expected": "Actual F01 authorized link or accurate unavailable affordance",
+        "recheck": "200 installed granted/denied/deep link/back/focus/400%",
+        "original_id": "PRE-R01-146-004",
+        "identity_preserved": true,
+        "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "previous_receipt_blob": "5342ec3da96c71375d59d0035779e82f11c2a970",
+        "proof_level": "STATIC_SOURCE_ONLY"
+      }
+    },
+    {
+      "id": "PRE-R01-146-005",
+      "severity": "P2",
+      "kind": "NAVIGATION_ACCESSIBILITY",
+      "title": "Hoje lista casos para retomar mas não oferece links/ação",
+      "status": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "owner": {
+        "writer": "N10/PR147 UI29",
+        "integrator": "132/PR65 route builders"
+      },
+      "affected": "UI29/U01 Today, resumption, focus navigation",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "blob": "724b6ce9cc60d63c0b1b315297a4417f433a6ead",
+          "lines": "126-145",
+          "role": "Resume cases rendered as li/strong/version only",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx#L126-L145"
+        },
+        {
+          "path": "packages/schema/src/sucafina/work.ts",
+          "blob": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+          "lines": "113-118",
+          "role": "caseRef exists in authorized source output",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/schema/src/sucafina/work.ts#L113-L118"
+        }
+      ],
+      "causal": "The source provides a caseRef but the 'resume' view renders only plain list text, not an interactive element to open an existing case. Keyboard navigation cannot resume from the advertised entry.",
+      "expected": "Authorized caseRef links to case detail via owner-aware route builder, preserving returnRef, focus, and denied/removed states.",
+      "correction": "N10 consume authorized route builder/deep link and render a named focusable link; 132 ensure case route and owner tuple; no fake record from title.",
+      "validation_request": "150/Q02 keyboard, desktop/web, available/removed/denied case, back focus.",
+      "review207": {
+        "status": "SOURCE_CORRECTION_PRESENT_NOT_INSTALLED_PROVEN",
+        "criterion_ids": [
+          "U01-AC01",
+          "U01-AC03"
+        ],
+        "trigger": "Resume a case from Hoje and navigate back after access change",
+        "evidence": [
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+            "blob": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+            "lines": "132-185,235-254,296-303",
+            "what": "Resume action wired; meetings and changes independently unavailable",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          }
+        ],
+        "owner": "U01 consumer + 189",
+        "expected": "Authorized keyboard action and owner-stable return",
+        "recheck": "200 F04 real resume/removed/denied/back/focus desktop/browser",
+        "original_id": "PRE-R01-146-005",
+        "identity_preserved": true,
+        "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "previous_receipt_blob": "5342ec3da96c71375d59d0035779e82f11c2a970",
+        "proof_level": "STATIC_SOURCE_ONLY"
+      }
+    },
+    {
+      "id": "PRE-R01-146-006",
+      "severity": "P2",
+      "kind": "DESKTOP_PARITY",
+      "title": "Meu trabalho bloqueia navegação para fonte em desktop por comparação de origins",
+      "status": "OPEN_STATIC_CAUSAL_NOT_EXECUTED_DEPENDS_ON_001",
+      "owner": {
+        "writer": "N11/PR158 UI30",
+        "integrator": "132 D01 desktop broker"
+      },
+      "affected": "UI30 source-link desktop journey",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "blob": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+          "lines": "39-47",
+          "role": "safeSourceHref rejects renderer origin distinct from authorized public origin",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx#L39-L47"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "blob": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+          "lines": "193-210",
+          "role": "on undefined valid link, detailState partial instead of opening source",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/04bf1711d4ccbed43e7b2bc84d1499ceffefb315/packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx#L193-L210"
+        }
+      ],
+      "causal": "Desktop runs on distinct renderer origin. Even if the producer returns an authorized same-installation source path, window.location.origin !== publicOrigin makes safeSourceHref fail, so the source navigation cannot resolve. No unsafe direct desktop href should be substituted.",
+      "expected": "Desktop may open approved in-app source destination via D01 owner-validated navigation broker without reusing a browser publicOrigin comparison.",
+      "correction": "132/D01 define permitted desktop internal navigation/broker route and N11 use it without arbitrary web URLs. Recheck after F146-001 producer is installed.",
+      "validation_request": "150/Q01/Q02 original desktop installed session opens authorized source, denies cross-origin and userinfo/hash, preserves access revocation.",
+      "review207": {
+        "status": "UI30_SOURCE_CORRECTED_DOCUMENT_CROSS_SURFACE_GAP",
+        "criterion_ids": [
+          "U41-AC01",
+          "U24-AC01",
+          "D01"
+        ],
+        "trigger": "Desktop renderer clicks original source href returned by authorized file producer",
+        "evidence": [
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+            "blob": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+            "lines": "39-50,190-265",
+            "what": "Work item source and approved publicOrigin navigation",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          },
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+            "blob": "304d5887db0b0db22eac81c1309274ea7f5155dd",
+            "lines": "347-355,472-478,512-518",
+            "what": "Renderer-origin comparison hides server links in desktop",
+            "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+          }
+        ],
+        "owner": "U24/D01 + 189; 199 host proof",
+        "expected": "Compare installed authorized publicOrigin or broker; no arbitrary external link",
+        "recheck": "199 D01 browser+desktop approved/foreign origin/userinfo/hash/no leak/revocation; 200 targeted U24",
+        "original_id": "PRE-R01-146-006",
+        "identity_preserved": true,
+        "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "previous_receipt_blob": "5342ec3da96c71375d59d0035779e82f11c2a970",
+        "proof_level": "STATIC_SOURCE_ONLY"
+      }
+    }
+  ],
+  "added": [
+    {
+      "id": "S1-R1-207-001",
+      "severity": "P1",
+      "kind": "FUNCTIONAL_SOURCE_GAP",
+      "title": "UI62 Casos semelhantes permanently unavailable",
+      "status": "FAIL_SOURCE_STATIC",
+      "affected": [
+        "UI62",
+        "U26",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "criterion_ids": [
+        "U26-AC01",
+        "U26-AC02"
+      ],
+      "trigger": "Owner authorized to memory opens /orchestra/sf-memory/cases and tries to query related cases",
+      "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "lines": "231-249,265-269",
+          "what": "UI62 hardcoded unavailable and query hidden",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/client/src/sucafina/memory.ts",
+          "blob": "cddd7ceccc66bc5faf38d169bede03efa31440db",
+          "lines": "7-44",
+          "what": "Seven typed memory operations, none queries similarity",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/schema/src/sucafina/memory.ts",
+          "blob": "554c07bbf881b89ab9df852cdbf61322547f6382",
+          "lines": "356-495",
+          "what": "Closed operation inventory",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "normative": {
+        "sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+        "manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+        "surface": "UI62",
+        "input": "query-in-memory/context-ref",
+        "output": "authorized-similar-cases"
+      },
+      "observed": "pageState forces unavailable and no typed similarity operation; cannot claim behavior even when host is ready",
+      "expected": "Admitted source-backed similarity query, scoped ACL, historical cutoff, dedup, why-related, empty/denied/revoked states",
+      "owner": {
+        "writer": "U26/A14 real similarity producer+consumer",
+        "integrator": "189/I00",
+        "dispatcher": "200/PR106"
+      },
+      "correction": "Publish an approved typed producer/contract and UI consumer, or explicit BLOCKED_CONTRACT; never invent related cases",
+      "recheck": "After source release and integration, 200 real F04 two-owner positive/negative similarity + cutoff/dedup and keyboard/400%; independent changed-blob review"
+    },
+    {
+      "id": "S1-R1-207-002",
+      "severity": "P2",
+      "kind": "ROUTE_FUNCTIONAL_GAP",
+      "title": "UI57 approved import history route forced unavailable",
+      "status": "FAIL_SOURCE_STATIC",
+      "affected": [
+        "UI57",
+        "U23",
+        "WP06.T04"
+      ],
+      "criterion_ids": [
+        "U23-AC01",
+        "U23-AC02"
+      ],
+      "trigger": "Authorized user opens /orchestra/sf-imports route kind history",
+      "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "lines": "370-388",
+          "what": "UI57 history route unconditional unavailable",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "normative": {
+        "sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+        "manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+        "surface": "UI57",
+        "kind": "history",
+        "route": "/orchestra/sf-imports"
+      },
+      "observed": "effect unconditionally sets unavailable for every authorized history route; real history producer not established",
+      "expected": "Authorized original history/receipt navigation or documented approved BLOCKED_CONTRACT until producer available",
+      "owner": {
+        "writer": "U23 history consumer",
+        "integrator": "189/I00",
+        "dispatcher": "200/PR106"
+      },
+      "correction": "Use actual owner scoped receipt producer, no synthesized history; preserve denial/unknown/removed",
+      "recheck": "After accepted contract C, 200 real manifest/receipt history, owner swap, denied, return and reflow; independent causal recheck"
+    }
+  ],
+  "prior_PR100_PR97_PR98": "INHERITED_NO_DUPLICATE_IDS",
+  "notifications": {
+    "integrator_pr": 65,
+    "comment_ids": [
+      6903474206,
+      6903572778
+    ],
+    "not_ack_or_wake": true
+  },
+  "verdict": "FIX_FIRST",
+  "approval": false,
+  "global_release": false,
+  "no_test_runs": true
+}

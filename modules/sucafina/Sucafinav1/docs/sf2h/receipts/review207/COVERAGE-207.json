@@ -1,0 +1,4089 @@
+{
+  "schema": "sf2h.review207.coverage.v1",
+  "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "source_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+  "actor": "S1-R1",
+  "phase": "PRE_FREEZE_REVIEW",
+  "immutable": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "UX_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "original_capabilities": 28,
+    "additional_UX_surfaces": 42,
+    "surfaces": 70,
+    "chapters": 15,
+    "route_variants": 165
+  },
+  "route_parity": {
+    "status": "PASS",
+    "method": "Exact frozen-manifest tuples vs registered JSON route tuple",
+    "manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "registry_blob": "c70c68fee7eb3e944c432ad636ef9ba30571b425",
+    "missing": [],
+    "extra": [],
+    "disclaimer": "Source recognition only; no authorization, rendered UI, session or installed runtime proof"
+  },
+  "surface_matrix": [
+    {
+      "id": "CAP01",
+      "name": "Dashboard: Executive Dashboard",
+      "chapter": "sf-dashboard",
+      "owner": "U02",
+      "tasks": [
+        "WP02.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-dashboard/executive"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+        "selectors": [
+          "domain.view",
+          "render(page=\"Executive Dashboard\")",
+          "execute(page=\"Executive Dashboard\")"
+        ]
+      },
+      "required_commands": [
+        "save-users",
+        "save-benchmark"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP02",
+      "name": "Dashboard: Hot Topics & Actions",
+      "chapter": "sf-dashboard",
+      "owner": "U38",
+      "tasks": [
+        "WP02.T04",
+        "WP08.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-dashboard/hot-topics"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-dashboard/hot-topics/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-dashboard/hot-topics/:topicRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-dashboard/hot-topics/:topicRef/edit"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+        "selectors": [
+          "topicFields",
+          "domain.view",
+          "render(page=\"Hot Topics & Actions\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP03",
+      "name": "Dashboard: Budget Overview",
+      "chapter": "sf-dashboard",
+      "owner": "U02",
+      "tasks": [
+        "WP02.T01",
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-dashboard/budget"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+        "selectors": [
+          "domain.view",
+          "execute(page=\"Budget Overview\")",
+          "render(page=\"Budget Overview\")"
+        ]
+      },
+      "required_commands": [
+        "save-month",
+        "save-revenue"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP04",
+      "name": "Dashboard: OPEX Detail",
+      "chapter": "sf-dashboard",
+      "owner": "U39",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-dashboard/opex"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-dashboard/opex/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-dashboard/opex/:lineRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-dashboard/opex/:lineRef/edit"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+        "selectors": [
+          "execute: OPEX Detail branch",
+          "render(page=\"OPEX Detail\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "save-entry",
+        "save-deviation",
+        "annual-entry",
+        "year-amount",
+        "import"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "Source CRUD code present but U39 tests do not run complete positive/negative mutate/unknown",
+        "evidence": {
+          "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+          "blob": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+          "lines": "1-193",
+          "what": "Three pre-existing tests, no confirmed complete CRUD and negatives",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP05",
+      "name": "Dashboard: CAPEX Projects",
+      "chapter": "sf-dashboard",
+      "owner": "U40",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-dashboard/capex"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-dashboard/capex/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-dashboard/capex/:projectRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-dashboard/capex/:projectRef/edit"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+        "selectors": [
+          "execute: CAPEX Projects branch",
+          "render(page=\"CAPEX Projects\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "save-entry",
+        "save-deviation",
+        "annual-entry",
+        "year-amount"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "Source CRUD code present but U40 tests do not run complete positive/negative mutate/unknown",
+        "evidence": {
+          "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+          "blob": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+          "lines": "1-193",
+          "what": "Three pre-existing tests, no confirmed complete CRUD and negatives",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP06",
+      "name": "Dashboard: Headcount Overview",
+      "chapter": "sf-people",
+      "owner": "U03",
+      "tasks": [
+        "WP02.T01",
+        "WP03.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-people/overview"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+        "selectors": [
+          "readMembers",
+          "domain.view",
+          "render(page=\"Headcount Overview\")"
+        ]
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "FAIL",
+        "reason": "Inherited PRE-R01-146-004 hard-disabled CTA",
+        "evidence": {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+          "blob": "71d5028ed37864ad98cb767687e354a32730cfbd",
+          "lines": "66-74",
+          "what": "Primary open-team-structure disabled true and no-op",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP07",
+      "name": "Dashboard: Team Structure",
+      "chapter": "sf-people",
+      "owner": "U03",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-people/structure"
+        },
+        {
+          "kind": "cio",
+          "path": "/orchestra/sf-people/structure/cio"
+        },
+        {
+          "kind": "leader",
+          "path": "/orchestra/sf-people/structure/leaders/:personRef"
+        },
+        {
+          "kind": "new-member",
+          "path": "/orchestra/sf-people/structure/members/new"
+        },
+        {
+          "kind": "member",
+          "path": "/orchestra/sf-people/structure/members/:personRef"
+        },
+        {
+          "kind": "member-edit",
+          "path": "/orchestra/sf-people/structure/members/:personRef/edit"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+        "selectors": [
+          "cioFields",
+          "leaderFields",
+          "memberFields",
+          "render(page=\"Team Structure\")",
+          "memberForm"
+        ]
+      },
+      "required_commands": [
+        "saveCio",
+        "saveLeader",
+        "deleteLeader",
+        "saveMember",
+        "deleteMember"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP08",
+      "name": "Dashboard: Talent Review",
+      "chapter": "sf-people",
+      "owner": "U47",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-people/talent"
+        },
+        {
+          "kind": "member",
+          "path": "/orchestra/sf-people/talent/:personRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-people/talent/:personRef/edit"
+        },
+        {
+          "kind": "import",
+          "path": "/orchestra/sf-people/talent/import"
+        },
+        {
+          "kind": "export",
+          "path": "/orchestra/sf-people/talent/export"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+        "selectors": [
+          "memberFields",
+          "classifications",
+          "outlooks",
+          "render(page=\"Talent Review\")",
+          "memberForm"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "import",
+        "exportAllMembers"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP09",
+      "name": "Dashboard: Portfolio Dashboard",
+      "chapter": "sf-portfolio",
+      "owner": "U05",
+      "tasks": [
+        "WP02.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-portfolio/overview"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+        "selectors": [
+          "names.projects",
+          "publicRecord(collection=\"projects\")",
+          "renderPortfolioReview"
+        ]
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP10",
+      "name": "Dashboard: All Projects",
+      "chapter": "sf-portfolio",
+      "owner": "U05",
+      "tasks": [
+        "WP02.T02",
+        "WP02.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-portfolio/projects"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-portfolio/projects/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-portfolio/projects/:projectRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-portfolio/projects/:projectRef/edit"
+        },
+        {
+          "kind": "milestones",
+          "path": "/orchestra/sf-portfolio/projects/:projectRef/milestones"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+        "selectors": [
+          "names.projects",
+          "recordFields(collection=\"projects\")",
+          "renderMilestones",
+          "importProjectRows"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "import",
+        "save-milestone",
+        "delete-milestone"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP11",
+      "name": "Dashboard: IT Operations",
+      "chapter": "sf-operations",
+      "owner": "U04",
+      "tasks": [
+        "WP02.T02",
+        "WP05.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-operations/service"
+        },
+        {
+          "kind": "edit-month",
+          "path": "/orchestra/sf-operations/service/edit"
+        },
+        {
+          "kind": "settings",
+          "path": "/orchestra/sf-operations/service/settings"
+        },
+        {
+          "kind": "import",
+          "path": "/orchestra/sf-operations/service/import"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+        "selectors": [
+          "ticketFields",
+          "periodFields",
+          "domain.execute(page=\"IT Operations\")",
+          "render(page=\"IT Operations\")"
+        ]
+      },
+      "required_commands": [
+        "save-categories",
+        "save-items",
+        "save-tickets",
+        "save-sla",
+        "save-heatmap",
+        "import-month"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP12",
+      "name": "Dashboard: IT Security KPIs",
+      "chapter": "sf-operations",
+      "owner": "U29",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-operations/security"
+        },
+        {
+          "kind": "edit-kpi",
+          "path": "/orchestra/sf-operations/security/kpi/edit"
+        },
+        {
+          "kind": "campaign",
+          "path": "/orchestra/sf-operations/security/campaigns/:recordRef"
+        },
+        {
+          "kind": "incident",
+          "path": "/orchestra/sf-operations/security/incidents/:recordRef"
+        },
+        {
+          "kind": "action",
+          "path": "/orchestra/sf-operations/security/actions/:recordRef"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+        "selectors": [
+          "kpiFields",
+          "domain.execute: actions map",
+          "render(page=\"IT Security KPIs\")"
+        ]
+      },
+      "required_commands": [
+        "save-kpi",
+        "delete-kpi",
+        "save-action",
+        "delete-action",
+        "save-incident",
+        "delete-incident",
+        "save-campaign",
+        "delete-campaign"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP13",
+      "name": "Dashboard: IT Risks",
+      "chapter": "sf-operations",
+      "owner": "U30",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-operations/risks"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-operations/risks/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-operations/risks/:riskRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-operations/risks/:riskRef/edit"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+        "selectors": [
+          "names.risks",
+          "recordFields(collection=\"risks\")",
+          "publicRecord(collection=\"risks\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP14",
+      "name": "Dashboard: Vendor Contracts",
+      "chapter": "sf-procurement",
+      "owner": "U15",
+      "tasks": [
+        "WP02.T02",
+        "WP01.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-procurement/contracts"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-procurement/contracts/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-procurement/contracts/:contractRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-procurement/contracts/:contractRef/edit"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+        "selectors": [
+          "names.contracts",
+          "recordFields(collection=\"contracts\")",
+          "publicRecord(collection=\"contracts\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP15",
+      "name": "Dashboard: Stakeholder Management",
+      "chapter": "sf-operations",
+      "owner": "U30",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-operations/stakeholders"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-operations/stakeholders/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-operations/stakeholders/:stakeholderRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-operations/stakeholders/:stakeholderRef/edit"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+        "selectors": [
+          "names.stakeholders",
+          "recordFields(collection=\"stakeholders\")",
+          "publicRecord(collection=\"stakeholders\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP16",
+      "name": "Dashboard: IT Performance Contract",
+      "chapter": "sf-operations",
+      "owner": "U31",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-operations/performance"
+        },
+        {
+          "kind": "item",
+          "path": "/orchestra/sf-operations/performance/items/:itemRef"
+        },
+        {
+          "kind": "subitem",
+          "path": "/orchestra/sf-operations/performance/items/:itemRef/subitems/:subitemRef"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+        "selectors": [
+          "performance",
+          "publicPerformance",
+          "renderPerformance",
+          "perfSubs"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "save-item",
+        "delete-item",
+        "save-sub",
+        "delete-sub"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP17",
+      "name": "Planner: Overview",
+      "chapter": "sf-planner",
+      "owner": "U06",
+      "tasks": [
+        "WP03.T01",
+        "WP03.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-planner/overview"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "selectors": [
+          "domain.view",
+          "renderPage(page=\"Overview\")",
+          "monthlyChart"
+        ]
+      },
+      "required_commands": [
+        "import-workbook"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP18",
+      "name": "Planner: OPEX",
+      "chapter": "sf-planner",
+      "owner": "U07",
+      "tasks": [
+        "WP03.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-planner/opex"
+        },
+        {
+          "kind": "line",
+          "path": "/orchestra/sf-planner/opex/lines/:lineRef"
+        },
+        {
+          "kind": "line-edit",
+          "path": "/orchestra/sf-planner/opex/lines/:lineRef/edit"
+        },
+        {
+          "kind": "review",
+          "path": "/orchestra/sf-planner/opex/review"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "selectors": [
+          "execute.fieldsByCollection.lines",
+          "execute: values.closed branch",
+          "execute: values.split branch",
+          "renderPage(page=\"OPEX\")",
+          "workbookForm"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "spread",
+        "reset",
+        "import-workbook"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP19",
+      "name": "Planner: CAPEX",
+      "chapter": "sf-planner",
+      "owner": "U07",
+      "tasks": [
+        "WP03.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-planner/capex"
+        },
+        {
+          "kind": "line",
+          "path": "/orchestra/sf-planner/capex/lines/:lineRef"
+        },
+        {
+          "kind": "line-edit",
+          "path": "/orchestra/sf-planner/capex/lines/:lineRef/edit"
+        },
+        {
+          "kind": "project",
+          "path": "/orchestra/sf-planner/capex/projects/:projectRef"
+        },
+        {
+          "kind": "review",
+          "path": "/orchestra/sf-planner/capex/review"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "selectors": [
+          "execute.fieldsByCollection.lines",
+          "execute.fieldsByCollection.projects",
+          "renderPage(page=\"CAPEX\")",
+          "workbookForm"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "spread",
+        "reset",
+        "import-workbook"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP20",
+      "name": "Planner: Headcount",
+      "chapter": "sf-planner",
+      "owner": "U08",
+      "tasks": [
+        "WP03.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-planner/headcount"
+        },
+        {
+          "kind": "position",
+          "path": "/orchestra/sf-planner/headcount/positions/:positionRef"
+        },
+        {
+          "kind": "position-edit",
+          "path": "/orchestra/sf-planner/headcount/positions/:positionRef/edit"
+        },
+        {
+          "kind": "rates",
+          "path": "/orchestra/sf-planner/headcount/rates"
+        },
+        {
+          "kind": "settings",
+          "path": "/orchestra/sf-planner/headcount/settings"
+        },
+        {
+          "kind": "roster-review",
+          "path": "/orchestra/sf-planner/headcount/roster-review"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "selectors": [
+          "plannerHeadcountInputs",
+          "publicPositionFields",
+          "execute.fieldsByCollection.positions",
+          "execute.fieldsByCollection.rates",
+          "execute: increase/leaderDomains branches",
+          "renderHeadcount"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "sync",
+        "import-workbook"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP21",
+      "name": "Planner: Entities & allocations",
+      "chapter": "sf-planner",
+      "owner": "U09",
+      "tasks": [
+        "WP03.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-planner/allocations"
+        },
+        {
+          "kind": "entity",
+          "path": "/orchestra/sf-planner/allocations/entities/:entityRef"
+        },
+        {
+          "kind": "allocation",
+          "path": "/orchestra/sf-planner/allocations/entries/:allocationRef"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "selectors": [
+          "executeLists",
+          "renderPage(page=\"Entities & allocations\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "common",
+        "import-workbook"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP22",
+      "name": "Planner: FX rates",
+      "chapter": "sf-planner",
+      "owner": "U45",
+      "tasks": [
+        "WP03.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-planner/fx"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "selectors": [
+          "execute.fieldsByCollection.fx",
+          "renderPage(page=\"FX rates\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "delete",
+        "import-workbook"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP23",
+      "name": "Planner: Versions",
+      "chapter": "sf-planner",
+      "owner": "U46",
+      "tasks": [
+        "WP03.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-planner/versions"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-planner/versions/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-planner/versions/:versionRef"
+        },
+        {
+          "kind": "compare",
+          "path": "/orchestra/sf-planner/versions/compare"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "selectors": [
+          "executeVersions",
+          "renderPage(page=\"Versions\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "copy",
+        "official",
+        "lock",
+        "unlock",
+        "delete",
+        "import-workbook"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP24",
+      "name": "Procurement: Dashboard",
+      "chapter": "sf-procurement",
+      "owner": "U10",
+      "tasks": [
+        "WP04.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-procurement/overview"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+        "selectors": [
+          "domain.view",
+          "readProcurementQueueView",
+          "render(page=\"Dashboard\")"
+        ]
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP25",
+      "name": "Procurement: Requests",
+      "chapter": "sf-procurement",
+      "owner": "U11",
+      "tasks": [
+        "WP04.T02",
+        "WP04.T03",
+        "WP04.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-procurement/requests"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-procurement/requests/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-procurement/requests/:requestRef"
+        },
+        {
+          "kind": "requisition",
+          "path": "/orchestra/sf-procurement/requests/:requestRef/requisition"
+        },
+        {
+          "kind": "sourcing",
+          "path": "/orchestra/sf-procurement/requests/:requestRef/sourcing"
+        },
+        {
+          "kind": "quotes",
+          "path": "/orchestra/sf-procurement/requests/:requestRef/sourcing/compare"
+        },
+        {
+          "kind": "po",
+          "path": "/orchestra/sf-procurement/requests/:requestRef/po"
+        },
+        {
+          "kind": "history",
+          "path": "/orchestra/sf-procurement/requests/:requestRef/history"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+        "selectors": [
+          "prFields",
+          "sourceFields",
+          "poFields",
+          "inputs",
+          "structuredInput",
+          "repeatRows",
+          "render(page=\"Requests\")"
+        ]
+      },
+      "required_commands": [
+        "create",
+        "save",
+        "submit_pr",
+        "submit_sourcing",
+        "select_quote",
+        "submit_po",
+        "approve",
+        "reject",
+        "issue",
+        "cancel",
+        "delete"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP26",
+      "name": "Procurement: My approvals",
+      "chapter": "sf-procurement",
+      "owner": "U13",
+      "tasks": [
+        "WP04.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-procurement/approvals"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-procurement/approvals/:requestRef"
+        },
+        {
+          "kind": "review",
+          "path": "/orchestra/sf-procurement/approvals/:requestRef/review"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+        "selectors": [
+          "approvalDecision",
+          "approvalQueue",
+          "approvalStageEntry",
+          "render(page=\"My approvals\")"
+        ]
+      },
+      "required_commands": [
+        "approve",
+        "reject"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP27",
+      "name": "Procurement: Suppliers",
+      "chapter": "sf-procurement",
+      "owner": "U14",
+      "tasks": [
+        "WP04.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-procurement/suppliers"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-procurement/suppliers/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-procurement/suppliers/:supplierRef"
+        },
+        {
+          "kind": "edit",
+          "path": "/orchestra/sf-procurement/suppliers/:supplierRef/edit"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+        "selectors": [
+          "supplierFields",
+          "bankFields",
+          "supplier",
+          "scalarFields",
+          "repeatRows",
+          "render(page=\"Suppliers\")"
+        ]
+      },
+      "required_commands": [
+        "create",
+        "save",
+        "activate",
+        "block",
+        "inactivate",
+        "delete",
+        "change-bank"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "CAP28",
+      "name": "Procurement: Settings",
+      "chapter": "sf-procurement",
+      "owner": "U36",
+      "tasks": [
+        "WP04.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-procurement/settings"
+        }
+      ],
+      "source_binding": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+        "selectors": [
+          "settingsFields",
+          "settings",
+          "scalarFields",
+          "repeatRows",
+          "render(page=\"Settings\")"
+        ]
+      },
+      "required_commands": [
+        "save",
+        "reset"
+      ],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI29",
+      "name": "Hoje",
+      "chapter": "sf-home",
+      "owner": "U01",
+      "tasks": [
+        "WP01.T05",
+        "WP08.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-home"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP01.json",
+            "taskId": "WP01.T05",
+            "pointer": "/tasks/4"
+          },
+          {
+            "path": "work-packages/WP08.json",
+            "taskId": "WP08.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "Resume source corrected, meeting/material sections unavailable, F04 not proven",
+        "evidence": {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "blob": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+          "lines": "132-185,235-254,296-303",
+          "what": "Resume action wired; meetings and changes independently unavailable",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI30",
+      "name": "Meu trabalho",
+      "chapter": "sf-work",
+      "owner": "U41",
+      "tasks": [
+        "WP08.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-work"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP08.json",
+            "taskId": "WP08.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "Work-item source corrected but no F04 real consumer proof",
+        "evidence": {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "blob": "fde98b609f88d5bdb3ca472bddc4b373092da2a6",
+          "lines": "354-379",
+          "what": "projection.work-item handler returned",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI31",
+      "name": "Busca SF",
+      "chapter": "sf-home",
+      "owner": "U42",
+      "tasks": [
+        "WP01.T04",
+        "WP14.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-home/search"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP01.json",
+            "taskId": "WP01.T04",
+            "pointer": "/tasks/3"
+          },
+          {
+            "path": "work-packages/WP14.json",
+            "taskId": "WP14.T02",
+            "pointer": "/tasks/1"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "POST private search source corrected but HTTP/desktop log evidence absent",
+        "evidence": {
+          "path": "packages/client/src/sucafina/work.ts",
+          "blob": "c6092505e5e146775615da2d131f270d681cfc97",
+          "lines": "36-50",
+          "what": "Search fail-closed POST and V2 views fail closed",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI32",
+      "name": "Visões salvas",
+      "chapter": "sf-work",
+      "owner": "U43",
+      "tasks": [
+        "WP01.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-work/views/:viewId"
+        },
+        {
+          "kind": "list",
+          "path": "/orchestra/sf-work/views"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-work/views/new"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP01.json",
+            "taskId": "WP01.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "Normative V2 view/landing BLOCKED_DEPENDENCY in CONTRACTS.md:181-187",
+        "evidence": {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/views/index.tsx",
+          "blob": "e4ccac3bba27b728d6b1f16315051327715c5752",
+          "lines": "47-50,197-202,473-477",
+          "what": "V2 native and preferred landing declared unavailable pending source",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI33",
+      "name": "Lista/criação de casos",
+      "chapter": "sf-decisions",
+      "owner": "U16",
+      "tasks": [
+        "WP01.T05",
+        "WP11.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-decisions/new"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP01.json",
+            "taskId": "WP01.T05",
+            "pointer": "/tasks/4"
+          },
+          {
+            "path": "work-packages/WP11.json",
+            "taskId": "WP11.T01",
+            "pointer": "/tasks/0"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI34",
+      "name": "Resumo/intenção do caso",
+      "chapter": "sf-decisions",
+      "owner": "U16",
+      "tasks": [
+        "WP11.T01",
+        "WP12.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions/:caseRef"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP11.json",
+            "taskId": "WP11.T01",
+            "pointer": "/tasks/0"
+          },
+          {
+            "path": "work-packages/WP12.json",
+            "taskId": "WP12.T02",
+            "pointer": "/tasks/1"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI35",
+      "name": "Alternativas e comparação",
+      "chapter": "sf-decisions",
+      "owner": "U17",
+      "tasks": [
+        "WP05.T05",
+        "WP11.T02",
+        "WP12.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions/:caseRef/alternatives"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-decisions/:caseRef/alternatives/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-decisions/:caseRef/alternatives/:alternativeRef"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T05",
+            "pointer": "/tasks/4"
+          },
+          {
+            "path": "work-packages/WP11.json",
+            "taskId": "WP11.T02",
+            "pointer": "/tasks/1"
+          },
+          {
+            "path": "work-packages/WP12.json",
+            "taskId": "WP12.T03",
+            "pointer": "/tasks/2"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI36",
+      "name": "Premissas e divergências",
+      "chapter": "sf-decisions",
+      "owner": "U17",
+      "tasks": [
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions/:caseRef/assumptions"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP11.json",
+            "taskId": "WP11.T02",
+            "pointer": "/tasks/1"
+          },
+          {
+            "path": "work-packages/WP12.json",
+            "taskId": "WP12.T02",
+            "pointer": "/tasks/1"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI37",
+      "name": "Perguntas e ciclos",
+      "chapter": "sf-decisions",
+      "owner": "U17",
+      "tasks": [
+        "WP08.T06",
+        "WP12.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions/:caseRef/questions"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP08.json",
+            "taskId": "WP08.T06",
+            "pointer": "/tasks/5"
+          },
+          {
+            "path": "work-packages/WP12.json",
+            "taskId": "WP12.T03",
+            "pointer": "/tasks/2"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI38",
+      "name": "Escolha humana atual",
+      "chapter": "sf-decisions",
+      "owner": "U18",
+      "tasks": [
+        "WP11.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions/:caseRef/choice"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP11.json",
+            "taskId": "WP11.T03",
+            "pointer": "/tasks/2"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI39",
+      "name": "Mudanças preparadas",
+      "chapter": "sf-decisions",
+      "owner": "U18",
+      "tasks": [
+        "WP11.T03",
+        "WP11.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions/:caseRef/changes/:changeRef"
+        },
+        {
+          "kind": "list",
+          "path": "/orchestra/sf-decisions/:caseRef/changes"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP11.json",
+            "taskId": "WP11.T03",
+            "pointer": "/tasks/2"
+          },
+          {
+            "path": "work-packages/WP11.json",
+            "taskId": "WP11.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI40",
+      "name": "Recibo/histórico de aplicação",
+      "chapter": "sf-decisions",
+      "owner": "U18",
+      "tasks": [
+        "WP11.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions/:caseRef/receipts/:receiptRef"
+        },
+        {
+          "kind": "history",
+          "path": "/orchestra/sf-decisions/:caseRef/history"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP11.json",
+            "taskId": "WP11.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI41",
+      "name": "Análise assíncrona",
+      "chapter": "sf-decisions",
+      "owner": "U37",
+      "tasks": [
+        "WP09.T07",
+        "WP12.T01",
+        "WP12.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-decisions/:caseRef/analyses/:analysisRef"
+        },
+        {
+          "kind": "list",
+          "path": "/orchestra/sf-decisions/:caseRef/analyses"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T07",
+            "pointer": "/tasks/6"
+          },
+          {
+            "path": "work-packages/WP12.json",
+            "taskId": "WP12.T01",
+            "pointer": "/tasks/0"
+          },
+          {
+            "path": "work-packages/WP12.json",
+            "taskId": "WP12.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI42",
+      "name": "Campanha/candidatos",
+      "chapter": "sf-portfolio",
+      "owner": "U19",
+      "tasks": [
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-portfolio/scenarios/:caseRef"
+        },
+        {
+          "kind": "list",
+          "path": "/orchestra/sf-portfolio/scenarios"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP13.json",
+            "taskId": "WP13.T01",
+            "pointer": "/tasks/0"
+          },
+          {
+            "path": "work-packages/WP13.json",
+            "taskId": "WP13.T02",
+            "pointer": "/tasks/1"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI43",
+      "name": "Combinações/histórico",
+      "chapter": "sf-portfolio",
+      "owner": "U19",
+      "tasks": [
+        "WP13.T02",
+        "WP13.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-portfolio/scenarios/:caseRef/results/:resultRef"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP13.json",
+            "taskId": "WP13.T02",
+            "pointer": "/tasks/1"
+          },
+          {
+            "path": "work-packages/WP13.json",
+            "taskId": "WP13.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI44",
+      "name": "Sensibilidade",
+      "chapter": "sf-portfolio",
+      "owner": "U19",
+      "tasks": [
+        "WP05.T05",
+        "WP13.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-portfolio/sensitivity/:caseRef/:resultRef"
+        },
+        {
+          "kind": "selection",
+          "path": "/orchestra/sf-portfolio/sensitivity"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T05",
+            "pointer": "/tasks/4"
+          },
+          {
+            "path": "work-packages/WP13.json",
+            "taskId": "WP13.T03",
+            "pointer": "/tasks/2"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI45",
+      "name": "Catálogo BI",
+      "chapter": "sf-bi",
+      "owner": "U21",
+      "tasks": [
+        "WP05.T01",
+        "WP05.T02",
+        "WP05.T03",
+        "WP05.T04",
+        "WP05.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-bi"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T01",
+            "pointer": "/tasks/0"
+          },
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T02",
+            "pointer": "/tasks/1"
+          },
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T03",
+            "pointer": "/tasks/2"
+          },
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T04",
+            "pointer": "/tasks/3"
+          },
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T05",
+            "pointer": "/tasks/4"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI46",
+      "name": "Visual BI e drilldown",
+      "chapter": "sf-bi",
+      "owner": "U21",
+      "tasks": [
+        "WP05.T01",
+        "WP05.T02",
+        "WP05.T03",
+        "WP05.T04",
+        "WP05.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-bi/:viewId"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T01",
+            "pointer": "/tasks/0"
+          },
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T02",
+            "pointer": "/tasks/1"
+          },
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T03",
+            "pointer": "/tasks/2"
+          },
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T04",
+            "pointer": "/tasks/3"
+          },
+          {
+            "path": "work-packages/WP05.json",
+            "taskId": "WP05.T05",
+            "pointer": "/tasks/4"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI47",
+      "name": "Seleção da pauta",
+      "chapter": "sf-reviews",
+      "owner": "U25",
+      "tasks": [
+        "WP07.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-reviews/agenda"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP07.json",
+            "taskId": "WP07.T01",
+            "pointer": "/tasks/0"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "FAIL",
+        "reason": "Inherited PRE-R01-146-002 review factory not mounted",
+        "evidence": {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "8dcafe957590c47f342786e6fb79cd231fe69714",
+          "lines": "5-13,190-201",
+          "what": "Only chosen native factories mounted, review factory excluded",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI48",
+      "name": "Revisões preservadas",
+      "chapter": "sf-reviews",
+      "owner": "U32",
+      "tasks": [
+        "WP07.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-reviews/reviews/:reviewRef"
+        },
+        {
+          "kind": "list",
+          "path": "/orchestra/sf-reviews/reviews"
+        },
+        {
+          "kind": "present",
+          "path": "/orchestra/sf-reviews/reviews/:reviewRef/present"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP07.json",
+            "taskId": "WP07.T02",
+            "pointer": "/tasks/1"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI49",
+      "name": "Comparar revisões",
+      "chapter": "sf-reviews",
+      "owner": "U32",
+      "tasks": [
+        "WP07.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-reviews/compare"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP07.json",
+            "taskId": "WP07.T03",
+            "pointer": "/tasks/2"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI50",
+      "name": "Exportar relatório",
+      "chapter": "sf-reviews",
+      "owner": "U33",
+      "tasks": [
+        "WP07.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-reviews/reports/:reviewRef"
+        },
+        {
+          "kind": "list",
+          "path": "/orchestra/sf-reviews/reports"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP07.json",
+            "taskId": "WP07.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI51",
+      "name": "Relações entre registros",
+      "chapter": "sf-work",
+      "owner": "U44",
+      "tasks": [
+        "WP08.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-work/relations/:relationRef"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-work/relations/new"
+        },
+        {
+          "kind": "case-alias",
+          "path": "/orchestra/sf-decisions/:caseRef/relations"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP08.json",
+            "taskId": "WP08.T01",
+            "pointer": "/tasks/0"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI52",
+      "name": "Thread contextual",
+      "chapter": "sf-work",
+      "owner": "U44",
+      "tasks": [
+        "WP08.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-work/threads/:threadRef"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP08.json",
+            "taskId": "WP08.T02",
+            "pointer": "/tasks/1"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI53",
+      "name": "Confirmar sem alteração",
+      "chapter": "sf-work",
+      "owner": "U44",
+      "tasks": [
+        "WP08.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-work/confirmations/:selectionRef"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP08.json",
+            "taskId": "WP08.T03",
+            "pointer": "/tasks/2"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI54",
+      "name": "Encaminhar Hot Topic",
+      "chapter": "sf-dashboard",
+      "owner": "U38",
+      "tasks": [
+        "WP02.T04",
+        "WP08.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-dashboard/hot-topics/proposals/:proposalRef"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP02.json",
+            "taskId": "WP02.T04",
+            "pointer": "/tasks/3"
+          },
+          {
+            "path": "work-packages/WP08.json",
+            "taskId": "WP08.T05",
+            "pointer": "/tasks/4"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI55",
+      "name": "Arquivos/destino de import",
+      "chapter": "sf-imports",
+      "owner": "U23",
+      "tasks": [
+        "WP06.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-imports/new"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP06.json",
+            "taskId": "WP06.T01",
+            "pointer": "/tasks/0"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI56",
+      "name": "Prévia/impacto de import",
+      "chapter": "sf-imports",
+      "owner": "U23",
+      "tasks": [
+        "WP06.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-imports/:manifestId/preview"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP06.json",
+            "taskId": "WP06.T02",
+            "pointer": "/tasks/1"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI57",
+      "name": "Aplicação/recibo de import",
+      "chapter": "sf-imports",
+      "owner": "U23",
+      "tasks": [
+        "WP06.T03",
+        "WP06.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-imports/:manifestId/receipt"
+        },
+        {
+          "kind": "review",
+          "path": "/orchestra/sf-imports/:manifestId/review"
+        },
+        {
+          "kind": "history",
+          "path": "/orchestra/sf-imports"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP06.json",
+            "taskId": "WP06.T03",
+            "pointer": "/tasks/2"
+          },
+          {
+            "path": "work-packages/WP06.json",
+            "taskId": "WP06.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "FAIL",
+        "reason": "207-002 history route hardcoded unavailable",
+        "evidence": {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "lines": "370-388",
+          "what": "UI57 history route unconditional unavailable",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI58",
+      "name": "Catálogo de documentos",
+      "chapter": "sf-documents",
+      "owner": "U24",
+      "tasks": [
+        "WP06.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-documents"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-documents/new"
+        },
+        {
+          "kind": "detail",
+          "path": "/orchestra/sf-documents/:documentRef"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP06.json",
+            "taskId": "WP06.T05",
+            "pointer": "/tasks/4"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "Document original link compares renderer origin, desktop parity gap inherited same-class 146-006",
+        "evidence": {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "blob": "304d5887db0b0db22eac81c1309274ea7f5155dd",
+          "lines": "347-355,472-478,512-518",
+          "what": "Renderer-origin comparison hides server links in desktop",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI59",
+      "name": "Extração/confirmação",
+      "chapter": "sf-documents",
+      "owner": "U24",
+      "tasks": [
+        "WP06.T05",
+        "WP12.T02"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-documents/:documentRef/evidence"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP06.json",
+            "taskId": "WP06.T05",
+            "pointer": "/tasks/4"
+          },
+          {
+            "path": "work-packages/WP12.json",
+            "taskId": "WP12.T02",
+            "pointer": "/tasks/1"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "Document original link compares renderer origin, desktop parity gap inherited same-class 146-006",
+        "evidence": {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "blob": "304d5887db0b0db22eac81c1309274ea7f5155dd",
+          "lines": "347-355,472-478,512-518",
+          "what": "Renderer-origin comparison hides server links in desktop",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI60",
+      "name": "Documento para cenário",
+      "chapter": "sf-documents",
+      "owner": "U24",
+      "tasks": [
+        "WP06.T05",
+        "WP09.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-documents/:documentRef/scenario"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP06.json",
+            "taskId": "WP06.T05",
+            "pointer": "/tasks/4"
+          },
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "Document evidence→scenario typed source code present, no real F04 and revocation/unknown proof",
+        "evidence": {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "blob": "304d5887db0b0db22eac81c1309274ea7f5155dd",
+          "lines": "347-355,472-478,512-518",
+          "what": "Renderer-origin comparison hides server links in desktop",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI61",
+      "name": "Sinais/materialidade",
+      "chapter": "sf-memory",
+      "owner": "U26",
+      "tasks": [
+        "WP14.T01",
+        "WP14.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-memory/signals"
+        },
+        {
+          "kind": "chapter-root",
+          "path": "/orchestra/sf-memory"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP14.json",
+            "taskId": "WP14.T01",
+            "pointer": "/tasks/0"
+          },
+          {
+            "path": "work-packages/WP14.json",
+            "taskId": "WP14.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI62",
+      "name": "Casos semelhantes",
+      "chapter": "sf-memory",
+      "owner": "U26",
+      "tasks": [
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-memory/cases"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP14.json",
+            "taskId": "WP14.T02",
+            "pointer": "/tasks/1"
+          },
+          {
+            "path": "work-packages/WP14.json",
+            "taskId": "WP14.T05",
+            "pointer": "/tasks/4"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "FAIL",
+        "reason": "207-001 similarity view hardcoded unavailable",
+        "evidence": {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "lines": "231-249,265-269",
+          "what": "UI62 hardcoded unavailable and query hidden",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI63",
+      "name": "Previsto versus observado",
+      "chapter": "sf-memory",
+      "owner": "U26",
+      "tasks": [
+        "WP14.T03"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-memory/outcomes/:selectionRef"
+        },
+        {
+          "kind": "selection",
+          "path": "/orchestra/sf-memory/outcomes"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP14.json",
+            "taskId": "WP14.T03",
+            "pointer": "/tasks/2"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI64",
+      "name": "Catálogo/admissão de rotinas",
+      "chapter": "sf-routines",
+      "owner": "U27",
+      "tasks": [
+        "WP09.T01",
+        "WP12.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-routines"
+        },
+        {
+          "kind": "recipe",
+          "path": "/orchestra/sf-routines/recipes/:recipeRef"
+        },
+        {
+          "kind": "admission",
+          "path": "/orchestra/sf-routines/admissions/:admissionRef"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T01",
+            "pointer": "/tasks/0"
+          },
+          {
+            "path": "work-packages/WP12.json",
+            "taskId": "WP12.T01",
+            "pointer": "/tasks/0"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI65",
+      "name": "Execução/resultado de rotina",
+      "chapter": "sf-routines",
+      "owner": "U27",
+      "tasks": [
+        "WP09.T02",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T05",
+        "WP09.T07"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-routines/runs/:runRef"
+        },
+        {
+          "kind": "list",
+          "path": "/orchestra/sf-routines/runs"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T02",
+            "pointer": "/tasks/1"
+          },
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T03",
+            "pointer": "/tasks/2"
+          },
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T04",
+            "pointer": "/tasks/3"
+          },
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T05",
+            "pointer": "/tasks/4"
+          },
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T07",
+            "pointer": "/tasks/6"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI66",
+      "name": "Recorrência",
+      "chapter": "sf-routines",
+      "owner": "U34",
+      "tasks": [
+        "WP09.T06"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-routines/schedules/:scheduleRef"
+        },
+        {
+          "kind": "list",
+          "path": "/orchestra/sf-routines/schedules"
+        },
+        {
+          "kind": "new",
+          "path": "/orchestra/sf-routines/schedules/new"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP09.json",
+            "taskId": "WP09.T06",
+            "pointer": "/tasks/5"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI67",
+      "name": "Login/contexto/acesso",
+      "chapter": "sf-home",
+      "owner": "F01",
+      "tasks": [
+        "WP00.T04",
+        "WP10.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-home/context"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP00.json",
+            "taskId": "WP00.T04",
+            "pointer": "/tasks/3"
+          },
+          {
+            "path": "work-packages/WP10.json",
+            "taskId": "WP10.T01",
+            "pointer": "/tasks/0"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI68",
+      "name": "Exports de dados/PO",
+      "chapter": "sf-imports",
+      "owner": "U23",
+      "tasks": [
+        "WP00.T01",
+        "WP04.T05",
+        "WP06.T04"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-imports/exports"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP00.json",
+            "taskId": "WP00.T01",
+            "pointer": "/tasks/0"
+          },
+          {
+            "path": "work-packages/WP04.json",
+            "taskId": "WP04.T05",
+            "pointer": "/tasks/4"
+          },
+          {
+            "path": "work-packages/WP06.json",
+            "taskId": "WP06.T04",
+            "pointer": "/tasks/3"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI69",
+      "name": "Ferramentas locais de administração",
+      "chapter": "sf-home",
+      "owner": "U28",
+      "tasks": [
+        "WP10.T01"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-home/administration"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP10.json",
+            "taskId": "WP10.T01",
+            "pointer": "/tasks/0"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    },
+    {
+      "id": "UI70",
+      "name": "Estado/perfil de residentes",
+      "chapter": "sf-routines",
+      "owner": "U35",
+      "tasks": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "routes": [
+        {
+          "kind": "entry",
+          "path": "/orchestra/sf-routines/residents"
+        }
+      ],
+      "source_binding": {
+        "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "taskSelectors": [
+          {
+            "path": "work-packages/WP10.json",
+            "taskId": "WP10.T06",
+            "pointer": "/tasks/5"
+          },
+          {
+            "path": "work-packages/WP10.json",
+            "taskId": "WP10.T07",
+            "pointer": "/tasks/6"
+          }
+        ],
+        "rule": "Use the operation-specific input/output types selected by contract-catalog. No open JSON payload or inferred fields."
+      },
+      "required_commands": [],
+      "source_shape": "FROZEN_INVENTORY",
+      "route_static": "PASS",
+      "functional": {
+        "status": "NOT_PROVEN",
+        "reason": "No same-C F04 installed authorized end-to-end criterion evidence; presence of file/route is not functional proof"
+      },
+      "owner_revocation": "NOT_PROVEN",
+      "draft_review_pending_unknown": "NOT_PROVEN",
+      "a11y_keyboard": "NOT_PROVEN",
+      "responsive_320_768_1024_1280_1440_200_400": "NOT_PROVEN"
+    }
+  ],
+  "chapter_matrix": [
+    {
+      "name": "sf-dashboard",
+      "surfaces": [
+        "CAP01",
+        "CAP02",
+        "CAP03",
+        "CAP04",
+        "CAP05",
+        "UI54"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-people",
+      "surfaces": [
+        "CAP06",
+        "CAP07",
+        "CAP08"
+      ],
+      "route_structure": "PASS",
+      "functional": "FAIL",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-portfolio",
+      "surfaces": [
+        "CAP09",
+        "CAP10",
+        "UI42",
+        "UI43",
+        "UI44"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-operations",
+      "surfaces": [
+        "CAP11",
+        "CAP12",
+        "CAP13",
+        "CAP15",
+        "CAP16"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-procurement",
+      "surfaces": [
+        "CAP14",
+        "CAP24",
+        "CAP25",
+        "CAP26",
+        "CAP27",
+        "CAP28"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-planner",
+      "surfaces": [
+        "CAP17",
+        "CAP18",
+        "CAP19",
+        "CAP20",
+        "CAP21",
+        "CAP22",
+        "CAP23"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-home",
+      "surfaces": [
+        "UI29",
+        "UI31",
+        "UI67",
+        "UI69"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-work",
+      "surfaces": [
+        "UI30",
+        "UI32",
+        "UI51",
+        "UI52",
+        "UI53"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-decisions",
+      "surfaces": [
+        "UI33",
+        "UI34",
+        "UI35",
+        "UI36",
+        "UI37",
+        "UI38",
+        "UI39",
+        "UI40",
+        "UI41"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-bi",
+      "surfaces": [
+        "UI45",
+        "UI46"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-reviews",
+      "surfaces": [
+        "UI47",
+        "UI48",
+        "UI49",
+        "UI50"
+      ],
+      "route_structure": "PASS",
+      "functional": "FAIL",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-imports",
+      "surfaces": [
+        "UI55",
+        "UI56",
+        "UI57",
+        "UI68"
+      ],
+      "route_structure": "PASS",
+      "functional": "FAIL",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-documents",
+      "surfaces": [
+        "UI58",
+        "UI59",
+        "UI60"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-memory",
+      "surfaces": [
+        "UI61",
+        "UI62",
+        "UI63"
+      ],
+      "route_structure": "PASS",
+      "functional": "FAIL",
+      "installed": "NOT_PROVEN"
+    },
+    {
+      "name": "sf-routines",
+      "surfaces": [
+        "UI64",
+        "UI65",
+        "UI66",
+        "UI70"
+      ],
+      "route_structure": "PASS",
+      "functional": "NOT_PROVEN",
+      "installed": "NOT_PROVEN"
+    }
+  ],
+  "reviewer_mandatory_criterion_matrix": [
+    {
+      "id": "WP10.CMP.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.CMP.02",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.CMP.10",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.CMP.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.CMP.60",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.DOD.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.DOD.02",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.DOD.10",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.DOD.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.DOD.60",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.INV.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.INV.02",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.INV.10",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.INV.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.INV.60",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.QLT.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.QLT.02",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.QLT.10",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.QLT.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.QLT.60",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.SUC.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.SUC.02",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.SUC.10",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.SUC.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.SUC.60",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.CHK.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.CHK.02",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.CHK.03",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.CHK.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.CMP.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.CMP.02",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.CMP.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.DOD.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.DOD.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.INV.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.INV.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.QLT.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.QLT.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.SUC.01",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    },
+    {
+      "id": "WP10.T03.SUC.40",
+      "status": "NOT_PROVEN",
+      "basis": "Independent source review only, no final accepted C or complete installed proof"
+    }
+  ],
+  "sampled_order_criteria": [
+    {
+      "id": "U03-AC01",
+      "status": "FAIL",
+      "finding": "PRE-R01-146-004"
+    },
+    {
+      "id": "U25-AC01",
+      "status": "FAIL",
+      "finding": "PRE-R01-146-002"
+    },
+    {
+      "id": "U26-AC01",
+      "status": "FAIL",
+      "finding": "S1-R1-207-001"
+    },
+    {
+      "id": "U23-AC01",
+      "status": "FAIL",
+      "finding": "S1-R1-207-002"
+    },
+    {
+      "id": "U39-AC01",
+      "status": "NOT_PROVEN",
+      "source_blob": "11612644c0ab7f46dbe1ff1943ab37cda354161e"
+    },
+    {
+      "id": "U39-AC02",
+      "status": "NOT_PROVEN"
+    },
+    {
+      "id": "U39-AC03",
+      "status": "NOT_PROVEN"
+    },
+    {
+      "id": "U40-AC01",
+      "status": "NOT_PROVEN",
+      "source_blob": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926"
+    },
+    {
+      "id": "U40-AC02",
+      "status": "NOT_PROVEN"
+    },
+    {
+      "id": "U40-AC03",
+      "status": "NOT_PROVEN"
+    },
+    {
+      "id": "U43-V2",
+      "status": "NOT_PROVEN",
+      "blocking": "Normative BLOCKED_DEPENDENCY producer+schemaV2"
+    }
+  ],
+  "WP_matrix": [
+    {
+      "WP": "WP01",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP02",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP03",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP04",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP05",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP06",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP07",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP08",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP09",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP10",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP11",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP12",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP13",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP14",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    },
+    {
+      "WP": "WP15",
+      "status": "NOT_PROVEN",
+      "reason": "No integral accepted same-C proof; partial source/fixtures cannot close WP"
+    }
+  ],
+  "u39_u40": {
+    "shared_ui": {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+      "blob": "ed94efe4d919eb80e4592057170d03c4b2348eb6",
+      "lines": "104-110,236-314,429-506,700-776",
+      "what": "CAP04/05 source-bound CRUD/editing/confirmation code",
+      "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "shared_model": {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/model.ts",
+      "blob": "a21b1fc6b3cdceec6e666d8d7d8fa760911f2668",
+      "lines": "125-177",
+      "what": "Typed CAP04/05 action-specific dispatch",
+      "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "U39": {
+      "spec": {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+        "blob": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+        "lines": "1-193",
+        "what": "Three pre-existing tests, no confirmed complete CRUD and negatives",
+        "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      "static_cases": [
+        "read/filtered-empty",
+        "create draft and review without submit",
+        "reflow"
+      ],
+      "not_proven": [
+        "confirm submitted save",
+        "edit",
+        "delete",
+        "save-entry",
+        "save-deviation",
+        "annual-entry",
+        "year-amount",
+        "denied/revoked/owner swap",
+        "outcome-unknown",
+        "complete keyboard/400%"
+      ]
+    },
+    "U40": {
+      "spec": {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+        "blob": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+        "lines": "1-193",
+        "what": "Three pre-existing tests, no confirmed complete CRUD and negatives",
+        "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      "static_cases": [
+        "read/filtered-empty",
+        "create draft and review without submit",
+        "reflow"
+      ],
+      "not_proven": [
+        "confirm submitted save",
+        "edit",
+        "delete",
+        "save-entry",
+        "save-deviation",
+        "annual-entry",
+        "year-amount",
+        "denied/revoked/owner swap",
+        "outcome-unknown",
+        "complete keyboard/400%"
+      ]
+    }
+  },
+  "integrated": {
+    "source_units": [
+      161,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187
+    ],
+    "receipt_base": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/",
+    "source_readback": "RECORDED",
+    "hosted_C": "NOT_PROVEN",
+    "real_profiles": 5,
+    "real_skills": 18,
+    "real_operations": 39,
+    "real_profiles_skills_operations": "NOT_PROVEN"
+  },
+  "blocked_external": {
+    "F04_installed_manifest": "NOT_ATTESTED",
+    "real_authorized_principals": "NOT_OBSERVED",
+    "accepted_final_C": false,
+    "current_compiler_190": "NOT_PROVEN",
+    "current_product_CI_200": "NOT_PROVEN",
+    "desktop_D01_199": "NOT_PROVEN"
+  },
+  "summary": {
+    "route_PASS": 165,
+    "source_functional_FAIL": 4,
+    "functional_NOT_PROVEN": 66,
+    "final_verdict": "FIX_FIRST",
+    "global_release": false
+  }
+}
