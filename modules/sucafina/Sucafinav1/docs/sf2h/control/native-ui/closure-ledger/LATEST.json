@@ -193,10 +193,10 @@
     {
       "mission": 211,
       "branch": "sf-closure-bundle",
-      "head": "25bf8587a2f99457db7734f6f78ce7893ef30362",
-      "message": "fix(sf): activate owner-validated CAP06/CAP24 entry navigation [skip ci]",
-      "date": "2026-11-16T00:46:21Z",
-      "state": "CODE_COMPOSITION_ACTIVE_212_AND214_PATCHES_VERIFIED"
+      "head": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab",
+      "message": "docs(sf): pin original 15WP 74-task 17-contract 1610-criterion ledger [skip ci]",
+      "date": "2026-11-16T00:58:30Z",
+      "state": "COMPOSITION_AND_FULL_SCOPE_TRACE_PUBLISHED"
     },
     {
       "mission": 212,
@@ -204,7 +204,7 @@
       "head": "e8dfeb4cb4e122318b6289fbeb8fe4da9ef53f64",
       "message": "docs(sf): complete AM01 hypothetical closure handoff, inert patch and 214/190 requests [skip ci]",
       "date": "2026-11-16T00:34:19Z",
-      "state": "TERMINAL_HANDOFF_CONSUMED_PENDING_PROOF"
+      "state": "TERMINAL_SOURCE_HANDOFF"
     },
     {
       "mission": 213,
@@ -212,15 +212,15 @@
       "head": "6f65ea078a3c596fca02961a68d98d36778bd54f",
       "message": "docs(sf): terminal mission 213 evidence ledger, real D01 dependencies and 214/190 handoff [skip ci]",
       "date": "2026-11-16T00:42:48Z",
-      "state": "TERMINAL_ARTIFACT_READY_PR194_PENDING_CONSUMPTION"
+      "state": "TERMINAL_SOURCE_HANDOFF"
     },
     {
       "mission": 214,
       "branch": "sf-ci-validation",
-      "head": "a4310b2122f38c643ffffdb65ea71f0460271a59",
-      "message": "docs(sf): stage exact F02 Response.json MIME causal assertion fix",
-      "date": "2026-11-16T00:40:43Z",
-      "state": "CI_RUNNING_AND_INCREMENTAL_RESULTS"
+      "head": "e2c01385479d5d11531f5e2489463baf4ba669fd",
+      "message": "docs(sf): reconcile complete 214 queue, all producers and same-C blockers",
+      "date": "2026-11-16T00:54:06Z",
+      "state": "CI_INCREMENTAL_RESULTS_TWO_NEW_GREENS"
     }
   ],
   "new_concrete_corrections": [
@@ -351,18 +351,18 @@
     {
       "mission": 215,
       "branch": "sf-bi-units",
-      "head": "f161c48ea27e1322ae18d49481fc8d865820a2ec",
-      "message": "docs(sf): hand off BI unit repair to 211, 214 and independent 208 [skip ci]",
-      "date": "2026-11-16T00:46:42Z",
-      "state": "TERMINAL_ARTIFACT_READY_PENDING_INTEGRATION"
+      "head": "0d37528d52eb27c2cfafd9772508914e03f2f7f4",
+      "message": "docs(sf): provide inert exact pre/post integration patch for 211 [skip ci]",
+      "date": "2026-11-16T00:49:36Z",
+      "state": "TERMINAL_HANDOFF_READY"
     },
     {
       "mission": 216,
       "branch": "sf-atlas-sequence",
-      "head": "a47a987ac65041ef32782822739256f6b1b90591",
-      "message": "fix(sucafina): validate physical Atlas journal ordinals and add AM05 regressions",
-      "date": "2026-11-16T00:46:21Z",
-      "state": "CODE_PUBLISHED_HANDOFF_NOT_CONFIRMED"
+      "head": "14f894e3c70d14092a50931cc511250d276e107c",
+      "message": "docs(sucafina): hand off REV208-NEW-002 to 211, 214 and independent 208",
+      "date": "2026-11-16T00:50:50Z",
+      "state": "TERMINAL_HANDOFF_READY"
     },
     {
       "mission": 217,
@@ -375,10 +375,10 @@
     {
       "mission": 218,
       "branch": "sf-import-history",
-      "head": "f2a340e04e3d7770d3b09836e09b6ed57d8101a1",
-      "message": "fix(sf): make UI57 history a fenced authorized receipt-reference lookup",
-      "date": "2026-11-16T00:43:40Z",
-      "state": "CODE_PUBLISHED_HANDOFF_NOT_CONFIRMED"
+      "head": "fdc8c392fa65a176bc8c7dec0f0d0b32900214a3",
+      "message": "fix(sf): clear sensitive import history refs on revocation and preserve route reactivity",
+      "date": "2026-11-16T00:55:50Z",
+      "state": "CODE_PROGRESS_REVOKE_AND_ROUTE_FIXED"
     },
     {
       "mission": 219,
@@ -386,14 +386,26 @@
       "head": "0d9053d4649da9d313cc47392cd6723f9de1f8a7",
       "message": "docs(sf): reserve concrete finding repair 219 [skip ci]",
       "date": "2026-11-16T00:26:53Z",
-      "state": "RESERVATION_ONLY_NO_ACK_AT_READ"
+      "state": "RESERVATION_ONLY_NO_ACK_OBSERVED"
     }
   ],
   "latest_ci": [
     {
+      "id": 43783196912,
+      "status": "completed",
+      "conclusion": "success",
+      "name": "test-ci"
+    },
+    {
+      "id": 43783167215,
+      "status": "completed",
+      "conclusion": "success",
+      "name": "test-ci"
+    },
+    {
       "id": 43782484684,
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "name": "test-ci"
     },
     {
@@ -430,24 +442,6 @@
       "id": 43781292706,
       "status": "completed",
       "conclusion": "failure",
-      "name": "test-ci"
-    },
-    {
-      "id": 43781269811,
-      "status": "completed",
-      "conclusion": "failure",
-      "name": "test-ci"
-    },
-    {
-      "id": 43781246250,
-      "status": "completed",
-      "conclusion": "success",
-      "name": "test-ci"
-    },
-    {
-      "id": 43781218586,
-      "status": "completed",
-      "conclusion": "success",
       "name": "test-ci"
     }
   ],
@@ -546,5 +540,49 @@
   "native219_at_latest_read": {
     "head": "0d9053d4649da9d313cc47392cd6723f9de1f8a7",
     "state": "RESERVATION_ONLY_ACK_NOT_OBSERVED"
-  }
+  },
+  "current_hosted_repairs": [
+    {
+      "mission": 220,
+      "branch": "sf-decisions-capture",
+      "head": "c5db89c85817b8b12f535b51717313133c296e12",
+      "message": "docs(sf): reserve hosted failure repair 220 [skip ci]",
+      "date": "2026-11-16T00:54:06Z",
+      "state": "USER_REPORTED_LAUNCHED_RESERVATION_ONLY_AT_READ"
+    },
+    {
+      "mission": 221,
+      "branch": "sf-am01-selection",
+      "head": "cbe4a3e22e6ea6b7a5f15815fc48491fe88d0325",
+      "message": "docs(sf): reserve hosted failure repair 221 [skip ci]",
+      "date": "2026-11-16T00:54:10Z",
+      "state": "USER_REPORTED_LAUNCHED_RESERVATION_ONLY_AT_READ"
+    },
+    {
+      "mission": 222,
+      "branch": "sf-am02-authority",
+      "head": "99d55d36d37842fa9893c5161b1aa2d04b87fa70",
+      "message": "docs(sf): reserve hosted failure repair 222 [skip ci]",
+      "date": "2026-11-16T00:54:14Z",
+      "state": "USER_REPORTED_LAUNCHED_RESERVATION_ONLY_AT_READ"
+    }
+  ],
+  "new_green_results": [
+    {
+      "run": 43783167215,
+      "job": 133024785654,
+      "scope": "F02 MIME causal recheck",
+      "pass": 6,
+      "fail": 0,
+      "classification": "SCOPED_COMPONENT_NOT_FINAL_C"
+    },
+    {
+      "run": 43783196912,
+      "job": 133024878286,
+      "scope": "Desktop213 enrollment bridge",
+      "pass": 4,
+      "fail": 0,
+      "classification": "SCOPED_COMPONENT_NOT_PACKAGED_ELECTRON_D01"
+    }
+  ]
 }
