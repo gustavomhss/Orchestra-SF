@@ -1,0 +1,44 @@
+import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
+import { Option, Schema } from "effect"
+import { SfProcurementSchemas } from "@orchestra/schema/sucafina/procurement"
+import type { SfNativeRouteCandidate } from "../route-registry"
+
+const kinds: Readonly<Record<string, readonly string[]>> = {
+  CAP14: ["entry", "new", "detail", "edit"],
+  CAP24: ["entry"],
+  CAP25: ["entry", "new", "detail", "history", "requisition", "po", "sourcing", "quotes"],
+  CAP26: ["entry", "detail", "review"],
+  CAP27: ["entry", "new", "detail", "edit"],
+  CAP28: ["entry"],
+}
+
+/** Recognition never grants access. Record references are admitted again by the original page read. */
+export function parseProcurementRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
+  if (candidate.chapterId !== "sf-procurement" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
+  const keys = [...params.keys()]
+  if (new Set(keys).size !== keys.length ||
+      keys.some((key) => !["server", "project", "installation", "year", "month"].includes(key))) return
+  const selectors = ["server", "project", "installation"].map((key) => params.get(key))
+  if (selectors.some((item) => item !== null) && !selectors.every((item) => !!item)) return
+  const year = params.get("year")
+  const month = params.get("month")
+  if (candidate.surfaceId !== "CAP24" && candidate.surfaceId !== "CAP28" && (year !== null || month !== null)) return
+  if (year !== null && !/^202[4-7]$/.test(year)) return
+  if (month !== null && !/^(?:[1-9]|1[0-2])$/.test(month)) return
+  const input = {
+    ...(year === null ? {} : { year: Number(year) }),
+    ...(month === null ? {} : { month: Number(month) }),
+  }
+  if (Option.isNone(Schema.decodeUnknownOption(SfProcurementSchemas.pageSelection, { onExcessProperty: "error" })(input))) return
+  return input
+}
+
+/** Availability and destination are necessary only; each leaf still reads and authorizes at its producer. */
+export function procurementRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+  if (candidate.chapterId !== "sf-procurement" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
+  const id = candidate.surfaceId
+  return context.destinations.some((item) => item.capabilityId === id && item.canRead) &&
+    context.availability.some((resource) => resource.family === (id === "CAP14" ? "domain-read" : "procurement") &&
+      resource.resource === id && resource.operations.some((operation) => operation.operationId === `domain.page.${id}` &&
+        operation.state === "ready" && operation.operational))
+}
