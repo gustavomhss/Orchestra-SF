@@ -8,7 +8,9 @@ import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
 import { SfRecordDetail } from "../../shared/detail"
 import { SfChangeReview } from "../../shared/change-review"
-import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import {
+  createSfProcurementClient, exportSfSupplierCsv, sfSupplierCsvBindingInstalled,
+} from "@orchestra/client/sucafina/procurement"
 import type { SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
 import type { SfCopyKey, SfDisplayValue, SfMessage, SfText, SfUiState } from "../../shared/frame"
 import type { SfSort } from "../../shared/table"
@@ -34,6 +36,7 @@ type Intent = Readonly<{
   intentRef: SfIntentRef
 }>
 type Phase = "idle" | "reviewing" | "checking" | "submitting" | "outcome-unknown" | "verifying" | "producer-confirmed" | "conflict" | "failed"
+type CsvState = "idle" | "downloading" | "denied" | "unauthenticated" | "stale" | "unavailable"
 const k = (value: SfU14CopyKey) => value as SfCopyKey
 const m = (value: SfU14CopyKey): SfMessage => ({ key: k(value) })
 const data = (text: string): SfText => ({ kind: "data", text })
@@ -68,14 +71,16 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     unknownOperation: string | null
     error: SfUiState | null
     confirmedMessage: string | null
+    csvState: CsvState
   }>({
     token: null, state: "loading", page: null, selected: null, mode: "detail",
     search: "", filter: "All", sort: { kind: "none" }, layoutMode: "split",
     phase: "idle", review: null, unknownOperation: null, error: null,
-    confirmedMessage: null,
+    confirmedMessage: null, csvState: "idle",
   })
   let readAbort: AbortController | undefined
   let writeAbort: AbortController | undefined
+  let csvAbort: AbortController | undefined
   let readSequence = 0
   let sending = false
 
@@ -91,6 +96,24 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     return JSON.stringify([state.ownerKey, host.generation(), state.owner.authEpoch, state.context.stamp, props.route.href])
   }
   const page = () => authority() && ui.token === authority() ? ui.page : null
+
+  // The CAP27 projection grants neither a download nor hidden bank fields.
+  // The current files/exports operation, source destination and installed
+  // byte binding must ALL be admitted for this owner and policy epoch.
+  const csvAllowed = () => {
+    const ready = host.ready(), current = page()
+    if (!ready || !current || current.value.capabilityId !== "CAP27" ||
+        ui.state !== "ready" || !authority()) return false
+    return sfSupplierCsvBindingInstalled(ready.transport) &&
+      ready.context.destinations.some((dest) =>
+        dest.capabilityId === "CAP27" && dest.surface === "procurement" &&
+        dest.page === "Suppliers" && dest.canRead) &&
+      ready.context.availability.some((resource) =>
+        resource.family === "files" && resource.resource === "exports" &&
+        resource.operations.some((op) =>
+          op.operationId === "files.export.suppliers" && op.state === "ready" && op.operational))
+  }
+  const csvReady = () => csvAllowed() && ui.csvState !== "downloading"
   const routeRef = () => props.route.kind === "detail" || props.route.kind === "edit"
     ? props.route.params.supplierRef : null
   const ref = () => routeRef() ?? ui.selected
@@ -161,14 +184,17 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     const chosen = routeRef()
     readAbort?.abort()
     writeAbort?.abort()
+    csvAbort?.abort()
+    csvAbort = undefined
     sending = false
     setUi({
       token, state: token ? "loading" : "session-expired", page: null,
       selected: chosen, mode: props.route.kind === "new" ? "new" : props.route.kind === "edit" ? "edit" : "detail",
       review: null, phase: "idle", unknownOperation: null, error: null, confirmedMessage: null,
+      csvState: "idle",
     })
     if (token) void refresh(token, chosen ?? undefined)
-    onCleanup(() => { readAbort?.abort(); writeAbort?.abort() })
+    onCleanup(() => { readAbort?.abort(); writeAbort?.abort(); csvAbort?.abort() })
   })
 
   const draft = createMemo(() => {
@@ -272,6 +298,73 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     unavailable: "sf.u14.unavailable", stale: "sf.u14.stale", conflict: "sf.u14.stale",
     invalid: "sf.u14.invalid", "outcome-unknown": "sf.u14.unknown",
   } as Partial<Record<SfUiState, SfU14CopyKey>>)[state()] ?? "sf.u14.unavailable"
+
+
+  /**
+   * Only the exact A06/F02 producer bytes are downloaded; never CSV-serialize
+   * CAP27 rows or embed a bearer URL. F02 reauthorizes actor/policy/stamp after
+   * receiving the bytes, while this view fences owner changes before egress.
+   */
+  const beginCsv = async () => {
+    const token = authority(), ready = host.ready()
+    if (!token || !ready || !csvReady() || csvAbort) return
+    const controller = new AbortController()
+    const principal = ready.context.stamp
+    csvAbort = controller
+    setUi("csvState", "downloading")
+    try {
+      const result = await exportSfSupplierCsv(ready.transport, { surface: "procurement" }, {
+        signal: controller.signal,
+      })
+      if (controller.signal.aborted || authority() !== token ||
+          host.ready()?.transport !== ready.transport) return
+      if (result.status !== "ok") {
+        if (result.status === "aborted") return
+        console.error("SF_SUPPLIER_CSV_PRODUCER_REFUSED", result.status)
+        if (result.status === "denied" || result.status === "unauthenticated" || result.status === "stale") {
+          setUi("page", null)
+          setUi("state", result.status === "unauthenticated" ? "session-expired" :
+            result.status === "denied" ? "denied" : "stale")
+        }
+        setUi("csvState", result.status === "invalid" ? "unavailable" : result.status)
+        return
+      }
+      const current = host.ready()?.context.stamp
+      const sameStamp = current && Object.keys(principal).every((key) =>
+        principal[key as keyof typeof principal] === current[key as keyof typeof current] &&
+        current[key as keyof typeof current] === result.stamp[key as keyof typeof result.stamp])
+      if (!sameStamp || !csvAllowed() || authority() !== token) {
+        setUi("csvState", "stale")
+        return
+      }
+      const blob = new Blob([new Uint8Array(result.bytes)], { type: result.mediaType })
+      if (controller.signal.aborted || authority() !== token || !csvAllowed()) return
+      const url = URL.createObjectURL(blob)
+      try {
+        const anchor = document.createElement("a")
+        anchor.href = url
+        anchor.download = result.fileName
+        anchor.rel = "noopener"
+        document.body.append(anchor)
+        try { anchor.click() }
+        finally { anchor.remove() }
+      } finally {
+        // Release the ephemeral object URL after the browser consumes the click.
+        setTimeout(() => URL.revokeObjectURL(url), 10_000)
+      }
+      setUi("csvState", "idle")
+    } catch {
+      if (!controller.signal.aborted && authority() === token) {
+        console.error("SF_SUPPLIER_CSV_DOWNLOAD_FAILED")
+        setUi("csvState", "unavailable")
+      }
+    } finally {
+      if (csvAbort === controller) {
+        csvAbort = undefined
+        if (authority() === token && ui.csvState === "downloading") setUi("csvState", "idle")
+      }
+    }
+  }
 
   const bankAuthorized = () =>
     can("change-bank") && page()?.value.data.bankVerificationAvailable === true
@@ -661,8 +754,9 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     primaryAction={can("create") ? {id:"create",labelKey:k("sf.cap27.primary"),tone:"primary",
       disabled:active(ui.phase),busy:false,
       onInvoke:()=>{setUi("mode","new");setUi("selected",null)}} : undefined}
-    secondaryActions={[{id:"csv",labelKey:k("sf.u14.csv"),tone:"secondary",disabled:true,
-      reasonKey:k("sf.u14.csvUnavailable"),busy:false,onInvoke:()=>{}}]}
+    secondaryActions={[{id:"csv",labelKey:k("sf.u14.csv"),tone:"secondary",
+      disabled:!csvReady(),reasonKey:csvReady() ? undefined : k("sf.u14.csvUnavailable"),
+      busy:ui.csvState==="downloading",onInvoke:()=>void beginCsv()}]}
   >
     <div class="sf-u14-layout">
       <Show when={state() === "ready" || state() === "empty" || state() === "filtered-empty" || state() === "outcome-unknown"}
@@ -743,7 +837,10 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               captionKey={k("sf.cap27.title")} density="comfortable"
               state={rows().length===0 ? page()?.value.data.suppliers.length===0 ? "empty" : "filtered-empty" : "ready"}
             />
-            <p class="sf-u14-hint">{t("sf.u14.csvUnavailable")}</p>
+            <Show when={!csvAllowed()}><p class="sf-u14-hint">{t("sf.u14.csvUnavailable")}</p></Show>
+            <Show when={ui.csvState === "downloading"}><p role="status">{t("sf.u14.loading")}</p></Show>
+            <Show when={ui.csvState === "unavailable"}><p role="alert">{t("sf.u14.unavailable")}</p></Show>
+            <Show when={ui.csvState === "stale"}><p role="alert">{t("sf.u14.stale")}</p></Show>
           </div>
           <Show when={ui.mode === "new" || (supplier() && (ui.mode === "edit" || ui.mode === "bank"))}
             fallback={<Show when={supplier()}>{currentDetail()}</Show>}>
