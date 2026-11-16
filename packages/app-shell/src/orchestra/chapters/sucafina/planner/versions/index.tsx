@@ -125,8 +125,8 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
       base: { name: current.name, year: current.year },
       value: { name: current.name, year: current.year },
       revalidation: {
-        operationId: "domain.page.CAP23", input: { year: current.year },
-        fieldPaths: ["data.versions", "versions"],
+        operationId: "domain.page.CAP23", input: props.route.query.year === undefined ? {} : { year: props.route.query.year },
+        fieldPaths: ["name", "year"],
         actionIds: ["save"],
       },
     })

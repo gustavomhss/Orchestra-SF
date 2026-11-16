@@ -14,11 +14,13 @@ const fresh = Schema.decodeUnknownSync(SfContext)({
     { capabilityId: "CAP25", surface: "procurement", page: "Requests", canRead: true, allowedActionIds: ["save", "create"] },
     { capabilityId: "CAP27", surface: "procurement", page: "Suppliers", canRead: true, allowedActionIds: ["create", "save", "change-bank"] },
     { capabilityId: "CAP28", surface: "procurement", page: "Settings", canRead: true, allowedActionIds: ["save", "reset"] },
+    { capabilityId: "CAP23", surface: "planner", page: "Versions", canRead: true, allowedActionIds: ["save"] },
   ],
   availability: [
     { family: "procurement", resource: "CAP25", state: "ready", operations: [operation("domain.page.CAP25"), operation("domain.command.CAP25.save")] },
     { family: "procurement", resource: "CAP27", state: "ready", operations: [operation("domain.command.CAP27.create"), operation("domain.command.CAP27.save"), operation("domain.command.CAP27.change-bank")] },
     { family: "decisions", resource: "cases", state: "ready", operations: [operation("projection.case")] },
+    { family: "planner", resource: "CAP23", state: "ready", operations: [operation("domain.page.CAP23"), operation("domain.command.CAP23.save")] },
   ],
 })
 const owner = { serverKey: "server", transportIdentity: "transport", publicOrigin: "https://sf.test",
@@ -138,6 +140,19 @@ describe("source-bound draft revalidation", () => {
     expect(await run(input, page({ data, allowedActionIds: [] }))).toEqual({ status: "denied" })
     expect(await run(input, page({ data: { ...data, requests: [{ ...row, sourcing: { quotes: [{ supplier: "no-id" }] } }] } }))).toEqual({ status: "unavailable" })
     expect(await run({ ...input, read: { ...input.read, fieldPaths: ["sourcing"] } }, page({ data }))).toEqual({ status: "unavailable" })
+  })
+  test("planner version uses its actual read selector and version CAS", async () => {
+    const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "CAP23",
+      identity: { kind: "record", recordRef: "v1" as SfRef }, editScopeKey: "planner:2026:v1" as SfEditScopeKey,
+      read: { operationId: "domain.page.CAP23", input: {}, fieldPaths: ["name", "year"], actionIds: ["save"] } }
+    const version = { id: "v1", name: "Plan", year: 2026, locked: false, closed: 0, official: false }
+    const body = { status: "ok", context: stamp, value: { capabilityId: "CAP23", selection: { year: 2026 },
+      data: { versions: [version] }, versions: { "versions:v1": { version: 8, by: "actor" } }, allowedActionIds: ["save"] } }
+    expect(await run(input, body)).toMatchObject({ status: "authorized", sourceVersion: 8 })
+    expect(await run(input, { ...body, value: { ...body.value, versions: {} } })).toMatchObject({ status: "authorized", sourceVersion: 0 })
+    expect(await run(input, { ...body, value: { ...body.value, data: { versions: [{ ...version, id: "v2" }] } } })).toEqual({ status: "unavailable" })
+    expect(await run(input, { ...body, value: { ...body.value, allowedActionIds: [] } })).toEqual({ status: "denied" })
+    expect(await run({ ...input, editScopeKey: "planner:2025:v1" as SfEditScopeKey }, body)).toEqual({ status: "unavailable" })
   })
   test("preserves the opaque case selector and independently stamped version", async () => {
     const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "UI29",
