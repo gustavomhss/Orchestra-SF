@@ -129,8 +129,9 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
     const operationRef = local.reviewRef
     if (!current || !operationRef || current.phase !== "reviewing" ||
         current.pendingOperation || current.conflict || !props.admitted || busy()) return
-    if (typeof current.baseVersion !== "number" || !Number.isSafeInteger(current.baseVersion)) return
-    const version = current.baseVersion
+    if (current.baseVersion === null && props.recordRef) return
+    const version = current.baseVersion ?? props.version
+    if (!Number.isSafeInteger(version) || version < 0) return
     const value = { ...current.value }
     const key = crypto.randomUUID()
     setLocal("busy", true)
@@ -139,7 +140,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
         operationId: props.action.operationId, id: props.recordRef ?? null, version, values: value,
       }))
       // The draft fences the exact source version, intent, digest and key.
-      draft().setPending({ operationRef, idempotencyKey: key, payloadDigest, expectedVersion: version })
+      draft().setPending({ operationRef, idempotencyKey: key, payloadDigest, expectedVersion: current.baseVersion })
       draft().setPhase("submitting")
       const controller = new AbortController()
       const result = await props.onCommit(value, version, key, controller.signal)
