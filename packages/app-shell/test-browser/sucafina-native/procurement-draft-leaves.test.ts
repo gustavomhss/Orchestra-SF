@@ -44,7 +44,7 @@ if (process.env.SF_PROCUREMENT_DRAFT_DOM !== "1") {
   const mount = (kind: "sourcing" | "requisition", transport: SfTransport) => {
     const deps: SfContextDependencies = { listInstallations: async () => ({ installations: [binding] }),
       loadContext: async () => ({ status: "ok", value: context }), createTransport: () => transport,
-      resolveTransportIdentity: () => "transport", createDraft, revalidateDraft: async () => ({ status: "unavailable" }) }
+      resolveTransportIdentity: () => "transport", createDraft: createSfDraft, revalidateDraft: async () => ({ status: "unavailable" }) }
     const route = { surfaceId: "CAP25", ownerSelection: selection, href: "/requests/PR-1" as SfHref,
       pathname: "/requests/PR-1", query: {}, kind, params: { requestRef: "PR-1" as SfRef } } as SfSurfaceProps<"CAP25">["route"]
     const node = document.createElement("div"); document.body.append(node)

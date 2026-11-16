@@ -51,7 +51,7 @@ jobs:
       - name: Verify test-ci Linux-only request contract
         run: |
           set -euo pipefail
-          (cd packages/core && bun test test/test-ci-request.test.ts)
+          (cd packages/core && ORCHESTRA_OMNI_CONTROL=declared bun test test/test-ci-request.test.ts)
       - name: Verify generated business boundaries
         run: |
           set -euo pipefail
