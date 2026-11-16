@@ -127,6 +127,10 @@ jobs:
           artifact: sf-omni-linux-${{ github.sha }}
       - name: Execute exact required Bun selection
         shell: bash
+        env:
+          # The canonical Actions Bun test runner uses this sentry value;
+          # CI=true remains enforced and the actual runner must be Linux x64.
+          GITHUB_ACTIONS: "false"
         run: |
           set -uo pipefail
           root="$GITHUB_WORKSPACE"
@@ -144,7 +148,7 @@ jobs:
                 ;;
               CI-APP-SRC)
                 cd "$root/packages/app-shell"
-                bun test --conditions=solid --preload ../../script/test-omni-control.ts --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                bun run test:unit --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-APP-BROWSER)
                 cd "$root/packages/app-shell"
@@ -152,7 +156,7 @@ jobs:
                 ;;
               CI-ATLAS-BUSINESS)
                 cd "$root/modules/atlas/boundary"
-                bun test --timeout 30000 --preload ../../../script/test-omni-control.ts --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                bun run test --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               *) echo "Unknown suite: $SF_SUITE_ID" >&2; exit 2 ;;
             esac
