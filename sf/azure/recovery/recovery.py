@@ -162,7 +162,7 @@ def verify_clone(a):
     checkpoint = private_json(Path(a.receipt))
     if checkpoint.get("schema") != "orchestra-sf.azure-checkpoint.v1" or \
        checkpoint.get("archiveSha256") != digest(Path(a.archive)) or \
-       Path(checkpoint.get("archiveFile", "")) != Path(a.archive):
+       not isinstance(checkpoint.get("archiveFile"), str) or not Path(checkpoint["archiveFile"]).is_absolute():
         refuse("checkpoint digest/source mismatch")
     if subprocess.run(["systemctl", "is-active", "--quiet", "orchestra-sf.service"]).returncode == 0:
         refuse("clone app service must remain stopped")
@@ -204,17 +204,22 @@ def az_args(a):
 
 
 def azure_backup(a):
+    from datetime import datetime
+    if datetime.strptime(a.retain_until, "%d-%m-%Y").date() <= datetime.now(timezone.utc).date():
+        refuse("future UTC backup retention date required")
+    receipt = private_json(Path(a.checkpoint_receipt))
+    if receipt.get("schema") != "orchestra-sf.azure-checkpoint.v1" or receipt.get("stoppedQuiesced") is not True or \
+       not COMMIT.fullmatch(str(receipt.get("candidateSha", ""))) or \
+       receipt.get("archiveSha256") != digest(Path(receipt.get("archiveFile", ""))):
+        refuse("real immutable local application checkpoint required before Azure backup")
+    if subprocess.run(["systemctl", "is-active", "--quiet", "orchestra-sf.service"]).returncode == 0:
+        refuse("service was restarted; Azure backup would not be app-quiesced")
     check_approval(a.approval, "AZURE_BACKUP", resourceGroup=a.resource_group, vault=a.vault,
-                   container=a.container, item=a.item)
+                   container=a.container, item=a.item, candidateSha=receipt["candidateSha"])
     item = call_json("az", "backup", "item", "show", *az_args(a), "--container-name", a.container,
                      "--name", a.item, "--backup-management-type", "AzureIaasVM", "-o", "json")
     if item.get("properties", {}).get("protectionState") not in ("Protected", "ProtectionConfigured"):
         refuse("vault item is not actually protected")
-    if a.checkpoint_receipt:
-        receipt = private_json(Path(a.checkpoint_receipt))
-        if receipt.get("schema") != "orchestra-sf.azure-checkpoint.v1" or \
-           digest(Path(receipt.get("archiveFile", ""))) != receipt.get("archiveSha256"):
-            refuse("local quiesced checkpoint not verified")
     result = call_json("az", "backup", "protection", "backup-now", *az_args(a),
                        "--container-name", a.container, "--item-name", a.item,
                        "--backup-management-type", "AzureIaasVM", "--retain-until", a.retain_until, "-o", "json")
@@ -282,6 +287,14 @@ def rollback_code(a):
        not SHA.fullmatch(approval["schemaCompatibilityProofSha256"]) or \
        approval.get("writesBlockedByOwner") is not True:
         refuse("independent migration compatibility and write quiescence required")
+    proof = private_json(Path(a.compatibility_proof))
+    if digest(Path(a.compatibility_proof)) != approval["schemaCompatibilityProofSha256"] or \
+       proof.get("schema") != "orchestra-sf.azure-migration-compatibility.v1" or \
+       proof.get("currentCandidate") != current.name or \
+       proof.get("targetCandidate") != a.target_candidate or \
+       proof.get("compatible") is not True or \
+       not isinstance(proof.get("reviewer"), str) or not proof.get("reviewer"):
+        refuse("signed reviewed migration compatibility evidence missing or unbound")
     cookie = Path(a.cookie)
     if not cookie.is_file():
         refuse("live actor session necessary after rollback")
@@ -316,13 +329,13 @@ def main():
     ab = s.add_parser("vault-backup")
     for flag in ("resource-group", "vault", "container", "item", "retain-until", "approval"):
         ab.add_argument("--" + flag, required=True)
-    ab.add_argument("--checkpoint-receipt")
+    ab.add_argument("--checkpoint-receipt", required=True)
     ar = s.add_parser("vault-restore-disks")
     for flag in ("source-group", "target-group", "vault", "container", "item", "recovery-point",
                  "storage-account", "approval"):
         ar.add_argument("--" + flag, required=True)
     rb = s.add_parser("rollback-code")
-    for flag in ("target-candidate", "target-tree", "target-archive-sha", "approval", "cookie"):
+    for flag in ("target-candidate", "target-tree", "target-archive-sha", "approval", "cookie", "compatibility-proof"):
         rb.add_argument("--" + flag, required=True)
     a = p.parse_args()
     try:
