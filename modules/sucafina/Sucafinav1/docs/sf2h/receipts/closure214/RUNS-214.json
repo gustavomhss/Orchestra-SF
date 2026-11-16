@@ -573,13 +573,106 @@
       "result_type": "PASS_SCOPED_ONLY",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43782484684",
       "source_change": "211 composed 207 CAP06 CAP24 navigation CTA original owner candidate and approved Q01 15/74/1610 mapping; synthetic/browser component only"
+    },
+    {
+      "id": "B21",
+      "W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+      "tree": "6bcc92ea3ce21e8aecdfa953939bdd598fc4baf9",
+      "S": "e21cc07a15457c8a0649532f068bd7aebbfc8865",
+      "Stree": "3c1ef7acd93ba125da0c59af38b7946d09d126a4",
+      "request_blob": "957891df988de18d29a8ace120cafd4a73e08ef4",
+      "branch": "ci-run-linux-sf214-client-mime-5",
+      "run_id": 43783167215,
+      "job_id": 133024785654,
+      "cleanup_job_id": 133025341570,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "client",
+      "directory": "packages/client",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "test/sucafina/transport-type-repair/f02-transport.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 6,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 6
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "not_observed",
+        "delegated": null
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43783167215",
+      "source_change": {
+        "source": "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts",
+        "pre": "6f470dcc23300873223ec2c01bb7d36c6a5c23ea",
+        "post": "fef5c0a8702ffde3921a7cd65829cfba9259716d",
+        "composer": "211/INTAKE-213-214-MIME.json",
+        "product_same_C": false
+      }
+    },
+    {
+      "id": "B22",
+      "W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+      "tree": "6bcc92ea3ce21e8aecdfa953939bdd598fc4baf9",
+      "S": "07b69b39bfa655d7b5f8019109d0f6d6fb0a2a62",
+      "Stree": "b2644df2cf4d3d1d33360d8e386183e5120ea96b",
+      "request_blob": "13afcc1e6582e8bde6aaaec2837467aac9e7185e",
+      "branch": "ci-run-linux-sf214-desktop-enroll-5",
+      "run_id": 43783196912,
+      "job_id": 133024878286,
+      "cleanup_job_id": 133025533032,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "desktop",
+      "directory": "apps/desktop",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "test/sucafina-bootstrap213/enrollment-bridge.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 4,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 4
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": 0
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43783196912",
+      "source_change": {
+        "source": "apps/desktop/test/sucafina-bootstrap213/enrollment-bridge.test.ts",
+        "blob": "b33bbab29041342727df5d9f9e9b33f45d77870c",
+        "composer": "211/INTAKE-213-214-MIME.json",
+        "proof_class": "SCOPED_SYNTHETIC_UNIT_NOT_INSTALLED_D01"
+      }
     }
   ],
   "totals": {
-    "pass": 124,
+    "pass": 134,
     "fail": 12,
-    "tests": 136,
-    "success": 5,
+    "tests": 146,
+    "success": 7,
     "failed": 8
   },
   "dedup_causal": {
@@ -587,7 +680,9 @@
     "B10_B11_to_B18": "AM03/AM04 imports corrected by exact postimage",
     "B15_to_B15R": "Bun selector ./ path syntax correction",
     "B19": "212 AM01 causal test newly composed; failure is new domain admission, not old hypothetical null assertion",
-    "B20": "Fresh composer W3 owner navigation CTA source changes; first unique exact selection; no rerun on unchanged source"
+    "B20": "Fresh composer W3 owner navigation CTA source changes; first unique exact selection; no rerun on unchanged source",
+    "B21": "Composer consumed 214 literal MIME postblob fef5c0...; same F02 selector now 6pass0fail",
+    "B22": "New 213 real broker code with synthetic enrollment bridge unit test, no native packaged proof"
   },
   "limitations": {
     "same_final_C": false,
@@ -600,5 +695,7 @@
   },
   "pending_new_material": null,
   "GLOBAL_RELEASE": false,
-  "all_terminal_as_of_reconciliation": true
+  "all_terminal_as_of_reconciliation": true,
+  "recent_composer_candidate": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab",
+  "actions_terminal_all": true
 }
