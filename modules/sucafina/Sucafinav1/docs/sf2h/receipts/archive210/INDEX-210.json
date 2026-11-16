@@ -1,0 +1,3233 @@
+{
+  "schema": "sf2h.evidence.archive210.immutable-index.v1",
+  "mission": 210,
+  "actor_id": "EVIDENCE-ARCHIVE",
+  "epoch": "evidence-archive-e1-browser210",
+  "root_repo": "gustavomhss/Orchestra-SF",
+  "original_package": {
+    "commit": "57bc98cb10a29e6428df226f496805e7f117dc5a",
+    "blob": "078550beb1e84a9e4f065b31a76f9d299174e054"
+  },
+  "review188_inventory": {
+    "commit": "0730dfa7134ca46df3d89c46801ee200f28e168e",
+    "blob": "a542b16e0e28d37da59439fb2a3a4b691bb7898d"
+  },
+  "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+  "source_commit_ancestor_of_branch": true,
+  "ancestor_proof": {
+    "compare_status": "ahead",
+    "ahead_by": 28,
+    "behind_by": 0,
+    "merge_base": "690a34cdd81c12d7311f3717c19679b950276161"
+  },
+  "branch_head_verified_for_tree": "343e32088b32e50ca5698ea70b5f783e2412321d",
+  "current_ref": "sf-guard-archive",
+  "readback_method": "GitHubMCP fetch_file at pinned historic W + fetch_blob by immutable SHA; full content exact equality, UTF-8 byte size equality; no bytes written to receipts",
+  "latest_tree_unchanged_in_all_55_paths": true,
+  "distribution": {
+    "final_intake_55": 8,
+    "release_wave_71": 44,
+    "rolling_intake_42": 3
+  },
+  "outcome": {
+    "verified_historical_blob_readbacks": 55,
+    "missing_blobs": 0,
+    "live_tree_sha_mismatches": 0,
+    "delete_authorized": 0,
+    "deletions_done": 0,
+    "guard_claim": "NOT_RUN_ON_NEW_C",
+    "GLOBAL_RELEASE": false
+  },
+  "semantics": "APPEND_ONLY_HISTORICAL_INDEX_NOT_A_GUARD_PASS_NOT_CONSUMER_MIGRATION",
+  "logs": [
+    {
+      "id": "AS-01",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/01-43649352799.log",
+      "mode": "100644",
+      "bytes": 4272,
+      "git_blob_sha": "87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "source_mission": 39,
+      "source_identity": {
+        "terminal": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+        "source_W": null,
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": "01-43649352799",
+      "classification": "historical_workflow_attempt",
+      "actual_use": "Eight Actions runs document attempted source tests and their outcomes",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/01-43649352799.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 4272
+      },
+      "old_tree": {
+        "at_historical_W": "87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+        "at_branch_before_210": "87a2c34edeb9720f4a7abec675f2bee4dfee7033"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+        "post_path_exists": true,
+        "post_blob": "87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-02",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/02-43649823660.log",
+      "mode": "100644",
+      "bytes": 2548,
+      "git_blob_sha": "ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "source_mission": 39,
+      "source_identity": {
+        "terminal": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+        "source_W": null,
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": "02-43649823660",
+      "classification": "historical_workflow_attempt",
+      "actual_use": "Eight Actions runs document attempted source tests and their outcomes",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/02-43649823660.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2548
+      },
+      "old_tree": {
+        "at_historical_W": "ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+        "at_branch_before_210": "ba1e4185352c9e65a2e916f58faeb4559ee0a141"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+        "post_path_exists": true,
+        "post_blob": "ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-03",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/03-43650319287.log",
+      "mode": "100644",
+      "bytes": 3439,
+      "git_blob_sha": "bfc6bc6750156ced1e59197a22d3872716ae8d65",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "source_mission": 39,
+      "source_identity": {
+        "terminal": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+        "source_W": null,
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": "03-43650319287",
+      "classification": "historical_workflow_attempt",
+      "actual_use": "Eight Actions runs document attempted source tests and their outcomes",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/bfc6bc6750156ced1e59197a22d3872716ae8d65",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/03-43650319287.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3439
+      },
+      "old_tree": {
+        "at_historical_W": "bfc6bc6750156ced1e59197a22d3872716ae8d65",
+        "at_branch_before_210": "bfc6bc6750156ced1e59197a22d3872716ae8d65"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "bfc6bc6750156ced1e59197a22d3872716ae8d65",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "bfc6bc6750156ced1e59197a22d3872716ae8d65",
+        "post_path_exists": true,
+        "post_blob": "bfc6bc6750156ced1e59197a22d3872716ae8d65",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-04",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/04-43650994005.log",
+      "mode": "100644",
+      "bytes": 3265,
+      "git_blob_sha": "e456a2ed570611a7990ac0065f85598bdcd60111",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "source_mission": 39,
+      "source_identity": {
+        "terminal": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+        "source_W": null,
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": "04-43650994005",
+      "classification": "historical_workflow_attempt",
+      "actual_use": "Eight Actions runs document attempted source tests and their outcomes",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e456a2ed570611a7990ac0065f85598bdcd60111",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/04-43650994005.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3265
+      },
+      "old_tree": {
+        "at_historical_W": "e456a2ed570611a7990ac0065f85598bdcd60111",
+        "at_branch_before_210": "e456a2ed570611a7990ac0065f85598bdcd60111"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "e456a2ed570611a7990ac0065f85598bdcd60111",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "e456a2ed570611a7990ac0065f85598bdcd60111",
+        "post_path_exists": true,
+        "post_blob": "e456a2ed570611a7990ac0065f85598bdcd60111",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-05",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/05-43651791685.log",
+      "mode": "100644",
+      "bytes": 5350,
+      "git_blob_sha": "8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "source_mission": 39,
+      "source_identity": {
+        "terminal": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+        "source_W": null,
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": "05-43651791685",
+      "classification": "historical_workflow_attempt",
+      "actual_use": "Eight Actions runs document attempted source tests and their outcomes",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/05-43651791685.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 5350
+      },
+      "old_tree": {
+        "at_historical_W": "8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+        "at_branch_before_210": "8a037b834a94cc1d432c1d55afe62d1170c7fac0"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+        "post_path_exists": true,
+        "post_blob": "8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-06",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/06-43653108315.log",
+      "mode": "100644",
+      "bytes": 4188,
+      "git_blob_sha": "4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "source_mission": 39,
+      "source_identity": {
+        "terminal": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+        "source_W": null,
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": "06-43653108315",
+      "classification": "historical_workflow_attempt",
+      "actual_use": "Eight Actions runs document attempted source tests and their outcomes",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/06-43653108315.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 4188
+      },
+      "old_tree": {
+        "at_historical_W": "4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+        "at_branch_before_210": "4c157c62f09ae8b9bc14e21580b67119cb58ec25"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+        "post_path_exists": true,
+        "post_blob": "4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-07",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/07-43653855014.log",
+      "mode": "100644",
+      "bytes": 2464,
+      "git_blob_sha": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "source_mission": 39,
+      "source_identity": {
+        "terminal": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+        "source_W": null,
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": "07-43653855014",
+      "classification": "historical_workflow_attempt",
+      "actual_use": "Eight Actions runs document attempted source tests and their outcomes",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/07-43653855014.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2464
+      },
+      "old_tree": {
+        "at_historical_W": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+        "at_branch_before_210": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+        "post_path_exists": true,
+        "post_blob": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-08",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/08-43654981768.log",
+      "mode": "100644",
+      "bytes": 1693,
+      "git_blob_sha": "8731d2ba584b31a85c8c030a676b850df70ce8b4",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "source_mission": 39,
+      "source_identity": {
+        "terminal": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+        "source_W": null,
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": "08-43654981768",
+      "classification": "historical_workflow_attempt",
+      "actual_use": "Eight Actions runs document attempted source tests and their outcomes",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8731d2ba584b31a85c8c030a676b850df70ce8b4",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/08-43654981768.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 1693
+      },
+      "old_tree": {
+        "at_historical_W": "8731d2ba584b31a85c8c030a676b850df70ce8b4",
+        "at_branch_before_210": "8731d2ba584b31a85c8c030a676b850df70ce8b4"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "8731d2ba584b31a85c8c030a676b850df70ce8b4",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "8731d2ba584b31a85c8c030a676b850df70ce8b4",
+        "post_path_exists": true,
+        "post_blob": "8731d2ba584b31a85c8c030a676b850df70ce8b4",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-09",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/B0-test-excerpt.log",
+      "mode": "100644",
+      "bytes": 2572,
+      "git_blob_sha": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 72,
+      "source_identity": {
+        "terminal": "2690de74b0581130ae92e1129d986d31d1663fe8",
+        "source_W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+        "source_tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+        "source_PR": 84
+      },
+      "original_run_path_label": null,
+      "classification": "authorization_test_excerpt",
+      "actual_use": "Historical auth regression/failure excerpts; negative checks must survive",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/B0-test-excerpt.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2572
+      },
+      "old_tree": {
+        "at_historical_W": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+        "at_branch_before_210": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+        "post_path_exists": true,
+        "post_blob": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-10",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/R1-test-excerpt.log",
+      "mode": "100644",
+      "bytes": 19381,
+      "git_blob_sha": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 72,
+      "source_identity": {
+        "terminal": "2690de74b0581130ae92e1129d986d31d1663fe8",
+        "source_W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+        "source_tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+        "source_PR": 84
+      },
+      "original_run_path_label": null,
+      "classification": "authorization_test_excerpt",
+      "actual_use": "Historical auth regression/failure excerpts; negative checks must survive",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/R1-test-excerpt.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 19381
+      },
+      "old_tree": {
+        "at_historical_W": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+        "at_branch_before_210": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+        "post_path_exists": true,
+        "post_blob": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-11",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/test-output.log",
+      "mode": "100644",
+      "bytes": 3378,
+      "git_blob_sha": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 65,
+      "source_identity": {
+        "terminal": "165da54e7320605092eede58a7dfc1ff706b13c1",
+        "source_W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "source_tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+        "source_PR": 74
+      },
+      "original_run_path_label": null,
+      "classification": "case_recovery_test",
+      "actual_use": "Baseline and retry test outcomes for receipt recovery",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/test-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3378
+      },
+      "old_tree": {
+        "at_historical_W": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+        "at_branch_before_210": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+        "post_path_exists": true,
+        "post_blob": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-12",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/test-output.log",
+      "mode": "100644",
+      "bytes": 8833,
+      "git_blob_sha": "8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 65,
+      "source_identity": {
+        "terminal": "165da54e7320605092eede58a7dfc1ff706b13c1",
+        "source_W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "source_tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+        "source_PR": 74
+      },
+      "original_run_path_label": null,
+      "classification": "case_recovery_test",
+      "actual_use": "Baseline and retry test outcomes for receipt recovery",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/test-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 8833
+      },
+      "old_tree": {
+        "at_historical_W": "8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+        "at_branch_before_210": "8b5d4f7262372f0d08e823fcf6f9427c7035893c"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+        "post_path_exists": true,
+        "post_blob": "8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-13",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/test-output.log",
+      "mode": "100644",
+      "bytes": 8616,
+      "git_blob_sha": "065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 65,
+      "source_identity": {
+        "terminal": "165da54e7320605092eede58a7dfc1ff706b13c1",
+        "source_W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "source_tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+        "source_PR": 74
+      },
+      "original_run_path_label": null,
+      "classification": "case_recovery_test",
+      "actual_use": "Baseline and retry test outcomes for receipt recovery",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/test-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 8616
+      },
+      "old_tree": {
+        "at_historical_W": "065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+        "at_branch_before_210": "065349a1681ed5f50f1faf547e1d02fa0bb104e4"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+        "post_path_exists": true,
+        "post_blob": "065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-14",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B0-test-output.log",
+      "mode": "100644",
+      "bytes": 8544,
+      "git_blob_sha": "342c7129f4bfd11bc4cacdff44e56147ba15d503",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 76,
+      "source_identity": {
+        "terminal": "9a7fb8c3c83df886781024d6f548d6523209523f",
+        "source_W": "6854c0f966e4fd78322932181359c3742c53c16d",
+        "source_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+        "source_PR": 87
+      },
+      "original_run_path_label": null,
+      "classification": "original_producer_and_P03",
+      "actual_use": "Causal/performance evidence including original failing P03",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/342c7129f4bfd11bc4cacdff44e56147ba15d503",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B0-test-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 8544
+      },
+      "old_tree": {
+        "at_historical_W": "342c7129f4bfd11bc4cacdff44e56147ba15d503",
+        "at_branch_before_210": "342c7129f4bfd11bc4cacdff44e56147ba15d503"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "342c7129f4bfd11bc4cacdff44e56147ba15d503",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "342c7129f4bfd11bc4cacdff44e56147ba15d503",
+        "post_path_exists": true,
+        "post_blob": "342c7129f4bfd11bc4cacdff44e56147ba15d503",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-15",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B1-test-output.log",
+      "mode": "100644",
+      "bytes": 2129,
+      "git_blob_sha": "8dd8b50207df51748d964edccd74dc266cefc228",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 76,
+      "source_identity": {
+        "terminal": "9a7fb8c3c83df886781024d6f548d6523209523f",
+        "source_W": "6854c0f966e4fd78322932181359c3742c53c16d",
+        "source_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+        "source_PR": 87
+      },
+      "original_run_path_label": null,
+      "classification": "original_producer_and_P03",
+      "actual_use": "Causal/performance evidence including original failing P03",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8dd8b50207df51748d964edccd74dc266cefc228",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B1-test-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2129
+      },
+      "old_tree": {
+        "at_historical_W": "8dd8b50207df51748d964edccd74dc266cefc228",
+        "at_branch_before_210": "8dd8b50207df51748d964edccd74dc266cefc228"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "8dd8b50207df51748d964edccd74dc266cefc228",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "8dd8b50207df51748d964edccd74dc266cefc228",
+        "post_path_exists": true,
+        "post_blob": "8dd8b50207df51748d964edccd74dc266cefc228",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-16",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B2-test-output.log",
+      "mode": "100644",
+      "bytes": 7914,
+      "git_blob_sha": "8d66dbba8fb077552e87ee01f78f07106f95309f",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 76,
+      "source_identity": {
+        "terminal": "9a7fb8c3c83df886781024d6f548d6523209523f",
+        "source_W": "6854c0f966e4fd78322932181359c3742c53c16d",
+        "source_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+        "source_PR": 87
+      },
+      "original_run_path_label": null,
+      "classification": "original_producer_and_P03",
+      "actual_use": "Causal/performance evidence including original failing P03",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8d66dbba8fb077552e87ee01f78f07106f95309f",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B2-test-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 7914
+      },
+      "old_tree": {
+        "at_historical_W": "8d66dbba8fb077552e87ee01f78f07106f95309f",
+        "at_branch_before_210": "8d66dbba8fb077552e87ee01f78f07106f95309f"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "8d66dbba8fb077552e87ee01f78f07106f95309f",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "8d66dbba8fb077552e87ee01f78f07106f95309f",
+        "post_path_exists": true,
+        "post_blob": "8d66dbba8fb077552e87ee01f78f07106f95309f",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-17",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/P03-test-output.log",
+      "mode": "100644",
+      "bytes": 5291,
+      "git_blob_sha": "42e39293213abf1c84323718acf1817cdda9d164",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 76,
+      "source_identity": {
+        "terminal": "9a7fb8c3c83df886781024d6f548d6523209523f",
+        "source_W": "6854c0f966e4fd78322932181359c3742c53c16d",
+        "source_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+        "source_PR": 87
+      },
+      "original_run_path_label": null,
+      "classification": "original_producer_and_P03",
+      "actual_use": "Original P03 failure/coverage evidence; must not be converted to success",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/42e39293213abf1c84323718acf1817cdda9d164",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/P03-test-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 5291
+      },
+      "old_tree": {
+        "at_historical_W": "42e39293213abf1c84323718acf1817cdda9d164",
+        "at_branch_before_210": "42e39293213abf1c84323718acf1817cdda9d164"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "42e39293213abf1c84323718acf1817cdda9d164",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "42e39293213abf1c84323718acf1817cdda9d164",
+        "post_path_exists": true,
+        "post_blob": "42e39293213abf1c84323718acf1817cdda9d164",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-18",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/R1-test-output.log",
+      "mode": "100644",
+      "bytes": 7700,
+      "git_blob_sha": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 76,
+      "source_identity": {
+        "terminal": "9a7fb8c3c83df886781024d6f548d6523209523f",
+        "source_W": "6854c0f966e4fd78322932181359c3742c53c16d",
+        "source_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+        "source_PR": 87
+      },
+      "original_run_path_label": null,
+      "classification": "original_producer_and_P03",
+      "actual_use": "Causal/performance evidence including original failing P03",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/R1-test-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 7700
+      },
+      "old_tree": {
+        "at_historical_W": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+        "at_branch_before_210": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+        "post_path_exists": true,
+        "post_blob": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-19",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4-tests.log",
+      "mode": "100644",
+      "bytes": 5061,
+      "git_blob_sha": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 80,
+      "source_identity": {
+        "terminal": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+        "source_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+        "source_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+        "source_PR": 90
+      },
+      "original_run_path_label": null,
+      "classification": "cost_counterfactual_or_terminal",
+      "actual_use": "Cost80 R4 terminal/counterfactual output; not a production performance PASS",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/985de4515a1b091f71c4fecc2741c3b49a73e565",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4-tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 5061
+      },
+      "old_tree": {
+        "at_historical_W": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+        "at_branch_before_210": "985de4515a1b091f71c4fecc2741c3b49a73e565"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+        "post_path_exists": true,
+        "post_blob": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-20",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1-tests.log",
+      "mode": "100644",
+      "bytes": 55851,
+      "git_blob_sha": "1b71cd92c92de2cb59ea257915abb6367a54724a",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 80,
+      "source_identity": {
+        "terminal": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+        "source_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+        "source_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+        "source_PR": 90
+      },
+      "original_run_path_label": null,
+      "classification": "cost_regression",
+      "actual_use": "R1/R2/R3 test history, failures and recoveries",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1b71cd92c92de2cb59ea257915abb6367a54724a",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1-tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 55851
+      },
+      "old_tree": {
+        "at_historical_W": "1b71cd92c92de2cb59ea257915abb6367a54724a",
+        "at_branch_before_210": "1b71cd92c92de2cb59ea257915abb6367a54724a"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "1b71cd92c92de2cb59ea257915abb6367a54724a",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "1b71cd92c92de2cb59ea257915abb6367a54724a",
+        "post_path_exists": true,
+        "post_blob": "1b71cd92c92de2cb59ea257915abb6367a54724a",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-21",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2-tests.log",
+      "mode": "100644",
+      "bytes": 24507,
+      "git_blob_sha": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 80,
+      "source_identity": {
+        "terminal": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+        "source_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+        "source_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+        "source_PR": 90
+      },
+      "original_run_path_label": null,
+      "classification": "cost_regression",
+      "actual_use": "R1/R2/R3 test history, failures and recoveries",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2-tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 24507
+      },
+      "old_tree": {
+        "at_historical_W": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+        "at_branch_before_210": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+        "post_path_exists": true,
+        "post_blob": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-22",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3-tests.log",
+      "mode": "100644",
+      "bytes": 2151,
+      "git_blob_sha": "b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 80,
+      "source_identity": {
+        "terminal": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+        "source_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+        "source_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+        "source_PR": 90
+      },
+      "original_run_path_label": null,
+      "classification": "cost_regression",
+      "actual_use": "R1/R2/R3 test history, failures and recoveries",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3-tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2151
+      },
+      "old_tree": {
+        "at_historical_W": "b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+        "at_branch_before_210": "b41da686b893a2bd8f536c6671e8377a15ed8e3e"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+        "post_path_exists": true,
+        "post_blob": "b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-23",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-tests.log",
+      "mode": "100644",
+      "bytes": 40064,
+      "git_blob_sha": "b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 66,
+      "source_identity": {
+        "terminal": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+        "source_W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+        "source_tree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e",
+        "source_PR": 77
+      },
+      "original_run_path_label": null,
+      "classification": "export_test",
+      "actual_use": "Source export regression results, not final candidate proof",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 40064
+      },
+      "old_tree": {
+        "at_historical_W": "b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+        "at_branch_before_210": "b0ae8fae2396c2dc66ab36035cab598ede4911fc"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+        "post_path_exists": true,
+        "post_blob": "b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-24",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-tests.log",
+      "mode": "100644",
+      "bytes": 16232,
+      "git_blob_sha": "aeb1c529e74a6411248e32c16f7429b7cad6383f",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 66,
+      "source_identity": {
+        "terminal": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+        "source_W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+        "source_tree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e",
+        "source_PR": 77
+      },
+      "original_run_path_label": null,
+      "classification": "export_test",
+      "actual_use": "Source export regression results, not final candidate proof",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/aeb1c529e74a6411248e32c16f7429b7cad6383f",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 16232
+      },
+      "old_tree": {
+        "at_historical_W": "aeb1c529e74a6411248e32c16f7429b7cad6383f",
+        "at_branch_before_210": "aeb1c529e74a6411248e32c16f7429b7cad6383f"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "aeb1c529e74a6411248e32c16f7429b7cad6383f",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "aeb1c529e74a6411248e32c16f7429b7cad6383f",
+        "post_path_exists": true,
+        "post_blob": "aeb1c529e74a6411248e32c16f7429b7cad6383f",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-25",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-tests.log",
+      "mode": "100644",
+      "bytes": 14914,
+      "git_blob_sha": "e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 66,
+      "source_identity": {
+        "terminal": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+        "source_W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+        "source_tree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e",
+        "source_PR": 77
+      },
+      "original_run_path_label": null,
+      "classification": "export_test",
+      "actual_use": "Source export regression results, not final candidate proof",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 14914
+      },
+      "old_tree": {
+        "at_historical_W": "e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+        "at_branch_before_210": "e2c4ca00cbcf91e6c9809fb125220fb739d91970"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+        "post_path_exists": true,
+        "post_blob": "e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-26",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/cleanup-job-132671266536.log",
+      "mode": "100644",
+      "bytes": 2304,
+      "git_blob_sha": "2f4b0d063c560cd3028994472cdabc78829ab65b",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 64,
+      "source_identity": {
+        "terminal": "4d0421669054a131de0df0c95994b45229ab354e",
+        "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "source_tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a",
+        "source_PR": 80
+      },
+      "original_run_path_label": null,
+      "classification": "hosted_native_job",
+      "actual_use": "Hosted native test/cleanup job logs; source only",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/2f4b0d063c560cd3028994472cdabc78829ab65b",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/cleanup-job-132671266536.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2304
+      },
+      "old_tree": {
+        "at_historical_W": "2f4b0d063c560cd3028994472cdabc78829ab65b",
+        "at_branch_before_210": "2f4b0d063c560cd3028994472cdabc78829ab65b"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "2f4b0d063c560cd3028994472cdabc78829ab65b",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "2f4b0d063c560cd3028994472cdabc78829ab65b",
+        "post_path_exists": true,
+        "post_blob": "2f4b0d063c560cd3028994472cdabc78829ab65b",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-27",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/test-job-132670817059.log",
+      "mode": "100644",
+      "bytes": 88508,
+      "git_blob_sha": "55a6bca3959f2759ff763dfc64614e62235331fb",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 64,
+      "source_identity": {
+        "terminal": "4d0421669054a131de0df0c95994b45229ab354e",
+        "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "source_tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a",
+        "source_PR": 80
+      },
+      "original_run_path_label": null,
+      "classification": "hosted_native_job",
+      "actual_use": "Hosted native test/cleanup job logs; source only",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/55a6bca3959f2759ff763dfc64614e62235331fb",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/test-job-132670817059.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 88508
+      },
+      "old_tree": {
+        "at_historical_W": "55a6bca3959f2759ff763dfc64614e62235331fb",
+        "at_branch_before_210": "55a6bca3959f2759ff763dfc64614e62235331fb"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "55a6bca3959f2759ff763dfc64614e62235331fb",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "55a6bca3959f2759ff763dfc64614e62235331fb",
+        "post_path_exists": true,
+        "post_blob": "55a6bca3959f2759ff763dfc64614e62235331fb",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-28",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam-output.log",
+      "mode": "100644",
+      "bytes": 970,
+      "git_blob_sha": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 970
+      },
+      "old_tree": {
+        "at_historical_W": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+        "at_branch_before_210": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+        "post_path_exists": true,
+        "post_blob": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-29",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.log",
+      "mode": "100644",
+      "bytes": 1037,
+      "git_blob_sha": "947131337f1c1f5c821116bea961ce309d44f044",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/947131337f1c1f5c821116bea961ce309d44f044",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 1037
+      },
+      "old_tree": {
+        "at_historical_W": "947131337f1c1f5c821116bea961ce309d44f044",
+        "at_branch_before_210": "947131337f1c1f5c821116bea961ce309d44f044"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "947131337f1c1f5c821116bea961ce309d44f044",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "947131337f1c1f5c821116bea961ce309d44f044",
+        "post_path_exists": true,
+        "post_blob": "947131337f1c1f5c821116bea961ce309d44f044",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-30",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/bun.log",
+      "mode": "100644",
+      "bytes": 3744,
+      "git_blob_sha": "f84898708ac3db90f5bc392ac20a0bed97042103",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "R2/R3 ClamAV/freshclam and Bun diagnostics",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f84898708ac3db90f5bc392ac20a0bed97042103",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/bun.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3744
+      },
+      "old_tree": {
+        "at_historical_W": "f84898708ac3db90f5bc392ac20a0bed97042103",
+        "at_branch_before_210": "f84898708ac3db90f5bc392ac20a0bed97042103"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "f84898708ac3db90f5bc392ac20a0bed97042103",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "f84898708ac3db90f5bc392ac20a0bed97042103",
+        "post_path_exists": true,
+        "post_blob": "f84898708ac3db90f5bc392ac20a0bed97042103",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-31",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error-output.log",
+      "mode": "100644",
+      "bytes": 2698,
+      "git_blob_sha": "25a631e7b551a518b5545dcd496100f21193b93e",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/25a631e7b551a518b5545dcd496100f21193b93e",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2698
+      },
+      "old_tree": {
+        "at_historical_W": "25a631e7b551a518b5545dcd496100f21193b93e",
+        "at_branch_before_210": "25a631e7b551a518b5545dcd496100f21193b93e"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "25a631e7b551a518b5545dcd496100f21193b93e",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "25a631e7b551a518b5545dcd496100f21193b93e",
+        "post_path_exists": true,
+        "post_blob": "25a631e7b551a518b5545dcd496100f21193b93e",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-32",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.log",
+      "mode": "100644",
+      "bytes": 3491,
+      "git_blob_sha": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3491
+      },
+      "old_tree": {
+        "at_historical_W": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+        "at_branch_before_210": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+        "post_path_exists": true,
+        "post_blob": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-33",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main-output.log",
+      "mode": "100644",
+      "bytes": 3294,
+      "git_blob_sha": "b67c8061ef612343a3801304a1715efeffa262d0",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b67c8061ef612343a3801304a1715efeffa262d0",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3294
+      },
+      "old_tree": {
+        "at_historical_W": "b67c8061ef612343a3801304a1715efeffa262d0",
+        "at_branch_before_210": "b67c8061ef612343a3801304a1715efeffa262d0"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "b67c8061ef612343a3801304a1715efeffa262d0",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "b67c8061ef612343a3801304a1715efeffa262d0",
+        "post_path_exists": true,
+        "post_blob": "b67c8061ef612343a3801304a1715efeffa262d0",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-34",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.log",
+      "mode": "100644",
+      "bytes": 4087,
+      "git_blob_sha": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 4087
+      },
+      "old_tree": {
+        "at_historical_W": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+        "at_branch_before_210": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+        "post_path_exists": true,
+        "post_blob": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-35",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam-output.log",
+      "mode": "100644",
+      "bytes": 1279,
+      "git_blob_sha": "71a2da26f85e3c1af4551aacbbc63b745ee92483",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/71a2da26f85e3c1af4551aacbbc63b745ee92483",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 1279
+      },
+      "old_tree": {
+        "at_historical_W": "71a2da26f85e3c1af4551aacbbc63b745ee92483",
+        "at_branch_before_210": "71a2da26f85e3c1af4551aacbbc63b745ee92483"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "71a2da26f85e3c1af4551aacbbc63b745ee92483",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "71a2da26f85e3c1af4551aacbbc63b745ee92483",
+        "post_path_exists": true,
+        "post_blob": "71a2da26f85e3c1af4551aacbbc63b745ee92483",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-36",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.log",
+      "mode": "100644",
+      "bytes": 1346,
+      "git_blob_sha": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_source",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 1346
+      },
+      "old_tree": {
+        "at_historical_W": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+        "at_branch_before_210": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+        "post_path_exists": true,
+        "post_blob": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-37",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error-output.log",
+      "mode": "100644",
+      "bytes": 2506,
+      "git_blob_sha": "ac7855f087b4566bbd73665cbda703000e48137f",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_terminal",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ac7855f087b4566bbd73665cbda703000e48137f",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2506
+      },
+      "old_tree": {
+        "at_historical_W": "ac7855f087b4566bbd73665cbda703000e48137f",
+        "at_branch_before_210": "ac7855f087b4566bbd73665cbda703000e48137f"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "ac7855f087b4566bbd73665cbda703000e48137f",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "ac7855f087b4566bbd73665cbda703000e48137f",
+        "post_path_exists": true,
+        "post_blob": "ac7855f087b4566bbd73665cbda703000e48137f",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-38",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.log",
+      "mode": "100644",
+      "bytes": 3299,
+      "git_blob_sha": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_terminal",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a0966c9b3b811b955238cca1fe92414ee1914ae6",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3299
+      },
+      "old_tree": {
+        "at_historical_W": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+        "at_branch_before_210": "a0966c9b3b811b955238cca1fe92414ee1914ae6"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+        "post_path_exists": true,
+        "post_blob": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-39",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main-output.log",
+      "mode": "100644",
+      "bytes": 2526,
+      "git_blob_sha": "562a28955b912b1fa99103821cbed77d479dbbb4",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_terminal",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/562a28955b912b1fa99103821cbed77d479dbbb4",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 2526
+      },
+      "old_tree": {
+        "at_historical_W": "562a28955b912b1fa99103821cbed77d479dbbb4",
+        "at_branch_before_210": "562a28955b912b1fa99103821cbed77d479dbbb4"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "562a28955b912b1fa99103821cbed77d479dbbb4",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "562a28955b912b1fa99103821cbed77d479dbbb4",
+        "post_path_exists": true,
+        "post_blob": "562a28955b912b1fa99103821cbed77d479dbbb4",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-40",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.log",
+      "mode": "100644",
+      "bytes": 3319,
+      "git_blob_sha": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_terminal",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3319
+      },
+      "old_tree": {
+        "at_historical_W": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+        "at_branch_before_210": "60bb1a41a8c0c26b01a61afeba47c248f72ef837"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+        "post_path_exists": true,
+        "post_blob": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-41",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam-output.log",
+      "mode": "100644",
+      "bytes": 1279,
+      "git_blob_sha": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_terminal",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam-output.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 1279
+      },
+      "old_tree": {
+        "at_historical_W": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+        "at_branch_before_210": "e5c048686e3107e2d311f782bd05ad985bdb7eb2"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+        "post_path_exists": true,
+        "post_blob": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-42",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.log",
+      "mode": "100644",
+      "bytes": 1346,
+      "git_blob_sha": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 75,
+      "source_identity": {
+        "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+        "source_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+        "source_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+        "source_PR": 78
+      },
+      "original_run_path_label": null,
+      "classification": "scanner_terminal",
+      "actual_use": "Original antivirus scanner process output (including errors); no fake clean status",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 1346
+      },
+      "old_tree": {
+        "at_historical_W": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+        "at_branch_before_210": "68fa31ea1e9313549d13aaf2cad49292b00c9f91"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+        "post_path_exists": true,
+        "post_blob": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-43",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-job.log",
+      "mode": "100644",
+      "bytes": 89896,
+      "git_blob_sha": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 59,
+      "source_identity": {
+        "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+        "source_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+        "source_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+        "source_PR": 72
+      },
+      "original_run_path_label": null,
+      "classification": "readonly_runtime_job",
+      "actual_use": "Full R1/R2/R3 hosted outputs including failures",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-job.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 89896
+      },
+      "old_tree": {
+        "at_historical_W": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+        "at_branch_before_210": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+        "post_path_exists": true,
+        "post_blob": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-44",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-job.log",
+      "mode": "100644",
+      "bytes": 98644,
+      "git_blob_sha": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 59,
+      "source_identity": {
+        "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+        "source_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+        "source_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+        "source_PR": 72
+      },
+      "original_run_path_label": null,
+      "classification": "readonly_runtime_job",
+      "actual_use": "Full R1/R2/R3 hosted outputs including failures",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-job.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 98644
+      },
+      "old_tree": {
+        "at_historical_W": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+        "at_branch_before_210": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+        "post_path_exists": true,
+        "post_blob": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-45",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-job.log",
+      "mode": "100644",
+      "bytes": 72850,
+      "git_blob_sha": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 59,
+      "source_identity": {
+        "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+        "source_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+        "source_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+        "source_PR": 72
+      },
+      "original_run_path_label": null,
+      "classification": "readonly_runtime_job",
+      "actual_use": "Full R1/R2/R3 hosted outputs including failures",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-job.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 72850
+      },
+      "old_tree": {
+        "at_historical_W": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+        "at_branch_before_210": "5a6b2b6a84a9f5c4361dd1649932611beecccae9"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+        "post_path_exists": true,
+        "post_blob": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-46",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/r3-failure-excerpt.log",
+      "mode": "100644",
+      "bytes": 16310,
+      "git_blob_sha": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 68,
+      "source_identity": {
+        "terminal": "edb91ea6466683437f13bfb983d473303e12cdd4",
+        "source_W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "source_tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "source_PR": 81
+      },
+      "original_run_path_label": null,
+      "classification": "mcp_case_test_and_failure",
+      "actual_use": "Negative failure excerpt retained for debugging and independent recheck of a named consumer",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/r3-failure-excerpt.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 16310
+      },
+      "old_tree": {
+        "at_historical_W": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+        "at_branch_before_210": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+        "post_path_exists": true,
+        "post_blob": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-47",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/r1-failure-excerpt.log",
+      "mode": "100644",
+      "bytes": 7563,
+      "git_blob_sha": "6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 68,
+      "source_identity": {
+        "terminal": "edb91ea6466683437f13bfb983d473303e12cdd4",
+        "source_W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "source_tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "source_PR": 81
+      },
+      "original_run_path_label": null,
+      "classification": "mcp_case_test_and_failure",
+      "actual_use": "Negative failure excerpt retained for debugging and independent recheck of a named consumer",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/r1-failure-excerpt.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 7563
+      },
+      "old_tree": {
+        "at_historical_W": "6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+        "at_branch_before_210": "6c0eaa12e5d48204194107a9f04a20a73ff4b638"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+        "post_path_exists": true,
+        "post_blob": "6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-48",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/r3-failure-excerpt.log",
+      "mode": "100644",
+      "bytes": 10169,
+      "git_blob_sha": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 68,
+      "source_identity": {
+        "terminal": "edb91ea6466683437f13bfb983d473303e12cdd4",
+        "source_W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "source_tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "source_PR": 81
+      },
+      "original_run_path_label": null,
+      "classification": "mcp_case_test_and_failure",
+      "actual_use": "Negative failure excerpt retained for debugging and independent recheck of a named consumer",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/r3-failure-excerpt.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 10169
+      },
+      "old_tree": {
+        "at_historical_W": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+        "at_branch_before_210": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+        "post_path_exists": true,
+        "post_blob": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-49",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.tests.log",
+      "mode": "100644",
+      "bytes": 89377,
+      "git_blob_sha": "c718f517eacbacc224a9b842b51e93e1d8517832",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 68,
+      "source_identity": {
+        "terminal": "edb91ea6466683437f13bfb983d473303e12cdd4",
+        "source_W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "source_tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "source_PR": 81
+      },
+      "original_run_path_label": null,
+      "classification": "mcp_case_test_and_failure",
+      "actual_use": "Runs and negative proposal excerpts for MCP/consumers",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c718f517eacbacc224a9b842b51e93e1d8517832",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 89377
+      },
+      "old_tree": {
+        "at_historical_W": "c718f517eacbacc224a9b842b51e93e1d8517832",
+        "at_branch_before_210": "c718f517eacbacc224a9b842b51e93e1d8517832"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "c718f517eacbacc224a9b842b51e93e1d8517832",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "c718f517eacbacc224a9b842b51e93e1d8517832",
+        "post_path_exists": true,
+        "post_blob": "c718f517eacbacc224a9b842b51e93e1d8517832",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-50",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.tests.log",
+      "mode": "100644",
+      "bytes": 53310,
+      "git_blob_sha": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 68,
+      "source_identity": {
+        "terminal": "edb91ea6466683437f13bfb983d473303e12cdd4",
+        "source_W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "source_tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "source_PR": 81
+      },
+      "original_run_path_label": null,
+      "classification": "mcp_case_test_and_failure",
+      "actual_use": "Runs and negative proposal excerpts for MCP/consumers",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 53310
+      },
+      "old_tree": {
+        "at_historical_W": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+        "at_branch_before_210": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+        "post_path_exists": true,
+        "post_blob": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-51",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.tests.log",
+      "mode": "100644",
+      "bytes": 28708,
+      "git_blob_sha": "0c1c59e36aafb156504098adcdb64ce50262d63c",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 68,
+      "source_identity": {
+        "terminal": "edb91ea6466683437f13bfb983d473303e12cdd4",
+        "source_W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "source_tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "source_PR": 81
+      },
+      "original_run_path_label": null,
+      "classification": "mcp_case_test_and_failure",
+      "actual_use": "Runs and negative proposal excerpts for MCP/consumers",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/0c1c59e36aafb156504098adcdb64ce50262d63c",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 28708
+      },
+      "old_tree": {
+        "at_historical_W": "0c1c59e36aafb156504098adcdb64ce50262d63c",
+        "at_branch_before_210": "0c1c59e36aafb156504098adcdb64ce50262d63c"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "0c1c59e36aafb156504098adcdb64ce50262d63c",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "0c1c59e36aafb156504098adcdb64ce50262d63c",
+        "post_path_exists": true,
+        "post_blob": "0c1c59e36aafb156504098adcdb64ce50262d63c",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-52",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.tests.log",
+      "mode": "100644",
+      "bytes": 10285,
+      "git_blob_sha": "509326e2921e600367231470f7fc375a808e15f0",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "source_mission": 68,
+      "source_identity": {
+        "terminal": "edb91ea6466683437f13bfb983d473303e12cdd4",
+        "source_W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "source_tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "source_PR": 81
+      },
+      "original_run_path_label": null,
+      "classification": "mcp_case_test_and_failure",
+      "actual_use": "Runs and negative proposal excerpts for MCP/consumers",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/509326e2921e600367231470f7fc375a808e15f0",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.tests.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 10285
+      },
+      "old_tree": {
+        "at_historical_W": "509326e2921e600367231470f7fc375a808e15f0",
+        "at_branch_before_210": "509326e2921e600367231470f7fc375a808e15f0"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "509326e2921e600367231470f7fc375a808e15f0",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "509326e2921e600367231470f7fc375a808e15f0",
+        "post_path_exists": true,
+        "post_blob": "509326e2921e600367231470f7fc375a808e15f0",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-53",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/client-and-collection.log",
+      "mode": "100644",
+      "bytes": 3521,
+      "git_blob_sha": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "231f2b7c3ae7279b3071d7e95bacaeda317053d0",
+      "source_mission": 36,
+      "source_identity": {
+        "terminal": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+        "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": null,
+      "classification": "reports_semantic_proof",
+      "actual_use": "Reports source guard/client/evidence runs under semantic HOLD",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/client-and-collection.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3521
+      },
+      "old_tree": {
+        "at_historical_W": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+        "at_branch_before_210": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+          "blob": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+          "blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+          "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+        "post_path_exists": true,
+        "post_blob": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-54",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/nominal-03.log",
+      "mode": "100644",
+      "bytes": 3234,
+      "git_blob_sha": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "231f2b7c3ae7279b3071d7e95bacaeda317053d0",
+      "source_mission": 36,
+      "source_identity": {
+        "terminal": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+        "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": null,
+      "classification": "reports_semantic_proof",
+      "actual_use": "Reports source guard/client/evidence runs under semantic HOLD",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7c6801eed5eb0a3bcee125133734e87ff34319ad",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/nominal-03.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3234
+      },
+      "old_tree": {
+        "at_historical_W": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+        "at_branch_before_210": "7c6801eed5eb0a3bcee125133734e87ff34319ad"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+          "blob": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+          "blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+          "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+        "post_path_exists": true,
+        "post_blob": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    },
+    {
+      "id": "AS-55",
+      "original_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/source-guards.log",
+      "mode": "100644",
+      "bytes": 3981,
+      "git_blob_sha": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree_sha": "231f2b7c3ae7279b3071d7e95bacaeda317053d0",
+      "source_mission": 36,
+      "source_identity": {
+        "terminal": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+        "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+        "source_tree": null,
+        "source_PR": null
+      },
+      "original_run_path_label": null,
+      "classification": "reports_semantic_proof",
+      "actual_use": "Reports source guard/client/evidence runs under semantic HOLD",
+      "proof_restriction": "HISTORICAL_SOURCE_ONLY; no C/D PASS inference",
+      "retrieval": {
+        "immutable_blob_uri": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/03784d07d1cad170a7a49529fc6febd5aca9d501",
+        "immutable_path_uri": "https://github.com/gustavomhss/Orchestra-SF/blob/690a34cdd81c12d7311f3717c19679b950276161/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/source-guards.log",
+        "historical_path_readback": "SHA_MATCH_AND_CONTENT_MATCH",
+        "direct_blob_readback": "CONTENT_MATCH_AND_BYTE_COUNT_MATCH",
+        "bytes_observed": 3981
+      },
+      "old_tree": {
+        "at_historical_W": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+        "at_branch_before_210": "03784d07d1cad170a7a49529fc6febd5aca9d501"
+      },
+      "current_tree": {
+        "at_ack_head": "343e32088b32e50ca5698ea70b5f783e2412321d",
+        "blob": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+        "verified": true
+      },
+      "original_known_consumer_references": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+          "blob": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+          "blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+          "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08"
+        }
+      ],
+      "pre_post_delete": {
+        "pre_path_exists": true,
+        "pre_blob": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+        "post_path_exists": true,
+        "post_blob": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+        "delete_authorized": false,
+        "consumer_equivalence_proven": false,
+        "blocker": "IMMUTABLE_CONSUMERS_NOT_YET_MIGRATED_OR_FULLY_QUALIFIED"
+      }
+    }
+  ]
+}
