@@ -3,8 +3,15 @@ import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { readFileSync } from "node:fs"
 import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection } from "./gate.mjs"
+import { bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines } from "./selection.mjs"
 
-const report = Buffer.from(JSON.stringify({ status: "PASS", counts: { product_executed: 2, failures: 0, errors: 0, skipped: 0 } }))
+const report = Buffer.from(JSON.stringify({ status: "PASS",
+  counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
+  cases: ["first real test", "second real test"].map((name) => ({
+    name, classname: "", file: "test/sf-authorized-sample.test.ts",
+    failures: 0, errors: 0, skipped: 0, executed: 1, product_executed: 1,
+  })),
+}))
 const digest = createHash("sha256").update(report).digest("hex")
 const sha = "a".repeat(40)
 const runId = "123"
@@ -19,9 +26,10 @@ const manifest = {
             releaseOnlyFiles: ["test-browser/sucafina-native/transport-integration.test.ts"] } }
         : {}),
       ...(id === "CI-SF"
-        ? { selection: { kind: "full-except-release-only",
+        ? { selection: { kind: "full-except-release-only", testDirectory: "Sucafinav1/test",
             releaseOnlyFiles: ["Sucafinav1/test/parity-pitr.test.ts"] } }
         : {}),
+      ...(id === "CI-APP-SRC" ? { selection: { kind: "directory", testDirectory: "src" } } : {}),
       ...(id === "CI-CLI" || id === "CI-ATLAS-BUSINESS"
         ? { selection: { kind: "explicit", testFiles: ["test/sf-authorized-sample.test.ts"] } }
         : {}),
@@ -30,10 +38,25 @@ const manifest = {
 }
 function playwright(suite) {
   const data = {
-    suites: [{ file: suite.specFile, specs: [{ tests: [{ expectedStatus: "passed", results: [{ status: "passed" }] }] }] }],
+    suites: [{ file: suite.specFile, specs: [{
+      id: "case-source-id", title: "case source title",
+      idHash: createHash("sha256").update("case-source-id").digest("hex"),
+      tests: [{ expectedStatus: "passed", results: [{ status: "passed" }] }],
+    }] }],
     stats: { expected: 1, unexpected: 0, flaky: 0, skipped: 0 },
   }
   return Buffer.from(JSON.stringify(data))
+}
+// Synthetic fixture is independently versioned; production baselines cite an authentic Actions artifact.
+for (const suite of manifest.suites) {
+  const inventory = suite.kind === "bun"
+    ? bunCoverageIdentity(report.toString("utf8"))
+    : playwrightCoverageIdentity(playwright(suite).toString("utf8"), suite.specFile)
+  suite.coverageBaseline = {
+    schemaVersion: 1, status: "HISTORIC_SUCCESSFUL_ARTIFACT",
+    minimumCases: inventory.cases, minimumFiles: inventory.fileCount,
+    casesSha256: inventory.casesSha256, filesSha256: inventory.filesSha256,
+  }
 }
 function fixture() {
   const reports = {}
@@ -41,15 +64,23 @@ function fixture() {
   for (const suite of manifest.suites) {
     const bytes = suite.kind === "bun" ? report : playwright(suite)
     reports[suite.id] = bytes
+    const inventory = suite.kind === "bun"
+      ? bunCoverageIdentity(bytes.toString("utf8"))
+      : playwrightCoverageIdentity(bytes.toString("utf8"), suite.specFile)
     receipts[suite.id] = {
       schemaVersion: 1, suiteId: suite.id, kind: suite.kind, status: "PASS",
       exitCode: 0, sourceSha: sha, checkoutSha: sha, runId, attempt,
       runnerOS: "Linux", runnerArch: "X64", executedTests: suite.kind === "bun" ? 2 : 1,
+      executedFiles: inventory.fileCount, selectedFilesSha256: sha256Lines(inventory.files),
+      coverageFilesSha256: inventory.filesSha256, coverageCaseSha256: inventory.casesSha256,
       reportSha256: createHash("sha256").update(bytes).digest("hex"),
     }
   }
   const needs = Object.fromEntries(["preflight","static","omni","unit","ui"].map((name) => [name, { result: "success" }]))
-  return { manifest, reports, receipts, needs, sha, runId, attempt }
+  return { manifest, reports, receipts, needs, sha, runId, attempt,
+    selectionProvider: (_manifest, id) => id.startsWith("CI-UI-")
+      ? [manifest.suites.find((s) => s.id === id).specFile]
+      : ["test/sf-authorized-sample.test.ts"] }
 }
 test("eight normative suites and six independent AM proofs remain explicit", () => {
   assert.equal(validateManifest(manifest).length, 8)
@@ -177,4 +208,50 @@ test("manifest removed requirement cannot produce green", () => {
 })
 test("test reporter skips cannot produce green", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 2, failures: 0, errors: 0, skipped: 1 } })))
+})
+
+test("M4 authentic baseline cannot silently shrink into one test", () => {
+  const data = fixture()
+  data.manifest = structuredClone(manifest)
+  const suite = data.manifest.suites.find((item) => item.id === "CI-APP-SRC")
+  suite.coverageBaseline.minimumCases += 1
+  assert.throws(() => verifyAll(data), /missing\/changed baseline case or file/)
+})
+test("M4 missing baseline remains BLOCKED rather than passing with one test", () => {
+  const data = fixture()
+  data.manifest = structuredClone(manifest)
+  data.manifest.suites.find((item) => item.id === "CI-SF").coverageBaseline.status = "PENDING_REAL_COMPLETE_RUN"
+  assert.throws(() => verifyAll(data), /coverage baseline requires authentic successful run/)
+})
+test("B2 changing a selected file without the executed file evidence is RED", () => {
+  const data = fixture()
+  data.selectionProvider = (_manifest, id) => id === "CI-CLI" ? ["test/another-file.test.ts"]
+    : id.startsWith("CI-UI-") ? [manifest.suites.find((s) => s.id === id).specFile]
+      : ["test/sf-authorized-sample.test.ts"]
+  assert.throws(() => verifyAll(data), /selected files were not all executed/)
+})
+test("CI-06 receipt binds exact test identity, not just nonzero count", () => {
+  const data = fixture()
+  data.receipts["CI-ATLAS-BUSINESS"].coverageCaseSha256 = "0".repeat(64)
+  assert.throws(() => verifyAll(data), /case\/file\/selection receipt identity mismatch/)
+})
+test("forged summary cases with unchanged product count cannot masquerade as coverage", () => {
+  const tampered = JSON.parse(report.toString("utf8"))
+  tampered.cases.splice(0, 1)
+  assert.throws(() => bunCoverageIdentity(tampered), /casecase inventory|testcase inventory\/count disagreement/)
+})
+test("opaque Playwright evidence retains stable case fingerprint but removes source title", () => {
+  const suite = manifest.suites.find((s) => s.id === "CI-UI-OPERATIONS")
+  const minimized = minimalPlaywrightEvidence(playwright(suite).toString("utf8"), suite.specFile)
+  const cases = playwrightCoverageIdentity(minimized, suite.specFile)
+  assert.equal(cases.cases, 1)
+  assert.match(minimized, /idHash/)
+  assert.doesNotMatch(minimized, /case source title/)
+})
+test("all suite families have a manifest declaration; no hidden Windows or macOS target", () => {
+  assert.equal(validateManifest(manifest).length, 8)
+  const broken = structuredClone(manifest)
+  delete broken.suites.find((s) => s.id === "CI-APP-SRC").selection
+  assert.throws(() => validateManifest(broken), /app unit suite must be manifest-driven/)
+  assert.deepEqual([manifest.target.os, manifest.target.arch], ["Linux", "X64"])
 })
