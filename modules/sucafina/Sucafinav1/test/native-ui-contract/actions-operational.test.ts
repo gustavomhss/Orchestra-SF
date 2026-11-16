@@ -15,6 +15,8 @@ import { createSfSourcePersistence } from "../../product/integration/source-life
 import { enumerateSfSources } from "../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../product/integration/source-projections.ts"
 import { act, canApproveCurrentRequest } from "../../../porta/act.ts"
+import { plannerCurrentPageActions } from "../../runtime/planner.ts"
+import { budgetCanEditAnyLine } from "../../runtime/dashboard-budget.ts"
 
 const binding = Object.freeze({ installationId: "installation", projectId: "project", hostId: "host" })
 const stamp = Object.freeze({ ...binding, principalRef: "person", policyVersion: "policy", accessRevision: "revision" })
@@ -101,4 +103,18 @@ test("approval health uses the original holder and self-approval predicate", () 
   expect(canApproveCurrentRequest(request, { ...actor, id: "other" }, settings)).toBe(false)
   expect(canApproveCurrentRequest({ ...request, createdBy: "approver" }, actor, settings)).toBe(false)
   expect(canApproveCurrentRequest(request, { ...actor, canWrite: false }, settings)).toBe(false)
+})
+
+test("Planner and budget page capabilities respect original source ownership and roles", () => {
+  const snapshot = { data: { versions: [{ id: "v1", year: 2026, locked: false,
+    lines: [{ id: "line", sec: "opex", owner: { id: "owner" }, domain: "service" }] }], officials: {},
+    opexOwners: [{ id: "team" }], budgetLineIds: { owner: ["opexOwners:team"] } },
+    versions: {}, sequences: {}, audit: [], notices: [] }
+  const owner = { id: "owner", canWrite: true, roles: ["budget owner"], domains: [] }
+  const other = { id: "other", canWrite: true, roles: ["budget owner"], domains: [] }
+  expect(plannerCurrentPageActions(snapshot, owner, "OPEX")).toContain("save")
+  expect(plannerCurrentPageActions(snapshot, other, "OPEX")).toEqual([])
+  expect(plannerCurrentPageActions(snapshot, { ...owner, canWrite: false }, "OPEX")).toEqual([])
+  expect(budgetCanEditAnyLine(snapshot, { ...owner, roles: ["domain leader"] }, "opexOwners")).toBe(true)
+  expect(budgetCanEditAnyLine(snapshot, { ...other, roles: ["domain leader"] }, "opexOwners")).toBe(false)
 })
