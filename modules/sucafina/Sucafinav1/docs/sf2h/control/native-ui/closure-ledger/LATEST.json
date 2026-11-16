@@ -437,12 +437,6 @@
       "status": "completed",
       "conclusion": "failure",
       "name": "test-ci"
-    },
-    {
-      "id": 43781292706,
-      "status": "completed",
-      "conclusion": "failure",
-      "name": "test-ci"
     }
   ],
   "verified_consumer_deltas": {
@@ -680,5 +674,236 @@
     "source218_receipt": "repair218/A06-SOURCE-CLOSURE.json",
     "reusable_original_leaves": 5,
     "owner_new_shared_transport": 226
+  },
+  "latest_instances": [
+    {
+      "mission": 211,
+      "branch": "sf-closure-bundle",
+      "head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+      "message": "docs(sf): pin C source prepost, finite gaps and 190/214 surgical requests [skip ci]",
+      "date": "2026-11-16T01:07:04Z",
+      "state": "NO_NEW_COMMIT_WRITER_LIFECYCLE_UNCONFIRMED"
+    },
+    {
+      "mission": 215,
+      "branch": "sf-bi-units",
+      "head": "0d37528d52eb27c2cfafd9772508914e03f2f7f4",
+      "message": "docs(sf): provide inert exact pre/post integration patch for 211 [skip ci]",
+      "date": "2026-11-16T00:49:36Z",
+      "state": "SOURCE_HANDOFF_READY"
+    },
+    {
+      "mission": 216,
+      "branch": "sf-atlas-sequence",
+      "head": "14f894e3c70d14092a50931cc511250d276e107c",
+      "message": "docs(sucafina): hand off REV208-NEW-002 to 211, 214 and independent 208",
+      "date": "2026-11-16T00:50:50Z",
+      "state": "SOURCE_HANDOFF_READY"
+    },
+    {
+      "mission": 217,
+      "branch": "sf-similar-cases",
+      "head": "155091aa164f18e65a7fb6c398dad3d6789d22c7",
+      "message": "docs(sf): finish 217 handoff with PR198/commits and explicit CI214/recheck207 requests [skip ci]",
+      "date": "2026-11-16T01:04:52Z",
+      "state": "SOURCE_HANDOFF_READY"
+    },
+    {
+      "mission": 218,
+      "branch": "sf-import-history",
+      "head": "6ec7d43fdaa63268540f30e80d590d9af85d2988",
+      "message": "docs(sf): handoff repair218 with precise pre/post, 214 validation and 207 recheck",
+      "date": "2026-11-16T01:00:06Z",
+      "state": "SOURCE_HANDOFF_READY"
+    },
+    {
+      "mission": 219,
+      "branch": "sf-native-admission",
+      "head": "8f4f7e102ac1b73dc014e23737cc62bba84043ee",
+      "message": "fix(sf): bind human routine command to installed C07 ports [219 R3-TASK-03]\n\nWire original A09 Request, exact human intent and case fence into existing C07 producer without granting Task ownership. Reconstruct admitted native selector from real C15 records for independent core Task-frame reauthorization. Preserve fail-closed public-origin gap, emit 214 CI request and 209 recheck; leave cross-lease descriptor patch inert. All validations NOT_RUN.",
+      "date": "2026-11-16T01:04:08Z",
+      "state": "PARTIAL_SOURCE_READY_PUBLIC_ORIGIN_BLOCKED"
+    },
+    {
+      "mission": 220,
+      "branch": "sf-decisions-capture",
+      "head": "f4fc2af5809f8af6c2dc5b8ddcb176ee3409f002",
+      "message": "docs(sf): handoff repair 220 to compositor and CI dispatcher [skip ci]",
+      "date": "2026-11-16T01:16:12Z",
+      "state": "TERMINAL_HANDOFF_READY"
+    },
+    {
+      "mission": 221,
+      "branch": "sf-am01-selection",
+      "head": "8781a3b7c4c648e5e637caf94bfd187f87c9327a",
+      "message": "docs(sf): bind PR200 handoff to real historical AM01 request refs [skip ci]",
+      "date": "2026-11-16T01:16:37Z",
+      "state": "TERMINAL_HANDOFF_READY"
+    },
+    {
+      "mission": 222,
+      "branch": "sf-am02-authority",
+      "head": "b3d7fcfe5a1a76a673de1914eb01bff2f233f647",
+      "message": "docs(sf): record causal AM02 repair, prepost and exact 214 request [skip ci]",
+      "date": "2026-11-16T01:16:34Z",
+      "state": "TERMINAL_HANDOFF_READY"
+    },
+    {
+      "mission": 223,
+      "branch": "sf-ci-validation",
+      "head": "783becc0c5df4c2f1667a51d287710131a92b655",
+      "message": "docs(sucafina): reattach runs and publish CI 223 causal handoff",
+      "date": "2026-11-16T01:29:32Z",
+      "state": "TERMINAL_CI_HANDOFF_ZERO_NEW_DISPATCHES"
+    },
+    {
+      "mission": 224,
+      "branch": "sf-talent-files",
+      "head": "55118255658694e09b1c79affd309e309224662d",
+      "message": "docs(sf): reserve full closure lane 224 [skip ci]",
+      "date": "2026-11-16T01:09:34Z",
+      "state": "RESERVATION_ONLY_NO_RUNTIME_INFERENCE"
+    },
+    {
+      "mission": 225,
+      "branch": "sf-supplier-csv",
+      "head": "34355ba9ca53c0e8fa63fbf19b1b5e3ce82c3f42",
+      "message": "feat(sf): wire supplier CSV to authorized producer byte port [skip ci]",
+      "date": "2026-11-16T01:27:49Z",
+      "state": "CODE_PROGRESS_NO_TERMINAL_HANDOFF"
+    },
+    {
+      "mission": 226,
+      "branch": "sf-files-transport",
+      "head": "585bad394015bb7937c07e79f8bd9d754f208427",
+      "message": "docs(sf): reserve shared closure producer 226 [skip ci]",
+      "date": "2026-11-16T01:25:37Z",
+      "state": "RESERVATION_ONLY_NO_RUNTIME_INFERENCE"
+    },
+    {
+      "mission": 227,
+      "branch": "sf-today-resume",
+      "head": "8bd1035dba47152733e042492891b7a45b8bb7ac",
+      "message": "docs(sf): reserve shared closure producer 227 [skip ci]",
+      "date": "2026-11-16T01:25:41Z",
+      "state": "RESERVATION_ONLY_NO_RUNTIME_INFERENCE"
+    }
+  ],
+  "latest_ready_batch": {
+    "base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "changes": [
+      {
+        "mission": 220,
+        "path": "packages/schema/src/sucafina/decisions.ts",
+        "pre": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+        "post": "52fc1a3fc52b39c0d18f0064bcc17417421ce3c7",
+        "kind": "SOURCE",
+        "actual": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "pre": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+        "post": "dbdbde9d95ffcdf59c50ee64b880e631b37e433a",
+        "kind": "SOURCE",
+        "actual": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+        "pre": "33650407123163ea881eca9d4940fde364b27c54",
+        "post": "d96709db609b399ef801f487e443a381863d6298",
+        "kind": "SOURCE",
+        "actual": "33650407123163ea881eca9d4940fde364b27c54",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+        "pre": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+        "post": "f9c99a8a886211d1aba60371a2d3b0aa287293b5",
+        "kind": "SOURCE",
+        "actual": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "pre": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+        "post": "3a13c3401d7629904155664b3b5e08665c2713cc",
+        "kind": "INERT_REQUIRES_AUTHORITY_REVIEW",
+        "actual": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "pre": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+        "post": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+        "kind": "INERT_REQUIRES_AUTHORITY_REVIEW",
+        "actual": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+        "pre": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+        "post": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+        "kind": "INERT_REQUIRES_AUTHORITY_REVIEW",
+        "actual": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 221,
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+        "pre": "f20fdab67655572f181f78e64b3023f993346d7c",
+        "post": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+        "kind": "SOURCE",
+        "actual": "f20fdab67655572f181f78e64b3023f993346d7c",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 222,
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "pre": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+        "post": "aa48bb72137de7e123cbb38625e396825bbfa99e",
+        "kind": "SOURCE",
+        "actual": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 222,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts",
+        "pre": "57f9d00320d08e8890712f9a8525e7a2c56f22fc",
+        "post": "93d24c34b73bdd6d1a6ef4c6fe57a855f6820b26",
+        "kind": "SOURCE",
+        "actual": "57f9d00320d08e8890712f9a8525e7a2c56f22fc",
+        "state": "PREIMAGE_MATCH_READY"
+      }
+    ],
+    "validation": "Ten consumer preimages independently read; no product mutation or test PASS inferred.220financialC12inertchanges require behavior/authority review beforeacceptance."
+  },
+  "integration_authority": {
+    "branch": "sf-closure-bundle",
+    "current_actor": 211,
+    "current_epoch": "closure-composer-e1-browser211",
+    "replacement_started": false,
+    "question_pending": "Whether browser session211 has terminated; Git alone does not expose lifecycle. No transfer from silence."
+  },
+  "current_CI": {
+    "actor": 223,
+    "head": "783becc0c5df4c2f1667a51d287710131a92b655",
+    "state": "TERMINAL_HANDOFF",
+    "dispatches_this_session": 0,
+    "reason": "No newly consumed source on observed bundle",
+    "inflight": 0,
+    "prior_results_preserved": true
+  },
+  "native_public_origin": {
+    "mission": 219,
+    "state": "ARTIFACT_READY_PARTIAL_BLOCKED_PUBLIC_ORIGIN",
+    "release_blocking": true
   }
 }
