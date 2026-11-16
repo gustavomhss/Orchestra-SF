@@ -106,13 +106,15 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
             }]))
           : Object.fromEntries(Object.entries(values).filter(([, val]) => Number.isInteger(val)))
     }
+    // The authorized original budget producer reads absent collections as rows(undefined) = [].
     for (const field of ["itUsersMonthly", "costPerUserBenchmarks"] as const)
-      if (has(source, field)) data[field] = projectRows(source[field], ["id", "year", "month", "users", "value"])
+      data[field] = has(source, field) ? projectRows(source[field], ["id", "year", "month", "users", "value"]) : []
     if (has(source, "signals")) data.signals = projectRows(source.signals, signalFields)
   }
   if (cap === "CAP03") {
-    if (has(source, "budgetCurrentMonth")) data.budgetCurrentMonth = requiredRecord(source.budgetCurrentMonth)
-    if (has(source, "revenueByYear")) data.revenueByYear = requiredRecord(source.revenueByYear)
+    // The same producer reads absent singleton maps as object(undefined) = {}.
+    data.budgetCurrentMonth = has(source, "budgetCurrentMonth") ? requiredRecord(source.budgetCurrentMonth) : {}
+    data.revenueByYear = has(source, "revenueByYear") ? requiredRecord(source.revenueByYear) : {}
   }
   if (cap === "CAP04" || cap === "CAP05") {
     const own = cap === "CAP04" ? "opex" : "capex"
@@ -183,7 +185,20 @@ export function projectSfDomainData(cap: SfDomainCapability, source: Record<stri
 }
 
 /** Version values are CAS integers only, never version.by or private record IDs. */
-export function projectSfDomainVersions(cap: SfDomainCapability, source: Record<string, { version: number; by: string }>) {
+export function projectSfDomainVersions(
+  cap: SfDomainCapability, source: Record<string, { version: number; by: string }>, projectedData?: Record<string, unknown>,
+) {
+  const visibleRows = cap === "CAP01" && projectedData ? ["itUsersMonthly", "costPerUserBenchmarks"].flatMap((field) => {
+    const rows = projectedData[field]
+    if (!isRecordList(rows)) return []
+    return rows.flatMap((row) =>
+      (typeof row.id === "string" && row.id.trim() || typeof row.id === "number" && Number.isFinite(row.id))
+        ? [`${field}:${String(row.id)}`] : [])
+  }) : []
+  for (const key of visibleRows) {
+    if (Object.hasOwn(source, key) && (!source[key] || !Number.isSafeInteger(source[key].version) || source[key].version < 0))
+      throw new Error("Malformed authorized row version")
+  }
   if (cap === "CAP03") {
     for (const key of ["budgetCurrentMonth", "revenueByYear"] as const) {
       if (Object.hasOwn(source, key) && (!source[key] || !Number.isSafeInteger(source[key].version) || source[key].version < 0))
@@ -207,5 +222,7 @@ export function projectSfDomainVersions(cap: SfDomainCapability, source: Record<
     for (const key of ["budgetCurrentMonth", "revenueByYear"] as const)
       if (!Object.hasOwn(source, key)) projected[key] = 0
   }
+  for (const key of visibleRows)
+    if (!Object.hasOwn(source, key)) projected[key] = 0
   return projected
 }
