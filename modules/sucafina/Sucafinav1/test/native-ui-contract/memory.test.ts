@@ -11,8 +11,10 @@ import {
   SfIntelligenceMemorySignals,
 } from "../../../../../packages/schema/src/sucafina/memory.ts"
 
-const decode = <S extends Schema.Decoder<unknown>>(schema: S, value: unknown) =>
-  Schema.decodeUnknownSync(schema)(value)
+// These codecs are pure: the union type widens the requirements channel, so the
+// single cast restores the never-requirement decoder they actually are.
+const decode = <A>(schema: Schema.Schema<A>, value: unknown): A =>
+  Schema.decodeUnknownSync(schema as Schema.Decoder<A, never>)(value)
 
 const query = { caseId: "case-1", incarnation: "inc-1", version: 3 }
 const period = { start: "2026-01-01", end: "2026-12-31" } as const
