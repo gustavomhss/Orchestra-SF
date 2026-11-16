@@ -1,0 +1,130 @@
+{
+  "schema": "sf2h.closure206.artifact.v1",
+  "mission": 206,
+  "epoch": "source-closure-e2-browser206",
+  "modelEffectiveAck": "GPT-6",
+  "sessionId": "NOT_EXPOSED_BY_GITHUB_MCP",
+  "lifecycle": "NOT_INFERRED",
+  "authority": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "branch": "sf-ux-n13",
+    "pr": 150,
+    "prUrl": "https://github.com/gustavomhss/Orchestra-SF/pull/150",
+    "initialReservedHead": "0dd0ee1275f5b85d6658e1f094617e9b4eaefccb",
+    "sourceHandoff195": "679e17ecdfec23ab53ce4b23206594874617528d",
+    "sourcePackageCommit": "b2ddfdb61abf8f280619a51f1e9e0b931039c364",
+    "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normativeUxCommit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "fenceBlob": "be4642b5782ade8dde8ba8630f1d2e574a4ff445",
+    "leaseAccepted": "ONLY_U39_SPEC_U40_SPEC_AND_CLOSURE206_RECEIPTS",
+    "CAS": "expected-head; force:false",
+    "branchHeadBeforeHandoff": "6a309ca2e0c9f4adc1f9b0d9097b234b44e77c82"
+  },
+  "delivered": {
+    "status": "ALL_MANDATORY_SCENARIOS_CODE_WRITTEN; EXECUTION_PENDING_NATIVE_F04_AND_CI200",
+    "originalAdmission195": "PRESERVED_UNMODIFIED",
+    "specs": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+        "capability": "CAP04",
+        "workOrder": "U39",
+        "preBlob": "285db9bfdd046366f8fd814991f9f0724eff445f",
+        "postBlob": "f72347df8d20a465e478053c976e62fde124348d",
+        "declaredTests": 22,
+        "newTestsBy206": 19
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+        "capability": "CAP05",
+        "workOrder": "U40",
+        "preBlob": "83ee904b4ecf79248410a7714bb63ed7baf4aaf5",
+        "postBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de",
+        "declaredTests": 22,
+        "newTestsBy206": 19
+      }
+    ],
+    "criteria": {
+      "U39-AC01": "CODE_WRITTEN_NOT_RUN",
+      "U39-AC02": "CODE_WRITTEN_NOT_RUN",
+      "U39-AC03": "CODE_WRITTEN_NOT_RUN",
+      "U40-AC01": "CODE_WRITTEN_NOT_RUN",
+      "U40-AC02": "CODE_WRITTEN_NOT_RUN",
+      "U40-AC03": "CODE_WRITTEN_NOT_RUN"
+    },
+    "totalDeclaredTests": 44,
+    "previous195TestsPreserved": 6,
+    "newTests206": 38,
+    "productPatch": {
+      "status": "INERT_NOT_APPLIED",
+      "consumer": "189/PR65",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/patches/189-budget-surface.inert.patch",
+      "blob": "5436359403ebf6a738ddd58ed4fa11fb62100534",
+      "metadata": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/patches/189-budget-surface.json",
+      "metadataBlob": "c790cf4da67a8ab69c195087c84d33e42af762b6",
+      "productPath": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+      "preBlob": "ed94efe4d919eb80e4592057170d03c4b2348eb6",
+      "inertPostBlob": "1ba0272bee68c30175f779e733eb77bf4485c3f9",
+      "contextHunks": 10
+    },
+    "receipts": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/START206.json",
+        "blob": "ddcb041256315a14afacd7d275b51cd3ec9db402"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/CRITERIA-MATRIX.json",
+        "blob": "dc34a6a7f611acf7ce7f188599081e973bd9f4c5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/REQUIREMENTS-199.json",
+        "blob": "9e837cf9575f83b0d2f7ffdbbb0e3005a00a7928"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/CI-REQUEST-200.json",
+        "blob": "ea9f0df6ed6b11cb47df7420f78a97b5d2b855c4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/PATCH-HANDOFF-189.md",
+        "blob": "79b7fdb8354cbf57ef45cdd5d5aacd3038a693e3"
+      }
+    ],
+    "commitChain": [
+      "8269ce87c83bb8d43b034ee247d23bad70ae80b4",
+      "157321ccd82d2efc05f0ed9d9d91c873b0372a0b",
+      "fe08e909ddbcbbb2c1066447cd1c72eb60182d38",
+      "f0ff8ec1116a161bb476b068da80d81c0d37513b",
+      "4c6a09cc078de919b4fea4a5ed1468260500161c",
+      "2953bc15d8b8ed7aff34bbca00a1fc231cecabff",
+      "6a309ca2e0c9f4adc1f9b0d9097b234b44e77c82"
+    ]
+  },
+  "evidence": {
+    "CI": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "test": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "suites": {
+      "U39": {
+        "status": "NOT_RUN",
+        "runIDs": []
+      },
+      "U40": {
+        "status": "NOT_RUN",
+        "runIDs": []
+      }
+    },
+    "absenceOfInstalledHost": "FAIL_PRECONDITION_NOT_PASS",
+    "noMockOrSkipAsSubstitute": true,
+    "assertionsRelaxed": false
+  },
+  "handoffs": {
+    "integrateInertPatch": "189/PR65",
+    "realF04PrivateFixtures": "199",
+    "soleCiDispatcher": "200/PR106",
+    "compiler": "190/PR107",
+    "nativeGoal": "PAUSED",
+    "GLOBAL_RELEASE": false
+  },
+  "prohibitedActionsVerified": "No local tests/typechecks/build/validators, no own CI, no devmerge/deploy/Azure/engines/guardbypass/restart; no edits outside exact lease."
+}
