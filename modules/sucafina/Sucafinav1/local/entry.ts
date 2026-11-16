@@ -1,4 +1,5 @@
 import path from "node:path"
+import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
 import { createModule, contributions, type ModuleServices } from "../index.ts"
@@ -236,7 +237,7 @@ export async function createConfiguredInstallation(
       observeSfCases(nativeDependencies, request, stamp),
       actions.operational(request, stamp),
     ])
-    return observed.flatMap((item) => item.status === "fulfilled" ? item.value : [])
+    return observed.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
   }
   // Started only after composition succeeds, outside request/business scopes.
   // Auth retention runs for Microsoft too, independently of operator backup jobs.

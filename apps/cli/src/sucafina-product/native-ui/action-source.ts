@@ -4,11 +4,11 @@ import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor, Snapshot } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
-import { DashboardBudget, budgetAdminCanWrite } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts"
+import { DashboardBudget, budgetAdminCanWrite, budgetCanEditAnyLine } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts"
 import { DashboardPeople, peopleCanWrite } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people.ts"
 import { DashboardOperations, operationsCanWrite } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts"
 import { DashboardPortfolio, portfolioCanWrite, portfolioCanImport } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts"
-import { PlannerModule, plannerAdminSourceAvailable } from "../../../../../modules/sucafina/Sucafinav1/runtime/planner.ts"
+import { PlannerModule, plannerAdminSourceAvailable, plannerAdminImportAvailable, plannerCurrentPageActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/planner.ts"
 import { ProcurementModule, procurementCanCreateRequest, procurementCurrentRequestActions, procurementCanManageSettings, procurementSupplierRoleAllows } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../../../../../modules/sucafina/Sucafinav1/src/nav.ts"
 import { SF_OPERATIONS_ACTIONS } from "./operations/projection.ts"
@@ -21,8 +21,8 @@ type Source = Readonly<{ surface: SfLiveAdmittedPage["surface"]; page: string; i
 const sources: readonly Source[] = [
   { surface: "dashboard", page: "Executive Dashboard", id: "CAP01", domain: DashboardBudget.domain, actions: (a) => budgetAdminCanWrite(a) ? ["save-users", "save-benchmark"] : [] },
   { surface: "dashboard", page: "Budget Overview", id: "CAP03", domain: DashboardBudget.domain, actions: (a) => budgetAdminCanWrite(a) ? ["save-month", "save-revenue"] : [] },
-  { surface: "dashboard", page: "OPEX Detail", id: "CAP04", domain: DashboardBudget.domain, actions: (a) => budgetAdminCanWrite(a) ? ["save", "delete", "save-entry", "save-deviation", "annual-entry", "year-amount", "import"] : [] },
-  { surface: "dashboard", page: "CAPEX Projects", id: "CAP05", domain: DashboardBudget.domain, actions: (a) => budgetAdminCanWrite(a) ? ["save", "delete", "save-entry", "save-deviation", "annual-entry", "year-amount"] : [] },
+  { surface: "dashboard", page: "OPEX Detail", id: "CAP04", domain: DashboardBudget.domain, actions: (a, s) => budgetAdminCanWrite(a) || budgetCanEditAnyLine(s, a, "opexOwners") ? ["save", "delete", "save-entry", "save-deviation", "annual-entry", "year-amount", ...(budgetAdminCanWrite(a) ? ["import"] : [])] : [] },
+  { surface: "dashboard", page: "CAPEX Projects", id: "CAP05", domain: DashboardBudget.domain, actions: (a, s) => budgetAdminCanWrite(a) || budgetCanEditAnyLine(s, a, "capexProjects") ? ["save", "delete", "save-entry", "save-deviation", "annual-entry", "year-amount"] : [] },
   { surface: "dashboard", page: "Hot Topics & Actions", id: "CAP02", domain: DashboardPeople.domain, actions: (a) => peopleCanWrite(a, "Hot Topics & Actions") ? SF_PEOPLE_ACTIONS.CAP02 : [] },
   { surface: "dashboard", page: "Team Structure", id: "CAP07", domain: DashboardPeople.domain, actions: (a) => peopleCanWrite(a, "Team Structure") ? SF_PEOPLE_ACTIONS.CAP07 : [] },
   { surface: "dashboard", page: "Talent Review", id: "CAP08", domain: DashboardPeople.domain, actions: (a) => peopleCanWrite(a, "Talent Review") ? SF_PEOPLE_ACTIONS.CAP08 : [] },
@@ -33,8 +33,13 @@ const sources: readonly Source[] = [
   { surface: "dashboard", page: "Vendor Contracts", id: "CAP14", domain: DashboardPortfolio.domain, actions: (a) => portfolioCanWrite(a, "contracts") ? ["save", "delete"] : [] },
   { surface: "dashboard", page: "Stakeholder Management", id: "CAP15", domain: DashboardPortfolio.domain, actions: (a) => portfolioCanWrite(a, "stakeholders") ? ["save", "delete"] : [] },
   { surface: "dashboard", page: "IT Performance Contract", id: "CAP16", domain: DashboardPortfolio.domain, actions: (a) => portfolioCanWrite(a, "itperf") ? ["save", "save-item", "delete-item", "save-sub", "delete-sub"] : [] },
-  { surface: "planner", page: "Entities & allocations", id: "CAP21", domain: PlannerModule.domain, actions: (a, s) => plannerAdminSourceAvailable(s, a) ? ["save", "delete", "common"] : [] },
-  { surface: "planner", page: "Versions", id: "CAP23", domain: PlannerModule.domain, actions: (a, s) => plannerAdminSourceAvailable(s, a) ? ["save", "copy", "official", "lock", "unlock", "delete"] : [] },
+  { surface: "planner", page: "Overview", id: "CAP17", domain: PlannerModule.domain, actions: (a, s) => plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [] },
+  { surface: "planner", page: "Entities & allocations", id: "CAP21", domain: PlannerModule.domain, actions: (a, s) => plannerAdminSourceAvailable(s, a) ? ["save", "delete", "common", ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] : [] },
+  { surface: "planner", page: "OPEX", id: "CAP18", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "OPEX"), ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "CAPEX", id: "CAP19", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "CAPEX"), ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "Headcount", id: "CAP20", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "Headcount"), ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "FX rates", id: "CAP22", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "FX rates"), ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "Versions", id: "CAP23", domain: PlannerModule.domain, actions: (a, s) => plannerAdminSourceAvailable(s, a) ? ["save", "copy", "official", "lock", "unlock", "delete", ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] : [] },
   { surface: "procurement", page: "Requests", id: "CAP25", domain: ProcurementModule.domain, actions: (a, s) => [...(procurementCanCreateRequest(a) ? ["create"] : []), ...procurementCurrentRequestActions(s, a)] },
   { surface: "procurement", page: "My approvals", id: "CAP26", domain: ProcurementModule.domain, actions: (a, s) => procurementCurrentRequestActions(s, a).filter((id) => id === "approve" || id === "reject") },
   { surface: "procurement", page: "Suppliers", id: "CAP27", domain: ProcurementModule.domain, actions: (a, _s, key) => ["create", "save", "activate", "block", "inactivate", "delete", "change-bank"].filter((action) => procurementSupplierRoleAllows(a, action) && (action !== "change-bank" || key?.length === 32)) },

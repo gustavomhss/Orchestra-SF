@@ -308,6 +308,38 @@ export function plannerCanAdmin(actor: Actor) {
 export function plannerAdminSourceAvailable(snapshot: Snapshot, actor: Actor) {
   return plannerCanAdmin(actor) && plannerData(snapshot.data).errors.length === 0
 }
+export function plannerAdminImportAvailable(snapshot: Snapshot, actor: Actor) {
+  if (!plannerCanAdmin(actor)) return false
+  const normalized = plannerData(snapshot.data)
+  return normalized.errors.length === 0 && rows(normalized.data.versions).some((version) => !!idOf(version.id))
+}
+/** Page-level capability from the same normalized version and field predicate used by execute. */
+export function plannerCurrentPageActions(snapshot: Snapshot, actor: Actor, page: string): readonly string[] {
+  if (!actor.canWrite || !actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role))) return []
+  const normalized = plannerData(snapshot.data)
+  if (normalized.errors.length) return []
+  const actions = new Set<string>()
+  for (const version of rows(normalized.data.versions).map(versionOf)) {
+    const official = idOf(object(normalized.data.officials)[String(version.year)])
+    const allowed = (field: string, line?: Row) => plannerField(field, version, official, actor, line ? {
+      ownerId: text(line.ownerId) || text(object(line.owner).id) || text(line.owner),
+      domain: text(line.domain), hr: line.synthetic === true,
+    } : undefined)
+    if (page === "OPEX" || page === "CAPEX") {
+      const lines = version.lines.filter((line) => line.sec === (page === "OPEX" ? "opex" : "capex"))
+      if (allowed("structure")) { actions.add("save"); actions.add("delete") }
+      if (lines.some((line) => ["actual", "forecast", "budget"].some((field) => allowed(field, line)))) actions.add("save")
+      if (lines.some((line) => line.synthetic !== true && allowed("budget", line))) { actions.add("spread"); actions.add("reset") }
+    }
+    if (page === "Headcount") {
+      if (allowed("headcount") || allowed("rate") || allowed("increase")) actions.add("save")
+      if (allowed("headcount") || allowed("rate")) actions.add("delete")
+      if (allowed("headcount")) actions.add("sync")
+    }
+    if (page === "FX rates" && allowed("fx")) { actions.add("save"); actions.add("delete") }
+  }
+  return [...actions]
+}
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite || !actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role)))
@@ -2078,7 +2110,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
   const stale = conflict(snapshot, `versions:${source.id}`, command, source)
   if (stale) return stale
   const asNew = input.newVersion === true
-  if (asNew && !actor.roles.includes("admin")) return { ok: false, status: 403 }
+  if (asNew && !plannerCanAdmin(actor)) return { ok: false, status: 403 }
   const version = structuredClone(source)
   if (asNew) {
     version.id = environment.id()

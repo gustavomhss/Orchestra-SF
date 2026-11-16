@@ -1,5 +1,5 @@
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
-import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
+import type { SfContextStamp, SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -88,7 +88,7 @@ export async function observeSfDomainHealth(deps: SfNativeHostDependencies, hand
     if (!final || !final.members || final.fence !== second.fence || final.actor !== second.actor || request.signal.aborted) return observed
     return [...observed, { operationId: id, state: "ready" as const, reason: null, operational: true as const }]
   }))
-  return result.flatMap((item) => item.status === "fulfilled" ? item.value : [])
+  return result.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
 }
 
 function isOperation(value: string): value is SfOperationId {

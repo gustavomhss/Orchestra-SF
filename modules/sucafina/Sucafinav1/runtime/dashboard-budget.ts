@@ -44,6 +44,15 @@ const budgetKeys = [
 export function budgetAdminCanWrite(actor: Actor) {
   return actor.canWrite && actor.roles.includes("admin")
 }
+export function budgetCanWriteLine(snapshot: Snapshot, actor: Actor, collection: string, id: unknown) {
+  if (budgetAdminCanWrite(actor)) return true
+  const allowed = object(snapshot.data.budgetLineIds)[actor.id]
+  return actor.canWrite && actor.roles.includes("domain leader") && Array.isArray(allowed) &&
+    allowed.includes(`${collection}:${String(id ?? "")}`)
+}
+export function budgetCanEditAnyLine(snapshot: Snapshot, actor: Actor, collection: "opexOwners" | "capexProjects") {
+  return rows(snapshot.data[collection]).some((line) => budgetCanWriteLine(snapshot, actor, collection, line.id))
+}
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite) return { ok: false, status: 403 }
@@ -234,10 +243,9 @@ export const domain: Domain = {
 }
 function execute(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment): Result {
   const admin = budgetAdminCanWrite(actor)
-  const allowed = object(snapshot.data.budgetLineIds)[actor.id]
   // Raw legacy IDs are deliberately inert until an admin explicitly reselects each collection-qualified row.
   const canLine = (collection: string, id: unknown) =>
-    admin || (Array.isArray(allowed) && allowed.includes(`${collection}:${String(id ?? "")}`))
+    budgetCanWriteLine(snapshot, actor, collection, id)
   const value: Record<string, unknown> = {
     ...command.values,
     versions:

@@ -1,4 +1,5 @@
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
+import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { randomUUID } from "node:crypto"
 import { createSfPersonalViews } from "../../../../modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
 import { createSfPersonalViewAuthority } from "./personal-view-authority.ts"
@@ -937,7 +938,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])
-      return observations.flatMap((item) => item.status === "fulfilled" ? item.value : [])
+      return observations.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
     },
     admit: async (request) => {
       const admitted = await authority.readContextAdmission(request)
