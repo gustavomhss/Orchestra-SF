@@ -1,0 +1,89 @@
+{
+  "schema": "sf2h.repair217.inert-patches.v1",
+  "mission": 217,
+  "finding": "S1-R1-207-001",
+  "scope": "CROSS_LEASE_NOT_APPLIED",
+  "goal_native": "paused",
+  "GLOBAL_RELEASE": false,
+  "frozen_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "frozen_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "preserved": "15 WPs; 74 tasks; 17 contracts; 1610 criteria; 39 MCP operations",
+  "operation_delta": {
+    "id": "intelligence.memory-similar-cases",
+    "surface": "dashboard",
+    "family": "memory",
+    "kind": "UI-only typed read",
+    "MCP_delta": 0,
+    "extra_grants": 0,
+    "method": "POST",
+    "pathTemplate": "{mount}/dashboard",
+    "fixedQuery": {
+      "sf": "memory-similar-cases"
+    },
+    "maxRequestBytes": 65536,
+    "responseMode": "json",
+    "effect": "read",
+    "noStore": true,
+    "sameOrigin": true,
+    "original_admission": "sf-human:analysis.read via existing authority.ui.admit/validate and withCase",
+    "source": "apps/cli/src/sucafina-product/business-services.ts:business.caseRecall + business.cases.read + business.context.context",
+    "producer": "modules/sucafina/Sucafinav1/product/memory/similarity217.ts:createSfSimilarCases217",
+    "consumer": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+    "required_composer_wiring": "similarCases: createSfSimilarCases217({ caseRecall: business.caseRecall, cases: business.cases, context: business.context, host: authority.host })",
+    "required_composer_owner": "211/I00 at original createSfMemoryHttp composition; no separate listener and no new grant",
+    "preconditions": [
+      "existing memory-http handler already routed as SfHostServices.productHttp",
+      "reuse same initialized business/authority/Request/owner",
+      "CAS preimage before touching any shared file"
+    ],
+    "postconditions": [
+      "typed F02 codec auto binds SfMemory.operations when common/registry are updated",
+      "original C09 and C17/Atlas evidence egress revalidated",
+      "39 MCP catalog and frozen plan unchanged"
+    ]
+  },
+  "apply_rule": "For each patch require exact pre_blob before replacing with post_blob; on drift review context and merge into 211 own branch. Never write cross-lease from 217.",
+  "patches": [
+    {
+      "path": "packages/schema/src/sucafina/common.ts",
+      "pre_blob": "f486d0bdb266935791059514c11c34372204623f",
+      "post_blob": "1d2b8f5606fcf23f010a19148e3ca09e108d2db6",
+      "purpose": "UI-only closed ID, not MCP",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "I00/211"
+    },
+    {
+      "path": "packages/schema/src/sucafina/operation-registry.ts",
+      "pre_blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+      "post_blob": "0f1959d82a2e6a5c4ed745c3ad518339456f9ff7",
+      "purpose": "POST read JSON 65536 fixed query",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "I00/211"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra.ts",
+      "pre_blob": "8268cda221a272faceef08223726bda1458ccc83",
+      "post_blob": "e4f42b7aa0d4b9e0928d132d8a0b1596c334f698",
+      "purpose": "English/pt-BR typed copy registry",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "I00/211"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-http.ts",
+      "pre_blob": "f727d5250024df7338491321c36e7055d7c18f74",
+      "post_blob": "9c2c124b76dda4958e20385f9c5311188de580ec",
+      "purpose": "bounded POST original-Request C09/C17 producer",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "I00/211"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u26.spec.ts",
+      "pre_blob": "1bb0d8c9447426f63bc0ee7264aaf4a8284b7876",
+      "post_blob": "5bb883e96ee1e24175f40f2213011a5abc26f570",
+      "purpose": "replace obsolete UI62 unavailable assertion",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "I00/211"
+    }
+  ],
+  "status": "INERT_PENDING_211"
+}

@@ -1,0 +1,134 @@
+{
+  "schema": "sf2h.repair217.handoff.v1",
+  "finding_id": "S1-R1-207-001",
+  "mission": 217,
+  "epoch": "review-fix-e1-browser217",
+  "branch": "sf-similar-cases",
+  "merge_target": "sf-closure-bundle",
+  "owner": "217",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "session_id_state": "not-exposed",
+  "initial_head": "41dfcd8fa5063129d5ed0968d7f9d1ed081238a6",
+  "ack_commit": "7f722baff0fbd9f751cc94aeeaccfef4f56fcb8c",
+  "verified_fence_blob": "b9dd97e3453628a0fd8ffc2556c978a2fe140c2d",
+  "fixed_contracts": {
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "counts": "15WP/74tasks/17contracts/1610criteria/39MCP"
+  },
+  "owned_code": [
+    {
+      "path": "packages/schema/src/sucafina/memory.ts",
+      "pre_blob": "554c07bbf881b89ab9df852cdbf61322547f6382",
+      "post_blob": "fdb236cfc7eed079904d0664c69a953aaa9112e7"
+    },
+    {
+      "path": "packages/client/src/sucafina/memory.ts",
+      "pre_blob": "cddd7ceccc66bc5faf38d169bede03efa31440db",
+      "post_blob": "c63a98050984e937da4105b2667b670b73579d28"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/memory/similarity217.ts",
+      "pre_blob": null,
+      "post_blob": "1d3f1ecac45e03cc3b112727f2de21174142672b"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similarity-copy.ts",
+      "pre_blob": null,
+      "post_blob": "91d27442af391adaf876dd3541ca510ced4d4bdb"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+      "pre_blob": null,
+      "post_blob": "71c06dd535c80865de69fd0031e95235f91c3f93"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+      "pre_blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+      "post_blob": "e39fbb08e92ab7e816cd0db3ca38bc60a8ac6e91"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css",
+      "pre_blob": "514c7ef4563138991bb83ff717e776000bb077bf",
+      "post_blob": "809fa80d48b8c1d513cb870f7953925755b9398d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/similarity217/installed.test.ts",
+      "pre_blob": null,
+      "post_blob": "f9b72688d922c12268a83d02cdf22d46f1f511af"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/similarity217/ui62.spec.ts",
+      "pre_blob": null,
+      "post_blob": "9acbcbf14ad001bff34391f0e907f37266d5eec9"
+    }
+  ],
+  "inert_patches": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair217/INERT-PATCHES.json",
+    "blob": "79c01bd9b9612837eb8b898a3bb164ad9ba95c06",
+    "count": 5,
+    "status": "INERT_NOT_APPLIED"
+  },
+  "criteria_and_proof": {
+    "217-AC01": "UI62 selects from genuine authorized projection.cases; projection.case establishes original C09 case version/horizon; installed e2e selector prepared",
+    "217-AC02": "createSfCaseRecall over actual Atlas memory; match requires decision-type provenance, evidence refs and readback; installed source proof prepared",
+    "217-AC03": "C09 exact cutoff, historical boolean, differences and source states; test installed.test.ts historical scenario",
+    "217-AC04": "No self-match; <=50 versioned candidates; duplicate explicit inputs rejected, dedup actual matching C17 event; collision fails closed",
+    "217-AC05": "Original C09/C17 ACL and second egress checks; revoked, replaced and changed fail without match/count leak",
+    "217-AC06": "Alice/Bob distinct admission, revoke after original and fresh second admission; fixture code, not actual CI result",
+    "217-AC07": "owner.generation/abort cancellation clears catalog, result, detail on owner swap, no cached cross-principal content",
+    "217-AC08": "Selection, query, states and error paths, keyboard buttons, 320/768/1024/1280/1440 reflow in leaf and e2e",
+    "217-AC09": "Detail opens original C09 projection.case and verifies incarnation/version, no fabricated precedent",
+    "217-AC10": "Five complete out-of-lease pre/post Git blobs for I00/211; +1 typed UI-only read op, 0 MCP/grants and no plan edits",
+    "217-AC11": "CI214 and 207 independent recheck requested below; zero local test/build/CI runs and no false runtime proof"
+  },
+  "expected_behavior": {
+    "ok": "Same-owner original case C09 -> real Atlas event + C17 evidence revalidation -> reason, current differences, linked original",
+    "empty": "Actual authoritatively empty recall, not hardcoded unavailable",
+    "denied": "Other principal, revoked, owner swap, changed case or source fail closed with zero exposed candidate count",
+    "historical": "Only authorized C12 historical records in original period and requested flag; never label stale as fresh",
+    "dedup": "No repeated duplicate event; mismatch of repeated record or selected candidate refuses",
+    "keyboard": "Native select/input/checkbox/button, Enter submits; reflow CSS"
+  },
+  "ci_request_214": {
+    "status": "REQUESTED_NOT_RUN",
+    "runs": [],
+    "selectors": [
+      "bun test modules/sucafina/Sucafinav1/test/product/similarity217/installed.test.ts",
+      "playwright test packages/app-shell/e2e/sucafina/native/journeys/similarity217/ui62.spec.ts",
+      "playwright test packages/app-shell/e2e/sucafina/native/journeys/u26.spec.ts"
+    ],
+    "candidate_SHA": "211_INTEGRATED_SHA_REQUIRED",
+    "inputs": [
+      "SF_NATIVE_INSTALLED_MANIFEST + SF_NATIVE_CANDIDATE_SHA from real F04 installation",
+      "SF_NATIVE_SIMILAR217_SOURCE_REF original case:id:incarnation",
+      "SF_NATIVE_SIMILAR217_PRECEDENT_REF original case:id:incarnation",
+      "SF_NATIVE_SIMILAR217_PRECEDENT_ID from actually committed same-owner C09/C17 Atlas memory",
+      "Real F04 two-actor requester/denied + wrongProject; no test-owned session/auth"
+    ],
+    "prerequisites": [
+      "211 applies the complete inert shared operation/host/i18n patches with CAS",
+      "211 binds installed createSfMemoryHttp to original business.caseRecall",
+      "214 owns real runner selectors/SHA and returns true run IDs"
+    ],
+    "expected_receipt": "Per-selector runID, SHA, installed actor/principal, coverage, failures and original source observations; no test run inferred from this handoff"
+  },
+  "recheck_207": {
+    "requested": true,
+    "reviewer": "S1-R1-207",
+    "finding_id": "S1-R1-207-001",
+    "inputs": "217 PR, 211 integrated commit, 214 actual validation receipts",
+    "criteria": "UI62 real end-to-end; two actors, cutoff, dedup, stale/historical/revoked, owner swap, keyboard, reflow, no misleading similarity"
+  },
+  "status": {
+    "code": "AUTHORED_UNQUALIFIED",
+    "shared_integrator": "PENDING_211",
+    "tests": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "web_product": "NOT_PROVEN",
+    "desktop": "NOT_PROVEN",
+    "GLOBAL_RELEASE": false,
+    "goal_native": "paused"
+  }
+}

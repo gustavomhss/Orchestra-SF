@@ -17,3 +17,34 @@
 .sf-memory-section ul:not(.sf-memory-list) { margin-top: 0; overflow-wrap: anywhere; }
 @media (max-width: 37rem) { .sf-memory-facts { grid-template-columns: 1fr; gap: .15rem; } .sf-memory-facts dd { margin-bottom: .5rem; } .sf-memory-form label, .sf-memory-form button { flex-basis: 100%; } }
 @media (prefers-reduced-motion: reduce) { .sf-memory * { scroll-behavior: auto; } }
+
+
+/* 217/UI62 — source-locked similarity. Token inheriting, no overlay or private cache. */
+.sf-memory-similarity-form { display: grid; gap: .95rem; min-width: 0; }
+.sf-memory-similarity-form > label, .sf-memory-section > label { display: grid; gap: .4rem; min-width: 0; }
+.sf-memory-similarity input[type="search"], .sf-memory-similarity select {
+  width: 100%; min-width: 0; font: inherit; color: inherit; background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: .5rem; padding: .65rem .75rem;
+}
+.sf-memory-similarity .sf-memory-check {
+  display: flex; align-items: center; gap: .6rem; min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sf-memory-similarity .sf-memory-check input { flex: 0 0 auto; width: 1.15rem; height: 1.15rem; }
+.sf-memory-candidates { min-width: 0; margin: 0; padding: .8rem; border-radius: .65rem;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent); }
+.sf-memory-candidates legend { font-weight: 650; padding-inline: .3rem; }
+.sf-memory-candidate-grid { display: grid; gap: .6rem; max-height: 17rem; overflow-y: auto; min-width: 0; }
+.sf-memory-candidate-grid label { padding: .4rem; border-radius: .35rem; }
+.sf-memory-candidate-grid label:focus-within { outline: 2px solid currentColor; outline-offset: 1px; }
+.sf-memory-similarity .sf-memory-list li > div { min-width: min(100%, 17rem); }
+.sf-memory-similarity [data-sf-similar-detail] { border-block-start: 1px solid color-mix(in srgb, currentColor 24%, transparent); padding-block-start: 1rem; }
+@media (min-width: 60rem) {
+  .sf-memory-candidate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 37rem) {
+  .sf-memory-similarity-form, .sf-memory-similarity .sf-memory-list li { gap: .8rem; }
+  .sf-memory-similarity .sf-memory-list li > button { width: 100%; }
+  .sf-memory-similarity .sf-memory-candidate-grid { grid-template-columns: minmax(0, 1fr); }
+}

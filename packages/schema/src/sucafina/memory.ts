@@ -481,9 +481,57 @@ export const SfIntelligenceMemoryOutcomeSelection = {
 
 // These seven literal bindings are the entire memory authorization surface.
 // F02/I00 supply the sole transport, registry metadata and admitted codec map.
+
+/**
+ * 217 / UI62: additive, read-only projection of the existing CaseRecall/Atlas
+ * producer. The operational catalog/codec/HTTP binding is an INERT integration
+ * delta for I00/211; no new operation is admitted by this schema alone.
+ * Candidates are exact, currently-authorized C09 versions, never owner tokens.
+ */
+const SimilarCaseInput = Schema.Struct({
+  caseId: NonBlank,
+  incarnation: NonBlank,
+  version: PositiveVersion,
+  query: NonBlank,
+  period: Period,
+  includeHistorical: Schema.Boolean,
+  candidates: Schema.Array(CaseRef).check(Schema.isMaxLength(50)),
+}).annotate(closed)
+const SimilarExplanation = Schema.Struct({
+  candidateCaseRef: CaseRef,
+  matchedCriteria: Strings,
+  currentDifferences: Strings,
+  sourceStates: Schema.Array(Schema.Literals(["fresh", "historical", "stale", "revoked", "replaced", "missing", "invalid", "unavailable"])),
+  limitations: Strings,
+}).annotate(closed)
+export const SfIntelligenceMemorySimilarCases = {
+  operationId: "intelligence.memory-similar-cases",
+  input: SimilarCaseInput,
+  output: Schema.Union([
+    Schema.Struct({
+      status: Schema.Literal("ok"),
+      matches: Schema.Array(Schema.Struct({
+        caseRef: CaseRef,
+        memoryRecordRef: NonBlank,
+        explanation: SimilarExplanation,
+        evidenceRefs: Schema.Array(EvidenceRef),
+      }).annotate(closed)),
+      limitations: Strings,
+      accessRevision: NonBlank,
+      cutoff: Schema.Struct({
+        caseRef: CaseRef,
+        period: Period,
+        includeHistorical: Schema.Boolean,
+      }).annotate(closed),
+    }).annotate(closed),
+    Failure,
+  ]),
+} as const
+
 export const SfMemory = {
   operations: {
     "intelligence.memory-catalog": SfIntelligenceMemoryCatalog,
+    "intelligence.memory-similar-cases": SfIntelligenceMemorySimilarCases,
     "intelligence.memory-conditions": SfIntelligenceMemoryConditions,
     "intelligence.memory-signals": SfIntelligenceMemorySignals,
     "intelligence.memory-materiality": SfIntelligenceMemoryMateriality,

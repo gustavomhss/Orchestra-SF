@@ -6,6 +6,13 @@ import type { SfCallOptions, SfTransport } from "./transport.ts"
 // arbitrary operation dispatch, auth policy or response caching belongs here.
 export function createSfMemoryClient(transport: SfTransport) {
   return {
+
+    /** C09/C17 authorized Atlas recall; only the installed, admitted F02 binding can execute. */
+    "intelligence.memory-similar-cases": (
+      input: typeof SfMemory.operations["intelligence.memory-similar-cases"]["input"]["Type"],
+      options: SfCallOptions,
+    ) => transport.execute(SfMemory.operations["intelligence.memory-similar-cases"], input, options),
+
     "intelligence.memory-catalog": (
       input: typeof SfMemory.operations["intelligence.memory-catalog"]["input"]["Type"],
       options: SfCallOptions,
