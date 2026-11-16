@@ -18,11 +18,19 @@ const sha = "a".repeat(40)
 const runId = "123"
 const attempt = "1"
 const treeSha = "c".repeat(40)
+// Keep fixture paths identical to the normative suites.json topology.
+const suiteDirectories = {
+  "CI-SF": "modules/sucafina",
+  "CI-CLI": "apps/cli",
+  "CI-APP-SRC": "packages/app-shell",
+  "CI-APP-BROWSER": "packages/app-shell",
+  "CI-ATLAS-BUSINESS": "modules/atlas/boundary",
+}
 const manifest = {
   schemaVersion: 1, product: "Orchestra-SF", target: { os: "Linux", arch: "X64" },
   suites: REQUIRED.map((id) => id.startsWith("CI-UI-")
     ? { id, kind: "playwright", directory: "packages/app-shell", specFile: "e2e/sucafina/" + id.split("-").at(-1).toLowerCase() + ".spec.ts" }
-    : { id, kind: "bun", directory: "modules/sucafina",
+    : { id, kind: "bun", directory: suiteDirectories[id],
       ...(id === "CI-APP-BROWSER"
         ? { selection: { kind: "directory", testDirectory: "test-browser/sucafina-native",
             releaseOnlyFiles: ["test-browser/sucafina-native/transport-integration.test.ts"] } }
@@ -268,27 +276,99 @@ test("all suite families have a manifest declaration; no hidden Windows or macOS
 test("CI-05 discovers newly added source/Bun tests without changing YAML or allowing undeclared skips", () => {
   const root = mkdtempSync(path.join(tmpdir(), "sf-ci-select-"))
   const write = (filename) => {
-    const location = path.join(root, "modules/sucafina", filename)
+    const location = path.join(root, filename)
     mkdirSync(path.dirname(location), { recursive: true })
     writeFileSync(location, "test('covered', () => {})")
   }
+  const app = (name) => "packages/app-shell/" + name
+  const sf = (name) => "modules/sucafina/" + name
   try {
-    write("src/first.test.ts")
-    write("src/nested/new-test.test.ts")
+    // The APP-SRC unit lane admits tests under packages/app-shell/src,
+    // not the modules/sucafina tree used by the independent SF lane.
+    write(app("src/first.test.ts"))
+    write(app("src/nested/new-test.test.ts"))
     assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-SRC", root),
       ["src/first.test.ts", "src/nested/new-test.test.ts"])
-    write("src/nested/new-third.test.ts")
+    write(app("src/nested/new-third.test.ts"))
     assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-SRC", root),
       ["src/first.test.ts", "src/nested/new-test.test.ts", "src/nested/new-third.test.ts"])
-    write("Sucafinav1/test/real.test.ts")
-    write("Sucafinav1/test/parity-pitr.test.ts")
-    write("porta/mandatory.test.ts")
-    assert.deepEqual(selectSuiteFiles(manifest, "CI-SF", root),
-      ["Sucafinav1/test/real.test.ts", "porta/mandatory.test.ts",
-        "src/first.test.ts", "src/nested/new-test.test.ts", "src/nested/new-third.test.ts"])
-    rmSync(path.join(root, "modules/sucafina/Sucafinav1/test/parity-pitr.test.ts"))
+
+    // SF's full module must discover new tests in test/, src/ and porta/,
+    // excluding only the exact reviewable release-only manifest entry.
+    write(sf("Sucafinav1/test/real.test.ts"))
+    write(sf("Sucafinav1/test/nested/new.test.ts"))
+    write(sf("Sucafinav1/src/contract.spec.ts"))
+    write(sf("Sucafinav1/test/parity-pitr.test.ts"))
+    write(sf("porta/mandatory.test.ts"))
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-SF", root), [
+      "Sucafinav1/src/contract.spec.ts",
+      "Sucafinav1/test/nested/new.test.ts",
+      "Sucafinav1/test/real.test.ts",
+      "porta/mandatory.test.ts",
+    ])
+    write(sf("porta/late-added.test.ts"))
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-SF", root), [
+      "Sucafinav1/src/contract.spec.ts",
+      "Sucafinav1/test/nested/new.test.ts",
+      "Sucafinav1/test/real.test.ts",
+      "porta/late-added.test.ts",
+      "porta/mandatory.test.ts",
+    ])
+
+    write(app("test-browser/sucafina-native/transport-contract.test.ts"))
+    write(app("test-browser/sucafina-native/nested/new-browser.test.ts"))
+    write(app("test-browser/sucafina-native/transport-integration.test.ts"))
+    write(app("test/other.test.ts"))
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-BROWSER", root), [
+      "test-browser/sucafina-native/nested/new-browser.test.ts",
+      "test-browser/sucafina-native/transport-contract.test.ts",
+    ])
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-SRC", root),
+      ["src/first.test.ts", "src/nested/new-test.test.ts", "src/nested/new-third.test.ts"])
+
+    rmSync(path.join(root, sf("Sucafinav1/test/parity-pitr.test.ts")))
     assert.throws(() => selectSuiteFiles(manifest, "CI-SF", root),
-      /missing\/unsafe file in selected candidate/)
+      /missing\\/unsafe file in selected candidate/)
+    rmSync(path.join(root, app("test-browser/sucafina-native/transport-integration.test.ts")))
+    assert.throws(() => selectSuiteFiles(manifest, "CI-APP-BROWSER", root),
+      /missing\\/unsafe file in selected candidate/)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+test("CI-05 admission roots cannot be narrowed by a manifest edit", () => {
+  for (const [id, narrowed] of [
+    ["CI-SF", "modules/sucafina/Sucafinav1/test"],
+    ["CI-CLI", "apps/cli/test"],
+    ["CI-APP-SRC", "packages/app-shell/src"],
+    ["CI-APP-BROWSER", "packages/app-shell/test-browser/sucafina-native"],
+    ["CI-ATLAS-BUSINESS", "modules/atlas/boundary/test"],
+    ["CI-UI-OPERATIONS", "packages/app-shell/e2e"],
+  ]) {
+    const tampered = structuredClone(manifest)
+    tampered.suites.find((suite) => suite.id === id).directory = narrowed
+    assert.throws(() => validateManifest(tampered), /suite directory drift/)
+  }
+})
+test("CI-05 newly admitted files force RED when a hardcoded runner omits them", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "sf-ci-drift-"))
+  const write = (filename) => {
+    const full = path.join(root, "modules/sucafina", filename)
+    mkdirSync(path.dirname(full), { recursive: true })
+    writeFileSync(full, "test('covered',()=>{})")
+  }
+  try {
+    write("test/sf-authorized-sample.test.ts")
+    write("Sucafinav1/test/parity-pitr.test.ts")
+    const data = fixture()
+    const defaultSelection = data.selectionProvider
+    data.selectionProvider = (m, id) => id === "CI-SF"
+      ? selectSuiteFiles(m, id, root) : defaultSelection(m, id)
+    assert.equal(verifyAll(data).suiteCount, 8)
+    write("porta/newly-admitted.test.ts")
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-SF", root),
+      ["porta/newly-admitted.test.ts", "test/sf-authorized-sample.test.ts"])
+    assert.throws(() => verifyAll(data), /selected files were not all executed/)
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
@@ -296,7 +376,7 @@ test("CI-05 discovers newly added source/Bun tests without changing YAML or allo
 test("CI-05 source selection denies symlink escapes and paths without a test extension", () => {
   const root = mkdtempSync(path.join(tmpdir(), "sf-ci-symlink-"))
   try {
-    const dir = path.join(root, "modules/sucafina/src")
+    const dir = path.join(root, "packages/app-shell/src")
     mkdirSync(dir, { recursive: true })
     writeFileSync(path.join(dir, "good.test.ts"), "test('yes',()=>{})")
     symlinkSync(tmpdir(), path.join(dir, "escape"))
@@ -304,6 +384,20 @@ test("CI-05 source selection denies symlink escapes and paths without a test ext
     rmSync(path.join(dir, "escape"))
     writeFileSync(path.join(dir, "README.md"), "not a test")
     assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-SRC", root), ["src/good.test.ts"])
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+test("CI-05 explicit selections reject symlinked parent paths inside the checkout", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "sf-ci-parent-link-"))
+  try {
+    const cliRoot = path.join(root, "apps/cli")
+    const realTestDir = path.join(cliRoot, "real-tests")
+    mkdirSync(realTestDir, { recursive: true })
+    writeFileSync(path.join(realTestDir, "sf-authorized-sample.test.ts"), "test('yes',()=>{})")
+    symlinkSync("real-tests", path.join(cliRoot, "test"), "dir")
+    assert.throws(() => selectSuiteFiles(manifest, "CI-CLI", root),
+      /missing\\/unsafe file in selected candidate/)
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
