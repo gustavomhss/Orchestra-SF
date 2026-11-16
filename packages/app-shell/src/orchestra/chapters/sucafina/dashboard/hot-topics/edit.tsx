@@ -7,6 +7,7 @@ import { SfChangeReview } from "../../shared/change-review"
 import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfCopyKey, SfDisplayValue } from "../../shared/frame/types"
 import type { SfDraftRegistry } from "../../context/contracts"
+import type { SfJson } from "@orchestra/schema/sucafina/common"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
 import type { Topic } from "./reader"
 
@@ -49,6 +50,7 @@ export type HotTopicEditProps = Readonly<{
   canSave: boolean
   onRefetch: () => void
   scope: string
+  readInput: SfJson
   onBack: () => void
 }>
 
@@ -64,12 +66,12 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
     editScopeKey: scope,
     identity: props.record ? { kind: "record", recordRef: props.record.id as SfRef } :
       { kind: "new", newIntentRef: newIntent },
-    baseVersion: props.version ?? 0,
+    baseVersion: props.record ? props.version ?? 0 : null,
     base: props.record ? source() : null,
     value: source(),
-    revalidation: { operationId: "domain.page.CAP02", input: {},
-      fieldPaths: ["data.hotTopics.action", "data.hotTopics.owner", "data.hotTopics.due",
-        "data.hotTopics.status", "data.hotTopics.priority", "data.hotTopics.notes"],
+    revalidation: { operationId: "domain.page.CAP02", input: props.readInput,
+      fieldPaths: props.record ? (["action", "owner", "due", "status", "priority", "notes"] as const)
+        .filter((field) => props.record?.[field] !== undefined) : [],
       actionIds: ["save"] },
   }))
   const [stage, setStage] = createSignal<"edit" | "review">("edit")
@@ -105,7 +107,7 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
 
   async function save() {
     const current = active(), proposed = value()
-    if (!admitted() || !current || current.baseVersion !== (props.version ?? 0)) {
+    if (!admitted() || !current || current.baseVersion !== (props.record ? props.version ?? 0 : null)) {
       setFeedback("conflict");setStage("edit");return
     }
     setBusy(true);setStage("edit")
@@ -113,11 +115,11 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
     const idempotencyKey = crypto.randomUUID()
     try {
       const payloadDigest = await digest({ id: props.record?.id, version: props.version ?? 0, fields: proposed })
-      if (!props.canSave || !valid(value()) || active()?.baseVersion !== (props.version ?? 0) ||
+      if (!props.canSave || !valid(value()) || active()?.baseVersion !== (props.record ? props.version ?? 0 : null) ||
         active()?.pendingOperation || active()?.conflict) {
         setFeedback("conflict");return
       }
-      draft().setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: props.version ?? 0 })
+      draft().setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: props.record ? props.version ?? 0 : null })
       if (!active()?.pendingOperation) {setFeedback("conflict");return}
       draft().setPhase("submitting")
       const result = await createSfPeopleClient(props.transport)["domain.command.CAP02.save"]({
