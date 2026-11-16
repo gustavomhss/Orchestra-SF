@@ -1,6 +1,7 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { usePlatform } from "@/context/platform"
 import { useSfContext } from "../../context"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef, SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
@@ -55,6 +56,7 @@ const active = (phase: Phase) => phase === "reviewing" || phase === "checking" |
 export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
   const host = useSfContext()
   const language = useLanguage()
+  const platform = usePlatform()
   const t = (key: SfU14CopyKey) => language.t(k(key) as Parameters<typeof language.t>[0])
   const [ui, setUi] = createStore<{
     token: string | null
@@ -337,24 +339,69 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
         setUi("csvState", "stale")
         return
       }
-      const blob = new Blob([new Uint8Array(result.bytes)], { type: result.mediaType })
+
       if (controller.signal.aborted || authority() !== token || !csvAllowed()) return
-      const url = URL.createObjectURL(blob)
-      try {
-        const anchor = document.createElement("a")
-        anchor.href = url
-        anchor.download = result.fileName
-        anchor.rel = "noopener"
-        document.body.append(anchor)
-        try { anchor.click() }
-        finally { anchor.remove() }
-      } finally {
-        // Release the ephemeral object URL after the browser consumes the click.
-        setTimeout(() => URL.revokeObjectURL(url), 10_000)
+      if (platform.downloadResponse) {
+        // Existing native response-download IPC: chooser, 64-KiB writes, temp
+        // file, atomic finish and cancel. Check the active owner every chunk;
+        // a change errors reader.closed and cancels even an in-flight chooser.
+        let offset = 0
+        let sink: ReadableStreamDefaultController<Uint8Array> | undefined
+        const revoke = () => {
+          try { sink?.error(new DOMException("Supplier CSV owner changed", "AbortError")) }
+          catch { /* source already closed */ }
+        }
+        const bytes = new Uint8Array(result.bytes)
+        const source = new ReadableStream<Uint8Array>({
+          start(current) {
+            sink = current
+            controller.signal.addEventListener("abort", revoke, { once: true })
+          },
+          pull(current) {
+            if (controller.signal.aborted || authority() !== token ||
+                host.ready()?.transport !== ready.transport || !csvAllowed()) {
+              revoke()
+              return
+            }
+            if (offset === bytes.byteLength) { current.close(); return }
+            const end = Math.min(offset + 64 * 1024, bytes.byteLength)
+            current.enqueue(new Uint8Array(bytes.subarray(offset, end)))
+            offset = end
+          },
+          cancel() { controller.signal.removeEventListener("abort", revoke) },
+        }, { highWaterMark: 0 })
+        try {
+          await platform.downloadResponse(
+            new Response(source as BodyInit, { headers: { "Content-Type": result.mediaType } }),
+            result.fileName,
+          )
+        } finally {
+          controller.signal.removeEventListener("abort", revoke)
+          sink = undefined
+        }
+        if (controller.signal.aborted || authority() !== token) return
+      } else {
+        // Web: original producer bytes only, never frontend-generated CSV.
+        const blob = new Blob([new Uint8Array(result.bytes)], { type: result.mediaType })
+        if (controller.signal.aborted || authority() !== token || !csvAllowed()) return
+        const url = URL.createObjectURL(blob)
+        try {
+          const anchor = document.createElement("a")
+          anchor.href = url
+          anchor.download = result.fileName
+          anchor.rel = "noopener"
+          document.body.append(anchor)
+          try { anchor.click() }
+          finally { anchor.remove() }
+        } finally {
+          setTimeout(() => URL.revokeObjectURL(url), 10_000)
+        }
       }
       setUi("csvState", "idle")
-    } catch {
-      if (!controller.signal.aborted && authority() === token) {
+    } catch (error) {
+      if (!controller.signal.aborted &&
+          !(error instanceof DOMException && error.name === "AbortError") &&
+          authority() === token) {
         console.error("SF_SUPPLIER_CSV_DOWNLOAD_FAILED")
         setUi("csvState", "unavailable")
       }

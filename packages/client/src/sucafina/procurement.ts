@@ -23,9 +23,9 @@ export async function exportSfSupplierCsv(
   transport: SfTransport, input: SfSupplierCsvExportRequest, options: SfCallOptions,
 ): Promise<SfSupplierCsvExportResult> {
   if (input.surface !== "procurement" || Object.keys(input).length !== 1) return { status: "invalid" }
+  if (options.signal.aborted) return { status: "aborted" }
   const binding = csvPort(transport)
   if (!binding) return { status: "unavailable" }
-  if (options.signal.aborted) return { status: "aborted" }
   try { return await binding.downloadSupplierCsv(input, options) }
   catch { return options.signal.aborted ? { status: "aborted" } : { status: "unavailable" } }
 }
