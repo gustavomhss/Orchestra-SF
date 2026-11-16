@@ -33,9 +33,10 @@ export function parsePeopleRouteQuery(params: URLSearchParams, candidate: SfNati
 }
 export function peopleRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-people" || !isPeopleSurface(candidate.surfaceId) || !kinds[candidate.surfaceId].includes(candidate.kind)) return false
+  const operation = operations[candidate.surfaceId]
   return context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead) &&
     context.availability.some((resource) => resource.family === "domain-read" && resource.resource === candidate.surfaceId &&
-      resource.operations.some((item) => item.operationId === operations[candidate.surfaceId].operationId && item.state === "ready" && item.operational))
+      resource.operations.some((item) => item.operationId === operation.operationId && item.state === "ready" && item.operational))
 }
 export function SfPeoplePages(props: Readonly<{ route: SfResolvedRoute }>): JSX.Element {
   return <Switch>
