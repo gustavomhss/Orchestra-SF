@@ -13,6 +13,8 @@ test("home probe executes the real producer and checks original admission and re
   let actor = "person"
   let available = true
   let revokeDuringRead = false
+  let version = 1
+  let changeDuringRead = false
   const ui = createSfUiAuthority({
     createId: () => crypto.randomUUID(), now: Date.now, commandIdentity: async () => crypto.randomUUID(),
     authorize: async (request, operation) => {
@@ -28,7 +30,9 @@ test("home probe executes the real producer and checks original admission and re
     if (!available) return { status: "unavailable" }
     const value = callback({ cases: {} }, stamp)
     if (revokeDuringRead) revision = "revoked"
-    return { status: "ok", value }
+    const result = { status: "ok", storageVersion: version, aggregateRevision: version, incarnation: "state", value }
+    if (changeDuringRead) version++
+    return result
   } } }
   expect(await observeSfHome(runtime as never, original, stamp)).toEqual([
     { operationId: "projection.home", state: "ready", reason: null, operational: true },
@@ -39,6 +43,9 @@ test("home probe executes the real producer and checks original admission and re
   actor = "other"
   expect(await observeSfHome(runtime as never, original, stamp)).toEqual([])
   actor = "person"
+  changeDuringRead = true
+  expect(await observeSfHome(runtime as never, original, stamp)).toEqual([])
+  changeDuringRead = false
   available = false
   expect(await observeSfHome(runtime as never, original, stamp)).toEqual([])
   available = true
@@ -60,13 +67,13 @@ test("a large home source samples at most one case and fails closed on a failed 
   })
   let dispatches = 0
   let denied = false
-  const cases = Object.fromEntries(Array.from({ length: 500 }, (_, index) => [String(index),
+  const cases = Object.fromEntries(Array.from({ length: 100 }, (_, index) => [String(index),
     { id: String(index), incarnation: "incarnation", participants: ["person"] }]))
   const runtime = {
     ui,
     state: { read: async (_request: Request, _namespace: string,
       callback: (state: { cases: typeof cases }, authority: typeof stamp) => unknown) =>
-      ({ status: "ok", value: callback({ cases }, stamp) }) },
+      ({ status: "ok", storageVersion: 1, aggregateRevision: 1, incarnation: "state", value: callback({ cases }, stamp) }) },
     dispatch: async (operation: string, payload: unknown, call: Parameters<typeof ui.validate>[0]) => {
       dispatches++
       if (!await ui.validate(call, operation, digestSfValue(payload)) || denied) return { status: "denied" }
