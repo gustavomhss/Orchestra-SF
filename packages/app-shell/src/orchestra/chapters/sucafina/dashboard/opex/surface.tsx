@@ -124,14 +124,14 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     (item) => item.family === "domain-read" && item.resource === props.capability,
   )
   const canRead = () => Boolean(destination() && availability()?.operations.some(
-    (item) => item.operationId === "domain.page." + props.capability && item.state === "ready",
+    (item) => item.operationId === "domain.page." + props.capability && item.state === "ready" && item.operational,
   ))
   const allowed = (action: BudgetCommandName | "import"): boolean => {
     const id = "domain.command." + props.capability + "." + action
     return Boolean(
       view.page && destination()?.allowedActionIds.includes(action) &&
       view.page.allowedActionIds.includes(action) &&
-      availability()?.operations.some((item) => item.operationId === id && item.state === "ready"),
+      availability()?.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational),
     )
   }
   const listHref = (mode: "entry" | "new" | "detail" | "edit", recordId?: string, selectedYear = year()) => {
