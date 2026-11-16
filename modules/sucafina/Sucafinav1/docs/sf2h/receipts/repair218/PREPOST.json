@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h.repair218.prepost.v1",
+  "mission": 218,
+  "finding": "S1-R1-207-002",
+  "reference_product_base": "7abf6c425e9b480bb43ba4a82f29c02a55445b92",
+  "original_branch_head": "58ec4c5376f5c34c3391f7eb2962f32697c67a9e",
+  "authored_source_branch": "sf-import-history",
+  "original_source_pr": 121,
+  "allowed_leaves": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+      "preimage": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+      "postimage": "c503bb0904a5f989076583b30d91f9cd43d2bb4a",
+      "scope": "UI57/history consumer; preserves UI55/UI56/UI68"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts",
+      "preimage": "ABSENT",
+      "postimage": "16839289b896f4ddb2a656dc5cc13a8c8d2cb2f9",
+      "scope": "typed authorized C08 reference/detail lookup"
+    },
+    {
+      "path": "packages/schema/src/sucafina/files.ts",
+      "preimage": "ABSENT",
+      "postimage": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c",
+      "scope": "EXACT A06 original W18 release, not reimplemented"
+    },
+    {
+      "path": "packages/client/src/sucafina/files.ts",
+      "preimage": "ABSENT",
+      "postimage": "18d0e2f143fffc965d3b0a632c87f2aa59f7b302",
+      "scope": "EXACT A06 original W18 release, not reimplemented"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/files.ts",
+      "preimage": "ABSENT",
+      "postimage": "a2e1041871a553498b92f159ef9b28c874a3cfb6",
+      "scope": "EXACT A06 original W18 release, not reimplemented"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/import-history218/real-receipts.test.ts",
+      "preimage": "ABSENT",
+      "postimage": "a302126ef23e706972b3b80b14c78f3280feacf3",
+      "scope": "real C08/SQLite/Planner authority suite; NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts",
+      "preimage": "ABSENT",
+      "postimage": "38a9ee34e67b401c36efb8090aa807b451780d33",
+      "scope": "real installed host/late/reflow journey; NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/ACK.json",
+      "preimage": "ABSENT",
+      "postimage": "8826bb249ec58fb5ee0577b7e3515f3b4bd7a44c",
+      "scope": "checked HEAD/S0; effective model GPT-6; no exposed session id"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/A06-SOURCE-CLOSURE.json",
+      "preimage": "ABSENT",
+      "postimage": "3f716172765fb0fac6c3af6083b0d5ba5b17902a",
+      "scope": "out-of-lease shared patch ledger"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/patches/A06-shared-closure.patch",
+      "preimage": "ABSENT",
+      "postimage": "074910632f22780cc42ba130d93e01bcadeffa57",
+      "scope": "COMPLETE INERT diff; 211 only"
+    }
+  ],
+  "shared_patch_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/A06-SOURCE-CLOSURE.json",
+  "no_writes_outside_allowlist": true,
+  "not_executed": [
+    "tests",
+    "typecheck",
+    "build",
+    "local_validator",
+    "private_CI",
+    "deploy",
+    "Azure"
+  ],
+  "original_immutable_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "original_immutable_UX": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "preservation": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "mcp_operations": 39,
+    "UX": "unchanged"
+  },
+  "actual_runtime_session_id": null
+}

@@ -1,0 +1,101 @@
+{
+  "schema": "sf2h.product-validation-request.v1",
+  "request_id": "218-S1-R1-207-002-214",
+  "mission": 218,
+  "finding": "S1-R1-207-002",
+  "recipient": "214 / sf-ci-validation / PR106",
+  "source_pr_target": "sf-closure-bundle / PR191",
+  "author_branch": "sf-import-history",
+  "candidate_source_commit_before_handoff": "fdc8c392fa65a176bc8c7dec0f0d0b32900214a3",
+  "dispatch_condition": "AFTER 211 merges this PR and complete inert A06-shared-closure.patch into its authorized branch; after 190 resolves compiler/typecheck; never from this writer",
+  "no_local_run": true,
+  "no_private_ci": true,
+  "tests_status": "NOT_RUN",
+  "run_ids": [],
+  "selection": {
+    "product_surgical": {
+      "path": "modules/sucafina/Sucafinav1/test/product/import-history218/real-receipts.test.ts",
+      "blob": "a302126ef23e706972b3b80b14c78f3280feacf3",
+      "cases": [
+        "real signed C08 read after persisted Apply",
+        "revoked policy denies read",
+        "return after restored policy",
+        "wrong principal refuses",
+        "invalid manifest ref",
+        "unknown/removed never claimed empty",
+        "held detail old owner-generation discarded",
+        "read network failure is unavailable, not removed"
+      ],
+      "executor": "214 only; resolve existing test command/selector; no invented alias"
+    },
+    "installed_e2e": {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts",
+      "blob": "38a9ee34e67b401c36efb8090aa807b451780d33",
+      "cases": [
+        "authorized UI57 original reference/detail and receipt drilldown",
+        "producer denied",
+        "source/late reflow",
+        "320/768/1024/1280/1440 200/400% reflow"
+      ],
+      "executor": "214 only, installed F04 readiness must be true; cannot replace with component mock"
+    },
+    "original_regressions": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts",
+        "blob": "9e67742d5da58405c5fe4be40b7d989c44e1490b",
+        "reason": "UI55/UI56/UI57 receipts and UI68 regression"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts",
+        "blob": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6",
+        "reason": "W18 original A06 25 operation contract after applying inert patch"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+        "blob": "e852d61e2f9544e4e7621d6b7d8a1cd21719fc04",
+        "reason": "no partial financial Apply and rejected receipt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+        "blob": "90f40a0c3b66f23f4b16c9be107e0e83e874ecac",
+        "reason": "original xlsx roundtrip unchanged accounting"
+      }
+    ]
+  },
+  "real_external_inputs_minimum": [
+    "Already-installed genuine bound host and existing F04 native readiness manifest; 199 owns fixture, 213 desktop bootstrap",
+    "SF_NATIVE_IMPORT_RECEIPT_MANIFEST_REF: genuine persisted receipt/manifest id from the installed import producer, not manufactured",
+    "SF_NATIVE_IMPORT_SURFACE: planner or dashboard, matching that persisted ref",
+    "SF218_DENIED_IMPORT_MANIFEST_REF: genuine receipt ref inaccessible to this principal, not synthetic",
+    "Existing authenticated principal with current owner/accessRevision/policyVersion and original import-reference+import-detail producer availability",
+    "Independent actual owner switch/revocation case requires 199/213 real installed actor context; don't call surface change a proven principal switch"
+  ],
+  "required_evidence": [
+    "candidate exact SHA",
+    "211 integrated patch pre/post blobs",
+    "214 dispatched runId and result if actually executed",
+    "real accessRev/owner event when tested",
+    "no traffic to import-admit/preview/apply during history reads"
+  ],
+  "blockers": [
+    "The frozen A06 25-operation contract has no owner-scoped import-history/list operation. Index/empty/removed cannot be qualified until S0 approves contract/broker proof; never invent operation or grant.",
+    "The read-only F02 codec and package exports are shared, delivered as complete inert source closure patch for 211."
+  ],
+  "compiler_owner": "190",
+  "host_fixture_owner": "199",
+  "desktop_owner": "213",
+  "independent_reviewer": "207",
+  "prohibited": [
+    "force",
+    "run local tests",
+    "self CI dispatch",
+    "mock producer",
+    "new grant",
+    "no-source synthetic receipt",
+    "Azure",
+    "deploy",
+    "merge"
+  ],
+  "GLOBAL_RELEASE": false,
+  "native_goal": "paused"
+}

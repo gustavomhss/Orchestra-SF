@@ -1,0 +1,46 @@
+{
+  "schema": "sf2h.independent-review-request.v1",
+  "reviewer": "207 / S1-R1",
+  "mission": 218,
+  "finding": "S1-R1-207-002",
+  "status": "RECHECK_REQUESTED_NOT_ACKNOWLEDGED",
+  "after": [
+    "211 integrated genuine A06 source and complete shared patch with expected blobs and no drift",
+    "190 compiler/typecheck evidence exists if run",
+    "214 surgical genuine installed product and e2e run IDs are available"
+  ],
+  "recheck_sources": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+      "blob": "c503bb0904a5f989076583b30d91f9cd43d2bb4a"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts",
+      "blob": "16839289b896f4ddb2a656dc5cc13a8c8d2cb2f9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/store.ts",
+      "producer": "original C08 with access revision and target auth"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/A06-SOURCE-CLOSURE.json",
+      "blob": "3f716172765fb0fac6c3af6083b0d5ba5b17902a"
+    }
+  ],
+  "verify": [
+    "History route no longer unconditional unavailable for authorized actor; reference lookup issues two original reads only, not fake enumeration",
+    "Source/record/receipt version, digest, principal, installation, project and access/policy match current authority and source; stale/discard",
+    "denied/session-expired/no-permission never expose former receipt; no private cache across owner changes",
+    "unknown/not-found/removed/empty distinctions are only acknowledged where original producer differentiates, not guessed from transport status",
+    "Late response on owner switch/return blocked; use actual actor transition, not just source selection, before qualifying",
+    "No command Apply, scanner bypass, implicit financial approval, source recomputation or fabricated invoice history",
+    "400% reflow, keyboard access, original receipt detail navigation",
+    "Missing original owner-scoped listing op remains BLOCKED_CONTRACT; don't close original end-to-end history finding as PASS until approved path and tests actually prove it"
+  ],
+  "acceptance_status": "NOT_RUN_NO_REVIEWER_ACK",
+  "GLOBAL_RELEASE": false
+}
