@@ -4,6 +4,22 @@ import type {
   SfServerKey, SurfaceId,
 } from "@orchestra/schema/sucafina/context"
 
+/**
+ * Request an approved entry route for the exact original F01 owner tuple.
+ * This is a candidate URL string, NOT a trusted SfHref or a grant: the shell's
+ * native F01 transition must still admit/resolve it before displaying data.
+ * Only immutable Q01 surface-manifest entry templates are enumerated here.
+ */
+export function sfEntryDestinationRequest(from: SfResolvedRoute, target: "CAP07" | "CAP25"): string | undefined {
+  const owner = from.ownerSelection
+  if (!owner.serverKey || !owner.projectId || !owner.installationId) return undefined
+  const pathname = target === "CAP07" ? "/orchestra/sf-people/structure"
+    : "/orchestra/sf-procurement/requests"
+  return pathname + "?" + new URLSearchParams({
+    server: owner.serverKey, project: owner.projectId, installation: owner.installationId,
+  }).toString()
+}
+
 /** Original opaque references are encoded only to avoid route-token collisions. */
 export function encodeSfRouteRef(original: string): string {
   if (!original) throw new Error("invalid sf route reference")

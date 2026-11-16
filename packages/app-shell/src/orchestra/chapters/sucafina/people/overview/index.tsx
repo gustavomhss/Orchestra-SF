@@ -1,4 +1,5 @@
 import { For, Show, type JSX } from "solid-js"
+import { useNavigate } from "@solidjs/router"
 import { SfPeople } from "@orchestra/schema/sucafina/people"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -7,6 +8,7 @@ import { SfStatePanel } from "../../shared/states"
 import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfCopyKey } from "../../shared/frame"
 import { createPeopleSession } from "../structure/session"
+import { sfEntryDestinationRequest } from "../../navigation-state"
 import "../structure/people.css"
 
 type HeadcountResponse = typeof SfPeople.operations["domain.page.CAP06"]["output"]["Type"]
@@ -19,6 +21,7 @@ const key = (value: string) => value as SfCopyKey
  */
 export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Element {
   const { t } = useSfPresentation()
+  const navigate = useNavigate()
   const session = createPeopleSession<HeadcountData>("CAP06", () => props.route.href,
     (transport, signal) => {
       const selection = {
@@ -37,6 +40,23 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
     const resource = active.context.availability.find((item) =>
       item.family === "domain-read" && item.resource === "CAP07")
     return !destination?.canRead || resource?.state === "denied"
+  }
+  const structureHref = () => {
+    const active = snapshot()
+    const state = session.context.state()
+    if (!active || state.status !== "ready" || structureDenied() ||
+        state.selection.serverKey !== props.route.ownerSelection.serverKey ||
+        state.selection.projectId !== props.route.ownerSelection.projectId ||
+        state.selection.installationId !== props.route.ownerSelection.installationId) return undefined
+    const admitted = active.context.destinations.some((item) =>
+      item.capabilityId === "CAP07" && item.surface === "dashboard" && item.canRead)
+    if (!admitted) return undefined
+    const availability = active.context.availability.find((item) =>
+      item.family === "domain-read" && item.resource === "CAP07")
+    if (!availability || availability.state === "denied" || availability.state === "unavailable" ||
+        !availability.operations.some((op) => op.operationId === "domain.page.CAP07" &&
+          op.state === "ready" && op.operational)) return undefined
+    return sfEntryDestinationRequest(props.route, "CAP07")
   }
   const metric = (labelKey: string, value: string | number | undefined) => (
     <Show when={value !== undefined}>
@@ -63,14 +83,13 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
           value: { kind: "data", text: String(snapshot()!.value.selection.year ?? "") } },
       ] : []}
       tabs={[]} activeTab={null}
-      // A valid CAP07 route/permission does not supply an owner-bound SfHref.
-      // Keep this action fail-closed until I00/132 installs the public builder
-      // and native transition; report an actual denied destination as denied.
+      // This request preserves F01's original owner tuple; the native transition
+      // independently re-admits it rather than treating navigation as a grant.
       primaryAction={{
         id: "open-team-structure", labelKey: key("sf.cap06.primary"),
-        tone: "primary", disabled: true, busy: false,
+        tone: "primary", disabled: !structureHref(), busy: false,
         reasonKey: sfCommonKey(structureDenied() ? "sf.common.noAccess" : "sf.common.unavailable"),
-        onInvoke: () => undefined,
+        onInvoke: () => { const href = structureHref(); if (href) navigate(href) },
       }}
       secondaryActions={[]} density="comfortable" layout="reading"
       onLayoutMode={() => undefined}

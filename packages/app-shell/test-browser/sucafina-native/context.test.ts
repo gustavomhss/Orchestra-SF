@@ -4,6 +4,7 @@ import type {
 } from "@orchestra/schema/sucafina/context"
 import {
   createSfNavigationState, decodeSfRouteRef, encodeSfRouteRef, resolveSfUrlSelection,
+  sfEntryDestinationRequest,
 } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import {
   parseSfInstallationSelector, readSfInstallations,
@@ -171,5 +172,22 @@ describe("F01 URL and owner fences", () => {
     expect(nav.restore("owner-B" as SfOwnerKey, "UI67", "v1", "list")).toBeUndefined()
     expect(nav.restore("owner-A" as SfOwnerKey, "UI67", "v2", "list")).toBeUndefined()
     nav.dispose()
+  })
+})
+
+describe("Q01 original-owner entry navigation candidates", () => {
+  test("CAP06→CAP07 and CAP24→CAP25 use only approved frozen entry templates", () => {
+    expect(sfEntryDestinationRequest(route(selected("source-a")), "CAP07"))
+      .toBe("/orchestra/sf-people/structure?server=source-a&project=project&installation=installation")
+    expect(sfEntryDestinationRequest(route(selected("source-a")), "CAP25"))
+      .toBe("/orchestra/sf-procurement/requests?server=source-a&project=project&installation=installation")
+  })
+  test("refuses an incomplete installed owner and never fills another selection", () => {
+    const incomplete: SfOwnerSelection = {
+      serverKey: "source-a" as SfServerKey, projectId: "project" as SfRef,
+    }
+    expect(sfEntryDestinationRequest(route(incomplete), "CAP07")).toBeUndefined()
+    expect(sfEntryDestinationRequest(route(selected("source-b", "another-project", "another-install")), "CAP25"))
+      .toBe("/orchestra/sf-procurement/requests?server=source-b&project=another-project&installation=another-install")
   })
 })

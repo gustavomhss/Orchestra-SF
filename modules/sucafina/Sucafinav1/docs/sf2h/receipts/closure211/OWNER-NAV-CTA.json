@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.closure211.owner-nav.v1",
+  "epoch": "closure-composer-e1-browser211",
+  "parent_head": "95609f35caaae47214f4d4e8ae7dd4a67d25edd6",
+  "parent_tree": "bfd24092681226c7943b7d234e9b63acf190acad",
+  "findings": [
+    "S1-R1-207-004",
+    "PRE-R01-146-004"
+  ],
+  "ux_source": {
+    "commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "surface_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "entry_templates": {
+      "CAP07": "/orchestra/sf-people/structure",
+      "CAP25": "/orchestra/sf-procurement/requests"
+    }
+  },
+  "behavior": {
+    "canonical_path": "F01 original owner tuple, explicit 3-part selectors; no ambiguous shell fallback",
+    "authorization": "Original context stamp/current owner/generation, destination canRead and live domain.page operation needed before enabling; native F01 transition independently resolves destination",
+    "disabled": "No session, mismatch, missing grant, unavailable producer or incomplete tuple stays disabled",
+    "scope": "CAP06-to-CAP07, CAP24-to-CAP25; no grants invented, no generic route builder"
+  },
+  "files": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+      "pre": "dc264d8c97163922134d09285e1c8d3a38027760",
+      "post": "23a5da80dd837d5113e53ba6ece1ada5e97d0a0a"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+      "pre": "71d5028ed37864ad98cb767687e354a32730cfbd",
+      "post": "d0dfc461969b62949d6d8b6738ce999d54b0a57f"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+      "pre": "7bf3ce8b5d193c3732dfd236a51a3c804a73dae9",
+      "post": "a4b21a4c3f5e61e6c6be93d54d4df9e548a23957"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+      "pre": "5e8b1ba9ac50e15773cd48ce0e6dd00860bb931f",
+      "post": "6214f06108cf45abcf987454fb9707d2fdb1588c"
+    }
+  ],
+  "validation": "NOT_RUN",
+  "product_ci": 214,
+  "compiler": 190,
+  "reviews": [
+    207,
+    208,
+    209
+  ],
+  "S0": "PENDING",
+  "GLOBAL_RELEASE": false
+}
