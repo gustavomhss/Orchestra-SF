@@ -49,6 +49,7 @@ import { createSfAlternativeCaptures } from "./alternative-captures.ts"
 import { createSfBaselineServices } from "./baseline-services.ts"
 import { createSfMemoryServices } from "./memory-services.ts"
 import { createSfMemoryHttp } from "./memory-http.ts"
+import { createSfSimilarCases217 } from "../../../../modules/sucafina/Sucafinav1/product/memory/similarity217.ts"
 import { createSfWorkSignals, deriveSfWorkRefKey } from "./work-signals.ts"
 import { createSfWorkDestinations } from "./work-destinations.ts"
 import { createSfWorkHttp } from "./work-http.ts"
@@ -301,7 +302,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
   residentReviewReaders.bindOutcome(memory.reviewOutcome)
-  const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
+  const similarCases = createSfSimilarCases217({ caseRecall: business.caseRecall, cases: business.cases, context: business.context, host: authority.host })
+  const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase, similarCases })
   for (const replacement of extended.replacements) {
     const index = business.descriptors.findIndex((descriptor) => descriptor.id === replacement.id)
     if (index < 0) business.descriptors.push(replacement)
