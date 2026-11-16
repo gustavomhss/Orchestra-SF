@@ -2,7 +2,7 @@ import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfContextStamp, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { revalidateRequestsDraft } from "./draft-revalidation-requests"
-import { revalidateSupplierCreateDraft } from "./draft-revalidation-supplier"
+import { revalidateSupplierDraft } from "./draft-revalidation-supplier"
 import { revalidateSettingsDraft } from "./draft-revalidation-settings"
 
 export async function revalidateSfNativeDraft(
@@ -15,7 +15,7 @@ export async function revalidateSfNativeDraft(
   if (input.read.operationId === "domain.page.CAP25")
     return revalidateRequestsDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP27")
-    return revalidateSupplierCreateDraft(input, fresh, transport, signal)
+    return revalidateSupplierDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP28")
     return revalidateSettingsDraft(input, fresh, transport, signal)
   if (input.read.operationId !== "projection.case" || input.identity.kind !== "record" ||
