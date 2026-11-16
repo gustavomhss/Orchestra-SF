@@ -726,7 +726,7 @@ const layer = Layer.effect(
         const session = yield* getSession(input.sessionID).pipe(Effect.orDie)
         const engine = yield* engineOf(session)
         const host = engine ? hosts.get(engine) : undefined
-        return yield* SessionDirectCommands.skill({ events, skills, fs, host }, input)
+        return yield* SessionDirectCommands.skill({ events, skills, fs, database, host }, input)
       }),
     })
   }),

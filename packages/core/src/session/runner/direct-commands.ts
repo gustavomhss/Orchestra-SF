@@ -4,6 +4,7 @@ import { Cause, DateTime, Duration, Effect } from "effect"
 import { createHash } from "node:crypto"
 import { ChildProcess } from "effect/unstable/process"
 import type { Config } from "../../config"
+import type { Database } from "../../database/database"
 import type { EventV2 } from "../../event"
 import type { FSUtil } from "../../fs-util"
 import type { Location } from "../../location"
@@ -137,7 +138,7 @@ export const shell = Effect.fn("SessionRunner.shell")(function* (
 })
 
 export const skill = Effect.fn("SessionRunner.skill")(function* (
-  deps: { readonly events: EventV2.Interface; readonly skills: SkillV2.Interface; readonly fs: FSUtil.Interface; readonly host?: ExecutionHost.Interface },
+  deps: { readonly events: EventV2.Interface; readonly skills: SkillV2.Interface; readonly fs: FSUtil.Interface; readonly database: Database.Interface; readonly host?: ExecutionHost.Interface },
   input: {
     readonly sessionID: SessionSchema.ID
     readonly skill: string
@@ -148,6 +149,8 @@ export const skill = Effect.fn("SessionRunner.skill")(function* (
   if (!found) return false
   const source = deps.skills.sourceOf?.(found)
   const location = found.location
+  const content = found.content
+  const name = found.name
   const messageID = SessionMessage.ID.create()
   const material = yield* SkillTool.load(deps.fs, found, SkillV2.children(all, found)).pipe(Effect.orDie)
   const digest = createHash("sha256").update(material, "utf8").digest("hex")
@@ -158,17 +161,22 @@ export const skill = Effect.fn("SessionRunner.skill")(function* (
     text: material,
   })
   if (!deps.host?.observeSkillLoad) return true
+  // A nested Event transaction has not committed yet, even though publish returned. Never notify from it.
+  if (!deps.database.inTransaction || (yield* deps.database.inTransaction)) {
+    yield* Effect.logWarning("SessionRunner.skill: publication is not known committed; load not observed")
+    return false
+  }
   const current = yield* deps.skills.list()
   const now = deps.skills.sourceOf?.(found)
   if (!source || source !== now ||
-    current.find((item) => item.name === input.skill) !== found || found.location !== location) {
+    current.find((item) => item.name === input.skill) !== found || found.location !== location || found.content !== content || found.name !== name) {
     yield* Effect.logWarning("SessionRunner.skill: source provenance changed or unavailable; load not observed")
     return false
   }
   const checked = yield* SkillTool.load(deps.fs, found, SkillV2.children(current, found)).pipe(Effect.orDie)
   const finalSource = deps.skills.sourceOf?.(found)
   if (finalSource !== source ||
-    found.location !== location || createHash("sha256").update(checked, "utf8").digest("hex") !== digest) {
+    found.location !== location || found.content !== content || found.name !== name || createHash("sha256").update(checked, "utf8").digest("hex") !== digest) {
     yield* Effect.logWarning("SessionRunner.skill: loaded material changed; load not observed")
     return false
   }
@@ -177,8 +185,8 @@ export const skill = Effect.fn("SessionRunner.skill")(function* (
     skillName: input.skill,
     loadedMessageID: messageID,
     source: { ...source, location, contentDigest: digest },
-  }).pipe(
-    Effect.as(true),
+  }, () => deps.skills.sourceOf?.(found) === source && found.location === location && found.content === content && found.name === name).pipe(
+    Effect.tap((valid) => valid ? Effect.void : Effect.logWarning("SessionRunner.skill: source changed during notification")),
     Effect.catchCauseIf((cause) => !Cause.hasInterrupts(cause), (cause) =>
       Effect.logError("SessionRunner.skill: skill load observer failed", cause).pipe(Effect.as(false))),
   )
