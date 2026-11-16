@@ -72,11 +72,11 @@ export const seedNativeAdmission = Effect.fn("PhaseFixture.seedNativeAdmission")
   const parent = (yield* f.resources.store.get(lease.authoritySessionID))!
   const id = (name: string) => EventV2.ID.make(`evt_phase_${name}_${parent.id}`)
   const message = (name: string) => SessionMessage.ID.make(`msg_phase_${name}_${parent.id}`)
-  const draft = yield* f.state.publication!.publication.use((store) => Effect.gen(function* () {
+  const draft = yield* Effect.gen(function* () {
     const graph = yield* AuthoringGraph.project("Synthetic history workflow", { work_packages: [{ id: "prepare", instructions: "Fixture only",
       checklist: [{ id: "fixture-check", cmd: "true" }] }] })
-    const draft = yield* store.save({ body: graph }); yield* store.publish(draft.id, draft.versionId); return draft
-  }))
+    const draft = yield* f.authoring.save({ body: graph }); yield* f.authoring.publish(draft.id, draft.versionId); return draft
+  })
   const retained = { schema: "sf-routine-native-input-v1", purpose, owner: lease.owner, caseRef: f.state.caseRef,
     publishedRecipeRef: draft.id, inputRefs: [], parameters: {}, sourceRefs: [] }
   const acquired = yield* RelayWorkflowBinding.acquire({ port: f.state.publication!.publication, projectID: parent.projectID,
@@ -131,7 +131,7 @@ export const seedNativeAdmission = Effect.fn("PhaseFixture.seedNativeAdmission")
     { id: GovernanceDispatchV2.reservationID(id("authorization")) })
     yield* f.resources.events.publish(MaestroEvent.Task.WorkflowBound, { executionSessionID: childID, authorityMessageID: message("task"), authorityCallID: "task", token,
       binding: { definition: acquired.definition, planRevisionID: plan.id, executionSessionID: childID, authoritySessionID: parent.id, logicalTaskID: "synthetic-logical" } },
-    { id: WorkflowGateV2.eventID(childID) })
+    { id: EventV2.ID.make(WorkflowGateV2.eventID(childID)) })
     messages.push(SessionMessage.Assistant.make({ id: message("task"), type: "assistant", agent: "maestro", model, time, content: [{ type: "tool", name: "task", id: "task",
       provider: { executed: false }, time, state: { status: "error", input: { description: "Synthetic history", prompt: intent.prompt, subagent_type: "backend",
         authorizationID: id("authorization"), workflow: { documentID: draft.id, planRevisionID: plan.id, parameters: acquired.definition.parameters },
