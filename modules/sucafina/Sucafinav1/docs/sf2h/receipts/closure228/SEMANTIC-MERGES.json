@@ -1,0 +1,75 @@
+{
+  "schema": "sf2h.closure228.semantic-merge.v1",
+  "mission": 228,
+  "base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "authority": "INERT_ONLY",
+  "entries": [
+    {
+      "source_path": "packages/client/src/sucafina/transport.ts",
+      "expected_base_blob": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+      "full_post_bytes": 49608,
+      "consumer": [
+        225,
+        226
+      ],
+      "merge_rule": "226 generic file upload/download and 225 exact supplier CSV + postbyte authority",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/packages/client/src/sucafina/transport.ts.inert.txt",
+      "disposition": "NOT_APPLIED"
+    },
+    {
+      "source_path": "apps/desktop/src/main/sucafina/protocol.ts",
+      "expected_base_blob": "0b2152a22811d19a3b04ab1e4ebf5218c564b2eb",
+      "full_post_bytes": 13759,
+      "consumer": [
+        225,
+        226
+      ],
+      "merge_rule": "226 source query/upload checks and 225 supplier strict codec",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/desktop/src/main/sucafina/protocol.ts.inert.txt",
+      "disposition": "NOT_APPLIED"
+    },
+    {
+      "source_path": "apps/desktop/src/main/sucafina/index.ts",
+      "expected_base_blob": "a3f09c2a9006c016d51c660043d1189bb2df4c29",
+      "full_post_bytes": 29194,
+      "consumer": [
+        225,
+        226
+      ],
+      "merge_rule": "226 fresh D01 byte owner fences and 225 strict refusal status",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/desktop/src/main/sucafina/index.ts.inert.txt",
+      "disposition": "NOT_APPLIED"
+    },
+    {
+      "source_path": "apps/cli/src/sucafina-product/host-context.ts",
+      "expected_base_blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+      "full_post_bytes": 86875,
+      "consumer": [
+        211,
+        219
+      ],
+      "merge_rule": "211 A07 scoped Review projection and 219 A09 authorized routine producer",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt",
+      "disposition": "NOT_APPLIED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "expected_base_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+      "full_post_bytes": 51389,
+      "consumer": [
+        216
+      ],
+      "merge_rule": "original full journal validation + sparse ephemeral read ordinals",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts.inert.txt",
+      "disposition": "NOT_APPLIED"
+    }
+  ],
+  "caveats": [
+    "226 source is provisional pending explicit terminal handoff",
+    "C12 draft requires independent original policy review",
+    "190 compiler and 223 dispatcher required",
+    "S0 handoff 211->228 absent"
+  ],
+  "CI": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}
