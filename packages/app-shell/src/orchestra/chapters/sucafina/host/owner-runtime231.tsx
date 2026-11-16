@@ -29,6 +29,7 @@ import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
   SfDraftRevalidation, SfSurfaceProps } from "../context/contracts"
 import { parsePlannerRouteQuery, plannerRouteAvailable, plannerOverviewSelectionMatches } from "./planner-route"
 import { isPlannerPagesSurface, parsePlannerPagesRouteQuery, plannerPagesRouteAvailable, SfPlannerPages } from "./planner-pages-route"
+import { isPeopleSurface, parsePeopleRouteQuery, peopleRouteAvailable, SfPeoplePages } from "./people-route"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import { SfPlannerOverviewView } from "../planner/overview"
 import { SfPlannerVersionsView } from "../planner/versions"
@@ -247,6 +248,9 @@ function MountedSurface(props: Readonly<{
       </Match>
       <Match when={props.view().status === "ready" && current() && isPlannerPagesSurface(current()!.surfaceId)}>
         <SfPlannerPages route={current()!} />
+      </Match>
+      <Match when={props.view().status === "ready" && current() && isPeopleSurface(current()!.surfaceId)}>
+        <SfPeoplePages route={current()!} />
       </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "UI45"}>
         <SfBiCatalog surfaceId="UI45" route={current() as SfSurfaceProps<"UI45">["route"]} />
@@ -471,9 +475,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const dashboardQuery = candidate.chapterId === "sf-dashboard" ? parseDashboardRouteQuery(url.searchParams, candidate) : undefined
       const procurementQuery = candidate.chapterId === "sf-procurement" ? parseProcurementRouteQuery(url.searchParams, candidate) : undefined
       const plannerPagesQuery = isPlannerPagesSurface(candidate.surfaceId) ? parsePlannerPagesRouteQuery(url.searchParams, candidate) : undefined
+      const peopleQuery = candidate.chapterId === "sf-people" ? parsePeopleRouteQuery(url.searchParams, candidate) : undefined
       const plannerQuery = (candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17") ? parsePlannerRouteQuery(url.searchParams, candidate) : undefined
       if (candidate.chapterId === "sf-dashboard" ? !dashboardQuery :
         candidate.chapterId === "sf-procurement" ? !procurementQuery :
+        candidate.chapterId === "sf-people" ? !peopleQuery :
         isPlannerPagesSurface(candidate.surfaceId) ? !plannerPagesQuery :
         candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerQuery :
         [...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)) || !(
@@ -511,6 +517,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
       if (candidate.chapterId === "sf-dashboard" ? !dashboardRouteAvailable(context.value, candidate) :
         candidate.chapterId === "sf-procurement" ? !procurementRouteAvailable(context.value, candidate) :
+        candidate.chapterId === "sf-people" ? !peopleRouteAvailable(context.value, candidate) :
         isPlannerPagesSurface(candidate.surfaceId) ? !plannerPagesRouteAvailable(context.value, candidate) :
         candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerRouteAvailable(context.value, candidate) :
         candidate.surfaceId === "UI45" || candidate.surfaceId === "UI46" ? !biRouteAvailable(context.value, candidate) :
@@ -547,7 +554,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const route = {
         surfaceId: candidate.surfaceId, kind: candidate.kind,
         params: candidate.parameters, ownerSelection: selected,
-        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: dashboardQuery ?? procurementQuery ?? plannerPagesQuery ?? plannerQuery ?? {},
+        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: dashboardQuery ?? procurementQuery ?? peopleQuery ?? plannerPagesQuery ?? plannerQuery ?? {},
       } as SfResolvedRoute
       return { status: "authorized", route, ownerKey }
     },
@@ -695,20 +702,22 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       ? parseProcurementRouteQuery(new URLSearchParams(location.search), routePath) : undefined
     const plannerPages = routePath && isPlannerPagesSurface(routePath.surfaceId)
       ? parsePlannerPagesRouteQuery(new URLSearchParams(location.search), routePath) : undefined
+    const people = routePath && routePath.chapterId === "sf-people"
+      ? parsePeopleRouteQuery(new URLSearchParams(location.search), routePath) : undefined
     const nonPlanner = routePath && routePath.kind === "entry" &&
       ["UI29", "UI33", "UI34"].includes(routePath.surfaceId) &&
       [...new URLSearchParams(location.search).keys()].every((key) => ["server", "project", "installation"].includes(key))
     const bi = routePath && validBiRoute(routePath, new URLSearchParams(location.search))
     if (parsed.kind === "invalid" || parsed.kind === "selected" &&
         !sameSelection(parsed.selection, selected) ||
-        !routePath || !(dashboard || procurement || plannerPages || planner || nonPlanner || bi)) {
+        !routePath || !(dashboard || procurement || people || plannerPages || planner || nonPlanner || bi)) {
       setView({ status: "invalid-link", route: undefined })
       return
     }
     const returnRoute = {
       surfaceId: routePath.surfaceId, kind: routePath.kind, params: routePath.parameters,
       ownerSelection: selected, pathname: location.pathname,
-      href: (location.pathname + location.search) as SfHref, query: dashboard ?? procurement ?? plannerPages ?? planner ?? {},
+      href: (location.pathname + location.search) as SfHref, query: dashboard ?? procurement ?? people ?? plannerPages ?? planner ?? {},
     } as SfResolvedRoute
     try {
       const auth = await desktopBridge.login(returnRoute)
