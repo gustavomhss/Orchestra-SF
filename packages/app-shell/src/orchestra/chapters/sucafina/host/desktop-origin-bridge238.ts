@@ -8,7 +8,7 @@ import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import {
   createSfTransport, type SfConnectionCandidate, type SfDesktopBinding,
   type SfDesktopCapability, type SfDesktopInvalidation, type SfDesktopLocationProbe,
-  type SfTransport,
+  type SfTransport, type SfTransportFetch,
 } from "@orchestra/client/sucafina/transport"
 import type {
   SfInstallationDescriptor, SfInstallationList, SfOwnerSelection, SfResolvedRoute,
@@ -51,7 +51,7 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
   desktop: SfDesktopCapability
   server: ServerConnection.Any
   directory: string
-  fetch: typeof globalThis.fetch
+  fetch: SfTransportFetch
   onInvalidated: (reason: SfDesktopInvalidation["reason"]) => void
 }>): Bridge {
   const serverKey = ServerConnection.key(deps.server)
