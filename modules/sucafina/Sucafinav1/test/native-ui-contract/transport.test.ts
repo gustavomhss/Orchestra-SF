@@ -47,7 +47,7 @@ test("no real codec: known context ID does not imply an admitted producer", asyn
     binding: installation,
     generation: 1,
     currentGeneration: () => 1,
-    fetch: async () => { throw new Error("browser must not be used under desktop binding") },
+    fetch: Object.assign(async () => { throw new Error("browser must not be used under desktop binding") }, { preconnect: fetch.preconnect }),
     operations: {},
     desktop: forbiddenDesktop(() => invoked++),
     desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 1 },
@@ -67,7 +67,7 @@ test("stale owner generation blocks before any IPC or network", async () => {
     binding: installation,
     generation: 2,
     currentGeneration: () => 3,
-    fetch: async () => { throw new Error("must not fetch") },
+    fetch: Object.assign(async () => { throw new Error("must not fetch") }, { preconnect: fetch.preconnect }),
     operations: {},
     desktop: forbiddenDesktop(() => invoked++),
     desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 2 },
@@ -87,7 +87,7 @@ test("desktop descriptor change is not resolved by selection from another projec
     binding: installation,
     generation: 3,
     currentGeneration: () => 3,
-    fetch: async () => { throw new Error("must not fetch") },
+    fetch: Object.assign(async () => { throw new Error("must not fetch") }, { preconnect: fetch.preconnect }),
     operations: {},
     desktop: forbiddenDesktop(() => invoked++),
     desktopBinding: {
@@ -113,7 +113,7 @@ test("aborted signal does not enter the producer", async () => {
     binding: installation,
     generation: 4,
     currentGeneration: () => 4,
-    fetch: async () => { throw new Error("must not fetch") },
+    fetch: Object.assign(async () => { throw new Error("must not fetch") }, { preconnect: fetch.preconnect }),
     operations: {},
     desktop: forbiddenDesktop(() => invoked++),
     desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 4 },
@@ -132,7 +132,7 @@ test("ctx.context refuses a denied payload with a success HTTP status", async ()
     binding: installation,
     generation: 5,
     currentGeneration: () => 5,
-    fetch: async () => { throw new Error("web request forbidden in desktop test") },
+    fetch: Object.assign(async () => { throw new Error("web request forbidden in desktop test") }, { preconnect: fetch.preconnect }),
     operations: {
       "ctx.context": {
         decodeInput: (value) => {
@@ -197,7 +197,7 @@ test("lost mutation outcome cannot dispatch again with the same key", async () =
     binding: installation,
     generation: 6,
     currentGeneration: () => 6,
-    fetch: async () => { throw new Error("web request forbidden in desktop test") },
+    fetch: Object.assign(async () => { throw new Error("web request forbidden in desktop test") }, { preconnect: fetch.preconnect }),
     operations: {
       "ctx.context": {
         decodeInput(value) {
