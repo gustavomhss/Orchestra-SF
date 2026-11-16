@@ -1,5 +1,5 @@
 import { Option, Schema } from "effect"
-import { SfDomainPageCap01, SfDomainPageCap03, SfDomainPageCap04, SfDomainPageCap05 } from "@orchestra/schema/sucafina/domain"
+import { SfDomain, SfDomainPageCap01, SfDomainPageCap03, SfDomainPageCap04, SfDomainPageCap05 } from "@orchestra/schema/sucafina/domain"
 import { SfDomainPageCap02 } from "@orchestra/schema/sucafina/people"
 import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
@@ -10,6 +10,13 @@ const schemas = { CAP01: SfDomainPageCap01.input, CAP02: SfDomainPageCap02.input
 
 /** Syntax and producer input validation only; no authority is created here. */
 export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
+  if (candidate.chapterId === "sf-dashboard" && candidate.surfaceId === "UI54" && candidate.kind === "entry") {
+    const keys = [...params.keys()]
+    if (new Set(keys).size !== keys.length || keys.some((key) => !selectors.includes(key as typeof selectors[number]))) return
+    const selected = selectors.map((key) => params.get(key))
+    if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+    return {}
+  }
   if (candidate.chapterId !== "sf-dashboard" || !(candidate.surfaceId in schemas)) return
   if ((candidate.surfaceId === "CAP01" || candidate.surfaceId === "CAP03") && candidate.kind !== "entry") return
   if (!["entry", "new", "detail", "edit"].includes(candidate.kind)) return
@@ -31,6 +38,12 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
 
 /** Destination and live operation readiness are prerequisites, not write grants. */
 export function dashboardRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+  if (candidate.chapterId === "sf-dashboard" && candidate.surfaceId === "UI54" && candidate.kind === "entry") {
+    return context.destinations.some((item) => item.capabilityId === "UI54" && item.canRead) &&
+      context.availability.some((resource) => resource.family === "domain-read" && resource.resource === "hot-topic-proposal" &&
+        resource.operations.some((operation) => operation.operationId === SfDomain.operations["dashboard.dashboard-workbench"].operationId &&
+          operation.state === "ready" && operation.operational))
+  }
   if (candidate.chapterId !== "sf-dashboard" || !(candidate.surfaceId in schemas)) return false
   return context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead) &&
     context.availability.some((resource) => resource.family === "domain-read" && resource.resource === candidate.surfaceId &&

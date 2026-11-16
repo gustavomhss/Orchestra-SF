@@ -35,4 +35,12 @@ describe("dashboard route admission", () => {
       expect(dashboardRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [{ ...context.availability[0]!.operations[0]!, operational: false }] }] }, route)).toBe(false)
     }
   })
+  test("proposal detail uses its original workbench operation", () => {
+    const candidate = matchSfNativeRoutePath(`/orchestra/sf-dashboard/hot-topics/proposals/${encodeSfRouteRef("proposal")}`)!
+    expect(parseDashboardRouteQuery(new URLSearchParams(), candidate)).toEqual({})
+    expect(parseDashboardRouteQuery(new URLSearchParams("returnTo=x"), candidate)).toBeUndefined()
+    const context = { destinations: [{ capabilityId: "UI54", canRead: true }], availability: [{ family: "domain-read", resource: "hot-topic-proposal", operations: [{ operationId: "dashboard.dashboard-workbench", state: "ready", operational: true }] }] } as unknown as SfContext
+    expect(dashboardRouteAvailable(context, candidate)).toBe(true)
+    expect(dashboardRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
+  })
 })
