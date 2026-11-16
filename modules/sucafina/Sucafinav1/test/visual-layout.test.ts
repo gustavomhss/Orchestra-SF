@@ -110,8 +110,10 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
         const entry = `${surface} entry at ${width}px`
         console.info(`WP01 visual layout phase: ${entry}`)
         await step(`${entry}: navigate`, () => page.goto(`${origin}/sucafina/${surface}`))
-        const hrefs = await step(`${entry}: read authorized navigation`, () => page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!)))
+        const hrefs = await step(`${entry}: read authorized navigation`, () => page.locator("aside.sidebar nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!)))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
+        // A separate authorized decision-controls link is outside the sidebar.
+        expect(await step(`${entry}: decision-controls link`, () => page.locator('nav[aria-label="Controles de decisão"] a').getAttribute("href"))).toBe("?sf=decision-controls")
         expect(new Set(hrefs).size).toBe(hrefs.length)
         if (surface === "dashboard") {
           const cards = await step(`${entry}: people metric bounds`, () => Promise.all(["Total IT Users", "Cost per User (OPEX)", "Cost per User (OPEX + CAPEX)", "Attrition YTD"].map(async (label) => await page.locator(".metric").filter({ has: page.getByText(label, { exact: true }) }).boundingBox())))
@@ -133,7 +135,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
           expect(await step(`${route}: document width`, () => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1))).toBe(true)
           const charts = await step(`${route}: chart bounds`, () => page.locator("figure svg").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height)))
           expect(charts.every((height) => height <= 241)).toBe(true)
-          const active = page.locator('nav a[aria-current="page"]')
+          const active = page.locator('aside.sidebar nav a[aria-current="page"]')
           expect(await step(`${route}: active navigation count`, () => active.count())).toBe(1)
           if (width === 1440) {
             const name = new URL(page.url()).searchParams.get("page")!.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
