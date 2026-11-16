@@ -16,7 +16,7 @@ const fresh = Schema.decodeUnknownSync(SfContext)({
     { capabilityId: "CAP28", surface: "procurement", page: "Settings", canRead: true, allowedActionIds: ["save", "reset"] },
   ],
   availability: [
-    { family: "procurement", resource: "CAP25", state: "ready", operations: [operation("domain.page.CAP25")] },
+    { family: "procurement", resource: "CAP25", state: "ready", operations: [operation("domain.page.CAP25"), operation("domain.command.CAP25.save")] },
     { family: "procurement", resource: "CAP27", state: "ready", operations: [operation("domain.command.CAP27.create"), operation("domain.command.CAP27.save"), operation("domain.command.CAP27.change-bank")] },
     { family: "decisions", resource: "cases", state: "ready", operations: [operation("projection.case")] },
   ],
@@ -126,6 +126,18 @@ describe("source-bound draft revalidation", () => {
     expect(await run(bank, body)).toMatchObject({ status: "authorized", sourceVersion: 5 })
     expect(await run(bank, { ...body, value: { ...body.value, data: { ...body.value.data, bankVerificationAvailable: false } } })).toEqual({ status: "denied" })
     expect(await run(bank, { ...body, value: { ...body.value, allowedActionIds: ["save"] } })).toEqual({ status: "denied" })
+  })
+  test("sourcing binds each retained field to the same quote and editable request", async () => {
+    const input: SfDraftRevalidationInput = { ...recordInput, editScopeKey: "CAP25:sourcing" as SfEditScopeKey,
+      read: { ...recordInput.read, fieldPaths: ["sourcing.evaluator", "sourcing.quotes", 'sourcing.quote:["q1","supplier"]'] } }
+    const row = { number: requestRef, status: "sourcing", createdBy: "actor", sourcing: { evaluator: "actor", quotes: [{ id: "q1", supplier: "visible" }] } }
+    const data = { requests: [row], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false }
+    expect(await run(input, page({ data }))).toMatchObject({ status: "authorized", sourceVersion: 7 })
+    expect(await run(input, page({ data: { ...data, requests: [{ ...row, status: "po_draft" }] } }))).toEqual({ status: "denied" })
+    expect(await run(input, page({ data: { ...data, requests: [{ ...row, sourcing: { ...row.sourcing, quotes: [{ id: "q2", supplier: "visible" }] } }] } }))).toEqual({ status: "denied" })
+    expect(await run(input, page({ data, allowedActionIds: [] }))).toEqual({ status: "denied" })
+    expect(await run(input, page({ data: { ...data, requests: [{ ...row, sourcing: { quotes: [{ supplier: "no-id" }] } }] } }))).toEqual({ status: "unavailable" })
+    expect(await run({ ...input, read: { ...input.read, fieldPaths: ["sourcing"] } }, page({ data }))).toEqual({ status: "unavailable" })
   })
   test("preserves the opaque case selector and independently stamped version", async () => {
     const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "UI29",
