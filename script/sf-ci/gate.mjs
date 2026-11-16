@@ -1,5 +1,4 @@
 import assert from "node:assert/strict"
-import { execFileSync } from "node:child_process"
 import { createHash } from "node:crypto"
 import { mkdirSync, readFileSync, readdirSync, writeFileSync, statSync } from "node:fs"
 import path from "node:path"
@@ -214,8 +213,12 @@ function reportName(kind) {
   return kind === "bun" ? "summary.json" : "report.json"
 }
 function realTreeSha() {
-  const treeSha = execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()
-  if (!/^[a-f0-9]{40}$/.test(treeSha)) fail("invalid checked-out tree identity")
+  // A6 workflow, not JS tooling, runs git rev-parse HEAD^{tree}; never spawn
+  // a process from the gate or weaken the protected spawn-imports guard.
+  const treeSha = process.env.SF_CHECKOUT_TREE_SHA
+  if (!/^[a-f0-9]{40}$/.test(treeSha || "")) {
+    fail("missing actual Linux checkout tree SHA; A6 must export SF_CHECKOUT_TREE_SHA")
+  }
   return treeSha
 }
 function realRunMeta() {
