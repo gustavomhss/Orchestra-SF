@@ -414,6 +414,15 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted
         || binding.requests.get(request.requestId) !== pending) return failure("aborted")
       if (reply.status === 401 || reply.status === 403) {
+        // A new binding has no private context to revoke. Allow only the
+        // original validated unauthenticated context response so the owner
+        // can explicitly start the existing native login.
+        if (reply.status === 401 && request.operationId === "ctx.context" &&
+            !binding.context && reply.kind !== "stream") {
+          const decoded = decodeSfWireBody(plan.value, reply.bytes, reply.headers["content-type"])
+          if (decoded.status === "ok" && isRecord(decoded.value) && decoded.value.status === "unauthenticated")
+            return { kind: "json-response", status: 401, headers: reply.headers, body: decoded.value }
+        }
         await retire(binding, reply.status === 401 ? "session-expired" : "access-revoked")
         return failure("contract-unavailable")
       }
