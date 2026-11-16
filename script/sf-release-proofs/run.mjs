@@ -63,8 +63,7 @@ function checkTrackedSelection(cat, mode) {
     must(JSON.stringify(actual) === JSON.stringify([...selected].sort()),
       "F04_AM_DISCOVERY_DRIFT_INCLUDING_A5_SEQUENCE_INTEGRITY")
   }
-  return selected.map((file) => ({ path: file, sha256: sha(
-    Buffer.from(runGit(["hash-object", file]) + "\n")) }))
+  return selected.map((file) => ({ path: file }))
 }
 async function validateReport(mode, report) {
   const res = command("python3", [path.join(ROOT, "script/sf-release-proofs/verify-junit.py"), report, mode], ROOT, process.env)
@@ -192,12 +191,20 @@ async function attest(mode, installed, folder) {
     w.treeSha === ctx.treeSha && w.artifactSha256 === ctx.artifactSha256 &&
     w.manifestSha256 === installed.manifestSha256 &&
     w.processReceiptSha256 === sha(bytes) && w.reportSha256 === receipt.reportSha256 &&
-    [w.originalProducerSha256, w.actorAuthorizationSha256, w.taskPermissionRelaySha256,
-      w.sourceCasSha256].every((v) => SHA256.test(v ?? "")) &&
+    [w.originalProducerSha256, w.actorAuthorizationSha256, w.taskPermissionRelaySha256]
+      .every((v) => SHA256.test(v ?? "")) &&
     typeof w.witnessedBy === "string" && !!w.witnessedBy &&
     typeof w.observedUtc === "string" && Number.isFinite(Date.parse(w.observedUtc)) &&
-    Array.isArray(w.operationReceiptSha256) && w.operationReceiptSha256.length > 0 &&
-    w.operationReceiptSha256.every((v) => SHA256.test(v)),
+    (mode === "q01"
+      ? SHA256.test(w.negativeDenialSha256 ?? "") &&
+        SHA256.test(w.zeroNetworkDispatchSha256 ?? "") &&
+        Array.isArray(w.negativeCaseIds) &&
+        JSON.stringify([...w.negativeCaseIds].sort()) ===
+          JSON.stringify(["Q01-TRANSPORT-GUEST", "Q01-TRANSPORT-INVALID-OWNER",
+            "Q01-TRANSPORT-STALE-FENCE"].sort())
+      : SHA256.test(w.sourceCasSha256 ?? "") &&
+        Array.isArray(w.operationReceiptSha256) && w.operationReceiptSha256.length > 0 &&
+        w.operationReceiptSha256.every((v) => SHA256.test(v))),
     "F04_WITNESS_ORIGINAL_AUTHORITY_OR_DIGEST_INCOMPLETE")
   const observation = {
     schema: "sf2h.native-proof-observation-receipt.v1",
