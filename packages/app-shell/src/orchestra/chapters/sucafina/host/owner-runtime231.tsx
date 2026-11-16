@@ -44,6 +44,7 @@ import { validBiRoute, biRouteAvailable } from "./bi-route"
 import { parseDashboardRouteQuery, dashboardRouteAvailable } from "./dashboard-route"
 import { SfDashboardExecutiveView } from "../dashboard/executive"
 import { SfHotTopicsView } from "../dashboard/hot-topics"
+import { SfHotTopicProposalView } from "../dashboard/hot-topics/proposals"
 import { SfDashboardBudgetView } from "../dashboard/budget"
 import { SfDashboardOpexView } from "../dashboard/opex"
 import { SfDashboardCapexView } from "../dashboard/capex"
@@ -224,6 +225,9 @@ function MountedSurface(props: Readonly<{
       </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP02"}>
         <SfHotTopicsView surfaceId="CAP02" route={current() as SfSurfaceProps<"CAP02">["route"]} />
+      </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "UI54"}>
+        <SfHotTopicProposalView surfaceId="UI54" route={current() as SfSurfaceProps<"UI54">["route"]} />
       </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP03"}>
         <SfDashboardBudgetView surfaceId="CAP03" route={current() as SfSurfaceProps<"CAP03">["route"]} />
