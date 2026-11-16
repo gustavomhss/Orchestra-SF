@@ -1,0 +1,332 @@
+{
+  "schema": "sf2h.review-finding-correction.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 219,
+  "title": "Conectar o produtor nativo Task Relay ao host padrão",
+  "branch": "sf-native-admission",
+  "epoch": "review-fix-e1-browser219",
+  "state": "PREPARED_NOT_STARTED",
+  "product_base": "7abf6c425e9b480bb43ba4a82f29c02a55445b92",
+  "derived_from_existing_contracted_review": 209,
+  "original_finding": {
+    "id": "R3-TASK-03",
+    "inherited_from": "old R03/PR98 + 148",
+    "severity": "P1",
+    "kind": "CONFIRMED_DEFAULT_RUNTIME_MISSING_DEPENDENCY",
+    "state": "FAIL",
+    "new_bug": false,
+    "trigger": "Authenticated human invokes sf_routine_run on default installed host; expects published C07 workflow, approved Task/Relay native owner, run/result/return to product; Schedule watch must not fake positive.",
+    "loci": [
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+        "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931",
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+        "blob": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+        "lines": "22-112",
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+        "blob": "0d34ddeb14e9da525d6acc4960a54f35be18d577",
+        "lines": "17-130",
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+        "blob": "5383051da7cda4523d81f34d93430871e564bb06",
+        "lines": "62-222",
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+        "blob": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+        "lines": "32-149",
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+        "blob": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+        "lines": "20-155",
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+        "blob": "0e8edac9d862cd68db387695d8aa476ad775c235",
+        "lines": "5-49",
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+        "blob": "673a0f0d8c039cda65c4fd88dc13b638db4ab27a",
+        "lines": "12-96",
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      }
+    ],
+    "criteria": [
+      "WP10.DOD.40",
+      "WP10.INV.40",
+      "WP10.SUC.40",
+      "WP10.T03.CHK.40"
+    ],
+    "proof": "host-context.ts:107-125 default createSfHostRuntime supplies no nativeRoutineProducer; comments mark first-party producer NOT IMPLEMENTED. Lines320-355 prevent advertising Task-backed descriptors until native C15 Request origin readiness; Schedule/watch explicitly unadvertised. Installed Relay/Task read-only captures do not mint owner. AM06 correlator tests are negative-only; no real admitted Task->Relay child->result->UI. Static blocker on default construction; no claim of exploited permission failure.",
+    "owner": "Legitimate first-party native owner/199 PR190/189 PR65; WP07 business C07 writer only after genuine public Task/Relay admission; 200 requested CI only if causal input arrives",
+    "recheck": "Produce supported PUBLIC/native Task/Relay owner provenance from original authenticated human POST (Request, live TaskTool frame, C15 owner, Permission, approval, provider generation and publisher pin) with real admission/child W/tree/run/result and human reread. If existing engine exposes no supported origin, remain FAIL (no engine substitute, IDs or private API).",
+    "release_blocking": true
+  },
+  "write_paths": [
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "apps/cli/src/sucafina-product/routine-native-admission.ts",
+    "apps/cli/src/sucafina-product/routine-native-origin.ts",
+    "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+    "apps/cli/src/sucafina-product/routine-native-owner.ts",
+    "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+    "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-admission219/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair219/**"
+  ],
+  "goals": [
+    "Resolver R3-TASK-03: construtorpadrão createSfHostRuntime não injeta nativeRoutineProducer; readerports e fixtures não são dono executante. Ler C07/C15, origem humana/TaskToolFrame públicos, pinpublicação, Permission/approval/providerbinding e runtime reais.",
+    "Implementar a composição first-party usando SOMENTE APIs públicas já suportadas, proveniência deRequest humana original e frameTask executado, provider/generation/C15owner atuais; garantir admissão/execução e leitura legítimas atéRelaychild/run/result/consumoproduto.",
+    "Preservar revogação,cancelamento,retryidempotente, timezone/recorrência,dedup e recusa de prepare/run emroutine-result. SemTaskIDforjado, aprovaçãoautomática, read-onlycapture tratada comoowner, engineparalelo ou acesso privado.",
+    "Não alterar engines Maestro/Relay/Schedule, políticas ou conceder novos acessos. Se aAPIpública realmente não expuser a origem necessária, demonstrar assinaturas/callchain e bloqueio exato sem implementar bypass; completar todas as pontes legítimas possíveis e entregar patch integral/inertofora delease.",
+    "Receber a prontidãoAzure como infra existente informada pelo usuário, não prova deTask/provider/identidade.199preparouhostfixture; usar callbacks reaispermitidos e preparar AM06 driver com211/214. Semdeploy/mutaçãoAzure/restart.",
+    "Publicarcódigo/PR/prepost/proveniência, request214 e recheck209. Escopo inteiro do finding, não outro inventário deports."
+  ],
+  "mandatory_reads": [
+    "AGENTS aplicáveis e guardrail-usage se houver findings; planningSTART/WORKFLOW/executionCOMMON e partes próprias dos packs canônicos.",
+    "Este pacoteCOMPLETO, findingoriginal e ordens/contratos pertinentes completas; preservar15WPs74tasks17contratos1610critérios eUXaprovado. Todos os anexosrequired_reads das ordens são obrigatórios.",
+    "Código/dados/dependências reais noSHAproduto e releases source anteriores; buscar entregas órfãs antes de reimplementar qualquer produtor.",
+    "ProntidãoAzure é informada pelo usuário, não autorização de deploy/mudarrecursos nem prova de modelo/Task/identidade funcionando."
+  ],
+  "full_work_order_urls": [
+    "https://github.com/gustavomhss/Orchestra-SF/blob/cbac654784714f68779ae1434d30e6ea8970c4d1/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A09.json"
+  ],
+  "rules": [
+    "SessãoNOVA,branchisolada exclusiva por missão. Implementação inteira do finding, não só relatório, catálogo ou testes que espelham código. Não escrever em sf-closure-bundle ou outra branch de autores.",
+    "A211 já tem missão integral que inclui tratar findings207–209. Esta é tentativa de correção do mesmo critério/finding previamente contratado, não novoescopo. Entregar PR dirigida a sf-closure-bundle/PR191 e metadata comfindingID. Não contar comentário como instrução entregue ao chat211.",
+    "211fazcomposição;190compiler;214únicodispatcherproduto;199fixture,213desktopbootstrap. Revisores207–209nãoeditamproduto e podem estarterminais: publicar delta/recheckpacket para nova revisão independente, sem fingirACK.",
+    "Nenhum teste/typecheck/build/validator local ou CI próprio. Entregar requests cirúrgicos exatos e inputs ao dispatcher214 via artefato dehandoff/PR; evitar reruns de inputinalterado.",
+    "Remote somenteGitHubMCP,CASexpectedhead,force:false. Sem gh/push/novotoken/devmerge/deploy/Azure/engines/restart/guardoverride ousegredos.",
+    "Fora dewrite_paths: patchcompletoINERTEcompre/post/contexto/contrato para211, nunca mero pedido. Nãoafrouxarassertions, fontes,regrafinanceira,ACLoucontratopara fabricarPASS.",
+    "Os produtores/catálogos congelados definem semântica; não alterar plano aprovado. Qualquer adaptaçãooperacional necessária é separada com digests e implementação completa para revisãoS0, sem presumir nova permissão.",
+    "Concluir todo código/consumidor/testes/drivers independentes mesmo se instalaçãoexterna impedir prova. Não inventar TaskIDs,grants,scanner,Relay/providerwitness. RegistrarAPIausente/comandos/callchain exatos se realmente bloqueado.",
+    "Entregarcommit/PR/handoffprepost, critérios/casos,checksreais/NOT_RUN,limitaçãoexata e recheckindependente. Goalnativapausada,GLOBAL_RELEASEfalse,semnewsupervisor/watchdog."
+  ],
+  "routing": {
+    "integrator": 211,
+    "product_pr": 191,
+    "compiler": 190,
+    "product_ci": 214,
+    "host": 199,
+    "desktop_bootstrap": 213
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "full_work_orders": [
+    {
+      "id": "A09",
+      "title": "Bindings finos: Rotinas, Schedule e residentes",
+      "kind": "adapter",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "priority": 3,
+      "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+      "owns": [
+        "packages/schema/src/sucafina/routines.ts",
+        "packages/client/src/sucafina/routines.ts",
+        "apps/cli/src/sucafina-product/native-ui/routines.ts",
+        "packages/schema/src/sucafina/routines/**",
+        "packages/client/src/sucafina/routines/**",
+        "apps/cli/src/sucafina-product/native-ui/routines/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts"
+      ],
+      "may_write_shared_registry": false,
+      "canonical": {
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "task_refs": [
+          "WP09.T01",
+          "WP09.T06",
+          "WP09.T07",
+          "WP10.T06",
+          "WP10.T07"
+        ],
+        "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+      },
+      "surfaces": [],
+      "exports": [
+        "SfRoutines",
+        "createSfRoutinesClient",
+        "createSfRoutinesHandlers"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [
+          "Operational routines/Native41/Relay/Schedule qualification remains HOLD until actual installed native producer bindings, current grants and canonical handoffs pass; artifact/adapter readiness is separate."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes": {
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "transport"
+        ],
+        "producer_exports": [
+          {
+            "order": "F01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F02",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          }
+        ],
+        "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+        "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+        "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+        "operation_refs": [
+          "contract-catalog.json#/operations/projection.routine",
+          "contract-catalog.json#/operations/routines.catalog",
+          "contract-catalog.json#/operations/routines.prepare-admission",
+          "contract-catalog.json#/operations/routines.read-admission",
+          "contract-catalog.json#/operations/routines.read-run",
+          "contract-catalog.json#/operations/routines.run",
+          "contract-catalog.json#/operations/schedules.create",
+          "contract-catalog.json#/operations/schedules.list",
+          "contract-catalog.json#/operations/schedules.pause",
+          "contract-catalog.json#/operations/schedules.read",
+          "contract-catalog.json#/operations/schedules.read-run",
+          "contract-catalog.json#/operations/schedules.update"
+        ],
+        "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+      },
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A09.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/host-types",
+          "contract-catalog.json#/sources/ports",
+          "contract-catalog.json#/sources/routine-services",
+          "contract-catalog.json#/sources/workbench"
+        ]
+      },
+      "deliver": [
+        "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
+        "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
+        "Publish operation/field/source equivalence and current-access/redaction negative cases.",
+        "Implement only frozen routines/schedules HTTP adapters over BusinessPorts; nativeUiProducts injection belongs to I00. The optional missing Schedule port returns the exact authorized unavailable outcome, never a simulated engine or successful fixture."
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A09-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A09-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A09-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "handoff": {
+        "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+        "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+        "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/routines.ts",
+          "symbol": "SfRoutines",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/routines.ts",
+          "symbol": "createSfRoutinesClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+          "symbol": "createSfRoutinesHandlers",
+          "signature": "(deps:SfNativeHostDependencies) => readonly SfProjectionHandler[]; only routine projection and the closed routines/schedules operation IDs in the catalog/CONTRACTS §5.4, preserving original producers and admissions."
+        }
+      ],
+      "server_leaf_policy": "Only HTML-only projections specifically enumerated in contract-catalog for this owner: reuse existing JSON operations directly; never add family REST forwarders."
+    }
+  ],
+  "expected_head": "0d9053d4649da9d313cc47392cd6723f9de1f8a7"
+}

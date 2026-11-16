@@ -1,0 +1,375 @@
+{
+  "schema": "sf2h.review-finding-correction.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 218,
+  "title": "Implementar histórico autorizado de importações",
+  "branch": "sf-import-history",
+  "epoch": "review-fix-e1-browser218",
+  "state": "PREPARED_NOT_STARTED",
+  "product_base": "7abf6c425e9b480bb43ba4a82f29c02a55445b92",
+  "derived_from_existing_contracted_review": 207,
+  "original_finding": {
+    "id": "S1-R1-207-002",
+    "severity": "P2",
+    "kind": "ROUTE_FUNCTIONAL_GAP",
+    "title": "UI57 approved import history route forced unavailable",
+    "status": "FAIL_SOURCE_STATIC",
+    "affected": [
+      "UI57",
+      "U23",
+      "WP06.T04"
+    ],
+    "criterion_ids": [
+      "U23-AC01",
+      "U23-AC02"
+    ],
+    "trigger": "Authorized user opens /orchestra/sf-imports route kind history",
+    "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "sources": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+        "lines": "370-388",
+        "what": "UI57 history route unconditional unavailable",
+        "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+      }
+    ],
+    "normative": {
+      "sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+      "surface": "UI57",
+      "kind": "history",
+      "route": "/orchestra/sf-imports"
+    },
+    "observed": "effect unconditionally sets unavailable for every authorized history route; real history producer not established",
+    "expected": "Authorized original history/receipt navigation or documented approved BLOCKED_CONTRACT until producer available",
+    "owner": {
+      "writer": "U23 history consumer",
+      "integrator": "189/I00",
+      "dispatcher": "200/PR106"
+    },
+    "correction": "Use actual owner scoped receipt producer, no synthesized history; preserve denial/unknown/removed",
+    "recheck": "After accepted contract C, 200 real manifest/receipt history, owner swap, denied, return and reflow; independent causal recheck"
+  },
+  "write_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/imports/**",
+    "modules/sucafina/Sucafinav1/test/product/import-history218/**",
+    "packages/app-shell/e2e/sucafina/native/journeys/import-history218/**",
+    "packages/schema/src/sucafina/files.ts",
+    "packages/client/src/sucafina/files.ts",
+    "apps/cli/src/sucafina-product/native-ui/files.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/**"
+  ],
+  "goals": [
+    "Antes de criar arquivo/adapter, reconciliar o produtor Files já produzido e suas releases nos workorders/contratos originais. UIimporta @orchestra/client/sucafina/files e schemafiles, ausentes em7ab. Consumir fonte real liberada se existe; não reimplementar trabalho órfão ou inventar API. Se o produtor foi omitido da composição, entregar closure completa exata para211 e continuar história usando essa fonte.",
+    "Resolver S1-R1-207-002: rota aprovadaUI57/history não pode serunavailableincondicional. LerU23/WP06.T04/READ-01 e produtor original de histórico/CommandReceipt/importação antes de alterar.",
+    "Consumir histórico/recibos reais porowner/principal/recordversion, navegar detalhes/retorno/fontes autorizadas, distinguir vazio/notfound/removed/denied/unknown, revalidarowner/revogação e descartarrespostaantiga.",
+    "Implementar typedadapter/consumer e ponte ausente real necessária; nenhuma história sintética, bypass de upload/policy ou aprovação financeira implícita. Não reeditar infraAzure/login/engines.",
+    "Cobrirpositivo/negativo/trocadeowner/late/return/reflow comfixtures reais de domínio. Fora da lease, patchshared completo para211. EntregarPR/prepost/request214/recheck207, não só tela ou relato de dependencia."
+  ],
+  "mandatory_reads": [
+    "AGENTS aplicáveis e guardrail-usage se houver findings; planningSTART/WORKFLOW/executionCOMMON e partes próprias dos packs canônicos.",
+    "Este pacoteCOMPLETO, findingoriginal e ordens/contratos pertinentes completas; preservar15WPs74tasks17contratos1610critérios eUXaprovado. Todos os anexosrequired_reads das ordens são obrigatórios.",
+    "Código/dados/dependências reais noSHAproduto e releases source anteriores; buscar entregas órfãs antes de reimplementar qualquer produtor.",
+    "ProntidãoAzure é informada pelo usuário, não autorização de deploy/mudarrecursos nem prova de modelo/Task/identidade funcionando."
+  ],
+  "full_work_order_urls": [
+    "https://github.com/gustavomhss/Orchestra-SF/blob/cbac654784714f68779ae1434d30e6ea8970c4d1/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U23.json"
+  ],
+  "rules": [
+    "SessãoNOVA,branchisolada exclusiva por missão. Implementação inteira do finding, não só relatório, catálogo ou testes que espelham código. Não escrever em sf-closure-bundle ou outra branch de autores.",
+    "A211 já tem missão integral que inclui tratar findings207–209. Esta é tentativa de correção do mesmo critério/finding previamente contratado, não novoescopo. Entregar PR dirigida a sf-closure-bundle/PR191 e metadata comfindingID. Não contar comentário como instrução entregue ao chat211.",
+    "211fazcomposição;190compiler;214únicodispatcherproduto;199fixture,213desktopbootstrap. Revisores207–209nãoeditamproduto e podem estarterminais: publicar delta/recheckpacket para nova revisão independente, sem fingirACK.",
+    "Nenhum teste/typecheck/build/validator local ou CI próprio. Entregar requests cirúrgicos exatos e inputs ao dispatcher214 via artefato dehandoff/PR; evitar reruns de inputinalterado.",
+    "Remote somenteGitHubMCP,CASexpectedhead,force:false. Sem gh/push/novotoken/devmerge/deploy/Azure/engines/restart/guardoverride ousegredos.",
+    "Fora dewrite_paths: patchcompletoINERTEcompre/post/contexto/contrato para211, nunca mero pedido. Nãoafrouxarassertions, fontes,regrafinanceira,ACLoucontratopara fabricarPASS.",
+    "Os produtores/catálogos congelados definem semântica; não alterar plano aprovado. Qualquer adaptaçãooperacional necessária é separada com digests e implementação completa para revisãoS0, sem presumir nova permissão.",
+    "Concluir todo código/consumidor/testes/drivers independentes mesmo se instalaçãoexterna impedir prova. Não inventar TaskIDs,grants,scanner,Relay/providerwitness. RegistrarAPIausente/comandos/callchain exatos se realmente bloqueado.",
+    "Entregarcommit/PR/handoffprepost, critérios/casos,checksreais/NOT_RUN,limitaçãoexata e recheckindependente. Goalnativapausada,GLOBAL_RELEASEfalse,semnewsupervisor/watchdog."
+  ],
+  "routing": {
+    "integrator": 211,
+    "product_pr": 191,
+    "compiler": 190,
+    "product_ci": 214,
+    "host": 199,
+    "desktop_bootstrap": 213
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "full_work_orders": [
+    {
+      "id": "U23",
+      "title": "Importações e exports de dados",
+      "kind": "ui",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "priority": 6,
+      "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts"
+      ],
+      "may_write_shared_registry": false,
+      "canonical": {
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "task_refs": [
+          "WP06.T01",
+          "WP06.T02",
+          "WP06.T03",
+          "WP06.T04",
+          "WP04.T05"
+        ],
+        "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+      },
+      "surfaces": [
+        "UI55",
+        "UI56",
+        "UI57",
+        "UI68"
+      ],
+      "exports": [
+        "SfImportsView"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "files",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "planner",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "procurement",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-evidence",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A06",
+        "S01",
+        "S03",
+        "S04"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02",
+          "F03",
+          "A06",
+          "S01",
+          "S03",
+          "S04"
+        ],
+        "external": [
+          "Canonical producer releases and original blockers remain mandatory for qualification."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes": {
+        "contracts": [
+          "ctx",
+          "files",
+          "planner",
+          "procurement",
+          "surface-specs",
+          "ui-change-review",
+          "ui-evidence",
+          "ui-frame",
+          "ui-table"
+        ],
+        "producer_exports": [
+          {
+            "order": "F01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F02",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F03",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "A06",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "S01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "S03",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "S04",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          }
+        ],
+        "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+        "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+        "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+        "operation_refs": [
+          "contract-catalog.json#/operations/files.export.json",
+          "contract-catalog.json#/operations/files.export.register",
+          "contract-catalog.json#/operations/files.export.suppliers",
+          "contract-catalog.json#/operations/files.export.xlsx",
+          "contract-catalog.json#/operations/files.import-admit",
+          "contract-catalog.json#/operations/files.import-apply",
+          "contract-catalog.json#/operations/files.import-detail",
+          "contract-catalog.json#/operations/files.import-preview",
+          "contract-catalog.json#/operations/files.import-reference",
+          "contract-catalog.json#/operations/files.import-targets"
+        ],
+        "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+      },
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U23.json"
+        ],
+        "contracts": [
+          "ctx",
+          "files",
+          "planner",
+          "procurement",
+          "surface-specs",
+          "ui-change-review",
+          "ui-evidence",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "UI55",
+          "UI56",
+          "UI57",
+          "UI68"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/imports"
+        ]
+      },
+      "deliver": [
+        "Implement every field/action/state/route in the assigned surface entries; field source is authoritative, never an invitation to omit less visible controls.",
+        "Emit typed page/component exports and registration fragment to I00; no direct registry/shared producer writes.",
+        "Use frozen responsive/microcopy/dirty-navigation specification; add behavior-focused installed journey cases in the owned exact spec.",
+        "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write."
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U23-AC01",
+          "expected": "File→preview→impact→receipt preserves all original formats/options, cancel atomicity, concurrent reprévia and authorized downloads/roundtrip.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U23-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U23-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "handoff": {
+        "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+        "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+        "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "symbol": "SfImportsView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "i18n_exports": [
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+          "en_symbol": "SF_U23_COPY",
+          "pt_br_symbol": "SF_U23_COPY_BR",
+          "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+        }
+      ]
+    }
+  ],
+  "expected_head": "58ec4c5376f5c34c3391f7eb2962f32697c67a9e"
+}
