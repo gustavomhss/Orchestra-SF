@@ -160,3 +160,9 @@ staging parameter is never acceptable.
 4. Qualify exact frozen C, complete AM01–AM06 and independent reviews.
 5. Only then propose a separately approved branch-protection migration,
    retire the old Epic and integrate/qualify Azure application activation.
+
+## A10 W1 — release-evidence contract (2026-11-16; no deployment)
+
+The release has three **independent** proof gates: `CI_HARNESS_VALIDATED` (coverage, negative controls, binding, equivalence), `PRODUCT_CI_GREEN` (all 12 expected jobs and eight receipts + `sf/verify=success` on an exact candidate) and `AZURE_RELEASE_QUALIFIED` (actual Linux VM app, Entra/OIDC, origin/authorization, persistence/restore, F04/U39-U40/AM01–AM06, immutable artifact, smoke/rollback and three independent reviews **on the same C**). No PR green proves an installed product, and no historical run carries forward to a new SHA (M1).
+
+A10 W1 deliverables: [evidence form](../../validation/final-bundle/evidence-template.md), [installed acceptance checklist](../../validation/final-bundle/installed-proof-checklist.md), [checked historical CI digest](../../validation/final-bundle/ci-round-10-13-digest.md) and [unsigned release attestation / owner-only ruleset migration plan](./RELEASE-ATTESTATION.md). The historical run 43956369500 ultimately concluded `cancelled` (Reports `cancelled`, `sf/verify=failure`), not a passed CI. These files are preparation and actual-source triage, **not** W3 freeze, W5 release integration, or owner approval. Branch protection read returned 403: preserve Epic/required checks; changing them and enabling the protected Azure environment require explicit owner action. The existing release workflow stays intentionally failing and `release-target.activation.status` stays `BLOCKED` until proofs exist.
