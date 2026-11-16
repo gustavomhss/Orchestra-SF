@@ -1,0 +1,97 @@
+{
+  "schema": "sf2h.hosted-failure-correction.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 222,
+  "title": "Fechar autoridade nativa AM02 após reabertura",
+  "branch": "sf-am02-authority",
+  "epoch": "causal-ci-e1-browser222",
+  "state": "PREPARED_NOT_STARTED",
+  "product_base": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/am02-authority222/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair222/**"
+  ],
+  "evidence": [
+    {
+      "id": "B16",
+      "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+      "tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+      "S": "c3dc581eb80ac614d06185bde88659ccf3b35681",
+      "Stree": "e4c77043fb26546e52ca3ad27a8522642004f71c",
+      "request_blob": "45c363d1e5413b87b882c4db40172b55fcabe03d",
+      "branch": "ci-run-linux-sf214-am02-2",
+      "run_id": 43781314836,
+      "job_id": 133018910748,
+      "cleanup_job_id": 133019461386,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 1
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": null
+      },
+      "result_type": "FAIL_SCOPED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781314836"
+    }
+  ],
+  "goals": [
+    "Resolver denied authority-unavailable em nativeValue/native-capabilities-fixture.ts:63 ao executar performance-public-c16-reopen.test.ts:85/126, run43781314836/job133018910748. A recusa é proteção legítima até provaradmissão correta.",
+    "Rastrear a primeira perda decontextobinding/parent/lease/principal/policy/accessRevision/SkillLoadReceipt/providerobject/generation na composição legítima e apósreabertura. Revalidar RequestautenticadoeSkillcarregada pelo publicC16, sem fabricarautorização ou enfraquecer a recusa.",
+    "Exercer UI/agente/privateMCP nas mesmas3portasPerformance e recibos reais, reload/rebind correto,ação fora degrant negada,ownerrevoked/bindingantigo negados. A prova é deparidade e fronteira real, não metadata/snapshotoufakeTask.",
+    "Se a causa for runtime/produtor, fornecer patchINERTOcompleto para211; não alterar host-context.ts que219possui comoautor nativo. Usar APIs públicas existentes e preservar origemTask/C15; se aAPI não exposta realmenteimpedirpositivo, documentar callchain exato e terminar a correção legítima possível.",
+    "Entregar código/PR/prepost/critério e request214 dessa seleção exata; não editar39operações ou reescrever os packs que196 jáentregou."
+  ],
+  "original_scope": "Corrections to existing Decisions/C12/AM01/AM02/AM04/AM05 criteria, not a new product phase.",
+  "required_reads": [
+    "AGENTS aplicáveis, planoimutávelSTART/WORKFLOW/executionCOMMON e ownfullpacks/anexos necessários.",
+    "Seu pacotecompleto, logsreais dosjobs/pinW/seletores em evidence; produtoatual e dependências antes de editar.",
+    "Ownpredecessorcompletepack:220source193+197/198,221source212,222source196. Preservar sourceoutputs antigos, não reimplementar módulos prontos."
+  ],
+  "predecessor_packet_urls": [
+    "https://github.com/gustavomhss/Orchestra-SF/blob/647f232d0748b11c06145bd562f1488db4f3a74f/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/196.json"
+  ],
+  "rules": [
+    "SessãoNOVA,branchisoladaeepochpróprio;ACK model/session sóseexpostos. LerHEAD/S0FENCEantesdeescrever.",
+    "Write_paths estritos; source220/221/222disjuntos. Nãoeditar sf-closure-bundle, sf2-stack ou autorbranchalheia. PRpara sf-closure-bundle/PR191;211compõe,214testa,190compila.219nativehostcontextpreservado.",
+    "Nenhum teste/typecheck/build/validator local, nenhumCI próprio. Entregar requestcirúrgico e pre/post;214 dedup e executa após consumoscausais.",
+    "Nãoalteraroracles/grants/identity/provider/receipt/scanner parafabricarPASS.Não mockscomotestemunhonativopositivo. Fora delease,patchINERTOcompleto para211.",
+    "Não contarcommentcomoentrega aochatiniciado. Este artefato é correção dos checks/fontes jácontratados;consumer211lê saídasprevistepeloGit. Corrigir todaacausa, nãosó relatório.",
+    "GitHubMCP remoto,CASexpectedheadforce:false;semgh/push/token/devmerge/deploy/Azure/engine/restart/guardbypass/segredos.",
+    "Goalnativapausada,GLOBAL_RELEASEfalse.Nãocriarextrasupervisor/watchdog;concluir todoindependente antes de declarar bloqueioexterno real."
+  ],
+  "routing": {
+    "integrator": 211,
+    "product_pr": 191,
+    "product_ci": 214,
+    "compiler": 190,
+    "native_author": 219
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "expected_head": "99d55d36d37842fa9893c5161b1aa2d04b87fa70"
+}

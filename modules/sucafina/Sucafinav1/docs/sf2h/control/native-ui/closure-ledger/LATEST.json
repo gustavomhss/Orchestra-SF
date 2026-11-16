@@ -493,5 +493,58 @@
       "scope": "S05 corrected explicit selector"
     }
   ],
-  "release_status": "GLOBAL_RELEASE_FALSE_FINAL_C_GATES_AND_REAL_NATIVE_PROOFS_OPEN"
+  "release_status": "GLOBAL_RELEASE_FALSE_FINAL_C_GATES_AND_REAL_NATIVE_PROOFS_OPEN",
+  "new_hosted_failure_corrections": [
+    {
+      "mission": 220,
+      "title": "Fechar validação Decisions e captura C12 real",
+      "branch": "sf-decisions-capture",
+      "epoch": "causal-ci-e1-browser220",
+      "head": "c5db89c85817b8b12f535b51717313133c296e12",
+      "state": "PREPARED_NOT_STARTED",
+      "batches": [
+        "B9",
+        "B11",
+        "B18"
+      ],
+      "consumer": 211,
+      "validation": 214
+    },
+    {
+      "mission": 221,
+      "title": "Fechar seleção legítima do cenário na regressão AM01",
+      "branch": "sf-am01-selection",
+      "epoch": "causal-ci-e1-browser221",
+      "head": "cbe4a3e22e6ea6b7a5f15815fc48491fe88d0325",
+      "state": "PREPARED_NOT_STARTED",
+      "batches": [
+        "B19"
+      ],
+      "consumer": 211,
+      "validation": 214
+    },
+    {
+      "mission": 222,
+      "title": "Fechar autoridade nativa AM02 após reabertura",
+      "branch": "sf-am02-authority",
+      "epoch": "causal-ci-e1-browser222",
+      "head": "99d55d36d37842fa9893c5161b1aa2d04b87fa70",
+      "state": "PREPARED_NOT_STARTED",
+      "batches": [
+        "B16"
+      ],
+      "consumer": 211,
+      "validation": 214
+    }
+  ],
+  "latest_navigation_green": {
+    "run": 43782484684,
+    "pass": 11,
+    "fail": 0,
+    "final_C_proof": false
+  },
+  "native219_at_latest_read": {
+    "head": "0d9053d4649da9d313cc47392cd6723f9de1f8a7",
+    "state": "RESERVATION_ONLY_ACK_NOT_OBSERVED"
+  }
 }
