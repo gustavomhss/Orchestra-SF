@@ -1022,6 +1022,11 @@ export type SfNativeRouteCandidate = Readonly<{
   parameters: Readonly<Record<string, SfRef>>
 }>
 
+/** Chapter recognition only; every route still requires source admission. */
+export function isSfNativeChapter(chapter: string): boolean {
+  return sfNativeRouteSpecs.some((spec) => spec.chapterId === chapter)
+}
+
 /**
  * Strict untrusted path recognition. Source access and owner-key admission
  * are separate: a candidate MUST go through F01.resolveAuthorizedRoute.
