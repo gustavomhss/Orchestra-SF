@@ -480,7 +480,8 @@ const main = Effect.gen(function* () {
       catch: (e) => (e instanceof Error ? e : new Error(String(e))),
     }).pipe(Effect.tapError((e) => Effect.sync(() => logger.error("owned serve health check failed", e.message))))
     ownedSfConnection = {
-      serverKey: owned.url,
+      // Existing ServerConnection.Key for the app-owned child, not an inferred project or renderer URL.
+      serverKey: "sidecar",
       baseUrl: owned.url,
       credentials: { kind: "basic", username: owned.username, password: owned.password },
     }
