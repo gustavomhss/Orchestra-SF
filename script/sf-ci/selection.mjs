@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto"
-import { lstatSync, readdirSync, realpathSync } from "node:fs"
+import { lstatSync, readdirSync, realpathSync, statSync } from "node:fs"
 import path from "node:path"
 
 /** Manifest is authoritative; this module never infers a platform outside Linux/X64. */
@@ -31,10 +31,19 @@ function discover(root, relative) {
   const found = []
   const walk = (physical, name) => {
     for (const entry of readdirSync(physical, { withFileTypes: true })) {
-      if (!/^[a-zA-Z0-9_.-]+$/.test(entry.name) || entry.isSymbolicLink()) fail("unsafe test tree entry")
       const next = name + "/" + entry.name
+      if (entry.isSymbolicLink()) {
+        // E.g. app-shell/src/custom-elements.d.ts is an existing harmless type
+        // symlink. Do not traverse links or admit linked test files/directories.
+        const target = statSync(path.join(physical, entry.name), { throwIfNoEntry: false })
+        if (target?.isFile() && !isTestFile(next)) continue
+        fail("unsafe test tree symlink: " + next)
+      }
       if (entry.isDirectory()) walk(path.join(physical, entry.name), next)
-      else if (entry.isFile() && isTestFile(next)) found.push(next)
+      else if (entry.isFile() && isTestFile(next)) {
+        validateRelative(next)
+        found.push(next)
+      }
     }
   }
   walk(dir, relative)
