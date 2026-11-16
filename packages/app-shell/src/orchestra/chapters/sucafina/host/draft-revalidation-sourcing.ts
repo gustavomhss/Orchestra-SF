@@ -17,8 +17,9 @@ export async function revalidateSourcingDraft(
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP25" && item.surface === "procurement" &&
       item.page === "Requests" && item.canRead && item.allowedActionIds.includes("save")) ||
       !fresh.availability.some((resource) => resource.family === "procurement" && resource.resource === "CAP25" &&
-        resource.state !== "denied" && resource.state !== "unavailable" && resource.operations.some((operation) =>
-          operation.operationId === "domain.command.CAP25.save" && operation.state === "ready" && operation.operational)))
+        resource.state !== "denied" && resource.state !== "unavailable" &&
+        ["domain.page.CAP25", "domain.command.CAP25.save"].every((id) => resource.operations.some((operation) =>
+          operation.operationId === id && operation.state === "ready" && operation.operational))))
     return { status: "denied" }
   const result = await createSfProcurementClient(transport)["domain.page.CAP25"](
     { request: input.identity.recordRef }, { signal },
@@ -39,12 +40,11 @@ export async function revalidateSourcingDraft(
   const row = uniqueRequest(page, input.identity.recordRef)
   if (!row) return { status: "unavailable" }
   if (!editableStages.some((stage) => stage === row.status)) return { status: "denied" }
+  if (row.allowedDraftActions?.includes("save-sourcing") !== true) return { status: "denied" }
   const visible = sourcingSourceFields(row)
   if (!visible) return { status: "unavailable" }
   if (input.read.fieldPaths.some((field) => !visible.includes(field))) return { status: "denied" }
   const version = requestVersion(page, input.identity.recordRef)
   if (version === null) return { status: "unavailable" }
-  // The source mutation requires buyer/admin for sourcing, but CAP25 publishes
-  // only a page-wide "save" grant shared with requester-owned PR edits.
-  return { status: "unavailable" }
+  return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: version }
 }

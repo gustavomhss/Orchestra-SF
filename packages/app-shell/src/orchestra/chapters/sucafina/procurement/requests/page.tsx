@@ -120,7 +120,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     sf.ready()?.context.destinations.find((item) => item.capabilityId === "CAP25" && item.canRead)?.allowedActionIds ?? []
   const actionAllowed = (action: SfRequestCommand) => {
     const original = uiCommandAction(action)
-    return !!view.read && contextActions().includes(original) && view.read.actionIds.includes(original)
+    return !!view.read && contextActions().includes(original) && view.read.actionIds.includes(original) &&
+      sf.ready()?.context.availability.some((resource) => resource.family === "procurement" && resource.resource === "CAP25" &&
+        resource.state !== "denied" && resource.state !== "unavailable" && resource.operations.some((operation) =>
+          operation.operationId === "domain.command.CAP25." + original && operation.state === "ready" && operation.operational)) === true
   }
   const row = createMemo(() => view.read?.records.find((item) => requestRef(item) === selectedRef()))
   const version = () => {
@@ -195,7 +198,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const currentVersion = version()
     const ready = sf.ready()
     if (!ready || sf.state().status !== "ready" || !sourceAvailable() ||
-        !actionAllowed("save-pr") && !actionAllowed("create") ||
+        !(creating() ? actionAllowed("create") : actionAllowed("save-pr")) ||
         (!creating() && (!currentRow || !isPrWritable(currentRow) || currentVersion === undefined))) return undefined
     const original = prFromRecord(creating() ? undefined : currentRow)
     return ready.drafts.acquire<SfPrEdit>({

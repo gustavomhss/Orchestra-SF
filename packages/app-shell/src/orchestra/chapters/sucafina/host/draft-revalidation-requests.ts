@@ -31,8 +31,9 @@ export async function revalidateRequestsDraft(
     item.surface === "procurement" && item.page === "Requests" && item.canRead)
   if (!destination || !destination.allowedActionIds.includes(action)) return { status: "denied" }
   if (!fresh.availability.some((resource) => resource.family === "procurement" && resource.resource === "CAP25" &&
-    resource.state !== "denied" && resource.state !== "unavailable" && resource.operations.some((operation) =>
-    operation.operationId === "domain.page.CAP25" && operation.state === "ready" && operation.operational)))
+    resource.state !== "denied" && resource.state !== "unavailable" &&
+    ["domain.page.CAP25", "domain.command.CAP25." + action].every((id) => resource.operations.some((operation) =>
+      operation.operationId === id && operation.state === "ready" && operation.operational))))
     return { status: "denied" }
   const result = await createSfProcurementClient(transport)["domain.page.CAP25"](
     input.identity.kind === "record" ? { request: input.identity.recordRef } : {}, { signal },
@@ -62,11 +63,5 @@ export async function revalidateRequestsDraft(
     path === prefix + key && value !== undefined))) return { status: "denied" }
   const version = requestVersion(read, ref)
   if (version === undefined) return { status: "unavailable" }
-  // CAP25's page-wide save grant does not say whether the actor is a buyer,
-  // administrator, or the creator of this particular PR. The mutation checks
-  // those roles separately by stage, so PO and non-owner PRs need an original
-  // record/stage-specific grant before they can be restored.
-  if (input.editScopeKey === "po.fields" || row.createdBy !== fresh.stamp.principalRef)
-    return { status: "unavailable" }
   return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: version }
 }
