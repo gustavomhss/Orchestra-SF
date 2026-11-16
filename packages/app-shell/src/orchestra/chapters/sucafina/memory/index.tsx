@@ -259,7 +259,8 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     void readReference(selectionRef)
     onCleanup(() => detailAbort?.abort())
   })
-  const title = () => props.surfaceId === "UI63" ? "sf.ui63.title" : props.surfaceId === "UI62" ? "sf.ui62.title" : "sf.ui61.title"
+  // UI62 is delegated to SfSimilarCasesView in the early return above; these branches are UI61/UI63 only.
+  const title = () => props.surfaceId === "UI63" ? "sf.ui63.title" : "sf.ui61.title"
   const detailMessage = (): keyof typeof SF_U26_COPY | "sf.common.loading" | "sf.common.unavailable" | "sf.common.noAccess" | "sf.common.stale" | "sf.common.invalidLink" =>
     view.detailState === "loading" ? "sf.common.loading" :
     view.detailState === "denied" ? "sf.common.noAccess" :
@@ -267,13 +268,11 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     view.detailState === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable"
   const pageState = (): SfUiState =>
     privacy() !== "ready" ? privacy() :
-    props.surfaceId === "UI62" ? "unavailable" :
     view.listState === "idle" ? "ready" :
     view.listState === "loading" ? "loading" : view.listState
   const pageMessage = () => privacy() === "denied" ? "sf.common.noAccess" :
     privacy() === "session-expired" ? "sf.common.loginAgain" :
     privacy() === "loading" || view.listState === "loading" ? "sf.common.loading" :
-    props.surfaceId === "UI62" ? "sf.u26.noSimilarity" :
     view.listState === "empty" ? "sf.common.empty" :
     view.listState === "denied" ? "sf.common.noAccess" :
     view.listState === "partial" ? "sf.common.partial" :
@@ -283,7 +282,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     <SfPageFrame titleKey={k(title())} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}>
       <section class="sf-memory" data-sf-surface={props.surfaceId}>
-        <Show when={privacy() === "ready" && props.surfaceId !== "UI62" && !referenceRoute()}>
+        <Show when={privacy() === "ready" && !referenceRoute()}>
           <form class="sf-memory-form" onSubmit={(event) => { event.preventDefault(); void loadCase() }}>
             <p class="sf-memory-help">{t("sf.u26.caseHelp")}</p>
             <label>{t("sf.u26.caseId")}<input autocomplete="off" required value={view.caseId}
@@ -301,10 +300,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
         </Show>
         <SfStatePanel state={pageState()} messageKey={k(pageMessage())}
           onRetryRead={view.active && privacy() === "ready" ? () => void loadCase(view.active!) : undefined}>
-          <Show when={props.surfaceId === "UI62"}>
-            <p role="status">{t("sf.u26.noSimilarity")}</p>
-          </Show>
-          <Show when={props.surfaceId !== "UI62" && view.active}>
+          <Show when={view.active}>
             <section class="sf-memory-section">
               <h2>{t("sf.u26.conditions")}</h2>
               <Show when={view.conditions.length} fallback={<p>{t("sf.u26.noConditions")}</p>}>

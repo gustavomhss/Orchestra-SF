@@ -353,8 +353,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       failure({ state: "outcome-unknown" }, true)
       return
     }
-    await refreshReference(intent.id, manifest.context.surface, token)
-    if (current(token)) setState({ phase: "receipt", busy: false })
+    const settled = await refreshReference(intent.id, source, token)
+    if (current(token) && settled?.receipt) setState({ phase: "receipt", busy: false })
+    else if (current(token)) setState({ busy: false })
   }
   const reconcile = async () => {
     const ref = state.manifest?.id ?? applyIntent?.id

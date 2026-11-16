@@ -229,7 +229,9 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
           when={owner.state().status === "ready" && sourceReady() && (!screen.searched || screen.state === "ready")}
           fallback={
             <SfStatePanel
-              state={screen.state === "ready" ? "unavailable" : screen.state === "ready" && !selected().length ? "filtered-empty" : screen.state}
+              state={screen.state === "ready"
+                ? (screen.searched && !selected().length ? "filtered-empty" : "unavailable")
+                : screen.state}
               messageKey={feedback()}
               onRetryRead={retry}
             />

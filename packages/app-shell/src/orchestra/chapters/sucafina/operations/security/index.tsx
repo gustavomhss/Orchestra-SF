@@ -6,7 +6,7 @@ import { useSfContext } from "../../context"
 import type {
   SfSurfaceProps, SfEditScopeKey, SfOwnerKey, SfRef, SfPublicDraftController,
 } from "../../context/contracts"
-import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/context"
+import type { SfIntentRef, SfOperationRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
@@ -198,6 +198,8 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
     year: props.route.query.year, month: props.route.query.month,
     editor: null, refresh: 0, submitting: false, operationState: "idle", errorText: null,
   })
+  const setEditorReview = (review: boolean) =>
+    setState("editor", (current) => current ? { ...current, review } : null)
   let draft: Draft | undefined
   let draftOwner: SfOwnerKey | undefined
   let submitted: Readonly<{
@@ -473,7 +475,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       return
     }
     draft?.setPhase("reviewing")
-    setState("editor", "review", true)
+    setEditorReview(true)
     setState("errorText", null)
   }
 
@@ -652,7 +654,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   }]))
   const removeDepartment = (index: number) =>
     edit("departments", JSON.stringify(departmentRows().filter((_row, i) => i !== index)))
-  const reviewSnapshot = (value: FormValues, original: boolean, version = state.editor!.version): SfReviewSnapshot => {
+  const reviewSnapshot = (value: FormValues, original: boolean, version: SfVersion = state.editor!.version): SfReviewSnapshot => {
     const editor = state.editor!
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: msg(common("empty")) }
@@ -781,7 +783,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                   ).slice().sort((a, b) => Number(a.month) - Number(b.month))}>
                     {(row) => <tr><th scope="row">{securityString(row.month)}</th>
                       <For each={SECURITY_KPI_FIELDS}>{(name) =>
-                        <td>{row[name] == null || row[name] === "" ? t(key("table.noData")) : String(row[name])}</td>
+                        <td>{row[name] == null ? t(key("table.noData")) : String(row[name])}</td>
                       }</For>
                     </tr>}
                   </For>
@@ -983,10 +985,10 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                   onRevise={() => {
                     if (state.editor!.command.startsWith("delete-") && state.operationState !== "conflict")
                       setState("editor", null)
-                    else { setState("editor", "review", false); draft?.setPhase("dirty") }
+                    else { setEditorReview(false); draft?.setPhase("dirty") }
                   }}
                   onCancel={() => {
-                    if (state.operationState === "conflict") setState("editor", "review", false)
+                    if (state.operationState === "conflict") setEditorReview(false)
                     else setState("editor", null)
                   }}
                   onReconcile={refresh}

@@ -126,6 +126,11 @@ export function createPeopleSession<Data>(
       clear(readAvailability?.state === "denied" ? "denied" : "unavailable", generation)
       return
     }
+    // Owner stamp captured at reload start; the answer is only valid while the
+    // owner, generation and status still match this identity.
+    const readyState = context.state()
+    if (readyState.status !== "ready") return
+    const ownerKey = readyState.ownerKey
     // Drop all previous private content even while a same-owner read is pending.
     clear("loading", generation)
     const stillCurrent = () => {
@@ -133,7 +138,7 @@ export function createPeopleSession<Data>(
       return !controller.signal.aborted && serial === id &&
         context.generation() === generation &&
         state.status === "ready" &&
-        state.ownerKey === active.ownerKey
+        state.ownerKey === ownerKey
     }
     try {
       const result = await read(active.transport, controller.signal)

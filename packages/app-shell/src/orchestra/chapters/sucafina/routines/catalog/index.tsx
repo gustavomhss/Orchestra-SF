@@ -170,8 +170,9 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
       }
       setView("recipes", result.body.value)
       setView("recipesState", result.body.value.length ? "ready" : "empty")
-      if (props.route.kind === "recipe") {
-        const selectedRecipe = result.body.value.findIndex((item) => item.documentId === props.route.params.recipeRef)
+      const route = props.route
+      if (route.kind === "recipe") {
+        const selectedRecipe = result.body.value.findIndex((item) => item.documentId === route.params.recipeRef)
         if (selectedRecipe >= 0) setView("recipeIndex", selectedRecipe)
       }
     } catch (error) {

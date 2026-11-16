@@ -483,7 +483,8 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     if (!fingerprint || context.ready() !== ready || editing() !== editor || validate(editor)) return
     const payloadDigest = Array.from(new Uint8Array(fingerprint), (byte) => byte.toString(16).padStart(2, "0")).join("")
     editor.draft.setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version })
-    if (editor.draft.snapshot().availability !== "active" || editor.draft.snapshot().pendingOperation?.operationRef !== operationRef) return
+    const pendingSnapshot = editor.draft.snapshot()
+    if (pendingSnapshot.availability !== "active" || pendingSnapshot.pendingOperation?.operationRef !== operationRef) return
     editor.draft.setPhase("submitting")
     activeSubmissionRef = operationRef
     setView("busy", true)
@@ -501,12 +502,11 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         return
       }
       if (!result.body.ok) {
-        if (result.body.status === 409) {
-          editor.draft.setPhase("conflict")
-          setView("error", t(sfCommonKey("sf.common.conflict")))
-        } else if (result.body.status === 422) {
-          editor.draft.setPhase("validation-error")
-          setView("error", result.body.errors?.join("; ") ?? t(sfCommonKey("sf.common.fieldErrorSummary")))
+        if (result.body.status === 409 || result.body.status === 422) {
+          // A definite rejection is not an unknown outcome; release the pending operation via the draft contract.
+          editor.draft.rejectSave({ status: result.body.status, operation: { operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version } })
+          if (result.body.status === 409) setView("error", t(sfCommonKey("sf.common.conflict")))
+          else setView("error", result.body.errors?.join("; ") ?? t(sfCommonKey("sf.common.fieldErrorSummary")))
         } else {
           editor.draft.setPhase("failed")
           setView("error", t(sfCommonKey(result.body.status === 403 ? "sf.common.noAccess" : "sf.common.unavailable")))

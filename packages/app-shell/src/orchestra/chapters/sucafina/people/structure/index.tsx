@@ -57,9 +57,10 @@ const memberFields = (leaders: StructureData["leaders"]): readonly PeopleField[]
 ]
 const toValues = (value: object, fields: readonly PeopleField[]): PeopleFormValues => {
   const source = value as Record<string, unknown>
-  return Object.fromEntries(fields.filter((item) => Object.hasOwn(source, item.name)).map((item): [string, string] =>
-    [item.name, typeof source[item.name] === "number" ? String(source[item.name]) :
-      typeof source[item.name] === "string" ? source[item.name] : ""]))
+  return Object.fromEntries(fields.filter((item) => Object.hasOwn(source, item.name)).map((item): [string, string] => {
+    const raw = source[item.name]
+    return [item.name, typeof raw === "number" ? String(raw) : typeof raw === "string" ? raw : ""]
+  })) as PeopleFormValues
 }
 
 export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Element {

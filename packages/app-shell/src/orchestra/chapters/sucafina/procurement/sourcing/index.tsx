@@ -380,9 +380,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     setUi("phase","checking")
     const fresh=await read(token,intent.requestRef,controller.signal)
     if(controller.signal.aborted||commandController!==controller||authority()!==token){release();return}
-    // Fresh read: ui.phase's static narrowing above predates the setUi("phase","checking").
-    const phaseNow:Phase=ui.phase
-    if(ui.review!==intent||phaseNow!=="checking"||ref()!==intent.requestRef){release();return}
+    // Fresh reads of phase; static narrowing above predates setUi("phase","checking").
+    const phaseNow=()=>ui.phase
+    if(ui.review!==intent||phaseNow()!=="checking"||ref()!==intent.requestRef){release();return}
     const next=fresh.kind==="ok"?uniqueRequest(fresh.page,intent.requestRef):null
     if(fresh.kind!=="ok"||!next||
       requestRevision(fresh.page,intent.requestRef)!==intent.sourceRevision||
@@ -408,10 +408,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     try{
       const bytes=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(payloadJson)))
       digest=Array.from(bytes,(item)=>item.toString(16).padStart(2,"0")).join("")
-    }catch{if(commandController===controller&&authority()===token&&ui.review===intent&&ui.phase==="checking"){setUi("phase","failed");setUi("lastError","unavailable")}release();return}
+    }catch{if(commandController===controller&&authority()===token&&ui.review===intent&&phaseNow()==="checking"){setUi("phase","failed");setUi("lastError","unavailable")}release();return}
     if(controller.signal.aborted||commandController!==controller||authority()!==token){release();return}
     const current=page(),row=request(),currentDraft=draft()
-    if(ui.review!==intent||ui.phase!=="checking"||!ui.sending||ui.state!=="ready"||ui.token!==token||ref()!==intent.requestRef||
+    if(ui.review!==intent||phaseNow()!=="checking"||!ui.sending||ui.state!=="ready"||ui.token!==token||ref()!==intent.requestRef||
        !current||!row||row.number!==intent.requestRef||sourceVersion()!==intent.version||
        requestRevision(current,intent.requestRef)!==intent.sourceRevision||!can(intent.action)||JSON.stringify(payload)!==payloadJson||
        draftConflict()||draftPending()||currentDraft!==controllerDraft||

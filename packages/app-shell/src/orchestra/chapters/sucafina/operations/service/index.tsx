@@ -4,7 +4,7 @@ import { useLanguage } from "@/context/language"
 import { createSfOperationsClient } from "@orchestra/client/sucafina/operations"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps, SfEditScopeKey, SfRef, SfOwnerKey, SfPublicDraftController } from "../../context/contracts"
-import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/context"
+import type { SfIntentRef, SfOperationRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
@@ -144,6 +144,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     year: props.route.query.year, month: props.route.query.month,
     refresh: 0, editor: null, submitting: false, operationState: "idle", errorText: null,
   })
+  const setEditorReview = (review: boolean) =>
+    setState("editor", (current) => current ? { ...current, review } : null)
   let draft: Draft | undefined
   let draftOwner: SfOwnerKey | undefined
   let submitted: Readonly<{ operationRef: SfOperationRef; action: SfServiceAction; owner: SfOwnerKey; year: number; month: number }> | undefined
@@ -413,7 +415,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       return
     }
     draft?.setPhase("reviewing")
-    setState("editor", "review", true)
+    setEditorReview(true)
     setState("errorText", null)
   }
 
@@ -592,7 +594,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   const reviewState = () => state.operationState === "conflict" ? "conflict" :
     state.operationState === "unknown" ? "outcome-unknown" :
     state.operationState === "failed" ? "invalid" : state.state
-  const reviewSnapshot = (values: DraftValues, original: boolean, version = state.editor!.version): SfReviewSnapshot => {
+  const reviewSnapshot = (values: DraftValues, original: boolean, version: SfVersion = state.editor!.version): SfReviewSnapshot => {
     const editor = state.editor!
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: message(commonKey("empty")) }
@@ -891,8 +893,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   }}
                   state={reviewState()}
                   onConfirm={() => { void submitReviewed() }}
-                  onRevise={() => { setState("editor", "review", false); draft?.setPhase("dirty") }}
-                  onCancel={() => setState("editor", "review", false)}
+                  onRevise={() => { setEditorReview(false); draft?.setPhase("dirty") }}
+                  onCancel={() => setEditorReview(false)}
                    onReconcile={() => setState("refresh", (value) => value + 1)}
                 />
               }>
