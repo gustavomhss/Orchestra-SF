@@ -101,7 +101,7 @@ O `verify` isolado sem dados de Actions deve falhar: **isso é comportamento cor
 
 - **Contexto:** guardião do mapa de leases, da fila de integrações e das decisões não delegáveis. Conduz PR #242 para revisão fria; PR #240 exige X/Y/Z; PR #243 tem label relatado, mas merge é discricionário do dono. Não faz merge nem edita produto.
 - **Arquivos exclusivos:** `sf/ci/coordination/merge-ledger.md`, `sf/ci/coordination/dependency-ledger.md`, `sf/ci/reviews/ci-red-triage.md`, `sf/ci/reviews/performance.md`, `sf/ci/reviews/final-cold-review.md`.
-- **Compartilhados READ-ONLY:** todos os PRs, logs, ``f/ci/PENDING-WORK.md`, YAML, manifest, bundle. Corrigir pela mão do owner A2–A10.
+- **Compartilhados READ-ONLY:** todos os PRs, logs, `sf/ci/PENDING-WORK.md`, YAML, manifest, bundle. Corrigir pela mão do owner A2–A10.
 - **Grafo:** inicia W0; precisa de F0 para estado de código; recebe provas de A2–A9; A10 consome seu parecer antes de freeze/release.
 - **Tarefas:** CI-01 inventariar **todos os jobs** do último run completo, CI-10 classificar **cada RED** `PRODUCT_BUG / TEST_FIXTURE / MISSING_REAL_ENV / CI_HARNESS` com arquivo/caso, CI-11 medir fila/Bun/build/Omni/unit/UI/wall-clock/runner-min e p50/p95 **após amostra suficiente**, CI-12 revisão fria do PR #242, concorrência/base e subcasos Q01; vigiar PRs #240/#243 sem executá-los. Solicitar 3 pareceres finais de pessoas distintas para A10; nenhum revisor é o autor do próprio patch.
 - **Comandos de verificação (somente leitura):**
@@ -120,7 +120,7 @@ gh pr diff 242 -R gustavomhss/Orchestra-SF --name-only
 ### Agente A2 — gate, seleção governada pelo manifesto, receipts, Linux-only
 
 - **Contexto:** todos os oito IDs de `sf/ci/suites.json` são normativos. Seleção hoje é parcial: CLI/Atlas via manifesto, mas três E2E hardcoded em YAML; `countBunReport≥1` é insuficiente como prova de cobertura. `sf/verify` deve falhar antes de download quando upstream RED.
-- **Arquivos exclusivos:** ``cript/sf-ci/gate.mjs`, `gate.test.mjs`, `sf/ci/suites.json`, `script/sf2h/final-bundle/verify-bun-report.py`, `.github/workflows/test-ci.yml`, `script/test-ci.ts`, `script/test-ci-request.ts`, `script/test-ci-location.ts`, `packages/core/test/test-ci-request.test.ts`. **Não editar `sf-ci.yml` (A6).**
+- **Arquivos exclusivos:** `script/sf-ci/gate.mjs`, `gate.test.mjs`, `sf/ci/suites.json`, `script/sf2h/final-bundle/verify-bun-report.py`, `.github/workflows/test-ci.yml`, `script/test-ci.ts`, `script/test-ci-request.ts`, `script/test-ci-location.ts`, `packages/core/test/test-ci-request.test.ts`. **Não editar `sf-ci.yml` (A6).**
 - **Compartilhados READ-ONLY:** `.github/workflows/sf-ci.yml`, suites de produto e Q01; entregar a A6 o contrato do CLI de seleção + metadata.
 - **Grafo:** W1 após F0; interface fechada com A6 antes de ligação YAML; seu teste negativo e contrato de evidence precedem `CI_HARNESS_VALIDATED`.
 - **Tarefas:** CI-02 preflight independente Linux X64 e regressões do seletor; CI-03 precheck com upstream fracassado; CI-05/ B2 comando gerado de manifesto para **todas** as seleções, incluindo E2E, SF/APP-SRC/APP-BROWSER e exclusões release-only estritas; CI-06 binding recibos SHA256/run/attempt/runner/identidade/sem secrets; CI-07 bail de falha real/verde exaustivo; CI-08 sem OS fora do alvo/sem triggers duplicados; M4 travar suíte quase vazia com conjunto de **casos e arquivos coletados/executados** por família, baseline versionada e negative controls que removem arquivo/caso (contagem não basta). Preservar 6 AM como release-only.
@@ -423,7 +423,7 @@ gh api repos/gustavomhss/Orchestra-SF/branches/close-final-candidate/protection
 
 ## 8. Protocolo de congelamento C, prova completa e handoff definitivo
 
-1. A1 reconsulta branch/PRs e triagem; A6 garante o merge de ``1cb77b8deb` e `524f6ed87e`, controla a fila de integrações, A2–A5 entregam patches disjuntos e revistas. PR #243 só na ordem/autorização do dono; nunca pré-requisito escondido.
+1. A1 reconsulta branch/PRs e triagem; A6 garante o merge de `1cb77b8deb` e `524f6ed87e`, controla a fila de integrações, A2–A5 entregam patches disjuntos e revistas. PR #243 só na ordem/autorização do dono; nunca pré-requisito escondido.
 2. Antes de freeze, A2+A6 obtêm negativos B1/B2/M4, equivalência de B3, M2/M3; A3/A4/A5 corrigem reds reais preservando produtores e qualidade; review independente do PR #242 e PR #240. A10 **não** dá `CI_HARNESS_VALIDATED` só por preflight.
 3. A10 congela C: commit 40 hex, tree SHA, manifests/config/workflows/guards/Omni/build hashes, refs/PR parentage, e identifica exatamente como `workflow_dispatch`/PR Actions vai testar C. **Não** chamar run de merge ref diferente de “run em C”.
 4. Run final **novo e sem cancelamento** no SHA C: preflight, static, Omni, as cinco Bun (`CI-SF`, `CI-CLI`, `CI-APP-SRC`, `CI-APP-BROWSER`, `CI-ATLAS-BUSINESS`), três Playwright (`OPERATIONS`, `DECISIONS`, `REPORTS`) e verify. Guard base `origin/dev` e source commit registrados. A1 captura job IDs/status final e p50/p95 conforme amostra; A2 confere oito recibos, seleção por caso, SHA256 e ausência de skip. Um RED exige novo patch → **novo C**, não replay seletivo de green anterior.
@@ -466,7 +466,7 @@ Nenhum agente precisa de nova rodada de planejamento para saber **o que fazer**.
 | **P2-COLLISION-UNIT-AM:** A3 “toda árvore de testes SF” conflitaria com A5 nos cinco arquivos PR240 e A9 nos dirs am01..06; A7 assumiria `parity-pitr` como verde. | **MAJOR** | Precedência de exceções por paths exatos, ownership AM A9, file A5 preservado, `parity-pitr` preservado/sem PASS e substituição Linux A7. | **RESOLVIDO** |
 | **P2-HIDDEN-SERIAL:** A9 poderia começar F04 “em paralelo” à correção U39/U40, VM e Entra, criando dias de testes inválidos. | **BLOCKER** | DAG exige A5(X/Y/Z) + A7 instalado + A8 atores/Entra + A10 C antes de executar A9. A9 só prepara matrizes antes. | **RESOLVIDO NO PLANO; AMBIENTE AINDA PENDENTE** |
 | **P2-PROTECTION-403:** A10 não tem API de branch protection e guard paths exigem aprovação humana; planejamento de merge automático não seria executável. | **BLOCKER** | Owner externo nomeado para rulesets, PR separado e label same-day; CI-13/CI-14/AZ-08 gatilhados por prova do owner; sem alteração protegida pelos agentes. | **RESOLVIDO COMO DEPENDÊNCIA EXTERNA EXPLÍCITA** |
-| **P2-MERGE-ORDER:** “Faz CI e depois merge 524f” permitiria falha repetida de TS e DoD avaliado no SHA errado. | **MAJOR** | F0 passa ao início, com ``merge-base --is-ancestor` para ambos refs; W3 run somente no C após integração/review. | **RESOLVIDO** |
+| **P2-MERGE-ORDER:** “Faz CI e depois merge 524f” permitiria falha repetida de TS e DoD avaliado no SHA errado. | **MAJOR** | F0 passa ao início, com `merge-base --is-ancestor` para ambos refs; W3 run somente no C após integração/review. | **RESOLVIDO** |
 
 **Resultado do Pass 2:** prefixos amplos têm exclusões exatas; nenhuma edição paralela incide no mesmo arquivo. B2→A6 e A5/A7/A8→A9 são **seriais declaradas**, não paralelo fictício. PR #243 e migração required checks não têm um agente “com poder imaginário”.
 
