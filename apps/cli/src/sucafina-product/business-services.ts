@@ -719,6 +719,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       forecastCoverage.current = reader
     },
     atlasRecall: () => atlasState.current,
+    caseRecallSource: () => recall.current && evidence.current && atlasState.current
+      ? { recall: recall.current, evidence: evidence.current, atlas: atlasState.current } : undefined,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
     dispose: () => { reviewCollaboration.dispose(); workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
 }

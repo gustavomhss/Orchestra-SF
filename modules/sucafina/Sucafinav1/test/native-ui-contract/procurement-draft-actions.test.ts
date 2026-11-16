@@ -32,13 +32,15 @@ test("actual native request projection emits source-stamped draft capabilities",
   if (!created.ok) throw new Error("source request creation failed")
   const id = String(object(created.value).number)
   let actor = { id: "owner", role: "requester", canWrite: true }
+  let revoked = false
+  let admissions = 0
   const deps = { origin: "http://localhost", mount: "/sucafina", runtime: () => undefined,
     application: { domains: { dashboard: [], planner: [], procurement: [{ pages: ["Requests"], domain, render: () => undefined }] },
       persistence: { transaction: async (_surface: string, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: unknown }>) => (await work(snapshot)).value },
       authenticate: async () => ({ id: actor.id, canWrite: actor.canWrite, roles: [{ surface: "procurement", role: actor.role }] }),
       environment: async () => environment },
     readContext: async () => ({ status: "ok", value: { stamp: { installationId: "installation", projectId: "project", hostId: "host",
-      principalRef: actor.id, policyVersion: "policy", accessRevision: "revision" }, destinations: [{ capabilityId: "CAP25", surface: "procurement",
+      principalRef: actor.id, policyVersion: "policy", accessRevision: revoked && ++admissions > 1 ? "revoked" : "revision" }, destinations: [{ capabilityId: "CAP25", surface: "procurement",
       page: "Requests", canRead: true, allowedActionIds: ["save"] }] } }) }
   const handler = createSfProcurementProjectionHandlers(deps as never).find((entry) => entry.operationId === "domain.page.CAP25")!
   const read = async () => (await handler.handle(new Request("http://localhost/sucafina/api/ui/pages/CAP25"))).json()
@@ -49,4 +51,8 @@ test("actual native request projection emits source-stamped draft capabilities",
   expect((await read()).value.data.requests[0].allowedDraftActions).toEqual(["save-sourcing"])
   actor = { id: "stranger", role: "requester", canWrite: true }
   expect((await read()).value.data.requests).toEqual([])
+  actor = { id: "owner", role: "requester", canWrite: true }
+  revoked = true
+  admissions = 0
+  expect((await handler.handle(new Request("http://localhost/sucafina/api/ui/pages/CAP25"))).status).toBe(409)
 })
