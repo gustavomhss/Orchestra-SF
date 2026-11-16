@@ -360,6 +360,18 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         return
       }
       if (selection() && sameSelection(selection()!, parsed.selection)) return
+      if (selection()) {
+        // Keep the provider bound to the old owner until navigation has
+        // admitted the new owner and the user has confirmed any discard.
+        const abort = new AbortController()
+        const previousHref = untrack(() => view.route?.href)
+        void navigation.requestNativeTransition(currentHref(), "deep-link", { signal: abort.signal }).then((result) => {
+          if (disposed || abort.signal.aborted || result.status === "committed" || result.status === "aborted") return
+          if (previousHref) navigate(String(previousHref), { replace: true })
+        })
+        onCleanup(() => abort.abort())
+        return
+      }
       setDiscovery({ status: "ready", selection: parsed.selection })
       return
     }
@@ -397,6 +409,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const providerStatus = provider.status
     const providerGeneration = provider.generation
     if (!selected || disposed || providerStatus !== "ready" || providerGeneration < 0) return
+    const requested = explicitSelection(location.search)
+    // The discovery effect owns cross-owner admission and discard confirmation.
+    if (requested.kind === "selected" && !sameSelection(requested.selection, selected)) return
     if (untrack(() => view.status === "ready" && view.route?.href === href &&
       sameSelection(view.route.ownerSelection, selected))) return
     const epoch = ++routeEpoch
