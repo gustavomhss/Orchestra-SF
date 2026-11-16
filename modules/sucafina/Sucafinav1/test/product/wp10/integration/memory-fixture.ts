@@ -167,6 +167,7 @@ export async function memoryFixture(options: { principalRef?: string; caseRef?: 
     return { commit: true, value: undefined }
   })
   const http = createSfMemoryHttp({ origin, authority: { ui, human, host }, memory,
+    similarCases: async () => ({ status: "unavailable" as const, reason: "fixture-similarity-not-installed" }),
     // Explicit case-bound fixture only; the product host injects business.withCase.
     withCase: async (call, selected, _options, work) => call.kind === "ui" && digestSfValue(selected) === digestSfValue(selectedCase) && await host.revalidate(call)
       ? work() : { status: "denied", reason: "fixture-case-unavailable" },
