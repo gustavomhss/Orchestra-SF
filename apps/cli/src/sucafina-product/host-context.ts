@@ -89,6 +89,8 @@ import { createSfProductContribution, createSfProductDispatch } from "./contribu
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
+import { observeSfReportHealth } from "./native-ui/report-health.ts"
+import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
 import type { SfStoppedRun } from "./native-execution.ts"
@@ -929,7 +931,14 @@ export const createSfHostRuntimeWithRoutineNative = async (
   // missing operation probes remain explicitly unavailable (never catalog-ready).
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
-    operational: input.operational,
+    operational: async (request, stamp) => {
+      const observations = await Promise.allSettled([
+        input.operational?.(request, stamp) ?? Promise.resolve([]),
+        observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
+        observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
+      ])
+      return observations.flatMap((item) => item.status === "fulfilled" ? item.value : [])
+    },
     admit: async (request) => {
       const admitted = await authority.readContextAdmission(request)
       if (admitted.status !== "ok") return admitted

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import type { SfProductState } from "../../product/contracts/state.ts"
-import { selectSfCaseHealth } from "../../product/host-binding/state-provider.ts"
+import { selectSfCaseHealth, selectSfNamespaceHealth } from "../../product/host-binding/state-provider.ts"
 import { createStateIsolationFixture } from "../product/finance-state-read-performance/fixture.ts"
 
 test("C08 health selects metadata before cloning unrelated state; opaque callbacks remain isolated", async () => {
@@ -24,6 +24,20 @@ test("C08 health selects metadata before cloning unrelated state; opaque callbac
     f.controls.observe = undefined
     f.controls.checks.length = 0
     expect(await f.state.read(f.request, "cases", (state) => state.cases.case?.objective)).toMatchObject({ status: "ok", value: f.decision.objective })
+  } finally { await f.close() }
+})
+
+test("report storage health checks the original write authority without mutating C08", async () => {
+  const f = await createStateIsolationFixture()
+  try {
+    const before = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1) }))
+    const selector = selectSfNamespaceHealth("documents", f.context.binding, "write")
+    expect(await f.state.read(f.request, "documents", selector)).toMatchObject({ status: "ok", value: { storageVersion: 0 } })
+    expect(f.controls.checks.map((item) => item.mode)).toEqual(["write", "write"])
+    expect(await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.__sfProductV1 }))).toEqual(before)
+    f.controls.checks.length = 0
+    f.controls.observe = (_snapshot, _request, mode, index) => { if (mode === "write" && index === 2) f.controls.enabled = false }
+    expect(await f.state.read(f.request, "documents", selector)).toEqual({ status: "denied", reason: "product-authority-changed" })
   } finally { await f.close() }
 })
 
