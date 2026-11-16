@@ -21,7 +21,7 @@ posix("component: consumed POST -> narrowed parent -> original core Task; stale 
     expect((yield* f.sessions.messages({ sessionID: lease.authoritySessionID })).some((message) => message.type === "synthetic" && message.text.startsWith("<skill_content name=\"maestro-run-governed\">"))).toBe(true)
     const children = (yield* f.sessions.list()).filter((session) => session.parentID === lease.authoritySessionID)
     expect(children).toHaveLength(1)
-    expect(children[0]?.agent).toBe("archie")
+    expect<string | undefined>(children[0]?.agent).toBe("archie")
     expect(f.trace.issuers).toEqual(["core"])
     return lease.authoritySessionID
   }))
