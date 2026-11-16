@@ -23,7 +23,6 @@ export function parseFilesRouteQuery(params: URLSearchParams, candidate: SfNativ
 export function filesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (!(candidate.chapterId === "sf-imports" || candidate.chapterId === "sf-documents") || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   if ((["UI55", "UI56", "UI57", "UI68"].includes(candidate.surfaceId)) !== (candidate.chapterId === "sf-imports")) return false
-  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
   const ready = (id: string) => context.availability.some((resource) => resource.family === "files" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))
   if (candidate.surfaceId === "UI68") return [SfFiles.operations["files.export.xlsx"].operationId, SfFiles.operations["files.export.suppliers"].operationId,
     SfFiles.operations["files.export.register"].operationId, SfFiles.operations["files.export.json"].operationId].some(ready)

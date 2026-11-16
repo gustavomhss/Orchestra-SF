@@ -18,7 +18,6 @@ export function parseMemoryRouteQuery(params: URLSearchParams, candidate: SfNati
 }
 export function memoryRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-memory" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
-  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
   const operations = candidate.surfaceId === "UI62" ? [SfDecisions.operations["projection.cases"].operationId, SfMemory.operations["intelligence.memory-similar-cases"].operationId] :
     candidate.surfaceId === "UI63" && candidate.kind === "entry" ? [SfMemory.operations["intelligence.memory-catalog"].operationId, SfMemory.operations["intelligence.memory-outcome"].operationId] :
       [SfMemory.operations["intelligence.memory-catalog"].operationId]

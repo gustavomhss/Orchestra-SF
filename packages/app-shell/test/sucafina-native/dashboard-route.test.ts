@@ -3,6 +3,7 @@ import type { SfContext } from "@orchestra/schema/sucafina/context"
 import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { dashboardRouteAvailable, parseDashboardRouteQuery } from "../../src/orchestra/chapters/sucafina/host/dashboard-route"
+import { sourceDestinations } from "./source-context-fixture"
 
 describe("dashboard route admission", () => {
   test("recognizes real entry and detail routes, consuming only supported selectors", () => {
@@ -39,7 +40,7 @@ describe("dashboard route admission", () => {
     const candidate = matchSfNativeRoutePath(`/orchestra/sf-dashboard/hot-topics/proposals/${encodeSfRouteRef("proposal")}`)!
     expect(parseDashboardRouteQuery(new URLSearchParams(), candidate)).toEqual({})
     expect(parseDashboardRouteQuery(new URLSearchParams("returnTo=x"), candidate)).toBeUndefined()
-    const context = { destinations: [{ capabilityId: "UI54", canRead: true }], availability: [{ family: "domain-read", resource: "hot-topic-proposal", operations: [{ operationId: "dashboard.dashboard-workbench", state: "ready", operational: true }] }] } as unknown as SfContext
+    const context = { destinations: sourceDestinations, availability: [{ family: "domain-read", resource: "hot-topic-proposal", operations: [{ operationId: "dashboard.dashboard-workbench", state: "ready", operational: true }] }] } as unknown as SfContext
     expect(dashboardRouteAvailable(context, candidate)).toBe(true)
     expect(dashboardRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
   })

@@ -25,7 +25,6 @@ export function parseRoutinesRouteQuery(params: URLSearchParams, candidate: SfNa
 }
 export function routinesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-routines" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
-  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
   const operations = candidate.surfaceId === "UI64" ? [SfAnalyses.operations["intelligence.analysis.choices"].operationId,
     candidate.kind === "admission" ? SfRoutines.operations["routines.read-admission"].operationId : SfRoutines.operations["routines.catalog"].operationId] :
     candidate.surfaceId === "UI65" ? [SfRoutines.operations["projection.routine"].operationId] :

@@ -36,11 +36,10 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
   return { ...input, ...(status === null ? {} : { status }) }
 }
 
-/** Destination and live operation readiness are prerequisites, not write grants. */
+/** CAP destinations and live operation readiness are prerequisites, not write grants. */
 export function dashboardRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId === "sf-dashboard" && candidate.surfaceId === "UI54" && candidate.kind === "entry") {
-    return context.destinations.some((item) => item.capabilityId === "UI54" && item.canRead) &&
-      context.availability.some((resource) => resource.family === "domain-read" && resource.resource === "hot-topic-proposal" &&
+    return context.availability.some((resource) => resource.family === "domain-read" && resource.resource === "hot-topic-proposal" &&
         resource.operations.some((operation) => operation.operationId === SfDomain.operations["dashboard.dashboard-workbench"].operationId &&
           operation.state === "ready" && operation.operational))
   }

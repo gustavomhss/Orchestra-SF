@@ -96,6 +96,8 @@ export type SfNavigationDependencies = Readonly<{
   hasDirtyDrafts: () => boolean
   /** Only called before voluntary owner change; true means explicit discard. */
   confirmDiscard: () => Promise<boolean>
+  /** Re-read the staged target after a possibly long discard confirmation. */
+  revalidateAfterConsent?: (route: SfResolvedRoute, ownerKey: SfOwnerKey, signal: AbortSignal) => Promise<boolean>
   /** Purges requests/projections/drafts of previous owner before the new owner is committed. */
   invalidateOwner: (reason: "owner-changed") => void
   /** I00 composes route, global selection and provider owner in one synchronous host callback. */
@@ -169,10 +171,16 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
         const discard = await deps.confirmDiscard()
         if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
         if (!discard) return { status: "kept-editing" }
+        if (deps.revalidateAfterConsent) {
+          const fresh = await deps.revalidateAfterConsent(resolved.route, resolved.ownerKey, abort.signal).catch(() => false)
+          if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
+          if (!fresh) return { status: "denied" }
+        }
       }
       // A denied/stale reply or a changed owner may never commit after preflight.
       if (abort.signal.aborted || epoch !== generation ||
           options?.signal?.aborted ||
+          (changingOwner && deps.currentOwnerKey() !== outgoing) ||
           (options?.expectedOwnerKey && (
             deps.currentOwnerKey() !== options.expectedOwnerKey ||
             resolved.ownerKey !== options.expectedOwnerKey

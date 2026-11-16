@@ -31,13 +31,13 @@ export function parsePortfolioRouteQuery(params: URLSearchParams, candidate: SfN
 }
 export function portfolioRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-portfolio" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
-  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
   if (candidate.surfaceId === "CAP09" || candidate.surfaceId === "CAP10") {
+    if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
     const operation = candidate.surfaceId === "CAP09" ? SfDomainPageCap09 : SfDomainPageCap10
     return context.availability.some((resource) => resource.family === "domain-read" && resource.resource === candidate.surfaceId &&
       resource.operations.some((item) => item.operationId === operation.operationId && item.state === "ready" && item.operational))
   }
-  const ready = (family: "decisions" | "portfolio", operationId: string) => context.availability.some((resource) => resource.family === family && resource.state === "ready" &&
+  const ready = (family: "decisions" | "portfolio", operationId: string) => context.availability.some((resource) => resource.family === family &&
     resource.operations.some((item) => item.operationId === operationId && item.state === "ready" && item.operational))
   if (!ready("decisions", SfDecisions.operations["decisions.controls.read"].operationId)) return false
   if (candidate.surfaceId === "UI43") return ready("portfolio", SfPortfolio.operations["portfolio.decision-portfolio-read"].operationId)

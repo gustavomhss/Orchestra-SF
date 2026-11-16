@@ -31,7 +31,6 @@ export function homeContextStatusRoute(pathname: string, search: string, selecte
 }
 export function homePagesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-home" || !isHomePagesSurface(candidate.surfaceId) || candidate.kind !== "entry") return false
-  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
   // UI67 renders the same context already read and stamped by F01 preflight.
   if (candidate.surfaceId === "UI67") return true
   const operation = candidate.surfaceId === "UI31" ? SfWork.operations["projection.search"].operationId : SfDomain.operations["projection.local-admin"].operationId

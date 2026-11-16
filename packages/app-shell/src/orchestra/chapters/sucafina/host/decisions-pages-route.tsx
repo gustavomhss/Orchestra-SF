@@ -27,7 +27,6 @@ export function parseDecisionPagesRouteQuery(params: URLSearchParams, candidate:
 }
 export function decisionPagesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-decisions" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
-  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
   const operation = candidate.surfaceId === "UI41" ? SfAnalyses.operations["intelligence.analysis.choices"].operationId :
     candidate.surfaceId === "UI38" ? SfDecisions.operations["decisions.choice.read"].operationId :
       SfDecisions.operations["projection.case"].operationId

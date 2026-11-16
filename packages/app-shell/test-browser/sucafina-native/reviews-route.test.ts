@@ -3,6 +3,7 @@ import type { SfContext } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
 import { parseReviewsRouteQuery, reviewsRouteAvailable } from "../../src/orchestra/chapters/sucafina/host/reviews-route"
+import { sourceDestinations } from "../../test/sucafina-native/source-context-fixture"
 
 describe("review routes", () => {
   test("retains original review refs and validates closed query selectors", () => {
@@ -15,16 +16,16 @@ describe("review routes", () => {
     expect(parseReviewsRouteQuery(new URLSearchParams("previousReview=a&currentReview=b"), compare)).toEqual({ previousReview: "a", currentReview: "b" })
     expect(parseReviewsRouteQuery(new URLSearchParams("previousReview=a&currentReview=a"), compare)).toBeUndefined()
   })
-  test("requires the original readable review operation and destination", () => {
+  test("requires the original review operation with CAP-only destinations", () => {
     const candidate = matchSfNativeRoutePath("/orchestra/sf-reviews/compare")!
-    const context = { destinations: [{ capabilityId: "UI49", canRead: true }], availability: [{ family: "reviews", resource: "preserved", operations: [{ operationId: "dashboard.dashboard-review", state: "ready", operational: true }] }] } as unknown as SfContext
+    const context = { destinations: sourceDestinations, availability: [{ family: "reviews", resource: "preserved", operations: [{ operationId: "dashboard.dashboard-review", state: "ready", operational: true }] }] } as unknown as SfContext
     expect(reviewsRouteAvailable(context, candidate)).toBe(true)
     expect(reviewsRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
-    expect(reviewsRouteAvailable({ ...context, destinations: [{ ...context.destinations[0]!, canRead: false }] }, candidate)).toBe(false)
+    expect(reviewsRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [{ ...context.availability[0]!.operations[0]!, operational: false }] }] }, candidate)).toBe(false)
   })
   test("report admission uses source-backed prepare and download, not legacy Office codecs", () => {
     const candidate = matchSfNativeRoutePath(`/orchestra/sf-reviews/reports/${encodeSfRouteRef("review")}`)!
-    const context = { destinations: [{ capabilityId: "UI50", canRead: true }], availability: [
+    const context = { destinations: sourceDestinations, availability: [
       { family: "reviews", resource: "preserved", state: "ready", operations: [{ operationId: "dashboard.dashboard-review", state: "ready", operational: true }] },
       { family: "reviews", resource: "report-export", state: "unavailable", operations: [
         { operationId: "reviews.export.docx", state: "unavailable", operational: false },
@@ -35,6 +36,6 @@ describe("review routes", () => {
     expect(reviewsRouteAvailable(context, candidate)).toBe(true)
     expect(reviewsRouteAvailable({ ...context, availability: context.availability.slice(0, 2) }, candidate)).toBe(false)
     expect(reviewsRouteAvailable({ ...context, availability: [context.availability[0]!, context.availability[2]!] }, candidate)).toBe(false)
-    expect(reviewsRouteAvailable({ ...context, destinations: [{ ...context.destinations[0]!, canRead: false }] }, candidate)).toBe(false)
+    expect(reviewsRouteAvailable({ ...context, availability: [context.availability[1]!, context.availability[2]!] }, candidate)).toBe(false)
   })
 })
