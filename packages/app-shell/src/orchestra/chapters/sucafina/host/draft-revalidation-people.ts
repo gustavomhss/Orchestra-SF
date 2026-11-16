@@ -12,6 +12,10 @@ const talentFields = [...memberFields, "cls", "outlook", "notes"]
 export async function revalidatePeopleDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
+  if (signal.aborted) return { status: "unavailable" }
+  if (input.originalOwner.installationId !== fresh.stamp.installationId ||
+      input.originalOwner.projectId !== fresh.stamp.projectId ||
+      input.originalOwner.principalRef !== fresh.stamp.principalRef) return { status: "authority-changed" }
   const structure = input.surfaceId === "CAP07" && input.read.operationId === "domain.page.CAP07"
   const talent = input.surfaceId === "CAP08" && input.read.operationId === "domain.page.CAP08"
   if (!structure && !talent) return { status: "unavailable" }
@@ -53,8 +57,9 @@ export async function revalidatePeopleDraft(
   if (page.capabilityId !== input.surfaceId || Object.entries(selection).some(([key, value]) =>
     !Object.entries(page.selection).some(([selected, actual]) => selected === key && actual === value))) return { status: "unavailable" }
   if (!page.allowedActionIds.some((allowed) => allowed === action)) return { status: "denied" }
+  // These legacy create commands use expected-absence CAS 0, not a record ID.
   if (input.identity.kind === "new")
-    return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: null }
+    return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: 0 }
   const ref = input.identity.recordRef
   const rows = entity === "cio" ? (ref === "cio" && "cio" in page.data ? [page.data.cio] : []) :
     entity === "leader" ? ("leaders" in page.data ? page.data.leaders.filter((row) => row.id === ref) : []) :
@@ -62,9 +67,9 @@ export async function revalidatePeopleDraft(
   if (rows.length !== 1) return { status: "unavailable" }
   if (input.read.fieldPaths.some((field) => !Object.entries(rows[0]!).some(([key, value]) => key === field && value !== undefined)))
     return { status: "denied" }
-  // People command conflict() treats a missing version key as source CAS zero.
   const key = entity === "cio" ? "cio" : (entity === "leader" ? "leaders:" : "members:") + ref
-  const version = page.versions[key] ?? 0
-  if (!Number.isSafeInteger(version) || version < 0) return { status: "unavailable" }
+  if (!Object.hasOwn(page.versions, key)) return { status: "unavailable" }
+  const version = page.versions[key]
+  if (version === undefined || !Number.isSafeInteger(version) || version < 0) return { status: "unavailable" }
   return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: version }
 }

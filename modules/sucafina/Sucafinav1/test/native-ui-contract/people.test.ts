@@ -168,6 +168,20 @@ describe("A10 Pessoas and Talent — source-boundary contract", () => {
     expect(JSON.stringify(projectSfPeopleVersions("CAP07", state.versions, structure))).not.toContain("payroll")
   })
 
+  test("visible absent CAS keys are zero; corrupt visible versions fail without exposing hidden keys", () => {
+    const structure = projectSfPeopleData("CAP07", sources, selection, at, true)
+    const projected = projectSfPeopleVersions("CAP07", { "members:hidden": { version: -1, by: "private" } }, structure)
+    expect(projected).toEqual({ cio: 0, "leaders:l1": 0, "members:m1": 0, "members:m2": 0 })
+    for (const version of [-1, NaN, Infinity, 0.5]) {
+      expect(() => projectSfPeopleVersions("CAP07", { "members:m1": { version, by: "actor" } }, structure))
+        .toThrow("SF_PEOPLE_SOURCE_VERSION_INVALID")
+    }
+    expect(() => projectSfPeopleVersions("CAP07", { cio: undefined } as unknown as Record<string, { version: number; by: string }>, structure))
+      .toThrow("SF_PEOPLE_SOURCE_VERSION_INVALID")
+    const talent = projectSfPeopleData("CAP08", sources, selection, at, true)
+    expect(projectSfPeopleVersions("CAP08", {}, talent)).toEqual({ "members:m1": 0, "members:m2": 0 })
+  })
+
   test("real People domain keeps role-based Talent edit admission and version conflicts", () => {
     const state = snapshot()
     expect(domain.execute(state, viewer, {

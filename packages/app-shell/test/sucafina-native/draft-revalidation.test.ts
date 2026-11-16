@@ -239,7 +239,25 @@ describe("source-bound draft revalidation", () => {
       data: { cio: {}, leaders: [{ id: "l1", name: "Leader" }], members: [] }, versions: { "leaders:l1": 6 }, allowedActionIds: ["saveLeader"] } }
     expect(await run(leader, structure)).toMatchObject({ status: "authorized", sourceVersion: 6 })
     expect(await run({ ...leader, identity: { kind: "new", newIntentRef: "sf-people-CAP07-leader-new" as SfIntentRef },
-      read: { ...leader.read, fieldPaths: [] } }, structure)).toMatchObject({ status: "authorized", sourceVersion: null })
+      read: { ...leader.read, fieldPaths: [] } }, structure)).toMatchObject({ status: "authorized", sourceVersion: 0 })
+    expect(await run(leader, { ...structure, value: { ...structure.value, versions: {} } })).toEqual({ status: "unavailable" })
+    expect(await run(leader, { ...structure, value: { ...structure.value, versions: { "leaders:l1": 0 } } })).toMatchObject({ status: "authorized", sourceVersion: 0 })
+    expect(await run({ ...leader, read: { ...leader.read, actionIds: ["deleteLeader"] } }, structure)).toEqual({ status: "unavailable" })
+    expect(await run({ ...leader, read: { ...leader.read, fieldPaths: ["private"] } }, structure)).toEqual({ status: "unavailable" })
+    expect(await run({ ...leader, identity: { kind: "new", newIntentRef: "sf-people-CAP07-leader-new" as SfIntentRef },
+      read: { ...leader.read, fieldPaths: [] } }, { ...structure, value: { ...structure.value, allowedActionIds: [] } })).toEqual({ status: "denied" })
+    const cio: SfDraftRevalidationInput = { ...leader, identity: { kind: "record", recordRef: "cio" as SfRef },
+      editScopeKey: "people:structure:current:cio" as SfEditScopeKey,
+      read: { ...leader.read, fieldPaths: [], actionIds: ["saveCio"] } }
+    expect(await run(cio, { ...structure, value: { ...structure.value, versions: { cio: 0 }, allowedActionIds: ["saveCio"] } })).toMatchObject({ status: "authorized", sourceVersion: 0 })
+    const member: SfDraftRevalidationInput = { ...leader, identity: { kind: "record", recordRef: "m1" as SfRef },
+      editScopeKey: "people:structure:current:member" as SfEditScopeKey,
+      read: { ...leader.read, fieldPaths: ["name"], actionIds: ["saveMember"] } }
+    expect(await run(member, { ...structure, value: { ...structure.value, data: { ...structure.value.data, members: [{ id: "m1", name: "Member" }] },
+      versions: { "members:m1": 9 }, allowedActionIds: ["saveMember"] } })).toMatchObject({ status: "authorized", sourceVersion: 9 })
+    expect(await run(leader, { ...structure, context: { ...stamp, accessRevision: "changed" } })).toEqual({ status: "authority-changed" })
+    const abort = new AbortController()
+    expect(await revalidateSfNativeDraft(leader, fresh, fixture(structure, [], () => abort.abort()), abort.signal)).toEqual({ status: "unavailable" })
   })
   test("planner catalog scopes the record to its actual collection and source fields", async () => {
     const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "CAP21", identity: { kind: "record", recordRef: "item" as SfRef },

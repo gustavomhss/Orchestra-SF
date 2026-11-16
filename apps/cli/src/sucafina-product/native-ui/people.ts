@@ -240,10 +240,14 @@ export function projectSfPeopleVersions(
   if (cap === "CAP08" && "members" in data) {
     data.members.forEach((row) => visible.add("members:" + row.id))
   }
-  return Object.fromEntries(Object.entries(versions)
-    .filter(([key, value]) => visible.has(key) &&
-      Number.isSafeInteger(value.version) && value.version >= 0)
-    .map(([key, value]) => [key, value.version]))
+  return Object.fromEntries([...visible].map((key) => {
+    // Legacy conflict() defines a never-written visible key as revision zero.
+    if (!Object.hasOwn(versions, key)) return [key, 0]
+    const value = versions[key]
+    if (!value || !Number.isSafeInteger(value.version) || value.version < 0)
+      throw new Error("SF_PEOPLE_SOURCE_VERSION_INVALID")
+    return [key, value.version]
+  }))
 }
 
 type SfPeoplePageOutcome =
