@@ -43,3 +43,27 @@
 | 3 revisores frios + dono | nomes/parecer/URL/tempo e findings resolvidos | NOT_OBSERVED |
 
 **STOP:** manter `sf-release` fail-closed, `release-target.activation.status=BLOCKED`, Epic e required checks atuais. Qualquer aprovação de merge, ruleset, ambiente protegido ou go-live é **DECISÃO DO DONO**, não deste agente. Não fazer upgrade de estado por PR verde.
+
+---
+
+## A10/W2 — handoff objetivo ao owner para PROMOÇÃO (documental, ainda BLOCKED)
+
+**Procedimento owner-only integral:** [sf/ci/RELEASE-ATTESTATION.md](../../sf/ci/RELEASE-ATTESTATION.md#pacote-de-promoção--owner-only--execução-condicional-2026-11-16). Atestação utilizável: [evidence-template.md](./evidence-template.md#7-atestação-operacional-assinável--modelo-para-o-c-final-não-preenchido).
+
+| Ordem | Dono exato | Entrada que precisa fornecer / registrar (sem valores secretos no repo) | STOP se ausente |
+|---|---|---|---|
+| 1 — integração | Proprietário de repo + A6/A1 | PRs por lease com aprovação, B1/B2/B3/M2/M3/M4, CI-04 equivalência, fixes de produto e revisão #240/#242 | Não há C |
+| 2 — revisão | Dono aponta 3 humanos não autores: Security/Entra; Platform/Backup; Produto/CI | Identity, parecer timestamp/link + findings resolvidos no mesmo SHA, não “LGTM” genérico | AZ-06 NOT_RUN |
+| 3 — baseline GitHub | Você, Admin | Export válido de branch protection e rulesets efetivos (incluindo origem org), contexts/app IDs, strict, reviewers/bypass, targets, hash e hora; evidência 403 da integração | CI-13 BLOCKED_BY_OWNER |
+| 4 — identidade | Entra admin + você + A8 | Tenant/client/issuer/redirect/consent; grupos/roles por ID e contas reais requester/holder/denied/admin; sessões seguras, revogação, topologia de origem/retorno I00 | AZ-02 BLOCKED_BY_OWNER |
+| 5 — Azure host | Azure owner + A7 | subscription/RG/VM/disk/vault, permissão deploy/restore isolado, DNS/TLS; serviço, pacote C, factory legítima, mount, anteriores e target RPO/RTO | AZ-01/03 BLOCKED_BY_ENV |
+| 6 — segredos | Azure/Entra owner | Config privada de identity/cert/client credential, sessão+CSRF e source connectors conforme contrato real, Key Vault e acesso Managed Identity/0600; OIDC federado para GitHub environment — **nada de long-lived deploy secret em chat/Git** | AZ-02/07 BLOCKED_BY_OWNER |
+| 7 — provas | A7/A8/A9 + você | Build C digest, smoke transacional, 8 native recipes e AM01–06/F04/U39/U40, backup/restart/restore isolado e rollback em C, IDs/hashes e witness | AZ-01..05 NOT_RUN |
+| 8 — promoção | Você, após artefato/reviews | Protected environment approvals + ato escrito para promover C, rollback e operador; implementar workflow operacional sem sentinel em C **antes do freeze final** | AZ-07 BLOCKED_BY_OWNER/ENV |
+| 9 — policies | Você, somente após C e AZ PASS | Autorização de mutar required checks, adição sf/verify mantendo Epic, PR negativo, só depois retirada de contexts antigos, snapshots de rollback; outro PR para Epic | CI-14/AZ-08 NOT_AUTHORIZED |
+
+**Pendente técnico conhecido fora de A10:** A8 sinalizou no handoff A8-02 que o retorno Web/I00 ainda carece de contrato, A8-03 topologia de origem não comprovada, A8-04 exemplo de GET sem 3 selectors é inválido (esperado 400). A prova guest correta precisa incluir installationId/projectId/hostId e HTTPS; HEAD 200 **não prova autenticação**. A9 identificou dispatcher AM live ainda BLOCKED_BY_SOURCE; A7 documentou que fundação Azure/Caddy 503 **não é aplicação instalada**. Esses achados vetam promover sem correção/prova e owner responsável.
+
+**Sequência de rollback exigida como pré-requisito, não pós-escrito:** antes de qualquer alteração guardar versão anterior e digest, prova de compatibilidade de schema, checkpoint com Backup job e recovery point, restore em VM isolada, RPO/RTO com dono, capacidade de fechar writes/Task/Relay e versão anterior no slot. Se falhar host mas schema compatível: switch atômico + restart + transação/Entra; se schema incompatível: não usar binário antigo no DB novo, restaurar **isoladamente** e reconciliar alterações; se falhar policy: manter a mais restritiva até Epic original voltar e ser observado. Não modificar policy ou produção enquanto estado for BLOCKED.
+
+**Nada executado nesta seção:** docs prontos para decisão, sem assinatura, sem secrets, sem Azure, sem workflow de deploy ativado e sem required checks mutados.
