@@ -137,9 +137,9 @@ export function readSfProjectPage(payload: unknown): SfProjectPage | null {
   const versions: Record<string, number> = {}
   if (object(source.versions)) {
     for (const [key, value] of Object.entries(source.versions)) {
-      if (!key.startsWith("projects:") || !object(value) ||
-          !Number.isSafeInteger(value.version) || (value.version as number) < 0) continue
-      versions[key] = value.version as number
+      if (!key.startsWith("projects:") || typeof value !== "number" ||
+          !Number.isSafeInteger(value) || value < 0) continue
+      versions[key] = value
     }
   }
   return {
