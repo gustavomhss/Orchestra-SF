@@ -10,6 +10,7 @@ import { createSfConnectionRegistry, validateSfCandidate, type SfDesktopOwner } 
 import { allowSfAuthNavigation } from "./auth"
 import { requireSfEnrollmentUrl, readSfUnmanagedEnrollment } from "./enrollment"
 import { publicSfHeaders } from "./network"
+import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 
 const descriptor: SfInstallationDescriptor = {
   installationId: "installation-A", projectId: "project-A", hostId: "host-A",
@@ -51,7 +52,7 @@ afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })))
 })
 
-function brokerFixture() {
+function brokerFixture(contextReplies: Array<{ status: number; body: unknown }> = []) {
   const ipc = new Map<string, (event: unknown, arg: unknown) => Promise<unknown>>()
   const sessionNames: string[] = []
   const invalidations: unknown[] = []
@@ -61,15 +62,26 @@ function brokerFixture() {
   const sessions = new Map<string, { clearStorageData: () => Promise<void>; clearCache: () => Promise<void> }>()
   let cleared = 0
   let failLogout = false
+  class AuthWindow extends EventEmitter {
+    webContents = Object.assign(new EventEmitter(), { setWindowOpenHandler: () => undefined })
+    isDestroyed() { return false }
+    close() { this.emit("closed") }
+    async loadURL() {
+      queueMicrotask(() => {
+        const event = { preventDefault() {} }
+        this.webContents.emit("will-navigate", event, descriptor.publicOrigin + descriptor.mount + "/dashboard?sf=native-return&resume=abcdefghijklmnop")
+        this.webContents.emit("will-redirect", event, descriptor.publicOrigin + "/orchestra/sf-home")
+      })
+    }
+    static fromWebContents(sender: unknown) { return [...owners].find((entry) => entry.sender === sender)?.win }
+  }
   const api = {
     app,
     ipcMain: {
       handle: (name: string, listener: (event: unknown, arg: unknown) => Promise<unknown>) => ipc.set(name, listener),
       removeHandler: (name: string) => ipc.delete(name),
     },
-    BrowserWindow: {
-      fromWebContents: (sender: unknown) => [...owners].find((entry) => entry.sender === sender)?.win,
-    },
+    BrowserWindow: AuthWindow,
     dialog: {
       async showMessageBox(_win: unknown, options: { defaultId: number; cancelId: number }) {
         dialogs.push(options)
@@ -107,15 +119,19 @@ function brokerFixture() {
             req.emit("error", new Error("offline"))
             return
           }
+          const context = options.url.includes("/api/ui/context") ? contextReplies.shift() : undefined
+          const intent = options.url.includes("/api/ui/return-intents")
           const response = Object.assign(new EventEmitter(), {
-            headers: options.url.includes("installations") ? { "content-type": "application/json" } : {},
-            statusCode: options.url.includes("installations") ? 200 : 204,
+            headers: options.url.includes("installations") || context || intent ? { "content-type": "application/json" } : {},
+            statusCode: options.url.includes("installations") || intent ? 200 : context?.status ?? 204,
             pause: () => undefined, resume: () => undefined,
           })
           req.emit("response", response)
           queueMicrotask(() => {
             if (options.url.includes("installations"))
               response.emit("data", Buffer.from(JSON.stringify({ installations: [descriptor] })))
+            if (context) response.emit("data", Buffer.from(JSON.stringify(context.body)))
+            if (intent) response.emit("data", Buffer.from(JSON.stringify({ resume: "abcdefghijklmnop" })))
             response.emit("end")
           })
         })
@@ -125,7 +141,7 @@ function brokerFixture() {
   }
   const broker = createSfDesktopBroker({
     electron: api as unknown as SfDesktopBrokerDependencies["electron"],
-    operations: codecs,
+    operations: { ...codecs, "ctx.context": SfNativeOperationBindings["ctx.context"] },
     isRendererUrl: (url) => url.startsWith("oc://renderer/"),
     isMainWindow: (win) => [...owners].some((owner) => owner.win === win),
     ownedConnection: () => undefined,
@@ -263,4 +279,69 @@ test("download header projection strips cookies, redirect and unsafe filenames",
     "x-sf-access-revision": "9",
   })
   expect(publicSfHeaders({ "content-disposition": 'attachment; filename="../../evil"' })["content-disposition"]).toBeUndefined()
+})
+
+const context231 = {
+  stamp: {
+    installationId: descriptor.installationId, projectId: descriptor.projectId, hostId: descriptor.hostId,
+    principalRef: "principal-A", policyVersion: "policy-1", accessRevision: "access-1",
+  },
+  contractRevision: "sf-native-ui/1", authMode: "microsoft", destinations: [], availability: [],
+}
+
+async function bindForContext(fixture: ReturnType<typeof brokerFixture>, owner: ReturnType<typeof fakeOwner>) {
+  expect((await fixture.call("sf-native-register-connection", owner.event, candidate) as { status: string }).status).toBe("approved")
+  const binding = await fixture.call("sf-native-bind", owner.event, {
+    serverKey: candidate.serverKey, projectId: descriptor.projectId, installationId: descriptor.installationId,
+  }) as { status: string; bindingHandle: string; generation: number }
+  expect(binding.status).toBe("ok")
+  return { bindingHandle: binding.bindingHandle, generation: binding.generation }
+}
+
+function readContext(fixture: ReturnType<typeof brokerFixture>, owner: ReturnType<typeof fakeOwner>,
+  binding: { bindingHandle: string; generation: number }) {
+  return fixture.call("sf-native-invoke", owner.event, {
+    kind: "request", ...binding, requestId: crypto.randomUUID(), operationId: "ctx.context",
+    input: { installationId: descriptor.installationId, projectId: descriptor.projectId, hostId: descriptor.hostId },
+  })
+}
+
+test("initial validated 401 retains the binding for the original desktop login", async () => {
+  const fixture = brokerFixture([
+    { status: 401, body: { status: "unauthenticated" } },
+    { status: 200, body: { status: "ok", value: context231 } },
+  ])
+  try {
+    const owner = fakeOwner(101)
+    const binding = await bindForContext(fixture, owner)
+    expect(await readContext(fixture, owner, binding)).toMatchObject({
+      kind: "json-response", status: 401, body: { status: "unauthenticated" },
+    })
+    const route = {
+      surfaceId: "UI29", kind: "entry", params: {}, query: {},
+      pathname: "/orchestra/sf-home", href: "/orchestra/sf-home",
+      ownerSelection: { serverKey: candidate.serverKey, projectId: descriptor.projectId, installationId: descriptor.installationId },
+    }
+    expect(await fixture.call("sf-native-login", owner.event, { ...binding, returnRoute: route }))
+      .toMatchObject({ status: "authenticated", context: context231 })
+    expect(fixture.queries.some((item) => item.url.endsWith("/api/ui/return-intents"))).toBe(true)
+  } finally { await fixture.broker.dispose() }
+})
+
+test.each([
+  { label: "malformed initial 401", replies: [{ status: 401, body: { status: "unauthenticated", extra: true } }] },
+  { label: "initial 403", replies: [{ status: 403, body: { status: "denied" } }] },
+  { label: "401 after authenticated context", replies: [
+    { status: 200, body: { status: "ok", value: context231 } },
+    { status: 401, body: { status: "unauthenticated" } },
+  ] },
+])("$label revokes the binding", async ({ replies }) => {
+  const fixture = brokerFixture(replies)
+  try {
+    const owner = fakeOwner(102)
+    const binding = await bindForContext(fixture, owner)
+    if (replies.length === 2) expect(await readContext(fixture, owner, binding)).toMatchObject({ kind: "json-response", status: 200 })
+    expect(await readContext(fixture, owner, binding)).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+    expect(await readContext(fixture, owner, binding)).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+  } finally { await fixture.broker.dispose() }
 })
