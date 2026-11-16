@@ -1,0 +1,118 @@
+{
+  "schema": "sf2h.closure233.proof-criteria.v1",
+  "mission": 233,
+  "canonical_source": "dbf9547211d9b0fade619790de7c19c0869b7c7d:modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json",
+  "scope_preserved": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "UX": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "proofs": [
+    {
+      "id": "AM01",
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "executor": "S4",
+      "reviewer": "S3-R3",
+      "required": {
+        "profiles": 5,
+        "skills": 18,
+        "source_digests": true,
+        "actual_provider_inference": true,
+        "independent_reviewer": true,
+        "typed_output_persisted_and_reopened": true,
+        "negatives": [
+          "partial/missing-source",
+          "outside-grant"
+        ],
+        "status": "NOT_RUN"
+      },
+      "existing_origins": [
+        "C15 resident loader",
+        "WP12 native execution harness",
+        "AM01 original Actions log correlator"
+      ]
+    },
+    {
+      "id": "AM02",
+      "proof_packages": [
+        "E01",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "executor": "S0-B",
+      "reviewer": "S3-R3",
+      "required": {
+        "packs": 8,
+        "operations": 39,
+        "every_operation_allowed_and_denied": true,
+        "one_authoritative_ui_action_per_pack": true,
+        "agent_public_wrapper": true,
+        "separate_sdk_mcp": true,
+        "same_principal_case_business_version_domain_port": true,
+        "bridgecallid_and_domainreceipt": true,
+        "consumer_after_reload": true,
+        "never_catalog_only": true,
+        "status": "NOT_RUN"
+      },
+      "existing_origins": [
+        "C16 freeze",
+        "AM02 original qualifier and hosted reconciler"
+      ]
+    },
+    {
+      "id": "AM03",
+      "proof_packages": [
+        "E11",
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "executor": "S0-A/S0-B",
+      "reviewer": "S3-R3",
+      "required": {
+        "scenarios": 25,
+        "original_installed_host_two_actors_same_profile": true,
+        "private_cache_denial": true,
+        "wrong_context_direct_negatives": true,
+        "revocation_discovery_detail_and_consumers": true,
+        "namesake_object_generation_conflicts": true,
+        "original_process_restart_fresh_auth_binding": true,
+        "status": "NOT_RUN"
+      },
+      "existing_origins": [
+        "AM03 original correlateAm03",
+        "installed host 199/213 awaited",
+        "actual scanner/Atlas when memory involved"
+      ]
+    }
+  ],
+  "gating": {
+    "material_W": null,
+    "accepted_C": null,
+    "AM01": "NOT_RUN",
+    "AM02": "NOT_RUN",
+    "AM03": "NOT_RUN",
+    "three_independent_approvals": "NOT_RUN",
+    "G7_checkout": "C_ONLY_NOT_RUN",
+    "G8_checkout": "D_ONLY_NOT_RUN",
+    "GLOBAL_RELEASE": false
+  }
+}

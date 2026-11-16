@@ -1,0 +1,98 @@
+{
+  "schema": "sf2h.closure233.read-set.v1",
+  "mission": 233,
+  "baseline": {
+    "branch": "sf-closure-bundle",
+    "sha": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580"
+  },
+  "plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "START": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW": "043205bee6031b4517a98591b3588fca0ab12925",
+    "execution_COMMON": "d61f32af03fe10747a50274233f953af044decf6",
+    "resident_proofs": "fbea84748c1f6a0096130dd2b4de493002efbd67",
+    "CI_recipes": "ae5a1949876eef23450fa51167498be8a2334d35",
+    "contracts": "6d038e3218fb74be19314ee61ea88cf963e41071",
+    "proof_map": "3b2ff2424bba07656850105df3b341c2bc984708",
+    "scope": {
+      "WPs": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "approvedUX": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "original_runtime": {
+    "residentManifest": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+    "residentLoader": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+    "frozenOperations": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+    "WP12NativeHarness": "ebd55c6798bd81f37b29a62f8364dfff28edaee7",
+    "originalAm01Correlator": "2851de47ba3d5b5f6dc6d468a95f2164c4f9c7fb",
+    "originalAm02Qualifier": "86870360f94d77e57b4a21dcff9455934b324804",
+    "originalAm02Reconciler": "a848d1641966c3af2988acaefad897b566a924dd",
+    "originalAm03Correlator": "29c6806d5da75ffa019a21b11971833f436925f7",
+    "nativeUiObserver": "fdee242c35f56644c3aaba912eb33f40f49216d7"
+  },
+  "prior": {
+    "proposal228": {
+      "head": "33474b2158a4703f256191f61f1a16ac85c26004",
+      "detached_tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+      "applied": false
+    },
+    "review207": {
+      "head": "67f1963e42769dfb94ba1080ca0b5b883b54eb58",
+      "handoff": "b426dce8ab053da0dcf9eee82648925434fe7081",
+      "verdict": "FIX_FIRST"
+    },
+    "review208": {
+      "packet": "624870d6f1b65da64235d00fe034948249eab4f1",
+      "final_approval": null
+    },
+    "review209": {
+      "packet": "44cc6770e3591944d9edb5b65f6744b9497ed6bb",
+      "final_approval": null
+    },
+    "archive210": {
+      "head": "cca757a0e125de371cb677342802509fb769bbd2",
+      "handoff": "14986fe8ead6e778e712fbad056d05d92498d1ea",
+      "G7_G8": "NOT_RUN"
+    },
+    "native229": {
+      "head": "1e17d546ca5a4116693da449f5d2ecfb4c5cb18d",
+      "ACK": "47c633468ca38f388880163b9d51c5d210db4626",
+      "handoff": null
+    },
+    "c12review230": {
+      "head": "b8d0e46d6fcca835f345bd5e0d5f719d8047c757",
+      "handoff": "fa233a19e8aa52eb3dff77bf0a780872646bef1f",
+      "verdict": "FIX_FIRST"
+    },
+    "home231": {
+      "head": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "S0_fence": "c70c099ea29e0651085fb439a37d82b445c9d982",
+      "handoff": null
+    },
+    "dispatcher232": {
+      "head": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+      "handoff": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+      "CI_new_runs": 0,
+      "accepted_C": null
+    }
+  },
+  "ownership": {
+    "excluded_missions": [
+      224,
+      229,
+      230,
+      231,
+      232
+    ],
+    "consumer": "211/190; authorized future sole dispatcher, S3-R3 independent reviewer"
+  },
+  "claims": {
+    "no_readback_equals_run": true,
+    "not_run": true,
+    "GLOBAL_RELEASE": false
+  }
+}

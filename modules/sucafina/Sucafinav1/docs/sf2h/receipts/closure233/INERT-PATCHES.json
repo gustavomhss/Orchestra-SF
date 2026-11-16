@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.closure233.complete-inert-patches.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 233,
+  "authority": "INERT_ONLY_NOT_APPLIED",
+  "entries": [
+    {
+      "id": "P233-AM03-URL-AND-SCENARIO",
+      "path": "script/sf2h/proofs/am03/correlation.ts",
+      "preimage": {
+        "product_sha": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+        "blob": "29c6806d5da75ffa019a21b11971833f436925f7",
+        "bytes": 11271
+      },
+      "postimage": {
+        "blob": "b9b39d734ef519efb7d35cfc092fdb1c4b85bdc0",
+        "bytes": 11798,
+        "complete_payload_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/payloads/script/sf2h/proofs/am03/correlation.ts.inert.txt"
+      },
+      "surgical_changes": [
+        "Require exact original Actions run URL, no prefix-run-ID confusion",
+        "Require artifact URI rooted below exact run path, not adjacent run prefix",
+        "Reject unknown/malformed AM03 scenario records and absent observation arrays without PASS"
+      ],
+      "consumer": [
+        "modules/sucafina/Sucafinav1/test/product/proof233/am03-envelope-integrity.test.ts",
+        "script/sf2h/proofs/am03/correlation.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
+        "independent-runtime-review209",
+        "single-ci-dispatcher-232-successor"
+      ],
+      "application_owner": "211_OR_EXPLICIT_PRODUCT_COMPOSER_AND_190_CORRELATOR_OWNER",
+      "precondition": "RECHECK_LIVE_C_PREIMAGE_EXPECTED_BLOB_AND_CAS_BEFORE_APPLY",
+      "status": "NOT_APPLIED",
+      "tests": "NOT_RUN"
+    }
+  ],
+  "no_existing_source_edited": true,
+  "CI": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}

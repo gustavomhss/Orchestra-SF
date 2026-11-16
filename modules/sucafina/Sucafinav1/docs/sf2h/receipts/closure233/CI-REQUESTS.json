@@ -1,0 +1,281 @@
+{
+  "schema": "sf2h.closure233.exact-test-ci-requests.v1",
+  "mission": 233,
+  "campaign": "sf2h-integral-20261112",
+  "source_232": {
+    "head": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+    "handoff": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+    "request_manifest": "f5c93194b81ac6cd594a7a08d0a4062b89b889fe",
+    "status": "TERMINAL_RELEASED_NO_INITIAL_DISPATCH_INTERFACE"
+  },
+  "dispatch_owner": "SOLE_FUTURE_EXPLICIT_AUTHORIZED_OFFICIAL_DISPATCHER_ONLY",
+  "requests": [
+    {
+      "id": "P233-SOURCE-ADMISSION",
+      "status": "NOT_RUN",
+      "os": "linux",
+      "package": "sucafina",
+      "purpose": "Verify original shipped profiles/skill bytes/39 route producer-consumer alignment and evidence intake refuses empty run material",
+      "coverage": "SOURCE_ONLY_NOT_AM_PASS",
+      "existing_source_selector_only": false,
+      "conditions_before_dispatch": [
+        "211_OR_AUTHORIZED_COMPOSER_CONSUMES_PROOF233_TEST_FILES_IN_NEW_MATERIAL_W",
+        "OFFICIAL_TEST_CI_DISPATCH_INTERFACE_AVAILABLE_AND_SINGLE_DISPATCHER_REAUTHORIZED",
+        "ORIGINAL_TEST_CI_VALIDATOR_AND_WORKFLOW_UNCHANGED",
+        "CONFIRM_ACTUAL_SELECTED_FILES_ON_MATERIAL_W"
+      ],
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/proof233/source-matrix.test.ts",
+          "Sucafinav1/test/product/proof233/provenance-negative.test.ts"
+        ],
+        "env": {}
+      },
+      "exact_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/proof233/source-matrix.test.ts",
+        "Sucafinav1/test/product/proof233/provenance-negative.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "ci_snapshot_sha": null,
+      "run_id": null,
+      "artifact_uri": null,
+      "accepted_C": null
+    },
+    {
+      "id": "P233-AM03-URL-ADMISSION",
+      "status": "NOT_RUN",
+      "os": "linux",
+      "package": "sucafina",
+      "purpose": "Detect run-ID prefix confusion and unrecognized AM03 scenario before any native promotion",
+      "coverage": "NEGATIVE_ONLY_NOT_AM03_PASS",
+      "existing_source_selector_only": false,
+      "conditions_before_dispatch": [
+        "211_OR_AUTHORIZED_COMPOSER_CONSUMES_PROOF233_TEST_FILES_IN_NEW_MATERIAL_W",
+        "OFFICIAL_TEST_CI_DISPATCH_INTERFACE_AVAILABLE_AND_SINGLE_DISPATCHER_REAUTHORIZED",
+        "ORIGINAL_TEST_CI_VALIDATOR_AND_WORKFLOW_UNCHANGED",
+        "CONFIRM_ACTUAL_SELECTED_FILES_ON_MATERIAL_W",
+        "APPLY_FULL_INERT_SCRIPT_AM03_CORRELATION_POSTIMAGE_b9b39d734ef519efb7d35cfc092fdb1c4b85bdc0"
+      ],
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/proof233/am03-envelope-integrity.test.ts"
+        ],
+        "env": {}
+      },
+      "exact_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/proof233/am03-envelope-integrity.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "ci_snapshot_sha": null,
+      "run_id": null,
+      "artifact_uri": null,
+      "accepted_C": null
+    },
+    {
+      "id": "P233-AM01-NATIVE",
+      "status": "NOT_RUN",
+      "os": "linux",
+      "package": "sucafina",
+      "purpose": "Original WP12 real native provider/case/consumer runs: 5 profiles 18 skills, no catalog-only substitution",
+      "coverage": "NATIVE_REQUIRED_NO_MODEL_EQUALS_NOT_RUN",
+      "existing_source_selector_only": true,
+      "conditions_before_dispatch": [
+        "211_OR_AUTHORIZED_COMPOSER_CONSUMES_PROOF233_TEST_FILES_IN_NEW_MATERIAL_W",
+        "OFFICIAL_TEST_CI_DISPATCH_INTERFACE_AVAILABLE_AND_SINGLE_DISPATCHER_REAUTHORIZED",
+        "ORIGINAL_TEST_CI_VALIDATOR_AND_WORKFLOW_UNCHANGED",
+        "CONFIRM_ACTUAL_SELECTED_FILES_ON_MATERIAL_W",
+        "AUTHORIZED_ORIGINAL_INSTALLED_MODEL_AND_HOST_F04_REQUIRED",
+        "SAME_ACCEPTED_C_FOR_FINAL_AM01",
+        "VERIFY_ACTUAL_SESSIONV2_MODEL_TURN_PERSISTENCE_REOPEN_AND_OUTPUT",
+        "ORIGINAL_AM01_HOSTED_CORRELATOR"
+      ],
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp12/resident-native.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts"
+        ],
+        "env": {}
+      },
+      "exact_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "ci_snapshot_sha": null,
+      "run_id": null,
+      "artifact_uri": null,
+      "accepted_C": null
+    },
+    {
+      "id": "P233-AM02-C16-CAUSAL",
+      "status": "NOT_RUN",
+      "os": "linux",
+      "package": "sucafina",
+      "purpose": "Causal public Performance/Planner C16 domain and native trace; cannot infer remaining 35 routes or independent SDK-MCP parity",
+      "coverage": "PARTIAL_4_OF_39_STRUCTURE_NOT_PASS",
+      "existing_source_selector_only": true,
+      "conditions_before_dispatch": [
+        "211_OR_AUTHORIZED_COMPOSER_CONSUMES_PROOF233_TEST_FILES_IN_NEW_MATERIAL_W",
+        "OFFICIAL_TEST_CI_DISPATCH_INTERFACE_AVAILABLE_AND_SINGLE_DISPATCHER_REAUTHORIZED",
+        "ORIGINAL_TEST_CI_VALIDATOR_AND_WORKFLOW_UNCHANGED",
+        "CONFIRM_ACTUAL_SELECTED_FILES_ON_MATERIAL_W",
+        "SOURCE_211_ORIGINAL_AGENT_AND_MCP_CONSUMER",
+        "SAME_ACCEPTED_C_FOR_FINAL_AM02",
+        "REAL_39_ROUTE_WITNESSES_REQUIRED"
+      ],
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+          "Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+        ],
+        "env": {}
+      },
+      "exact_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "ci_snapshot_sha": null,
+      "run_id": null,
+      "artifact_uri": null,
+      "accepted_C": null
+    },
+    {
+      "id": "P233-AM03-BOUNDARIES",
+      "status": "NOT_RUN",
+      "os": "linux",
+      "package": "sucafina",
+      "purpose": "Actual public host/registry and Planner fixture component isolation, revocation and generation refusal; not genuine installed actor or process restart",
+      "coverage": "COMPONENT_NEGATIVES_NOT_INSTALLED_AM03_PASS",
+      "existing_source_selector_only": true,
+      "conditions_before_dispatch": [
+        "211_OR_AUTHORIZED_COMPOSER_CONSUMES_PROOF233_TEST_FILES_IN_NEW_MATERIAL_W",
+        "OFFICIAL_TEST_CI_DISPATCH_INTERFACE_AVAILABLE_AND_SINGLE_DISPATCHER_REAUTHORIZED",
+        "ORIGINAL_TEST_CI_VALIDATOR_AND_WORKFLOW_UNCHANGED",
+        "CONFIRM_ACTUAL_SELECTED_FILES_ON_MATERIAL_W",
+        "SAME_ACCEPTED_C_FOR_FINAL_AM03",
+        "REAL_INSTALLED_25_SCENARIOS_STILL_REQUIRED"
+      ],
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts"
+        ],
+        "env": {}
+      },
+      "exact_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "ci_snapshot_sha": null,
+      "run_id": null,
+      "artifact_uri": null,
+      "accepted_C": null
+    }
+  ],
+  "reuse_without_duplicating": {
+    "preexisting_232_surgical": [
+      "S222-AM02-CAUSAL"
+    ],
+    "preexisting_232_finals": 8,
+    "do_not_redrive_original_failures": true
+  },
+  "acceptance": {
+    "C": null,
+    "D": null,
+    "final_eight": "NOT_RUN",
+    "epic_E2E": "NOT_RUN",
+    "AM01": "NOT_RUN",
+    "AM02": "NOT_RUN",
+    "AM03": "NOT_RUN",
+    "G7_on_C": "NOT_RUN",
+    "G8_on_D": "NOT_RUN",
+    "reviews3": "NOT_RUN"
+  },
+  "all_new_dispatches": 0,
+  "all_tests": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}
