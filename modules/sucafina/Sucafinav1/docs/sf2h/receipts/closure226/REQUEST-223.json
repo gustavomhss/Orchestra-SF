@@ -1,0 +1,448 @@
+{
+  "schema": "sf2h.closure226.request223.v1",
+  "mission": 226,
+  "branch": "sf-files-transport",
+  "epoch": "shared-closure-e1-browser226",
+  "head_at_handoff": "3a92c63cbd73ba577a9b362e85ff9a1c484d5e16",
+  "product_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "immutable_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "status": "CODE_PUBLISHED_INTEGRATION_REQUIRED",
+  "GLOBAL_RELEASE": false,
+  "native_goal": "PAUSED",
+  "source_recovery": {
+    "original_pr": 121,
+    "original_commit": "a81ee51b312a64d27cff496e863a02e874ac14a8",
+    "closure218": "6ec7d43fdaa63268540f30e80d590d9af85d2988",
+    "five_leaves": [
+      "packages/schema/src/sucafina/files.ts",
+      "packages/schema/src/sucafina/files/structures.ts",
+      "packages/client/src/sucafina/files.ts",
+      "apps/cli/src/sucafina-product/native-ui/files.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts"
+    ]
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "e2e": "NOT_RUN"
+  },
+  "authorities": {
+    "no_new_S0": true,
+    "no_platform_change": true,
+    "no_SDK_generated": true,
+    "no_merges": true,
+    "no_Azure": true,
+    "no_deployment": true,
+    "no_host_restart": true,
+    "no_external_resources_modified": true
+  },
+  "producer": "226",
+  "consumer": "223/product-ci",
+  "request": "SURGICAL_AFTER_211_CONSUMPTION",
+  "sourcePaths": {
+    "schema": [
+      "packages/schema/src/sucafina/files.ts",
+      "packages/schema/src/sucafina/files/structures.ts"
+    ],
+    "codecs": [
+      "packages/client/src/sucafina/files/codecs.ts",
+      "packages/client/src/sucafina/files.ts"
+    ],
+    "transport": [
+      "packages/client/src/sucafina/transport.ts",
+      "packages/client/src/sucafina/transport/files.ts"
+    ],
+    "desktop": [
+      "apps/desktop/src/main/sucafina/protocol.ts",
+      "apps/desktop/src/main/sucafina/index.ts"
+    ],
+    "host": [
+      "apps/cli/src/sucafina-product/native-ui/files.ts"
+    ],
+    "tests": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts",
+      "packages/client/test/sucafina/files-transport226/source-codecs.test.ts"
+    ],
+    "driver": [
+      "modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts"
+    ]
+  },
+  "mandatory_inputs": {
+    "context": "capture real ctx.context status=ok; installationId,projectId,hostId,principalRef,accessRevision,policyVersion and per-operation ready state, never fabricated",
+    "provenance": "record exact original producer, signed asset HMAC/expiry where applicable, selected import target/record version, current policy and session owner",
+    "binary": "real uploaded original XLSX/XLS/JSON and real asset bytes provided by authorized source; never use fabricated fixture as a green oracle",
+    "permissions": "actual denied/revoked owner and version stale cases from original server (requires authorized test fixture); capture revision before/after",
+    "previous": "211 must apply INERT-211-PATCHSET.json with own CAS and update consumer branch; recheck current product/211 head before requests",
+    "native_runtime": "199/213 host fixture only if legitimately installed and D01 actual owner session exposed; otherwise NOT_RUN, no synthetic browser session"
+  },
+  "selectors": [
+    {
+      "operationId": "files.import-targets",
+      "input": "GET original {mount}/{surface}?sf=import-targets&surface=dashboard|planner&start?&end? (surface in path AND query)",
+      "expected": "original authorized PortResult, no extra method/path"
+    },
+    {
+      "operationId": "files.import-admit",
+      "input": "POST original ?sf=import-admit; multipart named file,surface,selectionRef,options; real scanner; <=16MiB file, <=16MiB+64KiB envelope",
+      "expected": "private staged ref only, no business apply"
+    },
+    {
+      "operationId": "files.import-preview",
+      "input": "POST original ?sf=import-preview; admittedFileRef/format/options, prepared manifest with receipt",
+      "expected": "no domainApplied mutation, preserve nested/null/zero/period/version"
+    },
+    {
+      "operationId": "files.import-apply",
+      "input": "POST original ?sf=import-apply; manifestId/version, idempotency key and real human confirmation",
+      "expected": "real receipt only; no auto replay on uncertain outcome"
+    },
+    {
+      "operationId": "files.document-confirm",
+      "input": "POST original ?sf=document-confirm; direct original SfDocumentEvidence JSON body, not {evidence:...}",
+      "expected": "source auth and field evidence CAS"
+    },
+    {
+      "operationId": "files.document-open",
+      "input": "GET original ?sf=document-open&ref=JSON.stringify(typed SfDocumentRef)",
+      "expected": "authorized excerpt only"
+    },
+    {
+      "operationId": "files.document-scenario-targets",
+      "input": "GET original ?sf=document-scenario-targets&ref=JSON.stringify(typed SfDocumentRef)",
+      "expected": "selection bound to original source revision"
+    },
+    {
+      "operationId": "files.asset.upload",
+      "input": "POST original ?upload=kind&record=id&recordVersion=n&name=...&page=...; raw limited bytes with actual MIME",
+      "expected": "source scan/ACL/version, no client clean-scan or substituted asset path"
+    },
+    {
+      "operationId": "files.asset.link",
+      "input": "GET original ?asset-link=sourceAssetId",
+      "expected": "producer returns signed {query,expires}, never UI raw URL"
+    },
+    {
+      "operationId": "files.asset.download",
+      "input": "GET original ?asset=id&expires=sourceExpiry&signature=sourceHmac",
+      "expected": "source HMAC+fresh auth, typed <=32MiB bounded IPC/Web chunks, sanitized content-type"
+    },
+    {
+      "operationId": "files.export.xlsx",
+      "input": "GET original ?download=xlsx",
+      "expected": "source role/field/export format verified, revalidate before and between chunks; no privileged snapshot fallback"
+    },
+    {
+      "operationId": "files.export.suppliers",
+      "input": "GET original ?download=suppliers",
+      "expected": "source role/field/export format verified, revalidate before and between chunks; no privileged snapshot fallback"
+    },
+    {
+      "operationId": "files.export.register",
+      "input": "GET original ?download=register",
+      "expected": "source role/field/export format verified, revalidate before and between chunks; no privileged snapshot fallback"
+    },
+    {
+      "operationId": "files.export.json",
+      "input": "GET original ?download=json",
+      "expected": "source role/field/export format verified, revalidate before and between chunks; no privileged snapshot fallback"
+    }
+  ],
+  "matrix": {
+    "allowed": "live authorized operation with original source bytes/PortResult/format; check exact MIME and bounded count",
+    "denied": "current grant denies operation/format or record; assert no bytes returned to UI/IPC",
+    "revoked": "change original permission/accessRevision mid-stream; no new bytes on next bounded chunk; cancel, cleanup, invalidate binding",
+    "stale": "change recordVersion/source digest/incarnation between selection and admit/apply/asset; preserve source stale or HTTP409, no new business effects",
+    "oversize": "real oversized file/response recorded by original handler; reject before upload or at bounded chunk, cancel source",
+    "cancel": "abort before dispatch => aborted; after uncertain mutation => outcome-unknown; byte reader closes and releases handle",
+    "retry": "same idempotency key after uncertain sent mutation remains outcome-unknown; never synthesize clean success or auto-submit",
+    "web_desktop": "compare one original Request's ACL, format and version behavior through authenticated Web fetch and desktop broker",
+    "history_218": "import history consumption remains owned by 218; no replacement UI",
+    "talent_224": "real CAP08 import/export consumption remains owned by 224",
+    "suppliers_225": "real Supplier CSV export remains owned by 225"
+  },
+  "operation_catalog": [
+    {
+      "operationId": "files.import-targets",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "import-targets"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/import-http.ts"
+    },
+    {
+      "operationId": "files.import-reference",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "import-reference"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/import-http.ts"
+    },
+    {
+      "operationId": "files.import-detail",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "import-detail"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/import-http.ts"
+    },
+    {
+      "operationId": "files.import-admit",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "import-admit"
+      },
+      "maxRequestBytes": 16842752,
+      "effect": "mutation",
+      "requestSource": "original product/interface/import-http.ts"
+    },
+    {
+      "operationId": "files.import-preview",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "import-preview"
+      },
+      "maxRequestBytes": 65536,
+      "effect": "prepare",
+      "requestSource": "original product/interface/import-http.ts"
+    },
+    {
+      "operationId": "files.import-apply",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "import-apply"
+      },
+      "maxRequestBytes": 65536,
+      "effect": "mutation",
+      "requestSource": "original product/interface/import-http.ts"
+    },
+    {
+      "operationId": "files.document-requests",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-requests"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-search",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-search"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-open",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-open"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-schemas",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-schemas"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-schema",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-schema"
+      },
+      "maxRequestBytes": null,
+      "effect": "mutation",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-sources",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-sources"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-admit",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-admit"
+      },
+      "maxRequestBytes": null,
+      "effect": "mutation",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-extract",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-extract"
+      },
+      "maxRequestBytes": null,
+      "effect": "mutation",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-confirm",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-confirm"
+      },
+      "maxRequestBytes": null,
+      "effect": "mutation",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-candidates",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-candidates"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/document-http.ts"
+    },
+    {
+      "operationId": "files.document-scenario-targets",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-scenario-targets"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original product/interface/document-scenario-http.ts"
+    },
+    {
+      "operationId": "files.document-scenario-preview",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "document-scenario-preview"
+      },
+      "maxRequestBytes": null,
+      "effect": "preview",
+      "requestSource": "original product/interface/document-scenario-http.ts"
+    },
+    {
+      "operationId": "files.export.xlsx",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "download": "xlsx"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original runtime/application.ts; runtime/assets.ts; runtime/downloads.ts"
+    },
+    {
+      "operationId": "files.export.suppliers",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "download": "suppliers"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original runtime/application.ts; runtime/assets.ts; runtime/downloads.ts"
+    },
+    {
+      "operationId": "files.export.register",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "download": "register"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original runtime/application.ts; runtime/assets.ts; runtime/downloads.ts"
+    },
+    {
+      "operationId": "files.export.json",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "download": "json"
+      },
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original runtime/application.ts; runtime/assets.ts; runtime/downloads.ts"
+    },
+    {
+      "operationId": "files.asset.link",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": null,
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original runtime/application.ts; runtime/assets.ts; runtime/downloads.ts"
+    },
+    {
+      "operationId": "files.asset.download",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": null,
+      "maxRequestBytes": null,
+      "effect": "read",
+      "requestSource": "original runtime/application.ts; runtime/assets.ts; runtime/downloads.ts"
+    },
+    {
+      "operationId": "files.asset.upload",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": null,
+      "maxRequestBytes": null,
+      "effect": "mutation",
+      "requestSource": "original runtime/application.ts; runtime/assets.ts; runtime/downloads.ts"
+    }
+  ],
+  "fail_if": [
+    "unexpected 26th file endpoint",
+    "raw URL/path/header accepted from UI",
+    "codecs loosened original nested/null/zero shapes",
+    "any byte content on accessRevision change",
+    "bytes exceeding cap",
+    "consumer throws away original denial",
+    "mock provider/scan/grant used as source of success"
+  ],
+  "next_action": "After 211 consumes producer + inert patches, 223 run exact selective e2e using original fixture; report log/selector/inputs/effects/provenance/cleanup with explicit NOT_RUN for absent real source."
+}

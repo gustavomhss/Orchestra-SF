@@ -1,0 +1,115 @@
+{
+  "schema": "sf2h.closure226.handoff.v1",
+  "mission": 226,
+  "branch": "sf-files-transport",
+  "epoch": "shared-closure-e1-browser226",
+  "head_at_handoff": "3a92c63cbd73ba577a9b362e85ff9a1c484d5e16",
+  "product_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "immutable_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "status": "CODE_PUBLISHED_INTEGRATION_REQUIRED",
+  "GLOBAL_RELEASE": false,
+  "native_goal": "PAUSED",
+  "source_recovery": {
+    "original_pr": 121,
+    "original_commit": "a81ee51b312a64d27cff496e863a02e874ac14a8",
+    "closure218": "6ec7d43fdaa63268540f30e80d590d9af85d2988",
+    "five_leaves": [
+      "packages/schema/src/sucafina/files.ts",
+      "packages/schema/src/sucafina/files/structures.ts",
+      "packages/client/src/sucafina/files.ts",
+      "apps/cli/src/sucafina-product/native-ui/files.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts"
+    ]
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "e2e": "NOT_RUN"
+  },
+  "authorities": {
+    "no_new_S0": true,
+    "no_platform_change": true,
+    "no_SDK_generated": true,
+    "no_merges": true,
+    "no_Azure": true,
+    "no_deployment": true,
+    "no_host_restart": true,
+    "no_external_resources_modified": true
+  },
+  "output_paths": {
+    "schema": [
+      "packages/schema/src/sucafina/files.ts",
+      "packages/schema/src/sucafina/files/structures.ts"
+    ],
+    "codecs": [
+      "packages/client/src/sucafina/files/codecs.ts",
+      "packages/client/src/sucafina/files.ts"
+    ],
+    "transport": [
+      "packages/client/src/sucafina/transport.ts",
+      "packages/client/src/sucafina/transport/files.ts"
+    ],
+    "desktop": [
+      "apps/desktop/src/main/sucafina/protocol.ts",
+      "apps/desktop/src/main/sucafina/index.ts"
+    ],
+    "host": [
+      "apps/cli/src/sucafina-product/native-ui/files.ts"
+    ],
+    "tests": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts",
+      "packages/client/test/sucafina/files-transport226/source-codecs.test.ts"
+    ],
+    "driver": [
+      "modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts"
+    ]
+  },
+  "changes": {
+    "source": "exact five original A06 blobs restored by source-recovery commit, client/files.ts only POST-read parity correction",
+    "typed": "25 source-bound codec entries, metadata binary isolated from JSON, original shapes preserved; signed asset query parser reused",
+    "browser": "same-origin credentialed original Request, exact selectors, multipart payload + raw asset byte body, live per-op ctx authority before/after byte egress, 32MiB reader",
+    "desktop": "original Electron net.request owner partition, main-only method/URL from frozen registry, typed upload slot, private responseHandle+64KiB chunks, 32MiB total, live ctx owner/policy/accessRevision checks before/after chunk",
+    "host": "A06 host bindings preserve source Request; 211 patchset includes package exports, client registry, closed host routing, privileged filename handling",
+    "tests": "source component tests recovered; closed wire contract tests and real-source driver published, checks NOT_RUN"
+  },
+  "source_owners": {
+    "190": "official public API codegen iff actual diff",
+    "199": "host fixture",
+    "211": "compose product and apply patchset",
+    "213": "bootstrap",
+    "218": "import history UI",
+    "223": "CI/E2E only after true consumption",
+    "224": "Talent CAP08 files UI",
+    "225": "supplier CSV UI"
+  },
+  "unresolved": [
+    {
+      "id": "INTEGRATION_211",
+      "status": "PENDING_EXTERNAL_CONSUMER",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/INERT-211-PATCHSET.json",
+      "blocker": "outside-leased package exports, binding registry and native host callback injection; 226 cannot write these files"
+    },
+    {
+      "id": "SOURCE_PROOF_223",
+      "status": "NOT_RUN",
+      "blocker": "requires 211 consumption + actual authenticated fixture/owner/role/bytes and availability"
+    },
+    {
+      "id": "COMPILER_190",
+      "status": "CONDITIONAL",
+      "blocker": "only after concrete public API/HttpApi changes; none authored by 226"
+    }
+  ],
+  "exact_next_actions": [
+    "211: verify each target preimage against 998f0afd; apply all six inert patches under its own lease/CAS, inject original SfFilesHostSources from installed producers, never fabricate provider",
+    "223: after 211 consumption execute REQUEST-223.json against real original source and record actual authorized/denied/revoked/stale/oversize/cancel/retry",
+    "190: inspect real public API/HttpApi difference after 211; NO_GENERATION_REQUIRED if unchanged, else official generation with request and real sha",
+    "218/224/225: consume A06 typed methods and `@orchestra/client/sucafina/files` when 211 exports exist; keep screens and history owned by their authors"
+  ],
+  "release": "BLOCKED_UNTIL_211_223_AND_POLICY_EVIDENCE",
+  "evidence_note": "No local tests/build/validator, no CI run or actual producer bytes were fabricated; no deployment."
+}
