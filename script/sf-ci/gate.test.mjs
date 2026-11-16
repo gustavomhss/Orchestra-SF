@@ -1,9 +1,11 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { readFileSync } from "node:fs"
+import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
+import { tmpdir } from "node:os"
+import path from "node:path"
 import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection } from "./gate.mjs"
-import { bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines } from "./selection.mjs"
+import { bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./selection.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -258,4 +260,45 @@ test("all suite families have a manifest declaration; no hidden Windows or macOS
   delete broken.suites.find((s) => s.id === "CI-APP-SRC").selection
   assert.throws(() => validateManifest(broken), /app unit suite must be manifest-driven/)
   assert.deepEqual([manifest.target.os, manifest.target.arch], ["Linux", "X64"])
+})
+
+test("CI-05 discovers newly added source/Bun tests without changing YAML or allowing undeclared skips", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "sf-ci-select-"))
+  const write = (filename) => {
+    const location = path.join(root, "modules/sucafina", filename)
+    mkdirSync(path.dirname(location), { recursive: true })
+    writeFileSync(location, "test('covered', () => {})")
+  }
+  try {
+    write("src/first.test.ts")
+    write("src/nested/new-test.test.ts")
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-SRC", root),
+      ["src/first.test.ts", "src/nested/new-test.test.ts"])
+    write("src/nested/new-third.test.ts")
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-SRC", root),
+      ["src/first.test.ts", "src/nested/new-test.test.ts", "src/nested/new-third.test.ts"])
+    write("Sucafinav1/test/real.test.ts")
+    write("Sucafinav1/test/parity-pitr.test.ts")
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-SF", root), ["Sucafinav1/test/real.test.ts"])
+    rmSync(path.join(root, "modules/sucafina/Sucafinav1/test/parity-pitr.test.ts"))
+    assert.throws(() => selectSuiteFiles(manifest, "CI-SF", root),
+      /missing\/unsafe file in selected candidate/)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+test("CI-05 source selection denies symlink escapes and paths without a test extension", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "sf-ci-symlink-"))
+  try {
+    const dir = path.join(root, "modules/sucafina/src")
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(path.join(dir, "good.test.ts"), "test('yes',()=>{})")
+    symlinkSync(tmpdir(), path.join(dir, "escape"))
+    assert.throws(() => selectSuiteFiles(manifest, "CI-APP-SRC", root), /unsafe test tree entry/)
+    rmSync(path.join(dir, "escape"))
+    writeFileSync(path.join(dir, "README.md"), "not a test")
+    assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-SRC", root), ["src/good.test.ts"])
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
 })
