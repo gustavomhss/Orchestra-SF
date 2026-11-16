@@ -1,0 +1,27 @@
+import { expect, test } from "bun:test"
+import { observeSfHome } from "../../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
+import { createSfUiAuthority } from "../../product/integration/ui-authority.ts"
+
+const stamp = Object.freeze({ installationId: "installation", projectId: "project", hostId: "host",
+  principalRef: "person", policyVersion: "policy", accessRevision: "revision" })
+
+test("home probe executes the real producer and checks original admission and revocation", async () => {
+  const original = new Request("http://localhost/sucafina/api/ui/context")
+  let revision = "revision"
+  const ui = createSfUiAuthority({
+    createId: () => crypto.randomUUID(), now: Date.now, commandIdentity: async () => crypto.randomUUID(),
+    authorize: async (request, operation) => {
+      expect(request).toBe(original)
+      if (operation !== "sf_work_list") return undefined
+      return { installationId: stamp.installationId, projectId: stamp.projectId, principalRef: stamp.principalRef,
+        policyVersion: stamp.policyVersion, accessRevision: revision }
+    },
+  })
+  const runtime = { ui }
+  expect(await observeSfHome(runtime as never, original, stamp)).toEqual([
+    { operationId: "projection.home", state: "ready", reason: null, operational: true },
+  ])
+  revision = "revoked"
+  expect(await observeSfHome(runtime as never, original, stamp)).toEqual([])
+  expect(await observeSfHome(undefined, original, stamp)).toEqual([])
+})
