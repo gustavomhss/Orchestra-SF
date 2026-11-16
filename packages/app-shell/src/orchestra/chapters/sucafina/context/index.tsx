@@ -237,6 +237,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   const handle: SfContextHandle = {
     state: () => store.state,
     generation: () => store.generation,
+    hasDirtyDrafts: () => current?.drafts.state() === "quarantined" || current?.drafts.dirty() === true,
     ready: () => {
       if (store.state.status !== "ready" || !store.active) return undefined
       return { context: store.active.context, transport: store.active.transport, drafts: store.active.drafts.registry }

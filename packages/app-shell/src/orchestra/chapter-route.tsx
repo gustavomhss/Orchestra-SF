@@ -11,6 +11,7 @@ import { ServerSyncProvider } from "@/context/server-sync"
 import { ModelsProvider } from "@/context/models"
 import { showWip } from "@/orchestra/navigation"
 import { pathKey } from "@/utils/path-key"
+import { SfOwnerRuntime231 } from "./chapters/sucafina/host/owner-runtime231"
 
 export type ChapterPageProps = { server: ServerConnection.Any; directory: string }
 
@@ -42,10 +43,13 @@ export const chapterPages: Partial<Record<string, ChapterPage>> = {
   atlas: lazy(() => import("./chapters/atlas/atlas")),
   "rag-studio": lazy(() => import("./chapters/rag-studio/page")),
   board: lazy(() => import("./chapters/board/board")),
+  // F01/231: both routes share one owner lifetime, not a per-chapter wrapper.
+  "sf-home": SfOwnerRuntime231,
+  "sf-decisions": SfOwnerRuntime231,
 }
 
 // These chapters span the whole server, so they render without a project (with an empty directory).
-const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox"]
+const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox", "sf-home", "sf-decisions"]
 
 const ChapterEmpty = lazy(() => import("./chapter-empty"))
 
@@ -117,9 +121,15 @@ export function OrchestraChapterRoute() {
                   {(conn) => (
                     <ServerSDKProvider server={() => conn}>
                       <ServerSyncProvider server={() => conn}>
-                        <ChapterBoundary chapter={params.chapter}>
-                          <Dynamic component={page()} server={conn} directory="" />
-                        </ChapterBoundary>
+                        <Show when={params.chapter === "sf-home" || params.chapter === "sf-decisions"} fallback={
+                          <ChapterBoundary chapter={params.chapter}>
+                            <Dynamic component={page()} server={conn} directory="" />
+                          </ChapterBoundary>
+                        }>
+                          {/* Explicit owner triplet may work without an opened project directory;
+                              location-less implicit selection still fails closed in F01. */}
+                          <SfOwnerRuntime231 server={conn} directory="" />
+                        </Show>
                       </ServerSyncProvider>
                     </ServerSDKProvider>
                   )}
@@ -131,9 +141,14 @@ export function OrchestraChapterRoute() {
                   <ServerSyncProvider server={() => owner.server}>
                     <SDKProvider directory={owner.directory}>
                       <ModelsProvider directory={() => owner.directory}>
-                        <ChapterBoundary chapter={params.chapter}>
-                          <Dynamic component={page()} server={owner.server} directory={owner.directory} />
-                        </ChapterBoundary>
+                        {/* Native UI29/UI33/UI34 must keep the same F01 owner across chapter changes. */}
+                        <Show when={params.chapter === "sf-home" || params.chapter === "sf-decisions"} fallback={
+                          <ChapterBoundary chapter={params.chapter}>
+                            <Dynamic component={page()} server={owner.server} directory={owner.directory} />
+                          </ChapterBoundary>
+                        }>
+                          <SfOwnerRuntime231 server={owner.server} directory={owner.directory} />
+                        </Show>
                       </ModelsProvider>
                     </SDKProvider>
                   </ServerSyncProvider>

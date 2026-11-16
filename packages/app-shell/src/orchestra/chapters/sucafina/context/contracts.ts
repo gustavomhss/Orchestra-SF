@@ -80,6 +80,8 @@ export type SfContextProviderProps = Readonly<{
 export type SfContextHandle = Readonly<{
   state: Accessor<SfContextState>
   generation: Accessor<number>
+  /** Reads the original owner draft registry, including quarantined edits. */
+  hasDirtyDrafts: () => boolean
   ready: Accessor<Readonly<{ context: SfContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
   reload: () => Promise<void>
   invalidate: (reason: "logout" | "revoked" | "owner-changed" | "host-changed") => void

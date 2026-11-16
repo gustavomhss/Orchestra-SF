@@ -16,6 +16,9 @@ export const primaryNavigation = [
 ] as const
 
 export const advancedNavigation = [
+  // Sucafina F01 native entry routes; still subject to installed owner/context admission.
+  { id: "sf-home", label: "sf.ui29.title" },
+  { id: "sf-decisions", label: "sf.ui33.title" },
   // Session-relative governance (S20), opened as a dialog over the current session; not a route.
   { id: "maestro", label: "orchestra.nav.maestro" },
   // Relay workflows sit next to Maestro, which runs them (owner decision, 2026-10-06).
