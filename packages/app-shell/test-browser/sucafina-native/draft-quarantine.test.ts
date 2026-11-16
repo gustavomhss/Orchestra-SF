@@ -122,6 +122,78 @@ describe("owner draft quarantine", () => {
 })
 
 describe("provider quarantine publication", () => {
+  test("session expiry fences the transport and hides pending edits until same-owner proof", async () => {
+    const entered = Promise.withResolvers<void>()
+    const proof = Promise.withResolvers<SfDraftRevalidation>()
+    let notices = 0
+    const deps: SfContextDependencies = { ...dependencies(async () => { entered.resolve(); return proof.promise }),
+      createTransport: () => ({ execute: transport.execute }), onDraftAccessRevoked: () => { notices++ } }
+    const node = document.createElement("div")
+    document.body.append(node)
+    const captured: { handle?: SfContextHandle } = {}
+    const child = () => { captured.handle = useSfContext(); return null }
+    const dispose = render(() => createComponent(SfContextProvider, {
+      selection: () => selection, dependencies: deps, get children() { return createComponent(child, {}) },
+    }), node)
+    try {
+      const handle = captured.handle
+      if (!handle) throw new Error("provider handle unavailable")
+      await handle.reload()
+      const firstTransport = handle.ready()!.transport
+      const draft = open(handle.ready()!.drafts, "r1")
+      draft.edit({ text: "private" })
+      draft.setPending({ operationRef: "op" as SfOperationRef, idempotencyKey: "intent", payloadDigest: "digest", expectedVersion: 1 })
+      draft.setPhase("outcome-unknown")
+      const generation = handle.generation()
+      handle.invalidate("session-expired")
+      expect(handle.generation()).toBeGreaterThan(generation)
+      expect(handle.state()).toMatchObject({ status: "unavailable", reason: "connection-auth-unavailable" })
+      expect(handle.ready()).toBeUndefined()
+      expect(handle.discardDrafts()).toBe(false)
+      expect(draft.snapshot()).toEqual({ availability: "quarantined", reason: "session-expired", dirty: true })
+      const loading = handle.reload()
+      await entered.promise
+      expect(draft.snapshot().availability).toBe("quarantined")
+      expect(handle.ready()).toBeUndefined()
+      proof.resolve(authorized())
+      await loading
+      expect(handle.ready()?.transport).not.toBe(firstTransport)
+      expect(draft.snapshot()).toMatchObject({ availability: "active", phase: "outcome-unknown", value: { text: "private" }, pendingOperation: { operationRef: "op" } })
+      expect(notices).toBe(0)
+    } finally { dispose(); node.remove() }
+  })
+
+  test("logout and a different principal purge expired drafts without a false revocation notice", async () => {
+    let fresh = context
+    let proofs = 0, notices = 0
+    const deps: SfContextDependencies = { ...dependencies(async () => { proofs++; return authorized() }),
+      loadContext: async () => ({ status: "ok", value: fresh }), onDraftAccessRevoked: () => { notices++ } }
+    const node = document.createElement("div")
+    document.body.append(node)
+    const captured: { handle?: SfContextHandle } = {}
+    const child = () => { captured.handle = useSfContext(); return null }
+    const dispose = render(() => createComponent(SfContextProvider, {
+      selection: () => selection, dependencies: deps, get children() { return createComponent(child, {}) },
+    }), node)
+    try {
+      const handle = captured.handle
+      if (!handle) throw new Error("provider handle unavailable")
+      await handle.reload()
+      const logoutDraft = open(handle.ready()!.drafts, "r1")
+      logoutDraft.edit({ text: "private" }); handle.invalidate("session-expired"); handle.invalidate("logout")
+      expect(logoutDraft.snapshot()).toEqual({ availability: "revoked", reason: "logout" })
+      await handle.reload()
+      const priorOwner = open(handle.ready()!.drafts, "r2")
+      priorOwner.edit({ text: "other private" }); handle.invalidate("session-expired")
+      fresh = { ...context, stamp: { ...stamp, principalRef: "other" } }
+      await handle.reload()
+      expect(priorOwner.snapshot()).toMatchObject({ availability: "revoked" })
+      expect(handle.ready()?.drafts.peek(selected("r2"))).toBeUndefined()
+      expect(proofs).toBe(0)
+      expect(notices).toBe(0)
+    } finally { dispose(); node.remove() }
+  })
+
   test("explicit non-ready discard replaces the revoked registry on the next successful load", async () => {
     let available = true
     const deps: SfContextDependencies = { ...dependencies(async () => authorized()),
