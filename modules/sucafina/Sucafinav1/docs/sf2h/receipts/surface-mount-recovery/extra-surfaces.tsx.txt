@@ -1,0 +1,96 @@
+// INERT DRAFT. Intended location: packages/app-shell/src/orchestra/chapters/sucafina/host/extra-surfaces.tsx
+// Render ONLY after F01 source-authorized transition. See HANDOFF.md before integration.
+import { Match, Switch, type JSX } from "solid-js"
+import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfSurfaceProps } from "../context/contracts"
+import { SfBiCatalog } from "../bi/catalog"
+import { SfConfirmationView } from "../collaboration-pages/confirmations"
+import { SfRelationsView } from "../collaboration-pages/relations"
+import { SfThreadView } from "../collaboration-pages/threads"
+import { SfBudgetOverview } from "../dashboard/budget"
+import { SfExecutiveDashboard } from "../dashboard/executive"
+import { SfHotTopicsPage } from "../dashboard/hot-topics"
+import { SfHotTopicProposalView } from "../dashboard/hot-topics/proposals"
+import { SfAnalysesView } from "../decisions/analyses"
+import { SfPreparedChangesView } from "../decisions/changes"
+import { SfChoiceView } from "../decisions/choice"
+import { SfDecisionReceiptsView } from "../decisions/receipts"
+import { SfPerformanceView } from "../operations/performance"
+import { SfRisksView } from "../operations/risks"
+import { SfSecurityView } from "../operations/security"
+import { SfServiceView } from "../operations/service"
+import { SfStakeholdersView } from "../operations/stakeholders"
+import { SfPeopleOverviewView } from "../people/overview"
+import { SfPeopleStructureView } from "../people/structure"
+import { SfPeopleTalentView } from "../people/talent"
+import { SfAllocationsView } from "../planner/allocations"
+import { SfPlannerCapexView } from "../planner/capex"
+import { SfFxView } from "../planner/fx"
+import { SfPlannerHeadcountView } from "../planner/headcount"
+import { SfPlannerOpexView } from "../planner/opex"
+import { SfPlannerOverviewView } from "../planner/overview"
+import { SfPortfolioOverviewView } from "../portfolio/overview"
+import { SfProjectsView } from "../portfolio/projects"
+import { SfSensitivityView } from "../portfolio/sensitivity"
+import { SfProcurementOverviewView } from "../procurement/overview"
+import { SfProcurementSettingsView } from "../procurement/settings"
+import { SfSuppliersView } from "../procurement/suppliers"
+import { SfAgendaView } from "../reviews/agenda"
+import { SfReviewCompareView } from "../reviews/compare"
+import { SfPreservedReviewView } from "../reviews/preserved"
+import { SfReportsView } from "../reviews/reports"
+import { SfRoutineCatalogView } from "../routines/catalog"
+import { SfResidentsView } from "../routines/residents"
+import { SfRoutineRunView } from "../routines/runs"
+import { SfSchedulesView } from "../routines/schedules"
+import { SfSearchView } from "../search"
+import { SfSavedViewsView } from "../views"
+import { SfWorkView } from "../work"
+
+export function SfExtraSurfaces(props: { route: SfResolvedRoute }): JSX.Element {
+  return <Switch>
+    <Match when={props.route.surfaceId === "UI45"}><SfBiCatalog surfaceId="UI45" route={props.route as SfSurfaceProps<"UI45">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI53"}><SfConfirmationView surfaceId="UI53" route={props.route as SfSurfaceProps<"UI53">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI51"}><SfRelationsView surfaceId="UI51" route={props.route as SfSurfaceProps<"UI51">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI52"}><SfThreadView surfaceId="UI52" route={props.route as SfSurfaceProps<"UI52">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP03"}><SfBudgetOverview surfaceId="CAP03" route={props.route as SfSurfaceProps<"CAP03">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP01"}><SfExecutiveDashboard surfaceId="CAP01" route={props.route as SfSurfaceProps<"CAP01">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP02"}><SfHotTopicsPage surfaceId="CAP02" route={props.route as SfSurfaceProps<"CAP02">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI54"}><SfHotTopicProposalView surfaceId="UI54" route={props.route as SfSurfaceProps<"UI54">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI41"}><SfAnalysesView surfaceId="UI41" route={props.route as SfSurfaceProps<"UI41">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI39"}><SfPreparedChangesView surfaceId="UI39" route={props.route as SfSurfaceProps<"UI39">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI38"}><SfChoiceView surfaceId="UI38" route={props.route as SfSurfaceProps<"UI38">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI40"}><SfDecisionReceiptsView surfaceId="UI40" route={props.route as SfSurfaceProps<"UI40">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP16"}><SfPerformanceView surfaceId="CAP16" route={props.route as SfSurfaceProps<"CAP16">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP13"}><SfRisksView surfaceId="CAP13" route={props.route as SfSurfaceProps<"CAP13">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP12"}><SfSecurityView surfaceId="CAP12" route={props.route as SfSurfaceProps<"CAP12">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP11"}><SfServiceView surfaceId="CAP11" route={props.route as SfSurfaceProps<"CAP11">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP15"}><SfStakeholdersView surfaceId="CAP15" route={props.route as SfSurfaceProps<"CAP15">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP06"}><SfPeopleOverviewView surfaceId="CAP06" route={props.route as SfSurfaceProps<"CAP06">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP07"}><SfPeopleStructureView surfaceId="CAP07" route={props.route as SfSurfaceProps<"CAP07">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP08"}><SfPeopleTalentView surfaceId="CAP08" route={props.route as SfSurfaceProps<"CAP08">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP21"}><SfAllocationsView surfaceId="CAP21" route={props.route as SfSurfaceProps<"CAP21">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP19"}><SfPlannerCapexView surfaceId="CAP19" route={props.route as SfSurfaceProps<"CAP19">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP22"}><SfFxView surfaceId="CAP22" route={props.route as SfSurfaceProps<"CAP22">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP20"}><SfPlannerHeadcountView surfaceId="CAP20" route={props.route as SfSurfaceProps<"CAP20">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP18"}><SfPlannerOpexView surfaceId="CAP18" route={props.route as SfSurfaceProps<"CAP18">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP17"}><SfPlannerOverviewView surfaceId="CAP17" route={props.route as SfSurfaceProps<"CAP17">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP09"}><SfPortfolioOverviewView surfaceId="CAP09" route={props.route as SfSurfaceProps<"CAP09">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP10"}><SfProjectsView surfaceId="CAP10" route={props.route as SfSurfaceProps<"CAP10">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI44"}><SfSensitivityView surfaceId="UI44" route={props.route as SfSurfaceProps<"UI44">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP24"}><SfProcurementOverviewView surfaceId="CAP24" route={props.route as SfSurfaceProps<"CAP24">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP28"}><SfProcurementSettingsView surfaceId="CAP28" route={props.route as SfSurfaceProps<"CAP28">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "CAP27"}><SfSuppliersView surfaceId="CAP27" route={props.route as SfSurfaceProps<"CAP27">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI47"}><SfAgendaView surfaceId="UI47" route={props.route as SfSurfaceProps<"UI47">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI49"}><SfReviewCompareView surfaceId="UI49" route={props.route as SfSurfaceProps<"UI49">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI48"}><SfPreservedReviewView surfaceId="UI48" route={props.route as SfSurfaceProps<"UI48">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI50"}><SfReportsView surfaceId="UI50" route={props.route as SfSurfaceProps<"UI50">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI64"}><SfRoutineCatalogView surfaceId="UI64" route={props.route as SfSurfaceProps<"UI64">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI70"}><SfResidentsView surfaceId="UI70" route={props.route as SfSurfaceProps<"UI70">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI65"}><SfRoutineRunView surfaceId="UI65" route={props.route as SfSurfaceProps<"UI65">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI66"}><SfSchedulesView surfaceId="UI66" route={props.route as SfSurfaceProps<"UI66">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI31"}><SfSearchView surfaceId="UI31" route={props.route as SfSurfaceProps<"UI31">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI32"}><SfSavedViewsView surfaceId="UI32" route={props.route as SfSurfaceProps<"UI32">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI30"}><SfWorkView surfaceId="UI30" route={props.route as SfSurfaceProps<"UI30">["route"]} /></Match>
+  </Switch>
+}
