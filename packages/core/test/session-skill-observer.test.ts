@@ -14,8 +14,10 @@ import { Harness, sessionID } from "./session-runner-harness"
 
 let started: Deferred.Deferred<void> | undefined
 let attempts = 0
+// This harness is the only registered host for its Location, so it stands in for the
+// selectable engine id the agent schema accepts; it refuses load observation.
 const host: ExecutionHost.Interface = {
-  id: "refusing-host",
+  id: "claude-code",
   stateKey: "refusing",
   observeSkillLoad: () => Effect.sync(() => { attempts++ }).pipe(Effect.andThen(Effect.die("observer refused"))),
   observedSkillLoad: () => Effect.succeed(undefined),
