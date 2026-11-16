@@ -1,9 +1,11 @@
 import { describe, expect, test } from "bun:test"
 import type { SfHref, SfOwnerKey, SfOwnerSelection, SfRef, SfResolvedRoute, SfServerKey } from "@orchestra/schema/sucafina/context"
+import type { SfContextState } from "../../src/orchestra/chapters/sucafina/context/contracts"
 import { advancedNavigation } from "../../src/orchestra/navigation"
 import { matchSfNativeRoutePath, sfNativeRouteSpecs } from "../../src/orchestra/chapters/sucafina/route-registry"
 import { bindSfNativeChapterNavigation, openSfNativeChapter, requestSfNativeChapterNavigation,
-  sfNativeChapterEntry, sfNativeOwnerChapterRequest, transitionSfNativeChapter } from "../../src/orchestra/chapters/sucafina/host/native-chapter-entry"
+  sfNativeChapterEntry, sfNativeOwnerChapterRequest, sfCaptureReadyOwner, sfReadyOwnerSelection, sfSameReadyOwnerSnapshot,
+  transitionSfNativeChapter } from "../../src/orchestra/chapters/sucafina/host/native-chapter-entry"
 import { createSfNavigationState } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
 describe("native chapter entry", () => {
@@ -25,6 +27,47 @@ describe("native chapter entry", () => {
     expect(parsed.pathname).toBe("/orchestra/sf-planner/overview")
     expect(Object.fromEntries(parsed.searchParams)).toEqual({ server: selection.serverKey, project: selection.projectId, installation: selection.installationId })
     expect(sfNativeOwnerChapterRequest("sf-planner", { ...selection, installationId: undefined })).toBeUndefined()
+  })
+  test("ready owner tuple comes from one coherent verified snapshot, not discovery", () => {
+    const ready = {
+      status: "ready", ownerKey: "owner" as SfOwnerKey,
+      owner: { serverKey: "server-a", transportIdentity: "transport", publicOrigin: "https://sf.example",
+        projectId: "project-a", installationId: "install-a", principalRef: "principal", authEpoch: 1 },
+      binding: { projectId: "project-a", installationId: "install-a", hostId: "host", publicOrigin: "https://sf.example",
+        mount: "/sucafina", authMode: "microsoft", contractRevision: "sf-native-ui/1" },
+      context: { stamp: { projectId: "project-a", installationId: "install-a", hostId: "host", principalRef: "principal",
+        policyVersion: "policy", accessRevision: "revision" }, contractRevision: "sf-native-ui/1", authMode: "microsoft",
+        destinations: [], availability: [] },
+    } satisfies Extract<SfContextState, { status: "ready" }>
+    const selected = sfReadyOwnerSelection(ready)
+    expect(selected).toEqual({ serverKey: "server-a", projectId: "project-a", installationId: "install-a" })
+    const withStaleSelection = { ...ready, selection: { serverKey: "server-b", projectId: "project-b", installationId: "install-b" } }
+    expect(sfReadyOwnerSelection(withStaleSelection)).toEqual(selected)
+    expect(sfReadyOwnerSelection({ ...ready, owner: { ...ready.owner, projectId: "different" } })).toBeUndefined()
+    expect(sfReadyOwnerSelection({ ...ready, context: { ...ready.context, stamp: { ...ready.context.stamp, hostId: "different" } } })).toBeUndefined()
+    const snapshot = sfCaptureReadyOwner(ready)
+    if (!snapshot) throw new Error("verified snapshot missing")
+    let current: SfContextState = ready
+    let generation = 7
+    const handle = { state: () => current, generation: () => generation }
+    expect(sfSameReadyOwnerSnapshot(handle, snapshot, 7)).toBe(true)
+    generation = 8
+    expect(sfSameReadyOwnerSnapshot(handle, snapshot, 7)).toBe(false)
+    generation = 7
+    current = { ...ready, owner: { ...ready.owner, serverKey: "server-b" } }
+    expect(sfSameReadyOwnerSnapshot(handle, snapshot, 7)).toBe(false)
+    current = { ...ready, context: { ...ready.context, stamp: { ...ready.context.stamp, accessRevision: "revoked" } } }
+    expect(sfSameReadyOwnerSnapshot(handle, snapshot, 7)).toBe(false)
+    if (!selected) throw new Error("verified selection missing")
+    current = { status: "denied", selection: selected }
+    expect(sfSameReadyOwnerSnapshot(handle, snapshot, 7)).toBe(false)
+    const mutableStamp = { ...ready.context.stamp }
+    const mutableReady = { ...ready, context: { ...ready.context, stamp: mutableStamp } }
+    const captured = sfCaptureReadyOwner(mutableReady)
+    if (!captured) throw new Error("mutable snapshot missing")
+    current = mutableReady
+    mutableStamp.accessRevision = "changed-in-place"
+    expect(sfSameReadyOwnerSnapshot(handle, captured, 7)).toBe(false)
   })
   test("live denial never falls back, and initial entry and profile switch are distinct", async () => {
     const calls: string[] = []
