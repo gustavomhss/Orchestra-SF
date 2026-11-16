@@ -29,3 +29,25 @@ test("snapshot store reports tampered or duplicate event identities", () => {
   partition.events.push(partition.events[0]!)
   expect(store.read().rejected).toBeGreaterThan(1)
 })
+
+test("Atlas snapshot refuses changed, duplicated and reordered persisted ordinals", () => {
+  const original: Parameters<typeof createSfAtlasDurableMemory>[0] = { events: [] }
+  const writer = createSfAtlasDurableMemory(original)
+  writer.append(first)
+  writer.append(second)
+  expect(createSfAtlasDurableMemory(structuredClone(original)).read().rejected).toBe(0)
+  for (const corruptedSeq of [0, 1, 3, 999]) {
+    const corrupted = structuredClone(original)
+    const event = corrupted.events[1]!
+    corrupted.events[1] = [event[0], { ...event[1], seq: corruptedSeq }]
+    const reopened = createSfAtlasDurableMemory(corrupted)
+    expect(reopened.read().rejected).toBeGreaterThan(0)
+    expect(reopened.read().store).toEqual([])
+    expect(() => reopened.append(first)).toThrow("Atlas snapshot is invalid")
+  }
+  const reordered = structuredClone(original)
+  reordered.events.reverse()
+  const replay = createSfAtlasDurableMemory(reordered)
+  expect(replay.read().rejected).toBeGreaterThan(0)
+  expect(replay.read().store).toEqual([])
+})

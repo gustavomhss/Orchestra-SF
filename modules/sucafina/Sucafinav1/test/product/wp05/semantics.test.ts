@@ -35,6 +35,17 @@ test("a producer cannot relabel a currency as another currency", () => {
   expect(resolveBiPresentation(single, { ...presentation, series: [{ ...presentation.series[0]!, unit: "EUR" }] })).toEqual({ status: "unavailable", reason: "incompatible-unit" })
 })
 
+test("rejects an explicitly conflicting physical unit even when the currency matches the series", () => {
+  // A matching USD currency does not authorize an hours measurement to render as USD.
+  const hours = { ...projection, values: [{ ...projection.values[0]!, unit: "hours", currency: "USD" }] }
+  const dollarSeries: BiPresentation = { ...presentation, series: [{ ...presentation.series[0]!, unit: "USD" }] }
+  expect(resolveBiPresentation(hours, dollarSeries)).toEqual({ status: "unavailable", reason: "incompatible-unit" })
+  // Explicit unit labels are not replaced by a second metadata field.
+  expect(resolveBiPresentation(hours, presentation)).toEqual({ status: "unavailable", reason: "incompatible-unit" })
+  const currencyOnly = { ...projection, values: [{ ...projection.values[0]!, unit: undefined, currency: "USD" }] }
+  expect(resolveBiPresentation(currencyOnly, dollarSeries).status).toBe("ok")
+})
+
 test("ticket categories cannot masquerade as consecutive monthly points", () => {
   const tickets = { ...projection, values: projection.values.map((value) => ({ ...value, unit: "tickets", currency: undefined, granularity: "month" as const })) }
   const input: BiPresentation = { viewId: "BI07", series: [{ id: "open", label: "Opened", unit: "tickets", role: "opened", valueIds: ["a", "b"] }], limitations: [] }

@@ -1,0 +1,90 @@
+{
+  "schema": "sf2h.closure211.integration-fix.v1",
+  "parent": "9771cc7e2757056429404a91d23493988f14aa47",
+  "parent_tree": "d75dad06c7e2186b3dd323780aebce63321dac3e",
+  "epoch": "closure-composer-e1-browser211",
+  "mission": 211,
+  "source_facts": [
+    {
+      "mission": 199,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/INERT-189-PLAYWRIGHT-PRODUCTION.patch",
+      "source_blob": "659e9b958bb59904a526de212cd9483cd975f35b",
+      "finding": "F04 prod-webServer and trace mitigation"
+    },
+    {
+      "mission": 208,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review208/FINDINGS-208.json",
+      "source_blob": "8dd0f76923e9f6e7ba8e43ad4bb9ffe5304d1401",
+      "findings": [
+        "REV208-NEW-001",
+        "REV208-NEW-002"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "key": "pw",
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "pre": "e2b615a50c3907bbe21fd6158be47fcebf477679",
+      "post": "42d765b2e0762c3a312e4369a62e6e97da28df14",
+      "bytes": 2468
+    },
+    {
+      "key": "sem",
+      "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "pre": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+      "post": "2420a5147e6705a5842936ee3459bf7d787d5870",
+      "bytes": 3709
+    },
+    {
+      "key": "st",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "pre": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+      "post": "227f22ae80851185a1998bee1adf7bda73a83485",
+      "bytes": 2969
+    },
+    {
+      "key": "semtest",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/semantics.test.ts",
+      "pre": "aecf989c694556460662d2239170d0f5f00cb3a5",
+      "post": "4b9c23ac245dd85fcf64820c3fbd8c6c2e9022ef",
+      "bytes": 5228
+    },
+    {
+      "key": "sttest",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "pre": "e366d37c1f31217744e800263d9dcc514e2db755",
+      "post": "88b771c19f211850d3a3d36a7402f35d0ce510e1",
+      "bytes": 2758
+    }
+  ],
+  "behavior": {
+    "native_f04": "Disable webServer, isolate workers, disable tracing/screen/video only for native selected tests, fail closed on missing private manifest; leave other specs/CI untouched",
+    "bi": "Reject mismatch of explicit value.unit even when currency matches reported unit; preserve generic monetary unit labels with currency metadata",
+    "atlas": "Strict persisted append-only event.seq 1..N; retain digest check with canonical single-record ordinal without treating rewritten seq as proof; refuse corruption and append"
+  },
+  "tests": {
+    "semantics_unit_counterexample": "CODE_WRITTEN_NOT_RUN",
+    "atlas_seq_tamper_order_negative": "CODE_WRITTEN_NOT_RUN",
+    "playwright_native_host": "NOT_RUN",
+    "hosted_compiler": "NOT_RUN",
+    "local_test": "NOT_RUN",
+    "local_typecheck": "NOT_RUN",
+    "local_build": "NOT_RUN",
+    "local_validator": "NOT_RUN"
+  },
+  "acceptance": {
+    "candidate_C": false,
+    "GLOBAL_RELEASE": false
+  },
+  "consumers": {
+    "compiler": 190,
+    "sole_product_CI": 214,
+    "reviewers": [
+      207,
+      208,
+      209
+    ],
+    "S0": 189
+  }
+}

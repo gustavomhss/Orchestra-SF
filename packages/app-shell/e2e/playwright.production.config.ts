@@ -26,8 +26,10 @@ export default defineConfig({
   // Specs read this to prove dev-only marks and controls are absent from the built bundle.
   metadata: { ...config.metadata, bundle: "production" },
   outputDir: "./test-results",
+  workers: sfNative ? 1 : config.workers,
+  fullyParallel: sfNative ? false : config.fullyParallel,
   reporter: [["html", { outputFolder: "./playwright-report", open: "never" }], ["line"], ["./utils/flaky-reporter.ts"]],
-  webServer: [{
+  webServer: sfNative ? [] : [{
     ...config.webServer,
     cwd: path.resolve(import.meta.dirname, "../../../apps/web"),
     command: `bun run build && bun run serve -- --host 0.0.0.0 --port ${port} --strictPort`,
@@ -41,6 +43,8 @@ export default defineConfig({
   }] : [])],
   use: {
     ...config.use,
-    trace: "retain-on-failure",
+    // Real authenticated Microsoft contexts must never emit secret-bearing artifacts.
+    trace: sfNative ? "off" : "retain-on-failure",
+    ...(sfNative ? { screenshot: "off" as const, video: "off" as const } : {}),
   },
 })

@@ -18,11 +18,14 @@ export function createSfAtlasDurableMemory(partition: { events: Array<Parameters
           }
           const [id, event] = item
           const record = event.payload as MemoryRecord
-          if (!record || typeof record.owner !== "string" || !record.owner.trim() || (record.kind !== "task" && record.kind !== "project") || memoryKindOf(record.entry) !== record.kind || !validate(record.kind, record.entry).valid || !Number.isSafeInteger(event.seq) || event.seq < 0 || log.has(id)) {
+          if (!record || typeof record.owner !== "string" || !record.owner.trim() || (record.kind !== "task" && record.kind !== "project") || memoryKindOf(record.entry) !== record.kind || !validate(record.kind, record.entry).valid || !Number.isSafeInteger(event.seq) || event.seq !== log.size + 1 || log.has(id)) {
             rejected++
             continue
           }
           const expected = versioned([record]).get(id)
+          // The original ordinal was verified against the append-only log above.
+          // Normalize only for the canonical single-record hash: never accept a
+          // different persisted seq, a gap, or reordered event as valid.
           if (!expected || digestSfValue({ ...event, seq: expected.seq }) !== digestSfValue(expected)) {
             rejected++
             continue
