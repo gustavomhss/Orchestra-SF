@@ -6,10 +6,10 @@ import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-produc
 import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
-import { createSfWorkProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
+import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
 import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
 import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
-import { createSfDecisionsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
+import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
 import { createSfRoutinesHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { startAuthMaintenance } from "../runtime/auth-maintenance.ts"
@@ -217,7 +217,14 @@ export async function createConfiguredInstallation(
     ],
   })
   // Router construction above proves these exact handlers were installed.
-  nativeOperational = (request, stamp) => observeSfPlannerPages(nativeApplication, request, stamp)
+  nativeOperational = async (request, stamp) => {
+    const observed = await Promise.allSettled([
+      observeSfPlannerPages(nativeApplication, request, stamp),
+      observeSfHome(runtime?.services?.(), request, stamp),
+      observeSfCases(nativeDependencies, request, stamp),
+    ])
+    return observed.flatMap((item) => item.status === "fulfilled" ? item.value : [])
+  }
   // Started only after composition succeeds, outside request/business scopes.
   // Auth retention runs for Microsoft too, independently of operator backup jobs.
   const authMaintenance = startAuthMaintenance({ secrets: store.secrets })

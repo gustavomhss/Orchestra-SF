@@ -342,7 +342,8 @@ export async function observeSfPlannerPages(
       const value = { capabilityId: cap, selection: { ...selection, ...(current ? { versionId: id(current.id) } : {}) },
         data, versions: cas(view, cap, current, data), allowedActionIds: [] }
       const output = { status: "ok", context: stamp, value }
-      if (!Schema.is(SfPlanner.operations[`domain.page.${cap}`].output)(output)) return []
+      if (!(cap === "CAP17" ? Schema.is(SfPlanner.operations["domain.page.CAP17"].output)(output)
+        : Schema.is(SfPlanner.operations["domain.page.CAP23"].output)(output))) return []
       return [{ operationId: `domain.page.${cap}` as const, state: "ready" as const, reason: null, operational: true as const }]
     })
     return { commit: false, value: observations }

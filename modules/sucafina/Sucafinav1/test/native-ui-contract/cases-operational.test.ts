@@ -1,10 +1,11 @@
 import { expect, test } from "bun:test"
+import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
 import { createSfUiAuthority } from "../../product/integration/ui-authority.ts"
+import { digestSfValue } from "../../product/contracts/canonical.ts"
+import { operationalCase } from "./operational-fixture.ts"
 
 const stamp = Object.freeze({ installationId: "installation", projectId: "project", hostId: "host",
   principalRef: "person", policyVersion: "policy", accessRevision: "revision" })
-const decisions = await import("../../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts")
-const observeSfCases = (decisions as unknown as { observeSfCases: (deps: never, request: Request, stamp: typeof stamp) => Promise<unknown> }).observeSfCases
 
 test("case list probe admits the original Request and fences authority and source", async () => {
   const original = new Request("http://localhost/sucafina/api/ui/context")
@@ -22,14 +23,17 @@ test("case list probe admits the original Request and fences authority and sourc
   })
   let reads = 0
   let available = true
+  let revokeDuringRead = false
   const runtime = { ui, state: { read: async (request: Request, namespace: string, callback: (state: { cases: Record<string, never> }, authority: typeof stamp) => unknown) => {
     expect(request).toBe(original)
     expect(namespace).toBe("cases")
     reads++
     if (!available) return { status: "unavailable" }
-    return { status: "ok", value: callback({ cases: {} }, stamp) }
+    const value = callback({ cases: {} }, stamp)
+    if (revokeDuringRead) revision = "revoked"
+    return { status: "ok", value }
   } } }
-  const deps = { runtime: () => runtime }
+  const deps = { runtime: () => runtime, readContext: async () => { throw new Error("recursive context read") } }
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([
     { operationId: "projection.cases", state: "ready", reason: null, operational: true },
   ])
@@ -43,6 +47,10 @@ test("case list probe admits the original Request and fences authority and sourc
   actor = "other"
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
   actor = "person"
+  revokeDuringRead = true
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  revision = "revision"
+  revokeDuringRead = false
   granted = false
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
   expect(await observeSfCases({ runtime: () => undefined } as never, original, stamp)).toEqual([])
@@ -66,13 +74,25 @@ test("case readiness samples one source and preserves the producer's 100-case ce
         { id: String(index), incarnation: "incarnation", participants: ["person"] }]))
       return { status: "ok", value: callback({ cases }, stamp) }
     } },
-    dispatch: async () => { dispatches++; return { status: "denied" } },
+    dispatch: async (operation: string, payload: unknown, call: Parameters<typeof ui.validate>[0]) => {
+      dispatches++
+      return await ui.validate(call, operation, digestSfValue(payload)) ? { status: "ok", result: operationalCase } : { status: "denied" }
+    },
   }
-  const deps = { runtime: () => runtime }
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  const deps = { runtime: () => runtime, readContext: async () => { throw new Error("recursive context read") } }
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([
+    { operationId: "projection.cases", state: "ready", reason: null, operational: true },
+  ])
   expect(dispatches).toBe(1)
   count = 101
   dispatches = 0
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
   expect(dispatches).toBe(0)
+  count = 2
+  const handler = createSfDecisionsProjectionHandlers({ ...deps, origin: "http://localhost", mount: "/sucafina",
+    readContext: async () => ({ status: "ok", value: { stamp } }) } as never).find((item) => item.operationId === "projection.cases")!
+  const response = await handler.handle(new Request("http://localhost/sucafina/api/ui/projections/cases"))
+  expect(response.status).toBe(200)
+  expect((await response.json()).value.cases).toHaveLength(2)
+  expect(dispatches).toBe(2)
 })
