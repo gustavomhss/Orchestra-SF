@@ -1,0 +1,80 @@
+{
+  "schema": "sf2h.closure238.patchset-part1.v1",
+  "owner": "closure238",
+  "source_head": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "ack_commit": "3989d11f466bbf135a7b894f78a24eaaf85d07da",
+  "composition": "INERT_ONLY; apply target preimages under exclusive lease",
+  "files": [
+    {
+      "target": "packages/client/src/sucafina/transport.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "preimage_blob": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/client/src/sucafina/transport.ts.preimage.txt",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/client/src/sucafina/transport.ts.inert.txt",
+      "apply": "INERT_ONLY",
+      "changes": 2
+    },
+    {
+      "target": "apps/desktop/src/main/sucafina/connections.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "preimage_blob": "152652da3b64b60a8609be8b4ad27961a7f307f5",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/main/sucafina/connections.ts.preimage.txt",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/main/sucafina/connections.ts.inert.txt",
+      "apply": "INERT_ONLY",
+      "changes": 2
+    },
+    {
+      "target": "apps/desktop/src/preload/sucafina.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "preimage_blob": "cd8bc2500bc22b9ab2c1afb33dd3b36d6f9ac163",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/preload/sucafina.ts.preimage.txt",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/preload/sucafina.ts.inert.txt",
+      "apply": "INERT_ONLY",
+      "changes": 1
+    },
+    {
+      "target": "apps/desktop/src/renderer/sucafina.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "preimage_blob": "4d14e5888a0f9e91ec469e935e498fc9553ead90",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/renderer/sucafina.ts.preimage.txt",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/renderer/sucafina.ts.inert.txt",
+      "apply": "INERT_ONLY",
+      "changes": 1
+    },
+    {
+      "target": "packages/app-shell/src/context/platform.tsx",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "preimage_blob": "6dd22aad08f5f82bf6dcf5ce5d32d2c7c2db8c47",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/app-shell/src/context/platform.tsx.preimage.txt",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/app-shell/src/context/platform.tsx.inert.txt",
+      "apply": "INERT_ONLY",
+      "changes": 2
+    },
+    {
+      "target": "apps/desktop/src/renderer/index.tsx",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "preimage_blob": "1e19ec2a8864fd4b78e5e16d8d89372caffbceca",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/renderer/index.tsx.preimage.txt",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/renderer/index.tsx.inert.txt",
+      "apply": "INERT_ONLY",
+      "changes": 2
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238.ts",
+      "kind": "NEW_AFTER_231",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "preimage_blob": null,
+      "preimage_file": null,
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238.ts.inert.txt",
+      "apply": "INERT_ONLY",
+      "changes": 1
+    }
+  ],
+  "checks": "NOT_RUN"
+}
