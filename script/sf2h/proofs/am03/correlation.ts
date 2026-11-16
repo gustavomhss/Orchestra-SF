@@ -172,7 +172,7 @@ export function correlateAm03(input: Am03HostedCandidate) {
         !record.privateCacheNamespaceDigest || !digest64.test(record.privateCacheNamespaceDigest) ||
         !record.privateRefDigests || record.privateRefDigests.length === 0 ||
         (record.exposedRecordCount ?? 0) <= 0 ||
-        !record.privateRefDigests.every((value) => digest64.test(value))))
+        !record.privateRefDigests.every((value: string) => digest64.test(value))))
       gaps.push("scenario:" + id + ":missing-real-bridge-to-domain-or-cache-correlation")
     if (id === "revoked-memory" && (!record.scannerBinaryVersion || record.scannerResult !== "clean"))
       gaps.push("scenario:" + id + ":real-clean-scanner-not-observed")
@@ -208,7 +208,7 @@ export function correlateAm03(input: Am03HostedCandidate) {
     a.binding.caseId === b.binding.caseId ||
     a.binding.authenticatedBindingId === b.binding.authenticatedBindingId ||
     a.privateCacheNamespaceDigest === b.privateCacheNamespaceDigest ||
-    a.privateRefDigests?.some((digest) => b.privateRefDigests?.includes(digest))
+    a.privateRefDigests?.some((digest: string) => b.privateRefDigests?.includes(digest))
   )) gaps.push("actor-pair:case-principal-session-cache-or-private-refs-crossed")
   const cache = input.observations.find((item) => item.scenario === "cache-isolation")
   if (cache && (!a || !b || cache.outcome !== "denied" ||
