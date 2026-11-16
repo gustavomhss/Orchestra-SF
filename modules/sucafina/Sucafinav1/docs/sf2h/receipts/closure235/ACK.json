@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.closure235.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission": 235,
+  "epoch": "independent-review-prep-e1-browser235",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "branch": "sf-review-prep",
+  "initial_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "initial_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+  "native_goal": "PAUSED",
+  "global_release": false,
+  "actor": {
+    "role": "review-preparation-only",
+    "model_effective": "GPT-6",
+    "session_id": null,
+    "session_id_exposed": false,
+    "reviewer_identity_claimed": false
+  },
+  "head_fence": {
+    "checked_by": "GitHub MCP read ref + git commit",
+    "expected": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "observed": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "product_branch": "sf-closure-bundle",
+    "product_observed_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "product_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "product_control_fence_blob": "60a2f1ff4e790b411b71ba3e6a2d4a6c473e2f95"
+  },
+  "inputs": {
+    "detached228": {
+      "ref": "sf-closure-intake",
+      "head": "33474b2158a4703f256191f61f1a16ac85c26004",
+      "proposed_tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+      "state": "INERT_NOT_CONSUMED"
+    },
+    "reviews": {
+      "R1": "sf-review-functional",
+      "R2": "sf-review-integrity",
+      "R3": "sf-review-runtime"
+    },
+    "late_sessions": {
+      "m229": "ACK_ONLY_READ_NO_NATIVE_HANDOFF",
+      "m230": "SOURCE_REVIEW_FIX_FIRST_INERT",
+      "m231": "S0_FENCE_ONLY_READ_NO_PRODUCT_HANDOFF",
+      "m232": "TERMINAL_QUEUE_READ_NO_NEW_RUNS"
+    }
+  },
+  "authority": {
+    "write_only": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/**",
+      "modules/sucafina/Sucafinav1/test/product/proof235/**"
+    ],
+    "no_product_edits": true,
+    "no_sf2_control": true,
+    "reviewer_launches": 0,
+    "new_supervisor": 0
+  },
+  "execution": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "G7": "NOT_RUN",
+    "G8": "NOT_RUN",
+    "reviewer_final_approvals": "NOT_RUN",
+    "product_changes": 0
+  },
+  "candidate_C": "NOT_ACCEPTED",
+  "S0_handoff_to_228": "NOT_OBSERVED",
+  "comment": "ACK for preparation only. Static review reconciliation must never count as a final independent review."
+}
