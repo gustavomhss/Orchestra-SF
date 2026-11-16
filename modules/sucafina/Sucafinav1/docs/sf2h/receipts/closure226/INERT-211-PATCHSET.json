@@ -1,0 +1,171 @@
+{
+  "schema": "sf2h.closure226.inert-patchset.v1",
+  "mission": 226,
+  "kind": "INERT_OUT_OF_LEASE_NO_APPLY",
+  "source_branch": "sf-files-transport",
+  "source_head": "b34d7c1905ce2addc6ed62d852d7285dd30b0f36",
+  "target_branch": "sf-closure-bundle",
+  "target_head_read": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "original_a06": "a81ee51b312a64d27cff496e863a02e874ac14a8",
+  "authority": "211 exclusively applies with live CAS, only after own preimage verification",
+  "safety": "No new endpoint, no public HttpApi, no SDK generated changes, no fake provider/auth, no deploy",
+  "patches": [
+    {
+      "path": "packages/schema/package.json",
+      "pre": {
+        "ref": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+        "blob": "d4b28cceb8c5695fbf290a6d9a1e0c319e28c337"
+      },
+      "format": "exact-replacement",
+      "replacements": [
+        {
+          "find": "    \"./sucafina/context\": \"./src/sucafina/context.ts\",",
+          "replace": "    \"./sucafina/context\": \"./src/sucafina/context.ts\",\n    \"./sucafina/files\": \"./src/sucafina/files.ts\","
+        }
+      ],
+      "post": {
+        "must_include": [
+          "    \"./sucafina/context\": \"./src/sucafina/context.ts\",\n    \"./sucafina/files\": \"./src/sucafina/files.ts\","
+        ],
+        "must_not_erase_existing": true
+      },
+      "rationale": "Export only the original 25 A06 source schemas, no generated SDK changes."
+    },
+    {
+      "path": "packages/client/package.json",
+      "pre": {
+        "ref": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+        "blob": "89c376ac148db0c3ba2a5f5b0a0aece932c72a6f"
+      },
+      "format": "exact-replacement",
+      "replacements": [
+        {
+          "find": "    \"./sucafina/transport\": \"./src/sucafina/transport.ts\",",
+          "replace": "    \"./sucafina/transport\": \"./src/sucafina/transport.ts\",\n    \"./sucafina/files\": \"./src/sucafina/files.ts\","
+        }
+      ],
+      "post": {
+        "must_include": [
+          "    \"./sucafina/transport\": \"./src/sucafina/transport.ts\",\n    \"./sucafina/files\": \"./src/sucafina/files.ts\","
+        ],
+        "must_not_erase_existing": true
+      },
+      "rationale": "Expose original 25 typed file client operations to 218/224/225 without rebuilding UI."
+    },
+    {
+      "path": "packages/client/src/sucafina/bindings.ts",
+      "pre": {
+        "ref": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+        "blob": "aff16695246561bd2cfe154c1ac892084ce119a4"
+      },
+      "format": "exact-replacement",
+      "replacements": [
+        {
+          "find": "import { SfAnalyses } from \"@orchestra/schema/sucafina/analyses\"",
+          "replace": "import { SfAnalyses } from \"@orchestra/schema/sucafina/analyses\"\nimport { SfFilesOperationBindings } from \"./files/codecs\""
+        },
+        {
+          "find": "  add(SfAnalyses.operations)\n  return Object.freeze(Object.fromEntries(bindings))",
+          "replace": "  add(SfAnalyses.operations)\n  // A06: bytes use F02's bounded consumer; upload bytes travel via a separate\n  // typed byte slot. Never use the generic JSON codec for these 25 operations.\n  const sourceFiles = Object.entries(SfFilesOperationBindings)\n  if (sourceFiles.length !== 25) throw new Error(\"SF_A06_25_OPERATIONS_REQUIRED\")\n  for (const [candidate, fileCodec] of sourceFiles) {\n    if (!Schema.is(SfOperationId)(candidate)) throw new Error(\"SF_A06_OPERATION_UNKNOWN\")\n    const id = candidate as SfOperationId\n    const meta = SfOperationRegistry[id]\n    if (!meta || meta.responseMode === \"navigation\" || !fileCodec || bindings.has(id))\n      throw new Error(\"SF_A06_BINDING_CONFLICT\")\n    bindings.set(id, fileCodec)\n  }\n  return Object.freeze(Object.fromEntries(bindings))"
+        }
+      ],
+      "post": {
+        "must_include": [
+          "import { SfAnalyses } from \"@orchestra/schema/sucafina/analyses\"\nimport { SfFilesOperationBindings } from \"./files/codecs\"",
+          "  add(SfAnalyses.operations)\n  // A06: bytes use F02's bounded consumer; upload bytes travel via a separate\n  // typed byte slot. Never use the generic JSON codec for these 25 operations.\n  const sourceFiles = Object.entries(SfFilesOperationBindings)\n  if (sourceFiles.length !== 25) throw new Error(\"SF_A06_25_OPERATIONS_REQUIRED\")\n  for (const [candidate, fileCodec] of sourceFiles) {\n    if (!Schema.is(SfOperationId)(candidate)) throw new Error(\"SF_A06_OPERATION_UNKNOWN\")\n    const id = candidate as SfOperationId\n    const meta = SfOperationRegistry[id]\n    if (!meta || meta.responseMode === \"navigation\" || !fileCodec || bindings.has(id))\n      throw new Error(\"SF_A06_BINDING_CONFLICT\")\n    bindings.set(id, fileCodec)\n  }\n  return Object.freeze(Object.fromEntries(bindings))"
+        ],
+        "must_not_erase_existing": true
+      },
+      "rationale": "Install exact A06 metadata and 25 codecs in I00 registry; no permissive fallback or fake JSON for bytes."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/files-routing.ts",
+      "pre": {
+        "ref": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+        "blob": null,
+        "condition": "ABSENT"
+      },
+      "format": "create-source",
+      "source": "import type { SfOperationId } from \"@orchestra/schema/sucafina/common\"\nimport { SfOperationRegistry } from \"@orchestra/schema/sucafina/operation-registry\"\nimport { createSfFilesHostBindings, type SfFilesHostSources } from \"./files\"\n\n/**\n * I00 only: dispatch to ORIGINAL sources with the untouched authenticated Request.\n * No new HTTP path, no rewritten URL, no generic upload/download proxy.\n * Factories inject the actual producer callbacks from the installed product.\n */\nconst sfModes: Readonly<Record<string, SfOperationId>> = Object.freeze({\n  \"import-targets\": \"files.import-targets\",\n  \"import-reference\": \"files.import-reference\",\n  \"import-detail\": \"files.import-detail\",\n  \"import-admit\": \"files.import-admit\",\n  \"import-preview\": \"files.import-preview\",\n  \"import-apply\": \"files.import-apply\",\n  \"document-requests\": \"files.document-requests\",\n  \"document-search\": \"files.document-search\",\n  \"document-open\": \"files.document-open\",\n  \"document-schemas\": \"files.document-schemas\",\n  \"document-schema\": \"files.document-schema\",\n  \"document-sources\": \"files.document-sources\",\n  \"document-admit\": \"files.document-admit\",\n  \"document-extract\": \"files.document-extract\",\n  \"document-confirm\": \"files.document-confirm\",\n  \"document-candidates\": \"files.document-candidates\",\n  \"document-scenario-targets\": \"files.document-scenario-targets\",\n  \"document-scenario-preview\": \"files.document-scenario-preview\",\n})\nconst downloads: Readonly<Record<string, SfOperationId>> = Object.freeze({\n  xlsx: \"files.export.xlsx\", suppliers: \"files.export.suppliers\",\n  register: \"files.export.register\", json: \"files.export.json\",\n})\nconst fail = (status: number) => Response.json({ status: \"invalid\" },\n  { status, headers: { \"Cache-Control\": \"no-store\" } })\n\nexport function mountSfFilesOriginalRoutes(input: Readonly<{\n  origin: string\n  mount: string\n  sources: SfFilesHostSources\n}>): (request: Request) => Promise<Response | undefined> {\n  const bound = createSfFilesHostBindings(input.sources)\n  if (!/^\\/(?:[A-Za-z0-9_-]+\\/)*[A-Za-z0-9_-]+$/.test(input.mount) ||\n      new URL(input.origin).origin !== input.origin) throw new Error(\"SF_A06_HOST_ROUTE_INVALID\")\n  return async (request) => {\n    const url = new URL(request.url)\n    const surface = url.pathname.slice(input.mount.length + 1)\n    if (url.origin !== input.origin || url.pathname !== input.mount + \"/\" + surface ||\n        ![\"dashboard\", \"planner\", \"procurement\"].includes(surface)) return undefined\n    const selector = url.searchParams\n    const keys = [\"sf\", \"download\", \"asset\", \"asset-link\", \"upload\"]\n    const picked = keys.filter((key) => selector.has(key))\n    if (picked.length === 0) return undefined\n    if (picked.length !== 1 || selector.getAll(picked[0]!).length !== 1)\n      return fail(400)\n    let operation: SfOperationId | undefined\n    if (picked[0] === \"sf\") operation = sfModes[selector.get(\"sf\") ?? \"\"]\n    if (picked[0] === \"download\") operation = downloads[selector.get(\"download\") ?? \"\"]\n    if (picked[0] === \"asset\") operation = \"files.asset.download\"\n    if (picked[0] === \"asset-link\") operation = \"files.asset.link\"\n    if (picked[0] === \"upload\") {\n      operation = [\"contract\", \"quote\", \"signed-po\", \"supplier\"].includes(selector.get(\"upload\") ?? \"\")\n        ? \"files.asset.upload\" : undefined\n    }\n    if (!operation) return undefined\n    const metadata = SfOperationRegistry[operation]\n    if (!metadata || metadata.pathTemplate !== \"{mount}/{surface}\") return fail(503)\n    if (metadata.method !== request.method) return fail(405)\n    // Original source remains authoritative for owner, role, field, version,\n    // MIME, signed ref, limited body and post-revocation egress checks.\n    return bound[operation](request, surface)\n  }\n}\n",
+      "post": {
+        "exports": [
+          "mountSfFilesOriginalRoutes"
+        ],
+        "no_endpoint_created": true,
+        "preserves_original_Request": true
+      },
+      "rationale": "Exact selector dispatcher; assembly owner 211 injects real sources only; missing source fails 503."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "pre": {
+        "ref": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+        "blob": "34d74d6651031c5194db1d22c823baae60e9a260"
+      },
+      "format": "exact-replacement",
+      "replacements": [
+        {
+          "find": "import type { MicrosoftTransport } from \"../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts\"",
+          "replace": "import type { MicrosoftTransport } from \"../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts\"\nimport type { SfFilesHostSources } from \"./native-ui/files\"\nimport { mountSfFilesOriginalRoutes } from \"./native-ui/files-routing\""
+        },
+        {
+          "find": "  transport?: MicrosoftTransport\n}",
+          "replace": "  transport?: MicrosoftTransport\n  /** Private owner-injected ORIGINAL producers; absence remains fail-closed. */\n  nativeFiles?: SfFilesHostSources\n}"
+        },
+        {
+          "find": "  const requestOrigin = transport?.ingressOrigin ?? origin",
+          "replace": "  const requestOrigin = transport?.ingressOrigin ?? origin\n  const files = installation.nativeFiles ? mountSfFilesOriginalRoutes({\n    origin: requestOrigin, mount: installation.mount, sources: installation.nativeFiles,\n  }) : undefined"
+        },
+        {
+          "find": "            const result = request ? await installation.handler(request).catch(() => new Response(null, { status: 503, headers: { \"Cache-Control\": \"no-store\", \"X-Content-Type-Options\": \"nosniff\" } })) : new Response(null, { status: 403 })",
+          "replace": "            // The same ORIGINAL authenticated Request flows to the installed\n            // domain producer; never invoke a synthetic Request or bypass ingress.\n            const result = request ? await (async () => {\n              try {\n                return (files ? await files(request) : undefined) ??\n                  await installation.handler(request)\n              } catch {\n                return new Response(null, { status: 503, headers: {\n                  \"Cache-Control\": \"no-store\", \"X-Content-Type-Options\": \"nosniff\",\n                } })\n              }\n            })() : new Response(null, { status: 403 })"
+        }
+      ],
+      "post": {
+        "must_include": [
+          "import type { MicrosoftTransport } from \"../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts\"\nimport type { SfFilesHostSources } from \"./native-ui/files\"\nimport { mountSfFilesOriginalRoutes } from \"./native-ui/files-routing\"",
+          "  transport?: MicrosoftTransport\n  /** Private owner-injected ORIGINAL producers; absence remains fail-closed. */\n  nativeFiles?: SfFilesHostSources\n}",
+          "  const requestOrigin = transport?.ingressOrigin ?? origin\n  const files = installation.nativeFiles ? mountSfFilesOriginalRoutes({\n    origin: requestOrigin, mount: installation.mount, sources: installation.nativeFiles,\n  }) : undefined",
+          "            // The same ORIGINAL authenticated Request flows to the installed\n            // domain producer; never invoke a synthetic Request or bypass ingress.\n            const result = request ? await (async () => {\n              try {\n                return (files ? await files(request) : undefined) ??\n                  await installation.handler(request)\n              } catch {\n                return new Response(null, { status: 503, headers: {\n                  \"Cache-Control\": \"no-store\", \"X-Content-Type-Options\": \"nosniff\",\n                } })\n              }\n            })() : new Response(null, { status: 403 })"
+        ],
+        "must_not_erase_existing": true
+      },
+      "rationale": "Privately compose same-original-Request file delegates before original installation.handler, without new endpoint or SDK generation. Actual SfFilesHostSources must originate from installed producers."
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/network.ts",
+      "pre": {
+        "ref": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+        "blob": "912cade1f8213c0014f27ed75adb85b2b64f33c2"
+      },
+      "format": "exact-replacement",
+      "replacements": [
+        {
+          "find": "    if (name === \"content-disposition\" && !/^attachment;\\s*filename=\"[^\\\\/\\r\\n\"]{1,160}\"$/i.test(value)) continue",
+          "replace": "    if (name === \"content-disposition\" &&\n        !(/^attachment;\\s*filename=\"[^\\\\/\\r\\n\"]{1,160}\"$/i.test(value) ||\n          /^attachment;\\s*filename\\*=UTF-8''[A-Za-z0-9._%-]{1,200}$/i.test(value) &&\n          !/[\\\\/\\r\\n\\x00-\\x1f\\x7f]/.test(decodeURIComponent(value.slice(value.indexOf(\"''\") + 2)))))\n      continue"
+        }
+      ],
+      "post": {
+        "must_include": [
+          "    if (name === \"content-disposition\" &&\n        !(/^attachment;\\s*filename=\"[^\\\\/\\r\\n\"]{1,160}\"$/i.test(value) ||\n          /^attachment;\\s*filename\\*=UTF-8''[A-Za-z0-9._%-]{1,200}$/i.test(value) &&\n          !/[\\\\/\\r\\n\\x00-\\x1f\\x7f]/.test(decodeURIComponent(value.slice(value.indexOf(\"''\") + 2)))))\n      continue"
+        ],
+        "must_not_erase_existing": true
+      },
+      "rationale": "Preserve sanitized RFC5987 filenames returned by original export source, never raw path; Unicode-safe decode requires 211 review."
+    }
+  ],
+  "installation_contract": {
+    "nativeFiles": "SfFilesHostSources; all callbacks MUST reference original producer Requests and installed authority",
+    "missing_sources": "503, no other fallback",
+    "available_sources": "read from installed runtime only; no mock",
+    "path_and_mime": "frozen 25 operation IDs/method/fixedQuery and source MIME/size fences",
+    "required_followup": "211 applies all patches atomically against exact preimages and compares own live HEAD; 190 official generation only if public Api/HttpApi really changes (not requested here)"
+  },
+  "checks": {
+    "unit": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "CI": "NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}
