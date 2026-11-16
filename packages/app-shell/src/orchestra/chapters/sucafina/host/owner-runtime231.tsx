@@ -61,6 +61,7 @@ import { SfVendorContractsPage } from "../procurement/contracts"
 import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
+import { revalidateReportRecovery } from "../reviews/reports/recovery"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
 import { createSfDesktopOriginBridge238 } from "./desktop-origin-bridge238"
 import { bindSfNativeChapterNavigation, confirmSfOwnerExit, rejectInvalidSfOwnerQuery, sfCaptureReadyOwner, sfReadyOwnerSelection, sfSameReadyOwnerSnapshot, transitionSfNativeChapter } from "./native-chapter-entry"
@@ -419,6 +420,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         description: language.t("sf.common.noAccess") })
     },
     revalidateDraft: async (input: SfDraftRevalidationInput, fresh, transport, signal): Promise<SfDraftRevalidation> => {
+      if (input.surfaceId === "UI50" && input.read.operationId === "dashboard.dashboard-review")
+        return revalidateReportRecovery(input, fresh, transport, signal)
       // Retained record reads only. No guessed field/action grants or automatic
       // restoration of pending writes; those require producer-specific proofs.
       if (signal.aborted || input.read.operationId !== "projection.case" ||

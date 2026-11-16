@@ -175,6 +175,7 @@ export async function runReportRecovery(input: Readonly<{
     if (!input.current()) return
     if (prepared && (prepared.kind !== "response" || prepared.body.status !== "ok")) {
       const reason = prepared.kind === "response" ? prepared.body.status + ": " + prepared.body.reason : prepared.reason
+      console.error("Sucafina report preparation did not settle", prepared.kind === "response" ? prepared.body.status : prepared.reason)
       update(input.drafts, intent, { reason })
       return
     }
@@ -186,6 +187,7 @@ export async function runReportRecovery(input: Readonly<{
           value.receipt.accessRevision !== input.accessRevision || value.receipt.principalRef !== input.principalRef ||
           value.result.coverage.length !== intent.payload.sectionRefs.length ||
           value.result.coverage.some((entry, index) => entry.sectionRef !== intent.payload.sectionRefs[index])) {
+        console.error("Sucafina report preparation returned a mismatched contract")
         update(input.drafts, intent, { reason: "contract-mismatch" })
         return
       }
@@ -197,13 +199,17 @@ export async function runReportRecovery(input: Readonly<{
       signal: input.signal, current: input.current, downloadResponse: input.downloadResponse })
     if (!input.current()) return
     if (!input.onDownloaded(intent.idempotencyKey)) {
+      console.error("Sucafina report recovery marker could not be cleared")
       update(input.drafts, intent, { reason: "contract-unavailable" })
       return
     }
     input.drafts.markUnresolved(selection, false)
     input.drafts.discard(selection)
-  } catch {
-    if (input.current()) update(input.drafts, intent, { reason: "outcome-unknown" })
+  } catch (error) {
+    if (input.current()) {
+      console.error("Sucafina report recovery failed", error instanceof Error ? error.name : "unknown")
+      update(input.drafts, intent, { reason: "outcome-unknown" })
+    }
   } finally {
     running.delete(input.drafts)
   }
