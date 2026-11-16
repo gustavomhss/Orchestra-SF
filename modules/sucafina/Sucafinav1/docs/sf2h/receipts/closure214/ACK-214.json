@@ -1,0 +1,70 @@
+{
+  "schema": "sf2h.product-ci214.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 214,
+  "epoch": "product-ci-e7-browser214",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "role": "SOLE_PRODUCT_CI_DISPATCHER",
+  "github_actor": "gustavomhss",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_exposed": false,
+  "session_id_reason": "ChatGPT/GitHub interface did not expose a stable host/Astra session ID; no lifecycle inference",
+  "handoff": {
+    "predecessor": 200,
+    "predecessor_epoch": "product-ci-e6-browser200",
+    "terminal_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation200/HANDOFF-200.md",
+    "terminal_blob": "97d616d88f3b54868e19c1cdd5ecfd5cc0554c1b",
+    "transfer_fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/S0-FENCE.json",
+    "transfer_fence_blob": "2217ec0669fb60d0b393eb81c73f1c1b814bbe02",
+    "previous_runtime_termination_claimed": false,
+    "history_preserved": true
+  },
+  "readset": {
+    "packet_sha": "647f232d0748b11c06145bd562f1488db4f3a74f",
+    "packet_blob": "ee8a7cb9d712641b9620ff338a3049d19fa24d08",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "head_preimage": "32c60ae4e56d8aa773840fe9cfd2a00ee18183fc",
+    "tree_preimage": "5643c2ec75421fdfe42748c9310c1a2ee448487c",
+    "queue200_blob": "bae56cb80ac60db3699596140e40214543252481",
+    "runs200_blob": "9146d5a4624d1ecf4b1303ee667fafcaea1824c8",
+    "findings200_blob": "bf3c5e8f4e46e4d018ff795e7fbaff4367f13bd9",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+  },
+  "actions_reconciliation": {
+    "in_progress": 0,
+    "queued": 0,
+    "waiting": 0,
+    "latest_run": 43775802204,
+    "latest_conclusion": "failure",
+    "historical_runs_200": [
+      43775214053,
+      43775606150,
+      43775802204
+    ],
+    "historical_runs_191": [
+      43772149086,
+      43772487366,
+      43772869717,
+      43773234546,
+      43773852118
+    ],
+    "compiler_190_runs": [
+      43772959867,
+      43774116387
+    ],
+    "new_dispatch_before_ack": 0
+  },
+  "product": {
+    "candidate_branch": "sf-closure-bundle",
+    "candidate_pr": 191,
+    "observed_head": "569b3213525aa6eb23741cb1034bd0f054ccd381",
+    "accepted_final_C": false
+  },
+  "status": "ACK_ACTIVE_AFTER_S0_TRANSFER_AND_ACTIONS_RECONCILIATION",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
