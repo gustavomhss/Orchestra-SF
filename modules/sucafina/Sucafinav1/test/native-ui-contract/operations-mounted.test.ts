@@ -73,6 +73,7 @@ test("mounted operations pages use real source views and fence actor, stamp and 
     expect(await security.json()).toMatchObject({ status: "ok", value: { versions: { "security:2026-11": 3 }, data: { secKpi: [{ training: 80 }] } } })
     expect((await call("CAP11", "?secYear=2026")).status).toBe(400)
     expect((await call("CAP11", "?month=13")).status).toBe(400)
+    expect((await call("CAP12", "?month=1&month=2")).status).toBe(400)
     actor = "other"
     expect((await call("CAP11")).status).toBe(403)
     actor = "person"
