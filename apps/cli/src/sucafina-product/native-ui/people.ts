@@ -2,6 +2,7 @@ import { Schema } from "effect"
 import { SfPeopleCio, SfPeopleLeader, SfPeopleMember, SfPeoplePageData, SfPeopleTopic } from "@orchestra/schema/sucafina/people"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+import { peopleCanWrite } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people.ts"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { publicSfData } from "../../../../../modules/sucafina/Sucafinav1/product/integration/public-state.ts"
@@ -36,7 +37,7 @@ const cioFields = ["name", "title", "location", "start"] as const
 const leaderFields = ["name", "title", "domain", "location", "start"] as const
 const memberFields = ["name", "title", "type", "leaderId", "location", "start", "end", "status", "cls", "outlook", "notes"] as const
 const publicMemberFields = memberFields.filter((field) => !["cls", "outlook", "notes"].includes(field))
-const actionIds: Readonly<Record<SfPeopleCapability, readonly string[]>> = {
+export const SF_PEOPLE_ACTIONS: Readonly<Record<SfPeopleCapability, readonly string[]>> = {
   CAP02: ["save", "delete"],
   CAP06: [],
   CAP07: ["saveCio", "saveLeader", "deleteLeader", "saveMember", "deleteMember"],
@@ -305,10 +306,7 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfPeo
       const view = contribution.domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
       const data = projectSfPeopleData(cap, publicSfData(view.data), selection, environment.at, actor.roles.includes("admin"))
       const versions = projectSfPeopleVersions(cap, view.versions, data)
-      const canWrite = actor.canWrite &&
-        (cap === "CAP02"
-          ? actor.roles.some((role) => role === "admin" || role === "domain leader")
-          : cap !== "CAP06" && actor.roles.includes("admin"))
+      const canWrite = peopleCanWrite(actor, pageName)
       return {
         commit: snapshot.audit.length !== beforeAudit,
         value: {
@@ -356,7 +354,7 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfPeo
     if (!current) return stale("domain-source-changed")
     if (request.signal.aborted) return unavailable("request-cancelled")
 
-    const admitted = new Set(actionIds[cap])
+    const admitted = new Set(SF_PEOPLE_ACTIONS[cap])
     return respond({
       status: "ok",
       context: refreshed.value.stamp,

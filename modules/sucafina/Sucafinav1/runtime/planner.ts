@@ -302,6 +302,12 @@ function calculated(version: Version) {
     warnings: [...warnings],
   }
 }
+export function plannerCanAdmin(actor: Actor) {
+  return actor.canWrite && actor.roles.includes("admin")
+}
+export function plannerAdminSourceAvailable(snapshot: Snapshot, actor: Actor) {
+  return plannerCanAdmin(actor) && plannerData(snapshot.data).errors.length === 0
+}
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite || !actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role)))
@@ -1459,7 +1465,6 @@ function executeVersions(
   versions: Version[],
 ): Result {
   const values = command.values
-  const admin = actor.roles.includes("admin")
   const reject: Result = { ok: false, status: 403 }
   const invalid = (message: string): Result => ({
     ok: false,
@@ -1471,7 +1476,7 @@ function executeVersions(
   const persist = () => {
     snapshot.data.versions = versions
   }
-  if (!admin) return reject
+  if (!plannerCanAdmin(actor)) return reject
   const version = versions.find((item) => item.id === command.id)
   if (!version) {
     if (command.action !== "save" || command.id || versions.length) return { ok: false, status: 400 }
@@ -1558,7 +1563,6 @@ function executeLists(
   versions: Version[],
 ): Result {
   const values = command.values
-  const admin = actor.roles.includes("admin")
   const reject: Result = { ok: false, status: 403 }
   const invalid = (message: string): Result => ({
     ok: false,
@@ -1570,7 +1574,7 @@ function executeLists(
   const persist = () => {
     snapshot.data.versions = versions
   }
-  if (!admin) return reject
+  if (!plannerCanAdmin(actor)) return reject
   const collection = text(values.collection)
   if (!["entities", "allocations"].includes(collection)) return invalid("Choose entities or allocations")
   const records = rows(snapshot.data[collection]).map(identified)

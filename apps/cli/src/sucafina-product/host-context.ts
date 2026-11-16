@@ -934,7 +934,9 @@ export const createSfHostRuntimeWithRoutineNative = async (
       const admitted = await authority.readContextAdmission(request)
       if (admitted.status !== "ok") return admitted
       if (!input.authMode) return { status: "unavailable", reason: "host-unavailable" } as const
-      const destinations = sfContextDestinationsFromPages(admitted.pages)
+      const actions = input.nativeActions ? await input.nativeActions(request, admitted.stamp, admitted.pages) : undefined
+      if (input.nativeActions && !Array.isArray(actions)) return { status: "unavailable", reason: "contract-mismatch" } as const
+      const destinations = sfContextDestinationsFromPages(admitted.pages, actions)
       if (!destinations) return { status: "unavailable", reason: "contract-mismatch" } as const
       return { status: "ok", stamp: admitted.stamp, authMode: input.authMode, destinations } as const
     },

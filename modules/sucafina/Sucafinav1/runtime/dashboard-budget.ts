@@ -41,6 +41,9 @@ const budgetKeys = [
   "deviations",
 ]
 
+export function budgetAdminCanWrite(actor: Actor) {
+  return actor.canWrite && actor.roles.includes("admin")
+}
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite) return { ok: false, status: 403 }
@@ -230,7 +233,7 @@ export const domain: Domain = {
   },
 }
 function execute(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment): Result {
-  const admin = actor.roles.includes("admin")
+  const admin = budgetAdminCanWrite(actor)
   const allowed = object(snapshot.data.budgetLineIds)[actor.id]
   // Raw legacy IDs are deliberately inert until an admin explicitly reselects each collection-qualified row.
   const canLine = (collection: string, id: unknown) =>

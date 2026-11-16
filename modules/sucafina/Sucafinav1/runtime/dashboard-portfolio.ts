@@ -122,7 +122,7 @@ export const domain: Domain = {
     if (!actor.canWrite) return { ok: false, status: 403 }
     const collection = Object.hasOwn(collections, command.page) ? collections[command.page] : undefined
     if (!collection) return { ok: false, status: 404 }
-    if (!writable(actor, collection))
+    if (!portfolioCanWrite(actor, collection))
       return {
         ok: false,
         status: 403,
@@ -256,7 +256,7 @@ export const domain: Domain = {
 function recordId(value: unknown) {
   return typeof value === "string" || (typeof value === "number" && Number.isFinite(value)) ? String(value) : ""
 }
-function writable(actor: Actor, collection: string) {
+export function portfolioCanWrite(actor: Actor, collection: string) {
   if (!actor.canWrite) return false
   if (actor.roles.includes("admin")) return true
   return (
@@ -264,6 +264,9 @@ function writable(actor: Actor, collection: string) {
     ["projects", "risks", "contracts"].includes(collection) &&
     (actor.assigned ?? []).includes(collection)
   )
+}
+export function portfolioCanImport(actor: Actor, collection: string) {
+  return collection === "projects" && portfolioCanWrite(actor, collection) && actor.roles.includes("admin")
 }
 function pick(value: Record<string, unknown>, keys: string[]) {
   return Object.fromEntries(keys.filter((key) => Object.hasOwn(value, key)).map((key) => [key, value[key]]))
@@ -365,7 +368,7 @@ function importProjectRows(
   environment: Environment,
   collection: string,
 ): Result {
-  if (collection !== "projects" || !actor.roles.includes("admin")) return { ok: false, status: 403 }
+  if (!portfolioCanImport(actor, collection)) return { ok: false, status: 403 }
   if (!["update", "replace"].includes(text(command.values.mode))) return { ok: false, status: 422 }
   const imported = rows(command.values.rows)
   if (imported.some((row) => row._status !== "error" && !text(row.name).trim()))
@@ -640,7 +643,7 @@ function performance(snapshot: Snapshot, actor: Actor, command: Command, environ
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
   const collection = Object.hasOwn(collections, page) ? collections[page] : undefined
   if (!collection) return undefined
-  const disabled = !writable(context.actor, collection)
+  const disabled = !portfolioCanWrite(context.actor, collection)
   if (collection === "itperf") return renderPerformance(page, object(data.itperf), context, disabled)
   const query = text(data.q).trim().toLowerCase()
   const status = text(data.status)
