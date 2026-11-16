@@ -12,7 +12,7 @@ const cases = [
   { key: "complete", subtotal: 250_000, observedTotal: 250_000, coverage: "complete" },
 ] as const
 
-/** Regression for CI200-AM01-HYPOTHETICAL-TOTAL: empty operations are a
+/** Regression for CI200-AM01-HYPOTHETICAL-TOTAL and CI214-AM01-CASE-SELECTION: empty operations are a
  * valid Planner observation, not a preview. Only an actual, source-derived
  * operation exercises hypothetical semantics; no fake producer, grant or
  * inference output is installed by this fixture. */
@@ -27,9 +27,48 @@ test("AM01 source observation differs from the persisted, un-applied hypothetica
         const source = prepared.sources.find((entry) => entry.key === variant.key)
         if (!source) throw new Error("The original Planner source was not issued for " + variant.key)
         const request = { baseRef: source.evidence.refId, operations: [], assumptions: [] }
+        // The coverage producer requires a selected C09 case on the exact
+        // admitted UI call. The 212 regression invoked Planner without that
+        // selection, so the real host correctly refused its coverage lookup.
+        // First prove that an unselected call remains fenced (no bypass).
+        if (variant.key === "baseline") {
+          const unselected = await context.ui("sf_scenario_simulate", request, (call) =>
+            context.business.planner.simulateScenario(request, call))
+          expect(unselected).toEqual({ status: "unavailable", reason: "baseline-coverage-case-not-selected" })
+        }
+        // withCase is the existing authenticated, case-version-checked host
+        // selection used by Finance/reviewer and the C09 result consumer. It
+        // binds only this UI invocation and releases the scope on exit. Never
+        // fabricate a native binding, coverage reference, actor or new grant.
         const observed = await context.ui("sf_scenario_simulate", request, (call) =>
-          context.business.planner.simulateScenario(request, call))
-        if (observed.status !== "ok") throw new Error("The real Planner observation failed: " + observed.reason)
+          context.business.withCase(call, prepared.caseRef, {}, () =>
+            context.business.planner.simulateScenario(request, call)))
+        if (observed.status !== "ok") throw new Error("The case-selected real Planner observation failed: " + observed.reason)
+        expect(observed.value.currency).toBe("USD")
+        expect(observed.value.horizon).toEqual(prepared.case.horizon)
+        expect(observed.value.costCoverage.basisId).toBe(alternative.result.costCoverage.basisId)
+        expect(observed.value.costCoverage.basisVersion).toBe(alternative.result.costCoverage.basisVersion)
+        expect(observed.value.costCoverage.coverageState).toBe(variant.coverage)
+        expect(observed.value.costCoverage.derivedMissingCategoryIds).toEqual(alternative.result.costCoverage.derivedMissingCategoryIds)
+        expect(observed.value.costCoverage.evaluatedSourceRefs.some((ref) =>
+          ref.refId === source.evidence.refId && ref.refDigest === source.evidence.refDigest)).toBe(true)
+        expect(observed.value.sourceRefs.some((ref) =>
+          ref.refId === source.evidence.refId && ref.refDigest === source.evidence.refDigest)).toBe(true)
+        const observedService = observed.value.components.filter((component) => component.id.startsWith("wp12-cost-service:"))
+        expect(observedService).toHaveLength(12)
+        expect(new Set(observedService.map((component) => component.period.start)).size).toBe(12)
+        expect(observed.value.components.every((component) =>
+          component.evidenceState === "confirmed" && component.amount !== null && Number.isFinite(component.amount))).toBe(true)
+        const observedTraining = observed.value.components.filter((component) => component.id.startsWith("wp12-cost-training:"))
+        if (variant.key === "pending") {
+          expect(observedTraining).toHaveLength(0)
+          expect(observed.value.costCoverage.entries).toContainEqual(
+            expect.objectContaining({ categoryId: "training", status: "pending", reason: "missing-category" }))
+        } else {
+          expect(observedTraining).toHaveLength(12)
+          expect(observedTraining.filter((component) => component.amount === (variant.key === "baseline" ? 0 : 40_000)))
+            .toHaveLength(variant.key === "baseline" ? 12 : 1)
+        }
 
         // This is the precise producer branch that returned 240000 in run
         // 43775802204. It is CORRECT for complete source observations only.
