@@ -153,16 +153,21 @@
         {
           "find": "export function publicSfHeaders",
           "replace": "function safeSfDownloadDisposition(value: string): boolean {\n  if (/^attachment;\\s*filename=\"[^\\\\/\\r\\n\"]{1,160}\"$/i.test(value)) return true\n  const encoded = /^attachment;\\s*filename\\*=UTF-8''([A-Za-z0-9._%-]{1,200})$/i.exec(value)\n  if (!encoded) return false\n  try {\n    const name = decodeURIComponent(encoded[1]!)\n    return name.length > 0 && name.length <= 160 && !/[\\x00-\\x1f\\x7f/\\\\]/.test(name)\n  } catch { return false }\n}\n\nexport function publicSfHeaders"
+        },
+        {
+          "find": "          buffered = new Uint8Array(chunk)\n          offset = 0\n          drain()",
+          "replace": "          // Reject oversized producer frames before copying them into IPC\n          // staging memory. The 64KiB pull and 32MiB total remain enforced\n          // independently by the desktop owner-bound broker.\n          if (chunk.byteLength > 1024 * 1024) {\n            failed = true\n            buffered = undefined\n            request.abort()\n            cleanup()\n            drain()\n            return\n          }\n          buffered = new Uint8Array(chunk)\n          offset = 0\n          drain()"
         }
       ],
       "post": {
         "must_include": [
           "    if (name === \"content-disposition\" && !safeSfDownloadDisposition(value)) continue",
-          "function safeSfDownloadDisposition(value: string): boolean {\n  if (/^attachment;\\s*filename=\"[^\\\\/\\r\\n\"]{1,160}\"$/i.test(value)) return true\n  const encoded = /^attachment;\\s*filename\\*=UTF-8''([A-Za-z0-9._%-]{1,200})$/i.exec(value)\n  if (!encoded) return false\n  try {\n    const name = decodeURIComponent(encoded[1]!)\n    return name.length > 0 && name.length <= 160 && !/[\\x00-\\x1f\\x7f/\\\\]/.test(name)\n  } catch { return false }\n}\n\nexport function publicSfHeaders"
+          "function safeSfDownloadDisposition(value: string): boolean {\n  if (/^attachment;\\s*filename=\"[^\\\\/\\r\\n\"]{1,160}\"$/i.test(value)) return true\n  const encoded = /^attachment;\\s*filename\\*=UTF-8''([A-Za-z0-9._%-]{1,200})$/i.exec(value)\n  if (!encoded) return false\n  try {\n    const name = decodeURIComponent(encoded[1]!)\n    return name.length > 0 && name.length <= 160 && !/[\\x00-\\x1f\\x7f/\\\\]/.test(name)\n  } catch { return false }\n}\n\nexport function publicSfHeaders",
+          "          // Reject oversized producer frames before copying them into IPC\n          // staging memory. The 64KiB pull and 32MiB total remain enforced\n          // independently by the desktop owner-bound broker.\n          if (chunk.byteLength > 1024 * 1024) {\n            failed = true\n            buffered = undefined\n            request.abort()\n            cleanup()\n            drain()\n            return\n          }\n          buffered = new Uint8Array(chunk)\n          offset = 0\n          drain()"
         ],
         "must_not_erase_existing": true
       },
-      "rationale": "Allow only safely decoded original RFC5987 filename* or existing sanitized filename, reject traversal/CRLF/invalid percent instead of throwing."
+      "rationale": "Allow only safely decoded original RFC5987 filename* or existing sanitized filename, reject traversal/CRLF/invalid percent instead of throwing. Reject individual upstream frames >1MiB before IPC staging; main still enforces 64KiB chunks and total 32MiB."
     }
   ],
   "installation_contract": {
@@ -180,6 +185,6 @@
   },
   "GLOBAL_RELEASE": false,
   "source_head_for_226_patchset": "b1dbc18e77cf1d48f4f0302f6ef7832b448107c1",
-  "patchset_revision": "v2-safety-type-ingress-repair",
+  "patchset_revision": "v3-bound-upstream-frames",
   "revalidation": "All six original 211 preimage blobs unchanged; enhanced original import multipart ingress cap and secure RFC5987 filename parse, type-closed host source"
 }
