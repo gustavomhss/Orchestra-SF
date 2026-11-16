@@ -1,0 +1,85 @@
+{
+  "schema": "sf2h.closure211.canonical-ux-intake.v1",
+  "epoch": "closure-composer-e1-browser211",
+  "branch": "sf-closure-bundle",
+  "pr": 191,
+  "parent_head": "0ab90984ea0656f8abd6f2776e8e7b3ee377ff5b",
+  "parent_tree": "1c0d7f71f22a034b984eb15f3a810cc86538eaa3",
+  "source_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "source_revisions": "native-ux-cold-r2",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/surface-manifest.json",
+      "consumer_pre": null,
+      "consumer_post": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+      "purpose": "Q01 complete 70-surface 165-route manifest exact SHA lock",
+      "origin": "IMMUTABLE_APPROVED_UX_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/criteria-trace.json",
+      "consumer_pre": null,
+      "consumer_post": "1dba83d77882073af587c031d63299ed472905e8",
+      "purpose": "Canonical 15/74/1610 original criteria/UX crosswalk documentary, not acceptance",
+      "origin": "IMMUTABLE_APPROVED_UX_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/contract-catalog.json",
+      "consumer_pre": null,
+      "consumer_post": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "purpose": "Frozen F02/UX 17-contract operation source; planning-only",
+      "origin": "IMMUTABLE_APPROVED_UX_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json",
+      "consumer_pre": null,
+      "consumer_post": "3d444da59c661faa17d23798f8a212a71d3d8f6d",
+      "purpose": "Immutable native UX execution work-order and operation registry provenance",
+      "origin": "IMMUTABLE_APPROVED_UX_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/PACKAGE-INTEGRITY.json",
+      "consumer_pre": null,
+      "consumer_post": "4135cefb81e538f91d56db53d00cf21791801a8e",
+      "purpose": "Sealed documentary integrity catalog; not live release evidence",
+      "origin": "IMMUTABLE_APPROVED_UX_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/route-signatures.ts",
+      "consumer_pre": null,
+      "consumer_post": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "purpose": "Approved F01 route signatures, documentary not substitute runtime",
+      "origin": "IMMUTABLE_APPROVED_UX_EXACT_BLOB"
+    }
+  ],
+  "preserved_source_counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "ui_surfaces": 70,
+    "ui_routes": 165,
+    "ui_chapters": 15
+  },
+  "why": "Installed Q01 E2E source currently imports missing surface-manifest.json and asserts exact Git blob 50e2993a...; preserve exact endorsed UX rather than reconstruct or weaken the test.",
+  "non_claims": [
+    "planning_only_is_not_product_implemented",
+    "criteria_trace_is_not_criterion_validation",
+    "no_test_executed",
+    "no_operator_principal_granted",
+    "candidate_C_not_accepted"
+  ],
+  "validation": "NOT_RUN",
+  "acceptance": {
+    "S0": false,
+    "GLOBAL_RELEASE": false
+  },
+  "consumers": [
+    190,
+    214,
+    207,
+    208,
+    209,
+    189
+  ]
+}
