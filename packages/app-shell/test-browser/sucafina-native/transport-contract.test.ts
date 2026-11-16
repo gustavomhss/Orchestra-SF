@@ -40,7 +40,18 @@ describe("Q01 integrated transport contract / original producer", () => {
     expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.review")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "reviews.report.prepare")).toBe(false)
-    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions)].sort()
+    // The 305-operation I00 catalog stays frozen. U26's newer similar-cases
+    // operation has its own original producer in product/memory/similarity217.ts:
+    // real C09 case read, C17 evidence and Atlas recall under current UI authority.
+    // Keep it an individually pinned, source-backed addition, NOT a rewrite of I00.
+    const similarCases = "intelligence.memory-similar-cases"
+    expect(Object.hasOwn(catalog.operations, similarCases)).toBe(false)
+    expect(Object.hasOwn(SfOperationExtensions, similarCases)).toBe(false)
+    expect(SfOperationRegistry[similarCases]).toEqual({
+      method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
+      responseMode: "json", fixedQuery: { sf: "memory-similar-cases" }, maxRequestBytes: 65536,
+    })
+    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions), similarCases].sort()
     expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
     expect([...SfOperationIds].sort()).toEqual(expected)
     expect(SfOperationRegistry["files.export.members"]).toEqual(SfOperationExtensions["files.export.members"])
