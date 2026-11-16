@@ -167,11 +167,11 @@
     "next_consumers": [
       {
         "role": "EXPLICITLY_AUTHORIZED_CURRENT_INTEGRATION_COMPOSER",
-        "task": "Consume six exact postimages if preimage matches current sf-integration-preview; reconcile newer owner changes; release new true product C"
+        "task": "Target 22209d9 already contains exact six C12 postimages and two 239 tests; do NOT reapply. On newer HEAD, verify all 8 blobs and authorize accepted product C. If drift, HOLD and reconcile under actual owner lease."
       },
       {
         "role": "FUTURE_AUTHORIZED_CI_DISPATCHER_WITH_VERIFIED_OFFICIAL_CAPABILITY",
-        "task": "Read CI-REQUEST on accepted C; issue original hosted test-ci selective request, record real runs; successor not inferred from closure232"
+        "task": "On an explicitly accepted current product C (point-in-time material head 22209d9), read closure239 CI-REQUEST, use real original hosted test-ci and record run/job/artifacts; successor authority/capability must be confirmed."
       },
       {
         "role": "INDEPENDENT_REVIEWERS",
@@ -191,5 +191,18 @@
   },
   "source_only_verdict": true,
   "product_committed_outside_lease": false,
-  "global_release": false
+  "global_release": false,
+  "integration_reconciliation": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/RECONCILIATION.json",
+    "snapshot_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+    "tree": "b2840657133b13a2d4701f06bd3975e7106ce24e",
+    "source_commit": "36233798300fc31afe3b38841105ef3971da6b37",
+    "test_commit": "22209d92fa1fd64c487dded102f3acb233dc689e",
+    "eight_exact_blobs": true,
+    "current_action": "NO_OP_ALREADY_COMPOSED",
+    "product_writes_by_mission239": false,
+    "no_implied_ci": true,
+    "not_final_C": true
+  },
+  "reconciliation_status": "C12_PRODUCT_MATERIALIZED_ON_OTHER_WRITERS_TARGET_NOT_VALIDATED"
 }

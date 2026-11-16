@@ -39,8 +39,8 @@
     "orchestration": "Original bun run test:ci via authorized dispatcher; no local invocation"
   },
   "requires": [
-    "Explicit 211-authorized or current valid exclusive composer integration of all six pre/post blobs into NEW product C, with the two closure239 tests",
-    "Original six source files on new material C with exact hashes verified again, no other-author overwrite",
+    "Six C12 production+regression postimages and both closure239 tests already match on target 22209d9; do not reapply. Require current integration HEAD recheck, explicit accepted material C and authorized CI executor before dispatch",
+    "At dispatch time recheck current target/source tree and all six exact C12 postimages plus two tests; if any drift, HOLD",
     "Only authorized dispatcher with available official dispatch interface may start a request, after dedupe by exact product tree and normalized selection",
     "Do not use 239 receipt-only SHA as tested product C; keep legacy security tests intact",
     "Use original workflow/validator and record real run IDs, jobs, failing assertions and artifacts; do not infer PASS"
@@ -136,5 +136,16 @@
     "AM05": "NOT_RUN",
     "G7": "NOT_RUN",
     "G8": "NOT_RUN"
+  },
+  "observed_materialization": {
+    "target_branch": "sf-integration-preview",
+    "target_commit": "22209d92fa1fd64c487dded102f3acb233dc689e",
+    "target_tree": "b2840657133b13a2d4701f06bd3975e7106ce24e",
+    "git_source": "GITHUB_READBACK",
+    "six_product_regression_postimages_match": true,
+    "two_239_tests_match": true,
+    "accepted_C": false,
+    "CI": "NOT_RUN",
+    "source": "closure239/RECONCILIATION.json"
   }
 }

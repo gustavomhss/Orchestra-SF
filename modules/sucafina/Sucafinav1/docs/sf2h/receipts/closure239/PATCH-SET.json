@@ -27,7 +27,10 @@
       "source": "closure230/HANDOFF.json and INERT-PATCH.json",
       "preimage_observed_on_initial_C": true,
       "postimage_git_object_verified": true,
-      "applied_to_product_by_239": false
+      "applied_to_product_by_239": false,
+      "observed_current_target_blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+      "observed_target_has_postimage": true,
+      "composition_action_at_observed_target": "NO_OP"
     },
     {
       "id": "SRC-02",
@@ -39,7 +42,10 @@
       "source": "closure230/HANDOFF.json and INERT-PATCH.json",
       "preimage_observed_on_initial_C": true,
       "postimage_git_object_verified": true,
-      "applied_to_product_by_239": false
+      "applied_to_product_by_239": false,
+      "observed_current_target_blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+      "observed_target_has_postimage": true,
+      "composition_action_at_observed_target": "NO_OP"
     },
     {
       "id": "SRC-03",
@@ -51,7 +57,10 @@
       "source": "closure230/HANDOFF.json and INERT-PATCH.json",
       "preimage_observed_on_initial_C": true,
       "postimage_git_object_verified": true,
-      "applied_to_product_by_239": false
+      "applied_to_product_by_239": false,
+      "observed_current_target_blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+      "observed_target_has_postimage": true,
+      "composition_action_at_observed_target": "NO_OP"
     },
     {
       "id": "REG-01",
@@ -63,7 +72,10 @@
       "source": "closure230/HANDOFF.json and INERT-PATCH.json",
       "preimage_observed_on_initial_C": true,
       "postimage_git_object_verified": true,
-      "applied_to_product_by_239": false
+      "applied_to_product_by_239": false,
+      "observed_current_target_blob": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+      "observed_target_has_postimage": true,
+      "composition_action_at_observed_target": "NO_OP"
     },
     {
       "id": "REG-02",
@@ -75,7 +87,10 @@
       "source": "closure230/HANDOFF.json and INERT-PATCH.json",
       "preimage_observed_on_initial_C": true,
       "postimage_git_object_verified": true,
-      "applied_to_product_by_239": false
+      "applied_to_product_by_239": false,
+      "observed_current_target_blob": "191021892019874e9ec8dec594b019f5addf7f3f",
+      "observed_target_has_postimage": true,
+      "composition_action_at_observed_target": "NO_OP"
     },
     {
       "id": "REG-03",
@@ -87,7 +102,10 @@
       "source": "closure230/HANDOFF.json and INERT-PATCH.json",
       "preimage_observed_on_initial_C": true,
       "postimage_git_object_verified": true,
-      "applied_to_product_by_239": false
+      "applied_to_product_by_239": false,
+      "observed_current_target_blob": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+      "observed_target_has_postimage": true,
+      "composition_action_at_observed_target": "NO_OP"
     }
   ],
   "already_in_C": [
@@ -117,13 +135,13 @@
     }
   ],
   "application_order": [
-    "check current target blob against expected_pre_blob",
-    "ensure matching baseline and read all six exact full postimages",
-    "apply production SRC-01..03 plus REG-01..03 together under explicit owner lease",
-    "if any mismatch HOLD and author-owned three-way reconciliation; no reset/force",
-    "run original test-ci selection on actual new C with authorized successor only",
-    "independent recheck and same-C AM04/AM05/campaign gates",
-    "do not merge on source-only review"
+    "Re-read HEAD and per-file sha on actual integration target before any composition",
+    "If current target blob equals proposed_post_blob: ALREADY_PRESENT_NO_OP; never reapply or overwrite",
+    "If current target blob equals expected_pre_blob: require explicit composer lease and atomically compose SRC-01..03+REG-01..03, preserving other writers",
+    "If target sha differs from both: HOLD, source-review and owner-controlled reconciliation; no reset/force",
+    "The six source+regression postimages and both new closure239 tests already match at observed target 22209d9; do not take credit for product writes by mission239",
+    "Authorized next CI successor selects original test-ci on an explicitly accepted material C (snapshot 22209d9 is unaccepted)",
+    "Same-C AM04/AM05, three independent reviewers and G7/G8 remain mandatory; never infer GLOBAL_RELEASE"
   ],
   "out_of_scope": [
     "sf-home-binding/closure231",
@@ -133,5 +151,63 @@
     "engines",
     "Azure"
   ],
-  "release": "NOT_GLOBAL_RELEASE"
+  "release": "NOT_GLOBAL_RELEASE",
+  "latest_target_snapshot": {
+    "observed_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+    "tree": "b2840657133b13a2d4701f06bd3975e7106ce24e",
+    "current_files": [
+      {
+        "id": "SRC-01",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+        "status": "EXACT_POSTIMAGE_NOOP"
+      },
+      {
+        "id": "SRC-02",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+        "status": "EXACT_POSTIMAGE_NOOP"
+      },
+      {
+        "id": "SRC-03",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+        "blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+        "status": "EXACT_POSTIMAGE_NOOP"
+      },
+      {
+        "id": "REG-01",
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+        "blob": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+        "status": "EXACT_POSTIMAGE_NOOP"
+      },
+      {
+        "id": "REG-02",
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+        "blob": "191021892019874e9ec8dec594b019f5addf7f3f",
+        "status": "EXACT_POSTIMAGE_NOOP"
+      },
+      {
+        "id": "REG-03",
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+        "blob": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+        "status": "EXACT_POSTIMAGE_NOOP"
+      },
+      {
+        "id": "TEST-239-01",
+        "path": "modules/sucafina/Sucafinav1/test/product/closure239/draft-authority239.test.ts",
+        "blob": "6f1584bcae1ef1dfb5ec70f7a18c9b7497bf90e5",
+        "status": "EXACT_POSTIMAGE_NOOP"
+      },
+      {
+        "id": "TEST-239-02",
+        "path": "modules/sucafina/Sucafinav1/test/product/closure239/receipt-recovery239.test.ts",
+        "blob": "04abcd3442295646b31df5efb7ebdc7b92d050b0",
+        "status": "EXACT_POSTIMAGE_NOOP"
+      }
+    ],
+    "status": "SIX_C12_PRODUCT_AND_REGRESSION_POSTIMAGES_PRESENT_TWO_239_TESTS_PRESENT",
+    "product_changes_made_by_239": false,
+    "static_observation_only": true,
+    "global_release": false
+  }
 }

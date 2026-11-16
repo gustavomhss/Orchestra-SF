@@ -1,0 +1,98 @@
+{
+  "schema": "sf2h.closure239.concurrent-target-reconciliation.v1",
+  "mission": 239,
+  "source_branch": "sf-c12-contract",
+  "review_base": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "prior_observation": "216011de368a4489aa61c38cf0739b31d993ccad",
+  "observed_target_ref": "sf-integration-preview",
+  "observed_target_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+  "observed_target_tree": "b2840657133b13a2d4701f06bd3975e7106ce24e",
+  "integration_commits": {
+    "production": "36233798300fc31afe3b38841105ef3971da6b37",
+    "tests": "22209d92fa1fd64c487dded102f3acb233dc689e",
+    "source": "GITHUB_COMMIT_HISTORY_READ"
+  },
+  "file_readback": [
+    {
+      "id": "SRC-01",
+      "target": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "post": "3a13c3401d7629904155664b3b5e08665c2713cc",
+      "observed_blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+      "match": true,
+      "status": "EXACT_POSTIMAGE_ON_TARGET"
+    },
+    {
+      "id": "SRC-02",
+      "target": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "post": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+      "observed_blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+      "match": true,
+      "status": "EXACT_POSTIMAGE_ON_TARGET"
+    },
+    {
+      "id": "SRC-03",
+      "target": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "post": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+      "observed_blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+      "match": true,
+      "status": "EXACT_POSTIMAGE_ON_TARGET"
+    },
+    {
+      "id": "REG-01",
+      "target": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+      "post": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+      "observed_blob": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+      "match": true,
+      "status": "EXACT_POSTIMAGE_ON_TARGET"
+    },
+    {
+      "id": "REG-02",
+      "target": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+      "post": "191021892019874e9ec8dec594b019f5addf7f3f",
+      "observed_blob": "191021892019874e9ec8dec594b019f5addf7f3f",
+      "match": true,
+      "status": "EXACT_POSTIMAGE_ON_TARGET"
+    },
+    {
+      "id": "REG-03",
+      "target": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "post": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+      "observed_blob": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+      "match": true,
+      "status": "EXACT_POSTIMAGE_ON_TARGET"
+    },
+    {
+      "id": "TEST-239-01",
+      "target": "modules/sucafina/Sucafinav1/test/product/closure239/draft-authority239.test.ts",
+      "post": "6f1584bcae1ef1dfb5ec70f7a18c9b7497bf90e5",
+      "observed_blob": "6f1584bcae1ef1dfb5ec70f7a18c9b7497bf90e5",
+      "match": true,
+      "status": "EXACT_POSTIMAGE_ON_TARGET"
+    },
+    {
+      "id": "TEST-239-02",
+      "target": "modules/sucafina/Sucafinav1/test/product/closure239/receipt-recovery239.test.ts",
+      "post": "04abcd3442295646b31df5efb7ebdc7b92d050b0",
+      "observed_blob": "04abcd3442295646b31df5efb7ebdc7b92d050b0",
+      "match": true,
+      "status": "EXACT_POSTIMAGE_ON_TARGET"
+    }
+  ],
+  "verdict": "EXACT_PRODUCT_AND_239_REGRESSION_BLOBS_ALREADY_COMPOSED_BY_OTHER_INTEGRATION_WRITER",
+  "double_apply_policy": "NO_OP_WHEN_POSTIMAGE_MATCHES; compare current blob to both expected pre and proposed post. Only an authorized owner may compose a preimage. Any third SHA requires HOLD and lease-based reconciliation.",
+  "received_product_authority_by_239": false,
+  "product_writes_by_239": false,
+  "candidate_accepted_for_final_campaign": false,
+  "global_release": false,
+  "tests": {
+    "unit": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM04": "NOT_RUN",
+    "AM05": "NOT_RUN",
+    "final_gates": "NOT_RUN"
+  },
+  "operational_limit": "This is a point-in-time read of GitHub target branch, not a frozen C nor CI evidence; re-read HEAD before consuming or dispatching."
+}

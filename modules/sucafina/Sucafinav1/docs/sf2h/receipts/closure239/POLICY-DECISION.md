@@ -4,7 +4,7 @@
 
 ## Decisão
 
-**COMPATÍVEL CONDICIONALMENTE COM A POLÍTICA EXISTENTE; NÃO INTEGRADO / NOT_RUN.** Autorizar a composição *somente como proposta inerte revisável* dos seis blobs após validação do preimage, teste sobre commit C composto e recheck independente. Isso **não** autoriza aprovar, submeter ou liberar efeitos financeiros. O rascunho original permite `Requests.save` por criador/admin nas etapas `draft` e `pr_rejected`; a aprovação formal continua independente, no snapshot de valor submetido e com holder. O `confirmed:false` é intenção explícita para o C12 de preparar um **save de rascunho**, não um certificado de alçada; o humano deve revisar e acionar Apply separadamente.
+**COMPATÍVEL COM A POLÍTICA EXISTENTE SOB COMPOSIÇÃO CONDICIONAL; POSTIMAGES OBSERVADOS NO TARGET, CI NOT_RUN.** Autorizar a composição *somente como proposta inerte revisável* dos seis blobs após validação do preimage, teste sobre commit C composto e recheck independente. Isso **não** autoriza aprovar, submeter ou liberar efeitos financeiros. O rascunho original permite `Requests.save` por criador/admin nas etapas `draft` e `pr_rejected`; a aprovação formal continua independente, no snapshot de valor submetido e com holder. O `confirmed:false` é intenção explícita para o C12 de preparar um **save de rascunho**, não um certificado de alçada; o humano deve revisar e acionar Apply separadamente.
 
 ## Evidências — critério → código e resultado
 
@@ -18,8 +18,12 @@
 
 ## Limitações e decisões de consumo
 
-1. A mudança é **permitida conceitualmente**, mas a aplicação é **HOLD** até o compositor autorizado admitir os seis arquivos como grupo, com seus SHAs exatos e recheck de dependências; a PR239 carrega apenas arquivos `closure239` e payloads inertes, não altera o produto.
+1. A mudança é **permitida conceitualmente**. Após esta revisão, a branch-alvo recebeu os seis postimages idênticos no commit `36233798300fc31afe3b38841105ef3971da6b37`, e os dois testes 239 idênticos no commit `22209d92fa1fd64c487dded102f3acb233dc689e`. **Não reaplicar** sobre esses blobs; revalidar novo HEAD e obter aceite formal de C. A PR239 mantém apenas recibos, testes e patches inertes, sem escrever no produto.
 2. Os seis payloads sob `receipts/closure239/patches` referenciam *objetos Git existentes* da revisão independente 230, byte a byte. `PATCH-SET.json` fixa preimage/postimage e ordem de composição. O grupo de três testes corrige oráculos históricos inválidos **sem remover** negativos de holder, CAS, stage, origem, perda de resposta ou idempotência.
 3. Testes novos sob `test/product/closure239` cobrem origem real no fixture SQLite, read-only, identidade, divergência de escolha, revogação, CAS, holder, submissão e receipt/recovery. **Status NOT_RUN**; fixture não equivale a credencial corporativa.
 4. O receptor é o **compositor explicitamente autorizado** de `sf-integration-preview`/C, seguido pelo **dispatcher sucessor autorizado e equipado com a capacidade oficial**, pois closure232 liberou sem capacidade MCP de despacho inicial. Sem essa admissão não há CI; nenhuma execução automática é alegada.
 5. closure231 F01/home e 229 Task/Relay permanecem independentes; não incorporar, repetir ou substituir seus deltas. Preservam-se 15 WPs, 74 tasks, 17 contratos, 1.610 critérios, e a UX aprovada. PR239 é proposta; **NOT_GLOBAL_RELEASE**.
+
+## Reconciliação posterior (GitHub, sem execução)
+
+Após a abertura da PR rascunho #214, `sf-integration-preview` avançou para `22209d92fa1fd64c487dded102f3acb233dc689e` (árvore `b2840657133b13a2d4701f06bd3975e7106ce24e`). Releitura estática confirmou **oito blobs exatos no target**: SRC-01..03, REG-01..03, `test/product/closure239/draft-authority239.test.ts` e `receipt-recovery239.test.ts`. Esse delta foi produzido pela composição concorrente em commits da branch-alvo, não por escrita de produto da missão 239. A correção passou de **inert pending** a **materialized/not-proven**. Nem a origem do commit nem a presença dos testes equivalem a CI executado, aprovação financeira, aceite de C, G7/G8 ou liberação global. Ver `RECONCILIATION.json` e `RECHECK.json`.

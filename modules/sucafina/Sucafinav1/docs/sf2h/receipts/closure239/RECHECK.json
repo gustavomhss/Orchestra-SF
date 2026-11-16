@@ -150,14 +150,74 @@
     "AM04": "NOT_RUN",
     "AM05": "NOT_RUN",
     "real_corporate_identity": "NOT_RUN",
-    "final_three_independent_reviews": "NOT_RUN"
+    "final_three_independent_reviews": "NOT_RUN",
+    "advanced_target_postimage_matches": "READ_MATCH_8_OF_8",
+    "current_target_treatment": "ALREADY_PRESENT_NO_OP"
   },
   "open": [
-    "six product+regression postimages must be composed under actual owner lease",
+    "Material target 22209d9 exists with C12 postimages, but not accepted as tested campaign C; official CI still NOT_RUN",
     "C12 code/test and source drivers only reviewed statically; no official CI",
     "hosted real authorization/holder and AM04/AM05 receipts pending",
     "role/authority of future CI successor unknown; predecessor232 released",
     "candidate C, G7/G8 and final reviewers not accepted"
   ],
-  "global_release": false
+  "global_release": false,
+  "materialized_target_at_reconciliation": {
+    "sha": "22209d92fa1fd64c487dded102f3acb233dc689e",
+    "tree": "b2840657133b13a2d4701f06bd3975e7106ce24e",
+    "source_production_commit": "36233798300fc31afe3b38841105ef3971da6b37",
+    "tests_commit": "22209d92fa1fd64c487dded102f3acb233dc689e",
+    "git_blob_readback": [
+      {
+        "id": "SRC-01",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+        "match": true
+      },
+      {
+        "id": "SRC-02",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+        "match": true
+      },
+      {
+        "id": "SRC-03",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+        "blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+        "match": true
+      },
+      {
+        "id": "REG-01",
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+        "blob": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+        "match": true
+      },
+      {
+        "id": "REG-02",
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+        "blob": "191021892019874e9ec8dec594b019f5addf7f3f",
+        "match": true
+      },
+      {
+        "id": "REG-03",
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+        "blob": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+        "match": true
+      },
+      {
+        "id": "TEST-239-01",
+        "path": "modules/sucafina/Sucafinav1/test/product/closure239/draft-authority239.test.ts",
+        "blob": "6f1584bcae1ef1dfb5ec70f7a18c9b7497bf90e5",
+        "match": true
+      },
+      {
+        "id": "TEST-239-02",
+        "path": "modules/sucafina/Sucafinav1/test/product/closure239/receipt-recovery239.test.ts",
+        "blob": "04abcd3442295646b31df5efb7ebdc7b92d050b0",
+        "match": true
+      }
+    ],
+    "note": "All six C12 postimages plus both new closure239 test files were integrated concurrently by another writer, not by 239; no duplicate apply"
+  },
+  "current_source_state": "POSTIMAGES_ALL_PRESENT_IN_TARGET_AT_22209d9"
 }
