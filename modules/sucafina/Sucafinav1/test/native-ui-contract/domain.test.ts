@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test"
 import {
   SF_DOMAIN_PAGES, projectSfDomainData, projectSfDomainVersions,
 } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain/projection.ts"
+import { conflict } from "../../runtime/contract.ts"
+import type { Snapshot } from "../../runtime/contract.ts"
 
 describe("A01 domain source projection — source-boundary qualification", () => {
   test("maps all ten frozen dashboard capabilities to the original page identifiers", () => {
@@ -132,6 +134,29 @@ describe("A01 domain source projection — source-boundary qualification", () =>
     expect(projectSfDomainVersions("CAP14", versions)).toEqual({ "contracts:c": 8 })
     expect(JSON.stringify(projectSfDomainVersions("CAP14", versions))).not.toContain("principal")
     expect(JSON.stringify(projectSfDomainVersions("CAP14", versions))).not.toContain("bank")
+  })
+  test("CAP03 publishes the original singleton conflict token, including canonical absent zero", () => {
+    const snapshot: Snapshot = { data: { budgetCurrentMonth: { "2026": 4 }, revenueByYear: { "2026": 100 } },
+      versions: {}, sequences: {}, audit: [], notices: [] }
+    const versions = projectSfDomainVersions("CAP03", snapshot.versions)
+    expect(versions).toEqual({ budgetCurrentMonth: 0, revenueByYear: 0 })
+    for (const key of ["budgetCurrentMonth", "revenueByYear"]) {
+      const command = { page: "Budget Overview", action: key === "budgetCurrentMonth" ? "save-month" : "save-revenue",
+        values: { year: 2026 }, version: versions[key]! }
+      expect(conflict(snapshot, key, command, snapshot.data[key])).toBeUndefined()
+      expect(conflict(snapshot, key, { ...command, version: 1 }, snapshot.data[key])).toMatchObject({ status: 409, currentVersionCAS: 0 })
+    }
+    expect(projectSfDomainVersions("CAP03", { budgetCurrentMonth: { version: 4, by: "actor" } }))
+      .toEqual({ budgetCurrentMonth: 4, revenueByYear: 0 })
+    expect(projectSfDomainVersions("CAP01", {})).toEqual({})
+  })
+  test("CAP03 rejects present malformed singleton metadata rather than inventing zero", () => {
+    for (const invalid of [undefined, null, {}, { version: -1 }, { version: 1.5 }, { version: "2" }, { version: NaN }]) {
+      for (const key of ["budgetCurrentMonth", "revenueByYear"]) {
+        const source = { [key]: invalid } as unknown as Snapshot["versions"]
+        expect(() => projectSfDomainVersions("CAP03", source)).toThrow("Malformed authorized singleton version")
+      }
+    }
   })
   test("malformed authorized source collections are unavailable, never synthetic empty successes", () => {
     expect(() => projectSfDomainData("CAP10", { projects: [null] }, 2026)).toThrow("Malformed authorized source collection")
