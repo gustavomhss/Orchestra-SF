@@ -1,0 +1,172 @@
+{
+  "schema": "sf2h.product-ci223.inputs.v1",
+  "mission": 223,
+  "epoch": "product-ci-e8-browser223",
+  "original": {
+    "original_commit": "00f1c623fb07490149b6124ce1a778e6109184ea",
+    "original_blobs": {
+      "RUNS-214.json": "f4e3bb33bcc3bbaa1a54d701e9cd3c2144870b8f",
+      "QUEUE-214.json": "3277e9db7f7048a26e7b470bfb671d99ce53eb1c",
+      "FINDINGS-214.json": "6d987cd3af6e51f63f1bdf15f008bf3aa7b03b49",
+      "HANDOFF-214.json": "eff6b92b19f9d8e8e2597faad5f3bd2d8f030172"
+    },
+    "history200": {
+      "queue": "bae56cb80ac60db3699596140e40214543252481",
+      "runs": "9146d5a4624d1ecf4b1303ee667fafcaea1824c8",
+      "findings": "bf3c5e8f4e46e4d018ff795e7fbaff4367f13bd9"
+    },
+    "original_workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator": "script/test-ci-request.ts",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+  },
+  "scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "UX_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "composer": {
+    "mission": 211,
+    "pr": 191,
+    "branch": "sf-closure-bundle",
+    "tip": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "formal_accepted_C": false,
+    "source_receipts": {
+      "prepost": "59ba55eeab48036b07c28bb8c39196510ba91894",
+      "finite_gaps": "1c57458f85e5c4a2a55e76d16ba45c55f3ec4f83",
+      "request_product": "0a32e650f881951790606532dc52c4692cefc233"
+    }
+  },
+  "sources": [
+    {
+      "mission": 215,
+      "branch": "sf-bi-units",
+      "observed_head": "0d37528d52eb27c2cfafd9772508914e03f2f7f4",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair215/INERT-PATCH211.json",
+      "delivered": "BI semantics 2420a514 -> b88301e2 + test 603d37; inert 211",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 216,
+      "branch": "sf-atlas-sequence",
+      "observed_head": "14f894e3c70d14092a50931cc511250d276e107c",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair216/HANDOFF.json",
+      "delivered": "Atlas store 0d7a1fa -> b5caa2d; 216 multi-event test; sparse memory consumer patch inert",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 217,
+      "branch": "sf-similar-cases",
+      "observed_head": "155091aa164f18e65a7fb6c398dad3d6789d22c7",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair217/HANDOFF.json",
+      "delivered": "Similar Cases typed producer/UI/test; 5 outside-lease patches inert",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 218,
+      "branch": "sf-import-history",
+      "observed_head": "6ec7d43fdaa63268540f30e80d590d9af85d2988",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/PREPOST.json",
+      "delivered": "History, authorized original files typed source + consumer/tests, integration pending",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 219,
+      "branch": "sf-native-admission",
+      "observed_head": "8f4f7e102ac1b73dc014e23737cc62bba84043ee",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair219/HANDOFF.json",
+      "delivered": "human Request native producer partial; actual Task/Relay service origin absent; inert 211 descriptor patch",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 220,
+      "branch": "sf-decisions-capture",
+      "observed_head": "7c368ee55a255bc4ac9dfe42b97024aaa139d97c",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair220/HANDOFF-211-214.json",
+      "delivered": "decisions.ts 6c1d974 -> 52fc1a3; 3 procurement files in INERT-PATCH-211-v2 need atomic 211 adoption",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 221,
+      "branch": "sf-am01-selection",
+      "observed_head": "3defbff06fc079c825b3d783a38a6ad434ad5b95",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair221/HANDOFF221.json",
+      "delivered": "AM01 test f20fdab -> 55aec41 genuine C09 case selection; new B19 rerun not yet executed",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 222,
+      "branch": "sf-am02-authority",
+      "observed_head": "6c2002b712ce08a6c1f335458d4175f8420743e9",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair222/HANDOFF-211.json",
+      "delivered": "AM02 tests+fixture 39fadbd -> aa48bb7;57f9d0 -> 93d24c; new B16 rerun not executed",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 224,
+      "branch": "sf-talent-files",
+      "observed_head": "55118255658694e09b1c79affd309e309224662d",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure224/S0-FENCE.json",
+      "delivered": "S0 fence only, no code/test postimage",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    },
+    {
+      "mission": 225,
+      "branch": "sf-supplier-csv",
+      "observed_head": "87633bdc0b69fc0b3c51f7903fbd7c27865be9e7",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/ACK.json",
+      "delivered": "ACK after fence; no code/test postimage",
+      "source_composed": false,
+      "scoped_ci": "NOT_RUN_NEW",
+      "next": "211 verify actual pre/post and consume eligible source; 223 only when changed material W is available"
+    }
+  ],
+  "host199": {
+    "head": "9b512eeffa9c437967b03d5af6dab11a1718f48b",
+    "dependency_blob": "a02fb1acfd5af132c8f3a6a71311478fe896444f",
+    "status": "NOT_INSTALLED_AUTHENTIC_POSITIVE",
+    "missing": [
+      "S0 accepted exact C",
+      "SF_NATIVE_CANDIDATE_SHA",
+      "approved host private 0700 root and 0600 installed manifest",
+      "0600 browser endpoint preexisting CDP and separately authenticated Microsoft requester/holder/denied",
+      "0600 real D01 Electron packaged attestation and SHA",
+      "main-owned approved Orchestra connection and original F01 CAP14/CAP04/CAP05 source routes"
+    ]
+  },
+  "desktop213": {
+    "head": "6f65ea078a3c596fca02961a68d98d36778bd54f",
+    "state": "B22_4_COMPONENT_PASS_NOT_D01"
+  },
+  "compiler190": {
+    "head": "b935f51ca9333c77d2b13ced8e7ad743df79468d",
+    "role": "static compiler/G7/G8 separate; not product dispatcher"
+  },
+  "reviewers": {
+    "R1": "FIX_FIRST",
+    "R2": "FIX_FIRST",
+    "R3": "FIX_FIRST"
+  },
+  "GLOBAL_RELEASE": false
+}

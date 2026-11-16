@@ -1,0 +1,134 @@
+{
+  "schema": "sf2h.product-ci223.handoff.v1",
+  "mission": 223,
+  "epoch": "product-ci-e8-browser223",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ci-validation",
+  "pr": {
+    "number": 106,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/106",
+    "open": true,
+    "draft": true,
+    "merge": false
+  },
+  "actor": {
+    "model": "GPT-6",
+    "session_id": null,
+    "session_exposed": false,
+    "predecessor_lifecycle_inferred": false
+  },
+  "authority": {
+    "initial_reserved_head": "79179b9f966357babe535aab120a4478a69de5b9",
+    "fence_blob": "077f3ec538da89a0943b6db2e18f5deed17d0296",
+    "predecessor_terminal_handoff": "00f1c623fb07490149b6124ce1a778e6109184ea",
+    "ack_commit": "03d9ee85b75d4bd5b396ad5e8a5729f90e0cac43",
+    "ack_CAS": true,
+    "force": false
+  },
+  "readset": {
+    "original_commit": "00f1c623fb07490149b6124ce1a778e6109184ea",
+    "original_blobs": {
+      "RUNS-214.json": "f4e3bb33bcc3bbaa1a54d701e9cd3c2144870b8f",
+      "QUEUE-214.json": "3277e9db7f7048a26e7b470bfb671d99ce53eb1c",
+      "FINDINGS-214.json": "6d987cd3af6e51f63f1bdf15f008bf3aa7b03b49",
+      "HANDOFF-214.json": "eff6b92b19f9d8e8e2597faad5f3bd2d8f030172"
+    },
+    "history200": {
+      "queue": "bae56cb80ac60db3699596140e40214543252481",
+      "runs": "9146d5a4624d1ecf4b1303ee667fafcaea1824c8",
+      "findings": "bf3c5e8f4e46e4d018ff795e7fbaff4367f13bd9"
+    },
+    "original_workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator": "script/test-ci-request.ts",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+  },
+  "results": {
+    "totals": {
+      "runs": 15,
+      "success": 7,
+      "failure": 8,
+      "passed": 134,
+      "failed": 12,
+      "artifacts": 0,
+      "jobs": 30,
+      "active": 0,
+      "dispatched_by_223": 0
+    },
+    "run_receipt": "RUNS-223.json",
+    "queue_receipt": "QUEUE-223.json",
+    "finding_receipt": "FINDINGS-223.json",
+    "source_receipt": "INPUTS-223.json",
+    "new_product_code_written": false,
+    "actions_dispatched_this_mission": 0,
+    "official_test_ci_preserved": true,
+    "old_runs_are_not_final_PASS": true
+  },
+  "blockers": [
+    {
+      "kind": "SOURCE",
+      "why": "215–222 outputs not yet composed into 211 W; 224 fence only; 225 ACK only; 211 tip documentary after e648",
+      "consumer": 211,
+      "next": "Apply exact source pre/post and inert patches on 211 lease, publish new material W/tree and source receipts"
+    },
+    {
+      "kind": "HOST",
+      "why": "199 real approved private host identities/browser/D01 packaged proof missing",
+      "consumer": "199/213/S0",
+      "next": "Provide original authorized installed host input and independent provider/Task/Relay evidence; never create or print secrets"
+    },
+    {
+      "kind": "FINAL",
+      "why": "No S0 accepted immutable C; no eight final, epic/e2e, G7/G8 D, final reviews or remoteproof",
+      "consumer": "S0/190/207–209/223",
+      "next": "S0 accepts coherent C after product/UX full integration, 223 runs official same-C selectors only with real original resources"
+    }
+  ],
+  "specific_failed_recheck_triggers": [
+    {
+      "run": 43780028332,
+      "cause": "Decisions closed schema",
+      "new_owner": 220
+    },
+    {
+      "run": 43780062327,
+      "cause": "AM05 original C12 capture",
+      "new_owner": 220
+    },
+    {
+      "run": 43781497192,
+      "cause": "AM04 review HTTP400",
+      "new_owner": 220
+    },
+    {
+      "run": 43781520064,
+      "cause": "AM01 selected case",
+      "new_owner": 221
+    },
+    {
+      "run": 43781314836,
+      "cause": "AM02 C16 actual authority",
+      "new_owner": 222
+    }
+  ],
+  "not_run": [
+    "220/221/222 causal rechecks",
+    "215–219,224,225 causal scoped tests",
+    "U15/U39/U40 F04",
+    "D01 packaged",
+    "AM01–AM06 installed native positive",
+    "eight same-C finals",
+    "epic/e2e and extra suites",
+    "190 C/G7",
+    "S0 D/G8",
+    "R1/R2/R3 FINAL",
+    "remoteproof"
+  ],
+  "resume_condition": "Producer code becomes material committed in 211 and S0 formally accepts immutable C for finals (installed proof only on authentic host), re-read Git refs and dedup before any ci-run snapshot",
+  "no_new_supervisor": true,
+  "Azure_untouched": true,
+  "no_local_tests": true,
+  "no_merges": true,
+  "goal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}
