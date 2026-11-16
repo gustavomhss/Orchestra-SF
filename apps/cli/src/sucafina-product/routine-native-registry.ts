@@ -261,6 +261,7 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
       evidence.signal.removeEventListener("abort", close)
       cancellation.abort()
     }
+    let generation: number | undefined
     const sync = () => active && !disposed && input.resources() === resources && resources.current() &&
       input.requestFor(context) === request && !signal.aborted && now() < until && performance.now() < monotonicUntil &&
       (context.kind === "ui" || context.kind === "native" &&
@@ -276,7 +277,7 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
     // A pending historical attestation occupies a slot only until this Request/lease deadline.
     timer = setTimeout(close, Math.max(0, Math.min(until - now(), monotonicUntil - performance.now())))
     try {
-      const generation = await observeSfRoutineNative(input.generation, signal)
+      generation = await observeSfRoutineNative(input.generation, signal)
       if (!sync() || generation === undefined || !Number.isSafeInteger(generation) ||
         generation < 0 || invalidGenerations.has(generation) || !await observeSfRoutineNative(() => input.authorize(context), signal) ||
         !await observeSfRoutineNative(() => evidence.current(context, request), signal) || !sync()) return undefined
