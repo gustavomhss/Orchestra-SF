@@ -125,8 +125,17 @@ async function actors(){
   }
   await check("DISTINCT_ACTORS","distinct sessions and principalRefs",async()=>({ok:okActors.length===2&&
     okActors[0].raw!==okActors[1].raw&&okActors[0].id!==okActors[1].id}));
+  for(const key of ["installationId","projectId","hostId"])
+    await check("AUTH_BIND_"+key,"409 contract-mismatch while authenticated",async()=>{
+      const r=await send("GET",ctx({[key]:changed(c[key])}),{"Cookie":cookie("requester")});
+      return{status:r.status,ok:is(r,[409],["unavailable"])&&data(r)?.reason==="contract-mismatch"};
+    });
   for(const [id,h] of [["NO_ORIGIN",{}],["OTHER_ORIGIN",{"Origin":"https://unauthorized.invalid"}],["CROSS_SITE",{"Origin":origin,"Sec-Fetch-Site":"cross-site"}]])
     await check("AUTH_CSRF_"+id,"403, session preserved",async()=>{const r=await send("POST",mount+"/auth/logout",{"Cookie":cookie("requester"),...h});return{status:r.status,ok:csrfDeny(r)}});
+  await check("AUTH_CSRF_SESSION_SURVIVES","200 after rejected CSRF attempts",async()=>{
+    const r=await send("GET",ctx(),{"Cookie":cookie("requester")});
+    return{status:r.status,ok:stampOk(r)};
+  });
 }
 async function producer(){
   assert(has("confirm-producer-writes")&&c.isolated?.approvedForNegativeWrites===true&&
