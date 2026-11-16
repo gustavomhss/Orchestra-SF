@@ -83,7 +83,7 @@ describe("A09 schema equivalence and authority boundary", () => {
     })
     const withoutOptionals = decode(result)
     expect(Option.isSome(withoutOptionals)).toBe(true)
-    if (Option.isSome(withoutOptionals)) expect(withoutOptionals.value).toEqual(result)
+    if (Option.isSome(withoutOptionals)) expect<object>(withoutOptionals.value).toEqual(result)
     expect(Option.isSome(decode({ ...result, admissionVersion: 0 }))).toBe(true)
     expect(Option.isNone(decode({ ...result, admissionVersion: -1 }))).toBe(true)
     expect(Option.isNone(Schema.decodeUnknownOption(SfRoutineCaseRef)(
