@@ -1,9 +1,12 @@
 import { expect } from "bun:test"
+import fs from "node:fs/promises"
 import path from "node:path"
-import { Context, Deferred, Effect, Fiber, Layer, LayerMap } from "effect"
+import { LLMClient, LLMEvent, type LLMRequest } from "@orchestra/llm"
+import { Deferred, Effect, Fiber, Layer, LayerMap, RcMap, Stream } from "effect"
 import { Database } from "@orchestra/core/database/database"
-import { makeGlobalNode, makeLocationNode } from "@orchestra/core/effect/app-node"
+import { makeGlobalNode } from "@orchestra/core/effect/app-node"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
+import { LayerNodePlatform } from "@orchestra/core/effect/app-node-platform"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { EventV2 } from "@orchestra/core/event"
 import { Global } from "@orchestra/core/global"
@@ -12,17 +15,22 @@ import { SessionPrompt } from "@orchestra/core/host/session-prompt"
 import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import type { LocationServices } from "@orchestra/core/location-services"
+import { ModelV2 } from "@orchestra/core/model"
 import { Project } from "@orchestra/core/project"
 import { ProjectTable } from "@orchestra/core/project/sql"
+import { ProviderV2 } from "@orchestra/core/provider"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
 import { SessionExecution } from "@orchestra/core/session/execution"
+import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionInput } from "@orchestra/core/session/input"
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionProjector } from "@orchestra/core/session/projector"
 import { SessionInputTable, SessionTable } from "@orchestra/core/session/sql"
 import { SessionStore } from "@orchestra/core/session/store"
 import { Snapshot } from "@orchestra/core/snapshot"
+import { TaskGovernance } from "@orchestra/core/tool/task-governance"
+import { ToolRegistry } from "@orchestra/core/tool/registry"
 import { ToolSafety } from "@orchestra/core/tool-safety"
 import { tmpdir } from "./fixture/tmpdir"
 import { testEffect } from "./lib/effect"
@@ -165,39 +173,142 @@ it.live("the default observer and admit-only prompt do not acquire a Location or
   }).pipe(Effect.provide(harness(tmp.path, wakes)))
 }))
 
-class LocationCaller extends Context.Service<LocationCaller, { readonly session: SessionV2.Interface }>()("test/PromptLocationCaller") {}
+// A cold native Task, like tool-task-cold.test.ts: the real Location registry registers TaskTool.node, whose
+// globalSessions capture obtains the already-constructed Session instead of rebuilding SessionV2.node.
+const userText = (request: LLMRequest) => request.messages.filter((message) => message.role === "user").at(-1)?.content
+  .flatMap((part) => part.type === "text" ? [part.text] : []).join("\n")
+const childTurns = (requests: LLMRequest[]) => requests.filter((request) => userText(request) === "child" &&
+  !request.system.some((part) => part.text.startsWith("You are a title generator")))
 
-it.live("a Location caller captures the replaced global observer without replacing the reserved Session node", () => Effect.gen(function* () {
-  const tmp = yield* temporary
-  const wakes: SessionV2.ID[] = []
-  const observed: SessionMessage.ID[] = []
-  const replacement = observerNode(() => (input) => Effect.sync(() => { observed.push(input.messageID) }))
-  const contribution = Host.merge([{ id: "observer", replacements: [[SessionPrompt.node, replacement]] }])
-  expect(() => Host.merge([{ id: "invalid", replacements: [[SessionV2.node, SessionV2.node]] }])).toThrow(`Host contribution may not own ${SessionV2.node.name}`)
-  const caller = makeLocationNode({
-    service: LocationCaller,
-    layer: Layer.effect(LocationCaller, Effect.gen(function* () {
-      const session = yield* SessionV2.Service
-      yield* Location.Service
-      return LocationCaller.of({ session })
-    })),
-    deps: [SessionV2.node, Location.node],
-  })
-  const context = yield* Layer.build(AppNodeBuilder.build(nodes, [
-    ...contribution.replacements,
-    [Database.node, Database.layerFromPath(path.join(tmp.path, "test.sqlite"))],
-    [SessionExecution.node, execution(wakes)],
-    [Global.node, Global.layerWith({ home: tmp.path, config: path.join(tmp.path, "config"), data: path.join(tmp.path, "data") })],
-    [Snapshot.node, Snapshot.noopLayer],
-  ], [caller]))
-  yield* seed(AbsolutePath.make(tmp.path)).pipe(Effect.provideContext(context))
-  const locations = Context.get(context, LocationServiceMap.Service)
-  const ref = Location.Ref.make({ directory: AbsolutePath.make(tmp.path) })
-  const location = yield* Layer.build(locations.get(ref))
-  const native = Context.getUnsafe(location, LocationCaller)
-  expect(native.session).toBe(Context.get(context, SessionV2.Service))
-  const id = SessionMessage.ID.create()
-  yield* native.session.prompt({ id, sessionID, prompt: { text: "native caller" }, resume: false })
-  expect(observed).toEqual([id])
-  expect(wakes).toEqual([])
-}), 30_000)
+for (const decision of ["allow", "observer-deny", "task-deny"] as const) {
+  it.live(`native Task ${decision}: the captured Session observes child admission without changing Task policy`, () => Effect.gen(function* () {
+    const tmp = yield* temporary
+    yield* Effect.promise(async () => {
+      await fs.mkdir(path.join(tmp.path, ".global"), { recursive: true })
+      await fs.mkdir(path.join(tmp.path, ".orchestra"), { recursive: true })
+      await Bun.write(path.join(tmp.path, ".global", "orchestra.json"), JSON.stringify({ trusted_projects: [tmp.path] }))
+      await Bun.write(path.join(tmp.path, ".orchestra", "orchestra.json"), JSON.stringify({
+        snapshots: false,
+        providers: { "observer-task": {
+          api: { type: "aisdk", package: "@ai-sdk/openai", settings: { apiKey: "test" } },
+          models: { chat: { disabled: false, capabilities: { tools: true, input: ["text"], output: ["text"] }, limit: { context: 100_000, output: 1_000 } } },
+        } },
+      }))
+      await Bun.write(path.join(tmp.path, "orchestra.json"), JSON.stringify({ agents: { worker: { mode: "subagent", description: "Worker" } } }))
+    })
+    const requests: LLMRequest[] = []
+    const observed: Parameters<SessionPrompt.Observer>[0][] = []
+    const parents: SessionV2.ID[] = []
+    const order: string[] = []
+    const constructions = { count: 0 }
+    const replacement = observerNode((database) => {
+      constructions.count++
+      return (input) => Effect.gen(function* () {
+        if (!input.session.parentID) {
+          parents.push(input.session.id)
+          return
+        }
+        expect(yield* SessionInput.find(database.db, input.messageID)).toBeUndefined()
+        expect(requests.filter((request) => request.http?.headers?.["x-parent-session-id"] === input.session.parentID)).toHaveLength(0)
+        expect(requests.filter((request) => userText(request) === "child")).toHaveLength(0)
+        order.push("observe-child")
+        observed.push(input)
+        if (decision === "observer-deny") return yield* new ToolSafety.Denied({ reason: "observer-denied" })
+      })
+    })
+    const contribution = Host.merge([{ id: "observer", replacements: [[SessionPrompt.node, replacement]] }])
+    expect(() => Host.merge([{ id: "invalid", replacements: [[SessionV2.node, SessionV2.node]] }])).toThrow(`Host contribution may not own ${SessionV2.node.name}`)
+    const client = LLMClient.Service.of({
+      prepare: () => Effect.die("Unexpected prepare"),
+      generate: () => Effect.die("Unexpected generate"),
+      stream: (request) => Stream.suspend((): Stream.Stream<LLMEvent> => {
+        requests.push(request)
+        const prompt = userText(request)
+        if (childTurns([request]).length) order.push("child-provider")
+        if (prompt === "parent" && !request.messages.some((message) => message.role === "tool")) return Stream.fromIterable([
+          LLMEvent.stepStart({ index: 0 }),
+          LLMEvent.toolCall({ id: "observer-task", name: "task", input: { description: "Child", prompt: "child", subagent_type: "worker" } }),
+          LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+          LLMEvent.finish({ reason: "tool-calls" }),
+        ])
+        return Stream.fromIterable([
+          LLMEvent.stepStart({ index: 0 }), LLMEvent.textStart({ id: "answer" }),
+          LLMEvent.textDelta({ id: "answer", text: `answer:${prompt}` }), LLMEvent.textEnd({ id: "answer" }),
+          LLMEvent.stepFinish({ index: 0, reason: "stop" }), LLMEvent.finish({ reason: "stop" }),
+        ])
+      }),
+    })
+    const governance = TaskGovernance.Service.of({
+      ...TaskGovernance.allowAll,
+      admit: (input) => Effect.sync(() => { order.push("admit") }).pipe(Effect.andThen(TaskGovernance.allowAll.admit(input))),
+      settle: (input) => Effect.sync(() => { order.push("settle") }).pipe(Effect.andThen(TaskGovernance.allowAll.settle(input))),
+    })
+    const app = AppNodeBuilder.build(LayerNode.group([
+      Database.node, LocationServiceMap.node, SessionV2.node, SessionExecution.node,
+    ]), [
+      ...contribution.replacements,
+      [Database.node, Database.layerFromPath(path.join(tmp.path, "test.sqlite"))],
+      [SessionExecution.node, SessionExecutionLocal.node],
+      [LayerNodePlatform.llmClient, Layer.succeed(LLMClient.Service, client)],
+      [TaskGovernance.node, Layer.succeed(TaskGovernance.Service, governance)],
+      [Snapshot.node, Snapshot.noopLayer],
+      [Global.node, Global.layerWith({ home: tmp.path, config: path.join(tmp.path, ".global"), data: path.join(tmp.path, ".data") })],
+    ])
+    yield* Effect.gen(function* () {
+      const sessions = yield* SessionV2.Service
+      const database = yield* Database.Service
+      const locations = yield* LocationServiceMap.Service
+      const model = ModelV2.Ref.make({ providerID: ProviderV2.ID.make("observer-task"), id: ModelV2.ID.make("chat") })
+      const parent = yield* sessions.create({ location: Location.Ref.make({ directory: AbsolutePath.make(tmp.path) }), model })
+      yield* sessions.setPermission({ sessionID: parent.id, permission: [
+        { permission: "bash", pattern: "rm *", action: "deny" },
+        // A resource-specific deny leaves Task advertised, so its own permission assertion is exercised.
+        ...(decision === "task-deny" ? [{ permission: "task", pattern: "worker", action: "deny" as const }] : []),
+      ] })
+      yield* sessions.prompt({ sessionID: parent.id, prompt: { text: "parent" }, resume: false })
+      expect(parents).toEqual([parent.id])
+      expect(constructions.count).toBe(1)
+      expect(Array.from(yield* RcMap.keys(locations.rcMap))).toHaveLength(0)
+      yield* sessions.resume(parent.id)
+      expect(constructions.count).toBe(1)
+      const registry = yield* ToolRegistry.Service.pipe(Effect.provide(locations.get(parent.location)))
+      expect((yield* registry.materialize()).definitions.map((tool) => tool.name)).toContain("task")
+      const children = (yield* sessions.list()).filter((session) => session.parentID === parent.id)
+      const parts = (yield* sessions.context(parent.id)).flatMap((message) => message.type === "assistant" ? message.content : [])
+        .filter((part) => part.type === "tool" && part.id === "observer-task")
+      if (decision === "task-deny") {
+        expect(children).toHaveLength(0)
+        expect(observed).toHaveLength(0)
+        expect(requests.filter((request) => userText(request) === "child")).toHaveLength(0)
+        expect(order).toEqual(["admit"])
+        expect(parts).toEqual([expect.objectContaining({ state: expect.objectContaining({ status: "error" }) })])
+        return
+      }
+      expect(children).toHaveLength(1)
+      const child = children[0]!
+      expect(observed).toHaveLength(1)
+      expect(observed[0]).toMatchObject({ session: { id: child.id, parentID: parent.id, agent: "worker" }, prompt: { text: "child" }, delivery: "queue" })
+      expect(yield* sessions.getPermission(child.id)).toEqual([{ permission: "bash", pattern: "rm *", action: "deny" }])
+      const input = yield* SessionInput.find(database.db, observed[0]!.messageID)
+      const rows = (yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie))
+        .filter((row) => row.session_id === child.id)
+      if (decision === "observer-deny") {
+        expect(input).toBeUndefined()
+        expect(rows).toHaveLength(0)
+        expect(requests.filter((request) => userText(request) === "child")).toHaveLength(0)
+        expect(requests.filter((request) => request.http?.headers?.["x-parent-session-id"] === parent.id)).toHaveLength(0)
+        expect(yield* sessions.messages({ sessionID: child.id })).toEqual([])
+        expect(order).toEqual(["admit", "observe-child"])
+        expect(parts).toEqual([expect.objectContaining({ state: expect.objectContaining({ status: "error", error: expect.objectContaining({ message: expect.stringContaining("observer-denied") }) }) })])
+        return
+      }
+      expect(input).toMatchObject({ sessionID: child.id, delivery: "queue", prompt: { text: "child" } })
+      expect(rows).toHaveLength(1)
+      expect(childTurns(requests)).toHaveLength(1)
+      expect(order).toEqual(["admit", "observe-child", "child-provider", "settle"])
+      expect(yield* sessions.messages({ sessionID: child.id, order: "asc" })).toEqual(expect.arrayContaining([
+        expect.objectContaining({ type: "assistant", content: expect.arrayContaining([expect.objectContaining({ type: "text", text: "answer:child" })]) }),
+      ]))
+    }).pipe(Effect.provide(app))
+  }), 30_000)
+}
