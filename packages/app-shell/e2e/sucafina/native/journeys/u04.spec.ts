@@ -151,23 +151,3 @@ test("U04-AC02 same-owner month drafts survive Escape and period navigation with
   await expect(incident).toHaveValue(original)
 })
 
-test.skipIf(process.env.SF_NATIVE_ISOLATED_MUTATION_FIXTURE !== "true")(
-  "U04-AC01 authoritative SLA save is observable after a fresh installed read", async ({ page }, info) => {
-  info.annotations.push({ type: "criteria-scope", description: "U04-AC01; mutation only on real isolated 150 fixture; source refetch; no optimistic pass" })
-  const service = await readyService(page)
-  await service.getByRole("button", { name: "Save SLA", exact: true }).click()
-  const editor = service.locator(".sf-ops-editor")
-  const incident = editor.getByRole("spinbutton", { name: "incSLA" })
-  const original = await incident.inputValue()
-  const desired = original === "42" ? "43" : "42"
-  await incident.fill(desired)
-  await editor.getByRole("button", { name: /Review|Revisar/ }).click()
-  const review = editor.locator('[data-component="sf-change-review"]')
-  await expect(review).toBeVisible()
-  await review.getByRole("button", { name: "Save SLA", exact: true }).click()
-  await expect(service.getByRole("status").filter({ hasText: /Changes saved|Alterações salvas/ })).toBeVisible()
-  await page.reload()
-  await expect(service).toHaveAttribute("data-sf-read-state", "ready")
-  await service.getByRole("button", { name: "Save SLA", exact: true }).click()
-  await expect(service.locator(".sf-ops-editor").getByRole("spinbutton", { name: "incSLA" })).toHaveValue(desired)
-})

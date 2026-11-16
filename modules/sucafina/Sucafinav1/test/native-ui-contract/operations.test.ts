@@ -34,7 +34,7 @@ const expected = [
   "domain.command.CAP12.delete-campaign",
 ] as const
 
-function valid<S extends Schema.ConstraintDecoder<unknown>>(schema: S, value: unknown): boolean {
+function valid<S extends Schema.Decoder<unknown>>(schema: S, value: unknown): boolean {
   return Option.isSome(Schema.decodeUnknownOption(schema)(value, { onExcessProperty: "error" }))
 }
 const stamp = {
