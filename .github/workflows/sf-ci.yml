@@ -3,8 +3,6 @@ name: sf-ci
 # SF product CI only. Legacy sf2-epic stays intact until this candidate is
 # independently validated and required checks are explicitly migrated.
 on:
-  push:
-    branches: [sf-ci-lean]
   pull_request:
     branches: [close-final-candidate, go-live-close]
   workflow_dispatch:
@@ -66,6 +64,10 @@ jobs:
           (cd apps/cli && bun run typecheck)
           (cd packages/app-shell && bun run typecheck)
           (cd packages/app-shell && bun run typecheck:sf-e2e)
+      - name: Verify test-ci Linux-only request contract
+        run: |
+          set -euo pipefail
+          (cd packages/core && bun test test/test-ci-request.test.ts)
       - name: Verify Linux web production build
         run: (cd apps/web && bun run build)
       - name: Security and dependency guards
@@ -165,8 +167,12 @@ jobs:
                 bun run test:unit --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-APP-BROWSER)
+                # Only the installed Sucafina browser/host boundary: every
+                # current and future *.test.ts in this directory is admitted.
                 cd "$root/packages/app-shell"
-                bun run test:browser --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                ORCHESTRA_OMNI_CONTROL=declared bun test --conditions=browser \
+                  --preload ../../script/test-omni-control.ts --preload ./happydom.ts \
+                  ./test-browser/sucafina-native --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-ATLAS-BUSINESS)
                 # SF's business boundary, catalog, surface and scanner-clock.

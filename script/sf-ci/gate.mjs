@@ -20,6 +20,11 @@ export function validateManifest(manifest) {
   const suites = manifest.suites
   if (!Array.isArray(suites)) fail("missing suites")
   if (new Set(suites.map((s) => s.id)).size !== suites.length) fail("duplicate suite")
+  const sfBrowser = suites.find((s) => s.id === "CI-APP-BROWSER")
+  if (sfBrowser?.selection?.kind !== "directory" ||
+      sfBrowser.selection.testDirectory !== "test-browser/sucafina-native") {
+    fail("the SF installed browser directory cannot be removed or replaced")
+  }
   for (const id of ["CI-CLI", "CI-ATLAS-BUSINESS"]) {
     const selected = suites.find((s) => s.id === id)?.selection
     if (selected?.kind !== "explicit" || !Array.isArray(selected.testFiles) || selected.testFiles.length < 1 ||

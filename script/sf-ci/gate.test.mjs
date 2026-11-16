@@ -13,6 +13,9 @@ const manifest = {
   suites: REQUIRED.map((id) => id.startsWith("CI-UI-")
     ? { id, kind: "playwright", directory: "packages/app-shell", specFile: "e2e/sucafina/" + id.split("-").at(-1).toLowerCase() + ".spec.ts" }
     : { id, kind: "bun", directory: "modules/sucafina",
+      ...(id === "CI-APP-BROWSER"
+        ? { selection: { kind: "directory", testDirectory: "test-browser/sucafina-native" } }
+        : {}),
       ...(id === "CI-CLI" || id === "CI-ATLAS-BUSINESS"
         ? { selection: { kind: "explicit", testFiles: ["test/sf-authorized-sample.test.ts"] } }
         : {}),
@@ -65,6 +68,13 @@ test("Playwright artifact evidence retains only admission data and never raw att
   assert.equal(countPlaywrightReport(sanitized, suite.specFile), 1)
   assert.equal(sanitized.includes(secret), false)
   assert.equal(sanitized.includes("attachments"), false)
+})
+test("removing or widening the installed SF browser selection fails closed", () => {
+  for (const testDirectory of [undefined, "", "test-browser", "test-browser/other"]) {
+    const invalid = structuredClone(manifest)
+    invalid.suites.find((s) => s.id === "CI-APP-BROWSER").selection.testDirectory = testDirectory
+    assert.throws(() => validateManifest(invalid), /SF_CI_FAIL_CLOSED/)
+  }
 })
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))

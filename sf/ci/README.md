@@ -31,7 +31,13 @@ client and Atlas boundary, E2E typecheck, actual Web build, spawn boundaries
 and guardrails. We do not report this pilot as green without a run.
 
 The initial pilot executes **all eight approved CI families**, not
-a new untested dependency-based filter. The CLI and Atlas-Business families
+a new untested dependency-based filter. Only pull-request or manual
+dispatch triggers the pipeline; push no longer schedules a redundant
+copy that gets cancelled. Browser unit tests run the full
+`packages/app-shell/test-browser/sucafina-native` directory, including
+new files automatically, rather than the unrelated canonical browser
+tests. The independent Linux-only `test-ci` selector regression runs
+on the static lane. The CLI and Atlas-Business families
 now use explicit, committed Linux/SF product selections from
 `sf/ci/suites.json` instead of upstream compiled distribution and redundant
 generator tests. CLI includes host installation, admission, Task/Relay

@@ -48,7 +48,12 @@
     {
       "id": "CI-APP-BROWSER",
       "kind": "bun",
-      "directory": "packages/app-shell"
+      "directory": "packages/app-shell",
+      "selection": {
+        "kind": "directory",
+        "testDirectory": "test-browser/sucafina-native",
+        "coverage": "All installed SF browser/host boundary tests, including new tests under this directory; excludes unrelated Orchestra canonical browser tests"
+      }
     },
     {
       "id": "CI-ATLAS-BUSINESS",
