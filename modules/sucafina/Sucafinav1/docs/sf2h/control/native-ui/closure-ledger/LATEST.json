@@ -45,11 +45,12 @@
       "mission": 196,
       "branch": "sf-proof-profiles",
       "head": "2c0416ca80c2367843be7b39dbc4a7fb677a2185",
-      "state": "SOURCE_HANDOFF_READY",
+      "state": "CONSUMPTION_COMMIT_OBSERVED_PENDING_POSTIMAGE_AND_CI_VERIFICATION",
       "consumer": 211,
       "validation_owner": 214,
       "source_released": true,
-      "consumer_ack": "NOT_YET_VERIFIED"
+      "consumer_ack": "AUTHOR_COMPOSITION_COMMIT_OBSERVED",
+      "consumer_commit": "9771cc7e2757056429404a91d23493988f14aa47"
     },
     {
       "mission": 197,
@@ -75,11 +76,12 @@
       "mission": 199,
       "branch": "sf-installed-host",
       "head": "9b512eeffa9c437967b03d5af6dab11a1718f48b",
-      "state": "SOURCE_HANDOFF_READY",
+      "state": "CONSUMPTION_COMMIT_OBSERVED_PENDING_POSTIMAGE_AND_CI_VERIFICATION",
       "consumer": 211,
       "validation_owner": 214,
       "source_released": true,
-      "consumer_ack": "NOT_YET_VERIFIED"
+      "consumer_ack": "AUTHOR_COMPOSITION_COMMIT_OBSERVED",
+      "consumer_commit": "9771cc7e2757056429404a91d23493988f14aa47"
     },
     {
       "mission": 201,
@@ -95,51 +97,56 @@
       "mission": 202,
       "branch": "sf-context-types",
       "head": "1f9220cd68f84237f4c2dc6d3f28b858f5de2bda",
-      "state": "SOURCE_HANDOFF_READY",
+      "state": "CONSUMPTION_COMMIT_OBSERVED_PENDING_POSTIMAGE_AND_CI_VERIFICATION",
       "consumer": 211,
       "validation_owner": 214,
       "source_released": true,
-      "consumer_ack": "NOT_YET_VERIFIED"
+      "consumer_ack": "AUTHOR_COMPOSITION_COMMIT_OBSERVED",
+      "consumer_commit": "9771cc7e2757056429404a91d23493988f14aa47"
     },
     {
       "mission": 203,
       "branch": "sf-transport-types",
       "head": "df9fdd3afa36ccc2f686d165104546819eb96dfc",
-      "state": "SOURCE_HANDOFF_READY",
+      "state": "CONSUMPTION_COMMIT_OBSERVED_PENDING_POSTIMAGE_AND_CI_VERIFICATION",
       "consumer": 211,
       "validation_owner": 214,
       "source_released": true,
-      "consumer_ack": "NOT_YET_VERIFIED"
+      "consumer_ack": "AUTHOR_COMPOSITION_COMMIT_OBSERVED",
+      "consumer_commit": "9771cc7e2757056429404a91d23493988f14aa47"
     },
     {
       "mission": 204,
       "branch": "sf-fixture-types",
       "head": "e6e8ecdc63ea7cc8070c15aec16c001c4b657a13",
-      "state": "SOURCE_HANDOFF_READY",
+      "state": "CONSUMPTION_COMMIT_OBSERVED_PENDING_POSTIMAGE_AND_CI_VERIFICATION",
       "consumer": 211,
       "validation_owner": 214,
       "source_released": true,
-      "consumer_ack": "NOT_YET_VERIFIED"
+      "consumer_ack": "AUTHOR_COMPOSITION_COMMIT_OBSERVED",
+      "consumer_commit": "9771cc7e2757056429404a91d23493988f14aa47"
     },
     {
       "mission": 205,
       "branch": "sf-thread-newlines",
       "head": "c8af58da3cb7c8734c2d2f126e63fd1ddabd0440",
-      "state": "SOURCE_HANDOFF_READY",
+      "state": "CONSUMPTION_COMMIT_OBSERVED_PENDING_POSTIMAGE_AND_CI_VERIFICATION",
       "consumer": 211,
       "validation_owner": 214,
       "source_released": true,
-      "consumer_ack": "NOT_YET_VERIFIED"
+      "consumer_ack": "AUTHOR_COMPOSITION_COMMIT_OBSERVED",
+      "consumer_commit": "9771cc7e2757056429404a91d23493988f14aa47"
     },
     {
       "mission": 206,
       "branch": "sf-ux-n13",
       "head": "6b747c45b0f26ea2e9b8d726a34347cc6b42a4a4",
-      "state": "SOURCE_HANDOFF_READY",
+      "state": "CONSUMPTION_COMMIT_OBSERVED_PENDING_POSTIMAGE_AND_CI_VERIFICATION",
       "consumer": 211,
       "validation_owner": 214,
       "source_released": true,
-      "consumer_ack": "NOT_YET_VERIFIED"
+      "consumer_ack": "AUTHOR_COMPOSITION_COMMIT_OBSERVED",
+      "consumer_commit": "9771cc7e2757056429404a91d23493988f14aa47"
     },
     {
       "mission": 207,
@@ -186,26 +193,30 @@
     {
       "mission": 211,
       "branch": "sf-closure-bundle",
-      "head": "76fa5205c5524c3c1b6d4b2bab034cf763b97959",
-      "state": "ACK_CONFIRMED_AT_LAST_READ"
+      "head": "9771cc7e2757056429404a91d23493988f14aa47",
+      "message": "fix(sf): compose verified 196 199 202-206 product outputs [skip ci]",
+      "state": "COMPOSITION_COMMIT_OBSERVED_PENDING_RECHECK"
     },
     {
       "mission": 212,
       "branch": "sf-hypothetical-fix",
-      "head": "6260333fbd2d717562ba94de8658bf904ac37e30",
-      "state": "RESERVATION_ONLY_AT_LAST_READ_NO_RUNTIME_INFERENCE"
+      "head": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+      "message": "fix(sf): make AM01 renewal scenario a genuine non-applied preview [skip ci]",
+      "state": "SOURCE_CODE_FIX_PUBLISHED"
     },
     {
       "mission": 213,
       "branch": "sf-desktop-bootstrap",
-      "head": "5f604d6412823c004394a319285de9da581a835e",
-      "state": "RESERVATION_ONLY_AT_LAST_READ_NO_RUNTIME_INFERENCE"
+      "head": "03e3936a1627e4834370951aca0de4c45c60e7b4",
+      "message": "docs(sf): acknowledge desktop broker authoring lease 213 [skip ci]",
+      "state": "ACK_CONFIRMED"
     },
     {
       "mission": 214,
       "branch": "sf-ci-validation",
-      "head": "32c60ae4e56d8aa773840fe9cfd2a00ee18183fc",
-      "state": "RESERVATION_ONLY_AT_LAST_READ_NO_RUNTIME_INFERENCE"
+      "head": "b0509bfe1acee87563d699c79e9e672d0196f8af",
+      "message": "docs(sf): checkpoint three mission214 scoped Actions requests",
+      "state": "THREE_SCOPED_ACTIONS_REQUESTS_RECORDED_NOT_PASS"
     }
   ],
   "new_concrete_corrections": [
@@ -281,5 +292,7 @@
     "New role/write attempts are recorded for conflict checking; branch source writers remain exclusive. Product proposal composition211 only; sf2-stack189 untouched."
   ],
   "native_goal": "paused",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "observed_new_composition": "9771cc7e2757056429404a91d23493988f14aa47",
+  "observed_AM01_fix": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4"
 }
