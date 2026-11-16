@@ -299,9 +299,10 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
         Object.values(state.cases).filter((entry) => entry.participants.includes(authority.principalRef))
           .map((entry) => encodeCaseRef(entry)))
       if (listed.status === "ok") {
-        // Context observations must not fan out over an unbounded case set.
-        if (expected && listed.value.length > 10) return failure(request, "unavailable")
-        const items = await Promise.all(listed.value.map(async (caseRef) => {
+        // A context observation exercises at most one real case; the actual
+        // home response continues to project the complete authorized list.
+        const candidates = expected ? listed.value.slice(0, 1) : listed.value
+        const items = await Promise.all(candidates.map(async (caseRef) => {
           const selection = { caseRef }
           const other = await runtime.ui.admit(request, "sf_case_read", digestSfValue(selection))
           if (other.status !== "ok") return undefined
