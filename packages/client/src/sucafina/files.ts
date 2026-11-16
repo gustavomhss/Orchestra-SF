@@ -214,5 +214,9 @@ export function createSfFilesClient(transport: SfTransport) {
   "files.export.json": (input: SfFilesOperationInput<"files.export.json">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.export.json">>> => {
     return transport.execute(SfFiles.operations["files.export.json"], input, options)
   },
+  "files.export.members": (input: SfFilesOperationInput<"files.export.members">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.export.members">>> => {
+    if (!plain(input) || !only(input, ["surface"]) || input.surface !== "dashboard") return Promise.resolve(rejectContract)
+    return transport.execute(SfFiles.operations["files.export.members"], input, options)
+  },
   })
 }

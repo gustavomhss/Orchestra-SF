@@ -106,6 +106,8 @@ Em **Dashboard** e **Planner**, abra **Import with preview**. Selecione **Find d
 
 Selecione **Preview import** e confira as alterações, origens e erros de linha. A prévia não aplica mudanças. Só selecione **Apply reviewed import** depois de revisar o destino e as alterações. O resultado informa se a importação foi aplicada, não precisou alterar campos ou foi recusada. Corrija erros ou atualize a prévia se a fonte mudar. Se a tela não puder confirmar a aplicação, confira o estado atual antes de repetir a ação.
 
+Quando a integração de arquivos estiver disponível em **Talent Review**, **Import** abre o fluxo de importação. Escolha o destino do Dashboard para **All Members**, carregue a planilha e revise a prévia antes de aplicar. **Export** baixa a planilha original de membros; a exportação exige autorização de administrador e é recusada se o acesso mudar durante a geração.
+
 ## Quando uma ação falha ou o acesso muda
 
 Nas edições comuns das páginas, uma resposta perdida deixa o resultado **inconclusivo**. A interface preserva sua tentativa e não reenvia esse comando por conta própria. **Inspect current record without resending** consulta a versão atual para comparação; essa consulta não altera a versão original da tentativa nem confirma que ela foi aplicada. Se o serviço ainda não puder recuperar o resultado, mantenha a página aberta e confira o registro com o responsável antes de iniciar outra alteração. O texto digitado nesses formulários não é guardado no navegador; sair da página pode perdê-lo.
@@ -121,4 +123,3 @@ Uma atualização ou consulta de um componente que detecta sessão expirada ou m
 No painel de pauta e Hot Topics, uma resposta incompleta ou incompatível com a tentativa não confirma retrato, reunião, rascunho, preparação ou aplicação. Os campos e a solicitação original permanecem preservados e bloqueados; use **Repetir mesma tentativa** para conferir o resultado com seu acesso atual. Uma aplicação sem confirmação continua inconclusiva mesmo que a gravação já tenha ocorrido: confira o recibo autorizado antes de iniciar outra alteração.
 
 Uma lista vazia pode significar que não há itens atribuídos no período, decisões acessíveis ou resultados salvos. Uma tela indisponível não confirma que a ação foi concluída. Em caso de dúvida, consulte o registro de origem antes de repetir uma gravação.
-

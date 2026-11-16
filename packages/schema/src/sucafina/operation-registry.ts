@@ -254,6 +254,7 @@ export const SfOperationRegistry = Object.freeze({
   "files.document-search": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"document-search"}},
   "files.document-sources": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"document-sources"}},
   "files.export.json": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"json"}},
+  "files.export.members": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"members"}},
   "files.export.register": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"register"}},
   "files.export.suppliers": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"suppliers"}},
   "files.export.xlsx": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"xlsx"}},

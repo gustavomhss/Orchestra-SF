@@ -73,5 +73,6 @@ export function createSfFilesHostBindings(input: SfFilesHostSources) {
     "files.export.suppliers": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.export.register": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.export.json": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
+    "files.export.members": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
   } satisfies Record<SfFilesOperationId, SfFilesExistingProducer>)
 }
