@@ -626,7 +626,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     expect(command.id).toBe(id)
     expect(asRecord(command.values)?.month).toBe(7)
     await expect.poll(async () =>
-      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7])?.flag,
+      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7"])?.flag,
     ).toBe("dev-amber")
     const before = await originalPage(page, nativeHarness)
     const priorVersion = before.versions[deviationKey]
@@ -642,10 +642,10 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     const updated = await commitReviewed(page, nativeHarness, "save-deviation")
     expect(updated.version).toBe(priorVersion)
     await expect.poll(async () =>
-      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7])?.text,
+      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7"])?.text,
     ).toBe("N206 updated producer deviation")
     const after = await originalPage(page, nativeHarness)
-    expect(asRecord(after.deviations[sourceKind + "-" + id + "-2026-7])?.flag).toBe("dev-red")
+    expect(asRecord(after.deviations[sourceKind + "-" + id + "-2026-7"])?.flag).toBe("dev-red")
     expect(after.versions[deviationKey]).toBeGreaterThan(priorVersion as number)
     await deleteRealOwner(page, nativeHarness, surface, name, id)
   })
