@@ -33,6 +33,8 @@ function discover(root, relative) {
   const found = []
   const walk = (physical, name) => {
     for (const entry of readdirSync(physical, { withFileTypes: true })) {
+      // Bun does not collect dependency trees or VCS metadata as product tests.
+      if (entry.name === "node_modules" || entry.name === ".git") continue
       const next = name ? name + "/" + entry.name : entry.name
       if (entry.isSymbolicLink()) {
         // E.g. app-shell/src/custom-elements.d.ts is an existing harmless type
