@@ -1,6 +1,7 @@
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfReviews } from "@orchestra/schema/sucafina/reviews"
+import { SfOperationId } from "@orchestra/schema/sucafina/common"
 import type { SfContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
@@ -20,15 +21,23 @@ export function parseReviewsRouteQuery(params: URLSearchParams, candidate: SfNat
   const year = params.get("year"), previous = params.get("previousReview"), current = params.get("currentReview")
   if (year !== null && (!/^\d{4}$/.test(year) || Number(year) === 0)) return
   if ([previous, current].some((ref) => ref !== null && (!ref.trim() || ref.length > 2048)) || previous !== null && previous === current) return
-  if (year !== null && Option.isNone(Schema.decodeUnknownOption(SfReviews.operations["projection.review"].input, { onExcessProperty: "error" })({ start: `${year}-01-01`, end: `${year}-12-31` }))) return
-  if ([previous, current].some((ref) => ref !== null && Option.isNone(Schema.decodeUnknownOption(SfReviews.operations["dashboard.dashboard-review"].input, { onExcessProperty: "error" })({ id: ref })))) return
+  if (year !== null && Option.isNone(Schema.decodeUnknownOption(SfReviews["projection.review"].input, { onExcessProperty: "error" })({ start: `${year}-01-01`, end: `${year}-12-31` }))) return
+  if ([previous, current].some((ref) => ref !== null && Option.isNone(Schema.decodeUnknownOption(SfReviews["dashboard.dashboard-review"].input, { onExcessProperty: "error" })({ id: ref })))) return
   return { ...(year === null ? {} : { year: Number(year) }), ...(previous === null ? {} : { previousReview: previous as SfRef }), ...(current === null ? {} : { currentReview: current as SfRef }) }
 }
 export function reviewsRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
-  const id = candidate.surfaceId === "UI47" ? SfReviews.operations["projection.review"].operationId : SfReviews.operations["dashboard.dashboard-review"].operationId
-  return context.availability.some((resource) => resource.family === "reviews" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))
+  const id = candidate.surfaceId === "UI47" ? SfReviews["projection.review"].operationId : SfReviews["dashboard.dashboard-review"].operationId
+  if (!context.availability.some((resource) => resource.family === "reviews" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))) return false
+  if (candidate.surfaceId !== "UI50") return true
+  const prepare = "reviews.report.prepare"
+  const download = "files.export.review"
+  if (!Schema.is(SfOperationId)(prepare) || !Schema.is(SfOperationId)(download)) return false
+  return context.availability.some((resource) => resource.family === "reviews" && resource.resource === "report-export" &&
+    resource.operations.some((item) => item.operationId === prepare && item.state === "ready" && item.operational)) &&
+    context.availability.some((resource) => resource.family === "files" && resource.resource === "exports" &&
+      resource.operations.some((item) => item.operationId === download && item.state === "ready" && item.operational))
 }
 export function SfReviewPages(props: Readonly<{ route: SfResolvedRoute }>): JSX.Element {
   return <Switch>
