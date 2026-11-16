@@ -722,7 +722,12 @@ const layer = Layer.effect(
       compact,
       generate,
       shell: (input) => SessionDirectCommands.shell({ events, location, config, appProcess }, input),
-      skill: (input) => SessionDirectCommands.skill({ events, skills, fs }, input),
+      skill: (input) => Effect.gen(function* () {
+        const session = yield* getSession(input.sessionID).pipe(Effect.orDie)
+        const engine = yield* engineOf(session)
+        const host = engine ? hosts.get(engine) : undefined
+        return yield* SessionDirectCommands.skill({ events, skills, fs, host }, input)
+      }),
     })
   }),
 )
