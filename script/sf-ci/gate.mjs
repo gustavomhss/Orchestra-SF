@@ -37,10 +37,18 @@ const validateRelative = (name) => {
   return name
 }
 function ensureContained(root, relative, kind) {
-  const resolved = path.join(root, validateRelative(relative))
-  const info = lstatSync(resolved, { throwIfNoEntry: false })
-  if (!info || info.isSymbolicLink() || (kind === "file" ? !info.isFile() : !info.isDirectory())) {
-    fail("missing/unsafe " + kind + " in selected candidate: " + relative)
+  const segments = validateRelative(relative).split("/")
+  let resolved = root
+  // Reject symlinks at every component, including a parent that points back
+  // inside the checkout and would otherwise bypass explicit admission.
+  for (let i = 0; i < segments.length; i++) {
+    resolved = path.join(resolved, segments[i])
+    const info = lstatSync(resolved, { throwIfNoEntry: false })
+    const leaf = i === segments.length - 1
+    if (!info || info.isSymbolicLink() ||
+        (leaf ? (kind === "file" ? !info.isFile() : !info.isDirectory()) : !info.isDirectory())) {
+      fail("missing/unsafe " + kind + " in selected candidate: " + relative)
+    }
   }
   const actual = realpathSync(resolved)
   const prefix = realpathSync(root) + path.sep
