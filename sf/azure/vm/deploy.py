@@ -146,8 +146,8 @@ def activate(a):
     caddy_next = (ROOT / "sf/azure/runtime/Caddyfile.template").read_text()
     caddy_next = caddy_next.replace("__SF_FQDN__", config["fqdn"]).replace("__SF_PORT__", str(config["port"]))
     old = CADDY.read_text()
-    bootstrap_pattern = re.compile(r"^\\s*" + re.escape(config["fqdn"]) + r"\\s*\\{\\s*respond\\s+503\\s*\\}\\s*$")
-    old_managed = re.sub(r"127\\.0\\.0\\.1:[0-9]{4,5}", "127.0.0.1:__SF_PORT__", old)
+    bootstrap_pattern = re.compile(r"^\s*" + re.escape(config["fqdn"]) + r"\s*\{\s*respond\s+503\s*\}\s*$")
+    old_managed = re.sub(r"127\.0\.0\.1:[0-9]{4,5}", "127.0.0.1:__SF_PORT__", old)
     managed_template = (ROOT / "sf/azure/runtime/Caddyfile.template").read_text().replace("__SF_FQDN__", config["fqdn"])
     if not (bootstrap_pattern.fullmatch(old) or old_managed == managed_template):
         refuse("unrecognized/non-exclusive Caddy site; refuse to clobber unrelated hosts")
