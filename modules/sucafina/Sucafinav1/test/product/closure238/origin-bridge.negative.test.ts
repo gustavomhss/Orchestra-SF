@@ -72,7 +72,7 @@ test("cancelled approval and foreign descriptor cannot become installed context"
 })
 test("cross-owner selection does not register or invoke", async () => {
   const f = fake()
-  expect(await f.bridge.listByIds({ ...selected, serverKey: "https://other.example" },
+  expect(await f.bridge.listByIds({ ...selected, serverKey: "https://other.example" as SfOwnerSelection["serverKey"] },
     new AbortController().signal)).toBeUndefined()
   expect(f.invokes).toBe(0)
   f.bridge.dispose()
