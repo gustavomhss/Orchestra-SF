@@ -145,6 +145,7 @@ test("same-CAS request navigation before digest continuation cannot post the rev
     gate.release.resolve(); await gate.finished.promise
     await new Promise((resolve) => setTimeout(resolve, 0))
     expect(view.writes).toEqual([])
+    expect(view.node.querySelector<HTMLInputElement>("input")?.value).toBe("before")
     expect(view.node.textContent).not.toContain("private proposed title")
   } finally { gate.release.resolve(); gate.spy.mockRestore(); view.close() }
 })
@@ -160,6 +161,7 @@ test("owner invalidation before digest continuation cannot post the reviewed tit
     gate.release.resolve(); await gate.finished.promise
     await new Promise((resolve) => setTimeout(resolve, 0))
     expect(view.writes).toEqual([])
+    expect(view.node.querySelector("input")).toBeNull()
     expect(view.node.textContent).not.toContain("private proposed title")
   } finally { gate.release.resolve(); gate.spy.mockRestore(); view.close() }
 })
@@ -180,6 +182,7 @@ test("source reload before digest continuation cannot post the reviewed title", 
     gate.release.resolve(); await gate.finished.promise
     await new Promise((resolve) => setTimeout(resolve, 0))
     expect(view.writes).toEqual([])
+    expect(view.node.querySelector("input")).toBeNull()
     expect(view.node.textContent).not.toContain("private proposed title")
   } finally { gate.release.resolve(); gate.spy.mockRestore(); view.close() }
 })
@@ -206,6 +209,7 @@ test("owner invalidation during post-digest preflight hides the review and never
     const confirm = await review(view), held = view.holdNextRead()
     confirm.click(); await held.entered.promise
     view.handle.invalidate("owner-changed")
+    expect(view.node.querySelector("input")).toBeNull()
     expect(view.node.textContent).not.toContain("private proposed title")
     held.release.resolve(); await held.finished.promise
     await new Promise((resolve) => setTimeout(resolve, 0))
@@ -230,6 +234,7 @@ test("changed source CAS during post-digest preflight invalidates the old review
     confirm.click()
     expect(view.writes).toEqual([])
     expect(view.node.querySelector('[data-component="sf-change-review"]')).toBeNull()
+    expect(view.node.querySelector("input")).toBeNull()
     expect(view.node.textContent).not.toContain("private proposed title")
   } finally { view.close() }
 })
