@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.repair217.ci-request.v1",
+  "target": 214,
+  "source": 217,
+  "finding": "S1-R1-207-001",
+  "pr": {
+    "number": 198,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/198",
+    "head": "sf-similar-cases",
+    "base": "sf-closure-bundle",
+    "code_commit": "9225b052158d0d037a50f9c4ced70f628f630e45",
+    "status": "OPEN_NOT_QUALIFIED"
+  },
+  "epoch": "review-fix-e1-browser217",
+  "request_status": "REQUESTED_NOT_RUN",
+  "candidate_sha": "PENDING_211_INTEGRATED_SHA",
+  "prerequisites": [
+    "211 applies 5 inert postimages with Git CAS in own branch and binds real createSfMemoryHttp producer",
+    "214 owns dispatcher, F04 installed host and inputs, not 217",
+    "no mock, no local runs, no newly requested Azure/login/deploy"
+  ],
+  "selectors": [
+    "bun test modules/sucafina/Sucafinav1/test/product/similarity217/installed.test.ts",
+    "playwright test packages/app-shell/e2e/sucafina/native/journeys/similarity217/ui62.spec.ts",
+    "playwright test packages/app-shell/e2e/sucafina/native/journeys/u26.spec.ts"
+  ],
+  "inputs": [
+    "SF_NATIVE_INSTALLED_MANIFEST + SF_NATIVE_CANDIDATE_SHA from real F04 installation",
+    "SF_NATIVE_SIMILAR217_SOURCE_REF original case:id:incarnation",
+    "SF_NATIVE_SIMILAR217_PRECEDENT_REF original case:id:incarnation",
+    "SF_NATIVE_SIMILAR217_PRECEDENT_ID from actually committed same-owner C09/C17 Atlas memory",
+    "Real F04 two-actor requester/denied + wrongProject; no test-owned session/auth"
+  ],
+  "criteria": [
+    "U26 UI62 genuine source selector",
+    "CaseRecall C09/Atlas C17 evidence",
+    "two actors revocation and old lease no resurrection",
+    "cutoff, historical and dedup",
+    "keyboard and 320..1440 reflow",
+    "owner swap clears all output"
+  ],
+  "run_ids": [],
+  "result": "NOT_RUN",
+  "actual_sha": null
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "sf2h.repair217.recheck-request.v1",
+  "target": "207/S1-R1",
+  "source": 217,
+  "finding": "S1-R1-207-001",
+  "pr": {
+    "number": 198,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/198",
+    "head": "sf-similar-cases",
+    "base": "sf-closure-bundle",
+    "code_commit": "9225b052158d0d037a50f9c4ced70f628f630e45",
+    "status": "OPEN_NOT_QUALIFIED"
+  },
+  "request_status": "REQUESTED_PENDING_211_214",
+  "depends_on": [
+    "211 composition",
+    "214 surgical check receipts"
+  ],
+  "review_scope": [
+    "Original source C09 and exact current version/horizon",
+    "same-owner C17/Atlas provenance and no fabricated match",
+    "reason/why-related/source differences",
+    "cutoff/dedup/historical/revoked/stale/missing",
+    "two actors; denial and owner swap remove output without counts",
+    "UI62 read/query/keyboard/reflow at 320..1440"
+  ],
+  "acceptance": "Independent reviewer must attach actual evidence/run IDs; 217 does not claim closed finding.",
+  "checks": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}
