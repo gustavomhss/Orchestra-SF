@@ -61,19 +61,26 @@ def preflight():
     source = run("findmnt", "-n", "-o", "SOURCE", "--mountpoint", str(STATE))
     if Path(source).resolve() != LUN.resolve() or run("findmnt", "-n", "-o", "FSTYPE", "--mountpoint", str(STATE)) != "ext4":
         refuse("wrong data disk or filesystem")
-    if int(run("id", "-u", "orchestra-sf")) == 0 or run("id", "-gn", "orchestra-sf") != "orchestra-sf":
+    uid = int(run("id", "-u", "orchestra-sf"))
+    gid = int(run("id", "-g", "orchestra-sf"))
+    if uid == 0 or run("id", "-gn", "orchestra-sf") != "orchestra-sf":
         refuse("non-root service account not provisioned")
     if run("getent", "passwd", "orchestra-sf").split(":")[5] != str(STATE / "home"):
         refuse("unexpected service account HOME")
-    if (STATE / "home").is_symlink() or not (STATE / "home").is_dir():
+    home = STATE / "home"
+    if home.is_symlink() or not home.is_dir():
         refuse("private persistent HOME unavailable")
+    if STATE.stat().st_uid != uid or home.stat().st_uid != uid or home.stat().st_gid != gid or \
+       home.stat().st_mode & 0o077:
+        refuse("persistent HOME owner or private mode incorrect; never blind chown")
     if not ETC.is_dir() or ETC.is_symlink() or ETC.stat().st_uid != 0 or ETC.stat().st_mode & 0o077:
         refuse("owner-only /etc/orchestra-sf (0700) absent")
     if not CADDY.is_file() or CADDY.is_symlink():
         refuse("Caddy foundation not installed")
-    if not RELEASES.exists():
-        RELEASES.mkdir(parents=True, mode=0o755)
-    if RELEASES.is_symlink() or RELEASES.stat().st_uid != 0:
+    parent = RELEASES.parent
+    if parent.is_symlink() or not parent.is_dir() or parent.stat().st_uid != 0:
+        refuse("unsafe /opt/orchestra-sf release parent")
+    if RELEASES.exists() and (RELEASES.is_symlink() or not RELEASES.is_dir() or RELEASES.stat().st_uid != 0):
         refuse("unsafe release directory")
 
 
@@ -125,6 +132,11 @@ def stage(a):
     frozen_checkout(a.candidate, a.tree)
     if not SHA.fullmatch(a.bundle_sha):
         refuse("archive digest invalid")
+    # Stage is the first permitted write; preflight remains strictly read-only.
+    if not RELEASES.exists():
+        RELEASES.mkdir(mode=0o755)
+    if RELEASES.is_symlink() or RELEASES.stat().st_uid != 0:
+        refuse("unsafe release root after creation")
     print(stage_bundle(Path(a.bundle).resolve(), a.bundle_sha, a.candidate, a.tree, RELEASES))
     print("AZ-01=STAGED_ONLY; AZ-03=NOT_RUN; AZURE_RELEASE_QUALIFIED=BLOCKED")
 
