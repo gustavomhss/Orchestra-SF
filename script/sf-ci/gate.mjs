@@ -40,7 +40,7 @@ export function validateManifest(manifest) {
   if (appUnit?.selection?.kind !== "directory" || appUnit.selection.testDirectory !== "src") {
     fail("app unit suite must be manifest-driven and include all app src tests")
   }
-  if (sfProduct.selection.testDirectory !== "Sucafinav1/test") {
+  if (sfProduct.selection.testDirectory !== ".") {
     fail("SF complete unit subtree must remain admitted")
   }
   for (const id of ["CI-CLI", "CI-ATLAS-BUSINESS"]) {
