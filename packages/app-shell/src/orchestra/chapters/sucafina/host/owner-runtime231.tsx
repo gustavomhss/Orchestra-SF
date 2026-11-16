@@ -363,7 +363,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         fetch: fetcher, onInvalidated: (reason) => {
           ownerEpoch += 1
           mounted?.invalidate(reason === "logout" ? "logout" :
-            reason === "access-revoked" || reason === "session-expired" ? "revoked" : "owner-changed")
+            reason === "access-revoked" ? "revoked" :
+            reason === "session-expired" ? "session-expired" : "owner-changed")
           setView({ status: "denied", route: undefined })
           setReconnect({ required: reason === "session-expired", busy: false })
         },
