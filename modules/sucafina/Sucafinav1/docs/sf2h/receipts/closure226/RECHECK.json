@@ -1,0 +1,171 @@
+{
+  "schema": "sf2h.closure226.recheck.v1",
+  "mission": 226,
+  "epoch": "shared-closure-e1-browser226",
+  "actor_model": "GPT-6",
+  "session_id": "NOT_EXPOSED",
+  "branch": "sf-files-transport",
+  "observed_live_head_before_receipt": "8f731ea6e9bb9202c6a205b43e5276b4f5e3924c",
+  "frozen_head": "585bad394015bb7937c07e79f8bd9d754f208427",
+  "frozen_s0": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/S0-FENCE.json",
+    "sha": "55ec32f51b2c251b2f3500c9d73eb27dc15fc46d",
+    "state": "PREPARED_NOT_STARTED_AT_FENCE",
+    "authority": "write_paths only",
+    "fence_replaced": false
+  },
+  "consumer_base": {
+    "branch": "sf-closure-bundle",
+    "sha": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "read": "CONFIRMED_UNCHANGED",
+    "modified_by_226": false
+  },
+  "pr": {
+    "number": 205,
+    "base": "sf-closure-bundle",
+    "head": "sf-files-transport",
+    "state": "open",
+    "draft": true,
+    "mergeable_last_observed": false,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/205",
+    "merge_performed": false,
+    "mergeability_note": "GitHub reports mergeable=false at last fetch; 211 must reconcile without force and preserve its own branch work."
+  },
+  "source": {
+    "original_pr": 121,
+    "commit": "a81ee51b312a64d27cff496e863a02e874ac14a8",
+    "manifest218": "6ec7d43fdaa63268540f30e80d590d9af85d2988",
+    "five_leaves": [
+      {
+        "path": "packages/schema/src/sucafina/files.ts",
+        "original_blob": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c",
+        "now": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c"
+      },
+      {
+        "path": "packages/schema/src/sucafina/files/structures.ts",
+        "original_blob": "72859baa8ae358038274edd14bb20d9a3334a031",
+        "now": "72859baa8ae358038274edd14bb20d9a3334a031"
+      },
+      {
+        "path": "packages/client/src/sucafina/files.ts",
+        "original_blob": "18d0e2f143fffc965d3b0a632c87f2aa59f7b302",
+        "now": "4f29bf65fe6f128fb3d34d24beeaddef983c1e6b",
+        "only_mission_delta": "POST-read and preview idempotency is F02-owned, wrappers do not require caller-supplied key"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/files.ts",
+        "original_blob": "a2e1041871a553498b92f159ef9b28c874a3cfb6",
+        "now": "a2e1041871a553498b92f159ef9b28c874a3cfb6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts",
+        "original_blob": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6",
+        "now": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6"
+      }
+    ]
+  },
+  "coded_rechecks": [
+    {
+      "path": "packages/client/src/sucafina/files/codecs.ts",
+      "sha": "221098f0f73b0048574522f114cf92be8344440a",
+      "role": "25 exact A06 input/output codecs, binary isolated"
+    },
+    {
+      "path": "packages/client/src/sucafina/transport/files.ts",
+      "sha": "f01f7d06169f0b396baf38ada9f97a9a25831f8c",
+      "role": "closed files selectors, source MIME and size guards"
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "sha": "368f4420e7c74fbbdb45a6d55c442915bbaba16c",
+      "role": "F02 browser original Request / multipart; desktop chunks and unconditional abort cleanup"
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/protocol.ts",
+      "sha": "134cf26a0b65ed4b3f606f975925ad865902c021",
+      "role": "typed desktop original route/multipart upload and source query"
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/index.ts",
+      "sha": "1aa59adc0e252feefaeaf2a783b0c94ee51a19e3",
+      "role": "owner bound private byte handle, operation grant/context revalidation"
+    },
+    {
+      "path": "packages/client/test/sucafina/files-transport226/source-codecs.test.ts",
+      "sha": "7e120681b3ccffa6dcdb05585a6b916fcab960fc",
+      "role": "authored source-only tests NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts",
+      "sha": "e42288e8d0149dc990cb3e62d71b20d4be1fc35c",
+      "role": "real 223 driver with exact HTTP/PortResult/size/MIME oracle NOT_RUN"
+    }
+  ],
+  "integration_inert": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/INERT-211-PATCHSET.json",
+    "sha": "751ca2d1e57a2fcb54973ff134de51d6b035b487",
+    "target": "211",
+    "target_branch": "sf-closure-bundle",
+    "target_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "patches": 6,
+    "application_status": "NOT_APPLIED_BY_226",
+    "preimages_checked": [
+      "d4b28cceb8c5695fbf290a6d9a1e0c319e28c337",
+      "89c376ac148db0c3ba2a5f5b0a0aece932c72a6f",
+      "aff16695246561bd2cfe154c1ac892084ce119a4",
+      "ABSENT",
+      "34d74d6651031c5194db1d22c823baae60e9a260",
+      "912cade1f8213c0014f27ed75adb85b2b64f33c2"
+    ],
+    "note": "Package exports, I00 codecs registry, native original Request host routing and bounded multipart/network filename/1MiB staging are bundled as complete inert changes, not applied out-of-lease; owner 211 must live-CAS and inject real product producer functions."
+  },
+  "consumer_requests": {
+    "190": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/REQUEST-190.json",
+      "sha": "6b9a993a140ba656f05b1b32d54aa0922450348e",
+      "status": "PUBLISHED_CONDITIONAL_IF_PUBLIC_API_DIFF"
+    },
+    "223": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/REQUEST-223.json",
+      "sha": "96ade07f3b1fd6f788af04d3462bb2a9b0e0b831",
+      "status": "PUBLISHED_NOT_RUN"
+    }
+  },
+  "no_duplicated_screens": [
+    "218/import-history",
+    "224/talent-CAP08",
+    "225/suppliers-CSV"
+  ],
+  "checks": {
+    "unit": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "browser_real": "NOT_RUN",
+    "desktop_real": "NOT_RUN",
+    "source_owner_revocation": "NOT_RUN"
+  },
+  "limitations": {
+    "C_001": "SOURCE_AND_TRANSPORT_CODE_PUBLISHED_NOT_INTEGRATED",
+    "C_004": "SOURCE_DEPENDENT_PROOF_PENDING",
+    "reason": "211 composition and original authenticated owner/bytes/producers outside 226 lease; no synthetic credentials/grant/scanner or actions provided.",
+    "broker_stream": "Private handle and 32MiB cap in 226 main, upstream single-frame 1MiB guard is provided as 211 inert patch (not yet applied)."
+  },
+  "next_actions": [
+    "211: re-read current live HEAD and S0, consume PR205 code + all six preimage-pinned INERT-211-PATCHSET hunks under its CAS, inject four existing product producers using unchanged Request; resolve PR mergeability without force",
+    "223: only after 211 real composition, execute REQUEST-223 original real-input source selectors including seven-case permitted/denied/revoked/stale/oversize/cancel/retry matrix; publish exact observed outcome and bytes bound",
+    "190: compare actual public API/HttpApi; report no-generation-required if unchanged, otherwise run official generation and record real output SHA",
+    "218/224/225: consume same installed F02/A06 port from Git, without replacing screens or authors"
+  ],
+  "guardrails": {
+    "global_release": false,
+    "native_goal": "PAUSED",
+    "Azure_modified": false,
+    "SDK_generated_modified": false,
+    "other_author_branches_modified": false,
+    "watchdog": false,
+    "new_S0": false,
+    "own_CI_run": false
+  }
+}
