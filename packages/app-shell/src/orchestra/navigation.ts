@@ -19,6 +19,19 @@ export const advancedNavigation = [
   // Sucafina F01 native entry routes; still subject to installed owner/context admission.
   { id: "sf-home", label: "sf.ui29.title" },
   { id: "sf-decisions", label: "sf.ui33.title" },
+  { id: "sf-dashboard", label: "sf.cap01.title" },
+  { id: "sf-people", label: "sf.cap06.title" },
+  { id: "sf-operations", label: "sf.cap11.title" },
+  { id: "sf-portfolio", label: "sf.cap09.title" },
+  { id: "sf-procurement", label: "sf.cap25.title" },
+  { id: "sf-planner", label: "sf.cap17.title" },
+  { id: "sf-work", label: "sf.ui30.title" },
+  { id: "sf-bi", label: "sf.ui45.title" },
+  { id: "sf-reviews", label: "sf.ui47.title" },
+  { id: "sf-imports", label: "sf.ui55.title" },
+  { id: "sf-documents", label: "sf.ui58.title" },
+  { id: "sf-memory", label: "sf.ui61.title" },
+  { id: "sf-routines", label: "sf.ui64.title" },
   // Session-relative governance (S20), opened as a dialog over the current session; not a route.
   { id: "maestro", label: "orchestra.nav.maestro" },
   // Relay workflows sit next to Maestro, which runs them (owner decision, 2026-10-06).

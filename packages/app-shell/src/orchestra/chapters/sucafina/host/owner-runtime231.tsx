@@ -14,6 +14,8 @@ import { Option, Schema } from "effect"
 import { usePlatform } from "@/context/platform"
 import { useLanguage } from "@/context/language"
 import { ServerConnection } from "@/context/server"
+import { pathKey } from "@/utils/path-key"
+import { showToast } from "@/utils/toast"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
@@ -25,10 +27,13 @@ import { createSfDraft } from "../shared/draft"
 import { createSfNavigationState, type SfNativeNavigationState } from "../navigation-state"
 import { isSfNativeChapter, matchSfNativeRoutePath } from "../route-registry"
 import { useSfContext } from "../context"
+import { SfPageFrame } from "../shared/frame"
+import { SfStatePanel } from "../shared/states"
 import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
   SfDraftRevalidation, SfSurfaceProps } from "../context/contracts"
 import { parsePlannerRouteQuery, plannerRouteAvailable, plannerOverviewSelectionMatches } from "./planner-route"
 import { isExtendedSurface, parseExtendedRouteQuery, extendedRouteAvailable, SfExtendedPages } from "./extended-routes"
+import { homeContextStatusRoute } from "./home-pages-route"
 import { isPlannerPagesSurface, plannerPagesRouteAvailable } from "./planner-pages-route"
 import { plannerPagesNeedsPreflight, preflightPlannerPages } from "./planner-pages-preflight"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
@@ -58,6 +63,7 @@ import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
 import { createSfDesktopOriginBridge238 } from "./desktop-origin-bridge238"
+import { bindSfNativeChapterNavigation, transitionSfNativeChapter } from "./native-chapter-entry"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -188,6 +194,7 @@ function ownerKeyFromVerifiedContext(
 
 function MountedSurface(props: Readonly<{
   view: () => View
+  contextStatusRoute: () => SfResolvedRoute<"UI67"> | undefined
   bind: (handle: SfContextHandle | undefined) => void
   status: (status: string, generation: number) => void
 }>): JSX.Element {
@@ -196,8 +203,27 @@ function MountedSurface(props: Readonly<{
   createEffect(() => props.status(handle.state().status, handle.generation()))
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.view().route
+  const statusKey = (key: string) => key as Parameters<typeof SfStatePanel>[0]["messageKey"]
+  const ownerStatus = () => {
+    const status = handle.state().status
+    return status === "resolving" ? "loading" as const : status === "denied" ? "denied" as const :
+      status === "unauthenticated" ? "session-expired" as const : status === "context-mismatch" ? "invalid" as const :
+      status === "ready" ? "ready" as const : "unavailable" as const
+  }
+  const ownerMessage = () => {
+    const status = handle.state().status
+    return status === "resolving" ? "sf.ui67.loading" : status === "denied" ? "sf.ui67.denied" :
+      status === "unauthenticated" ? "sf.ui67.unauthenticated" : status === "context-mismatch" ? "sf.ui67.mismatch" :
+      status === "choose-installation" ? "sf.ui67.select" : "sf.ui67.unavailable"
+  }
   return (
     <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
+      <Match when={handle.state().status !== "ready" && props.contextStatusRoute()}>
+        <SfPageFrame titleKey={statusKey("sf.ui67.title")} context={[]} tabs={[]} activeTab={null}
+          secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
+          <SfStatePanel state={ownerStatus()} messageKey={statusKey(ownerMessage())} onRetryRead={() => { void handle.reload() }} />
+        </SfPageFrame>
+      </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "UI29"}>
         <SfTodayView surfaceId="UI29" route={current() as SfSurfaceProps<"UI29">["route"]} />
       </Match>
@@ -583,6 +609,30 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         navigate(target, { replace: cause === "deep-link" || cause === "history" || cause === "reload" })
     },
   })
+  const unbindChapterNavigation = bindSfNativeChapterNavigation(async (request) => {
+    if (request.server !== ServerConnection.key(props.server) ||
+      pathKey(request.directory ?? "") !== pathKey(props.directory)) return "profile-mismatch"
+    const state = mounted?.state()
+    const selected = selection()
+    if (!state || state.status !== "ready" || !selected || state.owner.serverKey !== request.server ||
+      selected.serverKey !== request.server || selected.projectId !== state.binding.projectId ||
+      !selected.installationId || selected.installationId !== state.binding.installationId) {
+      console.error("Sucafina sidebar owner is not ready")
+      showToast({ title: language.t("common.requestFailed"), description: language.t("sf.common.unavailable") })
+      return "blocked"
+    }
+    const result = await transitionSfNativeChapter(request.chapter, selected, state.ownerKey, navigation).catch((error: unknown) => {
+      console.error("Sucafina sidebar transition failed", error)
+      return { status: "unavailable" as const }
+    })
+    if (result.status === "committed") return "committed"
+    restoreEditorFocus()
+    if (result.status !== "kept-editing" && result.status !== "aborted") {
+      console.error("Sucafina sidebar transition not admitted", result.status)
+      showToast({ title: language.t("common.requestFailed"), description: language.t("sf.common.unavailable") })
+    }
+    return "blocked"
+  })
   // The exact 227 resume adapter receives this single navigation instance.
   const boundDependencies: SfContextDependencies = Object.freeze({ ...dependencies, navigation })
   let discoveryAttempt = 0
@@ -685,6 +735,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     ownerEpoch += 1
     desktopBridge?.dispose()
     navigation.dispose()
+    unbindChapterNavigation()
     unbindExit()
     if (typeof window !== "undefined") window.removeEventListener("beforeunload", unload)
   })
@@ -777,7 +828,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           dependencies={boundDependencies}
           ownerNavigation={navigation}
         >
-          <MountedSurface view={() => view} bind={(handle) => { mounted = handle }}
+          <MountedSurface view={() => view}
+            contextStatusRoute={() => selection() ? homeContextStatusRoute(location.pathname, location.search, selection()!) : undefined}
+            bind={(handle) => { mounted = handle }}
             status={(status, generation) => setProvider({ status, generation })} />
         </SfTodayBoundOwnerProvider>
       </Show>

@@ -20,6 +20,7 @@ import { HugrBrand } from "@/orchestra/brand"
 import { chapterPages } from "@/orchestra/chapter-route"
 import { FlightNavChip } from "@/orchestra/chapters/flight-engineer/entry"
 import { requestSfOwnerShellExit237 } from "@/orchestra/chapters/sucafina/host/owner-runtime231"
+import { openSfNativeChapter, requestSfNativeChapterNavigation, sfNativeChapterEntry } from "@/orchestra/chapters/sucafina/host/native-chapter-entry"
 import { createAdvancedNavigation } from "@/orchestra/compact-navigation"
 import { advancedNavigation, navigation, primaryNavigation, settingsNavigation, showWip } from "@/orchestra/navigation"
 import { OrchestraNavigationToggle } from "@/orchestra/navigation-toggle"
@@ -321,10 +322,25 @@ export function OrchestraSidebar(props: {
   }
 
   async function openChapter(id: string, view = "") {
-    // Switching to another Orchestra chapter leaves the SF owner; keep same-owner
-    // native SF chapter transitions under F01's original navigation instead.
-    if (id !== "sf-home" && id !== "sf-decisions" &&
-        !(await requestSfOwnerShellExit237())) return
+    const native = sfNativeChapterEntry(id)
+    if (native) {
+      const target = profile()
+      const directory = target.project?.worktree ?? target.directory
+      await openSfNativeChapter({ chapter: id, server: target.server, directory }, {
+        request: requestSfNativeChapterNavigation,
+        confirmExit: requestSfOwnerShellExit237,
+        sameProfile: () => {
+          const latest = profile()
+          return !requests.disposed && latest.server === target.server &&
+            pathKey(latest.project?.worktree ?? latest.directory ?? "") === pathKey(directory ?? "")
+        },
+        // Initial discovery uses the actual selected profile, never a remembered installation ID.
+        selectProfile: () => layout.home.setSelection({ server: target.server, ...(directory ? { directory } : {}) }),
+        navigate,
+      })
+      return
+    }
+    if (!(await requestSfOwnerShellExit237())) return
     // Chapter pages read the Home selection; carry the profile the user is looking at.
     const target = profile()
     const directory = target.project?.worktree ?? target.directory
@@ -450,7 +466,7 @@ export function OrchestraSidebar(props: {
               if (chapterPages[item.id]) return openChapter(item.id)
             }}
           >
-            <svg class="orchestra-nav-icon" viewBox="0 0 16 16" aria-hidden="true" innerHTML={icons[item.id]} />
+            <svg class="orchestra-nav-icon" viewBox="0 0 16 16" aria-hidden="true" innerHTML={icons[item.id as keyof typeof icons] ?? (sfNativeChapterEntry(item.id) ? icons["sf-home"] : undefined)} />
             <span class="orchestra-nav-label">{language.t(item.label)}</span>
             <Show when={item.id === "search"}>
               <kbd>{command.keybind("command.palette")}</kbd>

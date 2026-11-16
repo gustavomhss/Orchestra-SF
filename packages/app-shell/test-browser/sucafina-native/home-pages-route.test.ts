@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
-import type { SfContext } from "@orchestra/schema/sucafina/context"
+import type { SfContext, SfRef, SfServerKey } from "@orchestra/schema/sucafina/context"
 import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
-import { homePagesRouteAvailable, parseHomePagesRouteQuery } from "../../src/orchestra/chapters/sucafina/host/home-pages-route"
+import { homeContextStatusRoute, homePagesRouteAvailable, parseHomePagesRouteQuery } from "../../src/orchestra/chapters/sucafina/host/home-pages-route"
 
 describe("home context, search and administration", () => {
   test("permits only owner selectors", () => {
@@ -18,5 +18,13 @@ describe("home context, search and administration", () => {
     expect(homePagesRouteAvailable(context, candidate)).toBe(true)
     expect(homePagesRouteAvailable({ ...context, destinations: [{ ...context.destinations[0]!, canRead: false }] }, candidate)).toBe(false)
     expect(homePagesRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
+  })
+  test("pre-login context status never borrows a mismatched or partial owner", () => {
+    const selected = { serverKey: "s" as SfServerKey, projectId: "p" as SfRef, installationId: "i" as SfRef }
+    expect(homeContextStatusRoute("/orchestra/sf-home/context", "", selected)?.surfaceId).toBe("UI67")
+    expect(homeContextStatusRoute("/orchestra/sf-home/context", "?server=s&project=p&installation=i", selected)?.ownerSelection).toEqual(selected)
+    expect(homeContextStatusRoute("/orchestra/sf-home/context", "?server=s", selected)).toBeUndefined()
+    expect(homeContextStatusRoute("/orchestra/sf-home/context", "?server=s&project=other&installation=i", selected)).toBeUndefined()
+    expect(homeContextStatusRoute("/orchestra/sf-home/context", "?q=private", selected)).toBeUndefined()
   })
 })
