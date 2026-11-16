@@ -16,6 +16,17 @@ export const bankFields = ["iban", "account", "bankName", "swift", "accountHolde
 export const booleanFields: readonly (keyof SupplierEdit)[] = ["dueDiligence","nda","dpa"]
 export const multilineFields: readonly (keyof SupplierEdit)[] = ["address","notes","certifications","categories"]
 
+/** Field names actually disclosed by this supplier projection for this editor. */
+export function supplierSourceFields(source: Supplier, bank: boolean): readonly string[] {
+  if (bank) return bankFields.filter((field) => source[field] !== undefined)
+  return [
+    ...generalFields.filter((field) => source[field] !== undefined),
+    ...(source.contacts === undefined ? [] : ["contacts"]),
+    ...(source.commercial?.notes === undefined ? [] : ["commercial.notes"]),
+    ...(source.compliance?.notes === undefined ? [] : ["compliance.notes"]),
+  ]
+}
+
 // Never copy bank data from source projection into a general draft. Buyer
 // source values are redacted; privileged bank updates use their own intent.
 export function supplierEdit(source: Supplier): SupplierEdit {

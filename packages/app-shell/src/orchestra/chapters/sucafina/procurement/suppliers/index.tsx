@@ -18,7 +18,7 @@ import type { SfCopyKey, SfDisplayValue, SfMessage, SfText, SfUiState } from "..
 import type { SfSort } from "../../shared/table"
 import type { SfU14CopyKey } from "@/i18n/orchestra-chapters/sf-u14"
 import {
-  bankFields, booleanFields, generalFields, linkedRequests,
+  bankFields, booleanFields, generalFields, linkedRequests, supplierSourceFields,
   multilineFields, supplierEdit, supplierRevision, supplierVersion,
   uniqueSupplier, type Cap27PageOk, type Supplier, type SupplierAction, type SupplierEdit,
 } from "./model"
@@ -220,7 +220,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       editScopeKey: (bank ? "CAP27:bank" : "CAP27:general") as SfEditScopeKey,
       baseVersion: version(), base: original, value: original,
       revalidation: { operationId: "domain.page.CAP27", input: { supplier: current.id },
-        fieldPaths: ["id"], actionIds: [bank ? "change-bank" : "save"] },
+        fieldPaths: supplierSourceFields(current, bank), actionIds: [bank ? "change-bank" : "save"] },
     })
   })
   createEffect(() => {

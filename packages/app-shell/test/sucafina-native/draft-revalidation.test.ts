@@ -12,12 +12,12 @@ const fresh = Schema.decodeUnknownSync(SfContext)({
   stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft",
   destinations: [
     { capabilityId: "CAP25", surface: "procurement", page: "Requests", canRead: true, allowedActionIds: ["save", "create"] },
-    { capabilityId: "CAP27", surface: "procurement", page: "Suppliers", canRead: true, allowedActionIds: ["create"] },
+    { capabilityId: "CAP27", surface: "procurement", page: "Suppliers", canRead: true, allowedActionIds: ["create", "save", "change-bank"] },
     { capabilityId: "CAP28", surface: "procurement", page: "Settings", canRead: true, allowedActionIds: ["save", "reset"] },
   ],
   availability: [
     { family: "procurement", resource: "CAP25", state: "ready", operations: [operation("domain.page.CAP25")] },
-    { family: "procurement", resource: "CAP27", state: "ready", operations: [operation("domain.command.CAP27.create")] },
+    { family: "procurement", resource: "CAP27", state: "ready", operations: [operation("domain.command.CAP27.create"), operation("domain.command.CAP27.save"), operation("domain.command.CAP27.change-bank")] },
     { family: "decisions", resource: "cases", state: "ready", operations: [operation("projection.case")] },
   ],
 })
@@ -108,6 +108,24 @@ describe("source-bound draft revalidation", () => {
     expect(await run(input, { ...body, value: { ...body.value, allowedActionIds: ["save"] } })).toEqual({ status: "denied" })
     expect(await run(input, { ...body, value: { ...body.value, data: { settings: {}, directory: [] } } })).toEqual({ status: "denied" })
     expect(await run(input, { ...body, value: { ...body.value, versions: {} } })).toEqual({ status: "unavailable" })
+  })
+  test("supplier edits recheck the selected record, disclosed fields and exact action", async () => {
+    const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "CAP27",
+      identity: { kind: "record", recordRef: "supplier-1" as SfRef }, editScopeKey: "CAP27:general" as SfEditScopeKey,
+      read: { operationId: "domain.page.CAP27", input: { supplier: "supplier-1" }, fieldPaths: ["legalName", "commercial.notes"], actionIds: ["save"] } }
+    const supplier = { id: "supplier-1", legalName: "Supplier", commercial: { notes: "visible" }, iban: "secret" }
+    const body = { status: "ok", context: stamp, value: { capabilityId: "CAP27", selection: { supplier: "supplier-1" },
+      data: { suppliers: [supplier], requests: [], formSettings: {}, bankVerificationAvailable: true },
+      versions: { "suppliers:supplier-1": { version: 5, by: "actor" } }, allowedActionIds: ["save", "change-bank"] } }
+    expect(await run(input, body)).toMatchObject({ status: "authorized", sourceVersion: 5 })
+    expect(await run(input, { ...body, value: { ...body.value, data: { ...body.value.data, suppliers: [{ ...supplier, commercial: {} }] } } })).toEqual({ status: "denied" })
+    expect(await run(input, { ...body, value: { ...body.value, allowedActionIds: ["change-bank"] } })).toEqual({ status: "denied" })
+    expect(await run(input, { ...body, value: { ...body.value, data: { ...body.value.data, suppliers: [{ ...supplier, id: "other" }] } } })).toEqual({ status: "unavailable" })
+    const bank: SfDraftRevalidationInput = { ...input, editScopeKey: "CAP27:bank" as SfEditScopeKey,
+      read: { ...input.read, fieldPaths: ["iban"], actionIds: ["change-bank"] } }
+    expect(await run(bank, body)).toMatchObject({ status: "authorized", sourceVersion: 5 })
+    expect(await run(bank, { ...body, value: { ...body.value, data: { ...body.value.data, bankVerificationAvailable: false } } })).toEqual({ status: "denied" })
+    expect(await run(bank, { ...body, value: { ...body.value, allowedActionIds: ["save"] } })).toEqual({ status: "denied" })
   })
   test("preserves the opaque case selector and independently stamped version", async () => {
     const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "UI29",
