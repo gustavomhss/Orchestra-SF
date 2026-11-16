@@ -23,16 +23,16 @@ export async function revalidateDashboardScalarDraft(
     cap === "CAP03" && action === "save-revenue" ? "revenueByYear" : undefined
   if (!collection || input.read.fieldPaths[0] !== "data." + collection) return { status: "unavailable" }
   const original = input.read.input
+  const selectorKeys = cap === "CAP01" ? action === "save-users" ? ["execYear", "executiveMonth"] : ["execYear"] : ["year"]
   if (!original || typeof original !== "object" || Array.isArray(original) ||
-      Object.keys(original).length !== (cap === "CAP01" ? 2 : 1) ||
-      Object.keys(original).some((key) => !(cap === "CAP01" ? ["execYear", "executiveMonth"] : ["year"]).includes(key)))
+      Object.keys(original).length !== selectorKeys.length || Object.keys(original).some((key) => !selectorKeys.includes(key)))
     return { status: "unavailable" }
   const selection = Schema.decodeUnknownOption(SfDomain.operations["domain.page.CAP01"].input,
     { onExcessProperty: "error" })(original)
   if (Option.isNone(selection)) return { status: "unavailable" }
   const year = cap === "CAP01" ? selection.value.execYear : selection.value.year
   const month = selection.value.executiveMonth
-  if (year === undefined || cap === "CAP01" && month === undefined) return { status: "unavailable" }
+  if (year === undefined || action === "save-users" && month === undefined) return { status: "unavailable" }
   const scope = cap === "CAP01" ? action === "save-users" ? `${year}:${month}:users` : `${year}:benchmark` :
     action === "save-month" ? `${year}:month` : `${year}:revenue`
   if (input.editScopeKey !== `${cap}:${scope}` || cap === "CAP03" && input.identity.kind !== "new")
@@ -56,8 +56,8 @@ export async function revalidateDashboardScalarDraft(
     return { status: "authority-changed" }
   const page = result.body.value
   if (page.capabilityId !== cap || page.selection.year !== year ||
-      cap === "CAP01" && (page.selection.month !== month || page.selection.execYear !== year ||
-        page.selection.executiveMonth !== month)) return { status: "unavailable" }
+      cap === "CAP01" && page.selection.execYear !== year || action === "save-users" &&
+      (page.selection.month !== month || page.selection.executiveMonth !== month)) return { status: "unavailable" }
   if (!page.allowedActionIds.includes(action!)) return { status: "denied" }
   if (page.capabilityId === "CAP01") {
     const rows = collection === "itUsersMonthly" ? page.data.itUsersMonthly : page.data.costPerUserBenchmarks

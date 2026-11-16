@@ -24,7 +24,7 @@ const users: SfDraftRevalidationInput = { surfaceId: "CAP01", identity: { kind: 
   read: { operationId: "domain.page.CAP01", input: { execYear: 2026, executiveMonth: 4 }, fieldPaths: ["data.itUsersMonthly"], actionIds: ["save-users"] } }
 const benchmark: SfDraftRevalidationInput = { ...users, identity: { kind: "record", recordRef: "b1" as SfRef },
   editScopeKey: "CAP01:2026:benchmark" as SfEditScopeKey,
-  read: { ...users.read, fieldPaths: ["data.costPerUserBenchmarks"], actionIds: ["save-benchmark"] } }
+  read: { ...users.read, input: { execYear: 2026 }, fieldPaths: ["data.costPerUserBenchmarks"], actionIds: ["save-benchmark"] } }
 const month: SfDraftRevalidationInput = { ...users, surfaceId: "CAP03", identity: { kind: "new", newIntentRef: "intent" as SfIntentRef },
   editScopeKey: "CAP03:2026:month" as SfEditScopeKey,
   read: { operationId: "domain.page.CAP03", input: { year: 2026 }, fieldPaths: ["data.budgetCurrentMonth"], actionIds: ["save-month"] } }
@@ -54,16 +54,38 @@ describe("dashboard scalar source revalidation", () => {
       .toMatchObject({ status: "authorized", sourceVersion: 7 })
     expect(calls).toEqual([{ id: "domain.page.CAP01", input: { execYear: 2026, executiveMonth: 4 } }])
     expect(await run(benchmark, executive)).toMatchObject({ status: "authorized", sourceVersion: 8 })
+    expect(await run(users, { ...executive, value: { ...executive.value, versions: { "itUsersMonthly:u1": 0 } } })).toMatchObject({ status: "authorized", sourceVersion: 0 })
     // The group's grant does not require every optional scalar on an existing row.
     expect(await run(users, { ...executive, value: { ...executive.value, data: { itUsersMonthly: [{ id: "u1", year: 2026, month: 4, value: 2 }] } } }))
       .toMatchObject({ status: "authorized", sourceVersion: 7 })
     expect(await run(users, { ...executive, value: { ...executive.value, data: { itUsersMonthly: [{ ...userRow, futureOptionalSourceField: "new" }] } } }))
       .toMatchObject({ status: "authorized", sourceVersion: 7 })
   })
+  test("benchmark keeps one year-only draft contract across changes to the displayed month", async () => {
+    const calls: { id: string; input: unknown }[] = []
+    const changedMonth = { ...executive, value: { ...executive.value, selection: { execYear: 2026, year: 2026, month: 9 } } }
+    expect(await revalidateSfNativeDraft(benchmark, fresh, fixture(changedMonth, calls), new AbortController().signal))
+      .toMatchObject({ status: "authorized", sourceVersion: 8 })
+    expect(calls).toEqual([{ id: "domain.page.CAP01", input: { execYear: 2026 } }])
+    expect(await run({ ...benchmark, read: { ...benchmark.read, input: { execYear: 2026, executiveMonth: 4 } } }, executive)).toEqual({ status: "unavailable" })
+    expect(await run(benchmark, { ...changedMonth, value: { ...changedMonth.value,
+      data: { costPerUserBenchmarks: [benchRow, { ...benchRow, id: "b2" }] } } })).toEqual({ status: "unavailable" })
+    expect(await run(benchmark, { ...changedMonth, value: { ...changedMonth.value,
+      selection: { execYear: 2025, year: 2025, month: 9 } } })).toEqual({ status: "unavailable" })
+    const deps = { createDraft: createSfDraft, revalidateDraft: revalidateSfNativeDraft } as unknown as SfContextDependencies
+    const drafts = createSfOwnerDrafts(deps, { key: "old" as SfOwnerKey, identity: owner })
+    const registration = { surfaceId: "CAP01" as const, identity: benchmark.identity, editScopeKey: benchmark.editScopeKey,
+      baseVersion: 8, base: { text: "12" }, value: { text: "12" }, revalidation: benchmark.read }
+    const draft = drafts.registry.acquire(registration)
+    draft.edit({ text: "14" })
+    expect(drafts.registry.acquire({ ...registration, revalidation: { ...benchmark.read, input: { execYear: 2026 } } })).toBe(draft)
+    expect(draft.snapshot()).toMatchObject({ value: { text: "14" } })
+  })
   test("new CAP01 rows prove exact absence, never fallback, duplicates or missing collections", async () => {
     const created: SfDraftRevalidationInput = { ...users, identity: { kind: "new", newIntentRef: "new" as SfIntentRef } }
     const absent = { ...executive, value: { ...executive.value, data: { itUsersMonthly: [{ id: "old", year: 2026, month: 3, users: 10 }] } } }
     expect(await run(created, absent)).toMatchObject({ status: "authorized", sourceVersion: 0 })
+    expect(await run(created, { ...executive, value: { ...executive.value, data: { itUsersMonthly: [] } } })).toMatchObject({ status: "authorized", sourceVersion: 0 })
     expect(await run(created, executive)).toEqual({ status: "unavailable" })
     expect(await run(created, { ...executive, value: { ...executive.value, data: {} } })).toEqual({ status: "unavailable" })
     expect(await run(users, { ...executive, value: { ...executive.value, data: { itUsersMonthly: [userRow, { ...userRow, id: "u2" }] } } })).toEqual({ status: "unavailable" })
@@ -78,6 +100,7 @@ describe("dashboard scalar source revalidation", () => {
       .toMatchObject({ status: "authorized", sourceVersion: 11 })
     expect(await run(month, { ...budget, value: { ...budget.value, versions: {} } })).toEqual({ status: "unavailable" })
     expect(await run(month, { ...budget, value: { ...budget.value, versions: { budgetCurrentMonth: 0 } } })).toMatchObject({ status: "authorized", sourceVersion: 0 })
+    expect(await run(month, { ...budget, value: { ...budget.value, data: { budgetCurrentMonth: {} }, versions: { budgetCurrentMonth: 0 } } })).toMatchObject({ status: "authorized", sourceVersion: 0 })
     expect(await run(month, { ...budget, value: { ...budget.value, data: {} } })).toEqual({ status: "unavailable" })
     expect(await run({ ...month, identity: { kind: "record", recordRef: "2026" as SfRef } }, budget)).toEqual({ status: "unavailable" })
   })

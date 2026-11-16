@@ -200,7 +200,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                   recordId={benchmark()?.id === undefined ? undefined : String(benchmark()?.id)}
                   year={year()!} month={month()!} scope={String(year()) + ":benchmark"} integerOnly={false} min={0}
                   admitted={canEdit("save-benchmark")} drafts={ready().drafts}
-                  readInput={{ execYear: year()!, executiveMonth: month()! }}
+                  readInput={{ execYear: year()! }}
                   onConfirmed={reader.refresh}
                   onWrite={(value, version, idempotencyKey, signal) => createSfDomainClient(ready().transport)["domain.command.CAP01.save-benchmark"]({
                     id: benchmark()?.id === undefined ? undefined : String(benchmark()?.id),
