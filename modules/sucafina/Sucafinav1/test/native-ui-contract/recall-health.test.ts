@@ -20,5 +20,5 @@ test("CaseRecall health uses the initialized Atlas source and original C08 autho
     f.access.allowed = true
     f.business.dispose()
     expect(await observeSfRecallHealth(input, original, admitted.stamp)).toEqual([])
-  })
+  }, "recall-health-contract")
 })
