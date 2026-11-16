@@ -1,0 +1,243 @@
+{
+  "schema": "sf2h.closure233.handoff.v1",
+  "mission": 233,
+  "epoch": "proof-first-e1-browser233",
+  "actor": "implementer233",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "effective_model": "GPT-6",
+  "native_session_id": null,
+  "session_id_exposed": false,
+  "branch": "sf-proof-first",
+  "commit_before_handoff": "29627efa3dd284345e077641d067f86946d22933",
+  "ACK_commit": "89f25d399e8d44b0655c14581d3e2ffa8b427077",
+  "pull_request": {
+    "number": 211,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/211",
+    "base": "sf-closure-bundle",
+    "draft": true,
+    "merged": false
+  },
+  "entry_base": {
+    "branch": "sf-closure-bundle",
+    "head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580"
+  },
+  "scope": {
+    "write_lease": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/**",
+      "modules/sucafina/Sucafinav1/test/product/proof233/**"
+    ],
+    "mutated_product_files": 0,
+    "mutated_sf2_control_files": 0,
+    "overlapping_work_with_224_229_230_231_232": false,
+    "retain_all_original_15_WP_74_tasks_17_contracts_1610_criteria": true,
+    "approved_UX": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "native_goal": "PAUSED",
+    "GLOBAL_RELEASE": false
+  },
+  "deliveries": {
+    "code": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof233/source-fixture.ts",
+        "blob": "2fda640e4ac3c6d203a4abeec364b2247d9558f4",
+        "role": "original C15 source byte loader, 18 specialist input selectors, real domain producer paths and actual consumer source existence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof233/hosted-driver.ts",
+        "blob": "544eb5ec15b41be92bab6fa6d263a88e6b3992d7",
+        "role": "read-only original hosted CI envelope, AM01 input adapter, AM02/AM03 existing qualifiers; never PASS"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof233/driver.ts",
+        "blob": "de96b2e6419e906ccd10c30e7ab21318bfa6df85",
+        "role": "CLI on authorized pre-fetched real Actions bytes, structural preflight only"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof233/source-matrix.test.ts",
+        "blob": "c9e791ea5fd5def3e1b3c5e60a8ba0d8b4d064fa",
+        "role": "source-byte/producer/consumer regression, not native proof"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof233/provenance-negative.test.ts",
+        "blob": "68666670c026e556fc7698741cbd8fa7b69efcf1",
+        "role": "empty and malformed CI evidence negative checks"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof233/am03-envelope-integrity.test.ts",
+        "blob": "dfaf5cb257038482b80d32a4a422ff64a2387867",
+        "role": "AM03 URL prefix and unrecognized scenario negative; requires inert postimage applied by original writer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof233/README.md",
+        "blob": "8505067186e90bfceca9e42a3fd3dc609556f126",
+        "role": "operator / no PASS guide"
+      }
+    ],
+    "receipts": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/ACK.json",
+        "blob": "8e36c02518afa83b58b2c9290422d8654cd505e3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/SOURCE-READSET.json",
+        "blob": "1ca5b78efa4be7aa938f640251e625ea51bb55b3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/CRITERIA.json",
+        "blob": "0ed05026c9b50388276e597057f7fde3431716de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/CONSUMER-MAP.json",
+        "blob": "26788d98114fa6c8d02ad6c1378928ed15d6d05f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/CI-REQUESTS.json",
+        "blob": "51a49d79f7040a5a22c7f025426c1d5d11f7596c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/INERT-PATCHES.json",
+        "blob": "70169eca131f766c8004b7dc6264ce02067664cd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/payloads/script/sf2h/proofs/am03/correlation.ts.preimage.txt",
+        "blob": "29c6806d5da75ffa019a21b11971833f436925f7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/payloads/script/sf2h/proofs/am03/correlation.ts.inert.txt",
+        "blob": "b9b39d734ef519efb7d35cfc092fdb1c4b85bdc0"
+      }
+    ],
+    "real_source_and_consumer_links": {
+      "manifest": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "frozen_operations": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "run_time_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "consumer": {
+        "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+        "entry": "handleSfAnalysis:output"
+      },
+      "loaded_skill": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7"
+      },
+      "original_c16_observer": {
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+        "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7"
+      },
+      "all_routes": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/CONSUMER-MAP.json"
+    }
+  },
+  "behavior": {
+    "source_fixture": "Real source bytes, grants, 39 paths and 15 original AM01 test selectors; no provider, test principal or model generated",
+    "hosted_driver": "Reject malformed untrusted run IDs/URLs/hash/selection and preserve 5/18/39/8/25 matrix; AM01 source selector mapping and original hosted correlator are separate",
+    "am01": "18 original native specialty selectors over 5 profiles plus real source and consumption; no inference assumed",
+    "am02": "39 original C16 routes under 8 packs, authentic UI+agent+SDK MCP must be separately observed before S3-R3 acceptance",
+    "am03": "25 real installed-host scenarios required; 233 supplies negative correlation regression and full inert source fix",
+    "mock_proof": "NONE",
+    "provider_or_identity_claim": "NONE"
+  },
+  "inert_patches": [
+    {
+      "file": "script/sf2h/proofs/am03/correlation.ts",
+      "preimage": "29c6806d5da75ffa019a21b11971833f436925f7",
+      "postimage": "b9b39d734ef519efb7d35cfc092fdb1c4b85bdc0",
+      "preimage_complete_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/payloads/script/sf2h/proofs/am03/correlation.ts.preimage.txt",
+      "postimage_complete_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/payloads/script/sf2h/proofs/am03/correlation.ts.inert.txt",
+      "consumer": [
+        "modules/sucafina/Sucafinav1/test/product/proof233/am03-envelope-integrity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
+        "original runtime review209"
+      ],
+      "status": "INERT_NOT_APPLIED",
+      "apply_by": "211/190 authorized product owner after live SHA/CAS check"
+    }
+  ],
+  "provenance": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "source228": "33474b2158a4703f256191f61f1a16ac85c26004",
+    "source228_detached_tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+    "review207": "b426dce8ab053da0dcf9eee82648925434fe7081",
+    "review208_packet": "624870d6f1b65da64235d00fe034948249eab4f1",
+    "review209_packet": "44cc6770e3591944d9edb5b65f6744b9497ed6bb",
+    "archive210_handoff": "14986fe8ead6e778e712fbad056d05d92498d1ea",
+    "native229_current": "1e17d546ca5a4116693da449f5d2ecfb4c5cb18d",
+    "c12review230_handoff": "fa233a19e8aa52eb3dff77bf0a780872646bef1f",
+    "home231_fence": "c70c099ea29e0651085fb439a37d82b445c9d982",
+    "dispatcher232_handoff": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+    "dispatcher232_head": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72"
+  },
+  "CI_requests": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/CI-REQUESTS.json",
+    "blob": "51a49d79f7040a5a22c7f025426c1d5d11f7596c",
+    "exact_ids": [
+      "P233-SOURCE-ADMISSION",
+      "P233-AM03-URL-ADMISSION",
+      "P233-AM01-NATIVE",
+      "P233-AM02-C16-CAUSAL",
+      "P233-AM03-BOUNDARIES"
+    ],
+    "authorization": "Single reauthorized official dispatcher only, recheck 232 queue and dedup",
+    "number_dispatched_by_233": 0,
+    "CI_final_eight": "NOT_RUN",
+    "epic_E2E": "NOT_RUN"
+  },
+  "observations": {
+    "head_before_write_confirmed": true,
+    "github_branch_CAS_force_false": true,
+    "git_compare_lease_paths_only": true,
+    "own_files_from_original_git_blobs": true,
+    "source_runtime_executed": false,
+    "actions_runs_fetched_for_this_candidate": false,
+    "original_auth_f04_verified": false,
+    "accepted_C": null,
+    "D": null,
+    "am01": "NOT_RUN",
+    "am02": "NOT_RUN",
+    "am03": "NOT_RUN",
+    "G7_on_C": "NOT_RUN",
+    "G8_on_D": "NOT_RUN",
+    "reviews3": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "global_release": false
+  },
+  "deps": [
+    {
+      "owner": "211 or explicitly assigned product composer",
+      "state": "BLOCKED_AWAIT_LEASE_HANDOFF",
+      "need": "Consume proof233 code/tests into a material product W; reconcile 228 and subsequent patches; apply complete pre/post AM03 patch only with matching original blob and CAS"
+    },
+    {
+      "owner": "199/213 or original installed F04 authority",
+      "state": "NOT_PROVEN",
+      "need": "Authenticated original installed host principal/model/SessionV2, real provider generation and restart evidence; never introduce new access"
+    },
+    {
+      "owner": "single authorized original test:ci dispatcher succeeding 232",
+      "state": "NOT_EXPOSED",
+      "need": "Run exact distinct selections on actual material W then accepted C using original workflow, preserve snapshots and original run logs/requests"
+    },
+    {
+      "owner": "S3-R3 independent review and other 2 independent reviewers",
+      "state": "NOT_RUN",
+      "need": "Review original authenticated AM01-AM03 positive/negative/consumption witnesses on accepted C; no autojudgment"
+    },
+    {
+      "owner": "G7/G8 guard owner",
+      "state": "NOT_RUN",
+      "need": "G7 on actual C checkout, then evidence-only D and G8 on actual D checkout, never same tree"
+    }
+  ],
+  "state": "PREPARATION_IMPLEMENTED_SOURCE_ONLY_ALL_PROOFS_NOT_RUN",
+  "verdict": "READY_FOR_CONTROLLED_CONSUMPTION_NOT_FOR_ACCEPTANCE",
+  "lease_state": "RELEASED_UPON_HANDOFF_PUBLICATION",
+  "writer_alive_claim": false,
+  "release_effect": "No 233 writes or CI dispatches authorized after this handoff without fresh explicit lease"
+}

@@ -102,10 +102,28 @@ export async function loadProof233SourceFixture() {
     }
   })
 
+  // Check existing source and consumer files, never create substitute fixtures.
+  const repoRoot = path.resolve(import.meta.dir, "../../../../../..")
+  const consumerSources = [
+    "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+  ]
+  const requiredTreePaths = [
+    ...am01HostedSelectors.map((selector) => path.join("modules/sucafina", selector)),
+    ...routes.map((route) => route.producerPath),
+    ...consumerSources,
+  ]
+  for (const file of new Set(requiredTreePaths)) {
+    if (!await Bun.file(path.join(repoRoot, file)).exists())
+      throw new Error("233: original source/consumer/selector not present in candidate tree: " + file)
+  }
+
   return {
     schema: "sf2h.proof233.original-source-fixture.v1" as const,
     proofStatus: "NOT_RUN" as const, sourceOnly: true, manifestDigest: bundle.manifestDigest,
     profiles: [...profiles].sort(), skills: [...skills].sort(), packs: [...packs].sort(),
+    sourcePathsChecked: [...new Set(requiredTreePaths)].sort(), consumerSources,
     assignments, routes, scenarios: [...am03Scenarios],
     noPassFromCatalog: true,
   }

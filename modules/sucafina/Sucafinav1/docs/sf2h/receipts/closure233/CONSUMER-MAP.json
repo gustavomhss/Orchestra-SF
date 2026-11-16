@@ -1,0 +1,1686 @@
+{
+  "schema": "sf2h.closure233.real-source-consumer-map.v1",
+  "baseline": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "freeze_blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+  "resident_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+  "source_data": "Actual product tree at the recorded base. No runtime execution; a frozen task ID is only a consumer contract, not installed UI observation.",
+  "entries": [
+    {
+      "operation": "sf_dashboard_read",
+      "pack": "performance",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+        "blob": "e86b1ca37f7b82d1618b6209cfb362a422e475a1",
+        "handler_export": "readDashboard",
+        "owner": "WP02.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-produzir-bi-contextual",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+        "source_digest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7"
+      },
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_kpi_explain",
+      "pack": "performance",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+        "blob": "e86b1ca37f7b82d1618b6209cfb362a422e475a1",
+        "handler_export": "explainKpi",
+        "owner": "WP02.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_finance",
+        "skill": "sf-explicar-forecast",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "source_digest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_bi_view",
+      "pack": "performance",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+        "blob": "87e36883d92f6982cc8765337f8802ffacd6e52c",
+        "handler_export": "readBiView",
+        "owner": "WP05.T04"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_finance",
+        "skill": "sf-produzir-bi-contextual",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+        "source_digest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7"
+      },
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_source_get",
+      "pack": "performance",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+        "blob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+        "handler_export": "resolveSfSource",
+        "owner": "WP10.T07"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_forecast_compare",
+      "pack": "planning",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+        "blob": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+        "handler_export": "compareForecast",
+        "owner": "WP03.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_finance",
+        "skill": "sf-explicar-forecast",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "source_digest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_scenario_simulate",
+      "pack": "planning",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+        "blob": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+        "handler_export": "simulateScenario",
+        "owner": "WP03.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_finance",
+        "skill": "sf-comparar-cenarios",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+        "source_digest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_scenario_compare",
+      "pack": "planning",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+        "blob": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+        "handler_export": "compareScenarios",
+        "owner": "WP03.T05"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_finance",
+        "skill": "sf-comparar-cenarios",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+        "source_digest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_sensitivity_evaluate",
+      "pack": "planning",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+        "blob": "3fd9f28d2d4b19181f11563039b7440ba8e3e4fe",
+        "handler_export": "evaluateSensitivity",
+        "owner": "WP13.T03"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_finance",
+        "skill": "sf-avaliar-sensibilidade",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+        "source_digest": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5"
+      },
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_portfolio_evaluate",
+      "pack": "planning",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+        "blob": "3fd9f28d2d4b19181f11563039b7440ba8e3e4fe",
+        "handler_export": "evaluatePortfolio",
+        "owner": "WP13.T02"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_portfolio",
+        "skill": "sf-compor-portfolio",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+        "source_digest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_request_read",
+      "pack": "procurement",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "blob": "65e24b8fb32cede73975430a5835df9d9b54a733",
+        "handler_export": "readRequest",
+        "owner": "WP04.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-comparar-sourcing",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+        "source_digest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_supplier_read",
+      "pack": "procurement",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "blob": "65e24b8fb32cede73975430a5835df9d9b54a733",
+        "handler_export": "readSupplier",
+        "owner": "WP04.T05"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-comparar-sourcing",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+        "source_digest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_contract_read",
+      "pack": "procurement",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "blob": "65e24b8fb32cede73975430a5835df9d9b54a733",
+        "handler_export": "readContract",
+        "owner": "WP04.T05"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-comparar-sourcing",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+        "source_digest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_sourcing_compare",
+      "pack": "procurement",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "blob": "65e24b8fb32cede73975430a5835df9d9b54a733",
+        "handler_export": "compareSourcing",
+        "owner": "WP04.T03"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-comparar-sourcing",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+        "source_digest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_case_read",
+      "pack": "decisions",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+        "blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249",
+        "handler_export": "readCase",
+        "owner": "WP11.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-enquadrar-decisao",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "source_digest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4"
+      },
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_case_draft",
+      "pack": "decisions",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+        "blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249",
+        "handler_export": "draftCase",
+        "owner": "WP11.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-enquadrar-decisao",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "source_digest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4"
+      },
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_alternative_draft",
+      "pack": "decisions",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+        "blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249",
+        "handler_export": "draftAlternative",
+        "owner": "WP11.T02"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_finance",
+        "skill": "sf-comparar-cenarios",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+        "source_digest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_change_prepare",
+      "pack": "decisions",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+        "blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249",
+        "handler_export": "prepareChange",
+        "owner": "WP11.T03"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-preparar-compra",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+        "source_digest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0"
+      },
+      "consumer_tasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_receipt_get",
+      "pack": "decisions",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+        "blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249",
+        "handler_export": "readReceipt",
+        "owner": "WP11.T04"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-preparar-compra",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+        "source_digest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0"
+      },
+      "consumer_tasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_work_list",
+      "pack": "collaboration",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+        "blob": "c0bd1afe946a79a906c4f29c4afbd31a992daa68",
+        "handler_export": "listWork",
+        "owner": "WP08.T04"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_question_prepare",
+      "pack": "collaboration",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+        "blob": "c0bd1afe946a79a906c4f29c4afbd31a992daa68",
+        "handler_export": "prepareQuestion",
+        "owner": "WP08.T06"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-enquadrar-decisao",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "source_digest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4"
+      },
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_answer_read",
+      "pack": "collaboration",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+        "blob": "c0bd1afe946a79a906c4f29c4afbd31a992daa68",
+        "handler_export": "readAnswer",
+        "owner": "WP08.T02"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-coordenar-perguntas",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+        "source_digest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33"
+      },
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_relation_read",
+      "pack": "collaboration",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+        "blob": "c0bd1afe946a79a906c4f29c4afbd31a992daa68",
+        "handler_export": "readRelations",
+        "owner": "WP08.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-coordenar-perguntas",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+        "source_digest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33"
+      },
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_handoff_prepare",
+      "pack": "collaboration",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+        "blob": "c0bd1afe946a79a906c4f29c4afbd31a992daa68",
+        "handler_export": "prepareHandoff",
+        "owner": "WP08.T05"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-coordenar-perguntas",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+        "source_digest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33"
+      },
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_document_extract",
+      "pack": "documents_reports",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+        "blob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41",
+        "handler_export": "extractDocumentEvidence",
+        "owner": "WP06.T05"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-revisar-condicoes-contratuais",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+        "source_digest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb"
+      },
+      "consumer_tasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_import_preview",
+      "pack": "documents_reports",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/imports/capabilities.ts",
+        "blob": "0e660ca0c26506c29d49a07becf406a31f38738f",
+        "handler_export": "previewImport",
+        "owner": "WP06.T02"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_finance",
+        "skill": "sf-explicar-forecast",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "source_digest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_review_prepare",
+      "pack": "documents_reports",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+        "blob": "d4ea6ec8cfd1c1a9dbe0be0a92e236df94b1d11f",
+        "handler_export": "prepareReview",
+        "owner": "WP07.T02"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_report_prepare",
+      "pack": "documents_reports",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+        "blob": "d4ea6ec8cfd1c1a9dbe0be0a92e236df94b1d11f",
+        "handler_export": "prepareReport",
+        "owner": "WP07.T04"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_artifact_get",
+      "pack": "documents_reports",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+        "blob": "d4ea6ec8cfd1c1a9dbe0be0a92e236df94b1d11f",
+        "handler_export": "readArtifact",
+        "owner": "WP07.T04"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_context_get",
+      "pack": "knowledge",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+        "blob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+        "handler_export": "readSfBusinessContext",
+        "owner": "WP10.T07"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-enquadrar-decisao",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "source_digest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4"
+      },
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_knowledge_search",
+      "pack": "knowledge",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+        "blob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41",
+        "handler_export": "searchDocumentEvidence",
+        "owner": "WP06.T05"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-revisar-condicoes-contratuais",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+        "source_digest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb"
+      },
+      "consumer_tasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_evidence_get",
+      "pack": "knowledge",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+        "blob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+        "handler_export": "resolveSfBusinessEvidence",
+        "owner": "WP10.T07"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_procurement",
+        "skill": "sf-comparar-sourcing",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+        "source_digest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_decision_recall",
+      "pack": "knowledge",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+        "blob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+        "handler_export": "recallSfDecisions",
+        "owner": "WP10.T07"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-consultar-memoria-decisoria",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+        "source_digest": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_freshness_check",
+      "pack": "knowledge",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+        "blob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+        "handler_export": "checkSfFreshness",
+        "owner": "WP10.T07"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-enquadrar-decisao",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "source_digest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4"
+      },
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_routine_catalog",
+      "pack": "routines",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+        "blob": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+        "handler_export": "readRoutineCatalog",
+        "owner": "WP09.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_routine_prepare",
+      "pack": "routines",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+        "blob": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+        "handler_export": "prepareRoutine",
+        "owner": "WP09.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_routine_run",
+      "pack": "routines",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+        "blob": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+        "handler_export": "runAdmittedRoutine",
+        "owner": "WP09.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_routine_status",
+      "pack": "routines",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+        "blob": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+        "handler_export": "readRoutineStatus",
+        "owner": "WP09.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_routine_result",
+      "pack": "routines",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+        "blob": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+        "handler_export": "readRoutineResult",
+        "owner": "WP09.T01"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_maestro",
+        "skill": "sf-preparar-revisao-executiva",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+      },
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    },
+    {
+      "operation": "sf_watch_prepare",
+      "pack": "routines",
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+        "blob": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+        "handler_export": "prepareWatch",
+        "owner": "WP09.T06"
+      },
+      "native_wrapper": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "profile": "sf_portfolio",
+        "skill": "sf-reavaliar-compromissos",
+        "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+        "source_digest": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6"
+      },
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ],
+      "consumer_programs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "role": "typed analysis output HTML + authorized read/revalidate; NOT per-route UI parity"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+          "blob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+          "role": "original observed SessionV2 C16 receipt and live UI correlation; NOT independent SDK MCP"
+        }
+      ],
+      "runtime_composition": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442"
+      },
+      "observed_call_ref": null,
+      "output_ref": null,
+      "installed_consumer": "NOT_RUN"
+    }
+  ],
+  "summary": {
+    "entries": 39,
+    "packs": 8,
+    "missing_original_producer_blob": [],
+    "real_consumer_program_sources_pinned": 2,
+    "source_status": "STATIC_VERIFIED_LINKS_ONLY",
+    "AM01": "NOT_RUN",
+    "AM02": "NOT_RUN",
+    "AM03": "NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}

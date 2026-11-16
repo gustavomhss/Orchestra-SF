@@ -10,12 +10,14 @@
       "preimage": {
         "product_sha": "998f0afd6047409956418f40c570dc9c48dc6c8f",
         "blob": "29c6806d5da75ffa019a21b11971833f436925f7",
-        "bytes": 11271
+        "bytes": 11271,
+        "complete_payload_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/payloads/script/sf2h/proofs/am03/correlation.ts.preimage.txt"
       },
       "postimage": {
         "blob": "b9b39d734ef519efb7d35cfc092fdb1c4b85bdc0",
         "bytes": 11798,
-        "complete_payload_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/payloads/script/sf2h/proofs/am03/correlation.ts.inert.txt"
+        "complete_payload_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure233/payloads/script/sf2h/proofs/am03/correlation.ts.inert.txt",
+        "compared_against_actual_original_blob": true
       },
       "surgical_changes": [
         "Require exact original Actions run URL, no prefix-run-ID confusion",
@@ -37,5 +39,6 @@
   ],
   "no_existing_source_edited": true,
   "CI": "NOT_RUN",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "note": "Both full preimage and full postimage are Git objects stored under exclusive closure233 receipts; no source file altered."
 }
