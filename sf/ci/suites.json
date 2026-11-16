@@ -15,7 +15,14 @@
     {
       "id": "CI-SF",
       "kind": "bun",
-      "directory": "modules/sucafina"
+      "directory": "modules/sucafina",
+      "selection": {
+        "kind": "full-except-release-only",
+        "releaseOnlyFiles": [
+          "Sucafinav1/test/parity-pitr.test.ts"
+        ],
+        "reason": "macOS local-operator Litestream continuity; Azure Linux backup/restore requires a distinct real release proof"
+      }
     },
     {
       "id": "CI-CLI",
@@ -52,7 +59,11 @@
       "selection": {
         "kind": "directory",
         "testDirectory": "test-browser/sucafina-native",
-        "coverage": "All installed SF browser/host boundary tests, including new tests under this directory; excludes unrelated Orchestra canonical browser tests"
+        "coverage": "All installed SF browser/host boundary tests, including new tests under this directory; excludes unrelated Orchestra canonical browser tests",
+        "releaseOnlyFiles": [
+          "test-browser/sucafina-native/transport-integration.test.ts"
+        ],
+        "releaseReason": "F04 installed-host live manifest and authenticated public origin are release-owned, not a PR Bun-only fixture"
       }
     },
     {

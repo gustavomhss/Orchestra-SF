@@ -2,7 +2,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { readFileSync } from "node:fs"
-import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites } from "./gate.mjs"
+import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS", counts: { product_executed: 2, failures: 0, errors: 0, skipped: 0 } }))
 const digest = createHash("sha256").update(report).digest("hex")
@@ -15,7 +15,12 @@ const manifest = {
     ? { id, kind: "playwright", directory: "packages/app-shell", specFile: "e2e/sucafina/" + id.split("-").at(-1).toLowerCase() + ".spec.ts" }
     : { id, kind: "bun", directory: "modules/sucafina",
       ...(id === "CI-APP-BROWSER"
-        ? { selection: { kind: "directory", testDirectory: "test-browser/sucafina-native" } }
+        ? { selection: { kind: "directory", testDirectory: "test-browser/sucafina-native",
+            releaseOnlyFiles: ["test-browser/sucafina-native/transport-integration.test.ts"] } }
+        : {}),
+      ...(id === "CI-SF"
+        ? { selection: { kind: "full-except-release-only",
+            releaseOnlyFiles: ["Sucafinav1/test/parity-pitr.test.ts"] } }
         : {}),
       ...(id === "CI-CLI" || id === "CI-ATLAS-BUSINESS"
         ? { selection: { kind: "explicit", testFiles: ["test/sf-authorized-sample.test.ts"] } }
@@ -99,6 +104,24 @@ test("upstream failures list every failed, skipped or missing job, not only the 
   delete data.needs.ui
   assert.throws(() => requirePrerequisites(data.needs), /static=failure, unit=cancelled, ui=missing/)
   assert.equal(requirePrerequisites(fixture().needs), 5)
+})
+test("live installed and macOS-local recovery proofs are release-owned, never silently discarded", () => {
+  assert.deepEqual(releaseOnlySelection(manifest, "CI-SF"), ["Sucafinav1/test/parity-pitr.test.ts"])
+  assert.deepEqual(releaseOnlySelection(manifest, "CI-APP-BROWSER"),
+    ["test-browser/sucafina-native/transport-integration.test.ts"])
+  for (const id of ["CI-SF", "CI-APP-BROWSER"]) {
+    const tampered = structuredClone(manifest)
+    delete tampered.suites.find((s) => s.id === id).selection.releaseOnlyFiles
+    assert.throws(() => releaseOnlySelection(tampered, id))
+    assert.throws(() => validateManifest(tampered))
+  }
+})
+test("the two relocated proofs remain explicitly blocked by the real Azure release boundary", () => {
+  const releaseWorkflow = readFileSync(new URL("../../.github/workflows/sf-release.yml", import.meta.url), "utf8")
+  assert.match(releaseWorkflow, /Sucafinav1\/test\/parity-pitr\.test\.ts/)
+  assert.match(releaseWorkflow, /sucafina-native\/transport-integration\.test\.ts/)
+  assert.match(releaseWorkflow, /AZURE_APP_ACTIVATION_NOT_COMPOSED/)
+  assert.match(releaseWorkflow, /process\.exit\(1\)/)
 })
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))

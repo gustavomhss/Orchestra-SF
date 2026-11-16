@@ -20,9 +20,17 @@ export function validateManifest(manifest) {
   const suites = manifest.suites
   if (!Array.isArray(suites)) fail("missing suites")
   if (new Set(suites.map((s) => s.id)).size !== suites.length) fail("duplicate suite")
+  const sfProduct = suites.find((s) => s.id === "CI-SF")
+  if (sfProduct?.selection?.kind !== "full-except-release-only" ||
+      JSON.stringify(sfProduct.selection.releaseOnlyFiles) !==
+        JSON.stringify(["Sucafinav1/test/parity-pitr.test.ts"])) {
+    fail("Linux SF unit and release-only recovery boundary drift")
+  }
   const sfBrowser = suites.find((s) => s.id === "CI-APP-BROWSER")
   if (sfBrowser?.selection?.kind !== "directory" ||
-      sfBrowser.selection.testDirectory !== "test-browser/sucafina-native") {
+      sfBrowser.selection.testDirectory !== "test-browser/sucafina-native" ||
+      JSON.stringify(sfBrowser.selection.releaseOnlyFiles) !==
+        JSON.stringify(["test-browser/sucafina-native/transport-integration.test.ts"])) {
     fail("the SF installed browser directory cannot be removed or replaced")
   }
   for (const id of ["CI-CLI", "CI-ATLAS-BUSINESS"]) {
@@ -173,6 +181,17 @@ function realRunMeta() {
       !/^[0-9]+$/.test(attempt || "")) fail("invalid GitHub Actions identity")
   return { sha, runId, attempt }
 }
+export function releaseOnlySelection(manifest, id) {
+  const suites = validateManifest(manifest)
+  const suite = suites.find((entry) => entry.id === id)
+  const selected = suite?.selection?.releaseOnlyFiles
+  if (!suite || !Array.isArray(selected) || selected.length !== 1 ||
+      !selected.every((name) => /^[\w/-]+\.test\.ts$/.test(name))) {
+    fail("invalid release-only selection: " + String(id))
+  }
+  return [...selected]
+}
+
 export function requiredSelection(manifest, id) {
   const suites = validateManifest(manifest)
   const suite = suites.find((entry) => entry.id === id)
@@ -202,6 +221,17 @@ function cli() {
     const safe = minimalPlaywrightEvidence(readFileSync(reportFile, "utf8"), suite.specFile)
     writeFileSync(reportFile, safe, { mode: 0o600 })
     console.log("SF_CI_PLAYWRIGHT_EVIDENCE_MINIMIZED " + id)
+    return
+  }
+  if (command === "release-only") {
+    const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID)
+    for (const name of releaseOnlySelection(manifest, process.env.SF_SUITE_ID)) {
+      const filename = path.join(suite.directory, name)
+      if (!statSync(filename, { throwIfNoEntry: false })?.isFile()) {
+        fail("release-owned proof file missing: " + filename)
+      }
+      process.stdout.write(name + "\n")
+    }
     return
   }
   if (command === "precheck") {

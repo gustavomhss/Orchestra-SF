@@ -147,8 +147,14 @@ jobs:
           {
             case "$SF_SUITE_ID" in
               CI-SF)
+                # macOS-local Litestream parity has its own release-only inventory;
+                # Azure backup/restore is blocked until the real Linux proof exists.
+                node script/sf-ci/gate.mjs release-only > "$evidence/release-only.txt" || exit $?
+                mapfile -t released < "$evidence/release-only.txt"
+                excluded=()
+                for file in "${released[@]}"; do excluded+=("--path-ignore-patterns=$file"); done
                 cd "$root/modules/sucafina"
-                bun test --timeout 30000 --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                bun test --timeout 30000 --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${excluded[@]}"
                 ;;
               CI-CLI)
                 # The validated manifest is the sole source of selected paths.
@@ -163,12 +169,17 @@ jobs:
                 bun run test:unit --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-APP-BROWSER)
-                # Only the installed Sucafina browser/host boundary: every
-                # current and future *.test.ts in this directory is admitted.
+                # The F04 real-installed manifest test runs only with a real
+                # installed host at release; never fake one in a PR unit lane.
+                node script/sf-ci/gate.mjs release-only > "$evidence/release-only.txt" || exit $?
+                mapfile -t released < "$evidence/release-only.txt"
+                excluded=()
+                for file in "${released[@]}"; do excluded+=("--path-ignore-patterns=$file"); done
                 cd "$root/packages/app-shell"
                 ORCHESTRA_OMNI_CONTROL=declared bun test --conditions=browser \
                   --preload ../../script/test-omni-control.ts --preload ./happydom.ts \
-                  ./test-browser/sucafina-native --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                  ./test-browser/sucafina-native --bail=5 \
+                  "${excluded[@]}" --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-ATLAS-BUSINESS)
                 # Generated files are checked independently by static.

@@ -39,6 +39,33 @@ The former Epic attempted full upstream Core and multi-OS matrices; the SF-speci
 
 The current test layout still mixes true installed-app tests and macOS-local acceptance fixtures with portable Bun unit tests. The new CI is honest about this: it flags missing Litestream / F04 live manifest as environment blockers. Removing them silently would invalidate the product acceptance. The Linux Azure architecture must provide equivalent release proofs or the product remains RED.
 
+## Follow-up: required unit vs. release-only boundaries
+
+**Change under validation:** `CI-SF` continues testing its complete Linux-appropriate
+Sucafina unit tree except the original `parity-pitr.test.ts` for macOS
+local-operator Litestream. The excluded test remains in the repository and
+is recorded as `releaseOnlyFiles`. Actual Azure backup and restore is a
+**separate unsatisfied production requirement**, not PASS-by-exclusion.
+
+`CI-APP-BROWSER` continues selecting the whole `sucafina-native` directory
+except `transport-integration.test.ts`, which requires the installed F04
+manifest bound to real authorized sessions. Its exact test file remains
+in the repository and the release workflow checks its presence while
+remaining explicitly BLOCKED. No fake host, identity, credentials or
+synthetic green status is introduced.
+
+The runner builds ignore arguments only from the **validated, exact paths**
+in `sf/ci/suites.json`. Deletion, widening or renaming the release-owned
+files fails the manifest gate; documentation alone cannot waive them.
+These two cases are **not counted among tests passed by the PR**. Their
+Azure/live counterparts must be exercised before `GLOBAL_RELEASE`.
+
+The revised `sf/verify` prechecks all upstream job conclusions before
+downloading any suite evidence. A failed product job results in a
+specific fail-closed diagnosis, never an artifact failure mistaken for
+a product error. The unit gate may become green while the separate
+`sf-release` remains BLOCKED; this is intended evidence separation.
+
 ## Acceptance for this CI-specific PR
 
 1. The isolated PR HEAD passes **harness self-tests**, with Linux-only platform admission and no duplicate automatic runs.

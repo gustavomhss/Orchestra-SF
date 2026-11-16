@@ -29,6 +29,11 @@ jobs:
         with:
           ref: ${{ inputs.candidate_sha }}
           persist-credentials: false
+      - name: Confirm release-only proofs remain owned, not waived
+        run: |
+          set -euo pipefail
+          test -f modules/sucafina/Sucafinav1/test/parity-pitr.test.ts
+          test -f packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts
       - name: Refuse unqualified deployment
         env:
           CANDIDATE: ${{ inputs.candidate_sha }}

@@ -105,6 +105,27 @@ not active. They are not reenabled to solve a false-green; the Epic remains
 unchanged during pilot. The optional `test-ci` is separately being fenced
 to Linux only as part of this migration.
 
+## Proofs that require the real installed target
+
+Two existing tests were previously guaranteed RED inside ordinary PR Bun
+suites for missing prerequisites that a unit runner must not invent:
+
+- `modules/sucafina/Sucafinav1/test/parity-pitr.test.ts` exercises the
+  **macOS local-operator** Litestream continuity. Azure VM backup/restore is
+  a distinct Linux release acceptance obligation, not a job that should
+  auto-install arbitrary Litestream on a PR runner.
+- `packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts`
+  requires a **real F04 installed-host manifest** and authenticated actor
+  binding. This is a release-installed proof, not a Bun DOM fixture.
+
+The exact paths are declared as `releaseOnlyFiles` in the manifest. CI
+validates that the original test files still exist and fails if their
+ownership list changes. A PR does not execute or approve these two tests.
+The release workflow checks their inventory and **continues refusing all
+deployment** until real Linux Azure backup/restore and F04 host/auth proof
+can be run. This is explicit scope separation, not a skipped successful
+assertion. The other suites still run their entire declared selections.
+
 ## Release boundary
 
 `.github/workflows/sf-release.yml` is deliberately an **inert red gate**.
