@@ -38,7 +38,7 @@ export function createSfNativePhasePromptContribution(guard: Guard): Host.Contri
       return SessionPrompt.Service.of({
         beforePrompt: (event) => sfNativePhaseBeforePrompt(guard, event, original.beforePrompt),
       })
-    })).pipe(Layer.provide(SessionPrompt.node.implementation!)),
+    })).pipe(Layer.provide([SessionPrompt.node.implementation!])),
   }
   return { id: "sucafina/native-phase-prompt", replacements: [[SessionPrompt.node, replacement]] }
 }
