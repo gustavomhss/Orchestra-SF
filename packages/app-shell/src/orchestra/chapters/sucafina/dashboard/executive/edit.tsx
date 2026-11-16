@@ -4,7 +4,8 @@ import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orches
 import { SfChangeReview } from "../../shared/change-review"
 import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfCopyKey } from "../../shared/frame/types"
-import type { SfDraftRegistry } from "../../context/contracts"
+import type { SfDraftRegistry, SfPublicDraftController } from "../../context/contracts"
+import type { SfDraftState } from "../../shared/draft"
 import { SF_U02_COPY } from "@/i18n/orchestra-chapters/sf-u02"
 
 type Key = keyof typeof SF_U02_COPY
@@ -37,6 +38,25 @@ export type U02EditProps = Readonly<{
   onConfirmed: () => void
 }>
 type DraftValue = Readonly<{ text: string }>
+export function sfU02DraftReady(state: SfDraftState<DraftValue> | undefined, version: number | undefined): boolean {
+  return state?.availability === "active" && state.phase !== "conflict" && state.conflict === null &&
+    state.pendingOperation === null && version !== undefined && state.baseVersion === version
+}
+export function sfU02Discard(
+  draft: SfPublicDraftController<DraftValue>, source: Readonly<{ admitted: boolean; version: number | undefined; value: number | undefined; busy: boolean }>,
+): boolean {
+  const state = draft.snapshot()
+  if (state.availability !== "active" || !source.admitted || source.busy || state.pendingOperation !== null ||
+      state.phase === "submitting" || state.phase === "outcome-unknown" || source.version === undefined ||
+      !Number.isSafeInteger(source.version) || source.version < 0) return false
+  const remote = { baseVersion: source.version, value: { text: source.value === undefined ? "" : String(source.value) } }
+  draft.receiveRemote(remote)
+  draft.discard()
+  // receiveRemote is a no-op for an unchanged dirty CAS; establish the current
+  // source as the clean baseline only after the explicit discard has removed edits.
+  draft.receiveRemote(remote)
+  return true
+}
 function validNumber(raw: string, props: U02EditProps): number | null {
   const value = raw.trim()
   // Blank, NaN and legacy Number("") coercion are never zero.
@@ -88,8 +108,10 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     return state.availability === "active" ? state : undefined
   }
   const parsed = () => active() ? validNumber(active()!.value.text, props) : null
-  const allowed = () => props.admitted && props.version !== undefined && parsed() !== null && props.year >= 2024 &&
-    props.year <= 2027 && !busy() && active()?.pendingOperation === null && active()?.conflict === null
+  const conflicted = () => active()?.phase === "conflict" || !!active()?.conflict
+  const allowed = () => props.admitted && sfU02DraftReady(active(), props.version) && parsed() !== null && props.year >= 2024 &&
+    props.year <= 2027 && !busy()
+  createEffect(() => { if (review() && !allowed()) setReview(false) })
   const reviewFields = () => [{
     path: props.actionId === "save-month" ? "month" : props.actionId === "save-revenue" ? "revenue" : "value",
     label: { key: key(props.valueLabelKey) },
@@ -118,8 +140,8 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     try {
       const digest = await sha256({ action: props.operationId, value, version: expectedVersion,
         recordId: props.recordId, year: props.year, month: props.month })
-      if (!props.admitted || parsed() !== value || active()?.baseVersion !== expectedVersion ||
-        active()?.pendingOperation || active()?.conflict) {
+      if (!props.admitted || props.version !== expectedVersion || parsed() !== value ||
+        !sfU02DraftReady(active(), expectedVersion)) {
         setFeedback("conflict");return
       }
       draft().setPending({ operationRef, idempotencyKey, payloadDigest: digest,
@@ -151,18 +173,23 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     <Show when={active()} fallback={<p role="status">{t(key("sf.u02.unknownOutcome"))}</p>}>
       <label>{t(key(props.valueLabelKey))}
         <input type="text" inputMode={props.integerOnly ? "numeric" : "decimal"}
-          value={active()?.value.text ?? ""} disabled={!props.admitted || !!active()?.pendingOperation || busy()}
+          value={active()?.value.text ?? ""} disabled={!props.admitted || !!active()?.pendingOperation || busy() || conflicted()}
           aria-invalid={feedback() === "invalid"}
-          onInput={(event) => { draft().edit({ text: event.currentTarget.value });setFeedback("none") }} />
+          onInput={(event) => { if (conflicted()) return;draft().edit({ text: event.currentTarget.value });setFeedback("none") }} />
       </label>
       <p>{t(key("sf.u02.sourceVersion"))}: {props.version}</p>
-      <Show when={active()?.conflict}><p role="alert">{t(sfCommonKey("sf.common.conflict"))}</p></Show>
+      <Show when={conflicted()}><p role="alert">{t(sfCommonKey("sf.common.conflict"))}</p></Show>
       <button class="mx-btn primary" type="button" disabled={!allowed()}
-        onClick={() => { draft().setPhase("reviewing");setReview(true);setFeedback("none") }}>
+        onClick={() => { if (!allowed()) return;draft().setPhase("reviewing");setReview(true);setFeedback("none") }}>
         {t(key("sf.u02.reviewChange"))}
       </button>
-      <button class="mx-btn" type="button" disabled={!!active()?.pendingOperation}
-        onClick={() => { draft().discard();setFeedback("none") }}>{t(sfCommonKey("sf.common.discard"))}</button>
+      <button class="mx-btn" type="button" disabled={!props.admitted || props.version === undefined ||
+          !Number.isSafeInteger(props.version) || props.version < 0 || !!active()?.pendingOperation || busy() ||
+          active()?.phase === "submitting" || active()?.phase === "outcome-unknown"}
+        onClick={() => {
+          if (!sfU02Discard(draft(), { admitted: props.admitted, version: props.version, value: props.value, busy: busy() })) return
+          setReview(false);setFeedback("none")
+        }}>{t(sfCommonKey("sf.common.discard"))}</button>
     </Show>
     <Show when={feedback() !== "none"}><p role="alert" data-edit-result={feedback()}>
       {t(key(feedback() === "invalid" ? "sf.u02.invalidValue" :
