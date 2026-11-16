@@ -143,7 +143,7 @@ export function sfContextDestinationsFromPages(
     const source = PAGES.find((entry) => entry.surface === item.surface && entry.page === item.page)
     if (!source || actions.has(source.id) || !pages.some((page) => page.surface === item.surface && page.page === item.page) ||
       new Set(item.allowedActionIds).size !== item.allowedActionIds.length ||
-      item.allowedActionIds.some((id) => !source.actions.some((allowed) => allowed === id))) return undefined
+      item.allowedActionIds.some((id: string) => !source.actions.some((allowed) => allowed === id))) return undefined
     actions.set(source.id, item.allowedActionIds)
   }
   const result: Destination[] = []
