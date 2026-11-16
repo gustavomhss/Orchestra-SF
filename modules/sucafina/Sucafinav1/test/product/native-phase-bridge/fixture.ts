@@ -132,7 +132,7 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
         })
         return prepared.bridge.withInvocation(invocation, original.run(invocation, inspect, observe, outcome))
       } })
-    })).pipe(Layer.provide(ToolSafety.node.implementation!)) }
+    })).pipe(Layer.provide([ToolSafety.node.implementation!])) }
     const governance = { ...TaskGovernance.node, implementation: Layer.succeed(TaskGovernance.Service, {
       ...TaskGovernance.allowAll, beforeTurn: prepared.bridge.beforeTurn,
       admit: (request) => TaskGovernance.allowAll.admit(request).pipe(Effect.flatMap((admitted) => prepared.bridge.admitted(request, admitted))),
@@ -165,7 +165,7 @@ const setup = Effect.fn("PhaseFixture.setup")(function* (directory: string, prep
   const resources: SfRoutineNativeRuntimeResources = { identity: { installationId: "phase-fixture", hostId: "phase-host", projectId: nativeLocation.project.id, location },
     database, events, store, execution, sessions, registry, records, location: nativeLocation,
     agents: Context.get(opened, AgentV2.Service), permission: Context.get(opened, PermissionV2.Service), governance: Context.get(opened, TaskGovernance.Service),
-    safety: Context.get(opened, ToolSafety.Service), relay: Context.get(opened, Relay.Service), config: Context.get(opened, Config.Service), taskRegistration,
+    safety: Context.getUnsafe(opened, ToolSafety.Service), relay: Context.get(opened, Relay.Service), config: Context.get(opened, Config.Service), taskRegistration,
     governanceInstallation: { epoch: 1, projectId: nativeLocation.project.id, directory }, current: () => true }
   prepared.state.resources = resources; prepared.state.sessions = sessions; prepared.state.context = prepared.ui()
   const authoring = yield* AuthoringStore.open(directory, nativeLocation.project.id)
