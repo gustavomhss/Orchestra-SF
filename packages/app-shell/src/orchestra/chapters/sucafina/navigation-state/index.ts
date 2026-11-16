@@ -50,7 +50,7 @@ export function resolveSfUrlSelection(href: string, currentHref: string, selecte
     const destination = new URL(href, base)
     if (!["http:", "https:"].includes(destination.protocol) || destination.origin !== base.origin || !destination.pathname.startsWith("/orchestra/"))
       return { status: "invalid-link" }
-    if (/%(?![\\da-fA-F]{2})/.test(destination.search)) return { status: "invalid-link" }
+    if (/%(?![\da-fA-F]{2})/.test(destination.search)) return { status: "invalid-link" }
     const values = ["server", "project", "installation"].map((key) => destination.searchParams.getAll(key))
     if (values.some((items) => items.length > 1)) return { status: "invalid-link" }
     if (values.every((items) => items.length === 0)) return { status: "selected", selection: selected, explicit: false }
