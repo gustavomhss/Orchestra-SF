@@ -3,6 +3,7 @@ import { constants } from "node:fs"
 import { link, lstat, mkdir, open, unlink } from "node:fs/promises"
 import type { Stats } from "node:fs"
 import { randomUUID } from "node:crypto"
+import type { Pointer } from "bun:ffi"
 
 /** Deliberately no Windows mode-bit fallback: Node exposes neither handle DACL verification nor reparse-safe
  * relative opens. Until a real private-file Windows adapter exists this capability is explicitly unavailable.
@@ -126,7 +127,7 @@ async function noDarwinWriteAcl(fd: number, privateTarget = false) {
     acl_free: { args: [FFIType.ptr], returns: FFIType.i32 },
     __error: { args: [], returns: FFIType.ptr },
   })
-  const acl = library.symbols.acl_get_fd_np(fd, 0x100)
+  const acl = library.symbols.acl_get_fd_np(fd, 0x100) as Pointer | null
   try {
     if (!acl) {
       const error = library.symbols.__error()
