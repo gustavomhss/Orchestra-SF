@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.closure231.ci-request.v1",
+  "requester": 231,
+  "assigned_successor": 232,
+  "when": "ONLY_AFTER_211_EXCLUSIVE_COMPOSITION_AND_228_RECONCILIATION",
+  "candidate": "Exact C SHA after applying pinned 227 + 228 + 231 inert postimages; NOT the author branch by itself",
+  "requested_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+    "packages/app-shell/src/orchestra/chapter-route.tsx",
+    "packages/app-shell/src/orchestra/navigation.ts",
+    "packages/app-shell/src/orchestra/sidebar.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/{index.tsx,contracts.ts}",
+    "packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts",
+    "packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u01-host231.spec.ts"
+  ],
+  "selection": {
+    "typecheck": {
+      "cwd": "packages/app-shell",
+      "script": "bun run typecheck",
+      "status": "NOT_RUN"
+    },
+    "browser_contracts": {
+      "cwd": "packages/app-shell",
+      "command": "bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts ./test-browser/sucafina-native/host-binding231.test.ts ./test-browser/sucafina-native/today-resume227.test.ts",
+      "status": "NOT_RUN"
+    },
+    "e2e_types": {
+      "cwd": "packages/app-shell",
+      "script": "bun run typecheck:sf-e2e",
+      "status": "NOT_RUN"
+    },
+    "original_installed": {
+      "cwd": "packages/app-shell",
+      "runner": "playwright test",
+      "test_files": [
+        "e2e/sucafina/native/journeys/u01.spec.ts",
+        "e2e/sucafina/native/journeys/u01-host231.spec.ts"
+      ],
+      "requires": "Original F04 private 0600 manifest and already authenticated host-owned CDP session; no new login; attached browser actor/source original only",
+      "status": "NOT_RUN"
+    },
+    "negative_matrix": {
+      "wrong_server": "NOT_RUN",
+      "wrong_project": "NOT_RUN",
+      "wrong_installation": "NOT_RUN",
+      "invalid_deep_link": "NOT_RUN",
+      "stale_case_held_real_GET": "NOT_RUN",
+      "owner_switch": "NOT_RUN",
+      "revoked_real_producer": "NOT_RUN_REQUIRED_REAL_REVOKER",
+      "dirty_draft": "NOT_RUN_EDITOR_NOT_IN_REGISTRY",
+      "browser_back_focus": "NOT_RUN",
+      "source_version_cas": "NOT_RUN"
+    },
+    "forbidden": [
+      "do not run tests locally in 231",
+      "do not issue mock positive proof",
+      "do not replay AM evidence",
+      "do not create auth/roles/tokens",
+      "do not mutate Azure/Goal/guards",
+      "do not start CI from this PR"
+    ]
+  },
+  "all_status": "NOT_RUN",
+  "proof_kind": "REQUEST_ONLY_NO_CI_TRIGGERED",
+  "original_browser_driver": "e2e/sucafina/native/journeys/u01.spec.ts from 227 + inert proposed u01-host231.spec.ts",
+  "dependencies": [
+    "211 has applied root/SDK/owner patches onto exact C SHA after its exclusive handoff",
+    "228 adapter has been installed from 80874de468b3891057008380a498d949e9d0a3ff",
+    "227 all exact navigation/context/Home original leaves installed",
+    "Real F04 installed-host manifest + pre-authenticated BrowserContext and authorized original case/case version",
+    "If installed host publicOrigin != shell origin, genuine approved source bridge or original hosted origin must be provided; no CORS bypass",
+    "Real privileged revocation/owner-switch setup and concrete draft edit registration needed for respective negatives"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.closure231.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 231,
+  "epoch": "home-host-binding-e1-browser231",
+  "t0": "2026-11-13T04:01:10Z",
+  "campaign_state": "CONTINUING_LATE",
+  "branch": "sf-home-binding",
+  "observed_head": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+  "observed_tree": "09213907abb428d9c9e64544bc184f578637f4bb",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/S0-FENCE.json",
+  "fence_blob": "c70c099ea29e0651085fb439a37d82b445c9d982",
+  "verified_via": "GitHub MCP ref/contents GET before any Git ref write",
+  "input_sha": {
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "source227": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+    "source228": "33474b2158a4703f256191f61f1a16ac85c26004"
+  },
+  "scope": {
+    "wPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "mutable_paths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/**"
+    ]
+  },
+  "effective_model": "GPT-6",
+  "effective_astra_runtime_model": "NOT_EXPOSED",
+  "session_id": null,
+  "reason_session_id": "No native Astra session identifier exposed by this ChatGPT GitHub connector; not invented.",
+  "authority": {
+    "owner_writer": 231,
+    "bundle_composer": 211,
+    "detached_reconciler": 228,
+    "successor_ci": 232,
+    "goal": "PAUSED",
+    "create_watchdog": false,
+    "global_release": false
+  },
+  "checks": {
+    "git_head": "READ_PASS",
+    "s0_fence": "READ_PASS",
+    "source_blobs": "READ_PASS",
+    "local_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "ci": "NOT_RUN"
+  }
+}

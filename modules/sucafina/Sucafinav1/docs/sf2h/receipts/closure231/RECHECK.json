@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.closure231.recheck.v1",
+  "mission": 231,
+  "target_consumer": 232,
+  "status": "REQUESTED_NOT_EXECUTED",
+  "defects": [
+    {
+      "finding": "CALLSITE_NOT_WIRED",
+      "resolution": "COMPLETE_INERT_FULL_POSTIMAGE",
+      "status": "NEEDS_PRODUCT_COMPOSER"
+    },
+    {
+      "finding": "227_OWNER_NAVIGATION",
+      "resolution": "PINNED_SHA_REUSED",
+      "status": "REQUIRES_211_APPLY"
+    },
+    {
+      "finding": "228_TODAY_PROVIDER",
+      "resolution": "PINNED_SHA_REUSED",
+      "status": "REQUIRES_211_APPLY"
+    },
+    {
+      "finding": "UI34_SOURCE_CASE",
+      "resolution": "existing SfIntentView & original projection.case",
+      "status": "NOT_PROVEN_LIVE"
+    },
+    {
+      "finding": "SHELL_HOST_BRIDGE",
+      "resolution": "original transport rejects cross-origin; no authority to change transport",
+      "status": "OPEN_EXTERNAL_PRODUCER"
+    },
+    {
+      "finding": "REVOCATION_NEGATIVE",
+      "resolution": "original privileged producer callback absent",
+      "status": "NOT_RUN"
+    },
+    {
+      "finding": "DRAFT_SWITCH_NEGATIVE",
+      "resolution": "original registry hook exposed; UI33 editor not registered",
+      "status": "NOT_RUN"
+    }
+  ],
+  "expected_proof": "Same candidate SHA, real installed host and actor, source-authenticated GET, owner switch + stale/revoked/dirty-draft negative observability",
+  "checks": {
+    "repo_head": "READ_PASS",
+    "s0_fence": "READ_PASS",
+    "local": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "installed": "NOT_RUN"
+  },
+  "no_global_release": true
+}

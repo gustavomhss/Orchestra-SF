@@ -1,0 +1,258 @@
+{
+  "schema": "sf2h.closure231.handoff.v1",
+  "version": 1,
+  "mission": 231,
+  "epoch": "home-host-binding-e1-browser231",
+  "branch": "sf-home-binding",
+  "start_head": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+  "product_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "candidate_commit": "SEE_PR_HEAD_AFTER_CAS",
+  "consumed": {
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "receipt227_commit": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+    "adapter228_commit": "33474b2158a4703f256191f61f1a16ac85c26004",
+    "original228_adapter_blob": "80874de468b3891057008380a498d949e9d0a3ff"
+  },
+  "committed_paths": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "pre_blob": null,
+      "post_blob": "fd5e173de15a42431d5053d1fd132b593564752b"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts",
+      "pre_blob": null,
+      "post_blob": "9821bf2abae2355129e3952ae136b4d68291340f"
+    }
+  ],
+  "inert_patch_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/PATCH-SET.json",
+  "inert_postimages": [
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+      "pre_blob": "23a5da80dd837d5113e53ba6ece1ada5e97d0a0a",
+      "post_blob": "6e74148eb42efb18f15ecf25d098cbe1bf5f038d",
+      "source_commit": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+      "mode": "PINNED_227_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts.227.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts",
+      "pre_blob": null,
+      "post_blob": "44c3ad22099b2a20047fe79dbc058cc7a37bbd63",
+      "source_commit": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+      "mode": "PINNED_227_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts.227.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+      "pre_blob": "592eef8206c665a1fc908934e258b286fe85609e",
+      "post_blob": "876f95feadd07d6628d13a6c34e454a5ce382ea4",
+      "source_commit": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+      "mode": "PINNED_227_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts.227.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "pre_blob": "8b949f966725f8a7d22a486e3391f79deecce258",
+      "post_blob": "2a993c4d30e63cb534326d5586fe2c871b340d1b",
+      "source_commit": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+      "mode": "PINNED_227_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx.227.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+      "pre_blob": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+      "post_blob": "7e66c610cd4bbb8e27e4c16a239b2142d5b208ba",
+      "source_commit": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+      "mode": "PINNED_227_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx.227.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts",
+      "pre_blob": null,
+      "post_blob": "9fae974a321af6c863c8749600d42e5271bfa63f",
+      "source_commit": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+      "mode": "PINNED_227_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts.227.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+      "pre_blob": "335ffccb6aa231a13700f9f0f8bd76e4f3ee8694",
+      "post_blob": "340fbae98d8245cf571af266a1c447b226fc98ac",
+      "source_commit": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+      "mode": "PINNED_227_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts.227.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/host/today-resume-binding.tsx",
+      "pre_blob": null,
+      "post_blob": "80874de468b3891057008380a498d949e9d0a3ff",
+      "source_commit": "33474b2158a4703f256191f61f1a16ac85c26004",
+      "mode": "PINNED_228_ADAPTER",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapters/sucafina/host/today-resume-binding.tsx.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+      "pre_blob": "876f95feadd07d6628d13a6c34e454a5ce382ea4",
+      "post_blob": "01e879a9bb60f9752af617c5e3528f56c4d89245",
+      "source_commit": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "mode": "INERT_FULL_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "pre_blob": "2a993c4d30e63cb534326d5586fe2c871b340d1b",
+      "post_blob": "d67d17782c4f02673cb6b6b82bc647dd39e55eef",
+      "source_commit": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "mode": "INERT_FULL_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapter-route.tsx",
+      "pre_blob": "f22a07f31ed99055d30cd360fcdc6a1d1f365d99",
+      "post_blob": "3243780b050ad1cbeb2848731010bd769d72ee4c",
+      "source_commit": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "mode": "INERT_FULL_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/chapter-route.tsx.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/navigation.ts",
+      "pre_blob": "3455a98470ac4945b399413fc1207b1f6899c717",
+      "post_blob": "6af26a8f07e90d1c4ee8e58d9e8d1fc46e9547d4",
+      "source_commit": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "mode": "INERT_FULL_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/navigation.ts.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/sidebar.tsx",
+      "pre_blob": "e252a24d23c1175082802732b70f646fc5d3251a",
+      "post_blob": "fdcaca8d91711f544c5c80200819ab4348fb7237",
+      "source_commit": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "mode": "INERT_FULL_POSTIMAGE",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/src/orchestra/sidebar.tsx.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/e2e/sucafina/native/journeys/u01-host231.spec.ts",
+      "pre_blob": null,
+      "post_blob": "92fe9d0c7b9fe7da94c6ae5c0385e226fa1fe674",
+      "source_commit": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "mode": "PROPOSED_REAL_BROWSER_SPEC",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/patches/packages/app-shell/e2e/sucafina/native/journeys/u01-host231.spec.ts.inert.txt"
+    }
+  ],
+  "behavior_delivered_as_code": [
+    "Real chapter-route insertion point: both sf-home and sf-decisions use the SAME SfOwnerRuntime231 component under selected ServerConnection, preserved shell SDK/Models, outside keyed chapter suspense; server-wide fallback handles an explicit selector with no opened directory.",
+    "Route parser Q01 already admits UI29/UI33/UI34; no new hand-built registry namespace or new installation/Task/Goal.",
+    "Real original installation discovery from selected Orchestra server /api/sucafina/installations, strict SfInstallationList decoding, no implicit owner when ambiguous, exact project/installation triplet and same server key.",
+    "Original ctx.context read through existing SfNativeOperationBindings/createSfTransport and SfContextProvider via exact 228 SfTodayBoundOwnerProvider.",
+    "One singleton createSfNavigationState with original 227 navigation/resume owner-scoped 2x projection.case checks, late abort, owner key, accessRevision, one-shot return/focus on browser back.",
+    "Existing UI29 original projection.home and existing UI33/UI34 components only; no invented original projection or caseRef-as-case.id equivalence.",
+    "Owner draft guard reads actual original createSfOwnerDrafts.dirty via additive SfContextHandle.hasDirtyDrafts; browser confirm is explicit before voluntary switch, invalidation purges old owner.",
+    "Preserves original shell sidebar and source registry with additive native links and icons; other chapters untouched."
+  ],
+  "distinctions": {
+    "committed": "owner-runtime231.tsx and host-binding231.test.ts plus receipts/closure231 only",
+    "inert": "existing shell chapter-route/navigation/sidebar/context and 228 adapter, 227 exact leaves and proposed e2e spec are FULL inert postimages only",
+    "not_integrated": "No bundle candidate application; PR191 remains owned by 211; host binding not live until exact 227/228/231 postimages applied",
+    "release": "NOT_GLOBAL_RELEASE"
+  },
+  "negatives_and_limits": [
+    "No source identity or user grant invented; original SDK-authenticated same-origin host may not be accessible if shellOrigin and publicOrigin differ, because original SfTransport rejects web origin mismatch; requires original producer/host approval by 211/232, not bypassed.",
+    "Original UI33 new-case editor stores local form independently of SfDraftRegistry; its unsaved fields are NOT yet proved by common dirty-draft hook. Consumer must connect an actual editor registration before claiming dirty-draft guard complete.",
+    "Generic revalidation allows ONLY original projection.case with exact opaque producer input and no requested private field/action; other editor scopes fail closed instead of restoring access.",
+    "External server selection via existing non-SF sidebar can leave this owner lifetime; the 231 navigation guard covers native transitions and owner selection inside that lifetime but not every shell-wide exit. Needs 211 root-route guard integration.",
+    "Fresh live revocation/owner-switch/accessRevision changes demand actual original privileged producer action and authenticated installed browser; none supplied to this session.",
+    "Partial/deep-link filtered queries intentionally denied instead of inferring selection; preserve source-validated filters only after contract-specific producer validates."
+  ],
+  "original_227_consumption": {
+    "navigation-state/index.ts": "exact SHA 6e74148eb42efb18f15ecf25d098cbe1bf5f038d createSfNavigationState and resumeFocus",
+    "navigation-state/resume.ts": "exact SHA 44c3ad22099b2a20047fe79dbc058cc7a37bbd63 2x original projection.case",
+    "context/contracts.ts": "exact SHA 876f95feadd07d6628d13a6c34e454a5ce382ea4 + additive 231 handle",
+    "context/index.tsx": "exact SHA 2a993c4d30e63cb534326d5586fe2c871b340d1b + additive 231 handle",
+    "home/index.tsx": "exact SHA 7e66c610cd4bbb8e27e4c16a239b2142d5b208ba UI29 source and focus",
+    "test-browser/today-resume227.test.ts": "exact SHA 9fae974a321af6c863c8749600d42e5271bfa63f to run by 232",
+    "e2e/journeys/u01.spec.ts": "exact SHA 340fbae98d8245cf571af266a1c447b226fc98ac for installed browser by 232"
+  },
+  "coverage": {
+    "targeted": [
+      "F01 native root",
+      "U01/UI29 Today",
+      "UI33 and UI34 original case",
+      "owner/key/access scope",
+      "back-return one-shot",
+      "negative wrong owner/ref/stale"
+    ],
+    "not_claimed": [
+      "all 1610 criteria",
+      "GLOBAL_RELEASE",
+      "D01 desktop",
+      "revoked privileged workflow",
+      "actual cross-origin installed positive UX"
+    ]
+  },
+  "checks": {
+    "github_ref_and_fence": "READ_PASS",
+    "sources_read": "READ_PASS",
+    "blob_object_construction": "OBJECTS_CREATED_ONLY",
+    "local_unit": "NOT_RUN",
+    "browser_source": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "installed_e2e": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM_positive": "NOT_RUN"
+  },
+  "findings": [
+    {
+      "id": "231-F01-CALLSITE",
+      "severity": "P0",
+      "status": "PATCH_INERT",
+      "detail": "Base has no sf-home/sf-decisions registered in chapter-route.tsx; exact rooted postimage supplied."
+    },
+    {
+      "id": "231-SAME-ORIGIN-BOUNDARY",
+      "severity": "P1",
+      "status": "OPEN_EXTERNAL_PRODUCER",
+      "detail": "SfTransport.webOrigin enforces publicOrigin; when installed shellOrigin differs, code cannot assert real UI readiness; no bypass or corporate auth invention."
+    },
+    {
+      "id": "231-DIRTY-EDITOR-CONSUMER",
+      "severity": "P1",
+      "status": "OPEN_CONSUMER",
+      "detail": "UI33 local inputs do not yet register with SfDraftRegistry; only original registry entries guarded."
+    },
+    {
+      "id": "231-ROOT-SHELL-EXIT",
+      "severity": "P1",
+      "status": "OPEN_CONSUMER",
+      "detail": "Global sidebar/chapter changes outside SF native transitions need authorized root discard fencing."
+    },
+    {
+      "id": "231-REAL-REVOKER",
+      "severity": "P1",
+      "status": "NOT_RUN",
+      "detail": "No installed privileged revocation producer callback exposed; cannot forge denial proof."
+    }
+  ],
+  "next_consumers": [
+    {
+      "mission": 211,
+      "role": "EXCLUSIVE_PRODUCT_COMPOSER",
+      "action": "Reconcile exact 227/228 postimages then 231 inert patches on PR191, verify actual F01 root mounted; do not reassign authority by age."
+    },
+    {
+      "mission": 228,
+      "role": "DETACHED_RECONCILER",
+      "action": "No implied promotion or silent handoff; preserve its existing receipts."
+    },
+    {
+      "mission": 232,
+      "role": "AUTHORIZED_HOSTED_CI",
+      "action": "After controlled C integration run typecheck, source browser and authenticated CDP installed e2e from CI-REQUEST; publish C-anchored proofs."
+    }
+  ],
+  "native_goal": "PAUSED",
+  "global_release": false,
+  "authoritative_completion": "AUTHOR_PATCH_AND_PR_ONLY_NOT_PRODUCT_CLOSED"
+}
