@@ -43,9 +43,8 @@ export async function readRequestTitle(context: SfContext, transport: SfTranspor
     const rows = page.records.filter((row) => requestRef(row) === ref)
     if (rows.length !== 1) return { status: "unavailable" } as const
     const row = rows[0]!
-    if (!isPrWritable(row)) return { status: "denied" } as const
     if (!row.allowedDraftActions) return { status: "unavailable" } as const
-    if (!row.allowedDraftActions.includes("save-pr")) return { status: "denied" } as const
+    if (!isPrWritable(row) || !row.allowedDraftActions.includes("save-pr")) return { status: "denied" } as const
     const version = requestVersion(page, ref)
     if (version === undefined || !row.pr || (row.pr.title !== undefined && typeof row.pr.title !== "string"))
       return { status: "unavailable" } as const
