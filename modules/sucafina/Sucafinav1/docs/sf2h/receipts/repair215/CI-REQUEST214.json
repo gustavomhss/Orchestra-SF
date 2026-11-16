@@ -1,0 +1,112 @@
+{
+  "schema": "sf2h-product-ci-surgical-request-v1",
+  "request_id": "215-REV208-NEW-001-e1",
+  "mission": 215,
+  "finding_id": "REV208-NEW-001",
+  "dispatch_owner": 214,
+  "integrator_owner": 211,
+  "target_branch": "sf-closure-bundle",
+  "source_branch": "sf-bi-units",
+  "source_code_commit": "e76063dc78d0d179c8e9a95e874552ad11ac3b7f",
+  "source_code_tree": "fb8b502e53a2abf24a81650bc53aeb551ed57ce5",
+  "source_semantics_blob": "b88301e2f956aefb5fff723d5a1f97af31423f4d",
+  "regression_test_blob": "603d37dfbbe1c474781dc38bb26fde503750f671",
+  "source_preimage_semantics_blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+  "status": "REQUESTED_NOT_DISPATCHED",
+  "prerequisite": "211 integrates the exact semantics and regression test into candidate C. 214 must resolve C head/tree, existing Actions runs, validator and environment before dispatch; no source-only run qualifies integrated C.",
+  "runner": {
+    "verified_script": "bun run test:ci",
+    "verified_package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "named_test_files_relative_to_package": [
+      "Sucafinav1/test/product/analytics/unit-integrity215.test.ts",
+      "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "Sucafinav1/test/product/wp05/semantic-discriminants.test.ts",
+      "Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+      "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts"
+    ],
+    "command_template": "bun run test:ci sucafina Sucafinav1/test/product/analytics/unit-integrity215.test.ts Sucafinav1/test/product/wp05/semantics.test.ts Sucafinav1/test/product/wp05/semantic-discriminants.test.ts Sucafinav1/test/product/wp05/consumer-dashboard.test.ts Sucafinav1/test/product/wp05/planner-integration.test.ts Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts --os linux",
+    "selection_note": "Root script/test-ci.ts supports package and exact named files, preserving supplied order; 214 must reconcile actual runnable workflow, existing state and can adjust to required OS/queue without changing covered selectors.",
+    "dependent_systems": [
+      "PlannerPort.compareForecast",
+      "DashboardPort.read",
+      "BI readBiPresentation/dispatchBiPresentation",
+      "resolveBiPresentation",
+      "renderBiView",
+      "C16 host binding",
+      "C17 readBiDestination"
+    ],
+    "workflow": "CI-SF, incremental surgical slice; wider suites remain on canonical same-C gate, not waived"
+  },
+  "compiler": {
+    "owner": 190,
+    "scope": "bun typecheck in modules/sucafina and relevant transitive consumers after integrated C",
+    "status": "NOT_RUN_NO_DIRECT_REQUEST_TO_RUN_FROM_215"
+  },
+  "inputs": {
+    "subject": "REV208-NEW-001 explicit unit vs currency admission",
+    "positive": [
+      "currency-only USD",
+      "unit-only FTE",
+      "explicit money + USD currency",
+      "FTE + cost independent scales"
+    ],
+    "negatives": [
+      "hours + USD cannot enter USD series",
+      "mixed EUR and USD with same physical unit",
+      "mixed physical units even with same currency",
+      "numeric missing currency in a priced series"
+    ],
+    "parity": [
+      "zero==0 not null",
+      "absent==null no plotted mark",
+      "equivalent data table even if chart unavailable",
+      "unit/currency labels and scales unchanged",
+      "no FX conversion or inferred hours/FTE equivalence"
+    ],
+    "fixtures": "Existing committed producer/installed fixtures; new unit-integrity215.test.ts is a regression test, not a substitute for integrated host evidence",
+    "product_view_sources": [
+      "product/analytics/semantics.ts@b88301e2f956aefb5fff723d5a1f97af31423f4d",
+      "product/analytics/view.ts@b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+      "product/planner/bi.ts@4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6",
+      "product/planner/port.ts@13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "apps/cli/src/sucafina-product/bi-services.ts@e818019f23e449468577175d5c78e53dbf0fb9b2"
+    ]
+  },
+  "deduplication": {
+    "required": [
+      "integrated candidate C commit/tree",
+      "normalized file selectors/runner/OS/env",
+      "material workflow/validator digest",
+      "fixture and host configuration",
+      "prior run ID and integrity"
+    ],
+    "rule": "No success inferred from old C, cancelled/empty/failed/missing-artifact run; do not rerun a failed identical input without causal change"
+  },
+  "receipt_expected_from_214": [
+    "integrated_C_sha",
+    "integrated_C_tree",
+    "accepted_source_and_test_blobs",
+    "actual_command/workflow/runners",
+    "run_ids",
+    "per_case_observed_results",
+    "PASS_or_FAIL_or_BLOCKED_with_reason"
+  ],
+  "current": {
+    "runs": [],
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "external_ready_claim": "NOT_ACCEPTED_AS_PRODUCT_PROOF",
+    "GLOBAL_RELEASE": false
+  },
+  "review": {
+    "owner": 208,
+    "required": "Recheck failure causal negative, positive producer series, browser table/labels/scale parity against same validated integrated C",
+    "status": "PENDING"
+  }
+}

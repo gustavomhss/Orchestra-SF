@@ -1,0 +1,229 @@
+{
+  "schema": "sf2h-review-finding-handoff-v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 215,
+  "finding_id": "REV208-NEW-001",
+  "attempt": "review-fix-e1-browser215",
+  "status": "ARTIFACT_READY_AWAITING_211_INTEGRATION_214_VALIDATION_208_RECHECK",
+  "owner": {
+    "branch": "sf-bi-units",
+    "source_commit": "e76063dc78d0d179c8e9a95e874552ad11ac3b7f",
+    "source_tree": "fb8b502e53a2abf24a81650bc53aeb551ed57ce5",
+    "lease": "review-fix-e1-browser215",
+    "model_effective": "GPT-6",
+    "session_id": "NOT_EXPOSED",
+    "runtime_lifecycle": "NOT_INFERRED",
+    "ack_commit": "64cca9fadb3099dbb75af65a4599112ddaafc2b8"
+  },
+  "fence": {
+    "initial_reserved_head": "6015d23d4d0e08af32004e5b9d614320ca2a7142",
+    "s0_fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair215/S0-FENCE.json",
+    "s0_fence_blob": "2c06335e292d410630d0238f6fd6a407b49375d5",
+    "product_base": "7abf6c425e9b480bb43ba4a82f29c02a55445b92",
+    "immutable_planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "frozen_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "contracts": [
+    "C10",
+    "C17",
+    "C01",
+    "C02",
+    "C08",
+    "C16"
+  ],
+  "orders": [
+    "A08",
+    "U20",
+    "U21"
+  ],
+  "task_and_criteria": [
+    "WP05.T01",
+    "WP05.T04",
+    "WP05.T05",
+    "WP05.T01.CHK.02",
+    "WP05.T01.CHK.04",
+    "WP05.QLT.02",
+    "WP05.INV.01",
+    "WP05.INV.02",
+    "A08-AC01",
+    "U20-AC01",
+    "U21-AC01",
+    "WP10.QLT.10"
+  ],
+  "invariant_scope": {
+    "original_work_packages": 15,
+    "original_tasks": 74,
+    "original_contracts": 17,
+    "original_criteria": 1610,
+    "mcp_operations": 39,
+    "ux_approved": "PRESERVED_UNCHANGED",
+    "native_goal": "paused",
+    "GLOBAL_RELEASE": false
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "preimage_blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+      "postimage_blob": "b88301e2f956aefb5fff723d5a1f97af31423f4d",
+      "change": "Do not let matching currency override a conflicting explicit unit; use currency as series-unit fallback only when producer unit is absent; other guards unchanged"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/analytics/unit-integrity215.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "603d37dfbbe1c474781dc38bb26fde503750f671",
+      "change": "10 executable behavioral cases including a discriminating browser-rendered counterexample and valid independent FTE/USD panels"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair215/S0-FENCE.json",
+      "preimage_blob": "2c06335e292d410630d0238f6fd6a407b49375d5",
+      "postimage_blob": "2c06335e292d410630d0238f6fd6a407b49375d5",
+      "change": "UNTOUCHED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair215/ACK215.json",
+      "preimage_blob": null,
+      "postimage_blob": "1e39c299605ccf56e9fa2c76654816ca1180872f",
+      "change": "Model/lease/HEAD acknowledgement, no fabricated session ID"
+    }
+  ],
+  "source_and_call_chain": {
+    "producer_contract": "product/contracts/context.ts@ae2d6b73a24970ba23d21e17694b54fd32d1a700 — ProjectionValue.unit? and .currency? are independent optional producer attributes",
+    "producers": [
+      "product/planner/bi.ts@4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6 — plannerMonthlyPresentation and plannerCapacityPresentation",
+      "product/planner/port.ts@13800a1ac7dbe1b9bc95ca0a10480708760b4936 — buildPlannerFinancialProjection produces USD currency-only cost and fte unit-only capacity",
+      "product/dashboard/bi.ts@8a88163e8fed6c356af8b433f81ef6f0f7809c4c3d",
+      "apps/cli/src/sucafina-product/bi-services.ts@e818019f23e449468577175d5c78e53dbf0fb9b2"
+    ],
+    "guard": "product/analytics/semantics.ts:resolveBiPresentation; readBiPresentation and readForReview call same guard",
+    "c16": "product/analytics/capabilities.ts@87e36883d92f6982cc8765337f8802ffacd6e52c — producer read/describe + C16 authorized projection",
+    "consumer": "product/analytics/consumer.ts@117c0fc6191b9d7797a4e08db19e90c3079fe129 — exact projection digest / C08 / C17 source reopen",
+    "renderer": "product/analytics/view.ts@b131fb28a385105f0e8ef5b337ffa4e5bca15f21 — guard gates charts; unchanged table retains producer unit, original zero and absent null",
+    "table": "product/analytics/catalog.ts@2b92394e3f1ce66e715e83a79b249b7972305ff6 — presentProjection preserves missing/null vs confirmed zero",
+    "external_sources_or_new_adapters": "NONE"
+  },
+  "behavior": {
+    "permitted": [
+      "Series USD by currency when value.unit absent and value.currency USD",
+      "FTE by explicit unit without currency",
+      "Generic money with currency USD, series unit money",
+      "FTE with an optional separately supplied currency, preserving declared FTE axis",
+      "Unassigned values remain in table"
+    ],
+    "rejected": [
+      "hours + USD referenced by USD series: incompatible-unit",
+      "Explicit mismatched physical units irrespective of matching currency: incompatible-unit",
+      "unit-less EUR value in USD series: incompatible-unit",
+      "Different currencies in one series with matching physical unit: incompatible-currency",
+      "Priced series with numeric missing-currency member: currency-missing",
+      "Explicit empty unit mislabeled as currency: incompatible-unit"
+    ],
+    "untouched": [
+      "No conversion, FX, engine, finance policy, frontend totals or producer changes",
+      "No newly invented units or correlations between FTE and cost",
+      "No table elision on invalid graph; zero remains zero and absent null remains unavailable",
+      "No changes to source references, periods, versions, authorization or C17 drilldown",
+      "BI04 charts retain aligned independent scales and producer labels"
+    ]
+  },
+  "proof_cases": [
+    {
+      "id": "215-P01",
+      "expect": "USD by currency-only; 0 remains 0, null remains null; source rows identical",
+      "kind": "unit"
+    },
+    {
+      "id": "215-P02",
+      "expect": "FTE by unit-only; no currency created",
+      "kind": "unit"
+    },
+    {
+      "id": "215-P03",
+      "expect": "Money/optional-currency and FTE/optional-currency still match their declared units",
+      "kind": "unit"
+    },
+    {
+      "id": "215-N01",
+      "expect": "hours+USD must not enter USD series; incompatible-unit",
+      "kind": "unit+browser"
+    },
+    {
+      "id": "215-N02",
+      "expect": "FTE/hours physical dimensional conflicts do not equal currency",
+      "kind": "unit"
+    },
+    {
+      "id": "215-N03",
+      "expect": "unit-less EUR cannot present as USD",
+      "kind": "unit"
+    },
+    {
+      "id": "215-N04",
+      "expect": "USD/EUR heterogeneous currencies with money unit rejected",
+      "kind": "unit"
+    },
+    {
+      "id": "215-N05",
+      "expect": "numeric missing currency in a priced series refused",
+      "kind": "unit"
+    },
+    {
+      "id": "215-P04",
+      "expect": "untyped absent remains missing; explicit empty unit does not borrow USD",
+      "kind": "unit"
+    },
+    {
+      "id": "215-B01",
+      "expect": "Discriminating BI03 browser case rejects plotted hours-as-USD but retains hours, zero and null in equivalent table; valid BI04 renders separate FTE/USD scales and labels, null omits mark",
+      "kind": "browser"
+    }
+  ],
+  "checks": {
+    "observed": [
+      "GitHub MCP verified current sf-bi-units HEAD and pinned S0-FENCE before first write",
+      "GitHub blob reads for producer/guard/view/consumer/native orders and C10/C17",
+      "ACK commit 64cca9fadb3099dbb75af65a4599112ddaafc2b8 with expected-head CAS and force:false",
+      "Code commit afb059b52dc8e58b9872008035b6e5e253b8d152 and regression refinement commit e76063dc78d0d179c8e9a95e874552ad11ac3b7f, both CAS force:false",
+      "Read-only GitHub Actions enumeration for sf-bi-units returned 0 runs; commit check-runs returned 0"
+    ],
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "local_ci": "NOT_RUN",
+    "own_ci": "NOT_RUN",
+    "github_actions_run_ids": [],
+    "passed_tests": 0,
+    "reason": "Per mission 215, only dispatcher 214 may run product CI after integration and candidate C is fixed"
+  },
+  "target_observation": {
+    "integrator_branch": "sf-closure-bundle",
+    "integrator_mission": 211,
+    "integrator_pr": 191,
+    "observed_target_head": "95609f35caaae47214f4d4e8ae7dd4a67d25edd6",
+    "observed_target_semantics_blob": "2420a5147e6705a5842936ee3459bf7d787d5870",
+    "source_semantics_preimage_blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+    "note": "Target branch has a different semantics blob; integrator must compare current target line and choose the verified explicit-unit-first correction without resetting its other work, accepting exact source/test blobs via PR. This observation is read-only and not an authorization to edit 211."
+  },
+  "delivery": {
+    "route": "PR from sf-bi-units to sf-closure-bundle for the already contracted REV208-NEW-001 finding",
+    "integrations": [
+      "211 commits the correction and tests into one candidate C while preserving all other outputs",
+      "190 is compiler-only owner if compiler validation needed",
+      "199 provides installed host fixture; 213 owns desktop bootstrap; neither is changed here",
+      "214 consumes CI-REQUEST214.json, reconciles existing runs/selection, dispatches only if genuinely needed",
+      "208 performs independent, post-C recheck, never author of this change"
+    ],
+    "blockers": [
+      "Runtime qualification on integrated candidate C NOT_RUN by design; no product or CI PASS claimed",
+      "Integrator target semantics blob has drifted since original source preimage; requires source/target hunk reconciliation by 211, not branch replacement"
+    ],
+    "consumer_ack": "PENDING_FROM_211_AND_208",
+    "minimal_external_inputs": [
+      "211 integrated C/tree and exact adopted code/test blobs",
+      "214 existing authorized CI runner and same candidate C, no new infrastructure/credential",
+      "208 actual CI run IDs, observed chart/table and any genuine independent follow-up"
+    ],
+    "no_outside_lease_writes": true,
+    "no_cloud_or_engine_mutations": true
+  }
+}

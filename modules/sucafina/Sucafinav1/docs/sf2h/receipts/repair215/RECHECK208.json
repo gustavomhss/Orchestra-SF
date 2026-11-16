@@ -1,0 +1,51 @@
+{
+  "schema": "sf2h-independent-review-recheck-request-v1",
+  "review_owner": 208,
+  "correction_owner": 215,
+  "integrator": 211,
+  "ci_dispatcher": 214,
+  "finding_id": "REV208-NEW-001",
+  "revision": "e76063dc78d0d179c8e9a95e874552ad11ac3b7f",
+  "status": "READY_FOR_POST_INTEGRATION_RECHECK_NOT_REVIEW_ACCEPTED",
+  "original_counterexample": {
+    "value": {
+      "id": "worked-hours",
+      "value": 8,
+      "unit": "hours",
+      "currency": "USD"
+    },
+    "series": {
+      "id": "cost",
+      "unit": "USD",
+      "valueIds": [
+        "worked-hours"
+      ]
+    },
+    "old_expected_actual": "old resolver status ok; renderer would mislabel hours as USD",
+    "new_expected": "unavailable incompatible-unit"
+  },
+  "expected_independent_cases": [
+    "Positive USD series with currency-only values",
+    "Positive FTE series with unit-only values",
+    "Preserve money unit with optional currency; no blind && to ||",
+    "Reject hours-as-USD even if currency matches series",
+    "Reject mixed currencies, FTE-versus-hours and priced numeric missing currency",
+    "Observed renderer for BI03 refuses invalid chart yet retains zero/null/table units; BI04 keeps independent FTE/USD panels, markers and labels",
+    "Installed C08/C16/C17 authorization and original producer values preserved, no FX engine alterations"
+  ],
+  "authority_and_evidence": {
+    "source_branch": "sf-bi-units",
+    "source_revision": "e76063dc78d0d179c8e9a95e874552ad11ac3b7f",
+    "semantics_blob": "b88301e2f956aefb5fff723d5a1f97af31423f4d",
+    "test_blob": "603d37dfbbe1c474781dc38bb26fde503750f671",
+    "integrated_candidate_C": "PENDING_211",
+    "CI_run_ids": [],
+    "reviewer_new_session": "NOT_OBSERVED",
+    "independence_ack": "PENDING"
+  },
+  "conditions": [
+    "208 must review post-integration material and actual 214 run outcomes, not static 215 assertions alone",
+    "Review 208 must not author or alter product",
+    "No global release or native lifecycle claim from this receipt"
+  ]
+}
