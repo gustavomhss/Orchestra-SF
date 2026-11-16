@@ -165,6 +165,18 @@ it.live("mutating the cached Info during materialization prevents observation af
   expect(observed).toEqual([])
 }))
 
+it.live("an accessor cannot present original bytes for validation and different bytes to the loader", () => Effect.gen(function* () {
+  const deps = yield* fixture
+  const found = (yield* deps.skills.list()).find((item) => item.name === input.skill)!
+  const original = found.content
+  Object.defineProperty(found, "content", { configurable: true, get: () => original })
+  expect(deps.skills.sourceOf?.(found)).toBeUndefined()
+  const observed: unknown[] = []
+  const host = makeHost((receipt) => Effect.sync(() => void observed.push(receipt)))
+  expect(yield* SessionDirectCommands.skill({ ...deps, host }, input)).toBe(true)
+  expect(observed).toEqual([])
+}))
+
 it.live("sourceOf recognizes only current winning identity and revokes it after reload", () => Effect.gen(function* () {
   const deps = yield* fixture
   const found = (yield* deps.skills.list())[0]!

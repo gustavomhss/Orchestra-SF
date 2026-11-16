@@ -252,7 +252,13 @@ const layer = Layer.effect(
         const source = provenance.get(info)
         if (!source || source.data !== state.get() || source.generation !== generation.current) return undefined
         const original = originals.get(info)
-        if (!original || info.name !== original.name || info.location !== original.location || info.content !== original.content) return undefined
+        const name = Object.getOwnPropertyDescriptor(info, "name")
+        const location = Object.getOwnPropertyDescriptor(info, "location")
+        const content = Object.getOwnPropertyDescriptor(info, "content")
+        // Accessors can return the original during validation and different bytes during loading.
+        if (!original || !name || !("value" in name) || name.value !== original.name ||
+          !location || !("value" in location) || location.value !== original.location ||
+          !content || !("value" in content) || content.value !== original.content) return undefined
         return source.source
       },
       save,
