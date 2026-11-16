@@ -32,7 +32,7 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
 export function dashboardRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (!(candidate.surfaceId in schemas)) return false
   return context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead) &&
-    context.availability.some((resource) => resource.resource === candidate.surfaceId &&
+    context.availability.some((resource) => resource.family === "domain-read" && resource.resource === candidate.surfaceId &&
       resource.operations.some((operation) => operation.operationId === `domain.page.${candidate.surfaceId}` &&
         operation.state === "ready" && operation.operational))
 }
