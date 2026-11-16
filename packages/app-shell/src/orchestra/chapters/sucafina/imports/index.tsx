@@ -114,7 +114,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const failure = (result: Readonly<{ state: SfUiState }>, isMutation = false) => {
     if (result.state === "denied" || result.state === "session-expired") {
       clearReview()
-      setState({ targets: [], discovery: undefined, selectionRef: "", needsDiscovery: true, file: undefined })
+      setState({ targets: [], discovery: undefined, selectionRef: "", needsDiscovery: true,
+        file: undefined, historyRef: "" })
     }
     if (result.state === "stale" || result.state === "conflict") applyIntent = undefined
     setState({
@@ -417,11 +418,14 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       auth.state().status === "denied" ? "denied" : "unavailable",
       phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
       reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
-      historyRef: "", reference: undefined, detail: undefined, file: undefined, busy: false })
+      historyRef: "", reference: undefined, detail: undefined, file: undefined,
+      busy: false, error: undefined })
     if (!ready || !selectedOwner) return
-    // UI57/history exposes the existing authorized import-reference lookup.
-    // An original owner-scoped enumeration endpoint has not been contracted;
-    // never substitute an unscoped document dump or an invented empty list.
+    if (chapter === "UI57" && routeKind === "history") {
+      // No auto-fetch of an unscoped collection: original Files only authorizes
+      // reference/detail reads. Never infer an empty collection or issue a grant.
+      setState("historyRef", "")
+    }
     // Route-param consumers must request an explicit producer surface: no guessed
     // dashboard→planner fallback and no replay of a hidden previous selection.
   })
