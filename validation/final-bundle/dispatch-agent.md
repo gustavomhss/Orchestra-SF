@@ -1,20 +1,9 @@
-# DISPATCH — Você é um dos dez agentes do plano SF go-live
 
-Você NÃO está trabalhando sozinho: 10 agentes trabalham em paralelo neste repo. Seu contrato completo está em **`sf/ci/GPT-PLAN-10.md` neste branch** — a seção do SEU agente (ex.: "Agente A6"), os mapas de leases, as tabelas de fechamento (§6–7), o DAG (§3) e as regras de evidência (§4). O brief consolidado está em `validation/final-bundle/gpt-plan-001-brief.md`.
+## 9. CI via GitHub Actions — autorizado a todo mundo que entrega
 
-**Leia nesta ordem:** brief → seu lease (exclusividade, arquivos compartilhados READ-ONLY) → seu workstream no plano → fontes listadas no seu contrato.
+Cada entrega precisa de prova real, não de inferência. Você PODE e DEVE abrir um **PR draft** do seu `sfa-*` para **`close-final-candidate`** — o `sf-ci.yml` dispara no `pull_request` e roda o CI full novo no Linux. Depois:
 
-## Regras invioláveis
-
-1. **Escopo:** só os arquivos **seus** do lease (exclusivos para escrita). Compartilhados são READ-ONLY — pedir ao dono do lease via #coord, nunca editar diretamente. Nunca commitar arquivos fora do seu lease.
-2. **Paths protegidos (NO-TOUCH para todos nós):** `script/godfile.ts`, `script/spawn-imports/**`, `script/guards/**`, `godfile-waivers.json`. Mudança excepcional exige PR separado + label `guardrail-approved` MESMO DIA por pessoa com write access. Não toque.
-3. **Honestidade de estado:** sem VM Azure, sem tenant Microsoft/Entra, sem atores admitidos, sem manifesto F04 real — itens dependentes do ambiente são `BLOCKED_BY_ENV`/`BLOCKED_BY_OWNER`/`BLOCKED_SOURCE` e ficarão marcados assim, com dono e caminho de destrave. **Não simular, não inventar, não "assumir feito".** Nenhum `PASS` sem observação real fresca.
-4. **Sem PRs, merges, labels, closes ou waits de remediação fora do seu lease.** Outros agentes/PRs são território alheio — ler, nunca editar.
-5. **Commits:** apenas no seu branch. Mensagem curta e clara, ex. `docs(sf): <Agente A<n>> — <resumo>`. Um ou poucos commits por marco. Não dispare CI (push em branch de trabalho não dispara nada; não empurre pra `sf-ci-lean`/`sf2-epic-c`/`close-final-candidate`).
-6. **Execução:** verifique o lease antes de qualquer escrita (duas reconsultas no HEAD imediatamente antes). Faça apenas tarefas W0/W1 que o seu lease permite HOJE. Seu DoD exige prova fresca (run/receipt/command output real) — registre os comandos exatos e os exits.
-7. **Conflitos:** se descobrir lease duplicado ou bloqueio real, PARE, registre como `BLOCKED` com prova (log/comando) e relate. Nunca contorne com outro arquivo.
-8. **Não desista cedo de verdade** — mas não gaste seu prazo em ambiente inexistente. O equilíbrio correcto: preparar tudo que É preparável hoje (documentos, inventários, runbooks, planos, cartas de teste, diffs revisados) e marcar `BLOCKED_BY_ENV` com o que falta.
-
-## Contrato de resposta no chat
-
-Exatamente: (1) frase de veredicto no formato `<AGENTE_ID> / <status> — <1 linha>`; (2) 3 itens do que de fato fez verificável; (3) URLs dos commits; (4) o que ficou `BLOCKED` e com qual dono/ambiente. Mais nada.
+- aguarde e REPORTE o resultado: `run_id`, `head SHA`, `job IDs` e a conclusão EXATA de cada job (preflight/static/omni/5 unitárias/3 UI/`sf/verify`);
+- **nunca mergear, aprovar, fechar ou empurrar direto** para `sf-ci-lean`, `sf2-epic-c` ou `close-final-candidate`; o PR é rascunho — quem decide merge é o dono (+ A6/A1);
+- se seu MCP do GitHub não permite criar PR, **PARE e relate** em vez de contornar com push direto ou outro branch;
+- o CI é caminho COMPLETO de evidência: sucesso aqui não apaga a necessidade de `BLOCKED_BY_ENV` nos itens de VM/Microsoft; nada de verde do PR vale como Azure qualificado.
