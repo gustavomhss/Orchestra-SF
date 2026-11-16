@@ -1,0 +1,154 @@
+{
+  "schema": "sf2h.review-finding-handoff.219.v1",
+  "mission": 219,
+  "finding_id": "R3-TASK-03",
+  "severity": "P1",
+  "original_state": "FAIL",
+  "state": "ARTIFACT_READY_PARTIAL__BLOCKED_PUBLIC_ORIGIN",
+  "branch": "sf-native-admission",
+  "epoch": "review-fix-e1-browser219",
+  "source_base_sha": "0d9053d4649da9d313cc47392cd6723f9de1f8a7",
+  "source_product_base": "7abf6c425e9b480bb43ba4a82f29c02a55445b92",
+  "source_tree_preimage": "f73dc9b9ec9718da44f3313b4ff29946aa7b407f",
+  "source_post_tree": "resolve from PR tip",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "s0_fence_blob": "718e60078018e64eb5dd757fff65c4254b18f93c",
+  "outputs": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "before": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+      "after": "b81e7f93a2f6c031b51b63ba36bcba129be45a73",
+      "nature": "root composition: original A09 case/ports + exact human command + current admitted native C15 locator"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+      "before": null,
+      "after": "dcd223898ca0bddb755ec2dc6b8e3fe2bd149cf4",
+      "nature": "first-party authorized HTTP command boundary only; not Task owner"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission219/human-command.test.ts",
+      "before": null,
+      "after": "fb24ea750289297621b9ab514ce6422bc2435342",
+      "nature": "isolated original Request, exact human command, stale intent and abort negative/forwarding cases"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair219/INERT-211-routine-services.diff",
+      "before": null,
+      "after": "bba22c08b1e1b148bdce0637e6abf95a4b6c7d4c",
+      "nature": "unapplied external-lease source patch for real descriptor stage; scoped to integrator"
+    }
+  ],
+  "other_allowed_paths_untouched": true,
+  "implemented": [
+    "A09 original human POST now reaches real routine BusinessPorts from default host's nativeUiProducts, under existing business.withCase",
+    "Human routines.run command reauthorized before and after the actual C07 run using exact {caseRef,input}, same original Request, header/binding digest and cancellation fence",
+    "Native-origin authorizer no longer compares original human grant to an unrelated C15 intent DTO: it reconstructs exact A09 body only after a real persisted admitted native authorization/reservation, plan, case/source input digest, principal, generation and native publication placement match",
+    "Native origin/Task/Permission/approval/Relay services remain exactly the prior engines and guards, no synthetic Session, no auto approval or Schedule success",
+    "Existing negative native unit fixtures and original assertions unchanged; external-lease descriptor staging patch supplied as inert postimage"
+  ],
+  "not_implemented_due_to_public_gap": [
+    "A genuine nativeRoutineProducer subscription for the default host: no supported shared origin entrypoint carries a real A09 Request and a concurrently issued core Task frame/C15 policy callback",
+    "Actual C07 Task/Relay run/result/product consumption on default host: not proven by source-level wiring alone",
+    "AM06 installed witnessed provider/Task/Relay/browser roundtrip, independent 209 recheck, CI run, typecheck"
+  ],
+  "public_callchain": [
+    {
+      "stage": "human",
+      "source": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+      "signature": "createSfRoutinesHandlers(deps) retains original Request; human.admit(request,'routines.run',{caseRef,input}); withCase -> BusinessPorts.routines.run(input,TrustedUiContext)",
+      "source_blob": "6948316a7dc0b07296180fed7f5b32f613bcc106"
+    },
+    {
+      "stage": "host",
+      "source": "apps/cli/src/sucafina-product/host-context.ts",
+      "signature": "createSfHostRuntime(input:CreateSfHostRuntime[0]); createSfHostRuntimeWithRoutineNative(input,nativeRoutineOrigin?,nativeRoutineProducer?)",
+      "source_blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83"
+    },
+    {
+      "stage": "native_core",
+      "source": "packages/core/src/tool/registry.ts",
+      "signature": "ToolRegistry.materialize(advertisedNames).settle({sessionID,agent,assistantMessageID,call,model?}) has no authenticated Request or SF action context",
+      "source_blob": "27c06bb2060a792ca1a2237673f2627b8d04f3fc"
+    },
+    {
+      "stage": "native_task",
+      "source": "packages/core/src/tool/task.ts",
+      "signature": "TaskTool.Input {description,prompt,subagent_type,model?,task_id?,directory?,worktree?}; ToolSafety invocation conveys native session/call, not original HTTP Request",
+      "source_blob": "0e82455ca428e5b498551496bc65bdc0f6551df3"
+    },
+    {
+      "stage": "origin_contract",
+      "source": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+      "signature": "admit({request,context,authoritySessionID,intent,signal,current,nativePolicy:{signal,current}}); no native producer currently calls it",
+      "source_blob": "0d34ddeb14e9da525d6acc4960a54f35be18d577"
+    },
+    {
+      "stage": "Task_owner",
+      "source": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "signature": "captureSfRoutineNativeOwner(resources,invocation) requires actual core CapabilityInvocation + C15 approval/Permission",
+      "source_blob": "a4dce61b612729bb317761bb0d63ff622f55a8cd"
+    },
+    {
+      "stage": "publication",
+      "source": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "signature": "createSfInstalledRoutinePublication: public read-only Relay/AuthoringStore/Skill sources, never Task authority",
+      "source_blob": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "WP10.DOD.40",
+      "state": "OPEN",
+      "reason": "real installed native owner and AM06 lacking"
+    },
+    {
+      "id": "WP10.INV.40",
+      "state": "OPEN",
+      "reason": "native original Request->Task causal proof lacking"
+    },
+    {
+      "id": "WP10.SUC.40",
+      "state": "OPEN",
+      "reason": "native Relay result and UI consumption not witnessed"
+    },
+    {
+      "id": "WP10.T03.CHK.40",
+      "state": "OPEN",
+      "reason": "cannot satisfy original full-chain acceptance from this source patch"
+    }
+  ],
+  "tests": {
+    "local": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "hostedAM06": "NOT_RUN",
+    "runIDs": []
+  },
+  "checks_real": [
+    "source blob SHAs read from GitHub MCP",
+    "branch HEAD matches S0-FENCE reservation",
+    "full A09 order, C07/C15, public ToolRegistry, TaskTool, C15 native owner and human-authority callchain inspected"
+  ],
+  "unmodified_prior_product": true,
+  "dependency_receipts": {
+    "producer_native_199": "host fixture exists, not a Task-origin authority",
+    "integrator_211": "merge only exact source blobs; apply inert patch only after ownership and owner-ready checks",
+    "ci_dispatcher_214": "CI-REQUEST-214.json",
+    "compiler_190": "typecheck via dispatcher only",
+    "desktop_213": "existing prepared bootstrap, not live provider proof",
+    "independent_review_209": "RECHECK-209.json"
+  },
+  "azure_readiness": "user informed ready; no Azure access, deploy, mutation or identity/Task evidence",
+  "no_new_supervisor_or_watchdog": true,
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "receiver": "211 sf-closure-bundle / PR191",
+  "lease_handoff": "publish PR; no write on target branch; review and release depend on integrator",
+  "source_commit": "resolve from actual sf-native-admission PR tip",
+  "model": "GPT-6",
+  "session_id": null
+}

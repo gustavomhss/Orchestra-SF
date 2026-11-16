@@ -1,0 +1,81 @@
+{
+  "schema": "sf2h.surgical-ci-request.219.v1",
+  "finding_id": "R3-TASK-03",
+  "author": 219,
+  "dispatcher": 214,
+  "compiler": 190,
+  "integrator": 211,
+  "trigger": "211 integrates the exact referenced blobs into an observed candidate C and verifies producer dependencies; no submission from author 219",
+  "source_branch": "sf-native-admission",
+  "expected_author_base_sha": "0d9053d4649da9d313cc47392cd6723f9de1f8a7",
+  "source_commit": "resolve from sf-native-admission PR tip; do not self-reference this receipt",
+  "source_blob_shas": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "b81e7f93a2f6c031b51b63ba36bcba129be45a73"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+      "sha": "dcd223898ca0bddb755ec2dc6b8e3fe2bd149cf4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission219/human-command.test.ts",
+      "sha": "fb24ea750289297621b9ab514ce6422bc2435342"
+    }
+  ],
+  "run_id": null,
+  "checks_executed": [],
+  "state": "NOT_RUN",
+  "selectors": {
+    "author_unit": [
+      "modules/sucafina/Sucafinav1/test/product/native-admission219/human-command.test.ts"
+    ],
+    "native_consumer": [
+      "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts"
+    ],
+    "am06": [
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/native-terminal-unavailable.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/schedule-native-retry.test.ts"
+    ],
+    "installed_host_proof": "packages/app-shell/e2e/sucafina/native/fixture/** (owner 199; only actual installed host run)",
+    "typecheck_packages_by_190": [
+      "apps/cli",
+      "packages/schema",
+      "packages/client"
+    ]
+  },
+  "selectors_are_paths_not_workflow_or_runner_ids": true,
+  "inputs_required": [
+    "211 observed material C SHA/tree including source blob SHAs and native-ui consumer",
+    "199 actual installed host fixture and 213 desktop broker on same candidate and identity",
+    "Original authenticated POST routines.run + exact A09 body + consumed current UI lease; absence must deny",
+    "Live public core ToolRegistry Task settlement, real CapabilityInvocation frame, current Maestro/C15 admission, Permission and APPROVED human decision",
+    "Actual provider/generation match and published/armed Relay workflow, child/run/terminal + human product reread",
+    "199/213 provider identity, auth and approval observations only from genuinely hosted run; informed Azure readiness is not evidence"
+  ],
+  "execution_policy": "214 single dispatcher; dedup by C/tree normalized request, selector, runtime/config and installed fixture; no unobserved PASS, no rerun unchanged failing input",
+  "expected_negative": [
+    "missing producer on default must not become READY by catalog, fixture or Session ID",
+    "original POST command differs from C15 intent selector; stale/mutated/nonauthentic input denied",
+    "abort/revocation/provider generation/approval change/duplicate Request invalidates owner",
+    "routine-result forbids prepare/run; repeated retry has no duplicate workflow effect",
+    "timezone/recurrence and Schedule unavailable cannot return synthetic active schedule"
+  ],
+  "expected_positive_only_when_real": [
+    "single original Request -> actual Task frame/Permission/approval -> C07 plan/pin/admission -> Relay child/run/result",
+    "same principal/case/version/source refs and authorized product reread/consumption after reload",
+    "AM06 five real capability calls, native skill/model inference, contribution, consumption and independent 209 recheck"
+  ],
+  "telemetry": {
+    "runIDs": [],
+    "nativeTaskIDs": [],
+    "providerWitnesses": [],
+    "resultRefs": []
+  },
+  "result": "NOT_RUN"
+}

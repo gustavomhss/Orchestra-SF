@@ -1,0 +1,24 @@
+# INERT PATCH ONLY — mission219, external-lease source. DO NOT apply on this branch.
+# Owner: 211/source-owner of apps/cli/src/sucafina-product/routine-services.ts
+# Finding: R3-TASK-03, dormant until live C15 Task source exists
+# preimage blob: 4b455444cdeb560e85f6a17e6192c0420287d48a
+# proposed complete-file postimage blob: 94599cebd50f1c948945083cafc99979e63ed549
+# precondition: exact preimage and still-owned source; recheck consumer/lease before apply.
+# postcondition: actual C07 descriptors register at Location readiness without requiring
+# an already-running Request-scoped owner; the handler itself still rechecks native owner.
+diff --git a/apps/cli/src/sucafina-product/routine-services.ts b/apps/cli/src/sucafina-product/routine-services.ts
+index 4b455444cdeb..94599cebd50f 100644
+--- a/apps/cli/src/sucafina-product/routine-services.ts
++++ b/apps/cli/src/sucafina-product/routine-services.ts
+@@ -273,7 +273,10 @@
+     routines,
+     /** Read at native tool registration, after the existing Location services have actually been acquired. */
+     get descriptors() {
+-      if (!input.native?.() || !input.publication?.()) return []
++      // The native owner is Request-scoped and cannot exist at Location registration.
++      // Register only genuine producer implementations after host origin readiness;
++      // the C07 handlers still resolve/revalidate the live owner on EVERY invocation.
++      if (!input.publication?.()) return []
+       return descriptors.filter((descriptor) => descriptor.id !== "sf_watch_prepare" || !!input.prepareWatch && input.watchAvailable?.() === true)
+     },
+     resultAccess, expectedInputDigest, readExecution,

@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.independent-recheck.219.v1",
+  "finding_id": "R3-TASK-03",
+  "review_owner": 209,
+  "finding_before": "FAIL",
+  "finding_after_author_patch": "BLOCKED_PUBLIC_TASK_REQUEST_ORIGIN",
+  "reviewer_ack": false,
+  "review_claimed": false,
+  "exact_source_inputs": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "b81e7f93a2f6c031b51b63ba36bcba129be45a73"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+      "blob": "dcd223898ca0bddb755ec2dc6b8e3fe2bd149cf4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission219/human-command.test.ts",
+      "blob": "fb24ea750289297621b9ab514ce6422bc2435342"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair219/INERT-211-routine-services.diff",
+      "blob": "bba22c08b1e1b148bdce0637e6abf95a4b6c7d4c"
+    }
+  ],
+  "blockers": [
+    "Default createSfHostRuntime still has no actual nativeRoutineProducer; public host CreateSfHostRuntime input has no original Task-origin callback",
+    "ToolRegistry.materialize.settle public args are {sessionID,agent,assistantMessageID,call,model?}, not the original SF HTTP Request/TrustedUiContext",
+    "TaskTool and ToolSafety invocation can attest core Task frame but cannot recover the authenticated human command from an unrelated UI Request",
+    "A09 handler retains original HTTP Request and C07 port/withCase; native C15 admission records are read-only locators, not CapabilityInvocation or authorizing origin",
+    "Installed publication is a read-only AuthoringStore/Relay publication provider, not a core Task-native origin or human approval issuer",
+    "Without the same actual Task/Request causal entrypoint and independent nativePolicy.current, no 219 adapter may call createSfRoutineNativeOrigin.admit or enable nativeRoutineProducer.ready"
+  ],
+  "recheck_cases": [
+    "R3-TASK-03.A: default host POST reaches real C07 BusinessPorts and original human envelope without replacing owner",
+    "R3-TASK-03.B: original human body digest/C15 admission ref/version/pin match; mutation and stale generation deny",
+    "R3-TASK-03.C: real native issued Task frame and same Request + live C15+Permission+approval must be proved or finding stays FAIL",
+    "R3-TASK-03.D: real Relay terminal child/run/result and authorized reread+product consumption; no synthetic pass",
+    "R3-TASK-03.E: approval/revocation/cancel/retry/duplicate/timezone/schedule/routine-result negatives",
+    "R3-TASK-03.F: 199/213 installed host with same C; 214 run ID and 209 independent reviewer must be real"
+  ],
+  "current_status": "RECHECK_REQUIRED_NOT_ACCEPTED",
+  "GLOBAL_RELEASE": false
+}
