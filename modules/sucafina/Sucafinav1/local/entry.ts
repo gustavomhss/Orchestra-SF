@@ -6,6 +6,7 @@ import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-produc
 import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
+import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
 import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
@@ -190,10 +191,7 @@ export async function createConfiguredInstallation(
     ...nativeDependenciesBase,
     readContext: nativeContext.readContext,
   }
-  const nativeProjections = mountSfNativeProjections({
-    mount: config.mount,
-    context: nativeContext,
-    handlers: [
+  const nativeHandlers = [
       ...createSfDomainProjectionHandlers(nativeDependencies),
       ...createSfPeopleProjectionHandlers(nativeDependencies),
       ...createSfWorkProjectionHandlers(nativeDependencies),
@@ -215,13 +213,18 @@ export async function createConfiguredInstallation(
           )
         },
       },
-    ],
+    ]
+  const nativeProjections = mountSfNativeProjections({
+    mount: config.mount,
+    context: nativeContext,
+    handlers: nativeHandlers,
   })
   // Router construction above proves these exact handlers were installed.
   nativeOperational = async (request, stamp) => {
     const observed = await Promise.allSettled([
       observeSfPlannerPages(nativeApplication, request, stamp),
       observeSfDashboardPages(nativeApplication, request, stamp),
+      observeSfDomainHealth(nativeDependencies, nativeHandlers, request, stamp),
       observeSfHome(runtime?.services?.(), request, stamp),
       observeSfCases(nativeDependencies, request, stamp),
     ])
