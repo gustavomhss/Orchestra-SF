@@ -631,7 +631,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
               detail={recordDetail()}
             />
             </Show>
-            <Show when={ui.review && selectedPr() && samePrReview(ui.review.source, selectedPr()!)}>
+            <Show when={(ui.review && selectedPr()) ? (samePrReview(ui.review.source, selectedPr()!) ? ui.review : undefined) : undefined}>
               {() => {
                 const review = ui.review!
                 const approved = review.decision === "approve"

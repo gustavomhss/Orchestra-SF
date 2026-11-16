@@ -156,12 +156,14 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
           controller.receiveRemote({ baseVersion: source.revision, value: remote })
         }
       }
-      if (props.route.kind === "entity" && !result.body.value.data.entities.some(
-        (row) => row.id === props.route.params.entityRef,
-      )) setScreen("state", "not-found")
-      if (props.route.kind === "allocation" && !result.body.value.data.allocations.some(
-        (row) => row.id === props.route.params.allocationRef,
-      )) setScreen("state", "not-found")
+      if (props.route.kind === "entity") {
+        const routeEntityRef = props.route.params.entityRef
+        if (!result.body.value.data.entities.some((row) => row.id === routeEntityRef)) setScreen("state", "not-found")
+      }
+      if (props.route.kind === "allocation") {
+        const routeAllocationRef = props.route.params.allocationRef
+        if (!result.body.value.data.allocations.some((row) => row.id === routeAllocationRef)) setScreen("state", "not-found")
+      }
       return
     }
     const status = result.body.status
@@ -171,7 +173,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       return
     }
     setScreen("state", status === "stale" ? "stale" : status === "invalid" || status === "needs-input" ? "invalid" : "unavailable")
-    setScreen("problem", result.body.reason)
+    setScreen("problem", "reason" in result.body ? result.body.reason : null)
   }
   createEffect(() => {
     const status = host.state().status
@@ -312,7 +314,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     const bindPending = () => {
       if (intent.kind !== "save") return
       draft()?.setPending({
-        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
         idempotencyKey: options.idempotencyKey,
         payloadDigest: digest,
         expectedVersion: intent.id === null ? null : intent.version,
@@ -349,7 +351,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       bindPending()
       draft()?.confirmSave({
         kind: "confirmed-without-projection",
-        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
         resultVersion: null,
       })
       if (draft()?.snapshot().availability === "confirmed-without-projection") setDraft(null)
@@ -500,7 +502,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
               </Show>
             </section>
           </Show>
-          <Show when={currentValue() && !screen.intent && !screen.lockedOutcome}>
+          <Show when={(!screen.intent && !screen.lockedOutcome) ? currentValue() : undefined}>
             {(value) => (
               <form class="mx-card sf-n20-editor" onSubmit={(event) => {
                 event.preventDefault()

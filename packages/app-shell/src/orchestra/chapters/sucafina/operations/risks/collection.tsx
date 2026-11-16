@@ -506,15 +506,18 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                         const sourceVersion = () => { const state = current(); return state.availability === "active" ? state.baseVersion : null }
                         const proposedFields = () => { const state = current(); return state.availability === "active"
                           ? reviewFields(active().entity, state.value) : [] }
+                        const intentRef = () => {
+                          const identity = active().identity
+                          return identity.kind === "new" ? identity.newIntentRef
+                            : ("n16-review:" + String(active()!.entity!.id)) as SfIntentRef
+                        }
                         return <SfChangeReview
                           operation={{ ref: active().operationRef, label: message(spec.primary),
                             scope: { kind: "message", message: message(spec.title) } }}
                           base={originalSnapshot(active().entity)}
                           current={originalSnapshot(active().entity)}
                           proposed={{ kind: "draft",
-                            intentRef: active().identity.kind === "new"
-                              ? active().identity.newIntentRef
-                              : ("n16-review:" + String(active().entity!.id)) as SfIntentRef,
+                            intentRef: intentRef(),
                             sourceRef: active().entity ? idOf(active().entity!.id) : null,
                             sourceVersion: sourceVersion(), fields: proposedFields() }}
                           effects={[{ id: "domain-save", domain: "dashboard", state: "proposed",

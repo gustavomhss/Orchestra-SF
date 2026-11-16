@@ -18,7 +18,7 @@ import "./monthly-grid.css"
 
 export type {
   SfMonthId, SfMonth, SfCellCoordinate, SfCellValue, SfGridCell, SfDraftCell,
-  SfGridNavigation, SfGridRange, SfPasteMeasure, SfPasteCell, SfPasteRow,
+  SfGridNavigation, SfGridRange, SfMessage, SfPasteMeasure, SfPasteCell, SfPasteRow,
   SfPasteState, SfPasteRequest, SfMonthlyGridProps,
 } from "./types"
 

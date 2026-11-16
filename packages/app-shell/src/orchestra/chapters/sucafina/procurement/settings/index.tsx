@@ -362,7 +362,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           onRetryRead={() => setView("refresh", (value) => value + 1)}
           onLogin={() => { void owner.reload() }}
         >
-          <Show when={currentProjection() && active()}>
+          <Show when={(currentProjection() && active()) ? active() : undefined}>
             {() => (
               <>
                 <Show when={!pageAllowed() || !actionAllowed("save")}>

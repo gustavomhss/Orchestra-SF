@@ -303,7 +303,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
               </section>
             )}
           </Show>
-          <Show when={projection() && !confirmed()}>
+          <Show when={(!confirmed()) ? projection() : undefined}>
             {(observed) => <p role="status">{t("sf.u44.status")}: {observed().state} ({observed().reason})</p>}
           </Show>
         </SfStatePanel>

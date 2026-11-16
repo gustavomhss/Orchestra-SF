@@ -110,12 +110,13 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
       if(response.status===404)return {kind:"not-found"}
       if(response.status===409||response.body.status==="stale")return {kind:"stale"}
       if(response.status!==200||response.body.status!=="ok")return {kind:"unavailable"}
-      if(response.body.value.capabilityId!=="CAP26"||
+      const page=response.body
+      if(page.value.capabilityId!=="CAP26"||
         Object.keys(ready.context.stamp).some((field)=>
-          response.body.context[field as keyof typeof response.body.context] !==
+          page.context[field as keyof typeof page.context] !==
           ready.context.stamp[field as keyof typeof ready.context.stamp]))
         return {kind:"invalid"}
-      return {kind:"ok",page:response.body}
+      return {kind:"ok",page}
     }catch{return {kind:"unavailable"}}
   }
   const refresh=async(token:string,requestRef?:string)=>{
@@ -210,8 +211,11 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     if(ui.state!=="ready")return ui.state
     if(ui.phase==="outcome-unknown"||ui.phase==="source-changed")return "outcome-unknown"
     if(ui.phase==="conflict")return "conflict"
-    if(ui.phase==="failed")return ui.failure==="denied"||ui.failure==="session-expired"||ui.failure==="not-found"||
-      !!draftState()?.pendingOperation ?ui.failure??"unavailable":"ready"
+    if(ui.phase==="failed"){
+      const pending=decisionDraft()?.snapshot()
+      return ui.failure==="denied"||ui.failure==="session-expired"||ui.failure==="not-found"||
+        !!(pending?.availability==="active"&&pending.pendingOperation) ?ui.failure??"unavailable":"ready"
+    }
     if(ref()&&selected()?.kind==="not-found")return "not-found"
     if(ref()&&selected()?.kind==="not-pending")return "invalid"
     if(ref()&&selected()?.kind==="source-unavailable")return "invalid"
@@ -388,6 +392,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     if(!source)return <SfStatePanel state="invalid" messageKey={k("sf.u13.remaining.notPending")}/>
     const record=source.request
     const draft=draftState()
+    const conflict=draft?.availability==="active"?draft.conflict:null
     return <section class="sf-u13-remaining-detail">
       <h2>{record.pr?.title??source.requestRef}</h2>
       <p>{t("sf.u13.remaining.stage")}: {t(source.stage==="sourcing"?"sf.u13.remaining.sourcing":"sf.u13.remaining.po")} ·
@@ -398,7 +403,8 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
             <dd>{field.value.kind==="number"?
               new Intl.NumberFormat(language.intl(),{minimumFractionDigits:2,maximumFractionDigits:2})
                 .format(field.value.value)+" "+(source.baseCurrency??t("sf.u13.remaining.missing")):
-              field.value.kind==="text"?field.value.text.text:
+              field.value.kind==="text"?(field.value.text.kind==="data"?field.value.text.text:
+                t("sf.u13.remaining.missing")):
                 t("sf.u13.remaining.missing")}</dd></div>
         }</For>
       </dl>
@@ -439,14 +445,14 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
           </label>
           <div class="sf-u13-remaining-actions">
             <button type="button" class="mx-btn-primary"
-              disabled={!available("approve")||phaseIsBusy(ui.phase)||!!draft.conflict}
+              disabled={!available("approve")||phaseIsBusy(ui.phase)||!!conflict}
               onClick={()=>begin("approve")}>{t("sf.u13.remaining.approve")}</button>
             <button type="button" class="mx-btn"
-              disabled={!available("reject")||phaseIsBusy(ui.phase)||!!draft.conflict||
+              disabled={!available("reject")||phaseIsBusy(ui.phase)||!!conflict||
                 !draftValue().reason.trim()}
               onClick={()=>begin("reject")}>{t("sf.u13.remaining.reject")}</button>
           </div>
-          <Show when={draft.conflict}><p role="alert">{t("sf.u13.remaining.conflict")}</p></Show>
+          <Show when={conflict}><p role="alert">{t("sf.u13.remaining.conflict")}</p></Show>
         </div>
       </Show>
       <Show when={!available("approve")&&!available("reject")}>

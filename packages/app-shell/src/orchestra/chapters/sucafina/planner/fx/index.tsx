@@ -157,7 +157,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     }
     setScreen("state", result.body.status === "stale" ? "stale" :
       result.body.status === "invalid" || result.body.status === "needs-input" ? "invalid" : "unavailable")
-    setScreen("problem", result.body.reason)
+    setScreen("problem", "reason" in result.body ? result.body.reason : null)
   }
   createEffect(() => {
     const generation = host.generation()
@@ -296,7 +296,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     const bindPending = () => {
       if (intent.kind !== "save") return
       draft()?.setPending({
-        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
         idempotencyKey: options.idempotencyKey,
         payloadDigest: digest,
         expectedVersion: intent.id === null ? null : intent.version,
@@ -333,7 +333,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       bindPending()
       draft()?.confirmSave({
         kind: "confirmed-without-projection",
-        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
         resultVersion: null,
       })
       if (draft()?.snapshot().availability === "confirmed-without-projection") setDraft(null)
@@ -472,7 +472,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
               </ul>
             </Show>
           </section>
-          <Show when={currentValue() && !screen.intent && !screen.lockedOutcome}>
+          <Show when={(!screen.intent && !screen.lockedOutcome) ? currentValue() : undefined}>
             {(value) => (
               <form class="mx-card sf-n20-fx-editor" onSubmit={(event) => {
                 event.preventDefault()

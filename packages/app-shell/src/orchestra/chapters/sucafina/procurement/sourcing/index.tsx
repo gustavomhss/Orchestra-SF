@@ -42,8 +42,11 @@ const asString = (v:unknown):string => v == null ? "" : typeof v === "string" ? 
 const truth = (v:unknown) => v === true || v === "true" || v === "on"
 const active = (v:Phase) => ["reviewing","checking","submitting","verifying","outcome-unknown"].includes(v)
 const toView = (v:unknown) => ({kind:"text" as const,text:data(v == null || v === "" ? "—" : asString(v))})
-const scoreValue = (scores:QuoteEdit["scores"], index:number) =>
-  Array.isArray(scores) ? scores[index] : scores && typeof scores === "object" ? scores[String(index)] : undefined
+const scoreValue = (scores:QuoteEdit["scores"], index:number):string|number|null|undefined => {
+  if (scores == null) return undefined
+  if (Array.isArray(scores)) return (scores as readonly (string|number|null)[])[index]
+  return (scores as Readonly<Record<string, string|number|null>>)[String(index)]
+}
 
 /** Source-read and editable-stage admission must not depend on operational save. */
 export function sourcingDraftReadAuthorized(row:SourcingRequest,context:SfContext):boolean {
@@ -153,12 +156,13 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       if(result.status===404)return {kind:"not-found"}
       if(result.status===409||result.body.status==="stale")return {kind:"stale"}
       if(result.status!==200||result.body.status!=="ok")return {kind:"unavailable"}
-      if(result.body.value.capabilityId!=="CAP25"||
+      const page=result.body
+      if(page.value.capabilityId!=="CAP25"||
         Object.keys(ready.context.stamp).some((field)=>
-          result.body.context[field as keyof typeof result.body.context] !==
+          page.context[field as keyof typeof page.context] !==
           ready.context.stamp[field as keyof typeof ready.context.stamp]))
         return {kind:"invalid"}
-      return {kind:"ok",page:result.body}
+      return {kind:"ok",page}
     }catch{return {kind:"unavailable"}}
   }
   const refresh=async(token:string,requestRef?:string)=>{
@@ -238,10 +242,18 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     update((old)=>({...old,quotes:(old.quotes??[]).map((item,position)=>{
       if(position!==index)return item
       const scores=item[kind]
-      const values=Array.isArray(scores)?[...scores]:
-        scores&&typeof scores==="object"?{...scores}:{}
-      if(Array.isArray(values))values[criterion]=raw
-      else values[String(criterion)]=raw
+      if(scores==null){
+        const created:Record<string,string|number|null>={}
+        created[String(criterion)]=raw
+        return {...item,[kind]:created}
+      }
+      if(Array.isArray(scores)){
+        const values=[...scores]
+        values[criterion]=raw
+        return {...item,[kind]:values}
+      }
+      const values={...scores} as Record<string,string|number|null>
+      values[String(criterion)]=raw
       return {...item,[kind]:values}
     })}))
   }
@@ -266,8 +278,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const query=ui.search.trim().toLocaleLowerCase()
     const shown=recorded.filter((quote)=>!query||[quote.id,quote.supplier,quote.currency].some((v)=>
       asString(v).toLocaleLowerCase().includes(query)))
-    if(ui.sort==="source")return shown
-    return [...shown].sort((a,b)=>asString(a[ui.sort]).localeCompare(asString(b[ui.sort])))
+    const sort=ui.sort
+    if(sort==="source")return shown
+    return [...shown].sort((a,b)=>asString(a[sort]).localeCompare(asString(b[sort])))
   }
   const state=():SfUiState=>{
     if(!authority()||ui.token!==authority()){
@@ -279,8 +292,11 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(ui.state!=="ready")return ui.state
     if(ui.phase==="outcome-unknown"||draftPending())return "outcome-unknown"
     if(ui.phase==="conflict"&&!request())return "conflict"
-    if(ui.phase==="failed")return ui.lastError==="denied"||ui.lastError==="session-expired"||ui.lastError==="not-found"||
-      !!snapshot()?.pendingOperation ? ui.lastError??"unavailable" : "ready"
+    if(ui.phase==="failed"){
+      const snap=snapshot()
+      return ui.lastError==="denied"||ui.lastError==="session-expired"||ui.lastError==="not-found"||
+        !!(snap?.availability==="active"&&snap.pendingOperation) ? ui.lastError??"unavailable" : "ready"
+    }
     if(ref()&&!request())return "not-found"
     if(!ref()&&requestRows().length===0)return "empty"
     return "ready"
@@ -364,7 +380,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     setUi("phase","checking")
     const fresh=await read(token,intent.requestRef,controller.signal)
     if(controller.signal.aborted||commandController!==controller||authority()!==token){release();return}
-    if(ui.review!==intent||ui.phase!=="checking"||ref()!==intent.requestRef){release();return}
+    // Fresh read: ui.phase's static narrowing above predates the setUi("phase","checking").
+    const phaseNow:Phase=ui.phase
+    if(ui.review!==intent||phaseNow!=="checking"||ref()!==intent.requestRef){release();return}
     const next=fresh.kind==="ok"?uniqueRequest(fresh.page,intent.requestRef):null
     if(fresh.kind!=="ok"||!next||
       requestRevision(fresh.page,intent.requestRef)!==intent.sourceRevision||
