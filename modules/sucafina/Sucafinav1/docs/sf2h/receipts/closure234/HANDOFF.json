@@ -1,0 +1,255 @@
+{
+  "schema": "sf2h.closure234.handoff.v1",
+  "mission": 234,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "epoch": "proof-last-e1-browser234",
+  "author": {
+    "actor": "MISSION234_AM04_AM06_DRIVER_AUTHOR",
+    "model": "GPT-6",
+    "session_id": null,
+    "session_id_claim": false
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-proof-last",
+  "initial_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "ack_commit": "44174f954975de565007c725fd22253c44269f41",
+  "implementation_commit": "d9905d1ffd5ab5aab2f6872cc5e97c3d40667ab2",
+  "implementation_tree": "8e04b926a16f6987e9886359ab99c7b6c30a8ce7",
+  "PR": {
+    "number": 212,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/212",
+    "base": "sf-closure-bundle",
+    "base_sha": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "draft": true,
+    "merge": "NOT_DONE"
+  },
+  "planning": {
+    "immutable_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "UX": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "original_counts": {
+      "WPs": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "modified": false
+  },
+  "committed_code": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/proof234/am04-c12-return.test.ts",
+      "blob": "7c4d5f0dfcfde500da11413ab40004a259a91d37",
+      "scope": "AM04 C12 original HTTP + original SQLite transactionAll + post-commit lost return + reopen + recovery + revoked principal",
+      "status": "NOT_RUN",
+      "test_kind": "component-original-source-not-native-positive"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/proof234/am05-atlas-source.test.ts",
+      "blob": "6b810b541a762be1c2b297fb8f9001fb13a1acde",
+      "scope": "AM05 C09/C17 original business outbox, real Atlas and named Gitleaks, historical source, authorized read/revoke, no extra append",
+      "status": "NOT_RUN",
+      "test_kind": "component-original-source-not-installed-model"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/proof234/am06-original-terminal.test.ts",
+      "blob": "381ea378ecbf8fe5351c1f6f2bd1189bd6faae63",
+      "scope": "AM06 actual original C07 publication/native owner/Session read, refuses absent terminal artifact and revoked read; fixture arm synthetic, strictly negative",
+      "status": "NOT_RUN",
+      "test_kind": "negative-only-no-Relay-execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/proof234/hosted-driver.ts",
+      "blob": "9f1214c6c29f1a1c7c6a28ace9bffdcf901c433d",
+      "scope": "AM04 original correlator reuse + AM05 C17 native-observation structural gate + AM06 real C07 result reader and 229 origin gate; no PASS return type",
+      "status": "NOT_RUN",
+      "test_kind": "read-only-correlator-needs-original-witness"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/proof234/hosted-fail-closed.test.ts",
+      "blob": "9bc07f3c46caa46a82594a883631a51d1f76f04c",
+      "scope": "missing accepted C or malformed CI run cannot be positive proof",
+      "status": "NOT_RUN",
+      "test_kind": "negative-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/proof234/README.md",
+      "blob": "2a9821012b32d5dc8dc1ec9c9330890388f6edfb",
+      "scope": "integration and use limitations",
+      "status": "COMMITTED_NOT_PROVEN"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/ACK.json",
+      "blob": "4887268b2320ea4da09bd5af13cb170c74e65fa6",
+      "purpose": "confirmed initial HEAD/lease limitations"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/CRITERIA.json",
+      "blob": "c504c89a3456ef1f70af3af05f3d6647e20a3e86",
+      "purpose": "all original AM04–AM06 checks and 89 directly associated unmodified criterion IDs/expectations, all NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/INERT-PATCH-MANIFEST.json",
+      "blob": "829ef528d224e32ce3e29942f0155e58a244e771",
+      "purpose": "10 complete 230 source/test patches, 20 full pre/post images by original Git blobs under closure234/inert/230"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/CI-REQUESTS.json",
+      "blob": "5f59ee997bf534a1b30647159573ffab2e682927",
+      "purpose": "four exact new test:ci requests for sole 232 dispatcher, none submitted"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/DEPENDENCIES.json",
+      "blob": "81c90483ab4d3eb6ea6dd41435fd5e30ea143ace",
+      "purpose": "source/test SHA pins, original producers/consumers, 207–232 states and unresolved authorizations"
+    }
+  ],
+  "patches": {
+    "complete_inert_prepost_count": 20,
+    "logical_original_230_patches": 10,
+    "source_manifest_230_blob": "4dd4ce583ab30bc29f4f60de1b751d6deb484e87",
+    "src_required": [
+      "SRC-01",
+      "SRC-02",
+      "SRC-03"
+    ],
+    "mandatory_regression_oracle": [
+      "REG-01",
+      "REG-02",
+      "REG-03"
+    ],
+    "other_230_own": [
+      "FIX-01",
+      "FIX-02",
+      "SCHEMA-01",
+      "SCHEMA-02"
+    ],
+    "path_pattern": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/{pre|post}/<original-path>.inert.txt",
+    "all_post_and_pre_blobs_byte_complete": true,
+    "unchanged_target_branch": true,
+    "all_unowned_paths_modified": false,
+    "consumer": "211 solely, with original 230 SHA/preimage checks and author approval; no autoapply",
+    "status": "INERT_NOT_APPLIED"
+  },
+  "criteria": {
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/CRITERIA.json",
+    "direct_criteria_count": 89,
+    "per_proof_with_overlap": {
+      "AM04": 11,
+      "AM05": 53,
+      "AM06": 47
+    },
+    "all_original_rules_preserved": true,
+    "status": "NOT_RUN",
+    "AM04": [
+      "model-prepares-human-chooses-reviews-authorizes",
+      "C08-atomic-original-domain-and-receipt",
+      "lost-return-between-commit-and-case-reconciliation",
+      "same-key-digest-replay-different-content-conflict",
+      "per-domain-authorization-and-partial-state-no-global-transaction"
+    ],
+    "AM05": [
+      "original-C17-business-evidence-ref-and-memory-boundary",
+      "real-scanner-binary-clean-hit-timeout-unavailable",
+      "C08-append-commit-restart-read",
+      "two-principals-same-profile-revocation-incarnation-change",
+      "real-engine-port-generated-bundle-AST-check:spawn-imports",
+      "not-Atlas-shim"
+    ],
+    "AM06": [
+      "original-C07-published-version-human-admission",
+      "229-original-Task-Relay-child-Session-provider-run-result",
+      "five-sf-maestro-routine-operations-and-loaded-skill",
+      "UI-return-result-provenance",
+      "recursive-routine-refusal",
+      "native-Schedule-timezone-revoke-cancel"
+    ],
+    "positive_assessment": "NO_NATIVE_PASS_CLAIMED"
+  },
+  "ci": {
+    "source_232_handoff": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+    "source_232_requests_blob": "f5c93194b81ac6cd594a7a08d0a4062b89b889fe",
+    "only_dispatcher": 232,
+    "request_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/CI-REQUESTS.json",
+    "exact_new_ids": [
+      "S234-AM04-C12-SPLIT-RETURN",
+      "S234-AM05-C17-ORIGINAL",
+      "S234-AM06-NATIVE-TERMINAL-NEGATIVE",
+      "S234-CORRELATOR-FAIL-CLOSED"
+    ],
+    "already_owned_by_232": [
+      "S220-AM04",
+      "S220-AM05",
+      "S219-REAL-TASK-RELAY",
+      "S216-ATLAS-SEQUENCE",
+      "eight-final-same-C"
+    ],
+    "requested_not_dispatched": true,
+    "accepted_material_W": null,
+    "accepted_C": null,
+    "accepted_D": null,
+    "G7": {
+      "checkout": "C",
+      "status": "NOT_RUN"
+    },
+    "G8": {
+      "checkout": "D",
+      "status": "NOT_RUN",
+      "reuse_C_G7": false
+    },
+    "AM04_positive": "NOT_RUN",
+    "AM05_positive": "NOT_RUN",
+    "AM06_positive": "NOT_RUN",
+    "native_owner_review": "NOT_RUN",
+    "original_test_ci_uploader_only": true,
+    "no_new_workflow": true
+  },
+  "consumer_chain": {
+    "211": "verify and compose original product+230 fixes and 228/231 where authorized, keep all invariants",
+    "229": "publish genuine native Task/Relay origin and terminal handoff; 234 did not generate Task",
+    "232": "sole CI dispatcher, rerun only against exact material W / accepted C as required",
+    "235": "S2-R2 and S3-R3 independent original witness verification, not test pass",
+    "236": "retain accepted evidence in D; no synthetic PASS, separate G8 on D"
+  },
+  "exclusivity": {
+    "write_paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/**",
+      "modules/sucafina/Sucafinav1/test/product/proof234/**"
+    ],
+    "unowned_product_files_changed": 0,
+    "other_branch_writes": 0,
+    "force": false,
+    "no_goal_restart": true,
+    "no_supervisor": true,
+    "no_Azure": true,
+    "no_financial_policy_change": true,
+    "no_S0_authority_claim": true,
+    "no_runtime_session_termination_claim": true,
+    "writing_state": "RELEASED_AT_MISSION_HANDOFF",
+    "writes_after_release": "NONE",
+    "no_token_revocation_claim": true
+  },
+  "checks": {
+    "source_ref_and_s0_fence": "READ_ONLY_OBSERVED",
+    "github_tree_and_CAS": "OBSERVED",
+    "github_comparison": "31_ADDED_IN_SCOPE_ONLY_AS_OF_IMPLEMENTATION_COMMIT",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "scanner_invocation": "NOT_RUN",
+    "actual_model_provider": "NOT_RUN",
+    "installed_principal": "NOT_RUN",
+    "actual_Task_Relay_origin": "NOT_PROVEN",
+    "native_AM04": "NOT_RUN",
+    "native_AM05": "NOT_RUN",
+    "native_AM06": "NOT_RUN",
+    "guard_G7": "NOT_RUN",
+    "guard_G8": "NOT_RUN",
+    "independent_three_approvals": "NOT_RUN",
+    "GLOBAL_RELEASE": false
+  },
+  "status": "DRIVERS_AND_FULL_INERT_PATCHES_COMMITTED_HANDED_OFF_NOT_ATTESTED"
+}
