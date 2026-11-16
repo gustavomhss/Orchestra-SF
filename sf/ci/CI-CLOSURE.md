@@ -54,6 +54,13 @@ in the repository and the release workflow checks its presence while
 remaining explicitly BLOCKED. No fake host, identity, credentials or
 synthetic green status is introduced.
 
+The source `transport-integration.test.ts` originally had five assertions.
+It has been split into two portable Q01 catalog/route checks
+(`transport-contract.test.ts`, executed by the PR browser unit lane) and
+three real F04 installed-host negatives (kept in the release-owned file).
+The preflight asserts the complete five-case inventory and refuses an
+accidental move of live-manifest requirements into the portable test.
+
 The runner builds ignore arguments only from the **validated, exact paths**
 in `sf/ci/suites.json`. Deletion, widening or renaming the release-owned
 files fails the manifest gate; documentation alone cannot waive them.

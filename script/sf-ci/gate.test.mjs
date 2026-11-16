@@ -123,6 +123,21 @@ test("the two relocated proofs remain explicitly blocked by the real Azure relea
   assert.match(releaseWorkflow, /AZURE_APP_ACTIVATION_NOT_COMPOSED/)
   assert.match(releaseWorkflow, /process\.exit\(1\)/)
 })
+test("Q01 two pure contracts remain in the PR suite while three F04 proofs stay release-only", () => {
+  const base = new URL("../../packages/app-shell/test-browser/sucafina-native/", import.meta.url)
+  const portable = readFileSync(new URL("transport-contract.test.ts", base), "utf8")
+  const installed = readFileSync(new URL("transport-integration.test.ts", base), "utf8")
+  for (const id of ["Q01-TRANSPORT-REGISTRY", "Q01-TRANSPORT-PILOT-ROUTES"]) {
+    assert.match(portable, new RegExp(id))
+    assert.doesNotMatch(installed, new RegExp(id))
+  }
+  for (const id of ["Q01-TRANSPORT-GUEST", "Q01-TRANSPORT-INVALID-OWNER", "Q01-TRANSPORT-STALE-FENCE"]) {
+    assert.match(installed, new RegExp(id))
+    assert.doesNotMatch(portable, new RegExp(id))
+  }
+  assert.match(installed, /readNativeManifest/)
+  assert.doesNotMatch(portable, /readNativeManifest/)
+})
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))
 })

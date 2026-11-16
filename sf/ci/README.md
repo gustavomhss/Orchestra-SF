@@ -118,6 +118,15 @@ suites for missing prerequisites that a unit runner must not invent:
   requires a **real F04 installed-host manifest** and authenticated actor
   binding. This is a release-installed proof, not a Bun DOM fixture.
 
+The original transport test contained **five** distinct cases; they are
+now separated by *runtime requirement*, without removing assertions:
+`transport-contract.test.ts` keeps the pure Q01 registry and mutation-route
+contract checks (2 tests) in the PR suite, and
+`transport-integration.test.ts` retains the three real installed F04
+negative cases as release-owned checks. A preflight test verifies that all
+five named cases remain accounted for and that no F04 manifest is imported
+by the portable Q01 contract checks.
+
 The exact paths are declared as `releaseOnlyFiles` in the manifest. CI
 validates that the original test files still exist and fails if their
 ownership list changes. A PR does not execute or approve these two tests.
