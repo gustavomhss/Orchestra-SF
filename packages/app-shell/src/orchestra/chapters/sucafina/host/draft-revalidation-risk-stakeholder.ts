@@ -1,6 +1,7 @@
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 const riskFields = ["title", "name", "action", "responsible", "desc", "category", "impact", "probability",
   "status", "owner", "ownerId", "leaderId", "mitigation", "due", "notes"]
@@ -25,12 +26,10 @@ export async function revalidateRiskStakeholderDraft(
   const selection = Object.fromEntries(entries)
   const pageName = risk ? "IT Risks" : "Stakeholder Management"
   const command = risk ? "domain.command.CAP13.save" : "domain.command.CAP15.save"
+  const availability = draftAvailability(fresh, "domain-read", input.surfaceId, [input.read.operationId, command])
+  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === input.surfaceId && item.surface === "dashboard" &&
-      item.page === pageName && item.canRead && item.allowedActionIds.includes("save")) ||
-      !fresh.availability.some((resource) => resource.family === "domain-read" && resource.resource === input.surfaceId &&
-        resource.state !== "denied" && resource.state !== "unavailable" &&
-        [input.read.operationId, command].every((id) => resource.operations.some((operation) =>
-          operation.operationId === id && operation.state === "ready" && operation.operational)))) return { status: "denied" }
+      item.page === pageName && item.canRead && item.allowedActionIds.includes("save"))) return { status: "denied" }
   const client = createSfDomainClient(transport)
   const result = await (risk ? client["domain.page.CAP13"](selection, { signal }) :
     client["domain.page.CAP15"](selection, { signal })).catch(() => undefined)

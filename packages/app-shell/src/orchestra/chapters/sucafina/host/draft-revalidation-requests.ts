@@ -2,6 +2,7 @@ import { createSfProcurementClient } from "@orchestra/client/sucafina/procuremen
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { decodeRequestsPage, isPoWritable, isPrWritable, requestRef, requestVersion } from "../procurement/requests/model"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 // Exactly the fields registered by requests/page.tsx, excluding the separately-owned title.
 const prFields = ["type", "description", "estAmount", "costCenter", "needBy", "justification",
@@ -27,14 +28,11 @@ export async function revalidateRequestsDraft(
   const prefix = input.editScopeKey === "pr.details" ? "pr." : "po."
   if (input.read.fieldPaths.some((path) => !fields.some((field) => path === prefix + field)))
     return { status: "unavailable" }
+  const availability = draftAvailability(fresh, "procurement", "CAP25", ["domain.page.CAP25", "domain.command.CAP25." + action])
+  if (availability) return availability
   const destination = fresh.destinations.find((item) => item.capabilityId === "CAP25" &&
     item.surface === "procurement" && item.page === "Requests" && item.canRead)
   if (!destination || !destination.allowedActionIds.includes(action)) return { status: "denied" }
-  if (!fresh.availability.some((resource) => resource.family === "procurement" && resource.resource === "CAP25" &&
-    resource.state !== "denied" && resource.state !== "unavailable" &&
-    ["domain.page.CAP25", "domain.command.CAP25." + action].every((id) => resource.operations.some((operation) =>
-      operation.operationId === id && operation.state === "ready" && operation.operational))))
-    return { status: "denied" }
   const result = await createSfProcurementClient(transport)["domain.page.CAP25"](
     input.identity.kind === "record" ? { request: input.identity.recordRef } : {}, { signal },
   ).catch(() => undefined)
@@ -43,7 +41,7 @@ export async function revalidateRequestsDraft(
   if (result.status !== 200) return { status: "unavailable" }
   const read = decodeRequestsPage(result.body, fresh.stamp)
   if (read.kind === "denied" || read.kind === "unauthenticated") return { status: "denied" }
-  if (read.kind === "stale") return { status: "authority-changed" }
+  if (read.kind === "stale") return { status: result.body.status === "stale" ? "unavailable" : "authority-changed" }
   if (read.kind !== "ready") return { status: "unavailable" }
   if (result.body.status !== "ok" || (input.identity.kind === "new"
     ? Object.keys(result.body.value.selection).length !== 0
@@ -57,6 +55,10 @@ export async function revalidateRequestsDraft(
   const rows = read.records.filter((record) => requestRef(record) === ref)
   if (rows.length !== 1) return { status: "unavailable" }
   const row = rows[0]!
+  const stages = input.editScopeKey === "pr.details" ? ["draft", "pr_rejected"] : ["po_draft", "po_rejected"]
+  if (!stages.includes(row.status)) return { status: "denied" }
+  // Older source revisions omit this optional proof; omission is not a revocation.
+  if (row.allowedDraftActions === undefined) return { status: "unavailable" }
   if (!(input.editScopeKey === "pr.details" ? isPrWritable(row) : isPoWritable(row))) return { status: "denied" }
   const visible = input.editScopeKey === "pr.details" ? row.pr : row.po
   if (input.read.fieldPaths.some((path) => !visible || !Object.entries(visible).some(([key, value]) =>

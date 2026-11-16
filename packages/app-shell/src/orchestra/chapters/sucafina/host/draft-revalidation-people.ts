@@ -3,6 +3,7 @@ import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfPeopleStructureSelection, SfPeopleTalentSelection } from "@orchestra/schema/sucafina/people"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 const cioFields = ["name", "title", "location", "start"]
 const leaderFields = ["name", "title", "domain", "location", "start"]
@@ -35,12 +36,11 @@ export async function revalidatePeopleDraft(
       input.identity.kind === "new" && (entity === "cio" || input.read.fieldPaths.length ||
         input.identity.newIntentRef !== "sf-people-" + input.surfaceId + "-" + entity + "-new")) return { status: "unavailable" }
   const pageName = structure ? "Team Structure" : "Talent Review"
+  const availability = draftAvailability(fresh, "domain-read", input.surfaceId,
+    [input.read.operationId, "domain.command." + input.surfaceId + "." + action])
+  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === input.surfaceId && item.surface === "dashboard" &&
-      item.page === pageName && item.canRead && item.allowedActionIds.includes(action)) ||
-      !fresh.availability.some((resource) => resource.family === "domain-read" && resource.resource === input.surfaceId &&
-        resource.state !== "denied" && resource.state !== "unavailable" &&
-        [input.read.operationId, "domain.command." + input.surfaceId + "." + action].every((id) => resource.operations.some((operation) =>
-          operation.operationId === id && operation.state === "ready" && operation.operational)))) return { status: "denied" }
+      item.page === pageName && item.canRead && item.allowedActionIds.includes(action))) return { status: "denied" }
   const client = createSfPeopleClient(transport)
   const result = await (structure ? client["domain.page.CAP07"](selection, { signal }) :
     client["domain.page.CAP08"](selection, { signal })).catch(() => undefined)

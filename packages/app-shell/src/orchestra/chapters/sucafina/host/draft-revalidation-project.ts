@@ -4,6 +4,7 @@ import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { readSfProjectPage, sfProjectVersion } from "../portfolio/projects/model"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 const fields = ["name", "desc", "status", "risk", "priority", "pm", "start", "end",
   "budget", "spent", "pct", "watchList", "notes"]
@@ -24,12 +25,10 @@ export async function revalidateProjectDraft(
   const selection = Schema.decodeUnknownOption(SfDomain.operations["domain.page.CAP10"].input,
     { onExcessProperty: "error" })(original)
   if (Option.isNone(selection)) return { status: "unavailable" }
+  const availability = draftAvailability(fresh, "domain-read", "CAP10", ["domain.page.CAP10", "domain.command.CAP10.save"])
+  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP10" && item.surface === "dashboard" &&
-      item.page === "All Projects" && item.canRead && item.allowedActionIds.includes("save")) ||
-      !fresh.availability.some((resource) => resource.family === "domain-read" && resource.resource === "CAP10" &&
-        resource.state !== "denied" && resource.state !== "unavailable" &&
-        ["domain.page.CAP10", "domain.command.CAP10.save"].every((id) => resource.operations.some((operation) =>
-          operation.operationId === id && operation.state === "ready" && operation.operational)))) return { status: "denied" }
+      item.page === "All Projects" && item.canRead && item.allowedActionIds.includes("save"))) return { status: "denied" }
   const result = await createSfDomainClient(transport)["domain.page.CAP10"](selection.value, { signal }).catch(() => undefined)
   if (signal.aborted || !result || result.kind !== "response") return { status: "unavailable" }
   if (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" ||

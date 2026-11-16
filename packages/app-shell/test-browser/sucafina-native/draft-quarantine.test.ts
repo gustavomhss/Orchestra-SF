@@ -7,6 +7,7 @@ import { SfContextProvider, useSfContext } from "../../src/orchestra/chapters/su
 import { createSfOwnerDrafts } from "../../src/orchestra/chapters/sucafina/context/drafts"
 import type { SfContext, SfContextDependencies, SfContextHandle, SfDraftRevalidation, SfOwnerIdentity } from "../../src/orchestra/chapters/sucafina/context/contracts"
 import { createSfDraft } from "../../src/orchestra/chapters/sucafina/shared/draft"
+import { revalidateSfNativeDraft } from "../../src/orchestra/chapters/sucafina/host/draft-revalidation"
 
 // Contract tests with injected producer responses, not an installed identity/host proof.
 const stamp = { installationId: "install", projectId: "project", hostId: "host", principalRef: "actor", policyVersion: "p1", accessRevision: "a1" }
@@ -122,6 +123,47 @@ describe("owner draft quarantine", () => {
 })
 
 describe("provider quarantine publication", () => {
+  test("People source outage takes precedence over missing action; explicit action loss purges and notifies", async () => {
+    const source: SfContext = { ...context,
+      destinations: [{ capabilityId: "CAP08", surface: "dashboard", page: "Talent Review", canRead: true, allowedActionIds: ["save"] }],
+      availability: [{ family: "domain-read", resource: "CAP08", state: "ready", operations: [
+        { operationId: "domain.page.CAP08", state: "ready", operational: true, reason: null },
+        { operationId: "domain.command.CAP08.save", state: "ready", operational: true, reason: null },
+      ] }],
+    }
+    let fresh = source
+    let notices = 0
+    const deps: SfContextDependencies = { ...dependencies(revalidateSfNativeDraft),
+      loadContext: async () => ({ status: "ok", value: fresh }), onDraftAccessRevoked: () => { notices++ } }
+    const node = document.createElement("div")
+    document.body.append(node)
+    const captured: { handle?: SfContextHandle } = {}
+    const child = () => { captured.handle = useSfContext(); return null }
+    const dispose = render(() => createComponent(SfContextProvider, {
+      selection: () => selection, dependencies: deps, get children() { return createComponent(child, {}) },
+    }), node)
+    try {
+      const handle = captured.handle
+      if (!handle) throw new Error("provider handle unavailable")
+      await handle.reload()
+      const draft = handle.ready()!.drafts.acquire({ surfaceId: "CAP08",
+        identity: { kind: "record", recordRef: "m1" as SfRef }, editScopeKey: "people:talent:current:talent" as SfEditScopeKey,
+        baseVersion: 1, base: { text: "base" }, value: { text: "base" },
+        revalidation: { operationId: "domain.page.CAP08", input: {}, fieldPaths: ["name"], actionIds: ["save"] } })
+      draft.edit({ text: "private" }); handle.invalidate("session-expired")
+      fresh = { ...source, destinations: [], availability: [{ family: "domain-read", resource: "CAP08", state: "unavailable", operations: [] }] }
+      await handle.reload()
+      expect(handle.state()).toMatchObject({ status: "unavailable", reason: "host-unavailable" })
+      expect(draft.snapshot().availability).toBe("quarantined")
+      expect(notices).toBe(0)
+      fresh = { ...source, destinations: [] }
+      await handle.reload()
+      expect(handle.state().status).toBe("ready")
+      expect(draft.snapshot().availability).toBe("revoked")
+      expect(notices).toBe(1)
+    } finally { dispose(); node.remove() }
+  })
+
   test("session expiry fences the transport and hides pending edits until same-owner proof", async () => {
     const entered = Promise.withResolvers<void>()
     const proof = Promise.withResolvers<SfDraftRevalidation>()

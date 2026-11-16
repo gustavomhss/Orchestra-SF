@@ -1,6 +1,7 @@
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidatePlannerVersionDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -14,12 +15,10 @@ export async function revalidatePlannerVersionDraft(
       Object.keys(source).some((key) => key !== "year")) return { status: "unavailable" }
   const year = "year" in source ? source.year : undefined
   if (year !== undefined && (typeof year !== "number" || !Number.isSafeInteger(year))) return { status: "unavailable" }
+  const availability = draftAvailability(fresh, "planner", "CAP23", ["domain.page.CAP23", "domain.command.CAP23.save"])
+  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP23" && item.surface === "planner" &&
-      item.page === "Versions" && item.canRead && item.allowedActionIds.includes("save")) ||
-      !fresh.availability.some((resource) => resource.family === "planner" && resource.resource === "CAP23" &&
-        resource.state !== "denied" && resource.state !== "unavailable" &&
-        ["domain.page.CAP23", "domain.command.CAP23.save"].every((id) => resource.operations.some((operation) =>
-          operation.operationId === id && operation.state === "ready" && operation.operational))))
+      item.page === "Versions" && item.canRead && item.allowedActionIds.includes("save")))
     return { status: "denied" }
   const result = await createSfPlannerClient(transport)["domain.page.CAP23"](
     typeof year === "number" ? { year } : {}, { signal },
