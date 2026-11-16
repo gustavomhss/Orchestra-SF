@@ -161,33 +161,38 @@ export const skill = Effect.fn("SessionRunner.skill")(function* (
     text: material,
   })
   if (!deps.host?.observeSkillLoad) return true
-  // A nested Event transaction has not committed yet, even though publish returned. Never notify from it.
-  if (!deps.database.inTransaction || (yield* deps.database.inTransaction)) {
-    yield* Effect.logWarning("SessionRunner.skill: publication is not known committed; load not observed")
-    return false
-  }
-  const current = yield* deps.skills.list()
-  const now = deps.skills.sourceOf?.(found)
-  if (!source || source !== now ||
-    current.find((item) => item.name === input.skill) !== found || found.location !== location || found.content !== content || found.name !== name) {
-    yield* Effect.logWarning("SessionRunner.skill: source provenance changed or unavailable; load not observed")
-    return false
-  }
-  const checked = yield* SkillTool.load(deps.fs, found, SkillV2.children(current, found)).pipe(Effect.orDie)
-  const finalSource = deps.skills.sourceOf?.(found)
-  if (finalSource !== source ||
-    found.location !== location || found.content !== content || found.name !== name || createHash("sha256").update(checked, "utf8").digest("hex") !== digest) {
-    yield* Effect.logWarning("SessionRunner.skill: loaded material changed; load not observed")
-    return false
-  }
-  return yield* notifySkillLoad(deps.host, {
-    sessionID: input.sessionID,
-    skillName: input.skill,
-    loadedMessageID: messageID,
-    source: { ...source, location, contentDigest: digest },
-  }, () => deps.skills.sourceOf?.(found) === source && found.location === location && found.content === content && found.name === name).pipe(
-    Effect.tap((valid) => valid ? Effect.void : Effect.logWarning("SessionRunner.skill: source changed during notification")),
+  const host = deps.host
+  // Delivery succeeded. Observation is advisory and must never turn it into SkillNotFoundError.
+  return yield* Effect.gen(function* () {
+    // A nested Event transaction has not committed yet, even though publish returned. Never notify from it.
+    if (!deps.database.inTransaction || (yield* deps.database.inTransaction)) {
+      yield* Effect.logWarning("SessionRunner.skill: publication is not known committed; load not observed")
+      return
+    }
+    const current = yield* deps.skills.list()
+    const now = deps.skills.sourceOf?.(found)
+    if (!source || source !== now ||
+      current.find((item) => item.name === input.skill) !== found || found.location !== location || found.content !== content || found.name !== name) {
+      yield* Effect.logWarning("SessionRunner.skill: source provenance changed or unavailable; load not observed")
+      return
+    }
+    const checked = yield* SkillTool.load(deps.fs, found, SkillV2.children(current, found))
+    const finalSource = deps.skills.sourceOf?.(found)
+    if (finalSource !== source ||
+      found.location !== location || found.content !== content || found.name !== name || createHash("sha256").update(checked, "utf8").digest("hex") !== digest) {
+      yield* Effect.logWarning("SessionRunner.skill: loaded material changed; load not observed")
+      return
+    }
+    const valid = yield* notifySkillLoad(host, {
+      sessionID: input.sessionID,
+      skillName: input.skill,
+      loadedMessageID: messageID,
+      source: { ...source, location, contentDigest: digest },
+    }, () => deps.skills.sourceOf?.(found) === source && found.location === location && found.content === content && found.name === name)
+    if (!valid) yield* Effect.logWarning("SessionRunner.skill: source changed during notification")
+  }).pipe(
+    Effect.as(true),
     Effect.catchCauseIf((cause) => !Cause.hasInterrupts(cause), (cause) =>
-      Effect.logError("SessionRunner.skill: skill load observer failed", cause).pipe(Effect.as(false))),
+      Effect.logError("SessionRunner.skill: skill load observation failed", cause).pipe(Effect.as(true))),
   )
 })

@@ -165,6 +165,9 @@ const layer = Layer.effect(
     const caches = new WeakMap<Data, Map<string, Info[]>>()
     // A write bumps the generation, so a list() that started loading before it cannot refill the cache.
     const generation = { current: 0 }
+    // Capture before an Info leaves list(), not when it is later presented to sourceOf. A cached
+    // or embedded object must never acquire fresh provenance for fields changed by its holder.
+    const originals = new WeakMap<Info, Readonly<{ name: string; location: string; content: string }>>()
     const provenance = new WeakMap<Info, { data: Data; generation: number; source: Readonly<{ key: string; reserved: boolean }> }>()
     const invalidate = () => {
       generation.current++
@@ -181,6 +184,9 @@ const layer = Layer.effect(
       for (const source of data.sources) {
         const key = Source.key(source)
         const loaded = cache.get(key) ?? (yield* load(source))
+        for (const skill of loaded) {
+          if (!originals.has(skill)) originals.set(skill, Object.freeze({ name: skill.name, location: skill.location, content: skill.content }))
+        }
         if (generation.current === started) cache.set(key, loaded)
         sources.push({ key, skills: loaded })
       }
@@ -245,6 +251,8 @@ const layer = Layer.effect(
       sourceOf: (info) => {
         const source = provenance.get(info)
         if (!source || source.data !== state.get() || source.generation !== generation.current) return undefined
+        const original = originals.get(info)
+        if (!original || info.name !== original.name || info.location !== original.location || info.content !== original.content) return undefined
         return source.source
       },
       save,
