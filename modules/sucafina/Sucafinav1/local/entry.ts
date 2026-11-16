@@ -5,6 +5,7 @@ import { createModule, contributions, type ModuleServices } from "../index.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
+import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
 import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
@@ -220,6 +221,7 @@ export async function createConfiguredInstallation(
   nativeOperational = async (request, stamp) => {
     const observed = await Promise.allSettled([
       observeSfPlannerPages(nativeApplication, request, stamp),
+      observeSfDashboardPages(nativeApplication, request, stamp),
       observeSfHome(runtime?.services?.(), request, stamp),
       observeSfCases(nativeDependencies, request, stamp),
     ])
