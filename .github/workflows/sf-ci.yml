@@ -244,8 +244,8 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
-          # Consume A2's exported manifest validator; the YAML owns no copy of
-          # suite working-directory mappings.
+          # Consume A2's exported manifest validator; YAML does not duplicate
+          # the suite working-directory mapping.
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
@@ -366,8 +366,8 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
-          # Matrix enumerates the three normative IDs, never spec paths. The
-          # spec and package directory come from A2's validated manifest.
+          # The matrix enumerates only normative suite IDs. Select the exact
+          # source-controlled spec and package directory from the A2 manifest.
           suite_info="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
@@ -376,92 +376,8 @@ jobs:
             if (!suite) throw new Error("SF_CI_UNKNOWN_UI_SUITE")
             process.stdout.write([suite.directory, suite.specFile].join("\n"))
           ')"
-          suite_dir="${suite_info%%
-          cd "$root"
-          node script/sf-ci/gate.mjs sanitize-playwright
-          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
-      - name: Publish only minimized JSON and receipt for a clean run
-        if: success()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: sf-evidence-${{ matrix.id }}
-          path: |
-            sf-ci-evidence/${{ matrix.id }}/report.json
-            sf-ci-evidence/${{ matrix.id }}/receipt.json
-          if-no-files-found: error
-          retention-days: 7
-
-  verify:
-    name: sf/verify
-    if: always()
-    needs: [preflight, static, omni, unit, ui]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      contents: read
-      actions: read
-    steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
-        with:
-          persist-credentials: false
-      - name: Diagnose upstream gates before downloading suite artifacts
-        env:
-          SF_NEEDS_JSON: ${{ toJSON(needs) }}
-        run: node script/sf-ci/gate.mjs precheck
-      - name: Collect all eight exact results
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          pattern: sf-evidence-*
-          path: sf-ci-collected
-          merge-multiple: false
-      - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA
-        env:
-          SF_NEEDS_JSON: ${{ toJSON(needs) }}
-        run: node script/sf-ci/gate.mjs verify
-\n'*}"
-          SF_SPEC="${suite_info#*
-          cd "$root"
-          node script/sf-ci/gate.mjs sanitize-playwright
-          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
-      - name: Publish only minimized JSON and receipt for a clean run
-        if: success()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: sf-evidence-${{ matrix.id }}
-          path: |
-            sf-ci-evidence/${{ matrix.id }}/report.json
-            sf-ci-evidence/${{ matrix.id }}/receipt.json
-          if-no-files-found: error
-          retention-days: 7
-
-  verify:
-    name: sf/verify
-    if: always()
-    needs: [preflight, static, omni, unit, ui]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      contents: read
-      actions: read
-    steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
-        with:
-          persist-credentials: false
-      - name: Diagnose upstream gates before downloading suite artifacts
-        env:
-          SF_NEEDS_JSON: ${{ toJSON(needs) }}
-        run: node script/sf-ci/gate.mjs precheck
-      - name: Collect all eight exact results
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          pattern: sf-evidence-*
-          path: sf-ci-collected
-          merge-multiple: false
-      - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA
-        env:
-          SF_NEEDS_JSON: ${{ toJSON(needs) }}
-        run: node script/sf-ci/gate.mjs verify
-\n'}"
+          suite_dir="${suite_info%%$'\n'*}"
+          SF_SPEC="${suite_info#*$'\n'}"
           test -f "$root/$suite_dir/$SF_SPEC"
           export PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.json"
           cd "$root/$suite_dir"
