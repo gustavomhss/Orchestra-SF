@@ -48,6 +48,8 @@ Description=Orchestra-SF Linux host
 After=network-online.target
 Wants=network-online.target
 RequiresMountsFor=/var/lib/orchestra-sf
+StartLimitIntervalSec=60
+StartLimitBurst=3
 
 [Service]
 Type=simple
@@ -61,7 +63,6 @@ EnvironmentFile=/etc/orchestra-sf/runtime.env
 ExecStart=/opt/orchestra-sf/current/bin/orchestra serve --hostname 127.0.0.1 --port 4096 --allowed-host REQUIRES_OWNER_FQDN --installation /etc/orchestra-sf/REQUIRES_APPROVED_FACTORY
 Restart=on-failure
 RestartSec=5
-StartLimitBurst=3
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
