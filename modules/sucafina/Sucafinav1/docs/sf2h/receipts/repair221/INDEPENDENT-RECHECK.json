@@ -1,0 +1,130 @@
+{
+  "schema": "sf2h.repair221.independent-recheck.v1",
+  "mission": 221,
+  "actor": "INDEPENDENT_REVIEW_REQUIRED",
+  "mode": "READ_ONLY",
+  "sourceCi": {
+    "run": 43781520064,
+    "job": 133019558133,
+    "sourceCommit": "efca638d4a9382827d83bf11857e415ce622d654",
+    "sourceTree": "8752fb5e2e13349ebfac83ed9fce66a7149885a1",
+    "W": "0ab90984ea0656f8abd6f2776e8e7b3ee377ff5b",
+    "requestBlob": "7d188382e43bc13e1ecafffa39dc68e14ddede8a",
+    "historical": "1_pass_1_fail",
+    "failedFile": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+    "failedLine": 32,
+    "failedReason": "baseline-coverage-case-not-selected",
+    "passedFile": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+  },
+  "codeHead": "8255a7d760ad6ae4c4a3d9fb246d57e5567bebde",
+  "codeBlob": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+  "criteria": [
+    {
+      "id": "R221.01",
+      "check": "Diff postBlob against preBlob: only scoped AM01 test code, no case, provider, identity or production host changes",
+      "status": "PREPARED_NOT_EXECUTED"
+    },
+    {
+      "id": "R221.02",
+      "check": "Inspect 211 integrated C exact tree and verify 212 helper/ref operation and source review remain unchanged and persisted",
+      "status": "PREPARED_NOT_EXECUTED"
+    },
+    {
+      "id": "R221.03",
+      "check": "Review UI call chain: admitted Request -> withCase(current caseRef) -> forecast coverage selector -> Planner source observation -> egress and case readback",
+      "status": "PREPARED_NOT_EXECUTED"
+    },
+    {
+      "id": "R221.04",
+      "check": "Run 214's deduped selector for both hypothetical-closure212 and scenario-costs on the NEW C, not B19 historical tree",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "R221.05",
+      "check": "Compare actual emitted SF_AM01_SELECTION221 source-observation digests/totals and C09 preview digests; inspect source/persistence unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "R221.06",
+      "check": "Review finance/reviewer/portfolio downstream selected C09 requests; native proof requires installed real model and C15/C16 receipts",
+      "status": "NOT_RUN"
+    }
+  ],
+  "oracle": [
+    {
+      "variant": "baseline",
+      "observation": {
+        "knownSubtotal": 240000,
+        "total": 240000,
+        "coverageState": "complete"
+      },
+      "preview": {
+        "knownSubtotal": 240000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 12,
+        "zeroCount": 12,
+        "missing": false
+      }
+    },
+    {
+      "variant": "pending",
+      "observation": {
+        "knownSubtotal": 210000,
+        "total": null,
+        "coverageState": "pending"
+      },
+      "preview": {
+        "knownSubtotal": 210000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 0,
+        "zeroCount": 0,
+        "missing": true,
+        "reason": "missing-category"
+      }
+    },
+    {
+      "variant": "complete",
+      "observation": {
+        "knownSubtotal": 250000,
+        "total": 250000,
+        "coverageState": "complete"
+      },
+      "preview": {
+        "knownSubtotal": 250000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 12,
+        "zeroCount": 11,
+        "fortyThousandCount": 1,
+        "missing": false
+      }
+    }
+  ],
+  "blockers": {
+    "sourceCode": "NONE_FOR_REVIEW",
+    "composition": "211 must consume PR and check pre/post",
+    "ci": "214 single dispatcher",
+    "native": "Installed model required only for native consumer proof",
+    "compiler": "190 owns compiler checks; no own typecheck"
+  },
+  "evidencePolicy": "Historical log 43781520064 is evidence of original failure only, not a PASS for 221.",
+  "validation": {
+    "test": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "independent": "NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}

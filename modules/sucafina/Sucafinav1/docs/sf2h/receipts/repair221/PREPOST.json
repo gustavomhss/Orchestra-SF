@@ -1,0 +1,147 @@
+{
+  "schema": "sf2h.repair221.prepost.v1",
+  "mission": 221,
+  "epoch": "causal-ci-e1-browser221",
+  "branch": "sf-am01-selection",
+  "lease": "S0-FENCE.json",
+  "ACK": "ACK.json",
+  "sourceCi": {
+    "run": 43781520064,
+    "job": 133019558133,
+    "sourceCommit": "efca638d4a9382827d83bf11857e415ce622d654",
+    "sourceTree": "8752fb5e2e13349ebfac83ed9fce66a7149885a1",
+    "W": "0ab90984ea0656f8abd6f2776e8e7b3ee377ff5b",
+    "requestBlob": "7d188382e43bc13e1ecafffa39dc68e14ddede8a",
+    "historical": "1_pass_1_fail",
+    "failedFile": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+    "failedLine": 32,
+    "failedReason": "baseline-coverage-case-not-selected",
+    "passedFile": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+  },
+  "readOnlyHostCallchain": {
+    "uiAdmission": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts#context.ui",
+    "legitimateScopedSelection": "apps/cli/src/sucafina-product/business-services.ts#createSfBusinessServices.withCase",
+    "caseRead": "apps/cli/src/sucafina-product/business-services.ts#cases.read",
+    "coverageGuard": "apps/cli/src/sucafina-product/business-services.ts#coverageFor.forecast",
+    "registeredCoverage": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts#resolveForecastCoverage",
+    "plannerObservation": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts#simulateScenario",
+    "persistedC09": "modules/sucafina/Sucafinav1/product/interface/case-analysis-input.ts#readCaseAnalysisProjection",
+    "humanInputs": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts#prepareWp12ScenarioCase",
+    "sourceReview": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+  },
+  "change": {
+    "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+    "preBlob": "f20fdab67655572f181f78e64b3023f993346d7c",
+    "intermediateBlob": "82d4c972471e657999779287679a87df2936bff7",
+    "postBlob": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+    "postCommit": "8255a7d760ad6ae4c4a3d9fb246d57e5567bebde",
+    "fullPostFile": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "gitBlobSha": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+      "complete": true
+    },
+    "effect": [
+      "Preserve no-selection denial as a negative proof, not a catch or bypass.",
+      "Scope each operationless Planner source observation to the genuinely issued current C09 case using the host's existing authenticated withCase on the SAME UI call.",
+      "Compare actual observed sourceRef/evidenceDigest/caseRef/basis and coverage with saved hypothetical previews.",
+      "Verify twelve service month cells, explicit zero training versus missing training, coverage source identities and no financial mutation.",
+      "Log actual source-observation subtotals/totals and result digests, not hard-coded expected values; keep preexisting C09 reopened readback."
+    ]
+  },
+  "preserved": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "sha": "5d483cad26e595b7744794098a9ffe15605e3b8f",
+      "reason": "212 source-derived replace preview persists: no operationless fallback"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "sha": "cef673fe075775a8e4000734b4f028e941fa875f",
+      "reason": "212 inert patch already composed on PR191; requests use saved C09 scenario operations"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "reason": "domain C10 assertion preserved, no modified fixture"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+      "reason": "portfolio consumer preserved, no grant or source changes"
+    }
+  ],
+  "oracle": [
+    {
+      "variant": "baseline",
+      "observation": {
+        "knownSubtotal": 240000,
+        "total": 240000,
+        "coverageState": "complete"
+      },
+      "preview": {
+        "knownSubtotal": 240000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 12,
+        "zeroCount": 12,
+        "missing": false
+      }
+    },
+    {
+      "variant": "pending",
+      "observation": {
+        "knownSubtotal": 210000,
+        "total": null,
+        "coverageState": "pending"
+      },
+      "preview": {
+        "knownSubtotal": 210000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 0,
+        "zeroCount": 0,
+        "missing": true,
+        "reason": "missing-category"
+      }
+    },
+    {
+      "variant": "complete",
+      "observation": {
+        "knownSubtotal": 250000,
+        "total": 250000,
+        "coverageState": "complete"
+      },
+      "preview": {
+        "knownSubtotal": 250000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 12,
+        "zeroCount": 11,
+        "fortyThousandCount": 1,
+        "missing": false
+      }
+    }
+  ],
+  "externalOutOfLeasePatch": {
+    "status": "NOT_REQUIRED",
+    "reason": "Correct behavior enforced by production host; failure is the in-lease test call missing legitimate C09 selection. Source212 review patch already composed."
+  },
+  "validation": {
+    "preCode": "HISTORICAL_FAILED",
+    "postCode": "NOT_RUN",
+    "test": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "CI": "NOT_DISPATCHED",
+    "recheckOwner": 214
+  },
+  "nativeGoal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}

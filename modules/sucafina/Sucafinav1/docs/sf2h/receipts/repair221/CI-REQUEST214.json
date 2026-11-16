@@ -1,0 +1,121 @@
+{
+  "schema": "sf2h.repair221.ci-request214.v1",
+  "mission": 221,
+  "requesterBranch": "sf-am01-selection",
+  "requesterCodeCommit": "8255a7d760ad6ae4c4a3d9fb246d57e5567bebde",
+  "requesterCodeBlob": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+  "status": "REQUEST_ONLY_NOT_DISPATCHED",
+  "owner": 214,
+  "composer": 211,
+  "compiler": 190,
+  "sourceCi": {
+    "run": 43781520064,
+    "job": 133019558133,
+    "sourceCommit": "efca638d4a9382827d83bf11857e415ce622d654",
+    "sourceTree": "8752fb5e2e13349ebfac83ed9fce66a7149885a1",
+    "W": "0ab90984ea0656f8abd6f2776e8e7b3ee377ff5b",
+    "requestBlob": "7d188382e43bc13e1ecafffa39dc68e14ddede8a",
+    "historical": "1_pass_1_fail",
+    "failedFile": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+    "failedLine": 32,
+    "failedReason": "baseline-coverage-case-not-selected",
+    "passedFile": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+  },
+  "candidate": {
+    "branch": "sf-closure-bundle",
+    "pr": 191,
+    "requiredFile": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+    "requiredBlob": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+    "helperBlob": "5d483cad26e595b7744794098a9ffe15605e3b8f",
+    "reviewBlob": "cef673fe075775a8e4000734b4f028e941fa875f",
+    "W": "RESOLVE_AT_214",
+    "tree": "RESOLVE_AT_214",
+    "C": "RESOLVE_AT_214",
+    "requestSelection": "RESOLVE_FROM_C_AND_ACTUAL_HTTP_PAYLOADS"
+  },
+  "preconditions": [
+    "211 consumes PR221 and verifies target preBlob f20fdab67655572f181f78e64b3023f993346d7c before applying postBlob; reconcile if diverged, never overwrite.",
+    "211 preserves and verifies source212 helper + scenario-review blobs, C09/C10 outputs, source selections, and all other mission artifacts.",
+    "214 determines exact integrated C HEAD/tree, live request, selection and prior runs; deduplicate by W/tree/input/selection before dispatch. Historical B19 result cannot certify new C.",
+    "214 is sole CI dispatcher; this request is a source artifact, not permission to execute CI, local commands or a validator."
+  ],
+  "selectors": [
+    {
+      "id": "221-AM01-selected-source-and-hypothetical212",
+      "runner": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "args": [
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+        "Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+      ],
+      "needsInstalledModel": false,
+      "reason": "Recheck changed case-selection causal edge while protecting 212 preview and C10 domain regression",
+      "expectation": [
+        "Unselected baseline observation denied by real boundary, case-selected baseline/pending/complete observed correctly",
+        "Actual source observation values 240000/210000/250000 with totals 240000/null/250000",
+        "Persisted previews all conditioned and total null with hypothetical flags; training missing distinct from zero",
+        "Source evidence, selected real case/version, 12 months, planner source digest and C09 reopened readback hold",
+        "SF_AM01_SELECTION221 and SF_AM01_HYPOTHETICAL_CLOSURE212 markers contain computed result digests"
+      ],
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "221-AM01-native-consumer-if-already-in-plan",
+      "runner": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "args": [
+        "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+      ],
+      "needsInstalledModel": true,
+      "reason": "Run only if selected in 214's existing native queue with actual installed provider; request is not new independent CI",
+      "expectation": [
+        "sf_finance/reviewer use exact persisted C09 requests with real operation, not empty operations",
+        "C15/C16 tool receipts, typed ScenarioComparison and consumer persistence/readback remain actual"
+      ],
+      "validation": "NOT_RUN",
+      "blockedBy": "Real installed-model availability; historical B19 catalog empty"
+    }
+  ],
+  "dedup": {
+    "required": true,
+    "identityFields": [
+      "W",
+      "tree",
+      "input",
+      "selection",
+      "runner",
+      "directory",
+      "args"
+    ],
+    "historicalRunNotNewProof": true,
+    "rerunOnlyAfterCausalChange": true,
+    "owner": 214,
+    "avoidDuplicateRun": true
+  },
+  "prohibited": [
+    "Local tests/typecheck/build/validator",
+    "Own CI dispatch or workflow restart",
+    "Synthetic provider/authority/grants/receipt/case",
+    "Developer merge or target branch write",
+    "GLOBAL_RELEASE"
+  ],
+  "validation": {
+    "test": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "CI": "NOT_DISPATCHED"
+  },
+  "nativeGoal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,149 @@
+{
+  "schema": "sf2h.repair221.handoff.v1",
+  "mission": 221,
+  "branch": "sf-am01-selection",
+  "epoch": "causal-ci-e1-browser221",
+  "status": "SOURCE_CODE_DELIVERED_PENDING_211_COMPOSITION_AND_214_CI",
+  "ackPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair221/ACK.json",
+  "ackCommit": "904761f5890b091d3ec2fa282e10ab32f0cd926a",
+  "codeCommit": "8255a7d760ad6ae4c4a3d9fb246d57e5567bebde",
+  "sourceCi": {
+    "run": 43781520064,
+    "job": 133019558133,
+    "sourceCommit": "efca638d4a9382827d83bf11857e415ce622d654",
+    "sourceTree": "8752fb5e2e13349ebfac83ed9fce66a7149885a1",
+    "W": "0ab90984ea0656f8abd6f2776e8e7b3ee377ff5b",
+    "requestBlob": "7d188382e43bc13e1ecafffa39dc68e14ddede8a",
+    "historical": "1_pass_1_fail",
+    "failedFile": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+    "failedLine": 32,
+    "failedReason": "baseline-coverage-case-not-selected",
+    "passedFile": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+  },
+  "sourceBlobBefore": "f20fdab67655572f181f78e64b3023f993346d7c",
+  "sourceBlobAfter": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+  "codePath": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+  "prepostPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair221/PREPOST.json",
+  "ciRequestPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair221/CI-REQUEST214.json",
+  "recheckPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair221/INDEPENDENT-RECHECK.json",
+  "consumer": {
+    "mission": 211,
+    "branch": "sf-closure-bundle",
+    "pr": 191,
+    "requiredBeforeMerge": [
+      "Confirm current target file blob matches sourceBlobBefore; reconcile if already modified",
+      "Apply full exact Git blob 55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8 at modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+      "Preserve modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts at 5d483cad26e595b7744794098a9ffe15605e3b8f",
+      "Preserve modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts at cef673fe075775a8e4000734b4f028e941fa875f",
+      "Hand the fresh C tree/input/selection to 214; never claim B19 proof as C"
+    ],
+    "downstream": [
+      {
+        "mission": 214,
+        "request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair221/CI-REQUEST214.json",
+        "role": "sole surgical dispatcher"
+      },
+      {
+        "mission": 190,
+        "role": "compiler owner; no 221 local checks"
+      }
+    ]
+  },
+  "cause": "The operationless Planner source observation was requested under an admitted UI context without a selected current C09 case. The legitimate baseline-coverage producer correctly returned baseline-coverage-case-not-selected. Persisted 212 preview was correct and preserved.",
+  "fix": "Case-selected UI-scoped observation with the original authenticated Request, current issued C09 caseRef, real forecast evidence, original coverage records; explicit negative no-selection rejection preserved; actual returned values emitted as evidence.",
+  "oracle": [
+    {
+      "variant": "baseline",
+      "observation": {
+        "knownSubtotal": 240000,
+        "total": 240000,
+        "coverageState": "complete"
+      },
+      "preview": {
+        "knownSubtotal": 240000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 12,
+        "zeroCount": 12,
+        "missing": false
+      }
+    },
+    {
+      "variant": "pending",
+      "observation": {
+        "knownSubtotal": 210000,
+        "total": null,
+        "coverageState": "pending"
+      },
+      "preview": {
+        "knownSubtotal": 210000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 0,
+        "zeroCount": 0,
+        "missing": true,
+        "reason": "missing-category"
+      }
+    },
+    {
+      "variant": "complete",
+      "observation": {
+        "knownSubtotal": 250000,
+        "total": 250000,
+        "coverageState": "complete"
+      },
+      "preview": {
+        "knownSubtotal": 250000,
+        "total": null,
+        "comparisonStatus": "conditioned",
+        "hypotheticalComponents": 1
+      },
+      "training": {
+        "count": 12,
+        "zeroCount": 11,
+        "fortyThousandCount": 1,
+        "missing": false
+      }
+    }
+  ],
+  "contracts": [
+    "C01",
+    "C02",
+    "C08",
+    "C09",
+    "C10",
+    "C15",
+    "C16",
+    "C17"
+  ],
+  "unchangedConsumers": [
+    "sf_finance",
+    "sf_reviewer",
+    "sf_portfolio"
+  ],
+  "notChanged": [
+    "No product/plan changes",
+    "No arbitrary source or scope widening",
+    "No 18-skill rewrite",
+    "No global fixture edit",
+    "No fake model/provider/receipt",
+    "No own CI"
+  ],
+  "validation": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "CI": "NOT_DISPATCHED",
+    "independentRecheck": "NOT_RUN"
+  },
+  "observedModel": "GPT-6",
+  "sessionId": "NOT_EXPOSED",
+  "nativeGoal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}
