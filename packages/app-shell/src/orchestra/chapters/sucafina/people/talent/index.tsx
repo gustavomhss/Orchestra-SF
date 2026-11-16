@@ -110,6 +110,12 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
   const exportAvailable = () => !!ready()?.context.availability.some((resource) =>
     resource.family === "files" && resource.resource === "exports" && resource.operations.some((operation) =>
       operation.operationId === "files.export.members" && operation.state === "ready" && operation.operational))
+  const importAvailable = () => {
+    const active = ready()
+    return !!active && active.value.allowedActionIds.includes("import") &&
+      active.context.destinations.some((destination) => destination.capabilityId === "CAP08" &&
+        destination.surface === "dashboard" && destination.canRead && destination.allowedActionIds.includes("import"))
+  }
   const exportMembers = async () => {
     const active = ready()
     if (!active || !exportAvailable() || exportAbort) return
@@ -373,7 +379,7 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
               <section class="sf-people-section" data-sf-section="import-export">
                 <h2>{t(key("sf.u47.importTitle"))}</h2>
                 <div class="sf-people-toolbar">
-                  <button type="button" class="mx-btn" disabled={!session.can("save")}
+                  <button type="button" class="mx-btn" disabled={!importAvailable()}
                     onClick={() => navigate("/orchestra/sf-imports/new")}>
                     {t(key("sf.u47.import"))}
                   </button>

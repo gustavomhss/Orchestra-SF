@@ -1,7 +1,8 @@
 /**
  * Closed, browser-safe Sucafina native operation contract.
  * UX20 F02 / catalog 31dbec1726fd8147156b01dc545726650ffd49e1.
- * This is the frozen ID set, NOT an operation dispatcher or a second SDK.
+ * This is the closed ID set, including explicitly source-backed extensions,
+ * NOT an operation dispatcher or a second SDK.
  * The one canonical metadata table and admitted codecs are composed by I00.
  */
 import { Schema } from "effect"
@@ -243,6 +244,7 @@ export const SfOperationIds = [
   "files.document-search",
   "files.document-sources",
   "files.export.json",
+  "files.export.members",
   "files.export.register",
   "files.export.suppliers",
   "files.export.xlsx",

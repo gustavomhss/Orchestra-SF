@@ -1,6 +1,7 @@
 /**
- * I00/C00 canonical route METADATA from frozen contract-catalog.json
- * blob 31dbec1726fd8147156b01dc545726650ffd49e1 (305 IDs).
+ * I00/C00 route METADATA from frozen contract-catalog.json
+ * blob 31dbec1726fd8147156b01dc545726650ffd49e1 (305 IDs), plus the
+ * explicit source-backed members download extension below.
  * Metadata alone NEVER admits a business operation or grants access. F02 requires
  * a separate, real, per-operation codec binding; absent bindings fail closed
  * with contract-unavailable before network. Do not infer response bodies here.
@@ -16,6 +17,11 @@ export type SfNativeOperationRoute = Readonly<{
   fixedBodyDiscriminator?: Readonly<Record<string, string>>
   maxRequestBytes?: number
 }>
+
+/** Original dashboard serveDownload supports admin GET ?download=members. */
+export const SfOperationExtensions = Object.freeze({
+  "files.export.members": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"members"}},
+} as const satisfies Readonly<Partial<Record<SfOperationId, SfNativeOperationRoute>>>)
 
 export const SfOperationRegistry = Object.freeze({
   "bi.bi-data": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"bi-data"}},
@@ -254,7 +260,6 @@ export const SfOperationRegistry = Object.freeze({
   "files.document-search": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"document-search"}},
   "files.document-sources": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"document-sources"}},
   "files.export.json": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"json"}},
-  "files.export.members": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"members"}},
   "files.export.register": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"register"}},
   "files.export.suppliers": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"suppliers"}},
   "files.export.xlsx": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"xlsx"}},
@@ -325,4 +330,5 @@ export const SfOperationRegistry = Object.freeze({
   "views.open": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"open"},"maxRequestBytes":65536},
   "views.remove": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"remove"},"maxRequestBytes":65536},
   "views.save": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"save"},"maxRequestBytes":65536},
+  ...SfOperationExtensions,
 } as const satisfies Readonly<Record<SfOperationId, SfNativeOperationRoute>>)

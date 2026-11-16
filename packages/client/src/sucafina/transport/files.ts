@@ -1,6 +1,6 @@
 import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 
-/** Only the five original A06 producer byte routes, no arbitrary download URLs. */
+/** Only the source-bound producer byte routes, no arbitrary download URLs. */
 export const SF_FILE_BYTE_LIMIT = 32 * 1024 * 1024
 export const SF_FILE_IMPORT_LIMIT = 16 * 1024 * 1024
 export const SF_FILE_MULTIPART_LIMIT = SF_FILE_IMPORT_LIMIT + 64 * 1024
@@ -8,7 +8,8 @@ export const SF_FILE_ASSET_LIMIT = 25 * 1024 * 1024
 
 export function sfIsByteOperation(id: SfOperationId): boolean {
   return id === "files.asset.download" || id === "files.export.xlsx" ||
-    id === "files.export.suppliers" || id === "files.export.register" || id === "files.export.json"
+    id === "files.export.suppliers" || id === "files.export.register" || id === "files.export.json" ||
+    id === "files.export.members"
 }
 
 export function sfIsUploadOperation(id: SfOperationId): boolean {
@@ -20,7 +21,7 @@ export function sfAllowedByteMime(id: SfOperationId, raw: string | null | undefi
   if (!sfIsByteOperation(id) || typeof raw !== "string" || raw.length > 256 ||
       /[\r\n\0]/.test(raw)) return false
   const type = raw.split(";")[0]!.trim().toLowerCase()
-  if (id === "files.export.xlsx") return type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  if (id === "files.export.xlsx" || id === "files.export.members") return type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   if (id === "files.export.suppliers" || id === "files.export.register") return type === "text/csv"
   if (id === "files.export.json") return type === "application/json"
   return [

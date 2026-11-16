@@ -90,6 +90,10 @@ describe("226 A06/F02 source-locked file transport", () => {
     expect(sfAllowedByteMime("files.export.json", "application/json")).toBe(true)
     expect(sfAllowedByteMime("files.export.xlsx",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")).toBe(true)
+    expect(sfAllowedByteMime("files.export.members",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")).toBe(true)
+    expect(sfAllowedByteMime("files.export.members", "application/pdf")).toBe(false)
+    expect(sfAllowedByteMime("files.export.members", "text/html")).toBe(false)
     expect(sfAllowedByteMime("files.export.suppliers", "text/csv; charset=utf-8")).toBe(true)
     expect(sfAllowedByteMime("files.asset.download", "application/pdf")).toBe(true)
     expect(sfAllowedByteMime("files.export.json", "text/html")).toBe(false)

@@ -3,7 +3,8 @@ import { SfFiles } from "@orchestra/schema/sucafina/files"
 import type { SfOperationBindings, SfOperationCodec, SfWireDecodeResult } from "@orchestra/schema/sucafina/common"
 
 /**
- * A06 source-locked, 25-entry wire catalog. Only the two original upload
+ * A06 source-locked wire catalog, including the original members download.
+ * Only the two original upload
  * operations move their Uint8Array through F02's isolated byte slot. Their
  * JSON metadata is validated with the SAME original schema fields.
  *
@@ -48,6 +49,6 @@ const entries = Object.entries(SfFiles.operations).map(([operationId, source]) =
   return [operationId, result] as const
 })
 
-if (entries.length !== 25 || new Set(entries.map(([id]) => id)).size !== 25)
+if (entries.length !== 26 || new Set(entries.map(([id]) => id)).size !== 26)
   throw new Error("SF_A06_SOURCE_CATALOG_MISMATCH")
 export const SfFilesOperationBindings: SfOperationBindings = Object.freeze(Object.fromEntries(entries))

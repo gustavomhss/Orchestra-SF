@@ -95,9 +95,9 @@ export const SfNativeOperationBindings: SfOperationBindings = (() => {
   add(SfWork.operations)
   add(SfMemory.operations)
   add(SfAnalyses.operations)
-  // Source A06's 25 exact typed codecs, not JSON-masked download objects.
+  // Source A06's 25 codecs and the original members download, not JSON-masked bytes.
   const sourceFiles = Object.entries(SfFilesOperationBindings)
-  if (sourceFiles.length !== 25) throw new Error("SF_A06_25_OPERATIONS_REQUIRED")
+  if (sourceFiles.length !== 26) throw new Error("SF_A06_26_OPERATIONS_REQUIRED")
   for (const [candidate, fileCodec] of sourceFiles) {
     if (!Schema.is(SfOperationId)(candidate)) throw new Error("SF_A06_OPERATION_UNKNOWN")
     const id = candidate as SfOperationId
