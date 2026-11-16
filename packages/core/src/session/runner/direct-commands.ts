@@ -177,8 +177,10 @@ export const skill = Effect.fn("SessionRunner.skill")(function* (
       return
     }
     const checked = yield* SkillTool.load(deps.fs, found, SkillV2.children(current, found))
+    const latest = yield* deps.skills.list()
     const finalSource = deps.skills.sourceOf?.(found)
     if (finalSource !== source ||
+      latest.find((item) => item.name === input.skill) !== found ||
       found.location !== location || found.content !== content || found.name !== name || createHash("sha256").update(checked, "utf8").digest("hex") !== digest) {
       yield* Effect.logWarning("SessionRunner.skill: loaded material changed; load not observed")
       return
