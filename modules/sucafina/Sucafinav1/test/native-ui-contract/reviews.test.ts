@@ -18,7 +18,7 @@ import { createSfReviewsClient } from "../../../../../packages/client/src/sucafi
 import type { SfOperation, SfTransportResult } from "../../../../../packages/schema/src/sucafina/common.ts"
 import type { SfCallOptions, SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
 
-const accepts = <S extends Schema.Decoder<unknown, never>>(schema: S, value: unknown) =>
+const accepts = <S extends Schema.ConstraintDecoder<unknown>>(schema: S, value: unknown) =>
   Option.isSome(Schema.decodeUnknownOption(schema)(value))
 const section = {
   id: "line-one", title: "Current agenda", selectionRef: "scoped-selection",

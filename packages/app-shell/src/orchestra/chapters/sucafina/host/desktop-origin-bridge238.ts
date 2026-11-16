@@ -91,7 +91,7 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
     if (previous) releaseBinding(previous)
   }
   const allowedSelection = (selected: SfOwnerSelection) =>
-    usable && !disposed && selected.serverKey === serverKey &&
+    usable && !disposed && selected.serverKey === String(serverKey) &&
     !!selected.projectId && !!selected.installationId
   const validBound = (binding: SfDesktopBinding, selected: SfOwnerSelection,
     generation: number) =>
