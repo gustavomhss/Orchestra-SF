@@ -1,7 +1,7 @@
 import { stat } from "node:fs/promises"
 import { basename, join } from "node:path"
 import { types } from "node:util"
-import { app, BrowserWindow, clipboard, dialog, ipcMain, shell } from "electron"
+import { app, BrowserWindow, clipboard, dialog, ipcMain, net, session, shell } from "electron"
 import type { IpcMainEvent, IpcMainInvokeEvent } from "electron"
 import type { DesktopMenuAction } from "@orchestra/app/desktop-menu"
 import { parseDesktopNativeBundle, type DesktopNativeBundle } from "@orchestra/app/i18n/desktop-native"
@@ -15,6 +15,7 @@ import { flushStoreWrites, getStore, removeStoreFileIfEmpty, setStoreValue } fro
 import {
   getPinchZoomEnabled,
   getWindowID,
+  isMainWindow,
   openExternalURL,
   openLocalFileURL,
   setPinchZoomEnabled,
@@ -37,6 +38,8 @@ import { openDesktopPath } from "./apps"
 import { absoluteTargetPath, defaultServerKey, rendererStoreName } from "./ipc-validate"
 import { registerLiveIpc } from "./live-ipc"
 import type { LiveLoop } from "./live-loop"
+import type { SfDesktopBrokerDependencies } from "./sucafina"
+import { registerSfDesktopBootstrap } from "./sucafina/bootstrap"
 
 const pickerFilters = (ext?: string[]) => {
   if (!ext || ext.length === 0) return undefined
@@ -46,6 +49,7 @@ const pickerFilters = (ext?: string[]) => {
 const pickedFiles = createPickedFileAuthorizations()
 
 type Deps = {
+  sucafina: Pick<SfDesktopBrokerDependencies, "ownedConnection" | "requestLocalEnrollment">
   liveLoop: LiveLoop
   killSidecar: () => Promise<void> | void
   relaunch: () => void
@@ -376,7 +380,12 @@ export function registerIpcHandlers(deps: Deps) {
       throw new Error("Invalid titlebar frame sender")
     setTitlebarFrame(win, frame)
   })
-  return appDockIpc
+  const sucafinaBroker = registerSfDesktopBootstrap({
+    electron: { app, BrowserWindow, ipcMain, session, net, dialog },
+    isMainWindow,
+    ...deps.sucafina,
+  })
+  return { ...appDockIpc, sucafinaBroker }
 }
 
 export function sendMenuCommand(win: BrowserWindow, id: string) {

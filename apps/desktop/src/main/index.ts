@@ -11,6 +11,8 @@ import { Cause, Deferred, Effect, Exit, Fiber } from "effect"
 import contextMenu from "electron-context-menu"
 
 import type { ServerReadyData } from "../preload/types"
+import type { SfConnectionCandidate } from "@orchestra/client/sucafina/transport"
+import { createSfDesktopEnrollmentBridge } from "./sucafina/bootstrap"
 import { checkAppExists, resolveAppPath } from "./apps"
 import { CHANNEL } from "./constants"
 import { registerIpcHandlers, sendDeepLinks, sendMenuCommand } from "./ipc"
@@ -86,6 +88,8 @@ let logger: ReturnType<typeof initLogging>
 let server: { stop: () => Promise<void> } | null = null
 // Every caller of killSidecar awaits the same stop, so none returns while the server still holds its port and database.
 let stopping: Promise<void> | undefined
+let ownedSfConnection: Pick<SfConnectionCandidate, "serverKey" | "baseUrl" | "credentials"> | undefined
+let invalidateSfServer: ((serverKey: string) => Promise<void>) | undefined
 const startup = { windowsRestored: false }
 
 const deepLinks = createDeepLinkDelivery(process.argv, (target, urls) => {
@@ -112,7 +116,12 @@ async function killSidecar() {
   if (stopping) return stopping
   const current = server
   if (!current) return
-  stopping = current.stop().finally(() => {
+  const owned = ownedSfConnection
+  ownedSfConnection = undefined
+  stopping = Promise.resolve()
+    .then(() => owned ? invalidateSfServer?.(owned.serverKey) : undefined)
+    .then(() => current.stop())
+    .finally(() => {
     if (server === current) server = null
     stopping = undefined
   })
@@ -352,7 +361,12 @@ const main = Effect.gen(function* () {
   })
   app.once("will-quit", liveLoop.destroy)
   registerLiveTray({ loop: liveLoop })
-  shutdown.runtimeStop = registerIpcHandlers({
+  const sfEnrollment = createSfDesktopEnrollmentBridge(() => ownedSfConnection)
+  const ipcControllers = registerIpcHandlers({
+    sucafina: {
+      ownedConnection: () => ownedSfConnection,
+      requestLocalEnrollment: sfEnrollment.requestLocalEnrollment,
+    },
     liveLoop,
     killSidecar: () => killSidecar(),
     relaunch,
@@ -383,7 +397,10 @@ const main = Effect.gen(function* () {
     setNativeTranslations: (bundle) => {
       if (setNativeTranslations(bundle)) createMenu(menuDeps)
     },
-  }).stopLinuxRuntime
+  })
+  shutdown.runtimeStop = ipcControllers.stopLinuxRuntime
+  invalidateSfServer = (serverKey) => ipcControllers.sucafinaBroker.invalidateServer(serverKey)
+  app.once("will-quit", sfEnrollment.dispose)
   registerWslIpcHandlers(wslServers)
   // Not awaited: the net log took about a second to start, and the server start below does not need it.
   void startNetLog().catch((error) => logger.warn("failed to start net log", error))
@@ -416,10 +433,13 @@ const main = Effect.gen(function* () {
     const dock = yield* Effect.promise(() =>
       startDockChannel({
         onMessage: (message, reply) => {
+          if (sfEnrollment.handleMessage(message, reply)) return
           if (!LinuxWorkspaceRPC.handle(message, reply)) handleDockRPC(message, reply)
         },
-        onClose: () =>
-          void LinuxWorkspaceRPC.close().catch(() => writeLog("utility", "linux access cleanup failed", {}, "warn")),
+        onClose: () => {
+          sfEnrollment.disconnect()
+          void LinuxWorkspaceRPC.close().catch(() => writeLog("utility", "linux access cleanup failed", {}, "warn"))
+        },
       }),
     )
     // The app's global reads (providers, models) name no directory, so the server boots a Location for its cwd. In the
@@ -453,6 +473,11 @@ const main = Effect.gen(function* () {
       try: () => owned.health.wait,
       catch: (e) => (e instanceof Error ? e : new Error(String(e))),
     }).pipe(Effect.tapError((e) => Effect.sync(() => logger.error("owned serve health check failed", e.message))))
+    ownedSfConnection = {
+      serverKey: owned.url,
+      baseUrl: owned.url,
+      credentials: { kind: "basic", username: owned.username, password: owned.password },
+    }
     yield* Deferred.succeed(serverReady, {
       url: owned.url,
       username: owned.username,
