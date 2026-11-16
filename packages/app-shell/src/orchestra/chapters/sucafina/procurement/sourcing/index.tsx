@@ -97,6 +97,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   const can=(action:SourcingAction)=>{
     const current=page(),ready=host.ready(),row=request()
     return !!current&&!!ready&&!!row&&editableStages.includes(row.status as typeof editableStages[number])&&
+      row.allowedDraftActions?.includes("save-sourcing")===true&&
+      ready.context.destinations.some((destination)=>destination.capabilityId==="CAP25"&&
+        destination.surface==="procurement"&&destination.page==="Requests"&&destination.canRead&&
+        destination.allowedActionIds.includes(action))&&
       current.value.allowedActionIds.includes(action)&&
       ready.context.availability.some((resource)=>resource.family==="procurement"&&resource.resource==="CAP25"&&
         resource.operations.some((operation)=>operation.operationId==="domain.command.CAP25."+action&&

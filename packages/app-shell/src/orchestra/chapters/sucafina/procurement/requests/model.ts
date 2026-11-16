@@ -87,10 +87,12 @@ export function poFromRecord(row: SfRequest): SfPoEdit {
   }
 }
 export function isPrWritable(row: SfRequest) {
-  return row.status === "draft" || row.status === "pr_rejected"
+  return (row.status === "draft" || row.status === "pr_rejected") &&
+    row.allowedDraftActions?.includes("save-pr") === true
 }
 export function isPoWritable(row: SfRequest) {
-  return row.status === "po_draft" || row.status === "po_rejected"
+  return (row.status === "po_draft" || row.status === "po_rejected") &&
+    row.allowedDraftActions?.includes("save-po") === true
 }
 export function uiCommandAction(command: SfRequestCommand): string {
   return command === "save-pr" || command === "save-po" ? "save" : command
