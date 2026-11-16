@@ -1,0 +1,1303 @@
+{
+  "schema": "sf2h.closure235.fresh-independent-review.v1",
+  "mission": 235,
+  "packet_id": "R3",
+  "state": "PREPARED_NOT_STARTED",
+  "reviewer_role": "S3-R3",
+  "reviewer_identity": null,
+  "model_effective": null,
+  "session_id": null,
+  "scope": "Runtime IA, MCP, Task/Relay, Atlas, documentos e proveniência",
+  "provenance": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "product_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "initial_review_product": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "immutable_scopes": {
+      "work_packages": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "three_reviews": "NOT_RUN",
+    "candidate_C": null
+  },
+  "original_actor_pack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S3-R3.json",
+    "blob": "6c8de729cc156f6672738c2f8403472a8c478338",
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "read_required": "ENTIRE_PACK_NOT_AN_EXCERPT",
+    "proof_bindings": [
+      {
+        "criterion_id": "WP10.DOD.01",
+        "entity_id": "WP10",
+        "family": "dod",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.DOD.02",
+        "entity_id": "WP10",
+        "family": "dod",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.DOD.10",
+        "entity_id": "WP10",
+        "family": "dod",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.DOD.40",
+        "entity_id": "WP10",
+        "family": "dod",
+        "proof_packages": [
+          "E16",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.DOD.60",
+        "entity_id": "WP10",
+        "family": "dod",
+        "proof_packages": [
+          "E12",
+          "E15",
+          "E16"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM05"
+        ]
+      },
+      {
+        "criterion_id": "WP10.INV.01",
+        "entity_id": "WP10",
+        "family": "invariants",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.INV.02",
+        "entity_id": "WP10",
+        "family": "invariants",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.INV.10",
+        "entity_id": "WP10",
+        "family": "invariants",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.INV.40",
+        "entity_id": "WP10",
+        "family": "invariants",
+        "proof_packages": [
+          "E16",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.INV.60",
+        "entity_id": "WP10",
+        "family": "invariants",
+        "proof_packages": [
+          "E12",
+          "E15",
+          "E16"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM05"
+        ]
+      },
+      {
+        "criterion_id": "WP10.QLT.01",
+        "entity_id": "WP10",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.QLT.02",
+        "entity_id": "WP10",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.QLT.10",
+        "entity_id": "WP10",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.QLT.40",
+        "entity_id": "WP10",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E16",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.QLT.60",
+        "entity_id": "WP10",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E12",
+          "E15",
+          "E16"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM05"
+        ]
+      },
+      {
+        "criterion_id": "WP10.CMP.01",
+        "entity_id": "WP10",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.CMP.02",
+        "entity_id": "WP10",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.CMP.10",
+        "entity_id": "WP10",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.CMP.40",
+        "entity_id": "WP10",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E16",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.CMP.60",
+        "entity_id": "WP10",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E12",
+          "E15",
+          "E16"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM05"
+        ]
+      },
+      {
+        "criterion_id": "WP10.SUC.01",
+        "entity_id": "WP10",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.SUC.02",
+        "entity_id": "WP10",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.SUC.10",
+        "entity_id": "WP10",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.SUC.40",
+        "entity_id": "WP10",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E16",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.SUC.60",
+        "entity_id": "WP10",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E12",
+          "E15",
+          "E16"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM05"
+        ]
+      },
+      {
+        "criterion_id": "WP10.T03.DOD.01",
+        "entity_id": "WP10.T03",
+        "family": "dod",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.DOD.40",
+        "entity_id": "WP10.T03",
+        "family": "dod",
+        "proof_packages": [
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.T03.INV.01",
+        "entity_id": "WP10.T03",
+        "family": "invariants",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.INV.40",
+        "entity_id": "WP10.T03",
+        "family": "invariants",
+        "proof_packages": [
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.T03.QLT.01",
+        "entity_id": "WP10.T03",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.QLT.40",
+        "entity_id": "WP10.T03",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.T03.CMP.01",
+        "entity_id": "WP10.T03",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.CMP.02",
+        "entity_id": "WP10.T03",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.CMP.40",
+        "entity_id": "WP10.T03",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.T03.SUC.01",
+        "entity_id": "WP10.T03",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.SUC.40",
+        "entity_id": "WP10.T03",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP10.T03.CHK.01",
+        "entity_id": "WP10.T03",
+        "family": "check",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.CHK.02",
+        "entity_id": "WP10.T03",
+        "family": "check",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.CHK.03",
+        "entity_id": "WP10.T03",
+        "family": "check",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T03.CHK.40",
+        "entity_id": "WP10.T03",
+        "family": "check",
+        "proof_packages": [
+          "E17",
+          "E18"
+        ],
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      }
+    ],
+    "criterion_ids": [
+      "WP10.CMP.01",
+      "WP10.CMP.02",
+      "WP10.CMP.10",
+      "WP10.CMP.40",
+      "WP10.CMP.60",
+      "WP10.DOD.01",
+      "WP10.DOD.02",
+      "WP10.DOD.10",
+      "WP10.DOD.40",
+      "WP10.DOD.60",
+      "WP10.INV.01",
+      "WP10.INV.02",
+      "WP10.INV.10",
+      "WP10.INV.40",
+      "WP10.INV.60",
+      "WP10.QLT.01",
+      "WP10.QLT.02",
+      "WP10.QLT.10",
+      "WP10.QLT.40",
+      "WP10.QLT.60",
+      "WP10.SUC.01",
+      "WP10.SUC.02",
+      "WP10.SUC.10",
+      "WP10.SUC.40",
+      "WP10.SUC.60",
+      "WP10.T03.CHK.01",
+      "WP10.T03.CHK.02",
+      "WP10.T03.CHK.03",
+      "WP10.T03.CHK.40",
+      "WP10.T03.CMP.01",
+      "WP10.T03.CMP.02",
+      "WP10.T03.CMP.40",
+      "WP10.T03.DOD.01",
+      "WP10.T03.DOD.40",
+      "WP10.T03.INV.01",
+      "WP10.T03.INV.40",
+      "WP10.T03.QLT.01",
+      "WP10.T03.QLT.40",
+      "WP10.T03.SUC.01",
+      "WP10.T03.SUC.40"
+    ]
+  },
+  "mandatory_read_pins": [
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/execution-reconciliation.md",
+      "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1"
+    }
+  ],
+  "mandatory_appendices": [
+    {
+      "path": "specs/product-acceptance.md",
+      "rule": "Read the portions applying to assigned outputs and their dependencies; headings or links never waive a requirement.",
+      "read_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "specs/resident-runtime.md",
+      "rule": "Read the portions applying to assigned outputs and their dependencies; headings or links never waive a requirement.",
+      "read_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "specs/atlas-packaging.md",
+      "rule": "Read the portions applying to assigned outputs and their dependencies; headings or links never waive a requirement.",
+      "read_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "specs/execution-reconciliation.md",
+      "rule": "Read the portions applying to assigned outputs and their dependencies; headings or links never waive a requirement.",
+      "read_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    }
+  ],
+  "prior_inputs_read_only": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review209/FINDINGS.json",
+      "ref": "sf-review-runtime",
+      "blob": "9ac53500ea7e4d409dcb0b1a2ad7abfd24f35379"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/HANDOFF.json",
+      "ref": "sf-ci-closure",
+      "blob": "57b66b43bcd1eff480fe2986da2f36c7580216db"
+    }
+  ],
+  "additional_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/FINDING-TRACE.json",
+      "ref": "sf-review-prep"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REUSED-INERT-PREPOST.json",
+      "ref": "sf-review-prep"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/CI-DISPATCH-REQUESTS.json",
+      "ref": "sf-review-prep"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/CANDIDATE-DETACHED-TREE-V2.json",
+      "blob": "b478560c088fceab08dd852250c2e1e42cbfead7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/HANDOFF.json",
+      "blob": "fa233a19e8aa52eb3dff77bf0a780872646bef1f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/HANDOFF.json",
+      "blob": "57b66b43bcd1eff480fe2986da2f36c7580216db"
+    }
+  ],
+  "startup_prompt": "Você é um REVISOR NOVO E INDEPENDENTE (R3: Runtime IA, MCP, Task/Relay, Atlas, documentos e proveniência) no repositório gustavomhss/Orchestra-SF. Esta é uma NOVA sessão/contexto, não a revisão histórica 209. NÃO assuma identidade/autoria ou reuse execução de autor. Antes de começar: exija o commit C formalmente ACEITO e a árvore exata publicados pela composição 211/S0; se não há C, emita BLOCKED_NOT_STARTED, nunca APPROVE. Leia AGENTS, START.md, WORKFLOW.md, execution/COMMON.md do plano dbf9547211d9b0fade619790de7c19c0869b7c7d, seu actor pack integral, seus apêndices obrigatórios e modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/FINDING-TRACE.json, modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/CI-DISPATCH-REQUESTS.json e todas as fontes originais. Leia o produto REAL no checkout de C com SHA e blobs, não 228 separado como se fosse C. Execute crítica causal própria sem editar produto, sem novo supervisor/Goal; releia correções aceitas e compare paths/pre/post. Registre independência por arquivo, modelo/session apenas se expostos, cada critério e evidência nativa real + neg/pos, run/job IDs/artefatos, rechecks de todos seus achados, caminhos e consumidor. CI somente dispatcher único; G7 checkout C e G8 checkout D separadamente via 190. 207/208/209 são PRE_FREEZE/FIX_FIRST, não aceite. Se falta prova: NOT_RUN ou BLOCKED. Nunca invente grants, dados financeiros, aprovação, provider ou resultado. Nenhuma mudança em sf-closure-bundle, sf2-control, dev; devolva findings aos owners em receipts autorizados.",
+  "goals": [
+    "Inspecionar source shipping versus load/execução real de 5 perfis e 18 skills; um revisor IA exige SessionV2 própria",
+    "Verificar 8 packs e 39 operações MCP originais, C16 sem falso adapter, original provider pin e permissão",
+    "Validar 229 verdadeira origem Task/Relay, C15 admitida, descendência result/return de AM06; ausência explícita mantém FAIL",
+    "Validar AM01–AM06 originais positivos e negativos, documentos PDF/DOCX/textos, extração/humano/egress, Atlas/scanner e identidade do host",
+    "Verificar exatos 8 CI mesmo C, G7 no checkout C e G8 no checkout D só após envelope aceito"
+  ],
+  "adversarial_checklist": [
+    "Nenhum mock/fixture/catálogo/screenshot vira inferência positiva",
+    "Nenhum run 200 pré-C prova C só por coincidência de selector",
+    "D deve preservar todos blobs de C e não conter novo produto",
+    "Sem uso de autor do runtime como aprovador da própria seção"
+  ],
+  "full_criteria_texts_exact_from_plan": [
+    {
+      "id": "WP10.CMP.01",
+      "text": "Todas as capacidades antigas e novas, três superfícies, quatro rotinas, oito gráficos e estados relevantes têm cobertura rastreável.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.CMP.02",
+      "text": "Inclui regressão, concorrência, permissões, migração de estado anterior, export completo, falha e ausência de dados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.CMP.10",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.CMP.40",
+      "text": "Incluir empacotamento Atlas, APP src/APP browser separados, provas AM01-AM06, transferências e rechecagem do candidato.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.CMP.60",
+      "text": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.DOD.01",
+      "text": "Todos os WPs e suas tasks satisfazem os axiomas locais e as jornadas integradas; três pareceres independentes não têm achado obrigatório aberto.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.DOD.02",
+      "text": "O candidato de produto C possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo. O commit de entrega D arquiva essa evidência e passa a verificação do envelope e seu próprio guard, sem alegar que CI de C executou em D.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.DOD.10",
+      "text": "As entregas residentes atribuídas a WP10 têm produção, consumo e provas reais completos.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.DOD.40",
+      "text": "Runtime, Atlas, composição, CI e julgamentos têm atores/paths/recibos explícitos; cinco perfis/18 skills/oito packs e Atlas são integrados em G4.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.DOD.60",
+      "text": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.INV.01",
+      "text": "Só WP10 escreve composição compartilhada; defeitos em arquivos de domínio retornam ao owner, com revisão do delta.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.INV.02",
+      "text": "Nenhum gate é removido, teste enfraquecido, dado real exposto ou frente de deploy alterada para fechar a campanha.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.INV.10",
+      "text": "WP10 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.INV.40",
+      "text": "S0 não escreve arquivos delegados; nenhum autor assina aceitação independente de sua própria seção.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.INV.60",
+      "text": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.QLT.01",
+      "text": "Evidências são pequenas e suficientes para julgar cada resultado; validade é do comportamento observado, não da quantidade de testes.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.QLT.02",
+      "text": "A entrega usa linguagem de produto e inclui limites materiais e semântica dos números.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.QLT.40",
+      "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.QLT.60",
+      "text": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.SUC.01",
+      "text": "As jornadas de contribuição, comparação, decisão, reunião e retomada funcionam com identidades e dados compartilhados no módulo real.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.SUC.02",
+      "text": "André e o time podem completar suas tarefas sem reconstruir contexto em ferramentas auxiliares para os cenários cobertos.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.SUC.40",
+      "text": "O produto inteiro é revisável sem depender de trabalho oculto de coordenadores ou de checks atribuídos a seleção que não rodou.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.SUC.60",
+      "text": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.CHK.01",
+      "text": "Juiz identifica se o comparador confunde margem e economia, se o aging usa evento errado ou se dados restritos escapam por relatório.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.CHK.02",
+      "text": "Juiz de UX percorre contribuição e conclusão, não apenas a home de André.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.CHK.03",
+      "text": "Recibo de autor não conta como parecer independente; correção relevante invalida evidência afetada.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.CHK.40",
+      "text": "Cada seção dos três pareceres identifica reviewer e authors; seção com interseção não fecha aceite até ser reatribuída.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.CMP.01",
+      "text": "Produto/UX cobre tarefa e conclusão; semântica cobre cálculo, estado, papéis, fontes, versões e automações.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.CMP.02",
+      "text": "Cobrir produto/UX, finanças/permissões/persistência e IA/Relay/integração com três revisores sem autoria nos arquivos julgados; cobrir substituição de revisor caso um assuma WP14.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.CMP.40",
+      "text": "CobrirUX, semântica, IA/MCP/Atlas/Relay/documentos/WP14 e todas as fontes de skills.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.DOD.01",
+      "text": "Três juízes independentes emitem aceite fundamentado no candidato final, após correções necessárias.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.DOD.40",
+      "text": "Três pareceres consolidados sem autojulgamento no candidato final.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.INV.01",
+      "text": "Nenhum achado que viole axioma obrigatório pode ser reclassificado como opcional só para encerrar.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.INV.40",
+      "text": "Escrever uma correção remove o direito de aceitar aquela seção independentemente.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.QLT.01",
+      "text": "Pareceres citam cenário, comportamento e consequência; evitar notas genéricas ou placares sem evidência.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.QLT.40",
+      "text": "Achado registra critério/evidência/impacto/correção/recheck e SHA.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.SUC.01",
+      "text": "Um revisor sem autoria da implementação consegue sustentar o aceite e explicar seus limites concretos.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T03.SUC.40",
+      "text": "Revisão encontra lacunas sem contar S0-A/B builders como revisores livres.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "owned_26_subset_count": 9,
+  "owned_findings": [
+    {
+      "id": "R148-NATIVE-01",
+      "priority": "P1",
+      "original_state": "REMEDIATED_STATIC_RECHECK_PENDING",
+      "correction_route": "161/PR104 native source correction, 211 integration, 190/200 original proof",
+      "base_correction_state": "STATIC_CORRECTION_IN_REVIEWED_SOURCE_NATIVE_POSITIVE_PENDING",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/native-host.ts",
+        "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts"
+      ],
+      "source_prepost": [],
+      "criterion_ids": [
+        "WP10.INV.40",
+        "WP10.T03.CHK.40",
+        "WP10.DOD.40"
+      ],
+      "queue_ids": [
+        "S219-NATIVE-HUMAN-REQUEST",
+        "S222-AM02-CAUSAL"
+      ],
+      "required_fresh_recheck": "SessionV2 original create/mismatch/load/narrow/abort/retry/restore/revoke; persisted C08 marker no double grant/orphan",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "R3-NATIVE-01",
+      "priority": "P1",
+      "original_state": "NOT_PROVEN",
+      "correction_route": "196/199 installed original five profiles/18 skills/SkillLoadReceipt/C11",
+      "base_correction_state": "SOURCE_SHIPPING_ONLY_REAL_NATIVE_POSITIVE_UNPROVEN",
+      "source_paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "source_prepost": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "preimage_git_blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+          "postimage_git_blob": "438d258443e273d6dab46c4b6cfd9e291bec24c6",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        }
+      ],
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "queue_ids": [
+        "S221-AM01-CAUSAL",
+        "S222-AM02-CAUSAL"
+      ],
+      "required_fresh_recheck": "All 18 original SkillLoadReceipts/session/providermodel manifest/source digest/loadedMessageId; authorized outputRef persisted and human UI consumer after restart",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "R3-MCP-02",
+      "priority": "P1",
+      "original_state": "NOT_PROVEN",
+      "correction_route": "196/199 original MCP native C16 bridge, 39 routes; no fixture substitute",
+      "base_correction_state": "CATALOG_EXISTS_39_REAL_CALLS_AND_PERMISSION_PARITY_UNPROVEN",
+      "source_paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+      ],
+      "source_prepost": [],
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.T03.CHK.40"
+      ],
+      "queue_ids": [
+        "S222-AM02-CAUSAL"
+      ],
+      "required_fresh_recheck": "All 39 original initialize/listTools/callTool, 8 packs; host/provider pin, permission intersection, UI-domain receipt parity, original swap/restart/revoke",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "R3-TASK-03",
+      "priority": "P1",
+      "original_state": "FAIL",
+      "correction_route": "219 proposed origin only + 229 exclusive public Task/Relay provenance; 211 actual consumption needed",
+      "base_correction_state": "229_ONLY_ACK_NO_REAL_SOURCE_HANDOFF;DEFAULT_RUNTIME_ORIGIN_PROVENANCE_UNPROVEN",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+        "apps/cli/src/sucafina-product/routine-native-origin.ts"
+      ],
+      "source_prepost": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "preimage_git_blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+          "postimage_git_blob": "438d258443e273d6dab46c4b6cfd9e291bec24c6",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+          "preimage_git_blob": null,
+          "postimage_git_blob": "dcd223898ca0bddb755ec2dc6b8e3fe2bd149cf4",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-219/apps/cli/src/sucafina-product/native-routine-producer219.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 219
+        }
+      ],
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "queue_ids": [
+        "S219-NATIVE-HUMAN-REQUEST",
+        "S219-REAL-TASK-RELAY"
+      ],
+      "required_fresh_recheck": "Original human POST Request->TaskTool frame->C15 owner Permission/provider approval publisher pin->Relay child run/result->human re-read; if no public origin remain FAIL",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "R3-ATLAS-04",
+      "priority": "P1",
+      "original_state": "NOT_PROVEN",
+      "correction_route": "216 Atlas ordinal fix; 220/230 C12 original receipt and C08/outbox boundary, 198/199 real provision",
+      "base_correction_state": "COMPONENT_CATALOG_PRESENT_REAL_C08_COMMIT_RESTART_AND_TWO_PRINCIPAL_PROOF_UNPROVEN",
+      "source_paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts"
+      ],
+      "source_prepost": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "preimage_git_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "postimage_git_blob": "3ce00f44f2f072342b8e894bfc54b2f2a16f25c4",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "preimage_git_blob": "227f22ae80851185a1998bee1adf7bda73a83485",
+          "postimage_git_blob": "b5caa2d662e12b9e74460a7c9291b61b967b32e2",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-216/modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 216
+        }
+      ],
+      "criterion_ids": [
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.CMP.60",
+        "WP10.T03.CHK.40"
+      ],
+      "queue_ids": [
+        "S216-ATLAS-SEQUENCE",
+        "S220-AM05"
+      ],
+      "required_fresh_recheck": "Real C09 source, C08 append+outbox commit and scan, actual restart + recall, two original principals and revoke/replacement before/after commit",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "R3-SCANNER-05",
+      "priority": "P1",
+      "original_state": "NOT_PROVEN",
+      "correction_route": "190 compiler G7(C) G8(D); 199 installed gitleaks toolkit; no guard relaxation",
+      "base_correction_state": "INSTALLED_SCANNER_GENERATOR_GUARDS_NOT_RUN",
+      "source_paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "modules/atlas/boundary/package.json"
+      ],
+      "source_prepost": [],
+      "criterion_ids": [
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.QLT.60",
+        "WP10.CMP.60"
+      ],
+      "queue_ids": [
+        "S220-AM05",
+        "CI-ATLAS-BUSINESS"
+      ],
+      "required_fresh_recheck": "Official nonsecret installed scanner path/version or fail-closed; AST/spawn/generated guard C checkout G7, D checkout G8 separately; clean/canary/unavailable native witness",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "R3-EXPORT-06",
+      "priority": "P1",
+      "original_state": "NOT_PROVEN",
+      "correction_route": "WP06.T05 real document extraction and 196/199 authorized consumer, original bytes proof",
+      "base_correction_state": "REAL_ORIGINAL_PDF_DOCX_TEXT_AND_EXPORT_EGRESS_NOT_PROVEN",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/document-services.ts",
+        "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+      ],
+      "source_prepost": [],
+      "criterion_ids": [
+        "WP10.DOD.10",
+        "WP10.CMP.10",
+        "WP10.SUC.10",
+        "WP10.T03.CHK.40"
+      ],
+      "queue_ids": [
+        "CI-UI-REPORTS"
+      ],
+      "required_fresh_recheck": "Original source bytes/PDF digital/DOCX/text→candidate→human confirmation→C17 refs→C11 outputRef→authorized/denied/revoked/reload final consumer; digital scan no OCR claim",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "R3-CI-07",
+      "priority": "P1",
+      "original_state": "NOT_PROVEN",
+      "correction_route": "232 sole dispatcher terminal handoff: 19 causal/8 final, no initial official dispatch capability",
+      "base_correction_state": "NO_ACCEPTED_C_AND_FINAL_CI_NOT_RUN",
+      "source_paths": [
+        ".github/workflows/test-ci.yml",
+        "script/test-ci-request.ts"
+      ],
+      "source_prepost": [],
+      "criterion_ids": [
+        "WP10.DOD.02",
+        "WP10.QLT.02",
+        "WP10.T03.CHK.03",
+        "WP10.T03.DOD.01"
+      ],
+      "queue_ids": [
+        "CI-SF",
+        "CI-CLI",
+        "CI-APP-SRC",
+        "CI-APP-BROWSER",
+        "CI-ATLAS-BUSINESS",
+        "CI-UI-OPERATIONS",
+        "CI-UI-DECISIONS",
+        "CI-UI-REPORTS"
+      ],
+      "required_fresh_recheck": "After formal C, same-C 8 CI and epic/e2e+AM01–AM06 native recheck with original W/S/run/job/attempt/artifacts; negative failures not relabeled",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "R3-CANDIDATE-08",
+      "priority": "P1",
+      "original_state": "NOT_PROVEN",
+      "correction_route": "211 S0 sole C integrator; 235 reviewer prep only, 190 G7/G8",
+      "base_correction_state": "NO_FORMAL_C_3_FRESH_REVIEWS_NOT_RUN_D_NOT_BUILT_G7_G8_NOT_RUN",
+      "source_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure211/S0-FENCE.json"
+      ],
+      "source_prepost": [],
+      "criterion_ids": [
+        "WP10.DOD.01",
+        "WP10.DOD.02",
+        "WP10.T03.DOD.01",
+        "WP10.T03.SUC.01",
+        "WP10.T03.CMP.02"
+      ],
+      "queue_ids": [],
+      "required_fresh_recheck": "Exact accepted C+tree; independent 3 authorship-disjoint reviews on same C after repairs; D only evidence bytes, full C blob parity; G7 on C checkout and G8 on D checkout",
+      "proof": "NOT_RUN"
+    }
+  ],
+  "cross_review_shared_obligations": [
+    "REVIEW208 known_deduplicated 4 must be considered without reopening as a new ID",
+    "Every reviewer independently checks exact C+tree, source delta, original authority/provider and D unchanged content",
+    "No reviewer authors product; reviewer replacing a WP14 author must declare conflict and be replaced",
+    "No subset of 1610 criteria may be waived; original full 15 WPs/74 tasks/17 contracts remain normative"
+  ],
+  "proof_contract": {
+    "witness_case_fields": [
+      "finding_id",
+      "criterion_ids",
+      "candidate_C_sha",
+      "candidate_C_tree",
+      "actual_consumer_blob",
+      "original_source_and_ref_with_revision",
+      "original_authority_principal_scope_installation",
+      "actual_model_session_provider_generation_if_applicable",
+      "expected",
+      "observed",
+      "negative_controls",
+      "fresh_actual_success_or_blocker",
+      "CI_W",
+      "CI_S",
+      "normalized_request",
+      "run_id",
+      "job_id",
+      "attempt",
+      "artifact_id_and_digest",
+      "reviewer_authorship_check",
+      "source_recheck_date",
+      "verdict"
+    ],
+    "false_proof_forbidden": [
+      "synthetic identity labeled as corporate",
+      "catalog list as 18 skills executions",
+      "negative correlator as native positive",
+      "screenshot as real original server or F04",
+      "detached 228 tree as formal C",
+      "old scoped CI green as final same C PASS",
+      "G7 execution on D or G8 on C",
+      "reviewer's own source patch signed off by same reviewer"
+    ]
+  },
+  "gates": {
+    "candidate_C": "Formal original sole integrator 211 accepts exact immutable commit and tree C after real product composition and source-to-consumer readbacks; no substitute detached 228 tree",
+    "review": "Three NEW distinct context reviewers without product authorship independently inspect same C and original admission, capture reviewer model/session only actually exposed; old 207/208/209 are inputs NOT approvals",
+    "proof": "Original admitted model/host/principal, source revision and bytes, negative and positive witnessed, version/digest/receipts, W and S, run/job/attempt/artifact, consumer after restart",
+    "CI": "Unique authorized successor dispatcher with verified official test:ci interface after 232 terminal handoff, 19 scoped then 8 required final same-C plus epic and AM gates; no self-dispatch",
+    "G7": "190 executes unchanged bun run check:guards --base origin/dev on REAL CHECKOUT of C and records original C, script, run, result",
+    "D": "S0 constructs only evidence additions on previously allocated exact paths; full C→D mode/type/blob diff proves no product/fixture/docs normative modification, original runs remain attributed to C",
+    "G8": "190 executes unchanged bun run check:guards --base origin/dev on REAL CHECKOUT of D separately from G7; no cached C guard as D evidence",
+    "release": "No global release until C evidence + 3 independent approve + guard G7 and validated evidence-only D + G8 and zero mandatory blockers"
+  },
+  "decision_schema": {
+    "options": [
+      "APPROVE_AFTER_COMPLETE_INDEPENDENT_C_WITNESS",
+      "FIX_FIRST",
+      "BLOCKED_NOT_STARTED",
+      "NOT_PROVEN"
+    ],
+    "default": "BLOCKED_NOT_STARTED",
+    "approval_claim_before_C": false,
+    "global_release": false
+  },
+  "request_232_exact_ids": [
+    "S219-NATIVE-HUMAN-REQUEST",
+    "S222-AM02-CAUSAL",
+    "S221-AM01-CAUSAL",
+    "S219-REAL-TASK-RELAY",
+    "S216-ATLAS-SEQUENCE",
+    "S220-AM05",
+    "CI-ATLAS-BUSINESS",
+    "CI-UI-REPORTS",
+    "CI-SF",
+    "CI-CLI",
+    "CI-APP-SRC",
+    "CI-APP-BROWSER",
+    "CI-UI-OPERATIONS",
+    "CI-UI-DECISIONS"
+  ],
+  "initial_execution": {
+    "tests": "NOT_RUN",
+    "build": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "G7": "NOT_RUN",
+    "G8": "NOT_RUN",
+    "fresh_review": "NOT_STARTED",
+    "approval": "NOT_ISSUED"
+  }
+}
