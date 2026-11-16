@@ -25,6 +25,7 @@ const fresh = Schema.decodeUnknownSync(SfContext)({
     { capabilityId: "CAP10", surface: "dashboard", page: "All Projects", canRead: true, allowedActionIds: ["save"] },
     { capabilityId: "CAP16", surface: "dashboard", page: "IT Performance Contract", canRead: true, allowedActionIds: ["save", "save-item", "save-sub"] },
     { capabilityId: "CAP12", surface: "dashboard", page: "IT Security KPIs", canRead: true, allowedActionIds: ["save-action"] },
+    { capabilityId: "CAP11", surface: "dashboard", page: "IT Operations", canRead: true, allowedActionIds: ["save-sla", "save-categories"] },
   ],
   availability: [
     { family: "procurement", resource: "CAP25", state: "ready", operations: [operation("domain.page.CAP25"), operation("domain.command.CAP25.save")] },
@@ -41,6 +42,7 @@ const fresh = Schema.decodeUnknownSync(SfContext)({
     { family: "domain-read", resource: "CAP10", state: "ready", operations: [operation("domain.page.CAP10"), operation("domain.command.CAP10.save")] },
     { family: "domain-read", resource: "CAP16", state: "ready", operations: [operation("domain.page.CAP16"), operation("domain.command.CAP16.save"), operation("domain.command.CAP16.save-item"), operation("domain.command.CAP16.save-sub")] },
     { family: "domain-read", resource: "CAP12", state: "ready", operations: [operation("domain.page.CAP12"), operation("domain.command.CAP12.save-action")] },
+    { family: "domain-read", resource: "CAP11", state: "ready", operations: [operation("domain.page.CAP11"), operation("domain.command.CAP11.save-sla"), operation("domain.command.CAP11.save-categories")] },
   ],
 })
 const owner = { serverKey: "server", transportIdentity: "transport", publicOrigin: "https://sf.test",
@@ -293,6 +295,18 @@ describe("source-bound draft revalidation", () => {
     expect(await run(input, body)).toMatchObject({ status: "authorized", sourceVersion: 3 })
     expect(await run(input, { ...body, value: { ...body.value, data: { secActions: [{ id: "a1", text: "Action" }] } } })).toEqual({ status: "denied" })
     expect(await run(input, { ...body, value: { ...body.value, data: { secActions: [{ id: "other", text: "Action", done: false }] } } })).toEqual({ status: "unavailable" })
+    expect(await run(input, { ...body, value: { ...body.value, allowedActionIds: [] } })).toEqual({ status: "denied" })
+    expect(await run({ ...input, identity: { kind: "new", newIntentRef: "new" as SfIntentRef }, read: { ...input.read, fieldPaths: [] } }, body)).toEqual({ status: "unavailable" })
+  })
+  test("service draft binds the source month record and shared CAS", async () => {
+    const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "CAP11", identity: { kind: "record", recordRef: "sla1" as SfRef },
+      editScopeKey: "CAP11:save-sla:2026-1" as SfEditScopeKey,
+      read: { operationId: "domain.page.CAP11", input: { opsYear: 2026, operationsMonth: 1 }, fieldPaths: ["incSLA"], actionIds: ["save-sla"] } }
+    const body = { status: "ok", context: stamp, value: { capabilityId: "CAP11", selection: { year: 2026, month: 1 },
+      data: { opsSLA: [{ id: "sla1", year: 2026, month: 1, incSLA: 93 }] }, versions: { "ops:2026-1": 7 }, allowedActionIds: ["save-sla"] } }
+    expect(await run(input, body)).toMatchObject({ status: "authorized", sourceVersion: 7 })
+    expect(await run(input, { ...body, value: { ...body.value, data: { opsSLA: [{ id: "sla1", year: 2026, month: 1 }] } } })).toEqual({ status: "denied" })
+    expect(await run(input, { ...body, value: { ...body.value, data: { opsSLA: [{ id: "other", year: 2026, month: 1, incSLA: 93 }] } } })).toEqual({ status: "unavailable" })
     expect(await run(input, { ...body, value: { ...body.value, allowedActionIds: [] } })).toEqual({ status: "denied" })
     expect(await run({ ...input, identity: { kind: "new", newIntentRef: "new" as SfIntentRef }, read: { ...input.read, fieldPaths: [] } }, body)).toEqual({ status: "unavailable" })
   })
