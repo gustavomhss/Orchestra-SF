@@ -7,14 +7,12 @@
  * private host port. If I00 has not installed that port, it fails closed;
  * no authority, grant or trusted context is synthesized here.
  */
-import { Schema } from "effect"
-import { SfProjectionHome } from "@orchestra/schema/sucafina/work"
 import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { isSfPeriod } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
-import { selectSfCaseReadiness } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+import { observeSfCaseSource } from "./case-health.ts"
 import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { WorkPresentationItem } from "../../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
@@ -273,7 +271,7 @@ async function workSelection(
   }
 }
 
-async function home(request: Request, runtime: SfHostServices, expected?: SfContextStamp): Promise<Response> {
+async function home(request: Request, runtime: SfHostServices): Promise<Response> {
   // Follow the original workbench landing candidate admission. An unreadable
   // case list is explicitly unavailable, not an empty authorized collection.
   let accepted: Awaited<ReturnType<SfHostServices["ui"]["admit"]>> | undefined
@@ -289,17 +287,12 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
   if (!accepted || accepted.status !== "ok") return failure(request, "denied")
   const landing = accepted.value
   try {
-    if (expected && (landing.binding.installationId !== expected.installationId ||
-      landing.binding.projectId !== expected.projectId || landing.binding.principalRef !== expected.principalRef ||
-      landing.binding.policyVersion !== expected.policyVersion || landing.binding.accessRevision !== expected.accessRevision))
-      return failure(request, "denied")
     let cases: { status: "ok"; items: { caseRef: string; title: string; version: number }[] } | { status: "unavailable" } =
       { status: "unavailable" }
     if (caseAccess) {
-      const sample = expected ? selectSfCaseReadiness(expected) : undefined
-      const readCases = () => runtime.state.read(request, "cases", sample ?? ((state, authority) =>
+      const readCases = () => runtime.state.read(request, "cases", (state, authority) =>
         Object.values(state.cases).filter((entry) => entry.participants.includes(authority.principalRef))
-          .map((entry) => encodeCaseRef(entry))))
+          .map((entry) => encodeCaseRef(entry)))
       const listed = await readCases()
       if (listed.status === "ok" && listed.value) {
         const items = await Promise.all(listed.value.map(async (caseRef) => {
@@ -307,9 +300,6 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
           const other = await runtime.ui.admit(request, "sf_case_read", digestSfValue(selection))
           if (other.status !== "ok") return undefined
           try {
-            if (expected && (other.value.binding.installationId !== expected.installationId ||
-              other.value.binding.projectId !== expected.projectId || other.value.binding.principalRef !== expected.principalRef ||
-              other.value.binding.policyVersion !== expected.policyVersion || other.value.binding.accessRevision !== expected.accessRevision)) return undefined
             const read = await runtime.dispatch("sf_case_read", selection, other.value)
             if (read.status !== "ok" || !await runtime.ui.revalidate(other.value)) return undefined
             const decoded = decodeSfOperationOutput("sf_case_read", read.result)
@@ -320,24 +310,15 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
             runtime.ui.finish(other.value)
           }
         }))
-        if (expected && items.some((item) => item === undefined)) return failure(request, "unavailable")
-        if (expected) {
-          const again = await readCases()
-          if (again.status !== "ok" || !again.value || again.storageVersion !== listed.storageVersion ||
-            again.aggregateRevision !== listed.aggregateRevision || again.incarnation !== listed.incarnation ||
-            digestSfValue(again.value) !== digestSfValue(listed.value)) return failure(request, "stale")
-        }
         cases = { status: "ok", items: items.filter((item): item is NonNullable<typeof item> => item !== undefined) }
-      } else if (!expected && listed.status === "unavailable" && listed.reason === "product-state-uninitialized") {
+      } else if (listed.status === "unavailable" && listed.reason === "product-state-uninitialized") {
         cases = { status: "ok", items: [] }
       }
     }
 
     let routines: { status: "ok"; items: { admission: string; runRef?: string }[] } |
       { status: "unavailable" } = { status: "unavailable" }
-    // Routine discovery can fan out over an entire run index. It is not
-    // evidence for case or command readiness and is skipped in observations.
-    if (!expected && runtime.routineRuns) {
+    if (runtime.routineRuns) {
       const digest = digestSfValue({ purpose: "routine-discovery" })
       const admitted = await runtime.ui.admit(request, "sf_routine_status", digest)
       if (admitted.status === "ok") {
@@ -402,12 +383,8 @@ export function createSfWorkProjectionHandlers(deps: SfNativeHostDependencies): 
   ]
 }
 
-/** Exercise the mounted producer with the admitted original request, never a replacement request. */
+/** Home's admitted case-source infrastructure, not individual case or routine readiness. */
 export async function observeSfHome(runtime: SfHostServices | undefined, request: Request, stamp: SfContextStamp) {
-  if (!runtime || request.signal.aborted) return []
-  const result = await home(request, runtime, stamp)
-  if (request.signal.aborted || result.status !== 200 || result.headers.get("X-SF-Access-Revision") !== stamp.accessRevision) return []
-  const value: unknown = await result.json()
-  if (!Schema.is(SfProjectionHome.Output)(value) || value.status !== "ok" || value.value.cases.status !== "ok") return []
+  if (!await observeSfCaseSource(runtime, request, stamp)) return []
   return [{ operationId: "projection.home" as const, state: "ready" as const, reason: null, operational: true as const }]
 }

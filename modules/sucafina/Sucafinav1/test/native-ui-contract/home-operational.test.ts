@@ -25,14 +25,13 @@ test("home probe executes the real producer and checks original admission and re
     },
   })
   const runtime = { ui, state: { read: async (request: Request, _namespace: string,
-    callback: (state: { cases: Record<string, never> }, authority: typeof stamp) => unknown) => {
+    callback: (state: { cases: Record<string, never>; versions: { cases: number }; revision: number; incarnation: string }, authority: typeof stamp) => unknown) => {
     expect(request).toBe(original)
     if (!available) return { status: "unavailable" }
-    const value = callback({ cases: {} }, stamp)
+    const value = callback({ cases: {}, versions: { cases: version }, revision: version, incarnation: "state" }, stamp)
     if (revokeDuringRead) revision = "revoked"
-    const result = { status: "ok", storageVersion: version, aggregateRevision: version, incarnation: "state", value }
     if (changeDuringRead) version++
-    return result
+    return { status: "ok", storageVersion: version, aggregateRevision: version, incarnation: "state", value }
   } } }
   expect(await observeSfHome(runtime as never, original, stamp)).toEqual([
     { operationId: "projection.home", state: "ready", reason: null, operational: true },
@@ -54,7 +53,7 @@ test("home probe executes the real producer and checks original admission and re
   expect(await observeSfHome(undefined, original, stamp)).toEqual([])
 })
 
-test("a large home source samples at most one case and fails closed on a failed sample", async () => {
+test("home health never dispatches case or routine reads", async () => {
   const original = new Request("http://localhost/sucafina/api/ui/context")
   const ui = createSfUiAuthority({
     createId: () => crypto.randomUUID(), now: Date.now, commandIdentity: async () => crypto.randomUUID(),
@@ -66,28 +65,23 @@ test("a large home source samples at most one case and fails closed on a failed 
     },
   })
   let dispatches = 0
-  let denied = false
-  const cases = Object.fromEntries(Array.from({ length: 100 }, (_, index) => [String(index),
+  const cases = Object.fromEntries(Array.from({ length: 500 }, (_, index) => [String(index),
     { id: String(index), incarnation: "incarnation", participants: ["person"] }]))
   const runtime = {
     ui,
     state: { read: async (_request: Request, _namespace: string,
-      callback: (state: { cases: typeof cases }, authority: typeof stamp) => unknown) =>
-      ({ status: "ok", storageVersion: 1, aggregateRevision: 1, incarnation: "state", value: callback({ cases }, stamp) }) },
+      callback: (state: { cases: typeof cases; versions: { cases: number }; revision: number; incarnation: string }, authority: typeof stamp) => unknown) =>
+      ({ status: "ok", storageVersion: 1, aggregateRevision: 1, incarnation: "state", value: callback({ cases, versions: { cases: 1 }, revision: 1, incarnation: "state" }, stamp) }) },
     dispatch: async (operation: string, payload: unknown, call: Parameters<typeof ui.validate>[0]) => {
       dispatches++
-      if (!await ui.validate(call, operation, digestSfValue(payload)) || denied) return { status: "denied" }
+      if (!await ui.validate(call, operation, digestSfValue(payload))) return { status: "denied" }
       return { status: "ok", result: operationalCase }
     },
   }
   expect(await observeSfHome(runtime as never, original, stamp)).toEqual([
     { operationId: "projection.home", state: "ready", reason: null, operational: true },
   ])
-  expect(dispatches).toBe(1)
-  denied = true
-  dispatches = 0
-  expect(await observeSfHome(runtime as never, original, stamp)).toEqual([])
-  expect(dispatches).toBe(1)
+  expect(dispatches).toBe(0)
 })
 
 test("the actual home projection still reads every accessible case", async () => {

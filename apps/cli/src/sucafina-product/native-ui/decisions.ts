@@ -4,13 +4,11 @@
  * CurrentChoice and Procurement producers; F02 transports them unchanged.
  * This module cannot create, approve, apply or recover any decision.
  */
-import { Schema } from "effect"
-import { SfProjectionCases } from "@orchestra/schema/sucafina/decisions"
 import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
-import { selectSfCaseReadiness } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+import { observeSfCaseSource } from "./case-health.ts"
 import { contextualCaseReturn } from "../../../../../modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router.ts"
 
@@ -101,28 +99,26 @@ async function readCase(request: Request, deps: SfNativeHostDependencies): Promi
 }
 
 /** Participant-filtered Workbench list, then canonical per-case authorized read. */
-async function readCases(request: Request, deps: SfNativeHostDependencies, expected?: SfContextStamp): Promise<Response> {
-  if (!expected && !allowedRequest(request, deps, "cases")) return failed(request, "denied", "native-decision-request-unavailable")
-  if (!expected && !exactQuery(new URL(request.url), [])) return failed(request, "needs-input", "invalid-case-list-query")
+async function readCases(request: Request, deps: SfNativeHostDependencies): Promise<Response> {
+  if (!allowedRequest(request, deps, "cases")) return failed(request, "denied", "native-decision-request-unavailable")
+  if (!exactQuery(new URL(request.url), [])) return failed(request, "needs-input", "invalid-case-list-query")
   const runtime = deps.runtime()
   if (!runtime) return failed(request, "unavailable", "decision-host-unavailable")
-  const identity = expected ? undefined : await deps.readContext(request)
-  if (!expected && identity?.status !== "ok") return failed(request, identity?.status ?? "unavailable")
-  const stamp = expected ?? (identity?.status === "ok" ? identity.value.stamp : undefined)
-  if (!stamp) return failed(request, "unavailable")
+  const identity = await deps.readContext(request)
+  if (identity.status !== "ok") return failed(request, identity.status)
+  const stamp = identity.value.stamp
   const operationDigest = digestSfValue({})
   const admitted = await runtime.ui.admit(request, "sf_case_read", operationDigest)
   if (admitted.status !== "ok") return failed(request, admitted.status)
   try {
     if (!matches(stamp, admitted.value.binding) || !await runtime.ui.validate(admitted.value, "sf_case_read", operationDigest))
       return failed(request, "denied", "case-list-access-changed")
-    const sample = expected ? selectSfCaseReadiness(stamp) : undefined
-    const identities = () => runtime.state.read(request, "cases", sample ?? ((state, authority) => {
+    const identities = () => runtime.state.read(request, "cases", (state, authority) => {
       if (authority.principalRef !== admitted.value.binding.principalRef ||
         authority.policyVersion !== admitted.value.binding.policyVersion ||
         authority.accessRevision !== admitted.value.binding.accessRevision) return undefined
       return Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
-    }))
+    })
     const listed = await identities()
     if (listed.status !== "ok" || !listed.value || listed.value.length > 100)
       return failed(request, "unavailable", "case-list-source-unavailable")
@@ -152,14 +148,10 @@ async function readCases(request: Request, deps: SfNativeHostDependencies, expec
     const again = await identities()
     if (again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(listed.value))
       return failed(request, "stale", "case-list-changed")
-    if (expected && (again.storageVersion !== listed.storageVersion || again.aggregateRevision !== listed.aggregateRevision ||
-      again.incarnation !== listed.incarnation)) return failed(request, "stale", "case-list-changed")
     if (!await runtime.ui.revalidate(admitted.value)) return failed(request, "denied", "case-list-access-changed")
-    if (!expected) {
-      const current = await deps.readContext(request)
-      if (current.status !== "ok" || digestSfValue(current.value.stamp) !== digestSfValue(stamp))
-        return failed(request, "stale", "case-context-changed")
-    }
+    const current = await deps.readContext(request)
+    if (current.status !== "ok" || digestSfValue(current.value.stamp) !== digestSfValue(stamp))
+      return failed(request, "stale", "case-context-changed")
     return response(request, 200, { status: "ok", context: stamp, value: { cases } })
   } catch {
     return failed(request, "unavailable", "case-list-unavailable")
@@ -176,13 +168,8 @@ export function createSfDecisionsProjectionHandlers(deps: SfNativeHostDependenci
   ])
 }
 
-/** Installation-only observation of the real list producer with the original request. */
+/** Installed list infrastructure only, not per-case authorization or list completeness. */
 export async function observeSfCases(deps: SfNativeHostDependencies, request: Request, stamp: SfContextStamp) {
-  if (request.signal.aborted) return []
-  const result = await readCases(request, deps, stamp)
-  if (request.signal.aborted || result.status !== 200) return []
-  const value: unknown = await result.json()
-  if (!Schema.is(SfProjectionCases.output)(value) || value.status !== "ok" ||
-    digestSfValue(value.context) !== digestSfValue(stamp)) return []
+  if (!await observeSfCaseSource(deps.runtime(), request, stamp)) return []
   return [{ operationId: "projection.cases" as const, state: "ready" as const, reason: null, operational: true as const }]
 }
