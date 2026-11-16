@@ -38,15 +38,17 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     active?.abort()
   }
   const t = (value: Key) => language.t(value as Parameters<typeof language.t>[0])
+  const refValue = () => props.requestRef ?? (props.route.kind !== "entry" && props.route.kind !== "new"
+    ? props.route.params.requestRef : undefined)
   const authority = () => {
     const state = sf.state(), ready = sf.ready()
-    if (state.status !== "ready" || !ready || !props.requestRef) return null
-    return JSON.stringify([state.ownerKey, state.owner, sf.generation(), ready.context.stamp, props.route.href, props.requestRef])
+    if (state.status !== "ready" || !ready || !refValue()) return null
+    return JSON.stringify([state.ownerKey, state.owner, sf.generation(), ready.context.stamp, props.route.href, refValue()])
   }
   const selection = (ref: SfRef) => ({ surfaceId: "CAP25" as const,
     identity: { kind: "record" as const, recordRef: ref }, editScopeKey: scope })
   const draft = createMemo(() => {
-    const ready = sf.ready(), source = ui.source, ref = props.requestRef
+    const ready = sf.ready(), source = ui.source, ref = refValue()
     if (!ready || !source || !ref || ui.token !== authority() || titleReadiness(ready.context) !== "ready") return undefined
     const original = { title: source.title }
     return ready.drafts.acquire({ ...selection(ref), baseVersion: source.version, base: original, value: original,
@@ -60,7 +62,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
   }
   const refresh = () => setUi("refresh", ui.refresh + 1)
   createEffect(() => {
-    const token = authority(), ref = props.requestRef, ready = sf.ready()
+    const token = authority(), ref = refValue(), ready = sf.ready()
     void ui.refresh
     const previous = untrack(() => ui.token === token ? ui.source : null)
     stop()
@@ -90,7 +92,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
   const current = (intent: Intent) => {
     const state = editable(), source = ui.source, ready = sf.ready()
     return ui.review === intent && !active?.signal.aborted && authority() === intent.token &&
-      ui.token === intent.token && props.requestRef === intent.ref && !!ready && titleReadiness(ready.context) === "ready" &&
+      ui.token === intent.token && refValue() === intent.ref && !!ready && titleReadiness(ready.context) === "ready" &&
       !!source && source.version === intent.version && source.stage === intent.stage && source.title === intent.original &&
       !!state && state.value.title === intent.title && state.baseVersion === intent.version
   }
@@ -106,7 +108,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     result.status === "authorized" && result.version === intent.version && result.stage === intent.stage && result.title === intent.original
 
   const begin = async () => {
-    const state = editable(), source = ui.source, token = authority(), ref = props.requestRef, ready = sf.ready()
+    const state = editable(), source = ui.source, token = authority(), ref = refValue(), ready = sf.ready()
     if (!state || !state.dirty || !source || !token || !ref || !ready || busy || ui.review) return
     const intent: Intent = Object.freeze({ ref, token, version: source.version, stage: source.stage,
       original: source.title, title: state.value.title, operationRef: crypto.randomUUID() as SfOperationRef,
@@ -155,7 +157,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
       const settling = () => {
         const now = controller.snapshot(), source = ui.source, currentReady = sf.ready()
         return !abort.signal.aborted && authority() === intent.token && ui.review === intent &&
-          props.requestRef === intent.ref && !!currentReady && titleReadiness(currentReady.context) === "ready" &&
+          refValue() === intent.ref && !!currentReady && titleReadiness(currentReady.context) === "ready" &&
           !!source && source.version === intent.version && source.stage === intent.stage && source.title === intent.original &&
           now.availability === "active" && now.phase === "submitting" && now.baseVersion === intent.version &&
           now.value.title === intent.title && JSON.stringify(now.pendingOperation) === JSON.stringify(pending)
@@ -201,7 +203,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     }
   }
   const discard = () => {
-    const ref = props.requestRef, ready = sf.ready(), state = snapshot()
+    const ref = refValue(), ready = sf.ready(), state = snapshot()
     if (!ref || !ready || busy || state?.availability !== "active" || state.pendingOperation ||
         state.phase === "outcome-unknown" || state.phase === "submitting") return
     ready.drafts.discard(selection(ref))
