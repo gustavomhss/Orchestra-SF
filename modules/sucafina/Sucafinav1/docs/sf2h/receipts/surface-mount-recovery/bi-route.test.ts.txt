@@ -1,0 +1,14 @@
+import { describe, expect, test } from "bun:test"
+import type { SfContext } from "@orchestra/schema/sucafina/context"
+import { sfBiCatalogAvailable } from "../../src/orchestra/chapters/sucafina/host/bi-route"
+
+describe("BI catalog admission", () => {
+  test("requires the original catalog options operation to be ready and operational", () => {
+    const context = (family: string, resource: string, state: string, operational: boolean) => ({ availability: [{ family, resource,
+      operations: [{ operationId: "bi.bi-options", state, operational }] }] }) as unknown as SfContext
+    expect(sfBiCatalogAvailable(context("bi", "catalog", "ready", true))).toBe(true)
+    expect(sfBiCatalogAvailable(context("bi", "catalog", "denied", true))).toBe(false)
+    expect(sfBiCatalogAvailable(context("bi", "catalog", "ready", false))).toBe(false)
+    expect(sfBiCatalogAvailable(context("bi", "visual", "ready", true))).toBe(false)
+  })
+})
