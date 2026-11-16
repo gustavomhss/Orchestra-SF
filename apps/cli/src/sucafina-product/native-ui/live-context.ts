@@ -149,6 +149,7 @@ export function sfContextDestinationsFromPages(
   const result: Destination[] = []
   const seen = new Set<string>()
   for (const item of pages) {
+    if (!item || typeof item !== "object") return undefined
     const source = PAGES.find((entry) => entry.surface === item.surface && entry.page === item.page)
     if (!source || seen.has(source.id)) return undefined
     seen.add(source.id)
