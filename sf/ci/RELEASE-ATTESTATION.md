@@ -83,7 +83,7 @@ gh api "repos/$REPO/branches/$BRANCH" > "$SF_AUDIT_DIR/branch.before.json"
 gh api "repos/$REPO/branches/$BRANCH/protection" > "$SF_AUDIT_DIR/protection.before.json"
 gh api "repos/$REPO/branches/$BRANCH/protection/required_status_checks" > "$SF_AUDIT_DIR/required.before.json"
 gh api --paginate --slurp "repos/$REPO/rulesets?includes_parents=true&per_page=100" > "$SF_AUDIT_DIR/rulesets.pages.json"
-jq -s 'add' "$SF_AUDIT_DIR/rulesets.pages.json" > "$SF_AUDIT_DIR/rulesets.before.json"
+jq 'add' "$SF_AUDIT_DIR/rulesets.pages.json" > "$SF_AUDIT_DIR/rulesets.before.json"
 gh api "repos/$REPO/rules/branches/$BRANCH" > "$SF_AUDIT_DIR/effective-rules.before.json"
 jq '{protected,required_status_checks,required_pull_request_reviews,enforce_admins,restrictions,required_linear_history,allow_force_pushes,allow_deletions}' "$SF_AUDIT_DIR/protection.before.json"
 jq '[.[] | {id,name,source_type,enforcement}]' "$SF_AUDIT_DIR/rulesets.before.json"
@@ -164,7 +164,7 @@ gh workflow view sf-release.yml -R "$REPO" --ref "$TAG" --yaml > "$SF_AUDIT_DIR/
 jq -e '.activation.status != "BLOCKED" and .safety.doNotDeployOrClaimGoLive != true' sf/release-target.json
 ~~~
 
-**Esse bloco DEVE falhar no snapshot atual:** sentinel, release-target e ambiente não observados. Não editar os campos só para passar. A integração futura em .github/workflows/sf-release.yml (arquivo do A10), aprovada em PR e testada por A7/A8/A9, deve exigir approval nativo do environment **antes** de emitir Azure OIDC, baixar o artefato por ID e verificar SHA256/assinatura, comparar bytes servidos, checkpoint de dados e teste de rollback em staging, smoke transacional + positivos/negativos reais, testemunhas e cleanup. A retirada do sentinel só é permitida **juntamente com implementação operacional completa e revisão**.
+**Esse bloco DEVE falhar no snapshot atual:** sentinel, release-target e ambiente não observados. Não editar os campos só para passar. **Circularidade de freeze:** se a implementação legítima do release workflow, o release-target ou qualquer input versionado for incorporado depois do primeiro freeze, esse commit anterior NÃO é mais C: integrar por PR revisto, declarar novo C, reexecutar sf-ci 12/12 e todas as provas de staging/Azure/Entra/F04/AM/restore dependentes de C. Só o C final que já contém o workflow completo pode ser promovido. Não promover C antigo usando YAML de branch mais novo. A integração futura em .github/workflows/sf-release.yml (arquivo do A10), aprovada em PR e testada por A7/A8/A9, deve exigir approval nativo do environment **antes** de emitir Azure OIDC, baixar o artefato por ID e verificar SHA256/assinatura, comparar bytes servidos, checkpoint de dados e teste de rollback em staging, smoke transacional + positivos/negativos reais, testemunhas e cleanup. A retirada do sentinel só é permitida **juntamente com implementação operacional completa e revisão**.
 
 Ato do dono, **somente quando AZ-01..07 estiverem PASS em C** e assinatura explícita da promoção existir:
 
@@ -237,7 +237,7 @@ jq --argjson app "$SF_VERIFY_APP_ID" '{
     .parameters.required_status_checks += [{context:"sf/verify",integration_id:$app}]
   else . end]
 }' "$SF_AUDIT_DIR/ruleset.before.json" > "$SF_AUDIT_DIR/ruleset.add.json"
-# OWNER inspeciona diff completo; confirmer updated_at original antes do PUT.
+# OWNER inspeciona diff completo; confirmar updated_at original antes do PUT.
 gh api -X PUT "repos/$REPO/rulesets/$SF_RULESET_ID" --input "$SF_AUDIT_DIR/ruleset.add.json" > "$SF_AUDIT_DIR/ruleset.after-add.json"
 gh api "repos/$REPO/rules/branches/$BRANCH" > "$SF_AUDIT_DIR/effective-rules.after-add.json"
 ~~~
@@ -251,7 +251,7 @@ test -s "$LEGACY_CONTEXTS" || { echo "STOP: owner ainda nao assinou contextos le
 jq -e 'type=="array" and length>0 and all(.[]; type=="string" and .!="sf/verify")' "$LEGACY_CONTEXTS"
 gh api "repos/$REPO/branches/$BRANCH/protection/required_status_checks" > "$SF_AUDIT_DIR/required.before-retire.json"
 jq -e --slurpfile legacy "$LEGACY_CONTEXTS" '
-  all($legacy[0][]; . as $c | [.checks[].context] | index($c)!=null)
+  . as $current | all($legacy[0][]; . as $c | ([$current.checks[].context] | index($c)) != null)
 ' "$SF_AUDIT_DIR/required.before-retire.json"
 jq --slurpfile legacy "$LEGACY_CONTEXTS" '{
   strict:.strict,
