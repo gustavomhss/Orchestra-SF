@@ -406,7 +406,7 @@ export function createSfTransport(options: Readonly<{
       if (!Number.isInteger(response.status) || response.status < 200 || response.status >= 600) return failure(mutating ? "outcome-unknown" : "invalid-response")
       if (response.status === 401 || response.status === 403) clear()
       // A 5xx after submission is not a durable negative mutation receipt.
-      if (mutating && response.status >= 500) return failure("outcome-unknown")
+      if (mutating && response.status >= 500 && operation.operationId !== "reviews.report.prepare") return failure("outcome-unknown")
       const uncertain = mutating && response.status !== 401 && response.status !== 403
       if (isBytes) {
         if (response.status !== 200 || !(response.body instanceof Uint8Array))
@@ -422,6 +422,11 @@ export function createSfTransport(options: Readonly<{
       if (wireDecoded.status !== "ok") return failure(uncertain ? "outcome-unknown" : "invalid-response")
       const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
+      // A typed, explicit report rejection is the producer's result, not a
+      // successful artifact. An inconsistent 5xx success remains uncertain.
+      if (mutating && response.status >= 500 &&
+          (typeof parsedOutput.value !== "object" || parsedOutput.value === null ||
+           !("status" in parsedOutput.value) || parsedOutput.value.status === "ok")) return failure("outcome-unknown")
       if (operation.operationId.startsWith("files.") && stamp && !options.desktop &&
           !await refreshSfFileAuthority(options, stamp, operation.operationId))
         return failure(mutating ? "outcome-unknown" : "contract-unavailable")
@@ -675,7 +680,7 @@ function operationUrl(
     }
     const special = operationId.startsWith("files.") && source
       ? sfFilesSourceQuery(operationId, source) : undefined
-    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload",
+    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload","files.export.review",
       "files.document-open","files.document-scenario-targets"].includes(operationId) && !special)
       return undefined
     if (special) {

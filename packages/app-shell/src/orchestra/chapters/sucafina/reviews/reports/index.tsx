@@ -1,7 +1,9 @@
 import { For, Show, createEffect, createUniqueId, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { usePlatform } from "@/context/platform"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
+import { downloadReviewReport } from "./download"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
@@ -11,28 +13,22 @@ import { reviewReadState, type PreservedReview } from "../preserved/model"
 import "./reports.css"
 
 type Format = "docx" | "pptx"
-type Year = "2024" | "2025" | "2026" | "2027"
-const YEARS: readonly Year[] = ["2024", "2025", "2026", "2027"]
 const key = (value: string) => value as SfCopyKey
 
-/**
- * UI50: the installed source only prepares an HTML Generate Report workspace.
- * The frozen A07 Office codecs are Schema.Never and return contract-unavailable.
- * Never convert that response to a download or fabricate a success receipt.
- */
 export function SfReportsView(props: SfSurfaceProps<"UI50">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const platform = usePlatform()
   const uid = createUniqueId()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [store, setStore] = createStore({
     readState: "loading" as SfUiState,
     review: undefined as PreservedReview | undefined,
     selected: [] as string[],
-    year: "2026" as Year,
     format: "docx" as Format,
-    title: "",
     operationState: "idle" as "idle" | "preparing" | "unavailable" | "outcome-unknown",
+    operationReason: "",
+    gaps: [] as string[],
     retry: 0,
   })
   let requestAbort: AbortController | undefined
@@ -41,10 +37,11 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     owner.generation() === generation && owner.state().status === "ready" && owner.state().ownerKey === ownerKey
   const exportAdmitted = () => {
     const access = owner.ready()
-    const id = store.format === "docx" ? "reviews.export.docx" : "reviews.export.pptx"
-    return access?.context.availability.some((resource) =>
+    return !!access?.context.availability.some((resource) =>
       resource.family === "reviews" && resource.resource === "report-export" &&
-      resource.operations.some((item) => item.operationId === id && item.state === "ready")) ?? false
+      resource.operations.some((item) => item.operationId === "reviews.report.prepare" && item.state === "ready" && item.operational)) &&
+      !!access?.context.availability.some((resource) => resource.family === "files" && resource.resource === "exports" &&
+        resource.operations.some((item) => item.operationId === "files.export.review" && item.state === "ready" && item.operational))
   }
   createEffect(() => {
     const generation = owner.generation()
@@ -53,30 +50,32 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     const controller = new AbortController()
     requestAbort?.abort()
     setStore({
-      review: undefined, selected: [], operationState: "idle",
+      review: undefined, selected: [], operationState: "idle", operationReason: "", gaps: [],
       readState: state.status === "denied" ? "denied"
         : state.status === "unauthenticated" ? "session-expired"
         : state.status === "context-mismatch" ? "invalid"
         : state.status === "ready" || state.status === "resolving" ? "loading" : "unavailable",
     })
     if (state.status === "ready" && access && reviewRef) {
+      const stamp = JSON.stringify(access.context.stamp)
+      const currentRead = () => !controller.signal.aborted && sameOwner(generation, state.ownerKey) &&
+        owner.ready()?.transport === access.transport && JSON.stringify(owner.ready()?.context.stamp) === stamp
       void (async () => {
         try {
           const result = await createSfReviewsClient(access.transport)["dashboard.dashboard-review"](
             { id: reviewRef }, { signal: controller.signal },
           )
-          if (controller.signal.aborted || !sameOwner(generation, state.ownerKey)) return
+          if (!currentRead()) return
           if (result.kind === "response" && result.body.status === "ok") {
             const value = result.body.value
             if (value.id !== reviewRef) { setStore("readState", "invalid"); return }
-            const topics = value.sections.map((section) => section.title)
-            const valid = topics.length <= 40 && new Set(topics).size === topics.length &&
-              topics.every((topic) => !!topic.trim() && topic.length <= 120)
-            const year = YEARS.find((candidate) => candidate === value.sections[0]?.period.start.slice(0, 4)) ?? store.year
-            setStore({ review: value, readState: "ready", selected: valid ? topics : [], year })
+            const sections = value.sections.map((section) => section.id)
+            const valid = sections.length <= 40 && new Set(sections).size === sections.length &&
+              sections.every((id) => !!id.trim() && id.length <= 16384)
+            setStore({ review: value, readState: "ready", selected: valid ? sections : [] })
           } else setStore({ review: undefined, readState: reviewReadState(result) })
         } catch (error) {
-          if (controller.signal.aborted || !sameOwner(generation, state.ownerKey)) return
+          if (!currentRead()) return
           console.error("Sucafina report source read failed", error instanceof Error ? error.name : "unknown")
           setStore({ review: undefined, readState: "unavailable" })
         }
@@ -86,34 +85,57 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
   })
   const validSelection = () => !!store.review && store.selected.length >= 1 &&
     store.selected.length <= 40 && new Set(store.selected).size === store.selected.length &&
-    store.selected.every((topic) => !!topic.trim() && topic.length <= 120 &&
-      store.review!.sections.some((section) => section.title === topic)) &&
-    store.title.length <= 200
+    store.selected.every((id) => !!id.trim() && id.length <= 16384 &&
+      store.review!.sections.some((section) => section.id === id))
   const requestReport = async () => {
     const access = owner.ready(), state = owner.state()
     if (!access || state.status !== "ready" || !exportAdmitted() || !validSelection() ||
         store.operationState === "preparing" || store.operationState === "outcome-unknown") return
     const generation = owner.generation(), ownerKey = state.ownerKey
+    const stamp = JSON.stringify(access.context.stamp)
+    const format = store.format, reviewRef = store.review!.id, sectionRefs = [...store.selected]
     requestAbort?.abort()
     const controller = new AbortController()
     requestAbort = controller
-    const input = { year: store.year, topic: [...store.selected], ...(store.title ? { title: store.title } : {}) }
-    setStore("operationState", "preparing")
+    const current = () => {
+      const next = owner.ready()
+      return !controller.signal.aborted && sameOwner(generation, ownerKey) && !!next &&
+        next.transport === access.transport && JSON.stringify(next.context.stamp) === stamp && exportAdmitted()
+    }
+    setStore({ operationState: "preparing", operationReason: "", gaps: [] })
     try {
       const client = createSfReviewsClient(access.transport)
-      if (store.format === "docx") {
-        await client["reviews.export.docx"](input, { signal: controller.signal })
-      } else {
-        await client["reviews.export.pptx"](input, { signal: controller.signal })
+      const result = await client["reviews.report.prepare"]({ reviewRef, sectionRefs, format },
+        { signal: controller.signal, idempotencyKey: crypto.randomUUID() })
+      if (!current()) return
+      if (result.kind !== "response") {
+        setStore({ operationState: result.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable", operationReason: result.reason })
+        return
       }
-      if (controller.signal.aborted || !sameOwner(generation, ownerKey)) return
-      // Both frozen A07 methods return contract-unavailable. A navigation or
-      // future JSON response still cannot be interpreted as Office bytes.
-      setStore("operationState", "unavailable")
+      if (result.body.status !== "ok") {
+        setStore({ operationState: "unavailable", operationReason: result.body.status + ": " + result.body.reason })
+        return
+      }
+      const prepared = result.body
+      if (result.status !== 200 || prepared.result.reviewSelectionRef !== reviewRef ||
+          prepared.result.orderedResultRefs.length !== 1 || prepared.result.orderedResultRefs[0] !== prepared.outputRef ||
+          !/^report:[a-f0-9]{64}$/.test(prepared.outputRef) ||
+          prepared.receipt.operation !== "sf_report_prepare" ||
+          prepared.receipt.accessRevision !== access.context.stamp.accessRevision ||
+          prepared.receipt.principalRef !== access.context.stamp.principalRef ||
+          prepared.result.coverage.length !== sectionRefs.length ||
+          prepared.result.coverage.some((item, index) => item.sectionRef !== sectionRefs[index])) {
+        setStore({ operationState: "unavailable", operationReason: "contract-mismatch" })
+        return
+      }
+      setStore("gaps", prepared.result.gaps.map((gap) => gap.reason))
+      await downloadReviewReport({ transport: access.transport, artifactRef: prepared.outputRef, format,
+        signal: controller.signal, current, downloadResponse: platform.downloadResponse })
+      if (current()) setStore("operationState", "idle")
     } catch (error) {
-      if (controller.signal.aborted || !sameOwner(generation, ownerKey)) return
+      if (!current()) return
       console.error("Sucafina Office report preparation failed", error instanceof Error ? error.name : "unknown")
-      setStore("operationState", "unavailable")
+      setStore({ operationState: "unavailable", operationReason: "" })
     }
   }
   onCleanup(() => requestAbort?.abort())
@@ -140,6 +162,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
             <div class="sf-n28-form">
               <label class="sf-n28-field" for={uid + "-format"}>{t("sf.u33.format")}
                 <select id={uid + "-format"} value={store.format}
+                  disabled={store.operationState === "preparing" || store.operationState === "outcome-unknown"}
                   onChange={(event) => {
                     setStore("format", event.currentTarget.value === "pptx" ? "pptx" : "docx")
                     setStore("operationState", "idle")
@@ -148,18 +171,8 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
                   <option value="pptx">{t("sf.u33.pptx")}</option>
                 </select>
               </label>
-              <label class="sf-n28-field" for={uid + "-year"}>{t("sf.u33.year")}
-                <select id={uid + "-year"} value={store.year} onChange={(event) => {
-                  const next = YEARS.find((year) => year === event.currentTarget.value)
-                  if (next) { setStore("year", next); setStore("operationState", "idle") }
-                }}><For each={YEARS}>{(year) => <option value={year}>{year}</option>}</For></select>
-              </label>
               <label class="sf-n28-field" for={uid + "-title"}>{t("sf.u33.title")}
-                <input id={uid + "-title"} maxlength="200" value={store.title}
-                  onInput={(event) => {
-                    setStore("title", event.currentTarget.value)
-                    setStore("operationState", "idle")
-                  }} />
+                <input id={uid + "-title"} value={`Review ${review().id}`} readOnly />
               </label>
             </div>
             <section class="sf-n28-section" aria-label={t("sf.u33.contents")}>
@@ -168,14 +181,14 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
               <ul class="sf-n28-items">
                 <For each={review().sections}>{(section) => <li class="mx-card" data-section-id={section.id} data-source-record-count={section.count}>
                   <label>
-                    <input type="checkbox" checked={store.selected.includes(section.title)}
+                    <input type="checkbox" checked={store.selected.includes(section.id)}
                       disabled={store.operationState === "preparing" || store.operationState === "outcome-unknown" ||
-                        section.title.length > 120}
+                        section.id.length > 16384}
                       onChange={(event) => {
-                        const title = section.title, checked = event.currentTarget.checked
-                        setStore("selected", (items) => checked
-                          ? items.includes(title) ? items : [...items, title]
-                          : items.filter((item) => item !== title))
+                        const selected = new Set(store.selected)
+                        if (event.currentTarget.checked) selected.add(section.id)
+                        else selected.delete(section.id)
+                        setStore("selected", review().sections.map((item) => item.id).filter((id) => selected.has(id)))
                         setStore("operationState", "idle")
                       }} />
                     <span> {t("sf.u33.include")}: <strong>{section.title}</strong></span>
@@ -199,10 +212,11 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
             </section>
             <section class="sf-n28-section" aria-label={t("sf.u33.download")}>
               <h2>{t("sf.u33.download")}</h2>
-              <Show when={true /* A07 has no real Office bytes, regardless of host readiness */}>
+              <Show when={!exportAdmitted() || store.operationState === "unavailable"}>
                 <p role="status" data-sf-file-unavailable>{t("sf.u33.notAvailable")}</p>
-                <p>{t("sf.u33.noReceipt")}</p>
+                <Show when={store.operationReason}><p>{store.operationReason}</p></Show>
               </Show>
+              <For each={store.gaps}>{(gap) => <p>{gap}</p>}</For>
               <Show when={store.operationState === "preparing"}>
                 <p role="status" aria-live="polite">{t("sf.u33.preparing")}</p>
               </Show>

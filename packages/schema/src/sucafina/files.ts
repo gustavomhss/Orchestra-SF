@@ -296,6 +296,13 @@ export const SfFilesExportMembers = {
   input: Schema.Struct({ surface: Schema.Literal("dashboard") }),
   output: SfFilesDownloadBytes,
 } as const
+export const SfFilesExportReview = {
+  operationId: "files.export.review",
+  input: Schema.Struct({ surface: Schema.Literal("dashboard"),
+    artifactRef: Schema.String.check(Schema.isPattern(/^report:[a-f0-9]{64}$/)) })
+    .annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: SfFilesDownloadBytes,
+} as const
 
 export const SfFiles = {
   operations: {
@@ -325,6 +332,7 @@ export const SfFiles = {
     "files.export.register": SfFilesExportRegister,
     "files.export.json": SfFilesExportJson,
     "files.export.members": SfFilesExportMembers,
+    "files.export.review": SfFilesExportReview,
   },
 } as const
 

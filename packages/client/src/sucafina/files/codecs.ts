@@ -49,6 +49,6 @@ const entries = Object.entries(SfFiles.operations).map(([operationId, source]) =
   return [operationId, result] as const
 })
 
-if (entries.length !== 26 || new Set(entries.map(([id]) => id)).size !== 26)
+if (entries.length !== 27 || new Set(entries.map(([id]) => id)).size !== 27)
   throw new Error("SF_A06_SOURCE_CATALOG_MISMATCH")
 export const SfFilesOperationBindings: SfOperationBindings = Object.freeze(Object.fromEntries(entries))

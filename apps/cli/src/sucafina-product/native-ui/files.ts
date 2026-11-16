@@ -16,6 +16,7 @@ export type SfFilesHostSources = Readonly<{
   documents?: SfFilesExistingProducer
   documentScenarios?: SfFilesExistingProducer
   application?: SfFilesExistingProducer
+  reviews?: SfFilesExistingProducer
 }>
 
 const failUnavailable = () => Response.json(
@@ -74,5 +75,6 @@ export function createSfFilesHostBindings(input: SfFilesHostSources) {
     "files.export.register": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.export.json": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.export.members": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
+    "files.export.review": (request: Request, surface: SfFilesSurface) => through(input.reviews, request, surface),
   } satisfies Record<SfFilesOperationId, SfFilesExistingProducer>)
 }
