@@ -299,6 +299,8 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
         Object.values(state.cases).filter((entry) => entry.participants.includes(authority.principalRef))
           .map((entry) => encodeCaseRef(entry)))
       if (listed.status === "ok") {
+        // Context observations must not fan out over an unbounded case set.
+        if (expected && listed.value.length > 10) return failure(request, "unavailable")
         const items = await Promise.all(listed.value.map(async (caseRef) => {
           const selection = { caseRef }
           const other = await runtime.ui.admit(request, "sf_case_read", digestSfValue(selection))
