@@ -1,0 +1,25 @@
+{
+  "schema": "sf2h.ci214.causal-inert-client-mime.v1",
+  "mission": 214,
+  "source_candidate_W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+  "source_tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+  "run_id": 43781269811,
+  "job_id": 133018763437,
+  "selection": "test/sucafina/transport-type-repair/f02-transport.test.ts",
+  "failure": "B14 5 pass / 1 fail: exact Response.json header expected application/json vs observed application/json;charset=utf-8",
+  "cause": "The test's own stub uses Response.json, which emits charset=utf-8; other desktop fixture header expectations are unchanged.",
+  "source_path": "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts",
+  "source_preblob": "6f470dcc23300873223ec2c01bb7d36c6a5c23ea",
+  "source_postblob": "fef5c0a8702ffde3921a7cd65829cfba9259716d",
+  "complete_inert_postimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/inert/client-f02-transport.test.ts.txt",
+  "transformation": {
+    "old": "kind: \"response\", status: 503,\n      headers: { \"content-type\": \"application/json\" },\n      body: { status: \"unavailable\" }",
+    "new": "kind: \"response\", status: 503,\n      headers: { \"content-type\": \"application/json;charset=utf-8\" },\n      body: { status: \"unavailable\" }",
+    "count": 1,
+    "assertion_weakened": false
+  },
+  "consumer": "211 on sf-closure-bundle PR191 after preblob verification",
+  "state": "SOURCE_PAYLOAD_PREPARED_NOT_COMPOSED_NOT_TESTED",
+  "no_local_execution": true,
+  "GLOBAL_RELEASE": false
+}
