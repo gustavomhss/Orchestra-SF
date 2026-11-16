@@ -169,7 +169,9 @@ export function createSfDecisionsProjectionHandlers(deps: SfNativeHostDependenci
 }
 
 /** Installed list infrastructure only, not per-case authorization or list completeness. */
-export async function observeSfCases(deps: SfNativeHostDependencies, request: Request, stamp: SfContextStamp) {
+export async function observeSfCases(deps: SfNativeHostDependencies, handlers: readonly SfProjectionHandler[], request: Request, stamp: SfContextStamp) {
+  const ids = (["projection.cases", "projection.case"] as const).filter((id) => handlers.some((handler) => handler.operationId === id))
+  if (!ids.length) return []
   if (!await observeSfCaseSource(deps.runtime(), request, stamp)) return []
-  return [{ operationId: "projection.cases" as const, state: "ready" as const, reason: null, operational: true as const }]
+  return ids.map((operationId) => ({ operationId, state: "ready" as const, reason: null, operational: true as const }))
 }

@@ -19,6 +19,7 @@ test("original draft predicate keeps visibility, ownership, roles and stage sepa
   expect(Schema.is(SfProcurementRequest)(record)).toBe(true)
   expect(Schema.is(SfProcurementRequest)({ ...record, allowedDraftActions: ["save-pr"] })).toBe(true)
   expect(Schema.is(SfProcurementRequest)({ ...record, allowedDraftActions: ["forged"] })).toBe(false)
+  expect(Object.hasOwn(Schema.encodeSync(SfProcurementRequest)({ ...record, allowedDraftActions: undefined }), "allowedDraftActions")).toBe(false)
 })
 
 test("actual native request projection emits source-stamped draft capabilities", async () => {

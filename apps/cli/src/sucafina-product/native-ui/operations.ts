@@ -59,7 +59,7 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfOpe
     const environment = await deps.application.environment(request)
     const now = new Date(environment.at)
     if (!Number.isFinite(now.getTime())) return unavailable("domain-environment-invalid")
-    const year = selected[cap === "CAP11" ? "opsYear" : "secYear"] ?? selected.own ?? Math.min(2027, Math.max(2024, now.getFullYear()))
+    const year = selected[cap === "CAP11" ? "opsYear" : "secYear"] ?? selected.own ?? selected.year ?? Math.min(2027, Math.max(2024, now.getFullYear()))
     const month = selected[cap === "CAP11" ? "operationsMonth" : "securityMonth"] ?? selected.month ?? now.getMonth() + 1
     const outcome = await deps.application.persistence.transaction("dashboard", async (snapshot) => {
       const principal = await deps.application.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })

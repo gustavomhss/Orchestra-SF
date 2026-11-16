@@ -21,8 +21,9 @@ test("mounted operations pages use real source views and fence actor, stamp and 
     await store.initializeSources("dashboard")
     await store.transaction("dashboard", async (snapshot) => {
       snapshot.data.opsCats = ["IT Operations"]
-      snapshot.data.opsTickets = [{ year: 2026, month: 11, "IT Operations|Incidents|Open": 5, "IT Operations|Incidents|Closed": 2 }]
-      snapshot.data.secKpi = [{ year: 2026, month: 11, training: 80 }]
+      snapshot.data.opsTickets = [{ year: 2026, month: 11, "IT Operations|Incidents|Open": 5, "IT Operations|Incidents|Closed": 2 },
+        { year: 2024, month: 11, "IT Operations|Incidents|Open": 4 }]
+      snapshot.data.secKpi = [{ year: 2026, month: 11, training: 80 }, { year: 2024, month: 11, training: 40 }]
       snapshot.versions["ops:2026-11"] = { version: 2, by: "person" }
       snapshot.versions["security:2026-11"] = { version: 3, by: "person" }
       return { commit: true, value: null }
@@ -71,6 +72,14 @@ test("mounted operations pages use real source views and fence actor, stamp and 
     const security = await call("CAP12", "?secYear=2026&securityMonth=11")
     expect(security.status).toBe(200)
     expect(await security.json()).toMatchObject({ status: "ok", value: { versions: { "security:2026-11": 3 }, data: { secKpi: [{ training: 80 }] } } })
+    const ops2024 = await call("CAP11", "?year=2024&month=11")
+    expect(ops2024.status).toBe(200)
+    expect(await ops2024.json()).toMatchObject({ value: { selection: { year: 2024 }, data: { opsTickets: [{ year: 2024, "IT Operations|Incidents|Open": 4 }] } } })
+    const security2024 = await call("CAP12", "?year=2024&month=11")
+    expect(security2024.status).toBe(200)
+    expect(await security2024.json()).toMatchObject({ value: { selection: { year: 2024 }, data: { secKpi: [{ year: 2024, training: 40 }] } } })
+    const specificYear = await call("CAP11", "?year=2024&own=2025&opsYear=2026&month=11")
+    expect((await specificYear.json()).value.selection.year).toBe(2026)
     expect((await call("CAP11", "?secYear=2026")).status).toBe(400)
     expect((await call("CAP11", "?month=13")).status).toBe(400)
     expect((await call("CAP12", "?month=1&month=2")).status).toBe(400)
