@@ -13,7 +13,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
 import {
-  SECURITY_CAMPAIGN_FIELDS, SECURITY_COLLECTIONS, SECURITY_CONSEQUENCES,
+  SECURITY_CAMPAIGN_FIELDS, SECURITY_CONSEQUENCES,
   SECURITY_DEPARTMENT_FIELDS, SECURITY_INCIDENT_FLAGS, SECURITY_KPI_FIELDS,
   SECURITY_MONTHS, SECURITY_OPERATION_IDS, SECURITY_YEARS,
   securityActions, securityCampaigns, securityIncidents, securityKpi,
@@ -286,15 +286,16 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       ? { kind: "record", recordRef: ref(id) }
       : { kind: "new", newIntentRef: intent("u29:" + scope) }
     const initial = initialForm(page, entity, id)
-    const rowSet = SECURITY_COLLECTIONS[entity]
+    const row = id ? securityRow(page, entity, id) : undefined
     try {
       draft = active.drafts.acquire({
         surfaceId: "CAP12", identity, editScopeKey: scope, baseVersion: version,
         base: initial, value: initial,
         revalidation: {
           operationId: "domain.page.CAP12",
-          input: { secYear: page.selection.year, securityMonth: page.selection.month },
-          fieldPaths: id ? [rowSet] : [],
+          input: { ...(state.year === undefined ? {} : { secYear: state.year }),
+            ...(state.month === undefined ? {} : { securityMonth: state.month }) },
+          fieldPaths: row ? Object.keys(initial).filter((field) => Object.hasOwn(row, field)) : [],
           actionIds: [command],
         },
       })
