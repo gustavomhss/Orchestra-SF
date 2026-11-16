@@ -98,8 +98,7 @@ def checkpoint(a):
     home = STATE / "home"
     destination = output_dir(a.output_dir)
     subprocess.run(["systemctl", "stop", "orchestra-sf.service"], check=True)
-    if subprocess.check_output(["systemctl", "is-active", "orchestra-sf.service"],
-                               text=True).strip() == "active":
+    if subprocess.run(["systemctl", "is-active", "--quiet", "orchestra-sf.service"]).returncode == 0:
         refuse("still writing after stop")
     dbs = sqlite_integrity(home)
     name = "checkpoint-" + a.candidate + "-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -159,6 +158,10 @@ def verify_clone(a):
     if target != Path("/mnt/orchestra-sf-restore") or target.is_symlink() or not target.is_dir() or \
        target.stat().st_uid != 0 or target.stat().st_mode & 0o077 or list(target.iterdir()):
         refuse("only empty root-owned 0700 /mnt/orchestra-sf-restore permitted")
+    archive = Path(a.archive)
+    astat = archive.lstat()
+    if not stat.S_ISREG(astat.st_mode) or archive.is_symlink() or astat.st_uid != 0 or astat.st_mode & 0o077:
+        refuse("clone recovery archive must be a root-owned 0600 regular file")
     checkpoint = private_json(Path(a.receipt))
     if checkpoint.get("schema") != "orchestra-sf.azure-checkpoint.v1" or \
        checkpoint.get("archiveSha256") != digest(Path(a.archive)) or \
@@ -186,10 +189,10 @@ def verify_clone(a):
                     out.flush()
                     os.fsync(out.fileno())
     dbs = sqlite_integrity(target / "home")
-    before = {i["relativePath"] for i in checkpoint["sqlite"]}
-    after = {i["relativePath"] for i in dbs}
+    before = {i["relativePath"]: i["sha256"] for i in checkpoint["sqlite"]}
+    after = {i["relativePath"]: i["sha256"] for i in dbs}
     if before != after:
-        refuse("restored database inventory differs")
+        refuse("restored SQLite file digests/inventory differ")
     print(json.dumps({"proofClass": "CLONE_FILE_RESTORE_INTEGRITY_ONLY", "candidateSha": checkpoint["candidateSha"],
                       "sourceArchiveSha256": checkpoint["archiveSha256"], "dbCount": len(dbs),
                       "businessReadWrite": "NOT_RUN", "azureRestoreJob": "NOT_VERIFIED_HERE",
