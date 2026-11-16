@@ -1,6 +1,6 @@
 import type { Application } from "../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
-import { Either, Schema } from "effect"
+import { Option, Schema } from "effect"
 import { SfIntelligenceMemorySimilarCases } from "@orchestra/schema/sucafina/memory"
 import type { createSfSimilarCases217 } from "../../../../modules/sucafina/Sucafinav1/product/memory/similarity217.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
@@ -60,9 +60,9 @@ export function createSfMemoryHttp(input: {
         const raw = await boundedBody(request)
         if (!raw) return respond({ status: "needs-input", reason: "invalid-similar-cases-request" })
         const candidate: unknown = JSON.parse(raw)
-        const parsed = Schema.decodeUnknownEither(SfIntelligenceMemorySimilarCases.input)(candidate)
-        if (Either.isLeft(parsed)) return respond({ status: "needs-input", reason: "invalid-similar-cases-selection" })
-        const payload = parsed.right
+        const parsed = Schema.decodeUnknownOption(SfIntelligenceMemorySimilarCases.input)(candidate)
+        if (Option.isNone(parsed)) return respond({ status: "needs-input", reason: "invalid-similar-cases-selection" })
+        const payload = parsed.value
         const caseRef = memoryCaseRef({ id: payload.caseId, incarnation: payload.incarnation, version: payload.version })
         if (!caseRef) return respond({ status: "needs-input", reason: "invalid-memory-case" })
         const operation = "sf-human:analysis.read"
