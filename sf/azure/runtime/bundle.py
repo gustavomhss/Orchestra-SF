@@ -62,8 +62,10 @@ def manifest(raw, candidate, tree):
         index[name] = item
     if not {"bin/orchestra", "web/index.html", "factory/installation.mjs"} <= index.keys():
         refuse("real ELF CLI, Web entry or trusted factory missing")
-    if index["bin/orchestra"]["mode"] != "0555" or not any(x.startswith("omni/") for x in index):
-        refuse("CLI executable/Omni Linux payload not present")
+    if index["bin/orchestra"]["mode"] != "0555" or not {"bin/hugr_omni.node", "bin/hugr-omni-supervisor"} <= index.keys():
+        refuse("real CLI and pinned Omni addon/supervisor are mandatory")
+    if index["bin/hugr-omni-supervisor"]["mode"] != "0555":
+        refuse("Omni supervisor must be executable")
     return doc, index
 
 
@@ -93,10 +95,11 @@ def verify_release(folder, candidate, tree, archive_sha):
         refuse("installed file missing")
     if (folder / ".archive-sha256").read_text().strip() != archive_sha:
         refuse("archive digest receipt differs")
-    with (folder / "bin/orchestra").open("rb") as handle:
-        elf = handle.read(20)
-    if len(elf) < 20 or elf[:4] != b"\x7fELF" or elf[4:6] != b"\x02\x01" or elf[18:20] != b"\x3e\x00":
-        refuse("compiled CLI is not ELF 64-bit little-endian x86_64")
+    for native in ("bin/orchestra", "bin/hugr_omni.node", "bin/hugr-omni-supervisor"):
+        with (folder / native).open("rb") as handle:
+            elf = handle.read(20)
+        if len(elf) < 20 or elf[:4] != b"\x7fELF" or elf[4:6] != b"\x02\x01" or elf[18:20] != b"\x3e\x00":
+            refuse(native + " is not ELF64 Linux x86_64")
     return index
 
 
