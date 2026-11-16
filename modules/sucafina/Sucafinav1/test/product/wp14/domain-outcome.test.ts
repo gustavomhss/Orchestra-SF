@@ -22,6 +22,7 @@ import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidence
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext, TrustedUiLease } from "../../../product/contracts/sf-execution.ts"
+import type { SfProductState, SfStateAuthority, SfStateNamespace } from "../../../product/contracts/state.ts"
 
 const period = { start: "2027-01-01", end: "2027-01-31" }
 const call: TrustedDomainContext = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "finance", requestId: "r", policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease }
@@ -60,10 +61,40 @@ test("review outcome reads the actual closed Planner month and rechecks its C08 
     const selection = { caseRef, choiceId: "choice", criterionRef: "cost", valueId: "line:1:actual-usd", period, evidenceRefs: [ref] }
     expect((await registry.register(selection, call)).status).toBe("unavailable")
     session.approved = true
-    expect((await registry.register(selection, call)).status).toBe("ok")
+    const registered = await registry.register(selection, call)
+    expect(registered.status).toBe("ok")
+    if (registered.status !== "ok") throw new Error("Outcome selection was not registered")
+    const selectionRef = registered.selectionRef
+    expect(selectionRef).toMatch(/^[a-f0-9]{64}$/)
     const preferences = await state.read(host.requestFor(call)!, "preferences", (value) => Object.keys(value.preferences).filter((key) => key.startsWith(SF_OUTCOME_SELECTION_PREFIX)))
     expect(preferences.status).toBe("ok")
     if (preferences.status !== "ok" || !preferences.value[0]) return
+    expect(preferences.value[0]).toBe(SF_OUTCOME_SELECTION_PREFIX + selectionRef)
+    expect(await registry.readReference(selectionRef, call)).toEqual(selection)
+    expect(await registry.readReference(SF_OUTCOME_SELECTION_PREFIX + selectionRef, call)).toBeUndefined()
+    expect(await registry.readReference("A".repeat(64), call)).toBeUndefined()
+    const otherRef = (selectionRef[0] === "0" ? "1" : "0") + selectionRef.slice(1)
+    expect(await registry.readReference(otherRef, call)).toBeUndefined()
+    expect(await registry.readReference(selectionRef, { ...call, binding: { ...call.binding, principalRef: "other" } })).toBeUndefined()
+    const wrongKey = createSfOutcomeSelectionRegistry({ ...registryInput, state: { ...state,
+      read: <T>(request: Request, namespace: SfStateNamespace, reader: (value: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
+        state.read(request, namespace, (value, authority) => reader(namespace === "preferences" ? { ...value,
+          preferences: { ...value.preferences, [SF_OUTCOME_SELECTION_PREFIX + otherRef]: value.preferences[SF_OUTCOME_SELECTION_PREFIX + selectionRef] } } : value, authority)),
+    } })
+    expect(await wrongKey.readReference(otherRef, call)).toBeUndefined()
+    let reads = 0
+    const changing = createSfOutcomeSelectionRegistry({ ...registryInput, state: { ...state,
+      read: async <T>(request: Request, namespace: SfStateNamespace, reader: (value: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) => {
+        const result = await state.read(request, namespace, reader)
+        if (namespace === "preferences" && ++reads === 4 && result.status === "ok") return { ...result, storageVersion: result.storageVersion + 1 }
+        return result
+      },
+    } })
+    expect(await changing.readReference(selectionRef, call)).toBeUndefined()
+    expect(reads).toBe(4)
+    const afterReference = await state.read(host.requestFor(call)!, "preferences", (value) => value.preferences[preferences.value[0]!])
+    expect(afterReference.status).toBe("ok")
+    if (afterReference.status === "ok") expect(afterReference.storageVersion).toBe(preferences.storageVersion)
     const forged = await state.transaction(host.requestFor(call)!, { namespace: "preferences", expectedStorageVersion: preferences.storageVersion, targetRef: encodeCaseRef(caseRef), targetIncarnation: caseRef.incarnation, idempotencyKey: "forged-outcome", commandDigest: digestSfValue("forged") }, async (value) => { delete value.preferences[preferences.value[0]!]; return { commit: true, value: true } })
     expect(forged.status).toBe("denied")
     for (const mutation of ["binding", "abort", "request", "alias"] as const) {
@@ -218,7 +249,9 @@ test("review outcome reads the actual closed Planner month and rechecks its C08 
     expect((await review({ caseRef, choiceId: "choice" }, call)).status).toBe("ready")
     await persistence.transaction("planner", async (snapshot) => { const versions = snapshot.data.versions as { lines: { a: (number | null)[] }[] }[]; versions[0]!.lines[0]!.a[0] = 41000; return { commit: true, value: true } })
     expect((await review({ caseRef, choiceId: "choice" }, call)).status).toBe("unavailable")
+    expect(await registry.readReference(selectionRef, call)).toBeUndefined()
     session.active = false
     expect((await review({ caseRef, choiceId: "choice" }, call)).status).toBe("unavailable")
+    expect(await registry.readReference(selectionRef, call)).toBeUndefined()
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

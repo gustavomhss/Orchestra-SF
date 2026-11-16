@@ -73,6 +73,10 @@ Na seção **Explain a forecast** de um caso, escolha duas fontes de previsão d
 
 Quando houver um resultado, abra suas fontes e detalhes para entender a contribuição. A contribuição é uma proposta para revisão; **Accept contribution** registra sua aceitação no caso com o motivo informado, não aplica valores no Planner. Se a análise ficar indisponível, desatualizada ou perder acesso à fonte, confira as fontes e o estado atual antes de tentar novamente.
 
+Um link para um resultado observado abre a seleção já registrada e consulta novamente o caso, a escolha e as fontes com seu acesso atual. Abrir o link não cria nem altera a seleção. Se ela estiver desatualizada ou indisponível, volte à decisão para revisar suas fontes.
+
+A consulta de resultado aceita o seletor original de caso e escolha ou `selectionRef` (64 caracteres hexadecimais minúsculos), mas não ambos. A referência identifica a seleção salva; não concede acesso por si só.
+
 Essa opção depende de duas fontes de Planner anexadas ao caso e de um modelo disponível. Se o formulário não aparecer, continue usando a comparação normal no Planner ou confira as fontes do caso e o acesso disponível.
 
 Enquanto o início de uma análise estiver sem confirmação, as seleções e o modelo ficam preservados para repetir a mesma tentativa. Falhas transitórias na atualização do histórico conservam o resultado aberto e a justificativa digitada. Um resultado desatualizado deixa de poder ser aceito; uma revogação de acesso remove o conteúdo anterior.

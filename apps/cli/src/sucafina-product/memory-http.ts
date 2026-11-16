@@ -81,11 +81,14 @@ export function createSfMemoryHttp(input: {
       }
 
       if (request.method !== "GET") return respond({ status: "needs-input", reason: "invalid-memory-read" })
-      const keys = route === "memory-catalog" ? ["sf"] : ["sf", "caseId", "incarnation", "version", ...(route === "memory-materiality" ? ["conditionId"] : []), ...(route === "memory-outcome" ? ["choiceId"] : [])]
+      const byReference = route === "memory-outcome" && url.searchParams.has("selectionRef")
+      const keys = route === "memory-catalog" ? ["sf"] : byReference ? ["sf", "selectionRef"] : ["sf", "caseId", "incarnation", "version", ...(route === "memory-materiality" ? ["conditionId"] : []), ...(route === "memory-outcome" ? ["choiceId"] : [])]
       if (keys.some((key) => url.searchParams.getAll(key).length !== 1) || [...url.searchParams.keys()].some((key) => !keys.includes(key)))
         return respond({ status: "needs-input", reason: "invalid-memory-read" })
+      const selectionRef = byReference ? url.searchParams.get("selectionRef") : null
+      if (byReference && (!selectionRef || !/^[a-f0-9]{64}$/.test(selectionRef))) return respond({ status: "needs-input", reason: "invalid-memory-read" })
       const caseRef = memoryCaseRef({ id: url.searchParams.get("caseId"), incarnation: url.searchParams.get("incarnation"), version: Number(url.searchParams.get("version")) })
-      if (route !== "memory-catalog" && !caseRef) return respond({ status: "needs-input", reason: "invalid-memory-case" })
+      if (route !== "memory-catalog" && !byReference && !caseRef) return respond({ status: "needs-input", reason: "invalid-memory-case" })
       const payload = Object.fromEntries(url.searchParams)
       const operation = "sf-human:analysis.read"
       const digest = digestSfValue(payload)
@@ -93,13 +96,21 @@ export function createSfMemoryHttp(input: {
       if (admitted.status !== "ok") return respond(admitted)
       try {
         if (!await input.authority.ui.validate(admitted.value, operation, digest)) return respond({ status: "denied", reason: "memory-authority-unavailable" })
-        const read = async () => ({ status: "ok" as const, value: route === "memory-conditions" ? await input.memory.conditions(caseRef!, admitted.value)
-          : route === "memory-signals" ? await input.memory.signals(caseRef!, admitted.value)
-          : route === "memory-materiality" ? await input.memory.materiality(caseRef!, url.searchParams.get("conditionId")!, admitted.value)
-          : await input.memory.outcomes({ caseRef: caseRef!, choiceId: url.searchParams.get("choiceId")! }, admitted.value) })
+        const selection = selectionRef ? await input.memory.outcomeSelections.readReference(selectionRef, admitted.value) : undefined
+        if (byReference && !selection) return respond({ status: "unavailable", reason: "memory-selection-source-unavailable" })
+        const selectedCase = selection?.caseRef ?? caseRef
+        const read = async () => ({ status: "ok" as const, value: route === "memory-conditions" ? await input.memory.conditions(selectedCase!, admitted.value)
+          : route === "memory-signals" ? await input.memory.signals(selectedCase!, admitted.value)
+          : route === "memory-materiality" ? await input.memory.materiality(selectedCase!, url.searchParams.get("conditionId")!, admitted.value)
+          : await input.memory.outcomes({ caseRef: selectedCase!, choiceId: selection?.choiceId ?? url.searchParams.get("choiceId")! }, admitted.value) })
         const scoped = route === "memory-catalog" ? { status: "ok" as const, value: { status: "ok", value: input.memory.catalog } }
-          : await input.withCase(admitted.value, caseRef!, {}, read)
+          : await input.withCase(admitted.value, selectedCase!, {}, read)
         const result = scoped.status === "ok" ? scoped.value : scoped
+        if (selectionRef) {
+          const current = await input.memory.outcomeSelections.readReference(selectionRef, admitted.value)
+          if (!current || digestSfValue(current) !== digestSfValue(selection))
+            return respond({ status: "unavailable", reason: "memory-selection-source-unavailable" })
+        }
         return await input.authority.host.revalidate(admitted.value) ? respond(result) : respond({ status: "denied", reason: "memory-authority-unavailable" })
       } finally { input.authority.ui.finish(admitted.value) }
     } catch { return respond({ status: "unavailable", reason: "memory-request-unavailable" }) }

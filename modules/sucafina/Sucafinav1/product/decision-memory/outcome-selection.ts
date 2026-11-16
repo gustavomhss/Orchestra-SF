@@ -21,7 +21,7 @@ export function createSfOutcomeSelectionRegistry(input: {
   checkSourceFence: (snapshot: Snapshot, selection: SfOutcomeSelection, authority: SfStateAuthority) => Promise<boolean>
   operationIdentity: (call: TrustedDomainContext) => string | undefined
 }) {
-  return {
+  const registry = {
     async register(requested: SfOutcomeSelection, call: TrustedDomainContext) {
       try {
         const selection = structuredClone(requested)
@@ -49,7 +49,7 @@ export function createSfOutcomeSelectionRegistry(input: {
         input.signalRegistryWrites.add(work)
         const saved = await input.state.transaction(request, { namespace: "preferences", domainSurface: selection.evidenceRefs[0]!.kind === "record" ? selection.evidenceRefs[0]!.target.surface : undefined, expectedStorageVersion: before.storageVersion, targetRef: encodeCaseRef(selection.caseRef), targetIncarnation: selection.caseRef.incarnation, idempotencyKey: `outcome-selection:${identity}:${selection.caseRef.id}:${selection.caseRef.incarnation}:${selection.choiceId}`, commandDigest: digestSfValue(selection) }, work).finally(() => input.signalRegistryWrites.delete(work))
         if (saved.status !== "ok" || !saved.value || !unchanged() || !await input.authorizeSelection(selection, call) || !await input.approveSelection(selection, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
-        return { status: "ok" as const }
+        return { status: "ok" as const, selectionRef: key(selection, call).slice(SF_OUTCOME_SELECTION_PREFIX.length) }
       } catch { return { status: "unavailable" as const } }
     },
     /** Host-only lookup: the browser supplies neither this state nor an observation value. */
@@ -79,7 +79,39 @@ export function createSfOutcomeSelectionRegistry(input: {
         return structuredClone(stored.selection)
       } catch { return undefined }
     },
+    /** The opaque locator identifies one preference; it is never an access grant. */
+    async readReference(selectionRef: string, call: TrustedDomainContext): Promise<SfOutcomeSelection | undefined> {
+      try {
+        if (call.kind !== "ui" || !/^[a-f0-9]{64}$/.test(selectionRef)) return undefined
+        const request = input.host.requestFor(call)
+        const binding = digestSfValue([call.kind, call.binding])
+        const unchanged = () => !!request && !request.signal.aborted && digestSfValue([call.kind, call.binding]) === binding
+        if (!request || !await input.host.revalidate(call) || !unchanged()) return undefined
+        const preferenceKey = SF_OUTCOME_SELECTION_PREFIX + selectionRef
+        const read = () => input.state.read(request, "preferences", (state, authority) =>
+          authority.principalRef === call.binding.principalRef && authority.accessRevision === call.binding.accessRevision &&
+          authority.policyVersion === call.binding.policyVersion ? state.preferences[preferenceKey] as StoredSelection | undefined : undefined)
+        const first = await read()
+        if (first.status !== "ok" || !first.value || first.value.schema !== "sf-memory-outcome-v1" ||
+          first.value.principalRef !== call.binding.principalRef || !validSelection(first.value.selection, call) ||
+          key(first.value.selection, call) !== preferenceKey || !unchanged()) return undefined
+        const stored = structuredClone(first.value)
+        const storedDigest = digestSfValue(stored)
+        const selected = await registry.select({ caseRef: stored.selection.caseRef, choiceId: stored.selection.choiceId }, call)
+        if (!selected || digestSfValue(selected) !== digestSfValue(stored.selection) || !unchanged()) return undefined
+        const again = await read()
+        if (again.status !== "ok" || again.storageVersion !== first.storageVersion ||
+          digestSfValue(again.value) !== storedDigest || digestSfValue(stored) !== storedDigest ||
+          !await input.host.revalidate(call) || !unchanged() || digestSfValue(stored) !== storedDigest) return undefined
+        const final = await read()
+        if (final.status !== "ok" || final.storageVersion !== first.storageVersion ||
+          digestSfValue(final.value) !== storedDigest || !unchanged() || !await input.host.revalidate(call) ||
+          !unchanged() || digestSfValue(stored) !== storedDigest) return undefined
+        return structuredClone(selected)
+      } catch { return undefined }
+    },
   }
+  return registry
 }
 
 function key(selection: Pick<SfOutcomeSelection, "caseRef" | "choiceId">, call: TrustedDomainContext) {
