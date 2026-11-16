@@ -1,0 +1,16 @@
+import { describe, expect, test } from "bun:test"
+import { SfOwnerRuntime231 } from "../../src/orchestra/chapters/sucafina/host/owner-runtime231"
+import { chapterPages } from "../../src/orchestra/chapter-route"
+import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
+import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
+
+describe("procurement overview shell increment", () => {
+  test("the overview uses the existing owner and exact route", () => {
+    expect(chapterPages["sf-procurement"]).toBe(SfOwnerRuntime231)
+    expect(matchSfNativeRoutePath("/orchestra/sf-procurement/overview")).toMatchObject({
+      surfaceId: "CAP24", kind: "entry", chapterId: "sf-procurement",
+    })
+    expect(matchSfNativeRoutePath("/orchestra/sf-procurement/overview/")).toBeUndefined()
+    expect(SfProcurement.operations["domain.page.CAP24"].method).toBe("GET")
+  })
+})
