@@ -212,6 +212,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
   const [view, setView] = createStore<View>({ status: "resolving" })
   const [provider, setProvider] = createStore({ status: "unmounted", generation: -1 })
+  const [reconnect, setReconnect] = createStore({ required: false, busy: false })
   let mounted: SfContextHandle | undefined
   let ownerEpoch = 0
   let disposed = false
@@ -275,6 +276,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           mounted?.invalidate(reason === "logout" ? "logout" :
             reason === "access-revoked" || reason === "session-expired" ? "revoked" : "owner-changed")
           setView({ status: "denied", route: undefined })
+          setReconnect({ required: reason === "session-expired", busy: false })
         },
       }) : undefined
   // Web discovery is admitted only on the identical server origin. An
@@ -567,6 +569,22 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     if (typeof window !== "undefined") window.removeEventListener("beforeunload", unload)
   })
 
+  const reconnectDesktop = async () => {
+    const selected = selection()
+    const handle = mounted
+    if (!desktopBridge || !selected || !handle || disposed || reconnect.busy) return
+    setReconnect("busy", true)
+    try {
+      // Reload re-discovers and binds the exact selected owner; it never revives
+      // the retired handle or restores private state without fresh admission.
+      await handle.reload()
+      if (disposed || mounted !== handle || !selection() || !sameSelection(selection()!, selected)) return
+      const status = handle.state().status
+      if (status === "ready" || status === "unauthenticated") setReconnect("required", false)
+    } finally {
+      if (!disposed) setReconnect("busy", false)
+    }
+  }
   const desktopLogin = async () => {
     const selected = selection()
     if (!desktopBridge || !selected || disposed || provider.status !== "unauthenticated") return
@@ -606,6 +624,10 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           lastEditorFocus = event.target
       }}>
 
+      <Show when={desktopBridge && reconnect.required}>
+        <button type="button" data-sf-desktop-reconnect="required" disabled={reconnect.busy}
+          onClick={() => { void reconnectDesktop() }}>{language.t("sf.common.loginAgain")}</button>
+      </Show>
       <Show when={desktopBridge && provider.status === "unauthenticated"}>
         <button type="button" data-sf-desktop-login="required"
           onClick={() => { void desktopLogin() }}>{language.t("sf.common.loginAgain")}</button>
