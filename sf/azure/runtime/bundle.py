@@ -6,6 +6,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
+import stat
 import tarfile
 import tempfile
 
@@ -90,6 +91,10 @@ def verify_release(folder, candidate, tree, archive_sha):
                 continue
             if relative not in index or digest(f) != index[relative]["sha256"]:
                 refuse("installed file not admitted or hash changed: " + relative)
+            info = f.stat()
+            if stat.S_IMODE(info.st_mode) != int(index[relative]["mode"], 8) or \
+               (os.geteuid() == 0 and info.st_uid != 0):
+                refuse("installed file owner/mode differs: " + relative)
             seen.add(relative)
     if seen != set(index):
         refuse("installed file missing")
