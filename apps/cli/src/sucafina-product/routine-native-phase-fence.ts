@@ -124,7 +124,10 @@ export function createSfRoutinePhaseFence(input: { resources: () => SfRoutineNat
       Effect.acquireUseRelease(Effect.sync(() => {
         if (!root.startsWith(SF_ROUTINE_PHASE_PARENT_PREFIX) || active.has(root)) return undefined
         const lease: Lease = { ...authority, root }; active.set(root, lease); return lease
-      }), (lease): Effect.Effect<A, E | ToolFailure, Exclude<R, never>> => lease ? Effect.provideService(effect, Current, lease) : Effect.fail(denied()),
+      }), (lease): Effect.Effect<A, E | ToolFailure, Exclude<R, never>> => Effect.gen(function* () {
+        if (!lease) return yield* Effect.fail(denied())
+        return yield* Effect.provideService(effect, Current, lease)
+      }),
       (lease) => Effect.sync(() => { if (lease && active.get(root) === lease) active.delete(root) })),
     beforeTurn: (session: SessionSchema.Info) => Effect.gen(function* () {
       const resources = input.resources(), store = resources?.store ?? lastStore, database = resources?.database ?? lastDatabase
@@ -196,7 +199,10 @@ export function createSfRoutinePhaseFence(input: { resources: () => SfRoutineNat
       const key = callKey(context)
       return yield* Effect.acquireUseRelease(Effect.sync(() => {
         if (taskCalls.has(key)) return false; taskCalls.set(key, observed); return true
-      }), (acquired): Effect.Effect<A, E | ToolSafety.Denied, Exclude<R, never>> => acquired ? Effect.provideService(effect, Current, lease) : Effect.fail(safetyDenied()), () => Effect.sync(() => {
+      }), (acquired): Effect.Effect<A, E | ToolSafety.Denied, Exclude<R, never>> => Effect.gen(function* () {
+        if (!acquired) return yield* Effect.fail(safetyDenied())
+        return yield* Effect.provideService(effect, Current, lease)
+      }), () => Effect.sync(() => {
         cancellation.abort()
         if (taskCalls.get(key) === observed) taskCalls.delete(key)
         if (observed.childID && children.get(observed.childID)?.signal === signal) children.delete(observed.childID)
