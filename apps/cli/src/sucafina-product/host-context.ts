@@ -934,7 +934,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
           const delivered = yield* resources.store.message(facts.loadedMessageID)
           return delivered?.sessionID === session.id && delivered.message.type === "synthetic" &&
             createHash("sha256").update(delivered.message.text, "utf8").digest("hex") === facts.source.contentDigest
-        }).pipe(Effect.provide(locations.get(session.location)))).catch(() => false)
+        }).pipe(Effect.provide(locations.get(session.location)), Effect.provideService(LocationServiceMap.Service, locations))).catch(() => false)
       }
       yield* Effect.addFinalizer(() => Effect.gen(function* () {
         if (state.identity !== identity) return
