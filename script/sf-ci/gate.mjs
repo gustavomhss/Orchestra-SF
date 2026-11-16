@@ -131,13 +131,23 @@ export function checkReceipt(receipt, suite, meta, reportBytes) {
   return count
 }
 
+export function requirePrerequisites(needs) {
+  if (needs === null || typeof needs !== "object" || Array.isArray(needs)) {
+    fail("upstream job conclusions missing")
+  }
+  const missing = JOBS.filter((job) => needs[job]?.result !== "success")
+  if (missing.length) {
+    fail("upstream jobs not successful: " + missing.map((job) =>
+      job + "=" + String(needs[job]?.result ?? "missing")).join(", "))
+  }
+  return JOBS.length
+}
+
 export function verifyAll({ manifest, receipts, reports, needs, sha, runId, attempt }) {
   const suites = validateManifest(manifest)
   if (!/^[a-f0-9]{40}$/.test(String(sha))) fail("invalid candidate SHA")
   if (!/^[0-9]+$/.test(String(runId)) || !/^[0-9]+$/.test(String(attempt))) fail("missing run identity")
-  for (const job of JOBS) {
-    if (needs?.[job]?.result !== "success") fail("missing, skipped, cancelled or failed job: " + job)
-  }
+  requirePrerequisites(needs)
   if (Object.keys(receipts).length !== suites.length || Object.keys(reports).length !== suites.length) {
     fail("missing or extra suite artifacts")
   }
@@ -192,6 +202,11 @@ function cli() {
     const safe = minimalPlaywrightEvidence(readFileSync(reportFile, "utf8"), suite.specFile)
     writeFileSync(reportFile, safe, { mode: 0o600 })
     console.log("SF_CI_PLAYWRIGHT_EVIDENCE_MINIMIZED " + id)
+    return
+  }
+  if (command === "precheck") {
+    requirePrerequisites(JSON.parse(process.env.SF_NEEDS_JSON || "null"))
+    console.log("SF_CI_REQUIRED_JOB_CONCLUSIONS_PASS")
     return
   }
   if (command === "select") {

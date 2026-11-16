@@ -66,8 +66,13 @@ Multi-platform compiled CLI build acceptance is not a dependency of the
 VM-hosted SF unit gate; Linux native release acceptance remains blocked
 until actual application packaging and deployment are available.
 
-The aggregator downloads each artifact into a distinct named directory and
-refuses missing, extra, duplicate or misbound receipts. This removes the 59-job
+The aggregator checks all upstream job conclusions **before** attempting any
+artifact download. A failed unit, UI, static or Omni job produces a precise
+RED precheck listing each failed/cancelled/skipped/missing job; no misleading
+artifact-download error precedes that diagnostic. Only successful upstream
+runs download the eight receipt directories. The aggregator keeps each
+artifact in a distinct named directory and refuses missing, extra,
+duplicate or misbound receipts. This removes the 59-job
 canonical-multi-OS topology. Later PR-only path reduction requires a
 separately proven classifier with unknown/shared/lock/config changes falling
 back to full coverage. No hidden missing-test shortcuts.

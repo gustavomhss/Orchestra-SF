@@ -2,7 +2,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { readFileSync } from "node:fs"
-import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection } from "./gate.mjs"
+import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS", counts: { product_executed: 2, failures: 0, errors: 0, skipped: 0 } }))
 const digest = createHash("sha256").update(report).digest("hex")
@@ -91,6 +91,14 @@ test("selected files are read only from the validated Linux SF manifest", () => 
   assert.deepEqual(requiredSelection(manifest, "CI-ATLAS-BUSINESS"), ["test/sf-authorized-sample.test.ts"])
   assert.throws(() => requiredSelection(manifest, "CI-SF"), /SF_CI_FAIL_CLOSED/)
   assert.throws(() => requiredSelection(manifest, "CI-APP-BROWSER"), /SF_CI_FAIL_CLOSED/)
+})
+test("upstream failures list every failed, skipped or missing job, not only the first", () => {
+  const data = fixture()
+  data.needs.static.result = "failure"
+  data.needs.unit.result = "cancelled"
+  delete data.needs.ui
+  assert.throws(() => requirePrerequisites(data.needs), /static=failure, unit=cancelled, ui=missing/)
+  assert.equal(requirePrerequisites(fixture().needs), 5)
 })
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))
