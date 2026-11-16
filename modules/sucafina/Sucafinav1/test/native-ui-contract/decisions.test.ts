@@ -30,7 +30,7 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
       "decisions.decision-recover", "decisions.decision-review", "decisions.decision-select-portfolio",
     ].sort())
     for (const [id, operation] of Object.entries(SfDecisions.operations)) {
-      expect(operation.operationId).toBe(id)
+      expect<string>(operation.operationId).toBe(id)
       expect(operation.pathTemplate.startsWith("{mount}")).toBe(true)
       expect(operation.responseMode).toBe("json")
       expect("automaticRetry" in operation).toBe(false)
