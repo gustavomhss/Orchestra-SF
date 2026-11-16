@@ -1,3 +1,4 @@
+import { batch } from "solid-js"
 import type {
   SfContext, SfContextDependencies, SfDraftReadBinding, SfDraftRegistry,
   SfDraftRevalidation, SfOwnerIdentity, SfPublicDraftController,
@@ -18,6 +19,7 @@ type DraftEntry = {
   facade: SfPublicDraftController<unknown>
   quarantinedBaseVersion: SfVersion | null
   quarantinedDirty: boolean
+  quarantinedPending: boolean
 }
 type RegistryState = "active" | "quarantined" | "revoked"
 
@@ -30,6 +32,7 @@ export function createSfOwnerDrafts(
   const unresolved = new Set<string>()
   let owner = initial
   let state: RegistryState = "active"
+  let revocationReason: "logout" | "owner-changed" | "access-revoked" | "authority-changed" | undefined
   const identityKey = (surfaceId: SurfaceId, identity: SfDraftIdentity, editScopeKey: SfEditScopeKey) =>
     JSON.stringify([surfaceId, identity.kind, identity.kind === "record" ? identity.recordRef : identity.newIntentRef, editScopeKey])
   const shapeOf = (value: unknown): string => {
@@ -77,6 +80,7 @@ export function createSfOwnerDrafts(
         facade: facade as SfPublicDraftController<unknown>,
         quarantinedBaseVersion: input.baseVersion,
         quarantinedDirty: false,
+        quarantinedPending: false,
       })
       return facade
     },
@@ -99,12 +103,18 @@ export function createSfOwnerDrafts(
   }
 
   const discardAll = () => {
-    if (!live() || unresolved.size > 0) return false
+    if (state === "revoked" || unresolved.size > 0) return false
     // A submitted command's status cannot be cleared by a UI discard prompt.
     if ([...entries.values()].some((entry) => {
+      if (state === "quarantined") return entry.quarantinedPending
       const snapshot = entry.controller.snapshot()
-      return snapshot.availability !== "active" || snapshot.pendingOperation !== null
+      return snapshot.availability !== "active" || snapshot.pendingOperation !== null ||
+        snapshot.phase === "submitting" || snapshot.phase === "outcome-unknown"
     })) return false
+    if (state === "quarantined") {
+      revoke("owner-changed")
+      return true
+    }
     entries.forEach((entry) => entry.controller.revoke("owner-changed"))
     entries.clear()
     return true
@@ -118,6 +128,11 @@ export function createSfOwnerDrafts(
       if (snapshot.availability === "active") {
         entry.quarantinedBaseVersion = snapshot.baseVersion
         entry.quarantinedDirty = snapshot.dirty
+        entry.quarantinedPending = snapshot.pendingOperation !== null ||
+          snapshot.phase === "submitting" || snapshot.phase === "outcome-unknown"
+      } else {
+        // Confirmed-but-unprojected entries are submitted, not unsent drafts.
+        entry.quarantinedPending = true
       }
       entry.controller.quarantine()
     })
@@ -125,6 +140,7 @@ export function createSfOwnerDrafts(
   const revoke = (reason: "logout" | "owner-changed" | "access-revoked" | "authority-changed") => {
     if (state === "revoked") return
     state = "revoked"
+    revocationReason = reason
     entries.forEach((entry) => entry.controller.revoke(reason))
     entries.clear()
     unresolved.clear()
@@ -142,22 +158,31 @@ export function createSfOwnerDrafts(
     transport: SfTransport,
     signal: AbortSignal,
   ): Promise<boolean> => {
-    if (state !== "quarantined" || !sameAuthority(owner.identity, incoming.identity)) {
+    if (!sameAuthority(owner.identity, incoming.identity) ||
+        incoming.identity.installationId !== context.stamp.installationId ||
+        incoming.identity.projectId !== context.stamp.projectId ||
+        incoming.identity.principalRef !== context.stamp.principalRef) {
       revoke("authority-changed")
       return false
     }
+    if (state !== "quarantined" || signal.aborted) return false
     // No optimistic or cached access: every retained edit must be proved again.
+    const proofs: { entry: DraftEntry; sourceVersion: SfVersion | null }[] = []
     for (const entry of entries.values()) {
-      const proof: SfDraftRevalidation = await deps.revalidateDraft({
+      const proof: SfDraftRevalidation | undefined = await Promise.resolve().then(() => deps.revalidateDraft({
         surfaceId: entry.surfaceId,
         identity: entry.identity,
         editScopeKey: entry.editScopeKey,
         originalOwner: entry.originalOwner,
         read: entry.read,
-      }, context, transport, signal)
-      if (signal.aborted) return false
-      if (proof.status !== "authorized" ||
-          proof.authority !== "unchanged" ||
+      }, context, transport, signal)).catch(() => undefined) // Source failure retains the quarantine for retry.
+      if (signal.aborted || state !== "quarantined") return false
+      if (!proof || proof.status === "unavailable") continue
+      if (proof.status === "denied") {
+        revoke("access-revoked")
+        return false
+      }
+      if (proof.status !== "authorized" || proof.authority !== "unchanged" || !proof.stamp ||
           proof.stamp.installationId !== context.stamp.installationId ||
           proof.stamp.projectId !== context.stamp.projectId ||
           proof.stamp.hostId !== context.stamp.hostId ||
@@ -167,20 +192,25 @@ export function createSfOwnerDrafts(
         revoke("authority-changed")
         return false
       }
-      const previousVersion = entry.quarantinedBaseVersion
-      const wasDirty = entry.quarantinedDirty
-      entry.controller.restoreSameAuthority(incoming.key)
-      if (wasDirty && previousVersion !== proof.sourceVersion)
-        entry.controller.setPhase("conflict") // No automatic merge or reuse of old review admission.
+      proofs.push({ entry, sourceVersion: proof.sourceVersion })
     }
-    if (signal.aborted) return false
-    owner = incoming
-    state = "active"
+    if (signal.aborted || state !== "quarantined" || proofs.length !== entries.size) return false
+    batch(() => {
+      proofs.forEach(({ entry, sourceVersion }) => {
+        entry.controller.restoreSameAuthority(incoming.key)
+        if (entry.quarantinedDirty && entry.quarantinedBaseVersion !== sourceVersion)
+          entry.controller.setPhase("conflict") // No automatic merge or reuse of old review admission.
+      })
+      owner = incoming
+      state = "active"
+    })
     return true
   }
   const dirty = () => unresolved.size > 0 || [...entries.values()].some((entry) => {
     const snapshot = entry.controller.snapshot()
+    if (state === "quarantined") return entry.quarantinedDirty || entry.quarantinedPending
     return snapshot.availability === "active" && (snapshot.dirty || snapshot.pendingOperation !== null)
   })
-  return Object.freeze({ registry, discardAll, quarantine, revoke, revalidate, dirty, sameAuthority, owner: () => owner, state: () => state })
+  return Object.freeze({ registry, discardAll, quarantine, revoke, revalidate, dirty, sameAuthority,
+    owner: () => owner, state: () => state, revocationReason: () => revocationReason })
 }

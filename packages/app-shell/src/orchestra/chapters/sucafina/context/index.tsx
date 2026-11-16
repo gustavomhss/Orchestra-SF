@@ -64,6 +64,10 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   }
   const fail = (generation: number, selection: SfOwnerSelection, reason: "network" | "installation-unavailable") =>
     publish(generation, { status: "unavailable", selection, reason })
+  const notifyDraftRevoked = () => {
+    try { props.dependencies.onDraftAccessRevoked?.() }
+    catch (error) { console.error("Sucafina draft access notice failed", error instanceof Error ? error.name : "unknown") }
+  }
 
   const load = async (selection: SfOwnerSelection) => {
     const prior = store.state
@@ -115,9 +119,11 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
         return
       }
       if (result.status === "denied") {
+        const lostDrafts = current?.drafts.dirty() === true
         current?.drafts.revoke("access-revoked")
         current = undefined
         publish(generation, { status: "denied", selection })
+        if (lostDrafts) notifyDraftRevoked()
         return
       }
       if (result.status === "unavailable") {
@@ -158,6 +164,12 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
         current = undefined
         epoch += 1
       }
+      if (current?.drafts.state() === "revoked") {
+        current = undefined
+        currentOwner = undefined
+        ownerKey = undefined
+        epoch += 1
+      }
       const renewedIdentity = { ...identity, authEpoch: epoch }
       const renewedKey = JSON.stringify([
         renewedIdentity.serverKey, renewedIdentity.transportIdentity, renewedIdentity.publicOrigin,
@@ -184,12 +196,18 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
           { key: transferredKey, identity: transferredIdentity }, fresh, transport, abort.signal,
         )
         if (disposed || abort.signal.aborted || generation !== store.generation) return
-        if (!restored) current.drafts.revoke("authority-changed")
+        if (!restored && current.drafts.state() !== "revoked") {
+          publish(generation, { status: "unavailable", selection, reason: "host-unavailable" })
+          return
+        }
+        const revoked = !restored && (current.drafts.revocationReason() === "access-revoked" ||
+          current.drafts.revocationReason() === "authority-changed")
         const drafts = restored ? current.drafts : createSfOwnerDrafts(props.dependencies, { key: transferredKey, identity: transferredIdentity })
         current = { context: fresh, transport, drafts }
         currentOwner = transferredIdentity
         ownerKey = transferredKey
         publish(generation, { status: "ready", selection, owner: transferredIdentity, ownerKey: transferredKey, binding, context: fresh }, current)
+        if (revoked) notifyDraftRevoked()
         return
       }
       const drafts = current?.drafts ?? createSfOwnerDrafts(props.dependencies, { key: renewedKey, identity: renewedIdentity })
@@ -207,6 +225,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   const invalidate: SfContextHandle["invalidate"] = (reason) => {
     fence(props.selection())
     props.dependencies.navigation?.clearResumeFocus()
+    const lostDrafts = reason === "revoked" && current?.drafts.dirty() === true
     current?.drafts.revoke(reason === "logout" ? "logout" : reason === "revoked" ? "access-revoked" : "owner-changed")
     current = undefined
     currentOwner = undefined
@@ -214,6 +233,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     epoch += 1
     const selection = props.selection()
     publish(store.generation, { status: reason === "revoked" ? "denied" : "resolving", selection })
+    if (lostDrafts) notifyDraftRevoked()
   }
   const currentResumeOwner = (): SfCurrentResumeOwner | undefined => {
     const state = store.state
@@ -237,8 +257,8 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   const handle: SfContextHandle = {
     state: () => store.state,
     generation: () => store.generation,
-    hasDirtyDrafts: () => current?.drafts.state() === "quarantined" || current?.drafts.dirty() === true,
-    discardDrafts: () => store.state.status === "ready" &&
+    hasDirtyDrafts: () => current?.drafts.dirty() === true,
+    discardDrafts: () => (store.state.status === "ready" || current?.drafts.state() === "quarantined") &&
       current?.drafts.discardAll() === true,
     ready: () => {
       if (store.state.status !== "ready" || !store.active) return undefined

@@ -73,6 +73,8 @@ export type SfContextDependencies = Readonly<{
   resolveTransportIdentity(selection: SfOwnerSelection): string
   createDraft<Value>(input: SfDraftInput<Value>): SfDraftController<Value>
   revalidateDraft(input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal): Promise<SfDraftRevalidation>
+  /** Generic notice only: retained edits were purged after access was revoked. */
+  onDraftAccessRevoked?: () => void
   /** I00 supplies only the genuine owner-bound F01 shell navigation instance. */
   navigation?: SfNativeNavigationState
 }>

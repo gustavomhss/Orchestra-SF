@@ -103,12 +103,13 @@ describe("237 — F01 owner-scoped UI33 editor regressions", () => {
     expect(after.dirty()).toBe(false)
   })
 
-  test("quarantined/unauthorized fields cannot be discarded into a new owner", () => {
+  test("explicit discard purges quarantined unsent fields without exposing them", () => {
     const drafts = owner("owner-a")
     const editing = openDraft(drafts)
     drafts.quarantine()
     expect(editing.snapshot()).toMatchObject({ availability: "quarantined" })
-    expect(drafts.discardAll()).toBe(false)
+    expect(drafts.discardAll()).toBe(true)
+    expect(editing.snapshot()).toEqual({ availability: "revoked", reason: "owner-changed" })
     expect(drafts.registry.peek(selection)).toBeUndefined()
   })
 
