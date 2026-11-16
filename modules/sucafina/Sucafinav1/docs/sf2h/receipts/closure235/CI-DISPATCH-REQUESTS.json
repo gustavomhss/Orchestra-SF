@@ -1,0 +1,1625 @@
+{
+  "schema": "sf2h.closure235.ci-request-reuse.v1",
+  "mission": 235,
+  "source_dispatcher_handoff": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/HANDOFF.json",
+    "blob": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+    "terminal": true,
+    "not_dispatched": true
+  },
+  "source_manifest": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/REQUEST-MANIFESTS.json",
+    "blob": "f5c93194b81ac6cd594a7a08d0a4062b89b889fe"
+  },
+  "source_snapshot": {
+    "candidate_branch": "sf-closure-bundle",
+    "head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "material_after_source": false,
+    "accepted_final_C": false,
+    "workflow_path": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator_path": "script/test-ci-request.ts",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "run_uploader": "script/test-ci.ts",
+    "run_uploader_blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+    "original_recipe_blob": "ae5a1949876eef23450fa51167498be8a2334d35",
+    "prohibited_alternative": "No gh, curl, user tokens, git push or custom branch-as-dispatch. Only official existing test:ci via authorized supported interface.",
+    "available_GitHub_MCP_actions": [
+      "fetch_workflow_run_jobs",
+      "fetch_workflow_run_artifacts",
+      "fetch_commit_workflow_runs",
+      "rerun_workflow_job",
+      "rerun_failed_workflow_run_jobs"
+    ],
+    "initial_workflow_dispatch_MCP": "NOT_EXPOSED"
+  },
+  "policy": {
+    "current_dispatch_capability": "INITIAL_TEST_CI_DISPATCH_NOT_EXPOSED_BY_GITHUB_MCP",
+    "sole_dispatcher": "232 terminal successor only on verified official invocation and assignment",
+    "run_everything_on_accepted_C": false,
+    "order": "19 causal only after exact source integration W and material consumer; 8 final strictly after formal accepted immutable C; real F04 and AM witness independent gate",
+    "no_user_special_network_or_shell": true,
+    "do_not_duplicate_any_inflight_key": true,
+    "guard": "190 owns G7 on C checkout and G8 on D checkout separately, outside this dispatch"
+  },
+  "counts": {
+    "source_total": 27,
+    "causal": 19,
+    "final": 8,
+    "new_ci_by_235": 0
+  },
+  "entries": [
+    {
+      "id": "S215-BI-UNITS",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/analytics/unit-integrity215.test.ts\",\"Sucafinav1/test/product/wp05/semantics.test.ts\",\"Sucafinav1/test/product/wp05/semantic-discriminants.test.ts\",\"Sucafinav1/test/product/wp05/consumer-dashboard.test.ts\",\"Sucafinav1/test/product/wp05/planner-integration.test.ts\",\"Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/analytics/unit-integrity215.test.ts",
+          "Sucafinav1/test/product/wp05/semantics.test.ts",
+          "Sucafinav1/test/product/wp05/semantic-discriminants.test.ts",
+          "Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+          "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/analytics/unit-integrity215.test.ts",
+        "Sucafinav1/test/product/wp05/semantics.test.ts",
+        "Sucafinav1/test/product/wp05/semantic-discriminants.test.ts",
+        "Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+        "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+        "Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/analytics/unit-integrity215.test.ts",
+          "Sucafinav1/test/product/wp05/semantics.test.ts",
+          "Sucafinav1/test/product/wp05/semantic-discriminants.test.ts",
+          "Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+          "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 215,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair215/CI-REQUEST214.json",
+          "receipt_blob": "c058c0293bfc9b0f4cc348112f45cc7a91eb796a"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S216-ATLAS-SEQUENCE",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"360000\",\"Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "360000",
+          "Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "--timeout",
+        "360000",
+        "Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "--timeout",
+          "360000",
+          "Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 216,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair216/CI-REQUEST-214.json",
+          "receipt_blob": "4e033f94ebaaaf6a9d1b4a4c8911ed6e886c3571"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S217-SIMILAR-CASES",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/similarity217/installed.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/similarity217/installed.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/similarity217/installed.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/similarity217/installed.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 217,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair217/REQUEST-214.json",
+          "receipt_blob": "a378bde653c78f13b083a4d6d8670b17e3898e2b"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S217-UI62-U26-F04",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/native/journeys/similarity217/ui62.spec.ts\",\"e2e/sucafina/native/journeys/u26.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/native/journeys/similarity217/ui62.spec.ts",
+          "e2e/sucafina/native/journeys/u26.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "e2e/sucafina/native/journeys/similarity217/ui62.spec.ts",
+        "e2e/sucafina/native/journeys/u26.spec.ts",
+        "--runner",
+        "playwright",
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "os": "linux",
+        "args": [
+          "e2e/sucafina/native/journeys/similarity217/ui62.spec.ts",
+          "e2e/sucafina/native/journeys/u26.spec.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER",
+        "211_ACTUAL_SIMILAR_CASES_PORT_AND_UI_CONSUMER"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 217,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair217/REQUEST-214.json",
+          "receipt_blob": "a378bde653c78f13b083a4d6d8670b17e3898e2b"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S218-IMPORT-RECEIPTS",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/import-history218/real-receipts.test.ts\",\"Sucafinav1/test/native-ui-contract/files.test.ts\",\"Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts\",\"Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/import-history218/real-receipts.test.ts",
+          "Sucafinav1/test/native-ui-contract/files.test.ts",
+          "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+          "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/import-history218/real-receipts.test.ts",
+        "Sucafinav1/test/native-ui-contract/files.test.ts",
+        "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+        "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/import-history218/real-receipts.test.ts",
+          "Sucafinav1/test/native-ui-contract/files.test.ts",
+          "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+          "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "A06_ORIGINAL_READ_LIST_CONTRACT_AUTHORITY"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 218,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/REQUEST214.json",
+          "receipt_blob": "9dc7697683d0dc246f41b755cfae39ef364fbc0f"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S218-IMPORT-HISTORY-F04",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts\",\"e2e/sucafina/native/journeys/u23.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts",
+          "e2e/sucafina/native/journeys/u23.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts",
+        "e2e/sucafina/native/journeys/u23.spec.ts",
+        "--runner",
+        "playwright",
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "os": "linux",
+        "args": [
+          "e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts",
+          "e2e/sucafina/native/journeys/u23.spec.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 218,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/REQUEST214.json",
+          "receipt_blob": "9dc7697683d0dc246f41b755cfae39ef364fbc0f"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S219-NATIVE-HUMAN-REQUEST",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/native-admission219/human-command.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/native-admission219/human-command.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/native-admission219/human-command.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/native-admission219/human-command.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 219,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair219/CI-REQUEST-214.json",
+          "receipt_blob": "dc5f23c4197be80e43e6c37787b73a4b4e636ac9"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S219-REAL-TASK-RELAY",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/native-admission-closure/admission.test.ts\",\"Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts\",\"Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts\",\"Sucafinav1/test/native-ui-contract/routines.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+          "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+          "Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+          "Sucafinav1/test/native-ui-contract/routines.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+        "Sucafinav1/test/native-ui-contract/routines.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+          "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+          "Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+          "Sucafinav1/test/native-ui-contract/routines.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER",
+        "229_ACTUAL_TASK_RELAY_ORIGIN_HANDOFF_AND_211_CONSUMPTION"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 219,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair219/CI-REQUEST-214.json",
+          "receipt_blob": "dc5f23c4197be80e43e6c37787b73a4b4e636ac9"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S220-DECISIONS",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/native-ui-contract/decisions.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/native-ui-contract/decisions.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/native-ui-contract/decisions.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 220,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair220/HANDOFF-211-214.json",
+          "receipt_blob": "9cf2877266055ae57ad337e06564749d7e260205"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S220-AM04",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts\",\"Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 220,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair220/HANDOFF-211-214.json",
+          "receipt_blob": "9cf2877266055ae57ad337e06564749d7e260205"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S220-AM05",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts\",\"Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 220,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair220/HANDOFF-211-214.json",
+          "receipt_blob": "9cf2877266055ae57ad337e06564749d7e260205"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S221-AM01-CAUSAL",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"240000\",\"Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts\",\"Sucafinav1/test/product/wp03/scenario-costs.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "240000",
+          "Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+        "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "--timeout",
+          "240000",
+          "Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 221,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair221/CI-REQUEST214.json",
+          "receipt_blob": "11b2f0817e6680dde6b12a2e670ea2d4623753c2"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S222-AM02-CAUSAL",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"240000\",\"Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "240000",
+          "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "--timeout",
+          "240000",
+          "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 222,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair222/REQUEST-214.json",
+          "receipt_blob": "2608cb9ed28ee8764966b33971432be867f2c10f"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S225-CSV-ADMISSION",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/supplier-csv225/admission.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/supplier-csv225/admission.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/supplier-csv225/admission.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/supplier-csv225/admission.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 225,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/request223.json",
+          "receipt_blob": "d78e1162880fe1fda5bb4dd6a92016c089841f59"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S225-SUPPLIER-CSV-F04",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts",
+        "--runner",
+        "playwright",
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "os": "linux",
+        "args": [
+          "e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 225,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/request223.json",
+          "receipt_blob": "d78e1162880fe1fda5bb4dd6a92016c089841f59"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S226-FILES-CODECS",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"client\",\"directory\":\"packages/client\",\"runner\":\"bun\",\"args\":[\"test/sucafina/files-transport226/source-codecs.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "client",
+        "directory": "packages/client",
+        "runner": "bun",
+        "args": [
+          "test/sucafina/files-transport226/source-codecs.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "client",
+        "test/sucafina/files-transport226/source-codecs.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "client",
+        "directory": "packages/client",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "test/sucafina/files-transport226/source-codecs.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "228_226_SEMANTIC_TRANSPORT_PREPOST_CONFLICT"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 226,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/REQUEST-223.json",
+          "receipt_blob": "96ade07f3b1fd6f788af04d3462bb2a9b0e0b831"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S226-FILES-CONTRACT",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/native-ui-contract/files.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/native-ui-contract/files.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/native-ui-contract/files.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/native-ui-contract/files.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "218_226_ORIGINAL_25_OPERATION_PRODUCER_CONSUMER_PARITY"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 226,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/REQUEST-223.json",
+          "receipt_blob": "96ade07f3b1fd6f788af04d3462bb2a9b0e0b831"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S227-TODAY-RESUME-BROWSER",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"bun\",\"args\":[\"test-browser/sucafina-native/today-resume227.test.ts\",\"test-browser/sucafina-native/context.test.ts\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [
+          "test-browser/sucafina-native/today-resume227.test.ts",
+          "test-browser/sucafina-native/context.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "test-browser/sucafina-native/today-resume227.test.ts",
+        "test-browser/sucafina-native/context.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "test-browser/sucafina-native/today-resume227.test.ts",
+          "test-browser/sucafina-native/context.test.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 227,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/REQUEST-223.json",
+          "receipt_blob": "336c2bd32678db10496f725875a6fe2941945383"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "S227-TODAY-F04",
+      "group": "SURGICAL_CAUSAL",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/native/journeys/u01.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/native/journeys/u01.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "e2e/sucafina/native/journeys/u01.spec.ts",
+        "--runner",
+        "playwright",
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "os": "linux",
+        "args": [
+          "e2e/sucafina/native/journeys/u01.spec.ts"
+        ]
+      },
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER",
+        "231_ACTUAL_HOME_F01_HOST_BINDING_HANDOFF_AND_COMPOSITION"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": 227,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/REQUEST-223.json",
+          "receipt_blob": "336c2bd32678db10496f725875a6fe2941945383"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "CI-SF",
+      "group": "FINAL_SAME_C",
+      "exact_request_identity": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": []
+      },
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "CI-CLI",
+      "group": "FINAL_SAME_C",
+      "exact_request_identity": "[\"linux\",{\"package\":\"cli\",\"directory\":\"apps/cli\",\"runner\":\"bun\",\"args\":[],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "cli",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": []
+      },
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "group": "FINAL_SAME_C",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"bun\",\"args\":[],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": []
+      },
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "group": "FINAL_SAME_C",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"bun\",\"args\":[\"test-browser\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "test-browser",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "test-browser"
+        ]
+      },
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "group": "FINAL_SAME_C",
+      "exact_request_identity": "[\"linux\",{\"package\":\"atlas-boundary\",\"directory\":\"modules/atlas/boundary\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"30000\"],\"env\":{}}]",
+      "exact_ci_run_json": {
+        "package": "atlas-boundary",
+        "directory": "modules/atlas/boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "atlas-boundary",
+        "--timeout",
+        "30000",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "atlas-boundary",
+        "directory": "modules/atlas/boundary",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "--timeout",
+          "30000"
+        ]
+      },
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "group": "FINAL_SAME_C",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/operations.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "e2e/sucafina/operations.spec.ts",
+        "--runner",
+        "playwright",
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "os": "linux",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ]
+      },
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "group": "FINAL_SAME_C",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/decisions.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "e2e/sucafina/decisions.spec.ts",
+        "--runner",
+        "playwright",
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "os": "linux",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ]
+      },
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "group": "FINAL_SAME_C",
+      "exact_request_identity": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/reports.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "exact_ci_run_json": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "app",
+        "e2e/sucafina/reports.spec.ts",
+        "--runner",
+        "playwright",
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--os",
+        "linux"
+      ],
+      "selector": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "os": "linux",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ]
+      },
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "origin": "source",
+      "source": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "dispatch": "NOT_DISPATCHED_BY_235",
+      "new_run_ids": [],
+      "candidate_C": "NOT_ACCEPTED",
+      "real_positive": "NOT_RUN"
+    }
+  ],
+  "extra_hosted_obligations": [
+    {
+      "id": "F04_INSTALLED_AUTHORIZATION",
+      "owner": "199/S0 authenticated installed original host, future authorized CI dispatcher",
+      "state": "NOT_RUN",
+      "must_prove": "Original principals/permissions/identity/profile, owner switching, deny/revoke, full correct bytes, retry/reload, no screenshots as substitute"
+    },
+    {
+      "id": "AM01_AM06_NATIVE_POSITIVE",
+      "owner": "233/234 proof drivers+199 origin/200 dispatcher successor",
+      "state": "NOT_RUN",
+      "must_prove": "Actual model/provider/native SessionV2/MCP/Task/Atlas original admitted positive+negative; fixture/catalog not accepted"
+    },
+    {
+      "id": "EPIC_INTEGRATED_REAL_E2E",
+      "owner": "unique authorized dispatcher",
+      "state": "NOT_RUN",
+      "must_prove": "E2E using accepted same C on original installed context; no extra opportunistic dispatch"
+    },
+    {
+      "id": "COMPILER_G7_C",
+      "owner": "190",
+      "checkout": "C",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "DELIVERY_G8_D",
+      "owner": "190/S0",
+      "checkout": "D",
+      "state": "NOT_RUN"
+    }
+  ],
+  "historical_15_runs_claim": "Predecessor 232 recorded 7 scoped success and 8 failure on earlier W, none establishes final C or 235 PASS",
+  "current_235_execution": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "G7": "NOT_RUN",
+    "G8": "NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}

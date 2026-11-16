@@ -1,0 +1,2110 @@
+{
+  "schema": "sf2h.closure235.finding-trace.v1",
+  "version": 1,
+  "mission": 235,
+  "reviewed_original_product": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "base_product": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "candidate_C": null,
+  "original_review_blobs": {
+    "r207": "8b91f7617ba6ce1c456ea7912efd2deeee5b19f7",
+    "r208": "8dd0f76923e9f6e7ba8e43ad4bb9ffe5304d1401",
+    "r209": "9ac53500ea7e4d409dcb0b1a2ad7abfd24f35379"
+  },
+  "candidate228_prepared_tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+  "counts": {
+    "r207": 11,
+    "r208": 6,
+    "r209": 9,
+    "unique_findings": 26,
+    "r208_dedup_existing": 4
+  },
+  "safety": "All original findings remain OPEN_FOR_FINAL_RECHECK. Earlier static source correction never proves deployed original/installed behavior. 228 and 230 inert postimages are not accepted C.",
+  "records": [
+    {
+      "id": "PRE-R01-146-001",
+      "source_review": 207,
+      "origin": "INHERITED_146",
+      "priority": "P1",
+      "title": "Meu trabalho: detalhe invocado sem projection.work-item no host instalado",
+      "original_state": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": "UI30/U41, route projection.work-item, details and source navigation",
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "git_blob_at_original_review": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+          "lines": "170-188"
+        },
+        {
+          "path": "packages/client/src/sucafina/work.ts",
+          "git_blob_at_original_review": "f790637deb85ae93d85840dea625d953b73e619c",
+          "lines": "35-44"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "git_blob_at_original_review": "402b8a4599807d403065e561a427e230ae5981cb",
+          "lines": "262-286"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "git_blob_at_original_review": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+          "lines": "185-200"
+        }
+      ],
+      "source_closure_path": [
+        "apps/cli/src/sucafina-product/native-ui/work.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx"
+      ],
+      "correction_owner": {
+        "writer": "N11/PR158 (UI30) + A12 projection producer",
+        "integrator": "132/PR65"
+      },
+      "correction_exact": "132 obtain real workDestinations.read/verify producer with bounded authority, register route in native handler map; N11 preserve selection and display proper denied/stale/unavailable states. No stub or success simulation.",
+      "reconciliation_route": "211 existing F02/work-item source; 213 installed D01",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "STATIC_CORRECTION_REPORTED_BUT_REAL_INSTALLED_PROOF_MISSING",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Original owner workDestinations.read/verify; UI30 selection, stale, denied/revoked, distinct owner, desktop, no invented link",
+        "reference_original_recheck": "150/Q01/Q02 installed row selection, authorized work-item and denied/revoked/stale/cross-owner/desktop checks on final frozen C; 149 compile and SDK contract.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE-R01-146-002",
+      "source_review": 207,
+      "origin": "INHERITED_146",
+      "priority": "P1",
+      "title": "Agenda de revisões depende de projection.review que não está montada no host",
+      "original_state": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": "UI47/U25 agenda preview and review-workspace",
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "git_blob_at_original_review": "e420a6107d9bb6d4a96bcb58ed628269e5173d03",
+          "lines": "80-105"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+          "git_blob_at_original_review": "920ea5f414dfc87c939cbc12cff88d28481bf95a",
+          "lines": "47-56"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+          "git_blob_at_original_review": "920ea5f414dfc87c939cbc12cff88d28481bf95a",
+          "lines": "189-198"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "git_blob_at_original_review": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+          "lines": "185-200"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "git_blob_at_original_review": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+          "lines": "278-291"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+      ],
+      "correction_owner": {
+        "writer": "A07 producer/reviews seam + N28/PR152 UI",
+        "integrator": "132/PR65"
+      },
+      "correction_exact": "132 compose A07 factory using real scoped authority, source/business/review services (no fabricated ports); ensure route metadata/SDK and UI source schema match; do not overwrite other source areas.",
+      "reconciliation_route": "211 REVIEW-ROUTE-COMPOSITION.json; already source-composed at 998f; 228 host-context remerge",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "preimage_git_blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+          "postimage_git_blob": "438d258443e273d6dab46c4b6cfd9e291bec24c6",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        }
+      ],
+      "correction_and_evidence_state_at_base": "STATIC_211_SOURCE_CORRECTION_NOT_INSTALLED_PROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Scoped original A07 projection.review discover/preserve, denial/revoke, 503 when source absent, SDK compatibility on accepted C",
+        "reference_original_recheck": "150/Q01+Q02 installed agenda discover, source changes/revocation and successful preserve; 149 compiler. Same frozen C.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "CI-UI-DECISIONS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE-R01-146-003",
+      "source_review": 207,
+      "origin": "INHERITED_146",
+      "priority": "P1",
+      "title": "Busca livre trafega como q em GET URL contra NAV-01",
+      "original_state": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": "UI31/U42 search, text privacy, HTTP request path",
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+          "git_blob_at_original_review": "f6c892046752446417e122dbaf740d3d69836ec0",
+          "lines": "87-105"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "git_blob_at_original_review": "402b8a4599807d403065e561a427e230ae5981cb",
+          "lines": "18-25"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "git_blob_at_original_review": "402b8a4599807d403065e561a427e230ae5981cb",
+          "lines": "59-92"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "git_blob_at_original_review": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84",
+          "lines": "301-305"
+        }
+      ],
+      "source_closure_path": [
+        "apps/cli/src/sucafina-product/native-ui/work.ts",
+        "packages/client/src/sucafina/transport.ts",
+        "packages/schema/src/sucafina/operation-registry.ts"
+      ],
+      "correction_owner": {
+        "writer": "N10/PR147 UI search + A12/transport contract owner",
+        "integrator": "132/PR65"
+      },
+      "correction_exact": "A12+132 freeze safe input/route contract (e.g. source-admitted POST read with bounded body and idempotency rule), adapt N10 UI and tests; avoid pretending transport-only change is semantically compatible.",
+      "reconciliation_route": "211 F02 private POST; 203 preexisting source guarded; transport reconciled by 228",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "preimage_git_blob": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+          "postimage_git_blob": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/transport.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "preimage_git_blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+          "postimage_git_blob": "0f1959d82a2e6a5c4ed745c3ad518339456f9ff7",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/schema/src/sucafina/operation-registry.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 217
+        }
+      ],
+      "correction_and_evidence_state_at_base": "STATIC_CORRECTION_REPORTED_HTTP_LOG_PROOF_MISSING",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Original Request UTF8 body bound, never query URL/raw logs, legacy GET denied, source scope switching, SDK type parity",
+        "reference_original_recheck": "150/Q01/Q02 verify HTTP/desktop URL and log/request capture contains no raw search content; 149 compile contract; final same C.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE-R01-146-004",
+      "source_review": 207,
+      "origin": "INHERITED_146",
+      "priority": "P2",
+      "title": "CAP06 CTA primária Abrir estrutura permanece sempre desabilitada",
+      "original_state": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": "CAP06/U03 -> CAP07/U47 navigation and keyboard users",
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+          "git_blob_at_original_review": "df71763074fccb7dd6f26efba762dffc32c42c65",
+          "lines": "57-65"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx"
+      ],
+      "correction_owner": {
+        "writer": "N14/PR146 CAP06/CAP07 leaf",
+        "integrator": "132/PR65 frozen route builders"
+      },
+      "correction_exact": "N14 wire actual frozen route builder and permission, preserve no implicit cross-owner fallback; 132 supply registry entry/ACK.",
+      "reconciliation_route": "211 OWNER-NAV-CTA source navigation change",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "SOURCE_CHANGE_REPORTED_F04_PENDING",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "CAP06→CAP07 genuine route, permission denial, keyboard/focus, back/referrer and 320/400% reflow",
+        "reference_original_recheck": "150/Q02 keyboard and screen-reader navigation CAP06 -> CAP07, denied role, deep-link/back with focus and at 320/400% reflow.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "CI-UI-OPERATIONS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE-R01-146-005",
+      "source_review": 207,
+      "origin": "INHERITED_146",
+      "priority": "P2",
+      "title": "Hoje lista casos para retomar mas não oferece links/ação",
+      "original_state": "OPEN_STATIC_CAUSAL_NOT_EXECUTED",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": "UI29/U01 Today, resumption, focus navigation",
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "git_blob_at_original_review": "724b6ce9cc60d63c0b1b315297a4417f433a6ead",
+          "lines": "126-145"
+        },
+        {
+          "path": "packages/schema/src/sucafina/work.ts",
+          "git_blob_at_original_review": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+          "lines": "113-118"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts"
+      ],
+      "correction_owner": {
+        "writer": "N10/PR147 UI29",
+        "integrator": "132/PR65 route builders"
+      },
+      "correction_exact": "N10 consume authorized route builder/deep link and render a named focusable link; 132 ensure case route and owner tuple; no fake record from title.",
+      "reconciliation_route": "227 source navigation + 231 actual F01 root binding still assigned",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "preimage_git_blob": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+          "postimage_git_blob": "7e66c610cd4bbb8e27e4c16a239b2142d5b208ba",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 227
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "preimage_git_blob": "592eef8206c665a1fc908934e258b286fe85609e",
+          "postimage_git_blob": "876f95feadd07d6628d13a6c34e454a5ce382ea4",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 227
+        }
+      ],
+      "correction_and_evidence_state_at_base": "227_INERT_231_HANDOFF_NOT_OBSERVED_F04_PENDING",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Original caseRef/version authorized resume; unavailable/removed/stale/revoked; browser/desktop back and focus",
+        "reference_original_recheck": "150/Q02 keyboard, desktop/web, available/removed/denied case, back focus.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S227-TODAY-RESUME-BROWSER",
+        "S227-TODAY-F04"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE-R01-146-006",
+      "source_review": 207,
+      "origin": "INHERITED_146",
+      "priority": "P2",
+      "title": "Meu trabalho bloqueia navegação para fonte em desktop por comparação de origins",
+      "original_state": "OPEN_STATIC_CAUSAL_NOT_EXECUTED_DEPENDS_ON_001",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": "UI30 source-link desktop journey",
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "git_blob_at_original_review": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+          "lines": "39-47"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "git_blob_at_original_review": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+          "lines": "193-210"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+        "apps/desktop/src/main/sucafina/protocol.ts"
+      ],
+      "correction_owner": {
+        "writer": "N11/PR158 UI30",
+        "integrator": "132 D01 desktop broker"
+      },
+      "correction_exact": "132/D01 define permitted desktop internal navigation/broker route and N11 use it without arbitrary web URLs. Recheck after F146-001 producer is installed.",
+      "reconciliation_route": "211 work link source; 213/199 D01 original desktop identity",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "apps/desktop/src/main/sucafina/protocol.ts",
+          "preimage_git_blob": "0b2152a22811d19a3b04ab1e4ebf5218c564b2eb",
+          "postimage_git_blob": "34b54f2c3c0cf6e3284da1f80edbf66ac45786d2",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/desktop/src/main/sucafina/protocol.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        }
+      ],
+      "correction_and_evidence_state_at_base": "DESKTOP_REAL_BROKER_AND_AUTHORITY_PENDING",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Original installed D01 same-owner safe source navigation; forbidden foreign origin/userinfo/hash; revoke/return",
+        "reference_original_recheck": "150/Q01/Q02 original desktop installed session opens authorized source, denies cross-origin and userinfo/hash, preserves access revocation.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "S1-R1-207-001",
+      "source_review": 207,
+      "origin": "NEW_207",
+      "priority": "P1",
+      "title": "UI62 Casos semelhantes permanently unavailable",
+      "original_state": "FAIL_SOURCE_STATIC",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U26-AC01",
+        "U26-AC02"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": [
+        "UI62",
+        "U26",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "git_blob_at_original_review": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "lines": "231-249,265-269"
+        },
+        {
+          "path": "packages/client/src/sucafina/memory.ts",
+          "git_blob_at_original_review": "cddd7ceccc66bc5faf38d169bede03efa31440db",
+          "lines": "7-44"
+        },
+        {
+          "path": "packages/schema/src/sucafina/memory.ts",
+          "git_blob_at_original_review": "554c07bbf881b89ab9df852cdbf61322547f6382",
+          "lines": "356-495"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/product/memory/similarity217.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+        "packages/client/src/sucafina/memory.ts"
+      ],
+      "correction_owner": {
+        "writer": "U26/A14 real similarity producer+consumer",
+        "integrator": "189/I00",
+        "dispatcher": "200/PR106"
+      },
+      "correction_exact": "Publish an approved typed producer/contract and UI consumer, or explicit BLOCKED_CONTRACT; never invent related cases",
+      "reconciliation_route": "217 similar-cases producer+UI consumer full inert payload in 228",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/memory/similarity217.ts",
+          "preimage_git_blob": null,
+          "postimage_git_blob": "1d3f1ecac45e03cc3b112727f2de21174142672b",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/modules/sucafina/Sucafinav1/product/memory/similarity217.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 217
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+          "preimage_git_blob": null,
+          "postimage_git_blob": "71c06dd535c80865de69fd0031e95235f91c3f93",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 217
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "preimage_git_blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "postimage_git_blob": "e39fbb08e92ab7e816cd0db3ca38bc60a8ac6e91",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 217
+        },
+        {
+          "path": "packages/client/src/sucafina/memory.ts",
+          "preimage_git_blob": "cddd7ceccc66bc5faf38d169bede03efa31440db",
+          "postimage_git_blob": "c63a98050984e937da4105b2667b670b73579d28",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/client/src/sucafina/memory.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 217
+        }
+      ],
+      "correction_and_evidence_state_at_base": "217_PATCH_INERT_NOT_PRODUCT_CONSUMED",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Two genuine authorized principals/cases, cutoff/dedup, no cross-owner leak, fresh F04 keyboard/400%",
+        "reference_original_recheck": "After source release and integration, 200 real F04 two-owner positive/negative similarity + cutoff/dedup and keyboard/400%; independent changed-blob review",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S217-SIMILAR-CASES",
+        "S217-UI62-U26-F04"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "S1-R1-207-002",
+      "source_review": 207,
+      "origin": "NEW_207",
+      "priority": "P2",
+      "title": "UI57 approved import history route forced unavailable",
+      "original_state": "FAIL_SOURCE_STATIC",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U23-AC01",
+        "U23-AC02"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": [
+        "UI57",
+        "U23",
+        "WP06.T04"
+      ],
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "git_blob_at_original_review": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "lines": "370-388"
+        }
+      ],
+      "source_closure_path": [
+        "apps/cli/src/sucafina-product/native-ui/files.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "packages/client/src/sucafina/files.ts"
+      ],
+      "correction_owner": {
+        "writer": "U23 history consumer",
+        "integrator": "189/I00",
+        "dispatcher": "200/PR106"
+      },
+      "correction_exact": "Use actual owner scoped receipt producer, no synthesized history; preserve denial/unknown/removed",
+      "reconciliation_route": "218 history producer+consumer, 226 transport typed; 228 full inert",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/files.ts",
+          "preimage_git_blob": null,
+          "postimage_git_blob": "a2e1041871a553498b92f159ef9b28c874a3cfb6",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/apps/cli/src/sucafina-product/native-ui/files.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 226
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts",
+          "preimage_git_blob": null,
+          "postimage_git_blob": "16839289b896f4ddb2a656dc5cc13a8c8d2cb2f9",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 218
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "preimage_git_blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "postimage_git_blob": "c503bb0904a5f989076583b30d91f9cd43d2bb4a",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 218
+        },
+        {
+          "path": "packages/client/src/sucafina/files.ts",
+          "preimage_git_blob": null,
+          "postimage_git_blob": "4f29bf65fe6f128fb3d34d24beeaddef983c1e6b",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/files.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 226
+        }
+      ],
+      "correction_and_evidence_state_at_base": "218_226_PATCHES_INERT_REAL_ORIGINAL_RECEIPTS_PENDING",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Original owner-scoped history; manifest/read real receipt, original denied/revoked/removed, owner/time period switch, no synthetic history",
+        "reference_original_recheck": "After accepted contract C, 200 real manifest/receipt history, owner swap, denied, return and reflow; independent causal recheck",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S218-IMPORT-RECEIPTS",
+        "S218-IMPORT-HISTORY-F04",
+        "S226-FILES-CONTRACT"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "S1-R1-207-003",
+      "source_review": 207,
+      "origin": "NEW_207",
+      "priority": "P1",
+      "title": "CAP08 Talent import/export command paths and routes permanently disabled",
+      "original_state": "FAIL_SOURCE_STATIC",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U47-AC01",
+        "U47-AC02"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": [
+        "CAP08",
+        "U47",
+        "WP02.T02"
+      ],
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "git_blob_at_original_review": "443a8e2190ed5fa3bbb7a09e27f6c79af012754c",
+          "lines": "182-183,330-344"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "git_blob_at_original_review": "b853b38ebc3a0538aaba963c6422d749febde544",
+          "lines": "114-117"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+        "packages/schema/src/sucafina/people.ts",
+        "packages/client/src/sucafina/transport.ts"
+      ],
+      "correction_owner": {
+        "writer": "N14 U47/CAP08 / PR146",
+        "integrator": "189/PR65",
+        "proof": "200/PR106 and 199/D01"
+      },
+      "correction_exact": "Wire actual original producer via approved typed file+download bindings or explicitly qualify BLOCKED_CONTRACT. No fake artifact, upload or grant.",
+      "reconciliation_route": "224 exclusive talent importer/exporter source, 226 file transport; DO NOT REIMPLEMENT",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "preimage_git_blob": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+          "postimage_git_blob": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/transport.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        }
+      ],
+      "correction_and_evidence_state_at_base": "224_SOURCE_NOT_PUBLISHED_AT_REVIEW_235",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "224 authoritative CAP08 bytes/preview/consent/versioned import and export; F04 allow/deny/revoke/owner-switch/bad format/bytes D01; ask 232 successor new exact selector only after published source",
+        "reference_original_recheck": "On newly accepted C, independent source plus 200 F04 authorized/denied/revoked/owner switch/format invalid/preview mutation/export bytes and 199 desktop path.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S226-FILES-CODECS",
+        "S226-FILES-CONTRACT"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "S1-R1-207-004",
+      "source_review": 207,
+      "origin": "NEW_207",
+      "priority": "P2",
+      "title": "CAP24 Procurement Overview open-requests primary CTA is unconditional no-op",
+      "original_state": "FAIL_SOURCE_STATIC",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U10-AC01",
+        "U10-AC03"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": [
+        "CAP24",
+        "U10"
+      ],
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "git_blob_at_original_review": "7bf3ce8b5d193c3732dfd236a51a3c804a73dae9",
+          "lines": "142-156"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx"
+      ],
+      "correction_owner": {
+        "writer": "N21 CAP24 / PR163",
+        "integrator": "189/PR65",
+        "proof": "200/PR106"
+      },
+      "correction_exact": "Use admitted navigation route and nonmisleading availability, no owner fallback",
+      "reconciliation_route": "211 OWNER-NAV-CTA (CAP24) original owner route",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "211_SOURCE_CHANGE_NOT_F04_PROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "CAP24 genuine open requests route, denial/cross-owner/focus/return/400%",
+        "reference_original_recheck": "New C + 200 F04 allowed/denied/owner swap/focus/return/400%.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "CI-UI-OPERATIONS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "S1-R1-207-005",
+      "source_review": 207,
+      "origin": "NEW_207",
+      "priority": "P2",
+      "title": "CAP27 Suppliers CSV export secondary action permanently disabled",
+      "original_state": "FAIL_SOURCE_STATIC",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U14-AC01"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": [
+        "CAP27",
+        "U14"
+      ],
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "git_blob_at_original_review": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+          "lines": "656-665"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+        "packages/client/src/sucafina/procurement.ts",
+        "packages/schema/src/sucafina/procurement.ts",
+        "packages/client/src/sucafina/transport.ts"
+      ],
+      "correction_owner": {
+        "writer": "N23 CAP27 / PR173",
+        "integrator": "189/PR65",
+        "proof": "200/PR106 + 199/D01 if relevant"
+      },
+      "correction_exact": "Do not synthesize private bank CSV or bypass grant; obtain explicit producer/export contract and consume only admitted bytes",
+      "reconciliation_route": "225 sole producer supplier CSV, 226 typed transport, 228 inert merge",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "preimage_git_blob": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+          "postimage_git_blob": "e354b0f5fcfc1c8aaf1aba447dfa0a60df233c93",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 225
+        },
+        {
+          "path": "packages/client/src/sucafina/procurement.ts",
+          "preimage_git_blob": "7875c98e14fcde4255bd807f094685cc0fcf60b6",
+          "postimage_git_blob": "e3c7c28e7a3f12ecb619ba3a87d6c50aa63ff3c5",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/client/src/sucafina/procurement.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 225
+        },
+        {
+          "path": "packages/schema/src/sucafina/procurement.ts",
+          "preimage_git_blob": "1b69faa66446264d70964f0235a3e77d1979e6fb",
+          "postimage_git_blob": "a71569ca0b3ad34c17ace04d33c855f120b7870c",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/schema/src/sucafina/procurement.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 225
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "preimage_git_blob": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+          "postimage_git_blob": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/transport.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        }
+      ],
+      "correction_and_evidence_state_at_base": "225_SOURCE_IN_INERT_228_AND_225_OWN_RECEIPT_NOT_CONSUMED",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Real allowed CSV bytes, original bank masking/row count, denied/revoked/owner swap; desktop broker if applicable",
+        "reference_original_recheck": "New C + 200 real F04 allowed/denied/revoked, masked bank fields, source rows, and 199 desktop if applicable.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S225-CSV-ADMISSION",
+        "S225-SUPPLIER-CSV-F04",
+        "S226-FILES-CODECS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R1",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "REV208-NEW-001",
+      "source_review": 208,
+      "origin": "NEW_208",
+      "priority": "P2",
+      "title": "FINANCIAL_UNIT_ADMISSION",
+      "original_state": "FAIL_SOURCE_STATIC_NOT_RUNTIME_QUALIFIED",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "A08-AC01",
+        "U20-AC01",
+        "U21-AC01",
+        "WP10.QLT.10"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+          "git_blob_at_original_review": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+          "lines": "7-28"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+          "git_blob_at_original_review": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+          "lines": "267-305"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+          "git_blob_at_original_review": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+          "lines": "35-65"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/view.ts"
+      ],
+      "correction_owner": {
+        "route": "189/PR65 sole integrator",
+        "writer": "A08/BI producer-semantic authority; N26 U20/U21 consumers under active lease only",
+        "product_write_by_reviewer": false
+      },
+      "correction_exact": "On source-origin BI semantic boundary, reject contradictory explicit unit/currency; do not infer conversion or mix FTE and cost and do not weaken absent/zero rules.",
+      "reconciliation_route": "215 original analytics unit repair full inert payload in 228",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+          "preimage_git_blob": "2420a5147e6705a5842936ee3459bf7d787d5870",
+          "postimage_git_blob": "b88301e2f956aefb5fff723d5a1f97af31423f4d",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-215/modules/sucafina/Sucafinav1/product/analytics/semantics.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 215
+        }
+      ],
+      "correction_and_evidence_state_at_base": "CURRENT_998F_STATIC_GUARD_DIFFERS_FROM_6130;215_POSTIMAGE_NOT_CONSUMED_NO_RUNTIME_RECHECK",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "USD and FTE positives, conflicting explicit hours+USD v USD, other mismatched physical/currency, null/zero, no fake FX, correct BI charts",
+        "reference_original_recheck": "Positive USD currency series and FTE unit series independently, negative conflicting explicit hours+USD versus USD series, mixed currency rejection, zero/null table parity, no invented FX and correct scale labels.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S215-BI-UNITS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R2",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "REV208-NEW-002",
+      "source_review": 208,
+      "origin": "NEW_208",
+      "priority": "P2",
+      "title": "ATLAS_PERSISTED_SEQUENCE_INTEGRITY",
+      "original_state": "FAIL_SOURCE_STATIC_NOT_RUNTIME_QUALIFIED",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "AM05",
+        "U26-AC01",
+        "WP10.T07",
+        "WP10.QLT.40"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "git_blob_at_original_review": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+          "lines": "9-48"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "git_blob_at_original_review": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "lines": "400-445"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+      ],
+      "correction_owner": {
+        "route": "189/PR65 sole integrator",
+        "writer": "WP10.T07 Atlas boundary/storage authority, active lease to confirm; 198/PR183 proof consumer",
+        "product_write_by_reviewer": false
+      },
+      "correction_exact": "Validate persisted ordinal uniqueness, expected monotonic append order and consistency without comparing legitimate event.seq to constant versioned([record]).seq. Preserve scanner and existing engine.",
+      "reconciliation_route": "216 original Atlas storage repair full inert payload and 228 semantic atlas-memory merge",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "preimage_git_blob": "227f22ae80851185a1998bee1adf7bda73a83485",
+          "postimage_git_blob": "b5caa2d662e12b9e74460a7c9291b61b967b32e2",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-216/modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 216
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "preimage_git_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "postimage_git_blob": "3ce00f44f2f072342b8e894bfc54b2f2a16f25c4",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        }
+      ],
+      "correction_and_evidence_state_at_base": "CURRENT_998F_ALREADY_CHECKS_ORDINAL_STATICALLY;216_POSTIMAGE_NOT_CONSUMED_NO_REAL_RESTART",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Two persisted originals, clean restart/append, duplicate/reordered/mutated ordinal rejects without disclosure/append, scanner clean/canary/unavailable",
+        "reference_original_recheck": "At least two committed task/project records: untouched journal reload/restart positive; mutated seq duplicate/out-of-order/tampered ordinal fails closed with zero disclosed records and zero committed append; next append after clean restart monotonic; scanner clean/hit/unavailable remain independent.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S216-ATLAS-SEQUENCE",
+        "S220-AM05"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R2",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE147-R02-01",
+      "source_review": 208,
+      "origin": "INHERITED_147",
+      "priority": "P1",
+      "title": "",
+      "original_state": "STATIC_CORRECTION_OBSERVED_HOSTED_RECHECK_NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U32-AC01",
+        "U32-AC02",
+        "R02-AC01"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "git_blob_at_original_review": "933426ea548c2c82c115f34c2f099df82379daee",
+          "lines": "33-54"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx"
+      ],
+      "correction_owner": "Historical owner 152/157, integration solely 189/PR65; 200/PR106 test dispatcher",
+      "correction_exact": "installationId/projectId now checked against both first/current projection contexts; static corrected.",
+      "reconciliation_route": "152/157 historic UI49 preserved comparison source, 211 integration",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "STATIC_HISTORIC_CORRECTION_OBSERVED_ACTUAL_SAME_C_F04_NOT_PROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Same-period/currency across installation/project must deny; same-owner project positive after fresh original read",
+        "reference_original_recheck": "Same-C U32 hosted same-period/currency cross-install/project, denied second read, same-scope positive.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "CI-UI-DECISIONS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R2",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE147-R02-02",
+      "source_review": 208,
+      "origin": "INHERITED_147",
+      "priority": "P2",
+      "title": "",
+      "original_state": "STATIC_CORRECTION_OBSERVED_HOSTED_RECHECK_NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC01"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "git_blob_at_original_review": "638ca5f806f1d11b8549972ba5559b4913ba4e6b",
+          "lines": "74-102,247-298"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+        "packages/schema/src/sucafina/reviews.ts"
+      ],
+      "correction_owner": "Historical owner 152/157, integration solely 189/PR65; 200/PR106 test dispatcher",
+      "correction_exact": "Value/Component cells show unit, currency, explicit null, evidence and source refs; static corrected.",
+      "reconciliation_route": "152/157 UI49 preserved model + semantic rendering already corrected statically",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "STATIC_HISTORIC_CORRECTION_OBSERVED_ACTUAL_SAME_C_F04_NOT_PROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "100 USD→EUR, confidence confirmed→estimated, 0→null, no silent conversion, full provenance",
+        "reference_original_recheck": "Same-C authorized UI49 100 USD→EUR, confirmed→estimated, 0→null, no implicit FX.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "CI-UI-DECISIONS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R2",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE147-R02-03",
+      "source_review": 208,
+      "origin": "INHERITED_147",
+      "priority": "P1",
+      "title": "",
+      "original_state": "STATIC_CORRECTION_OBSERVED_HOSTED_RECHECK_NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC02"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "git_blob_at_original_review": "933426ea548c2c82c115f34c2f099df82379daee",
+          "lines": "57-95"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx"
+      ],
+      "correction_owner": "Historical owner 152/157, integration solely 189/PR65; 200/PR106 test dispatcher",
+      "correction_exact": "Preserved value/section/overall ancestry now compared; compare/index.tsx@638ca5f:199-205,250-295 renders provenance; static corrected.",
+      "reconciliation_route": "152/157 preserved model lineage original source",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "STATIC_HISTORIC_CORRECTION_OBSERVED_ACTUAL_SAME_C_F04_NOT_PROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Equal numeric value with changed sourceRef version/incarnation/access/observedAt must show change; revocation negative",
+        "reference_original_recheck": "Same-C UI49 equal number but sourceRef version/incarnation/access/observedAt changes; verify distinct source change and negative revoked path.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "CI-UI-DECISIONS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R2",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "PRE147-R02-04",
+      "source_review": 208,
+      "origin": "INHERITED_147",
+      "priority": "P2",
+      "title": "",
+      "original_state": "STATIC_CORRECTION_OBSERVED_HOSTED_RECHECK_NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "U23-AC01",
+        "U23-AC02",
+        "R02-AC02"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "git_blob_at_original_review": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "lines": "149-194,230-244,405-409"
+        }
+      ],
+      "source_closure_path": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
+      ],
+      "correction_owner": "Historical owner 152/157, integration solely 189/PR65; 200/PR106 test dispatcher",
+      "correction_exact": "changePeriod clears discovery/selection/targets; selectedTarget crosschecks owner/surface/period; prepare refuses without refreshed target; static corrected.",
+      "reconciliation_route": "152/157 original UI55 import target selection source; 218 cross-domain receipt",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "preimage_git_blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "postimage_git_blob": "c503bb0904a5f989076583b30d91f9cd43d2bb4a",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 218
+        }
+      ],
+      "correction_and_evidence_state_at_base": "STATIC_HISTORIC_CORRECTION_OBSERVED_ACTUAL_SAME_C_F04_NOT_PROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Jan→Feb clears prior target/selection, renewed discovery; deny stale/revoked target, no apply",
+        "reference_original_recheck": "Same-C UI55 Jan→Feb clears old targets, rediscovery, revoked target denied, no admit/preview/apply using old selection.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S218-IMPORT-HISTORY-F04"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R2",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R148-NATIVE-01",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "PREVIOUS_CODE_DEFECT_CAUSAL_RECHECK",
+      "original_state": "REMEDIATED_STATIC_RECHECK_PENDING",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.INV.40",
+        "WP10.T03.CHK.40",
+        "WP10.DOD.40"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "git_blob_at_original_review": "b22f8c528d394549475106736a96727be7277152",
+          "lines": "143-280"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+          "git_blob_at_original_review": "85c745581cc327646dadbf4df344b51409c8655e",
+          "lines": "47-100, 100-147"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "git_blob_at_original_review": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931"
+        }
+      ],
+      "source_closure_path": [
+        "apps/cli/src/sucafina-product/native-host.ts",
+        "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts"
+      ],
+      "correction_owner": "Source161/PR104 correction and integrator189; 200/PR106 only surgical proof; 190 guards",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "161/PR104 native source correction, 211 integration, 190/200 original proof",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "STATIC_CORRECTION_IN_REVIEWED_SOURCE_NATIVE_POSITIVE_PENDING",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "SessionV2 original create/mismatch/load/narrow/abort/retry/restore/revoke; persisted C08 marker no double grant/orphan",
+        "reference_original_recheck": "On accepted C same exact blobs inject create/mismatch/load/narrow/abort, same runId retry, reload/revocation with C08 marker and fail-closed ownership; bind accepted runId/artifact + W/tree; ensure no double grant or orphan replay.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S219-NATIVE-HUMAN-REQUEST",
+        "S222-AM02-CAUSAL"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R3-NATIVE-01",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "NATIVE_POSITIVE_EVIDENCE_GAP",
+      "original_state": "NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "git_blob_at_original_review": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "git_blob_at_original_review": "b22f8c528d394549475106736a96727be7277152",
+          "lines": "143-280"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+          "git_blob_at_original_review": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+          "lines": "1-180"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+          "git_blob_at_original_review": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+          "lines": "1-220"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+          "git_blob_at_original_review": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+          "lines": "60-188"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+          "git_blob_at_original_review": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+          "lines": "10-60"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "git_blob_at_original_review": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+          "lines": "14-140"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "correction_owner": "WP12/196 PR182 (sources/proofs), 199/PR190 (installed host), 189 integration; 200 witnessed test",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "196/199 installed original five profiles/18 skills/SkillLoadReceipt/C11",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "preimage_git_blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+          "postimage_git_blob": "438d258443e273d6dab46c4b6cfd9e291bec24c6",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        }
+      ],
+      "correction_and_evidence_state_at_base": "SOURCE_SHIPPING_ONLY_REAL_NATIVE_POSITIVE_UNPROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "All 18 original SkillLoadReceipts/session/providermodel manifest/source digest/loadedMessageId; authorized outputRef persisted and human UI consumer after restart",
+        "reference_original_recheck": "Supply exact accepted C/run artifacts with real effective provider/model, profile/skill/source/instructions/manifest digests, loadedMessageId, nativeSessionId, actual operations, outputRef/version and consumer action after reload for all 18 skills; revalidate own reviewer separate SessionV2.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S221-AM01-CAUSAL",
+        "S222-AM02-CAUSAL"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R3-MCP-02",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "REAL_MCP_PARITY_PROOF_GAP",
+      "original_state": "NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.T03.CHK.40"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+          "git_blob_at_original_review": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+          "lines": "manifest: profiles,skills,packs,operation_call_routes"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+          "git_blob_at_original_review": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+          "lines": "1-220"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+          "git_blob_at_original_review": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469",
+          "lines": "60-190"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+          "git_blob_at_original_review": "6ba1b02eee73d44133c78599284f9772b26007b1",
+          "lines": "1-210"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+          "git_blob_at_original_review": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+          "lines": "14-19, 62-116"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+          "git_blob_at_original_review": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+          "lines": "12-100"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+      ],
+      "correction_owner": "WP10/C16 producers + WP12/196 PR182, WP10 189 integration; 200 executes selected witness",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "196/199 original MCP native C16 bridge, 39 routes; no fixture substitute",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "CATALOG_EXISTS_39_REAL_CALLS_AND_PERMISSION_PARITY_UNPROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "All 39 original initialize/listTools/callTool, 8 packs; host/provider pin, permission intersection, UI-domain receipt parity, original swap/restart/revoke",
+        "reference_original_recheck": "On accepted C capture real MCP exchange, each route UI/native source/receipt comparison; prove public binding, permission intersection and narrowed scope, revoke/discovery/reuse expiry, generation/object provider swap and actual restart; no fallback to homonymous remote provider.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S222-AM02-CAUSAL"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R3-TASK-03",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "CONFIRMED_DEFAULT_RUNTIME_MISSING_DEPENDENCY",
+      "original_state": "FAIL",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "git_blob_at_original_review": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+          "git_blob_at_original_review": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+          "lines": "22-112"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+          "git_blob_at_original_review": "0d34ddeb14e9da525d6acc4960a54f35be18d577",
+          "lines": "17-130"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+          "git_blob_at_original_review": "5383051da7cda4523d81f34d93430871e564bb06",
+          "lines": "62-222"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+          "git_blob_at_original_review": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+          "lines": "32-149"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+          "git_blob_at_original_review": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+          "lines": "20-155"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+          "git_blob_at_original_review": "0e8edac9d862cd68db387695d8aa476ad775c235",
+          "lines": "5-49"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+          "git_blob_at_original_review": "673a0f0d8c039cda65c4fd88dc13b638db4ab27a",
+          "lines": "12-96"
+        }
+      ],
+      "source_closure_path": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+        "apps/cli/src/sucafina-product/routine-native-origin.ts"
+      ],
+      "correction_owner": "Legitimate first-party native owner/199 PR190/189 PR65; WP07 business C07 writer only after genuine public Task/Relay admission; 200 requested CI only if causal input arrives",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "219 proposed origin only + 229 exclusive public Task/Relay provenance; 211 actual consumption needed",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "preimage_git_blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+          "postimage_git_blob": "438d258443e273d6dab46c4b6cfd9e291bec24c6",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+          "preimage_git_blob": null,
+          "postimage_git_blob": "dcd223898ca0bddb755ec2dc6b8e3fe2bd149cf4",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-219/apps/cli/src/sucafina-product/native-routine-producer219.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 219
+        }
+      ],
+      "correction_and_evidence_state_at_base": "229_ONLY_ACK_NO_REAL_SOURCE_HANDOFF;DEFAULT_RUNTIME_ORIGIN_PROVENANCE_UNPROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Original human POST Request->TaskTool frame->C15 owner Permission/provider approval publisher pin->Relay child run/result->human re-read; if no public origin remain FAIL",
+        "reference_original_recheck": "Produce supported PUBLIC/native Task/Relay owner provenance from original authenticated human POST (Request, live TaskTool frame, C15 owner, Permission, approval, provider generation and publisher pin) with real admission/child W/tree/run/result and human reread. If existing engine exposes no supported origin, remain FAIL (no engine substitute, IDs or private API).",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S219-NATIVE-HUMAN-REQUEST",
+        "S219-REAL-TASK-RELAY"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R3-ATLAS-04",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "DURABLE_ATLAS_POSITIVE_PROOF_GAP",
+      "original_state": "NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.CMP.60",
+        "WP10.T03.CHK.40"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "git_blob_at_original_review": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "lines": "295-463"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "git_blob_at_original_review": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+          "git_blob_at_original_review": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+          "lines": "60-188"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+          "git_blob_at_original_review": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+          "lines": "generated file"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+          "git_blob_at_original_review": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+          "lines": "20-91"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts"
+      ],
+      "correction_owner": "WP10/Atlas producer (prior WP10.T07) and 198/PR183 for AM05, 189 integration, 199 installed host, 200 hosted proof",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "216 Atlas ordinal fix; 220/230 C12 original receipt and C08/outbox boundary, 198/199 real provision",
+      "existing_complete_inert_postimages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "preimage_git_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "postimage_git_blob": "3ce00f44f2f072342b8e894bfc54b2f2a16f25c4",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": "228-SEMANTIC"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "preimage_git_blob": "227f22ae80851185a1998bee1adf7bda73a83485",
+          "postimage_git_blob": "b5caa2d662e12b9e74460a7c9291b61b967b32e2",
+          "complete_inert_payload": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-216/modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts.inert.txt",
+          "actual_211_consumption": "NOT_CONSUMED_AT_998f",
+          "candidate_C_acceptance": "NOT_RUN",
+          "producer": 216
+        }
+      ],
+      "correction_and_evidence_state_at_base": "COMPONENT_CATALOG_PRESENT_REAL_C08_COMMIT_RESTART_AND_TWO_PRINCIPAL_PROOF_UNPROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Real C09 source, C08 append+outbox commit and scan, actual restart + recall, two original principals and revoke/replacement before/after commit",
+        "reference_original_recheck": "Record real C09 source, owner-derived Atlas partition and scanner receipt; same C08 commit version/outbox and original+recall read after true restart, two authenticated actors and revocation/replacement+zero-append failure before/after commit; preserve source digests.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S216-ATLAS-SEQUENCE",
+        "S220-AM05"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R3-SCANNER-05",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "SCANNER_PACKAGE_AND_GUARD_PROOF_GAP",
+      "original_state": "NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.QLT.60",
+        "WP10.CMP.60"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+          "git_blob_at_original_review": "11922bec60a7b9223f6f11043b02a63885b55b31",
+          "lines": "1-43"
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "git_blob_at_original_review": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+          "lines": "5-50"
+        },
+        {
+          "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+          "git_blob_at_original_review": "06f8085df12d57baf7973d0df500da3e366dc29a",
+          "lines": "1-8"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+          "git_blob_at_original_review": "fb3d542eb22e9b8dc9a139ce1ff98189812d6e0d",
+          "lines": "1-45"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+          "git_blob_at_original_review": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+          "lines": "generated file"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/native-memory.js",
+          "git_blob_at_original_review": "820a3010be24a817edae7ff26299919d448ad4bf",
+          "lines": "generated file"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+          "git_blob_at_original_review": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+          "lines": "20-91"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "modules/atlas/boundary/package.json"
+      ],
+      "correction_owner": "199/PR190 installation/provisioner; 190/PR107 compiler/guards; 198/PR183 AM05; 189 for integrator",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "190 compiler G7(C) G8(D); 199 installed gitleaks toolkit; no guard relaxation",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "INSTALLED_SCANNER_GENERATOR_GUARDS_NOT_RUN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Official nonsecret installed scanner path/version or fail-closed; AST/spawn/generated guard C checkout G7, D checkout G8 separately; clean/canary/unavailable native witness",
+        "reference_original_recheck": "199 supplies nonsecret binary path/version or classified unavailable via installed toolkit; 190 attaches check:generated, typecheck, AST and check:spawn-imports G7D/G8 exact C artifacts; 200 real scanner positive/negative selected proof; no modifications to guard/allowlist.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "S220-AM05",
+        "CI-ATLAS-BUSINESS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R3-EXPORT-06",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "DOCUMENT_AND_CONSUMER_EGRESS_PROOF_GAP",
+      "original_state": "NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.DOD.10",
+        "WP10.CMP.10",
+        "WP10.SUC.10",
+        "WP10.T03.CHK.40"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "apps/cli/src/sucafina-product/document-services.ts",
+          "git_blob_at_original_review": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+          "lines": "17-55"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+          "git_blob_at_original_review": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+          "lines": "1-72"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+          "git_blob_at_original_review": "b968936724192eaab050cf48e69dc5a634dc54d9",
+          "lines": "1-51"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+          "git_blob_at_original_review": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+          "lines": "10-60"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+          "git_blob_at_original_review": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+          "lines": "83-175"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "git_blob_at_original_review": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+          "lines": "14-140"
+        }
+      ],
+      "source_closure_path": [
+        "apps/cli/src/sucafina-product/document-services.ts",
+        "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+      ],
+      "correction_owner": "WP06.T05 document source and WP12/196 PR182 consumers, 189 integrates; 200 evidence and 199 installed host",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "WP06.T05 real document extraction and 196/199 authorized consumer, original bytes proof",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "REAL_ORIGINAL_PDF_DOCX_TEXT_AND_EXPORT_EGRESS_NOT_PROVEN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Original source bytes/PDF digital/DOCX/text→candidate→human confirmation→C17 refs→C11 outputRef→authorized/denied/revoked/reload final consumer; digital scan no OCR claim",
+        "reference_original_recheck": "Accepted C document source bytes/revision and C17 ref, PDF/DOCX/text extraction/candidate->human confirmation/deny, authorized and revoked refresh, contribution outputRef/run receipts, consumer read/action after restart; classify export C-blobs vs UI projections separately.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "CI-UI-REPORTS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R3-CI-07",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "FINAL_C_CI_PROVENANCE_GAP",
+      "original_state": "NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.DOD.02",
+        "WP10.QLT.02",
+        "WP10.T03.CHK.03",
+        "WP10.T03.DOD.01"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/BATCH-03-AM01-AM06-CONSUMPTION.json",
+          "git_blob_at_original_review": "86c001c0472fa3e5cfd6695172fc7315c9b6a89e",
+          "lines": "proof inventory and validation NOT_RUN"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/HANDOFF-190-191-AM01-AM06.json",
+          "git_blob_at_original_review": "c1c5dbeae84d47f76f9bc732fbb5128ce4389cdc",
+          "lines": "all AM proof status NOT_RUN"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+          "git_blob_at_original_review": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+          "lines": "189 integration authority"
+        }
+      ],
+      "source_closure_path": [
+        ".github/workflows/test-ci.yml",
+        "script/test-ci-request.ts"
+      ],
+      "correction_owner": "190/PR107 compiler G7D/G8; 200/PR106 sole product CI dispatcher; 189/PR65 acceptance; reviewers independent",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "232 sole dispatcher terminal handoff: 19 causal/8 final, no initial official dispatch capability",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "NO_ACCEPTED_C_AND_FINAL_CI_NOT_RUN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "After formal C, same-C 8 CI and epic/e2e+AM01–AM06 native recheck with original W/S/run/job/attempt/artifacts; negative failures not relabeled",
+        "reference_original_recheck": "Accepted C W/tree + immutable run/job/attempt/selector/matrix/artifact IDs for exact eight CI-SF, CI-CLI, CI-APP-SRC, CI-APP-BROWSER, CI-ATLAS-BUSINESS, CI-UI-OPERATIONS, CI-UI-DECISIONS, CI-UI-REPORTS and epic/G7/G8. Record no skipped hard obligation and same C. Classify existing 200 AM failure from log instead of dispatch duplicate.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [
+        "CI-SF",
+        "CI-CLI",
+        "CI-APP-SRC",
+        "CI-APP-BROWSER",
+        "CI-ATLAS-BUSINESS",
+        "CI-UI-OPERATIONS",
+        "CI-UI-DECISIONS",
+        "CI-UI-REPORTS"
+      ],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    },
+    {
+      "id": "R3-CANDIDATE-08",
+      "source_review": 209,
+      "origin": "RUNTIME_209",
+      "priority": "P1",
+      "title": "FINAL_C_D_INDEPENDENCE_AND_RECHECK_GAP",
+      "original_state": "NOT_PROVEN",
+      "original_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "impacted_criterion_ids": [
+        "WP10.DOD.01",
+        "WP10.DOD.02",
+        "WP10.T03.DOD.01",
+        "WP10.T03.SUC.01",
+        "WP10.T03.CMP.02"
+      ],
+      "review_acceptance_refs": [
+        "WP10.T03.QLT.40",
+        "WP10.T03.INV.01",
+        "WP10.DOD.01"
+      ],
+      "affected": null,
+      "original_source_refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+          "git_blob_at_original_review": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+          "lines": "189 integration authority"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/BATCH-03-AM01-AM06-CONSUMPTION.json",
+          "git_blob_at_original_review": "86c001c0472fa3e5cfd6695172fc7315c9b6a89e",
+          "lines": "proof inventory and validation NOT_RUN"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/HANDOFF-190-191-AM01-AM06.json",
+          "git_blob_at_original_review": "c1c5dbeae84d47f76f9bc732fbb5128ce4389cdc",
+          "lines": "all AM proof status NOT_RUN"
+        }
+      ],
+      "source_closure_path": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure211/S0-FENCE.json"
+      ],
+      "correction_owner": "189 sole C integrator; 190 G7D/G8; 207/208/209 reviewers independently after accepted C; 200 on C only",
+      "correction_exact": "No source modification permitted here; source producer or evidence authority remains open.",
+      "reconciliation_route": "211 S0 sole C integrator; 235 reviewer prep only, 190 G7/G8",
+      "existing_complete_inert_postimages": [],
+      "correction_and_evidence_state_at_base": "NO_FORMAL_C_3_FRESH_REVIEWS_NOT_RUN_D_NOT_BUILT_G7_G8_NOT_RUN",
+      "pending_recheck": {
+        "status": "NOT_RUN",
+        "required_behavior": "Exact accepted C+tree; independent 3 authorship-disjoint reviews on same C after repairs; D only evidence bytes, full C blob parity; G7 on C checkout and G8 on D checkout",
+        "reference_original_recheck": "189 publishes accepted C full tree/blob inventory and no moving source; three independent final reviews verify same C and all previously open findings; 190 verifies D evidence-only envelope keeps all C blobs byte-for-byte plus 3 reviews and G8, no C CI misattributed to D; any later change triggers independent causal recheck.",
+        "candidate_C_sha": null,
+        "product_W_sha": null,
+        "run_id": null,
+        "job_id": null,
+        "original_actor_grant": null,
+        "observed": null,
+        "verdict": "NOT_APPROVED"
+      },
+      "existing_232_request_ids": [],
+      "do_not_dispatch_or_duplicate": true,
+      "reviewer_after_formal_C": "R3",
+      "origin_approved_by_235": false
+    }
+  ],
+  "known_deduplicated_208": [
+    {
+      "tracking": "203 F02/NAV-01 source handoff (PR189), no new 208 ID",
+      "priority": "P1",
+      "status": "OPEN_AT_REVIEWED_SRC",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "blob": "17db52d914ca49934953e1161461b03856eb29c5",
+      "lines": "69-97",
+      "fact": "POST projection.search permits URI search query parameter q; known inert writer203 patch postblob 2c71817, consumer old blob 17db52d. Registry POST JSON 4096 already declared, but privacy gate not yet complete.",
+      "owner": "189 consume 203 inert patch; 200 request already recorded on PR106, avoid duplicate",
+      "recheck": "No q in URL; original Request preserved; body UTF8 <=4096; reject legacy private GET; no leakage through logs or downloads."
+    },
+    {
+      "tracking": "200/PR106 AM01 and AM03 known run failures; 196/197 corrective source",
+      "priority": "P1",
+      "status": "KNOWN_NOT_DUPLICATED",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/",
+      "blob": null,
+      "lines": null,
+      "fact": "Existing 43775802204 reported AM01 expected conditioned null versus 240000 and AM03 input selector failure; triage/corrections belong to 196/197/200/189, not new 208 findings.",
+      "owner": "196/197 writers; 189 integrator; 200 dispatcher",
+      "recheck": "Reconcile same C, first-error and original financial oracle, no rerun identical unchanged input."
+    },
+    {
+      "tracking": "161 native tombstone correction and R148-NATIVE-01; 209 already rechecks",
+      "priority": "P1",
+      "status": "UNQUALIFIED_CROSS_SCOPE",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "lines": "100-115,128-170",
+      "fact": "State provider retains principal/access/policy/target-incarnation CAS, guarded metadata and native publication; 161's inert privileged settlement proposal is not proof of safe tombstone/revocation. Existing R148-NATIVE-01 belongs 209/189.",
+      "owner": "189 with native writer and 209 reviewer; 200 test evidence",
+      "recheck": "Denied/revoked/tombstoned native attempt not resurrected; abort/restart no duplicate or unauthorized settlement; same C."
+    },
+    {
+      "tracking": "207 functional review on UI62/U26 and UI57/U23",
+      "priority": "P1/P2",
+      "status": "KNOWN_OTHER_REVIEWER",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/",
+      "blob": null,
+      "lines": null,
+      "fact": "UI62 similarity unavailable and UI57 import history hard-unavailable already opened by mission207/PR65, not reproduced as 208 new IDs.",
+      "owner": "207/189 and current N writers",
+      "recheck": "Follow 207 named criteria, keep shared installed evidence and avoid duplicate requests."
+    }
+  ],
+  "extra_global_unqualified": [
+    "Original 165/165 route parity is structural only",
+    "UX original 42 additional entries/70 surfaces, U39/U40, UI32 v2 pending",
+    "5 resident profiles 18 skills 8 packs 39 operations and 6 AM proofs require real original positive and negative witness",
+    "No valid C, no original F04 nor three review approvals",
+    "Guard G7 on C checkout; guard G8 on D checkout separately"
+  ],
+  "execution": {
+    "source_inspection": "GITHUB_MCP_STATIC",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "final_approvals": "NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}
