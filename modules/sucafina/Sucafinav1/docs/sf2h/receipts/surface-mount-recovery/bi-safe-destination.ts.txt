@@ -1,0 +1,20 @@
+import type { SfInstallationDescriptor } from "@orchestra/schema/sucafina/context"
+
+/** Producer links are data. Bind egress to the current authenticated installation. */
+export function safeBiDestination(value: string, binding: Pick<SfInstallationDescriptor, "publicOrigin" | "mount">): string | undefined {
+  if (!value || [...value].some((ch) => ch.charCodeAt(0) <= 32 || ch.charCodeAt(0) === 127 || ch === "\\" || ch === "#")) return
+  if (!URL.canParse(binding.publicOrigin)) return
+  const origin = new URL(binding.publicOrigin)
+  if (!["http:", "https:"].includes(origin.protocol) || origin.username || origin.password ||
+      origin.pathname !== "/" || origin.search || origin.hash) return
+  const mount = binding.mount === "/" ? "" : binding.mount.replace(/\/$/, "")
+  if (mount && (!mount.startsWith("/") || mount.includes("//") || ["%", "\\", "?", "#"].some((part) => mount.includes(part)) ||
+      mount.split("/").some((part) => part === "." || part === ".."))) return
+  const base = origin.origin + mount + "/dashboard"
+  if (!URL.canParse(value, base)) return
+  const target = new URL(value, base)
+  if (!["http:", "https:"].includes(target.protocol) || target.origin !== origin.origin ||
+      target.username || target.password || target.hash ||
+      !["dashboard", "planner", "procurement"].some((name) => target.pathname === mount + "/" + name)) return
+  return target.href
+}
