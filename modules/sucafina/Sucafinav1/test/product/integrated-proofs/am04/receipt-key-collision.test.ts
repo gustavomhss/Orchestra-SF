@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
-import { object, rows } from "../../../runtime/contract.ts"
-import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { receiptProofKey, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
+import { object, rows } from "../../../../runtime/contract.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { receiptProofKey, receiptProofTransactionKey, receiptReviewBinding } from "../../../../product/decisions/receipt-review-binding.ts"
 import { createC12Fixture, prepareC12Change, readReviewDigest } from "../../c12-receipt-recovery/fixture.ts"
 import { observeC12 } from "../../c12-receipt-recovery/consumer.ts"
 

@@ -1,0 +1,117 @@
+{
+  "schema": "sf2h.closure211.cross-actor-intake.v1",
+  "epoch": "closure-composer-e1-browser211",
+  "base_head": "fbbbf07c9622f449e77856bbe09077f9e38bd2c7",
+  "base_tree": "4b9cac590f69a9d232cd52a8c3e059a49c60cf5c",
+  "source": {
+    "212": {
+      "branch": "sf-hypothetical-fix",
+      "code_commit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/HANDOFF.json",
+      "receipt_blob": "b4d65db453de5e7f4d7e4237a05a7a48f6f28f47",
+      "cause": "CI200-AM01-HYPOTHETICAL-TOTAL",
+      "original_failed_run": 43775802204
+    },
+    "214": {
+      "branch": "sf-ci-validation",
+      "source_commit": "da75b820574c11d28fa772b05550bfc78bd4b427",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/INERT-211-CAUSAL-PATCHES.json",
+      "receipt_blob": "6579a0b87b8ed1d3761fe2c0644b86f687b2f90a",
+      "original_failed_runs": [
+        43780028332,
+        43780060382,
+        43780062327
+      ]
+    }
+  },
+  "paths": [
+    {
+      "mission": 212,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "pre": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+      "post": "5d483cad26e595b7744794098a9ffe15605e3b8f",
+      "kind": "producer-output",
+      "source_commit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+      "consumer_preimage": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+      "consumer_postimage": "5d483cad26e595b7744794098a9ffe15605e3b8f"
+    },
+    {
+      "mission": 212,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+      "pre": null,
+      "post": "f20fdab67655572f181f78e64b3023f993346d7c",
+      "kind": "producer-output",
+      "source_commit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+      "consumer_preimage": null,
+      "consumer_postimage": "f20fdab67655572f181f78e64b3023f993346d7c"
+    },
+    {
+      "mission": 212,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "pre": "80da902f35f80d9b61175fd90d5c10fa7b3f00aa",
+      "post": "cef673fe075775a8e4000734b4f028e941fa875f",
+      "kind": "complete-inert-consumer-patch",
+      "source_commit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+      "consumer_preimage": "80da902f35f80d9b61175fd90d5c10fa7b3f00aa",
+      "consumer_postimage": "cef673fe075775a8e4000734b4f028e941fa875f"
+    },
+    {
+      "mission": 214,
+      "path": "apps/cli/src/sucafina-product/native-ui/operations/projection.ts",
+      "pre": "02b5f163387aaee657336f5544003ab123af5dd4",
+      "post": "bdde554d78b3c2e9c880499d879388a65147b3f0",
+      "kind": "complete-inert-causal-repair",
+      "source_commit": "da75b820574c11d28fa772b05550bfc78bd4b427",
+      "consumer_preimage": "02b5f163387aaee657336f5544003ab123af5dd4",
+      "consumer_postimage": "bdde554d78b3c2e9c880499d879388a65147b3f0"
+    },
+    {
+      "mission": 214,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+      "pre": "530b1d6618218f11cefa699e3e6def1bd8f96270",
+      "post": "bb4cdec036331bc180db16795c7dcae215cfbe98",
+      "kind": "complete-inert-import-repair",
+      "source_commit": "da75b820574c11d28fa772b05550bfc78bd4b427",
+      "consumer_preimage": "530b1d6618218f11cefa699e3e6def1bd8f96270",
+      "consumer_postimage": "bb4cdec036331bc180db16795c7dcae215cfbe98"
+    },
+    {
+      "mission": 214,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+      "pre": "1fbabb2be4bd2540f1f280cf432630e6dd3f486d",
+      "post": "aa144a649d9f3378f9b0861941b3c7f4379fc472",
+      "kind": "complete-inert-import-repair",
+      "source_commit": "da75b820574c11d28fa772b05550bfc78bd4b427",
+      "consumer_preimage": "1fbabb2be4bd2540f1f280cf432630e6dd3f486d",
+      "consumer_postimage": "aa144a649d9f3378f9b0861941b3c7f4379fc472"
+    },
+    {
+      "mission": 214,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+      "pre": "4a7100ca6d4a3c109924674fc6d6ae8c4e79aee0",
+      "post": "20be7565a7d63a1f042a718dbc1c5787340b62e1",
+      "kind": "complete-inert-import-repair",
+      "source_commit": "da75b820574c11d28fa772b05550bfc78bd4b427",
+      "consumer_preimage": "4a7100ca6d4a3c109924674fc6d6ae8c4e79aee0",
+      "consumer_postimage": "20be7565a7d63a1f042a718dbc1c5787340b62e1"
+    }
+  ],
+  "changes": {
+    "am01": "Use real Planner-produced noncommitting hypothetical scenario command instead of operationless observed source; preserve missing vs zero, C09/C10",
+    "native": "Strict native Finance/Reviewer counterproofs and causal negative cases, not observed positive runtime",
+    "syntax": "Remove unmatched operations/projection ternary while retaining tests/oracle",
+    "imports": "Correct AM03/AM04 relative imports without dropping assertions"
+  },
+  "validation": {
+    "all_repaired_selections": "NOT_RUN",
+    "run_43775802204": "FAILED_BEFORE_FIX_NOT_RECHECKED",
+    "run_43780028332": "FAILED_BEFORE_FIX_NOT_RECHECKED",
+    "run_43780060382": "FAILED_BEFORE_FIX_NOT_RECHECKED",
+    "run_43780062327": "FAILED_BEFORE_FIX_NOT_RECHECKED",
+    "compiler190": "REQUEST_REQUIRED_NOT_RUN",
+    "productCI214": "REQUEST_REQUIRED_NOT_DISPATCHED_BY_211"
+  },
+  "active214_is_only_dispatcher": true,
+  "approvedC": false,
+  "GLOBAL_RELEASE": false
+}

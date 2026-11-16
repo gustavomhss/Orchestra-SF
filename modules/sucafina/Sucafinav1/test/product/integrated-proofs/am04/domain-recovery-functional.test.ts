@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { rm } from "node:fs/promises"
-import { object, rows } from "../../../runtime/contract.ts"
+import { object, rows } from "../../../../runtime/contract.ts"
 import { createC12Fixture, prepareC12Change, readReviewDigest, changedReviewDigest } from "../../c12-receipt-recovery/fixture.ts"
 import { observeC12 } from "../../c12-receipt-recovery/consumer.ts"
 
