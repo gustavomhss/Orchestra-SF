@@ -24,7 +24,7 @@ const accepts = <A>(schema: Schema.Decoder<A, never>, value: unknown): boolean =
 // Schema.toType verifies decoded values without claiming the wire's erased
 // DecodingServices (including Receipt/EvidenceRef) are context-free.
 const acceptsDecoded = <S extends Schema.Top>(schema: S, value: unknown): boolean =>
-  Option.isSome(Schema.decodeUnknownOption(Schema.toType(schema))(value))
+  Option.isSome(Schema.decodeUnknownOption(Schema.toType(schema), { onExcessProperty: "error" })(value))
 const section = {
   id: "line-one", title: "Current agenda", selectionRef: "scoped-selection",
   topic: "budget", period: { start: "2026-01-01", end: "2026-12-31" },

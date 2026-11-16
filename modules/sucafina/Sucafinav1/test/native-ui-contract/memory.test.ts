@@ -19,7 +19,7 @@ const decode = <A>(schema: Schema.Decoder<A, never>, value: unknown): A =>
 // *decoded type* (not the encoded wire). toType removes decoder effects without
 // an unsafe cast; never claim this verifies its context-dependent wire decoder.
 const validateDecoded = <S extends Schema.Top>(schema: S, value: unknown): S["Type"] =>
-  Schema.decodeUnknownSync(Schema.toType(schema))(value)
+  Schema.decodeUnknownSync(Schema.toType(schema), { onExcessProperty: "error" })(value)
 
 const query = { caseId: "case-1", incarnation: "inc-1", version: 3 }
 const period = { start: "2026-01-01", end: "2026-12-31" } as const
