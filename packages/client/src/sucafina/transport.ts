@@ -10,6 +10,10 @@ import type {
 } from "@orchestra/schema/sucafina/common"
 import { SfOperationRegistry, type SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
 import { SfContextStamp, type SfContext, type SfInstallationDescriptor, type SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import {
+  SF_FILE_BYTE_LIMIT, SF_FILE_MULTIPART_LIMIT, sfAllowedByteMime, sfFilesSourceQuery,
+  sfIsByteOperation, sfIsUploadOperation, sfUploadSlot,
+} from "./transport/files"
 
 // Keep the Client public type identical to the canonical, browser-safe wire union.
 export type { SfTransportResult } from "@orchestra/schema/sucafina/common"
@@ -151,16 +155,24 @@ export function createSfTransport(options: Readonly<{
       if (!codec) return failure("contract-unavailable")
       const parsedInput = Schema.decodeUnknownOption(Schema.toType(operation.input), { onExcessProperty: "error" })(input)
       if (Option.isNone(parsedInput)) return failure("contract-mismatch")
+      const upload = sfIsUploadOperation(operation.operationId)
+        ? sfUploadSlot(operation.operationId, parsedInput.value) : undefined
+      if (sfIsUploadOperation(operation.operationId) && !upload) return failure("contract-mismatch")
+      const codecInput = upload && typeof parsedInput.value === "object" && parsedInput.value !== null
+        ? Object.fromEntries(Object.entries(parsedInput.value).filter(([key]) => key !== "bytes"))
+        : parsedInput.value
       const decoded = (() => {
-        try { return codec.decodeInput(parsedInput.value) }
+        try { return codec.decodeInput(codecInput) }
         catch { return { status: "invalid" } as const }
       })()
       if (decoded.status !== "ok") return failure("contract-mismatch")
-      if (metadata.responseMode !== "json" && metadata.responseMode !== "empty") {
-        // Bytes require the installed download-handle/chunk consumer, not buffering
-        // unbounded exports into memory. Navigation is never data transport.
+      const isBytes = metadata.responseMode === "bytes"
+      if (isBytes !== sfIsByteOperation(operation.operationId) &&
+          (isBytes || operation.operationId.startsWith("files.export.") ||
+           operation.operationId === "files.asset.download")) return failure("contract-unavailable")
+      if (metadata.responseMode !== "json" && metadata.responseMode !== "empty" && !isBytes)
         return failure("contract-unavailable")
-      }
+      if ((isBytes || upload) && !stamp) return failure("contract-unavailable")
       // ctx.context expectations are ALWAYS taken from the approved descriptor.
       // The frozen F01 signatures allow an undefined public argument, while the
       // catalog requires exactly this private three-field query; never trust an
@@ -189,7 +201,11 @@ export function createSfTransport(options: Readonly<{
         : undefined
       if (metadata.method === "POST" && (!key || !KEY.test(key))) return failure("contract-mismatch")
       if (metadata.method === "GET" && call.idempotencyKey !== undefined) return failure("contract-mismatch")
-      const bodyValue = metadata.method === "POST" ? operationBody(metadata, wireInput) : undefined
+      const bodyValue = metadata.method === "POST"
+        ? operation.operationId === "files.document-confirm" && asJsonObject(wireInput)
+          ? asJsonObject(wireInput)?.evidence
+          : operationBody(metadata, wireInput)
+        : undefined
       if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")
       const body = bodyValue === undefined ? undefined : JSON.stringify(bodyValue)
       if (body !== undefined && metadata.maxRequestBytes !== undefined &&
@@ -201,7 +217,12 @@ export function createSfTransport(options: Readonly<{
       if (legacyMutation && !stamp) return failure("contract-unavailable")
       if (stamp && !sameStampInstallation(stamp, options.binding)) return failure("contract-mismatch")
       if (mutating && pending.size >= MUTATION_LIMIT && !pending.has(key!)) return failure("contract-unavailable")
-      const digest = mutating ? await digestPayload(operation.operationId, route, body ?? "") : undefined
+      // Bind each mutation intent to the actual bytes as well as its metadata,
+      // without serializing a Uint8Array or creating an optimistic retry.
+      const uploadDigest = upload ? await sha256Bytes(upload.bytes) : undefined
+      if (upload && !uploadDigest) return failure("contract-unavailable")
+      const digest = mutating ? await digestPayload(operation.operationId, route,
+        (body ?? "") + (uploadDigest ? "\\u0000" + uploadDigest : "")) : undefined
       if (mutating && digest === undefined) return failure("contract-unavailable")
       const ownerHeader = legacyMutation ? nativeOwnerHeader(stamp!) : undefined
       if (legacyMutation && !ownerHeader) return failure("contract-mismatch")
@@ -219,8 +240,29 @@ export function createSfTransport(options: Readonly<{
         return failure("aborted")
       }
 
-      const headers: Record<string, string> = { Accept: "application/json" }
-      if (body !== undefined) headers["Content-Type"] = "application/json"
+      const headers: Record<string, string> = {
+        Accept: operation.operationId === "files.export.xlsx"
+          ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          : operation.operationId === "files.export.json" ? "application/json"
+          : operation.operationId === "files.export.suppliers" || operation.operationId === "files.export.register"
+            ? "text/csv" : isBytes ? "application/octet-stream" : "application/json",
+      }
+      let requestBody: BodyInit | undefined = body
+      if (upload && operation.operationId === "files.import-admit") {
+        const fields = asJsonObject(wireInput)
+        if (!fields || typeof fields.surface !== "string" ||
+            typeof fields.selectionRef !== "string" || !fields.options) return failure("contract-mismatch")
+        const form = new FormData()
+        form.set("surface", fields.surface)
+        form.set("selectionRef", fields.selectionRef)
+        form.set("options", JSON.stringify(fields.options))
+        form.set("file", new Blob([new Uint8Array(upload.bytes)], { type: upload.mediaType }), upload.fileName)
+        requestBody = form
+        if (upload.bytes.byteLength + 65_536 > SF_FILE_MULTIPART_LIMIT + 65_536) return failure("contract-mismatch")
+      } else if (upload) {
+        requestBody = upload.bytes
+        headers["Content-Type"] = upload.mediaType
+      } else if (body !== undefined) headers["Content-Type"] = "application/json"
       if (key) headers["Idempotency-Key"] = key
       if (ownerHeader) headers["X-SF-Native-Owner"] = ownerHeader
       let dispatched = false
@@ -235,10 +277,40 @@ export function createSfTransport(options: Readonly<{
           const result = await options.desktop.invoke({
             kind: "request", ...owner, requestId, operationId: operation.operationId,
             input: wireInput, ...(key ? { idempotencyKey: key } : {}),
+            ...(upload ? { upload } : {}),
           })
           if ("status" in result && (result.status === 401 || result.status === 403)) stamp = undefined
           if (result.kind === "transport-error") response = result
-          else if (result.kind === "json-response" && metadata.responseMode === "json" &&
+          else if (result.kind === "byte-response" && isBytes && result.status === 200 &&
+                   sfAllowedByteMime(operation.operationId, result.headers["content-type"])) {
+            const parts: Uint8Array[] = []
+            let size = 0
+            let sequence = 0
+            let completed = false
+            while (size <= SF_FILE_BYTE_LIMIT && !completed && isCurrent() && !call.signal.aborted) {
+              const part = await options.desktop.invoke({
+                kind: "response-chunk", ...owner, requestId,
+                responseHandle: result.responseHandle, sequence,
+              })
+              if (part.kind !== "byte-chunk" || part.sequence !== sequence ||
+                  !(part.bytes instanceof Uint8Array) || part.bytes.byteLength > 64 * 1024 ||
+                  part.done && part.bytes.byteLength !== 0) break
+              sequence++
+              if (part.done) { completed = true; break }
+              if (part.bytes.byteLength === 0 || size + part.bytes.byteLength > SF_FILE_BYTE_LIMIT) break
+              size += part.bytes.byteLength
+              parts.push(new Uint8Array(part.bytes))
+            }
+            if (completed && isCurrent() && !call.signal.aborted) {
+              const bytes = new Uint8Array(size)
+              let at = 0
+              for (const part of parts) { bytes.set(part, at); at += part.byteLength }
+              response = { status: result.status, headers: publicHeaders(result.headers), body: bytes }
+            } else response = failure("invalid-response")
+            // The main broker owns revocation and byte-handle cleanup; this
+            // abort is idempotent after completed transfer and releases handles.
+            await options.desktop.abort({ ...owner, requestId }).catch(() => undefined)
+          } else if (result.kind === "json-response" && metadata.responseMode === "json" &&
                    isJsonContentType(result.headers["content-type"])) {
             response = { status: result.status, headers: publicHeaders(result.headers), body: result.body }
           } else if (result.kind === "empty-response" && metadata.responseMode === "empty" &&
@@ -259,11 +331,19 @@ export function createSfTransport(options: Readonly<{
             redirect: "error",
             signal: call.signal,
             headers,
-            ...(body !== undefined ? { body } : {}),
+            ...(requestBody !== undefined ? { body: requestBody } : {}),
           })
           const extracted = publicHeaders(result.headers)
           if (result.status === 401 || result.status === 403) stamp = undefined
-          if (metadata.responseMode === "empty") {
+          if (isBytes && result.status === 200) {
+            const bytes = sfAllowedByteMime(operation.operationId, result.headers.get("content-type")) && stamp
+              ? await readSfBytesBounded(result, call.signal, async () =>
+                  isCurrent() && webOrigin() && !!stamp &&
+                  await refreshSfFileAuthority(options, stamp)) : undefined
+            response = bytes
+              ? { status: result.status, headers: extracted, body: bytes }
+              : failure("invalid-response")
+          } else if (metadata.responseMode === "empty") {
             response = result.status === 204 && !result.headers.get("content-type")
               ? { status: result.status, headers: extracted, body: undefined }
               : failure("invalid-response")
@@ -290,6 +370,13 @@ export function createSfTransport(options: Readonly<{
       // A 5xx after submission is not a durable negative mutation receipt.
       if (mutating && response.status >= 500) return failure("outcome-unknown")
       const uncertain = mutating && response.status !== 401 && response.status !== 403
+      if (isBytes) {
+        if (response.status !== 200 || !(response.body instanceof Uint8Array))
+          return failure("invalid-response")
+        const parsedBytes = Schema.decodeUnknownOption(Schema.toType(operation.output))(response.body)
+        if (Option.isNone(parsedBytes)) return failure("invalid-response")
+        return { kind: "response", status: response.status, headers: response.headers, body: parsedBytes.value }
+      }
       const wireDecoded = (() => {
         try { return codec.decodeOutput(response.body) }
         catch { return { status: "invalid" } as const }
@@ -386,7 +473,17 @@ function operationUrl(
       if (!/^[a-zA-Z][a-zA-Z0-9._\[\]-]*$/.test(key) || value.includes("\n") || value.includes("\r")) return undefined
       url.searchParams.set(key, value)
     }
-    if (meta.method === "GET" && input !== undefined) {
+    const special = operationId.startsWith("files.") && source
+      ? sfFilesSourceQuery(operationId, source) : undefined
+    if (["files.asset.link","files.asset.download","files.asset.upload",
+      "files.document-open","files.document-scenario-targets"].includes(operationId) && !special)
+      return undefined
+    if (special) {
+      for (const [key, value] of Object.entries(special)) {
+        if (url.searchParams.has(key)) return undefined
+        url.searchParams.set(key, value)
+      }
+    } else if (meta.method === "GET" && input !== undefined) {
       if (!source) return undefined
       for (const [key, value] of Object.entries(source)) {
         if (key === "surface" && meta.pathTemplate.includes("{surface}")) continue
@@ -540,4 +637,79 @@ async function readJsonBounded(response: Response): Promise<unknown | undefined>
     return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(all))
   } catch { return undefined }
   finally { reader.releaseLock() }
+}
+
+/** F02 streaming. The declared size is a hint; every actual chunk is bounded. */
+async function readSfBytesBounded(response: Response, signal: AbortSignal,
+  recheck: () => Promise<boolean>): Promise<Uint8Array | undefined> {
+  const declared = response.headers.get("content-length")
+  if (declared !== null && (!/^(0|[1-9][0-9]*)$/.test(declared) ||
+      Number(declared) > SF_FILE_BYTE_LIMIT)) {
+    await response.body?.cancel().catch(() => undefined)
+    return undefined
+  }
+  const reader = response.body?.getReader()
+  if (!reader) return undefined
+  const parts: Uint8Array[] = []
+  let total = 0
+  try {
+    for (;;) {
+      if (signal.aborted || !await recheck()) { await reader.cancel(); return undefined }
+      const part = await reader.read()
+      if (part.done) break
+      if (part.value.byteLength === 0) continue
+      total += part.value.byteLength
+      if (total > SF_FILE_BYTE_LIMIT) { await reader.cancel(); return undefined }
+      parts.push(new Uint8Array(part.value))
+    }
+    if (signal.aborted || !await recheck()) return undefined
+    const result = new Uint8Array(total)
+    let offset = 0
+    for (const part of parts) { result.set(part, offset); offset += part.byteLength }
+    return result
+  } catch { return undefined }
+  finally { reader.releaseLock() }
+}
+async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
+  if (!crypto?.subtle) return undefined
+  const value = await crypto.subtle.digest("SHA-256", bytes).catch(() => undefined)
+  return value ? Array.from(new Uint8Array(value), (b) => b.toString(16).padStart(2, "0")).join("") : undefined
+}
+
+/**
+ * An authenticated original ctx.context request (never renderer-provided URL)
+ * fences each web byte read against owner, policy and accessRevision changes.
+ * Server producers separately reauthenticate record/export access at egress.
+ */
+async function refreshSfFileAuthority(options: Readonly<{
+  binding: SfInstallationDescriptor; fetch: typeof globalThis.fetch;
+  operations: SfOperationBindings;
+}>, expected: SfContextStamp): Promise<boolean> {
+  const meta = cataloguedRoute("ctx.context")
+  const codec = options.operations["ctx.context"]
+  if (!meta || !codec || meta.method !== "GET" || meta.responseMode !== "json") return false
+  const tuple = { installationId: options.binding.installationId,
+    projectId: options.binding.projectId, hostId: options.binding.hostId }
+  const route = operationUrl(options.binding, meta, tuple, "ctx.context")
+  if (!route) return false
+  try {
+    const reply = await options.fetch(route, {
+      method: "GET", credentials: "same-origin", cache: "no-store", redirect: "error",
+      headers: { Accept: "application/json" },
+    })
+    if (reply.status !== 200 || !isJsonContentType(reply.headers.get("content-type"))) return false
+    const wire = await readJsonBounded(reply)
+    if (wire === undefined) return false
+    const context = codec.decodeOutput(wire)
+    if (context.status !== "ok" || !validContextOutcome(context.value, options.binding, 200)) return false
+    const value = context.value
+    if (!value || typeof value !== "object" || !("status" in value) ||
+        value.status !== "ok" || !("value" in value) || !value.value ||
+        typeof value.value !== "object" || !("stamp" in value.value)) return false
+    const current = value.value.stamp
+    return validContextStamp(current) && sameStampInstallation(current, options.binding) &&
+      current.principalRef === expected.principalRef &&
+      current.policyVersion === expected.policyVersion &&
+      current.accessRevision === expected.accessRevision
+  } catch { return false }
 }
