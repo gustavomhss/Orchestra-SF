@@ -295,9 +295,10 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
     let cases: { status: "ok"; items: { caseRef: string; title: string; version: number }[] } | { status: "unavailable" } =
       { status: "unavailable" }
     if (caseAccess) {
-      const listed = await runtime.state.read(request, "cases", (state, authority) =>
-        Object.values(state.cases).filter((entry) => entry.participants.includes(authority.principalRef))
-          .map((entry) => encodeCaseRef(entry)))
+      const listed = await runtime.state.read(request, "cases", (state, authority) => {
+        const visible = Object.values(state.cases).filter((entry) => entry.participants.includes(authority.principalRef))
+        return (expected ? visible.slice(0, 1) : visible).map((entry) => encodeCaseRef(entry))
+      })
       if (listed.status === "ok") {
         // A context observation exercises at most one real case; the actual
         // home response continues to project the complete authorized list.
@@ -317,6 +318,7 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
             runtime.ui.finish(other.value)
           }
         }))
+        if (expected && items.some((item) => item === undefined)) return failure(request, "unavailable")
         cases = { status: "ok", items: items.filter((item): item is NonNullable<typeof item> => item !== undefined) }
       } else if (listed.status === "unavailable" && listed.reason === "product-state-uninitialized") {
         cases = { status: "ok", items: [] }
