@@ -16,7 +16,8 @@ import "./collection.css"
 
 type Cap = "CAP13" | "CAP15"
 type Entity = Readonly<{ id: string | number }>
-export type Filters = Readonly<{ q?: string; status?: string; filter?: string; owner?: string }>
+// Mutable: store paths write through setStore("filtersEdit", key, ...), which requires writable keys.
+export type Filters = { q?: string; status?: string; filter?: string; owner?: string }
 export type PageResult<Row> =
   | Readonly<{ kind: "ok"; rows: readonly Row[]; versions: Readonly<Record<string, number>>; actions: readonly string[] }>
   | Readonly<{ kind: "error"; state: SfUiState }>

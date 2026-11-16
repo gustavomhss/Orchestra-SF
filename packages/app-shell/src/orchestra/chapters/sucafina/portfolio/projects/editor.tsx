@@ -150,7 +150,8 @@ export function SfProjectEditor(props: Readonly<{
   )
 }
 
-export type SfMilestoneDraft = Readonly<{ milestoneId: string; name: string; date: string; status: SfProjectMilestone["status"]; notes: string }>
+// Solid store state: no Readonly<> wrapper, see security/index.tsx.
+export type SfMilestoneDraft = { milestoneId: string; name: string; date: string; status: SfProjectMilestone["status"]; notes: string }
 export function SfMilestoneEditor(props: Readonly<{
   projectId: string
   source: SfProjectMilestone | null

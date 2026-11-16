@@ -17,7 +17,7 @@ import {
   SfSourceCaseRead, SfSourceCaseDraft, SfSourceChangePrepare,
   SfSourceQuestionPrepare, SfSourceScenarioResult, SfSourceDomainProjection,
   SfSourceRecordSource, SfSourceCostCoverageBasis, SfSourceEvidenceInput,
-} from "./decisions/source-contracts.ts"
+} from "./decisions/source-contracts"
 
 const text = Schema.String.pipe(Schema.check(Schema.isMinLength(1)), Schema.check(Schema.isMaxLength(16384)))
 const digest = Schema.String.pipe(Schema.check(Schema.isPattern(/^[a-f0-9]{64}$/)))

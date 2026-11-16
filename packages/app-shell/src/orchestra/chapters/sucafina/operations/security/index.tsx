@@ -41,7 +41,9 @@ type SecurityEditor = Readonly<{
   operationRef: SfOperationRef
   review: boolean
 }>
-type SecurityView = Readonly<{
+// Store state is Solid-mutated through the setter proxy; a Readonly<> type makes
+// MutableKeyOf collapse to never and every setState("key", ...) stop type-checking.
+type SecurityView = {
   state: SfUiState
   page: SfSecurityPage | undefined
   year: number | undefined
@@ -51,7 +53,7 @@ type SecurityView = Readonly<{
   submitting: boolean
   operationState: "idle" | "saved" | "failed" | "unknown" | "conflict"
   errorText: string | null
-}>
+}
 const key = (part: string) => ("sf.cap12." + part) as SfCopyKey
 const common = (part: string) => ("sf.common." + part) as SfCopyKey
 const msg = (copy: SfCopyKey) => ({ key: copy })

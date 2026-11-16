@@ -30,7 +30,8 @@ type Editor = Readonly<{
   review: boolean
   operationRef: SfOperationRef
 }>
-type ReadState = Readonly<{
+// Solid store state: no Readonly<> wrapper, see security/index.tsx.
+type ReadState = {
   state: SfUiState
   page: SfServicePage | undefined
   year: number | undefined
@@ -40,7 +41,7 @@ type ReadState = Readonly<{
   submitting: boolean
   operationState: "idle" | "saved" | "failed" | "unknown" | "conflict"
   errorText: string | null
-}>
+}
 const sourceKey = (part: string) => ("sf.cap11." + part) as SfCopyKey
 const commonKey = (part: string) => ("sf.common." + part) as SfCopyKey
 const message = (key: SfCopyKey) => ({ key })
