@@ -187,8 +187,8 @@ jobs:
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
-      - name: Publish only bounded reports and the proven receipt
-        if: always()
+      - name: Publish only valid summary and receipt for a clean run
+        if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: sf-evidence-${{ matrix.id }}
@@ -248,9 +248,10 @@ jobs:
           status=$?
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           cd "$root"
+          node script/sf-ci/gate.mjs sanitize-playwright
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
-      - name: Publish JSON result and the proven receipt, never operator traces
-        if: always()
+      - name: Publish only minimized JSON and receipt for a clean run
+        if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: sf-evidence-${{ matrix.id }}

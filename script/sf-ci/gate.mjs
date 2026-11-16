@@ -80,6 +80,37 @@ export function countPlaywrightReport(raw, exactSpec) {
   return count
 }
 
+
+export function minimalPlaywrightEvidence(raw, exactSpec) {
+  const original = JSON.parse(raw)
+  const expected = countPlaywrightReport(raw, exactSpec)
+  const suites = original.suites.map((suite) => {
+    const visit = (input) => ({
+      file: input.file,
+      specs: (input.specs || []).map((spec) => ({
+        file: spec.file,
+        tests: spec.tests.map((test) => ({
+          expectedStatus: test.expectedStatus,
+          results: test.results.map((result) => ({ status: result.status })),
+        })),
+      })),
+      suites: (input.suites || []).map(visit),
+    })
+    return visit(suite)
+  })
+  const safe = {
+    stats: {
+      expected: original.stats.expected, unexpected: original.stats.unexpected,
+      flaky: original.stats.flaky, skipped: original.stats.skipped,
+    },
+    suites,
+  }
+  if (countPlaywrightReport(JSON.stringify(safe), exactSpec) !== expected) {
+    fail("Playwright evidence minimization changed execution count")
+  }
+  return JSON.stringify(safe) + "\n"
+}
+
 export function checkReceipt(receipt, suite, meta, reportBytes) {
   if (!receipt || receipt.schemaVersion !== 1) fail("invalid receipt schema")
   if (receipt.suiteId !== suite.id || receipt.kind !== suite.kind) fail("receipt suite mismatch")
@@ -136,6 +167,18 @@ function cli() {
     return
   }
   const meta = realRunMeta()
+  if (command === "sanitize-playwright") {
+    const id = process.env.SF_SUITE_ID
+    const suite = suites.find((entry) => entry.id === id && entry.kind === "playwright")
+    if (!suite || process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") {
+      fail("invalid Playwright minimization request")
+    }
+    const reportFile = path.join("sf-ci-evidence", id, "report.json")
+    const safe = minimalPlaywrightEvidence(readFileSync(reportFile, "utf8"), suite.specFile)
+    writeFileSync(reportFile, safe, { mode: 0o600 })
+    console.log("SF_CI_PLAYWRIGHT_EVIDENCE_MINIMIZED " + id)
+    return
+  }
   if (command === "receipt") {
     const id = process.env.SF_SUITE_ID
     const suite = suites.find((entry) => entry.id === id)

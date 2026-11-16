@@ -1,7 +1,7 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { countBunReport, countPlaywrightReport, verifyAll, REQUIRED, validateManifest } from "./gate.mjs"
+import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS", counts: { product_executed: 2, failures: 0, errors: 0, skipped: 0 } }))
 const digest = createHash("sha256").update(report).digest("hex")
@@ -52,6 +52,19 @@ test("removed/duplicate/invalid SF host selections never pass manifest admission
     invalid.suites.find((s) => s.id === "CI-CLI").selection.testFiles = files
     assert.throws(() => validateManifest(invalid), /SF_CI_FAIL_CLOSED/)
   }
+})
+test("Playwright artifact evidence retains only admission data and never raw attachments/secrets", () => {
+  const suite = manifest.suites[5]
+  const original = JSON.parse(playwright(suite).toString("utf8"))
+  const secret = "SENSITIVE_ONLY_IN_RAW_PLAYWRIGHT_REPORT"
+  original.suites[0].title = secret
+  original.suites[0].specs[0].tests[0].results[0].stdout = [secret]
+  original.suites[0].specs[0].tests[0].results[0].attachments = [{ name: secret, body: secret }]
+  original.metadata = { token: secret }
+  const sanitized = minimalPlaywrightEvidence(JSON.stringify(original), suite.specFile)
+  assert.equal(countPlaywrightReport(sanitized, suite.specFile), 1)
+  assert.equal(sanitized.includes(secret), false)
+  assert.equal(sanitized.includes("attachments"), false)
 })
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))

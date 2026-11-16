@@ -55,8 +55,12 @@ For a pull request that is normally the merge commit, not its head. A green
 pull-request merge cannot replace a final qualification of frozen product
 candidate `C`. Any product/config/test mutation creates a new candidate.
 
-Receipts are machine-checked; report files stay non-secret. Do not upload
-Playwright traces, cookies or real business data. Each Playwright spec runs
+Receipts are machine-checked. Only successful suites upload evidence.
+Before upload, the Playwright JSON is reduced to file identity, per-test
+execution statuses and aggregate counts: no attachments, traces, cookies,
+raw stdout/stderr or operator data are retained in the artifact.
+Raw failure details remain in the restricted Actions job log.
+Do not upload Playwright traces, cookies or real business data. Each Playwright spec runs
 one worker with zero retries. Failure means RED; a deadline does not turn
 a proof into NOT_APPLICABLE.
 
