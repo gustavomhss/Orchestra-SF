@@ -22,6 +22,17 @@ test("AM01 source observation differs from the persisted, un-applied hypothetica
     const initial = await open("initial", async (context) => {
       const prepared = await prepareWp12ScenarioCase(context)
       const resultDigests: Record<string, string> = {}
+      const sourceObservations: Array<{
+        key: (typeof cases)[number]["key"]
+        baseRef: string
+        evidenceDigest: string
+        caseRef: typeof prepared.caseRef
+        knownSubtotal: number | null
+        total: number | null
+        coverageState: "complete" | "pending" | "unavailable"
+        comparisonStatus: "complete" | "conditioned" | "incompatible" | "unavailable"
+        resultDigest: string
+      }> = []
       for (const variant of cases) {
         const alternative = prepared[variant.key]
         const source = prepared.sources.find((entry) => entry.key === variant.key)
@@ -77,6 +88,12 @@ test("AM01 source observation differs from the persisted, un-applied hypothetica
         expect(observed.value.comparisonStatus).toBe(variant.observedTotal === null ? "conditioned" : "complete")
         expect(observed.value.restrictions).not.toContain("preview-not-applied")
         expect(observed.value.unresolvedConditions).not.toContain("scenario-is-hypothetical")
+        sourceObservations.push({ key: variant.key, baseRef: request.baseRef,
+          evidenceDigest: source.evidence.refDigest, caseRef: prepared.caseRef,
+          knownSubtotal: observed.value.knownSubtotal, total: observed.value.total,
+          coverageState: observed.value.costCoverage.coverageState,
+          comparisonStatus: observed.value.comparisonStatus,
+          resultDigest: digestSfValue(observed.value) })
 
         // In contrast, C09 stores a source-derived identity operation that
         // does not change a cost, but must be treated as an unapplied preview.
@@ -114,10 +131,11 @@ test("AM01 source observation differs from the persisted, un-applied hypothetica
         }
         resultDigests[variant.key] = digestSfValue(alternative.result)
       }
+      expect(sourceObservations).toHaveLength(cases.length)
       expect(await context.persistence.transaction("planner", async (snapshot) => ({
         commit: false, value: digestSfValue(snapshot.data.versions),
       }))).toBe(prepared.plannerSourceDigest)
-      return { caseRef: prepared.caseRef, caseDigest: digestSfValue(prepared.case),
+      return { caseRef: prepared.caseRef, sourceObservations, caseDigest: digestSfValue(prepared.case),
         plannerSourceDigest: prepared.plannerSourceDigest, resultDigests, resultRefs: prepared.resultRefs,
         baseRefs: { baseline: prepared.baseline.scenario.baseRef, pending: prepared.pending.scenario.baseRef,
           complete: prepared.complete.scenario.baseRef } }
@@ -157,9 +175,17 @@ test("AM01 source observation differs from the persisted, un-applied hypothetica
       }))).toBe(initial.plannerSourceDigest)
       console.log("SF_AM01_HYPOTHETICAL_CLOSURE212:" + JSON.stringify({
         githubSha: process.env.GITHUB_SHA ?? null, caseRef: initial.caseRef,
-        sourceObservations: cases.map((item) => ({ key: item.key, total: item.observedTotal })),
+        sourceObservations: initial.sourceObservations,
         savedResultRefs: initial.resultRefs, resultDigests: initial.resultDigests,
         persistedReadback: true, sourceUnchanged: true, inferenceExecuted: false, gnativeAccepted: false,
+      }))
+      console.log("SF_AM01_SELECTION221:" + JSON.stringify({
+        githubSha: process.env.GITHUB_SHA ?? null, caseRef: initial.caseRef,
+        selectedCaseObservation: true, unselectedGuardRejected: true,
+        sourceObservations: initial.sourceObservations,
+        hypotheticalResultDigests: initial.resultDigests,
+        comparisonStatus: "conditioned", allPreviewsNotApplied: true,
+        persistedReadback: true, sourceUnchanged: true, inferenceExecuted: false,
       }))
     })
   })
