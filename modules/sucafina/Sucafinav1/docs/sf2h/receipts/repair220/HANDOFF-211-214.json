@@ -1,0 +1,190 @@
+{
+  "schema": "sf2h.repair220.handoff.v1",
+  "mission": 220,
+  "recipient": "211 compositor / 214 one CI dispatcher / 190 compiler",
+  "actor": "S4-D / S1-ROOT task 220",
+  "epoch": "causal-ci-e1-browser220",
+  "model": "GPT-6",
+  "session_id": "NOT_EXPOSED",
+  "ack": {
+    "commit": "4ca81355f00484b4e876f79a2f01f271eb1c9656",
+    "blob": "7088ea43f951034520b19c0ff5bfc0b07dd34bf2"
+  },
+  "fences": {
+    "initial_head": "c5db89c85817b8b12f535b51717313133c296e12",
+    "initial_tree": "586304dd33684f83e93740709ed31b673b030b7d",
+    "fence_blob": "678f8fe6df7c691c7cef9b514a0153c2678a205a",
+    "base_product": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "source": {
+    "commit": "a9e62d6a3e77611e12dd210984d454a57c195925",
+    "tree": "6f5a031f86f9a3920f7cf3da21f82d71f75bcaae",
+    "changes": [
+      {
+        "path": "packages/schema/src/sucafina/decisions.ts",
+        "pre_blob": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+        "post_blob": "52fc1a3fc52b39c0d18f0064bcc17417421ce3c7",
+        "effect": "Empty cases projection now accepts {} and denies any supplied key via Schema.Record(String,Never)"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "pre_blob": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+        "post_blob": "dbdbde9d95ffcdf59c50ee64b880e631b37e433a",
+        "effect": "preserve all 11 test cases, add excess/grant/authority inputs to same oracle"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+        "pre_blob": "33650407123163ea881eca9d4940fde364b27c54",
+        "post_blob": "d96709db609b399ef801f487e443a381863d6298",
+        "effect": "body+HTTP status shown before unchanged 200 oracle; no fake command"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+        "pre_blob": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+        "post_blob": "f9c99a8a886211d1aba60371a2d3b0aa287293b5",
+        "effect": "specific original capture status/reason and actual command cardinality; no fake Atlas capture"
+      }
+    ]
+  },
+  "external_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair220/INERT-PATCH-211-v2.json",
+    "blob": "f200c095fea543ad6c437974cc99f9afbb56ed15",
+    "applied": false,
+    "write_permission": false,
+    "expected_preimages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "pre": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+        "post": "3a13c3401d7629904155664b3b5e08665c2713cc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "pre": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+        "post": "68a309ddc7c637ba1c473fb2edb4848250a51ab6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+        "pre": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+        "post": "7af4f596f6eabce32d2c3a21947300278c345cd9"
+      }
+    ],
+    "contract": "211 must apply all three as one authorized owner integration after checking preimage and policy. Prepare an explicit save-estimate draft from canonical human review and real source; never approve a PR, synthesize grant/receipt, bypass C08/C09, or treat conditioned financial comparison as complete"
+  },
+  "observations": {
+    "B9": {
+      "job": 133014881019,
+      "from": "decisions.test.ts:186",
+      "input": {
+        "includePrivate": true
+      },
+      "expected": false,
+      "observed": true,
+      "new_checks": "NOT_RUN"
+    },
+    "B11": {
+      "job": 133014985875,
+      "from": "wp10/memory-integrity/fixture.ts:142",
+      "symptom": "Real C12 original capture unavailable",
+      "underlying_call": "prepareDomainCommands -> bridge.prepareScenario -> createProcurementScenarioPreparation -> procurementPreparationIssue",
+      "observed_http_body": "NOT_RECORDED",
+      "likely_reasons_from_source": [
+        "financial-approval-command-unavailable"
+      ],
+      "new_checks": "NOT_RUN"
+    },
+    "B18": {
+      "job": 133019486672,
+      "from": "c12-receipt-recovery/fixture.ts:244",
+      "observed_http_status": 400,
+      "observed_http_body": "NOT_RECORDED",
+      "correct_response": "MUST_FOLLOW_FROM_CANONICAL_PRODUCER_NOT_FORCED"
+    }
+  },
+  "acceptance": [
+    {
+      "criterion": "projection.cases",
+      "input": "{}",
+      "expected": "accept; no grant/authority supplied",
+      "qualification": "NOT_RUN"
+    },
+    {
+      "criterion": "projection.cases",
+      "input": "{includePrivate:true} and all unknown/grant fields",
+      "expected": "reject",
+      "qualification": "NOT_RUN"
+    },
+    {
+      "criterion": "C12 draft",
+      "input": "chosen C08 case and originally issued PR-1 scope, human decisions.prepare-changes",
+      "expected": "real Requests.save candidate with bounded actor/source/CAS/preview; distinct explicit review and Apply",
+      "qualification": "BLOCKED_ON_211_PATCH"
+    },
+    {
+      "criterion": "AM04 lost return",
+      "input": "real receipt after domain SQLite commit",
+      "expected": "one effect/receipt, same key+digest, reopen recovery; drift and revocation denied",
+      "qualification": "BLOCKED_ON_211_PATCH"
+    },
+    {
+      "criterion": "AM05 original & rollback",
+      "input": "canonical Atlas original, Gitleaks scanner, C08/C09",
+      "expected": "single append, original replay and rollback isolation; no invented original",
+      "qualification": "BLOCKED_ON_211_PATCH"
+    }
+  ],
+  "validation": {
+    "local": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "own_ci": "NOT_RUN",
+    "historical_jobs": "FAIL (not reused)",
+    "independent_recheck": "REQUESTED_NOT_RUN"
+  },
+  "requests_214": [
+    {
+      "request_id": "220-decisions",
+      "after": "211 composes product C including inert patch and source patch",
+      "selector": [
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts"
+      ],
+      "expected": "11 literal decision tests, empty projection accepted, unknown/grant refused; decodeEffect4 on real schema",
+      "dedup": "workflow/tree/input/selection"
+    },
+    {
+      "request_id": "220-am04",
+      "after": "same composed C",
+      "selector": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts"
+      ],
+      "expected": "domain receipt after returned-response loss, key+digest collision and rollback; no duplicate domain effect",
+      "dedup": "workflow/tree/input/selection"
+    },
+    {
+      "request_id": "220-am05",
+      "after": "same composed C",
+      "selector": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts"
+      ],
+      "expected": "authorized original replay, C08 rollback with actual scanner/Atlas and authority loss",
+      "dedup": "workflow/tree/input/selection"
+    }
+  ],
+  "dependencies": [
+    "211: consume patch-v2, source blobs and produce product C with approved owner lease",
+    "214: only dispatcher selects necessary files on C and records actual observed results",
+    "190: compiler contract consistency when invoked by dispatcher"
+  ],
+  "conditions": {
+    "source_history": "PRESERVED",
+    "native_goal": "PAUSED",
+    "global_release": false,
+    "no_new_supervisor": true,
+    "no_own_ci": true
+  },
+  "status": "READY_FOR_COMPOSITION_WITH_PRODUCER_PATCH_INERT"
+}
