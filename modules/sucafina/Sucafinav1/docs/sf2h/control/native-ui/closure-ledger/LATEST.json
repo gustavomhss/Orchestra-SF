@@ -917,5 +917,30 @@
     "activation_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/closure-ledger/HANDOFF-211-228.json on sf2-control",
     "writer211_lifecycle": "UNCONFIRMED_QUESTION_PENDING",
     "ready_paths": 10
+  },
+  "observation_policy": {
+    "source": "Explicit user instruction",
+    "browser_status_checks": "DISABLED_FOR_CAMPAIGN",
+    "primary_evidence": [
+      "GitHub commits and exact blobs",
+      "published terminal handoffs",
+      "consumer receipts",
+      "GitHub Actions results"
+    ],
+    "runtime_rule": "Git silence does not prove browser session termination. Preserve exclusive writer authority until an explicit lifecycle fact or trustworthy handoff is available.",
+    "last_browser_attempt": {
+      "mechanism": "Existing Chrome/CDP read-only capability discovery",
+      "outcome": "No usable chat lifecycle signal",
+      "mutations": false,
+      "retries_stopped": true
+    }
+  },
+  "reconciliation228": {
+    "head": "590cc55fe29e1d661a9609ef126ecf7b89a791ff",
+    "message": "docs(sf): archive released 225 and provisional 226 exact file bytes [skip ci]",
+    "state": "INDEPENDENT_RECONCILIATION_PROGRESS",
+    "product_write_authority": "NOT_GRANTED",
+    "writer211_preserved": true,
+    "prepared_sources": "225 release and provisional226 bytes archived by228"
   }
 }
