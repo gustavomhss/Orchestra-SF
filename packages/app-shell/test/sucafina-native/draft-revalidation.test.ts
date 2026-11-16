@@ -296,7 +296,9 @@ describe("source-bound draft revalidation", () => {
     expect(await run(input, { ...body, value: { ...body.value, data: { secActions: [{ id: "a1", text: "Action" }] } } })).toEqual({ status: "denied" })
     expect(await run(input, { ...body, value: { ...body.value, data: { secActions: [{ id: "other", text: "Action", done: false }] } } })).toEqual({ status: "unavailable" })
     expect(await run(input, { ...body, value: { ...body.value, allowedActionIds: [] } })).toEqual({ status: "denied" })
-    expect(await run({ ...input, identity: { kind: "new", newIntentRef: "new" as SfIntentRef }, read: { ...input.read, fieldPaths: [] } }, body)).toEqual({ status: "unavailable" })
+    const scope = "CAP12:save-action:2026:1:new"
+    expect(await run({ ...input, identity: { kind: "new", newIntentRef: ("u29:" + scope) as SfIntentRef },
+      editScopeKey: scope as SfEditScopeKey, read: { ...input.read, fieldPaths: [] } }, body)).toMatchObject({ status: "authorized", sourceVersion: null })
   })
   test("service draft binds the source month record and shared CAS", async () => {
     const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "CAP11", identity: { kind: "record", recordRef: "sla1" as SfRef },
