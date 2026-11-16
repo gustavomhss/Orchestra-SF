@@ -43,6 +43,9 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
   const authority = () => {
     const state = sf.state(), ready = sf.ready()
     if (state.status !== "ready" || !ready || !refValue()) return null
+    const selected = props.route.ownerSelection
+    if (state.owner.serverKey !== selected.serverKey || state.owner.projectId !== selected.projectId ||
+        selected.installationId && state.owner.installationId !== selected.installationId) return null
     return JSON.stringify([state.ownerKey, state.owner, sf.generation(), ready.context.stamp, props.route.href, refValue()])
   }
   const selection = (ref: SfRef) => ({ surfaceId: "CAP25" as const,
@@ -77,13 +80,14 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
         setUi("state", result.status === "denied" ? "denied" : "unavailable")
         return
       }
-      setUi({ source: result, state: "ready" })
-      const controller = draft(), state = controller?.snapshot()
+      const controller = ready.drafts.peek<{ title: string }>(selection(ref)), state = controller?.snapshot()
       if (state?.availability === "active" && (state.baseVersion !== result.version ||
+          !state.base || state.base.title !== result.title ||
           !!previous && (previous.stage !== result.stage || previous.title !== result.title))) {
         if (state.dirty) controller?.setPhase("conflict")
         else controller?.receiveRemote({ baseVersion: result.version, value: { title: result.title } })
       }
+      setUi({ source: result, state: "ready" })
     })
     onCleanup(stop)
   })
