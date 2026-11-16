@@ -936,12 +936,10 @@
     }
   },
   "reconciliation228": {
-    "head": "590cc55fe29e1d661a9609ef126ecf7b89a791ff",
-    "message": "docs(sf): archive released 225 and provisional 226 exact file bytes [skip ci]",
-    "state": "INDEPENDENT_RECONCILIATION_PROGRESS",
+    "head": "33474b2158a4703f256191f61f1a16ac85c26004",
+    "state": "DETACHED_COMPOSITION_PROPOSAL_V2_PUBLISHED",
     "product_write_authority": "NOT_GRANTED",
-    "writer211_preserved": true,
-    "prepared_sources": "225 release and provisional226 bytes archived by228"
+    "writer211_preserved": true
   },
   "native_origin_resolution": {
     "mission": 229,
@@ -953,5 +951,19 @@
     "source219": "Partial output retained; consumer must resolve genuine public origin, not just ports",
     "Core_engine_authority": "READ_ONLY; complete inert proposed patch only",
     "consumer": 228
+  },
+  "additional_source_progress": {
+    "224": {
+      "head": "55118255658694e09b1c79affd309e309224662d",
+      "state": "RESERVATION_ONLY_NO_LIFECYCLE_INFERENCE"
+    },
+    "226": {
+      "head": "1872cc6a60809dec489ce1b486114aaa6e87a77b",
+      "state": "AUTHOR_FINAL_HANDOFF_PUBLISHED_CONSUMPTION_NOT_VERIFIED"
+    },
+    "227": {
+      "head": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+      "state": "CODE_AND_HANDOFF_PUBLISHED_CONSUMPTION_NOT_VERIFIED"
+    }
   }
 }
