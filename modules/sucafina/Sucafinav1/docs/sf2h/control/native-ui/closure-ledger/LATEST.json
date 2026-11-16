@@ -584,5 +584,71 @@
       "fail": 0,
       "classification": "SCOPED_COMPONENT_NOT_PACKAGED_ELECTRON_D01"
     }
+  ],
+  "product_ci": {
+    "previous": 214,
+    "previous_terminal": "00f1c623fb07490149b6124ce1a778e6109184ea",
+    "current_prepared": 223,
+    "state": "FRESH_SUCCESSOR_PREPARED_NOT_STARTED",
+    "running_observed": 0,
+    "queued_observed": 0
+  },
+  "remaining_closure_owners": {
+    "composition": 211,
+    "BI_units": 215,
+    "Atlas_integrity": 216,
+    "similar_cases": 217,
+    "import_history": 218,
+    "native_Task_Relay": 219,
+    "Decisions_C12_AM04_AM05": 220,
+    "AM01_case_selection": 221,
+    "AM02_authority": 222,
+    "Talent_import_export": 224,
+    "supplier_CSV": 225,
+    "product_CI": 223,
+    "compiler_guards": 190,
+    "real_host_fixture": 199
+  },
+  "additional_review_findings": {
+    "talent": {
+      "actual": "443a8e2190ed5fa3bbb7a09e27f6c79af012754c",
+      "expected": "443a8e2190ed5fa3bbb7a09e27f6c79af012754c",
+      "base": "c5703ca53399a4ead279cdf4df3c1261eef1dd8e",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent"
+    },
+    "suppliers": {
+      "actual": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+      "expected": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+      "base": "c5703ca53399a4ead279cdf4df3c1261eef1dd8e",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers"
+    },
+    "current_source_gaps_verified": true,
+    "new_scope": false
+  },
+  "new_prepared": [
+    {
+      "mission": 223,
+      "title": "Continuar toda a validação do bundle até o fechamento",
+      "branch": "sf-ci-validation",
+      "epoch": "product-ci-e8-browser223",
+      "expected_head": "79179b9f966357babe535aab120a4478a69de5b9",
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "mission": 224,
+      "title": "Completar importação e exportação Talent CAP08",
+      "branch": "sf-talent-files",
+      "epoch": "functional-export-e1-browser224",
+      "expected_head": "55118255658694e09b1c79affd309e309224662d",
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "mission": 225,
+      "title": "Completar exportação CSV autorizada de fornecedores",
+      "branch": "sf-supplier-csv",
+      "epoch": "functional-export-e1-browser225",
+      "expected_head": "134bdb2dd76e8e7774338ebceee3b5281993a547",
+      "state": "PREPARED_NOT_STARTED"
+    }
   ]
 }
