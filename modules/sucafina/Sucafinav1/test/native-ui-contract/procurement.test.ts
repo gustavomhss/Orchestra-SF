@@ -35,7 +35,7 @@ describe("W11 Procurement A03 public contract", () => {
     expect(new Set(ids).size).toBe(39)
     for (const id of ids) {
       const operation = SfProcurement.operations[id as keyof typeof SfProcurement.operations]
-      expect(operation.operationId).toBe(id)
+      expect<string>(operation.operationId).toBe(id)
     }
     expect(ids).toContain("domain.command.CAP25.save")
     expect(ids).toContain("domain.command.CAP26.approve")
@@ -48,7 +48,7 @@ describe("W11 Procurement A03 public contract", () => {
       page: "Requests", action: "save", id: "PR-2026-0001",
       version: 7, values: { pr: { title: "New title" } },
     }
-    expect(Schema.decodeUnknownSync(SfProcurementTitleSave)(titleSave)).toEqual(titleSave)
+    expect<object>(Schema.decodeUnknownSync(SfProcurementTitleSave)(titleSave)).toEqual(titleSave)
     expect(() => Schema.decodeUnknownSync(SfProcurementTitleSave)({
       ...titleSave, action: "approve",
     })).toThrow()
