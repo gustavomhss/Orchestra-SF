@@ -21,7 +21,13 @@
         "releaseOnlyFiles": [
           "Sucafinav1/test/parity-pitr.test.ts"
         ],
-        "reason": "macOS local-operator Litestream continuity; Azure Linux backup/restore requires a distinct real release proof"
+        "reason": "macOS local-operator Litestream continuity; Azure Linux backup/restore requires a distinct real release proof",
+        "testDirectory": "Sucafinav1/test"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "PENDING_REAL_COMPLETE_RUN",
+        "reason": "No successful complete raw case/file inventory was available; do not invent counts, case IDs or a PASS. Produce candidate evidence on an authentic Linux run, independently review, then version a baseline."
       }
     },
     {
@@ -45,12 +51,45 @@
           "test/daemon-password.test.ts"
         ],
         "coverage": "Installed SF host and authorization, not universal CLI distribution"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "source": {
+          "runId": "43956369500",
+          "attempt": "1",
+          "testedSha": "30e8495c6e27114c8900619f4cca68191965f4f4",
+          "artifactId": 14272990498
+        },
+        "minimumCases": 34,
+        "minimumFiles": 12,
+        "filesSha256": "94186ae7778943b4f507a6eef10b6d40dd60ffe4ee61068fdf49f57ac16e943b",
+        "casesSha256": "ba2803a69ee0d03659ff60768872a89b24933fcba77d5298b72baea65f15b4d0"
       }
     },
     {
       "id": "CI-APP-SRC",
       "kind": "bun",
-      "directory": "packages/app-shell"
+      "directory": "packages/app-shell",
+      "selection": {
+        "kind": "directory",
+        "testDirectory": "src",
+        "coverage": "All app-shell unit tests under src; no explicit allowlist"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "source": {
+          "runId": "43956369500",
+          "attempt": "1",
+          "testedSha": "30e8495c6e27114c8900619f4cca68191965f4f4",
+          "artifactId": 14272652674
+        },
+        "minimumCases": 2408,
+        "minimumFiles": 273,
+        "filesSha256": "38dd26efc44420d6d5ed0f3c96af6efaadd98b1a5ab71c7144a87536ea024f79",
+        "casesSha256": "40328173decad6fae7051c29dbc6dfb4b528cb51f610a48dba9c206cf7c0d058"
+      }
     },
     {
       "id": "CI-APP-BROWSER",
@@ -64,6 +103,11 @@
           "test-browser/sucafina-native/transport-integration.test.ts"
         ],
         "releaseReason": "F04 installed-host live manifest and authenticated public origin are release-owned, not a PR Bun-only fixture"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "PENDING_REAL_COMPLETE_RUN",
+        "reason": "No successful complete raw case/file inventory was available; do not invent counts, case IDs or a PASS. Produce candidate evidence on an authentic Linux run, independently review, then version a baseline."
       }
     },
     {
@@ -79,25 +123,54 @@
           "test/scanner-clock.test.ts"
         ],
         "coverage": "SF business memory boundary, surface, catalog and scanner-clock; generated check static"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "source": {
+          "runId": "43956369500",
+          "attempt": "1",
+          "testedSha": "30e8495c6e27114c8900619f4cca68191965f4f4",
+          "artifactId": 14272915730
+        },
+        "minimumCases": 8,
+        "minimumFiles": 4,
+        "filesSha256": "760c4bae39e017f6978274532edb90ffe15144f87b3063e4b3c20d8880556645",
+        "casesSha256": "eed8d896627fb9626137fdd5e2154d011a62489aac9441e902e35e187384954d"
       }
     },
     {
       "id": "CI-UI-OPERATIONS",
       "kind": "playwright",
       "directory": "packages/app-shell",
-      "specFile": "e2e/sucafina/operations.spec.ts"
+      "specFile": "e2e/sucafina/operations.spec.ts",
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "PENDING_REAL_COMPLETE_RUN",
+        "reason": "No successful complete raw case/file inventory was available; do not invent counts, case IDs or a PASS. Produce candidate evidence on an authentic Linux run, independently review, then version a baseline."
+      }
     },
     {
       "id": "CI-UI-DECISIONS",
       "kind": "playwright",
       "directory": "packages/app-shell",
-      "specFile": "e2e/sucafina/decisions.spec.ts"
+      "specFile": "e2e/sucafina/decisions.spec.ts",
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "PENDING_REAL_COMPLETE_RUN",
+        "reason": "No successful complete raw case/file inventory was available; do not invent counts, case IDs or a PASS. Produce candidate evidence on an authentic Linux run, independently review, then version a baseline."
+      }
     },
     {
       "id": "CI-UI-REPORTS",
       "kind": "playwright",
       "directory": "packages/app-shell",
-      "specFile": "e2e/sucafina/reports.spec.ts"
+      "specFile": "e2e/sucafina/reports.spec.ts",
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "PENDING_REAL_COMPLETE_RUN",
+        "reason": "No successful complete raw case/file inventory was available; do not invent counts, case IDs or a PASS. Produce candidate evidence on an authentic Linux run, independently review, then version a baseline."
+      }
     }
   ],
   "separateReleaseProofs": [
