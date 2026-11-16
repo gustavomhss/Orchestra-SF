@@ -3,7 +3,7 @@ import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
-import type { SfSurfaceProps } from "../../context/contracts"
+import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { SfChangeReview, type SfReviewField } from "../../shared/change-review"
 import { SfStatePanel } from "../../shared/states"
@@ -31,7 +31,12 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     token: null, source: null, state: "loading", review: null, busy: false, notice: null, refresh: 0,
   })
   let active: AbortController | undefined
+  let submitted: SfPublicDraftController<{ title: string }> | undefined
   let busy = false
+  const stop = () => {
+    submitted?.setPhase("outcome-unknown")
+    active?.abort()
+  }
   const t = (value: Key) => language.t(value as Parameters<typeof language.t>[0])
   const authority = () => {
     const state = sf.state(), ready = sf.ready()
@@ -58,7 +63,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     const token = authority(), ref = props.requestRef, ready = sf.ready()
     void ui.refresh
     const previous = untrack(() => ui.token === token ? ui.source : null)
-    active?.abort()
+    stop()
     setUi({ token, source: null, state: token ? "loading" : "unavailable", review: null, busy: false, notice: null })
     busy = false
     if (!token || !ref || !ready) return
@@ -78,9 +83,9 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
         else controller?.receiveRemote({ baseVersion: result.version, value: { title: result.title } })
       }
     })
-    onCleanup(() => abort.abort())
+    onCleanup(stop)
   })
-  onCleanup(() => active?.abort())
+  onCleanup(stop)
 
   const current = (intent: Intent) => {
     const state = editable(), source = ui.source, ready = sf.ready()
@@ -110,7 +115,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     const review = ui.review!
     busy = true
     const abort = new AbortController()
-    active?.abort(); active = abort
+    stop(); active = abort
     const fresh = await readRequestTitle(ready.context, ready.transport, ref, abort.signal)
     if (!current(review) || abort.signal.aborted) { busy = false; return }
     if (!matches(fresh, review)) { rejectSource(fresh); busy = false; setUi("busy", false); return }
@@ -129,7 +134,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     busy = true
     setUi("busy", true)
     const abort = new AbortController()
-    active?.abort(); active = abort
+    stop(); active = abort
     const payload = { page: "Requests" as const, action: "save" as const, id: intent.ref,
       version: intent.version, values: { pr: { title: intent.title } } }
     try {
@@ -146,12 +151,22 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
       const state = controller.snapshot()
       if (state.availability !== "active" || state.phase !== "submitting" ||
           state.pendingOperation?.operationRef !== pending.operationRef) return
+      submitted = controller
+      const settling = () => {
+        const now = controller.snapshot(), source = ui.source, currentReady = sf.ready()
+        return !abort.signal.aborted && authority() === intent.token && ui.review === intent &&
+          props.requestRef === intent.ref && !!currentReady && titleReadiness(currentReady.context) === "ready" &&
+          !!source && source.version === intent.version && source.stage === intent.stage && source.title === intent.original &&
+          now.availability === "active" && now.phase === "submitting" && now.baseVersion === intent.version &&
+          now.value.title === intent.title && JSON.stringify(now.pendingOperation) === JSON.stringify(pending)
+      }
       const response = await createSfProcurementClient(ready.transport)["domain.command.CAP25.save"](payload,
         { signal: abort.signal, idempotencyKey: intent.idempotencyKey })
-      if (abort.signal.aborted || authority() !== intent.token) return
+      if (!settling()) { controller.setPhase("outcome-unknown"); return }
       if (response.kind === "response" && !response.body.ok &&
           (response.status === 409 || response.status === 422) && response.body.status === response.status) {
         controller.rejectSave({ status: response.status, operation: pending })
+        submitted = undefined
         setUi({ review: null, state: response.status === 409 ? "conflict" : "ready",
           notice: response.status === 409 ? "sf.u11.remaining.missingVersion" : "sf.u11.remaining.invalidPr" })
         return
@@ -162,15 +177,17 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
         return
       }
       const projected = await readRequestTitle(ready.context, ready.transport, intent.ref, abort.signal)
-      if (abort.signal.aborted || authority() !== intent.token) return
+      if (!settling()) { controller.setPhase("outcome-unknown"); return }
       if (projected.status === "authorized" && projected.version > intent.version && projected.title === intent.title) {
         controller.confirmSave({ kind: "projected", operationRef: intent.operationRef,
           baseVersion: projected.version, value: { title: projected.title } })
+        submitted = undefined
         setUi({ source: projected, review: null, state: "ready", notice: "sf.u11.remaining.saved" })
         props.onConfirmed?.()
         return
       }
       controller.confirmSave({ kind: "confirmed-without-projection", operationRef: intent.operationRef, resultVersion: null })
+      submitted = undefined
       setUi({ source: null, review: null, state: "unavailable", notice: "sf.u11.remaining.accepted" })
     } catch {
       const state = controller.snapshot()
