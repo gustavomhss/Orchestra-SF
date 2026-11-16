@@ -285,7 +285,8 @@ test("CI-05 discovers newly added source/Bun tests without changing YAML or allo
     write("Sucafinav1/test/parity-pitr.test.ts")
     write("porta/mandatory.test.ts")
     assert.deepEqual(selectSuiteFiles(manifest, "CI-SF", root),
-      ["Sucafinav1/test/real.test.ts", "porta/mandatory.test.ts"])
+      ["Sucafinav1/test/real.test.ts", "porta/mandatory.test.ts",
+        "src/first.test.ts", "src/nested/new-test.test.ts", "src/nested/new-third.test.ts"])
     rmSync(path.join(root, "modules/sucafina/Sucafinav1/test/parity-pitr.test.ts"))
     assert.throws(() => selectSuiteFiles(manifest, "CI-SF", root),
       /missing\/unsafe file in selected candidate/)
