@@ -22,4 +22,19 @@ describe("review routes", () => {
     expect(reviewsRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
     expect(reviewsRouteAvailable({ ...context, destinations: [{ ...context.destinations[0]!, canRead: false }] }, candidate)).toBe(false)
   })
+  test("report admission uses source-backed prepare and download, not legacy Office codecs", () => {
+    const candidate = matchSfNativeRoutePath(`/orchestra/sf-reviews/reports/${encodeSfRouteRef("review")}`)!
+    const context = { destinations: [{ capabilityId: "UI50", canRead: true }], availability: [
+      { family: "reviews", resource: "preserved", state: "ready", operations: [{ operationId: "dashboard.dashboard-review", state: "ready", operational: true }] },
+      { family: "reviews", resource: "report-export", state: "unavailable", operations: [
+        { operationId: "reviews.export.docx", state: "unavailable", operational: false },
+        { operationId: "reviews.report.prepare", state: "ready", operational: true },
+      ] },
+      { family: "files", resource: "exports", state: "ready", operations: [{ operationId: "files.export.review", state: "ready", operational: true }] },
+    ] } as unknown as SfContext
+    expect(reviewsRouteAvailable(context, candidate)).toBe(true)
+    expect(reviewsRouteAvailable({ ...context, availability: context.availability.slice(0, 2) }, candidate)).toBe(false)
+    expect(reviewsRouteAvailable({ ...context, availability: [context.availability[0]!, context.availability[2]!] }, candidate)).toBe(false)
+    expect(reviewsRouteAvailable({ ...context, destinations: [{ ...context.destinations[0]!, canRead: false }] }, candidate)).toBe(false)
+  })
 })
