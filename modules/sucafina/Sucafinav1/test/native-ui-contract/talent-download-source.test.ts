@@ -38,5 +38,5 @@ test("original members download emits its workbook only to a still-authorized ad
   const revoked = await get()
   expect(calls).toBeGreaterThan(1)
   expect(revoked?.status).toBe(403)
-  expect(revoked?.headers.get("content-type")).not.toContain("spreadsheet")
+  expect(revoked?.headers.get("content-type") ?? "").not.toContain("spreadsheet")
 })
