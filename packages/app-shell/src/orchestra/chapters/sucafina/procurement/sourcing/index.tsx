@@ -11,6 +11,7 @@ import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewSnapshot, SfReviewField } from "../../shared/change-review"
 import type { SfCopyKey, SfMessage, SfText, SfUiState } from "../../shared/frame"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import type { SfU12CopyKey } from "@/i18n/orchestra-chapters/sf-u12"
 import {
   editableSourcing, editableStages, quoteIsPersisted, recordedFx, requestRevision, sourcingSourceFields,
@@ -162,9 +163,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const ready=host.ready(),row=request(),version=sourceVersion()
     if(!ready||!row?.number||version===null||!can("save"))return null
     const original=editableSourcing(row)
-    return ready.drafts.acquire<SourcingEdit>({
-      surfaceId:"CAP25",identity:{kind:"record",recordRef:row.number as SfRef},
-      editScopeKey:"CAP25:sourcing" as SfEditScopeKey,
+    const selection={surfaceId:"CAP25" as const,identity:{kind:"record" as const,recordRef:row.number as SfRef},
+      editScopeKey:"CAP25:sourcing" as SfEditScopeKey}
+    return sfRetainDraft<SourcingEdit>(ready.drafts,{
+      ...selection,
       baseVersion:version,base:original,value:original,
       revalidation:{operationId:"domain.page.CAP25",input:{request:row.number},
         fieldPaths:sourcingSourceFields(row)??["sourcing.unidentified-item"],actionIds:["save"]},
@@ -178,14 +180,15 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       controller.receiveRemote({baseVersion:version,value:editableSourcing(row)})
   })
   const snapshot=()=>draft()?.snapshot()
-  const editable=()=>snapshot()?.availability==="active"
+  const draftPending=()=>{const state=snapshot();return state?.availability==="active"&&!!state.pendingOperation}
+  const draftConflict=()=>sfDraftConflicted(snapshot(),sourceVersion()??undefined)
+  const editable=()=>!!sfDraftForEdit(snapshot(),sourceVersion()??undefined)
   const edit=():SourcingEdit=>{
-    const current=snapshot()
-    return current?.availability==="active"?current.value:{}
+    return sfDraftForEdit(snapshot(),sourceVersion()??undefined)?.value??{}
   }
   const update=(fn:(old:SourcingEdit)=>SourcingEdit)=>{
     const controller=draft(),state=controller?.snapshot()
-    if(!controller||state?.availability!=="active"||active(ui.phase))return
+    if(!controller||!sfDraftForEdit(state,sourceVersion()??undefined)||state?.availability!=="active"||active(ui.phase))return
     controller.edit(fn(state.value))
   }
   const changeField=(field:"evaluator"|"fewQuotesJustification"|"selectionJustification"|"contractStrategy",next:string)=>
@@ -255,7 +258,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   const begin=(action:SourcingAction)=>{
     const row=request(),current=page(),token=authority(),requestRef=row?.number,version=sourceVersion()
     if(!row||!current||!token||!requestRef||version===null||
-       ui.review||active(ui.phase)||sending||!can(action))return
+       ui.review||active(ui.phase)||sending||draftConflict()||draftPending()||!can(action))return
     const sourceRevision=requestRevision(current,requestRef)
     if(!sourceRevision)return
     const controller=draft(),ds=controller?.snapshot()
@@ -290,7 +293,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   })
   const confirmation=()=>{
     const intent=ui.review
-    if(!intent||!can(intent.action)||intent.token!==authority())
+    if(!intent||draftConflict()||draftPending()||!can(intent.action)||intent.token!==authority())
       return {kind:"blocked",labelKey:k("sf.u12.readOnly"),reasons:[m("sf.u12.readOnly")]} as const
     return {kind:"admitted",labelKey:k("sf.u12.confirm"),purpose:
       (intent.action==="select_quote"?"select":intent.action==="save"?"save":"submit") as "select"|"submit"|"save",
@@ -303,7 +306,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   }
   const confirm=async(admitted:Extract<ReturnType<typeof confirmation>,{kind:"admitted"}>)=>{
     const intent=ui.review,token=authority()
-    if(!intent||!token||sending||ui.phase!=="reviewing"||!can(intent.action)||
+    if(!intent||!token||sending||ui.phase!=="reviewing"||draftConflict()||draftPending()||!can(intent.action)||
       admitted.binding.kind!=="catalog-command"||
       admitted.binding.operationId!=="domain.command.CAP25."+intent.action||
       admitted.binding.version.kind!=="record"||
@@ -469,10 +472,26 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     </fieldset>
   }
 
+  const conflictPanel=():JSX.Element=><section class="sf-u12-editor" data-draft-conflict="sourcing">
+    <p role="alert">{t("sf.u12.conflict")}</p>
+    <button class="mx-btn" type="button" disabled={draftPending()||active(ui.phase)||sending}
+      onClick={()=>{
+        const ready=host.ready(),token=authority(),row=request(),state=snapshot()
+        if(!ready||!token||!row?.number||state?.availability!=="active"||state.pendingOperation||active(ui.phase)||sending)return
+        const selection={surfaceId:"CAP25" as const,identity:{kind:"record" as const,recordRef:row.number as SfRef},
+          editScopeKey:"CAP25:sourcing" as SfEditScopeKey}
+        ready.drafts.discard(selection)
+        if(ready.drafts.peek(selection))return
+        setUi({page:null,state:"loading",review:null,phase:"idle"})
+        void refresh(token,row.number)
+      }}>{language.t("sf.common.discard")}</button>
+  </section>
   const editor=():JSX.Element=>{
     const state=snapshot()
     if(state?.availability!=="active")
       return <SfStatePanel state="unavailable" messageKey={k("sf.u12.readOnly")}/>
+    if(draftPending())return <SfStatePanel state="outcome-unknown" messageKey={k("sf.u12.unknown")}/>
+    if(draftConflict())return conflictPanel()
     const current=edit()
     const keyFields=[
       ["evaluator","sf.u12.evaluator"],["fewQuotesJustification","sf.u12.fewQuotesJustification"],
@@ -518,6 +537,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     </section>
   }
   const comparison=():JSX.Element=>{
+    if(draftPending())return <SfStatePanel state="outcome-unknown" messageKey={k("sf.u12.unknown")}/>
+    if(draftConflict())return conflictPanel()
     const row=request()
     if(!row)return <SfStatePanel state="not-found" messageKey={k("sf.u12.notFound")}/>
     const recorded=row.sourcing?.quotes??[]

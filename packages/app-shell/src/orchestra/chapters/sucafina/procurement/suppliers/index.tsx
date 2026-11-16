@@ -18,7 +18,7 @@ import type { SfCopyKey, SfDisplayValue, SfMessage, SfText, SfUiState } from "..
 import type { SfSort } from "../../shared/table"
 import type { SfU14CopyKey } from "@/i18n/orchestra-chapters/sf-u14"
 import {
-  bankFields, booleanFields, generalFields, linkedRequests, supplierSourceFields,
+  bankFields, booleanFields, generalFields, generalDraftFields, linkedRequests,
   multilineFields, supplierEdit, supplierRevision, supplierVersion,
   uniqueSupplier, type Cap27PageOk, type Supplier, type SupplierAction, type SupplierEdit,
 } from "./model"
@@ -207,20 +207,20 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       return ready.drafts.acquire<SupplierEdit>({
         surfaceId: "CAP27", identity: { kind: "new", newIntentRef: "CAP27:supplier-create" as SfIntentRef },
         editScopeKey: "CAP27:general" as SfEditScopeKey, baseVersion: null, base: null, value: {},
-        revalidation: { operationId: "domain.page.CAP27", input: {}, fieldPaths: [],
+        revalidation: { operationId: "domain.page.CAP27", input: {}, fieldPaths: generalDraftFields,
           actionIds: ["create"] },
       })
     }
     if (!current?.id || version() === null) return null
     const bank = ui.mode === "bank"
-    if (!can(bank ? "change-bank" : "save")) return null
+    if (!can(bank ? "change-bank" : "save") || bank && !projection.value.data.bankVerificationAvailable) return null
     const original = bank ? {} : supplierEdit(current)
     return ready.drafts.acquire<SupplierEdit>({
       surfaceId: "CAP27", identity: { kind: "record", recordRef: current.id as SfRef },
       editScopeKey: (bank ? "CAP27:bank" : "CAP27:general") as SfEditScopeKey,
       baseVersion: version(), base: original, value: original,
       revalidation: { operationId: "domain.page.CAP27", input: { supplier: current.id },
-        fieldPaths: supplierSourceFields(current, bank), actionIds: [bank ? "change-bank" : "save"] },
+        fieldPaths: bank ? bankFields : generalDraftFields, actionIds: [bank ? "change-bank" : "save"] },
     })
   })
   createEffect(() => {
