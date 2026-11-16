@@ -1,0 +1,9 @@
+# Procurement route mount — candidate, review required
+
+Patch baseline: 27a2a5a4de019b6319a1751651ea86a4bf43dd5d. Apply with `git apply --check docs/sf2h/receipts/procurement-mount/reconciled/procurement.patch` then apply after reconciliation with other shared-file work. Preimages and postimages are provided. This replaces the earlier CAP24-only proposal; do not apply both.
+
+Mounts CAP14 and CAP24–28 in the existing F01 owner. CAP25 sourcing/compare use the sourcing leaf; other request routes use the request leaf. CAP26 renders both existing PR and remaining approvals components, each uses its own producer and stage checks. Route references are decoded by the existing route registry and read by each original leaf, which checks visibility and context. Availability requires a real ready operational page operation and readable destination. It is not a command grant. Owner, navigation guard and desktop staged bridge remain intact.
+
+Recognized query parameters are complete owner selector triplet and optional year/month (2024–2027, 1–12); CAP14 only accepts owner selectors. Unknown keys and duplicates fail closed. The leaves currently read their own intended projection and may not consume every year/month selector. Approval returnTo is deliberately rejected pending same-owner destination re-admission. No change to policies or financial calculation.
+
+NOT VERIFIED: tests, typecheck, guard, installed browser and UX. The candidate needs independent review, hosted tests of every route and producer refusal, stale/context change, dirty drafts and bridge; CAP26's two independent panels need UX and behavior review. F01 only revalidates case drafts: procurement drafts remain quarantined after reconnect rather than being restored. Do not claim completion until the exact producer revalidation and mounted end-to-end tests pass. Apply no concurrent owner patch without a semantic union.

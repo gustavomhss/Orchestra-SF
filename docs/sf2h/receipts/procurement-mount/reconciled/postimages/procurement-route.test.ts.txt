@@ -1,0 +1,38 @@
+import { describe, expect, test } from "bun:test"
+import type { SfContext } from "@orchestra/schema/sucafina/context"
+import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
+import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
+import { parseProcurementRouteQuery, procurementRouteAvailable } from "../../src/orchestra/chapters/sucafina/host/procurement-route"
+
+describe("procurement route admission", () => {
+  test("accepts exact route kinds and strictly bounded selectors", () => {
+    for (const path of ["/orchestra/sf-procurement/overview", "/orchestra/sf-procurement/requests/new",
+      "/orchestra/sf-procurement/requests/" + encodeSfRouteRef("PR-1") + "/sourcing/compare",
+      "/orchestra/sf-procurement/approvals/" + encodeSfRouteRef("PR-1") + "/review",
+      "/orchestra/sf-procurement/suppliers/" + encodeSfRouteRef("S-1") + "/edit",
+      "/orchestra/sf-procurement/contracts/" + encodeSfRouteRef("C-1") + "/edit",
+      "/orchestra/sf-procurement/settings"]) {
+      const route = matchSfNativeRoutePath(path)!
+      expect(parseProcurementRouteQuery(new URLSearchParams(), route)).toEqual({})
+      expect(parseProcurementRouteQuery(new URLSearchParams("server=a"), route)).toBeUndefined()
+      expect(parseProcurementRouteQuery(new URLSearchParams("x=1"), route)).toBeUndefined()
+      expect(parseProcurementRouteQuery(new URLSearchParams("year=2026&year=2026"), route)).toBeUndefined()
+    }
+    const overview = matchSfNativeRoutePath("/orchestra/sf-procurement/overview")!
+    expect(parseProcurementRouteQuery(new URLSearchParams("year=2026&month=12"), overview)).toEqual({ year: 2026, month: 12 })
+    expect(parseProcurementRouteQuery(new URLSearchParams("year=2028"), overview)).toBeUndefined()
+    expect(parseProcurementRouteQuery(new URLSearchParams("month=13"), overview)).toBeUndefined()
+  })
+  test("a catalog route cannot grant access without destination and live operation", () => {
+    const route = matchSfNativeRoutePath("/orchestra/sf-procurement/overview")!
+    const context = { destinations: [{ capabilityId: "CAP24", canRead: true }],
+      availability: [{ family: "procurement", resource: "CAP24", operations: [
+        { operationId: "domain.page.CAP24", state: "ready", operational: true },
+      ] }] } as unknown as SfContext
+    expect(procurementRouteAvailable(context, route)).toBe(true)
+    expect(procurementRouteAvailable({ ...context, destinations: [] }, route)).toBe(false)
+    expect(procurementRouteAvailable({ ...context, availability: [] }, route)).toBe(false)
+    expect(procurementRouteAvailable({ ...context, availability: [{ ...context.availability[0]!,
+      operations: [{ operationId: "domain.page.CAP24", state: "unavailable", reason: "offline", operational: false }] }] }, route)).toBe(false)
+  })
+})
