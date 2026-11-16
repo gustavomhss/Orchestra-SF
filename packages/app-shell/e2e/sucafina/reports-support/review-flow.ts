@@ -235,8 +235,17 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
   await expect(button).toBeEnabled()
+  const reportRequest = page.waitForRequest((request) =>
+    request.method() === "POST" && new URL(request.url()).origin === app.origin &&
+    new URL(request.url()).pathname === new URL(app.dashboardURL).pathname &&
+    new URL(request.url()).searchParams.get("sf") === "review-report")
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
   await button.click()
+  // Producer-owned UI must actually issue the admitted POST; a visible button
+  // is not positive evidence of any export. Fail early for a missing request,
+  // but still require the actual 200 response and exact preserved selection.
+  const dispatched = await reportRequest
+  expect(dispatched.postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
   const response = await pending
   expect(response.status()).toBe(200)
   expect(response.request().postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
@@ -276,8 +285,16 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
+  const navigation = page.waitForNavigation({ waitUntil: "domcontentloaded" })
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   await page.getByRole("region", { name: "Prepare review", exact: true }).getByRole("button", { name: "Open meeting", exact: true }).click()
+  // Original CLI's openReview uses location.assign(reviewUrl(...)); establish
+  // that its real mounted meeting route is admitted BEFORE waiting on its
+  // subsequent current-authority review-read, never fabricating either read.
+  const opened = await navigation
+  expect(opened?.status(), "Original review navigation must be admitted").toBe(200)
+  expect(new URL(page.url()).searchParams.get("sf")).toBe("review")
+  expect(new URL(page.url()).searchParams.get("reviewRef")).toBe(saved.id)
   expect(object(await (await pending).json()).value).toEqual(saved)
   const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting).toHaveCount(1)
