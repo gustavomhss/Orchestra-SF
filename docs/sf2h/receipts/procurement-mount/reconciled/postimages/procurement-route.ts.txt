@@ -20,7 +20,7 @@ export function parseProcurementRouteQuery(params: URLSearchParams, candidate: S
   if (selectors.some((item) => item !== null) && !selectors.every((item) => !!item)) return
   const year = params.get("year")
   const month = params.get("month")
-  if (candidate.surfaceId === "CAP14" && (year !== null || month !== null)) return
+  if (candidate.surfaceId !== "CAP24" && candidate.surfaceId !== "CAP28" && (year !== null || month !== null)) return
   if (year !== null && !/^202[4-7]$/.test(year)) return
   if (month !== null && !/^(?:[1-9]|1[0-2])$/.test(month)) return
   return {
