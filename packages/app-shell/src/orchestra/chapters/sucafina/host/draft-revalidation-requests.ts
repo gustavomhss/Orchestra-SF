@@ -62,5 +62,11 @@ export async function revalidateRequestsDraft(
     path === prefix + key && value !== undefined))) return { status: "denied" }
   const version = requestVersion(read, ref)
   if (version === undefined) return { status: "unavailable" }
+  // CAP25's page-wide save grant does not say whether the actor is a buyer,
+  // administrator, or the creator of this particular PR. The mutation checks
+  // those roles separately by stage, so PO and non-owner PRs need an original
+  // record/stage-specific grant before they can be restored.
+  if (input.editScopeKey === "po.fields" || row.createdBy !== fresh.stamp.principalRef)
+    return { status: "unavailable" }
   return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: version }
 }
