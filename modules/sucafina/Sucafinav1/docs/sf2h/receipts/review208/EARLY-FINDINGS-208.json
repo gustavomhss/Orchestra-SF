@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h.review208.early.v1",
+  "mission": 208,
+  "actor": "S2-R2",
+  "epoch": "cold-review-e1-browser208",
+  "review_kind": "PRE_FREEZE_STATIC_INDEPENDENT_NOT_FINAL",
+  "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "status": "FIX_FIRST",
+  "global_release": false,
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "compiler_or_tests_run_by_reviewer": false,
+  "findings": [
+    {
+      "id": "REV208-NEW-001",
+      "origin": "new_static",
+      "priority": "P2",
+      "topic": "BI semantic unit mismatch admitted",
+      "trigger": "A BI Presentation series declares unit 'USD', while its referenced ProjectionValue contains unit 'hours' and currency 'USD'. resolveBiPresentation returns ok because the OR-like predicate accepts matching currency even though value.unit conflicts; renderBiView consumes the accepted series and labels/scales by declared unit.",
+      "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "lines": "20-24",
+      "blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+      "consumer_path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "consumer_blob": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+      "consumer_lines": "267-285",
+      "contracts": [
+        "C10",
+        "C17"
+      ],
+      "criterion_ids": [
+        "WP10.T03.CHK.02",
+        "WP10.QLT.10"
+      ],
+      "proof": "Source-static Boolean counterexample; no runtime test claimed.",
+      "owner": "analytics/BI active writer via sole integrator 189/PR65",
+      "recheck": "Reject conflicting explicit unit/currency metadata, preserve legitimate FTE vs cost separate scales; targeted BI semantic unit test on accepted C by 200."
+    },
+    {
+      "id": "REV208-NEW-002",
+      "origin": "new_static",
+      "priority": "P2",
+      "topic": "Atlas persisted log sequence mutation not rejected",
+      "trigger": "Persist an otherwise valid Atlas memory event with a different safe integer seq; read() validates the supplied seq only for range then normalizes seq to expected.seq before comparing event digest. A changed seq is accepted; events are sorted by the untrusted supplied seq, allowing reordering or duplicate ordinals.",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "lines": "19-38",
+      "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+      "contracts": [
+        "C08",
+        "C17"
+      ],
+      "criterion_ids": [
+        "WP10.T03.CHK.03",
+        "WP10.QLT.40"
+      ],
+      "proof": "Source-static invariant counterexample; corruption injection NOT_RUN.",
+      "owner": "Atlas persistence/host-binding writer via sole integrator 189/PR65",
+      "recheck": "Reject duplicate/non-monotonic/out-of-order seq and demonstrate fail-closed read on altered persisted seq, positive ordered append and restart recovery at accepted C via 200."
+    }
+  ],
+  "known_not_inflated": [
+    {
+      "reference": "203 inert router source",
+      "priority": "P1",
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "lines": "73-82",
+      "blob": "17db52d914ca49934953e1161461b03856eb29c5",
+      "issue": "POST projection.search does not reject q in URI; 203 already supplied inert shared patch and transport test repair for 189 to integrate.",
+      "contract": "NAV-01 POST JSON 4096 private q",
+      "owner": "189 consuming 203 inert shared patch + 200 recheck",
+      "recheck": "Router denies query q without consuming Request; POST body 4096, GET 405 and real browser/desktop transport; no q in URI or logs."
+    }
+  ],
+  "limitations": [
+    "Static review only; C final not accepted; host/Azure identities and external private fixtures not accessed.",
+    "Does not claim execution, exploit, scanner corruption or full source proof."
+  ]
+}
