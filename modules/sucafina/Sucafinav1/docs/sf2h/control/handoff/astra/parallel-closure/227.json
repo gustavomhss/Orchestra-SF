@@ -1,0 +1,282 @@
+{
+  "schema": "sf2h.shared-closure-foundation.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 227,
+  "title": "Implementar retomada autorizada de casos na tela Hoje",
+  "branch": "sf-today-resume",
+  "epoch": "shared-closure-e1-browser227",
+  "state": "PREPARED_NOT_STARTED",
+  "product_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "write_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/home/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts",
+    "packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/**"
+  ],
+  "goals": [
+    "Resolver C-004/PRER01-146-005:Homejá define SfTodayResumePort.resumeCase, masSfContextHandle não fornece o port, então canResume fica falso. Não reimplementar oscards/casos já existentes.",
+    "LerF01/route-signatures/host-signatures/SfTodayResumePort e oshelpersdenavegação211 atuais. Conectar umportreal que prepare/admitarotaUI34 porcaseRef/incarnation/versioneowner/principal/generationatuais, sem montarURL apartirdotítulo ou suporgrant.",
+    "Ação deve serfocusable/pointer+keyboard, preservarretorno/foco e cancelardraft/replytardiaaoownerchange; revoked/denied/stale/removed/refmalformed não navegam nemmostram conteúdoantigo. Não transformar sourceausenteemcasofabricado.",
+    "Preservar READ01, empty/filter/unavailableindependentes, 320–1440/200%/400%,tokens/copyenptBR e semânticaoriginal. Reusar o contratonavigation/preflight e métodos atuais, não criarumcontroladorderotas paralelo.",
+    "Se precisa dehostbinding/APIpública fora delease, entregar patchINERTOintegralpara211 com pre/post/contrato, não encerrar numpedido. Implementar source/browser/installeddrivers necessários,semalegarprovaD01 ou modeloreal porumcomponenttest.",
+    "EntregarPRbundle191,código/testscompletos,prepost,request223exato e recheck207 dosdeltas."
+  ],
+  "full_work_orders": [
+    {
+      "id": "U01",
+      "title": "Hoje e retomada de trabalho",
+      "kind": "ui",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "priority": 6,
+      "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/home/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts"
+      ],
+      "may_write_shared_registry": false,
+      "canonical": {
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "task_refs": [
+          "WP01.T05",
+          "WP08.T04"
+        ],
+        "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+      },
+      "surfaces": [
+        "UI29"
+      ],
+      "exports": [
+        "SfTodayView"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A12",
+        "S01"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02",
+          "F03",
+          "A12",
+          "S01"
+        ],
+        "external": [
+          "Canonical producer releases and original blockers remain mandatory for qualification."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes": {
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "surface-specs",
+          "ui-frame",
+          "ui-table"
+        ],
+        "producer_exports": [
+          {
+            "order": "F01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F02",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F03",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "A12",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "S01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          }
+        ],
+        "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+        "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+        "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+        "operation_refs": [
+          "contract-catalog.json#/operations/projection.home"
+        ],
+        "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+      },
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U01.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "surface-specs",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "UI29"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/workbench"
+        ]
+      },
+      "deliver": [
+        "Implement every field/action/state/route in the assigned surface entries; field source is authoritative, never an invitation to omit less visible controls.",
+        "Emit typed page/component exports and registration fragment to I00; no direct registry/shared producer writes.",
+        "Use frozen responsive/microcopy/dirty-navigation specification; add behavior-focused installed journey cases in the owned exact spec.",
+        "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write.",
+        "Landing route resolves explicit deep link then v2 preferred view when admitted, then Hoje, then first authorized destination; missingPreference is explicit, no automatic foreign owner/path fallback or implicit preference mutation."
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U01-AC01",
+          "expected": "Home composes authorized attention/resume/meeting/material-change sections with independent unavailable/empty states and stable source navigation; it never fabricates work, a meeting snapshot or a successful routine.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U01-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U01-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "handoff": {
+        "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+        "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+        "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "symbol": "SfTodayView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "i18n_exports": [
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts",
+          "en_symbol": "SF_U01_COPY",
+          "pt_br_symbol": "SF_U01_COPY_BR",
+          "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "finite_gap": "C-004",
+    "source_fact": "hasResumePort() checks runtime resumeCase; no implementation in currentcontext orcontracts read at998f0afd6047409956418f40c570dc9c48dc6c8f"
+  },
+  "mandatory_reads": [
+    "AGENTSaplicáveis;START/WORKFLOW/executionCOMMON e próprios critérios/contratos/anexoscompletos.",
+    "Pacotecompleto e ordenscompletasabaixo; seguircada required_read no normativoUXcbac654784714f68779ae1434d30e6ea8970c4d1 emdocs/sf2h/native-ui/execution/.",
+    "Código/dependênciasoriginais emproduct_base e entregasliberadas já existentes antes de editar. Fonte pronta/órfã deve ser reaproveitada; preservar todos os25Filesops e17contratos."
+  ],
+  "rules": [
+    "SessãoNOVA,branchisolada,ACK model/session somenteexpostos. Escopofixo completo; outputs de produtoresoriginais são dadoscontratados a serem lidos peloGit, sem recadoaochat.",
+    "211únicocompositordabundle/PR191,223únicoCIproduto,190compiler,199host,213bootstrap,219nativeTask. Nada de outroS0/watchdog/serviço/infra.",
+    "Strictwrite_paths, fora deles patchINERTOcompletocompre/post/contexto. Nãoescrever emsf-closure-bundle,sf2-stack ou autoresalheios.226nãoeditaosconsumidores224225/218;227nãoedita fontecase220/native219.",
+    "Nenhumteste/typecheck/build/validator local e nenhumCI próprio. Requests cirúrgicos223/190 apósconsumo; codegen só oficial seAPIpúblicamudar, sem editar generated.",
+    "Nãoinventarbytes,artefatos,casos,rotas,grants,headers,TaskIDs ou scanner/provasnativas. Preservarpolíticafinanceira/ACL/oracles e negaçãofechada.",
+    "Remote sóGitHubMCP,CASexpectedheadforce:false;semgh/push/token/devmerge/deploy/Azure/engines/restart/segredos/guardbypass.",
+    "Concluir produtor/consumidorcontratado/tests/driverscompletos; impedimento externo só bloqueiaaprovação dependente, nãooutrocódigo. Entregarcommit/PR/handoffprepost/critério/checksreaisNOT_RUN/consumidor/minimofaltante.",
+    "Planoimutável15WPs74tasks17contratos1610critérios+UXintegral;Goalnativapausada,GLOBAL_RELEASEfalse até predicado real. Preparação não é produtoentregue."
+  ],
+  "routing": {
+    "integrator": 211,
+    "product_pr": 191,
+    "product_ci": 223,
+    "compiler": 190,
+    "source_consumers": [
+      218,
+      224,
+      225
+    ],
+    "reviews": [
+      207,
+      208,
+      209
+    ]
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "expected_head": "8bd1035dba47152733e042492891b7a45b8bb7ac"
+}

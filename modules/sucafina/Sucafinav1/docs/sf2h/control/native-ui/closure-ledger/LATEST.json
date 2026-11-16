@@ -650,5 +650,35 @@
       "expected_head": "134bdb2dd76e8e7774338ebceee3b5281993a547",
       "state": "PREPARED_NOT_STARTED"
     }
-  ]
+  ],
+  "acceleration_shared_sources": [
+    {
+      "mission": 226,
+      "title": "Fechar transporte tipado de arquivos e downloads autorizados",
+      "branch": "sf-files-transport",
+      "epoch": "shared-closure-e1-browser226",
+      "head": "585bad394015bb7937c07e79f8bd9d754f208427",
+      "state": "PREPARED_NOT_STARTED",
+      "derived_gap": "C-001",
+      "consumer": 211
+    },
+    {
+      "mission": 227,
+      "title": "Implementar retomada autorizada de casos na tela Hoje",
+      "branch": "sf-today-resume",
+      "epoch": "shared-closure-e1-browser227",
+      "head": "8bd1035dba47152733e042492891b7a45b8bb7ac",
+      "state": "PREPARED_NOT_STARTED",
+      "derived_gap": "C-004",
+      "consumer": 211
+    }
+  ],
+  "recovered_orphan_source": {
+    "original_pr": 121,
+    "original_branch": "sf-ux-w18",
+    "original_sha": "a81ee51b312a64d27cff496e863a02e874ac14a8",
+    "source218_receipt": "repair218/A06-SOURCE-CLOSURE.json",
+    "reusable_original_leaves": 5,
+    "owner_new_shared_transport": 226
+  }
 }
