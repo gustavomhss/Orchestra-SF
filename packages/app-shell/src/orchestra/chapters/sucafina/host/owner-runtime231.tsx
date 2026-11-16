@@ -421,7 +421,23 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         setView({ status: "denied", route: undefined })
         return
       }
-      if (selection()) return // The existing F01 navigation must admit/confirm before owner changes.
+      if (selection() && sameSelection(selection()!, parsed.selection)) return
+      if (selection()) {
+        // Preserve 231 follow-up: discovery, not the route effect, owns
+        // cross-owner admission and cancel/return. Never pre-publish the selector.
+        const abort = new AbortController()
+        const previousHref = untrack(() => view.route?.href)
+        void navigation.requestNativeTransition(currentHref(), "deep-link", { signal: abort.signal }).then((result) => {
+          if (disposed || abort.signal.aborted ||
+            result.status === "committed" || result.status === "aborted") return
+          if (previousHref) {
+            navigate(String(previousHref), { replace: true })
+            restoreEditorFocus()
+          }
+        })
+        onCleanup(() => abort.abort())
+        return
+      }
       setDiscovery({ status: "ready", selection: parsed.selection })
       return
     }
@@ -459,6 +475,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const providerStatus = provider.status
     const providerGeneration = provider.generation
     if (!selected || disposed || providerStatus !== "ready" || providerGeneration < 0) return
+    const requested = explicitSelection(location.search)
+    // Preserve PR208 #208 cross-owner single admission; never race discovery.
+    if (requested.kind === "selected" && !sameSelection(requested.selection, selected)) return
     if (untrack(() => view.status === "ready" && view.route?.href === href &&
       sameSelection(view.route.ownerSelection, selected))) return
     const epoch = ++routeEpoch
