@@ -90,6 +90,35 @@ export function bunCoverageIdentity(raw) {
   return { cases: cases.length, files, fileCount: files.length,
     casesSha256: sha256Lines(cases), filesSha256: sha256Lines(files) }
 }
+
+/** Playwright minimized evidence retains only salted-free opaque case IDs and source file paths. */
+export function playwrightCoverageIdentity(raw, exactSpec) {
+  let data
+  try { data = typeof raw === "string" ? JSON.parse(raw) : raw } catch { fail("invalid Playwright coverage JSON") }
+  if (!Array.isArray(data?.suites)) fail("missing Playwright coverage suites")
+  const cases = [], files = new Set()
+  const visit = (suite, inheritedFile = "") => {
+    const suiteFile = suite.file || inheritedFile
+    for (const spec of suite.specs || []) {
+      const file = validateRelative(String(spec.file || suiteFile).replaceAll("\\", "/"))
+      if (file !== exactSpec || !Array.isArray(spec.tests) || !/^[a-f0-9]{64}$/.test(spec.idHash || "")) {
+        fail("unbound Playwright case identity/file: " + file)
+      }
+      files.add(file)
+      spec.tests.forEach((t, index) => {
+        if (t.expectedStatus !== "passed" || !Array.isArray(t.results) || t.results.length !== 1 ||
+            t.results[0]?.status !== "passed") fail("incomplete Playwright execution")
+        cases.push(file + "\0" + spec.idHash + "\0" + index)
+      })
+    }
+    for (const child of suite.suites || []) visit(child, suiteFile)
+  }
+  for (const suite of data.suites) visit(suite)
+  if (!cases.length || cases.length !== data.stats?.expected) fail("Playwright coverage case count mismatch")
+  const selected = [...files].sort()
+  return { cases: cases.length, files: selected, fileCount: selected.length,
+    casesSha256: sha256Lines(cases), filesSha256: sha256Lines(selected) }
+}
 export function checkCoverageBaseline(suite, coverage) {
   const baseline = suite.coverageBaseline
   if (baseline?.schemaVersion !== 1 || baseline.status !== "HISTORIC_SUCCESSFUL_ARTIFACT") {
