@@ -1044,5 +1044,31 @@
       "Integrate after reliable writer211 release; C12 policy and Today F01 wiring remain explicit gaps",
       "Hosted validation only after concrete consumer SHA; no repeat unchanged CI"
     ]
-  }
+  },
+  "new_closure_batch230_232": [
+    {
+      "mission": 230,
+      "branch": "sf-c12-review",
+      "head": "96a398b80c61b9acb53b1ff479d51b4e19bcfd7c",
+      "epoch": "c12-review-e1-browser230",
+      "state": "PREPARED_NOT_STARTED",
+      "role": "read-only review of product; full inert fixes"
+    },
+    {
+      "mission": 231,
+      "branch": "sf-home-binding",
+      "head": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "epoch": "home-host-binding-e1-browser231",
+      "state": "PREPARED_NOT_STARTED",
+      "role": "source factory + full inert existing-root integration patch"
+    },
+    {
+      "mission": 232,
+      "branch": "sf-ci-closure",
+      "head": "840effa220ad1f5ba80d1914865febc7fc4cffe4",
+      "epoch": "product-ci-e9-browser232",
+      "state": "PREPARED_NOT_STARTED",
+      "role": "exclusive successor product CI dispatcher; receipts only"
+    }
+  ]
 }
