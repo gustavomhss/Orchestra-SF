@@ -4,6 +4,7 @@ import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNames
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { sfProductStateAdditiveFields } from "../contracts/state-layout.ts"
+import { encodeCaseRef } from "../decisions/case-port.ts"
 
 const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const
 const storedNamespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "transactions"] as const
@@ -14,6 +15,7 @@ const caseReads = new WeakMap<object, {
   id: string
   project: (cases: SfProductState["cases"], authority: SfStateAuthority) => SfProductState["cases"][string] | undefined
 }>()
+const readinessReads = new WeakMap<object, (cases: SfProductState["cases"], authority: SfStateAuthority) => readonly string[] | undefined>()
 
 export function selectSfCase(id: string, context: TrustedDomainContext) {
   const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) =>
@@ -26,6 +28,36 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
       const field = Object.getOwnPropertyDescriptor(binding.value, key)
       return !!field && "value" in field && typeof field.value === "string"
     })) caseReads.set(read, { id, project: (cases, authority) => read({ cases }, authority) })
+  return read
+}
+
+/** Closed readiness selector: no raw state or case escapes the C08 read. */
+export function selectSfCaseReadiness(context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">) {
+  const expected = Object.freeze({ principalRef: context.principalRef, policyVersion: context.policyVersion, accessRevision: context.accessRevision })
+  const select = (cases: SfProductState["cases"], authority: SfStateAuthority): readonly string[] | undefined => {
+    if (!sameAuthority(expected, authority)) return undefined
+    let inspected = 0
+    let sample: string | undefined
+    for (const key in cases) {
+      if (!Object.hasOwn(cases, key)) continue
+      // The list producer refuses more than 100 visible cases. Conservatively
+      // refuse any larger snapshot without visiting or dispatching more cases.
+      if (++inspected > 100) return undefined
+      const descriptor = Object.getOwnPropertyDescriptor(cases, key)
+      if (!descriptor?.enumerable || !("value" in descriptor) || !descriptor.value || typeof descriptor.value !== "object") return undefined
+      const item = descriptor.value
+      const participants = Object.getOwnPropertyDescriptor(item, "participants")
+      const id = Object.getOwnPropertyDescriptor(item, "id")
+      const incarnation = Object.getOwnPropertyDescriptor(item, "incarnation")
+      if (!participants || !("value" in participants) || !Array.isArray(participants.value) ||
+        !id || !("value" in id) || typeof id.value !== "string" ||
+        !incarnation || !("value" in incarnation) || typeof incarnation.value !== "string") return undefined
+      if (!sample && participants.value.includes(authority.principalRef)) sample = encodeCaseRef({ id: id.value, incarnation: incarnation.value })
+    }
+    return sample ? [sample] : []
+  }
+  const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => select(state.cases, authority)
+  readinessReads.set(read, select)
   return read
 }
 
@@ -53,13 +85,17 @@ export function createSfProductState(input: {
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
         const state = readSfState(snapshot)
         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
+        const readiness = namespace === "cases" ? readinessReads.get(read) : undefined
         const selection = namespace === "cases" ? caseReads.get(read) : undefined
-        const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
+        const cases = selection || readiness ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
         const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
           ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
         // Keep missing/inherited, accessor and malformed lookups on the original
         // path. Durable SQLite snapshots contain plain cloneable data.
-        const value = selection && selected?.enumerable && "value" in selected && selected.value &&
+        const value = readiness
+          ? (cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
+            ? structuredClone(readiness(cases.value, authority)) : undefined) as T
+          : selection && selected?.enumerable && "value" in selected && selected.value &&
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
           : await read(structuredClone(state), authority)

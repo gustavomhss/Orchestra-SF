@@ -10,6 +10,7 @@ import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { selectSfCaseReadiness } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { contextualCaseReturn } from "../../../../../modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router.ts"
 
@@ -77,7 +78,7 @@ async function readCase(request: Request, deps: SfNativeHostDependencies): Promi
   const admitted = await runtime.ui.admit(request, "sf_case_read", operationDigest)
   if (admitted.status !== "ok") return failed(request, admitted.status)
   try {
-    if (!matches(stamp, admitted.value.binding) || !await runtime.ui.validate(admitted.value, "sf_case_read", operationDigest))
+    if (!matches(stamp, admitted.value.binding) || !await runtime.ui.revalidate(admitted.value))
       return failed(request, "denied", "case-access-changed")
     const result = await runtime.dispatch("sf_case_read", parsed.value, admitted.value)
     if (result.status !== "ok") return failed(request, result.status, result.reason)
@@ -115,23 +116,13 @@ async function readCases(request: Request, deps: SfNativeHostDependencies, expec
   try {
     if (!matches(stamp, admitted.value.binding) || !await runtime.ui.validate(admitted.value, "sf_case_read", operationDigest))
       return failed(request, "denied", "case-list-access-changed")
-    const identities = () => runtime.state.read(request, "cases", (state, authority) => {
+    const sample = expected ? selectSfCaseReadiness(stamp) : undefined
+    const identities = () => runtime.state.read(request, "cases", sample ?? ((state, authority) => {
       if (authority.principalRef !== admitted.value.binding.principalRef ||
         authority.policyVersion !== admitted.value.binding.policyVersion ||
         authority.accessRevision !== admitted.value.binding.accessRevision) return undefined
-      if (!expected) return Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
-      // Reject large snapshots rather than claiming the full producer's 100-case
-      // ceiling holds; only one authorized case is dispatched by the observer.
-      let inspected = 0
-      const sample: string[] = []
-      for (const key in state.cases) {
-        if (!Object.hasOwn(state.cases, key)) continue
-        if (++inspected > 100) return undefined
-        const item = state.cases[key]!
-        if (!sample.length && item.participants.includes(authority.principalRef)) sample.push(encodeCaseRef(item))
-      }
-      return sample
-    })
+      return Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
+    }))
     const listed = await identities()
     if (listed.status !== "ok" || !listed.value || listed.value.length > 100)
       return failed(request, "unavailable", "case-list-source-unavailable")
@@ -161,6 +152,8 @@ async function readCases(request: Request, deps: SfNativeHostDependencies, expec
     const again = await identities()
     if (again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(listed.value))
       return failed(request, "stale", "case-list-changed")
+    if (expected && (again.storageVersion !== listed.storageVersion || again.aggregateRevision !== listed.aggregateRevision ||
+      again.incarnation !== listed.incarnation)) return failed(request, "stale", "case-list-changed")
     if (!await runtime.ui.revalidate(admitted.value)) return failed(request, "denied", "case-list-access-changed")
     if (!expected) {
       const current = await deps.readContext(request)

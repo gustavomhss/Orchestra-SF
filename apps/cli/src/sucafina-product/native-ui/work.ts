@@ -14,6 +14,7 @@ import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/produc
 import { isSfPeriod } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { selectSfCaseReadiness } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { WorkPresentationItem } from "../../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
@@ -295,22 +296,11 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
     let cases: { status: "ok"; items: { caseRef: string; title: string; version: number }[] } | { status: "unavailable" } =
       { status: "unavailable" }
     if (caseAccess) {
-      const listed = await runtime.state.read(request, "cases", (state, authority) => {
-        if (expected) {
-          if (authority.principalRef !== expected.principalRef || authority.policyVersion !== expected.policyVersion ||
-            authority.accessRevision !== expected.accessRevision) return undefined
-          let inspected = 0
-          for (const key in state.cases) {
-            if (!Object.hasOwn(state.cases, key)) continue
-            if (++inspected > 100) return undefined
-            const entry = state.cases[key]!
-            if (entry.participants.includes(authority.principalRef)) return [encodeCaseRef(entry)]
-          }
-          return []
-        }
-        return Object.values(state.cases).filter((entry) => entry.participants.includes(authority.principalRef))
-          .map((entry) => encodeCaseRef(entry))
-      })
+      const sample = expected ? selectSfCaseReadiness(expected) : undefined
+      const readCases = () => runtime.state.read(request, "cases", sample ?? ((state, authority) =>
+        Object.values(state.cases).filter((entry) => entry.participants.includes(authority.principalRef))
+          .map((entry) => encodeCaseRef(entry))))
+      const listed = await readCases()
       if (listed.status === "ok" && listed.value) {
         const items = await Promise.all(listed.value.map(async (caseRef) => {
           const selection = { caseRef }
@@ -331,6 +321,12 @@ async function home(request: Request, runtime: SfHostServices, expected?: SfCont
           }
         }))
         if (expected && items.some((item) => item === undefined)) return failure(request, "unavailable")
+        if (expected) {
+          const again = await readCases()
+          if (again.status !== "ok" || !again.value || again.storageVersion !== listed.storageVersion ||
+            again.aggregateRevision !== listed.aggregateRevision || again.incarnation !== listed.incarnation ||
+            digestSfValue(again.value) !== digestSfValue(listed.value)) return failure(request, "stale")
+        }
         cases = { status: "ok", items: items.filter((item): item is NonNullable<typeof item> => item !== undefined) }
       } else if (!expected && listed.status === "unavailable" && listed.reason === "product-state-uninitialized") {
         cases = { status: "ok", items: [] }

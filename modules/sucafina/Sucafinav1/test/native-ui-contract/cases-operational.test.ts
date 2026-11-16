@@ -24,6 +24,8 @@ test("case list probe admits the original Request and fences authority and sourc
   let reads = 0
   let available = true
   let revokeDuringRead = false
+  let version = 1
+  let changeDuringRead = false
   const runtime = { ui, state: { read: async (request: Request, namespace: string, callback: (state: { cases: Record<string, never> }, authority: typeof stamp) => unknown) => {
     expect(request).toBe(original)
     expect(namespace).toBe("cases")
@@ -31,7 +33,9 @@ test("case list probe admits the original Request and fences authority and sourc
     if (!available) return { status: "unavailable" }
     const value = callback({ cases: {} }, stamp)
     if (revokeDuringRead) revision = "revoked"
-    return { status: "ok", value }
+    const result = { status: "ok", storageVersion: version, aggregateRevision: version, incarnation: "state", value }
+    if (changeDuringRead) version++
+    return result
   } } }
   const deps = { runtime: () => runtime, readContext: async () => { throw new Error("recursive context read") } }
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([
@@ -47,6 +51,9 @@ test("case list probe admits the original Request and fences authority and sourc
   actor = "other"
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
   actor = "person"
+  changeDuringRead = true
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  changeDuringRead = false
   revokeDuringRead = true
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
   revision = "revision"
@@ -72,7 +79,7 @@ test("case readiness samples one source and preserves the producer's 100-case ce
       callback: (state: { cases: Record<string, { id: string; incarnation: string; participants: string[] }> }, authority: typeof stamp) => unknown) => {
       const cases = Object.fromEntries(Array.from({ length: count }, (_, index) => [String(index),
         { id: String(index), incarnation: "incarnation", participants: ["person"] }]))
-      return { status: "ok", value: callback({ cases }, stamp) }
+      return { status: "ok", storageVersion: 1, aggregateRevision: 1, incarnation: "state", value: callback({ cases }, stamp) }
     } },
     dispatch: async (operation: string, payload: unknown, call: Parameters<typeof ui.validate>[0]) => {
       dispatches++
@@ -95,4 +102,25 @@ test("case readiness samples one source and preserves the producer's 100-case ce
   expect(response.status).toBe(200)
   expect((await response.json()).value.cases).toHaveLength(2)
   expect(dispatches).toBe(2)
+})
+
+test("case detail leaves the item lease for the dispatcher and rejects revocation", async () => {
+  let revision = "revision"
+  let revoke = false
+  const ui = createSfUiAuthority({ createId: () => crypto.randomUUID(), now: Date.now, commandIdentity: async () => crypto.randomUUID(),
+    authorize: async (_request, operation) => operation === "sf_case_read"
+      ? { installationId: stamp.installationId, projectId: stamp.projectId, principalRef: stamp.principalRef,
+          policyVersion: stamp.policyVersion, accessRevision: revision } : undefined })
+  const runtime = { ui, dispatch: async (operation: string, payload: unknown, call: Parameters<typeof ui.validate>[0]) => {
+    if (!await ui.validate(call, operation, digestSfValue(payload))) return { status: "denied" }
+    if (revoke) revision = "revoked"
+    return { status: "ok", result: operationalCase }
+  } }
+  const deps = { runtime: () => runtime, origin: "http://localhost", mount: "/sucafina",
+    readContext: async () => ({ status: "ok", value: { stamp } }) }
+  const handler = createSfDecisionsProjectionHandlers(deps as never).find((item) => item.operationId === "projection.case")!
+  const request = () => new Request("http://localhost/sucafina/api/ui/projections/case?caseRef=case%3A0%3Aincarnation")
+  expect((await handler.handle(request())).status).toBe(200)
+  revoke = true
+  expect((await handler.handle(request())).status).toBe(403)
 })
