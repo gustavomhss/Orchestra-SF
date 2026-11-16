@@ -11,7 +11,7 @@ import {
   SfIntelligenceMemorySignals,
 } from "../../../../../packages/schema/src/sucafina/memory.ts"
 
-const decode = <S extends Schema.Top>(schema: S, value: unknown) =>
+const decode = <S extends Schema.Decoder<unknown, never>>(schema: S, value: unknown) =>
   Schema.decodeUnknownSync(schema)(value)
 
 const query = { caseId: "case-1", incarnation: "inc-1", version: 3 }
