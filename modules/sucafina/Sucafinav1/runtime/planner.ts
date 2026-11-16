@@ -358,6 +358,18 @@ export function plannerCurrentPageActions(snapshot: Snapshot, actor: Actor, page
       const lines = version.lines.filter((line) => line.sec === (page === "OPEX" ? "opex" : "capex"))
       if (allowed("structure")) { actions.add("save"); actions.add("delete") }
       if (lines.some((line) => ["actual", "forecast", "budget"].some((field) => allowed(field, line)))) actions.add("save")
+      if (page === "OPEX") {
+        if (actor.roles.some((role) => ["admin", "finance"].includes(role)) && allowed("closedThrough")) actions.add("save")
+        const domains = new Set([
+          ...hrLineDomains(version.hc.positions.map((position) => ({ domain: text(position.domain) || "Unassigned" })), version.hc.hrAF),
+          // Execute can create an HR row for an assigned domain before it appears in the source.
+          ...(actor.domains ?? []),
+        ])
+        if ([...domains].some((domain) => {
+          const target = { ...object(version.hc.hrAF[domain]), domain, synthetic: true }
+          return allowed("actual", target) || allowed("forecast", target)
+        })) actions.add("save")
+      }
       if (lines.some((line) => line.synthetic !== true && allowed("budget", line))) { actions.add("spread"); actions.add("reset") }
     }
     if (page === "Headcount") {

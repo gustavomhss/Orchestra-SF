@@ -18,6 +18,7 @@ import { act, canApproveCurrentRequest } from "../../../porta/act.ts"
 import { plannerCurrentPageActions, plannerWorkbookImportAvailable } from "../../runtime/planner.ts"
 import { budgetCanEditAnyLine } from "../../runtime/dashboard-budget.ts"
 import { procurementCurrentRequestActions } from "../../runtime/procurement.ts"
+import { plannerField } from "../../src/planner-role.ts"
 
 const binding = Object.freeze({ installationId: "installation", projectId: "project", hostId: "host" })
 const stamp = Object.freeze({ ...binding, principalRef: "person", policyVersion: "policy", accessRevision: "revision" })
@@ -118,6 +119,37 @@ test("Planner and budget page capabilities respect original source ownership and
   expect(plannerCurrentPageActions(snapshot, { ...owner, canWrite: false }, "OPEX")).toEqual([])
   expect(budgetCanEditAnyLine(snapshot, { ...owner, roles: ["domain leader"] }, "opexOwners")).toBe(true)
   expect(budgetCanEditAnyLine(snapshot, { ...other, roles: ["domain leader"] }, "opexOwners")).toBe(false)
+})
+
+test("OPEX save observes closed-month and synthetic HR modes without mutating the source", () => {
+  const version = { id: "v1", year: 2026, locked: true, lines: [],
+    hc: { positions: [], hrAF: { service: { ownerId: "assigned", domain: "ignored", synthetic: false } } } }
+  const snapshot = { data: { versions: [version], officials: { "2026": "v1" } },
+    versions: {}, sequences: {}, audit: [], notices: [] }
+  const before = structuredClone(snapshot)
+  const finance = { id: "finance", canWrite: true, roles: ["finance"] }
+  const empty = { ...snapshot, data: { ...snapshot.data, versions: [{ ...version, hc: { positions: [], hrAF: {} } }] } }
+  expect(plannerField("closedThrough", version, "v1", finance)).toBe(true)
+  expect(plannerCurrentPageActions(empty, finance, "OPEX")).toContain("save")
+  expect(plannerCurrentPageActions(empty, finance, "CAPEX")).toEqual([])
+  expect(plannerCurrentPageActions(empty, { ...finance, canWrite: false }, "OPEX")).toEqual([])
+
+  const owner = { id: "person", canWrite: true, roles: ["budget owner"], domains: ["service"] }
+  const target = { ownerId: version.hc.hrAF.service.ownerId, domain: "service", hr: true }
+  expect(plannerField("forecast", version, "v1", owner, target)).toBe(true)
+  expect(plannerField("actual", version, "v1", owner, target)).toBe(false)
+  expect(plannerCurrentPageActions(snapshot, owner, "OPEX")).toContain("save")
+  expect(plannerCurrentPageActions(snapshot, { ...owner, canWrite: false }, "OPEX")).toEqual([])
+  expect(plannerField("forecast", version, "v1", { ...owner, domains: ["foreign"] }, target)).toBe(false)
+  expect(plannerCurrentPageActions(snapshot, { ...owner, domains: [] }, "OPEX")).toEqual([])
+  expect(plannerCurrentPageActions(snapshot, { ...owner, id: "assigned", domains: [] }, "OPEX")).toContain("save")
+
+  // Execute also permits creating an HR row for an assigned domain not yet in the source.
+  expect(plannerCurrentPageActions(snapshot, { ...owner, domains: ["foreign"] }, "OPEX")).toContain("save")
+  const positionOnly = { ...snapshot, data: { ...snapshot.data, versions: [{ ...version,
+    hc: { positions: [{ domain: "service" }], hrAF: {} } }] } }
+  expect(plannerCurrentPageActions(positionOnly, owner, "OPEX")).toContain("save")
+  expect(snapshot).toEqual(before)
 })
 
 test("Planner workbook availability follows original fields, importable targets and roster authority", () => {
