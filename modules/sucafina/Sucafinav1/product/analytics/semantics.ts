@@ -18,7 +18,10 @@ export function resolveBiPresentation(projection: DomainProjection, presentation
     return value ? [value] : []
   }) }))
   if (series.some((entry) => entry.values.some((value) => !isSfPeriod(value.period)))) return { status: "unavailable", reason: "invalid-value-period" } as const
-  if (series.some((entry) => entry.values.some((value) => (value.unit || value.currency) && (value.unit || value.currency) !== entry.unit))) return { status: "unavailable", reason: "incompatible-unit" } as const
+  // A currency may label a unit-less value, but cannot override an explicit producer unit.
+  if (series.some((entry) => entry.values.some((value) => value.unit !== undefined
+    ? value.unit !== entry.unit
+    : value.currency !== undefined && value.currency !== entry.unit))) return { status: "unavailable", reason: "incompatible-unit" } as const
   if (presentation.viewId === "BI01" && series.some((entry) => entry.values.some((value) => value.granularity !== "month" && value.granularity !== "year") || new Set(entry.values.map((value) => value.granularity)).size > 1)) return { status: "unavailable", reason: "unsupported-financial-granularity" } as const
   if (series.some((entry) => entry.values.some((value) => !!value.currency) && entry.values.some((value) => typeof value.value === "number" && !value.currency))) return { status: "unavailable", reason: "currency-missing" } as const
   if (series.some((entry) => new Set(entry.values.flatMap((value) => value.currency ? [value.currency] : [])).size > 1)) return { status: "unavailable", reason: "incompatible-currency" } as const

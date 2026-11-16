@@ -260,6 +260,7 @@ export const SfOperationIds = [
   "intelligence.analysis.read",
   "intelligence.analysis.start",
   "intelligence.memory-catalog",
+  "intelligence.memory-similar-cases",
   "intelligence.memory-condition",
   "intelligence.memory-conditions",
   "intelligence.memory-materiality",

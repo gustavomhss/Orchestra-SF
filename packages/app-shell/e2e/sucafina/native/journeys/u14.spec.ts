@@ -40,7 +40,7 @@ async function open(page: Page, harness: InstalledNativeHarness, path: string) {
   return body
 }
 
-test("U14-AC01/02 supplier source list retains current filters and does not export a fabricated CSV", async ({ page, nativeHarness }, info) => {
+test("U14-AC01/02 supplier source list retains filters and downloads only original admitted CSV", async ({ page, nativeHarness }, info) => {
   info.annotations.push({ type: "criteria-scope", description: "U14-AC01/02; source suppliers and denied CSV adapter" })
   const writes: Request[] = []
   page.on("request", (request) => { if (supplierWrite(request)) writes.push(request) })
@@ -54,7 +54,19 @@ test("U14-AC01/02 supplier source list retains current filters and does not expo
   await expect(table).toHaveAttribute("data-sf-table-state", "filtered-empty")
   await expect(search).toHaveValue("~~no-supplier-matches-this-f04-only-filter~~")
   const csv = page.locator('[data-sf-frame="page"]').getByRole("button", { name: /Export suppliers CSV|Exportar CSV de fornecedores/ })
-  await expect(csv).toBeDisabled()
+  await expect(csv).toBeEnabled()
+  const producer = page.waitForResponse((response) => {
+    const u = new URL(response.url())
+    return response.request().method() === "GET" && u.pathname.endsWith("/procurement") &&
+      u.searchParams.get("download") === "suppliers"
+  })
+  const saved = page.waitForEvent("download")
+  await csv.click()
+  const response = await producer, download = await saved
+  expect(response.status()).toBe(200)
+  expect(response.headers()["content-type"]).toMatch(/^text\/csv;\s*charset=utf-8$/i)
+  expect(response.headers()["content-disposition"]).toBe("attachment; filename*=UTF-8''suppliers.csv")
+  expect(download.suggestedFilename()).toBe("suppliers.csv")
   expect(writes).toHaveLength(0)
 })
 
@@ -113,7 +125,11 @@ test("U14-AC01 bank section never exposes protected value and deletion is not an
     const deletion = root.getByRole("button", { name: /Delete pending supplier|Excluir fornecedor pendente/ })
     if (await deletion.count()) await expect(deletion).toBeDisabled()
   }
-  await expect(root.getByText(/CSV export requires|Exportação CSV exige/)).toBeVisible()
+  const csv = page.locator('[data-sf-frame="page"]').getByRole("button", { name: /Export suppliers CSV|Exportar CSV de fornecedores/ })
+  if (await csv.isEnabled())
+    await expect(root.getByText(/CSV export requires|Exportação CSV exige/)).toHaveCount(0)
+  else
+    await expect(root.getByText(/CSV export requires|Exportação CSV exige/)).toBeVisible()
 })
 
 test("U14-AC02 lost supplier command cannot be replayed by refreshing the source", async ({ page, nativeHarness }, info) => {

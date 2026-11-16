@@ -21,6 +21,7 @@ import { SfRoutines } from "@orchestra/schema/sucafina/routines"
 import { SfWork } from "@orchestra/schema/sucafina/work"
 import { SfMemory } from "@orchestra/schema/sucafina/memory"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
+import { SfFilesOperationBindings } from "./files/codecs"
 
 type Contract = Readonly<{
   operationId: string
@@ -94,5 +95,16 @@ export const SfNativeOperationBindings: SfOperationBindings = (() => {
   add(SfWork.operations)
   add(SfMemory.operations)
   add(SfAnalyses.operations)
+  // Source A06's 25 exact typed codecs, not JSON-masked download objects.
+  const sourceFiles = Object.entries(SfFilesOperationBindings)
+  if (sourceFiles.length !== 25) throw new Error("SF_A06_25_OPERATIONS_REQUIRED")
+  for (const [candidate, fileCodec] of sourceFiles) {
+    if (!Schema.is(SfOperationId)(candidate)) throw new Error("SF_A06_OPERATION_UNKNOWN")
+    const id = candidate as SfOperationId
+    const meta = SfOperationRegistry[id]
+    if (!meta || meta.responseMode === "navigation" || !fileCodec || bindings.has(id))
+      throw new Error("SF_A06_BINDING_CONFLICT")
+    bindings.set(id, fileCodec)
+  }
   return Object.freeze(Object.fromEntries(bindings))
 })()

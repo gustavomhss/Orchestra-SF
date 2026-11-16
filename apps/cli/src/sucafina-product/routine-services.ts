@@ -273,7 +273,10 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
     routines,
     /** Read at native tool registration, after the existing Location services have actually been acquired. */
     get descriptors() {
-      if (!input.native?.() || !input.publication?.()) return []
+      // The native owner is Request-scoped and cannot exist at Location registration.
+      // Register only genuine producer implementations after host origin readiness;
+      // the C07 handlers still resolve/revalidate the live owner on EVERY invocation.
+      if (!input.publication?.()) return []
       return descriptors.filter((descriptor) => descriptor.id !== "sf_watch_prepare" || !!input.prepareWatch && input.watchAvailable?.() === true)
     },
     resultAccess, expectedInputDigest, readExecution,

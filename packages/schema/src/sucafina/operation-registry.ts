@@ -271,6 +271,7 @@ export const SfOperationRegistry = Object.freeze({
   "intelligence.analysis.read": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"read"},"maxRequestBytes":65536},
   "intelligence.analysis.start": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"start"},"maxRequestBytes":65536},
   "intelligence.memory-catalog": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"memory-catalog"}},
+  "intelligence.memory-similar-cases": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"memory-similar-cases"},"maxRequestBytes":65536},
   "intelligence.memory-condition": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"memory-condition"}},
   "intelligence.memory-conditions": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"memory-conditions"}},
   "intelligence.memory-materiality": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"memory-materiality"}},

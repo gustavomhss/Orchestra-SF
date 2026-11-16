@@ -87,11 +87,11 @@ test("U26-AC03 — observed comparison discloses cutoff and refuses causal attri
   await expect(root.locator("[data-sf-memory-outcome]")).toContainText(/No causal attribution|Nenhuma causalidade/)
 })
 
-test("U26 blocked producer — never fabricate a similar-case search", async ({ page }, info) => {
-  info.annotations.push({ type: "contract-blocker", description: "A14 currently exposes no authorized similar-case producer/operation" })
+test("U26 source-linked UI62 — original catalog selector, not permanent unavailable", async ({ page }, info) => {
+  info.annotations.push({ type: "dependency", description: "Requires 211 applied 217 operation + real C09/C17 source" })
   const root = await navigate(page, info, "/orchestra/sf-memory/cases", "UI62")
-  await expect(root).toContainText(/not published|não publica/)
-  await expect(root.getByRole("button", { name: /Open case|Abrir caso/ })).toHaveCount(0)
+  await expect(root.getByLabel(/Original decision case|Caso de decisão original/)).toBeVisible()
+  // The richer two-actor recall and original source proof is in similarity217/ui62.spec.ts.
 })
 
 test("U26 responsive — owner-scoped page survives 320/768/1024/1280/1440 viewports", async ({ page }, info) => {

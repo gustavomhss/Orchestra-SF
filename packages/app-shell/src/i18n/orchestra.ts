@@ -31,6 +31,7 @@ import { SF_U23_COPY, SF_U23_COPY_BR } from "./orchestra-chapters/sf-u23"
 import { SF_U24_COPY, SF_U24_COPY_BR } from "./orchestra-chapters/sf-u24"
 import { SF_U25_COPY, SF_U25_COPY_BR } from "./orchestra-chapters/sf-u25"
 import { SF_U26_COPY, SF_U26_COPY_BR } from "./orchestra-chapters/sf-u26"
+import { SF_SIMILARITY217_COPY, SF_SIMILARITY217_COPY_BR } from "../orchestra/chapters/sucafina/memory/similarity-copy"
 import { SF_U27_COPY, SF_U27_COPY_BR } from "./orchestra-chapters/sf-u27"
 import { SF_U28_COPY, SF_U28_COPY_BR } from "./orchestra-chapters/sf-u28"
 import { SF_U29_COPY, SF_U29_COPY_BR } from "./orchestra-chapters/sf-u29"
@@ -446,6 +447,7 @@ export const ORCHESTRA_COPY = {
   ...SF_U24_COPY,
   ...SF_U25_COPY,
   ...SF_U26_COPY,
+  ...SF_SIMILARITY217_COPY,
   ...SF_U27_COPY,
   ...SF_U28_COPY,
   ...SF_U29_COPY,
@@ -847,6 +849,7 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...SF_U24_COPY_BR,
   ...SF_U25_COPY_BR,
   ...SF_U26_COPY_BR,
+  ...SF_SIMILARITY217_COPY_BR,
   ...SF_U27_COPY_BR,
   ...SF_U28_COPY_BR,
   ...SF_U29_COPY_BR,

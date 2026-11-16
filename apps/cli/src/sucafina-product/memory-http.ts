@@ -1,5 +1,8 @@
 import type { Application } from "../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { Either, Schema } from "effect"
+import { SfIntelligenceMemorySimilarCases } from "@orchestra/schema/sucafina/memory"
+import type { createSfSimilarCases217 } from "../../../../modules/sucafina/Sucafinav1/product/memory/similarity217.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
@@ -13,11 +16,12 @@ export function createSfMemoryHttp(input: {
   authority: Pick<ReturnType<typeof createSfProductAuthority>, "ui" | "human" | "host">
   memory: ReturnType<typeof createSfMemoryServices>
   withCase: ReturnType<typeof createSfBusinessServices>["withCase"]
+  similarCases: ReturnType<typeof createSfSimilarCases217>
 }): NonNullable<Application["product"]> {
   return async (request, surface) => {
     const url = new URL(request.url)
     const route = url.searchParams.get("sf")
-    if (surface !== "dashboard" || url.pathname !== `${input.mount ?? ""}/dashboard` || !route || !["memory-catalog", "memory-conditions", "memory-signals", "memory-materiality", "memory-outcome", "memory-condition", "memory-outcome-selection"].includes(route)) return undefined
+    if (surface !== "dashboard" || url.pathname !== `${input.mount ?? ""}/dashboard` || !route || !["memory-catalog", "memory-conditions", "memory-signals", "memory-materiality", "memory-outcome", "memory-condition", "memory-outcome-selection", "memory-similar-cases"].includes(route)) return undefined
     if (url.origin !== input.origin || (request.headers.has("origin") && request.headers.get("origin") !== input.origin) ||
       request.headers.get("sec-fetch-site") === "cross-site") return respond({ status: "denied", reason: "memory-authority-unavailable" })
     try {
@@ -44,6 +48,38 @@ export function createSfMemoryHttp(input: {
           return respond(saved.status === "ok" ? saved : { status: "unavailable", reason: "memory-selection-source-unavailable" })
         } finally { input.authority.human.finish(admitted.value) }
       }
+      if (route === "memory-similar-cases") {
+        if (request.method !== "POST" || url.searchParams.getAll("sf").length !== 1 ||
+          [...url.searchParams.keys()].some((key) => key !== "sf"))
+          return respond({ status: "needs-input", reason: "invalid-similar-cases-request" })
+        // POST read cannot carry free text in URL; same-origin Request, no replay.
+        if (request.headers.get("origin") !== input.origin)
+          return respond({ status: "denied", reason: "memory-authority-unavailable" })
+        if (request.headers.get("content-type")?.split(";")[0]?.trim().toLowerCase() !== "application/json")
+          return respond({ status: "needs-input", reason: "memory-json-required" })
+        const raw = await boundedBody(request)
+        if (!raw) return respond({ status: "needs-input", reason: "invalid-similar-cases-request" })
+        const candidate: unknown = JSON.parse(raw)
+        const parsed = Schema.decodeUnknownEither(SfIntelligenceMemorySimilarCases.input)(candidate)
+        if (Either.isLeft(parsed)) return respond({ status: "needs-input", reason: "invalid-similar-cases-selection" })
+        const payload = parsed.right
+        const caseRef = memoryCaseRef({ id: payload.caseId, incarnation: payload.incarnation, version: payload.version })
+        if (!caseRef) return respond({ status: "needs-input", reason: "invalid-memory-case" })
+        const operation = "sf-human:analysis.read"
+        const digest = digestSfValue(payload)
+        const admitted = await input.authority.ui.admit(request, operation, digest)
+        if (admitted.status !== "ok") return respond(admitted)
+        try {
+          if (!await input.authority.ui.validate(admitted.value, operation, digest))
+            return respond({ status: "denied", reason: "memory-authority-unavailable" })
+          const scoped = await input.withCase(admitted.value, caseRef, {}, async () =>
+            ({ status: "ok" as const, value: await input.similarCases(payload, admitted.value) }))
+          const result = scoped.status === "ok" ? scoped.value : scoped
+          return await input.authority.host.revalidate(admitted.value)
+            ? respond(result) : respond({ status: "denied", reason: "memory-authority-unavailable" })
+        } finally { input.authority.ui.finish(admitted.value) }
+      }
+
       if (request.method !== "GET") return respond({ status: "needs-input", reason: "invalid-memory-read" })
       const keys = route === "memory-catalog" ? ["sf"] : ["sf", "caseId", "incarnation", "version", ...(route === "memory-materiality" ? ["conditionId"] : []), ...(route === "memory-outcome" ? ["choiceId"] : [])]
       if (keys.some((key) => url.searchParams.getAll(key).length !== 1) || [...url.searchParams.keys()].some((key) => !keys.includes(key)))

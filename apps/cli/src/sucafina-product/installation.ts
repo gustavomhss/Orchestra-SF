@@ -7,6 +7,8 @@ import { Effect, Layer, Option, Stream } from "effect"
 import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { limitRequestBody, requestBodyLength, RequestBodyError } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
 import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
+import type { SfFilesHostSources } from "./native-ui/files"
+import { mountSfFilesOriginalRoutes } from "./native-ui/files-routing"
 
 export type SfInstallation = {
   mount: `/${string}`
@@ -14,6 +16,8 @@ export type SfInstallation = {
   dispose: () => void | Promise<void>
   host?: ReadonlyArray<Host.Contribution>
   transport?: MicrosoftTransport
+  /** Private owner-injected ORIGINAL producers; absence remains fail-closed. */
+  nativeFiles?: SfFilesHostSources
 }
 
 /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
@@ -34,6 +38,9 @@ export async function composeSfInstallation(value: unknown, origin: string) {
   const transport = readTransport("transport" in value ? value.transport : undefined, origin)
   const { microsoftRequest } = transport ? await import("../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts") : { microsoftRequest: undefined }
   const requestOrigin = transport?.ingressOrigin ?? origin
+  const files = installation.nativeFiles ? mountSfFilesOriginalRoutes({
+    origin: requestOrigin, mount: installation.mount, sources: installation.nativeFiles,
+  }) : undefined
   // Effect starts its HTTP span before route middleware and includes the full query.
   // Disable listener tracing for this explicit cloud installation, including malformed callbacks.
   const privacy = transport ? Layer.succeed(HttpMiddleware.TracerDisabledWhen)(() => true) : Layer.empty
@@ -50,8 +57,18 @@ export async function composeSfInstallation(value: unknown, origin: string) {
     const maximum = Number(configured ?? 16 * 1024 * 1024)
     const mode = url.searchParams.get("sf")
     // Keep the domain's 25MiB contract stream budget, while honoring smaller explicit host limits.
+    // Original import HTTP consumes up to 16MiB of file bytes PLUS the
+    // bounded multipart envelope. Do not disable a smaller explicit ingress cap.
+    const originalImport = incoming.method === "POST" &&
+      (url.pathname === `${installation.mount}/planner` ||
+        url.pathname === `${installation.mount}/dashboard`) &&
+      url.searchParams.size === 1 && url.searchParams.get("sf") === "import-admit"
+    const maxImportEnvelope = 16 * 1024 * 1024 + 64 * 1024
     const limit = mode === "workbench" || mode?.startsWith("workbench-")
       ? Math.min(maximum, 65536)
+      : originalImport
+        ? maximum === 16 * 1024 * 1024
+          ? maxImportEnvelope : Math.min(maximum, maxImportEnvelope)
       : incoming.method === "POST" && url.pathname === `${installation.mount}/dashboard` && !url.searchParams.has("sf") && url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract"
         ? maximum === 16 * 1024 * 1024 ? 25 * 1024 * 1024 : Math.min(maximum, 25 * 1024 * 1024)
         : maximum
@@ -114,7 +131,18 @@ export async function composeSfInstallation(value: unknown, origin: string) {
             if (bounded.failure()) return bodyFailure(bounded.failure()!.status)
             const web = new Request(url, { method: incoming.method, headers: sanitized.headers, body: bounded.body, signal: boundSignal, redirect: source?.redirect ?? "follow", ...(bounded.body ? { duplex: "half" } : {}) })
             const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
-            const result = request ? await installation.handler(request).catch(() => new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })) : new Response(null, { status: 403 })
+            // The same ORIGINAL authenticated Request flows to the installed
+            // domain producer; never invoke a synthetic Request or bypass ingress.
+            const result = request ? await (async () => {
+              try {
+                return (files ? await files(request) : undefined) ??
+                  await installation.handler(request)
+              } catch {
+                return new Response(null, { status: 503, headers: {
+                  "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
+                } })
+              }
+            })() : new Response(null, { status: 403 })
             // Some domain parsers classify reader errors themselves. Only this private budget can override them.
             const failure = bounded.failure()
             if (failure) return bodyFailure(failure.status)

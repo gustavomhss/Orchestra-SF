@@ -9,6 +9,7 @@ import type { SfSurfaceProps } from "../context/contracts"
 import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
+import { SfSimilarCasesView } from "./similar-cases"
 import "./memory.css"
 
 type Conditions = Extract<typeof SfMemory.operations["intelligence.memory-conditions"]["output"]["Type"], { status: "ok" }>["value"]
@@ -52,12 +53,15 @@ const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "signal
 }
 
 /**
- * U26 / UI61–UI63. Only A14's seven source-locked operations are legal here.
- * Case identity is explicit and is re-authorized by the producer on EVERY read.
- * In particular, UI62 has no similarity operation in the C60 catalog; it cannot
- * substitute Atlas memory, an inferred case list or a private server import.
+ * U26 / UI61–UI63. UI61/UI63 retain the seven A14 source operations.
+ * UI62 delegates to the separately typed CaseRecall consumer. Its additional
+ * operation requires the 211/I00 operational catalog delta; no new authority
+ * or server admission is derived from this UI component.
  */
 export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Element {
+  // UI62 has a real C09/C17 producer and its own owner-fenced typed consumer.
+  // UI61/UI63 retain the original seven A14 operations unchanged.
+  if (props.surfaceId === "UI62") return <SfSimilarCasesView {...props} />
   const owner = useSfContext()
   const language = useLanguage()
   const k = (value: keyof typeof SF_U26_COPY | "sf.common.loading" | "sf.common.empty" |

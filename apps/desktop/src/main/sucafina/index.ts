@@ -1,7 +1,8 @@
 import { createHash, randomUUID } from "node:crypto"
 import type { BrowserWindow, IpcMainInvokeEvent, Session, WebContents } from "electron"
 import type { SfInstallationDescriptor, SfContext, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
-import type { SfOperationBindings } from "@orchestra/schema/sucafina/common"
+import type { SfOperationBindings, SfOperationId } from "@orchestra/schema/sucafina/common"
+import { sfAllowedByteMime, sfIsByteOperation, SF_FILE_BYTE_LIMIT } from "@orchestra/client/sucafina/transport"
 import type {
   SfConnectionCandidate, SfDesktopInvocation, SfDesktopInvocationResult,
   SfDesktopInvalidation, SfDesktopLoginResult, SfDesktopOwnerRequest,
@@ -31,6 +32,8 @@ type Pending = {
   responseHandle?: string
   sequence: number
   pulling: boolean
+  fileOperation?: SfOperationId
+  byteCount?: number
 }
 type Binding = {
   active: boolean
@@ -131,6 +134,40 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     } satisfies SfDesktopInvalidation)
     if (!skipPurge && ![...bindings.values()].some((item) => item.active && item.partition === binding.partition))
       await purge(binding)
+  }
+
+  /**
+   * The existing authenticated ctx.context producer is the only trusted
+   * source of principal, policy, accessRevision and operation availability.
+   * This is not a grant manufactured from a renderer operation ID.
+   */
+  async function freshFileAuthority(binding: Binding, signal: AbortSignal,
+    operation: SfOperationId): Promise<boolean> {
+    if (!binding.active || signal.aborted || !validOwner(binding.owner) || !binding.context)
+      return false
+    const expected = binding.context.stamp
+    const current = await loadSfDesktopContext({
+      net: deps.electron.net, session: binding.session, descriptor: binding.descriptor,
+      operations: deps.operations, signal,
+    })
+    if (current.status === "unauthenticated" || current.status === "denied") {
+      await retire(binding, current.status === "unauthenticated" ? "session-expired" : "access-revoked")
+      return false
+    }
+    if (current.status !== "ok") return false
+    const stamp = current.context.stamp
+    if (stamp.installationId !== expected.installationId ||
+        stamp.hostId !== expected.hostId || stamp.projectId !== expected.projectId ||
+        stamp.principalRef !== expected.principalRef ||
+        stamp.policyVersion !== expected.policyVersion ||
+        stamp.accessRevision !== expected.accessRevision) {
+      await retire(binding, "access-revoked")
+      return false
+    }
+    return binding.active && !signal.aborted && validOwner(binding.owner) &&
+      current.context.availability.some((resource) =>
+        resource.operations.some((entry) =>
+          entry.operationId === operation && entry.state === "ready" && entry.operational === true))
   }
 
   const registry = createSfConnectionRegistry({
@@ -253,21 +290,40 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
         || !nonempty(raw.requestId, 64) || !nonempty(raw.responseHandle, 128) || !Number.isSafeInteger(raw.sequence))
         return failure("invalid-response")
       const pending = binding.requests.get(raw.requestId)
-      if (!pending || pending.responseHandle !== raw.responseHandle || !pending.source
-        || pending.sequence !== raw.sequence || pending.pulling) return failure("invalid-response")
+      if (!pending || pending.responseHandle !== raw.responseHandle || !pending.source ||
+        !pending.fileOperation || !sfIsByteOperation(pending.fileOperation) ||
+        pending.sequence !== raw.sequence || pending.pulling) return failure("invalid-response")
       pending.pulling = true
       try {
+        if (!await freshFileAuthority(binding, pending.controller.signal, pending.fileOperation))
+          return failure("contract-unavailable")
         const chunk = await pending.source.next()
-        if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted
-          || binding.requests.get(pending.requestId) !== pending) return failure("aborted")
+        if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted ||
+          binding.requests.get(pending.requestId) !== pending) return failure("aborted")
+        // Revalidation after the read prevents a revocation racing the next IPC reply.
+        if (!await freshFileAuthority(binding, pending.controller.signal, pending.fileOperation))
+          return failure("contract-unavailable")
         if (chunk === undefined) {
           pending.source.cancel()
           binding.requests.delete(pending.requestId)
           return { kind: "byte-chunk", sequence: pending.sequence++, bytes: new Uint8Array(), done: true }
         }
+        if (!(chunk instanceof Uint8Array) || chunk.byteLength === 0 ||
+            chunk.byteLength > 64 * 1024 ||
+            (pending.byteCount ?? 0) + chunk.byteLength > SF_FILE_BYTE_LIMIT)
+          return failure("invalid-response")
+        pending.byteCount = (pending.byteCount ?? 0) + chunk.byteLength
         return { kind: "byte-chunk", sequence: pending.sequence++, bytes: chunk, done: false }
-      } catch { binding.requests.delete(pending.requestId); return failure("network") }
-      finally { pending.pulling = false }
+      } catch { return failure("network") }
+      finally {
+        if (!binding.active || pending.controller.signal.aborted ||
+            binding.requests.get(pending.requestId) !== pending || pending.sequence === raw.sequence ||
+            (pending.byteCount ?? 0) > SF_FILE_BYTE_LIMIT) {
+          pending.source?.cancel()
+          binding.requests.delete(pending.requestId)
+        }
+        pending.pulling = false
+      }
     }
     if (raw.kind !== "request" || !closed(raw, [
       "kind", "bindingHandle", "generation", "requestId", "operationId", "input", "upload", "idempotencyKey",
@@ -284,6 +340,9 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     binding.controller.signal.addEventListener("abort", onRetired, { once: true })
     binding.requests.set(request.requestId, pending)
     try {
+      if (request.operationId.startsWith("files.") &&
+          !await freshFileAuthority(binding, pending.controller.signal, request.operationId))
+        return failure("contract-unavailable")
       const reply = await requestSfHttp({
         net: deps.electron.net, session: binding.session, origin: binding.descriptor.publicOrigin,
         url: plan.value.url, method: plan.value.method, mode: plan.value.mode, body: plan.value.body,
@@ -296,12 +355,30 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
         return failure("contract-unavailable")
       }
       if (reply.kind === "stream") {
+        if (!sfIsByteOperation(request.operationId) || plan.value.mode !== "bytes" ||
+            reply.status !== 200 || !sfAllowedByteMime(request.operationId, reply.headers["content-type"]) ||
+            !await freshFileAuthority(binding, pending.controller.signal, request.operationId)) {
+          reply.source.cancel()
+          return failure("invalid-response")
+        }
         pending.source = reply.source
+        pending.fileOperation = request.operationId
+        pending.byteCount = 0
         pending.responseHandle = randomUUID()
         return { kind: "byte-response", status: reply.status, headers: reply.headers, responseHandle: pending.responseHandle }
       }
+      // A06 non-success byte responses never decode or reveal their body.
+      // Original 401/403 auth revocation is already handled above.
+      if (sfIsByteOperation(request.operationId) || plan.value.mode === "bytes") {
+        if (reply.status !== 200)
+          return { kind: "empty-response", status: reply.status, headers: reply.headers }
+        return failure("invalid-response")
+      }
       const decoded = decodeSfWireBody(plan.value, reply.bytes, reply.headers["content-type"])
-      if (decoded.status !== "ok") return failure("invalid-response")
+      if (decoded.status !== "ok") return failure(plan.value.mutating ? "outcome-unknown" : "invalid-response")
+      if (request.operationId.startsWith("files.") &&
+          !await freshFileAuthority(binding, pending.controller.signal, request.operationId))
+        return failure(plan.value.mutating ? "outcome-unknown" : "contract-unavailable")
       if (request.operationId === "ctx.context" && isRecord(decoded.value) && decoded.value.status === "ok"
         && isRecord(decoded.value.value) && isRecord(decoded.value.value.stamp)) {
         const stamp = decoded.value.value.stamp

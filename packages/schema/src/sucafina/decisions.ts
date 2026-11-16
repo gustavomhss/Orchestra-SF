@@ -119,7 +119,9 @@ const caseListValue = Schema.Struct({cases:Schema.Array(Schema.Struct({caseRef:t
 const caseViewValue = Schema.Struct({projection:SfSourceCaseRead,returnTo:Schema.optional(text)})
 const projectionResult = <S extends Schema.Top>(value:S) => Schema.Union([Schema.Struct({status:Schema.Literal("ok"),context:caseStamp,value}),resultFailure])
 const caseQuery = Schema.Struct({caseRef:text,returnTo:Schema.optional(text)})
-const casesQuery = Schema.Struct({})
+// Effect 4's empty Struct accepts excess properties after toType; an empty Record
+// whose values are Never admits only {} under the same public decoder.
+const casesQuery = Schema.Record(Schema.String, Schema.Never)
 const controlsQuery = Schema.Struct({case:Schema.optional(text),source:Schema.optional(text),scenario:Schema.optional(text),baseline:Schema.optional(text),parameter:Schema.optional(text)})
 const choiceQuery = Schema.Struct({case:Schema.optional(text)})
 const committedReceipt = Schema.Struct({receiptId:text,surface,version:nonnegative,outcome:Schema.Literals(["applied","conflict","failed"])})

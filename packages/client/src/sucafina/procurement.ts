@@ -1,5 +1,34 @@
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
+import type { SfSupplierCsvExportRequest, SfSupplierCsvExportResult } from "@orchestra/schema/sucafina/procurement"
 import type { SfCallOptions, SfTransport } from "./transport"
+
+/**
+ * Dedicated A06->F02 byte handoff. JSON execute() cannot carry native bytes.
+ * Before F02/desktop installs its exact admitted consumer, this stays closed;
+ * no direct fetch, navigation URL, frontend CSV construction or fake grant.
+ */
+type SupplierCsvBytePort = Readonly<{
+  downloadSupplierCsv(input: SfSupplierCsvExportRequest, options: SfCallOptions): Promise<SfSupplierCsvExportResult>
+}>
+function csvPort(transport: SfTransport): SupplierCsvBytePort | null {
+  if (!("downloadSupplierCsv" in transport) || typeof transport.downloadSupplierCsv !== "function") return null
+  return transport as SfTransport & SupplierCsvBytePort
+}
+
+export function sfSupplierCsvBindingInstalled(transport: SfTransport): boolean {
+  return csvPort(transport) !== null
+}
+
+export async function exportSfSupplierCsv(
+  transport: SfTransport, input: SfSupplierCsvExportRequest, options: SfCallOptions,
+): Promise<SfSupplierCsvExportResult> {
+  if (input.surface !== "procurement" || Object.keys(input).length !== 1) return { status: "invalid" }
+  if (options.signal.aborted) return { status: "aborted" }
+  const binding = csvPort(transport)
+  if (!binding) return { status: "unavailable" }
+  try { return await binding.downloadSupplierCsv(input, options) }
+  catch { return options.signal.aborted ? { status: "aborted" } : { status: "unavailable" } }
+}
 
 /**
  * A03 typed facade. One immutable catalog entry per method. The injected F02

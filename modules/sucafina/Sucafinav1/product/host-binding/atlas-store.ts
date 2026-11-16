@@ -18,15 +18,22 @@ export function createSfAtlasDurableMemory(partition: { events: Array<Parameters
           }
           const [id, event] = item
           const record = event.payload as MemoryRecord
-          if (!record || typeof record.owner !== "string" || !record.owner.trim() || (record.kind !== "task" && record.kind !== "project") || memoryKindOf(record.entry) !== record.kind || !validate(record.kind, record.entry).valid || !Number.isSafeInteger(event.seq) || event.seq !== log.size + 1 || log.has(id)) {
+          if (!record || typeof record.owner !== "string" || !record.owner.trim() || (record.kind !== "task" && record.kind !== "project") || memoryKindOf(record.entry) !== record.kind || !validate(record.kind, record.entry).valid ||
+            !Number.isSafeInteger(event.seq) || event.seq !== log.size + 1 || log.has(id)) {
             rejected++
             continue
           }
+          // Atlas/KERNEL-9 deliberately excludes seq from content identity. Compare
+          // the authentic event bytes to Atlas' canonical event *without* either
+          // ordinal, then validate the persisted append ordinal independently.
           const expected = versioned([record]).get(id)
-          // The original ordinal was verified against the append-only log above.
-          // Normalize only for the canonical single-record hash: never accept a
-          // different persisted seq, a gap, or reordered event as valid.
-          if (!expected || digestSfValue({ ...event, seq: expected.seq }) !== digestSfValue(expected)) {
+          if (!expected) {
+            rejected++
+            continue
+          }
+          const { seq: _persistedSeq, ...persistedIdentity } = event
+          const { seq: _canonicalSeq, ...canonicalIdentity } = expected
+          if (digestSfValue(persistedIdentity) !== digestSfValue(canonicalIdentity)) {
             rejected++
             continue
           }
@@ -35,10 +42,11 @@ export function createSfAtlasDurableMemory(partition: { events: Array<Parameters
           rejected++
         }
       }
-      // Never expose a partial set: a caller must refuse both task and project reads/writes.
+      // Never expose a partial set: corruption in any ordinal, identity or
+      // record invalidates the entire owner journal for reads and appends.
       if (rejected) return { store: [], log: new Map(), rejected }
-      const ordered = new Map([...log].sort((a, b) => a[1].seq - b[1].seq))
-      return { store: respawnFromRecord(ordered), log: ordered, rejected: 0 }
+      // Keep the physical append order; sorting could conceal corruption.
+      return { store: respawnFromRecord(log), log, rejected: 0 }
     },
     append(record: MemoryRecord) {
       const existing = store.read()
@@ -46,7 +54,10 @@ export function createSfAtlasDurableMemory(partition: { events: Array<Parameters
       if ((record.kind !== "task" && record.kind !== "project") || memoryKindOf(record.entry) !== record.kind || !validate(record.kind, record.entry).valid || !record.owner.trim()) throw new Error("Atlas record is invalid")
       const [event] = versioned([record]).values()
       if (!event || existing.log.has(event.id)) return
-      const seq = Math.max(0, ...[...existing.log.values()].map((item) => item.seq)) + 1
+      // The verified journal is contiguous from 1. Count is therefore the
+      // durable head; after process restart the next append remains monotonic.
+      const seq = existing.log.size + 1
+      if (!Number.isSafeInteger(seq)) throw new Error("Atlas sequence exhausted")
       partition.events.push([event.id, { ...event, seq }])
     },
   }

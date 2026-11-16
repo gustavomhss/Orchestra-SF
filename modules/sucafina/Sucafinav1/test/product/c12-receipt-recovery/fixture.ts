@@ -241,8 +241,10 @@ export async function prepareC12Change(fixture: Awaited<ReturnType<typeof create
   const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: seeded.id, targetIncarnation: seeded.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue({ seeded, choice: choice.choice }) }, async (state) => { state.cases[seeded.id] = { ...seeded, choices: [choice.choice] }; return { commit: true, value: true } })
   if (saved.status !== "ok") throw new Error(`decision fixture persistence unavailable: ${saved.status}`)
   const prepared = await fixture.http("decision-prepare-changes", { caseRef: { id: seeded.id, incarnation: seeded.incarnation, version: seeded.version }, choiceId: choice.choice.id, operations: [operation] })
+  // Surface the real HTTP body, not only Bun\'s status assertion: a 400 can be
+  // the producer\'s legitimate refusal of an unreviewed financial command.
+  if (prepared.response.status !== 200 || prepared.body.status !== "ok") throw new Error(`real C12 prepare rejected: HTTP ${prepared.response.status}; body=${JSON.stringify(prepared.body)}`)
   expect(prepared.response.status).toBe(200)
-  if (prepared.response.status !== 200) throw new Error(`real prepare HTTP failed: ${JSON.stringify(prepared.body)}`)
   const after = await fixture.storedCase()
   expect(after.value.preparedChanges).toHaveLength(1)
   const change = after.value.preparedChanges[0]!

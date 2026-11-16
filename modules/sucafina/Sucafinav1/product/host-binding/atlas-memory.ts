@@ -231,7 +231,9 @@ export function createSfAtlasMemory(input: {
         approved.push({ id, event, envelope, resolutions, entry: { ...record.entry, ref: record.entry.ref } })
       }
       if (selection && !approved.length || !await authorized()) return { status: "unavailable" as const }
-      const filtered = createSfAtlasDurableMemory({ events: approved.map((item) => [item.id, item.event]) })
+      // Persisted physical journal has already passed strict owner verification.
+      // Renumber only this ephemeral authorized read subset; C08 stays untouched.
+      const filtered = createSfAtlasDurableMemory({ events: approved.map((item, index) => [item.id, { ...item.event, seq: index + 1 }]) })
       const recalled = createMemoryRead({ store: filtered, actor: owner }).recall({ kind: "task", owner })
       const records = approved.flatMap((item) => recalled.some((record) => digestSfValue(record) === digestSfValue(item.event.payload)) ? [{ envelope: item.envelope, entry: item.entry, resolutions: item.resolutions, case: found.value, recordDigest: digestSfValue(item.event.payload) }] : [])
       const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)

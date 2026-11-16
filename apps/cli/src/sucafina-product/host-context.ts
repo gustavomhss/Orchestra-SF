@@ -51,7 +51,6 @@ import { createSfMemoryServices } from "./memory-services.ts"
 import { createSfMemoryHttp } from "./memory-http.ts"
 import { createSfWorkSignals, deriveSfWorkRefKey } from "./work-signals.ts"
 import { createSfWorkDestinations } from "./work-destinations.ts"
-import { createSfReviewsProjectionHandlers } from "./native-ui/reviews.ts"
 import { createSfWorkHttp } from "./work-http.ts"
 import { materialSelection } from "./memory-selection.ts"
 import { createSfResidentReviewReaders } from "./review-resident-readers.ts"
@@ -69,13 +68,16 @@ import { createSfInstalledRoutinePublication } from "./routine-installed-publica
 import { createSfRoutineInputReaders } from "./routine-inputs.ts"
 import { createSfRoutineServices } from "./routine-services.ts"
 import { createSfRoutineNativeAdapter } from "./routine-native-adapter.ts"
-import { createSfRoutineNativeAdmission, type SfRoutineNativeAdmissionOrigin } from "./routine-native-admission.ts"
+import { createSfReviewsProjectionHandlers } from "./native-ui/reviews.ts"
+import { createSfRoutineNativeAdmission, type SfRoutineNativeAdmissionOrigin, type SfRoutineNativeAdmissionIntent } from "./routine-native-admission.ts"
 import { createSfRoutineNativeOwnerRegistry } from "./routine-native-registry.ts"
 import type { SfRoutineNativeHistoricalAuthority } from "./routine-native-registry.ts"
 import { createSfRoutineNativeOrigin } from "./routine-native-origin.ts"
 import type { SfRoutineNativeOriginalAdmission } from "./routine-native-origin.ts"
 import { createSfRoutineNativeGovernance } from "./routine-native-governance.ts"
 import { createSfRoutineNativeRuntime } from "./routine-native-runtime.ts"
+import { readSfRoutineNativeInput } from "./routine-native-input.ts"
+import { createSfRoutineHumanRun219, sfRoutineHumanRunCommand219 } from "./native-routine-producer219.ts"
 import { createSfDashboardHttp } from "./dashboard-http.ts"
 import { createSfSourcingInputs } from "./sourcing-inputs.ts"
 import { createProcurementDecisionHttp } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
@@ -338,16 +340,50 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const routineOwners = createSfRoutineNativeOwnerRegistry({ resources: routineRuntime.resources,
     requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
     generation: async () => await state.models?.() ? state.generation : undefined })
+  // Validate a native C15 locator against the EXACT original A09 human POST command.
+  // A plan/authorization/ref is never an owner; only the existing core Task frame can issue it.
+  const authorizeNativeHumanRun = async (context: TrustedUiContext, intent: SfRoutineNativeAdmissionIntent) => {
+    const resources = routineRuntime.resources()
+    if (!resources?.current() || context.kind !== "ui") return false
+    const before = await resources.records.readAdmission(intent.authorizationId).catch(() => undefined)
+    if (!before || before.state !== "admitted" || !before.reservation ||
+      before.authorizationID !== intent.authorizationId || before.reference !== before.reservation.id ||
+      before.revision.id !== intent.planRevisionId || before.revision.sessionID !== before.parent.id ||
+      before.parent.projectID !== resources.identity.projectId) return false
+    const retained = readSfRoutineNativeInput(before.revision)
+    const generation = await state.models?.() ? state.generation : undefined
+    if (!retained || generation === undefined || retained.owner.providerGeneration !== generation ||
+      retained.owner.authoritySessionId !== before.parent.id ||
+      retained.owner.principalRef !== context.binding.principalRef ||
+      retained.owner.installationId !== context.binding.installationId ||
+      retained.owner.projectId !== context.binding.projectId ||
+      retained.inputDigest !== intent.inputDigest ||
+      digestSfValue(retained.input.caseRef) !== digestSfValue(intent.caseRef)) return false
+    const command = sfRoutineHumanRunCommand219({
+      admissionRef: before.reference, expectedAdmissionVersion: before.version,
+      caseRef: { ...intent.caseRef },
+    })
+    const current = async () => {
+      if (resources !== routineRuntime.resources() || !resources.current() || generation !== state.generation ||
+        !await authority.authority.revalidateDomainContext(context)) return false
+      const after = await resources.records.readAdmission(intent.authorizationId).catch(() => undefined)
+      return !!after && after.state === "admitted" && after.reference === before.reference &&
+        after.version === before.version && after.authorizationID === before.authorizationID &&
+        after.revision.id === before.revision.id && resources === routineRuntime.resources() && resources.current()
+    }
+    return await current() && await authority.human.authorize(context, "routines.run", command) &&
+      await current() && await authority.human.authorize(context, "routines.run", command) && await current()
+  }
   const routineOriginBridge = createSfRoutineNativeOrigin({ ready: () => nativeRoutineProducer?.ready() === true,
     resources: routineRuntime.resources, requestFor: authority.host.requestFor,
     authorize: authority.authority.revalidateDomainContext,
-    authorizeIntent: (context, intent) => authority.human.authorize(context, "routines.run", intent),
+    authorizeIntent: authorizeNativeHumanRun,
     generation: async () => await state.models?.() ? state.generation : undefined })
   const unsubscribeNativeOrigin = nativeRoutineProducer?.subscribe(routineOriginBridge.admit)
   const routineAdmission = createSfRoutineNativeAdmission({ resources: routineRuntime.resources, registry: routineOwners,
     governance: routineGovernance, origin: () => nativeRoutineProducer ? routineOriginBridge.origin : nativeRoutineOrigin?.(),
     requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
-    authorizeIntent: (context, intent) => authority.human.authorize(context, "routines.run", intent),
+    authorizeIntent: authorizeNativeHumanRun,
     generation: async () => await state.models?.() ? state.generation : undefined,
     publication: routinePublication.publication, resolveCase: business.resolveCase, ...routineInputs })
   const routineNative = createSfRoutineNativeAdapter({ resources: routineRuntime.resources, owners: () => routineOwners.owners,
@@ -889,7 +925,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     runtime: () => identity() ? { ui: authority.ui, recoverCreation: business.cases.recoverCreation } : undefined })
   // 162-only composition. A live source must re-admit the same original Request;
   // missing operation probes remain explicitly unavailable (never catalog-ready).
-  const nativeUiProducts = createSfLiveContext({
+  const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
     admit: async (request) => {
       const admitted = await authority.readContextAdmission(request)
@@ -899,6 +935,21 @@ export const createSfHostRuntimeWithRoutineNative = async (
       if (!destinations) return { status: "unavailable", reason: "contract-mismatch" } as const
       return { status: "ok", stamp: admitted.stamp, authMode: input.authMode, destinations } as const
     },
+  })
+  // A09 original Request reaches these existing BusinessPorts through the real case fence.
+  // This does NOT issue a native Task owner, grant or Schedule capability.
+  const nativeUiProducts = Object.freeze({
+    ...nativeUiContext,
+    routines: Object.freeze({
+      ...routineServices.routines,
+      run: createSfRoutineHumanRun219({
+        run: routineServices.routines.run,
+        requestFor: authority.host.requestFor,
+        authorize: (context, command) => authority.human.authorize(context, "routines.run", command),
+        current: () => !!identity(),
+      }),
+    }),
+    withCase: business.withCase,
   })
   // Keep original A07 authority, business, Review application and scoped persistence;
   // never manufacture a principal or dispatch a second review engine.

@@ -11,6 +11,7 @@ import { encodeSfRouteRef } from "../navigation-state"
 import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
+import { readSfAuthorizedImportHistoryReference } from "./history"
 import "./imports.css"
 
 type ImportSurface = "planner" | "dashboard"
@@ -51,6 +52,7 @@ type LeafState = {
   selectionRef: string
   reviewedSelectionRef: string
   needsDiscovery: boolean
+  historyRef: string
   file: File | undefined
   newVersion: boolean
   removeMissing: boolean
@@ -75,7 +77,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const [state, setState] = createStore<LeafState>({
     status: "loading", phase: "selecting", surface: "planner",
     start: "", end: "", targets: [], discovery: undefined, selectionRef: "",
-    reviewedSelectionRef: "", needsDiscovery: false,
+    reviewedSelectionRef: "", needsDiscovery: false, historyRef: "",
     file: undefined, newVersion: false, removeMissing: false, replace: false,
     headerRow: "", manifest: undefined, reference: undefined, detail: undefined,
     busy: false, error: undefined, exportKind: "xlsx", download: undefined,
@@ -112,7 +114,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const failure = (result: Readonly<{ state: SfUiState }>, isMutation = false) => {
     if (result.state === "denied" || result.state === "session-expired") {
       clearReview()
-      setState({ targets: [], discovery: undefined, selectionRef: "", needsDiscovery: true, file: undefined })
+      setState({ targets: [], discovery: undefined, selectionRef: "", needsDiscovery: true,
+        file: undefined, historyRef: "" })
     }
     if (result.state === "stale" || result.state === "conflict") applyIntent = undefined
     setState({
@@ -144,7 +147,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     revokeExport()
     clearReview()
     setState({ surface, targets: [], discovery: undefined, selectionRef: "",
-      needsDiscovery: true, status: "ready" })
+      historyRef: "", needsDiscovery: true, status: "ready" })
   }
   const change = () => {
     // A file/target/option change invalidates any reviewed source version.
@@ -226,6 +229,41 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     if (current(token) && result && route.kind === "review" && result.manifest.state === "preview" && !result.receipt)
       setState("phase", "reviewing")
     if (current(token) && !result) setState("busy", false)
+  }
+  const loadHistory = async () => {
+    if (props.surfaceId !== "UI57" || props.route.kind !== "history") return
+    const currentOwner = auth.state()
+    const api = client()
+    const id = state.historyRef
+    const source = state.surface
+    if (currentOwner.status !== "ready" || !api ||
+        !permitted("files.import-reference") || !permitted("files.import-detail")) {
+      clearReview()
+      setState("status", currentOwner.status === "denied" ? "denied" : "unavailable")
+      return
+    }
+    const token = fence()
+    clearReview()
+    setState({ status: "loading", busy: true })
+    const stamp = currentOwner.context.stamp
+    const result = await readSfAuthorizedImportHistoryReference({
+      client: api, manifestId: id, surface: source,
+      owner: {
+        installationId: stamp.installationId, projectId: stamp.projectId,
+        principalRef: stamp.principalRef, accessRevision: stamp.accessRevision,
+        policyVersion: stamp.policyVersion,
+      },
+      signal: token.signal,
+      isCurrent: () => current(token) && state.historyRef === id && state.surface === source,
+    })
+    if (!current(token) || result.kind === "discarded") return
+    if (result.kind === "error") { failure({ state: result.state }); return }
+    const reference = result.reference
+    setState({
+      status: reference.manifest.state === "stale" ? "stale" : "ready",
+      phase: reference.receipt ? "receipt" : "preview", busy: false,
+      manifest: reference.manifest, reference, detail: result.detail,
+    })
   }
   const prepare = async () => {
     const api = client()
@@ -380,9 +418,14 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       auth.state().status === "denied" ? "denied" : "unavailable",
       phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
       reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
-      reference: undefined, detail: undefined, file: undefined, busy: false })
+      historyRef: "", reference: undefined, detail: undefined, file: undefined,
+      busy: false, error: undefined })
     if (!ready || !selectedOwner) return
-    if (chapter === "UI57" && routeKind === "history") setState("status", "unavailable")
+    if (chapter === "UI57" && routeKind === "history") {
+      // No auto-fetch of an unscoped collection: original Files only authorizes
+      // reference/detail reads. Never infer an empty collection or issue a grant.
+      setState("historyRef", "")
+    }
     // Route-param consumers must request an explicit producer surface: no guessed
     // dashboard→planner fallback and no replay of a hidden previous selection.
   })
@@ -400,7 +443,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     state.status === "invalid" ? "sf.common.invalidLink" :
     state.status === "loading" ? "sf.common.loading" : "sf.common.unavailable"
   const isImport = () => props.surfaceId === "UI55"
-  const isReference = () => props.surfaceId === "UI56" || props.surfaceId === "UI57"
+  const isHistory = () => props.surfaceId === "UI57" && props.route.kind === "history"
+  const isReference = () => props.surfaceId === "UI56" || (props.surfaceId === "UI57" && !isHistory())
   const isExport = () => props.surfaceId === "UI68"
   const canApply = () => !state.busy && state.phase === "reviewing" &&
     !!state.manifest && !state.manifest.domainApplied && state.manifest.state === "preview" &&
@@ -424,7 +468,10 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())}
-          onRetryRead={() => { if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) void download() }}>
+          onRetryRead={() => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) void download() }}
+          onBack={isHistory() && state.status === "not-found" ? () => {
+            fence(); clearReview(); setState({ status: "ready", historyRef: "", busy: false })
+          } : undefined}>
           <Show when={isImport()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
@@ -480,6 +527,28 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 onClick={() => { void prepare() }}>{t("sf.ui55.primary")}</button>
             </div>
           </Show>
+          <Show when={isHistory()}>
+            <form class="sf-files-fields" data-sf-history="authorized-reference"
+              onSubmit={(event) => { event.preventDefault(); void loadHistory() }}>
+              <label>{t("sf.u23.source")}
+                <select value={state.surface} disabled={editLocked()}
+                  onChange={(event) => newSource(event.currentTarget.value as ImportSurface)}>
+                  <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
+                </select>
+              </label>
+              <label>importPreviewRef
+                <input type="text" maxlength="512" required autocomplete="off" spellcheck={false}
+                  value={state.historyRef} disabled={editLocked()}
+                  onInput={(event) => {
+                    fence()
+                    clearReview()
+                    setState({ historyRef: event.currentTarget.value, status: "ready", busy: false })
+                  }} />
+              </label>
+              <button type="submit" class="mx-btn primary"
+                disabled={state.busy || !state.historyRef.trim()}>{t("sf.u23.reconcile")}</button>
+            </form>
+          </Show>
           <Show when={isReference()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
@@ -491,7 +560,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 onClick={() => { void loadReference() }}>{t("sf.u23.reconcile")}</button>
             </div>
           </Show>
-          <Show when={(isImport() || isReference()) && state.manifest && matchedSurface()}>
+          <Show when={(isImport() || isReference() || isHistory()) && state.manifest && matchedSurface()}>
             <section class="sf-files-section" aria-label={t("sf.u23.context")}>
               <h2>{state.manifest!.domainApplied ? t("sf.u23.confirmed") : t("sf.u23.simulation")}</h2>
               <p>{state.manifest!.context.period.start} – {state.manifest!.context.period.end} · {state.manifest!.context.currency}</p>
@@ -558,16 +627,22 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   {t("sf.ui56.primary")}
                 </A>
               </Show>
-              <Show when={isImport() && state.reference?.receipt}>
+              <Show when={(isImport() || isHistory()) && state.reference?.receipt}>
                 <A class="mx-btn" href={"/orchestra/sf-imports/" + encodeSfRouteRef(state.manifest!.id) + "/receipt"}>
                   {t("sf.ui57.primary")}
+                </A>
+              </Show>
+              <Show when={isReference() && props.surfaceId === "UI57"}>
+                <A class="mx-btn" href="/orchestra/sf-imports">
+                  {t("sf.common.returnToList")}
                 </A>
               </Show>
               <Show when={isImport() || props.route.kind === "review"}>
                 <button type="button" class="mx-btn primary" disabled={!canApply()}
                   onClick={() => { void applyReviewed() }}>{t("sf.u23.apply")}</button>
               </Show>
-              <button type="button" class="mx-btn" disabled={state.busy} onClick={() => { void reconcile() }}>
+              <button type="button" class="mx-btn" disabled={state.busy}
+                onClick={() => { if (isHistory()) void loadHistory(); else void reconcile() }}>
                 {t("sf.u23.reconcile")}
               </button>
             </div>

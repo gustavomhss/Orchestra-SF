@@ -1,4 +1,5 @@
 import { Schema } from "effect"
+import type { SfContextStamp } from "./context"
 
 // A03 public boundary. All values below are projected from the current authorized
 // Procurement producer; nothing here performs currency, approval or policy logic.
@@ -525,6 +526,26 @@ export const SfDomainCommandCap28Reset = { operationId: "domain.command.CAP28.re
 export const SfProcurementSourcingPrepare = { operationId: "procurement.sourcing.prepare", input: Schema.Struct({ caseRef: CaseRef, requestRef: NonEmpty }), output: portOutput(SourcingComparisonInput) } as const
 export const SfProcurementProcurementScenarioControls = { operationId: "procurement.procurement-scenario-controls", input: Schema.Struct({ case: NonEmpty, version: PositiveInteger }), output: portOutput(ScenarioControls) } as const
 export const SfProcurementProcurementScenarioPreview = { operationId: "procurement.procurement-scenario-preview", input: ScenarioSelection, output: portOutput(ScenarioPreview) } as const
+
+/**
+ * Supplier CSV uses the exact existing producer's GET ?download=suppliers bytes.
+ * The request is only an operation selector, never a grant or JSON result codec.
+ * F02's dedicated byte consumer and the original producer authorize actual egress.
+ */
+export const SfSupplierCsvExportRequest = Schema.Struct({
+  surface: Schema.Literal("procurement"),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
+export type SfSupplierCsvExportRequest = typeof SfSupplierCsvExportRequest.Type
+
+export type SfSupplierCsvExportResult =
+  | Readonly<{
+      status: "ok"
+      fileName: "suppliers.csv"
+      mediaType: "text/csv; charset=utf-8"
+      bytes: Uint8Array
+      stamp: SfContextStamp
+    }>
+  | Readonly<{ status: "denied" | "unauthenticated" | "stale" | "unavailable" | "aborted" | "invalid" }>
 
 /** Canonical A03 closed family: no action, page or endpoint can be passed as a free string. */
 export const SfProcurement = {

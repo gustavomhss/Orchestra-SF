@@ -48,6 +48,13 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
     expect(object(unauth.receipt).kind).toBe("unbound")
     const invalidAdmission = fixture.admission("kpi")
     expect(await fixture.product.native.bind({ ...invalidAdmission, skillReceipts: [] })).toMatchObject({ status: "denied" })
+    // A caller-supplied principal header is reauthenticated, not elevated by
+    // the C16 model/tool input or by copying an already authorized payload.
+    expect(await fixture.product.ui.admit(new Request(fixture.request, {
+      headers: { "x-test-principal": "ungranted-person" },
+    }), "sf_bi_view", digestSfValue(routes[2].payload))).toMatchObject({
+      status: "denied", reason: "ui-authority-unavailable",
+    })
     for (const row of routes) await fixture.bind(row.route)
 
     const assertions = async (rows: typeof routes, generation: number) => {
@@ -77,17 +84,22 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
         let consumerRef = "dashboard-public-ui-view"
         let observedAction = "reopened-public-UI-operation"
         if (row.route === "bi") {
-          // An actual authorized BI presentation, not a named hypothetical
-          // consumer, observes the projection from the same domain port.
-          const lease = nativeValue(await fixture.product.native.lease(fixture.call("bi"),
+          // A pending lease is not a consumed grant. Direct BI presentation
+          // cannot bypass the host's one-use dispatch authority.
+          const unconsumed = nativeValue(await fixture.product.native.lease(fixture.call("bi"),
             "sf_bi_view", digestSfValue(row.payload)))
           try {
-            const read = nativeValue(await fixture.presentation(row.payload, lease))
-            expect(read.projection).toEqual(decoded.value)
-            expect(read.presentation.series.some((series) => series.role === "actual")).toBe(true)
-            consumerRef = "readBiPresentation:BI01"
-            observedAction = "real-BI-presentation-consumed-domain-values"
-          } finally { fixture.product.native.finish(lease) }
+            expect(await fixture.presentation(row.payload, unconsumed)).toMatchObject({
+              status: "denied", reason: "authority-unavailable",
+            })
+          } finally { fixture.product.native.finish(unconsumed) }
+          // Authenticate and consume the public UI's own exact BI request.
+          // The C16 private MCP already consumed a separate native tool call.
+          const read = nativeValue(await fixture.uiPresentation(row.payload))
+          expect(read.projection).toEqual(decoded.value)
+          expect(read.presentation.series.some((series) => series.role === "actual")).toBe(true)
+          consumerRef = "readBiPresentation:BI01"
+          observedAction = "authenticated-UI-presentation-consumed-native-domain-values"
         }
         if (row.route === "dashboard") {
           const values = object(native.result).values
@@ -116,18 +128,20 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
           bridgeCallID: nativeReceipt.callId, runRef: nativeReceipt.runId,
           nativeSessionId: nativeReceipt.nativeSessionId,
           consumerRef, observedAction, generation, persistedBusinessValues: decoded.value,
-          negative: ["missing-binding", "missing-receipt", "replayed-call", "forged-control-field"],
+          negative: ["missing-binding", "missing-receipt", "replayed-call", "forged-control-field",
+            ...(row.route === "bi" ? ["unconsumed-lease"] : [])],
           provenance: "real-Dashboard-domain-and-native-Host/private-MCP",
           providerTurnObserved: false, agentInferenceWitness: false,
           AM02Qualified: false,
         }))
       }
+      // Exercise the same out-of-grant boundary in both host generations.
+      const crossSkill = object((await fixture.wrapper(fixture.call("dashboard"), "sf_kpi_explain",
+        rows[1].payload)).output?.structured)
+      expect(crossSkill.status).toBe("denied")
+      expect(object(crossSkill.receipt).kind).toBe("unbound")
     }
     await assertions(routes, 1)
-    const wrongSkill = object((await fixture.wrapper(fixture.call("dashboard"), "sf_kpi_explain",
-      routes[1].payload)).output?.structured)
-    expect(wrongSkill.status).toBe("denied")
-    expect(object(wrongSkill.receipt).kind).toBe("unbound")
     expect(await fixture.snapshot()).toEqual(before)
 
     await fixture.reopen()
@@ -157,5 +171,24 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
     }
     await assertions(freshRoutes, 2)
     expect(await fixture.snapshot()).toEqual(before)
+
+    // Revoke the principal's real Dashboard role in the persisted domain.
+    // The old native binding and new authenticated UI must both fail closed.
+    await fixture.revokeOwner()
+    for (const row of freshRoutes) {
+      const deniedUi = await fixture.product.ui.admit(fixture.request, row.operation, digestSfValue(row.payload))
+      expect(deniedUi).toMatchObject({ status: "denied", reason: "ui-authority-unavailable" })
+      const deniedNative = object((await fixture.wrapper(fixture.call(row.route), row.operation,
+        row.payload)).output?.structured)
+      expect(deniedNative.status).toBe("denied")
+      expect(object(deniedNative.receipt).kind).toBe("unbound")
+      console.info("SF_AM02_PERFORMANCE_C16_REVOKED:" + JSON.stringify({
+        githubSha: process.env.GITHUB_SHA ?? null, operation: row.operation,
+        caseRef: fixture.caseRef, runRef: fixture.admission(row.route).runId,
+        nativeSessionId: fixture.admission(row.route).sessionID,
+        revokedPrincipalRef: "person", result: "denied", source: "revoked-persisted-role-map",
+        providerTurnObserved: false, AM02Qualified: false,
+      }))
+    }
   })
 }, 240_000)
