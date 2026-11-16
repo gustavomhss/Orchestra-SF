@@ -328,10 +328,10 @@ test("CI-05 discovers newly added source/Bun tests without changing YAML or allo
 
     rmSync(path.join(root, sf("Sucafinav1/test/parity-pitr.test.ts")))
     assert.throws(() => selectSuiteFiles(manifest, "CI-SF", root),
-      /missing\\/unsafe file in selected candidate/)
+      /missing\/unsafe file in selected candidate/)
     rmSync(path.join(root, app("test-browser/sucafina-native/transport-integration.test.ts")))
     assert.throws(() => selectSuiteFiles(manifest, "CI-APP-BROWSER", root),
-      /missing\\/unsafe file in selected candidate/)
+      /missing\/unsafe file in selected candidate/)
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
@@ -397,7 +397,7 @@ test("CI-05 explicit selections reject symlinked parent paths inside the checkou
     writeFileSync(path.join(realTestDir, "sf-authorized-sample.test.ts"), "test('yes',()=>{})")
     symlinkSync("real-tests", path.join(cliRoot, "test"), "dir")
     assert.throws(() => selectSuiteFiles(manifest, "CI-CLI", root),
-      /missing\\/unsafe file in selected candidate/)
+      /missing\/unsafe file in selected candidate/)
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
