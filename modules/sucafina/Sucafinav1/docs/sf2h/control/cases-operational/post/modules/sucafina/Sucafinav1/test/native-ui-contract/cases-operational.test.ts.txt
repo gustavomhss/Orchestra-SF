@@ -19,10 +19,12 @@ test("case list probe admits the original Request and fences authority and sourc
     },
   })
   let reads = 0
+  let available = true
   const runtime = { ui, state: { read: async (request: Request, namespace: string, callback: (state: { cases: Record<string, never> }, authority: typeof stamp) => unknown) => {
     expect(request).toBe(original)
     expect(namespace).toBe("cases")
     reads++
+    if (!available) return { status: "unavailable" }
     return { status: "ok", value: callback({ cases: {} }, stamp) }
   } } }
   const deps = { runtime: () => runtime }
@@ -30,6 +32,9 @@ test("case list probe admits the original Request and fences authority and sourc
     { operationId: "projection.cases", state: "ready", reason: null, operational: true },
   ])
   expect(reads).toBe(2)
+  available = false
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  available = true
   revision = "revoked"
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
   granted = false
