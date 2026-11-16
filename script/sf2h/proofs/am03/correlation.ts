@@ -112,9 +112,18 @@ const blocked = new Set<Am03Scenario>([
  */
 export function correlateAm03(input: Am03HostedCandidate) {
   const gaps: string[] = []
+  if (!Array.isArray(input.observations)) {
+    return { status: "NOT_RUN" as const, structurallyCorrelatable: false,
+      gaps: ["missing-or-malformed-observations"], requiredScenarios: am03Scenarios.length,
+      providedScenarios: 0,
+      warning: "No original authenticated installed-host scenario observations. Structural intake is not AM03 PASS." }
+  }
+  if (input.observations.some((item) => !item || typeof item !== "object" ||
+    !am03Scenarios.includes(item.scenario)))
+    gaps.push("unknown-or-malformed-scenario")
   if (!sha40.test(input.productCandidateSha) || !sha40.test(input.productTreeSha) ||
     !sha40.test(input.ciSnapshotSha) || !Number.isSafeInteger(input.ciRunId) || input.ciRunId <= 0 ||
-    !input.ciRunUrl.startsWith("https://github.com/gustavomhss/Orchestra-SF/actions/runs/" + input.ciRunId))
+    input.ciRunUrl !== "https://github.com/gustavomhss/Orchestra-SF/actions/runs/" + input.ciRunId)
     gaps.push("hosted-candidate-provenance")
 
   for (const id of am03Scenarios) {
@@ -126,7 +135,7 @@ export function correlateAm03(input: Am03HostedCandidate) {
     const record = records[0]!
     if (record.evidenceClass !== "native-installed") gaps.push("scenario:" + id + ":not-installed-native")
     if (!sha40.test(record.sourceBlobSha) || !record.sourcePath ||
-      !record.evidenceUri.startsWith(input.ciRunUrl) ||
+      !record.evidenceUri.startsWith(input.ciRunUrl + "/") ||
       record.candidateSha !== input.productCandidateSha ||
       record.candidateTreeSha !== input.productTreeSha ||
       record.ciSnapshotSha !== input.ciSnapshotSha ||
