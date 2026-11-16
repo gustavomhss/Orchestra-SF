@@ -4,6 +4,7 @@ import type { SfContext, SfContextStamp, SfDraftRevalidation, SfDraftRevalidatio
 import { revalidateRequestsDraft } from "./draft-revalidation-requests"
 import { revalidateSupplierDraft } from "./draft-revalidation-supplier"
 import { revalidateSettingsDraft } from "./draft-revalidation-settings"
+import { revalidateSourcingDraft } from "./draft-revalidation-sourcing"
 
 export async function revalidateSfNativeDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -12,6 +13,8 @@ export async function revalidateSfNativeDraft(
   if (input.originalOwner.installationId !== fresh.stamp.installationId ||
       input.originalOwner.projectId !== fresh.stamp.projectId ||
       input.originalOwner.principalRef !== fresh.stamp.principalRef) return { status: "authority-changed" }
+  if (input.read.operationId === "domain.page.CAP25" && input.editScopeKey === "CAP25:sourcing")
+    return revalidateSourcingDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP25")
     return revalidateRequestsDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP27")

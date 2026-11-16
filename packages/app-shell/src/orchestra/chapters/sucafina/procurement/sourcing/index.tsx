@@ -13,7 +13,7 @@ import type { SfCopyKey, SfMessage, SfText, SfUiState } from "../../shared/frame
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfU12CopyKey } from "@/i18n/orchestra-chapters/sf-u12"
 import {
-  editableSourcing, editableStages, quoteIsPersisted, recordedFx, requestRevision,
+  editableSourcing, editableStages, quoteIsPersisted, recordedFx, requestRevision, sourcingSourceFields,
   requestVersion, uniqueRequest, type Cap25PageOk, type QuoteEdit, type SourcingAction,
   type SourcingEdit,
 } from "./model"
@@ -163,7 +163,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       editScopeKey:"CAP25:sourcing" as SfEditScopeKey,
       baseVersion:version,base:original,value:original,
       revalidation:{operationId:"domain.page.CAP25",input:{request:row.number},
-        fieldPaths:["status","sourcing","pr"],actionIds:["save"]},
+        fieldPaths:sourcingSourceFields(row)??["sourcing.unidentified-item"],actionIds:["save"]},
     })
   })
   createEffect(()=>{
