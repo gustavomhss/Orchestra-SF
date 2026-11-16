@@ -49,8 +49,15 @@ export async function revalidateSecurityDraft(
   if (page.capabilityId !== "CAP12" || selection.value.secYear !== undefined && selection.value.secYear !== page.selection.year ||
       selection.value.securityMonth !== undefined && selection.value.securityMonth !== page.selection.month) return { status: "unavailable" }
   if (!page.allowedActionIds.some((id) => id === action)) return { status: "denied" }
-  // New KPI/month records use a shared source CAS rather than a null record CAS.
-  if (input.identity.kind === "new") return { status: "unavailable" }
+  if (input.identity.kind === "new") {
+    // KPI is a month upsert governed by shared CAS; other save actions create
+    // a fresh id and use the producer's zero-version create contract.
+    const scope = "CAP12:" + action + ":" + page.selection.year + ":" + page.selection.month + ":new"
+    if (entity === "kpi" || !action.startsWith("save-") || input.editScopeKey !== scope ||
+        input.identity.newIntentRef !== "u29:" + scope || input.read.fieldPaths.length ||
+        securityVersion(page, entity) !== 0) return { status: "unavailable" }
+    return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: null }
+  }
   const ref = input.identity.recordRef
   if (input.editScopeKey !== "CAP12:" + action + ":" + page.selection.year + ":" + page.selection.month + ":" + ref)
     return { status: "unavailable" }

@@ -280,6 +280,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       return
     }
     const version = securityVersion(page, entity, id ?? undefined)
+    if (!id && entity !== "kpi" && version !== 0) return
     const scope = ("CAP12:" + command + ":" + page.selection.year + ":" +
       page.selection.month + ":" + (id ?? "new")) as SfEditScopeKey
     const identity: SecurityEditor["identity"] = id
@@ -289,8 +290,9 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
     const row = id ? securityRow(page, entity, id) : undefined
     try {
       draft = active.drafts.acquire({
-        surfaceId: "CAP12", identity, editScopeKey: scope, baseVersion: version,
-        base: initial, value: initial,
+        surfaceId: "CAP12", identity, editScopeKey: scope,
+        baseVersion: id || entity === "kpi" ? version : null,
+        base: id || entity === "kpi" ? initial : null, value: initial,
         revalidation: {
           operationId: "domain.page.CAP12",
           input: { ...(state.year === undefined ? {} : { secYear: state.year }),
@@ -504,7 +506,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       const payloadDigest = Array.from(digest, (byte) => byte.toString(16).padStart(2, "0")).join("")
       draft?.setPending({
         operationRef: editor.operationRef, idempotencyKey: options.idempotencyKey,
-        payloadDigest, expectedVersion: editor.version,
+        payloadDigest, expectedVersion: editor.id || editor.entity === "kpi" ? editor.version : null,
       })
       draft?.setPhase("submitting")
       let result: Awaited<ReturnType<typeof client["domain.command.CAP12.save-kpi"]>>
