@@ -1,0 +1,359 @@
+{
+  "schema": "sf2h.review208.findings.v1",
+  "mission": 208,
+  "actor": "S2-R2",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "review_kind": "PRE_FREEZE_DELTA_AND_UNCOVERED_CRITERIA",
+  "reviewed_branch": "sf2-stack",
+  "reviewed_commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "verdict": "FIX_FIRST",
+  "is_final": false,
+  "C_accepted": false,
+  "global_release": false,
+  "new_findings": [
+    {
+      "id": "REV208-NEW-001",
+      "priority": "P2",
+      "origin": "NEW_STATIC_INTEGRATED",
+      "status": "FAIL_SOURCE_STATIC_NOT_RUNTIME_QUALIFIED",
+      "category": "FINANCIAL_UNIT_ADMISSION",
+      "trigger": "A producer-authorized BI projection value with unit='hours', currency='USD' is referenced by a presentation series with unit='USD'. The guard returns status ok, because it checks unit mismatch AND currency mismatch, allowing currency equality to mask explicit physical unit contradiction. The renderer uses series.unit and groups amounts under USD.",
+      "root_cause": "Boolean conjunction at semantics.ts:21 accepts either currency or unit as a substitute for an explicitly conflicting other dimension.",
+      "source": [
+        {
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+          "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+          "blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+          "lines": "7-28"
+        },
+        {
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+          "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+          "blob": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+          "lines": "267-305"
+        },
+        {
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+          "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+          "lines": "35-65"
+        }
+      ],
+      "contract_ids": [
+        "C10",
+        "C17"
+      ],
+      "criteria": [
+        "A08-AC01",
+        "U20-AC01",
+        "U21-AC01",
+        "WP10.QLT.10"
+      ],
+      "criticality": "Incorrect financial label/scale or heterogeneous chart; source producer authorization is independent and not bypassed by this finding.",
+      "proof": {
+        "kind": "SOURCE_BOOLEAN_COUNTEREXAMPLE",
+        "observed": "Guard does not reject incompatible explicit unit when currency equals entry.unit.",
+        "not_proven": "No installed BI fixture or runtime artifact run by 208."
+      },
+      "owner": {
+        "route": "189/PR65 sole integrator",
+        "writer": "A08/BI producer-semantic authority; N26 U20/U21 consumers under active lease only",
+        "product_write_by_reviewer": false
+      },
+      "requested_fix": "On source-origin BI semantic boundary, reject contradictory explicit unit/currency; do not infer conversion or mix FTE and cost and do not weaken absent/zero rules.",
+      "recheck": {
+        "owner": "200/PR106 sole dispatcher",
+        "trigger": "189 integrates owner-owned correction, 190 compiler as needed, same candidate C accepted",
+        "minimal_proof": "Positive USD currency series and FTE unit series independently, negative conflicting explicit hours+USD versus USD series, mixed currency rejection, zero/null table parity, no invented FX and correct scale labels.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "id": "REV208-NEW-002",
+      "priority": "P2",
+      "origin": "NEW_STATIC_INTEGRATED",
+      "status": "FAIL_SOURCE_STATIC_NOT_RUNTIME_QUALIFIED",
+      "category": "ATLAS_PERSISTED_SEQUENCE_INTEGRITY",
+      "trigger": "Persist a syntactically valid existing Atlas event with its seq changed to another nonnegative safe integer. During read(), event.seq is checked for type/range but replaced with expected.seq for digest comparison; modified seq remains accepted and the returned ordered log sorts by the attacker/corruption-controlled value. Multiple events may share the same seq or be reordered without rejection.",
+      "root_cause": "The read integrity predicate checks digest of {...event,seq:expected.seq}, discarding the stored event ordinal before comparison, while appends write strictly increasing ordinals.",
+      "source": [
+        {
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+          "lines": "9-48"
+        },
+        {
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "lines": "400-445"
+        }
+      ],
+      "contract_ids": [
+        "C08",
+        "C09",
+        "C17"
+      ],
+      "criteria": [
+        "AM05",
+        "U26-AC01",
+        "WP10.T07",
+        "WP10.QLT.40"
+      ],
+      "criticality": "Fail-closed integrity invariant of the durable event journal. This does not assert an external arbitrary attacker can edit the protected store.",
+      "proof": {
+        "kind": "SOURCE_SEQUENCE_COUNTEREXAMPLE",
+        "observed": "Validation accepts altered seq except unsafe/negative, and reorder/duplicate never checked before respawnFromRecord.",
+        "not_proven": "No corruption injection, restarts, fresh process, or real scanner run by 208."
+      },
+      "owner": {
+        "route": "189/PR65 sole integrator",
+        "writer": "WP10.T07 Atlas boundary/storage authority, active lease to confirm; 198/PR183 proof consumer",
+        "product_write_by_reviewer": false
+      },
+      "requested_fix": "Validate persisted ordinal uniqueness, expected monotonic append order and consistency without comparing legitimate event.seq to constant versioned([record]).seq. Preserve scanner and existing engine.",
+      "recheck": {
+        "owner": "200/PR106 sole dispatcher",
+        "trigger": "189 integrates owner correction in accepted same-C source; deduplicate against 198 AM05 requests",
+        "minimal_proof": "At least two committed task/project records: untouched journal reload/restart positive; mutated seq duplicate/out-of-order/tampered ordinal fails closed with zero disclosed records and zero committed append; next append after clean restart monotonic; scanner clean/hit/unavailable remain independent.",
+        "status": "NOT_RUN"
+      }
+    }
+  ],
+  "inherited_findings": [
+    {
+      "id": "PRE147-R02-01",
+      "priority": "P1",
+      "origin": "PRE147_INHERITED",
+      "historical_severity": "HIGH",
+      "status": "STATIC_CORRECTION_OBSERVED_HOSTED_RECHECK_NOT_PROVEN",
+      "static_defect_current": false,
+      "original_source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "24-35"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "49-54"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "143-160"
+        }
+      ],
+      "integrated_source": {
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+        "blob": "933426ea548c2c82c115f34c2f099df82379daee",
+        "lines": "33-54"
+      },
+      "observed_causal_delta": "installationId/projectId now checked against both first/current projection contexts; static corrected.",
+      "criteria": [
+        "U32-AC01",
+        "U32-AC02",
+        "R02-AC01"
+      ],
+      "owner": "Historical owner 152/157, integration solely 189/PR65; 200/PR106 test dispatcher",
+      "recheck": "Same-C U32 hosted same-period/currency cross-install/project, denied second read, same-scope positive.",
+      "qualified": false,
+      "proof": "Full source inspected; no installed same-C test used or executed."
+    },
+    {
+      "id": "PRE147-R02-02",
+      "priority": "P2",
+      "origin": "PRE147_INHERITED",
+      "historical_severity": "MEDIUM",
+      "status": "STATIC_CORRECTION_OBSERVED_HOSTED_RECHECK_NOT_PROVEN",
+      "static_defect_current": false,
+      "original_source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "39-50"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "168-185"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "55-61"
+        }
+      ],
+      "integrated_source": {
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+        "blob": "638ca5f806f1d11b8549972ba5559b4913ba4e6b",
+        "lines": "74-102,247-298"
+      },
+      "observed_causal_delta": "Value/Component cells show unit, currency, explicit null, evidence and source refs; static corrected.",
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC01"
+      ],
+      "owner": "Historical owner 152/157, integration solely 189/PR65; 200/PR106 test dispatcher",
+      "recheck": "Same-C authorized UI49 100 USD→EUR, confirmed→estimated, 0→null, no implicit FX.",
+      "qualified": false,
+      "proof": "Full source inspected; no installed same-C test used or executed."
+    },
+    {
+      "id": "PRE147-R02-03",
+      "priority": "P1",
+      "origin": "PRE147_INHERITED",
+      "historical_severity": "HIGH",
+      "status": "STATIC_CORRECTION_OBSERVED_HOSTED_RECHECK_NOT_PROVEN",
+      "static_defect_current": false,
+      "original_source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "39-50"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "110-116"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "158-165"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "25-29"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "83-92"
+        }
+      ],
+      "integrated_source": {
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+        "blob": "933426ea548c2c82c115f34c2f099df82379daee",
+        "lines": "57-95"
+      },
+      "observed_causal_delta": "Preserved value/section/overall ancestry now compared; compare/index.tsx@638ca5f:199-205,250-295 renders provenance; static corrected.",
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC02"
+      ],
+      "owner": "Historical owner 152/157, integration solely 189/PR65; 200/PR106 test dispatcher",
+      "recheck": "Same-C UI49 equal number but sourceRef version/incarnation/access/observedAt changes; verify distinct source change and negative revoked path.",
+      "qualified": false,
+      "proof": "Full source inspected; no installed same-C test used or executed."
+    },
+    {
+      "id": "PRE147-R02-04",
+      "priority": "P2",
+      "origin": "PRE147_INHERITED",
+      "historical_severity": "MEDIUM",
+      "status": "STATIC_CORRECTION_OBSERVED_HOSTED_RECHECK_NOT_PROVEN",
+      "static_defect_current": false,
+      "original_source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b",
+          "lines": "135-165"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b",
+          "lines": "201-224"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b",
+          "lines": "401-416"
+        }
+      ],
+      "integrated_source": {
+        "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+        "lines": "149-194,230-244,405-409"
+      },
+      "observed_causal_delta": "changePeriod clears discovery/selection/targets; selectedTarget crosschecks owner/surface/period; prepare refuses without refreshed target; static corrected.",
+      "criteria": [
+        "U23-AC01",
+        "U23-AC02",
+        "R02-AC02"
+      ],
+      "owner": "Historical owner 152/157, integration solely 189/PR65; 200/PR106 test dispatcher",
+      "recheck": "Same-C UI55 Jan→Feb clears old targets, rediscovery, revoked target denied, no admit/preview/apply using old selection.",
+      "qualified": false,
+      "proof": "Full source inspected; no installed same-C test used or executed."
+    }
+  ],
+  "known_deduplicated": [
+    {
+      "tracking": "203 F02/NAV-01 source handoff (PR189), no new 208 ID",
+      "priority": "P1",
+      "status": "OPEN_AT_REVIEWED_SRC",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "blob": "17db52d914ca49934953e1161461b03856eb29c5",
+      "lines": "69-97",
+      "fact": "POST projection.search permits URI search query parameter q; known inert writer203 patch postblob 2c71817, consumer old blob 17db52d. Registry POST JSON 4096 already declared, but privacy gate not yet complete.",
+      "owner": "189 consume 203 inert patch; 200 request already recorded on PR106, avoid duplicate",
+      "recheck": "No q in URL; original Request preserved; body UTF8 <=4096; reject legacy private GET; no leakage through logs or downloads."
+    },
+    {
+      "tracking": "200/PR106 AM01 and AM03 known run failures; 196/197 corrective source",
+      "priority": "P1",
+      "status": "KNOWN_NOT_DUPLICATED",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/",
+      "blob": null,
+      "lines": null,
+      "fact": "Existing 43775802204 reported AM01 expected conditioned null versus 240000 and AM03 input selector failure; triage/corrections belong to 196/197/200/189, not new 208 findings.",
+      "owner": "196/197 writers; 189 integrator; 200 dispatcher",
+      "recheck": "Reconcile same C, first-error and original financial oracle, no rerun identical unchanged input."
+    },
+    {
+      "tracking": "161 native tombstone correction and R148-NATIVE-01; 209 already rechecks",
+      "priority": "P1",
+      "status": "UNQUALIFIED_CROSS_SCOPE",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "lines": "100-115,128-170",
+      "fact": "State provider retains principal/access/policy/target-incarnation CAS, guarded metadata and native publication; 161's inert privileged settlement proposal is not proof of safe tombstone/revocation. Existing R148-NATIVE-01 belongs 209/189.",
+      "owner": "189 with native writer and 209 reviewer; 200 test evidence",
+      "recheck": "Denied/revoked/tombstoned native attempt not resurrected; abort/restart no duplicate or unauthorized settlement; same C."
+    },
+    {
+      "tracking": "207 functional review on UI62/U26 and UI57/U23",
+      "priority": "P1/P2",
+      "status": "KNOWN_OTHER_REVIEWER",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/",
+      "blob": null,
+      "lines": null,
+      "fact": "UI62 similarity unavailable and UI57 import history hard-unavailable already opened by mission207/PR65, not reproduced as 208 new IDs.",
+      "owner": "207/189 and current N writers",
+      "recheck": "Follow 207 named criteria, keep shared installed evidence and avoid duplicate requests."
+    }
+  ],
+  "new_count": 2,
+  "inherited_count": 4,
+  "known_tracked_count": 4,
+  "rules": [
+    "A historical finding retains its PRE147 ID; corrective source evidence changes status to static-correction-observed, not PASS/closed without same-C hosted recheck.",
+    "No product, test, oracle, source, workflow or guard write by 208; no code/test runner dispatched.",
+    "A lack of proof remains NOT_PROVEN, never approved with a caveat."
+  ]
+}

@@ -1,0 +1,295 @@
+{
+  "schema": "sf2h.review208.evidence.v1",
+  "mission": 208,
+  "reviewed_commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "reviewed_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+  "review_mode": "read_only_remote_static",
+  "authority": {
+    "ack_commit": "23c2834ed3f478584cfa1d40b1d1206d3119b867",
+    "epoch": "cold-review-e1-browser208",
+    "model_effective": "GPT-6",
+    "session_id": null,
+    "product_write_paths": [],
+    "receipt_write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review208/",
+    "source_head_checked": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+  },
+  "pinned_inputs": [
+    {
+      "kind": "mission_packet",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/208.json",
+      "commit": "57bc98cb10a29e6428df226f496805e7f117dc5a"
+    },
+    {
+      "kind": "own_actor_pack",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-R2.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "dfb48ef567034ebc235d47bb12be030083d3e065"
+    },
+    {
+      "kind": "canonical_planning",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "kind": "normative_ux",
+      "commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+    },
+    {
+      "kind": "next30",
+      "commit": "1d9d49ec26281ffd6486d722a97298596289605d"
+    },
+    {
+      "kind": "preliminary147",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r02/preliminary147/",
+      "commit": "7fa13a079f02696924dadfd393d776bab5bce967"
+    }
+  ],
+  "instructions_read": [
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "sf2h-plan/START.md",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850"
+    },
+    {
+      "path": "sf2h-plan/WORKFLOW.md",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925"
+    },
+    {
+      "path": "sf2h-plan/prompts/S0.md",
+      "blob": "2f114eb43167885a8cbc88b112c596dcdff15e61"
+    },
+    {
+      "path": "sf2h-plan/execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "path": "sf2h-plan/specs/product-acceptance.md",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c"
+    },
+    {
+      "path": "sf2h-plan/specs/resident-runtime.md",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1"
+    },
+    {
+      "path": "sf2h-plan/specs/atlas-packaging.md",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9"
+    },
+    {
+      "path": "sf2h-plan/specs/execution-reconciliation.md",
+      "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1"
+    },
+    {
+      "path": "native-ui/UX-DESIGN.md",
+      "blob": "c0cacc229fa707f8873e63c0a64f61894ba62907"
+    },
+    {
+      "path": "native-ui/API-AND-ISOLATION.md",
+      "blob": "c01003b1182f5d517504b602a7657b7e710ec80e"
+    },
+    {
+      "path": "native-ui/ACCEPTANCE.md",
+      "blob": "3e12ac729ac5f814e5f681ad4a20fa09535dcc5c"
+    },
+    {
+      "path": "native-ui/criteria-trace.json",
+      "blob": "1dba83d77882073af587c031d63299ed472905e8"
+    },
+    {
+      "path": "native-ui/execution/next30/COMMON.md",
+      "blob": "e1c4ff62595738f53dc6b86ff2618fee41af4b81"
+    },
+    {
+      "path": "native-ui/execution/next30/README.md",
+      "blob": "31cb2f3693300357cff4e83e5cc6a5edd5832d40"
+    }
+  ],
+  "own_work_orders_read": [
+    "A08",
+    "A14",
+    "F02",
+    "F04",
+    "U20",
+    "U21",
+    "U23",
+    "U26",
+    "U32",
+    "U37"
+  ],
+  "source_blobs_examined": [
+    {
+      "path": "product/analytics/semantics.ts",
+      "blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/analytics/view.ts",
+      "blob": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/host-binding/atlas-store.ts",
+      "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/host-binding/atlas-memory.ts",
+      "blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/decisions/apply.ts",
+      "blob": "a2d08250d5104285dcdee87d86e39076535cf554",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/decisions/cost-coverage.ts",
+      "blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/collaboration/confirmation.ts",
+      "blob": "9d38a30265e6efc2c9667371087a87bcce8e682f",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/procurement/c12.ts",
+      "blob": "84f27e1312d3c58f3ba1ea5ae78fe5a936e3adc7",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/reports/storage.ts",
+      "blob": "b98b59c80d8208926ef1b61fccfe098389000230",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "runtime/application.ts",
+      "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "runtime/local-identity.ts",
+      "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "runtime/downloads.ts",
+      "blob": "ac73b9edc44bd5c8a616ce583084969d2a69e771",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "product/integration/public-state.ts",
+      "blob": "97d5062f42def4199cb16c1ae4502fdd982da68c",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "blob": "17db52d914ca49934953e1161461b03856eb29c5",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "packages/schema/src/sucafina/operation-registry.ts",
+      "blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+      "blob": "933426ea548c2c82c115f34c2f099df82379daee",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+      "blob": "638ca5f806f1d11b8549972ba5559b4913ba4e6b",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+      "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    }
+  ],
+  "prior_review": {
+    "mission": 147,
+    "number": 4,
+    "preserved_ids": [
+      "PRE147-R02-01",
+      "PRE147-R02-02",
+      "PRE147-R02-03",
+      "PRE147-R02-04"
+    ],
+    "static_correction_observed": [
+      {
+        "id": "PRE147-R02-01",
+        "blob": "933426ea548c2c82c115f34c2f099df82379daee"
+      },
+      {
+        "id": "PRE147-R02-02",
+        "blob": "638ca5f806f1d11b8549972ba5559b4913ba4e6b"
+      },
+      {
+        "id": "PRE147-R02-03",
+        "blob": "933426ea548c2c82c115f34c2f099df82379daee"
+      },
+      {
+        "id": "PRE147-R02-04",
+        "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac"
+      }
+    ],
+    "final_recheck": "NOT_RUN"
+  },
+  "known_external_evidence": [
+    {
+      "run": "43775214053",
+      "owner": "200/CI",
+      "category": "C08 isolated",
+      "reported": "PASS subset on another SHA; not accepted C"
+    },
+    {
+      "run": "43775606150",
+      "owner": "200/CI",
+      "category": "F04 route metadata",
+      "reported": "PASS subset on another SHA; not installed identity proof"
+    },
+    {
+      "run": "43775802204",
+      "owner": "200/CI",
+      "category": "AM01/03",
+      "reported": "FAIL subset, source branch differs; mismatch/selector tracked by 196/197/200"
+    },
+    {
+      "run": "43772959867",
+      "owner": "190/compiler",
+      "category": "historic W77e",
+      "reported": "FAIL old SHA; not new-C compile"
+    }
+  ],
+  "gaps": [
+    "No accepted final C, native D must be evidence-only.",
+    "No validated installed Microsoft role fixtures/consent, private approved identities, CDP and desktop artifact; 199 owns requisites.",
+    "No same-C financially complete coverage oracle or AM04 result-loss domain receipt proof.",
+    "No same-C Atlas corrupted seq+restart/scanner hit/could-not-run proof.",
+    "No same-C U32/U23/BI negative and regression suite."
+  ],
+  "not_executed_by_reviewer": [
+    "GitHub Actions CI",
+    "typecheck",
+    "build",
+    "validators",
+    "Azure",
+    "installed fixtures",
+    "scanner",
+    "secret access"
+  ],
+  "reference_notification": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6903575603"
+}

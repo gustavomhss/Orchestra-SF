@@ -1,0 +1,31 @@
+{
+  "schema": "sf2h.review208.checkpoint.v1",
+  "mission": 208,
+  "branch": "sf-review-integrity",
+  "source_commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "actor": "S2-R2",
+  "epoch": "cold-review-e1-browser208",
+  "model": "GPT-6",
+  "session_id": null,
+  "review_completed_for_available_pre_freeze_static_scope": true,
+  "final_review_started": false,
+  "C_accepted": false,
+  "verdict": "FIX_FIRST",
+  "global_release": false,
+  "next_action": "189/PR65: route 208 NEW-001 to BI semantic writer and NEW-002 to WP10.T07 Atlas writer, apply owner patches with CAS/preimage to sf2-stack; consume 203 NAV router patch. Then 190 compiler only if changed and 200 sole CI dispatcher deduplicates targeted exact tests on same accepted C; 199 supplies approved installed identity/fixture and packaged desktop proof. A different independent review session rechecks causal changed blobs and all outstanding 40 canonical criteria on accepted C. No release without integral proofs.",
+  "external_minimal_nonsecret_input": "Accepted candidate C HEAD/tree + code blobs and owner patch IDs, CI test selection/run/artifact identifiers, F04 readiness/anonymous per-role capability proof and approved fixture manifest reference (no credentials, tokens or tenant secret).",
+  "must_not": [
+    "Run own tests or CI",
+    "Mutate product/workflows/guards",
+    "Use Azure",
+    "Assume global transaction",
+    "Infer successful absence of evidence",
+    "Reissue failed unchanged CI selector",
+    "Mark APPROVE without complete proofs"
+  ],
+  "notifications": [
+    "189/PR65 early notification 6903575603",
+    "PR106 pending request (to publish)",
+    "Author PRs pending notices"
+  ]
+}
