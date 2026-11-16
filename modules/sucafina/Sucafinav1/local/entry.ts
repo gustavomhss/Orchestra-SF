@@ -7,7 +7,7 @@ import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../.
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfWorkProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
-import { createSfPlannerProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
+import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
 import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
 import { createSfDecisionsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
 import { createSfRoutinesHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
@@ -138,8 +138,10 @@ export async function createConfiguredInstallation(
   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
+  let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
   runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
+    operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
     isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
     persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
     grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
@@ -214,6 +216,8 @@ export async function createConfiguredInstallation(
       },
     ],
   })
+  // Router construction above proves these exact handlers were installed.
+  nativeOperational = (request, stamp) => observeSfPlannerPages(nativeApplication, request, stamp)
   // Started only after composition succeeds, outside request/business scopes.
   // Auth retention runs for Microsoft too, independently of operator backup jobs.
   const authMaintenance = startAuthMaintenance({ secrets: store.secrets })

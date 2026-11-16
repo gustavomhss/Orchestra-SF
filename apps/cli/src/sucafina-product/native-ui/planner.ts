@@ -1,4 +1,7 @@
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
+import { Schema } from "effect"
+import { SfPlanner } from "@orchestra/schema/sucafina/planner"
+import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { domain } from "../../../../../modules/sucafina/Sucafinav1/runtime/planner.ts"
 import { object, rows, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -305,4 +308,43 @@ export function createSfPlannerProjectionHandlers(deps: SfNativeHostDependencies
       } }, 200)
     },
   }))
+}
+
+/**
+ * Invoked only by the installation which mounted these handlers. Execute the
+ * same read-only Planner view and projection using the original context
+ * Request; no synthetic route request, write, or authorization is created.
+ */
+export async function observeSfPlannerPages(
+  application: SfNativeHostDependencies["application"], request: Request, stamp: SfContextStamp,
+) {
+  const environment = await application.environment(request)
+  if (request.signal.aborted) return []
+  return application.persistence.transaction("planner", async (snapshot) => {
+    const principal = await application.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+    if (!principal || !principal.id || principal.id.startsWith("local:") ||
+        principal.id !== stamp.principalRef || request.signal.aborted) return { commit: false, value: [] }
+    const roles = principal.roles.filter((row) => row.surface === "planner").map((row) => row.role)
+    const access = object(object(snapshot.data.access)[principal.id])
+    const actor: Actor = {
+      id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"),
+      assigned: Array.isArray(access.assigned) ? access.assigned.filter((v): v is string => typeof v === "string") : [],
+      domains: Array.isArray(access.domains) ? access.domains.filter((v): v is string => typeof v === "string") : [],
+    }
+    const allowed = plannerKeys(actor)
+    const view = domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
+    const selection = { year: 2026 }
+    const current = chosen(view, selection)
+    const observations = (["CAP17", "CAP23"] as const).flatMap((cap) => {
+      const spec = PAGES.find((entry) => entry.id === cap)
+      if (!spec || !allowed.includes(spec.page)) return []
+      const data = project(view, actor, cap, selection, current)
+      const value = { capabilityId: cap, selection: { ...selection, ...(current ? { versionId: id(current.id) } : {}) },
+        data, versions: cas(view, cap, current, data), allowedActionIds: [] }
+      const output = { status: "ok", context: stamp, value }
+      if (!Schema.is(SfPlanner.operations[`domain.page.${cap}`].output)(output)) return []
+      return [{ operationId: `domain.page.${cap}` as const, state: "ready" as const, reason: null, operational: true as const }]
+    })
+    return { commit: false, value: observations }
+  }, { signal: request.signal })
 }

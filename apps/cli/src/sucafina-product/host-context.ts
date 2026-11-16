@@ -929,6 +929,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   // missing operation probes remain explicitly unavailable (never catalog-ready).
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
+    operational: input.operational,
     admit: async (request) => {
       const admitted = await authority.readContextAdmission(request)
       if (admitted.status !== "ok") return admitted

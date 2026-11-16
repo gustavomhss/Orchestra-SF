@@ -110,6 +110,8 @@ export type SfHostRuntime = {
   services?: () => SfHostServices | undefined
 }
 export type CreateSfHostRuntime = (input: {
+  /** Host-private observation from the installation which actually mounts the producers. */
+  operational?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp) => Promise<readonly import("@orchestra/schema/sucafina/context").SfOperationAvailability[]>
   installationId: string
   directory: string
   sourceRoot: string
