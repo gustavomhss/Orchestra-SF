@@ -4,6 +4,11 @@
 protection remain unchanged until the replacement has live negative controls
 and the owner explicitly authorizes required-check migration.
 
+**Operational backlog / everything still pending:** [`PENDING-WORK.md`](./PENDING-WORK.md).
+This is the canonical open-work checklist for CI closure, product test red
+and Azure release readiness. The older [`CI-CLOSURE.md`](./CI-CLOSURE.md)
+retains historical evidence and rationale; do not interpret it as current live status.
+
 ## Source of truth and precedence
 
 - Product contract: `dbf9547211d9b0fade619790de7c19c0869b7c7d`,

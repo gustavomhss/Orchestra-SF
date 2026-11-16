@@ -1,5 +1,11 @@
 # Orchestra-SF — CI-only campaign, evidence and ownership
 
+> **Historical engineering evidence, not the live backlog.** For the actionable,
+> complete list of remaining work, owners by functional area, run snapshot,
+> acceptance criteria and execution order, see
+> [`PENDING-WORK.md`](./PENDING-WORK.md). Earlier job statuses below are
+> intentionally immutable historical observations; confirm latest run before action.
+
 **Scope:** this document closes **CI/test infrastructure classification**, not product go-live. Product code, Task, Permission, Relay, issuer, draft guards and financial policies are untouched by the CI campaign. This is an isolated PR against `close-final-candidate`.
 
 ## Platform / qualification contract
