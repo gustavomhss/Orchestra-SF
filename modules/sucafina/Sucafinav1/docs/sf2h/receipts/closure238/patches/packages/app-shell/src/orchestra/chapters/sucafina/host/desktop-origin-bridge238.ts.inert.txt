@@ -89,6 +89,9 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
     const key = keyOf(selected)
     if (current?.key === key) return current
     if (current && current.key !== key) retire()
+    // A pending bind belongs to exactly one selection. Another selection
+    // increments the local epoch before its response can publish authority.
+    if (pending && pending.key !== key) { epoch += 1; pending = undefined }
     if (pending && pending.key === key && pending.epoch === epoch) {
       const reused = await pending.task
       return !signal.aborted && current === reused ? reused : undefined
