@@ -7,7 +7,7 @@ import path from "node:path"
 import { makeGlobalNode } from "@orchestra/core/effect/app-node"
 import { ProjectV2 } from "@orchestra/core/project"
 import { AbsolutePath } from "@orchestra/core/schema"
-import { Effect, Layer, Option, Schema } from "effect"
+import { Context, Effect, Layer, Option, Schema } from "effect"
 import { Catalog } from "@orchestra/core/catalog"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { Mcp } from "@orchestra/core/mcp"
@@ -922,8 +922,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
             return messages.some((entry) => entry.type === "synthetic" &&
               entry.text.startsWith(`<skill_content name="${SF_ROUTINE_PHASE_PLAYBOOK}">\n# Skill: ${SF_ROUTINE_PHASE_PLAYBOOK}\n\n${winner.content.trim()}\n\n`))
           }
-          const hosts = yield* ExecutionHost.Service
-          const real = hosts.get(engine)
+          const hosts = yield* Effect.map(locations.contextEffect(session.location), (context) =>
+            Context.getOption(context, ExecutionHost.Service))
+          if (Option.isNone(hosts)) return false
+          const real = hosts.value.get(engine)
           if (!real?.observedSkillLoad) return false
           const facts = yield* real.observedSkillLoad({ sessionID: session.id, skillName: SF_ROUTINE_PHASE_PLAYBOOK })
           if (!facts || facts.sessionID !== session.id || facts.skillName !== SF_ROUTINE_PHASE_PLAYBOOK ||
