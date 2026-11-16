@@ -1,0 +1,79 @@
+{
+  "schema": "sf2h.remote-intake-sweep.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "observation": "GitHub MCP branch heads, published handoffs, open PRs and Actions; no browser lifecycle inference",
+  "heads": {
+    "sf-closure-bundle": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "sf-closure-intake": "33474b2158a4703f256191f61f1a16ac85c26004",
+    "sf-native-origin": "82e3f1833ff538621dad99bc1c98e8eee3f169b8",
+    "sf-talent-files": "55118255658694e09b1c79affd309e309224662d",
+    "sf-supplier-csv": "124901e88d21595de205f2e2a26846a5409682b7",
+    "sf-files-transport": "1872cc6a60809dec489ce1b486114aaa6e87a77b",
+    "sf-today-resume": "c2f0ef0ce180aad3fe31bd3af8485400ee4e0d79",
+    "sf-ci-validation": "783becc0c5df4c2f1667a51d287710131a92b655",
+    "sf-compiler-checks": "b935f51ca9333c77d2b13ced8e7ad743df79468d"
+  },
+  "proposal228": {
+    "source": "33474b2158a4703f256191f61f1a16ac85c26004",
+    "tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+    "totals": {
+      "git_entries_proposed": 70,
+      "added": 28,
+      "modified": 42,
+      "unchanged": 0,
+      "semantic_conflicts": 8
+    },
+    "status": "DETACHED_INERT_NOT_CONSUMED_OR_VALIDATED",
+    "critical_gaps": {
+      "mission224": "SOURCE_NOT_PUBLISHED",
+      "mission223": "CI_DISPATCHER_ONLY_NO_CODE",
+      "C12": "POLICY_SOURCE_REVIEWED_UNACCEPTED",
+      "today_F01": "INERT_BINDER_NOT_WIRED_TO_EXISTING_AUTHENTIC_HOST",
+      "real_host": "UNVERIFIED_PRIVATE_INSTALLED_F04",
+      "handoff_211_228": "NOT_OBSERVED",
+      "C": "PROPOSED_NOT_ACCEPTED",
+      "D": "NO_VALIDATED_EVIDENCE",
+      "guards_G7_G8": "NOT_RUN",
+      "compiler190": "NOT_RUN"
+    }
+  },
+  "product_integration": {
+    "head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "change_since_prior": false,
+    "writer": 211,
+    "terminal_handoff_present": false,
+    "activation_receipt211_228": "404_NOT_PRESENT",
+    "replacement_authority": "NOT_GRANTED"
+  },
+  "new_prs": [
+    {
+      "mission": 225,
+      "pr": 203
+    },
+    {
+      "mission": 226,
+      "pr": 205
+    },
+    {
+      "mission": 227,
+      "pr": 204
+    }
+  ],
+  "mission229": "USER_REPORTED_STARTED_NO_ACK_OR_PRODUCT_COMMIT_YET",
+  "mission224": "RESERVATION_ONLY_DO_NOT_INFER_TERMINATION",
+  "CI": {
+    "new_runs": 0,
+    "inflight_observed": 0,
+    "final_C_accepted": false
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "next": [
+    "Keep229 native-origin work independent",
+    "Preserve226/227 terminal handoffs and228 detached composition",
+    "Integrate after reliable writer211 release; C12 policy and Today F01 wiring remain explicit gaps",
+    "Hosted validation only after concrete consumer SHA; no repeat unchanged CI"
+  ]
+}
