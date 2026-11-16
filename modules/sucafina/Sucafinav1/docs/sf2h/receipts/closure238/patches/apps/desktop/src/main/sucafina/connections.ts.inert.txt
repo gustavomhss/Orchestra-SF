@@ -68,6 +68,14 @@ export function validateSfOwnedLocationProbe(raw: unknown,
   SfOwnedLocationProbe | undefined {
   if (!owned || !isRecord(raw) ||
     !closed(raw, ["serverKey", "baseUrl", "credentials", "location"]) ||
+    !text(raw.serverKey) || !text(raw.baseUrl) ||
+    !isRecord(raw.credentials) ||
+    !closed(raw.credentials, ["kind", "username", "password"]) ||
+    (raw.credentials.kind === "none" && Object.keys(raw.credentials).length !== 1) ||
+    (raw.credentials.kind === "basic" && (
+      Object.keys(raw.credentials).length !== 3 ||
+      !text(raw.credentials.username) || !text(raw.credentials.password, 8192))) ||
+    !["none", "basic"].includes(String(raw.credentials.kind)) ||
     !isRecord(raw.location) || !closed(raw.location, ["directory", "workspace"]) ||
     !text(raw.location.directory, 8192) ||
     (raw.location.workspace !== undefined && !text(raw.location.workspace, 8192)) ||
