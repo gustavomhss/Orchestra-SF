@@ -17,6 +17,7 @@ import { createSfSourceScopeProjector } from "../../product/integration/source-p
 import { act, canApproveCurrentRequest } from "../../../porta/act.ts"
 import { plannerCurrentPageActions } from "../../runtime/planner.ts"
 import { budgetCanEditAnyLine } from "../../runtime/dashboard-budget.ts"
+import { procurementCurrentRequestActions } from "../../runtime/procurement.ts"
 
 const binding = Object.freeze({ installationId: "installation", projectId: "project", hostId: "host" })
 const stamp = Object.freeze({ ...binding, principalRef: "person", policyVersion: "policy", accessRevision: "revision" })
@@ -117,4 +118,17 @@ test("Planner and budget page capabilities respect original source ownership and
   expect(plannerCurrentPageActions(snapshot, { ...owner, canWrite: false }, "OPEX")).toEqual([])
   expect(budgetCanEditAnyLine(snapshot, { ...owner, roles: ["domain leader"] }, "opexOwners")).toBe(true)
   expect(budgetCanEditAnyLine(snapshot, { ...other, roles: ["domain leader"] }, "opexOwners")).toBe(false)
+})
+
+test("request action health cannot use another owner's draft", () => {
+  const snapshot = { data: { store: { requests: {
+    own: { request: { createdBy: "person", status: "draft" } },
+    other: { request: { createdBy: "someone-else", status: "draft" } },
+  }, settings: {} } }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const actor = { id: "person", canWrite: true, roles: ["requester"] }
+  expect(procurementCurrentRequestActions(snapshot, actor)).toContain("save")
+  expect(procurementCurrentRequestActions(snapshot, actor)).toContain("delete")
+  delete (snapshot.data.store.requests as { own?: unknown }).own
+  expect(procurementCurrentRequestActions(snapshot, actor)).toEqual([])
+  expect(procurementCurrentRequestActions(snapshot, { ...actor, canWrite: false })).toEqual([])
 })
