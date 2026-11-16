@@ -136,45 +136,63 @@ for (const change of [
   { name: "forged-name" },
   { location: AbsolutePath.make("/forged/SKILL.md") },
 ]) {
-  it.live(`cached winning Info changed before load cannot acquire provenance: ${Object.keys(change)[0]}`, () => Effect.gen(function* () {
+  it.live(`cached winning Info cannot be mutated: ${Object.keys(change)[0]}`, () => Effect.gen(function* () {
     const deps = yield* fixture
     const found = (yield* deps.skills.list()).find((item) => item.name === input.skill)!
+    expect(Object.isFrozen(found)).toBe(true)
     expect(deps.skills.sourceOf?.(found)?.reserved).toBe(true)
-    Object.assign(found, change)
-    expect(deps.skills.sourceOf?.(found)).toBeUndefined()
-    yield* deps.skills.list()
-    expect(deps.skills.sourceOf?.(found)).toBeUndefined()
+    expect(() => Object.assign(found, change)).toThrow()
+    expect(deps.skills.sourceOf?.(found)?.reserved).toBe(true)
     const observed: unknown[] = []
     const host = makeHost((receipt) => Effect.sync(() => void observed.push(receipt)))
-    // A renamed skill is still selected by its new name: the cached object cannot authenticate it.
-    const requested = "name" in change && typeof change.name === "string" ? change.name : input.skill
-    expect(yield* SessionDirectCommands.skill({ ...deps, host }, { ...input, skill: requested })).toBe(true)
-    expect(observed).toEqual([])
+    expect(yield* SessionDirectCommands.skill({ ...deps, host }, input)).toBe(true)
+    expect(observed).toHaveLength(1)
   }))
 }
 
-it.live("mutating the cached Info during materialization prevents observation after delivery", () => Effect.gen(function* () {
+it.live("an attempt to mutate the cached Info during materialization cannot forge the load", () => Effect.gen(function* () {
   const deps = yield* fixture
   const found = (yield* deps.skills.list()).find((item) => item.name === input.skill)!
   const observed: unknown[] = []
   const host = makeHost((receipt) => Effect.sync(() => void observed.push(receipt)))
   const gated: FSUtil.Interface = { ...deps.fs, readDirectoryEntries: (directory) =>
-    deps.fs.readDirectoryEntries(directory).pipe(Effect.tap(() => Effect.sync(() => { Object.assign(found, { content: "forged after start" }) }))) }
+    deps.fs.readDirectoryEntries(directory).pipe(Effect.tap(() => Effect.sync(() => {
+      expect(() => Object.assign(found, { content: "forged after start" })).toThrow()
+    }))) }
   expect(yield* SessionDirectCommands.skill({ ...deps, fs: gated, host }, input)).toBe(true)
-  expect(deps.skills.sourceOf?.(found)).toBeUndefined()
-  expect(observed).toEqual([])
+  expect(observed).toHaveLength(1)
+  expect(deps.skills.sourceOf?.(found)?.reserved).toBe(true)
 }))
 
-it.live("an accessor cannot present original bytes for validation and different bytes to the loader", () => Effect.gen(function* () {
+it.live("an accessor cannot replace the materialized DTO", () => Effect.gen(function* () {
   const deps = yield* fixture
   const found = (yield* deps.skills.list()).find((item) => item.name === input.skill)!
-  const original = found.content
-  Object.defineProperty(found, "content", { configurable: true, get: () => original })
-  expect(deps.skills.sourceOf?.(found)).toBeUndefined()
+  expect(() => Object.defineProperty(found, "content", { configurable: true, get: () => "forged" })).toThrow()
+  expect(deps.skills.sourceOf?.(found)?.reserved).toBe(true)
   const observed: unknown[] = []
   const host = makeHost((receipt) => Effect.sync(() => void observed.push(receipt)))
   expect(yield* SessionDirectCommands.skill({ ...deps, host }, input)).toBe(true)
-  expect(observed).toEqual([])
+  expect(observed).toHaveLength(1)
+}))
+
+it.live("only the current winning object keeps provenance when a later sibling takes the name", () => Effect.gen(function* () {
+  const deps = yield* fixture
+  const first = (yield* deps.skills.list()).find((item) => item.name === input.skill)!
+  const later = SkillV2.Info.make({ name: input.skill, content: "displacing instructions", location: AbsolutePath.make("/later/SKILL.md") })
+  yield* deps.skills.transform((draft) => draft.source({ type: "embedded", skill: later }, { reserved: true }))
+  const winner = (yield* deps.skills.list()).find((item) => item.name === input.skill)!
+  expect(winner).not.toBe(first)
+  expect(deps.skills.sourceOf?.(first)).toBeUndefined()
+  expect(deps.skills.sourceOf?.(winner)).toBeDefined()
+  const observed: ExecutionHost.SkillLoadFacts[] = []
+  const host = makeHost((receipt) => Effect.sync(() => {
+    const facts = ExecutionHost.consumeSkillLoad(receipt, host)
+    if (facts) observed.push(facts)
+  }))
+  expect(yield* SessionDirectCommands.skill({ ...deps, host }, input)).toBe(true)
+  expect(observed).toHaveLength(1)
+  expect(observed[0]?.source.reserved).toBe(true)
+  expect(observed[0]?.source.contentDigest).not.toBe(createHash("sha256").update("forged", "utf8").digest("hex"))
 }))
 
 it.live("sourceOf recognizes only current winning identity and revokes it after reload", () => Effect.gen(function* () {
@@ -199,10 +217,10 @@ it.live("an embedded Info reused after reload cannot revive the old source pin",
   yield* deps.skills.reload()
   expect(deps.skills.sourceOf?.(found)).toBeUndefined()
   const next = (yield* deps.skills.list()).find((item) => item.name === info.name)!
-  expect(next).toBe(found)
+  expect(next).not.toBe(found)
   expect(deps.skills.sourceOf?.(next)).not.toBe(first)
-  Object.assign(next, { content: "forged" })
-  yield* deps.skills.reload()
-  expect((yield* deps.skills.list()).find((item) => item.name === info.name)).toBe(next)
-  expect(deps.skills.sourceOf?.(next)).toBeUndefined()
+  // The caller keeps its own object; the catalog materializes an immutable copy.
+  Object.assign(info, { content: "forged by caller" })
+  expect(next.content).toBe("instructions")
+  expect(deps.skills.sourceOf?.(next)).toBeDefined()
 }))
