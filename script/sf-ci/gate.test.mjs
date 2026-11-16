@@ -298,7 +298,7 @@ test("CI-05 source selection denies symlink escapes and paths without a test ext
     mkdirSync(dir, { recursive: true })
     writeFileSync(path.join(dir, "good.test.ts"), "test('yes',()=>{})")
     symlinkSync(tmpdir(), path.join(dir, "escape"))
-    assert.throws(() => selectSuiteFiles(manifest, "CI-APP-SRC", root), /unsafe test tree entry/)
+    assert.throws(() => selectSuiteFiles(manifest, "CI-APP-SRC", root), /unsafe test tree symlink/)
     rmSync(path.join(dir, "escape"))
     writeFileSync(path.join(dir, "README.md"), "not a test")
     assert.deepEqual(selectSuiteFiles(manifest, "CI-APP-SRC", root), ["src/good.test.ts"])
