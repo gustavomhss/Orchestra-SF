@@ -1,0 +1,57 @@
+{
+  "schema": "sf2h.closure226.ack.v1",
+  "mission": 226,
+  "epoch": "shared-closure-e1-browser226",
+  "branch": "sf-files-transport",
+  "observed_head": "585bad394015bb7937c07e79f8bd9d754f208427",
+  "s0_fence_blob": "55ec32f51b2c251b2f3500c9d73eb27dc15fc46d",
+  "model": "GPT-6",
+  "session_id_status": "NOT_EXPOSED",
+  "state": "ACK_SOURCE_RECOVERY",
+  "authority": "S0-FENCE reserved allowlist only",
+  "source": {
+    "original_pr": 121,
+    "source_sha": "a81ee51b312a64d27cff496e863a02e874ac14a8",
+    "recovery_manifest": "6ec7d43fdaa63268540f30e80d590d9af85d2988",
+    "recovered_leaves": [
+      {
+        "path": "packages/schema/src/sucafina/files.ts",
+        "blob": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c",
+        "preimage": "ABSENT",
+        "postimage": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c"
+      },
+      {
+        "path": "packages/schema/src/sucafina/files/structures.ts",
+        "blob": "72859baa8ae358038274edd14bb20d9a3334a031",
+        "preimage": "ABSENT",
+        "postimage": "72859baa8ae358038274edd14bb20d9a3334a031"
+      },
+      {
+        "path": "packages/client/src/sucafina/files.ts",
+        "blob": "18d0e2f143fffc965d3b0a632c87f2aa59f7b302",
+        "preimage": "ABSENT",
+        "postimage": "18d0e2f143fffc965d3b0a632c87f2aa59f7b302"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/files.ts",
+        "blob": "a2e1041871a553498b92f159ef9b28c874a3cfb6",
+        "preimage": "ABSENT",
+        "postimage": "a2e1041871a553498b92f159ef9b28c874a3cfb6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts",
+        "blob": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6",
+        "preimage": "ABSENT",
+        "postimage": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6"
+      }
+    ]
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "ci": "NOT_RUN"
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
