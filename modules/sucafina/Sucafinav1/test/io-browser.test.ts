@@ -66,6 +66,9 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(previewBody).toMatchObject({ ok: true })
     await expect(planner.locator("[data-import-notice]")).toContainText("OPEX (1)")
     await submit(page, planner)
+    // The default grid may show forecast or actual, which intentionally hides
+    // budget editors. Inspect the saved imported values in budget mode.
+    await page.goto("http://localhost:4110/sucafina/planner?page=OPEX&mode=budget")
     const importedLine = page.getByRole("row").filter({ hasText: "Browser OPEX fixture" }).first()
     await expect(importedLine).toBeVisible()
     // The grid renders month inputs; its annual total is verified in the exported workbook below.
