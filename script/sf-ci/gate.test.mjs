@@ -1,6 +1,7 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
+import { readFileSync } from "node:fs"
 import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS", counts: { product_executed: 2, failures: 0, errors: 0, skipped: 0 } }))
@@ -75,6 +76,15 @@ test("removing or widening the installed SF browser selection fails closed", () 
     invalid.suites.find((s) => s.id === "CI-APP-BROWSER").selection.testDirectory = testDirectory
     assert.throws(() => validateManifest(invalid), /SF_CI_FAIL_CLOSED/)
   }
+})
+test("CI workflow has one automatic trigger and preserves exhaustive green coverage", () => {
+  const workflow = readFileSync(new URL("../../.github/workflows/sf-ci.yml", import.meta.url), "utf8")
+  assert.match(workflow, /^  pull_request:/m)
+  assert.doesNotMatch(workflow, /^  push:/m)
+  assert.match(workflow, /bun test --timeout 30000 --bail=5/)
+  assert.match(workflow, /sucafina-native --bail=5/)
+  assert.match(workflow, /--max-failures=2/)
+  assert.doesNotMatch(workflow, /--pass-with-no-tests|continue-on-error: true|--retry\s+[1-9]/)
 })
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))

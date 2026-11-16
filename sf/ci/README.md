@@ -16,6 +16,22 @@ and the owner explicitly authorizes required-check migration.
   1,610 criteria, 5 profiles, 18 skills, 8 MCP packs/39 operations and
   AM01–AM06. This CI is not itself acceptance of those six live proofs.
 
+## Failure budget — fast red, complete green
+
+The full Sucafina Bun suite and the SF browser unit directory use
+`--bail=5`, while the three installed Playwright journeys use
+`--max-failures=2`. **This stops only after a real failure.** A successful
+qualification still runs every selected test; a failed/incomplete selection
+never produces a passing receipt or `sf/verify`. This prevents ten
+consecutive 165-second failures from consuming a CI runner merely to repeat
+an already decisive red verdict. For diagnosis, run the named failing test
+with the Linux-only surgical runner. No timeout, permission or expectation
+has been relaxed.
+
+The Linux-only request selector regression runs before product typechecks,
+and repository guards run even if product typechecks fail, so the quality
+of this CI migration can be reviewed separately from SF product failures.
+
 ## Required SF CI
 
 `.github/workflows/sf-ci.yml` intentionally has no path filter and no

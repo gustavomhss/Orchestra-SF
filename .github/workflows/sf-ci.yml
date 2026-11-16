@@ -48,6 +48,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: ./.github/actions/setup-bun
+      - name: Verify test-ci Linux-only request contract
+        run: |
+          set -euo pipefail
+          (cd packages/core && bun test test/test-ci-request.test.ts)
       - name: Verify generated business boundaries
         run: |
           set -euo pipefail
@@ -64,13 +68,12 @@ jobs:
           (cd apps/cli && bun run typecheck)
           (cd packages/app-shell && bun run typecheck)
           (cd packages/app-shell && bun run typecheck:sf-e2e)
-      - name: Verify test-ci Linux-only request contract
-        run: |
-          set -euo pipefail
-          (cd packages/core && bun test test/test-ci-request.test.ts)
       - name: Verify Linux web production build
         run: (cd apps/web && bun run build)
       - name: Security and dependency guards
+        # Run independently from product typecheck failures; keep this job red
+        # when protected files or security boundaries need human approval.
+        if: ${{ !cancelled() }}
         env:
           # PRs compare to their actual target; the isolated pilot compares
           # to its frozen source, not all unrelated canonical changes on dev.
@@ -142,7 +145,7 @@ jobs:
             case "$SF_SUITE_ID" in
               CI-SF)
                 cd "$root/modules/sucafina"
-                bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                bun test --timeout 30000 --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-CLI)
                 # Explicit installed-SF host subset; NOT the upstream distribution
@@ -172,7 +175,7 @@ jobs:
                 cd "$root/packages/app-shell"
                 ORCHESTRA_OMNI_CONTROL=declared bun test --conditions=browser \
                   --preload ../../script/test-omni-control.ts --preload ./happydom.ts \
-                  ./test-browser/sucafina-native --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                  ./test-browser/sucafina-native --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-ATLAS-BUSINESS)
                 # SF's business boundary, catalog, surface and scanner-clock.
@@ -250,7 +253,7 @@ jobs:
           mkdir -p "$evidence"
           export PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.json"
           cd "$root/packages/app-shell"
-          bun run test:e2e:local "$SF_SPEC" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --reporter json,line 2>&1 | tee "$evidence/run.log"
+          bun run test:e2e:local "$SF_SPEC" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line 2>&1 | tee "$evidence/run.log"
           status=$?
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           cd "$root"
