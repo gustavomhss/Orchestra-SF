@@ -31,6 +31,7 @@ import { AuthoringStore } from "@orchestra/relay/authoring/store"
 import { Context, Deferred, Effect, Layer, Schema, Stream, type Scope } from "effect"
 import { tmpdir } from "../../../../../../packages/core/test/fixture/tmpdir.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
+import type { SfDomainValidation } from "../../../product/contracts/runtime.ts"
 import type { RoutinePublicationHost } from "../../../product/routines/publication.ts"
 import { createSfRoutineNativePhaseComposition } from "../../../../../../apps/cli/src/sucafina-product/routine-native-phase-composition.ts"
 import { createSfRoutineNativeGovernance } from "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts"
@@ -67,13 +68,14 @@ function prepare(directory: string) {
     resolveCase: async () => ({ status: "ok" as const, value: structuredClone(state.caseRef) }),
     resolveInputs: async () => ({ status: "ok" as const, value: [] }), revalidateSources: async () => true }
   const registry = createSfRoutineNativeOwnerRegistry(input)
-  const composition = createSfRoutineNativePhaseComposition({ ...input, registry, authority: {
+  const authority: SfDomainValidation = {
     revalidateDomainContext: input.authorize,
     validateDomainContext: async (context, operation, digest) => context.kind === "native" && !!state.native &&
       await state.native.revalidate(context) && state.native.consume(context, operation, digest),
     receiptFor: (context, operation, digest, resultDigest) => context.kind === "native"
       ? state.native?.receiptFor(context, operation, digest, resultDigest) : undefined,
-  } })
+  }
+  const composition = createSfRoutineNativePhaseComposition({ ...input, registry, authority })
   return { state, input, bridge: composition.phase, composition, ui }
 }
 type Trace = { requests: LLMRequest[]; issuers: string[]; holdChild: boolean; childStarted: Deferred.Deferred<void> }
@@ -101,7 +103,7 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
       } }))
     })
     const client = LLMClient.Service.of({ prepare: () => Effect.die("unexpected prepare"), generate: () => Effect.die("unexpected generate"),
-      stream: (request) => Stream.suspend((): Stream.Stream<LLMEvent> => {
+      stream: (request: LLMRequest) => Stream.suspend((): Stream.Stream<LLMEvent> => {
         trace.requests.push(request)
         const text = request.messages.filter((message) => message.role === "user").at(-1)?.content.flatMap((part) => part.type === "text" ? [part.text] : []).join("\n")
         if (!text?.endsWith("planning-child") && request.system.some((part) => part.text.includes("Original source context DATA")) &&
@@ -169,5 +171,5 @@ const setup = Effect.fn("PhaseFixture.setup")(function* (directory: string, prep
   const authoring = yield* AuthoringStore.open(directory, nativeLocation.project.id)
   prepared.state.publication = { publication: { projectID: nativeLocation.project.id, use: (read) => read(authoring),
     skills: () => Effect.die("no workflow skills in component fixture"), acceptance: [] }, authorize: async () => prepared.state.authorized, authorSession: async () => undefined }
-  return { ...prepared, sessions, execution, resources, directory, skills: Context.get(opened, SkillV2.Service) }
+  return { ...prepared, sessions, execution, resources, directory, authoring, skills: Context.get(opened, SkillV2.Service) }
 })
