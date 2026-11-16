@@ -73,6 +73,15 @@ export type SfNativeTransitionCause =
 export type SfNativeTransitionResult =
   | Readonly<{ status: "committed"; route: SfResolvedRoute }>
   | Readonly<{ status: "aborted" | "invalid-link" | "denied" | "unavailable" | "kept-editing" }>
+export type SfNativeTransitionOptions = Readonly<{
+  signal?: AbortSignal
+  /** An owner-bound action cannot re-admit a different principal after an async read. */
+  expectedOwnerKey?: SfOwnerKey
+  /** Inspect the source-resolved target, never just the candidate URL. */
+  admit?: (route: SfResolvedRoute) => boolean
+  /** Second original-source read after F01 resolved but before commit. */
+  preCommit?: (route: SfResolvedRoute, signal: AbortSignal) => Promise<boolean>
+}>
 export type SfNavigationDependencies = Readonly<{
   /** Must resolve the exact ServerConnection from selection.serverKey BEFORE discovery. */
   resolveAuthorizedRoute(href: string, selection: SfOwnerSelection, signal: AbortSignal): Promise<
@@ -103,48 +112,82 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
   const returns = new Map<string, Readonly<{ ownerKey: SfOwnerKey; href: SfHref }>>()
   let generation = 0
   let inflight: AbortController | undefined
+  let resumeFocus: Readonly<{
+    ownerKey: SfOwnerKey
+    accessRevision: string
+    caseRef: string
+    sourceVersion: number
+    returnRef: string
+  }> | undefined
 
   const invalidate = () => {
     generation += 1
     inflight?.abort()
     inflight = undefined
   }
-  const requestNativeTransition = async (href: string, cause: SfNativeTransitionCause): Promise<SfNativeTransitionResult> => {
+  const requestNativeTransition = async (
+    href: string, cause: SfNativeTransitionCause, options?: SfNativeTransitionOptions,
+  ): Promise<SfNativeTransitionResult> => {
     invalidate()
+    if (options?.signal?.aborted) return { status: "aborted" }
     const epoch = generation
     const abort = new AbortController()
     inflight = abort
-    const selected = resolveSfUrlSelection(href, deps.currentHref(), deps.selected())
-    if (selected.status === "invalid-link") return { status: "invalid-link" }
-    // Explicit URL A is never filled from persisted selection B, including after failed discovery.
-    const resolved = await deps.resolveAuthorizedRoute(href, selected.selection, abort.signal).catch(() => {
-      if (abort.signal.aborted) return { status: "unavailable" as const }
-      console.error("Sucafina route resolution failed")
-      return { status: "unavailable" as const }
-    })
-    if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
-    if (resolved.status !== "authorized") return { status: resolved.status }
-    // Even an incorrectly wired router cannot turn a deep link for A into B.
-    if (resolved.route.ownerSelection.serverKey !== selected.selection.serverKey ||
-        resolved.route.ownerSelection.projectId !== selected.selection.projectId ||
-        resolved.route.ownerSelection.installationId !== selected.selection.installationId) {
-      return { status: "invalid-link" }
-    }
-    const outgoing = deps.currentOwnerKey()
-    const changingOwner = outgoing !== undefined && outgoing !== resolved.ownerKey
-    if (changingOwner && deps.hasDirtyDrafts()) {
-      const discard = await deps.confirmDiscard()
+    const cancel = () => abort.abort()
+    options?.signal?.addEventListener("abort", cancel, { once: true })
+    if (options?.signal?.aborted) abort.abort()
+    try {
+      if (abort.signal.aborted) return { status: "aborted" }
+      const selected = resolveSfUrlSelection(href, deps.currentHref(), deps.selected())
+      if (selected.status === "invalid-link") return { status: "invalid-link" }
+      // Explicit URL A is never filled from persisted selection B.
+      const resolved = await deps.resolveAuthorizedRoute(href, selected.selection, abort.signal).catch(() => {
+        if (!abort.signal.aborted) console.error("Sucafina route resolution failed")
+        return { status: "unavailable" as const }
+      })
       if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
-      if (!discard) return { status: "kept-editing" }
+      if (resolved.status !== "authorized") return { status: resolved.status }
+      if (resolved.route.ownerSelection.serverKey !== selected.selection.serverKey ||
+          resolved.route.ownerSelection.projectId !== selected.selection.projectId ||
+          resolved.route.ownerSelection.installationId !== selected.selection.installationId)
+        return { status: "invalid-link" }
+      if (options?.expectedOwnerKey &&
+          (resolved.ownerKey !== options.expectedOwnerKey ||
+           deps.currentOwnerKey() !== options.expectedOwnerKey))
+        return { status: "denied" }
+      if (options?.admit && !options.admit(resolved.route)) return { status: "denied" }
+      if (options?.preCommit) {
+        const stillAuthorized = await options.preCommit(resolved.route, abort.signal)
+        if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
+        if (!stillAuthorized) return { status: "denied" }
+      }
+      const outgoing = deps.currentOwnerKey()
+      const changingOwner = outgoing !== undefined && outgoing !== resolved.ownerKey
+      if (changingOwner && deps.hasDirtyDrafts()) {
+        const discard = await deps.confirmDiscard()
+        if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
+        if (!discard) return { status: "kept-editing" }
+      }
+      // A denied/stale reply or a changed owner may never commit after preflight.
+      if (abort.signal.aborted || epoch !== generation ||
+          options?.signal?.aborted ||
+          (options?.expectedOwnerKey && (
+            deps.currentOwnerKey() !== options.expectedOwnerKey ||
+            resolved.ownerKey !== options.expectedOwnerKey
+          )) ||
+          (options?.admit && !options.admit(resolved.route))) return { status: "aborted" }
+      if (changingOwner) {
+        deps.invalidateOwner("owner-changed")
+        retained.clear()
+        returns.clear()
+        resumeFocus = undefined
+      }
+      batch(() => deps.commit({ route: resolved.route, selection: selected.selection, ownerKey: resolved.ownerKey, cause }))
+      return { status: "committed", route: resolved.route }
+    } finally {
+      options?.signal?.removeEventListener("abort", cancel)
+      if (inflight === abort) inflight = undefined
     }
-    // No read, stale promise, or unapproved source may repopulate after this fence.
-    if (changingOwner) {
-      deps.invalidateOwner("owner-changed")
-      retained.clear()
-      returns.clear()
-    }
-    batch(() => deps.commit({ route: resolved.route, selection: selected.selection, ownerKey: resolved.ownerKey, cause }))
-    return { status: "committed", route: resolved.route }
   }
   const key = (ownerKey: SfOwnerKey, surfaceId: SurfaceId, accessRevision: string, scope: string) =>
     JSON.stringify([ownerKey, surfaceId, accessRevision, scope])
@@ -169,8 +212,42 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
     returns.delete(reference)
     return value?.ownerKey === ownerKey ? value.href : undefined
   }
-  const dispose = () => { invalidate(); retained.clear(); returns.clear() }
-  return Object.freeze({ requestNativeTransition, remember, restore, rememberReturn, consumeReturn, invalidate, dispose })
+  const clearResumeFocus = (reference?: string) => {
+    // An older, aborted attempt may never erase a later attempt's returnRef.
+    if (reference && resumeFocus?.returnRef !== reference) return
+    if (resumeFocus) consumeReturn(resumeFocus.returnRef, resumeFocus.ownerKey)
+    resumeFocus = undefined
+  }
+  const rememberResumeFocus = (input: Readonly<{
+    ownerKey: SfOwnerKey; accessRevision: string; caseRef: string
+    sourceVersion: number; returnHref: SfHref
+  }>) => {
+    clearResumeFocus()
+    const returnRef = rememberReturn(input.ownerKey, input.returnHref)
+    resumeFocus = {
+      ownerKey: input.ownerKey, accessRevision: input.accessRevision,
+      caseRef: input.caseRef, sourceVersion: input.sourceVersion, returnRef,
+    }
+    return returnRef
+  }
+  const claimResumeFocus = (input: Readonly<{
+    ownerKey: SfOwnerKey; accessRevision: string; caseRef: string
+    sourceVersion: number; returnHref: SfHref
+  }>): boolean => {
+    const pending = resumeFocus
+    if (!pending ||
+        pending.ownerKey !== input.ownerKey ||
+        pending.accessRevision !== input.accessRevision ||
+        pending.caseRef !== input.caseRef ||
+        pending.sourceVersion !== input.sourceVersion) return false
+    resumeFocus = undefined
+    return consumeReturn(pending.returnRef, input.ownerKey) === input.returnHref
+  }
+  const dispose = () => { invalidate(); retained.clear(); clearResumeFocus(); returns.clear() }
+  return Object.freeze({
+    requestNativeTransition, remember, restore, rememberReturn, consumeReturn,
+    rememberResumeFocus, claimResumeFocus, clearResumeFocus, invalidate, dispose,
+  })
 }
 
 export type SfNativeNavigationState = ReturnType<typeof createSfNavigationState>

@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.parallel227.handoff.v1",
+  "mission": 227,
+  "epoch": "shared-closure-e1-browser227",
+  "branch": "sf-today-resume",
+  "base_product": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "start_head": "8bd1035dba47152733e042492891b7a45b8bb7ac",
+  "start_tree": "5c8a6e6a37307cc4b18965e1f833c6bae5220526",
+  "source_packet": {
+    "commit": "3c04b0e196a10bb4d3c4c98f2ea522fbe5bbdc4b",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/227.json"
+  },
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "immutable_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "finding": [
+    "C-004",
+    "PRER01-146-005"
+  ],
+  "prepost": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+      "pre": "23a5da80dd837d5113e53ba6ece1ada5e97d0a0a",
+      "post": "6e74148eb42efb18f15ecf25d098cbe1bf5f038d"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts",
+      "pre": null,
+      "post": "44c3ad22099b2a20047fe79dbc058cc7a37bbd63"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+      "pre": "592eef8206c665a1fc908934e258b286fe85609e",
+      "post": "876f95feadd07d6628d13a6c34e454a5ce382ea4"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "pre": "8b949f966725f8a7d22a486e3391f79deecce258",
+      "post": "2a993c4d30e63cb534326d5586fe2c871b340d1b"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+      "pre": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+      "post": "7e66c610cd4bbb8e27e4c16a239b2142d5b208ba"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts",
+      "pre": null,
+      "post": "9fae974a321af6c863c8749600d42e5271bfa63f"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+      "pre": "335ffccb6aa231a13700f9f0f8bd76e4f3ee8694",
+      "post": "340fbae98d8245cf571af266a1c447b226fc98ac"
+    }
+  ],
+  "behavior": {
+    "home_preserved": "Existing source-backed UI29 cards kept; SfTodayResumePort already in Home, now conditionally injected via real context navigation binding",
+    "original_preflight": "projection.case original producer GET before F01 resolution and AGAIN immediately before F01 commit; caseRef remains opaque and never compared to internal case.id; compare incarnation, internal case.id and source version across source reads",
+    "authority": "Strict current owner tuple, principal/policy/access stamps, generation, original-case read availability and existing F01 authorized UI34 route resolution; never infer a grant",
+    "ref": "Original caseRef encoded through existing encodeSfRouteRef and frozen UI34 template, no title or arbitrary URL",
+    "async": "AbortSignal, current owner, source stamp and generation checked before/after async reads and immediately before commit; no late navigation",
+    "return_focus": "F01 owner-bound one-shot returnRef + exact owner/accessRevision/caseRef/version/HOME href; focus restored after genuine browser back, stale returnRef cancelled without erasing a newer attempt",
+    "removed": "denied/not-found/stale/malformed case rows cleared/hidden without mutating independent routines/meetings/material changes",
+    "a11y": "Existing native button pointer+Enter/Space, focus callback and original bilingual keys, no new CSS or fabricated states"
+  },
+  "out_of_lease_consumer": {
+    "mission": 211,
+    "pr": 191,
+    "target_branch": "sf-closure-bundle",
+    "artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/INERT-211-BINDING.md",
+    "binding": "Mount original F01 SfContextProvider with the singleton owner navigation state as SfContextDependencies.navigation; preserve original F01 host resolution, own drafts and route commit"
+  },
+  "tests": {
+    "browser_source": "NOT_RUN",
+    "installed_original": "NOT_RUN",
+    "reason": "No authorized execution in mission227; 223 and 190 own hosted CI and compiler; installed F04 needs real Microsoft source and case actor",
+    "D01": "NOT_RUN_NOT_CLAIMED"
+  },
+  "requests": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/REQUEST-223.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/REQUEST-190.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/RECHECK-207.json"
+  ],
+  "next": "211 consumes exact scoped pre/post into PR191 on sf-closure-bundle, connects F01 host binding, returns product C SHA/tree; 190 compiler/generation selection and 223 sole product CI on identical C; 207 cold review; 189/S0 decision only after evidence",
+  "global_release": false,
+  "native_goal": "paused"
+}

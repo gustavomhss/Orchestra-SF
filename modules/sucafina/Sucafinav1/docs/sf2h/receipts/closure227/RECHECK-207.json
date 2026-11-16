@@ -1,0 +1,30 @@
+{
+  "schema": "sf2h.parallel227.recheck207.v1",
+  "mission": 227,
+  "reviewer": 207,
+  "on": "211-composed same C after 227 handoff",
+  "finding": [
+    "S1-R1-207-005",
+    "PRE-R01-146-005",
+    "C-004"
+  ],
+  "rechecks": [
+    "UI29 canResume only when real SfContextDependencies.navigation singleton is injected; no stub or invented grant",
+    "Source/home caseRef version from original projection.home; projection.case typed original GET resolves internal id/incarnation/version twice; no cross-owner fallback",
+    "Route UI34 exact manifest, decoded original caseRef and same installed owner; F01 resolveAuthorizedRoute independently authorizes; navigation commit never on stale/denied/removed/ref malformed",
+    "Late preflight response abort on owner/generation/current-stamp change; stale/denied case not displayed; no draft crosses owners",
+    "Owner/access scoped one-shot returnRef consumed on Home render, correct focus on browser-back, keyboard Enter and pointer",
+    "READ01 independent unavailable/empty/filter; 320-1440, 200/400 text/zoom and en/pt-BR originals unchanged",
+    "Do not accept unit/source metadata or synthetic actors as installed F04/D01/GLOBAL_RELEASE evidence"
+  ],
+  "evidence_required": [
+    "source SHA/branch/PR",
+    "exact prepost",
+    "authenticated installed original cases",
+    "223 run/job/artifact",
+    "190 compiler and source boundary",
+    "independent cold review disposition"
+  ],
+  "status": "RECHECK_NOT_RUN",
+  "GLOBAL_RELEASE": false
+}

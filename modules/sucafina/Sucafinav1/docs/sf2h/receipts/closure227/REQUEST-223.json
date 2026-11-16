@@ -1,0 +1,144 @@
+{
+  "schema": "sf2h.parallel227.product-ci223.request.v1",
+  "mission": 227,
+  "recipient": 223,
+  "target": "C product HEAD of sf-closure-bundle after 211 consumes sf-today-resume",
+  "pr": 191,
+  "source_branch": "sf-today-resume",
+  "source_code_prepost": [
+    [
+      "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+      "23a5da80dd837d5113e53ba6ece1ada5e97d0a0a",
+      "6e74148eb42efb18f15ecf25d098cbe1bf5f038d"
+    ],
+    [
+      "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts",
+      null,
+      "44c3ad22099b2a20047fe79dbc058cc7a37bbd63"
+    ],
+    [
+      "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+      "592eef8206c665a1fc908934e258b286fe85609e",
+      "876f95feadd07d6628d13a6c34e454a5ce382ea4"
+    ],
+    [
+      "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "8b949f966725f8a7d22a486e3391f79deecce258",
+      "2a993c4d30e63cb534326d5586fe2c871b340d1b"
+    ],
+    [
+      "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+      "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+      "7e66c610cd4bbb8e27e4c16a239b2142d5b208ba"
+    ],
+    [
+      "packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts",
+      null,
+      "9fae974a321af6c863c8749600d42e5271bfa63f"
+    ],
+    [
+      "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+      "335ffccb6aa231a13700f9f0f8bd76e4f3ee8694",
+      "340fbae98d8245cf571af266a1c447b226fc98ac"
+    ]
+  ],
+  "run_policy": "REQUEST_ONLY_NOT_DISPATCHED_BY_227",
+  "instructions": "Run all 8 existing product minimum recipes on the exact accepted C, then these additive causal selectors; do not reuse older C runs or claim component tests as D01",
+  "selectors": [
+    {
+      "key": "U01_BROWSER_NEGATIVE",
+      "cwd": "packages/app-shell",
+      "runner": "bun",
+      "argv": [
+        "test",
+        "--conditions=browser",
+        "--preload",
+        "../../script/test-omni-control.ts",
+        "--preload",
+        "./happydom.ts",
+        "./test-browser/sucafina-native/today-resume227.test.ts"
+      ],
+      "mustObserve": [
+        "UI34 manifest exact opaque caseRef",
+        "malformed ref rejected",
+        "source-case GET typed read",
+        "projection.home read remains distinct"
+      ]
+    },
+    {
+      "key": "F01_NAV_REGRESSION",
+      "cwd": "packages/app-shell",
+      "runner": "bun",
+      "argv": [
+        "test",
+        "--conditions=browser",
+        "--preload",
+        "../../script/test-omni-control.ts",
+        "--preload",
+        "./happydom.ts",
+        "./test-browser/sucafina-native/context.test.ts"
+      ],
+      "mustObserve": [
+        "Owner A link never falls back to B",
+        "dirty drafts discard or retained",
+        "late source response cannot commit",
+        "owner/access-scoped retained return"
+      ]
+    },
+    {
+      "key": "U01_INSTALLED_F04",
+      "cwd": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/native/journeys/u01.spec.ts"
+      ],
+      "mustObserve": [
+        "Real original sf-home projection and caseRef/version",
+        "two real projection.case reads prior to admitted UI34",
+        "F01 owner tuple + principal + incarnation + version preserved",
+        "pointer and Enter reopen real UI34 content, browser back focus",
+        "one held original read cancelled on departure; no late UI34",
+        "320/640/768/1024/1280/1440 CSS and 200/400 percent reflow",
+        "independent meetings/material change unavailable; READ01 preserved"
+      ]
+    },
+    {
+      "key": "F04_NEGATIVE_ORIGINAL_REVOKED",
+      "cwd": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/native/journeys/u01.spec.ts"
+      ],
+      "mustObserve": [
+        "Real preflight denial, missing/removed source case, stale incarnation/version",
+        "actual F01 owner switch with draft quarantine/revoke (when installed actor available)",
+        "no route commit/no old case content after accessRevision or principal changes"
+      ],
+      "requiresRealSourceActor": true
+    }
+  ],
+  "compiler_dependency": "190 runs hosted typecheck and official generation only if public API/HttpApi changed on composed C; 227 did not edit schema/ClientApi/generated SDK",
+  "inputs_minimum": [
+    "211 accepted exact C SHA/tree after integration",
+    "real SF_NATIVE_INSTALLED_MANIFEST 0600 and original Microsoft authorized requester",
+    "real original producer projection.home cases and projection.case, with current caseRef, id, incarnation, version",
+    "genuine existing F01 host navigation bound and resolver using installed principal",
+    "original source revocation/owner switch actor for cross-owner negatives"
+  ],
+  "blocked_proofs": "If actual F04/auth source absent, mark INSTALLED_NOT_RUN_BLOCKED but run independent source/browser selectors; never fabricate actor or case",
+  "expected_evidence": [
+    "run_id",
+    "job_id",
+    "artifact_id",
+    "C_sha",
+    "C_tree",
+    "selector",
+    "source pre/post",
+    "exact assertion and failure reason",
+    "PASS/FAIL/NOT_RUN per selector"
+  ],
+  "status": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}

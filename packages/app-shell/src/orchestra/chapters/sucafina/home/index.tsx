@@ -22,13 +22,13 @@ type ResumeRequest = Readonly<{
   focusCaseRef: HomeCase["caseRef"]
 }>
 type ResumeResult = Readonly<{
-  status: "committed" | "aborted" | "kept-editing" | "denied" | "not-found" | "invalid-link" | "unavailable"
+  status: "committed" | "aborted" | "kept-editing" | "denied" | "not-found" | "invalid-link" | "unavailable" | "stale"
 }>
 /**
  * Pending I00/F01 public navigation seam, NOT an existing provider guarantee.
  * The callback must build/reauthorize UI34, mint an owner-bound returnRef and
  * restore focus from focusCaseRef. Never accept a client-constructed href.
- * Until 132 installs this exact port, no case can be opened from the leaf.
+ * Installed by F01's provider only when I00 supplies true owner navigation.
  */
 export type SfTodayResumePort = Readonly<{
   resumeCase(request: ResumeRequest, signal: AbortSignal): Promise<ResumeResult>
@@ -124,7 +124,8 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
     return routines?.status === "ok" ? routines.items : []
   }
   const caseState = (): SfUiState => {
-    if (resume.status === "denied" || resume.status === "not-found" || resume.status === "invalid") return resume.status
+    if (resume.status === "denied" || resume.status === "not-found" ||
+        resume.status === "invalid" || resume.status === "stale") return resume.status
     const cases = data()?.cases
     return cases?.status !== "ok" ? "unavailable" : cases.items.length ? "ready" : "empty"
   }
@@ -162,8 +163,9 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
         setResume({ caseRef: null, status: "idle" })
         return
       }
-      if (result.status === "denied" || result.status === "not-found") {
-        // A target-level revocation or removal must not leave that case's
+      if (result.status === "denied" || result.status === "not-found" ||
+          result.status === "invalid-link" || result.status === "stale") {
+        // Revoked, removed, malformed or version-changed cases must not leave their
         // previously authorized title/version in the in-memory home list.
         const current = screen.data
         if (current?.cases.status === "ok") {
@@ -224,6 +226,7 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                 caseState() === "denied" ? "sf.common.noAccess"
                 : caseState() === "not-found" ? "sf.common.removed"
                 : caseState() === "invalid" ? "sf.common.invalidLink"
+                : caseState() === "stale" ? "sf.common.stale"
                 : data()?.cases.status === "ok" && !caseItems().length ? "sf.common.empty"
                 : "sf.ui29.casesUnavailable"
               )}
@@ -246,6 +249,25 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                             class="mx-btn mt-2"
                             data-sf-resume-case="authorized"
                             aria-label={t(key("sf.ui29.resumeCaseLabel"), { title: item.title })}
+                            ref={(button) => {
+                              const state = owner.state()
+                              const ready = owner.ready()
+                              const generation = owner.generation()
+                              if (state.status !== "ready" || !ready ||
+                                  !owner.claimResumeFocus?.({
+                                    caseRef: item.caseRef,
+                                    sourceVersion: item.version,
+                                    ownerKey: state.ownerKey,
+                                    accessRevision: ready.context.stamp.accessRevision,
+                                    returnRoute: props.route,
+                                  })) return
+                              queueMicrotask(() => {
+                                const latest = owner.state()
+                                if (button.isConnected && owner.generation() === generation &&
+                                    latest.status === "ready" && latest.ownerKey === state.ownerKey)
+                                  button.focus()
+                              })
+                            }}
                             disabled={resume.status === "loading"}
                             onClick={() => beginResume(item)}
                           >

@@ -7,6 +7,8 @@ import type {
 import type { SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared/draft"
+import type { SfNativeNavigationState } from "../navigation-state"
+import type { SfTodayResumePort } from "../home"
 
 export type {
   SfContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
@@ -67,6 +69,8 @@ export type SfContextDependencies = Readonly<{
   resolveTransportIdentity(selection: SfOwnerSelection): string
   createDraft<Value>(input: SfDraftInput<Value>): SfDraftController<Value>
   revalidateDraft(input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal): Promise<SfDraftRevalidation>
+  /** I00 supplies only the genuine owner-bound F01 shell navigation instance. */
+  navigation?: SfNativeNavigationState
 }>
 export type SfContextProviderProps = Readonly<{
   selection: Accessor<SfOwnerSelection>
@@ -79,4 +83,14 @@ export type SfContextHandle = Readonly<{
   ready: Accessor<Readonly<{ context: SfContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
   reload: () => Promise<void>
   invalidate: (reason: "logout" | "revoked" | "owner-changed" | "host-changed") => void
+  /** Only installed with the real F01 navigation; no optimistic fallback. */
+  resumeCase?: SfTodayResumePort["resumeCase"]
+  /** Consumes an owner/access-scoped returnRef once after Home renders. */
+  claimResumeFocus?: (input: Readonly<{
+    caseRef: string
+    sourceVersion: number
+    ownerKey: SfOwnerKey
+    accessRevision: string
+    returnRoute: SfResolvedRoute<"UI29">
+  }>) => boolean
 }>

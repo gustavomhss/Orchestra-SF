@@ -1,0 +1,37 @@
+{
+  "schema": "sf2h.parallel227.compiler190.request.v1",
+  "mission": 227,
+  "recipient": 190,
+  "target": "211 composed C, not raw 227 branch",
+  "pr": 191,
+  "changes": [
+    "F01 SfContextDependencies optional navigation: SfNativeNavigationState",
+    "F01 SfContextHandle optional resumeCase/claimResumeFocus",
+    "F01 navigation-state extended opt-in AbortSignal/owner/admit/preCommit callback",
+    "new source case preflight and owner-scoped return focus",
+    "Home status stale handling and installed Playwright additions"
+  ],
+  "hosted_checks": [
+    "packages/app-shell bun run typecheck",
+    "packages/app-shell bun run typecheck:sf-e2e",
+    "packages/app-shell browser source suite/AST",
+    "F01 source spec route signatures and TS import cycles in compiled composed C",
+    "all existing G7/C guard recipes on true candidate C"
+  ],
+  "public_api_change": false,
+  "http_api_change": false,
+  "sdk_generated_change": false,
+  "codegen_rule": "No generated source edit. Re-run official generator only if 211 changes public schema/HttpApi when composing; publish actual generated blobs, run/job/artifact and exact C provenance.",
+  "expected": [
+    "C_sha",
+    "C_tree",
+    "command",
+    "exit_code",
+    "logs",
+    "actual line selectors",
+    "AST/route signature findings",
+    "official SDK generation if required"
+  ],
+  "status": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}

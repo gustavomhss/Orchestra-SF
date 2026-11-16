@@ -4,6 +4,7 @@ import { createStore, reconcile } from "solid-js/store"
 import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { createSfOwnerDrafts } from "./drafts"
+import { createSfTodayResumePort, type SfCurrentResumeOwner } from "../navigation-state/resume"
 import type {
   SfContext, SfContextHandle, SfContextProviderProps, SfContextState,
   SfOwnerIdentity, SfSurfaceProps,
@@ -43,6 +44,8 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
 
   const fence = (selection: SfOwnerSelection) => {
     inFlight?.abort()
+    // A reload or owner transition cancels pending F01 route admission.
+    props.dependencies.navigation?.invalidate()
     inFlight = new AbortController()
     batch(() => {
       setStore("generation", (value) => value + 1)
@@ -67,6 +70,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     const { abort, generation } = fence(selection)
     const changingSelection = !sameSelection(prior.selection, selection)
     if (changingSelection) {
+      props.dependencies.navigation?.clearResumeFocus()
       current?.drafts.revoke("owner-changed")
       current = undefined
       currentOwner = undefined
@@ -202,6 +206,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   }
   const invalidate: SfContextHandle["invalidate"] = (reason) => {
     fence(props.selection())
+    props.dependencies.navigation?.clearResumeFocus()
     current?.drafts.revoke(reason === "logout" ? "logout" : reason === "revoked" ? "access-revoked" : "owner-changed")
     current = undefined
     currentOwner = undefined
@@ -210,6 +215,25 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     const selection = props.selection()
     publish(store.generation, { status: reason === "revoked" ? "denied" : "resolving", selection })
   }
+  const currentResumeOwner = (): SfCurrentResumeOwner | undefined => {
+    const state = store.state
+    const active = store.active
+    if (disposed || state.status !== "ready" || !active ||
+        active.drafts.state() !== "active") return undefined
+    return {
+      ownerKey: state.ownerKey,
+      generation: store.generation,
+      selection: state.selection,
+      stamp: active.context.stamp,
+      transport: active.transport,
+      caseReadReady: active.context.availability.some((resource) =>
+        resource.operations.some((operation) =>
+          operation.operationId === "projection.case" &&
+          operation.state === "ready" && operation.operational)),
+    }
+  }
+  const navigation = props.dependencies.navigation
+  const resumePort = navigation ? createSfTodayResumePort(navigation, currentResumeOwner) : undefined
   const handle: SfContextHandle = {
     state: () => store.state,
     generation: () => store.generation,
@@ -219,11 +243,36 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     },
     reload: () => load(props.selection()),
     invalidate,
+    ...(resumePort ? {
+      resumeCase: resumePort.resumeCase,
+      claimResumeFocus: (input: Parameters<NonNullable<SfContextHandle["claimResumeFocus"]>>[0]) => {
+        const owner = currentResumeOwner()
+        if (!owner || !owner.caseReadReady ||
+            owner.ownerKey !== input.ownerKey ||
+            owner.stamp.accessRevision !== input.accessRevision ||
+            input.returnRoute.surfaceId !== "UI29" ||
+            input.returnRoute.kind !== "entry" ||
+            input.returnRoute.pathname !== "/orchestra/sf-home" ||
+            input.returnRoute.ownerSelection.serverKey !== owner.selection.serverKey ||
+            input.returnRoute.ownerSelection.projectId !== owner.selection.projectId ||
+            input.returnRoute.ownerSelection.installationId !== owner.selection.installationId)
+          return false
+        return navigation!.claimResumeFocus({
+          ownerKey: owner.ownerKey,
+          accessRevision: owner.stamp.accessRevision,
+          caseRef: input.caseRef,
+          sourceVersion: input.sourceVersion,
+          returnHref: input.returnRoute.href,
+        })
+      },
+    } : {}),
   }
   createEffect(() => { const selection = props.selection(); void load(selection) })
   onCleanup(() => {
     disposed = true
     inFlight?.abort()
+    navigation?.invalidate()
+    navigation?.clearResumeFocus()
     current?.drafts.revoke("owner-changed")
     current = undefined
   })
