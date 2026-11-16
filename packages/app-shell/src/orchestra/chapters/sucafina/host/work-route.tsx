@@ -28,7 +28,6 @@ export function parseWorkRouteQuery(params: URLSearchParams, candidate: SfNative
 }
 export function workRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-work" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
-  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
   const operations = candidate.surfaceId === "UI30" ? [SfWork.operations["projection.work-selection"].operationId, SfCollaboration.operations["collaboration.work-list"].operationId] :
     candidate.surfaceId === "UI32" ? [candidate.kind === "entry" ? SfWork.operations["views.open"].operationId : SfWork.operations["views.list"].operationId] :
     candidate.surfaceId === "UI51" ? [SfCollaboration.operations["collaboration.relation-read"].operationId] :

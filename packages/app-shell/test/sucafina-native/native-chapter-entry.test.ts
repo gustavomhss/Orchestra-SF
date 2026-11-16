@@ -3,7 +3,7 @@ import type { SfHref, SfOwnerKey, SfOwnerSelection, SfRef, SfResolvedRoute, SfSe
 import type { SfContextState } from "../../src/orchestra/chapters/sucafina/context/contracts"
 import { advancedNavigation } from "../../src/orchestra/navigation"
 import { matchSfNativeRoutePath, sfNativeRouteSpecs } from "../../src/orchestra/chapters/sucafina/route-registry"
-import { bindSfNativeChapterNavigation, openSfNativeChapter, requestSfNativeChapterNavigation,
+import { bindSfNativeChapterNavigation, openSfNativeChapter, rejectInvalidSfOwnerQuery, requestSfNativeChapterNavigation,
   sfNativeChapterEntry, sfNativeOwnerChapterRequest, sfCaptureReadyOwner, sfReadyOwnerSelection, sfSameReadyOwnerSnapshot,
   transitionSfNativeChapter } from "../../src/orchestra/chapters/sucafina/host/native-chapter-entry"
 import { createSfNavigationState } from "../../src/orchestra/chapters/sucafina/navigation-state"
@@ -95,6 +95,19 @@ describe("native chapter entry", () => {
     try { expect(await requestSfNativeChapterNavigation(request)).toBe("blocked") }
     finally { release() }
     expect(await requestSfNativeChapterNavigation(request)).toBe("unmounted")
+  })
+  test("invalid owner syntax preserves the live owner and prior editor", () => {
+    const events: string[] = []
+    const deps = { restore: (href: string) => events.push(`restore:${href}`), notify: () => events.push("invalid"),
+      initialInvalid: () => events.push("unmount") }
+    rejectInvalidSfOwnerQuery({ ownerMounted: true, selectionPresent: true, previousHref: "/orchestra/sf-home" }, deps)
+    expect(events).toEqual(["restore:/orchestra/sf-home", "invalid"])
+    events.length = 0
+    rejectInvalidSfOwnerQuery({ ownerMounted: true, selectionPresent: false }, deps)
+    expect(events).toEqual(["invalid"])
+    events.length = 0
+    rejectInvalidSfOwnerQuery({ ownerMounted: false, selectionPresent: false }, deps)
+    expect(events).toEqual(["unmount"])
   })
   test("sidebar enters through the real F01 transition and cannot commit a changed owner", async () => {
     const selection = { serverKey: "server" as SfServerKey, projectId: "project" as SfRef, installationId: "install" as SfRef } satisfies SfOwnerSelection

@@ -3,6 +3,7 @@ import type { SfContext } from "@orchestra/schema/sucafina/context"
 import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { decisionPagesRouteAvailable, parseDecisionPagesRouteQuery } from "../../src/orchestra/chapters/sucafina/host/decisions-pages-route"
+import { sourceDestinations } from "../../test/sucafina-native/source-context-fixture"
 
 describe("decision page routing", () => {
   test("retains canonical case and detail selectors and rejects controls", () => {
@@ -16,11 +17,11 @@ describe("decision page routing", () => {
     }
     expect(matchSfNativeRoutePath(`${root}/alternatives/${encodeSfRouteRef("alternative")}`)).toMatchObject({ surfaceId: "UI35", kind: "detail", parameters: { caseRef: "case", alternativeRef: "alternative" } })
   })
-  test("case projection admission requires a readable destination", () => {
+  test("case projection admission uses the actual CAP-only destination catalog", () => {
     const candidate = matchSfNativeRoutePath(`/orchestra/sf-decisions/${encodeSfRouteRef("case")}/assumptions`)!
-    const context = { destinations: [{ capabilityId: "UI36", canRead: true }], availability: [{ family: "decisions", resource: "case-intent", operations: [{ operationId: "projection.case", state: "ready", operational: true }] }] } as unknown as SfContext
+    const context = { destinations: sourceDestinations, availability: [{ family: "decisions", resource: "case-intent", operations: [{ operationId: "projection.case", state: "ready", operational: true }] }] } as unknown as SfContext
     expect(decisionPagesRouteAvailable(context, candidate)).toBe(true)
-    expect(decisionPagesRouteAvailable({ ...context, destinations: [{ ...context.destinations[0]!, canRead: false }] }, candidate)).toBe(false)
+    expect(decisionPagesRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [{ ...context.availability[0]!.operations[0]!, operational: false }] }] }, candidate)).toBe(false)
     expect(decisionPagesRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
   })
 })

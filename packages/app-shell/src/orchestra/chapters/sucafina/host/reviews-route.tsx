@@ -27,7 +27,6 @@ export function parseReviewsRouteQuery(params: URLSearchParams, candidate: SfNat
 }
 export function reviewsRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
-  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
   const id = candidate.surfaceId === "UI47" ? SfReviews["projection.review"].operationId : SfReviews["dashboard.dashboard-review"].operationId
   if (!context.availability.some((resource) => resource.family === "reviews" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))) return false
   if (candidate.surfaceId !== "UI50") return true

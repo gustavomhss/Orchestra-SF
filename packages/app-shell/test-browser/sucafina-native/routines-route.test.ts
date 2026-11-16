@@ -3,6 +3,7 @@ import type { SfContext } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
 import { parseRoutinesRouteQuery, routinesRouteAvailable } from "../../src/orchestra/chapters/sucafina/host/routines-route"
+import { sourceDestinations } from "../../test/sucafina-native/source-context-fixture"
 
 describe("routine routes", () => {
   test("keeps original refs and validates case selector syntax", () => {
@@ -12,11 +13,11 @@ describe("routine routes", () => {
     for (const query of ["case=", "case=x&case=y", "server=s", "returnTo=x"])
       expect(parseRoutinesRouteQuery(new URLSearchParams(query), candidate)).toBeUndefined()
   })
-  test("requires destination and exact operational source", () => {
+  test("requires the exact operational source with CAP-only destinations", () => {
     const candidate = matchSfNativeRoutePath(`/orchestra/sf-routines/runs/${encodeSfRouteRef("run")}`)!
-    const context = { destinations: [{ capabilityId: "UI65", canRead: true }], availability: [{ family: "intelligence", resource: "routine-runs", operations: [{ operationId: "projection.routine", state: "ready", operational: true }] }] } as unknown as SfContext
+    const context = { destinations: sourceDestinations, availability: [{ family: "intelligence", resource: "routine-runs", operations: [{ operationId: "projection.routine", state: "ready", operational: true }] }] } as unknown as SfContext
     expect(routinesRouteAvailable(context, candidate)).toBe(true)
     expect(routinesRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
-    expect(routinesRouteAvailable({ ...context, destinations: [{ ...context.destinations[0]!, canRead: false }] }, candidate)).toBe(false)
+    expect(routinesRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [{ ...context.availability[0]!.operations[0]!, operational: false }] }] }, candidate)).toBe(false)
   })
 })

@@ -32,6 +32,17 @@ export function sfNativeOwnerChapterRequest(chapter: string, selection: SfOwnerS
     installation: selection.installationId }).toString()
 }
 
+/** Invalid owner syntax is not permission to retire an already-mounted owner. */
+export function rejectInvalidSfOwnerQuery(input: Readonly<{ ownerMounted: boolean; selectionPresent: boolean; previousHref?: string }>,
+  deps: Readonly<{ restore: (href: string) => void; notify: () => void; initialInvalid: () => void }>): void {
+  if (input.ownerMounted || input.selectionPresent) {
+    if (input.previousHref) deps.restore(input.previousHref)
+    deps.notify()
+    return
+  }
+  deps.initialInvalid()
+}
+
 /** Read only the verified ready snapshot; never join discovery from another owner epoch. */
 export function sfReadyOwnerSelection(state: Extract<SfContextState, { status: "ready" }>): SfOwnerSelection | undefined {
   if (!state.ownerKey || !state.owner.serverKey || !state.owner.transportIdentity || !state.binding.projectId || !state.binding.installationId ||

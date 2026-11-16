@@ -63,7 +63,7 @@ import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
 import { createSfDesktopOriginBridge238 } from "./desktop-origin-bridge238"
-import { bindSfNativeChapterNavigation, confirmSfOwnerExit, sfCaptureReadyOwner, sfReadyOwnerSelection, sfSameReadyOwnerSnapshot, transitionSfNativeChapter } from "./native-chapter-entry"
+import { bindSfNativeChapterNavigation, confirmSfOwnerExit, rejectInvalidSfOwnerQuery, sfCaptureReadyOwner, sfReadyOwnerSelection, sfSameReadyOwnerSnapshot, transitionSfNativeChapter } from "./native-chapter-entry"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -455,9 +455,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   }
 
   const preflights = new WeakMap<AbortSignal, ReturnType<NonNullable<typeof desktopBridge>["stage"]>>()
+  const consentRechecks = new WeakMap<AbortSignal, (route: SfResolvedRoute, ownerKey: SfOwnerKey) => Promise<boolean>>()
   let routePreflightSignal: AbortSignal | undefined
   const navigation: SfNativeNavigationState = createSfNavigationState({
     finishPreflight: (signal, commit) => {
+      consentRechecks.delete(signal)
       const stage = preflights.get(signal)
       if (!stage) return !desktopBridge
       preflights.delete(signal)
@@ -481,6 +483,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     },
     hasDirtyDrafts: () => mounted?.hasDirtyDrafts() ?? true,
     confirmDiscard: () => confirmExit(routePreflightSignal),
+    revalidateAfterConsent: (route, ownerKey, signal) => consentRechecks.get(signal)?.(route, ownerKey) ?? Promise.resolve(false),
     invalidateOwner: () => {
       ownerEpoch += 1
       mounted?.invalidate("owner-changed")
@@ -546,8 +549,6 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
         : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
       const routeAvailable = (access: SfContext): boolean => {
-        if (candidate.surfaceId === "UI33" && candidate.kind === "new" &&
-          !access.destinations.some((item) => item.capabilityId === "UI33" && item.canRead)) return false
         return candidate.chapterId === "sf-dashboard" ? dashboardRouteAvailable(access, candidate) :
           candidate.chapterId === "sf-procurement" ? procurementRouteAvailable(access, candidate) :
           isExtendedSurface(candidate.surfaceId) ? extendedRouteAvailable(access, candidate) :
@@ -618,6 +619,33 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         params: candidate.parameters, ownerSelection: selected,
         pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: dashboardQuery ?? procurementQuery ?? extendedQuery ?? plannerQuery ?? {},
       } as SfResolvedRoute
+      consentRechecks.set(signal, async (resolved, resolvedOwner) => {
+        if (resolved.href !== route.href || resolvedOwner !== ownerKey || signal.aborted || currentGeneration !== ownerEpoch) return false
+        const contextStillValid = async () => {
+          const fresh = await readPreflightContext()
+          return !signal.aborted && currentGeneration === ownerEpoch && fresh.status === "ok" &&
+            sameStamp(stamp, fresh.value.stamp) && routeAvailable(fresh.value)
+        }
+        if (!(await contextStillValid())) return false
+        if (isPlannerPagesSurface(candidate.surfaceId) && extendedQuery && plannerPagesNeedsPreflight(candidate, extendedQuery)) {
+          const result = await preflightPlannerPages({ candidate, query: extendedQuery, transport: preflightTransport(), stamp,
+            signal, current: () => currentGeneration === ownerEpoch })
+          return result === "authorized" && await contextStillValid()
+        }
+        if (candidate.surfaceId === "CAP17" && plannerQuery && (plannerQuery.version || plannerQuery.filter)) {
+          const input = { ...(plannerQuery.year === undefined ? {} : { year: plannerQuery.year }),
+            ...(plannerQuery.version ? { version: plannerQuery.version } : {}), ...(plannerQuery.filter ? { filter: plannerQuery.filter } : {}) }
+          const result = await createSfPlannerClient(preflightTransport())["domain.page.CAP17"](input, { signal })
+          if (signal.aborted || currentGeneration !== ownerEpoch || result.kind !== "response" ||
+            result.status < 200 || result.status >= 300 || result.body.status !== "ok" ||
+            !sameStamp(stamp, result.body.context) ||
+            plannerQuery.version && result.body.value.selection.versionId !== plannerQuery.version ||
+            plannerQuery.year !== undefined && result.body.value.data.selectedVersion?.year !== plannerQuery.year ||
+            !plannerOverviewSelectionMatches(plannerQuery, result.body.value)) return false
+          return contextStillValid()
+        }
+        return true
+      })
       return { status: "authorized", route, ownerKey }
     },
     commit: ({ route, selection: selected, cause }) => {
@@ -666,8 +694,18 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const activeSelection = selection()
     const epoch = ++discoveryAttempt
     if (parsed.kind === "invalid") {
-      setDiscovery({ status: "invalid-link", selection: undefined })
-      setView({ status: "invalid-link", route: undefined })
+      rejectInvalidSfOwnerQuery({ ownerMounted: !!mounted, selectionPresent: !!activeSelection,
+        previousHref: untrack(() => view.route?.href) }, {
+        restore: (href) => { navigate(href, { replace: true }); restoreEditorFocus() },
+        notify: () => {
+          console.error("Sucafina owner query is invalid")
+          showToast({ variant: "error", title: language.t("common.requestFailed"), description: language.t("sf.common.invalidLink") })
+        },
+        initialInvalid: () => {
+          setDiscovery({ status: "invalid-link", selection: undefined })
+          setView({ status: "invalid-link", route: undefined })
+        },
+      })
       return
     }
     if (parsed.kind === "selected") {
@@ -688,6 +726,10 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           if (previousHref) {
             navigate(String(previousHref), { replace: true })
             restoreEditorFocus()
+          }
+          if (result.status !== "kept-editing") {
+            console.error("Sucafina owner transition not admitted", result.status)
+            showToast({ variant: "error", title: language.t("common.requestFailed"), description: language.t("sf.common.unavailable") })
           }
         })
         onCleanup(() => abort.abort())
@@ -735,6 +777,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const providerGeneration = provider.generation
     if (!selected || disposed || providerStatus !== "ready" || providerGeneration < 0) return
     const requested = explicitSelection(location.search)
+    if (requested.kind === "invalid") return // discovery retains any live owner and rejects the URL
     // Preserve PR208 #208 cross-owner single admission; never race discovery.
     if (requested.kind === "selected" && !sameSelection(requested.selection, selected)) return
     if (untrack(() => view.status === "ready" && view.route?.href === href &&
@@ -750,6 +793,13 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       if (result.status === "kept-editing" && previous) {
         navigate(String(previous.href), { replace: true })
         restoreEditorFocus()
+        return
+      }
+      if (result.status === "invalid-link" && previous) {
+        navigate(String(previous.href), { replace: true })
+        restoreEditorFocus()
+        console.error("Sucafina route query is invalid")
+        showToast({ variant: "error", title: language.t("common.requestFailed"), description: language.t("sf.common.invalidLink") })
         return
       }
       setView({ status: result.status, route: undefined })
