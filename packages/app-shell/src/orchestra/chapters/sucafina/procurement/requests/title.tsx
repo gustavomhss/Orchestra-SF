@@ -8,7 +8,7 @@ import { useSfContext } from "../../context"
 import { SfChangeReview, type SfReviewField } from "../../shared/change-review"
 import { SfStatePanel } from "../../shared/states"
 import type { SfUiState } from "../../shared/frame"
-import type { SF_U11_REMAINING_COPY } from "./copy"
+import { sfU11Label, type SF_U11_REMAINING_COPY } from "./copy"
 import { readRequestTitle, titleReadiness } from "./title-revalidation"
 
 type Key = keyof typeof SF_U11_REMAINING_COPY
@@ -41,7 +41,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     submitted?.setPhase("outcome-unknown")
     active?.abort()
   }
-  const t = (value: Key) => language.t(value as Parameters<typeof language.t>[0])
+  const t = (value: Key) => sfU11Label(value, language.locale(), language.t(value as Parameters<typeof language.t>[0]))
   const refValue = () => props.requestRef ?? (props.route.kind !== "entry" && props.route.kind !== "new"
     ? props.route.params.requestRef : undefined)
   const authority = () => {
