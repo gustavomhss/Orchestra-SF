@@ -267,7 +267,7 @@ export function createSfTransport(options: Readonly<{
         requestBody = form
         if (upload.bytes.byteLength + 65_536 > SF_FILE_MULTIPART_LIMIT + 65_536) return failure("contract-mismatch")
       } else if (upload) {
-        requestBody = upload.bytes
+        requestBody = new Uint8Array(upload.bytes)
         headers["Content-Type"] = upload.mediaType
       } else if (body !== undefined) headers["Content-Type"] = "application/json"
       if (key) headers["Idempotency-Key"] = key
@@ -342,7 +342,11 @@ export function createSfTransport(options: Readonly<{
           })
           const extracted = publicHeaders(result.headers)
           if (result.status === 401 || result.status === 403) stamp = undefined
-          if (isBytes && result.status === 200) {
+          if (isBytes && (result.status === 401 || result.status === 403)) {
+            clear()
+            await result.body?.cancel().catch(() => undefined)
+            response = failure("contract-unavailable")
+          } else if (isBytes && result.status === 200) {
             const bytes = sfAllowedByteMime(operation.operationId, result.headers.get("content-type")) && stamp
               ? await readSfBytesBounded(result, call.signal, async () =>
                   isCurrent() && webOrigin() && !!stamp &&
@@ -672,7 +676,8 @@ async function readSfBytesBounded(response: Response, signal: AbortSignal,
       if (total > SF_FILE_BYTE_LIMIT) { await reader.cancel(); return undefined }
       parts.push(new Uint8Array(part.value))
     }
-    if (signal.aborted || !await recheck()) return undefined
+    if (signal.aborted || !await recheck() ||
+        declared !== null && total !== Number(declared)) return undefined
     const result = new Uint8Array(total)
     let offset = 0
     for (const part of parts) { result.set(part, offset); offset += part.byteLength }
@@ -682,7 +687,7 @@ async function readSfBytesBounded(response: Response, signal: AbortSignal,
 }
 async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
   if (!crypto?.subtle) return undefined
-  const value = await crypto.subtle.digest("SHA-256", bytes).catch(() => undefined)
+  const value = await crypto.subtle.digest("SHA-256", new Uint8Array(bytes)).catch(() => undefined)
   return value ? Array.from(new Uint8Array(value), (b) => b.toString(16).padStart(2, "0")).join("") : undefined
 }
 
