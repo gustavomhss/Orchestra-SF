@@ -193,30 +193,34 @@
     {
       "mission": 211,
       "branch": "sf-closure-bundle",
-      "head": "9771cc7e2757056429404a91d23493988f14aa47",
-      "message": "fix(sf): compose verified 196 199 202-206 product outputs [skip ci]",
-      "state": "COMPOSITION_COMMIT_OBSERVED_PENDING_RECHECK"
+      "head": "fbbbf07c9622f449e77856bbe09077f9e38bd2c7",
+      "date": "2026-11-16T00:34:09Z",
+      "message": "fix(sf): bind existing A07 review projection into F02 live host [skip ci]",
+      "state": "CODE_PROGRESS_NO_TERMINAL_HANDOFF"
     },
     {
       "mission": 212,
       "branch": "sf-hypothetical-fix",
-      "head": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
-      "message": "fix(sf): make AM01 renewal scenario a genuine non-applied preview [skip ci]",
-      "state": "SOURCE_CODE_FIX_PUBLISHED"
+      "head": "e8dfeb4cb4e122318b6289fbeb8fe4da9ef53f64",
+      "date": "2026-11-16T00:34:19Z",
+      "message": "docs(sf): complete AM01 hypothetical closure handoff, inert patch and 214/190 requests [skip ci]",
+      "state": "TERMINAL_SOURCE_HANDOFF_READY"
     },
     {
       "mission": 213,
       "branch": "sf-desktop-bootstrap",
-      "head": "03e3936a1627e4834370951aca0de4c45c60e7b4",
-      "message": "docs(sf): acknowledge desktop broker authoring lease 213 [skip ci]",
-      "state": "ACK_CONFIRMED"
+      "head": "ee3dd6078bd0cca45774304b39ae9b23d02b0ba2",
+      "date": "2026-11-16T00:35:51Z",
+      "message": "fix(desktop): ensure child stop after revoke error and fence enrollment by server epoch [skip ci]",
+      "state": "CODE_PROGRESS_NO_TERMINAL_HANDOFF"
     },
     {
       "mission": 214,
       "branch": "sf-ci-validation",
-      "head": "b0509bfe1acee87563d699c79e9e672d0196f8af",
-      "message": "docs(sf): checkpoint three mission214 scoped Actions requests",
-      "state": "THREE_SCOPED_ACTIONS_REQUESTS_RECORDED_NOT_PASS"
+      "head": "da75b820574c11d28fa772b05550bfc78bd4b427",
+      "date": "2026-11-16T00:31:20Z",
+      "message": "docs(sf): publish four complete inert causal fixes for closure 211",
+      "state": "CI_ACTIVE_FIVE_RUNS_AND_FOUR_INERT_PATCHES"
     }
   ],
   "new_concrete_corrections": [
@@ -294,5 +298,145 @@
   "native_goal": "paused",
   "GLOBAL_RELEASE": false,
   "observed_new_composition": "9771cc7e2757056429404a91d23493988f14aa47",
-  "observed_AM01_fix": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4"
+  "observed_AM01_fix": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+  "new_ready_intake": {
+    "observed_product": "fbbbf07c9622f449e77856bbe09077f9e38bd2c7",
+    "source212": {
+      "head": "e8dfeb4cb4e122318b6289fbeb8fe4da9ef53f64",
+      "pr": 193,
+      "status": "TERMINAL_SOURCE_READY",
+      "code_files": 2,
+      "inert_downstream_patch": 1,
+      "preimages": "HELPER_AND_DOWNSTREAM_MATCH_NEW_SPEC_ABSENT",
+      "consumer": 211
+    },
+    "source214": {
+      "head": "da75b820574c11d28fa772b05550bfc78bd4b427",
+      "status": "FOUR_COMPLETE_INERT_PATCHES_READY",
+      "consumer_checks": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/operations/projection.ts",
+          "actual": "02b5f163387aaee657336f5544003ab123af5dd4",
+          "pre": "02b5f163387aaee657336f5544003ab123af5dd4",
+          "post": "bdde554d78b3c2e9c880499d879388a65147b3f0",
+          "state": "READY_PREIMAGE_MATCH"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+          "actual": "530b1d6618218f11cefa699e3e6def1bd8f96270",
+          "pre": "530b1d6618218f11cefa699e3e6def1bd8f96270",
+          "post": "bb4cdec036331bc180db16795c7dcae215cfbe98",
+          "state": "READY_PREIMAGE_MATCH"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+          "actual": "1fbabb2be4bd2540f1f280cf432630e6dd3f486d",
+          "pre": "1fbabb2be4bd2540f1f280cf432630e6dd3f486d",
+          "post": "aa144a649d9f3378f9b0861941b3c7f4379fc472",
+          "state": "READY_PREIMAGE_MATCH"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+          "actual": "4a7100ca6d4a3c109924674fc6d6ae8c4e79aee0",
+          "pre": "4a7100ca6d4a3c109924674fc6d6ae8c4e79aee0",
+          "post": "20be7565a7d63a1f042a718dbc1c5787340b62e1",
+          "state": "READY_PREIMAGE_MATCH"
+        }
+      ],
+      "consumer": 211
+    },
+    "delivery": "Registered expected source outputs for existing211scope; no comment/chat-context delivery claimed."
+  },
+  "current_corrections": [
+    {
+      "mission": 215,
+      "branch": "sf-bi-units",
+      "head": "64cca9fadb3099dbb75af65a4599112ddaafc2b8",
+      "date": "2026-11-16T00:32:55Z",
+      "message": "docs(sf): ack review finding repair 215 [skip ci]",
+      "state": "ACK_CONFIRMED_AT_READ"
+    },
+    {
+      "mission": 216,
+      "branch": "sf-atlas-sequence",
+      "head": "f9aca032271d1b683647b701f2c02c703eaaea20",
+      "date": "2026-11-16T00:26:41Z",
+      "message": "docs(sf): reserve concrete finding repair 216 [skip ci]",
+      "state": "RESERVATION_ONLY_AT_READ_NO_DEATH_INFERENCE"
+    },
+    {
+      "mission": 217,
+      "branch": "sf-similar-cases",
+      "head": "41dfcd8fa5063129d5ed0968d7f9d1ed081238a6",
+      "date": "2026-11-16T00:26:44Z",
+      "message": "docs(sf): reserve concrete finding repair 217 [skip ci]",
+      "state": "RESERVATION_ONLY_AT_READ_NO_DEATH_INFERENCE"
+    },
+    {
+      "mission": 218,
+      "branch": "sf-import-history",
+      "head": "58ec4c5376f5c34c3391f7eb2962f32697c67a9e",
+      "date": "2026-11-16T00:26:49Z",
+      "message": "docs(sf): reserve concrete finding repair 218 [skip ci]",
+      "state": "RESERVATION_ONLY_AT_READ_NO_DEATH_INFERENCE"
+    },
+    {
+      "mission": 219,
+      "branch": "sf-native-admission",
+      "head": "0d9053d4649da9d313cc47392cd6723f9de1f8a7",
+      "date": "2026-11-16T00:26:53Z",
+      "message": "docs(sf): reserve concrete finding repair 219 [skip ci]",
+      "state": "RESERVATION_ONLY_AT_READ_NO_DEATH_INFERENCE"
+    }
+  ],
+  "latest_ci": [
+    {
+      "id": 43781314836,
+      "status": "in_progress",
+      "conclusion": null,
+      "name": "test-ci"
+    },
+    {
+      "id": 43781292706,
+      "status": "in_progress",
+      "conclusion": null,
+      "name": "test-ci"
+    },
+    {
+      "id": 43781269811,
+      "status": "in_progress",
+      "conclusion": null,
+      "name": "test-ci"
+    },
+    {
+      "id": 43781246250,
+      "status": "in_progress",
+      "conclusion": null,
+      "name": "test-ci"
+    },
+    {
+      "id": 43781218586,
+      "status": "in_progress",
+      "conclusion": null,
+      "name": "test-ci"
+    },
+    {
+      "id": 43780062327,
+      "status": "completed",
+      "conclusion": "failure",
+      "name": "test-ci"
+    },
+    {
+      "id": 43780060382,
+      "status": "completed",
+      "conclusion": "failure",
+      "name": "test-ci"
+    },
+    {
+      "id": 43780028332,
+      "status": "completed",
+      "conclusion": "failure",
+      "name": "test-ci"
+    }
+  ]
 }
