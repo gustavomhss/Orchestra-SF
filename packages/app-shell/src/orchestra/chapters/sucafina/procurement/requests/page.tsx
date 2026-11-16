@@ -13,7 +13,7 @@ import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../..
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
-import { SF_U11_REMAINING_COPY } from "./copy"
+import { sfU11Label, SF_U11_REMAINING_COPY } from "./copy"
 import {
   decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, prFromRecord,
   requestRef, requestVersion, uiCommandAction, validatePo, validatePr,
@@ -134,7 +134,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     newIntentRef: crypto.randomUUID() as SfIntentRef,
   })
   let inFlight: AbortController | undefined
-  const t = (key: Key) => language.t(key as Parameters<typeof language.t>[0])
+  const t = (key: Key) => sfU11Label(key, language.locale(), language.t(key as Parameters<typeof language.t>[0]))
   const routeRef = () => props.route.kind !== "entry" && props.route.kind !== "new"
     ? props.route.params.requestRef : undefined
   const selectedRef = () => routeRef() ?? view.selected
