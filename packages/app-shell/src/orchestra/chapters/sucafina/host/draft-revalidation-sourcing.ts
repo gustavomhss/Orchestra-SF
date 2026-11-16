@@ -44,5 +44,7 @@ export async function revalidateSourcingDraft(
   if (input.read.fieldPaths.some((field) => !visible.includes(field))) return { status: "denied" }
   const version = requestVersion(page, input.identity.recordRef)
   if (version === null) return { status: "unavailable" }
-  return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: version }
+  // The source mutation requires buyer/admin for sourcing, but CAP25 publishes
+  // only a page-wide "save" grant shared with requester-owned PR edits.
+  return { status: "unavailable" }
 }

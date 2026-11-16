@@ -72,12 +72,12 @@ describe("source-bound draft revalidation", () => {
     expect(result).toEqual({ status: "authorized", authority: "unchanged", stamp, sourceVersion: 7 })
     expect(calls).toEqual([{ id: "domain.page.CAP25", input: { request: requestRef } }])
   })
-  test("PO uses its own fields, writable stage and source version", async () => {
+  test("PO validates stage but stays closed without a stage-specific save grant", async () => {
     const input: SfDraftRevalidationInput = { ...recordInput, editScopeKey: "po.fields" as SfEditScopeKey,
       read: { ...recordInput.read, fieldPaths: ["po.currency"] } }
     const po = { number: requestRef, status: "po_draft", createdBy: "actor", po: { currency: "USD" } }
     expect(await run(input, page({ data: { requests: [po], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } })))
-      .toMatchObject({ status: "authorized", sourceVersion: 7 })
+      .toEqual({ status: "unavailable" })
     expect(await run(input, page({ data: { requests: [{ ...po, status: "po_issued" }], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } })))
       .toEqual({ status: "denied" })
     expect(await run(recordInput, page({ data: { requests: [{ number: requestRef, status: "po_draft", createdBy: "actor", pr: { description: "visible" } }], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } })))
@@ -150,7 +150,7 @@ describe("source-bound draft revalidation", () => {
       read: { ...recordInput.read, fieldPaths: ["sourcing.evaluator", "sourcing.quotes", 'sourcing.quote:["q1","supplier"]'] } }
     const row = { number: requestRef, status: "sourcing", createdBy: "actor", sourcing: { evaluator: "actor", quotes: [{ id: "q1", supplier: "visible" }] } }
     const data = { requests: [row], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false }
-    expect(await run(input, page({ data }))).toMatchObject({ status: "authorized", sourceVersion: 7 })
+    expect(await run(input, page({ data }))).toEqual({ status: "unavailable" })
     expect(await run(input, page({ data: { ...data, requests: [{ ...row, status: "po_draft" }] } }))).toEqual({ status: "denied" })
     expect(await run(input, page({ data: { ...data, requests: [{ ...row, sourcing: { ...row.sourcing, quotes: [{ id: "q2", supplier: "visible" }] } }] } }))).toEqual({ status: "denied" })
     expect(await run(input, page({ data, allowedActionIds: [] }))).toEqual({ status: "denied" })
