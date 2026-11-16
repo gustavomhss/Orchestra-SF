@@ -17,7 +17,7 @@ import { ServerConnection } from "@/context/server"
 import { pathKey } from "@/utils/path-key"
 import { showToast } from "@/utils/toast"
 import { authTokenFromCredentials } from "@/utils/server"
-import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
+import { SfInstallationList, type SfContext, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
 import { createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
@@ -63,7 +63,7 @@ import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
 import { createSfDesktopOriginBridge238 } from "./desktop-origin-bridge238"
-import { bindSfNativeChapterNavigation, transitionSfNativeChapter } from "./native-chapter-entry"
+import { bindSfNativeChapterNavigation, confirmSfOwnerExit, sfCaptureReadyOwner, sfReadyOwnerSelection, sfSameReadyOwnerSnapshot, transitionSfNativeChapter } from "./native-chapter-entry"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -194,7 +194,7 @@ function ownerKeyFromVerifiedContext(
 
 function MountedSurface(props: Readonly<{
   view: () => View
-  contextStatusRoute: () => SfResolvedRoute<"UI67"> | undefined
+  contextStatusRoute: (selection: SfOwnerSelection) => SfResolvedRoute<"UI67"> | undefined
   bind: (handle: SfContextHandle | undefined) => void
   status: (status: string, generation: number) => void
 }>): JSX.Element {
@@ -203,6 +203,10 @@ function MountedSurface(props: Readonly<{
   createEffect(() => props.status(handle.state().status, handle.generation()))
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.view().route
+  const contextStatus = () => {
+    const state = handle.state()
+    return state.status === "ready" ? undefined : props.contextStatusRoute(state.selection)
+  }
   const statusKey = (key: string) => key as Parameters<typeof SfStatePanel>[0]["messageKey"]
   const ownerStatus = () => {
     const status = handle.state().status
@@ -218,7 +222,7 @@ function MountedSurface(props: Readonly<{
   }
   return (
     <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
-      <Match when={handle.state().status !== "ready" && props.contextStatusRoute()}>
+      <Match when={contextStatus()}>
         <SfPageFrame titleKey={statusKey("sf.ui67.title")} context={[]} tabs={[]} activeTab={null}
           secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
           <SfStatePanel state={ownerStatus()} messageKey={statusKey(ownerMessage())} onRetryRead={() => { void handle.reload() }} />
@@ -319,24 +323,15 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   }
   const confirmDiscard = async () => typeof window !== "undefined" &&
     window.confirm(language.t("sf.ui67.discardNavigate"))
-  const confirmExit = async () => {
-    const handle = mounted
-    if (!handle || !handle.hasDirtyDrafts()) return true
-    const before = handle.state()
-    if (before.status !== "ready") return false // quarantined: no private restore without revalidation
-    const accepted = await confirmDiscard()
-    if (!accepted) {
-      restoreEditorFocus()
-      return false
-    }
-    if (disposed || mounted !== handle) return false
-    const now = handle.state()
-    if (now.status !== "ready" || now.ownerKey !== before.ownerKey) return false
-    const discarded = handle.discardDrafts()
-    if (!discarded) restoreEditorFocus()
-    else setView({ status: "resolving", route: undefined }) // purge mounted private surface before shell selection
-    return discarded
-  }
+  const confirmExit = (signal?: AbortSignal) => confirmSfOwnerExit({
+    handle: () => mounted, disposed: () => disposed, confirmDiscard, restoreFocus: restoreEditorFocus,
+    valid: () => !signal?.aborted,
+    onDiscarded: () => setView({ status: "resolving", route: undefined }),
+    onBlocked: () => {
+      console.error("Sucafina draft discard was refused")
+      showToast({ variant: "error", title: language.t("common.requestFailed"), description: language.t("sf.common.pending") })
+    },
+  })
   const unbindExit = bindSfOwnerShellExit237(confirmExit)
   const unload = (event: BeforeUnloadEvent) => {
     if (!mounted?.hasDirtyDrafts()) return
@@ -403,7 +398,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       ? answer.body
       : { status: "unavailable" as const, reason: "host-unavailable" as const }
   }
-  const dependencies: SfContextDependencies = {
+  const dependencies: SfContextDependencies & Readonly<{ onDraftAccessRevoked: () => void }> = {
     listInstallations: async (selected, signal) => {
       ownerEpoch += 1 // invalidate all old transport generations before the next load
       const found = await source.listByIds(selected, signal)
@@ -417,6 +412,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       desktopBridge ? desktopBridge.transportIdentity(selected) :
       alignedOrigin ? ServerConnection.key(props.server) : "",
     createDraft: createSfDraft,
+    onDraftAccessRevoked: () => {
+      if (disposed) return
+      showToast({ variant: "error", title: language.t("common.requestFailed"),
+        description: language.t("sf.common.noAccess") })
+    },
     revalidateDraft: async (input: SfDraftRevalidationInput, fresh, transport, signal): Promise<SfDraftRevalidation> => {
       // Retained record reads only. No guessed field/action grants or automatic
       // restoration of pending writes; those require producer-specific proofs.
@@ -454,6 +454,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   }
 
   const preflights = new WeakMap<AbortSignal, ReturnType<NonNullable<typeof desktopBridge>["stage"]>>()
+  let routePreflightSignal: AbortSignal | undefined
   const navigation: SfNativeNavigationState = createSfNavigationState({
     finishPreflight: (signal, commit) => {
       const stage = preflights.get(signal)
@@ -478,7 +479,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       return state?.status === "ready" ? state.ownerKey : undefined
     },
     hasDirtyDrafts: () => mounted?.hasDirtyDrafts() ?? true,
-    confirmDiscard,
+    confirmDiscard: () => confirmExit(routePreflightSignal),
     invalidateOwner: () => {
       ownerEpoch += 1
       mounted?.invalidate("owner-changed")
@@ -491,6 +492,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       return { scrollY: values.scrollY }
     },
     resolveAuthorizedRoute: async (href, selected, signal) => {
+      routePreflightSignal = signal
       if (!sameServer(selected) || !selected.installationId) return { status: "denied" }
       let url: URL
       try {
@@ -519,7 +521,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const found = await (staged ? staged.listByIds() : source.listByIds(selected, signal))
       if (signal.aborted || !found) return { status: "unavailable" }
       if (found.installations.length !== 1) return { status: "denied" }
-      const binding = found.installations[0]!
+      const binding = found.installations[0]
+      if (!binding) return { status: "denied" }
       const currentGeneration = ownerEpoch
       const preflightTransport = () => staged
         ? staged.createTransport(binding, currentGeneration, () => ownerEpoch)
@@ -531,7 +534,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         return answer.kind === "response" ? answer.body : { status: "unavailable" as const, reason: "host-unavailable" as const }
       }
       const context = await readPreflightContext()
-      if (signal.aborted) return { status: "unavailable" }
+      if (signal.aborted || currentGeneration !== ownerEpoch) return { status: "unavailable" }
       if (context.status !== "ok")
         return { status: context.status === "denied" || context.status === "unauthenticated"
           ? "denied" : "unavailable" }
@@ -541,17 +544,32 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         return { status: "denied" }
       const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
         : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
-      if (candidate.surfaceId === "UI33" && candidate.kind === "new" &&
-        !context.value.destinations.some((item) => item.capabilityId === "UI33" && item.canRead))
-        return { status: "denied" }
-      if (candidate.chapterId === "sf-dashboard" ? !dashboardRouteAvailable(context.value, candidate) :
-        candidate.chapterId === "sf-procurement" ? !procurementRouteAvailable(context.value, candidate) :
-        isExtendedSurface(candidate.surfaceId) ? !extendedRouteAvailable(context.value, candidate) :
-        candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerRouteAvailable(context.value, candidate) :
-        candidate.surfaceId === "UI45" || candidate.surfaceId === "UI46" ? !biRouteAvailable(context.value, candidate) :
-        !context.value.availability.some((resource) => resource.operations.some((operation) =>
-          operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
-        return { status: "denied" }
+      const routeAvailable = (access: SfContext): boolean => {
+        if (candidate.surfaceId === "UI33" && candidate.kind === "new" &&
+          !access.destinations.some((item) => item.capabilityId === "UI33" && item.canRead)) return false
+        return candidate.chapterId === "sf-dashboard" ? dashboardRouteAvailable(access, candidate) :
+          candidate.chapterId === "sf-procurement" ? procurementRouteAvailable(access, candidate) :
+          isExtendedSurface(candidate.surfaceId) ? extendedRouteAvailable(access, candidate) :
+          candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? plannerRouteAvailable(access, candidate) :
+          candidate.surfaceId === "UI45" || candidate.surfaceId === "UI46" ? biRouteAvailable(access, candidate) :
+          access.availability.some((resource) => resource.operations.some((operation) =>
+            operation.operationId === requiredOperation && operation.state === "ready" && operation.operational))
+      }
+      if (!routeAvailable(context.value)) return { status: "denied" }
+      const pendingHandle = mounted
+      const pendingState = pendingHandle?.state()
+      if (pendingHandle && pendingState && pendingState.status !== "ready" && pendingHandle.hasDirtyDrafts() &&
+        !sameSelection(pendingState.selection, selected)) {
+        const generation = pendingHandle.generation()
+        if (!(await confirmExit(signal))) return { status: "denied" }
+        if (signal.aborted || currentGeneration !== ownerEpoch || mounted !== pendingHandle ||
+          pendingHandle.generation() !== generation) return { status: "unavailable" }
+        const fresh = await readPreflightContext()
+        if (signal.aborted || currentGeneration !== ownerEpoch || mounted !== pendingHandle ||
+          pendingHandle.generation() !== generation) return { status: "unavailable" }
+        if (fresh.status !== "ok" || !sameStamp(stamp, fresh.value.stamp) || !routeAvailable(fresh.value))
+          return { status: "denied" }
+      }
       if (isPlannerPagesSurface(candidate.surfaceId) && extendedQuery && plannerPagesNeedsPreflight(candidate, extendedQuery)) {
         const result = await preflightPlannerPages({ candidate, query: extendedQuery, transport: preflightTransport(), stamp,
           signal, current: () => currentGeneration === ownerEpoch })
@@ -585,9 +603,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       // UI29, the exact 227 resume port alone performs BOTH original case reads
       // (preflight and pre-commit), not a third implicit prefetch here.
       const existing = mounted?.state()
-      if (existing?.status === "ready" && sameSelection(existing.selection, selected) &&
+      const existingSelection = existing?.status === "ready" ? sfReadyOwnerSelection(existing) : undefined
+      if (existing?.status === "ready" && !existingSelection) return { status: "denied" }
+      if (existing?.status === "ready" && existingSelection && sameSelection(existingSelection, selected) &&
         !sameStamp(existing.context.stamp, stamp)) return { status: "denied" }
-      const ownerKey = existing?.status === "ready" && sameSelection(existing.selection, selected)
+      const ownerKey = existing?.status === "ready" && existingSelection && sameSelection(existingSelection, selected)
         ? existing.ownerKey : ownerKeyFromVerifiedContext(props.server, binding, stamp)
       // Strict Q01 path parser + original context admission precede this
       // route assembly. The UI34 original useSfCase validates the case read;
@@ -611,19 +631,20 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const unbindChapterNavigation = bindSfNativeChapterNavigation(async (request) => {
     if (request.server !== ServerConnection.key(props.server) ||
       pathKey(request.directory ?? "") !== pathKey(props.directory)) return "profile-mismatch"
-    const state = mounted?.state()
-    const selected = selection()
-    if (!state || state.status !== "ready" || !selected || state.owner.serverKey !== request.server ||
-      selected.serverKey !== request.server || selected.projectId !== state.binding.projectId ||
-      !selected.installationId || selected.installationId !== state.binding.installationId) {
+    const handle = mounted
+    const state = handle?.state()
+    const snapshot = state?.status === "ready" ? sfCaptureReadyOwner(state) : undefined
+    if (!handle || !snapshot || snapshot.selection.serverKey !== request.server) {
       console.error("Sucafina sidebar owner is not ready")
       showToast({ title: language.t("common.requestFailed"), description: language.t("sf.common.unavailable") })
       return "blocked"
     }
-    const result = await transitionSfNativeChapter(request.chapter, selected, state.ownerKey, navigation).catch((error: unknown) => {
+    const generation = handle.generation()
+    const result = await transitionSfNativeChapter(request.chapter, snapshot.selection, snapshot.ownerKey, navigation).catch((error: unknown) => {
       console.error("Sucafina sidebar transition failed", error)
       return { status: "unavailable" as const }
     })
+    if (disposed || mounted !== handle || !sfSameReadyOwnerSnapshot(handle, snapshot, generation)) return "blocked"
     if (result.status === "committed") return "committed"
     restoreEditorFocus()
     if (result.status !== "kept-editing" && result.status !== "aborted") {
@@ -641,6 +662,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const directory = props.directory
     const actualServerKey = ServerConnection.key(props.server)
     const parsed = explicitSelection(query)
+    const activeSelection = selection()
     const epoch = ++discoveryAttempt
     if (parsed.kind === "invalid") {
       setDiscovery({ status: "invalid-link", selection: undefined })
@@ -648,13 +670,13 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       return
     }
     if (parsed.kind === "selected") {
-      if (parsed.selection.serverKey !== actualServerKey && !selection()) {
+      if (parsed.selection.serverKey !== actualServerKey && !activeSelection) {
         setDiscovery({ status: "denied", selection: undefined })
         setView({ status: "denied", route: undefined })
         return
       }
-      if (selection() && sameSelection(selection()!, parsed.selection)) return
-      if (selection()) {
+      if (activeSelection && sameSelection(activeSelection, parsed.selection)) return
+      if (activeSelection) {
         // Preserve 231 follow-up: discovery, not the route effect, owns
         // cross-owner admission and cancel/return. Never pre-publish the selector.
         const abort = new AbortController()
@@ -673,7 +695,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       setDiscovery({ status: "ready", selection: parsed.selection })
       return
     }
-    if (selection()) return // already admitted by original location discovery
+    if (activeSelection) return // already admitted by original location discovery
     setDiscovery({ status: "resolving", selection: undefined })
     const abort = new AbortController()
     void source.listByLocation(directory, abort.signal).then((found) => {
@@ -686,7 +708,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         // Distinct genuine installations require explicit owner selection.
         setDiscovery({ status: "ambiguous", selection: undefined })
       } else {
-        const only = found.installations[0]!
+        const only = found.installations[0]
+        if (!only) {
+          setDiscovery({ status: "denied", selection: undefined })
+          return
+        }
         setDiscovery({ status: "ready", selection: {
           serverKey: actualServerKey as SfServerKey,
           projectId: only.projectId as SfRef,
@@ -740,24 +766,37 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   })
 
   const reconnectDesktop = async () => {
-    const selected = selection()
     const handle = mounted
-    if (!desktopBridge || !selected || !handle || disposed || reconnect.busy) return
+    if (!desktopBridge || !handle || disposed || reconnect.busy) return
+    const state = handle.state()
+    const selected = state.status === "ready" ? sfReadyOwnerSelection(state) : { ...state.selection }
+    const discovered = selection()
+    if (!selected || !discovered || !sameSelection(selected, discovered)) return
     setReconnect("busy", true)
     try {
       // Reload re-discovers and binds the exact selected owner; it never revives
       // the retired handle or restores private state without fresh admission.
       await handle.reload()
-      if (disposed || mounted !== handle || !selection() || !sameSelection(selection()!, selected)) return
-      const status = handle.state().status
+      const current = handle.state()
+      const currentSelection = current.status === "ready" ? sfReadyOwnerSelection(current) : current.selection
+      const next = selection()
+      if (disposed || mounted !== handle || !next || !currentSelection ||
+        !sameSelection(next, selected) || !sameSelection(currentSelection, selected)) return
+      const status = current.status
       if (status === "ready" || status === "unauthenticated") setReconnect("required", false)
     } finally {
       if (!disposed) setReconnect("busy", false)
     }
   }
   const desktopLogin = async () => {
-    const selected = selection()
-    if (!desktopBridge || !selected || disposed || provider.status !== "unauthenticated") return
+    const handle = mounted
+    const state = handle?.state()
+    if (!desktopBridge || !handle || !state || state.status !== "unauthenticated" || disposed || provider.status !== "unauthenticated") return
+    const selected = { ...state.selection }
+    const discovered = selection()
+    if (!discovered || !sameSelection(discovered, selected) || !sameServer(selected) ||
+      selected.projectId !== state.binding.projectId || selected.installationId !== state.binding.installationId) return
+    const generation = handle.generation()
     const parsed = explicitSelection(location.search)
     const routePath = matchSfNativeRoutePath(location.pathname)
     const planner = routePath && (routePath.surfaceId === "CAP17" || routePath.surfaceId === "CAP23")
@@ -791,7 +830,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         setView({ status: "unavailable", route: undefined })
         return
       }
-      await mounted?.reload()
+      const current = handle.state()
+      const next = selection()
+      if (disposed || mounted !== handle || handle.generation() !== generation || current.status !== "unauthenticated" ||
+        !next || !sameSelection(next, selected) || !sameSelection(current.selection, selected)) return
+      await handle.reload()
     } catch (error) {
       console.error("SF_NATIVE_AUTH_FAILED", error instanceof Error ? error.name : "unknown")
       setView({ status: "unavailable", route: undefined })
@@ -822,16 +865,16 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
             : "Sucafina installation unavailable or unauthorized"}
         </p>
       }>
-        <SfTodayBoundOwnerProvider
-          selection={() => selection()!}
+        {(selected) => <SfTodayBoundOwnerProvider
+          selection={selected}
           dependencies={boundDependencies}
           ownerNavigation={navigation}
         >
           <MountedSurface view={() => view}
-            contextStatusRoute={() => selection() ? homeContextStatusRoute(location.pathname, location.search, selection()!) : undefined}
+            contextStatusRoute={(current) => homeContextStatusRoute(location.pathname, location.search, current)}
             bind={(handle) => { mounted = handle }}
             status={(status, generation) => setProvider({ status, generation })} />
-        </SfTodayBoundOwnerProvider>
+        </SfTodayBoundOwnerProvider>}
       </Show>
     </div>
   )

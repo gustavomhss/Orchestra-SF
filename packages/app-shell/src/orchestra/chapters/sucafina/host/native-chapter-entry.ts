@@ -1,4 +1,5 @@
-import type { SfOwnerKey, SfOwnerSelection } from "@orchestra/schema/sucafina/context"
+import type { SfContext, SfOwnerKey, SfOwnerSelection, SfRef, SfServerKey } from "@orchestra/schema/sucafina/context"
+import type { SfContextHandle, SfContextState } from "../context/contracts"
 import type { SfNativeNavigationState, SfNativeTransitionResult } from "../navigation-state"
 import { isSfNativeChapter, type SfNativeChapterId } from "../route-registry"
 
@@ -29,6 +30,90 @@ export function sfNativeOwnerChapterRequest(chapter: string, selection: SfOwnerS
   if (!path || !selection.serverKey || !selection.projectId || !selection.installationId) return
   return path + "?" + new URLSearchParams({ server: selection.serverKey, project: selection.projectId,
     installation: selection.installationId }).toString()
+}
+
+/** Read only the verified ready snapshot; never join discovery from another owner epoch. */
+export function sfReadyOwnerSelection(state: Extract<SfContextState, { status: "ready" }>): SfOwnerSelection | undefined {
+  if (!state.ownerKey || !state.owner.serverKey || !state.owner.transportIdentity || !state.binding.projectId || !state.binding.installationId ||
+    !state.binding.hostId || !state.owner.principalRef || !state.owner.publicOrigin ||
+    state.owner.projectId !== state.binding.projectId || state.owner.installationId !== state.binding.installationId ||
+    state.owner.publicOrigin !== state.binding.publicOrigin ||
+    state.context.stamp.projectId !== state.binding.projectId || state.context.stamp.installationId !== state.binding.installationId ||
+    state.context.stamp.hostId !== state.binding.hostId || state.context.stamp.principalRef !== state.owner.principalRef ||
+    !state.context.stamp.policyVersion || !state.context.stamp.accessRevision) return
+  return { serverKey: state.owner.serverKey as SfServerKey, projectId: state.binding.projectId as SfRef,
+    installationId: state.binding.installationId as SfRef }
+}
+
+export type SfReadyOwnerSnapshot = Readonly<{ selection: SfOwnerSelection; ownerKey: SfOwnerKey; stamp: SfContext["stamp"] }>
+export function sfCaptureReadyOwner(state: Extract<SfContextState, { status: "ready" }>): SfReadyOwnerSnapshot | undefined {
+  const selection = sfReadyOwnerSelection(state)
+  if (!selection) return
+  const stamp = state.context.stamp
+  return { selection, ownerKey: state.ownerKey, stamp: {
+    installationId: stamp.installationId, projectId: stamp.projectId, hostId: stamp.hostId,
+    principalRef: stamp.principalRef, policyVersion: stamp.policyVersion, accessRevision: stamp.accessRevision,
+  } }
+}
+
+export function sfSameReadyOwnerSnapshot(handle: Readonly<{ state: () => SfContextState; generation: () => number }>,
+  prior: SfReadyOwnerSnapshot, generation: number): boolean {
+  const current = handle.state()
+  if (handle.generation() !== generation || current.status !== "ready" || current.ownerKey !== prior.ownerKey) return false
+  const after = sfReadyOwnerSelection(current)
+  if (!after || prior.selection.serverKey !== after.serverKey || prior.selection.projectId !== after.projectId ||
+    prior.selection.installationId !== after.installationId) return false
+  const left = prior.stamp
+  const right = current.context.stamp
+  return left.installationId === right.installationId && left.projectId === right.projectId &&
+    left.hostId === right.hostId && left.principalRef === right.principalRef &&
+    left.policyVersion === right.policyVersion && left.accessRevision === right.accessRevision
+}
+
+/** Discard only after consent while the exact owner epoch and handle are unchanged. */
+export async function confirmSfOwnerExit(deps: Readonly<{
+  handle: () => Pick<SfContextHandle, "state" | "generation" | "hasDirtyDrafts" | "discardDrafts"> | undefined
+  disposed: () => boolean
+  valid?: () => boolean
+  confirmDiscard: () => Promise<boolean>
+  restoreFocus: () => void
+  onDiscarded: () => void
+  onBlocked: () => void
+}>): Promise<boolean> {
+  const handle = deps.handle()
+  if (!handle || !handle.hasDirtyDrafts()) return true
+  if (deps.valid && !deps.valid()) return false
+  const before = handle.state()
+  const generation = handle.generation()
+  const status = before.status
+  const ready = before.status === "ready" ? sfCaptureReadyOwner(before) : undefined
+  const selected = before.status !== "ready" ? { ...before.selection } : undefined
+  const binding = before.status === "unauthenticated" ? { ...before.binding } : undefined
+  if (status === "ready" && !ready) return false
+  if (!(await deps.confirmDiscard())) {
+    deps.restoreFocus()
+    return false
+  }
+  if (deps.disposed() || deps.valid && !deps.valid() || deps.handle() !== handle || handle.generation() !== generation) return false
+  const now = handle.state()
+  if (status === "ready") {
+    if (!ready || !sfSameReadyOwnerSnapshot(handle, ready, generation)) return false
+  } else {
+    if (!selected || now.status === "ready" || now.status !== status ||
+      now.selection.serverKey !== selected.serverKey || now.selection.projectId !== selected.projectId ||
+      now.selection.installationId !== selected.installationId) return false
+    if (status === "unauthenticated" && (!binding || now.status !== "unauthenticated" ||
+      now.binding.projectId !== binding.projectId || now.binding.installationId !== binding.installationId ||
+      now.binding.hostId !== binding.hostId || now.binding.publicOrigin !== binding.publicOrigin ||
+      now.binding.mount !== binding.mount || now.binding.authMode !== binding.authMode)) return false
+  }
+  if (handle.discardDrafts()) {
+    deps.onDiscarded()
+    return true
+  }
+  deps.restoreFocus()
+  deps.onBlocked()
+  return false
 }
 
 /** Uses the live F01 transition and fences the owner across its async preflight. */
