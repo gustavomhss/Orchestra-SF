@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs"
+import { mkdirSync, readFileSync, readdirSync, writeFileSync, statSync } from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
@@ -163,6 +163,16 @@ function realRunMeta() {
       !/^[0-9]+$/.test(attempt || "")) fail("invalid GitHub Actions identity")
   return { sha, runId, attempt }
 }
+export function requiredSelection(manifest, id) {
+  const suites = validateManifest(manifest)
+  const suite = suites.find((entry) => entry.id === id)
+  const selected = suite?.selection
+  if (!suite || selected?.kind !== "explicit" || !Array.isArray(selected.testFiles)) {
+    fail("no explicit product test files for " + String(id))
+  }
+  return [...selected.testFiles]
+}
+
 function cli() {
   const command = process.argv[2]
   const manifest = readJson("sf/ci/suites.json")
@@ -182,6 +192,17 @@ function cli() {
     const safe = minimalPlaywrightEvidence(readFileSync(reportFile, "utf8"), suite.specFile)
     writeFileSync(reportFile, safe, { mode: 0o600 })
     console.log("SF_CI_PLAYWRIGHT_EVIDENCE_MINIMIZED " + id)
+    return
+  }
+  if (command === "select") {
+    for (const name of requiredSelection(manifest, process.env.SF_SUITE_ID)) {
+      if (!/^[A-Za-z0-9_/-]+\.test\.ts$/.test(name)) fail("untrusted test filename")
+      const file = path.join(manifest.suites.find((entry) => entry.id === process.env.SF_SUITE_ID).directory, name)
+      if (!statSync(file, { throwIfNoEntry: false })?.isFile()) {
+        fail("selected file missing on checked-out candidate: " + name)
+      }
+      process.stdout.write(name + "\n")
+    }
     return
   }
   if (command === "receipt") {

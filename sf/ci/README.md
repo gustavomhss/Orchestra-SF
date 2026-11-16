@@ -28,8 +28,8 @@ an already decisive red verdict. For diagnosis, run the named failing test
 with the Linux-only surgical runner. No timeout, permission or expectation
 has been relaxed.
 
-The Linux-only request selector regression runs before product typechecks,
-and repository guards run even if product typechecks fail, so the quality
+The Linux-only request selector regression runs in the independent preflight
+before product typechecks, and repository guards run even if product typechecks fail, so the quality
 of this CI migration can be reviewed separately from SF product failures.
 
 ## Required SF CI
@@ -54,7 +54,7 @@ copy that gets cancelled. Browser unit tests run the full
 new files automatically, rather than the unrelated canonical browser
 tests. The independent Linux-only `test-ci` selector regression runs
 on the static lane. The CLI and Atlas-Business families
-now use explicit, committed Linux/SF product selections from
+now read their explicit test-file arguments exclusively from
 `sf/ci/suites.json` instead of upstream compiled distribution and redundant
 generator tests. CLI includes host installation, admission, Task/Relay
 wiring, listener policy and Linux service boundaries. Atlas includes
