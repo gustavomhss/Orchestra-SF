@@ -1,0 +1,1443 @@
+{
+  "schema": "sf2h.closure228.proposed-detached-product-tree.v1",
+  "mission": 228,
+  "epoch": "closure-reconcile-e1-browser228",
+  "product_base_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "product_base_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+  "proposed_detached_git_tree": "3201ecd8178c4bb6b69465d2e2188ead8da5455a",
+  "detached_no_branch_or_ref_update": true,
+  "final_product_branch": "sf-closure-bundle",
+  "final_product_pr": 191,
+  "product_current_head_at_preparation": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "product_unchanged": true,
+  "authority": "INERT_ONLY_UNTIL_VALID_211_RELEASE_HANDOFF",
+  "materialization": "Each proposed_post_blob is an exact Git source blob also reachable under source/merged inert receipt paths. On valid S0 handoff adopt expected-head then recreate tree against the actual live product head, never blindly overwrite.",
+  "totals": {
+    "git_entries_proposed": 70,
+    "added": 28,
+    "modified": 42,
+    "unchanged": 0,
+    "semantic_conflicts": 8
+  },
+  "critical_gaps": {
+    "mission224": "SOURCE_NOT_PUBLISHED",
+    "mission223": "CI_DISPATCHER_ONLY_NO_CODE",
+    "C12": "POLICY_SOURCE_REVIEWED_UNACCEPTED",
+    "today_F01": "INERT_BINDER_NOT_WIRED_TO_EXISTING_AUTHENTIC_HOST",
+    "real_host": "UNVERIFIED_PRIVATE_INSTALLED_F04",
+    "handoff_211_228": "NOT_OBSERVED",
+    "C": "PROPOSED_NOT_ACCEPTED",
+    "D": "NO_VALIDATED_EVIDENCE",
+    "guards_G7_G8": "NOT_RUN",
+    "compiler190": "NOT_RUN"
+  },
+  "proposed_changes": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "expected_pre_blob": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+      "proposed_post_blob": "438d258443e273d6dab46c4b6cfd9e291bec24c6",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": 219,
+          "post_blob": "b81e7f93a2f6c031b51b63ba36bcba129be45a73",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-219/apps/cli/src/sucafina-product/host-context.ts.inert.txt"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "438d258443e273d6dab46c4b6cfd9e291bec24c6",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "expected_pre_blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+      "proposed_post_blob": "b653926d8ddc478af06a228e7d51c54894a6c7e9",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/apps/cli/src/sucafina-product/installation.ts.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "b653926d8ddc478af06a228e7d51c54894a6c7e9",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/apps/cli/src/sucafina-product/installation.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-http.ts",
+      "expected_pre_blob": "f727d5250024df7338491321c36e7055d7c18f74",
+      "proposed_post_blob": "9c2c124b76dda4958e20385f9c5311188de580ec",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/apps/cli/src/sucafina-product/memory-http.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "9c2c124b76dda4958e20385f9c5311188de580ec",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/apps/cli/src/sucafina-product/memory-http.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "dcd223898ca0bddb755ec2dc6b8e3fe2bd149cf4",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-219/apps/cli/src/sucafina-product/native-routine-producer219.ts.inert.txt",
+      "original_mission": 219,
+      "source_variants": [
+        {
+          "mission": 219,
+          "post_blob": "dcd223898ca0bddb755ec2dc6b8e3fe2bd149cf4",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-219/apps/cli/src/sucafina-product/native-routine-producer219.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/files-routing.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "0bf3b85b75498dd24a45bedf1c18c3e73724a581",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/apps/cli/src/sucafina-product/native-ui/files-routing.ts.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "0bf3b85b75498dd24a45bedf1c18c3e73724a581",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/apps/cli/src/sucafina-product/native-ui/files-routing.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/files.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "a2e1041871a553498b92f159ef9b28c874a3cfb6",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/apps/cli/src/sucafina-product/native-ui/files.ts.inert.txt",
+      "original_mission": 226,
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "a2e1041871a553498b92f159ef9b28c874a3cfb6",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/apps/cli/src/sucafina-product/native-ui/files.ts.inert.txt"
+        },
+        {
+          "mission": 226,
+          "post_blob": "a2e1041871a553498b92f159ef9b28c874a3cfb6",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/apps/cli/src/sucafina-product/native-ui/files.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "expected_pre_blob": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "proposed_post_blob": "94599cebd50f1c948945083cafc99979e63ed549",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-219/apps/cli/src/sucafina-product/routine-services.ts.inert.txt",
+      "original_mission": 219,
+      "source_variants": [
+        {
+          "mission": 219,
+          "post_blob": "94599cebd50f1c948945083cafc99979e63ed549",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-219/apps/cli/src/sucafina-product/routine-services.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/index.ts",
+      "expected_pre_blob": "a3f09c2a9006c016d51c660043d1189bb2df4c29",
+      "proposed_post_blob": "7b61a4f203d49598b0feb6c929cc85ed07a6df39",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/apps/desktop/src/main/sucafina/index.ts.inert.txt",
+      "original_mission": 225,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "1aa59adc0e252feefaeaf2a783b0c94ee51a19e3",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/apps/desktop/src/main/sucafina/index.ts.inert.txt"
+        },
+        {
+          "mission": 225,
+          "post_blob": "7b61a4f203d49598b0feb6c929cc85ed07a6df39",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/apps/desktop/src/main/sucafina/index.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/network.ts",
+      "expected_pre_blob": "912cade1f8213c0014f27ed75adb85b2b64f33c2",
+      "proposed_post_blob": "f5a8b7d00a0b8d288fd3c589b3056cd1759f0b8e",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/apps/desktop/src/main/sucafina/network.ts.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": 225,
+          "post_blob": "5b1cb5eebd73599a48f43a24c2b0985142f4d4a4",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/apps/desktop/src/main/sucafina/network.ts.inert.txt"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "f5a8b7d00a0b8d288fd3c589b3056cd1759f0b8e",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/apps/desktop/src/main/sucafina/network.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/protocol.ts",
+      "expected_pre_blob": "0b2152a22811d19a3b04ab1e4ebf5218c564b2eb",
+      "proposed_post_blob": "ec9636ed5005c8057c5d6656f7b8c54034e6365f",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/apps/desktop/src/main/sucafina/protocol.ts.inert.txt",
+      "original_mission": 225,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "134cf26a0b65ed4b3f606f975925ad865902c021",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/apps/desktop/src/main/sucafina/protocol.ts.inert.txt"
+        },
+        {
+          "mission": 225,
+          "post_blob": "ec9636ed5005c8057c5d6656f7b8c54034e6365f",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/apps/desktop/src/main/sucafina/protocol.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "expected_pre_blob": "2420a5147e6705a5842936ee3459bf7d787d5870",
+      "proposed_post_blob": "b88301e2f956aefb5fff723d5a1f97af31423f4d",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-215/modules/sucafina/Sucafinav1/product/analytics/semantics.ts.inert.txt",
+      "original_mission": 215,
+      "source_variants": [
+        {
+          "mission": 215,
+          "post_blob": "b88301e2f956aefb5fff723d5a1f97af31423f4d",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-215/modules/sucafina/Sucafinav1/product/analytics/semantics.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "expected_pre_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+      "proposed_post_blob": "3ce00f44f2f072342b8e894bfc54b2f2a16f25c4",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "3ce00f44f2f072342b8e894bfc54b2f2a16f25c4",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "expected_pre_blob": "227f22ae80851185a1998bee1adf7bda73a83485",
+      "proposed_post_blob": "b5caa2d662e12b9e74460a7c9291b61b967b32e2",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-216/modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts.inert.txt",
+      "original_mission": 216,
+      "source_variants": [
+        {
+          "mission": 216,
+          "post_blob": "b5caa2d662e12b9e74460a7c9291b61b967b32e2",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-216/modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/memory/similarity217.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "1d3f1ecac45e03cc3b112727f2de21174142672b",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/modules/sucafina/Sucafinav1/product/memory/similarity217.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "1d3f1ecac45e03cc3b112727f2de21174142672b",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/modules/sucafina/Sucafinav1/product/memory/similarity217.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "expected_pre_blob": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+      "proposed_post_blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-220/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts.inert.txt",
+      "original_mission": 220,
+      "source_variants": [
+        {
+          "mission": 220,
+          "post_blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-220/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": "C12_HUMAN_POLICY_REVIEW_REQUIRED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "expected_pre_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+      "proposed_post_blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-220/modules/sucafina/Sucafinav1/product/procurement/prepared.ts.inert.txt",
+      "original_mission": 220,
+      "source_variants": [
+        {
+          "mission": 220,
+          "post_blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-220/modules/sucafina/Sucafinav1/product/procurement/prepared.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": "C12_HUMAN_POLICY_REVIEW_REQUIRED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "expected_pre_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+      "proposed_post_blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-220/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts.inert.txt",
+      "original_mission": 220,
+      "source_variants": [
+        {
+          "mission": 220,
+          "post_blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-220/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": "C12_HUMAN_POLICY_REVIEW_REQUIRED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "expected_pre_blob": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+      "proposed_post_blob": "dbdbde9d95ffcdf59c50ee64b880e631b37e433a",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-220/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts.inert.txt",
+      "original_mission": 220,
+      "source_variants": [
+        {
+          "mission": 220,
+          "post_blob": "dbdbde9d95ffcdf59c50ee64b880e631b37e433a",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-220/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-218/modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts.inert.txt",
+      "original_mission": 218,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts.inert.txt"
+        },
+        {
+          "mission": 218,
+          "post_blob": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-218/modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/analytics/unit-integrity215.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "603d37dfbbe1c474781dc38bb26fde503750f671",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-215/modules/sucafina/Sucafinav1/test/product/analytics/unit-integrity215.test.ts.inert.txt",
+      "original_mission": 215,
+      "source_variants": [
+        {
+          "mission": 215,
+          "post_blob": "603d37dfbbe1c474781dc38bb26fde503750f671",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-215/modules/sucafina/Sucafinav1/test/product/analytics/unit-integrity215.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "expected_pre_blob": "33650407123163ea881eca9d4940fde364b27c54",
+      "proposed_post_blob": "d96709db609b399ef801f487e443a381863d6298",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-220/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts.inert.txt",
+      "original_mission": 220,
+      "source_variants": [
+        {
+          "mission": 220,
+          "post_blob": "d96709db609b399ef801f487e443a381863d6298",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-220/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "e42288e8d0149dc990cb3e62d71b20d4be1fc35c",
+      "git_mode": "100644",
+      "resolution": "source-226-latest:modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts",
+      "original_mission": 226,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "8125a05ef984e3328953b820d77d3851f34fd2f2",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts.inert.txt"
+        },
+        {
+          "mission": 226,
+          "post_blob": "e42288e8d0149dc990cb3e62d71b20d4be1fc35c",
+          "source_artifact": "source-226-latest:modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/files-transport226/README.md",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "cf6de0b9023d530870640df00282de81148b96a7",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/modules/sucafina/Sucafinav1/test/product/files-transport226/README.md.inert.txt",
+      "original_mission": 226,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "cf6de0b9023d530870640df00282de81148b96a7",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/modules/sucafina/Sucafinav1/test/product/files-transport226/README.md.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/import-history218/real-receipts.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "a302126ef23e706972b3b80b14c78f3280feacf3",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/modules/sucafina/Sucafinav1/test/product/import-history218/real-receipts.test.ts.inert.txt",
+      "original_mission": 218,
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "a302126ef23e706972b3b80b14c78f3280feacf3",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/modules/sucafina/Sucafinav1/test/product/import-history218/real-receipts.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+      "expected_pre_blob": "f20fdab67655572f181f78e64b3023f993346d7c",
+      "proposed_post_blob": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-221/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts.inert.txt",
+      "original_mission": 221,
+      "source_variants": [
+        {
+          "mission": 221,
+          "post_blob": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-221/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+      "expected_pre_blob": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+      "proposed_post_blob": "aa48bb72137de7e123cbb38625e396825bbfa99e",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-222/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts.inert.txt",
+      "original_mission": 222,
+      "source_variants": [
+        {
+          "mission": 222,
+          "post_blob": "aa48bb72137de7e123cbb38625e396825bbfa99e",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-222/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "a935ce97e97f03f1f6a02f03cabc6b271a0ec645",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-216/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts.inert.txt",
+      "original_mission": 216,
+      "source_variants": [
+        {
+          "mission": 216,
+          "post_blob": "a935ce97e97f03f1f6a02f03cabc6b271a0ec645",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-216/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission219/human-command.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "fb24ea750289297621b9ab514ce6422bc2435342",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-219/modules/sucafina/Sucafinav1/test/product/native-admission219/human-command.test.ts.inert.txt",
+      "original_mission": 219,
+      "source_variants": [
+        {
+          "mission": 219,
+          "post_blob": "fb24ea750289297621b9ab514ce6422bc2435342",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-219/modules/sucafina/Sucafinav1/test/product/native-admission219/human-command.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/similarity217/installed.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "f9b72688d922c12268a83d02cdf22d46f1f511af",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/modules/sucafina/Sucafinav1/test/product/similarity217/installed.test.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "f9b72688d922c12268a83d02cdf22d46f1f511af",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/modules/sucafina/Sucafinav1/test/product/similarity217/installed.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/supplier-csv225/admission.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "b35780346ef33c902d84c86a18147c22f4251fe5",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/modules/sucafina/Sucafinav1/test/product/supplier-csv225/admission.test.ts.inert.txt",
+      "original_mission": 225,
+      "source_variants": [
+        {
+          "mission": 225,
+          "post_blob": "b35780346ef33c902d84c86a18147c22f4251fe5",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/modules/sucafina/Sucafinav1/test/product/supplier-csv225/admission.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts",
+      "expected_pre_blob": "57f9d00320d08e8890712f9a8525e7a2c56f22fc",
+      "proposed_post_blob": "93d24c34b73bdd6d1a6ef4c6fe57a855f6820b26",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-222/modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts.inert.txt",
+      "original_mission": 222,
+      "source_variants": [
+        {
+          "mission": 222,
+          "post_blob": "93d24c34b73bdd6d1a6ef4c6fe57a855f6820b26",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-222/modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+      "expected_pre_blob": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+      "proposed_post_blob": "f9c99a8a886211d1aba60371a2d3b0aa287293b5",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-220/modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts.inert.txt",
+      "original_mission": 220,
+      "source_variants": [
+        {
+          "mission": 220,
+          "post_blob": "f9c99a8a886211d1aba60371a2d3b0aa287293b5",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-220/modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "38a9ee34e67b401c36efb8090aa807b451780d33",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts.inert.txt",
+      "original_mission": 218,
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "38a9ee34e67b401c36efb8090aa807b451780d33",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/similarity217/ui62.spec.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "9acbcbf14ad001bff34391f0e907f37266d5eec9",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/e2e/sucafina/native/journeys/similarity217/ui62.spec.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "9acbcbf14ad001bff34391f0e907f37266d5eec9",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/e2e/sucafina/native/journeys/similarity217/ui62.spec.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "05c985b73b7e9f070550b6bc457953ae3ff9e367",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/app-shell/e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts.inert.txt",
+      "original_mission": 225,
+      "source_variants": [
+        {
+          "mission": 225,
+          "post_blob": "05c985b73b7e9f070550b6bc457953ae3ff9e367",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/app-shell/e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+      "expected_pre_blob": "335ffccb6aa231a13700f9f0f8bd76e4f3ee8694",
+      "proposed_post_blob": "340fbae98d8245cf571af266a1c447b226fc98ac",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts.inert.txt",
+      "original_mission": 227,
+      "source_variants": [
+        {
+          "mission": 227,
+          "post_blob": "340fbae98d8245cf571af266a1c447b226fc98ac",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u14.spec.ts",
+      "expected_pre_blob": "3c77809d69825e193b985a1d3c0c192c0ba12815",
+      "proposed_post_blob": "7db2c9d67a724db736169251659d66cdeb457fea",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/packages/app-shell/e2e/sucafina/native/journeys/u14.spec.ts.inert.txt",
+      "original_mission": 225,
+      "source_variants": [
+        {
+          "mission": 225,
+          "post_blob": "7db2c9d67a724db736169251659d66cdeb457fea",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/packages/app-shell/e2e/sucafina/native/journeys/u14.spec.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u26.spec.ts",
+      "expected_pre_blob": "1bb0d8c9447426f63bc0ee7264aaf4a8284b7876",
+      "proposed_post_blob": "5bb883e96ee1e24175f40f2213011a5abc26f570",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/app-shell/e2e/sucafina/native/journeys/u26.spec.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "5bb883e96ee1e24175f40f2213011a5abc26f570",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/app-shell/e2e/sucafina/native/journeys/u26.spec.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra.ts",
+      "expected_pre_blob": "8268cda221a272faceef08223726bda1458ccc83",
+      "proposed_post_blob": "e4f42b7aa0d4b9e0928d132d8a0b1596c334f698",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/app-shell/src/i18n/orchestra.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "e4f42b7aa0d4b9e0928d132d8a0b1596c334f698",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/app-shell/src/i18n/orchestra.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+      "expected_pre_blob": "592eef8206c665a1fc908934e258b286fe85609e",
+      "proposed_post_blob": "876f95feadd07d6628d13a6c34e454a5ce382ea4",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts.inert.txt",
+      "original_mission": 227,
+      "source_variants": [
+        {
+          "mission": 227,
+          "post_blob": "876f95feadd07d6628d13a6c34e454a5ce382ea4",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "expected_pre_blob": "8b949f966725f8a7d22a486e3391f79deecce258",
+      "proposed_post_blob": "2a993c4d30e63cb534326d5586fe2c871b340d1b",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx.inert.txt",
+      "original_mission": 227,
+      "source_variants": [
+        {
+          "mission": 227,
+          "post_blob": "2a993c4d30e63cb534326d5586fe2c871b340d1b",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+      "expected_pre_blob": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+      "proposed_post_blob": "7e66c610cd4bbb8e27e4c16a239b2142d5b208ba",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx.inert.txt",
+      "original_mission": 227,
+      "source_variants": [
+        {
+          "mission": 227,
+          "post_blob": "7e66c610cd4bbb8e27e4c16a239b2142d5b208ba",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/today-resume-binding.tsx",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "80874de468b3891057008380a498d949e9d0a3ff",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/app-shell/src/orchestra/chapters/sucafina/host/today-resume-binding.tsx.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "80874de468b3891057008380a498d949e9d0a3ff",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/app-shell/src/orchestra/chapters/sucafina/host/today-resume-binding.tsx.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": "F01_CALLSITE_NOT_WIRED"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "16839289b896f4ddb2a656dc5cc13a8c8d2cb2f9",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts.inert.txt",
+      "original_mission": 218,
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "16839289b896f4ddb2a656dc5cc13a8c8d2cb2f9",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+      "expected_pre_blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+      "proposed_post_blob": "c503bb0904a5f989076583b30d91f9cd43d2bb4a",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx.inert.txt",
+      "original_mission": 218,
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "c503bb0904a5f989076583b30d91f9cd43d2bb4a",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+      "expected_pre_blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+      "proposed_post_blob": "e39fbb08e92ab7e816cd0db3ca38bc60a8ac6e91",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "e39fbb08e92ab7e816cd0db3ca38bc60a8ac6e91",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css",
+      "expected_pre_blob": "514c7ef4563138991bb83ff717e776000bb077bf",
+      "proposed_post_blob": "809fa80d48b8c1d513cb870f7953925755b9398d",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "809fa80d48b8c1d513cb870f7953925755b9398d",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "71c06dd535c80865de69fd0031e95235f91c3f93",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "71c06dd535c80865de69fd0031e95235f91c3f93",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similarity-copy.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "91d27442af391adaf876dd3541ca510ced4d4bdb",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/similarity-copy.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "91d27442af391adaf876dd3541ca510ced4d4bdb",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/app-shell/src/orchestra/chapters/sucafina/memory/similarity-copy.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+      "expected_pre_blob": "23a5da80dd837d5113e53ba6ece1ada5e97d0a0a",
+      "proposed_post_blob": "6e74148eb42efb18f15ecf25d098cbe1bf5f038d",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts.inert.txt",
+      "original_mission": 227,
+      "source_variants": [
+        {
+          "mission": 227,
+          "post_blob": "6e74148eb42efb18f15ecf25d098cbe1bf5f038d",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "44c3ad22099b2a20047fe79dbc058cc7a37bbd63",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts.inert.txt",
+      "original_mission": 227,
+      "source_variants": [
+        {
+          "mission": 227,
+          "post_blob": "44c3ad22099b2a20047fe79dbc058cc7a37bbd63",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+      "expected_pre_blob": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+      "proposed_post_blob": "e354b0f5fcfc1c8aaf1aba447dfa0a60df233c93",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx.inert.txt",
+      "original_mission": 225,
+      "source_variants": [
+        {
+          "mission": 225,
+          "post_blob": "e354b0f5fcfc1c8aaf1aba447dfa0a60df233c93",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "9fae974a321af6c863c8749600d42e5271bfa63f",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts.inert.txt",
+      "original_mission": 227,
+      "source_variants": [
+        {
+          "mission": 227,
+          "post_blob": "9fae974a321af6c863c8749600d42e5271bfa63f",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-227/packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/package.json",
+      "expected_pre_blob": "89c376ac148db0c3ba2a5f5b0a0aece932c72a6f",
+      "proposed_post_blob": "c2a2958bc63e2c10379ca57018b17ce11c19d940",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/package.json.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "c2a2958bc63e2c10379ca57018b17ce11c19d940",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-218/packages/client/package.json.inert.txt"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "c2a2958bc63e2c10379ca57018b17ce11c19d940",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/package.json.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/src/sucafina/bindings.ts",
+      "expected_pre_blob": "aff16695246561bd2cfe154c1ac892084ce119a4",
+      "proposed_post_blob": "39c31e0f88d366e97fa9cb126fd2fb4f228f8578",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/bindings.ts.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "b6a88b465e76edc93d8d5c2f3a4b011b3c1dbece",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-218/packages/client/src/sucafina/bindings.ts.inert.txt"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "39c31e0f88d366e97fa9cb126fd2fb4f228f8578",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/bindings.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/src/sucafina/files.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "4f29bf65fe6f128fb3d34d24beeaddef983c1e6b",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/files.ts.inert.txt",
+      "original_mission": 226,
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "18d0e2f143fffc965d3b0a632c87f2aa59f7b302",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/client/src/sucafina/files.ts.inert.txt"
+        },
+        {
+          "mission": 226,
+          "post_blob": "4f29bf65fe6f128fb3d34d24beeaddef983c1e6b",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/files.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/src/sucafina/files/codecs.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "221098f0f73b0048574522f114cf92be8344440a",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/files/codecs.ts.inert.txt",
+      "original_mission": 226,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "221098f0f73b0048574522f114cf92be8344440a",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/files/codecs.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/src/sucafina/memory.ts",
+      "expected_pre_blob": "cddd7ceccc66bc5faf38d169bede03efa31440db",
+      "proposed_post_blob": "c63a98050984e937da4105b2667b670b73579d28",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/client/src/sucafina/memory.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "c63a98050984e937da4105b2667b670b73579d28",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/client/src/sucafina/memory.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/src/sucafina/procurement.ts",
+      "expected_pre_blob": "7875c98e14fcde4255bd807f094685cc0fcf60b6",
+      "proposed_post_blob": "e3c7c28e7a3f12ecb619ba3a87d6c50aa63ff3c5",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/client/src/sucafina/procurement.ts.inert.txt",
+      "original_mission": 225,
+      "source_variants": [
+        {
+          "mission": 225,
+          "post_blob": "e3c7c28e7a3f12ecb619ba3a87d6c50aa63ff3c5",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/client/src/sucafina/procurement.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "expected_pre_blob": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+      "proposed_post_blob": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/transport.ts.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "02bb91510c84b36d5d7aad9c9631142136fb4122",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/transport.ts.inert.txt"
+        },
+        {
+          "mission": 225,
+          "post_blob": "829309cd3a9cc5411474709884e738e10e8db354",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/packages/client/src/sucafina/transport.ts.inert.txt"
+        },
+        {
+          "mission": 226,
+          "post_blob": "368f4420e7c74fbbdb45a6d55c442915bbaba16c",
+          "source_artifact": "source-226-latest:packages/client/src/sucafina/transport.ts"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/transport.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/src/sucafina/transport/files.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "f01f7d06169f0b396baf38ada9f97a9a25831f8c",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/transport/files.ts.inert.txt",
+      "original_mission": 226,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "f01f7d06169f0b396baf38ada9f97a9a25831f8c",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/transport/files.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/client/test/sucafina/files-transport226/source-codecs.test.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "7e120681b3ccffa6dcdb05585a6b916fcab960fc",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/test/sucafina/files-transport226/source-codecs.test.ts.inert.txt",
+      "original_mission": 226,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "7e120681b3ccffa6dcdb05585a6b916fcab960fc",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/test/sucafina/files-transport226/source-codecs.test.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/schema/package.json",
+      "expected_pre_blob": "d4b28cceb8c5695fbf290a6d9a1e0c319e28c337",
+      "proposed_post_blob": "8e6d85d91f233762f243b294f8d3428b3fdd9376",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/schema/package.json.inert.txt",
+      "original_mission": "228-SEMANTIC",
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "8e6d85d91f233762f243b294f8d3428b3fdd9376",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-218/packages/schema/package.json.inert.txt"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "post_blob": "8e6d85d91f233762f243b294f8d3428b3fdd9376",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/schema/package.json.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/schema/src/sucafina/common.ts",
+      "expected_pre_blob": "f486d0bdb266935791059514c11c34372204623f",
+      "proposed_post_blob": "1d2b8f5606fcf23f010a19148e3ca09e108d2db6",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/schema/src/sucafina/common.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "1d2b8f5606fcf23f010a19148e3ca09e108d2db6",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/schema/src/sucafina/common.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/schema/src/sucafina/decisions.ts",
+      "expected_pre_blob": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+      "proposed_post_blob": "52fc1a3fc52b39c0d18f0064bcc17417421ce3c7",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-220/packages/schema/src/sucafina/decisions.ts.inert.txt",
+      "original_mission": 220,
+      "source_variants": [
+        {
+          "mission": 220,
+          "post_blob": "52fc1a3fc52b39c0d18f0064bcc17417421ce3c7",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-220/packages/schema/src/sucafina/decisions.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/schema/src/sucafina/files.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/schema/src/sucafina/files.ts.inert.txt",
+      "original_mission": 226,
+      "source_variants": [
+        {
+          "mission": 218,
+          "post_blob": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-218/packages/schema/src/sucafina/files.ts.inert.txt"
+        },
+        {
+          "mission": 226,
+          "post_blob": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/schema/src/sucafina/files.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/schema/src/sucafina/files/structures.ts",
+      "expected_pre_blob": null,
+      "proposed_post_blob": "72859baa8ae358038274edd14bb20d9a3334a031",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-218/packages/schema/src/sucafina/files/structures.ts.inert.txt",
+      "original_mission": 218,
+      "source_variants": [
+        {
+          "mission": 226,
+          "post_blob": "72859baa8ae358038274edd14bb20d9a3334a031",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/schema/src/sucafina/files/structures.ts.inert.txt"
+        },
+        {
+          "mission": 218,
+          "post_blob": "72859baa8ae358038274edd14bb20d9a3334a031",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-218/packages/schema/src/sucafina/files/structures.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/schema/src/sucafina/memory.ts",
+      "expected_pre_blob": "554c07bbf881b89ab9df852cdbf61322547f6382",
+      "proposed_post_blob": "fdb236cfc7eed079904d0664c69a953aaa9112e7",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/schema/src/sucafina/memory.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "fdb236cfc7eed079904d0664c69a953aaa9112e7",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-217/packages/schema/src/sucafina/memory.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/schema/src/sucafina/operation-registry.ts",
+      "expected_pre_blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+      "proposed_post_blob": "0f1959d82a2e6a5c4ed745c3ad518339456f9ff7",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/schema/src/sucafina/operation-registry.ts.inert.txt",
+      "original_mission": 217,
+      "source_variants": [
+        {
+          "mission": 217,
+          "post_blob": "0f1959d82a2e6a5c4ed745c3ad518339456f9ff7",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-217/packages/schema/src/sucafina/operation-registry.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    },
+    {
+      "path": "packages/schema/src/sucafina/procurement.ts",
+      "expected_pre_blob": "1b69faa66446264d70964f0235a3e77d1979e6fb",
+      "proposed_post_blob": "a71569ca0b3ad34c17ace04d33c855f120b7870c",
+      "git_mode": "100644",
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/schema/src/sucafina/procurement.ts.inert.txt",
+      "original_mission": 225,
+      "source_variants": [
+        {
+          "mission": 225,
+          "post_blob": "a71569ca0b3ad34c17ace04d33c855f120b7870c",
+          "source_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-225/packages/schema/src/sucafina/procurement.ts.inert.txt"
+        }
+      ],
+      "state": "INERT_UNAPPLIED_NOT_TESTED",
+      "conditional": null
+    }
+  ],
+  "semantic_conflicts": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "chosen": "438d258443e273d6dab46c4b6cfd9e291bec24c6",
+      "from": [
+        {
+          "mission": 219,
+          "blob": "b81e7f93a2f6c031b51b63ba36bcba129be45a73"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "blob": "438d258443e273d6dab46c4b6cfd9e291bec24c6"
+        }
+      ],
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic/apps/cli/src/sucafina-product/host-context.ts.inert.txt"
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/index.ts",
+      "chosen": "7b61a4f203d49598b0feb6c929cc85ed07a6df39",
+      "from": [
+        {
+          "mission": 226,
+          "blob": "1aa59adc0e252feefaeaf2a783b0c94ee51a19e3"
+        },
+        {
+          "mission": 225,
+          "blob": "7b61a4f203d49598b0feb6c929cc85ed07a6df39"
+        }
+      ],
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/apps/desktop/src/main/sucafina/index.ts.inert.txt"
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/network.ts",
+      "chosen": "f5a8b7d00a0b8d288fd3c589b3056cd1759f0b8e",
+      "from": [
+        {
+          "mission": 225,
+          "blob": "5b1cb5eebd73599a48f43a24c2b0985142f4d4a4"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "blob": "f5a8b7d00a0b8d288fd3c589b3056cd1759f0b8e"
+        }
+      ],
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/apps/desktop/src/main/sucafina/network.ts.inert.txt"
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/protocol.ts",
+      "chosen": "ec9636ed5005c8057c5d6656f7b8c54034e6365f",
+      "from": [
+        {
+          "mission": 226,
+          "blob": "134cf26a0b65ed4b3f606f975925ad865902c021"
+        },
+        {
+          "mission": 225,
+          "blob": "ec9636ed5005c8057c5d6656f7b8c54034e6365f"
+        }
+      ],
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/cross-lease-225/apps/desktop/src/main/sucafina/protocol.ts.inert.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts",
+      "chosen": "e42288e8d0149dc990cb3e62d71b20d4be1fc35c",
+      "from": [
+        {
+          "mission": 226,
+          "blob": "8125a05ef984e3328953b820d77d3851f34fd2f2"
+        },
+        {
+          "mission": 226,
+          "blob": "e42288e8d0149dc990cb3e62d71b20d4be1fc35c"
+        }
+      ],
+      "resolution": "source-226-latest:modules/sucafina/Sucafinav1/test/product/files-transport226/live-driver.ts"
+    },
+    {
+      "path": "packages/client/src/sucafina/bindings.ts",
+      "chosen": "39c31e0f88d366e97fa9cb126fd2fb4f228f8578",
+      "from": [
+        {
+          "mission": 218,
+          "blob": "b6a88b465e76edc93d8d5c2f3a4b011b3c1dbece"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "blob": "39c31e0f88d366e97fa9cb126fd2fb4f228f8578"
+        }
+      ],
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/bindings.ts.inert.txt"
+    },
+    {
+      "path": "packages/client/src/sucafina/files.ts",
+      "chosen": "4f29bf65fe6f128fb3d34d24beeaddef983c1e6b",
+      "from": [
+        {
+          "mission": 218,
+          "blob": "18d0e2f143fffc965d3b0a632c87f2aa59f7b302"
+        },
+        {
+          "mission": 226,
+          "blob": "4f29bf65fe6f128fb3d34d24beeaddef983c1e6b"
+        }
+      ],
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/mission-226/packages/client/src/sucafina/files.ts.inert.txt"
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "chosen": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+      "from": [
+        {
+          "mission": 226,
+          "blob": "02bb91510c84b36d5d7aad9c9631142136fb4122"
+        },
+        {
+          "mission": 225,
+          "blob": "829309cd3a9cc5411474709884e738e10e8db354"
+        },
+        {
+          "mission": 226,
+          "blob": "368f4420e7c74fbbdb45a6d55c442915bbaba16c"
+        },
+        {
+          "mission": "228-SEMANTIC",
+          "blob": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8"
+        }
+      ],
+      "resolution": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/payloads/merged-semantic-v2/packages/client/src/sucafina/transport.ts.inert.txt"
+    }
+  ],
+  "tests": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "build": "NOT_RUN",
+  "validators": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "native_goal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}
