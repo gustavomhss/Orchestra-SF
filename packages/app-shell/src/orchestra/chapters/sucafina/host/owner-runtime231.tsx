@@ -32,6 +32,8 @@ import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import { SfPlannerOverviewView } from "../planner/overview"
 import { SfPlannerVersionsView } from "../planner/versions"
 import { SfPlannerCompareView } from "../planner/compare"
+import { SfBiCatalog } from "../bi/catalog"
+import { validBiRoute, biRouteAvailable } from "./bi-route"
 import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
@@ -189,6 +191,12 @@ function MountedSurface(props: Readonly<{
       <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP17"}>
         <SfPlannerOverviewView surfaceId="CAP17" route={current() as SfSurfaceProps<"CAP17">["route"]} />
       </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "UI45"}>
+        <SfBiCatalog surfaceId="UI45" route={current() as SfSurfaceProps<"UI45">["route"]} />
+      </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "UI46"}>
+        <SfBiCatalog surfaceId="UI46" route={current() as SfSurfaceProps<"UI46">["route"]} />
+      </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP23" && current()?.kind === "compare"}>
         <SfPlannerCompareView surfaceId="CAP23" route={current() as SfSurfaceProps<"CAP23">["route"]} />
       </Match>
@@ -255,7 +263,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         target.pathname.startsWith("/orchestra/sf-home/")) ||
         target.pathname === "/orchestra/sf-decisions" ||
         target.pathname.startsWith("/orchestra/sf-decisions/") ||
-        target.pathname === "/orchestra/sf-planner" || target.pathname.startsWith("/orchestra/sf-planner/"))) return
+        target.pathname === "/orchestra/sf-planner" || target.pathname.startsWith("/orchestra/sf-planner/") ||
+        target.pathname === "/orchestra/sf-bi" || target.pathname.startsWith("/orchestra/sf-bi/"))) return
     if (!mounted?.hasDirtyDrafts()) return
     event.preventDefault()
     void requestSfOwnerShellExit237().then((accepted) => {
@@ -409,6 +418,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const plannerQuery = (candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17") ? parsePlannerRouteQuery(url.searchParams, candidate) : undefined
       if (candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerQuery :
         [...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)) || !(
+          (candidate.surfaceId === "UI45" || candidate.surfaceId === "UI46") && validBiRoute(candidate, url.searchParams) ||
           candidate.surfaceId === "UI29" && candidate.kind === "entry" ||
           candidate.surfaceId === "UI33" && candidate.kind === "entry" ||
           candidate.surfaceId === "UI34" && candidate.kind === "entry"
@@ -441,6 +451,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
         : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
       if (candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerRouteAvailable(context.value, candidate) :
+        candidate.surfaceId === "UI45" || candidate.surfaceId === "UI46" ? !biRouteAvailable(context.value, candidate) :
         !context.value.availability.some((resource) => resource.operations.some((operation) =>
           operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
         return { status: "denied" }
@@ -619,9 +630,10 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const nonPlanner = routePath && routePath.kind === "entry" &&
       ["UI29", "UI33", "UI34"].includes(routePath.surfaceId) &&
       [...new URLSearchParams(location.search).keys()].every((key) => ["server", "project", "installation"].includes(key))
+    const bi = routePath && validBiRoute(routePath, new URLSearchParams(location.search))
     if (parsed.kind === "invalid" || parsed.kind === "selected" &&
         !sameSelection(parsed.selection, selected) ||
-        !routePath || !(planner || nonPlanner)) {
+        !routePath || !(planner || nonPlanner || bi)) {
       setView({ status: "invalid-link", route: undefined })
       return
     }

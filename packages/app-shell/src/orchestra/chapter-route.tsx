@@ -47,10 +47,11 @@ export const chapterPages: Partial<Record<string, ChapterPage>> = {
   "sf-home": SfOwnerRuntime231,
   "sf-decisions": SfOwnerRuntime231,
   "sf-planner": SfOwnerRuntime231,
+  "sf-bi": SfOwnerRuntime231,
 }
 
 // These chapters span the whole server, so they render without a project (with an empty directory).
-const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox", "sf-home", "sf-decisions", "sf-planner"]
+const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox", "sf-home", "sf-decisions", "sf-planner", "sf-bi"]
 
 const ChapterEmpty = lazy(() => import("./chapter-empty"))
 
@@ -122,7 +123,7 @@ export function OrchestraChapterRoute() {
                   {(conn) => (
                     <ServerSDKProvider server={() => conn}>
                       <ServerSyncProvider server={() => conn}>
-                        <Show when={params.chapter === "sf-home" || params.chapter === "sf-decisions" || params.chapter === "sf-planner"} fallback={
+                        <Show when={params.chapter === "sf-home" || params.chapter === "sf-decisions" || params.chapter === "sf-planner" || params.chapter === "sf-bi"} fallback={
                           <ChapterBoundary chapter={params.chapter}>
                             <Dynamic component={page()} server={conn} directory="" />
                           </ChapterBoundary>
@@ -143,7 +144,7 @@ export function OrchestraChapterRoute() {
                     <SDKProvider directory={owner.directory}>
                       <ModelsProvider directory={() => owner.directory}>
                         {/* Native UI29/UI33/UI34 must keep the same F01 owner across chapter changes. */}
-                        <Show when={params.chapter === "sf-home" || params.chapter === "sf-decisions" || params.chapter === "sf-planner"} fallback={
+                        <Show when={params.chapter === "sf-home" || params.chapter === "sf-decisions" || params.chapter === "sf-planner" || params.chapter === "sf-bi"} fallback={
                           <ChapterBoundary chapter={params.chapter}>
                             <Dynamic component={page()} server={owner.server} directory={owner.directory} />
                           </ChapterBoundary>
