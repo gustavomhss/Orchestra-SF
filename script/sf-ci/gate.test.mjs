@@ -16,6 +16,7 @@ const digest = createHash("sha256").update(report).digest("hex")
 const sha = "a".repeat(40)
 const runId = "123"
 const attempt = "1"
+const treeSha = "c".repeat(40)
 const manifest = {
   schemaVersion: 1, product: "Orchestra-SF", target: { os: "Linux", arch: "X64" },
   suites: REQUIRED.map((id) => id.startsWith("CI-UI-")
@@ -70,6 +71,7 @@ function fixture() {
     receipts[suite.id] = {
       schemaVersion: 1, suiteId: suite.id, kind: suite.kind, status: "PASS",
       exitCode: 0, sourceSha: sha, checkoutSha: sha, runId, attempt,
+      treeSha, manifestSha256: createHash("sha256").update(JSON.stringify(manifest)).digest("hex"),
       runnerOS: "Linux", runnerArch: "X64", executedTests: suite.kind === "bun" ? 2 : 1,
       executedFiles: inventory.fileCount, selectedFilesSha256: sha256Lines(inventory.files),
       coverageFilesSha256: inventory.filesSha256, coverageCaseSha256: inventory.casesSha256,
@@ -77,7 +79,7 @@ function fixture() {
     }
   }
   const needs = Object.fromEntries(["preflight","static","omni","unit","ui"].map((name) => [name, { result: "success" }]))
-  return { manifest, reports, receipts, needs, sha, runId, attempt,
+  return { manifest, reports, receipts, needs, sha, runId, attempt, treeSha,
     selectionProvider: (_manifest, id) => id.startsWith("CI-UI-")
       ? [manifest.suites.find((s) => s.id === id).specFile]
       : ["test/sf-authorized-sample.test.ts"] }
@@ -189,6 +191,8 @@ const mutations = [
   ["different run", (a) => { a.receipts["CI-SF"].runId = "999" }],
   ["different attempt", (a) => { a.receipts["CI-SF"].attempt = "2" }],
   ["wrong OS", (a) => { a.receipts["CI-SF"].runnerOS = "Windows" }],
+  ["wrong tree", (a) => { a.receipts["CI-SF"].treeSha = "f".repeat(40) }],
+  ["wrong manifest digest", (a) => { a.receipts["CI-SF"].manifestSha256 = "0".repeat(64) }],
   ["wrong arch", (a) => { a.receipts["CI-SF"].runnerArch = "ARM64" }],
   ["unexecuted", (a) => { a.receipts["CI-SF"].executedTests = 0 }],
   ["forged digest", (a) => { a.receipts["CI-SF"].reportSha256 = "0".repeat(64) }],
