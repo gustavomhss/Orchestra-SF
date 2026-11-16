@@ -78,8 +78,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
   const context = useSfContext()
   const { t } = useSfPresentation()
   const [store, setStore] = createStore<CatalogStore>({
-    viewId: props.surfaceId === "UI46" && BI_CATALOG.some((item) => item.id === props.route.params.viewId)
-      ? props.route.params.viewId as ViewId : "", start: "", end: "", choice: "",
+    viewId: props.surfaceId === "UI46" ? props.route.params.viewId as ViewId : "", start: "", end: "", choice: "",
     options: undefined, data: undefined, links: undefined, detail: undefined, selectedSource: null,
     sourceState: "empty", readState: "ready", busy: false, layout: "single",
   })
