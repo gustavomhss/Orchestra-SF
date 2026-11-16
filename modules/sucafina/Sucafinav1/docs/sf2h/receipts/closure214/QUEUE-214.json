@@ -14,165 +14,188 @@
     "no_other_dispatcher_claimed": true
   },
   "reconciliation": {
-    "runs_completed": 13,
+    "runs_completed": 15,
     "in_flight": [],
     "queued_by_214": [],
-    "successful": 5,
+    "successful": 7,
     "failed": 8,
-    "tests_passed": 124,
+    "tests_passed": 134,
     "tests_failed": 12,
     "zero_selection_attempt": 43781292706,
     "corrected_by": 43781695995,
     "actions_artifacts": [],
-    "accepted_same_C": false
+    "accepted_same_C": false,
+    "latest_material_W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+    "latest_docs_only_W": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab"
   },
   "producer_readset": [
     {
       "id": 193,
       "branch": "sf-ux-w16",
-      "source": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063",
       "consumer": "211",
-      "status": "SOURCE_CONSUMED_BUT_DECISIONS_EXTRA_FIELD_FAILS_B9"
+      "status": "SOURCE_CONSUMED_BUT_DECISIONS_EXTRA_FIELD_FAILS_B9",
+      "observed_branch_head": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 194,
       "branch": "sf-ux-n22",
-      "source": "72c5d2afcbdc202605614a18c5ba472aafc34574",
       "consumer": "211",
-      "status": "U15_EXECUTOR_PREVIOUSLY_FIXED_PER_CONTRACT; INSTALLED_F04_NOT_RUN"
+      "status": "U15_EXECUTOR_PREVIOUSLY_FIXED_PER_CONTRACT; INSTALLED_F04_NOT_RUN",
+      "observed_branch_head": "72c5d2afcbdc202605614a18c5ba472aafc34574",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 195,
       "branch": "sf-ux-n13",
-      "source": "679e17ecdfec23ab53ce4b23206594874617528d",
       "consumer": "211/206",
-      "status": "U39_U40_NEED_REAL_INSTALLED_HOST"
+      "status": "U39_U40_NEED_REAL_INSTALLED_HOST",
+      "observed_branch_head": "6b747c45b0f26ea2e9b8d726a34347cc6b42a4a4",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 196,
       "branch": "sf-proof-profiles",
-      "source": "2c0416ca80c2367843be7b39dbc4a7fb677a2185",
       "consumer": "211",
-      "status": "AM01_FIVE_PROFILE_SOURCE_COMPOSED; AM02_C16_B16_DENIED_AUTHORITY"
+      "status": "AM01_FIVE_PROFILE_SOURCE_COMPOSED; AM02_C16_B16_DENIED_AUTHORITY",
+      "observed_branch_head": "2c0416ca80c2367843be7b39dbc4a7fb677a2185",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 197,
       "branch": "sf-proof-authority",
-      "source": "3ec7a4ca7db735c08f1f63e164734a0bda245ac7",
       "consumer": "211",
-      "status": "AM03_IMPORT_FIX_B18_PASS; AM04_B18_HTTP_400"
+      "status": "AM03_IMPORT_FIX_B18_PASS; AM04_B18_HTTP_400",
+      "observed_branch_head": "3ec7a4ca7db735c08f1f63e164734a0bda245ac7",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 198,
       "branch": "sf-proof-persistence",
-      "source": "34a00f196de20de359b53f51fbe9007442f8cea4",
       "consumer": "211",
-      "status": "AM05_B11_C12_SOURCE_CAPTURE_UNAVAILABLE; AM06_NEGATIVE_PASS_ONLY"
+      "status": "AM05_B11_C12_SOURCE_CAPTURE_UNAVAILABLE; AM06_NEGATIVE_PASS_ONLY",
+      "observed_branch_head": "34a00f196de20de359b53f51fbe9007442f8cea4",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 199,
       "branch": "sf-installed-host",
-      "source": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
       "consumer": "211",
-      "status": "INSTALLED_SOURCE_FIXTURE_COMPOSED; ACTUAL_AUTHENTICATED_BROWSER_AND_PACKAGED_D01_UNAVAILABLE"
+      "status": "INSTALLED_SOURCE_FIXTURE_COMPOSED; ACTUAL_AUTHENTICATED_BROWSER_AND_PACKAGED_D01_UNAVAILABLE",
+      "observed_branch_head": "9b512eeffa9c437967b03d5af6dab11a1718f48b",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 201,
       "branch": "sf-work-types",
-      "source": "cb7a19356da4e9ba33c902264a1b4aa25639d976",
       "consumer": "211",
-      "status": "WORK_COMPONENT_CHECKS_B9_PASS; COMPILER190_OWNED"
+      "status": "WORK_COMPONENT_CHECKS_B9_PASS; COMPILER190_OWNED",
+      "observed_branch_head": "cb7a19356da4e9ba33c902264a1b4aa25639d976",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 202,
       "branch": "sf-context-types",
-      "source": "3b0d6e5c08b11dd2a152b2f455e80113f1188755",
       "consumer": "211",
-      "status": "F01_B12_PASS_NEGATIVE"
+      "status": "F01_B12_PASS_NEGATIVE",
+      "observed_branch_head": "1f9220cd68f84237f4c2dc6d3f28b858f5de2bda",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 203,
       "branch": "sf-transport-types",
-      "source": "4c4c3f4071e0efd8c212d93a3e6dde6e1cd95d3c",
       "consumer": "211",
-      "status": "B12_F02_PASS; B14_CLIENT_EXPECTED_MIME_PENDING_COMPLETE_PATCH_FROM_214"
+      "status": "B12_F02_PASS; B14_LITERAL_MIME_FAIL_COMPOSER_CONSUMED_B21_6_PASS",
+      "observed_branch_head": "df9fdd3afa36ccc2f686d165104546819eb96dfc",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 204,
       "branch": "sf-fixture-types",
-      "source": "e6e8ecdc63ea7cc8070c15aec16c001c4b657a13",
       "consumer": "211",
-      "status": "B13_BI_PEOPLE_PASS"
+      "status": "B13_BI_PEOPLE_PASS",
+      "observed_branch_head": "e6e8ecdc63ea7cc8070c15aec16c001c4b657a13",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 205,
       "branch": "sf-thread-newlines",
-      "source": "c8af58da3cb7c8734c2d2f126e63fd1ddabd0440",
       "consumer": "211",
-      "status": "B15_ZERO_SELECTION_REPAIRED_B15R_5_PASS"
+      "status": "B15_ZERO_SELECTION_REPAIRED_B15R_5_PASS",
+      "observed_branch_head": "c8af58da3cb7c8734c2d2f126e63fd1ddabd0440",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 206,
       "branch": "sf-ux-n13",
-      "source": "6a309ca2e0c9f4adc1f9b0d9097b234b44e77c82",
       "consumer": "211",
-      "status": "U39_U40_SOURCE_COMPOSED_NOT_INSTALLED_POSITIVE"
+      "status": "U39_U40_SOURCE_COMPOSED_NOT_INSTALLED_POSITIVE",
+      "observed_branch_head": "6b747c45b0f26ea2e9b8d726a34347cc6b42a4a4",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 207,
       "branch": "sf-review-functional",
-      "source": "67f1963e42769dfb94ba1080ca0b5b883b54eb58",
       "consumer": "211",
-      "status": "PRELIMINARY_FIX_FIRST_5_NEW_6_INHERITED; CAP06_CAP24_CTA_B20_COMPONENT_PASS_ONLY"
+      "status": "PRELIMINARY_FIX_FIRST_5_NEW_6_INHERITED; CAP06_CAP24_CTA_B20_COMPONENT_PASS_ONLY",
+      "observed_branch_head": "67f1963e42769dfb94ba1080ca0b5b883b54eb58",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 208,
       "branch": "sf-review-integrity",
-      "source": "b3e674c66e9c7e0a3f6ade6353905539a8e326fd",
       "consumer": "211",
-      "status": "PRELIMINARY_FIX_FIRST; BI_UNIT_ATLAS_SEQUENCE_2_FIXES_B13_PASS"
+      "status": "PRELIMINARY_FIX_FIRST; BI_UNIT_ATLAS_SEQUENCE_2_FIXES_B13_PASS",
+      "observed_branch_head": "b3e674c66e9c7e0a3f6ade6353905539a8e326fd",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 209,
       "branch": "sf-review-runtime",
-      "source": "84c9eb170b826c4c595120e62b78efe31f904d0d",
       "consumer": "211",
-      "status": "PRELIMINARY_FIX_FIRST; NATIVE_RUNNER_AND_G7_G8_UNPROVEN"
+      "status": "PRELIMINARY_FIX_FIRST; NATIVE_RUNNER_AND_G7_G8_UNPROVEN",
+      "observed_branch_head": "84c9eb170b826c4c595120e62b78efe31f904d0d",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 210,
       "branch": "sf-guard-archive",
-      "source": "cca757a0e125de371cb677342802509fb769bbd2",
       "consumer": "189/190/208",
-      "status": "55_HISTORICAL_BLOBS_VERIFIED_ZERO_DELETED; 69_STATIC_REFERENCES_DYNAMIC_NOT_PROVEN; 1_UNRECONCILED_PREBLOB; NO_GUARD_PASS"
+      "status": "55_HISTORICAL_BLOBS_VERIFIED_ZERO_DELETED; 69_STATIC_REFERENCES_DYNAMIC_NOT_PROVEN; 1_UNRECONCILED_PREBLOB; NO_GUARD_PASS",
+      "observed_branch_head": "cca757a0e125de371cb677342802509fb769bbd2",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 211,
       "branch": "sf-closure-bundle",
-      "source": "25bf8587a2f99457db7734f6f78ce7893ef30362",
       "consumer": "S0",
-      "status": "PR191_COMPOSER_PROPOSAL_ONLY; NO_ACCEPTED_FINAL_C"
+      "status": "PR191_COMPOSER_PROPOSAL_ONLY; latest e9d6 original 1610 criteria ledger is documentary, not accepted C",
+      "observed_branch_head": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 212,
       "branch": "sf-hypothetical-fix",
-      "source": "e8dfeb4cb4e122318b6289fbeb8fe4da9ef53f64",
       "consumer": "211",
-      "status": "AM01_CAUSAL_PATCH_COMPOSED; NEW_B19_BASELINE_COVERAGE_CASE_NOT_SELECTED"
+      "status": "AM01_CAUSAL_PATCH_COMPOSED; NEW_B19_BASELINE_COVERAGE_CASE_NOT_SELECTED",
+      "observed_branch_head": "e8dfeb4cb4e122318b6289fbeb8fe4da9ef53f64",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 213,
       "branch": "sf-desktop-bootstrap",
-      "source": "6f65ea078a3c596fca02961a68d98d36778bd54f",
       "consumer": "211",
-      "status": "DESKTOP_CODE_SOURCE_PRESENT; CROSS_LEASE_4_BLOBS_NOT_APPLIED_IN_211_AS_OBSERVED; NOT_PACKAGED_D01"
+      "status": "211_CONSUMED_DESKTOP213_MAIN_CODE_AND_ALL_4_INERT_POSTBLOBS; B22_4_UNIT_PASS_NOT_D01",
+      "observed_branch_head": "6f65ea078a3c596fca02961a68d98d36778bd54f",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     },
     {
       "id": 214,
       "branch": "sf-ci-validation",
-      "source": "d985f33687d5f5e9b830b0bfb2cf7c2a4240b299",
       "consumer": "S0/211/190/207-209",
-      "status": "SOLE_CI_DISPATCHER_13_RUNS_5_SUCCESS_8_FAILURE; 124_PASS_12_FAIL; EVIDENCE_COMMITTED"
+      "status": "SOLE_CI_DISPATCHER_15_RUNS_7_SUCCESS_8_FAILURE; 134_PASS_12_FAIL; EVIDENCE_COMMITTED",
+      "observed_branch_head": "a649c8f42f144048d217a0100619998c85aed141",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
     }
   ],
   "ready_new_unique_work": [],
@@ -210,36 +233,6 @@
       "next": "Repair genuine C12 original capture/authority/transaction precondition; rerun only material recheck"
     },
     {
-      "id": "214-NEXT-005",
-      "kind": "INERT_PATCH_CONSUMER",
-      "owner": "211",
-      "state": "READY_FOR_COMPOSER_CAS",
-      "input": {
-        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/INERT-211-CLIENT-MIME-214.json",
-        "preblob": "6f470dcc23300873223ec2c01bb7d36c6a5c23ea",
-        "postblob": "fef5c0a8702ffde3921a7cd65829cfba9259716d",
-        "failed_run": 43781269811
-      },
-      "next": "Apply full postimage on PR191 if current test preblob still matches; then 214 causal recheck on new W"
-    },
-    {
-      "id": "214-NEXT-006",
-      "kind": "DESKTOP_CONSUMER",
-      "owner": "211/213/199",
-      "state": "READY_SOURCE_BUT_NO_REAL_ARTIFACT",
-      "input": {
-        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure213/INERT-211-CROSS-LEASE.json",
-        "source_blob": "2802e04fdbd0aacd3b3eeffb22daed8fe6135224",
-        "paths": [
-          "apps/desktop/package.json",
-          "apps/desktop/electron.vite.config.ts",
-          "bun.lock",
-          "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts"
-        ]
-      },
-      "next": "Composer CAS-consume exact four complete inert dependency posts, reconcile 213 desktop source code, then build/attest only via approved existing host and official runner"
-    },
-    {
       "id": "214-NEXT-007",
       "kind": "INSTALLED_REAL_PROOF",
       "owner": "199/S0 authorized host then 214",
@@ -260,7 +253,7 @@
       "owner": "S0/211/189",
       "state": "BLOCKED_NOT_ACCEPTED",
       "input": {
-        "composer_head": "25bf8587a2f99457db7734f6f78ce7893ef30362",
+        "composer_head": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab",
         "stack_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
         "formal_acceptance": false
       },
@@ -500,5 +493,43 @@
   "source_read_only_scope": "15_WP_74_TASKS_17_CONTRACTS_1610_CRITERIA_70_SURFACES_165_ROUTES",
   "terminal_policy": "NO_REPEAT_UNCHANGED_FAILING_SELECTION; consume new contracted commits and run only independently ready material inputs; all other gates remain FAIL/BLOCKED/NOT_RUN",
   "native_goal": "PAUSED",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "completed_consumer_actions": [
+    {
+      "id": "214-NEXT-005",
+      "kind": "F02 MIME literal closed assertion",
+      "producer_postblob": "fef5c0a8702ffde3921a7cd65829cfba9259716d",
+      "composer_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure211/INTAKE-213-214-MIME.json",
+      "verified_on_W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+      "validation": {
+        "run_id": 43783167215,
+        "pass": 6,
+        "fail": 0
+      },
+      "state": "COMPLETE_COMPONENT_ONLY"
+    },
+    {
+      "id": "214-NEXT-006",
+      "kind": "213 source bootstrap and four inert payloads",
+      "composer_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure211/INTAKE-213-214-MIME.json",
+      "verified_on_W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+      "validation": {
+        "run_id": 43783196912,
+        "pass": 4,
+        "fail": 0
+      },
+      "state": "COMPOSED_AND_UNIT_VALIDATED; INSTALLED_D01_SEPARATELY_BLOCKED"
+    }
+  ],
+  "current_candidate_no_repeat_reason": "Latest composer e9d6 adds only a documentary 1610 criteria ledger after source W e648 (which passed B21/B22). All independently available changed source selections finished; repeating unchanged failures is prohibited. Material owner patch, accepted C or real installed host is required to unlock further validation.",
+  "last_ownership_ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/ACK-214.json",
+  "totals": {
+    "runs": 15,
+    "passed": 134,
+    "failed": 12,
+    "successful_workflows": 7,
+    "failed_workflows": 8,
+    "zero_selection_workflows": 1,
+    "artifacts": 0
+  }
 }
