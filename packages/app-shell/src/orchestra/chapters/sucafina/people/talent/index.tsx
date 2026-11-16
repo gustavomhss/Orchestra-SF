@@ -295,6 +295,9 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
               <Show when={showEditor()}>
                 <section class="sf-people-section" data-sf-selection="editor">
                   <SfPeopleEditor
+                    readInput={{ ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
+                      ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }),
+                      ...(props.route.query.status === undefined ? {} : { memberStatus: props.route.query.status }) }}
                     surfaceId="CAP08"
                     scopeKey={"people:talent:" + String(props.route.query.year ?? "current")}
                     entity="talent"

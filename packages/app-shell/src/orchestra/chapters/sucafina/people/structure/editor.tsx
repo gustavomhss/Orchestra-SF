@@ -4,6 +4,7 @@ import type {
   SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef, SfVersion, SurfaceId,
 } from "@orchestra/schema/sucafina/context"
 import type { SfDraftRegistry } from "../../context/contracts"
+import type { SfJson } from "@orchestra/schema/sucafina/common"
 import { SfChangeReview } from "../../shared/change-review"
 import { SfStatePanel } from "../../shared/states"
 import { SfActionButton, sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
@@ -28,6 +29,7 @@ export type PeopleEditorProps = Readonly<{
   scopeKey: string
   entity: "cio" | "leader" | "member" | "talent"
   recordRef?: SfRef
+  readInput: SfJson
   version: number
   original: PeopleFormValues | null
   fields: readonly PeopleField[]
@@ -76,12 +78,12 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
     identity: props.recordRef ? { kind: "record", recordRef: props.recordRef } :
       { kind: "new", newIntentRef: intentRef },
     editScopeKey: (props.scopeKey + ":" + props.entity) as SfEditScopeKey,
-    baseVersion: props.version,
+    baseVersion: props.recordRef ? props.version : null,
     base: props.original,
     value: initialValues(props),
     revalidation: {
       operationId: props.surfaceId === "CAP07" ? "domain.page.CAP07" : "domain.page.CAP08",
-      input: {},
+      input: props.readInput,
       fieldPaths: props.original
         ? props.fields.filter((field) => Object.hasOwn(props.original!, field.name)).map((field) => field.name)
         : [],
