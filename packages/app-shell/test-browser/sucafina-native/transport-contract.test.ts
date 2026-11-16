@@ -51,6 +51,18 @@ describe("Q01 integrated transport contract / original producer", () => {
       method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
       responseMode: "json", fixedQuery: { sf: "memory-similar-cases" }, maxRequestBytes: 65536,
     })
+    // NAV-01 privacy correction is source-backed rather than a silent rewrite
+    // of the pinned I00 catalog (which records GET). The real original CLI
+    // producer mounts POST bounded JSON only: apps/cli/src/sucafina-product/
+    // native-ui/router.ts rejects search queries in the URL, and UI31's
+    // search consumer refuses GET to keep private q out of navigation history.
+    // Preserve BOTH original facts and exact route/body limits.
+    const privateSearch = "projection.search"
+    expect(catalog.operations[privateSearch]?.method).toBe("GET")
+    expect(SfOperationRegistry[privateSearch]).toEqual({
+      method: "POST", pathTemplate: "{mount}/api/ui/projections/search", effect: "read",
+      responseMode: "json", maxRequestBytes: 4096,
+    })
     const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions), similarCases].sort()
     expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
     expect([...SfOperationIds].sort()).toEqual(expected)
@@ -60,7 +72,8 @@ describe("Q01 integrated transport contract / original producer", () => {
     for (const [id, source] of Object.entries(catalog.operations)) {
       const actual: SfNativeOperationRoute = SfOperationRegistry[id as keyof typeof SfOperationRegistry]
       expect(actual, "Q01 integrated metadata missing " + id).toBeDefined()
-      expect(actual.method).toBe(source.method)
+      expect(actual.method, "Q01 original-source method " + id)
+        .toBe(id === privateSearch ? "POST" : source.method)
       expect(actual.pathTemplate).toBe(source.pathTemplate)
       expect(actual.effect).toBe(source.effect)
       // The frozen I00 blob does NOT encode responseMode (all 305 source
