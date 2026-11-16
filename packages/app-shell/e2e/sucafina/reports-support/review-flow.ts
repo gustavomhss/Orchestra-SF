@@ -174,10 +174,17 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await row.getByRole("button", { name: "Edit", exact: true }).click()
     const editor = source.getByRole("dialog", { name: "Edit record", exact: true })
     await expect(editor).toBeVisible()
-    await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("110")
-    const version = Number(await form.getAttribute("data-version"))
+    // The source renders editor forms inside row dialogs. Assert the exact
+    // producer-owned modal is actionable instead of waiting the entire 180s
+    // scenario budget on a detached/hidden forecast control.
+    const activeForm = editor.locator('form[data-command="save-entry"][data-record="reports-opex-01"]')
+    await expect(activeForm).toHaveCount(1)
+    const forecast = activeForm.getByLabel("Forecast", { exact: true })
+    await expect(forecast).toBeVisible({ timeout: 10_000 })
+    await expect(forecast).toHaveValue("110")
+    const version = Number(await activeForm.getAttribute("data-version"))
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
-    await form.getByLabel("Forecast", { exact: true }).fill("190")
+    await forecast.fill("190")
     const previewed = source.waitForResponse((response) => response.url() === source.url() &&
       response.request().method() === "POST" && object(response.request().postDataJSON()).action === "preview-change")
     await form.getByRole("button", { name: "Save month", exact: true }).click()
