@@ -20,6 +20,9 @@ Revisadas as integrações 171–187, a costura 161 e os materiais de prova 165�
 | PRE-R01-146-006 | P2 | work href corrigido; UI58/UI59 desktop mantém mesmo padrão de comparação de origin | U24/D01, 199/200 |
 | S1-R1-207-001 | P1 | **FAIL** UI62 casos semelhantes sempre unavailable; sem produtor/contrato tipado | U26/A14, 189 |
 | S1-R1-207-002 | P2 | **FAIL** UI57 rota de histórico força unavailable; origem da consulta não demonstrada | U23, 189 |
+| S1-R1-207-003 | P1 | **FAIL** CAP08 Talent Import/Export desabilitados independentemente de permissão | N14/PR146, 189 |
+| S1-R1-207-004 | P2 | **FAIL** CAP24 Abrir pedidos hard-disabled/no-op | N21/PR163, 189 |
+| S1-R1-207-005 | P2 | **FAIL** CAP27 CSV fornecedores hard-disabled/no-op; contrato de export exige admissão | N23/PR173, 189 |
 
 Gatilhos, caminhos, linhas, blobs exatos, critérios, correção e recheck em FINDINGS-207.json e RECHECK-207.json. IDs antigos de 146 e PR100/97/98 HERDADOS, jamais duplicados como novos.
 
@@ -34,3 +37,7 @@ PR65 notificada pelos comentários `6903474206` e `6903572778`; comentários nã
 189 publica correções de autores por lease em C integrado com SHA/blobs. 199 entrega referência do manifesto F04 real e identidades já autorizadas em canal de prova protegido, sem credenciais, junto da D01 independente. 200 deduplica seletores e prova apenas correções causais U25/U03, U39/U40 CRUD + negativas/unknown, UI62 depois de source release, foco/reflow; 190 verifica alterações de SDK/types/guards sem duplicar 200. S1-R1 então faz recheck causal independente **no C aceito**. Sem C/prova, permanecer NOT_PROVEN/FIX_FIRST.
 
 **VERDICT: FIX_FIRST / PRE_FREEZE. NÃO APPROVE. GLOBAL_RELEASE=false. Meta nativa pausada.**
+
+## Complemento de varredura de fontes
+
+A matriz `SOURCE-AUDIT-207.json` vincula cada uma das 70 superfícies aos leaves TSX e blobs exatos do produto. Isto é leitura estática das fontes reais (não teste/validator), sem assumir que arquivo presente significa comportamento. PRs dos autores notificadas #146/#152/#156/#157/#163/#173 e PR65; notificações não são ACK/wake. Recheck real restrito a 189/190/199/200. GLOBAL_RELEASE=false.

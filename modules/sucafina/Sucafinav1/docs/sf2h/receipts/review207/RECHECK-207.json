@@ -197,6 +197,55 @@
         }
       ],
       "recheck": "After accepted contract C, 200 real manifest/receipt history, owner swap, denied, return and reflow; independent causal recheck"
+    },
+    {
+      "id": "S1-R1-207-003",
+      "status": "FAIL_SOURCE_STATIC",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "blob": "443a8e2190ed5fa3bbb7a09e27f6c79af012754c",
+          "lines": "182-183,330-344",
+          "why": "Both buttons disabled; import/export route only unavailable panel",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+          "lines": "114-117",
+          "why": "Typed CAP08 import and exportAllMembers descriptors exist; not proof of safe preview/download",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "On newly accepted C, independent source plus 200 F04 authorized/denied/revoked/owner switch/format invalid/preview mutation/export bytes and 199 desktop path."
+    },
+    {
+      "id": "S1-R1-207-004",
+      "status": "FAIL_SOURCE_STATIC",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "blob": "7bf3ce8b5d193c3732dfd236a51a3c804a73dae9",
+          "lines": "142-156",
+          "why": "primaryAction id open-requests hard-disabled/no-op despite frozen primary intent",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "New C + 200 F04 allowed/denied/owner swap/focus/return/400%."
+    },
+    {
+      "id": "S1-R1-207-005",
+      "status": "FAIL_SOURCE_STATIC",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "blob": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+          "lines": "656-665",
+          "why": "csv secondaryAction disabled true/no-op",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "New C + 200 real F04 allowed/denied/revoked, masked bank fields, source rows, and 199 desktop if applicable."
     }
   ],
   "old_prior_PR_ids": [
@@ -219,8 +268,8 @@
   ],
   "allowed_proof_requests": {
     "to_189": "Apply approved fixes from writers, record accepted C SHA and blobs; do not self-approve",
-    "to_writers": "A07/N28 review, N14 CAP06, U26/A14 similarity, U23 history, U24/D01 source link; respect leases 193-206",
-    "to_200": "Only deduped real F04 minimal U25/U03/U39/U40/UI62 after released source, 320-1440/200/400 owner denied/revoked/unknown",
+    "to_writers": "A07/N28 review, N14 CAP06, U26/A14 similarity, U23 history, U24/D01 source link; respect leases 193-206; N14 U47 CAP08 import/export PR146; N21 CAP24 CTA PR163; N23 CAP27 CSV PR173",
+    "to_200": "Only deduped real F04 minimal U25/U03/U39/U40/UI62 after released source, 320-1440/200/400 owner denied/revoked/unknown; U47 Talent import/export real; U10 CAP24 navigation; U14 CSV masking/denied only if real source released.",
     "to_190": "Causal typecheck+SDK+guards only on changed source, no duplicate dispatcher",
     "to_199": "Real installed manifest/principals/desktop proof; no mocks or secrets"
   },
@@ -228,5 +277,23 @@
   "global_release": false,
   "final_C_accepted": false,
   "reviewer_executed_tests": false,
-  "next_exact": "189 to publish integrated correction C and real F04 evidence, then S1-R1 independently recheck changed blobs and targeted 190/200/199 proof without reusing old C"
+  "next_exact": "189 to publish integrated correction C and real F04 evidence, then S1-R1 independently recheck changed blobs and targeted 190/200/199 proof without reusing old C",
+  "current_author_notifications": [
+    {
+      "pr": 146,
+      "comment": 6903835140
+    },
+    {
+      "pr": 163,
+      "comment": 6903835619
+    },
+    {
+      "pr": 173,
+      "comment": 6903836076
+    },
+    {
+      "pr": 65,
+      "comment": 6903836542
+    }
+  ]
 }

@@ -1,0 +1,1072 @@
+{
+  "schema": "sf2h.review207.source-consumer-audit.v1",
+  "mission": 207,
+  "actor": "S1-R1",
+  "product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "product_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+  "ui_subtree_sha": "af9e4aafcd1b863a267d4084d11c5aaf6ea16172",
+  "leaf_mapping_count": 70,
+  "unique_code_blobs": 69,
+  "missing_code_refs": [],
+  "classification": "SOURCE_READBACK_ONLY_NOT_RUNTIME_VALIDATION",
+  "source_matrix": [
+    {
+      "surface_id": "CAP01",
+      "chapter": "sf-dashboard",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
+          "blob": "50120ee3ae66adc0d3f5e0b98d616253e85f6c2d",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP02",
+      "chapter": "sf-dashboard",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/index.tsx",
+          "blob": "4d862e9c6803c6f912cfc41056e5aef48fd82921",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP03",
+      "chapter": "sf-dashboard",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
+          "blob": "b7e9f11870053cd45a0d30d11d8c440620fb33d8",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP04",
+      "chapter": "sf-dashboard",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/index.tsx",
+          "blob": "d7108f52118bebeb32010a4a3b0221c650f4bdce",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+          "blob": "ed94efe4d919eb80e4592057170d03c4b2348eb6",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP05",
+      "chapter": "sf-dashboard",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/capex/index.tsx",
+          "blob": "87a847f859fc15c5473a0ba6f778700be5e0e470",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+          "blob": "ed94efe4d919eb80e4592057170d03c4b2348eb6",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP06",
+      "chapter": "sf-people",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+          "blob": "71d5028ed37864ad98cb767687e354a32730cfbd",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "FAIL"
+    },
+    {
+      "surface_id": "CAP07",
+      "chapter": "sf-people",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
+          "blob": "b67ed1ced5497218b1c2c0d0011cafafed46eb72",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP08",
+      "chapter": "sf-people",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "blob": "443a8e2190ed5fa3bbb7a09e27f6c79af012754c",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "FAIL"
+    },
+    {
+      "surface_id": "CAP09",
+      "chapter": "sf-portfolio",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/index.tsx",
+          "blob": "b030348f51b806dd25eee4cda3f186436b580624",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP10",
+      "chapter": "sf-portfolio",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
+          "blob": "3ddf9f47d01caf69db2eff9cdf890b5b08385172",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP11",
+      "chapter": "sf-operations",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+          "blob": "e2eaa417dd8fda4aba9fe28d43e6c69f9986f521",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP12",
+      "chapter": "sf-operations",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+          "blob": "69cedff9bd0bb291dd1d94f9dbfa05bdce0cbe4f",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP13",
+      "chapter": "sf-operations",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/index.tsx",
+          "blob": "9f55c881506896e756a9a9f5ad4e1f23d05fde72",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.tsx",
+          "blob": "92282227be15db8b7238af4d31c1e771dad303cb",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP14",
+      "chapter": "sf-procurement",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "blob": "21d33438f49c68126bd22da223ecaa737a5b1cbc",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP15",
+      "chapter": "sf-operations",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/stakeholders/index.tsx",
+          "blob": "aebff25e95fb0014518b80ff8d85e0474833e856",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.tsx",
+          "blob": "92282227be15db8b7238af4d31c1e771dad303cb",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP16",
+      "chapter": "sf-operations",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "blob": "eece05b8d179ee93af32839ab71644d4c03d3ebe",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP17",
+      "chapter": "sf-planner",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/index.tsx",
+          "blob": "382886a44bd21a44c68d3f656f515b1701c3dc20",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP18",
+      "chapter": "sf-planner",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/index.tsx",
+          "blob": "b6274f9f22ac3a5a5c85a7b0c3c19efeb4519143",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+          "blob": "1b53a7e0a42c7d90593069a1af1d927226324ee4",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP19",
+      "chapter": "sf-planner",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/capex/index.tsx",
+          "blob": "771f8524a5972cbf19473b7b4173a0d97accfae1",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+          "blob": "1b53a7e0a42c7d90593069a1af1d927226324ee4",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP20",
+      "chapter": "sf-planner",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "blob": "a239c48f1ccf44d40aaa0397b68bcce68642e284",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP21",
+      "chapter": "sf-planner",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "blob": "e6b80babea1ce17f8cc50c9570474b7a5d101e35",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP22",
+      "chapter": "sf-planner",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
+          "blob": "d14869956bf138419f131b7df7d34c344661409b",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP23",
+      "chapter": "sf-planner",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+          "blob": "6b6d4d59e174e346e349aff7ecde33a6b89336b5",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP24",
+      "chapter": "sf-procurement",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "blob": "7bf3ce8b5d193c3732dfd236a51a3c804a73dae9",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "FAIL"
+    },
+    {
+      "surface_id": "CAP25",
+      "chapter": "sf-procurement",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+          "blob": "5bb03cc5b0386f6ff587c7f8e2c1643bc16f8ca7",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/forms.tsx",
+          "blob": "0d9d9838f895fc8c9b140a3afa51f517a034ddd4",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+          "blob": "e39b347632827cee26f6081c6669b7926ad3cb5d",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP26",
+      "chapter": "sf-procurement",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
+          "blob": "847521e06a2cef99daae72bac5dbe42aaab02801",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/index.tsx",
+          "blob": "733c3cafa057116f3cf7bf9af5fd5a893564331f",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "CAP27",
+      "chapter": "sf-procurement",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "blob": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "FAIL"
+    },
+    {
+      "surface_id": "CAP28",
+      "chapter": "sf-procurement",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/index.tsx",
+          "blob": "d86387cc5369f7337873441a1c6bc541ad83a647",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI29",
+      "chapter": "sf-home",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "blob": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI30",
+      "chapter": "sf-work",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "blob": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI31",
+      "chapter": "sf-home",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+          "blob": "e89fb68192660909865bb0f8b2e6a0b27c3f77d7",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI32",
+      "chapter": "sf-work",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/views/index.tsx",
+          "blob": "e4ccac3bba27b728d6b1f16315051327715c5752",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI33",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/index.tsx",
+          "blob": "a22b650d1388545a58f165fb0ca91c70d84071b2",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI34",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
+          "blob": "54008f5e0423c017a7550dafb7dab8e56c687d15",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI35",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+          "blob": "3e88cf1ae186b79a75934846bef5acc7298de0fd",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI36",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx",
+          "blob": "4cd6338b5e37179ff2168247f029f55bfd913a2e",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI37",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
+          "blob": "b19145f80487835f77bc74c7bc6fa64ac8e9df68",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI38",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/index.tsx",
+          "blob": "16b0484c36dcb56125cec8ba47c6ec9a298997f0",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI39",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+          "blob": "17928a20a24c046b2de2834dbcf9b7b7c3e09620",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI40",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
+          "blob": "3ab724b962b3a3956b04a0826dc9ceefcf5749d7",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI41",
+      "chapter": "sf-decisions",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
+          "blob": "154c5a97deeaf973447be17935b5ace3306177ad",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI42",
+      "chapter": "sf-portfolio",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
+          "blob": "0e09f1207acffcb51170489574fe2f9b72f5d9ef",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI43",
+      "chapter": "sf-portfolio",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
+          "blob": "0e09f1207acffcb51170489574fe2f9b72f5d9ef",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI44",
+      "chapter": "sf-portfolio",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx",
+          "blob": "d6aa1999e62f985a0d66ee277f20eb2a7065c4b1",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI45",
+      "chapter": "sf-bi",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+          "blob": "b49fa0a77a416b0de6209b63576a6e42e659bc9a",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI46",
+      "chapter": "sf-bi",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+          "blob": "b49fa0a77a416b0de6209b63576a6e42e659bc9a",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/decisions/index.tsx",
+          "blob": "b4355ea0bf4bfc7ebee9d999140da4a46979ff1f",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/operations/index.tsx",
+          "blob": "bc2f67151a4efd047e34a5f4df98b4415b37eedc",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI47",
+      "chapter": "sf-reviews",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "blob": "e420a6107d9bb6d4a96bcb58ed628269e5173d03",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "FAIL"
+    },
+    {
+      "surface_id": "UI48",
+      "chapter": "sf-reviews",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+          "blob": "fddc5bf2842de0d96d4306833bc733cf3c13fdb5",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI49",
+      "chapter": "sf-reviews",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "638ca5f806f1d11b8549972ba5559b4913ba4e6b",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI50",
+      "chapter": "sf-reviews",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "blob": "0f17ead8ce9be1d510e488e7932ee65788b1d088",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI51",
+      "chapter": "sf-work",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx",
+          "blob": "e36c99364e47fd66524ba5a5a8f974ccd2370027",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI52",
+      "chapter": "sf-work",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx",
+          "blob": "a7aa673097db18283fe9384d5091617154a40dd0",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI53",
+      "chapter": "sf-work",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx",
+          "blob": "816008ec9b7f667bae29ce768b144d27ca96cfa5",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI54",
+      "chapter": "sf-dashboard",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+          "blob": "180c543613ea5291429f8e7f9955f1ce8faa2233",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI55",
+      "chapter": "sf-imports",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI56",
+      "chapter": "sf-imports",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI57",
+      "chapter": "sf-imports",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "FAIL"
+    },
+    {
+      "surface_id": "UI58",
+      "chapter": "sf-documents",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "blob": "304d5887db0b0db22eac81c1309274ea7f5155dd",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI59",
+      "chapter": "sf-documents",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "blob": "304d5887db0b0db22eac81c1309274ea7f5155dd",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI60",
+      "chapter": "sf-documents",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "blob": "304d5887db0b0db22eac81c1309274ea7f5155dd",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI61",
+      "chapter": "sf-memory",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI62",
+      "chapter": "sf-memory",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "FAIL"
+    },
+    {
+      "surface_id": "UI63",
+      "chapter": "sf-memory",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI64",
+      "chapter": "sf-routines",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/index.tsx",
+          "blob": "5030558534372aad2cafb96c5d8ed9b201136aed",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI65",
+      "chapter": "sf-routines",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/index.tsx",
+          "blob": "ea1cf062919b4644bd2c6c98e293b6b4584c72cf",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI66",
+      "chapter": "sf-routines",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/index.tsx",
+          "blob": "2cc65973f3236549d668b6210e7892f7b538c295",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI67",
+      "chapter": "sf-home",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "blob": "8b949f966725f8a7d22a486e3391f79deecce258",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI68",
+      "chapter": "sf-imports",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI69",
+      "chapter": "sf-home",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+          "blob": "4196bf05bbe4b212bfdcf58acb2ac0e5376e58b5",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    },
+    {
+      "surface_id": "UI70",
+      "chapter": "sf-routines",
+      "code_source_refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/index.tsx",
+          "blob": "f35e1b109e82644aa954806c40b431accfb73f64",
+          "source_status": "EXACT_BLOB_IDENTIFIED"
+        }
+      ],
+      "source_review": "STATIC_READER_ONLY",
+      "proof": "NOT_INSTALLED",
+      "functional_outcome": "NOT_PROVEN"
+    }
+  ],
+  "review_details": {
+    "scanned_chapters": 15,
+    "inspected_frozen_routes": 165,
+    "known_current_static_failures": [
+      "PRE-R01-146-002",
+      "PRE-R01-146-004",
+      "S1-R1-207-001",
+      "S1-R1-207-002",
+      "S1-R1-207-003",
+      "S1-R1-207-004",
+      "S1-R1-207-005"
+    ],
+    "readable_UX_proof": "NO_F04_REAL_PROOF",
+    "authors_notified_prs": [
+      146,
+      152,
+      156,
+      157,
+      163,
+      173
+    ],
+    "do_not_promote_presence_to_function": true
+  }
+}

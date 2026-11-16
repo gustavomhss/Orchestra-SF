@@ -574,6 +574,147 @@
       },
       "correction": "Use actual owner scoped receipt producer, no synthesized history; preserve denial/unknown/removed",
       "recheck": "After accepted contract C, 200 real manifest/receipt history, owner swap, denied, return and reflow; independent causal recheck"
+    },
+    {
+      "id": "S1-R1-207-003",
+      "severity": "P1",
+      "kind": "FUNCTIONAL_COMMAND_CONSUMER_GAP",
+      "title": "CAP08 Talent import/export command paths and routes permanently disabled",
+      "status": "FAIL_SOURCE_STATIC",
+      "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "affected": [
+        "CAP08",
+        "U47",
+        "WP02.T02"
+      ],
+      "criterion_ids": [
+        "U47-AC01",
+        "U47-AC02"
+      ],
+      "trigger": "Current owner with admitted CAP08 import/export attempts UI Import or Export or deep-link to /orchestra/sf-people/talent/import or /export",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "blob": "443a8e2190ed5fa3bbb7a09e27f6c79af012754c",
+          "lines": "182-183,330-344",
+          "why": "Both buttons disabled; import/export route only unavailable panel",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+          "lines": "114-117",
+          "why": "Typed CAP08 import and exportAllMembers descriptors exist; not proof of safe preview/download",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "normative": {
+        "ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+        "surface": "CAP08",
+        "routes": [
+          "/orchestra/sf-people/talent/import",
+          "/orchestra/sf-people/talent/export"
+        ],
+        "actions": [
+          "import",
+          "exportAllMembers"
+        ],
+        "work_order": "U47.json",
+        "work_order_blob": "4e099430f215cc7652e9c8c0a13e46fdd71d253b"
+      },
+      "observed": "Source disables import/export for all owners; producer full file/preview/output contract remains unproved",
+      "expected": "Original source-authorized import preview→impact→review→apply→receipt and safe export artifact/download with role/format/version denial",
+      "owner": {
+        "writer": "N14 U47/CAP08 / PR146",
+        "integrator": "189/PR65",
+        "proof": "200/PR106 and 199/D01"
+      },
+      "correction": "Wire actual original producer via approved typed file+download bindings or explicitly qualify BLOCKED_CONTRACT. No fake artifact, upload or grant.",
+      "recheck": "On newly accepted C, independent source plus 200 F04 authorized/denied/revoked/owner switch/format invalid/preview mutation/export bytes and 199 desktop path."
+    },
+    {
+      "id": "S1-R1-207-004",
+      "severity": "P2",
+      "kind": "UX_PRIMARY_NAVIGATION_GAP",
+      "title": "CAP24 Procurement Overview open-requests primary CTA is unconditional no-op",
+      "status": "FAIL_SOURCE_STATIC",
+      "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "affected": [
+        "CAP24",
+        "U10"
+      ],
+      "criterion_ids": [
+        "U10-AC01",
+        "U10-AC03"
+      ],
+      "trigger": "Authorized procurement overview user invokes Abrir pedidos primary CTA by keyboard/pointer",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "blob": "7bf3ce8b5d193c3732dfd236a51a3c804a73dae9",
+          "lines": "142-156",
+          "why": "primaryAction id open-requests hard-disabled/no-op despite frozen primary intent",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "normative": {
+        "ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+        "surface": "CAP24",
+        "primary": "Abrir pedidos",
+        "destination": "/orchestra/sf-procurement/requests",
+        "work_order": "U10.json",
+        "work_order_blob": "37607805d0486308436dd9ab8825cd80dfc06162"
+      },
+      "observed": "Source cannot follow primary action, no execution claim",
+      "expected": "F01-authorized CAP25 route with owner tuple, denied/no grant, deep-link/back and keyboard focus",
+      "owner": {
+        "writer": "N21 CAP24 / PR163",
+        "integrator": "189/PR65",
+        "proof": "200/PR106"
+      },
+      "correction": "Use admitted navigation route and nonmisleading availability, no owner fallback",
+      "recheck": "New C + 200 F04 allowed/denied/owner swap/focus/return/400%."
+    },
+    {
+      "id": "S1-R1-207-005",
+      "severity": "P2",
+      "kind": "EXPORT_CONSUMER_GAP",
+      "title": "CAP27 Suppliers CSV export secondary action permanently disabled",
+      "status": "FAIL_SOURCE_STATIC",
+      "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "affected": [
+        "CAP27",
+        "U14"
+      ],
+      "criterion_ids": [
+        "U14-AC01"
+      ],
+      "trigger": "Authorized supplier operator chooses CSV action while supplier collection is present",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "blob": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+          "lines": "656-665",
+          "why": "csv secondaryAction disabled true/no-op",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "normative": {
+        "ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+        "surface": "CAP27",
+        "work_order": "U14.json",
+        "work_order_blob": "7a804205e92a4f9a74f9ce776098b32d26daf081",
+        "rule": "Supplier CSV respects original roles, bank masking, linked orders and audit"
+      },
+      "observed": "No usable CSV path in current UI. Manifest domain command set does not authorize arbitrary new mutation/export.",
+      "expected": "Actual original scoped CSV export/download via authorized egress, role masking and revocation; or explicit BLOCKED_CONTRACT until admitted",
+      "owner": {
+        "writer": "N23 CAP27 / PR173",
+        "integrator": "189/PR65",
+        "proof": "200/PR106 + 199/D01 if relevant"
+      },
+      "correction": "Do not synthesize private bank CSV or bypass grant; obtain explicit producer/export contract and consume only admitted bytes",
+      "recheck": "New C + 200 real F04 allowed/denied/revoked, masked bank fields, source rows, and 199 desktop if applicable."
     }
   ],
   "prior_PR100_PR97_PR98": "INHERITED_NO_DUPLICATE_IDS",
@@ -581,9 +722,27 @@
     "integrator_pr": 65,
     "comment_ids": [
       6903474206,
-      6903572778
+      6903572778,
+      6903763064,
+      6903763516,
+      6903764003,
+      6903764484,
+      6903765143,
+      6903835140,
+      6903835619,
+      6903836076,
+      6903836542
     ],
-    "not_ack_or_wake": true
+    "not_ack_or_wake": true,
+    "author_prs": [
+      146,
+      152,
+      156,
+      157,
+      163,
+      173
+    ],
+    "comments_are_not_ack_or_wake": true
   },
   "verdict": "FIX_FIRST",
   "approval": false,
