@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.closure235.authority-release.v1",
+  "mission": 235,
+  "campaign": "sf2h-integral-20261112",
+  "branch": "sf-review-prep",
+  "epoch": "independent-review-prep-e1-browser235",
+  "actor": {
+    "model": "GPT-6",
+    "session_id": null,
+    "session_id_exposed": false
+  },
+  "state": "MISSION235_PREPARATION_COMPLETE_WRITE_AUTHORITY_VOLUNTARILY_RELEASED",
+  "effective_after_commit": true,
+  "starting_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "release_parent_commit": "e074b9850a2385751141225341e88f1fc10633b5",
+  "review_handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/HANDOFF.json",
+  "PR": {
+    "number": 213,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/213",
+    "base": "sf-closure-bundle",
+    "head": "sf-review-prep",
+    "draft": true,
+    "merge_to_dev": false
+  },
+  "written_prefixes": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/**",
+    "modules/sucafina/Sucafinav1/test/product/proof235/**"
+  ],
+  "source_edits": 0,
+  "external_runtime_termination_claimed": false,
+  "external_tokens_revoked_claimed": false,
+  "supervisor_or_goal_created": false,
+  "goal_state": "PAUSED",
+  "post_release_writer_authority": "NONE_WITHIN_THIS_SESSION; future separate accepted lease required",
+  "future_consumers": [
+    "211/S0 actual source composition",
+    "199 real F04 host",
+    "190 G7(C)/G8(D) guards",
+    "232 successor sole dispatcher",
+    "3 new independent reviewers upon formal C",
+    "S0 delivery D"
+  ],
+  "candidate_C_accepted": false,
+  "source_proposal228_applied": false,
+  "reviewer_approved_count": 0,
+  "execution": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM01_AM06": "NOT_RUN",
+    "F04": "NOT_RUN",
+    "G7_on_real_C": "NOT_RUN",
+    "G8_on_real_D": "NOT_RUN",
+    "three_final_reviews": "NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}
