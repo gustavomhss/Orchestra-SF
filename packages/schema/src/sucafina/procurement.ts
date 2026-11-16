@@ -123,6 +123,7 @@ const HistoryEntry = Schema.Struct({
 export const SfProcurementRequest = Schema.Struct({
   number: Schema.optional(Schema.String), status: Schema.String, createdBy: Schema.String,
   buyerId: Schema.optional(Schema.String), requesterName: Schema.optional(Schema.String),
+  allowedDraftActions: Schema.optional(Schema.Array(Schema.Literals(["save-pr", "save-sourcing", "save-po"]))),
   pr: Schema.optional(Schema.NullOr(Requisition)),
   prApproval: Schema.optional(Schema.NullOr(Approval)),
   prApprovalBaseCurrency: Schema.optional(Schema.String),

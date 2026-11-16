@@ -1,5 +1,6 @@
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+import { requestDraftActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { object, rows, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor, Snapshot, View } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { procurementKeys } from "../../../../../modules/sucafina/Sucafinav1/src/nav.ts"
@@ -138,11 +139,11 @@ function selectPurchaseOrder(value: unknown) {
   return order
 }
 /** All data passed here has already crossed domain.view's current visibility boundary. */
-function selectRequest(source: Record<string, unknown>, detail: boolean) {
+function selectRequest(source: Record<string, unknown>, detail: boolean, actor: Actor) {
   if (!detail) {
     const minimal = pick(source, ["number", "status", "createdBy", "value"])
     if (Object.hasOwn(source, "po")) minimal.po = pick(source.po, ["expenseType"])
-    return minimal
+    return { ...minimal, allowedDraftActions: requestDraftActions(source, actor) }
   }
   const request = pick(source, requestKeys.filter((key) => !["pr", "sourcing", "po", "history"].includes(key)))
   if (Object.hasOwn(source, "pr"))
@@ -155,7 +156,7 @@ function selectRequest(source: Record<string, unknown>, detail: boolean) {
     request.prApproval = selectApproval(source.prApproval)
   if (Object.hasOwn(source, "history"))
     request.history = rows(source.history).map((entry) => pick(entry, ["at", "by", "action", "note"]))
-  return request
+  return { ...request, allowedDraftActions: requestDraftActions(source, actor) }
 }
 function selectSupplier(source: Record<string, unknown>, includeBank: boolean) {
   const safe = pick(source, includeBank ? [...supplierKeys, ...bankKeys] : supplierKeys)
@@ -189,15 +190,15 @@ function hasRequestShape(value: Record<string, unknown>): value is RequestView &
     (value.number === undefined || typeof value.number === "string")
 }
 function approvalGroups(
-  requests: readonly Record<string, unknown>[], actorId: string, queue: ProcurementQueueView | undefined,
+  requests: readonly Record<string, unknown>[], actor: Actor, queue: ProcurementQueueView | undefined,
 ) {
   const valid = requests.filter(hasRequestShape)
   if (queue) {
-    const groups = procurementApprovalGroups(queue, actorId)
+    const groups = procurementApprovalGroups(queue, actor.id)
     const fromRows = (arr: readonly { id: string }[]) =>
       arr.flatMap((row) => {
         const request = valid.find((request) => request.number === row.id)
-        return request ? [selectRequest(request, true)] : []
+        return request ? [selectRequest(request, true, actor)] : []
       })
     return {
       waitingForYou: fromRows(groups.waitingForYou),
@@ -205,11 +206,11 @@ function approvalGroups(
       unassigned: fromRows(groups.unassigned),
     }
   }
-  const groups = approvalQueue(valid, actorId)
+  const groups = approvalQueue(valid, actor.id)
   return {
-    waitingForYou: groups.waitingForYou.map((row) => selectRequest(row, true)),
-    waitingForOthers: groups.waitingForOthers.map((row) => selectRequest(row, true)),
-    unassigned: groups.unassigned.map((row) => selectRequest(row, true)),
+    waitingForYou: groups.waitingForYou.map((row) => selectRequest(row, true, actor)),
+    waitingForOthers: groups.waitingForOthers.map((row) => selectRequest(row, true, actor)),
+    unassigned: groups.unassigned.map((row) => selectRequest(row, true, actor)),
   }
 }
 function pageData(
@@ -223,8 +224,8 @@ function pageData(
     Object.hasOwn(prepared, "procurementQueueView") && (!queue || !visibleQueue(queue, requests))) return undefined
   const formSettings = pick(data.formSettings, formSettingsKeys)
   const directory = rows(data.directory).map((row) => pick(row, ["id", "name"]))
-  const requestsDetail = requests.map((row) => selectRequest(row, true))
-  const requestsSummary = requests.map((row) => selectRequest(row, false))
+  const requestsDetail = requests.map((row) => selectRequest(row, true, actor))
+  const requestsSummary = requests.map((row) => selectRequest(row, false, actor))
   const requestsVersion = versionsFor(view, requestKeysFor(requests))
   if (capability === "CAP24") {
     // The existing source routine owns aggregate/FX semantics. Browser never re-sums.
@@ -244,7 +245,7 @@ function pageData(
     versions: requestsVersion,
   }
   if (capability === "CAP26") return {
-    data: { requests: requestsDetail, ...approvalGroups(requests, actor.id, queue), directory, formSettings },
+    data: { requests: requestsDetail, ...approvalGroups(requests, actor, queue), directory, formSettings },
     versions: requestsVersion,
   }
   if (capability === "CAP27") return {
