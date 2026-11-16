@@ -94,3 +94,112 @@ Todos os nomes abaixo são normativos em `.github/workflows/sf-ci.yml` e `sf/ci/
 | Repo owner: autorização de produção/rollback | NOT_OBSERVED | NOT_OBSERVED | BLOCKED_BY_OWNER |
 
 **Decisão final:** `NOT_AUTHORIZED` enquanto uma obrigação prerequisito não tiver evidência própria; alterações de required checks, merge e deploy são `DECISÃO DO DONO`. Registrar URL da aprovação/PR separados, ausência de janela desprotegida e artefatos de rollback **antes** de mudar qualquer gate.
+
+---
+
+## 7. Atestação operacional assinável — modelo para o C final, NÃO preenchido
+
+**Instrução de custódia:** criar uma instância datada deste modelo em armazenamento de evidência controlado **somente após** fatos observados. Não substituir NOT_OBSERVED por PASS a partir de texto de plano, anotações históricas, screenshot sem URI ou sucesso de PR não executado em C. Referência do fluxo de owner/rollback: [RELEASE-ATTESTATION.md](../../sf/ci/RELEASE-ATTESTATION.md#pacote-de-promoção--owner-only--execução-condicional-2026-11-16). A assinatura é uma aprovação humana, não um campo default.
+
+~~~yaml
+schema: orchestra-sf.release-attestation.v1
+status: NOT_SIGNED
+release_decision: NOT_AUTHORIZED
+collection_timestamp_utc: NOT_OBSERVED
+collector_identity: NOT_OBSERVED
+owner_approval:
+  principal: NOT_OBSERVED
+  evidence_url_private_or_sanitized: NOT_OBSERVED
+  timestamp_utc: NOT_OBSERVED
+  scope: NOT_OBSERVED
+candidate:
+  commit_C_40hex: NOT_FROZEN
+  tree_sha_40hex: NOT_OBSERVED
+  base_and_accepted_prs_with_shas: NOT_OBSERVED
+  freeze_approval_url: NOT_OBSERVED
+  protected_tag_name_and_resolved_commit: NOT_OBSERVED
+  manifest_sha256: NOT_OBSERVED
+  ci_workflow_sha256: NOT_OBSERVED
+  release_workflow_sha256: NOT_OBSERVED
+  release_target_sha256: NOT_OBSERVED
+  release_inputs_revision_and_change_log: NOT_OBSERVED
+ci:
+  run_id: NOT_OBSERVED
+  run_attempt: NOT_OBSERVED
+  event: NOT_OBSERVED
+  head_sha: NOT_OBSERVED
+  github_sha_checkout: NOT_OBSERVED
+  checkout_tree_sha: NOT_OBSERVED
+  runner_os_and_arch: NOT_OBSERVED
+  runner_image_bun_node_versions: NOT_OBSERVED
+  run_status_conclusion_and_url: NOT_OBSERVED
+  twelve_job_ids_names_urls_exact_conclusions: NOT_OBSERVED
+  eight_suite_case_counts_skips_exit_codes: NOT_OBSERVED
+  eight_receipt_artifact_ids_and_sha256: NOT_OBSERVED
+  sf_verify_provenance_and_positive_negative_controls: NOT_OBSERVED
+  coverage_equivalence_B1_B2_B3_M2_M3_M4_review: NOT_OBSERVED
+artifact:
+  source_C: NOT_OBSERVED
+  immutable_id_and_restricted_uri: NOT_OBSERVED
+  build_run_attempt_and_builder_identity: NOT_OBSERVED
+  linux_binary_web_omni_factory_manifest_hashes: NOT_OBSERVED
+  signed_digest_sha256: NOT_OBSERVED
+  installed_bytes_sha256: NOT_OBSERVED
+  previous_release_id_and_sha256: NOT_OBSERVED
+azure:
+  subscription_rg_vm_opaque_record_id: NOT_OBSERVED
+  ubuntu_x86_64_and_volume_identity_receipt: NOT_OBSERVED
+  public_https_origin_and_service: NOT_OBSERVED
+  deploy_job_run_id_and_environment_approval: NOT_OBSERVED
+  app_start_restart_transacting_smoke_evidence: NOT_OBSERVED
+  entra_tenant_issuer_callback_login_and_revocation_evidence: NOT_OBSERVED
+  origin_CSRF_owner_project_installation_CAS_negatives: NOT_OBSERVED
+  backup_job_and_consistency_receipt: NOT_OBSERVED
+  recovery_point_and_restore_job_receipt: NOT_OBSERVED
+  isolated_restore_integrity_and_RPO_RTO: NOT_OBSERVED
+  rollback_drill_approval_exits_and_smoke: NOT_OBSERVED
+  F04_manifest_mode_binding_three_Q01_negatives: NOT_OBSERVED
+  U39_U40_case_counts_and_results: NOT_OBSERVED
+  AM01_AM02_AM03_AM04_AM05_AM06_receipts: NOT_OBSERVED
+  eight_native_recipes_cases_witness_and_digests: NOT_OBSERVED
+reviews:
+  security_reviewer_identity_timestamp_finding_closeout: NOT_OBSERVED
+  linux_data_reviewer_identity_timestamp_finding_closeout: NOT_OBSERVED
+  producer_business_CI_reviewer_identity_timestamp_finding_closeout: NOT_OBSERVED
+policy:
+  branch_protection_403_MCP_provenance: REPRODUCED_READ_403_ONLY
+  owner_full_protection_export_digest_and_timestamp: NOT_OBSERVED
+  repository_and_org_rulesets_effective_exports: NOT_OBSERVED
+  baseline_required_contexts_and_app_ids: NOT_OBSERVED
+  add_sf_verify_owner_approval_and_mutation_audit: NOT_AUTHORIZED
+  negative_enforcement_PR_url_after_add: NOT_OBSERVED
+  retire_legacy_contexts_owner_approval_and_audit: NOT_AUTHORIZED
+  epic_retirement_separate_PR_and_rollback_evidence: NOT_AUTHORIZED
+verdicts:
+  CI_HARNESS_VALIDATED: PARTIAL
+  PRODUCT_CI_GREEN: NO
+  AZURE_RELEASE_QUALIFIED: BLOCKED
+  GO_LIVE: BLOCKED
+signatures:
+  reviewer_1: NOT_SIGNED
+  reviewer_2: NOT_SIGNED
+  reviewer_3: NOT_SIGNED
+  release_owner: NOT_SIGNED
+~~~
+
+**Nota de semântica:** somente a observação MCP de GET branch protection 403 foi reproduzida em 2026-11-16; não houve leitura bem-sucedida das regras efetivas nem autorização de mudança. O campo de verdict inicial acima é **fotografia de bloqueio**, não uma atestação assinada do estado futuro. Quando iniciar uma instância real, os três vereditos são preenchidos da **nova prova C**, jamais copiados como PASS deste documento.
+
+## 8. Registro de mudança/rollback (uma linha POR ato, sem inferência)
+
+| Evento | Ator/autoridade | C e run/attempt | Antes → depois (ID/hash) | Aprovação/URL/UTC | Contraprova e efeito observado | Estado |
+|---|---|---|---|---|---|---|
+| Freeze de C | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_RUN |
+| Adição de sf/verify | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_AUTHORIZED |
+| Remoção exclusiva de contexts Epic | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_AUTHORIZED |
+| Deploy environment protegido | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_RUN |
+| Rollback app/host | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_RUN |
+| Restore isolado de dados | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_RUN |
+| Reversão de policy | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_RUN |
+| PR separado de aposentadoria Epic | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_AUTHORIZED |
+
+Cada linha precisa de **observação e link** antes de abandonar NOT_OBSERVED. Guardar IDs de VM/usuários, logs completos, tokens/cookies e manifesto F04 bruto apenas em storage de acesso restrito; a referência pública contém URL opaca/hash e verificação de um revisor autorizado. Nenhum script gera assinatura humana.
