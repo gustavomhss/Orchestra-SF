@@ -28,17 +28,7 @@ import { useSfContext } from "../context"
 import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
   SfDraftRevalidation, SfSurfaceProps } from "../context/contracts"
 import { parsePlannerRouteQuery, plannerRouteAvailable, plannerOverviewSelectionMatches } from "./planner-route"
-import { isPlannerPagesSurface, parsePlannerPagesRouteQuery, plannerPagesRouteAvailable, SfPlannerPages } from "./planner-pages-route"
-import { isPeopleSurface, parsePeopleRouteQuery, peopleRouteAvailable, SfPeoplePages } from "./people-route"
-import { isOperationsSurface, parseOperationsRouteQuery, operationsRouteAvailable, SfOperationsPages } from "./operations-route"
-import { isPortfolioSurface, parsePortfolioRouteQuery, portfolioRouteAvailable, SfPortfolioPages } from "./portfolio-route"
-import { isDecisionPagesSurface, parseDecisionPagesRouteQuery, decisionPagesRouteAvailable, SfDecisionPages } from "./decisions-pages-route"
-import { isWorkSurface, parseWorkRouteQuery, workRouteAvailable, SfWorkPages } from "./work-route"
-import { isHomePagesSurface, parseHomePagesRouteQuery, homePagesRouteAvailable, SfHomePages } from "./home-pages-route"
-import { isMemorySurface, parseMemoryRouteQuery, memoryRouteAvailable, SfMemoryPages } from "./memory-route"
-import { isReviewsSurface, parseReviewsRouteQuery, reviewsRouteAvailable, SfReviewPages } from "./reviews-route"
-import { isFilesSurface, parseFilesRouteQuery, filesRouteAvailable, SfFilesPages } from "./files-route"
-import { isRoutinesSurface, parseRoutinesRouteQuery, routinesRouteAvailable, SfRoutinePages } from "./routines-route"
+import { isExtendedSurface, parseExtendedRouteQuery, extendedRouteAvailable, SfExtendedPages } from "./extended-routes"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import { SfPlannerOverviewView } from "../planner/overview"
 import { SfPlannerVersionsView } from "../planner/versions"
@@ -215,26 +205,8 @@ function MountedSurface(props: Readonly<{
       <Match when={props.view().status === "ready" && current()?.surfaceId === "UI34"}>
         <SfIntentView surfaceId="UI34" route={current() as SfSurfaceProps<"UI34">["route"]} />
       </Match>
-      <Match when={props.view().status === "ready" && current() && isDecisionPagesSurface(current()!.surfaceId)}>
-        <SfDecisionPages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isWorkSurface(current()!.surfaceId)}>
-        <SfWorkPages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isHomePagesSurface(current()!.surfaceId)}>
-        <SfHomePages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isMemorySurface(current()!.surfaceId)}>
-        <SfMemoryPages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isReviewsSurface(current()!.surfaceId)}>
-        <SfReviewPages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isFilesSurface(current()!.surfaceId)}>
-        <SfFilesPages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isRoutinesSurface(current()!.surfaceId)}>
-        <SfRoutinePages route={current()!} />
+      <Match when={props.view().status === "ready" && current() && isExtendedSurface(current()!.surfaceId)}>
+        <SfExtendedPages route={current()!} />
       </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP01"}>
         <SfDashboardExecutiveView surfaceId="CAP01" route={current() as SfSurfaceProps<"CAP01">["route"]} />
@@ -279,18 +251,6 @@ function MountedSurface(props: Readonly<{
       </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP17"}>
         <SfPlannerOverviewView surfaceId="CAP17" route={current() as SfSurfaceProps<"CAP17">["route"]} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isPlannerPagesSurface(current()!.surfaceId)}>
-        <SfPlannerPages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isPeopleSurface(current()!.surfaceId)}>
-        <SfPeoplePages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isOperationsSurface(current()!.surfaceId)}>
-        <SfOperationsPages route={current()!} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isPortfolioSurface(current()!.surfaceId)}>
-        <SfPortfolioPages route={current()!} />
       </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "UI45"}>
         <SfBiCatalog surfaceId="UI45" route={current() as SfSurfaceProps<"UI45">["route"]} />
@@ -514,31 +474,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       if (!candidate) return { status: "invalid-link" }
       const dashboardQuery = candidate.chapterId === "sf-dashboard" ? parseDashboardRouteQuery(url.searchParams, candidate) : undefined
       const procurementQuery = candidate.chapterId === "sf-procurement" ? parseProcurementRouteQuery(url.searchParams, candidate) : undefined
-      const plannerPagesQuery = isPlannerPagesSurface(candidate.surfaceId) ? parsePlannerPagesRouteQuery(url.searchParams, candidate) : undefined
-      const peopleQuery = candidate.chapterId === "sf-people" ? parsePeopleRouteQuery(url.searchParams, candidate) : undefined
-      const operationsQuery = candidate.chapterId === "sf-operations" ? parseOperationsRouteQuery(url.searchParams, candidate) : undefined
-      const portfolioQuery = candidate.chapterId === "sf-portfolio" ? parsePortfolioRouteQuery(url.searchParams, candidate) : undefined
-      const decisionPagesQuery = isDecisionPagesSurface(candidate.surfaceId) ? parseDecisionPagesRouteQuery(url.searchParams, candidate) : undefined
-      const workQuery = candidate.chapterId === "sf-work" ? parseWorkRouteQuery(url.searchParams, candidate) : undefined
-      const homePagesQuery = isHomePagesSurface(candidate.surfaceId) ? parseHomePagesRouteQuery(url.searchParams, candidate) : undefined
-      const memoryQuery = candidate.chapterId === "sf-memory" ? parseMemoryRouteQuery(url.searchParams, candidate) : undefined
-      const reviewsQuery = candidate.chapterId === "sf-reviews" ? parseReviewsRouteQuery(url.searchParams, candidate) : undefined
-      const filesQuery = isFilesSurface(candidate.surfaceId) ? parseFilesRouteQuery(url.searchParams, candidate) : undefined
-      const routinesQuery = candidate.chapterId === "sf-routines" ? parseRoutinesRouteQuery(url.searchParams, candidate) : undefined
+      const extendedQuery = isExtendedSurface(candidate.surfaceId) ? parseExtendedRouteQuery(url.searchParams, candidate) : undefined
       const plannerQuery = (candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17") ? parsePlannerRouteQuery(url.searchParams, candidate) : undefined
       if (candidate.chapterId === "sf-dashboard" ? !dashboardQuery :
         candidate.chapterId === "sf-procurement" ? !procurementQuery :
-        candidate.chapterId === "sf-people" ? !peopleQuery :
-        candidate.chapterId === "sf-operations" ? !operationsQuery :
-        candidate.chapterId === "sf-portfolio" ? !portfolioQuery :
-        candidate.chapterId === "sf-work" ? !workQuery :
-        isHomePagesSurface(candidate.surfaceId) ? !homePagesQuery :
-        candidate.chapterId === "sf-memory" ? !memoryQuery :
-        candidate.chapterId === "sf-reviews" ? !reviewsQuery :
-        isFilesSurface(candidate.surfaceId) ? !filesQuery :
-        candidate.chapterId === "sf-routines" ? !routinesQuery :
-        isDecisionPagesSurface(candidate.surfaceId) ? !decisionPagesQuery :
-        isPlannerPagesSurface(candidate.surfaceId) ? !plannerPagesQuery :
+        isExtendedSurface(candidate.surfaceId) ? !extendedQuery :
         candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerQuery :
         [...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)) || !(
           (candidate.surfaceId === "UI45" || candidate.surfaceId === "UI46") && validBiRoute(candidate, url.searchParams) ||
@@ -578,17 +518,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         return { status: "denied" }
       if (candidate.chapterId === "sf-dashboard" ? !dashboardRouteAvailable(context.value, candidate) :
         candidate.chapterId === "sf-procurement" ? !procurementRouteAvailable(context.value, candidate) :
-        candidate.chapterId === "sf-people" ? !peopleRouteAvailable(context.value, candidate) :
-        candidate.chapterId === "sf-operations" ? !operationsRouteAvailable(context.value, candidate) :
-        candidate.chapterId === "sf-portfolio" ? !portfolioRouteAvailable(context.value, candidate) :
-        candidate.chapterId === "sf-work" ? !workRouteAvailable(context.value, candidate) :
-        isHomePagesSurface(candidate.surfaceId) ? !homePagesRouteAvailable(context.value, candidate) :
-        candidate.chapterId === "sf-memory" ? !memoryRouteAvailable(context.value, candidate) :
-        candidate.chapterId === "sf-reviews" ? !reviewsRouteAvailable(context.value, candidate) :
-        isFilesSurface(candidate.surfaceId) ? !filesRouteAvailable(context.value, candidate) :
-        candidate.chapterId === "sf-routines" ? !routinesRouteAvailable(context.value, candidate) :
-        isDecisionPagesSurface(candidate.surfaceId) ? !decisionPagesRouteAvailable(context.value, candidate) :
-        isPlannerPagesSurface(candidate.surfaceId) ? !plannerPagesRouteAvailable(context.value, candidate) :
+        isExtendedSurface(candidate.surfaceId) ? !extendedRouteAvailable(context.value, candidate) :
         candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerRouteAvailable(context.value, candidate) :
         candidate.surfaceId === "UI45" || candidate.surfaceId === "UI46" ? !biRouteAvailable(context.value, candidate) :
         !context.value.availability.some((resource) => resource.operations.some((operation) =>
@@ -624,7 +554,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const route = {
         surfaceId: candidate.surfaceId, kind: candidate.kind,
         params: candidate.parameters, ownerSelection: selected,
-        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: dashboardQuery ?? procurementQuery ?? peopleQuery ?? operationsQuery ?? portfolioQuery ?? workQuery ?? homePagesQuery ?? memoryQuery ?? reviewsQuery ?? filesQuery ?? routinesQuery ?? decisionPagesQuery ?? plannerPagesQuery ?? plannerQuery ?? {},
+        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: dashboardQuery ?? procurementQuery ?? extendedQuery ?? plannerQuery ?? {},
       } as SfResolvedRoute
       return { status: "authorized", route, ownerKey }
     },
@@ -770,28 +700,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       ? parseDashboardRouteQuery(new URLSearchParams(location.search), routePath) : undefined
     const procurement = routePath && routePath.chapterId === "sf-procurement"
       ? parseProcurementRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const plannerPages = routePath && isPlannerPagesSurface(routePath.surfaceId)
-      ? parsePlannerPagesRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const people = routePath && routePath.chapterId === "sf-people"
-      ? parsePeopleRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const operations = routePath && routePath.chapterId === "sf-operations"
-      ? parseOperationsRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const portfolio = routePath && routePath.chapterId === "sf-portfolio"
-      ? parsePortfolioRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const decisionPages = routePath && isDecisionPagesSurface(routePath.surfaceId)
-      ? parseDecisionPagesRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const work = routePath && routePath.chapterId === "sf-work"
-      ? parseWorkRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const homePages = routePath && isHomePagesSurface(routePath.surfaceId)
-      ? parseHomePagesRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const memory = routePath && routePath.chapterId === "sf-memory"
-      ? parseMemoryRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const reviews = routePath && routePath.chapterId === "sf-reviews"
-      ? parseReviewsRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const files = routePath && isFilesSurface(routePath.surfaceId)
-      ? parseFilesRouteQuery(new URLSearchParams(location.search), routePath) : undefined
-    const routines = routePath && routePath.chapterId === "sf-routines"
-      ? parseRoutinesRouteQuery(new URLSearchParams(location.search), routePath) : undefined
+    const extended = routePath && isExtendedSurface(routePath.surfaceId)
+      ? parseExtendedRouteQuery(new URLSearchParams(location.search), routePath) : undefined
     const nonPlanner = routePath &&
       (routePath.kind === "entry" && ["UI29", "UI33", "UI34"].includes(routePath.surfaceId) ||
         routePath.surfaceId === "UI33" && routePath.kind === "new") &&
@@ -799,14 +709,14 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const bi = routePath && validBiRoute(routePath, new URLSearchParams(location.search))
     if (parsed.kind === "invalid" || parsed.kind === "selected" &&
         !sameSelection(parsed.selection, selected) ||
-        !routePath || !(dashboard || procurement || people || operations || portfolio || work || homePages || memory || reviews || files || routines || decisionPages || plannerPages || planner || nonPlanner || bi)) {
+        !routePath || !(dashboard || procurement || extended || planner || nonPlanner || bi)) {
       setView({ status: "invalid-link", route: undefined })
       return
     }
     const returnRoute = {
       surfaceId: routePath.surfaceId, kind: routePath.kind, params: routePath.parameters,
       ownerSelection: selected, pathname: location.pathname,
-      href: (location.pathname + location.search) as SfHref, query: dashboard ?? procurement ?? people ?? operations ?? portfolio ?? work ?? homePages ?? memory ?? reviews ?? files ?? routines ?? decisionPages ?? plannerPages ?? planner ?? {},
+      href: (location.pathname + location.search) as SfHref, query: dashboard ?? procurement ?? extended ?? planner ?? {},
     } as SfResolvedRoute
     try {
       const auth = await desktopBridge.login(returnRoute)
