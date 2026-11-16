@@ -15,7 +15,7 @@ posix("component: genuine C11 native data gets a DISTINCT real Maestro parent an
   const owner = yield* f.bridge.withPlanning(source, (lease) => Effect.gen(function* () {
     expect(lease.authoritySessionID).not.toBe(caller.resident.id)
     expect((yield* f.resources.store.get(lease.authoritySessionID))?.agent).toBe(AgentV2.defaultID)
-    expect<string | undefined>((yield* f.resources.store.get(caller.resident.id))?.agent).toBe("sf_maestro"
+    expect<string | undefined>((yield* f.resources.store.get(caller.resident.id))?.agent).toBe("sf_maestro")
     const messages = yield* f.sessions.messages({ sessionID: lease.authoritySessionID })
     expect(messages.filter((message) => message.type === "user")).toEqual([])
     expect(f.trace.requests.some((request) => request.system.some((part) => part.text.includes("APPROVED is model DATA")))).toBe(true)
