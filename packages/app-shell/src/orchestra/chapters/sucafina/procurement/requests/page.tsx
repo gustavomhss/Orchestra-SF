@@ -303,9 +303,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const discardConflict = (kind: "pr" | "po") => {
     const ready = sf.ready(), ref = selectedRef(), controller = kind === "pr" ? prDraft() : poDraft()
     const snapshot = controller?.snapshot()
-    if (!ready || !ref || snapshot?.availability !== "active" || snapshot.pendingOperation ||
+    if (!ready || (!ref && !(kind === "pr" && creating())) || snapshot?.availability !== "active" || snapshot.pendingOperation ||
         view.sending || view.outcomeUnknown) return
-    const selection = { surfaceId: "CAP25" as const, identity: { kind: "record" as const, recordRef: ref },
+    const selection = { surfaceId: "CAP25" as const, identity: ref
+      ? { kind: "record" as const, recordRef: ref }
+      : { kind: "new" as const, newIntentRef: view.newIntentRef },
       editScopeKey: kind === "pr" ? prScope : poScope }
     ready.drafts.discard(selection)
     if (ready.drafts.peek(selection)) return
@@ -413,14 +415,14 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         else void sf.reload()
         return
       }
-      if (result.status === 409) {
+      if (result.status === 409 && !result.body.ok && result.body.status === 409) {
         prController?.rejectSave({ status: 409, operation: pending })
         poController?.rejectSave({ status: 409, operation: pending })
-        setView({ sending: false, reviewing: undefined,
+        setView({ sending: false, reviewing: undefined, state: prController || poController ? "ready" : "stale",
           notice: "sf.u11.remaining.missingVersion" })
         return
       }
-      if (result.status >= 500) {
+      if (result.status >= 500 || result.status === 409) {
         prController?.setPhase("outcome-unknown")
         poController?.setPhase("outcome-unknown")
         setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })

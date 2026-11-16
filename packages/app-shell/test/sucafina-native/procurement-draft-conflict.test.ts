@@ -111,3 +111,36 @@ test("PR and sourcing editable-stage transitions require conflict resolution at 
     expect(sfDraftForEdit(draft.snapshot(), 2)).toBeUndefined()
   }
 })
+
+test("deleted optional values and nested rows conflict without revoking or reusing the old CAS", async () => {
+  const context = Schema.decodeUnknownSync(SfContext)({ ...fresh,
+    destinations: [{ capabilityId: "CAP25", surface: "procurement", page: "Requests", canRead: true, allowedActionIds: ["save"] }],
+    availability: [{ family: "procurement", resource: "CAP25", state: "partial", operations: [
+      { operationId: "domain.page.CAP25", state: "ready", operational: true, reason: null },
+      { operationId: "domain.command.CAP25.save", state: "ready", operational: true, reason: null },
+      { operationId: "domain.command.CAP25.create", state: "unavailable", operational: false, reason: "network" },
+    ] }] })
+  for (const item of [
+    { scope: "pr.details", status: "pr_rejected", grant: "save-pr", fields: ["pr.description"], projection: { pr: {} } },
+    { scope: "po.fields", status: "po_rejected", grant: "save-po", fields: ["po.lines", "po.notes"], projection: { po: { lines: [] } } },
+    { scope: "CAP25:sourcing", status: "src_rejected", grant: "save-sourcing", fields: ['sourcing.quote:["q1","supplier"]'], projection: { sourcing: { quotes: [] } } },
+  ]) {
+    const body = { status: "ok", context: stamp, value: { capabilityId: "CAP25", selection: { request: "PR-1" },
+      data: { requests: [{ number: "PR-1", status: item.status, createdBy: "actor", allowedDraftActions: [item.grant], ...item.projection }],
+        suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false },
+      versions: { "requests:PR-1": { version: 2, by: "actor" } }, allowedActionIds: ["save"] } }
+    const transport: SfTransport = { async execute(operation) {
+      return { kind: "response", status: 200, headers: {}, body: Schema.decodeUnknownSync(Schema.toType(operation.output))(body) }
+    } }
+    const drafts = createSfOwnerDrafts({ createDraft: createSfDraft, revalidateDraft: revalidateSfNativeDraft } as unknown as SfContextDependencies, owner)
+    const selection = { surfaceId: "CAP25" as const, identity: { kind: "record" as const, recordRef: "PR-1" as SfRef }, editScopeKey: item.scope as SfEditScopeKey }
+    const draft = drafts.registry.acquire({ ...selection, baseVersion: 1, base: { text: "old" }, value: { text: "old" },
+      revalidation: { operationId: "domain.page.CAP25", input: { request: "PR-1" }, fieldPaths: item.fields, actionIds: ["save"] } })
+    draft.edit({ text: "private deleted row" }); drafts.quarantine()
+    expect(await drafts.revalidate(owner, context, transport, new AbortController().signal)).toBe(true)
+    expect(draft.snapshot()).toMatchObject({ availability: "active", phase: "conflict", baseVersion: 1, value: { text: "private deleted row" } })
+    expect(sfDraftForEdit(draft.snapshot(), 2)).toBeUndefined()
+    drafts.registry.discard(selection)
+    expect(drafts.registry.peek(selection)).toBeUndefined()
+  }
+})
