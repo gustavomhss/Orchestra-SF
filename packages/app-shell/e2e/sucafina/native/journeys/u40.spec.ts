@@ -9,7 +9,7 @@ import type { InstalledNativeHarness } from "../fixture.ts"
  * fails explicitly. No authorization flags, mocked grants, fake responses,
  * replayed mutations or browser storage-state exports.
  */
-const surfaceId = "CAP05"
+const surfaceId = "CAP05" as "CAP04" | "CAP05"
 const title = "CAPEX Projects"
 const recordName = "Project name"
 

@@ -130,7 +130,7 @@ export const seedNativeAdmission = Effect.fn("PhaseFixture.seedNativeAdmission")
       projectID: parent.projectID, routedMemberID: "backend", taskIntentHash: GovernanceDispatchV2.taskIntentHash(intent), permission: [] },
     { id: GovernanceDispatchV2.reservationID(id("authorization")) })
     yield* f.resources.events.publish(MaestroEvent.Task.WorkflowBound, { executionSessionID: childID, authorityMessageID: message("task"), authorityCallID: "task", token,
-      binding: { definition: acquired.definition, planRevisionID: plan.id, executionSessionID: childID, authoritySessionID: parent.id, logicalTaskID: "synthetic-logical" } },
+      binding: { definition: acquired.definition, planRevisionID: EventV2.ID.make(plan.id), executionSessionID: childID, authoritySessionID: parent.id, logicalTaskID: "synthetic-logical" } },
     { id: EventV2.ID.make(WorkflowGateV2.eventID(childID)) })
     messages.push(SessionMessage.Assistant.make({ id: message("task"), type: "assistant", agent: "maestro", model, time, content: [{ type: "tool", name: "task", id: "task",
       provider: { executed: false }, time, state: { status: "error", input: { description: "Synthetic history", prompt: intent.prompt, subagent_type: "backend",

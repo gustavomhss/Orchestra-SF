@@ -4,7 +4,7 @@
  * SHA-attested executable and live Microsoft host remain non-optional.
  * No web fixture, dev electron process or renderer-supplied principal counts.
  */
-import type { ElectronApplication, Page } from "@playwright/test"
+import type { ElectronApplication, Page } from "../../../../packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/playwright-types.ts"
 
 export async function requireSfPackagedBrokerReadiness(app: ElectronApplication, mainWindow: Page) {
   const main = await app.evaluate(({ app, ipcMain }) => ({
