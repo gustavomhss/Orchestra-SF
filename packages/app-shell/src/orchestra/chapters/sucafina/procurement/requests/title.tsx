@@ -133,9 +133,9 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     stop(); active = abort
     const fresh = await readRequestTitle(ready.context, ready.transport, ref, abort.signal)
     // Navigation/owner cleanup already hid this review; no old notice is safe to show.
-    if (!current(review) || abort.signal.aborted) { busy = false; return }
+    if (!current(review) || abort.signal.aborted) { if (active === abort) busy = false; return }
     if (!matches(fresh, review)) {
-      console.error("CAP25 title review preflight failed", fresh.status)
+      console.error("CAP25 title review preflight failed", fresh.status === "authorized" ? "source-changed" : fresh.status)
       rejectSource(fresh); busy = false; setUi("busy", false); return
     }
     draft()?.setPhase("reviewing")
@@ -164,7 +164,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
       const fresh = await readRequestTitle(ready.context, ready.transport, intent.ref, abort.signal)
       if (!current(intent) || abort.signal.aborted) return
       if (!matches(fresh, intent)) {
-        console.error("CAP25 title save preflight failed", fresh.status)
+        console.error("CAP25 title save preflight failed", fresh.status === "authorized" ? "source-changed" : fresh.status)
         rejectSource(fresh); return
       }
       const pending = { operationRef: intent.operationRef, idempotencyKey: intent.idempotencyKey,
@@ -173,7 +173,16 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
       controller.setPhase("submitting")
       const state = controller.snapshot()
       if (state.availability !== "active" || state.phase !== "submitting" ||
-          state.pendingOperation?.operationRef !== pending.operationRef) return
+          state.pendingOperation?.operationRef !== pending.operationRef) {
+        if (!abort.signal.aborted && authority() === intent.token) {
+          console.error("CAP25 title save admission failed")
+          if (state.availability === "active" && state.pendingOperation) {
+            controller.setPhase("outcome-unknown")
+            setUi({ review: null, state: "outcome-unknown", notice: "sf.u11.remaining.unknown" })
+          } else setUi({ review: null, state: "unavailable", notice: "sf.u11.remaining.notAvailable" })
+        }
+        return
+      }
       submitted = controller
       const settling = () => {
         const now = controller.snapshot(), source = ui.source, currentReady = sf.ready()
@@ -234,13 +243,15 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
       const state = controller.snapshot()
       if (authority() === intent.token && !abort.signal.aborted)
         console.error("CAP25 title save failed", error instanceof TypeError ? "TypeError" : error instanceof Error ? "Error" : "unknown")
-      if (authority() === intent.token && state.availability === "active" && state.pendingOperation) {
+      if (!abort.signal.aborted && authority() === intent.token && state.availability === "active" && state.pendingOperation) {
         controller.setPhase("outcome-unknown")
         setUi({ review: null, state: "outcome-unknown", notice: "sf.u11.remaining.unknown" })
-      } else if (authority() === intent.token) setUi({ review: null, state: "unavailable" })
+      } else if (!abort.signal.aborted && authority() === intent.token) setUi({ review: null, state: "unavailable" })
     } finally {
-      busy = false
-      if (authority() === intent.token) setUi("busy", false)
+      if (active === abort) {
+        busy = false
+        if (authority() === intent.token) setUi("busy", false)
+      }
     }
   }
   const discard = () => {
