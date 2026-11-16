@@ -41,3 +41,32 @@ test("case list probe admits the original Request and fences authority and sourc
   expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
   expect(await observeSfCases({ runtime: () => undefined } as never, original, stamp)).toEqual([])
 })
+
+test("case readiness samples one source and preserves the producer's 100-case ceiling", async () => {
+  const original = new Request("http://localhost/sucafina/api/ui/context")
+  const ui = createSfUiAuthority({
+    createId: () => crypto.randomUUID(), now: Date.now, commandIdentity: async () => crypto.randomUUID(),
+    authorize: async (_request, operation) => operation === "sf_case_read"
+      ? { installationId: stamp.installationId, projectId: stamp.projectId, principalRef: stamp.principalRef,
+          policyVersion: stamp.policyVersion, accessRevision: stamp.accessRevision } : undefined,
+  })
+  let count = 100
+  let dispatches = 0
+  const runtime = {
+    ui,
+    state: { read: async (_request: Request, _namespace: string,
+      callback: (state: { cases: Record<string, { id: string; incarnation: string; participants: string[] }> }, authority: typeof stamp) => unknown) => {
+      const cases = Object.fromEntries(Array.from({ length: count }, (_, index) => [String(index),
+        { id: String(index), incarnation: "incarnation", participants: ["person"] }]))
+      return { status: "ok", value: callback({ cases }, stamp) }
+    } },
+    dispatch: async () => { dispatches++; return { status: "denied" } },
+  }
+  const deps = { runtime: () => runtime }
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  expect(dispatches).toBe(1)
+  count = 101
+  dispatches = 0
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  expect(dispatches).toBe(0)
+})
