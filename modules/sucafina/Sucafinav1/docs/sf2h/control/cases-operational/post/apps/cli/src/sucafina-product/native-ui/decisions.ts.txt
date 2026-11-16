@@ -119,7 +119,9 @@ async function readCases(request: Request, deps: SfNativeHostDependencies, expec
       authority.principalRef === admitted.value.binding.principalRef &&
       authority.policyVersion === admitted.value.binding.policyVersion &&
       authority.accessRevision === admitted.value.binding.accessRevision
-        ? Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
+        ? (expected
+          ? Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).slice(0, 1)
+          : Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef))).map(encodeCaseRef)
         : undefined)
     const listed = await identities()
     if (listed.status !== "ok" || !listed.value || listed.value.length > 100)
