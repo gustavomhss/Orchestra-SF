@@ -22,7 +22,7 @@ if (sourceBlob !== "31dbec1726fd8147156b01dc545726650ffd49e1") {
   throw new Error("Q01_TRANSPORT_CATALOG_DRIFT_REQUIRES_I00")
 }
 const catalog = JSON.parse(catalogText) as {
-  operations: Record<string, { method: string; pathTemplate: string; effect: string; responseMode: string;
+  operations: Record<string, { method: string; pathTemplate: string; effect: string; responseMode?: string;
     fixedQuery?: Record<string, string>; fixedBodyDiscriminator?: Record<string, string> }>
 }
 
@@ -63,7 +63,12 @@ describe("Q01 integrated transport contract / original producer", () => {
       expect(actual.method).toBe(source.method)
       expect(actual.pathTemplate).toBe(source.pathTemplate)
       expect(actual.effect).toBe(source.effect)
-      expect(actual.responseMode).toBe(source.responseMode)
+      // The frozen I00 blob does NOT encode responseMode (all 305 source
+      // entries omit the property). Do not invent source metadata or assert
+      // undefined equals the normalized route's explicit response mode. Only
+      // claim equivalence when the original catalog actually specifies it.
+      if (source.responseMode !== undefined) expect(actual.responseMode).toBe(source.responseMode)
+      else expect(["json", "bytes", "empty", "navigation"]).toContain(actual.responseMode)
       expect(actual.fixedQuery ?? {}).toEqual(source.fixedQuery ?? {})
       expect(actual.fixedBodyDiscriminator ?? {}).toEqual(source.fixedBodyDiscriminator ?? {})
     }
