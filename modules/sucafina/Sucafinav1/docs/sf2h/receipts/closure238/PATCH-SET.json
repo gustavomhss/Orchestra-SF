@@ -1,0 +1,166 @@
+{
+  "schema": "sf2h.closure238.full-preimage-postimage.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 238,
+  "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "ux_ref": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "initial_base": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "source_integration_pr": 208,
+  "pr_238": 216,
+  "branch": "sf-origin-bridge",
+  "source_snapshots": {
+    "product": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+    "owner231": "95322577a4f4b1392163695b990199e5f88655fb",
+    "review230": "b8d0e46d6fcca835f345bd5e0d5f719d8047c757",
+    "ci232": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+    "receipt_patches_commit": "d34781759ecc24b98c472f751c6b96e135dbeebc"
+  },
+  "status": "COMPLETE_INERT_POSTIMAGES_NOT_APPLIED",
+  "files": [
+    {
+      "target": "apps/desktop/src/main/sucafina/connections.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "expected_preimage_blob": "152652da3b64b60a8609be8b4ad27961a7f307f5",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/main/sucafina/connections.ts.preimage.txt",
+      "postimage_blob": "d6e2a8af26d3c8630337576b3c90b81f23b5246e",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/main/sucafina/connections.ts.inert.txt",
+      "postimage_bytes": 10033,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    },
+    {
+      "target": "apps/desktop/src/main/sucafina/index.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "expected_preimage_blob": "ca0466e88ede4ad76d749186189dd85245dabae3",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/main/sucafina/index.ts.preimage.txt",
+      "postimage_blob": "1d0a1d167fa8187c5c4dc297f247e7f076d137d0",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/main/sucafina/index.ts.inert.txt",
+      "postimage_bytes": 32962,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    },
+    {
+      "target": "apps/desktop/src/preload/sucafina.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "expected_preimage_blob": "cd8bc2500bc22b9ab2c1afb33dd3b36d6f9ac163",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/preload/sucafina.ts.preimage.txt",
+      "postimage_blob": "ba9c2bcb3f278d88bea7544dbf1c9ce37988c76c",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/preload/sucafina.ts.inert.txt",
+      "postimage_bytes": 3155,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    },
+    {
+      "target": "apps/desktop/src/renderer/index.tsx",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "expected_preimage_blob": "1e19ec2a8864fd4b78e5e16d8d89372caffbceca",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/renderer/index.tsx.preimage.txt",
+      "postimage_blob": "331c6a220f7255850d0074e564c759c882ad6c81",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/renderer/index.tsx.inert.txt",
+      "postimage_bytes": 17941,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    },
+    {
+      "target": "apps/desktop/src/renderer/sucafina.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "expected_preimage_blob": "4d14e5888a0f9e91ec469e935e498fc9553ead90",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/renderer/sucafina.ts.preimage.txt",
+      "postimage_blob": "ac5558c30909610081f1748a174f84f1362f1e0c",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/apps/desktop/src/renderer/sucafina.ts.inert.txt",
+      "postimage_bytes": 904,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    },
+    {
+      "target": "packages/app-shell/src/context/platform.tsx",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "expected_preimage_blob": "6dd22aad08f5f82bf6dcf5ce5d32d2c7c2db8c47",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/app-shell/src/context/platform.tsx.preimage.txt",
+      "postimage_blob": "ed2faa58c39f824a8741080e44340e1390803d9d",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/app-shell/src/context/platform.tsx.inert.txt",
+      "postimage_bytes": 8213,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238.ts",
+      "kind": "ADD",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "expected_preimage_blob": null,
+      "preimage_file": null,
+      "postimage_blob": "ab66d187a26fff499aed7afba905166e48825472",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238.ts.inert.txt",
+      "postimage_bytes": 10253,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "kind": "MODIFY",
+      "source_ref": "95322577a4f4b1392163695b990199e5f88655fb",
+      "expected_preimage_blob": "fd5e173de15a42431d5053d1fd132b593564752b",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx.preimage231.txt",
+      "postimage_blob": "dcb761ab6ba3fd471ee1969a5466f771e625079e",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx.inert.txt",
+      "postimage_bytes": 24902,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    },
+    {
+      "target": "packages/client/src/sucafina/transport.ts",
+      "kind": "MODIFY",
+      "source_ref": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+      "expected_preimage_blob": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+      "preimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/client/src/sucafina/transport.ts.preimage.txt",
+      "postimage_blob": "51cdb3b4b277eb5becfb8d4cc03afc9b8619281b",
+      "postimage_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/patches/packages/client/src/sucafina/transport.ts.inert.txt",
+      "postimage_bytes": 50758,
+      "apply": "INERT_ONLY",
+      "required_action": "MATCH_EXACT_PREIMAGE_OR_ABORT_AND_RECONCILE_UNDER_OWNED_LEASE"
+    }
+  ],
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/closure238/origin-bridge.negative.test.ts",
+      "blob": "868981b4609a1b7f8c98c631423510b931944267",
+      "size": 7571,
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/closure238/real-installed-host-driver.ts",
+      "blob": "e6fd0989af27fe3b670c76f796676daf8cef07c1",
+      "size": 3527,
+      "execution": "NOT_RUN"
+    }
+  ],
+  "patch_count": 9,
+  "computed_from_github_tree": true,
+  "composition_order": [
+    "Confirm the exact host/head/lease and S0-FENCE; never rewrite another writer branch",
+    "Reconcile #208 sf-integration-preview moving target and preserve #229/#231/#237 in-flight output",
+    "Compose 231 original owner-runtime (preimage blob fd5e173de15a42431d5053d1fd132b593564752b) under the authorized product writer before 238, without overwriting 237; if combined target differs, apply only reviewed hunks",
+    "Before each 238 target write, require exact expected_preimage_blob; for ADD require absent target; mismatch = STOP/REBASE/RECHECK, not blind copy",
+    "Apply client type + preload/renderer + platform capability; apply strict main-owned location validator and registered main IPC; apply owner bridge and 231 consumer last",
+    "Carry both closure238 tests into product C (do not replace C inputs after tests); request authorized CI only once the SHA of C is fixed",
+    "Have independent reviewers confirm main-owned-only discovery, real context, auth, revocation and UX; run original G7 for C, then preserve blobs and run G8 for D via authorized owner"
+  ],
+  "source_boundary": "App-shell renderer never fetches a different publicOrigin; only existing Electron Main broker performs cross-origin IO with original strict origin, owner, cookies and auth.",
+  "external_api_delta": "Optional discoverLocation IPC for exact main-owned server only; unowned/remote discovery without explicit IDs is unavailable and cannot silently fall back to CORS.",
+  "prohibited": [
+    "force",
+    "new identity/grant",
+    "Azure/deploy",
+    "generic CORS",
+    "OAuth tokens in renderer",
+    "workflow engine/policy/financial changes",
+    "merge product from this 238 writer"
+  ],
+  "release": "PATCHSET_RELEASE_ONLY_PENDING_CONSUMER_ACCEPTANCE_AND_PROOF"
+}

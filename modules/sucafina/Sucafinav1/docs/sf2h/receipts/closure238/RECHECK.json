@@ -1,0 +1,136 @@
+{
+  "schema": "sf2h.closure238.recheck.v1",
+  "pr": 216,
+  "source_code_sha": "d34781759ecc24b98c472f751c6b96e135dbeebc",
+  "patches_only": true,
+  "candidate_C_sha": null,
+  "status": "NOT_RUN",
+  "tests": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "build": "NOT_RUN",
+  "runtime_e2e": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "observed_results": [],
+  "reviewer": null,
+  "verified_at": null,
+  "findings": [
+    {
+      "id": "231-SAME-ORIGIN-BOUNDARY",
+      "severity": "P1",
+      "state": "PATCH_PREPARED_NOT_VERIFIED",
+      "producer": "SfInstallationSource and Electron Main broker",
+      "consumer": "closure231 owner-runtime F01, UI29/UI33/UI34",
+      "expected": "real same-origin web or owned desktop bridge with original session; no cross-origin renderer fetch",
+      "observed": null
+    },
+    {
+      "id": "238-MAIN-OWNED-LOCATION",
+      "severity": "integration-gate",
+      "state": "NOT_RUN",
+      "producer": "ctx.installations + admitted LocationMiddleware via exact main-owned Electron server",
+      "consumer": "F01 initial default selection",
+      "expected": "0->denied, 1->exact selection, >1->ambiguous, malformed/mixed origin->deny",
+      "observed": null
+    },
+    {
+      "id": "238-REMOTE-EXPLICIT",
+      "severity": "integration-gate",
+      "state": "NOT_RUN",
+      "producer": "native registerConnection + approval/consent + bind",
+      "consumer": "F01 direct owner link",
+      "expected": "unowned remote without selection unavailable; exact selected with consent binds only matching publicOrigin",
+      "observed": null
+    },
+    {
+      "id": "238-REVOCATION-GENERATION",
+      "severity": "security-gate",
+      "state": "NOT_RUN",
+      "producer": "sf-native-invalidated + owner-bound transport",
+      "consumer": "context provider/drafts/navigation",
+      "expected": "revoked/changed owner cannot use stale handle or retained private projection",
+      "observed": null
+    },
+    {
+      "id": "238-AUTH",
+      "severity": "security-gate",
+      "state": "NOT_RUN",
+      "producer": "original local-operator or Microsoft main-native login",
+      "consumer": "F01 native sign-in user gesture and ctx.context",
+      "expected": "no token to renderer; authenticated stamp must match installation/project/host",
+      "observed": null
+    },
+    {
+      "id": "231-DIRTY-EDITOR-CONSUMER",
+      "severity": "P1",
+      "state": "DEPENDENCY_OPEN",
+      "owner": "231/237",
+      "expected": "Do not bypass existing dirty-draft confirmation",
+      "observed": null
+    },
+    {
+      "id": "231-ROOT-SHELL-EXIT",
+      "severity": "P1",
+      "state": "DEPENDENCY_OPEN",
+      "owner": "237",
+      "expected": "Review changes from 237 before applying 238 owner postimage",
+      "observed": null
+    },
+    {
+      "id": "231-REAL-REVOKER",
+      "severity": "P1",
+      "state": "DEPENDENCY_OPEN",
+      "owner": "231/237",
+      "expected": "Original revocation reaches native binding and draft quarantine",
+      "observed": null
+    },
+    {
+      "id": "230-C12-INDEPENDENT",
+      "severity": "dependency",
+      "state": "EXTERNAL_RECHECK_PENDING",
+      "owner": "230",
+      "expected": "No product financial rule or C12 evidence rewritten by 238",
+      "observed": null
+    }
+  ],
+  "criteria_mapping": [
+    {
+      "id": "F01",
+      "scope": "discovery, selected ServerConnection, exact installation/project/host, owner/draft/navigation, UI29/UI33/UI34",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "D01/F02",
+      "scope": "main broker, strict origin/webOrigin, owner, session, no redirect or arbitrary URL, operator/Microsoft authentication",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "C01",
+      "scope": "original principal, policyVersion, accessRevision and installation context, no invented authority",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "C03",
+      "scope": "existing mutation CAS/idempotency/owner headers untouched",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "C08",
+      "scope": "existing host BusinessPorts and original authenticated producers; no new grants",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP01.T01; WP10 consumer",
+      "scope": "Today entry/deep link/refresh/dirty drafts and installed integration",
+      "status": "NOT_RUN"
+    }
+  ],
+  "limits": [
+    "No installed desktop currently observed",
+    "No legitimate runtime principal or credential was supplied to this session",
+    "Native location IPC is an additive optional consumer/producer contract needing exact-owner acceptance",
+    "URL can be distinct from publicOrigin even when shell and selected ServerConnection coincide; fail closed until verified",
+    "Other 231/237 host edits and moving #208 base require manual three-way composition",
+    "No native run/CI/validator/independent reviewer evidence from this mission"
+  ],
+  "global_release": false
+}

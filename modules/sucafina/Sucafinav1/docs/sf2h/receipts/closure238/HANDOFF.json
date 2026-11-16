@@ -1,0 +1,164 @@
+{
+  "schema": "sf2h.closure238.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 238,
+  "branch": "sf-origin-bridge",
+  "pr": 216,
+  "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/216",
+  "pr_type": "DRAFT_PATCH_ONLY",
+  "parent_pr": 208,
+  "base_branch": "sf-integration-preview",
+  "initial_head": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "ack_commit": "3989d11f466bbf135a7b894f78a24eaaf85d07da",
+  "last_complete_patch_commit": "d34781759ecc24b98c472f751c6b96e135dbeebc",
+  "source_preimage_fence": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "base_moved_observed": "5befb878a045a24a76993cfdda065f36a413c481",
+  "source_231": {
+    "branch": "sf-home-binding",
+    "head": "95322577a4f4b1392163695b990199e5f88655fb",
+    "owner_blob": "fd5e173de15a42431d5053d1fd132b593564752b",
+    "finding": "231-SAME-ORIGIN-BOUNDARY",
+    "dirty_editor_and_revoker_handoff": "OPEN_DO_NOT_DUPLICATE"
+  },
+  "source_230": {
+    "branch": "sf-c12-review",
+    "head": "b8d0e46d6fcca835f345bd5e0d5f719d8047c757",
+    "disposition": "FIX_FIRST_NOT_RECHECKED; NO_C12_POLICY_CHANGE_HERE"
+  },
+  "source_232": {
+    "branch": "sf-ci-closure",
+    "head": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+    "dispatch": "FUTURE_AUTHORIZED_SUCCESSOR_ONLY_NO_MCP_INITIAL_DISPATCH"
+  },
+  "source_237": {
+    "disposition": "EXCLUSIVE_SHELL_EXIT_GUARD_WORK_NOT_DUPLICATED",
+    "risk": "reconcile touched 231 owner-runtime if 237 changed it"
+  },
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "ux_ref": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "scope_counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "count_claim": "Scope preserved as mandatory, not claimed verified",
+  "leased_writes": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/**",
+    "modules/sucafina/Sucafinav1/test/product/closure238/**"
+  ],
+  "direct_product_writes": [],
+  "inert_product_targets": [
+    {
+      "path": "apps/desktop/src/main/sucafina/connections.ts",
+      "preimage": "152652da3b64b60a8609be8b4ad27961a7f307f5",
+      "postimage": "d6e2a8af26d3c8630337576b3c90b81f23b5246e"
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/index.ts",
+      "preimage": "ca0466e88ede4ad76d749186189dd85245dabae3",
+      "postimage": "1d0a1d167fa8187c5c4dc297f247e7f076d137d0"
+    },
+    {
+      "path": "apps/desktop/src/preload/sucafina.ts",
+      "preimage": "cd8bc2500bc22b9ab2c1afb33dd3b36d6f9ac163",
+      "postimage": "ba9c2bcb3f278d88bea7544dbf1c9ce37988c76c"
+    },
+    {
+      "path": "apps/desktop/src/renderer/index.tsx",
+      "preimage": "1e19ec2a8864fd4b78e5e16d8d89372caffbceca",
+      "postimage": "331c6a220f7255850d0074e564c759c882ad6c81"
+    },
+    {
+      "path": "apps/desktop/src/renderer/sucafina.ts",
+      "preimage": "4d14e5888a0f9e91ec469e935e498fc9553ead90",
+      "postimage": "ac5558c30909610081f1748a174f84f1362f1e0c"
+    },
+    {
+      "path": "packages/app-shell/src/context/platform.tsx",
+      "preimage": "6dd22aad08f5f82bf6dcf5ce5d32d2c7c2db8c47",
+      "postimage": "ed2faa58c39f824a8741080e44340e1390803d9d"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238.ts",
+      "preimage": null,
+      "postimage": "ab66d187a26fff499aed7afba905166e48825472"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "preimage": "fd5e173de15a42431d5053d1fd132b593564752b",
+      "postimage": "dcb761ab6ba3fd471ee1969a5466f771e625079e"
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "preimage": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8",
+      "postimage": "51cdb3b4b277eb5becfb8d4cc03afc9b8619281b"
+    }
+  ],
+  "deliverables": {
+    "ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/ACK.json",
+    "patch_set": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/PATCH-SET.json",
+    "part1": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/PATCH-SET-PART1.json",
+    "part2": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/PATCH-SET-PART2.json",
+    "ci_request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/CI-REQUEST.json",
+    "recheck": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/RECHECK.json",
+    "release": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure238/AUTHORITY-RELEASE.json",
+    "test_assets": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/closure238/origin-bridge.negative.test.ts",
+        "blob": "868981b4609a1b7f8c98c631423510b931944267",
+        "size": 7571,
+        "execution": "NOT_RUN"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/closure238/real-installed-host-driver.ts",
+        "blob": "e6fd0989af27fe3b670c76f796676daf8cef07c1",
+        "size": 3527,
+        "execution": "NOT_RUN"
+      }
+    ]
+  },
+  "flow": {
+    "web": "Only if shellOrigin === selected HTTP server origin; original descriptor bound to that same origin; webOrigin checks exact publicOrigin and uses credentials:same-origin/redirect:error.",
+    "desktop": "If shell differs, expose preload.sucafina in Platform and use registerConnection -> existing approval/consent -> bind exact tuple -> session-isolated invoke -> original ctx.context stamp and availability. No origin from renderer operation.",
+    "discovery": "Exact main-owned connection may call the original global /api/sucafina/installations select=location via bounded Electron net, original typed codec and admitted LocationMiddleware; unowned remote without explicit ids stays unavailable.",
+    "sign_in": "Existing main-native login invoked only on user click with validated same-shell F01 route, then reloads original ctx.context; no renderer bearer/token or direct cookie sharing.",
+    "revocation": "Main validates frame/mainWindow on every IPC, returns invalidated binding generation; local source retires handle and invalidates provider/drafts; stale owner, generation, account or host cannot replay.",
+    "ownership": "Existing C01/C08 principal/policy/accessRevision and C03 mutating commands remain original and enforced by original producer, not inferred from URI."
+  },
+  "composition": {
+    "actor": "AUTHORIZED_S0_PRODUCT_COMPOSITOR_WITH_EXCLUSIVE_LEASE",
+    "consumer": "F01 closure231 + D01 Electron bridge + CI successor 232",
+    "status": "REQUIRES_CONSUMER_ADMISSION",
+    "product_composed": false,
+    "expected_head_required": true,
+    "force": false,
+    "preimage_guard": true,
+    "apply_strategy": "FULL_POSTIMAGE_ONLY_IF_EXACT_PREIMAGE; ELSE_TARGETED_3_WAY_MERGE_WITH_RECHECK",
+    "rules": "Honor #208 moving base and all 229/231/237 outputs; do not overwrite a second writer",
+    "dependencies": [
+      "closure231 owner-runtime installed first",
+      "closure238 optional D01 IPC approved by owner",
+      "closure237 dirty/exit merge reconciled",
+      "original ctx.installations/ctx.context producer present",
+      "CI and real installed host driver pass before release"
+    ]
+  },
+  "evidence": {
+    "source": "GitHub MCP fetched original and staged full inert postimages",
+    "actual_runtime": false,
+    "ci_executed": false,
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "independent_review": "NOT_RUN",
+    "G7": "NOT_RUN",
+    "G8": "NOT_RUN",
+    "actual_identity": null,
+    "session_id": null,
+    "effective_model": "GPT-6",
+    "native_lease_proof": null
+  },
+  "disposition": "READY_FOR_AUTHORIZED_COMPOSITION_AND_RECHECK; NOT_READY_FOR_PRODUCT_ACCEPTANCE; NOT_GLOBAL_RELEASE"
+}

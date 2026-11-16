@@ -1,0 +1,115 @@
+{
+  "schema": "sf2h.closure238.ci-request.v1",
+  "mission": 238,
+  "pr": 216,
+  "status": "PREPARED_NOT_DISPATCHED",
+  "dispatch_id": null,
+  "run_ids": [],
+  "actor": "FUTURE_AUTHORIZED_CI_DISPATCHER_WITH_VERIFIED_OFFICIAL_CAPABILITY_AFTER_232",
+  "authority_from": "closure232/HANDOFF.json @ ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+  "dispatch_constraint": "232 reported no usable initial official dispatch mechanism in GitHub MCP. No CI calls launched here.",
+  "candidate_source_sha": "d34781759ecc24b98c472f751c6b96e135dbeebc",
+  "product_C_sha": null,
+  "product_D_sha": null,
+  "requires_exact_candidate_C": true,
+  "preconditions": [
+    "Product compositor has legally applied full inert patches and reconciled 231/237 and moving sf-integration-preview",
+    "Consumer records exact C SHA, source blobs, models and selected test files; only the authorized dispatcher invokes official CI",
+    "Tests are not selected from this receipt-only branch as proof of installed product; no historical run used for new SHA",
+    "Actual installed Electron Main with authentic user-authorized server and login is available to the host driver; otherwise BLOCKED, not PASS"
+  ],
+  "surgical_requests": [
+    {
+      "id": "238-UNIT-1",
+      "type": "bun",
+      "selector": "bun run test:ci sucafina Sucafinav1/test/product/closure238/origin-bridge.negative.test.ts --os linux",
+      "expected": "closed foreign origin, no renderer fetch, approval cancelled/foreign descriptor, wrong owner, stale generation, revocation and main-owned location validation",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "238-DESKTOP-2",
+      "type": "bun",
+      "selector": "bun run test:ci desktop src/main/sucafina/broker.test.ts --os linux",
+      "expected": "owner/frame guard, main-owned discovery only, 401/403 and broker revocation, redirect denied, isolated cookies",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "238-CLIENT-3",
+      "type": "bun",
+      "selector": "bun run test:ci client test/sucafina/transport-type-repair/f02-transport.test.ts --os linux",
+      "expected": "webOrigin remains strict, desktop origin uses owner-bound handle, no schema or authorization bypass",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "238-HOST-4",
+      "type": "bun",
+      "selector": "bun run test:ci app test-browser/sucafina-native/host-binding231.test.ts --os linux",
+      "expected": "231 F01 explicit/deep-link/dirty draft/Today revalidation with revised desktop fallback",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "238-TYPE-5",
+      "type": "typecheck",
+      "selector": "packages/client; apps/desktop; packages/app-shell; modules/sucafina/Sucafinav1 (package canonical typecheck scripts)",
+      "expected": "all changed product interfaces and test modules compile",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "238-REAL-6",
+      "type": "real-installed-electron",
+      "entrypoint": "modules/sucafina/Sucafinav1/test/product/closure238/real-installed-host-driver.ts",
+      "expect_real_runtime": true,
+      "expected": "installed shell origin != publicOrigin, register actual approved selection, strict broker bind, real ctx.context stamp, native login after human gesture, lost-access/owner-replacement/logout deny; preserve full logs/redacted receipts",
+      "status": "NOT_RUN",
+      "if_no_credential_or_host": "BLOCKED_NOT_POSITIVE"
+    }
+  ],
+  "negative_cases": [
+    "foreign origin no CORS",
+    "malformed/forged basic credentials and unknown keys",
+    "renderer subframe invalid owner",
+    "denied/cancelled connection",
+    "descriptor from another installation or different publicOrigin",
+    "stale browser/desktop generation",
+    "binding invalidated/access revoked",
+    "redirect/cache/bytes outside bounds",
+    "ambiguous/empty LocationMiddleware discovery",
+    "unowned remote location without explicit owner selection",
+    "no fresh authenticated ctx.context",
+    "dirty editor retained on owner switch until authorized confirmation"
+  ],
+  "run_reporting": {
+    "per_test": [
+      "criterion_id",
+      "candidate_sha",
+      "runner",
+      "source_ref",
+      "input",
+      "expected",
+      "observed",
+      "status",
+      "evidence_uri",
+      "reviewer",
+      "verified_at"
+    ],
+    "allowed_status": [
+      "NOT_RUN",
+      "BLOCKED",
+      "PASS",
+      "FAIL"
+    ],
+    "no_synthetic_pass": true,
+    "ci_snapshot_sha": null,
+    "workflow_runs": [],
+    "replay_original_SHA_only": true
+  },
+  "final_gates": [
+    "original eight final CI selections",
+    "AM01-AM06",
+    "independent reviews 207/208/209 corrected on current C",
+    "G7",
+    "D evidence preservation",
+    "G8"
+  ],
+  "global_release": false
+}
