@@ -1,0 +1,148 @@
+# INERT cross-lease source changes for 211 (packaging and admitted D01/199 proof only)
+# Never automatically apply over a changed source preimage; product composer owns these paths.
+# Detached proposed Git blobs have no branch path write and are recorded below.
+# SOURCE sf-desktop-bootstrap apps/desktop/package.json PRE a7dd0b12de0f8c3855c7f5b2f069416ef711f577 POST 312fcd0a473cd7b412c8d80fc0363c96f50ebb99
+diff --git a/apps/desktop/package.json b/apps/desktop/package.json
+--- a/apps/desktop/package.json
++++ b/apps/desktop/package.json
+@@ -31,6 +31,7 @@
+   },
+   "main": "./out/main/index.js",
+   "dependencies": {
++    "@orchestra/client": "workspace:*",
+     "@orchestra/core": "workspace:*",
+     "hugr-omni": "workspace:*",
+     "@zip.js/zip.js": "2.7.62",
+
+# SOURCE sf-desktop-bootstrap apps/desktop/electron.vite.config.ts PRE b90da178775d53d1c8779edb633a6ccc23758c82 POST cac0655db92a7a8b8e3f32b230d886ecb5b2d427
+diff --git a/apps/desktop/electron.vite.config.ts b/apps/desktop/electron.vite.config.ts
+--- a/apps/desktop/electron.vite.config.ts
++++ b/apps/desktop/electron.vite.config.ts
+@@ -55,7 +55,7 @@
+         },
+       },
+       // core ships TypeScript sources, which Node will not load from node_modules: bundle it (its omni loader).
+-      externalizeDeps: { include: [nodePtyPkg], exclude: ["@orchestra/core"] },
++      externalizeDeps: { include: [nodePtyPkg], exclude: ["@orchestra/core", "@orchestra/client"] },
+     },
+     plugins: [
+       {
+
+# SOURCE sf-desktop-bootstrap bun.lock PRE e3f0c6443c12dd16cb66030f75e2f71f16508098 POST a05d2566eb71553c0cca54d7f041f3716f643dc8
+diff --git a/bun.lock b/bun.lock
+--- a/bun.lock
++++ b/bun.lock
+@@ -66,6 +66,7 @@
+       "name": "@orchestra/desktop",
+       "version": "1.18.27",
+       "dependencies": {
++        "@orchestra/client": "workspace:*",
+         "@orchestra/core": "workspace:*",
+         "@zip.js/zip.js": "2.7.62",
+         "drizzle-orm": "catalog:",
+
+# SOURCE sf-installed-host packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts PRE 2925ff518a78c2034f855561589f504b9ca7e48b POST c93196c555d79a3bd9a71c9c7d3be26bc06c52b2
+diff --git a/packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts b/packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts
+--- a/packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts
++++ b/packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts
+@@ -5,52 +5,54 @@
+  * This spec is dispatched only by the authorized 191 hosted runner.
+  */
+ import { createHash } from "node:crypto"
+-import { _electron, expect, test } from "@playwright/test"
+-import type { SfDesktopCapability, SfDesktopBindResult } from "@orchestra/client/sucafina/transport"
+-import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+-import { readNativeManifest } from "../../fixture/readiness.ts"
+-import {
+-  nativeSuiteFromChapter, readNativeSelectedInstallation,
+-} from "../../fixture/selected-installation.ts"
+-import {
+-  d01IsolatedDesktopEnvironment, requireD01PackagedHost,
+-} from "./desktop-host.ts"
+-
+-type RendererApi = Readonly<{
+-  awaitInitialization(): Promise<Readonly<{ url: string; username: string | null; password: string | null }>>
+-  sucafina: SfDesktopCapability
+-}>
+-type Owned = Readonly<{ bindingHandle: string; generation: number }>
+-type CookieCounts = Readonly<{ isolated: number; isolatedHttpOnly: number; default: number }>
+-
+-test.describe("D01 · real packaged Electron / Sucafina broker / private partition", () => {
+-  test("original Microsoft login stays within ephemeral partition; reject foreign owner and purge on logout", async ({}, info) => {
+-    const manifest = await readNativeManifest()
+-    const suite = nativeSuiteFromChapter(manifest)
+-    if (!suite) throw new Error("D01_ORIGINAL_F01_SELECTED_CHAPTER_NOT_INSTALLED")
+-    const bundle = await readNativeSelectedInstallation(manifest, suite)
+-    const route = bundle.selections.find((selection) => selection.intent !== "denied")?.route
+-    if (!route) throw new Error("D01_CURRENT_F01_RESOLVED_ROUTE_REQUIRED")
+-    if (route.ownerSelection.serverKey !== manifest.target.serverKey ||
+-        route.ownerSelection.projectId !== manifest.target.projectId ||
+-        route.ownerSelection.installationId !== undefined &&
+-        route.ownerSelection.installationId !== manifest.target.installationId)
+-      throw new Error("D01_F01_RETURN_ROUTE_WRONG_OWNER")
+-    const host = await requireD01PackagedHost(manifest)
+-    const app = await _electron.launch({
+-      executablePath: host.executablePath,
+-      env: d01IsolatedDesktopEnvironment(),
+-    })
+-    try {
+-      const main = await app.evaluate(({ app }) => ({
+-        isPackaged: app.isPackaged,
+-        appVersion: app.getVersion(),
+-      }))
+-      if (!main.isPackaged) throw new Error("D01_MUST_USE_PACKAGED_ELECTRON_NOT_DEV_WEB")
+-      const window = await app.firstWindow()
+-      await expect.poll(() => window.evaluate(() => {
+-        return typeof (window as unknown as { api?: RendererApi }).api?.sucafina?.registerConnection === "function"
+-      }), { message: "Packaged Electron preload must expose the real broker API" }).toBe(true)
++import { requireSfPackagedBrokerReadiness } from "../../../../../../../apps/desktop/test/sucafina-bootstrap213/d01-packaged-driver.ts"
++import { _electron, expect, test } from "@playwright/test"
++import type { SfDesktopCapability, SfDesktopBindResult } from "@orchestra/client/sucafina/transport"
++import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
++import { readNativeManifest } from "../../fixture/readiness.ts"
++import {
++  nativeSuiteFromChapter, readNativeSelectedInstallation,
++} from "../../fixture/selected-installation.ts"
++import {
++  d01IsolatedDesktopEnvironment, requireD01PackagedHost,
++} from "./desktop-host.ts"
++
++type RendererApi = Readonly<{
++  awaitInitialization(): Promise<Readonly<{ url: string; username: string | null; password: string | null }>>
++  sucafina: SfDesktopCapability
++}>
++type Owned = Readonly<{ bindingHandle: string; generation: number }>
++type CookieCounts = Readonly<{ isolated: number; isolatedHttpOnly: number; default: number }>
++
++test.describe("D01 · real packaged Electron / Sucafina broker / private partition", () => {
++  test("original Microsoft login stays within ephemeral partition; reject foreign owner and purge on logout", async ({}, info) => {
++    const manifest = await readNativeManifest()
++    const suite = nativeSuiteFromChapter(manifest)
++    if (!suite) throw new Error("D01_ORIGINAL_F01_SELECTED_CHAPTER_NOT_INSTALLED")
++    const bundle = await readNativeSelectedInstallation(manifest, suite)
++    const route = bundle.selections.find((selection) => selection.intent !== "denied")?.route
++    if (!route) throw new Error("D01_CURRENT_F01_RESOLVED_ROUTE_REQUIRED")
++    if (route.ownerSelection.serverKey !== manifest.target.serverKey ||
++        route.ownerSelection.projectId !== manifest.target.projectId ||
++        route.ownerSelection.installationId !== undefined &&
++        route.ownerSelection.installationId !== manifest.target.installationId)
++      throw new Error("D01_F01_RETURN_ROUTE_WRONG_OWNER")
++    const host = await requireD01PackagedHost(manifest)
++    const app = await _electron.launch({
++      executablePath: host.executablePath,
++      env: d01IsolatedDesktopEnvironment(),
++    })
++    try {
++      const main = await app.evaluate(({ app }) => ({
++        isPackaged: app.isPackaged,
++        appVersion: app.getVersion(),
++      }))
++      if (!main.isPackaged) throw new Error("D01_MUST_USE_PACKAGED_ELECTRON_NOT_DEV_WEB")
++      const window = await app.firstWindow()
++      await expect.poll(() => window.evaluate(() => {
++        return typeof (window as unknown as { api?: RendererApi }).api?.sucafina?.registerConnection === "function"
++      }), { message: "Packaged Electron preload must expose the real broker API" }).toBe(true)
++      await requireSfPackagedBrokerReadiness(app, window)
+ 
+       // Credentials, if the app owns them, are read INSIDE its trusted renderer
+       // and forwarded by its existing preload to main. They are never returned,

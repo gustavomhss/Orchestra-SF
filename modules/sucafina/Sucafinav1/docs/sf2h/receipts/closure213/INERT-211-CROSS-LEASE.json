@@ -1,0 +1,48 @@
+{
+  "schema": "sf2h.closure213.inert-cross-lease.v1",
+  "epoch": "desktop-bootstrap-e1-browser213",
+  "consumer": 211,
+  "productBranch": "sf-closure-bundle",
+  "status": "PROPOSED_NOT_APPLIED",
+  "detachedBlobObjectsOnly": true,
+  "paths": [
+    {
+      "path": "apps/desktop/package.json",
+      "sourceBranch": "sf-desktop-bootstrap",
+      "preBlob": "a7dd0b12de0f8c3855c7f5b2f069416ef711f577",
+      "postBlob": "312fcd0a473cd7b412c8d80fc0363c96f50ebb99"
+    },
+    {
+      "path": "apps/desktop/electron.vite.config.ts",
+      "sourceBranch": "sf-desktop-bootstrap",
+      "preBlob": "b90da178775d53d1c8779edb633a6ccc23758c82",
+      "postBlob": "cac0655db92a7a8b8e3f32b230d886ecb5b2d427"
+    },
+    {
+      "path": "bun.lock",
+      "sourceBranch": "sf-desktop-bootstrap",
+      "preBlob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "postBlob": "a05d2566eb71553c0cca54d7f041f3716f643dc8"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts",
+      "sourceBranch": "sf-installed-host",
+      "preBlob": "2925ff518a78c2034f855561589f504b9ca7e48b",
+      "postBlob": "c93196c555d79a3bd9a71c9c7d3be26bc06c52b2"
+    }
+  ],
+  "reason": {
+    "apps/desktop/package.json": "declare runtime @orchestra/client public binding catalog as actual dependency",
+    "apps/desktop/electron.vite.config.ts": "bundle TS workspace @orchestra/client instead of leaving unresolved Node externalization in packaged Electron",
+    "bun.lock": "keep frozen workspace lock aligned with actual declared direct dependency",
+    "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts": "199-owned packaged executable driver gains 213's main handler/preload readiness gate after 199 materialization"
+  },
+  "knownProducerSources": {
+    "publicBindings": "packages/client/src/sucafina/bindings.ts#SfNativeOperationBindings",
+    "cliEnrollment": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts#attachSfNativeEnrollment",
+    "originalD01ProofBranch": "sf-installed-host",
+    "originalD01ProofFileBlob": "2925ff518a78c2034f855561589f504b9ca7e48b"
+  },
+  "checks": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}
