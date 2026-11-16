@@ -9,6 +9,7 @@ type Ready = Readonly<{ launchId: string; send: DockReply }>
 type Pending = {
   key: string
   launchId: string
+  serverKey: string
   resolve: (reply: SfNativeEnrollmentReply) => void
   reject: (reason: Error) => void
   timer: ReturnType<typeof setTimeout>
@@ -75,7 +76,8 @@ export function createSfDesktopEnrollmentBridge(
     pending.delete(message.requestId)
     clearTimeout(item.timer)
     const owned = ownedConnection()
-    if (!owned || !text(message.publicOrigin) || message.publicOrigin !== owned.baseUrl
+    if (!owned || owned.serverKey !== item.serverKey
+      || !text(message.publicOrigin) || message.publicOrigin !== owned.baseUrl
       || !text(message.mount, 128) || !text(message.url) || !Number.isSafeInteger(message.expiresAt)
       || (message.expiresAt as number) <= Date.now() || (message.expiresAt as number) > Date.now() + 600_000) {
       item.reject(new Error("SF_NATIVE_ENROLLMENT_PRODUCER_MISMATCH"))
@@ -105,7 +107,8 @@ export function createSfDesktopEnrollmentBridge(
         pending.delete(request.requestId)
         reject(new Error("SF_NATIVE_ENROLLMENT_TIMEOUT"))
       }, 30_000)
-      pending.set(request.requestId, { key, launchId: connected.launchId, resolve, reject, timer })
+      pending.set(request.requestId, { key, launchId: connected.launchId,
+        serverKey: request.serverKey, resolve, reject, timer })
       try {
         connected.send({
           kind: "sf-native-local-enrollment-request",

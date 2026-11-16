@@ -119,12 +119,18 @@ async function killSidecar() {
   const owned = ownedSfConnection
   ownedSfConnection = undefined
   stopping = Promise.resolve()
-    .then(() => owned ? invalidateSfServer?.(owned.serverKey) : undefined)
-    .then(() => current.stop())
+    .then(async () => {
+      try {
+        if (owned) await invalidateSfServer?.(owned.serverKey)
+      } finally {
+        // A failed partition cleanup cannot strand the real child process.
+        await current.stop()
+      }
+    })
     .finally(() => {
-    if (server === current) server = null
-    stopping = undefined
-  })
+      if (server === current) server = null
+      stopping = undefined
+    })
   return stopping
 }
 
