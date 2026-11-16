@@ -21,6 +21,7 @@ const fresh = Schema.decodeUnknownSync(SfContext)({
     { capabilityId: "CAP07", surface: "dashboard", page: "Team Structure", canRead: true, allowedActionIds: ["saveCio", "saveLeader", "saveMember"] },
     { capabilityId: "CAP08", surface: "dashboard", page: "Talent Review", canRead: true, allowedActionIds: ["save"] },
     { capabilityId: "CAP21", surface: "planner", page: "Entities & allocations", canRead: true, allowedActionIds: ["save"] },
+    { capabilityId: "CAP02", surface: "dashboard", page: "Hot Topics & Actions", canRead: true, allowedActionIds: ["save"] },
   ],
   availability: [
     { family: "procurement", resource: "CAP25", state: "ready", operations: [operation("domain.page.CAP25"), operation("domain.command.CAP25.save")] },
@@ -33,6 +34,7 @@ const fresh = Schema.decodeUnknownSync(SfContext)({
     { family: "domain-read", resource: "CAP07", state: "ready", operations: [operation("domain.page.CAP07"), operation("domain.command.CAP07.saveCio"), operation("domain.command.CAP07.saveLeader"), operation("domain.command.CAP07.saveMember")] },
     { family: "domain-read", resource: "CAP08", state: "ready", operations: [operation("domain.page.CAP08"), operation("domain.command.CAP08.save")] },
     { family: "planner", resource: "CAP21", state: "ready", operations: [operation("domain.page.CAP21"), operation("domain.command.CAP21.save")] },
+    { family: "domain-read", resource: "CAP02", state: "ready", operations: [operation("domain.page.CAP02"), operation("domain.command.CAP02.save")] },
   ],
 })
 const owner = { serverKey: "server", transportIdentity: "transport", publicOrigin: "https://sf.test",
@@ -231,6 +233,19 @@ describe("source-bound draft revalidation", () => {
     expect(await run(input, { ...body, value: { ...body.value, data: { ...body.value.data, entities: [{ id: "item", name: "Entity", revision: 2 }] } } })).toEqual({ status: "denied" })
     expect(await run(input, { ...body, value: { ...body.value, allowedActionIds: [] } })).toEqual({ status: "denied" })
     expect(await run({ ...input, identity: { kind: "new", newIntentRef: "new" as SfIntentRef },
+      read: { ...input.read, fieldPaths: [] } }, body)).toMatchObject({ status: "authorized", sourceVersion: null })
+  })
+  test("hot topics bind the actual filtered read and source record", async () => {
+    const input: SfDraftRevalidationInput = { ...recordInput, surfaceId: "CAP02", identity: { kind: "record", recordRef: "t1" as SfRef },
+      editScopeKey: "hotTopics:t1" as SfEditScopeKey,
+      read: { operationId: "domain.page.CAP02", input: { topicStatus: "open" }, fieldPaths: ["action", "notes"], actionIds: ["save"] } }
+    const body = { status: "ok", context: stamp, value: { capabilityId: "CAP02", selection: { year: 2026, month: 1, topicStatus: "open" },
+      data: { hotTopics: [{ id: "t1", action: "Act", notes: "visible" }] }, versions: { "hotTopics:t1": 5 }, allowedActionIds: ["save"] } }
+    expect(await run(input, body)).toMatchObject({ status: "authorized", sourceVersion: 5 })
+    expect(await run(input, { ...body, value: { ...body.value, data: { hotTopics: [{ id: "t1", action: "Act" }] } } })).toEqual({ status: "denied" })
+    expect(await run(input, { ...body, value: { ...body.value, data: { hotTopics: [] } } })).toEqual({ status: "unavailable" })
+    expect(await run(input, { ...body, value: { ...body.value, allowedActionIds: [] } })).toEqual({ status: "denied" })
+    expect(await run({ ...input, identity: { kind: "new", newIntentRef: "new" as SfIntentRef }, editScopeKey: "hotTopics:new" as SfEditScopeKey,
       read: { ...input.read, fieldPaths: [] } }, body)).toMatchObject({ status: "authorized", sourceVersion: null })
   })
   test("preserves the opaque case selector and independently stamped version", async () => {
