@@ -184,16 +184,19 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     const version = action === "save-categories" || action === "save-items"
       ? serviceListVersion(page, action === "save-categories" ? "opsCats" : "opsHmItems")
       : serviceMonthVersion(page)
+    const selectedItem = action === "save-heatmap" ? item ?? serviceItems(page)[0] ?? "" : item
     const scope = ("CAP11:" + action + ":" + page.selection.year + "-" + page.selection.month +
-      (item === null ? "" : ":" + item)) as SfEditScopeKey
+      (selectedItem === null ? "" : ":" + selectedItem)) as SfEditScopeKey
     const entity = action === "save-categories" ? "opsCats" : action === "save-items" ? "opsHmItems" :
-      action === "save-heatmap" ? serviceCurrentHeatmap(page, item ?? serviceItems(page)[0] ?? "")?.id :
+      action === "save-heatmap" ? serviceCurrentHeatmap(page, selectedItem ?? "")?.id :
       action === "save-tickets" ? serviceCurrentTickets(page)?.id :
       action === "save-sla" ? serviceCurrentSla(page)?.id : undefined
     const identity: Editor["identity"] = entity === undefined || entity === null
       ? { kind: "new", newIntentRef: asIntent("u04:" + scope) }
       : { kind: "record", recordRef: asRef(String(entity)) }
-    const values = initialValues(page, action, item)
+    const values = initialValues(page, action, selectedItem)
+    const sourceRow = action === "save-heatmap" ? serviceCurrentHeatmap(page, selectedItem ?? "") :
+      action === "save-tickets" ? serviceCurrentTickets(page) : action === "save-sla" ? serviceCurrentSla(page) : undefined
     try {
       // F01 persists this owner-scoped draft beyond chapter unmount; keys never
       // include mutable record revision, only the business selection.
@@ -202,18 +205,17 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
         base: values, value: values,
         revalidation: {
           operationId: "domain.page.CAP11",
-          input: { opsYear: page.selection.year, operationsMonth: page.selection.month },
+          input: { ...(state.year === undefined ? {} : { opsYear: state.year }),
+            ...(state.month === undefined ? {} : { operationsMonth: state.month }) },
           fieldPaths: action === "save-categories" ? ["opsCats"] :
             action === "save-items" ? ["opsHmItems"] :
-            action === "save-heatmap" ? ["opsHeatmap"] :
-            action === "save-tickets" ? ["opsTickets"] :
-            action === "save-sla" ? ["opsSLA"] : ["opsTickets", "opsSLA", "opsHeatmap"],
+            sourceRow ? sourceFields(action, values).filter((field) => Object.hasOwn(sourceRow, field)) : [],
           actionIds: [action],
         },
       })
       draftOwner = key
       setState("editor", {
-        action, item, version, identity, scope, review: false,
+        action, item: selectedItem, version, identity, scope, review: false,
         operationRef: asOperation(crypto.randomUUID()),
       })
       setState("operationState", "idle")

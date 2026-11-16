@@ -112,6 +112,11 @@ export type SfHostRuntime = {
 export type CreateSfHostRuntime = (input: {
   /** Host-private observation from the installation which actually mounts the producers. */
   operational?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp) => Promise<readonly import("@orchestra/schema/sucafina/context").SfOperationAvailability[]>
+  /** Exact installed binding identity; not an authorization or a serialized readiness claim. */
+  nativeReadBinding?: (operationId: "projection.review" | "dashboard.dashboard-review", producer: object) => object | undefined
+  nativeActions?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp,
+    pages: readonly Readonly<{ surface: "dashboard" | "planner" | "procurement"; page: string }>[]) =>
+    Promise<readonly Readonly<{ surface: "dashboard" | "planner" | "procurement"; page: string; allowedActionIds: readonly string[] }>[]>
   installationId: string
   directory: string
   sourceRoot: string

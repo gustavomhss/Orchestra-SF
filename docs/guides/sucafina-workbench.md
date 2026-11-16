@@ -73,6 +73,12 @@ Na seção **Explain a forecast** de um caso, escolha duas fontes de previsão d
 
 Quando houver um resultado, abra suas fontes e detalhes para entender a contribuição. A contribuição é uma proposta para revisão; **Accept contribution** registra sua aceitação no caso com o motivo informado, não aplica valores no Planner. Se a análise ficar indisponível, desatualizada ou perder acesso à fonte, confira as fontes e o estado atual antes de tentar novamente.
 
+Um link para um resultado observado abre a seleção já registrada e consulta novamente o caso, a escolha e as fontes com seu acesso atual. Abrir o link não cria nem altera a seleção. Se ela estiver desatualizada ou indisponível, volte à decisão para revisar suas fontes.
+
+A consulta de resultado aceita o seletor original de caso e escolha ou `selectionRef` (64 caracteres hexadecimais minúsculos), mas não ambos. A referência identifica a seleção salva; não concede acesso por si só.
+
+Links de relações consultam a relação e suas fontes com o acesso atual. Para confirmar um escopo, abra a seleção produzida pela preparação original, confira os campos e valores e confirme explicitamente. A seleção expira em cinco minutos; se estiver desatualizada ou indisponível, prepare uma nova seleção na origem. Abrir o link não confirma nada.
+
 Essa opção depende de duas fontes de Planner anexadas ao caso e de um modelo disponível. Se o formulário não aparecer, continue usando a comparação normal no Planner ou confira as fontes do caso e o acesso disponível.
 
 Enquanto o início de uma análise estiver sem confirmação, as seleções e o modelo ficam preservados para repetir a mesma tentativa. Falhas transitórias na atualização do histórico conservam o resultado aberto e a justificativa digitada. Um resultado desatualizado deixa de poder ser aceito; uma revogação de acesso remove o conteúdo anterior.
@@ -106,6 +112,8 @@ Em **Dashboard** e **Planner**, abra **Import with preview**. Selecione **Find d
 
 Selecione **Preview import** e confira as alterações, origens e erros de linha. A prévia não aplica mudanças. Só selecione **Apply reviewed import** depois de revisar o destino e as alterações. O resultado informa se a importação foi aplicada, não precisou alterar campos ou foi recusada. Corrija erros ou atualize a prévia se a fonte mudar. Se a tela não puder confirmar a aplicação, confira o estado atual antes de repetir a ação.
 
+Quando a integração de arquivos estiver disponível em **Talent Review**, **Import** abre o fluxo de importação. Escolha o destino do Dashboard para **All Members**, carregue a planilha e revise a prévia antes de aplicar. **Export** baixa a planilha original de membros; a exportação exige autorização de administrador e é recusada se o acesso mudar durante a geração.
+
 ## Quando uma ação falha ou o acesso muda
 
 Nas edições comuns das páginas, uma resposta perdida deixa o resultado **inconclusivo**. A interface preserva sua tentativa e não reenvia esse comando por conta própria. **Inspect current record without resending** consulta a versão atual para comparação; essa consulta não altera a versão original da tentativa nem confirma que ela foi aplicada. Se o serviço ainda não puder recuperar o resultado, mantenha a página aberta e confira o registro com o responsável antes de iniciar outra alteração. O texto digitado nesses formulários não é guardado no navegador; sair da página pode perdê-lo.
@@ -121,4 +129,3 @@ Uma atualização ou consulta de um componente que detecta sessão expirada ou m
 No painel de pauta e Hot Topics, uma resposta incompleta ou incompatível com a tentativa não confirma retrato, reunião, rascunho, preparação ou aplicação. Os campos e a solicitação original permanecem preservados e bloqueados; use **Repetir mesma tentativa** para conferir o resultado com seu acesso atual. Uma aplicação sem confirmação continua inconclusiva mesmo que a gravação já tenha ocorrido: confira o recibo autorizado antes de iniciar outra alteração.
 
 Uma lista vazia pode significar que não há itens atribuídos no período, decisões acessíveis ou resultados salvos. Uma tela indisponível não confirma que a ação foi concluída. Em caso de dúvida, consulte o registro de origem antes de repetir uma gravação.
-

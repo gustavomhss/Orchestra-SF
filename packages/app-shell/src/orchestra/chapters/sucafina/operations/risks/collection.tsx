@@ -112,6 +112,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     ownerId: "",
     filters: spec.query(props.route),
     filtersEdit: spec.query(props.route),
+    readFilters: {} as Filters,
     selected: null as SfRef | null,
     mode: "list" as Mode,
     order: "none" as "none" | "asc" | "desc",
@@ -156,7 +157,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
   createEffect(() => {
     const r = nowReady()
     const generation = owner.generation()
-    const query = store.filters
+    const query = { ...store.filters }
     void store.reload
     if (!r || !r.state.context.destinations.some(
       (entry) => entry.capabilityId === spec.id && entry.canRead)) {
@@ -189,7 +190,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
         setStore({ status: result.state, rows: undefined, ownerId: "", actions: [], versions: {} })
         return
       }
-      setStore({ rows: result.rows, versions: result.versions, actions: result.actions,
+      setStore({ rows: result.rows, versions: result.versions, actions: result.actions, readFilters: { ...query },
         ownerId: identity, status: result.rows.length ? "ready" :
           query.q || query.filter || query.owner || query.status ? "filtered-empty" : "empty" })
       const pending = confirmed()
@@ -248,8 +249,13 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
       baseVersion: row ? version(row)! : null,
       base: row ? initial : null,
       value: initial,
-      revalidation: { operationId: spec.readOperation, input: {},
-        fieldPaths: spec.fields.filter((field) => !row || Object.hasOwn(row, field.name))
+      revalidation: { operationId: spec.readOperation, input: {
+        ...(store.readFilters.q === undefined ? {} : { q: store.readFilters.q }),
+        ...(store.readFilters.status === undefined ? {} : { status: store.readFilters.status }),
+        ...(store.readFilters.filter === undefined ? {} : { filter: store.readFilters.filter }),
+        ...(store.readFilters.owner === undefined ? {} : { owner: store.readFilters.owner }),
+      },
+        fieldPaths: spec.fields.filter((field) => row && Object.hasOwn(row, field.name))
           .map((field) => field.name), actionIds: ["save"] },
     })
     setDraft({ controller, entity: row, identity, operationRef: crypto.randomUUID() as SfOperationRef })

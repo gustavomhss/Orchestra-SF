@@ -21,12 +21,35 @@ export function createCollaborationHttp(input: {
     if (url.origin !== input.origin || url.pathname !== input.mount || request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied", reason: "collaboration-origin-denied" })
     if (request.method !== "POST") return reply({ status: "needs-input", reason: "collaboration-post-required" }, 405)
     if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "needs-input", reason: "invalid-collaboration-route" })
-    const route = routes.get(mode.slice("collaboration-".length))
+    const original = routes.get(mode.slice("collaboration-".length))
+    const route = mode === "collaboration-relation-read" && original ? {
+      ...original, keys: [], optional: ["recordRefs", "relationRef"],
+      validate: (payload: Record<string, unknown>) => typeof payload.relationRef === "string"
+        ? !!payload.relationRef.trim() && payload.relationRef.length <= 1024 && !Object.hasOwn(payload, "recordRefs")
+        : !Object.hasOwn(payload, "relationRef") && Array.isArray(payload.recordRefs) && payload.recordRefs.length > 0 &&
+          payload.recordRefs.every((value) => typeof value === "string" && !!value.trim()) && new Set(payload.recordRefs).size === payload.recordRefs.length,
+      invoke: (payload: Record<string, unknown>, context: TrustedUiContext) => typeof payload.relationRef === "string"
+        ? input.host.relations.readByReference(payload.relationRef, context) : original.invoke(payload, context),
+    } : mode === "collaboration-confirmation-project" && original ? {
+      ...original, keys: [], optional: ["id", "selectionRef"],
+      validate: (payload: Record<string, unknown>) => typeof payload.selectionRef === "string"
+        ? /^confirmation-selection:[a-f0-9]{64}$/.test(payload.selectionRef) && !Object.hasOwn(payload, "id")
+        : !Object.hasOwn(payload, "selectionRef") && typeof payload.id === "string" && !!payload.id.trim(),
+      invoke: (payload: Record<string, unknown>, context: TrustedUiContext) => typeof payload.selectionRef === "string"
+        ? input.host.confirmation?.readSelection(payload.selectionRef, context) ?? { status: "unavailable" as const, reason: "collaboration-feature-unavailable" }
+        : original.invoke(payload, context),
+    } : original
     if (!route) return reply({ status: "unavailable", reason: "collaboration-route-unavailable" }, 404)
     if (request.headers.get("content-type")?.split(";", 1)[0]?.trim().toLowerCase() !== "application/json") return reply({ status: "needs-input", reason: "collaboration-json-required" }, 415)
     const bytes = await bounded(request, 131072).catch(() => undefined)
     if (!bytes) return reply({ status: "needs-input", reason: "collaboration-request-too-large-or-unavailable" }, 413)
-    const decoded: unknown = await Promise.resolve().then(() => JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))).catch(() => undefined)
+    const decoded: unknown = await Promise.resolve().then(async () => {
+      const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes)
+      if (mode !== "collaboration-relation-read" && mode !== "collaboration-confirmation-project") return JSON.parse(text)
+      const { RelayJson } = await import("@orchestra/relay/json")
+      const { Effect } = await import("effect")
+      return Effect.runPromise(RelayJson.decode(text))
+    }).catch(() => undefined)
     if (!decoded || typeof decoded !== "object" || Array.isArray(decoded)) return reply({ status: "needs-input", reason: "invalid-collaboration-payload" })
     const payload = decoded as Record<string, unknown>
     const keys = [...route.keys, ...(route.optional ?? [])]

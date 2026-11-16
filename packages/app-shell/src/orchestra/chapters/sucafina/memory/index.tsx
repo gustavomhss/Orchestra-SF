@@ -226,6 +226,39 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     }
     setView("detailState", result ? stateFrom(result) : "unavailable")
   }
+  const referenceRoute = () => props.surfaceId === "UI63" && props.route.kind === "entry"
+    ? props.route.params.selectionRef : undefined
+  const readReference = async (selectionRef: string) => {
+    const ready = owner.ready()
+    if (!ready) return
+    detailAbort?.abort()
+    const controller = new AbortController()
+    detailAbort = controller
+    const epoch = ++requestEpoch
+    const generation = owner.generation()
+    setView({ selectedChoice: "", material: null, outcome: null, detailState: "loading" })
+    if (!/^[a-f0-9]{64}$/.test(selectionRef)) {
+      setView("detailState", "invalid")
+      return
+    }
+    const result = await createSfMemoryClient(ready.transport)["intelligence.memory-outcome"](
+      { selectionRef }, { signal: controller.signal },
+    ).catch(() => undefined)
+    if (!current(epoch, generation, controller.signal) || referenceRoute() !== selectionRef) return
+    if (result?.kind === "response" && result.body.status === "comparable") {
+      setView({ outcome: result.body, detailState: "ready" })
+      return
+    }
+    setView("detailState", result ? stateFrom(result) : "unavailable")
+  }
+  createEffect(() => {
+    const selectionRef = referenceRoute()
+    owner.generation()
+    const active = owner.ready()
+    if (!selectionRef || !active) return
+    void readReference(selectionRef)
+    onCleanup(() => detailAbort?.abort())
+  })
   const title = () => props.surfaceId === "UI63" ? "sf.ui63.title" : props.surfaceId === "UI62" ? "sf.ui62.title" : "sf.ui61.title"
   const detailMessage = (): keyof typeof SF_U26_COPY | "sf.common.loading" | "sf.common.unavailable" | "sf.common.noAccess" | "sf.common.stale" | "sf.common.invalidLink" =>
     view.detailState === "loading" ? "sf.common.loading" :
@@ -250,7 +283,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     <SfPageFrame titleKey={k(title())} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}>
       <section class="sf-memory" data-sf-surface={props.surfaceId}>
-        <Show when={privacy() === "ready" && props.surfaceId !== "UI62"}>
+        <Show when={privacy() === "ready" && props.surfaceId !== "UI62" && !referenceRoute()}>
           <form class="sf-memory-form" onSubmit={(event) => { event.preventDefault(); void loadCase() }}>
             <p class="sf-memory-help">{t("sf.u26.caseHelp")}</p>
             <label>{t("sf.u26.caseId")}<input autocomplete="off" required value={view.caseId}
@@ -336,10 +369,10 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
             )}</Show>
           </SfStatePanel>
         </Show>
-        <Show when={privacy() === "ready" && props.surfaceId === "UI63" && view.selectedChoice}>
+        <Show when={privacy() === "ready" && props.surfaceId === "UI63" && (view.selectedChoice || referenceRoute())}>
           <SfStatePanel state={view.detailState === "idle" ? "loading" : view.detailState}
             messageKey={k(detailMessage())}
-            onRetryRead={() => void readOutcome(view.selectedChoice)}>
+            onRetryRead={() => { const selectionRef = referenceRoute(); if (selectionRef) void readReference(selectionRef); else void readOutcome(view.selectedChoice) }}>
             <Show when={view.outcome}>{(data) => (
               <section class="sf-memory-section" data-sf-memory-outcome>
                 <h2>{t("sf.ui63.title")}</h2>

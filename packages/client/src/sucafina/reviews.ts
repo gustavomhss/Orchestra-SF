@@ -7,7 +7,7 @@ import {
   SfDashboardDashboardAgenda, SfDashboardDashboardCapture,
   SfDashboardDashboardHistory, SfDashboardDashboardReview,
   SfDashboardDashboardReviewPreserve, SfProjectionReview,
-  SfReviewsExportDocx, SfReviewsExportPptx,
+  SfReviewsExportDocx, SfReviewsExportPptx, SfReviewsReportPrepare,
   SfReviewsReviewSource, SfReviewsReviewUpdate,
 } from "@orchestra/schema/sucafina/reviews"
 import type { SfCallOptions, SfTransport } from "./transport"
@@ -70,11 +70,11 @@ const report = (value: Input<typeof SfReviewsExportDocx>) =>
   (value.title === undefined || value.title.length <= 200)
 
 /**
- * All ten keys are intentionally fixed; no generic action/payload dispatch.
+ * Keys are intentionally fixed; no generic action/payload dispatch.
  * Existing "export.docx/pptx" prepare an HTML review workspace rather than
  * bytes. A URL/navigation must be composed by F01 against the selected owner,
  * never fetched/parsed as a JSON result by the native client. The two methods
- * reject until I00 integrates the authenticated navigation/Office flow.
+ * remain unavailable. Report preparation uses a separate original producer.
  */
 export function createSfReviewsClient(transport: SfTransport) {
   return {
@@ -114,6 +114,12 @@ export function createSfReviewsClient(transport: SfTransport) {
     "reviews.export.pptx": (
       input: Input<typeof SfReviewsExportPptx>, options: SfCallOptions,
     ) => Promise.resolve(report(input) && readOptions(options) ? unavailable() : mismatch()),
+    "reviews.report.prepare": (
+      input: Input<typeof SfReviewsReportPrepare>, options: SfCallOptions,
+    ) => !!input && text(input.reviewRef, 2048) && distinct(input.sectionRefs, 1, 512) &&
+      (input.format === "docx" || input.format === "pptx") && mutationKey(options)
+      ? transport.execute(SfReviewsReportPrepare, input, options)
+      : Promise.resolve(mismatch()),
     "reviews.review-source": (
       input: Input<typeof SfReviewsReviewSource>, options: SfCallOptions,
     ) => source(input) && readOptions(options)

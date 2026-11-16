@@ -13,7 +13,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
 import {
-  SECURITY_CAMPAIGN_FIELDS, SECURITY_COLLECTIONS, SECURITY_CONSEQUENCES,
+  SECURITY_CAMPAIGN_FIELDS, SECURITY_CONSEQUENCES,
   SECURITY_DEPARTMENT_FIELDS, SECURITY_INCIDENT_FLAGS, SECURITY_KPI_FIELDS,
   SECURITY_MONTHS, SECURITY_OPERATION_IDS, SECURITY_YEARS,
   securityActions, securityCampaigns, securityIncidents, securityKpi,
@@ -280,21 +280,24 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       return
     }
     const version = securityVersion(page, entity, id ?? undefined)
+    if (!id && entity !== "kpi" && version !== 0) return
     const scope = ("CAP12:" + command + ":" + page.selection.year + ":" +
       page.selection.month + ":" + (id ?? "new")) as SfEditScopeKey
     const identity: SecurityEditor["identity"] = id
       ? { kind: "record", recordRef: ref(id) }
       : { kind: "new", newIntentRef: intent("u29:" + scope) }
     const initial = initialForm(page, entity, id)
-    const rowSet = SECURITY_COLLECTIONS[entity]
+    const row = id ? securityRow(page, entity, id) : undefined
     try {
       draft = active.drafts.acquire({
-        surfaceId: "CAP12", identity, editScopeKey: scope, baseVersion: version,
-        base: initial, value: initial,
+        surfaceId: "CAP12", identity, editScopeKey: scope,
+        baseVersion: id || entity === "kpi" ? version : null,
+        base: id || entity === "kpi" ? initial : null, value: initial,
         revalidation: {
           operationId: "domain.page.CAP12",
-          input: { secYear: page.selection.year, securityMonth: page.selection.month },
-          fieldPaths: id ? [rowSet] : [],
+          input: { ...(state.year === undefined ? {} : { secYear: state.year }),
+            ...(state.month === undefined ? {} : { securityMonth: state.month }) },
+          fieldPaths: row ? Object.keys(initial).filter((field) => Object.hasOwn(row, field)) : [],
           actionIds: [command],
         },
       })
@@ -503,7 +506,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       const payloadDigest = Array.from(digest, (byte) => byte.toString(16).padStart(2, "0")).join("")
       draft?.setPending({
         operationRef: editor.operationRef, idempotencyKey: options.idempotencyKey,
-        payloadDigest, expectedVersion: editor.version,
+        payloadDigest, expectedVersion: editor.id || editor.entity === "kpi" ? editor.version : null,
       })
       draft?.setPhase("submitting")
       let result: Awaited<ReturnType<typeof client["domain.command.CAP12.save-kpi"]>>

@@ -144,6 +144,8 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
         </Show>
         <Show when={props.route.kind === "new" ? current() : undefined}>
           {(ready) => <SfHotTopicEditor transport={ready().transport} drafts={ready().drafts}
+            readInput={{ topicStatus: source.filter(), ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
+              ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }) }}
             canSave={source.allowed("save")} scope="new" version={0} onBack={back} onRefetch={source.refresh} />}
         </Show>
         <Show when={props.route.kind === "edit" || props.route.kind === "detail" ? selected() : undefined}>
@@ -199,6 +201,8 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
             </Show>
             <Show when={props.route.kind === "edit" ? current() : undefined}>
               {(ready) => <SfHotTopicEditor record={topic()} version={version()} transport={ready().transport}
+                readInput={{ topicStatus: source.filter(), ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
+                  ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }) }}
                 drafts={ready().drafts} canSave={source.allowed("save")}
                 scope={topic().id} onBack={back} onRefetch={source.refresh} />}
             </Show>

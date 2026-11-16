@@ -12,6 +12,7 @@ import { ModelsProvider } from "@/context/models"
 import { showWip } from "@/orchestra/navigation"
 import { pathKey } from "@/utils/path-key"
 import { SfOwnerRuntime231 } from "./chapters/sucafina/host/owner-runtime231"
+import { isSfNativeChapter, sfNativeRouteSpecs } from "./chapters/sucafina/route-registry"
 
 export type ChapterPageProps = { server: ServerConnection.Any; directory: string }
 
@@ -43,15 +44,12 @@ export const chapterPages: Partial<Record<string, ChapterPage>> = {
   atlas: lazy(() => import("./chapters/atlas/atlas")),
   "rag-studio": lazy(() => import("./chapters/rag-studio/page")),
   board: lazy(() => import("./chapters/board/board")),
-  // F01/231: both routes share one owner lifetime, not a per-chapter wrapper.
-  "sf-home": SfOwnerRuntime231,
-  "sf-decisions": SfOwnerRuntime231,
-  "sf-planner": SfOwnerRuntime231,
-  "sf-bi": SfOwnerRuntime231,
+  // Recognition does not admit a route; F01 resolves it against the original source.
+  ...Object.fromEntries(sfNativeRouteSpecs.map((spec) => [spec.chapterId, SfOwnerRuntime231])),
 }
 
 // These chapters span the whole server, so they render without a project (with an empty directory).
-const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox", "sf-home", "sf-decisions", "sf-planner", "sf-bi"]
+const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox", "sf-home", "sf-decisions", "sf-planner", "sf-bi", "sf-dashboard", "sf-procurement"]
 
 const ChapterEmpty = lazy(() => import("./chapter-empty"))
 
@@ -112,7 +110,7 @@ export function OrchestraChapterRoute() {
               keyed
               fallback={
                 <Show
-                  when={serverWideChapters.includes(params.chapter) && selectedServer()}
+                  when={(serverWideChapters.includes(params.chapter) || isSfNativeChapter(params.chapter)) && selectedServer()}
                   keyed
                   fallback={
                     <ChapterBoundary chapter={params.chapter}>
@@ -123,7 +121,7 @@ export function OrchestraChapterRoute() {
                   {(conn) => (
                     <ServerSDKProvider server={() => conn}>
                       <ServerSyncProvider server={() => conn}>
-                        <Show when={params.chapter === "sf-home" || params.chapter === "sf-decisions" || params.chapter === "sf-planner" || params.chapter === "sf-bi"} fallback={
+                        <Show when={isSfNativeChapter(params.chapter)} fallback={
                           <ChapterBoundary chapter={params.chapter}>
                             <Dynamic component={page()} server={conn} directory="" />
                           </ChapterBoundary>
@@ -144,7 +142,7 @@ export function OrchestraChapterRoute() {
                     <SDKProvider directory={owner.directory}>
                       <ModelsProvider directory={() => owner.directory}>
                         {/* Native UI29/UI33/UI34 must keep the same F01 owner across chapter changes. */}
-                        <Show when={params.chapter === "sf-home" || params.chapter === "sf-decisions" || params.chapter === "sf-planner" || params.chapter === "sf-bi"} fallback={
+                        <Show when={isSfNativeChapter(params.chapter)} fallback={
                           <ChapterBoundary chapter={params.chapter}>
                             <Dynamic component={page()} server={owner.server} directory={owner.directory} />
                           </ChapterBoundary>

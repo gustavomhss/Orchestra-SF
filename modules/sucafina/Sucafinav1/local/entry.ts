@@ -1,15 +1,20 @@
 import path from "node:path"
+import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
 import { createModule, contributions, type ModuleServices } from "../index.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
+import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
+import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
-import { createSfWorkProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
+import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
+import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
 import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
 import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
-import { createSfDecisionsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
+import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
 import { createSfRoutinesHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { startAuthMaintenance } from "../runtime/auth-maintenance.ts"
@@ -139,9 +144,13 @@ export async function createConfiguredInstallation(
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
+  let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
+  let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
   runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
     operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
+    nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
+    nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
     isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
     persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
     grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
@@ -189,35 +198,55 @@ export async function createConfiguredInstallation(
     ...nativeDependenciesBase,
     readContext: nativeContext.readContext,
   }
-  const nativeProjections = mountSfNativeProjections({
-    mount: config.mount,
-    context: nativeContext,
-    handlers: [
+  // Resolve the real host producer per Request; it may not yet be live at route registration.
+  const nativeReviewHandler = Object.freeze({
+    operationId: "projection.review" as const,
+    handle: async (request: Request) => {
+      const producer = runtime?.services?.()?.nativeReviewProjection
+      return producer ? producer.handle(request) : Response.json(
+        { status: "unavailable", reason: "review-producer-unavailable" },
+        { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } },
+      )
+    },
+  })
+  const nativeHandlers = [
       ...createSfDomainProjectionHandlers(nativeDependencies),
       ...createSfPeopleProjectionHandlers(nativeDependencies),
+      ...createSfOperationsProjectionHandlers(nativeDependencies),
       ...createSfWorkProjectionHandlers(nativeDependencies),
       ...createSfPlannerProjectionHandlers(nativeDependencies),
       ...createSfProcurementProjectionHandlers(nativeDependencies),
       ...createSfDecisionsProjectionHandlers(nativeDependencies),
       ...createSfRoutinesHandlers(nativeDependencies),
-      // Resolve the real host producer per Request: host services may not yet be
-      // live when this installation factory first registers its routes.
-      // An absent Review service is an explicit 503, never synthetic data.
-      {
-        operationId: "projection.review" as const,
-        handle: async (request: Request) => {
-          const producer = runtime?.services?.()?.nativeReviewProjection
-          return producer ? producer.handle(request) : Response.json(
-            { status: "unavailable", reason: "review-producer-unavailable" },
-            { status: 503, headers: { "Cache-Control": "no-store",
-              "X-Content-Type-Options": "nosniff" } },
-          )
-        },
-      },
-    ],
+      nativeReviewHandler,
+    ]
+  const nativeProjections = mountSfNativeProjections({
+    mount: config.mount,
+    context: nativeContext,
+    handlers: nativeHandlers,
   })
+  const productBinding = applicationServices.product
+  nativeReadBinding = (operationId, producer) => {
+    const current = runtime?.services?.()
+    if (!current) return undefined
+    if (operationId === "projection.review")
+      return current.nativeReviewProjection === producer && nativeHandlers.includes(nativeReviewHandler) ? nativeReviewHandler : undefined
+    return current.productHttp === producer && applicationServices.product === productBinding ? productBinding : undefined
+  }
+  const actions = createSfActionSource(nativeDependencies, nativeHandlers)
+  nativeActions = actions.actions
   // Router construction above proves these exact handlers were installed.
-  nativeOperational = (request, stamp) => observeSfPlannerPages(nativeApplication, request, stamp)
+  nativeOperational = async (request, stamp) => {
+    const observed = await Promise.allSettled([
+      observeSfPlannerPages(nativeApplication, request, stamp),
+      observeSfDashboardPages(nativeApplication, request, stamp),
+      observeSfDomainHealth(nativeDependencies, nativeHandlers, request, stamp),
+      observeSfHome(runtime?.services?.(), request, stamp),
+      observeSfCases(nativeDependencies, nativeHandlers, request, stamp),
+      actions.operational(request, stamp),
+    ])
+    return observed.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
+  }
   // Started only after composition succeeds, outside request/business scopes.
   // Auth retention runs for Microsoft too, independently of operator backup jobs.
   const authMaintenance = startAuthMaintenance({ secrets: store.secrets })
@@ -313,7 +342,7 @@ export async function createConfiguredInstallation(
       return localChrome(response)
 
     },
-    async dispose() { await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
+    async dispose() { nativeReadBinding = undefined; await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
   }
 
   function localChrome(response: Response) {

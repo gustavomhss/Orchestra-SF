@@ -144,6 +144,32 @@ export function createRelationPort(input: {
       if (!await input.host.revalidate(context)) return { status: "denied", reason: "relation-access-unavailable" }
       return { status: "ok", value: { relations: candidates.filter((_, index) => access[index] && finalAccess[index]) } }
     },
+    readByReference: async (id: string, context: TrustedDomainContext): Promise<PortResult<ConfirmedRelations>> => {
+      if (typeof id !== "string" || !id.trim() || id.length > 1024 || isInternalRelationKey(id)) return { status: "needs-input", reason: "invalid-relation-reference" }
+      const request = input.host.requestFor(context)
+      const binding = digestSfValue([context.kind, context.binding])
+      const current = () => !!request && !request.signal.aborted && digestSfValue([context.kind, context.binding]) === binding
+      if (!request || !await input.host.revalidate(context) || !current()) return { status: "denied", reason: "relation-access-unavailable" }
+      const read = () => input.state.read(request, "relations", (state, authority) =>
+        authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision &&
+        authority.policyVersion === context.binding.policyVersion ? state.relations[id] : undefined)
+      const first = await read()
+      if (first.status !== "ok" || !isRelation(first.value) || first.value.id !== id || !current()) return { status: "unavailable", reason: "relation-access-unavailable" }
+      const original = structuredClone(first.value)
+      const digest = digestSfValue(original)
+      const refs = [original.fromRef, original.toRef]
+      const projected = await port.read(refs, context)
+      if (projected.status !== "ok") return projected
+      const selected = projected.value.relations.filter((relation) => relation.id === id)
+      if (selected.length !== 1 || !current()) return { status: "unavailable", reason: "relation-access-unavailable" }
+      const again = await read()
+      if (again.status !== "ok" || again.storageVersion !== first.storageVersion || digestSfValue(again.value) !== digest || !current()) return { status: "unavailable", reason: "relation-access-unavailable" }
+      const refreshed = await port.read(refs, context)
+      if (refreshed.status !== "ok" || digestSfValue(refreshed.value.relations.filter((relation) => relation.id === id)) !== digestSfValue(selected) || !await input.host.revalidate(context) || !current()) return { status: "unavailable", reason: "relation-access-unavailable" }
+      const final = await read()
+      if (final.status !== "ok" || final.storageVersion !== first.storageVersion || digestSfValue(final.value) !== digest || !await input.host.revalidate(context) || !current()) return { status: "unavailable", reason: "relation-access-unavailable" }
+      return { status: "ok", value: { relations: structuredClone(selected) } }
+    },
   }
   return {
     ...port,
@@ -188,5 +214,4 @@ function isRelation(value: unknown): value is Relation {
   const relation = value as Record<string, unknown>
   return [relation.id, relation.fromRef, relation.toRef, relation.kind, relation.confirmedBy, relation.confirmedAt].every((part) => typeof part === "string" && !!part.trim()) && Array.isArray(relation.evidenceRefs)
 }
-
 

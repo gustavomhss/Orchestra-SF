@@ -4,9 +4,11 @@
  * CurrentChoice and Procurement producers; F02 transports them unchanged.
  * This module cannot create, approve, apply or recover any decision.
  */
+import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { observeSfCaseSource } from "./case-health.ts"
 import { contextualCaseReturn } from "../../../../../modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router.ts"
 
@@ -74,7 +76,7 @@ async function readCase(request: Request, deps: SfNativeHostDependencies): Promi
   const admitted = await runtime.ui.admit(request, "sf_case_read", operationDigest)
   if (admitted.status !== "ok") return failed(request, admitted.status)
   try {
-    if (!matches(stamp, admitted.value.binding) || !await runtime.ui.validate(admitted.value, "sf_case_read", operationDigest))
+    if (!matches(stamp, admitted.value.binding) || !await runtime.ui.revalidate(admitted.value))
       return failed(request, "denied", "case-access-changed")
     const result = await runtime.dispatch("sf_case_read", parsed.value, admitted.value)
     if (result.status !== "ok") return failed(request, result.status, result.reason)
@@ -111,12 +113,12 @@ async function readCases(request: Request, deps: SfNativeHostDependencies): Prom
   try {
     if (!matches(stamp, admitted.value.binding) || !await runtime.ui.validate(admitted.value, "sf_case_read", operationDigest))
       return failed(request, "denied", "case-list-access-changed")
-    const identities = () => runtime.state.read(request, "cases", (state, authority) =>
-      authority.principalRef === admitted.value.binding.principalRef &&
-      authority.policyVersion === admitted.value.binding.policyVersion &&
-      authority.accessRevision === admitted.value.binding.accessRevision
-        ? Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
-        : undefined)
+    const identities = () => runtime.state.read(request, "cases", (state, authority) => {
+      if (authority.principalRef !== admitted.value.binding.principalRef ||
+        authority.policyVersion !== admitted.value.binding.policyVersion ||
+        authority.accessRevision !== admitted.value.binding.accessRevision) return undefined
+      return Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
+    })
     const listed = await identities()
     if (listed.status !== "ok" || !listed.value || listed.value.length > 100)
       return failed(request, "unavailable", "case-list-source-unavailable")
@@ -129,7 +131,9 @@ async function readCases(request: Request, deps: SfNativeHostDependencies): Prom
       const access = await runtime.ui.admit(request, "sf_case_read", itemDigest)
       if (access.status !== "ok") return failed(request, access.status)
       try {
-        if (!matches(stamp, access.value.binding) || !await runtime.ui.validate(access.value, "sf_case_read", itemDigest))
+        // The shared dispatcher consumes this item lease exactly once. Consuming
+        // it here would make every non-empty list fail at dispatch.
+        if (!matches(stamp, access.value.binding) || !await runtime.ui.revalidate(access.value))
           return failed(request, "denied", "case-item-access-changed")
         const item = await runtime.dispatch("sf_case_read", decoded.value, access.value)
         if (item.status !== "ok") return failed(request, item.status, item.reason)
@@ -162,4 +166,12 @@ export function createSfDecisionsProjectionHandlers(deps: SfNativeHostDependenci
     { operationId: "projection.cases" as const, handle: (request: Request) => readCases(request, deps) },
     { operationId: "projection.case" as const, handle: (request: Request) => readCase(request, deps) },
   ])
+}
+
+/** Installed list infrastructure only, not per-case authorization or list completeness. */
+export async function observeSfCases(deps: SfNativeHostDependencies, handlers: readonly SfProjectionHandler[], request: Request, stamp: SfContextStamp) {
+  const ids = (["projection.cases", "projection.case"] as const).filter((id) => handlers.some((handler) => handler.operationId === id))
+  if (!ids.length) return []
+  if (!await observeSfCaseSource(deps.runtime(), request, stamp)) return []
+  return ids.map((operationId) => ({ operationId, state: "ready" as const, reason: null, operational: true as const }))
 }

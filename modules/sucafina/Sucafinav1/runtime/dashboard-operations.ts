@@ -51,7 +51,7 @@ const campaignNumbers = [
 ]
 const consequences = ["Data exfiltration", "Data loss", "Service unavailability"]
 
-function writable(actor: Actor, page: string) {
+export function operationsCanWrite(actor: Actor, page: string) {
   return (
     actor.canWrite &&
     (actor.roles.includes("admin") ||
@@ -156,7 +156,7 @@ export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite) return { ok: false, status: 403 }
     if (!pages.some((page) => page === command.page)) return { ok: false, status: 400 }
-    if (!writable(actor, command.page)) return { ok: false, status: 403 }
+    if (!operationsCanWrite(actor, command.page)) return { ok: false, status: 403 }
     // Shared forms send textarea values as strings. Decode at the server boundary.
     const structured =
       command.action === "import-month"
@@ -497,7 +497,7 @@ function chart(title: string, labels: string[], series: { name: string; values: 
 
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
   if (!pages.some((owned) => page === owned)) return undefined
-  const disabled = !writable(context.actor, page)
+  const disabled = !operationsCanWrite(context.actor, page)
   const period = { year: context.year, month: context.month }
   const selector = `<div class="period-selector"><label>Year<select data-year="own" data-query="${page === pages[0] ? "opsYear" : "secYear"}">${[2024, 2025, 2026, 2027].map((year) => `<option${year === context.year ? " selected" : ""}>${year}</option>`).join("")}</select></label><label>Month<select data-month="own" data-query="${page === pages[0] ? "operationsMonth" : "securityMonth"}">${Array.from(
     { length: 12 },

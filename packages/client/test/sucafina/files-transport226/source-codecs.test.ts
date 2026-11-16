@@ -10,21 +10,21 @@ import {
 // Structural source-compatibility tests only. No fake principal, success grant,
 // provider, Request, live file or claimed server acceptance is generated here.
 describe("226 A06/F02 source-locked file transport", () => {
-  test("25 original schemas each have exactly one frozen route and codec", () => {
+  test("27 source schemas each have exactly one frozen route and codec", () => {
     const ids = Object.keys(SfFiles.operations)
-    expect(ids.length).toBe(25)
-    expect(new Set(ids).size).toBe(25)
+    expect(ids.length).toBe(27)
+    expect(new Set(ids).size).toBe(27)
     for (const id of ids) {
       expect(SfOperationRegistry[id as keyof typeof SfOperationRegistry]).toBeDefined()
       expect(SfFilesOperationBindings[id as keyof typeof SfFilesOperationBindings]).toBeDefined()
     }
   })
 
-  test("original five byte producers have byte-only mode; no implicit URL or extra byte route", () => {
+  test("source byte producers have byte-only mode; no implicit URL or extra byte route", () => {
     const ids = Object.keys(SfFiles.operations).filter((id) =>
       sfIsByteOperation(id as keyof typeof SfFiles.operations))
     expect(ids.sort()).toEqual([
-      "files.asset.download", "files.export.json", "files.export.register",
+      "files.asset.download", "files.export.json", "files.export.members", "files.export.register", "files.export.review",
       "files.export.suppliers", "files.export.xlsx",
     ])
     for (const id of ids) {
@@ -66,6 +66,11 @@ describe("226 A06/F02 source-locked file transport", () => {
     expect(sfFilesSourceQuery("files.asset.upload", { upload: "supplier", record: "s",
       recordVersion: -1, name: "x.pdf", page: "Suppliers" })).toBeUndefined()
     expect(sfFilesSourceQuery("files.asset.link", { assetId: "a" })).toEqual({ "asset-link": "a" })
+    const ref = "report:" + "a".repeat(64)
+    expect(sfFilesSourceQuery("files.export.review", { surface: "dashboard", artifactRef: ref })).toEqual({ artifactRef: ref })
+    expect(sfFilesSourceQuery("files.export.review", { surface: "planner", artifactRef: ref })).toBeUndefined()
+    expect(SfFilesOperationBindings["files.export.review"]!.decodeInput({ surface: "dashboard", artifactRef: ref, url: "https://evil.invalid" })).toEqual({ status: "invalid" })
+    expect(SfFilesOperationBindings["files.export.review"]!.decodeInput({ surface: "dashboard", artifactRef: "report:xyz" })).toEqual({ status: "invalid" })
   })
 
   test("two fixed upload slots reject MIME confusion, empty/oversize and binary-path diversion", () => {
@@ -90,6 +95,14 @@ describe("226 A06/F02 source-locked file transport", () => {
     expect(sfAllowedByteMime("files.export.json", "application/json")).toBe(true)
     expect(sfAllowedByteMime("files.export.xlsx",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")).toBe(true)
+    expect(sfAllowedByteMime("files.export.members",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")).toBe(true)
+    expect(sfAllowedByteMime("files.export.members", "application/pdf")).toBe(false)
+    expect(sfAllowedByteMime("files.export.members", "text/html")).toBe(false)
+    expect(sfAllowedByteMime("files.export.review", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")).toBe(true)
+    expect(sfAllowedByteMime("files.export.review", "application/vnd.openxmlformats-officedocument.presentationml.presentation")).toBe(true)
+    for (const type of ["text/html", "application/json", "application/pdf", "application/octet-stream", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"])
+      expect(sfAllowedByteMime("files.export.review", type)).toBe(false)
     expect(sfAllowedByteMime("files.export.suppliers", "text/csv; charset=utf-8")).toBe(true)
     expect(sfAllowedByteMime("files.asset.download", "application/pdf")).toBe(true)
     expect(sfAllowedByteMime("files.export.json", "text/html")).toBe(false)

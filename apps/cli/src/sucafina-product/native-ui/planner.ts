@@ -335,15 +335,29 @@ export async function observeSfPlannerPages(
     const view = domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
     const selection = { year: 2026 }
     const current = chosen(view, selection)
-    const observations = (["CAP17", "CAP23"] as const).flatMap((cap) => {
-      const spec = PAGES.find((entry) => entry.id === cap)
-      if (!spec || !allowed.includes(spec.page)) return []
-      const data = project(view, actor, cap, selection, current)
-      const value = { capabilityId: cap, selection: { ...selection, ...(current ? { versionId: id(current.id) } : {}) },
-        data, versions: cas(view, cap, current, data), allowedActionIds: [] }
-      const output = { status: "ok", context: stamp, value }
-      if (!Schema.is(SfPlanner.operations[`domain.page.${cap}`].output)(output)) return []
-      return [{ operationId: `domain.page.${cap}` as const, state: "ready" as const, reason: null, operational: true as const }]
+    const validate = {
+      CAP17: Schema.is(SfPlanner.operations["domain.page.CAP17"].output),
+      CAP18: Schema.is(SfPlanner.operations["domain.page.CAP18"].output),
+      CAP19: Schema.is(SfPlanner.operations["domain.page.CAP19"].output),
+      CAP20: Schema.is(SfPlanner.operations["domain.page.CAP20"].output),
+      CAP21: Schema.is(SfPlanner.operations["domain.page.CAP21"].output),
+      CAP22: Schema.is(SfPlanner.operations["domain.page.CAP22"].output),
+      CAP23: Schema.is(SfPlanner.operations["domain.page.CAP23"].output),
+    }
+    const observations = PAGES.flatMap((spec) => {
+      const cap = spec.id
+      if (!allowed.includes(spec.page)) return []
+      try {
+        const data = project(view, actor, cap, selection, current)
+        const value = { capabilityId: cap, selection: { ...selection, ...(current ? { versionId: id(current.id) } : {}) },
+          data, versions: cas(view, cap, current, data), allowedActionIds: [] }
+        const output = { status: "ok", context: stamp, value }
+        if (!validate[cap](output)) return []
+        return [{ operationId: `domain.page.${cap}` as const, state: "ready" as const, reason: null, operational: true as const }]
+      } catch {
+        // One unavailable projection must not advertise itself or mask others.
+        return []
+      }
     })
     return { commit: false, value: observations }
   }, { signal: request.signal })

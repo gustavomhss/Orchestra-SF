@@ -1,7 +1,10 @@
 import { For, Show, createEffect, createUniqueId, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { usePlatform } from "@/context/platform"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
+import { beginReportRecovery, clearReportMarker, readReportMarker, readReportRecovery,
+  reportMarkerScope, runReportRecovery, writeReportMarker } from "./recovery"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
@@ -11,109 +14,160 @@ import { reviewReadState, type PreservedReview } from "../preserved/model"
 import "./reports.css"
 
 type Format = "docx" | "pptx"
-type Year = "2024" | "2025" | "2026" | "2027"
-const YEARS: readonly Year[] = ["2024", "2025", "2026", "2027"]
 const key = (value: string) => value as SfCopyKey
 
-/**
- * UI50: the installed source only prepares an HTML Generate Report workspace.
- * The frozen A07 Office codecs are Schema.Never and return contract-unavailable.
- * Never convert that response to a download or fabricate a success receipt.
- */
 export function SfReportsView(props: SfSurfaceProps<"UI50">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const platform = usePlatform()
   const uid = createUniqueId()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [store, setStore] = createStore({
     readState: "loading" as SfUiState,
     review: undefined as PreservedReview | undefined,
     selected: [] as string[],
-    year: "2026" as Year,
     format: "docx" as Format,
-    title: "",
-    operationState: "idle" as "idle" | "preparing" | "unavailable" | "outcome-unknown",
+    busy: false,
+    markerScope: "",
+    marker: undefined as string | null | undefined,
     retry: 0,
   })
   let requestAbort: AbortController | undefined
   const ref = () => props.route.kind === "entry" ? props.route.params.reviewRef : undefined
-  const sameOwner = (generation: number, ownerKey: string) =>
-    owner.generation() === generation && owner.state().status === "ready" && owner.state().ownerKey === ownerKey
+  const sameOwner = (generation: number, ownerKey: string) => {
+    const state = owner.state()
+    return owner.generation() === generation && state.status === "ready" && state.ownerKey === ownerKey
+  }
+  const recovery = () => {
+    const access = owner.ready()
+    return access ? readReportRecovery(access.drafts) : undefined
+  }
+  const operationState = () => store.busy ? "preparing" : recovery()?.artifactRef ? "unavailable" :
+    recovery() || typeof store.marker === "string" ? "outcome-unknown" : store.marker === undefined ? "unavailable" : "idle"
   const exportAdmitted = () => {
     const access = owner.ready()
-    const id = store.format === "docx" ? "reviews.export.docx" : "reviews.export.pptx"
-    return access?.context.availability.some((resource) =>
+    return !!access?.context.availability.some((resource) =>
       resource.family === "reviews" && resource.resource === "report-export" &&
-      resource.operations.some((item) => item.operationId === id && item.state === "ready")) ?? false
+      resource.operations.some((item) => item.operationId === "reviews.report.prepare" && item.state === "ready" && item.operational)) &&
+      !!access?.context.availability.some((resource) => resource.family === "files" && resource.resource === "exports" &&
+        resource.operations.some((item) => item.operationId === "files.export.review" && item.state === "ready" && item.operational))
   }
+  const sameRecoveryOwner = () => {
+    const state = owner.state(), access = owner.ready(), intent = recovery()
+    return !!intent && !!access && state.status === "ready" && !!store.markerScope &&
+      intent.ownerScope === store.markerScope && intent.payload.reviewRef === ref()
+  }
+  const canRecover = () => sameRecoveryOwner() && !!store.markerScope && store.marker === recovery()?.idempotencyKey
+  const storage = () => {
+    try { return window.localStorage } catch { return undefined }
+  }
+  createEffect(() => {
+    const state = owner.state(), access = owner.ready()
+    setStore({ markerScope: "", marker: undefined })
+    if (state.status !== "ready" || !access) return
+    let alive = true
+    onCleanup(() => { alive = false })
+    void reportMarkerScope(state.owner).then((scope) => {
+      if (!alive) return
+      const saved = storage()
+      setStore({ markerScope: scope, marker: saved ? readReportMarker(saved, scope) : undefined })
+    }).catch(() => { if (alive) setStore({ markerScope: "", marker: undefined }) })
+  })
   createEffect(() => {
     const generation = owner.generation()
     const state = owner.state(), access = owner.ready(), reviewRef = ref()
     store.retry
     const controller = new AbortController()
-    requestAbort?.abort()
     setStore({
-      review: undefined, selected: [], operationState: "idle",
+      review: undefined, selected: [],
       readState: state.status === "denied" ? "denied"
         : state.status === "unauthenticated" ? "session-expired"
         : state.status === "context-mismatch" ? "invalid"
         : state.status === "ready" || state.status === "resolving" ? "loading" : "unavailable",
     })
     if (state.status === "ready" && access && reviewRef) {
+      const stamp = JSON.stringify(access.context.stamp)
+      const currentRead = () => !controller.signal.aborted && sameOwner(generation, state.ownerKey) &&
+        owner.ready()?.transport === access.transport && JSON.stringify(owner.ready()?.context.stamp) === stamp
       void (async () => {
         try {
           const result = await createSfReviewsClient(access.transport)["dashboard.dashboard-review"](
             { id: reviewRef }, { signal: controller.signal },
           )
-          if (controller.signal.aborted || !sameOwner(generation, state.ownerKey)) return
+          if (!currentRead()) return
           if (result.kind === "response" && result.body.status === "ok") {
             const value = result.body.value
             if (value.id !== reviewRef) { setStore("readState", "invalid"); return }
-            const topics = value.sections.map((section) => section.title)
-            const valid = topics.length <= 40 && new Set(topics).size === topics.length &&
-              topics.every((topic) => !!topic.trim() && topic.length <= 120)
-            const year = YEARS.find((candidate) => candidate === value.sections[0]?.period.start.slice(0, 4)) ?? store.year
-            setStore({ review: value, readState: "ready", selected: valid ? topics : [], year })
+            const sections = value.sections.map((section) => section.id)
+            const valid = sections.length <= 40 && new Set(sections).size === sections.length &&
+              sections.every((id) => !!id.trim() && id.length <= 16384)
+            const pending = recovery()
+            setStore({ review: value, readState: "ready", selected: pending
+              ? sameRecoveryOwner() ? [...pending.payload.sectionRefs] : []
+              : valid ? sections : [],
+              ...(pending && sameRecoveryOwner() ? { format: pending.payload.format } : {}) })
           } else setStore({ review: undefined, readState: reviewReadState(result) })
         } catch (error) {
-          if (controller.signal.aborted || !sameOwner(generation, state.ownerKey)) return
+          if (!currentRead()) return
           console.error("Sucafina report source read failed", error instanceof Error ? error.name : "unknown")
           setStore({ review: undefined, readState: "unavailable" })
         }
       })()
     } else if (state.status === "ready" && !reviewRef) setStore("readState", "unavailable")
-    onCleanup(() => { controller.abort(); requestAbort?.abort() })
+    onCleanup(() => controller.abort())
+  })
+  createEffect(() => {
+    owner.generation()
+    owner.state()
+    onCleanup(() => requestAbort?.abort())
+  })
+  createEffect(() => {
+    const pending = recovery(), review = store.review
+    if (!pending || !review || !sameRecoveryOwner() || review.id !== pending.payload.reviewRef) return
+    setStore({ selected: [...pending.payload.sectionRefs], format: pending.payload.format })
   })
   const validSelection = () => !!store.review && store.selected.length >= 1 &&
     store.selected.length <= 40 && new Set(store.selected).size === store.selected.length &&
-    store.selected.every((topic) => !!topic.trim() && topic.length <= 120 &&
-      store.review!.sections.some((section) => section.title === topic)) &&
-    store.title.length <= 200
+    store.selected.every((id) => !!id.trim() && id.length <= 16384 &&
+      store.review!.sections.some((section) => section.id === id))
   const requestReport = async () => {
     const access = owner.ready(), state = owner.state()
-    if (!access || state.status !== "ready" || !exportAdmitted() || !validSelection() ||
-        store.operationState === "preparing" || store.operationState === "outcome-unknown") return
+    if (!access || state.status !== "ready" || !exportAdmitted() || store.busy || !store.review || !store.markerScope) return
+    const saved = storage(), scope = store.markerScope
+    if (!saved) return
     const generation = owner.generation(), ownerKey = state.ownerKey
+    const stamp = JSON.stringify(access.context.stamp)
+    const existing = readReportRecovery(access.drafts)
+    if (existing && (!canRecover() || readReportMarker(saved, scope) !== existing.idempotencyKey)) return
+    if (!existing && !validSelection()) return
+    const idempotencyKey = existing?.idempotencyKey ?? crypto.randomUUID()
+    if (!existing && (store.marker !== null || !writeReportMarker(saved, scope, idempotencyKey))) return
+    if (!existing) setStore("marker", idempotencyKey)
+    const intent = existing ?? beginReportRecovery(access.drafts, { ownerScope: scope, idempotencyKey,
+      payload: { reviewRef: store.review.id, sectionRefs: [...store.selected], format: store.format } })
+    if (!intent) return
     requestAbort?.abort()
     const controller = new AbortController()
     requestAbort = controller
-    const input = { year: store.year, topic: [...store.selected], ...(store.title ? { title: store.title } : {}) }
-    setStore("operationState", "preparing")
+    const current = () => {
+      const next = owner.ready()
+      return !controller.signal.aborted && sameOwner(generation, ownerKey) && !!next &&
+        next.transport === access.transport && next.drafts === access.drafts && ref() === intent.payload.reviewRef &&
+        JSON.stringify(next.context.stamp) === stamp && store.markerScope === scope &&
+        readReportMarker(saved, scope) === intent.idempotencyKey && exportAdmitted()
+    }
+    setStore("busy", true)
     try {
-      const client = createSfReviewsClient(access.transport)
-      if (store.format === "docx") {
-        await client["reviews.export.docx"](input, { signal: controller.signal })
-      } else {
-        await client["reviews.export.pptx"](input, { signal: controller.signal })
-      }
-      if (controller.signal.aborted || !sameOwner(generation, ownerKey)) return
-      // Both frozen A07 methods return contract-unavailable. A navigation or
-      // future JSON response still cannot be interpreted as Office bytes.
-      setStore("operationState", "unavailable")
-    } catch (error) {
-      if (controller.signal.aborted || !sameOwner(generation, ownerKey)) return
-      console.error("Sucafina Office report preparation failed", error instanceof Error ? error.name : "unknown")
-      setStore("operationState", "unavailable")
+      await runReportRecovery({ drafts: access.drafts, transport: access.transport, signal: controller.signal,
+        current, principalRef: access.context.stamp.principalRef, accessRevision: access.context.stamp.accessRevision,
+        onDownloaded: (key) => {
+          const cleared = clearReportMarker(saved, scope, key)
+          if (cleared) setStore("marker", null)
+          return cleared
+        },
+        downloadResponse: platform.downloadResponse })
+    } finally {
+      if (requestAbort === controller) { requestAbort = undefined; setStore("busy", false) }
     }
   }
   onCleanup(() => requestAbort?.abort())
@@ -121,15 +175,19 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     <SfPageFrame titleKey={key("sf.ui50.title")} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={{
-        id: "report", labelKey: key("sf.ui50.primary"), tone: "primary",
-        disabled: !validSelection() || !exportAdmitted() || store.operationState === "preparing" ||
-          store.operationState === "outcome-unknown",
-        busy: store.operationState === "preparing", onInvoke: () => { void requestReport() },
+        id: "report", labelKey: key(recovery() ? "sf.common.retry" : "sf.ui50.primary"), tone: "primary",
+        disabled: !store.review || !exportAdmitted() || store.busy || !store.markerScope ||
+          (recovery() ? !canRecover() : store.marker !== null || !validSelection()),
+        busy: store.busy, onInvoke: () => { void requestReport() },
       }}
     >
-      <div class="sf-n28" data-sf-surface="UI50" data-export-state={store.operationState}>
+      <div class="sf-n28" data-sf-surface="UI50" data-export-state={operationState()}>
+        <Show when={typeof store.marker === "string" && !recovery()}>
+          <p role="alert">{t("sf.u33.unknown")}</p>
+        </Show>
         <SfStatePanel state={store.readState}
-          messageKey={key(!ref() ? "sf.u33.noReview" : "sf.u33.unavailable")}
+          messageKey={key(recovery() || typeof store.marker === "string" ? "sf.common.unavailable" :
+            !ref() ? "sf.u33.noReview" : "sf.u33.unavailable")}
           onRetryRead={() => setStore("retry", (count) => count + 1)}>
           <Show when={store.review}>{(review) => <section class="sf-n28-section" data-preserved-review={review().id}>
             <dl class="sf-n28-summary mx-card">
@@ -140,43 +198,30 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
             <div class="sf-n28-form">
               <label class="sf-n28-field" for={uid + "-format"}>{t("sf.u33.format")}
                 <select id={uid + "-format"} value={store.format}
+                  disabled={store.busy || !!recovery() || store.marker !== null}
                   onChange={(event) => {
+                    if (store.busy || recovery() || store.marker !== null) return
                     setStore("format", event.currentTarget.value === "pptx" ? "pptx" : "docx")
-                    setStore("operationState", "idle")
                   }}>
                   <option value="docx">{t("sf.u33.docx")}</option>
                   <option value="pptx">{t("sf.u33.pptx")}</option>
                 </select>
               </label>
-              <label class="sf-n28-field" for={uid + "-year"}>{t("sf.u33.year")}
-                <select id={uid + "-year"} value={store.year} onChange={(event) => {
-                  const next = YEARS.find((year) => year === event.currentTarget.value)
-                  if (next) { setStore("year", next); setStore("operationState", "idle") }
-                }}><For each={YEARS}>{(year) => <option value={year}>{year}</option>}</For></select>
-              </label>
-              <label class="sf-n28-field" for={uid + "-title"}>{t("sf.u33.title")}
-                <input id={uid + "-title"} maxlength="200" value={store.title}
-                  onInput={(event) => {
-                    setStore("title", event.currentTarget.value)
-                    setStore("operationState", "idle")
-                  }} />
-              </label>
             </div>
             <section class="sf-n28-section" aria-label={t("sf.u33.contents")}>
               <h2>{t("sf.u33.contents")}</h2>
-              <p>{t("sf.u33.limit")}</p>
               <ul class="sf-n28-items">
                 <For each={review().sections}>{(section) => <li class="mx-card" data-section-id={section.id} data-source-record-count={section.count}>
                   <label>
-                    <input type="checkbox" checked={store.selected.includes(section.title)}
-                      disabled={store.operationState === "preparing" || store.operationState === "outcome-unknown" ||
-                        section.title.length > 120}
+                    <input type="checkbox" checked={store.selected.includes(section.id)}
+                      disabled={store.busy || !!recovery() || store.marker !== null ||
+                        section.id.length > 16384}
                       onChange={(event) => {
-                        const title = section.title, checked = event.currentTarget.checked
-                        setStore("selected", (items) => checked
-                          ? items.includes(title) ? items : [...items, title]
-                          : items.filter((item) => item !== title))
-                        setStore("operationState", "idle")
+                        if (store.busy || recovery() || store.marker !== null) return
+                        const selected = new Set(store.selected)
+                        if (event.currentTarget.checked) selected.add(section.id)
+                        else selected.delete(section.id)
+                        setStore("selected", review().sections.map((item) => item.id).filter((id) => selected.has(id)))
                       }} />
                     <span> {t("sf.u33.include")}: <strong>{section.title}</strong></span>
                   </label>
@@ -199,15 +244,12 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
             </section>
             <section class="sf-n28-section" aria-label={t("sf.u33.download")}>
               <h2>{t("sf.u33.download")}</h2>
-              <Show when={true /* A07 has no real Office bytes, regardless of host readiness */}>
-                <p role="status" data-sf-file-unavailable>{t("sf.u33.notAvailable")}</p>
-                <p>{t("sf.u33.noReceipt")}</p>
+              <Show when={!exportAdmitted() || store.marker !== null || !!recovery() && !store.busy}>
+                <p role="status" data-sf-file-unavailable>{t("sf.common.unavailable")}</p>
               </Show>
-              <Show when={store.operationState === "preparing"}>
+              <For each={canRecover() ? recovery()?.gaps ?? [] : []}>{(gap) => <p>{gap}</p>}</For>
+              <Show when={store.busy}>
                 <p role="status" aria-live="polite">{t("sf.u33.preparing")}</p>
-              </Show>
-              <Show when={store.operationState === "outcome-unknown"}>
-                <p role="alert">{t("sf.u33.unknown")}</p>
               </Show>
             </section>
           </section>}</Show>

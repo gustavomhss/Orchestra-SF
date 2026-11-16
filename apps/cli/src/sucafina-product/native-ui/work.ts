@@ -7,10 +7,12 @@
  * private host port. If I00 has not installed that port, it fails closed;
  * no authority, grant or trusted context is synthesized here.
  */
+import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { isSfPeriod } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { observeSfCaseSource } from "./case-health.ts"
 import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { WorkPresentationItem } from "../../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
@@ -288,10 +290,11 @@ async function home(request: Request, runtime: SfHostServices): Promise<Response
     let cases: { status: "ok"; items: { caseRef: string; title: string; version: number }[] } | { status: "unavailable" } =
       { status: "unavailable" }
     if (caseAccess) {
-      const listed = await runtime.state.read(request, "cases", (state, authority) =>
+      const readCases = () => runtime.state.read(request, "cases", (state, authority) =>
         Object.values(state.cases).filter((entry) => entry.participants.includes(authority.principalRef))
           .map((entry) => encodeCaseRef(entry)))
-      if (listed.status === "ok") {
+      const listed = await readCases()
+      if (listed.status === "ok" && listed.value) {
         const items = await Promise.all(listed.value.map(async (caseRef) => {
           const selection = { caseRef }
           const other = await runtime.ui.admit(request, "sf_case_read", digestSfValue(selection))
@@ -378,4 +381,10 @@ export function createSfWorkProjectionHandlers(deps: SfNativeHostDependencies): 
   return [
     handler("home"), handler("search"), handler("work"), handler("work-item"), handler("work-selection"),
   ]
+}
+
+/** Home's admitted case-source infrastructure, not individual case or routine readiness. */
+export async function observeSfHome(runtime: SfHostServices | undefined, request: Request, stamp: SfContextStamp) {
+  if (!await observeSfCaseSource(runtime, request, stamp)) return []
+  return [{ operationId: "projection.home" as const, state: "ready" as const, reason: null, operational: true as const }]
 }

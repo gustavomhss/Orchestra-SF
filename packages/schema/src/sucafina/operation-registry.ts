@@ -1,6 +1,7 @@
 /**
- * I00/C00 canonical route METADATA from frozen contract-catalog.json
- * blob 31dbec1726fd8147156b01dc545726650ffd49e1 (305 IDs).
+ * I00/C00 route METADATA from frozen contract-catalog.json
+ * blob 31dbec1726fd8147156b01dc545726650ffd49e1 (305 IDs), plus the
+ * explicit source-backed extensions below.
  * Metadata alone NEVER admits a business operation or grants access. F02 requires
  * a separate, real, per-operation codec binding; absent bindings fail closed
  * with contract-unavailable before network. Do not infer response bodies here.
@@ -16,6 +17,13 @@ export type SfNativeOperationRoute = Readonly<{
   fixedBodyDiscriminator?: Readonly<Record<string, string>>
   maxRequestBytes?: number
 }>
+
+/** Original dashboard serveDownload supports admin GET ?download=members. */
+export const SfOperationExtensions = Object.freeze({
+  "files.export.members": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"members"}},
+  "files.export.review": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"sf":"review-download"}},
+  "reviews.report.prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"review-report"},"maxRequestBytes":65536},
+} as const satisfies Readonly<Partial<Record<SfOperationId, SfNativeOperationRoute>>>)
 
 export const SfOperationRegistry = Object.freeze({
   "bi.bi-data": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"bi-data"}},
@@ -324,4 +332,5 @@ export const SfOperationRegistry = Object.freeze({
   "views.open": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"open"},"maxRequestBytes":65536},
   "views.remove": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"remove"},"maxRequestBytes":65536},
   "views.save": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"save"},"maxRequestBytes":65536},
+  ...SfOperationExtensions,
 } as const satisfies Readonly<Record<SfOperationId, SfNativeOperationRoute>>)

@@ -14,6 +14,7 @@ const caseReads = new WeakMap<object, {
   id: string
   project: (cases: SfProductState["cases"], authority: SfStateAuthority) => SfProductState["cases"][string] | undefined
 }>()
+const readinessReads = new WeakMap<object, { namespace: SfStateNamespace; mode: "read" | "write"; select: (state: SfProductState, authority: SfStateAuthority) => { storageVersion: number; aggregateRevision: number; incarnation: string } | undefined }>()
 
 export function selectSfCase(id: string, context: TrustedDomainContext) {
   const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) =>
@@ -26,6 +27,24 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
       const field = Object.getOwnPropertyDescriptor(binding.value, key)
       return !!field && "value" in field && typeof field.value === "string"
     })) caseReads.set(read, { id, project: (cases, authority) => read({ cases }, authority) })
+  return read
+}
+
+/** Namespace infrastructure health only; this never observes or authorizes individual cases. */
+export function selectSfCaseHealth(context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">) {
+  return selectSfNamespaceHealth("cases", context)
+}
+
+/** Trusted metadata-only selector for the original C08 namespace. */
+export function selectSfNamespaceHealth(namespace: "cases" | "reviews" | "documents" | "atlas" | "outbox", context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">, mode: "read" | "write" = "read") {
+  if (!["cases", "reviews", "documents", "atlas", "outbox"].includes(namespace) || !["read", "write"].includes(mode)) throw new Error("SF_STATE_HEALTH_SELECTOR_INVALID")
+  const expected = Object.freeze({ principalRef: context.principalRef, policyVersion: context.policyVersion, accessRevision: context.accessRevision })
+  const select = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
+    if (!sameAuthority(expected, authority)) return undefined
+    return { storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation }
+  }
+  const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => select(state, authority)
+  readinessReads.set(read, { namespace, mode, select })
   return read
 }
 
@@ -49,7 +68,10 @@ export function createSfProductState(input: {
   return {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
       input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
-        const authority = await input.authorize(request, snapshot, namespace, "read")
+        const candidate = readinessReads.get(read)
+        const readiness = candidate?.namespace === namespace ? candidate : undefined
+        const mode = readiness?.mode ?? "read"
+        const authority = await input.authorize(request, snapshot, namespace, mode)
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
         const state = readSfState(snapshot)
         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
@@ -59,12 +81,14 @@ export function createSfProductState(input: {
           ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
         // Keep missing/inherited, accessor and malformed lookups on the original
         // path. Durable SQLite snapshots contain plain cloneable data.
-        const value = selection && selected?.enumerable && "value" in selected && selected.value &&
+        const value = readiness
+          ? structuredClone(readiness.select(state, authority)) as T
+          : selection && selected?.enumerable && "value" in selected && selected.value &&
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
           : await read(structuredClone(state), authority)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
-        const current = await input.authorize(request, snapshot, namespace, "read")
+        const current = await input.authorize(request, snapshot, namespace, mode)
         if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
       }, { signal: request.signal }),

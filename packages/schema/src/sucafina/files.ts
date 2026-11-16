@@ -9,7 +9,7 @@ import {
 } from "./files/structures"
 
 /**
- * A06: one typed operation for each of the 25 source-locked files operations.
+ * One typed operation for each source-locked files operation.
  *
  * These are NOT endpoints or source grants. I00/F02 bind the exact method, path,
  * fixed query, content type and download/upload wire mode from contract-catalog.
@@ -291,6 +291,18 @@ export const SfFilesExportJson = {
   input: Schema.Struct({ surface: Schema.Literal("dashboard") }),
   output: SfFilesDownloadBytes,
 } as const
+export const SfFilesExportMembers = {
+  operationId: "files.export.members",
+  input: Schema.Struct({ surface: Schema.Literal("dashboard") }),
+  output: SfFilesDownloadBytes,
+} as const
+export const SfFilesExportReview = {
+  operationId: "files.export.review",
+  input: Schema.Struct({ surface: Schema.Literal("dashboard"),
+    artifactRef: Schema.String.check(Schema.isPattern(/^report:[a-f0-9]{64}$/)) })
+    .annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: SfFilesDownloadBytes,
+} as const
 
 export const SfFiles = {
   operations: {
@@ -319,6 +331,8 @@ export const SfFiles = {
     "files.export.suppliers": SfFilesExportSuppliers,
     "files.export.register": SfFilesExportRegister,
     "files.export.json": SfFilesExportJson,
+    "files.export.members": SfFilesExportMembers,
+    "files.export.review": SfFilesExportReview,
   },
 } as const
 

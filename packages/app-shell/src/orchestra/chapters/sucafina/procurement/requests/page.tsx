@@ -11,6 +11,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
+import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
 import { SF_U11_REMAINING_COPY } from "./copy"
 import {
@@ -84,6 +85,33 @@ function stageOf(status: string): "pr" | "sourcing" | "po" | "closed" {
   return "closed"
 }
 
+export type RequestsDispatchFence = Readonly<{
+  reviewing: object | undefined
+  mode: "create" | "pr" | "po"
+  newIntentRef: SfIntentRef
+  ref: SfRef | undefined
+  sourceRevision: string
+  stage: ReturnType<typeof stageOf>
+  version: number | undefined
+  row: object | undefined
+  ownerKey: string | undefined
+  epoch: number
+  prController: object | undefined
+  poController: object | undefined
+  payload: string
+}>
+
+/** The reviewed row, source and draft owner must survive the digest unchanged. */
+export function sameRequestsDispatchFence(before: RequestsDispatchFence, after: RequestsDispatchFence): boolean {
+  return before.reviewing === after.reviewing &&
+    before.mode === after.mode && before.newIntentRef === after.newIntentRef &&
+    before.ref === after.ref && before.sourceRevision === after.sourceRevision &&
+    before.stage === after.stage && before.version === after.version &&
+    before.row === after.row && before.ownerKey === after.ownerKey &&
+    before.epoch === after.epoch && before.prController === after.prController &&
+    before.poController === after.poController && before.payload === after.payload
+}
+
 export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const sf = useSfContext()
   const language = useLanguage()
@@ -120,7 +148,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     sf.ready()?.context.destinations.find((item) => item.capabilityId === "CAP25" && item.canRead)?.allowedActionIds ?? []
   const actionAllowed = (action: SfRequestCommand) => {
     const original = uiCommandAction(action)
-    return !!view.read && contextActions().includes(original) && view.read.actionIds.includes(original)
+    return !!view.read && contextActions().includes(original) && view.read.actionIds.includes(original) &&
+      sf.ready()?.context.availability.some((resource) => resource.family === "procurement" && resource.resource === "CAP25" &&
+        resource.state !== "denied" && resource.state !== "unavailable" && resource.operations.some((operation) =>
+          operation.operationId === "domain.command.CAP25." + original && operation.state === "ready" && operation.operational)) === true
   }
   const row = createMemo(() => view.read?.records.find((item) => requestRef(item) === selectedRef()))
   const version = () => {
@@ -130,6 +161,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const canPr = () => !!row() && isPrWritable(row()!) && actionAllowed("save-pr")
   const canPo = () => !!row() && isPoWritable(row()!) && actionAllowed("save-po")
   const stage = () => row() ? stageOf(row()!.status) : "pr"
+  const sourceRevision = () => JSON.stringify({
+    row: row(), version: version(), actionIds: view.read?.actionIds, stamp: sf.ready()?.context.stamp,
+  })
   const stageHref = (ref: SfRef, part: "detail" | "requisition" | "po" | "history" | "sourcing" | "quotes") => {
     const url = new URL(props.route.href, "http://orchestra.invalid")
     const query = new URLSearchParams()
@@ -195,14 +229,14 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const currentVersion = version()
     const ready = sf.ready()
     if (!ready || sf.state().status !== "ready" || !sourceAvailable() ||
-        !actionAllowed("save-pr") && !actionAllowed("create") ||
+        !(creating() ? actionAllowed("create") : actionAllowed("save-pr")) ||
         (!creating() && (!currentRow || !isPrWritable(currentRow) || currentVersion === undefined))) return undefined
     const original = prFromRecord(creating() ? undefined : currentRow)
-    return ready.drafts.acquire<SfPrEdit>({
-      surfaceId: "CAP25",
-      identity: creating() ? { kind: "new", newIntentRef: view.newIntentRef } :
-        { kind: "record", recordRef: selectedRef()! },
-      editScopeKey: prScope,
+    const selection = { surfaceId: "CAP25" as const,
+      identity: creating() ? { kind: "new" as const, newIntentRef: view.newIntentRef } :
+        { kind: "record" as const, recordRef: selectedRef()! }, editScopeKey: prScope }
+    return sfRetainDraft<SfPrEdit>(ready.drafts, {
+      ...selection,
       baseVersion: creating() ? null : currentVersion!,
       base: creating() ? null : original,
       value: original,
@@ -223,10 +257,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         !currentRow || !isPoWritable(currentRow) || currentVersion === undefined ||
         !actionAllowed("save-po")) return undefined
     const original = poFromRecord(currentRow)
-    return ready.drafts.acquire<SfPoEdit>({
-      surfaceId: "CAP25",
-      identity: { kind: "record", recordRef: selectedRef()! },
-      editScopeKey: poScope,
+    const selection = { surfaceId: "CAP25" as const,
+      identity: { kind: "record" as const, recordRef: selectedRef()! }, editScopeKey: poScope }
+    return sfRetainDraft<SfPoEdit>(ready.drafts, {
+      ...selection,
       baseVersion: currentVersion,
       base: original,
       value: original,
@@ -241,20 +275,25 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   })
   const activePr = () => {
     const snapshot = prDraft()?.snapshot()
-    return snapshot?.availability === "active" ? snapshot : undefined
+    return sfDraftForEdit(snapshot, creating() ? null : version())
   }
   const activePo = () => {
     const snapshot = poDraft()?.snapshot()
-    return snapshot?.availability === "active" ? snapshot : undefined
+    return sfDraftForEdit(snapshot, version())
   }
+  const prConflict = () => sfDraftConflicted(prDraft()?.snapshot(), creating() ? null : version())
+  const poConflict = () => sfDraftConflicted(poDraft()?.snapshot(), version())
+  const prPending = () => { const state = prDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
+  const poPending = () => { const state = poDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
   const editPr = (next: SfPrEdit) => {
-    if (!view.sending && !view.reviewing && !view.outcomeUnknown) prDraft()?.edit(next)
+    if (activePr() && !view.sending && !view.reviewing && !view.outcomeUnknown) prDraft()?.edit(next)
   }
   const editPo = (next: SfPoEdit) => {
-    if (!view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
+    if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
   }
   const stageAllowed = (action: SfRequestCommand) => {
-    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown || view.sending) return false
+    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown || view.sending ||
+        prConflict() || poConflict() || prPending() || poPending()) return false
     const current = row()
     if (action === "create") return creating() && !!activePr()
     if (!current || version() === undefined) return false
@@ -291,6 +330,20 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     if (po) poDraft()?.setPhase("reviewing")
   }
   const refresh = () => setView("refresh", view.refresh + 1)
+  const discardConflict = (kind: "pr" | "po") => {
+    const ready = sf.ready(), ref = selectedRef(), controller = kind === "pr" ? prDraft() : poDraft()
+    const snapshot = controller?.snapshot()
+    if (!ready || (!ref && !(kind === "pr" && creating())) || snapshot?.availability !== "active" || snapshot.pendingOperation ||
+        view.sending || view.outcomeUnknown) return
+    const selection = { surfaceId: "CAP25" as const, identity: kind === "pr" && creating()
+      ? { kind: "new" as const, newIntentRef: view.newIntentRef }
+      : { kind: "record" as const, recordRef: ref! },
+      editScopeKey: kind === "pr" ? prScope : poScope }
+    ready.drafts.discard(selection)
+    if (ready.drafts.peek(selection)) return
+    setView({ read: undefined, state: "loading", reviewing: undefined })
+    refresh()
+  }
   const cancelReview = () => {
     if (view.sending) return
     prDraft()?.setPhase("dirty")
@@ -312,6 +365,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         (review.ref && activePr()?.baseVersion !== review.version))) return
     if (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
         activePo()?.baseVersion !== review.version)) return
+    // These are the originating controllers, not whichever row is selected after hashing.
+    const prController = pr ? prDraft() : undefined
+    const poController = po ? poDraft() : undefined
+    if ((pr && !prController) || (po && !poController)) return
     const client = createSfProcurementClient(ready.transport)
     const ownerKey = actor.ownerKey
     const epoch = sf.generation()
@@ -333,24 +390,72 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         case "delete": return { ...base, action: "delete" as const, values: {} }
       }
     })()
+    const payloadJson = JSON.stringify(input)
+    const fence: RequestsDispatchFence = {
+      reviewing: review, mode: creating() ? "create" : stage() === "po" ? "po" : "pr",
+      newIntentRef: view.newIntentRef, ref: selectedRef(), sourceRevision: sourceRevision(),
+      stage: stage(), version: version(), row: row(), ownerKey, epoch,
+      prController, poController, payload: payloadJson,
+    }
+    const declineBeforePost = () => {
+      if (inFlight !== abort) return
+      inFlight = undefined
+      abort.abort()
+      if (!ownerMatches(ownerKey, epoch)) return
+      // Return only the originating draft to edit mode; never modify the newly selected row.
+      prController?.setPhase("dirty")
+      poController?.setPhase("dirty")
+      if (view.reviewing === review) setView("reviewing", undefined)
+      setView("sending", false)
+    }
     let digest: string
     try {
-      const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(input)))
+      const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(payloadJson))
       digest = Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, "0")).join("")
     } catch (error) {
       console.error("CAP25 intent digest failed", error)
-      setView({ sending: false, notice: "sf.u11.remaining.notAvailable", reviewing: undefined })
+      if (ownerMatches(ownerKey, epoch) && view.reviewing === review)
+        setView("notice", "sf.u11.remaining.notAvailable")
+      declineBeforePost()
       return
     }
-    if (!ownerMatches(ownerKey, epoch) || abort.signal.aborted) return
-    const prController = pr ? prDraft() : undefined
-    const poController = po ? poDraft() : undefined
+    const currentOwner = sf.state()
+    if (!ownerMatches(ownerKey, epoch) || abort.signal.aborted ||
+        !sameRequestsDispatchFence(fence, {
+          reviewing: view.reviewing, mode: creating() ? "create" : stage() === "po" ? "po" : "pr",
+          newIntentRef: view.newIntentRef, ref: selectedRef(), sourceRevision: sourceRevision(),
+          stage: stage(), version: version(), row: row(),
+          ownerKey: currentOwner.status === "ready" ? currentOwner.ownerKey : undefined,
+          epoch: sf.generation(), prController: pr ? prDraft() : undefined,
+          poController: po ? poDraft() : undefined, payload: JSON.stringify(input),
+        }) || !stageAllowed(review.action) ||
+        (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
+          activePr()?.baseVersion !== (review.ref ? review.version : null))) ||
+        (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
+          activePo()?.baseVersion !== review.version))) {
+      declineBeforePost()
+      return
+    }
     const pending = {
       operationRef: review.operationRef, idempotencyKey: review.idempotencyKey,
       payloadDigest: digest, expectedVersion: review.ref ? review.version : null,
     }
     prController?.setPending(pending)
     poController?.setPending(pending)
+    const prState = prController?.snapshot()
+    const poState = poController?.snapshot()
+    const pendingMatches = (state: typeof prState | typeof poState) => {
+      const recorded = state?.availability === "active" ? state.pendingOperation : null
+      return !!recorded && recorded.operationRef === pending.operationRef &&
+        recorded.idempotencyKey === pending.idempotencyKey &&
+        recorded.payloadDigest === pending.payloadDigest &&
+        Object.is(recorded.expectedVersion, pending.expectedVersion)
+    }
+    if ((prController && !pendingMatches(prState)) || (poController && !pendingMatches(poState))) {
+      if (view.reviewing === review) setView("notice", "sf.u11.remaining.notAvailable")
+      declineBeforePost()
+      return
+    }
     prController?.setPhase("submitting")
     poController?.setPhase("submitting")
     const options = { signal: abort.signal, idempotencyKey: review.idempotencyKey }
@@ -378,11 +483,15 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       })()
       if (!ownerMatches(ownerKey, epoch)) return
       if (result.kind !== "response") {
-        const uncertain = !["contract-unavailable", "contract-mismatch"].includes(result.reason)
-        prController?.setPhase(uncertain ? "outcome-unknown" : "failed")
-        poController?.setPhase(uncertain ? "outcome-unknown" : "failed")
-        setView({ sending: false, reviewing: undefined, outcomeUnknown: uncertain,
-          notice: uncertain ? "sf.u11.remaining.unknown" : "sf.u11.remaining.notAvailable" })
+        prController?.setPhase("outcome-unknown")
+        poController?.setPhase("outcome-unknown")
+        setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })
+        return
+      }
+      if (result.status >= 500 || (result.body.ok ? result.status < 200 || result.status >= 300 : result.body.status !== result.status)) {
+        prController?.setPhase("outcome-unknown")
+        poController?.setPhase("outcome-unknown")
+        setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })
         return
       }
       if (result.status === 401 || result.status === 403) {
@@ -392,11 +501,17 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         else void sf.reload()
         return
       }
-      if (result.status === 409) {
-        prController?.setPhase("conflict")
-        poController?.setPhase("conflict")
-        setView({ sending: false, reviewing: undefined, state: "stale",
+      if (result.status === 409 && !result.body.ok && result.body.status === 409) {
+        prController?.rejectSave({ status: 409, operation: pending })
+        poController?.rejectSave({ status: 409, operation: pending })
+        setView({ sending: false, reviewing: undefined, state: prController || poController ? "ready" : "stale",
           notice: "sf.u11.remaining.missingVersion" })
+        return
+      }
+      if (result.status === 422 && !result.body.ok && result.body.status === 422) {
+        prController?.rejectSave({ status: 422, operation: pending })
+        poController?.rejectSave({ status: 422, operation: pending })
+        setView({ sending: false, reviewing: undefined, notice: po ? "sf.u11.remaining.invalidPo" : "sf.u11.remaining.invalidPr" })
         return
       }
       if (result.status < 200 || result.status >= 300 || result.body.ok !== true) {
@@ -554,12 +669,20 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <a href={stageHref(ref!, "history")}>{t("sf.u11.remaining.history")}</a>
         </nav>
       </Show>
+      <Show when={prPending() || poPending()}><p role="alert">{t("sf.u11.remaining.unknown")}</p></Show>
+      <Show when={prConflict()}>
+        <section class="sf-u11-stage" data-draft-conflict="pr">
+          <p role="alert">{language.t("sf.common.conflict")}</p>
+          <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || prPending()}
+            onClick={() => discardConflict("pr")}>{t("sf.u11.remaining.discard")}</button>
+        </section>
+      </Show>
       <Show when={activePr() && (creating() || isPrWritable(current!))}>
         <section class="sf-u11-stage" data-stage="pr">
           <Show when={current && !creating()}>
             <p>{t("sf.u11.remaining.noTitleMutation")}: {current?.pr?.title ?? ""}</p>
             {/* The W19 title editor is a separate source-locked intent/draft. */}
-            <SfRequestTitleEdit {...props} />
+            <SfRequestTitleEdit {...props} requestRef={selectedRef()} onConfirmed={refresh} />
           </Show>
           <SfRequisitionForm value={activePr()!.value} creating={creating()}
             disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
@@ -594,6 +717,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       <Show when={current && stage() === "po"}>
         <section class="sf-u11-stage" data-stage="po">
           <h3>{t("sf.u11.remaining.po")}</h3>
+          <Show when={poConflict()}>
+            <div data-draft-conflict="po"><p role="alert">{language.t("sf.common.conflict")}</p>
+              <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || poPending()}
+                onClick={() => discardConflict("po")}>{t("sf.u11.remaining.discard")}</button></div>
+          </Show>
           <Show when={canPo() && activePo()} fallback={<p>{t("sf.u11.remaining.readonly")}</p>}>
             <SfPurchaseOrderForm value={activePo()!.value}
               disabled={view.sending || !!view.reviewing || view.outcomeUnknown}

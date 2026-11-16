@@ -149,6 +149,7 @@ export function createSfTransport(options: Readonly<{
   const webOrigin = () => typeof window !== "undefined" && window.location.origin === options.binding.publicOrigin
   let stamp: SfContextStamp | undefined
   const pending = new Map<string, string>()
+  const reportInFlight = new Set<string>()
 
   const clear = () => { stamp = undefined; pending.clear() }
   const transport: SfTransport = {
@@ -251,17 +252,22 @@ export function createSfTransport(options: Readonly<{
       if (mutating && digest === undefined) return failure("contract-unavailable")
       const ownerHeader = legacyMutation ? nativeOwnerHeader(stamp!) : undefined
       if (legacyMutation && !ownerHeader) return failure("contract-mismatch")
+      const previous = mutating ? pending.get(key!) : undefined
+      const reportRetry = operation.operationId === "reviews.report.prepare"
       if (mutating) {
-        const previous = pending.get(key!)
+        if (reportRetry && reportInFlight.has(key!)) return failure("outcome-unknown")
         if (previous !== undefined) {
-          // A lost response leaves an unresolved intent. Neither concurrent
-          // dispatch nor a second execute is proof of source-side deduplication.
-          return failure(previous === digest ? "outcome-unknown" : "contract-mismatch")
+          if (previous !== digest) return failure("contract-mismatch")
+          // Only this source producer has a stable operation identity and
+          // preserves the first artifact for the exact same command.
+          if (!reportRetry) return failure("outcome-unknown")
         }
         pending.set(key!, digest!)
+        if (reportRetry) reportInFlight.add(key!)
       }
+      try {
       if (!isCurrent() || call.signal.aborted) {
-        if (mutating) pending.delete(key!)
+        if (mutating && previous === undefined) pending.delete(key!)
         return failure("aborted")
       }
       if (operation.operationId.startsWith("files.") && stamp &&
@@ -272,7 +278,7 @@ export function createSfTransport(options: Readonly<{
       }
 
       const headers: Record<string, string> = {
-        Accept: operation.operationId === "files.export.xlsx"
+        Accept: operation.operationId === "files.export.xlsx" || operation.operationId === "files.export.members"
           ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           : operation.operationId === "files.export.json" ? "application/json"
           : operation.operationId === "files.export.suppliers" || operation.operationId === "files.export.register"
@@ -437,6 +443,9 @@ export function createSfTransport(options: Readonly<{
       }
       if (mutating) pending.delete(key!)
       return { kind: "response", status: response.status, headers: response.headers, body: parsedOutput.value }
+      } finally {
+        if (mutating && reportRetry) reportInFlight.delete(key!)
+      }
     },
     /**
      * A06 original supplier CSV producer, exactly {mount}/procurement?download=suppliers.
@@ -675,7 +684,7 @@ function operationUrl(
     }
     const special = operationId.startsWith("files.") && source
       ? sfFilesSourceQuery(operationId, source) : undefined
-    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload",
+    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload","files.export.review",
       "files.document-open","files.document-scenario-targets"].includes(operationId) && !special)
       return undefined
     if (special) {

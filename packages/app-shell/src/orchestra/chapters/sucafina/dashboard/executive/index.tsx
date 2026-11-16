@@ -8,7 +8,7 @@ import { sfCommonKey, useSfPresentation, SF_STATE_FALLBACK_KEY } from "../../sha
 import type { SfCopyKey } from "../../shared/frame/types"
 import { SfDomainPageData } from "@orchestra/schema/sucafina/domain"
 import { SF_U02_COPY } from "@/i18n/orchestra-chapters/sf-u02"
-import { SfU02Edit } from "./edit"
+import { SfU02Edit, sfU02ExecutiveTarget } from "./edit"
 import { useU02Projection, knownNumber } from "./reader"
 import "./u02.css"
 
@@ -48,9 +48,14 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
       year() !== undefined && month() !== undefined ? String(year()) + ":" + String(month()) : undefined
     return period ? data()?.executiveMonths?.[period] : undefined
   }
-  const users = () => data()?.itUsersMonthly?.find((row) => row.year === year() && row.month === month())
-  const benchmark = () => data()?.costPerUserBenchmarks?.find((row) => row.year === year())
   const versions = () => reader.snapshot()?.versions ?? {}
+  const sourceSelected = () => reader.snapshot()?.selection.year === year() && reader.snapshot()?.selection.month === month()
+  const usersTarget = createMemo(() => sfU02ExecutiveTarget(sourceSelected() ? data()?.itUsersMonthly : undefined, year(), month(), "itUsersMonthly", versions()))
+  const benchmarkTarget = createMemo(() => sfU02ExecutiveTarget(sourceSelected() ? data()?.costPerUserBenchmarks : undefined, year(), month(), "costPerUserBenchmarks", versions()))
+  const users = () => { const target = usersTarget();return target.kind === "record" ? target.row : undefined }
+  const benchmark = () => { const target = benchmarkTarget();return target.kind === "record" ? target.row : undefined }
+  const usersVersion = () => { const target = usersTarget();return target.kind === "unavailable" ? undefined : target.version }
+  const benchmarkVersion = () => { const target = benchmarkTarget();return target.kind === "unavailable" ? undefined : target.version }
   const canEdit = (action: string) => reader.canAction(action, "domain.command.CAP01." + action)
   const stat = (id: string, label: Key, value: number | null | undefined) =>
     <div class="sf-u02-stat" data-sf-metric={id}><dt>{t(key(label))}</dt><dd>{numeric(value)}</dd></div>
@@ -178,10 +183,11 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
           {(ready) => <section class="sf-u02-section" aria-labelledby="sf-u02-inputs">
             <h2 id="sf-u02-inputs">{t(key("sf.u02.inputs"))}</h2>
             <div class="sf-u02-edit-grid">
-              <Show when={canEdit("save-users")}>
+              <Show when={canEdit("save-users") && usersTarget().kind === "unavailable"}><p role="status">{t(key("sf.u02.sourceMissing"))}</p></Show>
+              <Show when={canEdit("save-users") && usersTarget().kind !== "unavailable"}>
                 <SfU02Edit surfaceId="CAP01" operationId="domain.command.CAP01.save-users"
                   actionId="save-users" labelKey="sf.u02.editUsers" valueLabelKey="sf.u02.users"
-                  value={knownNumber(users()?.users)} version={versions()["itUsersMonthly:" + String(users()?.id ?? "")] ?? (users()?.id === undefined ? 0 : undefined)}
+                  value={knownNumber(users()?.users)} version={usersVersion()}
                   recordId={users()?.id === undefined ? undefined : String(users()?.id)} year={year()!} month={month()!}
                   scope={String(year()) + ":" + String(month()) + ":users"} integerOnly min={0}
                   admitted={canEdit("save-users")} drafts={ready().drafts}
@@ -192,15 +198,16 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                     version, values: { year: year()!, month: month()!, value },
                   }, { signal, idempotencyKey })} />
               </Show>
-              <Show when={canEdit("save-benchmark")}>
+              <Show when={canEdit("save-benchmark") && benchmarkTarget().kind === "unavailable"}><p role="status">{t(key("sf.u02.sourceMissing"))}</p></Show>
+              <Show when={canEdit("save-benchmark") && benchmarkTarget().kind !== "unavailable"}>
                 <SfU02Edit surfaceId="CAP01" operationId="domain.command.CAP01.save-benchmark"
                   actionId="save-benchmark" labelKey="sf.u02.editBenchmark" valueLabelKey="sf.u02.benchmark"
                   value={knownNumber(benchmark()?.value)}
-                  version={versions()["costPerUserBenchmarks:" + String(benchmark()?.id ?? "")] ?? (benchmark()?.id === undefined ? 0 : undefined)}
+                  version={benchmarkVersion()}
                   recordId={benchmark()?.id === undefined ? undefined : String(benchmark()?.id)}
                   year={year()!} month={month()!} scope={String(year()) + ":benchmark"} integerOnly={false} min={0}
                   admitted={canEdit("save-benchmark")} drafts={ready().drafts}
-                  readInput={{ execYear: year()!, executiveMonth: month()! }}
+                  readInput={{ execYear: year()! }}
                   onConfirmed={reader.refresh}
                   onWrite={(value, version, idempotencyKey, signal) => createSfDomainClient(ready().transport)["domain.command.CAP01.save-benchmark"]({
                     id: benchmark()?.id === undefined ? undefined : String(benchmark()?.id),

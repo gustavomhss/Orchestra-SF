@@ -719,7 +719,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                       state="outcome-unknown"
                       onReconcileRead={() => { void reconcileAbandoned() }}
                     />
-                  ) : null}
+                  )}
                 </Show>
                 <button type="button" class="rounded-md border border-border px-3 py-2"
                   onClick={() => { void reconcileAbandoned() }}>{t("sf.u13.reconcile")}</button>
