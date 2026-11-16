@@ -154,10 +154,9 @@ test("U29-AC02 KPI drafts survive Escape and a reference change without cross-mo
   await expect(training).toHaveValue(original)
 })
 
-test("U29-AC01 action lifecycle uses actual save and delete admissions on isolated producer", async ({ page }, info) => {
+test.skipIf(process.env.SF_NATIVE_ISOLATED_MUTATION_FIXTURE !== "true")(
+  "U29-AC01 action lifecycle uses actual save and delete admissions on isolated producer", async ({ page }, info) => {
   info.annotations.push({ type: "criteria-scope", description: "U29-AC01; save-action; delete-action; no fake authority; source refetch" })
-  test.skip(process.env.SF_NATIVE_ISOLATED_MUTATION_FIXTURE !== "true",
-    "150 must attest an isolated real producer fixture before any domain mutation")
   const security = await readySecurity(page)
   const unique = "N15 installed " + crypto.randomUUID()
   await security.getByRole("button", { name: "Add action", exact: true }).click()

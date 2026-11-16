@@ -151,10 +151,9 @@ test("U04-AC02 same-owner month drafts survive Escape and period navigation with
   await expect(incident).toHaveValue(original)
 })
 
-test("U04-AC01 authoritative SLA save is observable after a fresh installed read", async ({ page }, info) => {
+test.skipIf(process.env.SF_NATIVE_ISOLATED_MUTATION_FIXTURE !== "true")(
+  "U04-AC01 authoritative SLA save is observable after a fresh installed read", async ({ page }, info) => {
   info.annotations.push({ type: "criteria-scope", description: "U04-AC01; mutation only on real isolated 150 fixture; source refetch; no optimistic pass" })
-  test.skip(process.env.SF_NATIVE_ISOLATED_MUTATION_FIXTURE !== "true",
-    "150 must attest an isolated real producer fixture before allowing any domain write")
   const service = await readyService(page)
   await service.getByRole("button", { name: "Save SLA", exact: true }).click()
   const editor = service.locator(".sf-ops-editor")

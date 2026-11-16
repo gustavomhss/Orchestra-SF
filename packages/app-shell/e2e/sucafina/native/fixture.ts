@@ -21,7 +21,7 @@ import type {
   NativeInstalledCase, NativeSelectedInstallation, NativeInstalledSuite,
 } from "./fixture/selected-installation.ts"
 
-export { createNativeScratch } from "./fixture/scratch.ts"
+export { createNativeScratch } from "./fixture/isolated-installation.ts"
 export { nativeCorpus, sourceNativeVolume, seedNativeProcurementCorpus } from "./fixture/corpus.ts"
 export { registerNativeInstalledManifest } from "./fixture/installed-manifest.ts"
 export { readNativeManifest, observeNativeBinding, proveNativeWebReadiness } from "./fixture/readiness.ts"
