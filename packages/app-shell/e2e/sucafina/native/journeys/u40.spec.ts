@@ -1160,3 +1160,64 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     await deleteRealOwner(page, nativeHarness, surface, name, id)
   })
 })
+
+
+nativeInstalledFixture.describe("206 " + surfaceId + " · exact original read fieldsets", () => {
+  nativeInstalledFixture("206-AC01 CAP04/CAP05 owner, project status, annual/monthly and deviation values mirror the source without totals", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "read")
+    const original = await originalPage(page, nativeHarness)
+    const selected = nativeHarness.selected?.selections.find((row) => row.caseId === "entry")?.source
+    if (!selected || selected.collection !== sourceCollection) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_EXACT_SELECTED_SOURCE_RECORD")
+    }
+    const owner = exactOwner(original, selected.recordId)
+    if (typeof owner.name !== "string" || !owner.name.trim()) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_ORIGINAL_DISPLAY_NAME")
+    }
+    const detail = await openOwner(surface, owner.name, String(owner.id))
+    const metadata = detail.locator('[data-sf-field="budget"] dd')
+    if (owner.budget === null || owner.budget === undefined) {
+      await expect(metadata).toHaveText("Not available")
+    } else {
+      await expect(metadata).toHaveText(String(owner.budget))
+    }
+    await expect(detail.locator('[data-sf-field="source-version"] dd'))
+      .toHaveText(String(ownerVersion(original, String(owner.id))))
+    if (surfaceId === "CAP05") {
+      const row = ownerRow(surface, owner.name)
+      const status = owner.status === null || owner.status === undefined ? "Not available" : String(owner.status)
+      await expect(row).toContainText(status)
+    }
+    const annualMonths = detail.locator(".sf-budget-months tr[data-sf-month]")
+    await expect(annualMonths).toHaveCount(12)
+    for (let month = 1; month <= 12; month++) {
+      const matching = original.entries.filter((entry) =>
+        String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === String(owner.id) &&
+        entry.year === 2026 && entry.month === month)
+      if (matching.length > 1) throw new Error("F04_" + surfaceId + "_DUPLICATE_MONTH_" + month)
+      const projected = matching[0]
+      const row = detail.locator(".sf-budget-months tr[data-sf-month='" + month + "']")
+      for (const [index, field] of (["budget", "actual", "forecast"] as const).entries()) {
+        const number = projected?.[field]
+        const rendered = number === null || number === undefined ? "Not available" : String(number)
+        await expect(row.locator("td").nth(index)).toHaveText(rendered)
+      }
+      const deviation = asRecord(original.deviations[sourceKind + "-" + owner.id + "-2026-" + month])
+      await expect(row.locator("td").nth(3))
+        .toHaveText(deviation?.flag ? String(deviation.flag) : "Not available")
+      await expect(row.locator("td").nth(4))
+        .toHaveText(deviation?.text === null || deviation?.text === undefined
+          ? "Not available" : String(deviation.text))
+    }
+    const originalHint = asRecord(original.ytd["2026:" + String(owner.id)])
+    if (originalHint) {
+      const hint = detail.locator(".sf-budget-hint")
+      await expect(hint).toContainText(String(originalHint.amount))
+      await expect(hint).toContainText(String(originalHint.months))
+    } else {
+      await expect(detail.locator(".sf-budget-hint")).toHaveCount(0)
+    }
+    // No independent Planner projection or frontend total is created here.
+    // Every number expected in the DOM came from the authenticated source GET.
+  })
+})
