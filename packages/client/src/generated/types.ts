@@ -11484,6 +11484,45 @@ export type InstallationUpgradeInput = { readonly target: { readonly target: str
 
 export type InstallationUpgradeOutput = { readonly success: true; readonly version: string }
 
+export type ServerSucafinaInstallationsInput = {
+  readonly select: {
+    readonly select: "ids" | "location"
+    readonly installationId?: string | undefined
+    readonly projectId?: string | undefined
+    readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
+  }["select"]
+  readonly installationId?: {
+    readonly select: "ids" | "location"
+    readonly installationId?: string | undefined
+    readonly projectId?: string | undefined
+    readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
+  }["installationId"]
+  readonly projectId?: {
+    readonly select: "ids" | "location"
+    readonly installationId?: string | undefined
+    readonly projectId?: string | undefined
+    readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
+  }["projectId"]
+  readonly location?: {
+    readonly select: "ids" | "location"
+    readonly installationId?: string | undefined
+    readonly projectId?: string | undefined
+    readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
+  }["location"]
+}
+
+export type ServerSucafinaInstallationsOutput = {
+  readonly installations: ReadonlyArray<{
+    readonly installationId: string
+    readonly projectId: string
+    readonly hostId: string
+    readonly publicOrigin: string
+    readonly mount: string
+    readonly contractRevision: "sf-native-ui/1"
+    readonly authMode: "microsoft" | "local-operator"
+  }>
+}
+
 export type GuardrailRulesInput = {
   readonly location?: {
     readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined
