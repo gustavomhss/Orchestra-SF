@@ -1,9 +1,10 @@
 import { Match, Switch, type JSX } from "solid-js"
 import { SfWork } from "@orchestra/schema/sucafina/work"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfContext, SfHref, SfOwnerSelection, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
-import type { SfNativeRouteCandidate } from "../route-registry"
+import { matchSfNativeRoutePath, type SfNativeRouteCandidate } from "../route-registry"
+import { resolveSfUrlSelection } from "../navigation-state"
 import { SfSearchView } from "../search"
 import { SfContextPage } from "../context"
 import { SfLocalAdministrationView } from "../local-administration"
@@ -17,6 +18,16 @@ export function parseHomePagesRouteQuery(params: URLSearchParams, candidate: SfN
   const selected = ["server", "project", "installation"].map((key) => params.get(key))
   if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
   return {}
+}
+/** Syntax-only UI67 status route; it carries no authenticated authority. */
+export function homeContextStatusRoute(pathname: string, search: string, selected: SfOwnerSelection): SfResolvedRoute<"UI67"> | undefined {
+  const candidate = matchSfNativeRoutePath(pathname)
+  if (!candidate || candidate.surfaceId !== "UI67" || !parseHomePagesRouteQuery(new URLSearchParams(search), candidate)) return
+  const resolved = resolveSfUrlSelection(pathname + search, pathname, selected)
+  if (resolved.status !== "selected" || resolved.selection.serverKey !== selected.serverKey ||
+    resolved.selection.projectId !== selected.projectId || resolved.selection.installationId !== selected.installationId) return
+  return { surfaceId: "UI67", kind: "entry", params: {}, ownerSelection: selected,
+    pathname, href: (pathname + search) as SfHref, query: {} }
 }
 export function homePagesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-home" || !isHomePagesSurface(candidate.surfaceId) || candidate.kind !== "entry") return false
