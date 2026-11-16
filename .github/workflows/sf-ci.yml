@@ -244,6 +244,17 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
+          # Consume A2's exported manifest validator; the YAML owns no copy of
+          # suite working-directory mappings.
+          suite_dir="$(node --input-type=module -e '
+            import { readFileSync } from "node:fs"
+            import { validateManifest } from "./script/sf-ci/gate.mjs"
+            const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))
+            const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "bun")
+            if (!suite) throw new Error("SF_CI_UNKNOWN_BUN_SUITE")
+            process.stdout.write(suite.directory)
+          ')" || exit $?
+          test -f "$root/$suite_dir/package.json" || exit 2
           {
             case "$SF_SUITE_ID" in
               CI-SF)
@@ -253,7 +264,7 @@ jobs:
                 mapfile -t released < "$evidence/release-only.txt"
                 excluded=()
                 for file in "${released[@]}"; do excluded+=("--path-ignore-patterns=$file"); done
-                cd "$root/modules/sucafina"
+                cd "$root/$suite_dir"
                 bun test --timeout 30000 --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${excluded[@]}"
                 ;;
               CI-CLI)
@@ -261,11 +272,11 @@ jobs:
                 node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
                 mapfile -t files < "$evidence/selection.txt"
                 test "${#files[@]}" -gt 0 || exit 2
-                cd "$root/apps/cli"
+                cd "$root/$suite_dir"
                 bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               CI-APP-SRC)
-                cd "$root/packages/app-shell"
+                cd "$root/$suite_dir"
                 bun run test:unit --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-APP-BROWSER)
@@ -275,10 +286,19 @@ jobs:
                 mapfile -t released < "$evidence/release-only.txt"
                 excluded=()
                 for file in "${released[@]}"; do excluded+=("--path-ignore-patterns=$file"); done
-                cd "$root/packages/app-shell"
+                test_dir="$(node --input-type=module -e '
+                  import { readFileSync } from "node:fs"
+                  import { validateManifest } from "./script/sf-ci/gate.mjs"
+                  const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))
+                  const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "bun")
+                  if (suite?.selection?.kind !== "directory") throw new Error("SF_CI_BROWSER_SELECTION_DRIFT")
+                  process.stdout.write(suite.selection.testDirectory)
+                ')" || exit $?
+                test -d "$root/$suite_dir/$test_dir" || exit 2
+                cd "$root/$suite_dir"
                 ORCHESTRA_OMNI_CONTROL=declared bun test --conditions=browser \
                   --preload ../../script/test-omni-control.ts --preload ./happydom.ts \
-                  ./test-browser/sucafina-native --bail=5 \
+                  "./$test_dir" --bail=5 \
                   "${excluded[@]}" --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-ATLAS-BUSINESS)
@@ -286,7 +306,7 @@ jobs:
                 node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
                 mapfile -t files < "$evidence/selection.txt"
                 test "${#files[@]}" -gt 0 || exit 2
-                cd "$root/modules/atlas/boundary"
+                cd "$root/$suite_dir"
                 bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               *) echo "Unknown suite: $SF_SUITE_ID" >&2; exit 2 ;;
@@ -318,16 +338,9 @@ jobs:
       fail-fast: false
       max-parallel: 2
       matrix:
-        include:
-          - id: CI-UI-OPERATIONS
-            spec: e2e/sucafina/operations.spec.ts
-          - id: CI-UI-DECISIONS
-            spec: e2e/sucafina/decisions.spec.ts
-          - id: CI-UI-REPORTS
-            spec: e2e/sucafina/reports.spec.ts
+        id: [CI-UI-OPERATIONS, CI-UI-DECISIONS, CI-UI-REPORTS]
     env:
       SF_SUITE_ID: ${{ matrix.id }}
-      SF_SPEC: ${{ matrix.spec }}
       ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
       PLAYWRIGHT_WORKERS: "1"
       PLAYWRIGHT_NO_VIDEO: "1"
@@ -349,14 +362,113 @@ jobs:
       - name: Run installed SF UI journey
         shell: bash
         run: |
-          set -uo pipefail
+          set -euo pipefail
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
+          # Matrix enumerates the three normative IDs, never spec paths. The
+          # spec and package directory come from A2's validated manifest.
+          suite_info="$(node --input-type=module -e '
+            import { readFileSync } from "node:fs"
+            import { validateManifest } from "./script/sf-ci/gate.mjs"
+            const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))
+            const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "playwright")
+            if (!suite) throw new Error("SF_CI_UNKNOWN_UI_SUITE")
+            process.stdout.write([suite.directory, suite.specFile].join("\n"))
+          ')"
+          suite_dir="${suite_info%%
+          cd "$root"
+          node script/sf-ci/gate.mjs sanitize-playwright
+          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Publish only minimized JSON and receipt for a clean run
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-evidence-${{ matrix.id }}
+          path: |
+            sf-ci-evidence/${{ matrix.id }}/report.json
+            sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+  verify:
+    name: sf/verify
+    if: always()
+    needs: [preflight, static, omni, unit, ui]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Diagnose upstream gates before downloading suite artifacts
+        env:
+          SF_NEEDS_JSON: ${{ toJSON(needs) }}
+        run: node script/sf-ci/gate.mjs precheck
+      - name: Collect all eight exact results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: sf-evidence-*
+          path: sf-ci-collected
+          merge-multiple: false
+      - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA
+        env:
+          SF_NEEDS_JSON: ${{ toJSON(needs) }}
+        run: node script/sf-ci/gate.mjs verify
+\n'*}"
+          SF_SPEC="${suite_info#*
+          cd "$root"
+          node script/sf-ci/gate.mjs sanitize-playwright
+          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Publish only minimized JSON and receipt for a clean run
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-evidence-${{ matrix.id }}
+          path: |
+            sf-ci-evidence/${{ matrix.id }}/report.json
+            sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+  verify:
+    name: sf/verify
+    if: always()
+    needs: [preflight, static, omni, unit, ui]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Diagnose upstream gates before downloading suite artifacts
+        env:
+          SF_NEEDS_JSON: ${{ toJSON(needs) }}
+        run: node script/sf-ci/gate.mjs precheck
+      - name: Collect all eight exact results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: sf-evidence-*
+          path: sf-ci-collected
+          merge-multiple: false
+      - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA
+        env:
+          SF_NEEDS_JSON: ${{ toJSON(needs) }}
+        run: node script/sf-ci/gate.mjs verify
+\n'}"
+          test -f "$root/$suite_dir/$SF_SPEC"
           export PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.json"
-          cd "$root/packages/app-shell"
+          cd "$root/$suite_dir"
+          set +e
           bun run test:e2e:local "$SF_SPEC" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line 2>&1 | tee "$evidence/run.log"
-          status=$?
+          status=${PIPESTATUS[0]}
+          set -e
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
