@@ -217,7 +217,12 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const row=request(),version=sourceVersion(),controller=draft()
     if(!row||version===null||!controller)return
     const state=controller.snapshot()
-    if(state.availability==="active"&&state.baseVersion!==version)
+    // A dirty editor retains its original CAS after receiveRemote marks a
+    // conflict. Replaying the SAME remote version would republish the signal
+    // recursively while Solid reevaluates this effect (stack overflow). Only a
+    // genuinely newer producer version may advance the conflict witness.
+    if(state.availability==="active"&&state.baseVersion!==version&&
+       state.conflict?.currentVersion!==version)
       controller.receiveRemote({baseVersion:version,value:editableSourcing(row)})
   })
   const snapshot=()=>draft()?.snapshot()
