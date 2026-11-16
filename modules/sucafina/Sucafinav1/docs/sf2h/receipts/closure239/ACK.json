@@ -1,0 +1,47 @@
+{
+  "schema": "sf2h.closure239.ack.v1",
+  "mission": 239,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "epoch": "c12-contract-239-independent",
+  "model": "GPT-6",
+  "session_id": null,
+  "session_exposed": false,
+  "github_authenticated_login": "gustavomhss",
+  "branch": "sf-c12-contract",
+  "expected_initial_head": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "observed_initial_head": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "integration_pr": 208,
+  "integration_target": "sf-integration-preview",
+  "scope": {
+    "write_only": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/**",
+      "modules/sucafina/Sucafinav1/test/product/closure239/**"
+    ],
+    "product_outside_scope": "COMPLETE_INERT_PATCH_ONLY"
+  },
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "approved_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "read_sources": [
+    "root AGENTS at planning commit",
+    "sf2h-plan/START.md",
+    "sf2h-plan/WORKFLOW.md",
+    "sf2h-plan/execution/COMMON.md",
+    "17 canonical contracts including C12",
+    "WP04/WP10/WP11 criteria",
+    "closure230/HANDOFF,INERT-PATCH,REVIEW,TRACE",
+    "closure231/HANDOFF",
+    "closure232/HANDOFF",
+    "PR208 head and 66 paths"
+  ],
+  "authority": "DETACHED_CONTRACT_REVIEWER_NO_FINANCIAL_POLICY_CHANGE",
+  "supervisor_or_goal_created": false,
+  "checks": {
+    "local_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "ci": "NOT_RUN"
+  },
+  "global_release": false
+}
