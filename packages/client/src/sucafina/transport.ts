@@ -484,7 +484,7 @@ export function createSfTransport(options: Readonly<{
         total += chunk.byteLength
         return true
       }
-      const status = (code: number): SfSupplierCsvExportResult["status"] =>
+      const status = (code: number): Exclude<SfSupplierCsvExportResult["status"], "ok"> =>
         code === 401 ? "unauthenticated" : code === 403 ? "denied" :
         code === 409 ? "stale" : "unavailable"
       try {
