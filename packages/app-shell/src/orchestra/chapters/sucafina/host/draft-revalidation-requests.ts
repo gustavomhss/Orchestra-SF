@@ -60,9 +60,6 @@ export async function revalidateRequestsDraft(
   // Older source revisions omit this optional proof; omission is not a revocation.
   if (row.allowedDraftActions === undefined) return { status: "unavailable" }
   if (!(input.editScopeKey === "pr.details" ? isPrWritable(row) : isPoWritable(row))) return { status: "denied" }
-  const visible = input.editScopeKey === "pr.details" ? row.pr : row.po
-  if (input.read.fieldPaths.some((path) => !visible || !Object.entries(visible).some(([key, value]) =>
-    path === prefix + key && value !== undefined))) return { status: "denied" }
   const version = requestVersion(read, ref)
   if (version === undefined) return { status: "unavailable" }
   return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: version }

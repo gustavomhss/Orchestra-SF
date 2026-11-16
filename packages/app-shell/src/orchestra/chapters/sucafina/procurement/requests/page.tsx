@@ -414,10 +414,16 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         return
       }
       if (result.status === 409) {
-        prController?.setPhase("conflict")
-        poController?.setPhase("conflict")
-        setView({ sending: false, reviewing: undefined, state: "stale",
+        prController?.rejectSave({ status: 409, operation: pending })
+        poController?.rejectSave({ status: 409, operation: pending })
+        setView({ sending: false, reviewing: undefined,
           notice: "sf.u11.remaining.missingVersion" })
+        return
+      }
+      if (result.status >= 500) {
+        prController?.setPhase("outcome-unknown")
+        poController?.setPhase("outcome-unknown")
+        setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })
         return
       }
       if (result.status < 200 || result.status >= 300 || result.body.ok !== true) {

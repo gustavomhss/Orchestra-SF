@@ -8,7 +8,7 @@ export function draftAvailability(
   if (resources.length !== 1) return { status: "unavailable" }
   const resource = resources[0]!
   if (resource.state === "denied") return { status: "denied" }
-  if (resource.state !== "ready") return { status: "unavailable" }
+  if (resource.state !== "ready" && resource.state !== "partial") return { status: "unavailable" }
   const observations = operations.map((id) => resource.operations.filter((operation) => operation.operationId === id))
   if (observations.some((matches) => matches.length !== 1)) return { status: "unavailable" }
   if (observations.some((matches) => matches[0]?.state === "unavailable")) return { status: "unavailable" }

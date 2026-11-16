@@ -49,6 +49,7 @@ export function createSfOwnerDrafts(
     setPhase: (phase) => { if (live()) raw.setPhase(phase) },
     setPending: (operation) => { if (live()) raw.setPending(operation) },
     confirmSave: (result) => { if (live()) raw.confirmSave(result) },
+    rejectSave: (result) => { if (live()) raw.rejectSave(result) },
   })
   const registry: SfDraftRegistry = {
     peek<Value>(input: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>) {
