@@ -77,6 +77,8 @@ Um link para um resultado observado abre a seleção já registrada e consulta n
 
 A consulta de resultado aceita o seletor original de caso e escolha ou `selectionRef` (64 caracteres hexadecimais minúsculos), mas não ambos. A referência identifica a seleção salva; não concede acesso por si só.
 
+Links de relações consultam a relação e suas fontes com o acesso atual. Para confirmar um escopo, abra a seleção produzida pela preparação original, confira os campos e valores e confirme explicitamente. A seleção expira em cinco minutos; se estiver desatualizada ou indisponível, prepare uma nova seleção na origem. Abrir o link não confirma nada.
+
 Essa opção depende de duas fontes de Planner anexadas ao caso e de um modelo disponível. Se o formulário não aparecer, continue usando a comparação normal no Planner ou confira as fontes do caso e o acesso disponível.
 
 Enquanto o início de uma análise estiver sem confirmação, as seleções e o modelo ficam preservados para repetir a mesma tentativa. Falhas transitórias na atualização do histórico conservam o resultado aberto e a justificativa digitada. Um resultado desatualizado deixa de poder ser aceito; uma revogação de acesso remove o conteúdo anterior.

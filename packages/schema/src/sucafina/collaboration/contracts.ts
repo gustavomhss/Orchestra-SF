@@ -143,6 +143,13 @@ export const SfConfirmationRecord = Schema.Struct({
 export const SfConfirmationPrepareValue = Schema.Struct({
   sourceVersion: SfPositive, incarnation: SfNonEmpty, scopeFingerprint: SfNonEmpty,
   evidence: SfRecordEvidence, projection: SfDomainProjection,
+  selectionRef: Schema.optional(Schema.String.check(Schema.isPattern(/^confirmation-selection:[a-f0-9]{64}$/))),
+})
+export const SfPreparedConfirmationSelection = Schema.Struct({
+  kind: Schema.Literal("prepared-selection"),
+  selectionRef: Schema.String.check(Schema.isPattern(/^confirmation-selection:[a-f0-9]{64}$/)),
+  scope: SfConfirmationScope,
+  observation: SfConfirmationPrepareValue,
 })
 export const SfConfirmationProjection = Schema.Union([
   Schema.Struct({
