@@ -4,7 +4,7 @@ import { AgentV2 } from "@orchestra/core/agent"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import { ToolSafety } from "@orchestra/core/tool-safety"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { TrustedDomainContext, TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfRoutineNativeOwnerBinding, SfRoutineNativeOwnerPort } from "./routine-native-adapter.ts"
 import { withSfRoutineNativeAbort } from "./routine-native-dispatch.ts"
 import type { SfRoutineNativeOwnerHook } from "./routine-native-governance.ts"
@@ -45,11 +45,11 @@ type Entry = {
 export type SfRoutineNativeHistoricalAuthority = Readonly<{
   authoritySessionID: SessionSchema.ID
   signal: AbortSignal
-  current: (context: TrustedUiContext, request: Request) => Promise<boolean>
+  current: (context: TrustedDomainContext, request: Request) => Promise<boolean>
 }>
 
 type ReadEntry = {
-  readonly context: TrustedUiContext
+  readonly context: TrustedDomainContext
   readonly request: Request
   readonly binding: SfRoutineNativeOwnerBinding
   readonly generation: number
@@ -230,10 +230,10 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
    * historical owner has no Task invocation. No new run database, Task dispatch, or synthetic grant.
    */
   const withReauthenticatedRead = async <A>(
-    context: TrustedUiContext, request: Request, evidence: SfRoutineNativeHistoricalAuthority,
+    context: TrustedDomainContext, request: Request, evidence: SfRoutineNativeHistoricalAuthority,
     consume: () => Promise<A>,
   ): Promise<A | undefined> => {
-    if (disposed || context?.kind !== "ui" || request.signal.aborted || evidence.signal.aborted ||
+    if (disposed || !context || request.signal.aborted || evidence.signal.aborted ||
       input.requestFor(context) !== request || !Schema.is(SessionSchema.ID)(evidence.authoritySessionID) ||
       readEntries.has(request) || acquiringReads.has(request) || readEntries.size + acquiringReads.size >= 100)
       return undefined
@@ -323,9 +323,16 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
     },
   })
   const entriesHas = (entry: Entry) => [...entries.values()].includes(entry) && entry.scope.sync()
+  const readOwners: SfRoutineNativeOwnerPort = {
+    available: () => !disposed && readEntries.size > 0,
+    resolve: async (context, request) => {
+      const read = readEntries.get(request)
+      return read?.context === context && await read.current() && readEntries.get(request) === read ? read.binding : undefined
+    },
+  }
 
   return {
-    owners, withRequest, withReauthenticatedRead, run,
+    owners, readOwners, withRequest, withReauthenticatedRead, run,
     revoke: (request: Request) => {
       for (const acquisition of [...acquiring]) if (acquisition.request === request) acquisition.close()
       for (const scope of [...scopes]) if (scope.request === request) scope.close()
@@ -359,4 +366,3 @@ function denied() {
 function checked(current: () => Promise<boolean>) {
   return Effect.tryPromise({ try: current, catch: () => denied() })
 }
-

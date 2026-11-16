@@ -45,6 +45,10 @@ type Checked = {
   readonly lease: Lease
   readonly active: () => boolean
 }
+type PhaseFence = {
+  beforeTurn: (session: SessionSchema.Info) => Effect.Effect<void, ToolFailure>
+  admitted: (request: Parameters<TaskGovernance.Interface["admit"]>[0], admission: TaskGovernance.Admission) => Effect.Effect<TaskGovernance.Admission, ToolFailure>
+}
 
 /**
  * Adds current SF authority to Maestro's existing Task hooks. The only mutable entries are short-lived authority
@@ -61,6 +65,7 @@ export function createSfRoutineNativeGovernance(input: {
   const safeties = new WeakSet<ToolSafety.Interface>()
   const relays = new WeakSet<Relay.Interface>()
   let epoch = 0
+  let phaseFence: PhaseFence | undefined
 
   const bind = (planRevisionId: string, authority: SfRoutineNativeAuthorityLease): (() => void) => {
     // This is a capability registration, never an allocation of a plan or an admission identity.
@@ -145,9 +150,10 @@ export function createSfRoutineNativeGovernance(input: {
           checked.plan.workflowBinding.publication.projectID !== admission.parent.projectID)) return yield* denied("BINDING_INVALID")
         const admitted = yield* original.admit(admission)
         if (checked) yield* assertCurrent(checked)
-        return admitted
+        return phaseFence ? yield* phaseFence.admitted(admission, admitted) : admitted
       }),
       beforeTurn: (session) => Effect.gen(function* () {
+        if (phaseFence) yield* phaseFence.beforeTurn(session)
         const checked = yield* checkSession(session)
         yield* original.beforeTurn(session)
         if (checked) yield* assertCurrent(checked)
@@ -278,6 +284,11 @@ export function createSfRoutineNativeGovernance(input: {
 
   return {
     contribution,
+    installPhaseFence: (fence: PhaseFence) => {
+      if (phaseFence) throw new Error("SF_NATIVE_PHASE_FENCE_ALREADY_INSTALLED")
+      phaseFence = fence
+      return () => { if (phaseFence === fence) phaseFence = undefined }
+    },
     bind,
     tryBind,
     registerLease: bind,
@@ -299,4 +310,3 @@ function safetyDenied(error: ToolFailure) {
 function relayDenied(error: ToolFailure) {
   return new RelayWorkflowBinding.Held({ reason: error.message })
 }
-
