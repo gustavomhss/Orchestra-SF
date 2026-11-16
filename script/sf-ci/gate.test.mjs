@@ -81,7 +81,7 @@ function fixture() {
     }
   }
   const needs = Object.fromEntries(["preflight","static","omni","unit","ui"].map((name) => [name, { result: "success" }]))
-  return { manifest, reports, receipts, needs, sha, runId, attempt, treeSha,
+  return { manifest: structuredClone(manifest), reports, receipts, needs, sha, runId, attempt, treeSha,
     selectionProvider: (_manifest, id) => id.startsWith("CI-UI-")
       ? [manifest.suites.find((s) => s.id === id).specFile]
       : ["test/sf-authorized-sample.test.ts"] }
