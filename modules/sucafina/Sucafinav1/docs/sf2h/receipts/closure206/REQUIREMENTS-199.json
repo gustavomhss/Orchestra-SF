@@ -1,0 +1,109 @@
+{
+  "schema": "sf2h.closure206.required-native-fixture.v1",
+  "status": "EXTERNAL_PRECONDITIONS_NOT_FULFILLED_NOT_PASS",
+  "owner": "199/sf-installed-host",
+  "consumer": "200/PR106",
+  "requiredBefore": "200 surgical CI after 189 integration",
+  "observed199": {
+    "branch": "sf-installed-host",
+    "checkedHead": "bd61d0d200952f585f3aff9544ec8932009f5f5d",
+    "fixtureBlob": "a67dfce9c79309b182bb25100eeb2a51e49d9a3b",
+    "selectionBlob": "9c3fb31bf7d83da2ac2c75292501bd512ee2d0b7",
+    "browserBlob": "567ef2bf1d472e248468ad4eed93ead751aaaa22",
+    "faultsBlob": "71adbaaf679331a5a201aae663123ba87bc4a0b5",
+    "gap": "U39/U40 suite selection only entry; nativeSelectedCase returns entry for every U39/U40 title; nativeHarness.selectedCase not populated; no current producer-backed per-case negative actors, privileged revoke/second writer callbacks."
+  },
+  "notAllowed": "No fabricated grant, fake data, mocked permission, stale record inference, synthetic auth headers, storageState, new browser, import from Planner, skip, TODO, or an empty-source PASS.",
+  "exactHarnessConsumers": [
+    "nativeInstalledFixture",
+    "requireNativeJourney",
+    "nativeJourneyEntryHref",
+    "nativeDashboardCommandTarget",
+    "readNativeSelectedInstallation",
+    "nativeSuiteFromChapter",
+    "readOriginalNativeSource",
+    "armHeldResponse",
+    "armLostResponse",
+    "requestRealRevocation"
+  ],
+  "changesOwnedBy199": [
+    "Extend NativeInstalledCase, specs.U39/specs.U40, selected installation bundles, and nativeSelectedCase(title) so a negative test's exact real caseId maps to distinct actual Microsoft authenticated BrowserContext. Provide nativeHarness.selectedCase as the actual selected case to fail closed; do not reuse entry for denial/revocation.",
+    "Register source records with original A01 GET, immutable principalRef/policyVersion/accessRevision and true source CAS for each case; genuine zero-row collection in distinct disposable scenario; each test's writes isolated/compensated by original host, not a replay/mock.",
+    "Use only existing authenticated host CDP browser; provide truly separate preauthenticated principals and separate installed suite manifest per CAP04/U39 and CAP05/U40 for 2026.",
+    "Provide original-privileged fixture callback nativeHarness.revokeViaOriginalProducer({capabilityId,principalRef})=>Promise<{committed:boolean}> and nativeHarness.advanceViaSecondAuthenticatedWriter({capabilityId,recordId,expectedVersion})=>Promise<{sourceVersion:number}>, both with independent original auth proof, correct record and owner, no synthetic mutation.",
+    "Provide actual installed source status and available CAP03 authorized source target for source link; provide wrongProject manifest real binding. No application/product/lease changes by 206."
+  ],
+  "cases": [
+    {
+      "caseId": "entry",
+      "use": "ordinary original authenticated read/edit, selected original existing sourceId/version; existing 199 support but no proof of execution"
+    },
+    {
+      "caseId": "source",
+      "use": "genuine authorized CAP03 linked budget with CAP04/CAP05 source owner, original recordId, 2026 route; for U40 never import"
+    },
+    {
+      "caseId": "empty",
+      "use": "separate isolated original A01 collection containing exactly zero source rows with authentic read permission; filter-empty cannot stand in"
+    },
+    {
+      "caseId": "readonly",
+      "use": "original Microsoft authenticated canRead=true, allowedActionIds excludes save/mutation; grants rechecked each run"
+    },
+    {
+      "caseId": "denied",
+      "use": "original denied Microsoft principal canRead=false; verify no secret table/draft; never reuse requester"
+    },
+    {
+      "caseId": "revoked",
+      "use": "source record chosen from own disposable isolated dataset and privileged real original producer revocation; check accessRevision change in original context"
+    },
+    {
+      "caseId": "stale",
+      "use": "source record chosen from own isolated dataset, genuine second authenticated author CAS update to same record; first writer must reject stale version"
+    },
+    {
+      "caseId": "late",
+      "use": "original source record from selected isolated dataset, real wrongProject/wrongInstallation F01 selection, delayed original GET via route.fetch"
+    }
+  ],
+  "contract": {
+    "manifestFileEnv": "SF_NATIVE_INSTALLED_MANIFEST",
+    "privateRootMode": "0700",
+    "manifestMode": "0600",
+    "browserEndpointFileEnv": "SF_NATIVE_BROWSER_ENDPOINT_FILE",
+    "browserEndpoint": "loopback and host-owned authenticated CDP; no launch",
+    "runFlag": "GITHUB_ACTIONS=true",
+    "candidateEnv": "SF_NATIVE_CANDIDATE_SHA",
+    "manifestSchema": "sf2h.native-installed-manifest.v1",
+    "selectionSchema": "sf2h.native-selected-installation.v1",
+    "suiteFiles": [
+      "native-installed-u39.json",
+      "native-installed-u40.json"
+    ],
+    "requiredYear": 2026,
+    "actors": [
+      "requester",
+      "holder",
+      "denied",
+      "dashboardAdmin if present"
+    ],
+    "ownerStamp": [
+      "serverKey",
+      "installationId",
+      "projectId",
+      "hostId",
+      "principalRef",
+      "policyVersion",
+      "accessRevision"
+    ],
+    "requiresTwoSeparateJobsOrManifestRebindings": true
+  },
+  "precision": "All 44 cases are written independent of fixture availability. Missing external setup must be a failure at preflight, NOT_RUN, never PASS.",
+  "testSpecBlobs": {
+    "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts": "f72347df8d20a465e478053c976e62fde124348d",
+    "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+  },
+  "nativeGoal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}

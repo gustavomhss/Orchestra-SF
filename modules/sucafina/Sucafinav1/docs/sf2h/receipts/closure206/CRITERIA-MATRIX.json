@@ -1,0 +1,727 @@
+{
+  "schema": "sf2h.closure206.criteria-matrix.v1",
+  "mission": 206,
+  "epoch": "source-closure-e2-browser206",
+  "sourceAuthority": {
+    "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normativeUxCommit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "packageCommit": "b2ddfdb61abf8f280619a51f1e9e0b931039c364",
+    "pinnedProducerCommit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "pinnedProducerBlob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+    "sharedSurfacePreBlob": "ed94efe4d919eb80e4592057170d03c4b2348eb6"
+  },
+  "proofStatus": "ALL_44_CASES_CODE_WRITTEN_NOT_RUN",
+  "testCounts": {
+    "U39": 22,
+    "U40": 22,
+    "total": 44,
+    "originalFrom195": 6,
+    "newlyWrittenBy206": 38
+  },
+  "suites": [
+    {
+      "suite": "U39",
+      "capability": "CAP04",
+      "spec": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "preImageFrom195": "285db9bfdd046366f8fd814991f9f0724eff445f",
+      "postCodeBlob": "f72347df8d20a465e478053c976e62fde124348d",
+      "sourceProducer": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+      "consumedOriginalRead": "domain.page.CAP04",
+      "consumedMutations": [
+        "domain.command.CAP04.save",
+        "domain.command.CAP04.delete",
+        "domain.command.CAP04.save-entry",
+        "domain.command.CAP04.save-deviation",
+        "domain.command.CAP04.annual-entry",
+        "domain.command.CAP04.year-amount"
+      ],
+      "trace": [
+        {
+          "testName": "reads the source through A01 with owner-scoped state, filter-empty and source metadata",
+          "line": 129,
+          "criteria": [
+            "U39-AC01",
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "new record is a draft until explicit, version-bound change review",
+          "line": 155,
+          "criteria": [
+            "U39-AC01",
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "320–1440 viewports, 200% typography and 400% reflow keep surface controls reachable",
+          "line": 193,
+          "criteria": [
+            "U39-AC03"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 create/edit/delete producer owner CAS and removed detail do not become an empty collection",
+          "line": 449,
+          "criteria": [
+            "U39-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 monthly entry create/edit preserves exact budget, actual, forecast, month and CAS",
+          "line": 480,
+          "criteria": [
+            "U39-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 annual distribution fields use producer's twelve rows and original versions",
+          "line": 528,
+          "criteria": [
+            "U39-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 year amount records hint, actual/forecast, clearing and immutable monthly source",
+          "line": 573,
+          "criteria": [
+            "U39-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 deviation severity and text use one original versioned record",
+          "line": 613,
+          "criteria": [
+            "U39-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 filter survives list/detail/back, source record remains selected and source metadata is original",
+          "line": 679,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 a genuinely empty original collection is empty, not filtered-empty, partial or not-found",
+          "line": 703,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 not-found deep link is distinct from empty and never resurrects a removed record",
+          "line": 718,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 authorized producer source link and 2026 identity, with CAP04-only import control",
+          "line": 734,
+          "criteria": [
+            "U39-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 real read-only principal sees source but no enabled mutation or private false affordance",
+          "line": 778,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 denied original Microsoft actor never renders private rows, draft or edit, and denial is not empty",
+          "line": 806,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 real producer revocation while editing erases private draft after a new host read",
+          "line": 825,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 real 409 with concurrent authenticated editor blocks stale review; no optimistic overwrite",
+          "line": 868,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 validation error does not dispatch and preserves missing, zero and original editor text",
+          "line": 926,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 real held producer POST is visibly submitting/pending, double confirmation cannot dispatch",
+          "line": 962,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 lost response remains outcome-unknown until original authorized refetch, never auto-retry",
+          "line": 994,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 late original GET after different installation/project never leaks prior draft or owner",
+          "line": 1038,
+          "criteria": [
+            "U39-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC03 complete forms, actions and keyboard at 320/768/1024/1280/1440 plus 200/400 percent reflow",
+          "line": 1084,
+          "criteria": [
+            "U39-AC03"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 CAP04/CAP05 owner, project status, annual/monthly and deviation values mirror the source without totals",
+          "line": 1169,
+          "criteria": [
+            "U39-AC01"
+          ],
+          "status": "NOT_RUN"
+        }
+      ],
+      "criteria": [
+        {
+          "id": "U39-AC01",
+          "status": "CODE_WRITTEN_NOT_RUN",
+          "source": {
+            "workOrder": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U39.json",
+            "blob": "7c4fa620fbded6226a0bfc5e5aa16553d6d47ee6",
+            "acceptanceCaseId": "U39-AC01"
+          },
+          "scenarios": [
+            {
+              "title": "reads the source through A01 with owner-scoped state, filter-empty and source metadata",
+              "line": 129,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "new record is a draft until explicit, version-bound change review",
+              "line": 155,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC01 create/edit/delete producer owner CAS and removed detail do not become an empty collection",
+              "line": 449,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC01 monthly entry create/edit preserves exact budget, actual, forecast, month and CAS",
+              "line": 480,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC01 annual distribution fields use producer's twelve rows and original versions",
+              "line": 528,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC01 year amount records hint, actual/forecast, clearing and immutable monthly source",
+              "line": 573,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC01 deviation severity and text use one original versioned record",
+              "line": 613,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC01 authorized producer source link and 2026 identity, with CAP04-only import control",
+              "line": 734,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC01 CAP04/CAP05 owner, project status, annual/monthly and deviation values mirror the source without totals",
+              "line": 1169,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            }
+          ]
+        },
+        {
+          "id": "U39-AC02",
+          "status": "CODE_WRITTEN_NOT_RUN",
+          "source": {
+            "workOrder": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U39.json",
+            "blob": "7c4fa620fbded6226a0bfc5e5aa16553d6d47ee6",
+            "acceptanceCaseId": "U39-AC02"
+          },
+          "scenarios": [
+            {
+              "title": "reads the source through A01 with owner-scoped state, filter-empty and source metadata",
+              "line": 129,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "new record is a draft until explicit, version-bound change review",
+              "line": 155,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 filter survives list/detail/back, source record remains selected and source metadata is original",
+              "line": 679,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 a genuinely empty original collection is empty, not filtered-empty, partial or not-found",
+              "line": 703,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 not-found deep link is distinct from empty and never resurrects a removed record",
+              "line": 718,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 real read-only principal sees source but no enabled mutation or private false affordance",
+              "line": 778,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 denied original Microsoft actor never renders private rows, draft or edit, and denial is not empty",
+              "line": 806,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 real producer revocation while editing erases private draft after a new host read",
+              "line": 825,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 real 409 with concurrent authenticated editor blocks stale review; no optimistic overwrite",
+              "line": 868,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 validation error does not dispatch and preserves missing, zero and original editor text",
+              "line": 926,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 real held producer POST is visibly submitting/pending, double confirmation cannot dispatch",
+              "line": 962,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 lost response remains outcome-unknown until original authorized refetch, never auto-retry",
+              "line": 994,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC02 late original GET after different installation/project never leaks prior draft or owner",
+              "line": 1038,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            }
+          ]
+        },
+        {
+          "id": "U39-AC03",
+          "status": "CODE_WRITTEN_NOT_RUN",
+          "source": {
+            "workOrder": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U39.json",
+            "blob": "7c4fa620fbded6226a0bfc5e5aa16553d6d47ee6",
+            "acceptanceCaseId": "U39-AC03"
+          },
+          "scenarios": [
+            {
+              "title": "320–1440 viewports, 200% typography and 400% reflow keep surface controls reachable",
+              "line": 193,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            },
+            {
+              "title": "206-AC03 complete forms, actions and keyboard at 320/768/1024/1280/1440 plus 200/400 percent reflow",
+              "line": 1084,
+              "specBlob": "f72347df8d20a465e478053c976e62fde124348d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "suite": "U40",
+      "capability": "CAP05",
+      "spec": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "preImageFrom195": "83ee904b4ecf79248410a7714bb63ed7baf4aaf5",
+      "postCodeBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de",
+      "sourceProducer": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+      "consumedOriginalRead": "domain.page.CAP05",
+      "consumedMutations": [
+        "domain.command.CAP05.save",
+        "domain.command.CAP05.delete",
+        "domain.command.CAP05.save-entry",
+        "domain.command.CAP05.save-deviation",
+        "domain.command.CAP05.annual-entry",
+        "domain.command.CAP05.year-amount"
+      ],
+      "trace": [
+        {
+          "testName": "reads the source through A01 with owner-scoped state, filter-empty and source metadata",
+          "line": 129,
+          "criteria": [
+            "U40-AC01",
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "new record is a draft until explicit, version-bound change review",
+          "line": 155,
+          "criteria": [
+            "U40-AC01",
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "320–1440 viewports, 200% typography and 400% reflow keep surface controls reachable",
+          "line": 193,
+          "criteria": [
+            "U40-AC03"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 create/edit/delete producer owner CAS and removed detail do not become an empty collection",
+          "line": 449,
+          "criteria": [
+            "U40-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 monthly entry create/edit preserves exact budget, actual, forecast, month and CAS",
+          "line": 480,
+          "criteria": [
+            "U40-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 annual distribution fields use producer's twelve rows and original versions",
+          "line": 528,
+          "criteria": [
+            "U40-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 year amount records hint, actual/forecast, clearing and immutable monthly source",
+          "line": 573,
+          "criteria": [
+            "U40-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 deviation severity and text use one original versioned record",
+          "line": 613,
+          "criteria": [
+            "U40-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 filter survives list/detail/back, source record remains selected and source metadata is original",
+          "line": 679,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 a genuinely empty original collection is empty, not filtered-empty, partial or not-found",
+          "line": 703,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 not-found deep link is distinct from empty and never resurrects a removed record",
+          "line": 718,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 authorized producer source link and 2026 identity, with CAP04-only import control",
+          "line": 734,
+          "criteria": [
+            "U40-AC01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 real read-only principal sees source but no enabled mutation or private false affordance",
+          "line": 778,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 denied original Microsoft actor never renders private rows, draft or edit, and denial is not empty",
+          "line": 806,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 real producer revocation while editing erases private draft after a new host read",
+          "line": 825,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 real 409 with concurrent authenticated editor blocks stale review; no optimistic overwrite",
+          "line": 868,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 validation error does not dispatch and preserves missing, zero and original editor text",
+          "line": 926,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 real held producer POST is visibly submitting/pending, double confirmation cannot dispatch",
+          "line": 962,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 lost response remains outcome-unknown until original authorized refetch, never auto-retry",
+          "line": 994,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC02 late original GET after different installation/project never leaks prior draft or owner",
+          "line": 1038,
+          "criteria": [
+            "U40-AC02"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC03 complete forms, actions and keyboard at 320/768/1024/1280/1440 plus 200/400 percent reflow",
+          "line": 1084,
+          "criteria": [
+            "U40-AC03"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "testName": "206-AC01 CAP04/CAP05 owner, project status, annual/monthly and deviation values mirror the source without totals",
+          "line": 1169,
+          "criteria": [
+            "U40-AC01"
+          ],
+          "status": "NOT_RUN"
+        }
+      ],
+      "criteria": [
+        {
+          "id": "U40-AC01",
+          "status": "CODE_WRITTEN_NOT_RUN",
+          "source": {
+            "workOrder": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U40.json",
+            "blob": "8f9e0e021b1871054be0d371f0f717a5bbd42d36",
+            "acceptanceCaseId": "U40-AC01"
+          },
+          "scenarios": [
+            {
+              "title": "reads the source through A01 with owner-scoped state, filter-empty and source metadata",
+              "line": 129,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "new record is a draft until explicit, version-bound change review",
+              "line": 155,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC01 create/edit/delete producer owner CAS and removed detail do not become an empty collection",
+              "line": 449,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC01 monthly entry create/edit preserves exact budget, actual, forecast, month and CAS",
+              "line": 480,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC01 annual distribution fields use producer's twelve rows and original versions",
+              "line": 528,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC01 year amount records hint, actual/forecast, clearing and immutable monthly source",
+              "line": 573,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC01 deviation severity and text use one original versioned record",
+              "line": 613,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC01 authorized producer source link and 2026 identity, with CAP04-only import control",
+              "line": 734,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC01 CAP04/CAP05 owner, project status, annual/monthly and deviation values mirror the source without totals",
+              "line": 1169,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            }
+          ]
+        },
+        {
+          "id": "U40-AC02",
+          "status": "CODE_WRITTEN_NOT_RUN",
+          "source": {
+            "workOrder": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U40.json",
+            "blob": "8f9e0e021b1871054be0d371f0f717a5bbd42d36",
+            "acceptanceCaseId": "U40-AC02"
+          },
+          "scenarios": [
+            {
+              "title": "reads the source through A01 with owner-scoped state, filter-empty and source metadata",
+              "line": 129,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "new record is a draft until explicit, version-bound change review",
+              "line": 155,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 filter survives list/detail/back, source record remains selected and source metadata is original",
+              "line": 679,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 a genuinely empty original collection is empty, not filtered-empty, partial or not-found",
+              "line": 703,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 not-found deep link is distinct from empty and never resurrects a removed record",
+              "line": 718,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 real read-only principal sees source but no enabled mutation or private false affordance",
+              "line": 778,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 denied original Microsoft actor never renders private rows, draft or edit, and denial is not empty",
+              "line": 806,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 real producer revocation while editing erases private draft after a new host read",
+              "line": 825,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 real 409 with concurrent authenticated editor blocks stale review; no optimistic overwrite",
+              "line": 868,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 validation error does not dispatch and preserves missing, zero and original editor text",
+              "line": 926,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 real held producer POST is visibly submitting/pending, double confirmation cannot dispatch",
+              "line": 962,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 lost response remains outcome-unknown until original authorized refetch, never auto-retry",
+              "line": 994,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC02 late original GET after different installation/project never leaks prior draft or owner",
+              "line": 1038,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            }
+          ]
+        },
+        {
+          "id": "U40-AC03",
+          "status": "CODE_WRITTEN_NOT_RUN",
+          "source": {
+            "workOrder": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U40.json",
+            "blob": "8f9e0e021b1871054be0d371f0f717a5bbd42d36",
+            "acceptanceCaseId": "U40-AC03"
+          },
+          "scenarios": [
+            {
+              "title": "320–1440 viewports, 200% typography and 400% reflow keep surface controls reachable",
+              "line": 193,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            },
+            {
+              "title": "206-AC03 complete forms, actions and keyboard at 320/768/1024/1280/1440 plus 200/400 percent reflow",
+              "line": 1084,
+              "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

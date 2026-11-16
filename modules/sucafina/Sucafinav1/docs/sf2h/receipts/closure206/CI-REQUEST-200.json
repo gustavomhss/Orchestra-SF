@@ -1,0 +1,95 @@
+{
+  "schema": "sf2h.closure206.ci-request-200.v1",
+  "requestedBy": "mission206",
+  "dispatcher": "200/PR106 ONLY",
+  "dispatchStatus": "REQUEST_DOCUMENTED_NOT_DISPATCHED",
+  "status": "NOT_RUN",
+  "mustWaitFor": [
+    "189/PR65 consumes source patches and integrates U39/U40 latest blobs without changing original producer admission",
+    "199 supplies genuine installed F04 manifest for both suites, real Microsoft actor selection, original isolated source records and callbacks",
+    "200 confirms candidateSha/head and resolves exact manifest + current original producer availability; 190/PR107 is only compiler"
+  ],
+  "jobs": [
+    {
+      "suite": "U39",
+      "capability": "CAP04",
+      "runType": "surgical-native-installed-playwright",
+      "spec": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "specBlob": "f72347df8d20a465e478053c976e62fde124348d",
+      "testCount": 22,
+      "commandScope": "only packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "manifestChapter": "/orchestra/sf-dashboard/opex?server=<real>&project=<real>&installation=<real>&year=2026",
+      "requiresOriginalSelectedSuite": "U39",
+      "negativeScenarios": [
+        "readonly",
+        "denied",
+        "revoked",
+        "stale",
+        "late",
+        "empty",
+        "source"
+      ],
+      "expectedEvidence": [
+        "real authenticated original A01 GET",
+        "exact source CAS refs and versions before and after each mutation",
+        "real 200/4xx original POST receipts/status without frontend fabricated status",
+        "identified source record on negative cases",
+        "real response fault observations without mocks",
+        "screens/ARIA/reflow all five widths and 200/400%",
+        "runtime failures and actual runIDs"
+      ],
+      "notRun": true,
+      "runIds": []
+    },
+    {
+      "suite": "U40",
+      "capability": "CAP05",
+      "runType": "surgical-native-installed-playwright",
+      "spec": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "specBlob": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de",
+      "testCount": 22,
+      "commandScope": "only packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "manifestChapter": "/orchestra/sf-dashboard/capex?server=<real>&project=<real>&installation=<real>&year=2026",
+      "requiresOriginalSelectedSuite": "U40",
+      "negativeScenarios": [
+        "readonly",
+        "denied",
+        "revoked",
+        "stale",
+        "late",
+        "empty",
+        "source"
+      ],
+      "expectedEvidence": [
+        "real authenticated original A01 GET",
+        "exact source CAS refs and versions before and after each mutation",
+        "real 200/4xx original POST receipts/status without frontend fabricated status",
+        "identified source record on negative cases",
+        "real response fault observations without mocks",
+        "screens/ARIA/reflow all five widths and 200/400%",
+        "runtime failures and actual runIDs"
+      ],
+      "notRun": true,
+      "runIds": []
+    }
+  ],
+  "runnerRequirements": [
+    "Environment GITHUB_ACTIONS=true, SF_NATIVE_CANDIDATE_SHA=<integrated 40-character candidate sha>, SF_NATIVE_INSTALLED_MANIFEST=<absolute 0600 file under private 0700 root>, SF_NATIVE_BROWSER_ENDPOINT_FILE=<host-authenticated CDP endpoint private 0600 file under same root>",
+    "Web test config must attach host-owned CDP, not launch browser or import auth; distinct genuine Microsoft requester/holder/denied contexts; optional dashboardAdmin",
+    "Separate CAP04 and CAP05 chapterHref/manifest/selected suite; wrongProject/wrongInstallation actual host targets, year exactly 2026",
+    "Honor original 195 acceptance and all negatives, do NOT convert absence of installed external resource to a test skip, mark no output success or trigger autonomous CI",
+    "Report exact compiler/run/error IDs for both specs and any product behavior gap to 189; 200 only dispatcher, never 191"
+  ],
+  "evidence": {
+    "testExecution": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "runIds": [],
+    "artifactLinks": []
+  },
+  "inertProductPatch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/patches/189-budget-surface.inert.patch",
+  "doNot": "No CI trigger by 206, no dev merge, no deploy/Azure/engines, no guard bypass, no restart; comments are notices not wake/ACK",
+  "nativeGoal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}
