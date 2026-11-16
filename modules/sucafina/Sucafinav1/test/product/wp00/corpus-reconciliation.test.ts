@@ -14,9 +14,9 @@ import { applyDashboardImport, previewDashboardImport } from "../../../product/d
 import { projectDashboardSource } from "../../../product/dashboard/port.ts"
 import { renderPreservedReview } from "../../../product/reviews/render.ts"
 import type { PreservedReview, SourceRef } from "../../../product/contracts/context.ts"
-import corpus from "./fixtures/corpus-v2.json"
-import inputs from "./fixtures/consumer-inputs.json"
-import fixture from "./fixtures/reconciliation.json"
+import corpus from "./fixtures/corpus-v2.json" with { type: "json" }
+import inputs from "./fixtures/consumer-inputs.json" with { type: "json" }
+import fixture from "./fixtures/reconciliation.json" with { type: "json" }
 
 const actor = inputs.authorization.dashboardAdmin
 const at = "2027-01-01T00:00:00Z"

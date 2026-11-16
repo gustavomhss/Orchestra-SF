@@ -1,7 +1,7 @@
 import path from "node:path"
 import { mkdir, readFile } from "node:fs/promises"
 import { createHash } from "node:crypto"
-import sdk from "../../../plugin/package.json"
+import sdk from "../../../plugin/package.json" with { type: "json" }
 
 export const planted = 'throw new Error("planted SDK copy ran"); export const tool = () => {}; export const marker = true\n'
 

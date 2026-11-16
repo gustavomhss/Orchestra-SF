@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test"
 import JSZip from "jszip"
-import baseline from "../../../docs/product-campaign/wp00/baseline-capabilities.json"
-import additions from "../../../docs/product-campaign/wp00/baseline-new-capabilities.json"
-import journeys from "../../../docs/product-campaign/wp00/oracles/journeys-j01-j08.json"
-import corpus from "./fixtures/corpus-v2.json"
-import inputs from "./fixtures/consumer-inputs.json"
+import baseline from "../../../docs/product-campaign/wp00/baseline-capabilities.json" with { type: "json" }
+import additions from "../../../docs/product-campaign/wp00/baseline-new-capabilities.json" with { type: "json" }
+import journeys from "../../../docs/product-campaign/wp00/oracles/journeys-j01-j08.json" with { type: "json" }
+import corpus from "./fixtures/corpus-v2.json" with { type: "json" }
+import inputs from "./fixtures/consumer-inputs.json" with { type: "json" }
 import { createPlannerCorpus } from "./fixtures/planner.ts"
 import { contributions } from "../../../index.ts"
 import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV, dashboardPages, plannerKeys, procurementKeys } from "../../../src/nav.ts"

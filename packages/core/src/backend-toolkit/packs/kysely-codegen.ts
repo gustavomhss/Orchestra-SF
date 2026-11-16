@@ -1,5 +1,5 @@
 import type { Pack } from "../manifest"
-import lock from "./kysely-codegen.package-lock.json"
+import lock from "./kysely-codegen.package-lock.json" with { type: "json" }
 
 // kysely-codegen loads its database driver as an optional peer and requires `typescript` without declaring it, so the
 // pack pins the PostgreSQL and MySQL drivers and TypeScript alongside it (`kysely` comes in as its required peer).

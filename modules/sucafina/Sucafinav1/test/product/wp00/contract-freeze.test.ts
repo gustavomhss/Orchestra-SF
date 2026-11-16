@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import path from "node:path"
-import freeze from "../../../product/contracts/freeze-v1.json"
-import normative from "../../../product/contracts/normative-contracts.json"
+import freeze from "../../../product/contracts/freeze-v1.json" with { type: "json" }
+import normative from "../../../product/contracts/normative-contracts.json" with { type: "json" }
 import { sfOperationInputSchemas } from "../../../product/contracts/operations.ts"
 import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas } from "../../../product/contracts/output-schemas.ts"
 import { sfProductStateNamespaceFields, sfProductStateProviderFields, sfProductStateAdditiveFields, sfProductStateSchemaVersion } from "../../../product/contracts/state-layout.ts"

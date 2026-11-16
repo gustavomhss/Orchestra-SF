@@ -1,5 +1,5 @@
 import type { Pack } from "../manifest"
-import lock from "./protoc-gen-es.package-lock.json"
+import lock from "./protoc-gen-es.package-lock.json" with { type: "json" }
 
 const VERSION = "2.16.0"
 

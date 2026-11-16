@@ -1,5 +1,5 @@
 import type { ResearchPack } from "../index"
-import lock from "./scip-python.package-lock.json"
+import lock from "./scip-python.package-lock.json" with { type: "json" }
 
 // A bundled pyright fork in pure JavaScript with no install scripts, so one lock installs on all five targets. It runs
 // on node and reads the project's Python source and installed packages; it needs no Python interpreter to index the

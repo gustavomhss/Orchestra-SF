@@ -1,5 +1,5 @@
 import type { Pack } from "../manifest"
-import lock from "./modelina.package-lock.json"
+import lock from "./modelina.package-lock.json" with { type: "json" }
 
 // The AsyncAPI CLI's `generate models` delegates to this package, so it is the engine itself without the CLI's
 // server, generator and linter. The lock's `node_modules/npm/node_modules/*` entries are bundled inside the npm tarball

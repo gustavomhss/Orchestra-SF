@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/solid"
 import { render } from "solid-js/web"
 import { AppBaseProviders, AppInterface, type Platform, PlatformProvider, ServerConnection } from "@orchestra/app"
 import { loadInitialLocale, createBrowserDraftStore, en, zh, authFromToken } from "@orchestra/app/web"
-import pkg from "../package.json"
+import pkg from "../package.json" with { type: "json" }
 
 const DEFAULT_SERVER_URL_KEY = "orchestra.settings.dat:defaultServerUrl"
 

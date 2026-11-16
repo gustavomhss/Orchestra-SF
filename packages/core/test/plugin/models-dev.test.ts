@@ -16,7 +16,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { location } from "../fixture/location"
 import { testEffect } from "../lib/effect"
 import { catalogHost, host, integrationHost } from "./host"
-import snapshot from "./fixtures/models-dev-public.json"
+import snapshot from "./fixtures/models-dev-public.json" with { type: "json" }
 
 // Verbatim provider/model excerpts, with only provider model maps trimmed:
 // https://models.dev/api.json, fetched 2026-10-13T11:31:28.929Z
