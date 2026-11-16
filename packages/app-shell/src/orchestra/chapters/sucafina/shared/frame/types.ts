@@ -1,11 +1,11 @@
 import type { JSX } from "solid-js"
-import type { SfHref, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
+import type { SfHref, SfOpaque, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 
 // F03 public presentation contracts: COMPONENT-CONTRACTS.md and component-signatures.ts
-// are frozen. The only external identities are F01 Schema's opaque route/ref types.
+// are frozen. The only external identities are F01 Schema's opaque reference brands.
 // I00 composes the full leaf dictionary; its keys must never be arbitrary data text.
-declare const sfCopyKey: unique symbol
-export type SfCopyKey = string & { readonly [sfCopyKey]: "key-from-frozen-typed-dictionaries" }
+// The key brand is F01's SfOpaque so Frame and S01 share one nominal identity.
+export type SfCopyKey = SfOpaque<"key-from-frozen-typed-dictionaries">
 export type SfDensity = "comfortable" | "compact"
 export type SfLayoutMode = "single" | "split" | "split-context"
 export type SfScalar = string | number | boolean | null

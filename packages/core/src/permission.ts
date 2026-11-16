@@ -150,7 +150,12 @@ const layer = Layer.effect(
       const session = yield* sessions.get(sessionID)
       if (!session) return yield* new SessionV2.NotFoundError({ sessionID })
       const agent = yield* agents.resolve(agentID ?? session.agent)
-      return agent?.permissions ?? missingAgentPermissions
+      const agentRules = agent?.permissions ?? missingAgentPermissions
+      const sessionRules = yield* sessions.permissions(sessionID)
+      // Session-persisted deny rules must beat an agent's allow. evaluate() is
+      // last-match on a flat ruleset, but denied() inspects the configured list
+      // uniformly, so a deny anywhere still prevails over saved grants.
+      return [...agentRules, ...sessionRules]
     })
 
     function denied(input: AssertInput, rules: Permission.Ruleset) {

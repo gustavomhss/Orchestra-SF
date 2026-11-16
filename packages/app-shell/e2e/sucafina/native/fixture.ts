@@ -21,7 +21,13 @@ import type {
   NativeInstalledCase, NativeSelectedInstallation, NativeInstalledSuite,
 } from "./fixture/selected-installation.ts"
 
-export { createNativeScratch } from "./fixture/isolated-installation.ts"
+// Lazy-load the Bun-only local-store producer. A static re-export puts the
+// module into the Playwright/Node ESM graph even for specs that never call
+// createNativeScratch, and Node rejects the bun:sqlite import at load time.
+export async function createNativeScratch() {
+  const { createNativeScratch: impl } = await import("./fixture/isolated-installation.ts")
+  return impl()
+}
 export { nativeCorpus, sourceNativeVolume, seedNativeProcurementCorpus } from "./fixture/corpus.ts"
 export { registerNativeInstalledManifest } from "./fixture/installed-manifest.ts"
 export { readNativeManifest, observeNativeBinding, proveNativeWebReadiness } from "./fixture/readiness.ts"
