@@ -49,7 +49,7 @@ export function createSfRoutinePhaseFence(input: { resources: () => SfRoutineNat
     for (let current: SessionSchema.ID | undefined = id; current;) {
       if (seen.has(current) || seen.size >= 128) throw denied()
       seen.add(current)
-      const session = await Effect.runPromise(store.get(current))
+      const session: SessionSchema.Info | undefined = await Effect.runPromise(store.get(current))
       if (!session) throw denied()
       if (session.id.startsWith(SF_ROUTINE_PHASE_PARENT_PREFIX)) return session.id
       if (!copied && await Effect.runPromise(hasSfRoutinePhaseMarker(database, session.id))) copied = session.id
@@ -94,7 +94,7 @@ export function createSfRoutinePhaseFence(input: { resources: () => SfRoutineNat
       installed.add(wrapped)
       yield* Effect.addFinalizer(() => Effect.sync(() => installed.delete(wrapped)))
       return wrapped
-    })).pipe(Layer.provide(node.implementation!)) }
+    })).pipe(Layer.provide([node.implementation!])) }
   const contextNode = makeLocationNode({ name: "sucafina/native-phase-context", deps: [SystemContextRegistry.node, SkillV2.node],
     layer: Layer.effectDiscard(Effect.gen(function* () {
       const registry = yield* SystemContextRegistry.Service, skills = yield* SkillV2.Service
@@ -124,7 +124,7 @@ export function createSfRoutinePhaseFence(input: { resources: () => SfRoutineNat
       Effect.acquireUseRelease(Effect.sync(() => {
         if (!root.startsWith(SF_ROUTINE_PHASE_PARENT_PREFIX) || active.has(root)) return undefined
         const lease: Lease = { ...authority, root }; active.set(root, lease); return lease
-      }), (lease) => lease ? Effect.provideService(effect, Current, lease) : Effect.fail(denied()),
+      }), (lease): Effect.Effect<A, E | ToolFailure, Exclude<R, never>> => lease ? Effect.provideService(effect, Current, lease) : Effect.fail(denied()),
       (lease) => Effect.sync(() => { if (lease && active.get(root) === lease) active.delete(root) })),
     beforeTurn: (session: SessionSchema.Info) => Effect.gen(function* () {
       const resources = input.resources(), store = resources?.store ?? lastStore, database = resources?.database ?? lastDatabase
@@ -196,7 +196,7 @@ export function createSfRoutinePhaseFence(input: { resources: () => SfRoutineNat
       const key = callKey(context)
       return yield* Effect.acquireUseRelease(Effect.sync(() => {
         if (taskCalls.has(key)) return false; taskCalls.set(key, observed); return true
-      }), (acquired) => acquired ? Effect.provideService(effect, Current, lease) : Effect.fail(safetyDenied()), () => Effect.sync(() => {
+      }), (acquired): Effect.Effect<A, E | ToolSafety.Denied, Exclude<R, never>> => acquired ? Effect.provideService(effect, Current, lease) : Effect.fail(safetyDenied()), () => Effect.sync(() => {
         cancellation.abort()
         if (taskCalls.get(key) === observed) taskCalls.delete(key)
         if (observed.childID && children.get(observed.childID)?.signal === signal) children.delete(observed.childID)
