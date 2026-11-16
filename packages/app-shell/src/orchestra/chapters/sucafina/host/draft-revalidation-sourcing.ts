@@ -43,7 +43,6 @@ export async function revalidateSourcingDraft(
   if (row.allowedDraftActions?.includes("save-sourcing") !== true) return { status: "denied" }
   const visible = sourcingSourceFields(row)
   if (!visible) return { status: "unavailable" }
-  if (input.read.fieldPaths.some((field) => !visible.includes(field))) return { status: "denied" }
   const version = requestVersion(page, input.identity.recordRef)
   if (version === null) return { status: "unavailable" }
   return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: version }

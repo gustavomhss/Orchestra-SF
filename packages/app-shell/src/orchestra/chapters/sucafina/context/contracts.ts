@@ -39,7 +39,7 @@ export type SfContextState =
   | Readonly<{ status: "ready"; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfContext }>
 
 export type SfPublicDraftController<Value> = Pick<
-  SfDraftController<Value>, "snapshot" | "edit" | "discard" | "receiveRemote" | "setPhase" | "setPending" | "confirmSave"
+  SfDraftController<Value>, "snapshot" | "edit" | "discard" | "receiveRemote" | "setPhase" | "setPending" | "confirmSave" | "rejectSave"
 >
 export type SfDraftReadBinding = Readonly<{
   operationId: SfOperationId

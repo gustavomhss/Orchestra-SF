@@ -140,6 +140,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       setUi("state",result.kind)
       return null
     }
+    if(ui.review&&requestRevision(result.page,ui.review.requestRef)!==ui.review.sourceRevision){
+      draft()?.setPhase("conflict")
+      setUi({review:null,phase:"conflict"})
+    }
     setUi("page",result.page)
     setUi("state","ready")
     if(requestRef){
@@ -241,7 +245,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     }
     if(ui.state!=="ready")return ui.state
     if(ui.phase==="outcome-unknown")return "outcome-unknown"
-    if(ui.phase==="conflict")return "conflict"
+    if(ui.phase==="conflict"&&!draftConflict())return "conflict"
     if(ui.phase==="failed")return ui.lastError==="denied"||ui.lastError==="session-expired"||ui.lastError==="not-found"||
       !!snapshot()?.pendingOperation ? ui.lastError??"unavailable" : "ready"
     if(ref()&&!request())return "not-found"
@@ -344,7 +348,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       digest=Array.from(bytes,(item)=>item.toString(16).padStart(2,"0")).join("")
     }catch{setUi("phase","failed");setUi("lastError","unavailable");sending=false;return}
     if(controller.signal.aborted||authority()!==token){sending=false;return}
-    controllerDraft?.setPending({operationRef:intentRef,idempotencyKey,payloadDigest:digest,expectedVersion:intent.version})
+    const pending={operationRef:intentRef,idempotencyKey,payloadDigest:digest,expectedVersion:intent.version}
+    controllerDraft?.setPending(pending)
     controllerDraft?.setPhase("submitting")
     setUi("phase","submitting")
     try{
@@ -365,11 +370,17 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         setUi("phase","outcome-unknown");setUi("unknownOperation",intentRef)
         setUi("review",null);return
       }
+      if(response.status>=500){
+        controllerDraft?.setPhase("outcome-unknown")
+        setUi("phase","outcome-unknown");setUi("unknownOperation",intentRef)
+        setUi("review",null);return
+      }
       if(response.status!==200||!response.body.ok){
         const code=response.body.ok?response.status:response.body.status
         setUi("sourceWarnings",response.body.ok?[]:response.body.fieldErrors?.map((error)=>
           error.field+": "+error.message)??response.body.errors??[])
-        controllerDraft?.setPhase(code===409?"conflict":"failed")
+        if(response.status===409)controllerDraft?.rejectSave({status:409,operation:pending})
+        else controllerDraft?.setPhase("failed")
         setUi("review",null)
         setUi("phase",code===409?"conflict":"failed")
         setUi("lastError",code===401?"session-expired":code===403?"denied":code===404?"not-found":

@@ -68,6 +68,7 @@ export type SfDraftController<Value> = Readonly<{
   setPhase(phase: SfDraftPhase): void
   setPending(operation: SfPendingOperation): void
   confirmSave(result: SfSaveConfirmation<Value>): void
+  rejectSave(result: Readonly<{ status: 409; operation: SfPendingOperation }>): void
   quarantine(): void
   restoreSameAuthority(newOwnerKey: SfOwnerKey): void
   revoke(reason: "logout" | "owner-changed" | "access-revoked" | "authority-changed"): void
@@ -96,6 +97,7 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
   // Never expose either the quarantined private snapshot or the owner fence.
   // Revocation erases both from this controller, including any pending intent.
   let suspended: ActiveDraft<Value> | undefined
+  let outcomeUnknown = false
   let fence: Readonly<Pick<SfDraftInput<Value>, "ownerKey" | "editScopeKey" | "surfaceId" | "identity">> | undefined = {
     ownerKey: input.ownerKey,
     editScopeKey: input.editScopeKey,
@@ -122,8 +124,7 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
     },
     discard() {
       const state = active()
-      // The only API that can clear a submitted operation is an authoritative
-      // matching confirmation or an owner revocation; not a navigation/discard.
+      // Discard cannot clear an unresolved submission.
       if (!state || state.pendingOperation !== null) return
       const next = state.conflict
         ? { value: state.conflict.current, version: state.conflict.currentVersion }
@@ -165,6 +166,7 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
       if (unresolved(state) && phase !== "submitting" && phase !== "outcome-unknown") return
       if ((phase === "submitting" || phase === "outcome-unknown") && !state.pendingOperation) return
       if (state.conflict && (phase === "submitting" || phase === "reviewing")) return
+      if (phase === "outcome-unknown") outcomeUnknown = true
       publish({ ...state, phase })
     },
     setPending(operation) {
@@ -184,7 +186,15 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
         ) return
         return
       }
+      outcomeUnknown = false
       publish({ ...state, pendingOperation: { ...operation } })
+    },
+    rejectSave(result) {
+      const state = active(), pending = state?.pendingOperation, operation = result.operation
+      if (result.status !== 409 || !state || state.phase !== "submitting" || !pending || outcomeUnknown ||
+          pending.operationRef !== operation.operationRef || pending.idempotencyKey !== operation.idempotencyKey ||
+          pending.payloadDigest !== operation.payloadDigest || !Object.is(pending.expectedVersion, operation.expectedVersion)) return
+      publish({ ...state, pendingOperation: null, phase: "conflict" })
     },
     confirmSave(result) {
       const state = active()
@@ -216,6 +226,7 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
       const previous = suspended
       suspended = undefined
       const wasSubmitted = unresolved(previous)
+      if (wasSubmitted) outcomeUnknown = true
       publish({
         ...previous,
         pendingOperation: wasSubmitted ? previous.pendingOperation : null,
