@@ -12,7 +12,11 @@ const manifest = {
   schemaVersion: 1, product: "Orchestra-SF", target: { os: "Linux", arch: "X64" },
   suites: REQUIRED.map((id) => id.startsWith("CI-UI-")
     ? { id, kind: "playwright", directory: "packages/app-shell", specFile: "e2e/sucafina/" + id.split("-").at(-1).toLowerCase() + ".spec.ts" }
-    : { id, kind: "bun", directory: "modules/sucafina" }),
+    : { id, kind: "bun", directory: "modules/sucafina",
+      ...(id === "CI-CLI" || id === "CI-ATLAS-BUSINESS"
+        ? { selection: { kind: "explicit", testFiles: ["test/sf-authorized-sample.test.ts"] } }
+        : {}),
+    }),
   separateReleaseProofs: ["AM01","AM02","AM03","AM04","AM05","AM06"],
 }
 function playwright(suite) {
@@ -41,6 +45,13 @@ function fixture() {
 test("eight normative suites and six independent AM proofs remain explicit", () => {
   assert.equal(validateManifest(manifest).length, 8)
   assert.equal(verifyAll(fixture()).suiteCount, 8)
+})
+test("removed/duplicate/invalid SF host selections never pass manifest admission", () => {
+  for (const files of [[], ["test/duplicate.test.ts", "test/duplicate.test.ts"], ["../escape.test.ts"], ["test/windows.exe"]]) {
+    const invalid = structuredClone(manifest)
+    invalid.suites.find((s) => s.id === "CI-CLI").selection.testFiles = files
+    assert.throws(() => validateManifest(invalid), /SF_CI_FAIL_CLOSED/)
+  }
 })
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))

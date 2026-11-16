@@ -143,8 +143,22 @@ jobs:
                 bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-CLI)
+                # Explicit installed-SF host subset; NOT the upstream distribution
+                # matrices, desktop publisher or compiled multi-OS CLI acceptance.
                 cd "$root/apps/cli"
-                bun run test --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml" \
+                  test/sucafina-host-context.test.ts \
+                  test/sucafina-installation.test.ts \
+                  test/sucafina-native-phase-wiring.test.ts \
+                  test/listener-host-wiring.test.ts \
+                  test/listener-hosts.test.ts \
+                  test/product-host-parity.test.ts \
+                  test/product-host.test.ts \
+                  test/native-execution.test.ts \
+                  test/schema-files.test.ts \
+                  test/web.test.ts \
+                  test/daemon-port.test.ts \
+                  test/daemon-password.test.ts
                 ;;
               CI-APP-SRC)
                 cd "$root/packages/app-shell"
@@ -155,8 +169,14 @@ jobs:
                 bun run test:browser --reporter=junit "--reporter-outfile=$evidence/report.xml"
                 ;;
               CI-ATLAS-BUSINESS)
+                # SF's business boundary, catalog, surface and scanner-clock.
+                # Generated-file correctness is separately checked in static.
                 cd "$root/modules/atlas/boundary"
-                bun run test --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml" \
+                  test/business-memory-ports.test.ts \
+                  test/catalog.test.ts \
+                  test/surface.test.ts \
+                  test/scanner-clock.test.ts
                 ;;
               *) echo "Unknown suite: $SF_SUITE_ID" >&2; exit 2 ;;
             esac
@@ -258,7 +278,7 @@ jobs:
         with:
           pattern: sf-evidence-*
           path: sf-ci-collected
-          merge-multiple: true
+          merge-multiple: false
       - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA
         env:
           SF_NEEDS_JSON: ${{ toJSON(needs) }}

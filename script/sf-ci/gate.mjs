@@ -20,6 +20,14 @@ export function validateManifest(manifest) {
   const suites = manifest.suites
   if (!Array.isArray(suites)) fail("missing suites")
   if (new Set(suites.map((s) => s.id)).size !== suites.length) fail("duplicate suite")
+  for (const id of ["CI-CLI", "CI-ATLAS-BUSINESS"]) {
+    const selected = suites.find((s) => s.id === id)?.selection
+    if (selected?.kind !== "explicit" || !Array.isArray(selected.testFiles) || selected.testFiles.length < 1 ||
+        new Set(selected.testFiles).size !== selected.testFiles.length ||
+        selected.testFiles.some((file) => !/^test\/[\w/-]+\.test\.ts$/.test(file))) {
+      fail("invalid product selection: " + id)
+    }
+  }
   if (JSON.stringify(suites.map((s) => s.id)) !== JSON.stringify(REQUIRED)) fail("normative suite IDs changed")
   for (const suite of suites) {
     if (!["bun", "playwright"].includes(suite.kind)) fail("unknown runner: " + suite.id)
@@ -156,11 +164,13 @@ function cli() {
   if (command === "verify") {
     const root = "sf-ci-collected"
     const names = readdirSync(root, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name)
-    if (names.length !== suites.length || names.some((name) => !REQUIRED.includes(name))) fail("artifact directory inventory mismatch")
+    if (names.length !== suites.length || names.some((name) => !REQUIRED.includes(name.replace(/^sf-evidence-/, "")))) {
+      fail("artifact directory inventory mismatch")
+    }
     const receipts = {}
     const reports = {}
     for (const suite of suites) {
-      const dir = path.join(root, suite.id)
+      const dir = path.join(root, "sf-evidence-" + suite.id)
       receipts[suite.id] = readJson(path.join(dir, "receipt.json"))
       reports[suite.id] = readFileSync(path.join(dir, reportName(suite.kind)))
     }
