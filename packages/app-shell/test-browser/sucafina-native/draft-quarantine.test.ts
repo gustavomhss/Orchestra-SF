@@ -68,6 +68,22 @@ describe("owner draft quarantine", () => {
     registry.revoke("logout"); unknown.rejectSave({ status: 409, operation: pending })
     expect(unknown.snapshot()).toEqual({ availability: "revoked", reason: "logout" })
   })
+  test("typed 422 settles only the exact first submission and permits editing without changing CAS", () => {
+    const pending = { operationRef: "op" as SfOperationRef, idempotencyKey: "key", payloadDigest: "digest", expectedVersion: 1 }
+    const registry = createSfOwnerDrafts(dependencies(async () => authorized()), { key: "one" as SfOwnerKey, identity })
+    const draft = open(registry.registry, "r1")
+    draft.edit({ text: "invalid" }); draft.setPending(pending); draft.setPhase("submitting")
+    draft.rejectSave({ status: 422, operation: { ...pending, idempotencyKey: "wrong" } })
+    expect(draft.snapshot()).toMatchObject({ phase: "submitting", pendingOperation: pending })
+    draft.rejectSave({ status: 422, operation: pending })
+    expect(draft.snapshot()).toMatchObject({ phase: "validation-error", pendingOperation: null, baseVersion: 1, value: { text: "invalid" }, dirty: true })
+    draft.edit({ text: "corrected" }); draft.setPhase("reviewing")
+    expect(draft.snapshot()).toMatchObject({ phase: "reviewing", baseVersion: 1, value: { text: "corrected" } })
+    const unknown = open(registry.registry, "r2")
+    unknown.setPending(pending); unknown.setPhase("outcome-unknown"); unknown.setPhase("submitting")
+    unknown.rejectSave({ status: 422, operation: pending })
+    expect(unknown.snapshot()).toMatchObject({ pendingOperation: pending })
+  })
   test("unavailable retry keeps values hidden, then restores the same drafts", async () => {
     let proof: SfDraftRevalidation = { status: "unavailable" }
     const registry = createSfOwnerDrafts(dependencies(async () => proof), { key: "one" as SfOwnerKey, identity })
