@@ -3,6 +3,8 @@ import { createHash } from "node:crypto"
 import { mkdirSync, readFileSync, readdirSync, writeFileSync, statSync } from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
+import { selectSuiteFiles, sha256Lines, bunCoverageIdentity, playwrightCoverageIdentity,
+  checkCoverageBaseline } from "./selection.mjs"
 
 export const REQUIRED = [
   "CI-SF", "CI-CLI", "CI-APP-SRC", "CI-APP-BROWSER", "CI-ATLAS-BUSINESS",
@@ -33,6 +35,13 @@ export function validateManifest(manifest) {
         JSON.stringify(["test-browser/sucafina-native/transport-integration.test.ts"])) {
     fail("the SF installed browser directory cannot be removed or replaced")
   }
+  const appUnit = suites.find((s) => s.id === "CI-APP-SRC")
+  if (appUnit?.selection?.kind !== "directory" || appUnit.selection.testDirectory !== "src") {
+    fail("app unit suite must be manifest-driven and include all app src tests")
+  }
+  if (sfProduct.selection.testDirectory !== "Sucafinav1/test") {
+    fail("SF complete unit subtree must remain admitted")
+  }
   for (const id of ["CI-CLI", "CI-ATLAS-BUSINESS"]) {
     const selected = suites.find((s) => s.id === id)?.selection
     if (selected?.kind !== "explicit" || !Array.isArray(selected.testFiles) || selected.testFiles.length < 1 ||
@@ -49,6 +58,13 @@ export function validateManifest(manifest) {
       fail("invalid selected E2E spec: " + suite.id)
     }
     if (suite.kind === "bun" && suite.specFile !== undefined) fail("unexpected bun specFile")
+    if (suite.kind === "bun" && !["explicit", "directory", "full-except-release-only"].includes(suite.selection?.kind)) {
+      fail("Bun selection is not manifest-governed: " + suite.id)
+    }
+    if (suite.coverageBaseline?.schemaVersion !== 1 ||
+        !["HISTORIC_SUCCESSFUL_ARTIFACT", "PENDING_REAL_COMPLETE_RUN"].includes(suite.coverageBaseline?.status)) {
+      fail("unversioned coverage baseline state: " + suite.id)
+    }
   }
   if (JSON.stringify(manifest.separateReleaseProofs) !== JSON.stringify(PROOFS)) fail("AM proof inventory drift")
   return suites
@@ -102,6 +118,7 @@ export function minimalPlaywrightEvidence(raw, exactSpec) {
       file: input.file,
       specs: (input.specs || []).map((spec) => ({
         file: spec.file,
+        idHash: digest(String(spec.id || [spec.title, spec.line, spec.column].join("@"))),
         tests: spec.tests.map((test) => ({
           expectedStatus: test.expectedStatus,
           results: test.results.map((result) => ({ status: result.status })),
@@ -124,7 +141,14 @@ export function minimalPlaywrightEvidence(raw, exactSpec) {
   return JSON.stringify(safe) + "\n"
 }
 
-export function checkReceipt(receipt, suite, meta, reportBytes) {
+function coverageForReport(bytes, suite) {
+  const raw = bytes.toString("utf8")
+  return suite.kind === "bun"
+    ? bunCoverageIdentity(raw)
+    : playwrightCoverageIdentity(raw, suite.specFile)
+}
+
+export function checkReceipt(receipt, suite, meta, reportBytes, selectedFiles) {
   if (!receipt || receipt.schemaVersion !== 1) fail("invalid receipt schema")
   if (receipt.suiteId !== suite.id || receipt.kind !== suite.kind) fail("receipt suite mismatch")
   if (receipt.sourceSha !== meta.sha || receipt.checkoutSha !== meta.sha) fail("candidate or checkout SHA mismatch")
@@ -136,6 +160,15 @@ export function checkReceipt(receipt, suite, meta, reportBytes) {
     ? countBunReport(reportBytes.toString("utf8"))
     : countPlaywrightReport(reportBytes.toString("utf8"), suite.specFile)
   if (receipt.executedTests !== count) fail("receipt test count mismatch")
+  const coverage = checkCoverageBaseline(suite, coverageForReport(reportBytes, suite))
+  const selected = sha256Lines(selectedFiles)
+  if (coverage.filesSha256 !== selected) fail("selected files were not all executed: " + suite.id)
+  if (receipt.selectedFilesSha256 !== selected ||
+      receipt.coverageFilesSha256 !== coverage.filesSha256 ||
+      receipt.coverageCaseSha256 !== coverage.casesSha256 ||
+      receipt.executedFiles !== coverage.fileCount) {
+    fail("case/file/selection receipt identity mismatch: " + suite.id)
+  }
   return count
 }
 
@@ -151,7 +184,8 @@ export function requirePrerequisites(needs) {
   return JOBS.length
 }
 
-export function verifyAll({ manifest, receipts, reports, needs, sha, runId, attempt }) {
+export function verifyAll({ manifest, receipts, reports, needs, sha, runId, attempt,
+  selectionProvider = selectSuiteFiles }) {
   const suites = validateManifest(manifest)
   if (!/^[a-f0-9]{40}$/.test(String(sha))) fail("invalid candidate SHA")
   if (!/^[0-9]+$/.test(String(runId)) || !/^[0-9]+$/.test(String(attempt))) fail("missing run identity")
@@ -162,7 +196,8 @@ export function verifyAll({ manifest, receipts, reports, needs, sha, runId, atte
   let sum = 0
   for (const suite of suites) {
     if (!Object.hasOwn(receipts, suite.id) || !Object.hasOwn(reports, suite.id)) fail("missing suite: " + suite.id)
-    sum += checkReceipt(receipts[suite.id], suite, { sha, runId, attempt }, reports[suite.id])
+    const selection = selectionProvider(manifest, suite.id)
+    sum += checkReceipt(receipts[suite.id], suite, { sha, runId, attempt }, reports[suite.id], selection)
   }
   return { suiteCount: suites.length, executedTests: sum, candidateSha: sha, runId: String(runId) }
 }
@@ -240,14 +275,23 @@ function cli() {
     return
   }
   if (command === "select") {
-    for (const name of requiredSelection(manifest, process.env.SF_SUITE_ID)) {
-      if (!/^[A-Za-z0-9_/-]+\.test\.ts$/.test(name)) fail("untrusted test filename")
-      const file = path.join(manifest.suites.find((entry) => entry.id === process.env.SF_SUITE_ID).directory, name)
-      if (!statSync(file, { throwIfNoEntry: false })?.isFile()) {
-        fail("selected file missing on checked-out candidate: " + name)
-      }
-      process.stdout.write(name + "\n")
-    }
+    if (process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") fail("selection must run on Linux X64")
+    for (const name of selectSuiteFiles(manifest, process.env.SF_SUITE_ID)) process.stdout.write(name + "\n")
+    return
+  }
+  if (command === "coverage") {
+    const id = process.env.SF_SUITE_ID
+    const suite = suites.find((entry) => entry.id === id)
+    if (!suite || process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") fail("invalid coverage request")
+    const output = path.join("sf-ci-evidence", id)
+    const reportBytes = readFileSync(path.join(output, reportName(suite.kind)))
+    const coverage = coverageForReport(reportBytes, suite)
+    const expectedFiles = selectSuiteFiles(manifest, id)
+    if (coverage.filesSha256 !== sha256Lines(expectedFiles)) fail("coverage omitted selected file: " + id)
+    console.log("SF_CI_COVERAGE_CANDIDATE " + JSON.stringify({ suiteId: id, ...meta,
+      cases: coverage.cases, files: coverage.fileCount,
+      casesSha256: coverage.casesSha256, filesSha256: coverage.filesSha256,
+      baselineStatus: suite.coverageBaseline.status }))
     return
   }
   if (command === "receipt") {
@@ -263,12 +307,17 @@ function cli() {
     const count = suite.kind === "bun"
       ? countBunReport(reportBytes.toString("utf8"))
       : countPlaywrightReport(reportBytes.toString("utf8"), suite.specFile)
+    const coverage = checkCoverageBaseline(suite, coverageForReport(reportBytes, suite))
+    const selected = sha256Lines(selectSuiteFiles(manifest, id))
+    if (coverage.filesSha256 !== selected) fail("not every manifest-selected file executed: " + id)
     const receipt = {
       schemaVersion: 1, suiteId: id, kind: suite.kind,
       status: "PASS", exitCode: 0, sourceSha: meta.sha, checkoutSha: checkout,
       runId: String(meta.runId), attempt: String(meta.attempt),
       runnerOS: process.env.RUNNER_OS, runnerArch: process.env.RUNNER_ARCH,
-      executedTests: count, reportSha256: digest(reportBytes),
+      executedTests: count, executedFiles: coverage.fileCount,
+      selectedFilesSha256: selected, coverageFilesSha256: coverage.filesSha256,
+      coverageCaseSha256: coverage.casesSha256, reportSha256: digest(reportBytes),
     }
     mkdirSync(output, { recursive: true })
     writeFileSync(path.join(output, "receipt.json"), JSON.stringify(receipt, null, 2) + "\n")
