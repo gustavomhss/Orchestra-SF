@@ -532,20 +532,62 @@
       },
       "result_type": "FAIL_SCOPED",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781520064"
+    },
+    {
+      "id": "B20",
+      "W": "25bf8587a2f99457db7734f6f78ce7893ef30362",
+      "tree": "230dae37040cde5c593ac1255b77d3331c602e97",
+      "S": "8d2e8b277857947c5b8860a2245159df79106295",
+      "Stree": "fbd712e0af3f69325e6a2146c94bb5a411692a83",
+      "request_blob": "decf9f7693278be5ad60c735e24954f25b1661ef",
+      "branch": "ci-run-linux-sf214-owner-nav-4",
+      "run_id": 43782484684,
+      "job_id": 133022584733,
+      "cleanup_job_id": 133023137488,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "./test-browser/sucafina-native/context.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 11,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 11
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": 0
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43782484684",
+      "source_change": "211 composed 207 CAP06 CAP24 navigation CTA original owner candidate and approved Q01 15/74/1610 mapping; synthetic/browser component only"
     }
   ],
   "totals": {
-    "pass": 113,
+    "pass": 124,
     "fail": 12,
-    "tests": 125,
-    "success": 4,
+    "tests": 136,
+    "success": 5,
     "failed": 8
   },
   "dedup_causal": {
     "B9_to_B17": "operations/projection.ts syntactic blob correction verified",
     "B10_B11_to_B18": "AM03/AM04 imports corrected by exact postimage",
     "B15_to_B15R": "Bun selector ./ path syntax correction",
-    "B19": "212 AM01 causal test newly composed; failure is new domain admission, not old hypothetical null assertion"
+    "B19": "212 AM01 causal test newly composed; failure is new domain admission, not old hypothetical null assertion",
+    "B20": "Fresh composer W3 owner navigation CTA source changes; first unique exact selection; no rerun on unchanged source"
   },
   "limitations": {
     "same_final_C": false,
@@ -556,20 +598,7 @@
     "artifacts_uploaded_count": 0,
     "completed_runs_are_not_global_release": true
   },
-  "pending_new_material": {
-    "id": "B20-OWNER-NAV",
-    "W": "25bf8587a2f99457db7734f6f78ce7893ef30362",
-    "tree": "230dae37040cde5c593ac1255b77d3331c602e97",
-    "S": "8d2e8b277857947c5b8860a2245159df79106295",
-    "Stree": "fbd712e0af3f69325e6a2146c94bb5a411692a83",
-    "request_blob": "decf9f7693278be5ad60c735e24954f25b1661ef",
-    "branch": "ci-run-linux-sf214-owner-nav-4",
-    "run_id": 43782484684,
-    "status": "in_progress_at_first_read",
-    "requested": [
-      "./test-browser/sucafina-native/context.test.ts"
-    ],
-    "counts": "PENDING_AT_DOCUMENT_WRITE"
-  },
-  "GLOBAL_RELEASE": false
+  "pending_new_material": null,
+  "GLOBAL_RELEASE": false,
+  "all_terminal_as_of_reconciliation": true
 }
