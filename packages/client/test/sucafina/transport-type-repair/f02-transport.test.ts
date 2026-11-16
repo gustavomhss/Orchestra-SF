@@ -80,7 +80,7 @@ test("NAV-01: private search uses only bounded same-origin POST JSON, never a q 
     )
     expect(result).toEqual({
       kind: "response", status: 503,
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json;charset=utf-8" },
       body: { status: "unavailable" },
     })
     expect(calls).toHaveLength(1)

@@ -5,6 +5,7 @@
  * This spec is dispatched only by the authorized 191 hosted runner.
  */
 import { createHash } from "node:crypto"
+import { requireSfPackagedBrokerReadiness } from "../../../../../../../apps/desktop/test/sucafina-bootstrap213/d01-packaged-driver.ts"
 import { _electron, expect, test } from "@playwright/test"
 import type { SfDesktopCapability, SfDesktopBindResult } from "@orchestra/client/sucafina/transport"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
@@ -51,6 +52,7 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
       await expect.poll(() => window.evaluate(() => {
         return typeof (window as unknown as { api?: RendererApi }).api?.sucafina?.registerConnection === "function"
       }), { message: "Packaged Electron preload must expose the real broker API" }).toBe(true)
+      await requireSfPackagedBrokerReadiness(app, window)
 
       // Credentials, if the app owns them, are read INSIDE its trusted renderer
       // and forwarded by its existing preload to main. They are never returned,

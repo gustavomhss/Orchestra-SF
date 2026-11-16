@@ -55,7 +55,7 @@ const require = __cjs_mod__.createRequire(import.meta.url);
         },
       },
       // core ships TypeScript sources, which Node will not load from node_modules: bundle it (its omni loader).
-      externalizeDeps: { include: [nodePtyPkg], exclude: ["@orchestra/core"] },
+      externalizeDeps: { include: [nodePtyPkg], exclude: ["@orchestra/core", "@orchestra/client"] },
     },
     plugins: [
       {

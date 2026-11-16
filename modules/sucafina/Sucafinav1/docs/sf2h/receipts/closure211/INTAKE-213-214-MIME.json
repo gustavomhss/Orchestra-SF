@@ -1,0 +1,146 @@
+{
+  "schema": "sf2h.closure211.desktop-mime-intake.v1",
+  "mission": 211,
+  "epoch": "closure-composer-e1-browser211",
+  "base_head": "25bf8587a2f99457db7734f6f78ce7893ef30362",
+  "base_tree": "230dae37040cde5c593ac1255b77d3331c602e97",
+  "producer_213": {
+    "branch": "sf-desktop-bootstrap",
+    "epoch": "desktop-bootstrap-e1-browser213",
+    "source_code_head": "9e25cc70495d38aa62b2376be89cebe02e86761d",
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure213/ARTIFACT.json",
+    "receipt_blob": "7ee097427844fe91ea91169de37e0be26f8a5726",
+    "inert_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure213/INERT-211-CROSS-LEASE.json",
+    "inert_blob": "2802e04fdbd0aacd3b3eeffb22daed8fe6135224"
+  },
+  "producer_214": {
+    "branch": "sf-ci-validation",
+    "epoch": "product-ci-e7-browser214",
+    "source_run": 43781269811,
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/INERT-211-CLIENT-MIME-214.json",
+    "receipt_blob": "5a56120c034b0a7038ee41325f4e159d021e3114"
+  },
+  "paths": [
+    {
+      "mission": 213,
+      "kind": "PRODUCER",
+      "path": "apps/desktop/src/main/index.ts",
+      "pre": "51245e8469fa60decda9ed84efb3796fdf3fd510",
+      "post": "b1af6ab8f867b3d2727270f7ba87b9f6f1f6ffcc",
+      "consumer_pre": "51245e8469fa60decda9ed84efb3796fdf3fd510",
+      "consumer_post": "b1af6ab8f867b3d2727270f7ba87b9f6f1f6ffcc"
+    },
+    {
+      "mission": 213,
+      "kind": "PRODUCER",
+      "path": "apps/desktop/src/main/ipc.ts",
+      "pre": "babb1249587caf085909ed6316bbd0b9f968ce3c",
+      "post": "9d1c3715331f5793a94fbedadd8f52d4a4f94057",
+      "consumer_pre": "babb1249587caf085909ed6316bbd0b9f968ce3c",
+      "consumer_post": "9d1c3715331f5793a94fbedadd8f52d4a4f94057"
+    },
+    {
+      "mission": 213,
+      "kind": "PRODUCER",
+      "path": "apps/desktop/src/main/sucafina/bootstrap.ts",
+      "pre": null,
+      "post": "432d29e6ee2a48f82e4ad70523268ef1fa3175f5",
+      "consumer_pre": null,
+      "consumer_post": "432d29e6ee2a48f82e4ad70523268ef1fa3175f5"
+    },
+    {
+      "mission": 213,
+      "kind": "PRODUCER",
+      "path": "apps/desktop/test/sucafina-bootstrap213/enrollment-bridge.test.ts",
+      "pre": null,
+      "post": "b33bbab29041342727df5d9f9e9b33f45d77870c",
+      "consumer_pre": null,
+      "consumer_post": "b33bbab29041342727df5d9f9e9b33f45d77870c"
+    },
+    {
+      "mission": 213,
+      "kind": "PRODUCER",
+      "path": "apps/desktop/test/sucafina-bootstrap213/d01-packaged-driver.ts",
+      "pre": null,
+      "post": "3c3d97c8e1d571ead0f663ef92400b4700d3e4b0",
+      "consumer_pre": null,
+      "consumer_post": "3c3d97c8e1d571ead0f663ef92400b4700d3e4b0"
+    },
+    {
+      "mission": 213,
+      "kind": "COMPLETE_INERT",
+      "path": "apps/desktop/package.json",
+      "pre": "a7dd0b12de0f8c3855c7f5b2f069416ef711f577",
+      "post": "312fcd0a473cd7b412c8d80fc0363c96f50ebb99",
+      "consumer_pre": "a7dd0b12de0f8c3855c7f5b2f069416ef711f577",
+      "consumer_post": "312fcd0a473cd7b412c8d80fc0363c96f50ebb99"
+    },
+    {
+      "mission": 213,
+      "kind": "COMPLETE_INERT",
+      "path": "apps/desktop/electron.vite.config.ts",
+      "pre": "b90da178775d53d1c8779edb633a6ccc23758c82",
+      "post": "cac0655db92a7a8b8e3f32b230d886ecb5b2d427",
+      "consumer_pre": "b90da178775d53d1c8779edb633a6ccc23758c82",
+      "consumer_post": "cac0655db92a7a8b8e3f32b230d886ecb5b2d427"
+    },
+    {
+      "mission": 213,
+      "kind": "COMPLETE_INERT",
+      "path": "bun.lock",
+      "pre": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "post": "a05d2566eb71553c0cca54d7f041f3716f643dc8",
+      "consumer_pre": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "consumer_post": "a05d2566eb71553c0cca54d7f041f3716f643dc8"
+    },
+    {
+      "mission": 213,
+      "kind": "COMPLETE_INERT",
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts",
+      "pre": "2925ff518a78c2034f855561589f504b9ca7e48b",
+      "post": "c93196c555d79a3bd9a71c9c7d3be26bc06c52b2",
+      "consumer_pre": "2925ff518a78c2034f855561589f504b9ca7e48b",
+      "consumer_post": "c93196c555d79a3bd9a71c9c7d3be26bc06c52b2"
+    },
+    {
+      "mission": 214,
+      "kind": "COMPLETE_INERT",
+      "path": "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts",
+      "pre": "6f470dcc23300873223ec2c01bb7d36c6a5c23ea",
+      "post": "fef5c0a8702ffde3921a7cd65829cfba9259716d",
+      "consumer_pre": "6f470dcc23300873223ec2c01bb7d36c6a5c23ea",
+      "consumer_post": "fef5c0a8702ffde3921a7cd65829cfba9259716d"
+    }
+  ],
+  "external": {
+    "D01": "Packaged Electron original binary + hosted run SHA, real Microsoft identity and installed Sucafina manifest, private SF_NATIVE_D01_PACKAGED_ATTESTATION",
+    "local_enrollment": "CLI must attach authenticated AppDockSocket.fromEnv with real launch UUID, authentic local-operator descriptor and real enrollNativeLocal callback; never fabricate token"
+  },
+  "behavior": {
+    "desktop": "main sidecar and registered authenticated IPC original broker, failure closed, revocation on shutdown",
+    "bundle": "workspace client binding dependency, electron-vite explicit bundle, matching bun.lock",
+    "D01": "original host 199 installed proof extended with true packaged Electron/preload readiness gate",
+    "F02": "unit test expected exact Response.json charset header, assertion not weakened"
+  },
+  "validation": {
+    "unit": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "productCI": "NOT_DISPATCHED_BY_211",
+    "hostedD01": "NOT_RUN",
+    "Microsoft": "NOT_RUN"
+  },
+  "next": {
+    "compiler": 190,
+    "sole_productCI": 214,
+    "reviewers": [
+      207,
+      208,
+      209
+    ],
+    "S0": 189
+  },
+  "candidate_C_accepted": false,
+  "GLOBAL_RELEASE": false
+}
