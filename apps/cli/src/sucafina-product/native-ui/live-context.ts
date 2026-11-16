@@ -128,19 +128,32 @@ export type SfLiveAdmittedPage = Readonly<{
   surface: "dashboard" | "planner" | "procurement"
   page: string
 }>
+export type SfLivePageActions = SfLiveAdmittedPage & Readonly<{ allowedActionIds: readonly string[] }>
 export function sfContextDestinationsFromPages(
   pages: readonly SfLiveAdmittedPage[],
+  observedActions?: readonly SfLivePageActions[],
 ): SfContext["destinations"] | undefined {
   if (!Array.isArray(pages) || pages.length > PAGES.length) return undefined
+  if (observedActions !== undefined && (!Array.isArray(observedActions) || observedActions.length !== pages.length)) return undefined
+  const actions = new Map<string, readonly string[]>()
+  for (const item of observedActions ?? []) {
+    if (!item || !Array.isArray(item.allowedActionIds)) return undefined
+    const source = PAGES.find((entry) => entry.surface === item.surface && entry.page === item.page)
+    if (!source || actions.has(source.id) || !pages.some((page) => page.surface === item.surface && page.page === item.page) ||
+      new Set(item.allowedActionIds).size !== item.allowedActionIds.length ||
+      item.allowedActionIds.some((id) => !source.actions.some((allowed) => allowed === id))) return undefined
+    actions.set(source.id, item.allowedActionIds)
+  }
   const result: Destination[] = []
   const seen = new Set<string>()
   for (const item of pages) {
     const source = PAGES.find((entry) => entry.surface === item.surface && entry.page === item.page)
     if (!source || seen.has(source.id)) return undefined
     seen.add(source.id)
-    // Access to a page is not authorization to execute a domain command.
+    // Never read action claims from the admitted page object itself.
+    if (observedActions !== undefined && !actions.has(source.id)) return undefined
     result.push({ capabilityId: source.id, surface: source.surface, page: source.page,
-      canRead: true, allowedActionIds: [] })
+      canRead: true, allowedActionIds: actions.get(source.id) ?? [] })
   }
   return approvedDestinations(result)
 }

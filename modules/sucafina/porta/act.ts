@@ -160,7 +160,6 @@ function admit(
   if (parsedRequest?.status === "cancelled") return { code: "cancelled" }
   if (parsedRequest?.status === "po_issued") return { code: "already_issued" }
   const parsedAction = action as Action
-  if ((type === "approve" || type === "reject") && !firstPending(parsedRequest)) return { code: "no_step" }
   if ((type === "create" || type === "submit_pr") && !whoRequester(parsedRequest, parsedActor, type)) {
     return { code: "not_requester" }
   }
@@ -175,12 +174,8 @@ function admit(
     return { code: "not_canceller" }
   }
   if (type === "approve" || type === "reject") {
-    const pending = firstPending(parsedRequest)
-    const holderSet = pending?.step.holderId != null
-    const notHolder = pending?.step.holderId !== parsedActor.id
-    if (holderSet && notHolder && hasRole(parsedActor, "admin")) return { code: "no_override" }
-    if (holderSet && notHolder && !hasRole(parsedActor, "admin")) return { code: "not_approver" }
-    if (parsedSettings.blockSelfApproval && isCreatedBy(parsedRequest, parsedActor)) return { code: "self_approval" }
+    const failure = approvalFailure(parsedRequest, parsedActor, parsedSettings)
+    if (failure) return { code: failure }
   }
   if ((type === "reject" || type === "cancel") && reasonEmpty(parsedAction.reason)) return { code: "reason_required" }
   if (type === "select_quote" && !namedQuote(parsedRequest, String(parsedAction.quoteId))) return { code: "no_quote" }
@@ -207,6 +202,25 @@ function admit(
     issued: parsedIssued,
     supplier: parsedSupplier,
   }
+}
+
+function approvalFailure(request: Request | null, actor: Actor, settings: Settings) {
+  const pending = firstPending(request)
+  if (!pending) return "no_step" as const
+  const notHolder = pending.step.holderId !== actor.id
+  if (pending.step.holderId != null && notHolder && hasRole(actor, "admin")) return "no_override" as const
+  if (pending.step.holderId != null && notHolder) return "not_approver" as const
+  if (settings.blockSelfApproval && isCreatedBy(request, actor)) return "self_approval" as const
+  return undefined
+}
+
+/** Read-only reuse of the same holder/self-approval checks as the transition. */
+export function canApproveCurrentRequest(request: unknown, actor: unknown, settings: unknown) {
+  const currentActor = parseActor(actor)
+  const currentSettings = parseSettings(settings)
+  if (!currentActor?.canWrite || !currentSettings || !isRequest(request) ||
+    !["pr_pending", "src_pending", "po_pending"].includes(request.status)) return false
+  return !approvalFailure(request, currentActor, currentSettings)
 }
 
 function apply(ready: Ready): Request {

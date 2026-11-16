@@ -2,6 +2,7 @@ import { Schema } from "effect"
 import { SfOperations } from "@orchestra/schema/sucafina/operations"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+import { operationsCanWrite } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { publicSfData } from "../../../../../modules/sucafina/Sucafinav1/product/integration/public-state.ts"
@@ -71,8 +72,7 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfOpe
       const data = projectSfOperationsData(cap, publicSfData(view.data), year, month)
       return { commit: snapshot.audit.length !== beforeAudit, value: { data, versions: projectSfOperationsVersions(cap, view.versions, data, year, month),
         actor: digestSfValue(actor), versionFence: JSON.stringify(snapshot.versions),
-        canWrite: actor.canWrite && (actor.roles.includes("admin") || actor.roles.includes("contributor") &&
-          actor.assigned?.includes(cap === "CAP11" ? "Operations" : "security") === true) } }
+        canWrite: operationsCanWrite(actor, pageName) } }
     }, { signal: request.signal })
     if (!outcome) return denied()
     const current = await deps.application.persistence.transaction("dashboard", async (snapshot) => {

@@ -27,15 +27,19 @@ const topicFields = ["action", "owner", "due", "status", "priority", "notes"]
 const leaderFields = ["name", "title", "domain", "location", "start"]
 const cioFields = ["name", "title", "location", "start"]
 
+export function peopleCanWrite(actor: Actor, page: string) {
+  return actor.canWrite && (page === pages[0] ? actor.roles.some((role) => role === "admin" || role === "domain leader")
+    : (page === pages[2] || page === pages[3]) && actor.roles.includes("admin"))
+}
+
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite) return { ok: false, status: 403 }
     if (!(pages as readonly string[]).includes(command.page)) return { ok: false, status: 400 }
     if (!canRead(snapshot, actor, command.page)) return { ok: false, status: 403 }
     if (command.page === pages[1]) return { ok: false, status: 400 }
-    const admin = actor.roles.includes("admin")
     if (command.page === pages[3]) {
-      if (!admin)
+      if (!peopleCanWrite(actor, command.page))
         return {
           ok: false,
           status: 403,
@@ -72,7 +76,7 @@ export const domain: Domain = {
     if (command.page === pages[2]) {
       if (!["saveCio", "saveLeader", "deleteLeader", "saveMember", "deleteMember"].includes(command.action))
         return { ok: false, status: 400 }
-      if (!admin)
+      if (!peopleCanWrite(actor, command.page))
         return {
           ok: false,
           status: 403,
@@ -101,7 +105,7 @@ export const domain: Domain = {
     }
     if (!["save", "delete"].includes(command.action)) return { ok: false, status: 400 }
     // §4.1 authorizes domain leaders' hot topics without an owner qualifier.
-    if (!admin && !actor.roles.includes("domain leader")) return { ok: false, status: 403 }
+    if (!peopleCanWrite(actor, command.page)) return { ok: false, status: 403 }
     return saveRecord(snapshot, actor, command, environment, "hotTopics", topicFields)
   },
   view(snapshot, actor, environment) {

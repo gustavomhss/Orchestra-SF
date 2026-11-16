@@ -7,6 +7,7 @@ import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../.
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
 import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
@@ -142,9 +143,11 @@ export async function createConfiguredInstallation(
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
+  let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
   runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
     operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
+    nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
     isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
     persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
     grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
@@ -221,6 +224,8 @@ export async function createConfiguredInstallation(
     context: nativeContext,
     handlers: nativeHandlers,
   })
+  const actions = createSfActionSource(nativeDependencies, nativeHandlers)
+  nativeActions = actions.actions
   // Router construction above proves these exact handlers were installed.
   nativeOperational = async (request, stamp) => {
     const observed = await Promise.allSettled([
@@ -229,6 +234,7 @@ export async function createConfiguredInstallation(
       observeSfDomainHealth(nativeDependencies, nativeHandlers, request, stamp),
       observeSfHome(runtime?.services?.(), request, stamp),
       observeSfCases(nativeDependencies, request, stamp),
+      actions.operational(request, stamp),
     ])
     return observed.flatMap((item) => item.status === "fulfilled" ? item.value : [])
   }
