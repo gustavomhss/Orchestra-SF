@@ -21,3 +21,7 @@ Leia \`inert-211/delta-211.json\`. Para cada uma das cinco entradas, aplique a p
 **Checks da missão225**: \`NOT_RUN\` para local test, typecheck, build, validator, CI, desktop e revisão 207, por proibição expressa. Não há resultados positivos alegados. Integração e release continuam bloqueados até as provas reais.
 
 **Entrada mínima não secreta faltante**: HEAD e blobs atuais da branch de composição 211 para reconciliar pós-imagens; fixture F04 já aprovada com contextos Microsoft requester/denied e download habilitado, selecionada por 223. Não enviar cookies, credenciais, tokens, bankKey nem dados CSV.
+
+## Adendo de consumo desktop — código commitado na lease225
+
+Commit `1702a6139ab8073b2dbad6722ddbc31798bc585d`: U14 detecta o `Platform.downloadResponse` já existente e, somente após F02 e contexto atual autorizarem os bytes originais, fornece um `ReadableStream` de blocos de 64 KiB para o downloader Electron. O stream revoga `reader.closed` quando o owner/sinal muda: o `response-download` existente interrompe o chooser, a escrita temporária e não confirma arquivo parcial. Web preserva o link Blob transitório, sem CSV produzido pelo cliente. Esse adendo não altera broker/preload/main fora da lease; eles continuam como pós-imagens INERTES para 211. Checks permanecem `NOT_RUN`.

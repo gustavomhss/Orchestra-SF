@@ -10,7 +10,7 @@
   "product_base": "c5703ca53399a4ead279cdf4df3c1261eef1dd8e",
   "initial_head": "134bdb2dd76e8e7774338ebceee3b5281993a547",
   "ack_commit": "87633bdc0b69fc0b3c51f7903fbd7c27865be9e7",
-  "code_commit": "34355ba9ca53c0e8fa63fbf19b1b5e3ce82c3f42",
+  "code_commit": "1702a6139ab8073b2dbad6722ddbc31798bc585d",
   "inert_delta_commit": "a0559b916b7fd46f08003555dd77e2a54ae7934c",
   "tests_commit": "51be81026bb542906b86c1cb38c7f57bd44fed22",
   "contract": "S1-R1-207-005/U14-AC01 / WP04.T05 / files.export.suppliers",
@@ -40,13 +40,13 @@
     {
       "path": "packages/client/src/sucafina/procurement.ts",
       "before": "7875c98e14fcde4255bd807f094685cc0fcf60b6",
-      "after": "6847c58ebbe63ec9eb67d4f7f260490d0acde20b",
+      "after": "e3c7c28e7a3f12ecb619ba3a87d6c50aa63ff3c5",
       "scope": "dedicated optional native F02 byte port; fail-closed if uninstalled"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
       "before": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
-      "after": "77105541dab21e01a13476af25a7f44c90ea9659",
+      "after": "e354b0f5fcfc1c8aaf1aba447dfa0a60df233c93",
       "scope": "real CSV action with current context availability+CAP27+byte-port fence, abort on owner, no browser-generated data"
     },
     {
@@ -71,10 +71,10 @@
     "packages/app-shell/e2e/sucafina/native/journeys/u14.spec.ts"
   ],
   "behavior": {
-    "allowed": "enabled only on exact current files/exports operation and CAP27 authorized projection with installed byte port; invokes original GET; F02 post-response authenticates current actor/stamp/policy/access before any Blob/download; original UTF-8 CSV filename/columns/data; local filters remain unchanged",
+    "allowed": "enabled only on exact current files/exports operation and CAP27 authorized projection with installed byte port; invokes original GET; F02 post-response authenticates current actor/stamp/policy/access before any Blob/download; original UTF-8 CSV filename/columns/data; local filters remain unchanged; desktop uses existing Platform.downloadResponse with native chooser, 64KiB chunks, temporary file and abort on owner",
     "read_only": "read-only CAP27 may export only when the independent files/exports source operation is actually ready; CAP27 read is not by itself a download grant",
     "denied": "no file byte request when CAP27 read or files/exports is absent/denied; server 401/403 are not converted into synthetic data; no saved object",
-    "revoked": "inflight abort on generation/owner change; source original role recheck; F02 fresh ctx.context fence before release; no stale response after token mismatch",
+    "revoked": "inflight abort on generation/owner change; source original role recheck; F02 fresh ctx.context fence before release; no stale response after token mismatch; renderer abort errors ReadableStream so existing desktop response-download cancels partial file writes",
     "stale": "original source snapshot digest rejects changed records; F02 fresh stamp and UI token mismatch reject",
     "unavailable": "explicit unavailable state and current copy; never path/navigation fallback or synthetic bank-masked CSV"
   },
@@ -106,7 +106,7 @@
     "GLOBAL_RELEASE": false,
     "native_goal": "PAUSED"
   },
-  "status": "SOURCE_COMMITTED__SHARED_INERT_DELTA_PENDING_211__NOT_PRODUCT_VERIFIED",
+  "status": "SOURCE_COMMITTED_WITH_NATIVE_DOWNLOAD__SHARED_INERT_DELTA_PENDING_211__NOT_PRODUCT_VERIFIED",
   "consumer_order": [
     "211 reconcile+integrate F02/D01/context availability + outdated legacy U14 expectation without overwriting other authors",
     "223 run only sole surgical real/product CI on composed candidate",
@@ -114,5 +114,16 @@
     "211 compose when all producer-dependent gates verified"
   ],
   "minimum_non_secret_input": "211 must supply its exact current branch HEAD/source blobs before consuming postimages; 223 needs existing approved F04 host-mounted manifest with preauthenticated requester/denied contexts and installed browser-download support. Do NOT send cookies, token, bank key or credentials.",
-  "next_action": "211 consume inert-211/delta-211.json under current preimage CAS then send request223.json to sole dispatcher and recheck207.json to independent reviewer."
+  "next_action": "211 consume inert-211/delta-211.json under current preimage CAS then send request223.json to sole dispatcher and recheck207.json to independent reviewer.",
+  "latest_source_code_commit": "1702a6139ab8073b2dbad6722ddbc31798bc585d",
+  "additional_commits": [
+    {
+      "sha": "1702a6139ab8073b2dbad6722ddbc31798bc585d",
+      "source": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+        "packages/client/src/sucafina/procurement.ts"
+      ],
+      "purpose": "native response-download IPC and per-chunk owner/cancellation; source result preserves producer bytes"
+    }
+  ]
 }

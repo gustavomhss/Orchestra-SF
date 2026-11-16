@@ -4,7 +4,7 @@
   "requested_to": "223",
   "do_not_self_run": true,
   "source_branch": "sf-supplier-csv",
-  "source_head": "51be81026bb542906b86c1cb38c7f57bd44fed22",
+  "source_head": "1702a6139ab8073b2dbad6722ddbc31798bc585d",
   "product_base": "c5703ca53399a4ead279cdf4df3c1261eef1dd8e",
   "precondition": "Only after 211 has integrated owned code and exact F02/D01 postimages, with operation readiness bound to a real producer; preserve PR106/CI proofs214",
   "scope": [
@@ -76,7 +76,8 @@
         "same bytes/mime/filename as original producer",
         "no private header/cookie in IPC",
         "bounded chunks",
-        "abort on binding invalidation, no save on revoked/denied"
+        "abort on binding invalidation, no save on revoked/denied",
+        "uses existing Platform.downloadResponse native chooser, 64 KiB bounded writes, temp file and abort-on-owner, not Blob-only desktop navigation"
       ]
     },
     {
