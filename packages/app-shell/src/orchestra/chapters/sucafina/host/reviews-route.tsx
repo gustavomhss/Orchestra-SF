@@ -1,0 +1,40 @@
+import { Option, Schema } from "effect"
+import { Match, Switch, type JSX } from "solid-js"
+import { SfReviews } from "@orchestra/schema/sucafina/reviews"
+import type { SfContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfSurfaceProps } from "../context/contracts"
+import type { SfNativeRouteCandidate } from "../route-registry"
+import { SfAgendaView } from "../reviews/agenda"
+import { SfPreservedReviewView } from "../reviews/preserved"
+import { SfReviewCompareView } from "../reviews/compare"
+import { SfReportsView } from "../reviews/reports"
+
+const kinds: Readonly<Record<string, readonly string[]>> = { UI47: ["entry"], UI48: ["list", "entry", "present"], UI49: ["entry"], UI50: ["list", "entry"] }
+export function isReviewsSurface(id: string): boolean { return Object.hasOwn(kinds, id) }
+export function parseReviewsRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
+  if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
+  const keys = [...params.keys()]
+  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", ...(candidate.surfaceId === "UI47" ? ["year"] : []), ...(candidate.surfaceId === "UI49" ? ["previousReview", "currentReview"] : [])].includes(key))) return
+  const selected = ["server", "project", "installation"].map((key) => params.get(key))
+  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  const year = params.get("year"), previous = params.get("previousReview"), current = params.get("currentReview")
+  if (year !== null && (!/^\d{4}$/.test(year) || Number(year) === 0)) return
+  if ([previous, current].some((ref) => ref !== null && (!ref.trim() || ref.length > 2048)) || previous !== null && previous === current) return
+  if (year !== null && Option.isNone(Schema.decodeUnknownOption(SfReviews.operations["projection.review"].input, { onExcessProperty: "error" })({ start: `${year}-01-01`, end: `${year}-12-31` }))) return
+  if ([previous, current].some((ref) => ref !== null && Option.isNone(Schema.decodeUnknownOption(SfReviews.operations["dashboard.dashboard-review"].input, { onExcessProperty: "error" })({ id: ref })))) return
+  return { ...(year === null ? {} : { year: Number(year) }), ...(previous === null ? {} : { previousReview: previous as SfRef }), ...(current === null ? {} : { currentReview: current as SfRef }) }
+}
+export function reviewsRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+  if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
+  if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false
+  const id = candidate.surfaceId === "UI47" ? SfReviews.operations["projection.review"].operationId : SfReviews.operations["dashboard.dashboard-review"].operationId
+  return context.availability.some((resource) => resource.family === "reviews" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))
+}
+export function SfReviewPages(props: Readonly<{ route: SfResolvedRoute }>): JSX.Element {
+  return <Switch>
+    <Match when={props.route.surfaceId === "UI47"}><SfAgendaView surfaceId="UI47" route={props.route as SfSurfaceProps<"UI47">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI48"}><SfPreservedReviewView surfaceId="UI48" route={props.route as SfSurfaceProps<"UI48">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI49"}><SfReviewCompareView surfaceId="UI49" route={props.route as SfSurfaceProps<"UI49">["route"]} /></Match>
+    <Match when={props.route.surfaceId === "UI50"}><SfReportsView surfaceId="UI50" route={props.route as SfSurfaceProps<"UI50">["route"]} /></Match>
+  </Switch>
+}
