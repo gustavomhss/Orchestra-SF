@@ -6,6 +6,7 @@ import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-regist
 import { observeSfDomainHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
 import { createSfDomainProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
+import { createSfOperationsProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
 import { createSfProcurementProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
 import { contributions } from "../../index.ts"
 import { openLocalStore } from "../../runtime/local-store.ts"
@@ -44,14 +45,15 @@ test("page health uses mounted sources and original actor without private member
       } }
     const deps = { application, runtime: () => undefined, readContext: async () => { throw new Error("recursive context") } }
     const handlers = [...createSfDomainProjectionHandlers(deps as never), ...createSfPeopleProjectionHandlers(deps as never),
-      ...createSfProcurementProjectionHandlers(deps as never)]
+      ...createSfOperationsProjectionHandlers(deps as never), ...createSfProcurementProjectionHandlers(deps as never)]
     const before = await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
     const observed = await observeSfDomainHealth(deps as never, handlers, original, stamp)
     const ids = observed.map((entry) => entry.operationId)
     expect(ids).toContain("domain.page.CAP01")
     expect(ids).toContain("domain.page.CAP08")
     expect(ids).toContain("domain.page.CAP24")
-    expect(ids).not.toContain("domain.page.CAP11")
+    expect(ids).toContain("domain.page.CAP11")
+    expect(ids).toContain("domain.page.CAP12")
     expect(ids).not.toContain("domain.page.CAP25")
     if (Object.hasOwn(SfOperationRegistry, "files.export.members")) expect(ids.some((id) => String(id) === "files.export.members")).toBe(true)
     expect(privateReads).toBe(0)
