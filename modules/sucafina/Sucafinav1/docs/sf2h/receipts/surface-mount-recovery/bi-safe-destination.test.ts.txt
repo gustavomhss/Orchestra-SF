@@ -1,0 +1,25 @@
+import { describe, expect, test } from "bun:test"
+import { safeBiDestination } from "../../src/orchestra/chapters/sucafina/bi/safe-destination"
+
+describe("BI source destination", () => {
+  const binding = { publicOrigin: "https://sf.example", mount: "/tenant" }
+  test("accepts only the authenticated origin and the three exact producer paths", () => {
+    expect(safeBiDestination("?sf=workbench-case&id=x", binding)).toBe("https://sf.example/tenant/dashboard?sf=workbench-case&id=x")
+    expect(safeBiDestination("/tenant/planner?page=Versions", binding)).toBe("https://sf.example/tenant/planner?page=Versions")
+    expect(safeBiDestination("https://sf.example/tenant/procurement?page=Suppliers", binding)).toBe("https://sf.example/tenant/procurement?page=Suppliers")
+  })
+  test("blocks hostile schemes, origins, credentials, fragments, paths and malformed input", () => {
+    for (const value of [
+      "javascript:alert(1)", "data:text/html,x", "//evil.example/tenant/dashboard",
+      "https://sf.example.evil.test/tenant/dashboard", "https://user@sf.example/tenant/dashboard",
+      "https://sf.example/tenant/dashboard#secret", "/tenant/dashboard/extra", "/other/dashboard",
+      "/tenant/../dashboard", "/tenant/%64ashboard", "\\\\evil.example/tenant/dashboard",
+      "https://sf.example/tenant/dashboard\n", "http://[", "",
+    ]) expect(safeBiDestination(value, binding)).toBeUndefined()
+  })
+  test("rejects untrusted malformed bindings", () => {
+    expect(safeBiDestination("/tenant/dashboard", { ...binding, publicOrigin: "https://user@sf.example" })).toBeUndefined()
+    expect(safeBiDestination("/tenant/dashboard", { ...binding, publicOrigin: "javascript:alert(1)" })).toBeUndefined()
+    expect(safeBiDestination("/tenant/dashboard", { ...binding, mount: "/tenant/../other" })).toBeUndefined()
+  })
+})
