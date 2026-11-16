@@ -66,7 +66,7 @@ O workflow atual está **corretamente fail-closed** (`AZURE_APP_ACTIVATION_NOT_C
 4. **A10/owner:** validar environment de produção com **required reviewers**, restrições de branch/tag, Azure OIDC sem segredo estático e artifact imutável; workflow release real, aprovado e sem sentinel inerte **somente após implementação legítima em PR próprio**. Colher autorização humana explícita de produção, reversão e migração de contexts. Não trocar a falha deliberada atual por saída exit 0.
 5. **Owner, por último:** migração de required checks **aditiva antes de subtrativa**, observando enforcement efetivo e teste de PR bloqueado. Aposentar Epic **somente por PR separado e posterior**; se GitHub não permite detectar política, CONTINUAR BLOQUEADO.
 
-Os três vereditos são independentes: CI_HARNESS_VALIDATED, PRODUCT_CI_GREEN e AZURE_RELEASE_QUALIFIED. Sem os três PASS **observados** + autorização do owner = STOP. O estado atual dos três segue PARTIAL / NO / BLOCKED respectivamente.
+Os três vereditos são independentes: CI_HARNESS_VALIDATED, PRODUCT_CI_GREEN e AZURE_RELEASE_QUALIFIED. **Ordem sem dependência circular:** antes do deploy, exigem-se harness/product CI PASS e AZ-01..06 em instalação real/staging equivalente no C, rollback e três pareceres, mais aprovações; o deploy protegido produz a evidência AZ-07. **Só depois** o dono pode executar a mutação de policy de AZ-08 com fallback íntegro. O status agregado AZURE_RELEASE_QUALIFIED só vira PASS **após AZ-01..08 observados**, não é pré-condição de si mesmo. Sem esses passos, GO_LIVE=BLOCKED. Estados agora: PARTIAL / NO / BLOCKED.
 
 ### P1. Comandos exatos do OWNER — inventário de proteção e baseline 403
 
@@ -158,7 +158,12 @@ set -euo pipefail
 export SF_ENV=REPLACE_WITH_PROTECTED_GITHUB_ENVIRONMENT
 test "$SF_ENV" != REPLACE_WITH_PROTECTED_GITHUB_ENVIRONMENT
 gh api "repos/$REPO/environments/$SF_ENV" > "$SF_AUDIT_DIR/environment.before.json"
-jq '{name,protection_rules,prevent_self_review,deployment_branch_policy}' "$SF_AUDIT_DIR/environment.before.json"
+jq '{name,protection_rules,deployment_branch_policy}' "$SF_AUDIT_DIR/environment.before.json"
+jq -e 'any(.protection_rules[]?;
+  .type=="required_reviewers" and .prevent_self_review==true
+  and (.reviewers | type)=="array" and (.reviewers | length)>0)
+  and (.deployment_branch_policy.protected_branches==true
+       or .deployment_branch_policy.custom_branch_policies==true)' "$SF_AUDIT_DIR/environment.before.json"
 gh workflow view sf-release.yml -R "$REPO" --ref "$TAG" --yaml > "$SF_AUDIT_DIR/sf-release-C.yml"
 ! grep -q AZURE_APP_ACTIVATION_NOT_COMPOSED "$SF_AUDIT_DIR/sf-release-C.yml"
 jq -e '.activation.status != "BLOCKED" and .safety.doNotDeployOrClaimGoLive != true' sf/release-target.json
@@ -166,7 +171,7 @@ jq -e '.activation.status != "BLOCKED" and .safety.doNotDeployOrClaimGoLive != t
 
 **Esse bloco DEVE falhar no snapshot atual:** sentinel, release-target e ambiente não observados. Não editar os campos só para passar. **Circularidade de freeze:** se a implementação legítima do release workflow, o release-target ou qualquer input versionado for incorporado depois do primeiro freeze, esse commit anterior NÃO é mais C: integrar por PR revisto, declarar novo C, reexecutar sf-ci 12/12 e todas as provas de staging/Azure/Entra/F04/AM/restore dependentes de C. Só o C final que já contém o workflow completo pode ser promovido. Não promover C antigo usando YAML de branch mais novo. A integração futura em .github/workflows/sf-release.yml (arquivo do A10), aprovada em PR e testada por A7/A8/A9, deve exigir approval nativo do environment **antes** de emitir Azure OIDC, baixar o artefato por ID e verificar SHA256/assinatura, comparar bytes servidos, checkpoint de dados e teste de rollback em staging, smoke transacional + positivos/negativos reais, testemunhas e cleanup. A retirada do sentinel só é permitida **juntamente com implementação operacional completa e revisão**.
 
-Ato do dono, **somente quando AZ-01..07 estiverem PASS em C** e assinatura explícita da promoção existir:
+Ato do dono **somente após CI sobre C PASS + AZ-01..06 comprovados no alvo/staging real equivalente, protected environment validado, backup/restore/rollback ensaiados, artefato imutável, três reviews e assinatura explícita de promoção**. O próprio workflow protegido e seu smoke/rollback geram AZ-07; não exigir AZ-07 PASS antes de executar o ato que o comprova:
 
 ~~~bash
 set -euo pipefail
@@ -184,7 +189,7 @@ jq -e --arg c "$C" '.status=="completed" and .conclusion=="success" and .headSha
 
 ### P4. Migração de required checks — comandos do OWNER, sem downgrade de policy
 
-**Dependências rígidas:** C green do próprio workflow + AZURE_RELEASE_QUALIFIED + B1–B3/M2–M4 + 3 reviews + autorização separada do owner; regra exata e app ID identificados; rollout da nova CI observado no **PR contra cada branch alvo** (não apenas dispatch/tag). O sf-ci.yml atual dispara pull_request para close-final-candidate e go-live-close, **não** para todo branch automaticamente. Se a regra exige contexto em outro target, A6 corrige o trigger por PR próprio; não remover o legado para ocultar ausência. Se o legado não está disparando, a fase aditiva pode **bloquear merges**, nunca liberar remanejando o check antigo. Congelar mutações concorrentes de settings durante esta janela com owner.
+**Dependências rígidas:** C green do próprio workflow + **AZ-01..07 comprovados no mesmo C (AZ-08 ainda NOT_AUTHORIZED; AZURE_RELEASE_QUALIFIED permanece BLOCKED até o ato de policy)** + B1–B3/M2–M4 + 3 reviews + autorização separada do owner; regra exata e app ID identificados; rollout da nova CI observado no **PR contra cada branch alvo** (não apenas dispatch/tag). O sf-ci.yml atual dispara pull_request para close-final-candidate e go-live-close, **não** para todo branch automaticamente. Se a regra exige contexto em outro target, A6 corrige o trigger por PR próprio; não remover o legado para ocultar ausência. Se o legado não está disparando, a fase aditiva pode **bloquear merges**, nunca liberar remanejando o check antigo. Congelar mutações concorrentes de settings durante esta janela com owner.
 
 **4A. Identificar e fixar o GitHub App emissor (read-only):**
 
@@ -284,6 +289,7 @@ test "$(uname -s)" = Linux && test "$(uname -m)" = x86_64
 test -d "$SF_PREVIOUS_RELEASE_DIR" && test -d "$SF_NEW_RELEASE_DIR"
 test "$(readlink -f /opt/orchestra-sf/current)" = "$SF_NEW_RELEASE_DIR"
 test -L /opt/orchestra-sf/current
+test ! -e /opt/orchestra-sf/.current.rollback && test ! -L /opt/orchestra-sf/.current.rollback
 # Owner/A7 já confirmou drain, schema compatibility e snapshot recuperável.
 sudo ln -s "$SF_PREVIOUS_RELEASE_DIR" /opt/orchestra-sf/.current.rollback
 sudo mv -Tf /opt/orchestra-sf/.current.rollback /opt/orchestra-sf/current
