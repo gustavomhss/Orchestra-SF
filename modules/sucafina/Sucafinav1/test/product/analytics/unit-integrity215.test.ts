@@ -160,14 +160,16 @@ test("renderer keeps true FTE/USD scales separate while retaining a conflicting 
     const errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     await page.goto("about:blank")
+    // BI03 has no BI04 FTE/cost alignment gate: a bad chart here specifically
+    // demonstrates the unit/currency defect rather than an unrelated block.
     const negative = {
-      request: { viewId: "BI04" as const, selectionRef: "same-authorized-selection", period: horizon },
+      request: { viewId: "BI03" as const, selectionRef: "same-authorized-selection", period: horizon },
       projection: projection([
         point("hours-in-cost", 8, { unit: "hours", currency: "USD" }),
         point("cost-zero", 0, { currency: "USD", period: feb }),
         point("cost-missing", null, { currency: "USD", period: feb }),
       ]),
-      presentation: presentation("BI04", [
+      presentation: presentation("BI03", [
         { id: "cost", label: "Orçamento de pessoas", unit: "USD", role: "cost", valueIds: ["hours-in-cost", "cost-zero", "cost-missing"] },
       ]),
     }
