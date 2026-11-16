@@ -1,0 +1,190 @@
+{
+  "schema": "sf2h.closure212.handoff.v1",
+  "mission": 212,
+  "epoch": "hypothetical-e1-browser212",
+  "branch": "sf-hypothetical-fix",
+  "pr": {
+    "number": 193,
+    "link": "https://github.com/gustavomhss/Orchestra-SF/pull/193",
+    "draft": true,
+    "base": "sf-closure-bundle",
+    "targetPr": 191
+  },
+  "originalHead": "6260333fbd2d717562ba94de8658bf904ac37e30",
+  "ackedHead": "958b1aa1b8ac0d615c7b7c7bc72dd70973e7d568",
+  "sourceCodeCommit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+  "model": {
+    "effective": "GPT-6",
+    "sessionID": "NOT_EXPOSED",
+    "installedProviderModel": "NOT_OBSERVED",
+    "nativeSession": "NOT_EXPOSED",
+    "lifecycleClaims": "NONE"
+  },
+  "authority": {
+    "s0Fence": "88289588ab8aef53e456950eadaee5aba5ed7df2",
+    "fenceAccepted": true,
+    "writePaths": [
+      "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/**"
+    ],
+    "noOtherBranchWrite": true
+  },
+  "normative": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "scope": {
+      "workPackages": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "contracts": [
+      "C09",
+      "C10",
+      "C15",
+      "C16"
+    ],
+    "proofPackages": [
+      "E11",
+      "E16"
+    ],
+    "tasks": [
+      "WP03.T01",
+      "WP11.T02",
+      "WP11.T03",
+      "WP12.T01",
+      "WP12.T03"
+    ],
+    "source196": "2c0416ca80c2367843be7b39dbc4a7fb677a2185"
+  },
+  "failure": {
+    "id": "CI200-AM01-HYPOTHETICAL-TOTAL",
+    "run": 43775802204,
+    "job": 133001695266,
+    "assertion": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts:111 (original source line)",
+    "observedActual": 240000,
+    "expected": null,
+    "root": "Fixture/setup defect: operationless scenario selected canonical source observation. Assertion was correct for intended preview; Planner correctly returned observed complete total.",
+    "causalTrigger": {
+      "before": {
+        "operations": [],
+        "assumptions": [],
+        "producerRoute": "source-observation",
+        "comparisonStatus": "complete",
+        "total": 240000
+      },
+      "after": {
+        "operations": [
+          {
+            "kind": "replace",
+            "targetRef": "wp12-cost-service:1",
+            "amount": "derived from authorized confirmed source, never hardcoded"
+          }
+        ],
+        "assumptions": [],
+        "producerRoute": "non-committing Planner command preview",
+        "comparisonStatus": "conditioned",
+        "total": null,
+        "conditions": [
+          "scenario-is-hypothetical",
+          "preview-not-applied"
+        ]
+      }
+    }
+  },
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "preBlob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+      "postBlob": "5d483cad26e595b7744794098a9ffe15605e3b8f",
+      "applied": true,
+      "sourceCommit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+      "preBlob": null,
+      "postBlob": "f20fdab67655572f181f78e64b3023f993346d7c",
+      "applied": true,
+      "sourceCommit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "preBlob": "80da902f35f80d9b61175fd90d5c10fa7b3f00aa",
+      "postBlob": "cef673fe075775a8e4000734b4f028e941fa875f",
+      "applied": false,
+      "inert": true,
+      "patchReceipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/patches/211-native-scenarios-review.json",
+      "consumer": 211,
+      "preimageVerifiedAtComposerHead": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4"
+    }
+  ],
+  "cases": [
+    {
+      "variant": "baseline",
+      "knownSubtotal": 240000,
+      "total": null,
+      "coverageState": "complete",
+      "training": "12 confirmed amount=0; not missing",
+      "scenario": "identity-replace-preview"
+    },
+    {
+      "variant": "pending",
+      "knownSubtotal": 210000,
+      "total": null,
+      "coverageState": "pending",
+      "training": "no row, missing-category derived (never zero)",
+      "scenario": "identity-replace-preview"
+    },
+    {
+      "variant": "complete",
+      "knownSubtotal": 250000,
+      "total": null,
+      "coverageState": "complete",
+      "training": "confirmed 40000 plus eleven confirmed zeros",
+      "scenario": "identity-replace-preview"
+    }
+  ],
+  "consumerContracts": {
+    "nativeFinance": "sf_finance / sf-comparar-cenarios consumes exact saved scenario",
+    "nativeReviewer": "sf_reviewer / sf-contestar-decisao must have separate native run",
+    "portfolio": "C09 result refs and C10 conditioned comparison; no applying selection",
+    "inertPatchConsumer": 211,
+    "productCi": 214,
+    "compiler": 190
+  },
+  "validation": {
+    "sourceFailure": "ORIGINAL_FAILED_OBSERVED",
+    "fixTests": "NOT_RUN",
+    "fixTypecheck": "NOT_RUN",
+    "nativeC15C16": "NOT_RUN",
+    "localTests": false,
+    "CIRequestsDispatched": false
+  },
+  "gates": {
+    "GLOBAL_RELEASE": false,
+    "nativeGoal": "PAUSED",
+    "pending": [
+      "211 composed C and inert consumer patch",
+      "214 causal tests on same C and true C15/C16 provider",
+      "190 typecheck/static same C",
+      "independent 207-209 reviews",
+      "G7D/G8 guards",
+      "valid D and remote proofs",
+      "AM01-AM06 and entire candidate acceptance"
+    ]
+  },
+  "nextAction": {
+    "consumer211": "Integrate only 212 code and the complete inert downstream patch under CAS/preblob and update PR191; don't reimport prior 15 paths.",
+    "owner214": "Reconcile and dispatch only requests in CI-REQUEST.json after composed source; collect and bind receipts to actual runs.",
+    "owner190": "Compile/typecheck same accepted C from COMPILER-REQUEST.json"
+  },
+  "docs": {
+    "ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/ACK.json",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/HANDOFF.json",
+    "humanHandoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/HANDOFF.md",
+    "ciRequest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/CI-REQUEST.json",
+    "compilerRequest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/COMPILER-REQUEST.json",
+    "inertPatch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure212/patches/211-native-scenarios-review.json"
+  }
+}

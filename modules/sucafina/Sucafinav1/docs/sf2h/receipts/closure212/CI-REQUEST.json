@@ -1,0 +1,134 @@
+{
+  "schema": "sf2h.closure212.ci-request.v1",
+  "mission": 212,
+  "epoch": "hypothetical-e1-browser212",
+  "status": "REQUEST_ONLY_NOT_DISPATCHED",
+  "author": "sf-hypothetical-fix",
+  "codeCommit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+  "owners": {
+    "consumer": 211,
+    "productCi": 214,
+    "compiler": 190
+  },
+  "preconditions": [
+    "211 compõe helper e regression de ce88b1b6 na sf-closure-bundle/PR191 com verificação de blobs e CAS.",
+    "211 aplica a patch inerte na objective do cenário nativo somente quando o preblob do consumidor atual corresponde; em caso divergente reconcilia o código, não faz overwrite.",
+    "214 confirma HEAD/tree C integrados e reconcilia filas/requests/runs reais antes do único dispatch; sem duplicata nem prova baseada em outra árvore.",
+    "Modelos externos reais, perfis/grants e C15/C16 são pré-requisitos apenas das provas nativas que deles dependem, não da correção determinística."
+  ],
+  "sourceFailure": {
+    "id": "CI200-AM01-HYPOTHETICAL-TOTAL",
+    "runId": 43775802204,
+    "jobId": 133001695266,
+    "location": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts:111",
+    "actualAtFail": 240000,
+    "expected": null,
+    "cause": "Empty operations + empty assumptions selects canonical complete source observation; helper misclassified it as hypothetical.",
+    "status": "ORIGINAL_FAILURE_OBSERVED_ONLY"
+  },
+  "selectors": [
+    {
+      "id": "212-AM01-causal-regression",
+      "owner": 214,
+      "kind": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts"
+      ],
+      "sourceSelector": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+      "needsInstalledModel": false,
+      "expectedChecks": [
+        "Pure observations baseline 240000, pending null, covered alternative 250000",
+        "Saved previews all total=null with scenario-is-hypothetical and preview-not-applied",
+        "Missing training absent not zero; confirmed baseline training zero; confirmed training=40000",
+        "Case/scenario C09 persisted readback after restart, Planner source digest unchanged"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "212-AM01-native-review",
+      "owner": 214,
+      "kind": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+      ],
+      "sourceSelector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "requiresInertPatch": "cef673fe075775a8e4000734b4f028e941fa875f",
+      "needsInstalledModel": true,
+      "expectedChecks": [
+        "Real sf_finance sf-comparar-cenarios and sf_reviewer sf-contestar-decisao distinct session/run",
+        "ScenarioComparison knownDifference pending -30000 / complete +10000; completeDifference null",
+        "Native requests use source-derived saved scenarios, C15/C16 tool receipts verified, critique missing-category and readback"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "212-AM01-existing-domain",
+      "owner": 214,
+      "kind": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+      ],
+      "sourceSelector": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "needsInstalledModel": false,
+      "expectedChecks": [
+        "C10 cost coverage 240000 vs 210000 pending, 250000 covered",
+        "Training missing/confirmed zero and 40000, conditions preserved"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "212-AM01-source196-preservation",
+      "owner": 214,
+      "kind": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts"
+      ],
+      "sourceSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts"
+      ],
+      "producer196": "2c0416ca80c2367843be7b39dbc4a7fb677a2185",
+      "needsInstalledModel": true,
+      "precondition": "Confirm 196 source was actually composed and native host installed; no mock counts as positive.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "requirements": {
+    "singleDispatcher": true,
+    "doNotDispatchBy212": true,
+    "noLocalExecution": true,
+    "exactCandidateTreeRequired": true,
+    "runOnlyOnCausallyChangedCandidate": true,
+    "noTestDuplication": true,
+    "notClaimPassingWithoutLogs": true,
+    "doNotModifyCiRunRequestOutside214Lease": true
+  },
+  "evidenceMarkers": [
+    "SF_AM01_HYPOTHETICAL_CLOSURE212:",
+    "SF_WP12_NATIVE_SCENARIO_CASE_REOPEN:",
+    "SF_WP12_NATIVE_MISSION_RUN:",
+    "SF_AM01_PROFILE_RECALL_CONSUMED:"
+  ],
+  "validation": {
+    "postFix": "NOT_RUN",
+    "sourceRun": "ORIGINAL_FAILED",
+    "providerNative": "NOT_RUN",
+    "build": "NOT_RUN",
+    "typecheck": "NOT_RUN"
+  },
+  "nativeGoal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}

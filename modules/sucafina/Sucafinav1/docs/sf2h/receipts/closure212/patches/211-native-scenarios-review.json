@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.closure212.inert-source-patch.v1",
+  "status": "INERT_NOT_APPLIED",
+  "mission": 212,
+  "consumer": {
+    "mission": 211,
+    "branch": "sf-closure-bundle",
+    "pr": 191,
+    "authority": "S0-C-closure-composer"
+  },
+  "target": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+  "targetObservedHead": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+  "preBlob": "80da902f35f80d9b61175fd90d5c10fa7b3f00aa",
+  "postBlob": "cef673fe075775a8e4000734b4f028e941fa875f",
+  "preimageContract": {
+    "uniqueOccurrence": 1,
+    "exactSubstring": "Use sf_case_read, sf_scenario_simulate para as bases ${decision.baseline.scenario.baseRef} e ${alternative.scenario.baseRef} com operations e assumptions vazios, e sf_scenario_compare"
+  },
+  "replacement": {
+    "method": "unique-literal-splice",
+    "find": "Use sf_case_read, sf_scenario_simulate para as bases ${decision.baseline.scenario.baseRef} e ${alternative.scenario.baseRef} com operations e assumptions vazios, e sf_scenario_compare",
+    "replaceWith": "Use sf_case_read, sf_scenario_simulate com os pedidos exatos persistidos ${JSON.stringify(decision.baseline.scenario)} e ${JSON.stringify(alternative.scenario)} (preserve as operações de preview sem aplicação; não substitua por arrays vazios), e sf_scenario_compare"
+  },
+  "fullPostFile": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "gitBlobSha": "cef673fe075775a8e4000734b4f028e941fa875f",
+    "format": "text/plain; charset=utf-8",
+    "complete": true
+  },
+  "applyInstructions": [
+    "211 lê HEAD vivo da sua própria branch, verifica o blob exato do target contra preBlob; não usa HEAD de 212 como base.",
+    "211 aplica a alteração completa fornecida pelo Git blob postBlob somente se a preimage e a substring única coincidirem; em divergência, reconcilia manualmente, sem overwrite.",
+    "211 comita somente no seu lease com expected-head CAS, force:false. 212 não aplica esta alteração na branch de 211.",
+    "214 não executa native-execution-scenarios-review antes de esta aresta contratada ser composta."
+  ],
+  "rationale": {
+    "originalFailure": "C10 preview submetido com arrays vazios no helper; agora seu scenario real contém a substituição identity source-derived.",
+    "consumerMismatch": "O objetivo do perfil sf_finance e do reviewer ordenava operar arrays vazios, o que reproduz a observação do produtor e não o preview persistido.",
+    "effect": "Tool call do modelo deve usar requests C10 persistidos idênticos ao case; não altera schemas, skills, autorizações, output ou total."
+  },
+  "verify": {
+    "preimageMatchesComposer": true,
+    "atHead": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+    "postBlobIsCreatedFromCompleteSource": true,
+    "executed": false,
+    "validation": "NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}

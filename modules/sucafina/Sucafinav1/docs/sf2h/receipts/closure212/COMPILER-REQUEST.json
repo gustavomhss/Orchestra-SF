@@ -1,0 +1,29 @@
+{
+  "schema": "sf2h.closure212.compiler-request.v1",
+  "status": "REQUEST_ONLY_NOT_DISPATCHED",
+  "owner": 190,
+  "branch": "sf-compiler-checks",
+  "mission": 212,
+  "codeCommit": "ce88b1b6083b9e37c9e9310a8e20b30d0bfdc8b4",
+  "after": "211 accepts the same candidate C containing codeCommit and inert downstream patch; evaluate only that exact tree.",
+  "packageJson": {
+    "path": "modules/sucafina/Sucafinav1/package.json",
+    "preBlob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+    "script": "typecheck",
+    "command": "bun run --cwd modules/sucafina/Sucafinav1 typecheck"
+  },
+  "paths": [
+    "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+  ],
+  "expectedChecks": [
+    "tsgo --noEmit on same C candidate, no schema weakening",
+    "ScenarioOperation and typed SourceRef from Planner projection",
+    "C09 result store scoped readback and PortResult narrowing",
+    "Source C10 complete/pending discriminants and absent vs numeric zero"
+  ],
+  "coordination": "190 is sole compiler/static owner; 212 does not run checks or issue workflows.",
+  "statusSummary": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}
