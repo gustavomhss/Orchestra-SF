@@ -590,17 +590,21 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     if (!desktopBridge || !selected || disposed || provider.status !== "unauthenticated") return
     const parsed = explicitSelection(location.search)
     const routePath = matchSfNativeRoutePath(location.pathname)
+    const planner = routePath && (routePath.surfaceId === "CAP17" || routePath.surfaceId === "CAP23")
+      ? parsePlannerRouteQuery(new URLSearchParams(location.search), routePath) : undefined
+    const nonPlanner = routePath && routePath.kind === "entry" &&
+      ["UI29", "UI33", "UI34"].includes(routePath.surfaceId) &&
+      [...new URLSearchParams(location.search).keys()].every((key) => ["server", "project", "installation"].includes(key))
     if (parsed.kind === "invalid" || parsed.kind === "selected" &&
         !sameSelection(parsed.selection, selected) ||
-        !routePath || routePath.kind !== "entry" ||
-        !["UI29", "UI33", "UI34"].includes(routePath.surfaceId)) {
+        !routePath || !(planner || nonPlanner)) {
       setView({ status: "invalid-link", route: undefined })
       return
     }
     const returnRoute = {
       surfaceId: routePath.surfaceId, kind: routePath.kind, params: routePath.parameters,
       ownerSelection: selected, pathname: location.pathname,
-      href: (location.pathname + location.search) as SfHref, query: {},
+      href: (location.pathname + location.search) as SfHref, query: planner ?? {},
     } as SfResolvedRoute
     try {
       const auth = await desktopBridge.login(returnRoute)
