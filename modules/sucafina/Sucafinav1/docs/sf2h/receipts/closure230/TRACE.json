@@ -1,0 +1,74 @@
+{
+  "schema": "sf2h.closure230.c12-trace.v1",
+  "source_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "proposed_blobs": [
+    "3a13c3401d7629904155664b3b5e08665c2713cc",
+    "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+    "7af4f596f6eabce32d2c3a21947300278c345cd9"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "name": "scoped-source-and-choice",
+      "path": "procurement source resolver -> C08 case -> C09 choice",
+      "invariant": "authentic issued procurement source, immutable recorded choice, conditioned coverage remains pending"
+    },
+    {
+      "n": 2,
+      "name": "human prepare",
+      "path": "decision-host.ts prepareDomainCommands -> c12.ts -> scenario-preparation.ts",
+      "invariant": "ui decisions.prepare-changes, exact operation in choice, current source and principal, plan save-estimate only; no domain mutation"
+    },
+    {
+      "n": 3,
+      "name": "original source capture",
+      "path": "decision-host.ts captureSource -> state.transaction(preferences,domainSurface=procurement)",
+      "invariant": "physical incarnation/current scope and real C02 projection persisted as evidence original, no mock receipt; pre patch skipped because preparation rejected"
+    },
+    {
+      "n": 4,
+      "name": "persist prepared change",
+      "path": "decisions/mutations.ts -> prepared.ts",
+      "invariant": "C12 PreparedCommand version/idempotencyKey/commandDigest and target evidence; cloned domain preview, no receipt"
+    },
+    {
+      "n": 5,
+      "name": "before/after review",
+      "path": "prepared-review.ts -> decision-host.ts reviewChange",
+      "invariant": "current source reissued; exact before/after; digest bounded to 5min and same principal/source, no grant"
+    },
+    {
+      "n": 6,
+      "name": "human apply + atomic domain receipt",
+      "path": "decision-host.ts executeApplication -> decisions/apply.ts -> decisions/prepared-apply.ts -> runtime/procurement.ts",
+      "invariant": "distinct UI decisions.apply admission, genuine Requests.save and original CommandReceipt in one C08 transaction, application intent reserved; no global transaction"
+    },
+    {
+      "n": 7,
+      "name": "reconcile case",
+      "path": "decisions/apply.ts + decisions/receipts.ts",
+      "invariant": "receipt principal/target/key/digest classified after durable domain commit; case receipt can reconcile later without replaying effect"
+    },
+    {
+      "n": 8,
+      "name": "Atlas consume",
+      "path": "context.emitFromLedger(C09 event) -> host-binding/atlas-memory.ts readOriginalCapture -> decision-memory/atlas-projection.ts",
+      "invariant": "real scanner+outbox settled receipt, partition.originals and captureDigests linked to same case/owner; memory read authorized and source continuity rechecked"
+    }
+  ],
+  "behaviors": {
+    "identical_retry": "C08 same key+digest reads original durable receipt; no second Requests.save; case-only reconciliation permitted",
+    "different_content": "receiptProof transaction key or commandDigest collision -> conflict; no new domain effect",
+    "missing_receipt": "recover returns unavailable/original-receipt-unavailable, never guesses or executes new command",
+    "ambiguous_intent": "an existing application intent with absent receipt blocks redispatch; requires reconciliation",
+    "revoked": "fresh UI principal/grant/source/roleMap revalidation fails closed before output, even on retry or historical read",
+    "stale": "source scope/version/physical incarnation/choice and frozen prepared CAS drift fails; no auto-reprepare",
+    "pending_approval": "a draft estimate remains unapproved, conditioned comparison remains conditioned, submit_pr and holder approval are separate workflows",
+    "memory": "fixture observation alone is insufficient; original capture+event+scanner+outbox must exist in production"
+  },
+  "limitations": [
+    "No execution or CI; all behaviors traced as source invariants, not observed new C pass",
+    "No installed corporate provider/grant or Atlas scanner success claimed from synthetic local fixture",
+    "Source review does not satisfy independent final three release approvals"
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "schema": "sf2h.closure230.inert-patches.v1",
+  "mission": 230,
+  "decision": "FIX_FIRST",
+  "policy_change": false,
+  "product_writes": false,
+  "atomic_groups": {
+    "C12_producer": [
+      "SRC-01",
+      "SRC-02",
+      "SRC-03"
+    ],
+    "C12_regression_corrections": [
+      "REG-01",
+      "REG-02",
+      "REG-03"
+    ],
+    "adjacent_220_fixture": [
+      "FIX-01",
+      "FIX-02"
+    ],
+    "adjacent_B9_schema": [
+      "SCHEMA-01",
+      "SCHEMA-02"
+    ]
+  },
+  "entries": [
+    {
+      "id": "SRC-01",
+      "source_path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "expected_pre_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+      "proposed_post_blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts.inert.txt",
+      "kind": "C12_PRODUCTION",
+      "provenance": "repair220/INERT-PATCH-211-v2.json; closure228 candidate V2",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "SRC-02",
+      "source_path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "expected_pre_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+      "proposed_post_blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/product/procurement/prepared.ts.inert.txt",
+      "kind": "C12_PRODUCTION",
+      "provenance": "repair220/INERT-PATCH-211-v2.json; closure228 candidate V2",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "SRC-03",
+      "source_path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "expected_pre_blob": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+      "proposed_post_blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts.inert.txt",
+      "kind": "C12_PRODUCTION",
+      "provenance": "repair220/INERT-PATCH-211-v2.json; closure228 candidate V2",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "FIX-01",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "expected_pre_blob": "33650407123163ea881eca9d4940fde364b27c54",
+      "proposed_post_blob": "d96709db609b399ef801f487e443a381863d6298",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts.inert.txt",
+      "kind": "FIXTURE_DIAGNOSTIC",
+      "provenance": "repair220/HANDOFF-211-214.json; closure228 candidate V2",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "FIX-02",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+      "expected_pre_blob": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+      "proposed_post_blob": "f9c99a8a886211d1aba60371a2d3b0aa287293b5",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts.inert.txt",
+      "kind": "FIXTURE_DIAGNOSTIC",
+      "provenance": "repair220/HANDOFF-211-214.json; closure228 candidate V2",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "SCHEMA-01",
+      "source_path": "packages/schema/src/sucafina/decisions.ts",
+      "expected_pre_blob": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+      "proposed_post_blob": "52fc1a3fc52b39c0d18f0064bcc17417421ce3c7",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/packages/schema/src/sucafina/decisions.ts.inert.txt",
+      "kind": "RELATED_SCHEMA_B9",
+      "provenance": "repair220/HANDOFF-211-214.json; closure228 candidate V2",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "SCHEMA-02",
+      "source_path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "expected_pre_blob": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+      "proposed_post_blob": "dbdbde9d95ffcdf59c50ee64b880e631b37e433a",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts.inert.txt",
+      "kind": "RELATED_SCHEMA_B9",
+      "provenance": "repair220/HANDOFF-211-214.json; closure228 candidate V2",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "REG-01",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+      "expected_pre_blob": "6e795a84dbab450a280f4c2043e166743ca5df78",
+      "proposed_post_blob": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts.inert.txt",
+      "kind": "MANDATORY_C12_TEST_CORRECTION",
+      "provenance": "mission230 independently authored from canonical original test",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "REG-02",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+      "expected_pre_blob": "3c37f7868a62182658adf2b22d88e66869de8d73",
+      "proposed_post_blob": "191021892019874e9ec8dec594b019f5addf7f3f",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts.inert.txt",
+      "kind": "MANDATORY_C12_TEST_CORRECTION",
+      "provenance": "mission230 independently authored from canonical original test",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    },
+    {
+      "id": "REG-03",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "expected_pre_blob": "d71a7b8003071bcbc0f144f682cc34920cd00d0a",
+      "proposed_post_blob": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+      "inert_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts.inert.txt",
+      "kind": "MANDATORY_C12_TEST_CORRECTION",
+      "provenance": "mission230 independently authored from canonical original test",
+      "source_review": "FIX_FIRST_UNCHANGED_FINANCIAL_POLICY",
+      "applied_to_product": false
+    }
+  ],
+  "apply_instructions": [
+    "All complete postimages are Git blobs carried byte-for-byte under closure230/payloads, NOT commits to source paths",
+    "211 must re-read current target content SHAs; require exact expected_pre_blob or reconcile the owner-side delta without reset/force",
+    "Integrate three C12 producer files and three corrected test files as one independently reviewed candidate; include 220 diagnostics and schema only when relevant/authorized",
+    "Do not conflate C12 management choice and save-estimate with submit_pr, approve, finance policy or financial release",
+    "No write to sf-closure-bundle, sf2-control or product paths by 230; no inferred authority transfer to 228",
+    "After 211-authorized composition, request 232 surgical CI; this manifest itself is not a CI run"
+  ],
+  "provenance": {
+    "reviewed_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "repair220_post_manifest": "f200c095fea543ad6c437974cc99f9afbb56ed15",
+    "repair220_handoff": "9cf2877266055ae57ad337e06564749d7e260205",
+    "candidate228_commit": "33474b2158a4703f256191f61f1a16ac85c26004",
+    "pinned_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "checks": {
+    "github_head_and_fence": "READ_VERIFIED",
+    "original_plan_and_S2_R2": "READ",
+    "all_three_product_blobs": "READ_FULL_PRE_AND_POST",
+    "fixture_blobs": "READ_PRE_AND_POST",
+    "original_source_preimages": "MATCHED_BASE_998f0afd",
+    "review_path_trace": "READ_STATIC",
+    "new_regression_code_execution": "NOT_RUN",
+    "unit_tests": "NOT_RUN",
+    "build": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "global_release": "NOT_AUTHORIZED"
+  }
+}
