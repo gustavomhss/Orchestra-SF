@@ -1,5 +1,8 @@
 /* 238: deterministic negative contract tests. NOT_RUN until inert postimages composed. */
 import { test, expect } from "bun:test"
+import { createSfTransport } from "@orchestra/client/sucafina/transport"
+import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
+import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { validateSfOwnedLocationProbe } from "../../../../../../apps/desktop/src/main/sucafina/connections"
 import { createSfDesktopOriginBridge238 } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238"
 import { ServerConnection } from "../../../../../../packages/app-shell/src/context/server"
@@ -95,6 +98,43 @@ test("unapproved main-owned lookup has no browser fallback", async () => {
   const f = fake()
   expect(await f.bridge.listByLocation("/real/project", new AbortController().signal)).toBeUndefined()
   expect(await f.bridge.listByLocation("/other/project", new AbortController().signal)).toBeUndefined()
+  expect(f.invokes).toBe(0)
+  f.bridge.dispose()
+})
+
+test("browser denies a foreign publicOrigin before any fetch; no cross-origin CORS workaround", async () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, "window")
+  Object.defineProperty(globalThis, "window", {
+    configurable: true, value: { location: { origin: "https://different-shell.example" } },
+  })
+  try {
+    let fetches = 0
+    const transport = createSfTransport({
+      binding: descriptor, generation: 1, currentGeneration: () => 1,
+      operations: SfNativeOperationBindings,
+      fetch: async () => { fetches++; throw new Error("forbidden renderer fetch") },
+    })
+    const result = await createSfContextClient(transport)["ctx.context"]({
+      installationId: descriptor.installationId, projectId: descriptor.projectId,
+      hostId: descriptor.hostId,
+    }, { signal: new AbortController().signal })
+    expect(result.kind).toBe("transport-error")
+    expect(fetches).toBe(0)
+  } finally {
+    if (original) Object.defineProperty(globalThis, "window", original)
+    else Reflect.deleteProperty(globalThis, "window")
+  }
+})
+
+test("stale provider generation refuses native invoke even with an approved binding", async () => {
+  const f = fake()
+  expect(await f.bridge.listByIds(selected, new AbortController().signal)).toBeDefined()
+  const stale = f.bridge.createTransport(descriptor, 9, () => 10)
+  const result = await createSfContextClient(stale)["ctx.context"]({
+    installationId: descriptor.installationId, projectId: descriptor.projectId,
+    hostId: descriptor.hostId,
+  }, { signal: new AbortController().signal })
+  expect(result.kind).toBe("transport-error")
   expect(f.invokes).toBe(0)
   f.bridge.dispose()
 })
