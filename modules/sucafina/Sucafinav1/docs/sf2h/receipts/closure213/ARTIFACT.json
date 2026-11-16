@@ -1,0 +1,139 @@
+{
+  "schema": "sf2h.closure213.artifact.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 213,
+  "epoch": "desktop-bootstrap-e1-browser213",
+  "actor": "desktop-bootstrap",
+  "branch": "sf-desktop-bootstrap",
+  "prNumber": 194,
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/194",
+  "target": "sf-closure-bundle",
+  "sourcePreparedHead": "5f604d6412823c004394a319285de9da581a835e",
+  "sourcePreparedTree": "51f32c95dcb7790c9fac1d74a0a1fac0b075c488",
+  "s0FenceBlob": "70c1d9dea0e825c1e0ccba4f70102f552ec0dfcd",
+  "ackCommit": "03e3936a1627e4834370951aca0de4c45c60e7b4",
+  "codeHeadBeforeReceipt": "9e25cc70495d38aa62b2376be89cebe02e86761d",
+  "commits": {
+    "wiring": "1ff68a448ce75ada77e0a265601467e93581c365",
+    "tests": "f5b85fb05c4768cd7ceaa8e6575a39ef32ed7d39",
+    "epochFence": "ee3dd6078bd0cca45774304b39ae9b23d02b0ba2",
+    "inert": "9372c76e9e7c5ad31d8881834818a2466f2a9a6e",
+    "sidecarKey": "9e25cc70495d38aa62b2376be89cebe02e86761d"
+  },
+  "effectiveModel": "GPT-6",
+  "sessionID": null,
+  "sessionIDExposed": false,
+  "lifecycleAssertion": "NONE",
+  "canonical": {
+    "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "uxCommit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "workPackagesRetained": 15,
+    "tasksRetained": 74,
+    "contractsRetained": 17,
+    "criteriaRetained": 1610
+  },
+  "files": [
+    {
+      "path": "apps/desktop/src/main/index.ts",
+      "pre": "51245e8469fa60decda9ed84efb3796fdf3fd510",
+      "post": "b1af6ab8f867b3d2727270f7ba87b9f6f1f6ffcc",
+      "behavior": "main-owned sidecar key/origin credentials, Dock callback, after-health registry, server-stop revoke"
+    },
+    {
+      "path": "apps/desktop/src/main/ipc.ts",
+      "pre": "babb1249587caf085909ed6316bbd0b9f968ce3c",
+      "post": "9d1c3715331f5793a94fbedadd8f52d4a4f94057",
+      "behavior": "construct original D01 broker with Electron real app/windows/ipc/net/session/dialog, 7 IPC handlers"
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/bootstrap.ts",
+      "pre": null,
+      "post": "432d29e6ee2a48f82e4ad70523268ef1fa3175f5",
+      "behavior": "public SfNativeOperationBindings and origin; bounded authenticated Dock enrollment request-reply correlation"
+    },
+    {
+      "path": "apps/desktop/test/sucafina-bootstrap213/enrollment-bridge.test.ts",
+      "pre": null,
+      "post": "b33bbab29041342727df5d9f9e9b33f45d77870c",
+      "behavior": "behavioral negative/positive protocol unit tests, NOT_RUN not installed evidence"
+    },
+    {
+      "path": "apps/desktop/test/sucafina-bootstrap213/d01-packaged-driver.ts",
+      "pre": null,
+      "post": "3c3d97c8e1d571ead0f663ef92400b4700d3e4b0",
+      "behavior": "real packaged Electron handler and preload gate for 199 existing D01 fixture, NOT_RUN"
+    }
+  ],
+  "preexistingOriginalBroker": {
+    "path": "apps/desktop/src/main/sucafina/index.ts",
+    "blob": "a3f09c2a9006c016d51c660043d1189bb2df4c29",
+    "changed": false
+  },
+  "producers": {
+    "publicOperationBindings": {
+      "path": "packages/client/src/sucafina/bindings.ts",
+      "blob": "e0d5d853b0f86537bc0f1a6f3cb28d85d561f0a5",
+      "export": "SfNativeOperationBindings"
+    },
+    "cliEnrollment": {
+      "path": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+      "blob": "8ea7c0c87dc02165ca29be44bc947a6813f96832",
+      "export": "attachSfNativeEnrollment",
+      "contract": "Actual CLI startup must attach with an authenticated AppDockSocket.fromEnv transport, real launchId and loaded SfInstallationDescriptor plus genuine enrollNativeLocal callback; no ready = unavailable; no callback fabricated."
+    },
+    "installedHost199": {
+      "branch": "sf-installed-host",
+      "observedHead": "9b512eeffa9c437967b03d5af6dab11a1718f48b",
+      "terminalReceipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "terminalReceiptBlob": "e624bb5765d322e386d4accd8dac8b15b908ced8",
+      "realD01SpecBlob": "2925ff518a78c2034f855561589f504b9ca7e48b",
+      "packagedHostBlob": "1a6f2081664db3da72554df46fe347ae7a616352"
+    }
+  },
+  "inertPatch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure213/INERT-211-CROSS-LEASE.patch",
+    "blob": "809c5b1eef50447001c5cc7b3e8c7ff92818230d",
+    "indexPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure213/INERT-211-CROSS-LEASE.json",
+    "indexBlob": "2802e04fdbd0aacd3b3eeffb22daed8fe6135224",
+    "status": "NOT_APPLIED",
+    "foreignPathCount": 4
+  },
+  "acceptance": {
+    "D01-AC01": "CODE_WIRED_PENDING_HOSTED_REAL_PACKAGED_ELECTRON_AND_MICROSOFT",
+    "D01-AC02": "OWNER_ORIGIN_OPERATION_FENCE_REUSED_AND_BRIDGE_TESTS_COMMITTED_NOT_RUN",
+    "D01-AC03": "LOGOUT_PARTITION_CLEANUP_ORIGINAL_BROKER_PLUS_MAIN_SERVER_INVALIDATION_NOT_RUN",
+    "D01-77-LOGIN": "MICROSOFT_RETURN_ORIGINAL_BROKER_UNMODIFIED_HOSTED_PROOF_NOT_RUN",
+    "SF213-BRIDGE": "PRODUCER_LAUNCH_CORRELATION_BOUNDED_FAIL_CLOSED_TESTS_NOT_RUN"
+  },
+  "validation": {
+    "sourceShaAndFence": "REMOTE_READ_BEFORE_WRITES",
+    "codeAndBlobs": "REMOTE_COMMITTED_CAS_FORCE_FALSE",
+    "unitTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_DISPATCHED",
+    "installedHost": "NOT_RUN",
+    "Microsoft": "NOT_RUN",
+    "packagedElectron": "NOT_RUN",
+    "Azure": "NOT_TOUCHED"
+  },
+  "externalBlocked": {
+    "minimalD01Input": "Accepted candidate C containing 213 + 199 + actual public runtime package/lock/bundle patch; SHA-attested original packaged Electron executable and hosted run provenance, real Microsoft identities/access and installed Sucafina manifest; required private SF_NATIVE_D01_PACKAGED_ATTESTATION; no fake success.",
+    "minimalLocalEnrollmentInput": "Actual CLI attachSfNativeEnrollment producer initialized for this desktop-owned child via AppDockSocket.fromEnv, real UUID launchId, genuine selected local-operator SfInstallationDescriptor and genuine enrollNativeLocal callback; otherwise safe unavailable without token."
+  },
+  "consumers": [
+    211,
+    214,
+    190,
+    199,
+    207,
+    208,
+    209,
+    210
+  ],
+  "artifactReady": "CODE_AND_INERT_SHARED_PATCHES_COMMITTED_PENDING_INTEGRATION_AND_EXTERNAL_QUALIFICATION",
+  "globalRelease": false,
+  "nativeGoal": "PAUSED",
+  "noDeveloperMerge": true
+}
