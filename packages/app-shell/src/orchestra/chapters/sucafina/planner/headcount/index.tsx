@@ -102,18 +102,19 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
 
   const positionDraft = (p: Position): SfPublicDraftController<PositionForm> | undefined => {
     const ready = owner.ready()
-    if (!ready || !state.page || !currentVersion()) return undefined
-    const lookup = JSON.stringify([currentYear(), currentVersion(), p.id])
+    const year = currentYear()
+    if (!ready || !state.page || !currentVersion() || year === undefined) return undefined
+    const lookup = JSON.stringify([year, currentVersion(), p.id])
     const existing = drafts.get(lookup)
     if (existing) return existing
     const original = toPositionForm(p)
     const handle = ready.drafts.acquire<PositionForm>({
       surfaceId: "CAP20", identity: { kind: "record", recordRef: p.id as SfRef },
-      editScopeKey: JSON.stringify([currentYear(), currentVersion(), "positions"]) as SfEditScopeKey,
+      editScopeKey: JSON.stringify([year, currentVersion(), "positions"]) as SfEditScopeKey,
       baseVersion: p.revision, base: original, value: original,
       revalidation: {
         operationId: "domain.page.CAP20",
-        input: { year: currentYear(), version: currentVersion() },
+        input: { year, version: currentVersion() },
         fieldPaths: ["positions"],
         actionIds: ["save"],
       },
