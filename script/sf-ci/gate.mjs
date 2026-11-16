@@ -8,6 +8,17 @@ export const REQUIRED = [
   "CI-SF", "CI-CLI", "CI-APP-SRC", "CI-APP-BROWSER", "CI-ATLAS-BUSINESS",
   "CI-UI-OPERATIONS", "CI-UI-DECISIONS", "CI-UI-REPORTS",
 ]
+// Canonical admission roots prevent a manifest edit from silently narrowing product coverage.
+const SUITE_DIRECTORIES = Object.freeze({
+  "CI-SF": "modules/sucafina",
+  "CI-CLI": "apps/cli",
+  "CI-APP-SRC": "packages/app-shell",
+  "CI-APP-BROWSER": "packages/app-shell",
+  "CI-ATLAS-BUSINESS": "modules/atlas/boundary",
+  "CI-UI-OPERATIONS": "packages/app-shell",
+  "CI-UI-DECISIONS": "packages/app-shell",
+  "CI-UI-REPORTS": "packages/app-shell",
+})
 const PROOFS = ["AM01", "AM02", "AM03", "AM04", "AM05", "AM06"]
 const JOBS = ["preflight", "static", "omni", "unit", "ui"]
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex")
@@ -199,6 +210,7 @@ export function validateManifest(manifest) {
   for (const suite of suites) {
     if (!["bun", "playwright"].includes(suite.kind)) fail("unknown runner: " + suite.id)
     if (typeof suite.directory !== "string" || !/^[\w/-]+$/.test(suite.directory)) fail("bad directory")
+    if (suite.directory !== SUITE_DIRECTORIES[suite.id]) fail("suite directory drift: " + suite.id)
     if (suite.kind === "playwright" && !/^e2e\/sucafina\/[\w-]+\.spec\.ts$/.test(suite.specFile)) {
       fail("invalid selected E2E spec: " + suite.id)
     }
