@@ -51,7 +51,16 @@ function sameAuthorizedProjection(projection: SfCaseProjection, context: SfConte
     && projection.context.accessRevision === stamp.accessRevision
 }
 
-export function useSfCase(caseRef: () => string) {
+export function useSfCase(caseRef: () => string): {
+  owner: ReturnType<typeof useSfContext>
+  read: {
+    state: SfUiState
+    projection?: SfCaseProjection
+    refresh: number
+    returnTo?: string
+  }
+  reload: () => void
+} {
   const owner = useSfContext()
   const [read, setRead] = createStore<{
     state: SfUiState
