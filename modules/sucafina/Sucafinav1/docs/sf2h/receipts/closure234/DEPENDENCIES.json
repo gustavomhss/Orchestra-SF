@@ -1,0 +1,155 @@
+{
+  "schema": "sf2h.closure234.dependencies-and-consumers.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 234,
+  "snapshot": {
+    "product211": {
+      "head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+      "tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+      "path": "sf-closure-bundle",
+      "consumed_228_and_230": false,
+      "accepted_C": false
+    },
+    "proposal228": {
+      "commit": "33474b2158a4703f256191f61f1a16ac85c26004",
+      "tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+      "inert": true,
+      "no_owner_handoff_proven": true
+    },
+    "native229": {
+      "commit": "1e17d546ca5a4116693da449f5d2ecfb4c5cb18d",
+      "ack_blob": "47c633468ca38f388880163b9d51c5d210db4626",
+      "fence_blob": "def573b057da14c4dc1b6a909d2e91bf58846305",
+      "terminal_handoff": "NOT_OBSERVED",
+      "Task_Relay_origin": "NOT_PROVEN"
+    },
+    "c12review230": {
+      "commit": "b8d0e46d6fcca835f345bd5e0d5f719d8047c757",
+      "handoff_blob": "fa233a19e8aa52eb3dff77bf0a780872646bef1f",
+      "review_blob": "b8bc929922f0e09f3d37ff6f547ead5a1b3e6302",
+      "inert_patch_manifest_blob": "4dd4ce583ab30bc29f4f60de1b751d6deb484e87",
+      "status": "FIX_FIRST_NOT_APPLIED",
+      "atomic_groups": [
+        "SRC-01",
+        "SRC-02",
+        "SRC-03",
+        "REG-01",
+        "REG-02",
+        "REG-03"
+      ],
+      "financial_policy": "UNCHANGED"
+    },
+    "home231": {
+      "commit": "95322577a4f4b1392163695b990199e5f88655fb",
+      "handoff_blob": "e36d07676bb2cb44c21a18e990faf5754ba6f408",
+      "status": "source-only for 211; proposed shell changes remain inert; no 234 overlap"
+    },
+    "dispatcher232": {
+      "commit": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+      "handoff_blob": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+      "requests_blob": "f5c93194b81ac6cd594a7a08d0a4062b89b889fe",
+      "queue_blob": "c2180b83566acbd773903357a2bff59d73225052",
+      "state": "RELEASED_NO_ACTIVE_DISPATCH",
+      "new_dispatches": 0,
+      "active_runs": 0,
+      "available_initial_CI_dispatch": "NOT_EXPOSED"
+    },
+    "reviews207_210": {
+      "status_source": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/review207-210/STATUS.json",
+      "status_blob": "697d7df60d7025848845e4a9efeb395ff8f6b772",
+      "packets": {
+        "207": "12a0e0c89a05c25dfd0371d76b42ccdeee1539fe",
+        "208": "624870d6f1b65da64235d00fe034948249eab4f1",
+        "209": "44cc6770e3591944d9edb5b65f6744b9497ed6bb",
+        "210": "078550beb1e84a9e4f065b31a76f9d299174e054"
+      },
+      "pre_freeze_review_not_final": "DO_NOT_PROMOTE"
+    }
+  },
+  "source_tests_read": {
+    "AM04 original C12 fixture": "33650407123163ea881eca9d4940fde364b27c54",
+    "AM04 original sqlite return test": "aa144a649d9f3378f9b0861941b3c7f4379fc472",
+    "AM04 original original receipt collision": "20be7565a7d63a1f042a718dbc1c5787340b62e1",
+    "AM04 original hosted correlator": "d56510cf7afe03ed6189d16bbe909de7e9f9999b",
+    "AM05 original integrity fixture": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+    "AM05 original original replay": "fa68d8c5c1982b5fe27c1c6a2a79987a0e2cb5d2",
+    "AM05 real scanner gate": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+    "AM05 original rollback": "733664e6ba3da70fa63f8e83c9c37f4fde5f928c",
+    "AM06 original owner fixture": "68c277780db8d4c7ddfa1e55820b80e31b0f8605",
+    "AM06 original native terminal unavailable": "86d6d945d6474139c9445e8c99cff963ac924278",
+    "AM06 original schedule retry": "15e5ad520c3624b62c5f11c463113d720c98a9c8",
+    "AM06 original C07 correlator": "a0b079929cb010d8943c9042275408903174c1b9"
+  },
+  "new_sources": {
+    "AM04 driver": "modules/sucafina/Sucafinav1/test/product/proof234/am04-c12-return.test.ts",
+    "AM05 driver": "modules/sucafina/Sucafinav1/test/product/proof234/am05-atlas-source.test.ts",
+    "AM06 fail-closed read": "modules/sucafina/Sucafinav1/test/product/proof234/am06-original-terminal.test.ts",
+    "all hosted correlation": "modules/sucafina/Sucafinav1/test/product/proof234/hosted-driver.ts",
+    "negative gate": "modules/sucafina/Sucafinav1/test/product/proof234/hosted-fail-closed.test.ts"
+  },
+  "boundaries": [
+    {
+      "consumer": 211,
+      "requirement": "Compose actual C12 producer/review 230 SRC-01..03 with corrected REG-01..03, existing C08/SQLite + C09; admit only matching original preimages/owner CAS",
+      "status": "NOT_CONSUMED"
+    },
+    {
+      "consumer": "229 -> 211",
+      "requirement": "Publish terminal real Task/Relay origin and exact Task/Session/Relay producer identity; no synthetic arm or provider as positive AM06",
+      "status": "NOT_PROVEN"
+    },
+    {
+      "consumer": "224 -> 211",
+      "requirement": "Consume only assigned Talent CAP08 import/export original source if closure requires; 234 never edits this",
+      "status": "NOT_ASSESSED_BY_234"
+    },
+    {
+      "consumer": "231 -> 211",
+      "requirement": "Consume original F01/Today owner binding and source-dirty guard only within 231 handoff; 234 does not duplicate",
+      "status": "INERT_FOR_PRODUCT"
+    },
+    {
+      "consumer": "199/213/S0",
+      "requirement": "Provide installed host/corporate enterprise principal, original provider/loaded skills/scanner/Relay, no fake identity",
+      "status": "NOT_PROVEN"
+    },
+    {
+      "consumer": "232 sole dispatcher",
+      "requirement": "After accepted material W, run exact S234 surgical requests; after C, all eight final+epic/E2E and authentic AM01–AM06 on same C; preserve W/tree/S/request original provenance",
+      "status": "NOT_RUN"
+    },
+    {
+      "consumer": "190",
+      "requirement": "G7 in REAL accepted C checkout; G8 separately in REAL D checkout, plus check:spawn-imports and unchanged AST/guard/allowlist",
+      "status": "NOT_RUN"
+    },
+    {
+      "consumer": "235 S2-R2/S3-R3",
+      "requirement": "Independently verify real C, source outputs, run/job/artifact, model/scanner native and 3 final reviews; no verdict from 234 test",
+      "status": "NOT_RUN"
+    },
+    {
+      "consumer": "236 archive",
+      "requirement": "Archive only actual accepted evidence in D, preserve C blobs and immutable references; cannot substitute screenshots",
+      "status": "NOT_RUN"
+    }
+  ],
+  "known_open": [
+    "Without 230 owner composition, an unreviewed original C12 Requests.save may remain unavailable, making AM04 component CI intentionally red.",
+    "No accepted material C and no new dispatcher workflow interface in exposed 232 GitHub MCP.",
+    "229 native Task/Relay origin lacks terminal handoff at snapshot; AM06 only negative until authenticated original run and Task provenance.",
+    "AM05 native process restart and installed two-actor/provenance not observed. Component fixture only covers original source and scanner gating.",
+    "Original reviewers 207–209 are pre-freeze and cannot substitute final three approvals on accepted C."
+  ],
+  "behaviors": {
+    "native_goal": "PAUSED",
+    "no_supervisor": true,
+    "product_write": false,
+    "Azure_write": false,
+    "policy_finance_write": false,
+    "tests": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "native": "NOT_RUN",
+    "GLOBAL_RELEASE": false
+  }
+}

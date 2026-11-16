@@ -1,0 +1,321 @@
+{
+  "schema": "sf2h.closure234.ci-request-manifests.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 234,
+  "existing_dispatcher": {
+    "mission": 232,
+    "commit": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+    "manifest_blob": "f5c93194b81ac6cd594a7a08d0a4062b89b889fe",
+    "handoff_blob": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+    "state": "RELEASED_NO_ACTIVE_DISPATCH",
+    "initial_test_ci_capability": "NOT_EXPOSED",
+    "requests_preexisting": [
+      "S220-AM04",
+      "S220-AM05",
+      "S219-REAL-TASK-RELAY",
+      "S216-ATLAS-SEQUENCE",
+      "CI-SF",
+      "CI-ATLAS-BUSINESS"
+    ]
+  },
+  "original_workflow": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator": "script/test-ci-request.ts",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "uploader": "script/test-ci.ts",
+    "uploader_blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+  },
+  "sources": {
+    "product_W_initial": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "product_tree_initial": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "accepted_C": null,
+    "accepted_D": null
+  },
+  "entries": [
+    {
+      "id": "S234-AM04-C12-SPLIT-RETURN",
+      "proof": "AM04",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/proof234/am04-c12-return.test.ts"
+      ],
+      "requires": [
+        "OWNER211_INTEGRATES_REVIEW230_SRC01_02_03_AND_REG01_02_03",
+        "S0_ACCEPTS_EXACT_MATERIAL_C",
+        "ORIGINAL_C08_C12_RUNTIME_WITH_SOURCE_RECEIPT",
+        "OFFICIAL_TEST_CI_DISPATCH_CAPABILITY"
+      ],
+      "consumer": "232 dispatcher -> 211 / S2-R2",
+      "scope": "genuine SQLite component source witness, NOT native model/provider PASS",
+      "group": "S234_CAUSAL_ONLY",
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/proof234/am04-c12-return.test.ts"
+        ]
+      },
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/proof234/am04-c12-return.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/proof234/am04-c12-return.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "canonical_request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"120000\",\"Sucafinav1/test/product/proof234/am04-c12-return.test.ts\"],\"env\":{}}]",
+      "dedup_material_key": "PENDING_ACTUAL_W_SHA_AND_TREE",
+      "run_ids": [],
+      "job_ids": [],
+      "artifacts": [],
+      "dispatched": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S234-AM05-C17-ORIGINAL",
+      "proof": "AM05",
+      "args": [
+        "--timeout",
+        "180000",
+        "Sucafinav1/test/product/proof234/am05-atlas-source.test.ts"
+      ],
+      "requires": [
+        "OWNER211_COMPOSES_ATLAS_PORTS_C17_AND_CORRECT_C12_FIXTURES_IF_DEPENDENT",
+        "S0_ACCEPTS_EXACT_MATERIAL_C",
+        "REAL_GITLEAKS_BINARY_ON_AUTHORIZED_RUNNER",
+        "OFFICIAL_TEST_CI_DISPATCH_CAPABILITY"
+      ],
+      "consumer": "232 dispatcher -> 211 / S3-R3",
+      "scope": "real scanner + C08/outbox/Atlas component, NOT installed model/process reboot PASS",
+      "group": "S234_CAUSAL_ONLY",
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "--timeout",
+          "180000",
+          "Sucafinav1/test/product/proof234/am05-atlas-source.test.ts"
+        ]
+      },
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "180000",
+          "Sucafinav1/test/product/proof234/am05-atlas-source.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "--timeout",
+        "180000",
+        "Sucafinav1/test/product/proof234/am05-atlas-source.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "canonical_request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"180000\",\"Sucafinav1/test/product/proof234/am05-atlas-source.test.ts\"],\"env\":{}}]",
+      "dedup_material_key": "PENDING_ACTUAL_W_SHA_AND_TREE",
+      "run_ids": [],
+      "job_ids": [],
+      "artifacts": [],
+      "dispatched": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S234-AM06-NATIVE-TERMINAL-NEGATIVE",
+      "proof": "AM06",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/proof234/am06-original-terminal.test.ts"
+      ],
+      "requires": [
+        "OWNER211_CONSUMES_NATIVE_OWNER_C07",
+        "S0_ACCEPTS_EXACT_MATERIAL_C",
+        "OFFICIAL_TEST_CI_DISPATCH_CAPABILITY"
+      ],
+      "consumer": "232 dispatcher -> native source 229 / S3-R3",
+      "scope": "original native read-only negative only; synthetic arm fixture cannot attest positive Task/Relay",
+      "group": "S234_CAUSAL_ONLY",
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/proof234/am06-original-terminal.test.ts"
+        ]
+      },
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/proof234/am06-original-terminal.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/proof234/am06-original-terminal.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "canonical_request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"120000\",\"Sucafinav1/test/product/proof234/am06-original-terminal.test.ts\"],\"env\":{}}]",
+      "dedup_material_key": "PENDING_ACTUAL_W_SHA_AND_TREE",
+      "run_ids": [],
+      "job_ids": [],
+      "artifacts": [],
+      "dispatched": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S234-CORRELATOR-FAIL-CLOSED",
+      "proof": "AM04;AM05;AM06",
+      "args": [
+        "Sucafinav1/test/product/proof234/hosted-fail-closed.test.ts"
+      ],
+      "requires": [
+        "S0_ACCEPTS_EXACT_MATERIAL_C",
+        "ORIGINAL_AM04_AM06_CORRELATORS_UNCHANGED",
+        "OFFICIAL_TEST_CI_DISPATCH_CAPABILITY"
+      ],
+      "consumer": "232 dispatcher -> proof235 reviewer",
+      "scope": "negative proof gating only; no positive or mocked provider",
+      "group": "S234_CAUSAL_ONLY",
+      "selector": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "config": null,
+        "os": "linux",
+        "args": [
+          "Sucafinav1/test/product/proof234/hosted-fail-closed.test.ts"
+        ]
+      },
+      "exact_ci_run_json": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/proof234/hosted-fail-closed.test.ts"
+        ],
+        "env": {}
+      },
+      "official_test_ci_argv": [
+        "bun",
+        "run",
+        "test:ci",
+        "sucafina",
+        "Sucafinav1/test/product/proof234/hosted-fail-closed.test.ts",
+        "--runner",
+        "bun",
+        "--os",
+        "linux"
+      ],
+      "canonical_request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/proof234/hosted-fail-closed.test.ts\"],\"env\":{}}]",
+      "dedup_material_key": "PENDING_ACTUAL_W_SHA_AND_TREE",
+      "run_ids": [],
+      "job_ids": [],
+      "artifacts": [],
+      "dispatched": false,
+      "status": "NOT_RUN"
+    }
+  ],
+  "hosted_positive_followups": [
+    {
+      "proof": "AM04",
+      "requirement": "199/213 installed host + authentic model grant, event trace, original receipt, after-commit lost reply, case retry, GitHub run artifacts; correlateAm04 + independent S2-R2; no positive from 234 fixtures",
+      "state": "NOT_RUN"
+    },
+    {
+      "proof": "AM05",
+      "requirement": "C actual original Atlas module/scanner IDs + real process restart, original document/record/calc refs, two actors same profile, revoked/incarnation refused, C17 scanner and packaging gate; independent S3-R3",
+      "state": "NOT_RUN"
+    },
+    {
+      "proof": "AM06",
+      "requirement": "229 accepted Task/Relay origin + actual C07 human admission, original Task child provider terminal, profile/skill, five routed capabilities, authenticated artifact, UI consumer, schedule; correlateAm06 + independent S3-R3",
+      "state": "NOT_RUN"
+    }
+  ],
+  "gates": [
+    {
+      "owner": 190,
+      "id": "G7",
+      "checkout": "EXACT_ACCEPTED_C",
+      "command": "original compiler/guards from pinned plan, check:spawn-imports on same C",
+      "state": "NOT_RUN"
+    },
+    {
+      "owner": "S0/190",
+      "id": "G8",
+      "checkout": "EXACT_D_AFTER_EVIDENCE_ARCHIVE",
+      "command": "original archive/guard as authorized; not reused from G7",
+      "state": "NOT_RUN"
+    }
+  ],
+  "eight_final": "Owned by original 232 manifests; execute all eight on SAME accepted C, no duplicate branch dispatch from 234",
+  "epic_e2e": "Separate original epic/E2E paths and authentic AM actors, after C; NOT_RUN",
+  "dedup": "Do not collapse requests on selector alone. Key = material W/tree + normalized .ci-run.json + original workflow/validator + runtime/config + fixture/source selection.",
+  "checks": {
+    "unit": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "native": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "review": "NOT_RUN",
+    "GLOBAL_RELEASE": false
+  },
+  "no_self_dispatch": true,
+  "no_new_ci_workflow": true,
+  "no_git_push": true
+}

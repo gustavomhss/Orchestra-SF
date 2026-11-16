@@ -1,0 +1,1846 @@
+{
+  "schema": "sf2h.closure234.criteria-map.v1",
+  "mission": 234,
+  "source": {
+    "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "proof_map_blob": "3b2ff2424bba07656850105df3b341c2bc984708",
+    "resident_proof_plan_blob": "fbea84748c1f6a0096130dd2b4de493002efbd67"
+  },
+  "invariants_unchanged": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "UX": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "proof_definitions": [
+    {
+      "id": "AM04",
+      "title": "Escolha, aplicação e resposta perdida",
+      "proof_packages": [
+        "E10",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "execution_actor": "S4-A/S0",
+      "reviewer": "S2-R2",
+      "checks": [
+        "O modelo prepara. Escolha, aplicação e aprovação usam as ações autorizadas e os comandos do domínio.",
+        "Interromper após o commit no domínio e antes do retorno ou da reconciliação no caso. O retry produz um efeito e recupera o recibo persistido atomicamente.",
+        "O mesmo idempotencyKey e digest retornam o resultado autorizado. Chave repetida com conteúdo diferente falha.",
+        "Revalidar base e autoridade em cada domínio e explicar o estado parcial. Não declarar transação global."
+      ],
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am04.json"
+    },
+    {
+      "id": "AM05",
+      "title": "Evidência e Atlas persistente real",
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "execution_actor": "S0-A/S0-C",
+      "reviewer": "S3-R3",
+      "checks": [
+        "Resolver o import @orchestra/atlas-boundary/business-memory-ports e instrumentar createMemoryEmit, createMemoryRead e DurableMemory com o digest de engine/boundary. Ler apenas o ledger SF não passa.",
+        "Resolver BusinessEvidenceRef para documento/trecho/hash, registro/encarnação/versão e cálculo/recibo. Fonte ausente ou referência invalidada devem ser reconhecidas.",
+        "Exercer append, commit, read, reinício e nova leitura. A entrada autorizada e o contexto original devem persistir. Append ainda sem commit não aparece como sucesso.",
+        "Dois atores com o mesmo perfil, owner omitido ou forjado, sessão/caso incorretos e um canary privado não ampliam o acesso.",
+        "Revalidar e invalidar após revogação ou mudança de encarnação. O precedente recuperado explica pertinência e diferenças atuais.",
+        "Registrar binary path e versão do scanner real. Exercitar clean, secret-canary, timeout e ausência. Hit ou indisponibilidade não fazem append; indisponibilidade retorna scanner-unavailable. Não aceitar scanner simulado como prova real.",
+        "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou.",
+        "Empacotamento: business-memory-ports tem factories reais e zero imports de spawning; scanner vem de native-memory já admitido. Verificar AST, a aresta external exata, quatro digests gerados, exports bound preservados e check:spawn-imports do candidato com guard/allowlist inalterados."
+      ],
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am05.json"
+    },
+    {
+      "id": "AM06",
+      "title": "Rotina real e retorno ao produto",
+      "proof_packages": [
+        "E11",
+        "E13",
+        "E14",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "execution_actor": "S3-C/S4",
+      "reviewer": "S3-R3",
+      "checks": [
+        "Exercer admissão/publicação pinada, Relay, perfil/skill, operação SF, run/result e UI, com IDs e versões reais.",
+        "Falha, retry e intervenção ficam visíveis. O run pode terminar com pergunta; a resposta ocorre no produto. Não inventar espera humana interna ao run.",
+        "Retomar na nova versão sem duplicar proposta ou efeito. Schedule usa recorrência, dono e timezone atuais e não aprova negócio por conta própria.",
+        "Revogação e cancelamento afetam resultado e agenda. O progresso e a proveniência de C11 chegam à mesa.",
+        "sf_maestro/sf-preparar-revisao-executiva percorre catalog/prepare com pedido humano, run só com admissão C07 atual, status/result e consumo na pauta. Em routine-result, prepare/run são recusados; nenhuma chamada recursiva é criada."
+      ],
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am06.json"
+    }
+  ],
+  "criterion_assignment": [
+    {
+      "entity_id": "WP06",
+      "criterion_ids": [
+        "WP06.DOD.40",
+        "WP06.INV.40",
+        "WP06.QLT.40",
+        "WP06.CMP.40",
+        "WP06.SUC.40"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP06.T05",
+      "criterion_ids": [
+        "WP06.T05.DOD.40",
+        "WP06.T05.INV.40",
+        "WP06.T05.QLT.40",
+        "WP06.T05.CMP.40",
+        "WP06.T05.SUC.40",
+        "WP06.T05.CHK.40"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP14",
+      "criterion_ids": [
+        "WP14.DOD.40",
+        "WP14.INV.40",
+        "WP14.QLT.40",
+        "WP14.CMP.40",
+        "WP14.SUC.40"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP14.T05",
+      "criterion_ids": [
+        "WP14.T05.DOD.40",
+        "WP14.T05.INV.40",
+        "WP14.T05.QLT.40",
+        "WP14.T05.CMP.40",
+        "WP14.T05.SUC.40",
+        "WP14.T05.CHK.40"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T07",
+      "criterion_ids": [
+        "WP10.T07.DOD.40",
+        "WP10.T07.INV.40",
+        "WP10.T07.QLT.40",
+        "WP10.T07.CMP.40",
+        "WP10.T07.SUC.40",
+        "WP10.T07.CHK.40",
+        "WP10.T07.CHK.41"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T03",
+      "criterion_ids": [
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP00.T02",
+      "criterion_ids": [
+        "WP00.T02.DOD.60",
+        "WP00.T02.INV.60",
+        "WP00.T02.QLT.60",
+        "WP00.T02.CMP.60",
+        "WP00.T02.SUC.60",
+        "WP00.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP10.T06",
+      "criterion_ids": [
+        "WP10.T06.DOD.60",
+        "WP10.T06.INV.60",
+        "WP10.T06.QLT.60",
+        "WP10.T06.CMP.60",
+        "WP10.T06.SUC.60",
+        "WP10.T06.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP12.T02",
+      "criterion_ids": [
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60",
+        "WP12.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP06.T02",
+      "criterion_ids": [
+        "WP06.T02.DOD.60",
+        "WP06.T02.INV.60",
+        "WP06.T02.QLT.60",
+        "WP06.T02.CMP.60",
+        "WP06.T02.SUC.60",
+        "WP06.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP06.T03",
+      "criterion_ids": [
+        "WP06.T03.DOD.60",
+        "WP06.T03.INV.60",
+        "WP06.T03.QLT.60",
+        "WP06.T03.CMP.60",
+        "WP06.T03.SUC.60",
+        "WP06.T03.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP09.T01",
+      "criterion_ids": [
+        "WP09.T01.DOD.60",
+        "WP09.T01.INV.60",
+        "WP09.T01.QLT.60",
+        "WP09.T01.CMP.60",
+        "WP09.T01.SUC.60",
+        "WP09.T01.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.CMP.60",
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.QLT.60",
+        "WP10.SUC.60"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Código/artefatos reais, identidade do scanner e resultado de geração/AST/spawn gate no mesmo candidato; sem dispensa."
+    },
+    {
+      "entity_id": "WP10.T07",
+      "criterion_ids": [
+        "WP10.T07.CHK.60",
+        "WP10.T07.CHK.61",
+        "WP10.T07.CHK.62",
+        "WP10.T07.CMP.60",
+        "WP10.T07.DOD.60",
+        "WP10.T07.INV.60",
+        "WP10.T07.QLT.60",
+        "WP10.T07.SUC.60"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Código/artefatos reais, identidade do scanner e resultado de geração/AST/spawn gate no mesmo candidato; sem dispensa."
+    }
+  ],
+  "mapped_direct_count": 89,
+  "per_proof": {
+    "AM04": 11,
+    "AM05": 53,
+    "AM06": 47
+  },
+  "source_entries_all_unmodified": true,
+  "not_claimed": {
+    "typecheck": "NOT_RUN",
+    "component": "NOT_RUN",
+    "native": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "review": "NOT_RUN",
+    "release": false
+  },
+  "entries": [
+    {
+      "criterion_id": "WP06.DOD.40",
+      "entity_id": "WP06",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "Imports e documentos saem de writers disjuntos e são consumidos reais; resolver 20 e extração 35 não esperam a task de roundtrip.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.INV.40",
+      "entity_id": "WP06",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "Arquivo/documento só tem um escritor; transferência 53 não modifica origem/ACL nem permite inventar evidência.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.QLT.40",
+      "entity_id": "WP06",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "Handoff inclui revisão/trecho/hash e consumer real; recepção não equivale a prova final.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.CMP.40",
+      "entity_id": "WP06",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "Preservar todos os formatos de importação e PDFdigital/DOCX/texto, com casos negativos e consumidoresIA/Atlas/rotina.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.SUC.40",
+      "entity_id": "WP06",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "IA e Atlas recebem fonte documental verificável cedo enquanto imports continuam em paralelo.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.DOD.40",
+      "entity_id": "WP10",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "expected": "Runtime, Atlas, composição, CI e julgamentos têm atores/paths/recibos explícitos; cinco perfis/18 skills/oito packs e Atlas são integrados em G4.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.DOD.60",
+      "entity_id": "WP10",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.INV.40",
+      "entity_id": "WP10",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "expected": "S0 não escreve arquivos delegados; nenhum autor assina aceitação independente de sua própria seção.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.INV.60",
+      "entity_id": "WP10",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.QLT.40",
+      "entity_id": "WP10",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "expected": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.QLT.60",
+      "entity_id": "WP10",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.CMP.40",
+      "entity_id": "WP10",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "expected": "Incluir empacotamento Atlas, APP src/APP browser separados, provas AM01-AM06, transferências e rechecagem do candidato.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.CMP.60",
+      "entity_id": "WP10",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.SUC.40",
+      "entity_id": "WP10",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "expected": "O produto inteiro é revisável sem depender de trabalho oculto de coordenadores ou de checks atribuídos a seleção que não rodou.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.SUC.60",
+      "entity_id": "WP10",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.DOD.40",
+      "entity_id": "WP14",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "mapSfAtlasEntry sai 20; demais funções prontas 68 e consumidores completos 75, com transferência S4->S0-C em 43.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.INV.40",
+      "entity_id": "WP14",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "WP14 continua sem persistência, UI ou scheduler; autoria exclusiva continua durante transferência e correções.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.QLT.40",
+      "entity_id": "WP14",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Receipt liga SHA/lease, outputs e consumidores; não usar prazo 80 residual ou resgate S0-A já ocupado com Atlas.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.CMP.40",
+      "entity_id": "WP14",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Cobrir tradução/owner, materialidade, semelhança, observado, dedupe, revogação e consumo após reinício via T07.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.SUC.40",
+      "entity_id": "WP14",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Memória e reavaliação aparecem no fluxo real até 75 sem sobre carregar implicitamente S4 ou duplicar store.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP00.T02.DOD.60",
+      "entity_id": "WP00.T02",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP00.T02.INV.60",
+      "entity_id": "WP00.T02",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP00.T02.QLT.60",
+      "entity_id": "WP00.T02",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.60",
+      "entity_id": "WP00.T02",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP00.T02.SUC.60",
+      "entity_id": "WP00.T02",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.60",
+      "entity_id": "WP00.T02",
+      "family": "check",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T02.DOD.60",
+      "entity_id": "WP06.T02",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T02.INV.60",
+      "entity_id": "WP06.T02",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T02.QLT.60",
+      "entity_id": "WP06.T02",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T02.CMP.60",
+      "entity_id": "WP06.T02",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T02.SUC.60",
+      "entity_id": "WP06.T02",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T02.CHK.60",
+      "entity_id": "WP06.T02",
+      "family": "check",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T03.DOD.60",
+      "entity_id": "WP06.T03",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T03.INV.60",
+      "entity_id": "WP06.T03",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T03.QLT.60",
+      "entity_id": "WP06.T03",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T03.CMP.60",
+      "entity_id": "WP06.T03",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T03.SUC.60",
+      "entity_id": "WP06.T03",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T03.CHK.60",
+      "entity_id": "WP06.T03",
+      "family": "check",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T05.DOD.40",
+      "entity_id": "WP06.T05",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "Resolver e extração real têm entregas 20/35 e consumidores identificados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T05.INV.40",
+      "entity_id": "WP06.T05",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "S2 e S2-C jamais escrevem os mesmos arquivos documentais antes lease 53.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T05.QLT.40",
+      "entity_id": "WP06.T05",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "Handoff mantém referência/hash/revisão/ACL e status de confirmação.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T05.CMP.40",
+      "entity_id": "WP06.T05",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "Três formatos, falhas, versão/revogação e imports paralelos permanecem cobertos.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T05.SUC.40",
+      "entity_id": "WP06.T05",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "Fontes alimentam IA/Atlas antes da integração final sem bloquear importação.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP06.T05.CHK.40",
+      "entity_id": "WP06.T05",
+      "family": "check",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "expected": "DOC-REF T+20 é consumido por createSfBusinessContext e DOC-EXTRACT T+35 por T02; imports T01-T04 executam em outro writer.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP09.T01.DOD.60",
+      "entity_id": "WP09.T01",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP09.T01.INV.60",
+      "entity_id": "WP09.T01",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP09.T01.QLT.60",
+      "entity_id": "WP09.T01",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP09.T01.CMP.60",
+      "entity_id": "WP09.T01",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP09.T01.SUC.60",
+      "entity_id": "WP09.T01",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP09.T01.CHK.60",
+      "entity_id": "WP09.T01",
+      "family": "check",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T03.DOD.40",
+      "entity_id": "WP10.T03",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "expected": "Três pareceres consolidados sem autojulgamento no candidato final.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T03.INV.40",
+      "entity_id": "WP10.T03",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "expected": "Escrever uma correção remove o direito de aceitar aquela seção independentemente.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T03.QLT.40",
+      "entity_id": "WP10.T03",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "expected": "Achado registra critério/evidência/impacto/correção/recheck e SHA.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T03.CMP.40",
+      "entity_id": "WP10.T03",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "expected": "CobrirUX, semântica, IA/MCP/Atlas/Relay/documentos/WP14 e todas as fontes de skills.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T03.SUC.40",
+      "entity_id": "WP10.T03",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "expected": "Revisão encontra lacunas sem contar S0-A/B builders como revisores livres.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T03.CHK.40",
+      "entity_id": "WP10.T03",
+      "family": "check",
+      "integrated_proofs": [
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "expected": "Cada seção dos três pareceres identifica reviewer e authors; seção com interseção não fecha aceite até ser reatribuída.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T06.DOD.60",
+      "entity_id": "WP10.T06",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T06.INV.60",
+      "entity_id": "WP10.T06",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T06.QLT.60",
+      "entity_id": "WP10.T06",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T06.CMP.60",
+      "entity_id": "WP10.T06",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T06.SUC.60",
+      "entity_id": "WP10.T06",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T06.CHK.60",
+      "entity_id": "WP10.T06",
+      "family": "check",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.DOD.40",
+      "entity_id": "WP10.T07",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Boundary publicável, BCS, Atlas ports e provider durável têm owner/path/minutos/provas reais.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.DOD.60",
+      "entity_id": "WP10.T07",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.INV.40",
+      "entity_id": "WP10.T07",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Nenhuma escrita fora dos nove paths Atlas exatos; gerados são produzidos pelo gerador, engines/guard/allowlist permanecem fonte inalterada.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.INV.60",
+      "entity_id": "WP10.T07",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.QLT.40",
+      "entity_id": "WP10.T07",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Falha descan/commit/ACL é observável e não produz sucesso persistido.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.QLT.60",
+      "entity_id": "WP10.T07",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.CMP.40",
+      "entity_id": "WP10.T07",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Empacotamento e 8 casos AM05 integram o orçamento/proof-map, não só o teste doledgerSF.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.CMP.60",
+      "entity_id": "WP10.T07",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.SUC.40",
+      "entity_id": "WP10.T07",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Memória recupera precedente real após reinício comfonte/versão/acesso atual.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.SUC.60",
+      "entity_id": "WP10.T07",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.CHK.40",
+      "entity_id": "WP10.T07",
+      "family": "check",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "ATLAS-PACKAGE20 resolve os dois subpaths SF; AST, check:generated/typecheck e check:spawn-imports ficam vinculados ao candidato, além de CI-ATLAS-BUSINESS.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.CHK.41",
+      "entity_id": "WP10.T07",
+      "family": "check",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "ATLAS-FULL T+55 consome resolver 20, map 20 e protected-store 25; append/read/restart são pelo Atlas real.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.CHK.60",
+      "entity_id": "WP10.T07",
+      "family": "check",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "AST do business-memory-ports contém zero spawning imports e zero imports computados/dinâmicos; a única ligação do NO_SCANNER_NAME de memory-emit é o import literal external native-memory. Adicionar scanner export ao novo bundle ou desfazer externalização deve reprovar.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.CHK.61",
+      "entity_id": "WP10.T07",
+      "family": "check",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Native-bound preserva todos os exports bound e comportamento de createNativeMemory; scanner exports são reexports das funções/constante originais e não expõem createMemoryRead/createMemoryEmit/createDurableMemory, owner ou root mutáveis.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP10.T07.CHK.62",
+      "entity_id": "WP10.T07",
+      "family": "check",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Gerar os dois pares JS/d.ts e executar check:spawn-imports com guard/allowlist inalterados; nova ocorrência em business-memory-ports reprova. Os nove paths Atlas e atlas-scanner.ts/capabilities.ts têm escritor exclusivo S0-A.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP12.T02.DOD.60",
+      "entity_id": "WP12.T02",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP12.T02.INV.60",
+      "entity_id": "WP12.T02",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP12.T02.QLT.60",
+      "entity_id": "WP12.T02",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP12.T02.CMP.60",
+      "entity_id": "WP12.T02",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP12.T02.SUC.60",
+      "entity_id": "WP12.T02",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP12.T02.CHK.60",
+      "entity_id": "WP12.T02",
+      "family": "check",
+      "integrated_proofs": [
+        "AM06"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "expected": "Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.T05.DOD.40",
+      "entity_id": "WP14.T05",
+      "family": "dod",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Tradução pura é exportada 20 e validada pelo consumidor Atlas.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.T05.INV.40",
+      "entity_id": "WP14.T05",
+      "family": "invariants",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "SemPR/owner/seat fictício e sem store em WP14.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.T05.QLT.40",
+      "entity_id": "WP14.T05",
+      "family": "quality_standards",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Tipos/owners/razõesderecusa ficam nos contratos e evidência.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.T05.CMP.40",
+      "entity_id": "WP14.T05",
+      "family": "completeness_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Cobrir ator o mesmo perfil, owner omitido/forjado, encarnação e revogação nos consumidores.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.T05.SUC.40",
+      "entity_id": "WP14.T05",
+      "family": "success_criteria",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "Memória Atlas entendeentidadesSF sem confundir identidade empresarial e técnica.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criterion_id": "WP14.T05.CHK.40",
+      "entity_id": "WP14.T05",
+      "family": "check",
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "expected": "ATLAS-MAP20 é consumido por T07 real; translator não escreve persistência ou engines.",
+      "status": "NOT_RUN"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "schema": "sf2h.closure234.complete-inert-prepost.v1",
+  "mission": 234,
+  "source": {
+    "review_mission": 230,
+    "review_commit": "b8d0e46d6fcca835f345bd5e0d5f719d8047c757",
+    "manifest_blob": "4dd4ce583ab30bc29f4f60de1b751d6deb484e87",
+    "verdict": "FIX_FIRST",
+    "financial_policy": "UNCHANGED"
+  },
+  "description": "Self-contained full pre/post source blobs carried as READ-ONLY inert files under the owned closure234 receipt tree; exact original Git blob identities are preserved, not git diffs or placeholder hunks.",
+  "scope": {
+    "owner_branch": "sf-proof-last",
+    "only_original_230_patches": true,
+    "external_source_paths_edited": false,
+    "product_sf_closure_bundle_edited": false
+  },
+  "atomic_groups": {
+    "C12_producer": [
+      "SRC-01",
+      "SRC-02",
+      "SRC-03"
+    ],
+    "C12_regression_corrections": [
+      "REG-01",
+      "REG-02",
+      "REG-03"
+    ],
+    "adjacent_220_fixture": [
+      "FIX-01",
+      "FIX-02"
+    ],
+    "adjacent_B9_schema": [
+      "SCHEMA-01",
+      "SCHEMA-02"
+    ]
+  },
+  "entries": [
+    {
+      "id": "SRC-01",
+      "original_path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "source_mission": 230,
+      "preimage_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+      "postimage_blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts.inert.txt",
+      "kind": "C12_PRODUCTION",
+      "consumer": "WP11.T03/WP11.T04 -> procurement decision preparation, original Requests.save and C12 HTTP apply",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "SRC-02",
+      "original_path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "source_mission": 230,
+      "preimage_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+      "postimage_blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/product/procurement/prepared.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/product/procurement/prepared.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/product/procurement/prepared.ts.inert.txt",
+      "kind": "C12_PRODUCTION",
+      "consumer": "WP11.T04 -> prepared change source/version/grant check and C08 domain mutation",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "SRC-03",
+      "original_path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "source_mission": 230,
+      "preimage_blob": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+      "postimage_blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts.inert.txt",
+      "kind": "C12_PRODUCTION",
+      "consumer": "WP11.T04 -> C12 source-specific review digest and human apply",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "FIX-01",
+      "original_path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "source_mission": 230,
+      "preimage_blob": "33650407123163ea881eca9d4940fde364b27c54",
+      "postimage_blob": "d96709db609b399ef801f487e443a381863d6298",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts.inert.txt",
+      "kind": "FIXTURE_DIAGNOSTIC",
+      "consumer": "Owner211 C12 fixture diagnostics for source request/receipt without manufacturing positive provenance",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "FIX-02",
+      "original_path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+      "source_mission": 230,
+      "preimage_blob": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+      "postimage_blob": "f9c99a8a886211d1aba60371a2d3b0aa287293b5",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts.inert.txt",
+      "kind": "FIXTURE_DIAGNOSTIC",
+      "consumer": "Owner211 Atlas/C17 fixture diagnostics for genuine outbox/memory trace",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "SCHEMA-01",
+      "original_path": "packages/schema/src/sucafina/decisions.ts",
+      "source_mission": 230,
+      "preimage_blob": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+      "postimage_blob": "52fc1a3fc52b39c0d18f0064bcc17417421ce3c7",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/packages/schema/src/sucafina/decisions.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/packages/schema/src/sucafina/decisions.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/packages/schema/src/sucafina/decisions.ts.inert.txt",
+      "kind": "RELATED_SCHEMA_B9",
+      "consumer": "Owner211 C09/Decisions closed cases schema without foreign keys",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "SCHEMA-02",
+      "original_path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "source_mission": 230,
+      "preimage_blob": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+      "postimage_blob": "dbdbde9d95ffcdf59c50ee64b880e631b37e433a",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts.inert.txt",
+      "kind": "RELATED_SCHEMA_B9",
+      "consumer": "Owner211 native-ui-contract Decisions regression oracle B9",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "REG-01",
+      "original_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+      "source_mission": 230,
+      "preimage_blob": "6e795a84dbab450a280f4c2043e166743ca5df78",
+      "postimage_blob": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts.inert.txt",
+      "kind": "MANDATORY_C12_TEST_CORRECTION",
+      "consumer": "Owner211/dispatcher232 corrected financial-policy regression oracle",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "REG-02",
+      "original_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+      "source_mission": 230,
+      "preimage_blob": "3c37f7868a62182658adf2b22d88e66869de8d73",
+      "postimage_blob": "191021892019874e9ec8dec594b019f5addf7f3f",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts.inert.txt",
+      "kind": "MANDATORY_C12_TEST_CORRECTION",
+      "consumer": "Owner211/dispatcher232 corrected C12 preparation regression oracle",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    },
+    {
+      "id": "REG-03",
+      "original_path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "source_mission": 230,
+      "preimage_blob": "d71a7b8003071bcbc0f144f682cc34920cd00d0a",
+      "postimage_blob": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+      "full_preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/pre/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts.inert.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure234/inert/230/post/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts.inert.txt",
+      "original_full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/payloads/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts.inert.txt",
+      "kind": "MANDATORY_C12_TEST_CORRECTION",
+      "consumer": "Owner211/dispatcher232 corrected C12 scenario-composition regression oracle",
+      "dependency": "OWNER211_CAS_RECHECK_CURRENT_SOURCE_PREIMAGE_BEFORE_APPLY",
+      "state": "INERT_NOT_APPLIED_NOT_TESTED"
+    }
+  ],
+  "applier": "211 only after verified S0 lease; require matching preimage or reconcile owner-side delta; adopt 230 producer and mandatory regression oracles together, then CI 232",
+  "source_behavior": "C12 management choice + explicit draft Requests.save confirmed:false; never submit_pr, approve, financial policy or authorized holder changes.",
+  "tests": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "review": "NOT_APPLIED",
+  "release": false
+}
