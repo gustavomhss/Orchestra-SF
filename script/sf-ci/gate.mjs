@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { execFileSync } from "node:child_process"
 import { createHash } from "node:crypto"
 import { mkdirSync, readFileSync, readdirSync, writeFileSync, statSync } from "node:fs"
 import path from "node:path"
@@ -153,6 +154,8 @@ export function checkReceipt(receipt, suite, meta, reportBytes, selectedFiles) {
   if (receipt.suiteId !== suite.id || receipt.kind !== suite.kind) fail("receipt suite mismatch")
   if (receipt.sourceSha !== meta.sha || receipt.checkoutSha !== meta.sha) fail("candidate or checkout SHA mismatch")
   if (receipt.runId !== String(meta.runId) || receipt.attempt !== String(meta.attempt)) fail("run identity mismatch")
+  if (receipt.treeSha !== meta.treeSha || !/^[a-f0-9]{40}$/.test(receipt.treeSha || "")) fail("tree identity mismatch")
+  if (receipt.manifestSha256 !== meta.manifestSha256) fail("manifest bytes identity mismatch")
   if (receipt.runnerOS !== "Linux" || receipt.runnerArch !== "X64") fail("non-Linux-x64 runner")
   if (receipt.status !== "PASS" || receipt.exitCode !== 0) fail("not a successful execution")
   if (receipt.reportSha256 !== digest(reportBytes)) fail("report artifact digest mismatch")
@@ -184,11 +187,12 @@ export function requirePrerequisites(needs) {
   return JOBS.length
 }
 
-export function verifyAll({ manifest, receipts, reports, needs, sha, runId, attempt,
+export function verifyAll({ manifest, receipts, reports, needs, sha, runId, attempt, treeSha,
   selectionProvider = selectSuiteFiles }) {
   const suites = validateManifest(manifest)
   if (!/^[a-f0-9]{40}$/.test(String(sha))) fail("invalid candidate SHA")
   if (!/^[0-9]+$/.test(String(runId)) || !/^[0-9]+$/.test(String(attempt))) fail("missing run identity")
+  if (!/^[a-f0-9]{40}$/.test(String(treeSha))) fail("missing tree identity")
   requirePrerequisites(needs)
   if (Object.keys(receipts).length !== suites.length || Object.keys(reports).length !== suites.length) {
     fail("missing or extra suite artifacts")
@@ -197,7 +201,8 @@ export function verifyAll({ manifest, receipts, reports, needs, sha, runId, atte
   for (const suite of suites) {
     if (!Object.hasOwn(receipts, suite.id) || !Object.hasOwn(reports, suite.id)) fail("missing suite: " + suite.id)
     const selection = selectionProvider(manifest, suite.id)
-    sum += checkReceipt(receipts[suite.id], suite, { sha, runId, attempt }, reports[suite.id], selection)
+    sum += checkReceipt(receipts[suite.id], suite, { sha, runId, attempt, treeSha,
+      manifestSha256: digest(JSON.stringify(manifest)) }, reports[suite.id], selection)
   }
   return { suiteCount: suites.length, executedTests: sum, candidateSha: sha, runId: String(runId) }
 }
@@ -207,6 +212,11 @@ function readJson(filename) {
 }
 function reportName(kind) {
   return kind === "bun" ? "summary.json" : "report.json"
+}
+function realTreeSha() {
+  const treeSha = execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()
+  if (!/^[a-f0-9]{40}$/.test(treeSha)) fail("invalid checked-out tree identity")
+  return treeSha
 }
 function realRunMeta() {
   const sha = process.env.GITHUB_SHA
@@ -314,6 +324,7 @@ function cli() {
       schemaVersion: 1, suiteId: id, kind: suite.kind,
       status: "PASS", exitCode: 0, sourceSha: meta.sha, checkoutSha: checkout,
       runId: String(meta.runId), attempt: String(meta.attempt),
+      treeSha: realTreeSha(), manifestSha256: digest(JSON.stringify(manifest)),
       runnerOS: process.env.RUNNER_OS, runnerArch: process.env.RUNNER_ARCH,
       executedTests: count, executedFiles: coverage.fileCount,
       selectedFilesSha256: selected, coverageFilesSha256: coverage.filesSha256,
@@ -339,6 +350,7 @@ function cli() {
     }
     const result = verifyAll({
       manifest, receipts, reports, needs: JSON.parse(process.env.SF_NEEDS_JSON || "null"), ...meta,
+      treeSha: realTreeSha(),
     })
     console.log("SF_CI_ALL_SUITES_PASS " + JSON.stringify(result))
     return
