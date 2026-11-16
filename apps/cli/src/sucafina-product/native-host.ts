@@ -141,7 +141,8 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             if (placed._tag === "Failure") return { status: "unavailable", reason: "location-unavailable" } as const
             if (placed.success.conflict === undefined) return { status: "unavailable", reason: "provider-configuration-unavailable" } as const
             if (placed.success.conflict) return { status: "provider-conflict", reason: "provider-conflict" } as const
-            if (!placed.success.sourceCapability || !placed.success.model) return { status: "unavailable", reason: "resident-source-or-model-unavailable" } as const
+            const sourceCapability = placed.success.sourceCapability
+            if (!sourceCapability || !placed.success.model) return { status: "unavailable", reason: "resident-source-or-model-unavailable" } as const
             const reservedID = SessionSchema.ID.create()
             if (yield* store.get(reservedID)) return { status: "unavailable", reason: "native-session-id-conflict" } as const
             // Register the request abort BEFORE the first durable C08 effect; the previous
@@ -190,7 +191,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
                 acquired.sessionVerified = true
                 if (acquired.closed || args.request.signal.aborted || !lifetime.open)
                   return { status: "denied", reason: "native-preparation-aborted" } as const
-                const loaded = yield* Effect.result(loadSfSkill({ session, skills: placed.success.skills, sourceCapability: placed.success.sourceCapability,
+                const loaded = yield* Effect.result(loadSfSkill({ session, skills: placed.success.skills, sourceCapability,
                   selected, sessionID, profile: selected.profile, skill: selectedSkill, runId: args.runId, manifestDigest: selected.manifestDigest }))
                 if (loaded._tag === "Failure") {
                   return { status: "unavailable", reason: "native-skill-load-failed" } as const
@@ -209,7 +210,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
                   Effect.sync(() => {
                     if (!lifetime.open || acquired.closed || args.request.signal.aborted) throw new Error("native-host-disposed")
                     return input.onSkillLoaded?.({ session: created.success, admission, skills: placed.success.skills,
-                      sourceCapability: placed.success.sourceCapability! })
+                      sourceCapability })
                   }),
                   (release) => Effect.gen(function* () {
                     const attempted = yield* Effect.result(Effect.tryPromise({ try: () => input.registry.bind(admission).then((result) => {
