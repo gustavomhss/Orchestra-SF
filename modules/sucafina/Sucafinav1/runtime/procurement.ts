@@ -162,6 +162,14 @@ function requestEditModes(actor: Actor, request: Record<string, unknown>) {
     po: ["po_draft", "po_rejected"].includes(status) && procurementCanManageSourcing(actor),
   }
 }
+/** Per-record draft capability from the original visible source, never a browser role guess. */
+export function requestDraftActions(request: Record<string, unknown>, actor: Actor): readonly ("save-pr" | "save-sourcing" | "save-po")[] {
+  if (!text(actor.id).trim() || !actor.canWrite || actor.roles.every((role) => role === "viewer") ||
+    !visibleRequests([{ createdBy: text(request.createdBy) }], actor).length) return []
+  const modes = requestEditModes(actor, request)
+  return [...(modes.pr ? ["save-pr" as const] : []), ...(modes.source ? ["save-sourcing" as const] : []),
+    ...(modes.po ? ["save-po" as const] : [])]
+}
 /** Coarse current request capability; command execution retains all record, CAS and stage checks. */
 export function procurementCurrentRequestActions(snapshot: Snapshot, actor: Actor): readonly string[] {
   if (!text(actor.id).trim() || !actor.canWrite || actor.roles.every((role) => role === "viewer")) return []
@@ -173,13 +181,13 @@ export function procurementCurrentRequestActions(snapshot: Snapshot, actor: Acto
     if (++inspected > 100) break
     const request = object(object(requests[id]).request)
     if (!visibleRequests([{ createdBy: text(request.createdBy) }], actor).length) continue
-    const modes = requestEditModes(actor, request)
+    const drafts = requestDraftActions(request, actor)
     const status = text(request.status)
     if (!["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled"].includes(status)) continue
-    if (modes.pr || modes.source || modes.po) actions.add("save")
-    if (modes.pr) actions.add("submit_pr")
-    if (modes.source) { actions.add("submit_sourcing"); actions.add("select_quote") }
-    if (modes.po) actions.add("submit_po")
+    if (drafts.length) actions.add("save")
+    if (drafts.includes("save-pr")) actions.add("submit_pr")
+    if (drafts.includes("save-sourcing")) { actions.add("submit_sourcing"); actions.add("select_quote") }
+    if (drafts.includes("save-po")) actions.add("submit_po")
     if (status === "po_approved" && procurementCanManageSourcing(actor)) actions.add("issue")
     if (canApproveCurrentRequest(door(request), { id: actor.id, canWrite: actor.canWrite,
       roles: actor.roles.filter((role) => ["requester", "buyer", "approver", "admin"].includes(role)) },
@@ -538,10 +546,10 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   const was = row ? structuredClone(row.request) : null
   const request = row?.request ?? {}
   const status = text(request.status)
-  const modes = requestEditModes(actor, request)
-  const prEdit = modes.pr
-  const sourceEdit = modes.source
-  const poEdit = modes.po
+  const drafts = requestDraftActions(request, actor)
+  const prEdit = drafts.includes("save-pr")
+  const sourceEdit = drafts.includes("save-sourcing")
+  const poEdit = drafts.includes("save-po")
   if (command.action === "save" && !prEdit && !sourceEdit && !poEdit) return { ok: false, status: 403 }
   if (command.action === "create" && !procurementCanCreateRequest(actor)) return { ok: false, status: 403 }
   if (
