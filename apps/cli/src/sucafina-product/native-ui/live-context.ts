@@ -8,6 +8,7 @@
  * This module is inert until 162 installs it in the original host's services.
  */
 import { Schema } from "effect"
+import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import {
   SfContext as SfContextSchema,
   SfOperationAvailability as SfOperationAvailabilitySchema,
@@ -72,13 +73,27 @@ const sameStamp = (a: SfContextStamp, b: SfContextStamp) =>
   a.principalRef === b.principalRef && a.policyVersion === b.policyVersion &&
   a.accessRevision === b.accessRevision
 
-function originalRequest(request: Request, expected: Binding, origin: string, mount: string): boolean {
-  if (request.method !== "GET" || request.signal.aborted) return false
+function originalRequest(request: Request, expected: Binding, origin: string, mount: string, internal: boolean): boolean {
+  if (request.signal.aborted) return false
   const url = new URL(request.url)
-  if (url.origin !== origin || url.pathname !== mount + "/api/ui/context" ||
+  if (url.origin !== origin || url.username || url.password || url.hash ||
     request.headers.get("sec-fetch-site") === "cross-site" ||
     (request.headers.has("origin") && request.headers.get("origin") !== origin) ||
     /%(?![\da-fA-F]{2})/.test(url.search)) return false
+  if (internal) {
+    if (request.method !== "GET" && request.method !== "POST") return false
+    // Only exact static native routes can request internal admission. Each
+    // handler remains responsible for its own selector and body validation.
+    return url.search.length <= 4096 &&
+      [...url.searchParams.keys()].every((key) => url.searchParams.getAll(key).length === 1) &&
+      Object.values(SfOperationRegistry).some((operation) => {
+        const path = operation.pathTemplate.replaceAll("{mount}", mount)
+        return !path.includes("{") && path !== mount + "/api/ui/context" &&
+          path.startsWith(mount + "/api/ui/") && path === url.pathname &&
+          operation.method === request.method
+      })
+  }
+  if (request.method !== "GET" || url.pathname !== mount + "/api/ui/context") return false
   const entries = [...url.searchParams.entries()]
   if (entries.length !== 3 || new Set(entries.map(([key]) => key)).size !== 3 ||
     entries.some(([key, value]) => !["installationId", "projectId", "hostId"].includes(key) || !value))
@@ -190,14 +205,15 @@ function equalDestinations(a: readonly Destination[], b: readonly Destination[])
 export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
   currentBinding: SfLiveContextSources["currentBinding"]
   readContext: (request: Request, expected: Binding) => Promise<SfContextResult>
+  readRequestContext: (request: Request, expected: Binding) => Promise<SfContextResult>
 }> {
   if (!URL.canParse(source.origin) || new URL(source.origin).origin !== source.origin ||
     !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(source.mount))
     throw new Error("SF_LIVE_CONTEXT_CONFIG_INVALID")
 
   const currentBinding = source.currentBinding
-  const readContext = async (request: Request, expected: Binding): Promise<SfContextResult> => {
-    if (!originalRequest(request, expected, source.origin, source.mount)) return mismatch()
+  const read = async (request: Request, expected: Binding, internal: boolean): Promise<SfContextResult> => {
+    if (!originalRequest(request, expected, source.origin, source.mount, internal)) return mismatch()
     const firstBinding = currentBinding()
     if (!firstBinding) return { status: "unavailable", reason: "identity-unavailable" }
     if (!sameBinding(firstBinding, expected)) return mismatch()
@@ -259,5 +275,8 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     if (!Schema.is(SfContextSchema)(value)) return mismatch()
     return { status: "ok", value }
   }
-  return Object.freeze({ currentBinding, readContext })
+  return Object.freeze({ currentBinding,
+    readContext: (request: Request, expected: Binding) => read(request, expected, false),
+    readRequestContext: (request: Request, expected: Binding) => read(request, expected, true),
+  })
 }

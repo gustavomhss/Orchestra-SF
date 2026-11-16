@@ -12,6 +12,7 @@ type HostWithReader = SfHostServices & Readonly<{ nativeUiProducts?: Readonly<{
   /** I00 installs a read-only live view of runtime.identity(), never caller data. */
   currentBinding?: () => Readonly<{ installationId: string; projectId: string; hostId: string }> | undefined
   readContext?: TrustedContextReader
+  readRequestContext?: TrustedContextReader
 }> }>
 const jsonHeaders = (additional?: HeadersInit): Headers => {
   const headers = new Headers(additional)
@@ -66,15 +67,14 @@ function validAvailability(context: SfContext): boolean {
 export function createSfContextHandler(
   deps: Omit<SfNativeHostDependencies, "readContext">,
 ): Readonly<{ readContext(request: Request): Promise<SfContextResult>; handle(request: Request): Promise<Response> }> {
-  const readContext = async (request: Request): Promise<SfContextResult> => {
-    const expected = expectedContext(request, deps.origin, deps.mount)
-    if (!expected || request.method !== "GET" || request.signal.aborted)
-      return { status: "unavailable", reason: "contract-mismatch" }
+  const read = async (request: Request, internal: boolean): Promise<SfContextResult> => {
     const services = deps.runtime() as HostWithReader | undefined
     const producer = services?.nativeUiProducts
-    // F01 has no public access to the legacy authority's private resolve().
-    // Reuse the legitimate installed producer reader; never synthesize its stamp.
-    const reader = producer?.readContext
+    const expected = internal ? producer?.currentBinding?.() : expectedContext(request, deps.origin, deps.mount)
+    if (!expected || request.signal.aborted || !internal && request.method !== "GET")
+      return { status: "unavailable", reason: "contract-mismatch" }
+    // Both readers re-admit the same Request through the installed authority.
+    const reader = internal ? producer?.readRequestContext : producer?.readContext
     if (!reader || !producer?.currentBinding) return { status: "unavailable", reason: "host-unavailable" }
     if (!sameBinding(expected, producer.currentBinding()))
       return { status: "unavailable", reason: "contract-mismatch" }
@@ -92,6 +92,7 @@ export function createSfContextHandler(
         !validAvailability(result.value)) return { status: "unavailable", reason: "contract-mismatch" }
     return result
   }
+  const readContext = (request: Request) => read(request, true)
   const handle = async (request: Request): Promise<Response> => {
     const expected = expectedContext(request, deps.origin, deps.mount)
     if (!expected) return malformed()
@@ -99,7 +100,7 @@ export function createSfContextHandler(
       return new Response(null, { status: 405, headers: { Allow: "GET, HEAD", "Cache-Control": "no-store" } })
     // HEAD must never consume a return-intent or perform any auth/navigation side effect.
     if (request.method === "HEAD") return new Response(null, { status: 200, headers: jsonHeaders() })
-    const result = await readContext(request)
+    const result = await read(request, false)
     const status = result.status === "ok" ? 200 :
       result.status === "unauthenticated" ? 401 :
       result.status === "denied" ? 403 :
