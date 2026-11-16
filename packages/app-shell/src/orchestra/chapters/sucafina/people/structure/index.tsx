@@ -388,6 +388,8 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
               <Show when={activeEditor()}>
                 {(editor) => <section class="sf-people-section" data-sf-selection="editor">
                   <SfPeopleEditor surfaceId="CAP07"
+                    readInput={{ ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
+                      ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }) }}
                     scopeKey={"people:structure:" + String(props.route.query.year ?? "current")}
                     entity={editor().entity}
                     recordRef={editor().recordRef}
