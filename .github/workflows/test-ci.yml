@@ -19,37 +19,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The branch name carries the requested operating systems: ci-run-linux-*, ci-run-windows-*, ci-run-macos-*,
-        # ci-run-both-* (Linux and Windows) or ci-run-all-*. script/test-ci-request.ts maps the same names.
-        # The dedicated Intel lane precedes the generic macOS prefix and records x64 measurement reach separately.
-        # Extension: ci-run-linux-arm64-* selects only ubuntu-24.04-arm before the generic Linux fallback.
-        host: ${{ fromJSON(startsWith(github.ref_name, 'ci-run-macos-intel-') && '["macos-15-intel"]' || startsWith(github.ref_name, 'ci-run-all-') && '["ubuntu-24.04","windows-latest","macos-14"]' || startsWith(github.ref_name, 'ci-run-both-') && '["ubuntu-24.04","windows-latest"]' || startsWith(github.ref_name, 'ci-run-windows-') && '["windows-latest"]' || startsWith(github.ref_name, 'ci-run-macos-') && '["macos-14"]' || startsWith(github.ref_name, 'ci-run-linux-arm64-') && '["ubuntu-24.04-arm"]' || '["ubuntu-24.04"]') }}
+        # The optional SF request runner is Linux x86_64 only.
+        host: [ubuntu-24.04]
     runs-on: ${{ matrix.host }}
     timeout-minutes: 45
     defaults:
       run:
         shell: bash
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-
-      # Extension: branch-scoped so a misrouted ARM64 request cannot skip its CPU assertion.
-      - name: Assert Linux ARM64
-        if: startsWith(github.ref_name, 'ci-run-linux-arm64-')
+      - name: Deny every non-Linux-x64 request before any checkout or installation
         run: |
           set -euo pipefail
-          if [ "$RUNNER_OS" != Linux ] || [ "$RUNNER_ARCH" != ARM64 ] || [ "$(uname -m)" != aarch64 ]; then
-            echo "::error::${{ matrix.host }} must provide native Linux ARM64 (RUNNER_ARCH=ARM64, uname -m=aarch64)"
-            exit 2
-          fi
-
-      - name: Assert macOS arm64
-        if: runner.os == 'macOS' && matrix.host != 'macos-15-intel'
-        run: |
-          if [ "$RUNNER_ARCH" != ARM64 ] || [ "$(uname -m)" != arm64 ]; then
-            echo "::error::${{ matrix.host }} must provide native arm64"
-            exit 2
-          fi
+          case "$GITHUB_REF_NAME" in
+            ci-run-linux-arm64-*) echo "::error::Linux ARM64 is not the SF Azure VM target"; exit 2 ;;
+            ci-run-linux-*) test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64 ;;
+            *) echo "::error::Only ci-run-linux-* is admissible for Orchestra-SF"; exit 2 ;;
+          esac
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Setup request validator Node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0

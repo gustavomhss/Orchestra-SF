@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: sf-ci-${{ github.event.pull_request.number || github.ref }}
+  group: sf-ci-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -53,26 +53,31 @@ jobs:
       - name: Verify generated business boundaries
         run: |
           set -euo pipefail
-          bun --cwd modules/atlas/boundary run check:generated
-          bun --cwd packages/client run check:generated
+          (cd modules/atlas/boundary && bun run check:generated)
+          (cd packages/client && bun run check:generated)
       - name: Typecheck runtime, host, product, app and E2E
         run: |
           set -euo pipefail
-          bun --cwd modules/atlas/boundary run typecheck
-          bun --cwd modules/sucafina run typecheck
-          bun --cwd packages/core run typecheck
-          bun --cwd packages/server run typecheck
-          bun --cwd packages/client run typecheck
-          bun --cwd apps/cli run typecheck
-          bun --cwd packages/app-shell run typecheck
-          bun --cwd packages/app-shell run typecheck:sf-e2e
+          (cd modules/atlas/boundary && bun run typecheck)
+          (cd modules/sucafina && bun run typecheck)
+          (cd packages/core && bun run typecheck)
+          (cd packages/server && bun run typecheck)
+          (cd packages/client && bun run typecheck)
+          (cd apps/cli && bun run typecheck)
+          (cd packages/app-shell && bun run typecheck)
+          (cd packages/app-shell && bun run typecheck:sf-e2e)
       - name: Verify Linux web production build
-        run: bun --cwd apps/web run build
+        run: (cd apps/web && bun run build)
       - name: Security and dependency guards
+        env:
+          # PRs compare to their actual target; the isolated pilot compares
+          # to its frozen source, not all unrelated canonical changes on dev.
+          SF_GUARD_BASE: ${{ github.event.pull_request.base.sha || 'ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f' }}
         run: |
           set -euo pipefail
+          git cat-file -e "$SF_GUARD_BASE^{commit}"
           bun run check:spawn-imports
-          bun run check:guards --base origin/dev
+          bun run check:guards --base "$SF_GUARD_BASE"
 
   omni:
     name: sf/linux-native-omni
