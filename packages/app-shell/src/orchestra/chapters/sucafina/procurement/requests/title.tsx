@@ -37,6 +37,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
   let submitted: SfPublicDraftController<{ title: string }> | undefined
   let busy = false
   const stop = () => {
+    // A departed owner/navigation cannot safely receive an old action's result.
     submitted?.setPhase("outcome-unknown")
     active?.abort()
   }
@@ -131,8 +132,12 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     const abort = new AbortController()
     stop(); active = abort
     const fresh = await readRequestTitle(ready.context, ready.transport, ref, abort.signal)
+    // Navigation/owner cleanup already hid this review; no old notice is safe to show.
     if (!current(review) || abort.signal.aborted) { busy = false; return }
-    if (!matches(fresh, review)) { rejectSource(fresh); busy = false; setUi("busy", false); return }
+    if (!matches(fresh, review)) {
+      console.error("CAP25 title review preflight failed", fresh.status)
+      rejectSource(fresh); busy = false; setUi("busy", false); return
+    }
     draft()?.setPhase("reviewing")
     busy = false
     setUi("busy", false)
@@ -153,11 +158,15 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
       version: intent.version, values: { pr: { title: intent.title } } }
     try {
       const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(payload)))
+      // Cleanup on navigation or owner change hides the prior action and its values.
       if (!current(intent) || abort.signal.aborted) return
       const digest = Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, "0")).join("")
       const fresh = await readRequestTitle(ready.context, ready.transport, intent.ref, abort.signal)
       if (!current(intent) || abort.signal.aborted) return
-      if (!matches(fresh, intent)) { rejectSource(fresh); return }
+      if (!matches(fresh, intent)) {
+        console.error("CAP25 title save preflight failed", fresh.status)
+        rejectSource(fresh); return
+      }
       const pending = { operationRef: intent.operationRef, idempotencyKey: intent.idempotencyKey,
         payloadDigest: digest, expectedVersion: intent.version }
       controller.setPending(pending)
@@ -176,22 +185,38 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
       }
       const response = await createSfProcurementClient(ready.transport)["domain.command.CAP25.save"](payload,
         { signal: abort.signal, idempotencyKey: intent.idempotencyKey })
-      if (!settling()) { controller.setPhase("outcome-unknown"); return }
+      if (!settling()) {
+        controller.setPhase("outcome-unknown")
+        if (authority() === intent.token && !abort.signal.aborted) {
+          console.error("CAP25 title save lost its submission fence")
+          setUi({ review: null, state: "outcome-unknown", notice: "sf.u11.remaining.unknown" })
+        }
+        return
+      }
       if (response.kind === "response" && !response.body.ok &&
           (response.status === 409 || response.status === 422) && response.body.status === response.status) {
         controller.rejectSave({ status: response.status, operation: pending })
+        console.error("CAP25 title save rejected", response.status)
         submitted = undefined
         setUi({ review: null, state: response.status === 409 ? "conflict" : "ready",
           notice: response.status === 409 ? "sf.u11.remaining.missingVersion" : "sf.u11.remaining.invalidPr" })
         return
       }
       if (response.kind !== "response" || response.status < 200 || response.status >= 300 || response.body.ok !== true) {
+        console.error("CAP25 title save outcome unknown", response.kind === "response" ? response.status : "transport-error")
         controller.setPhase("outcome-unknown")
         setUi({ review: null, state: "outcome-unknown", notice: "sf.u11.remaining.unknown" })
         return
       }
       const projected = await readRequestTitle(ready.context, ready.transport, intent.ref, abort.signal)
-      if (!settling()) { controller.setPhase("outcome-unknown"); return }
+      if (!settling()) {
+        controller.setPhase("outcome-unknown")
+        if (authority() === intent.token && !abort.signal.aborted) {
+          console.error("CAP25 title projection lost its submission fence")
+          setUi({ review: null, state: "outcome-unknown", notice: "sf.u11.remaining.unknown" })
+        }
+        return
+      }
       if (projected.status === "authorized" && projected.version > intent.version && projected.title === intent.title) {
         controller.confirmSave({ kind: "projected", operationRef: intent.operationRef,
           baseVersion: projected.version, value: { title: projected.title } })
@@ -202,10 +227,13 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
         return
       }
       controller.confirmSave({ kind: "confirmed-without-projection", operationRef: intent.operationRef, resultVersion: null })
+      console.error("CAP25 title save projection unavailable", projected.status)
       submitted = undefined
       setUi({ source: null, review: null, state: "unavailable", notice: "sf.u11.remaining.accepted" })
-    } catch {
+    } catch (error) {
       const state = controller.snapshot()
+      if (authority() === intent.token && !abort.signal.aborted)
+        console.error("CAP25 title save failed", error instanceof TypeError ? "TypeError" : error instanceof Error ? "Error" : "unknown")
       if (authority() === intent.token && state.availability === "active" && state.pendingOperation) {
         controller.setPhase("outcome-unknown")
         setUi({ review: null, state: "outcome-unknown", notice: "sf.u11.remaining.unknown" })
@@ -236,7 +264,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     return state?.availability === "active" && !state.pendingOperation &&
       state.phase !== "submitting" && state.phase !== "outcome-unknown"
   }
-  return <section data-component="sf-request-title">
+  return <section data-component="sf-request-title-save">
     <Show when={visible()} fallback={<SfStatePanel state={displayState()} messageKey={key("sf.u11.remaining.noSource")} />}>
       <Show when={!review()} fallback={<Show when={review()}>{(item) => {
         const original = { kind: "persisted" as const, ref: item().ref, version: item().version, fields: [field(item().original)] }
