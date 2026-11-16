@@ -1,0 +1,96 @@
+{
+  "schema": "sf2h.closure225.surgical-ci-request.v1",
+  "mission": 225,
+  "requested_to": "223",
+  "do_not_self_run": true,
+  "source_branch": "sf-supplier-csv",
+  "source_head": "51be81026bb542906b86c1cb38c7f57bd44fed22",
+  "product_base": "c5703ca53399a4ead279cdf4df3c1261eef1dd8e",
+  "precondition": "Only after 211 has integrated owned code and exact F02/D01 postimages, with operation readiness bound to a real producer; preserve PR106/CI proofs214",
+  "scope": [
+    "packages/schema/src/sucafina/procurement.ts",
+    "packages/client/src/sucafina/procurement.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/**",
+    "packages/app-shell/e2e/sucafina/native/journeys/supplier-csv225/**",
+    "modules/sucafina/Sucafinav1/test/product/supplier-csv225/**",
+    "inert-211/legacy U14 test after 211 composition"
+  ],
+  "required_cases": [
+    {
+      "id": "225-P1",
+      "kind": "positive",
+      "source": "real installed CAP27/authorized files.export.suppliers",
+      "assert": [
+        "button enabled",
+        "GET exact original?download=suppliers",
+        "response Content-Type/Content-Disposition/no-store",
+        "download bytes SHA256 equal original producer HTTP bytes",
+        "columns/rows/audit/bank fields unmodified",
+        "no supplier write",
+        "filter preserved"
+      ]
+    },
+    {
+      "id": "225-N1",
+      "kind": "negative",
+      "source": "host-preauthenticated denied Microsoft actor, no minted auth",
+      "assert": [
+        "no CAP27 and/or files.exports grant",
+        "CSV disabled",
+        "zero requests and downloads",
+        "no exposed bank bytes"
+      ]
+    },
+    {
+      "id": "225-N2",
+      "kind": "negative",
+      "source": "real producer held HTTP response + page owner exit",
+      "assert": [
+        "no stale Blob/download after owner cleanup",
+        "no cross-owner reuse"
+      ]
+    },
+    {
+      "id": "225-N3",
+      "kind": "negative",
+      "source": "original producer returns 401,403,409 or 503 with current policy/snapshot",
+      "assert": [
+        "no browser save, no synthetic 200",
+        "denied/stale/unavailable surfaced",
+        "no retry while outcome unavailable"
+      ]
+    },
+    {
+      "id": "225-N4",
+      "kind": "negative",
+      "source": "mismatched owner, policyVersion, accessRevision, generation after ctx.context reread",
+      "assert": [
+        "abort/deny before byte release, no stale data"
+      ]
+    },
+    {
+      "id": "225-D01",
+      "kind": "desktop",
+      "source": "real installed Electron broker, original byte-response/chunks",
+      "assert": [
+        "same bytes/mime/filename as original producer",
+        "no private header/cookie in IPC",
+        "bounded chunks",
+        "abort on binding invalidation, no save on revoked/denied"
+      ]
+    },
+    {
+      "id": "225-U14-REGRESSION",
+      "kind": "legacy",
+      "source": "existing u14.spec.ts amended via inert postimage",
+      "assert": [
+        "old disabled/noop assertion replaced with authorized export",
+        "preserve U14 bank readonly, linked orders, version CAS and response loss"
+      ]
+    }
+  ],
+  "dispatch_limit": "223 only; no tests/typecheck/build/validator local or independent GitHub actions from 225",
+  "status": "REQUESTED_NOT_RUN",
+  "result_sha": null,
+  "GLOBAL_RELEASE": false
+}

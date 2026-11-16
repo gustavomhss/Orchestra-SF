@@ -1,0 +1,25 @@
+{
+  "schema": "sf2h.closure225.independent-recheck.v1",
+  "mission": 225,
+  "reviewer": "207",
+  "finding": "S1-R1-207-005",
+  "criterion": "U14-AC01",
+  "status": "PENDING_NOT_RUN",
+  "precondition": "211 composed source with F02+D01 and 223 real installed surgical CI results",
+  "questions": [
+    "Does allowed CAP27 owner have enabled, non-noop Export suppliers CSV and is authorization independent from the manifest and CAP27 action labels?",
+    "Are bytes, UTF-8 filename, columns/rows, bank masking, request/order links and audit EXACTLY from original authorized producer?",
+    "Can denied/read-only/revoked principals avoid private egress, including transient owner switch and late HTTP response?",
+    "Does current principal/installation/project/policyVersion/accessRevision and original source snapshot version recheck happen before browser/native byte release?",
+    "Do desktop/network paths use installed byte producer and preserve original Content-Disposition without bypassing host security?",
+    "Is outdated u14.spec.ts disabled assertion replaced after 211 composition, with no assertion weakened?"
+  ],
+  "evidence_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/inert-211/delta-211.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/request223.json",
+    "packages/app-shell/e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts",
+    "modules/sucafina/Sucafinav1/test/product/supplier-csv225/admission.test.ts"
+  ],
+  "prohibited": "no fabricated browser CSV, grants, simulated success, omitted criteria or rerun from 225",
+  "GLOBAL_RELEASE": false
+}
