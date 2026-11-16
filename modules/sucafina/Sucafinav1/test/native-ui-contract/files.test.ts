@@ -24,7 +24,7 @@ describe("A06 source-bound files contracts (component-only; NOT installed E2E)",
     expect(new Set(ids).size).toBe(27)
     expect(ids.every((id) => id.startsWith("files."))).toBe(true)
     for (const id of ids) {
-      expect(SfFiles.operations[id as keyof typeof SfFiles.operations].operationId).toBe(id)
+      expect<string>(SfFiles.operations[id as keyof typeof SfFiles.operations].operationId).toBe(id)
     }
   })
 
