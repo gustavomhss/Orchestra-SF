@@ -95,7 +95,7 @@ it.live("source revocation while an observer is suspended defeats consumption", 
   yield* Deferred.await(ready)
   yield* deps.skills.reload()
   yield* Deferred.succeed(resume, undefined)
-  expect(yield* Fiber.join(fiber)).toBe(false)
+  expect(yield* Fiber.join(fiber)).toBe(true)
   expect(seen.facts).toBeUndefined()
 }))
 
@@ -105,9 +105,9 @@ it.live("stale source, failed publication and absent provenance never notify", (
   const host = makeHost((receipt) => Effect.sync(() => void observed.push(receipt)))
   const changing: EventV2.Interface = { ...deps.events, publish: (definition, data, options) =>
     deps.events.publish(definition, data, options).pipe(Effect.tap(() => deps.skills.reload())) }
-  expect(yield* SessionDirectCommands.skill({ ...deps, events: changing, host }, input)).toBe(false)
+  expect(yield* SessionDirectCommands.skill({ ...deps, events: changing, host }, input)).toBe(true)
   const missing = { ...deps.skills, sourceOf: undefined }
-  expect(yield* SessionDirectCommands.skill({ ...deps, skills: missing, host }, input)).toBe(false)
+  expect(yield* SessionDirectCommands.skill({ ...deps, skills: missing, host }, input)).toBe(true)
   const failing: EventV2.Interface = { ...deps.events, publish: () => Effect.die("publish failed") }
   expect((yield* Effect.exit(SessionDirectCommands.skill({ ...deps, events: failing, host }, input)))._tag).toBe("Failure")
   expect(observed).toEqual([])
@@ -119,8 +119,8 @@ it.live("an in-flight reload and an uncommitted event cannot mint", () => Effect
   const host = makeHost((receipt) => Effect.sync(() => void observed.push(receipt)))
   const gated: FSUtil.Interface = { ...deps.fs, readDirectoryEntries: (directory) =>
     deps.fs.readDirectoryEntries(directory).pipe(Effect.tap(() => deps.skills.reload())) }
-  expect(yield* SessionDirectCommands.skill({ ...deps, fs: gated, host }, input)).toBe(false)
-  expect(yield* deps.events.transact(SessionDirectCommands.skill({ ...deps, host }, input))).toBe(false)
+  expect(yield* SessionDirectCommands.skill({ ...deps, fs: gated, host }, input)).toBe(true)
+  expect(yield* deps.events.transact(SessionDirectCommands.skill({ ...deps, host }, input))).toBe(true)
   expect(observed).toEqual([])
 }))
 
@@ -128,7 +128,41 @@ it.live("no observer, a missing skill, and observer defects preserve the boolean
   const deps = yield* fixture
   expect(yield* SessionDirectCommands.skill(deps, input)).toBe(true)
   expect(yield* SessionDirectCommands.skill(deps, { ...input, skill: "missing" })).toBe(false)
-  expect(yield* SessionDirectCommands.skill({ ...deps, host: makeHost(() => Effect.die("observer")) }, input)).toBe(false)
+  expect(yield* SessionDirectCommands.skill({ ...deps, host: makeHost(() => Effect.die("observer")) }, input)).toBe(true)
+}))
+
+for (const change of [
+  { content: "forged instructions" },
+  { name: "forged-name" },
+  { location: AbsolutePath.make("/forged/SKILL.md") },
+]) {
+  it.live(`cached winning Info changed before load cannot acquire provenance: ${Object.keys(change)[0]}`, () => Effect.gen(function* () {
+    const deps = yield* fixture
+    const found = (yield* deps.skills.list()).find((item) => item.name === input.skill)!
+    expect(deps.skills.sourceOf?.(found)?.reserved).toBe(true)
+    Object.assign(found, change)
+    expect(deps.skills.sourceOf?.(found)).toBeUndefined()
+    yield* deps.skills.list()
+    expect(deps.skills.sourceOf?.(found)).toBeUndefined()
+    const observed: unknown[] = []
+    const host = makeHost((receipt) => Effect.sync(() => void observed.push(receipt)))
+    // A renamed skill is still selected by its new name: the cached object cannot authenticate it.
+    const requested = "name" in change && typeof change.name === "string" ? change.name : input.skill
+    expect(yield* SessionDirectCommands.skill({ ...deps, host }, { ...input, skill: requested })).toBe(true)
+    expect(observed).toEqual([])
+  }))
+}
+
+it.live("mutating the cached Info during materialization prevents observation after delivery", () => Effect.gen(function* () {
+  const deps = yield* fixture
+  const found = (yield* deps.skills.list()).find((item) => item.name === input.skill)!
+  const observed: unknown[] = []
+  const host = makeHost((receipt) => Effect.sync(() => void observed.push(receipt)))
+  const gated: FSUtil.Interface = { ...deps.fs, readDirectoryEntries: (directory) =>
+    deps.fs.readDirectoryEntries(directory).pipe(Effect.tap(() => Effect.sync(() => { Object.assign(found, { content: "forged after start" }) }))) }
+  expect(yield* SessionDirectCommands.skill({ ...deps, fs: gated, host }, input)).toBe(true)
+  expect(deps.skills.sourceOf?.(found)).toBeUndefined()
+  expect(observed).toEqual([])
 }))
 
 it.live("sourceOf recognizes only current winning identity and revokes it after reload", () => Effect.gen(function* () {
@@ -155,4 +189,8 @@ it.live("an embedded Info reused after reload cannot revive the old source pin",
   const next = (yield* deps.skills.list()).find((item) => item.name === info.name)!
   expect(next).toBe(found)
   expect(deps.skills.sourceOf?.(next)).not.toBe(first)
+  Object.assign(next, { content: "forged" })
+  yield* deps.skills.reload()
+  expect((yield* deps.skills.list()).find((item) => item.name === info.name)).toBe(next)
+  expect(deps.skills.sourceOf?.(next)).toBeUndefined()
 }))
