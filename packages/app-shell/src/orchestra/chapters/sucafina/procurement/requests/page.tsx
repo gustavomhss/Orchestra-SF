@@ -600,7 +600,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <Show when={current && !creating()}>
             <p>{t("sf.u11.remaining.noTitleMutation")}: {current?.pr?.title ?? ""}</p>
             {/* The W19 title editor is a separate source-locked intent/draft. */}
-            <SfRequestTitleEdit {...props} />
+            <SfRequestTitleEdit {...props} requestRef={selectedRef()} onConfirmed={refresh} />
           </Show>
           <SfRequisitionForm value={activePr()!.value} creating={creating()}
             disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
