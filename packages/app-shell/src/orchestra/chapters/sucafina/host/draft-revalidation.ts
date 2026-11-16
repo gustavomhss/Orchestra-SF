@@ -9,6 +9,7 @@ import { revalidatePlannerVersionDraft } from "./draft-revalidation-planner-vers
 import { revalidateVendorContractDraft } from "./draft-revalidation-vendor"
 import { revalidateRiskStakeholderDraft } from "./draft-revalidation-risk-stakeholder"
 import { revalidatePeopleDraft } from "./draft-revalidation-people"
+import { revalidatePlannerCatalogDraft } from "./draft-revalidation-planner-catalog"
 
 export async function revalidateSfNativeDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -33,6 +34,8 @@ export async function revalidateSfNativeDraft(
     return revalidateRiskStakeholderDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP07" || input.read.operationId === "domain.page.CAP08")
     return revalidatePeopleDraft(input, fresh, transport, signal)
+  if (input.read.operationId === "domain.page.CAP21")
+    return revalidatePlannerCatalogDraft(input, fresh, transport, signal)
   if (input.read.operationId !== "projection.case" || input.identity.kind !== "record" ||
       input.read.fieldPaths.length || input.read.actionIds.length) return { status: "unavailable" }
 

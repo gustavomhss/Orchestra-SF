@@ -223,7 +223,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     }
     const version = row ? versionFor(collection, row.id) : null
     const controller = owner.drafts.acquire<RecordDraft>({
-      surfaceId: "CAP21", editScopeKey: "shared-catalog" as SfEditScopeKey,
+      surfaceId: "CAP21", editScopeKey: ("shared-catalog:" + collection) as SfEditScopeKey,
       identity: row ? { kind: "record", recordRef: ref(row.id) }
         : { kind: "new", newIntentRef: intent! },
       baseVersion: version, base: row ? value : null, value,
@@ -231,7 +231,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
         operationId: "domain.page.CAP21",
         input: props.route.query.year === undefined ? {} : { year: props.route.query.year },
         fieldPaths: row ? ["id", "name", ...(selectedDetail(row, collection) === undefined ? []
-          : [collection === "entities" ? "code" : "desc"])] : ["entities", "allocations"],
+          : [collection === "entities" ? "code" : "desc"])] : [],
         actionIds: ["save"],
       },
     })
