@@ -119,8 +119,10 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
     changedOrder: false,
   })
   let inFlight: AbortController | undefined
-  const sameOwner = (generation: number, keyValue: string) =>
-    owner.generation() === generation && owner.state().status === "ready" && owner.state().ownerKey === keyValue
+  const sameOwner = (generation: number, keyValue: string) => {
+    const state = owner.state()
+    return owner.generation() === generation && state.status === "ready" && state.ownerKey === keyValue
+  }
   const read = async () => {
     const state = owner.state(), access = owner.ready()
     const a = store.previousRef.trim(), b = store.currentRef.trim()

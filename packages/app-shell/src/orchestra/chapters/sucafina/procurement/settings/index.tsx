@@ -363,7 +363,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           onLogin={() => { void owner.reload() }}
         >
           <Show when={(currentProjection() && active()) ? active() : undefined}>
-            {() => (
+            {(_) => (
               <>
                 <Show when={!pageAllowed() || !actionAllowed("save")}>
                   <p role="status">{t(sfCommonKey("sf.common.readOnly"))}</p>

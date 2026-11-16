@@ -27,7 +27,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
       ...(selection.opsMonth === undefined ? {} : { opsMonth: selection.opsMonth }),
     }, { signal }))
   const [pinned, setPinned] = createSignal<ReadonlySet<string>>(new Set())
-  createEffect(() => { const generation = reader.context.generation();void generation;setPinned(new Set()) })
+  createEffect(() => { const generation = reader.context.generation();void generation;setPinned(new Set<string>()) })
   const data = () => reader.snapshot()?.data
   const selected = () => reader.selection()
   const year = () => selected().year

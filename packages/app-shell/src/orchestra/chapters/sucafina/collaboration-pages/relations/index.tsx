@@ -266,8 +266,8 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
             </label>
             <button type="submit" class="mx-btn" disabled={busy()}>{t("sf.u44.loadRelations")}</button>
           </form>
-          <Show when={props.route.kind === "entry"}>
-            <p class="sf-u44-ref">{t("sf.u44.relationRoute")}: <code>{String(props.route.params.relationRef)}</code></p>
+          <Show when={(props.route.kind === "entry") ? props.route.params.relationRef : undefined}>
+            {(relationRef) => <p class="sf-u44-ref">{t("sf.u44.relationRoute")}: <code>{String(relationRef())}</code></p>}
           </Show>
         </Show>
         <SfStatePanel state={effectiveState()} messageKey={stateKey(effectiveState())}

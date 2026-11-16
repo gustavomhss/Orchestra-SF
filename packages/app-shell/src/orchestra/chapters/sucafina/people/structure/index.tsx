@@ -57,7 +57,7 @@ const memberFields = (leaders: StructureData["leaders"]): readonly PeopleField[]
 ]
 const toValues = (value: object, fields: readonly PeopleField[]): PeopleFormValues => {
   const source = value as Record<string, unknown>
-  return Object.fromEntries(fields.filter((item) => Object.hasOwn(source, item.name)).map((item) =>
+  return Object.fromEntries(fields.filter((item) => Object.hasOwn(source, item.name)).map((item): [string, string] =>
     [item.name, typeof source[item.name] === "number" ? String(source[item.name]) :
       typeof source[item.name] === "string" ? source[item.name] : ""]))
 }
@@ -153,15 +153,20 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
     if (choice.kind === "new-member" || choice.kind === "new-leader")
       return { kind: "confirmed-without-projection" } // POST never returns new id
     if (choice.kind === "member") {
-      const updated = refreshed.data.members.find((person) => person.id === choice.id)
+      const recordId = choice.id
+      const updated = refreshed.data.members.find((person) => person.id === recordId)
       return updated ? { kind: "projected", value: toValues(updated, memberFields(refreshed.data.leaders)),
-        version: refreshed.versions["members:" + choice.id] ?? 0 } :
+        version: refreshed.versions["members:" + recordId] ?? 0 } :
         { kind: "confirmed-without-projection" }
     }
-    const updated = refreshed.data.leaders.find((person) => person.id === choice.id)
-    return updated ? { kind: "projected", value: toValues(updated, leaderFields),
-      version: refreshed.versions["leaders:" + choice.id] ?? 0 } :
-      { kind: "confirmed-without-projection" }
+    if (choice.kind === "leader") {
+      const recordId = choice.id
+      const updated = refreshed.data.leaders.find((person) => person.id === recordId)
+      return updated ? { kind: "projected", value: toValues(updated, leaderFields),
+        version: refreshed.versions["leaders:" + recordId] ?? 0 } :
+        { kind: "confirmed-without-projection" }
+    }
+    return { kind: "confirmed-without-projection" }
   }
 
   const chooseDelete = (kind: DeleteIntent["kind"], id: string) => {
@@ -373,8 +378,13 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
               <Show when={selected() && !selected()!.edit}>
                 <section class="sf-people-section sf-people-detail" data-sf-selection="details">
                   <h2>{t(key("sf.u03.details"))}</h2>
-                  <Show when={selected()?.kind === "leader" ? leader((selected() as Extract<Selection,{kind:"leader"}>).id) :
-                    selected()?.kind === "member" ? member((selected() as Extract<Selection,{kind:"member"}>).id) : undefined}
+                  <Show when={(() => {
+                    const sel = selected()
+                    if (!sel) return undefined
+                    if (sel.kind === "leader") return leader(sel.id)
+                    if (sel.kind === "member") return member(sel.id)
+                    return undefined
+                  })()}
                     fallback={<SfStatePanel state="not-found" messageKey={sfCommonKey("sf.common.removed")} />}>
                     {(row) => <dl>
                       <For each={Object.entries(row()).filter(([field]) =>

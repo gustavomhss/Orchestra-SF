@@ -75,6 +75,9 @@ function toTalentValues(person: object): PeopleFormValues {
  * The import destination is resolved by the owner navigation. Export uses the
  * original authorized workbook bytes, never a projection serialized in the UI.
  */
+const memberStatusQuery = (value: string | undefined) =>
+  value === "" || value === "Active" || value === "On Leave" || value === "Terminated" ? value : undefined
+
 export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element {
   const { t } = useSfPresentation()
   const navigate = useNavigate()
@@ -83,7 +86,7 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
     (transport, signal) => createSfPeopleClient(transport)["domain.page.CAP08"]({
       ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
       ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }),
-      ...(props.route.query.status === undefined ? {} : { memberStatus: props.route.query.status }),
+      ...(memberStatusQuery(props.route.query.status) === undefined ? {} : { memberStatus: memberStatusQuery(props.route.query.status)! }),
     }, { signal }))
   const [local, setLocal] = createStore<{
     filter: string
@@ -346,7 +349,7 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
                   <SfPeopleEditor
                     readInput={{ ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
                       ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }),
-                      ...(props.route.query.status === undefined ? {} : { memberStatus: props.route.query.status }) }}
+                      ...(memberStatusQuery(props.route.query.status) === undefined ? {} : { memberStatus: memberStatusQuery(props.route.query.status)! }) }}
                     surfaceId="CAP08"
                     scopeKey={"people:talent:" + String(props.route.query.year ?? "current")}
                     entity="talent"

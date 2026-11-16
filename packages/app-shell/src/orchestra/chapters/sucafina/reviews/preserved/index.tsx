@@ -33,8 +33,10 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
   const ref = () => props.route.kind === "entry" || props.route.kind === "present"
     ? props.route.params.reviewRef : undefined
   let successorAbort: AbortController | undefined
-  const current = (generation: number, ownerKey: string) =>
-    owner.generation() === generation && owner.state().status === "ready" && owner.state().ownerKey === ownerKey
+  const current = (generation: number, ownerKey: string) => {
+    const state = owner.state()
+    return owner.generation() === generation && state.status === "ready" && state.ownerKey === ownerKey
+  }
   createEffect(() => {
     const generation = owner.generation()
     const active = owner.ready()

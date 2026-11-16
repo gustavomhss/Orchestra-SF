@@ -65,7 +65,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
             messageKey={k(caseData.read.state === "loading" ? "sf.ui36.reading" : "sf.ui36.unavailable")}
             onRetryRead={() => caseData.reload()} />
         }>
-          {() => <>
+          {(_) => <>
             <section class="mx-card sf-n24-section" aria-labelledby="sf-n24-assumptions">
               <h2 id="sf-n24-assumptions">{t("sf.ui36.record")}</h2>
               <div class="sf-n24-toolbar">

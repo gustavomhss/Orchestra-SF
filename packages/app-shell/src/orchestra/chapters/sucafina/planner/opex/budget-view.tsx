@@ -104,6 +104,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   let lastIdentity = ""
 
   const isOpex = () => props.surfaceId === "CAP18"
+  const projectRows = () => { const data = state.page?.data; return data && "projects" in data ? data.projects : [] }
+  const splitRows = () => { const data = state.page?.data; return data && "split" in data ? data.split : [] }
   const pageName = () => isOpex() ? "OPEX" as const : "CAPEX" as const
   const currentYear = () => state.page?.selection.year ?? props.route.query.year
   const version = () => state.page?.data.selectedVersion
@@ -304,7 +306,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const rows = grid()?.rows ?? []
     const previous = rows.findIndex((row) => row.id === event.from.rowRef)
     if (previous < 0) return
-    let row = previous, month = event.from.month
+    let row = previous, month: number = event.from.month
     switch (event.key) {
       case "ArrowUp": row -= 1; break
       case "ArrowDown": row += 1; break
@@ -700,7 +702,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             <Show when={!isOpex() && "projects" in page().data}>
               <section><h2>{t("sf.u07.projects")}</h2>
                 <div class="sf-u07-project-list">
-                  <For each={"projects" in page().data? page().data.projects:[]}>{(p)=>
+                  <For each={projectRows()}>{(p)=>
                     <button type="button" class="mx-btn" onClick={()=>setState("selected",p.id)}>
                       {p.name} · {p.code??p.id}
                     </button>}
@@ -710,7 +712,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             </Show>
             <Show when={isOpex() && "split" in page().data}>
               <section><h2>{t("sf.u07.structure")}</h2>
-                <ul><For each={"split" in page().data?page().data.split:[]}>{(element)=><li>
+                <ul><For each={splitRows()}>{(element)=><li>
                   <span>{element.element} · {t("sf.u07.split")}: {String(element.split)}</span>
                   <button class="mx-btn" type="button" disabled={!allowed("save")}
                     onClick={()=>openReview("split","",element.revision,

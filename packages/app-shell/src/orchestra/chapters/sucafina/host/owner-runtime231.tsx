@@ -131,7 +131,7 @@ export function createSfInstalledOwnerSource231(
   server: ServerConnection.Any,
   fetcher: typeof globalThis.fetch,
 ) {
-  const key = ServerConnection.key(server)
+  const key: string = ServerConnection.key(server)
   const endpoint = (() => {
     try {
       const url = new URL(server.http.url)
@@ -382,7 +382,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const currentHref = () => location.pathname + location.search
   const selection = () => discovery.status === "ready" ? discovery.selection : undefined
   const sameServer = (value: SfOwnerSelection) =>
-    value.serverKey === ServerConnection.key(props.server)
+    value.serverKey === (ServerConnection.key(props.server) as string)
   const newTransport = (binding: SfInstallationDescriptor, generation: number,
     currentGeneration: () => number): SfTransport => desktopBridge
     ? desktopBridge.createTransport(binding, generation, currentGeneration)
@@ -663,7 +663,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     // Route selectors never borrow missing values from a remembered profile.
     const query = location.search
     const directory = props.directory
-    const actualServerKey = ServerConnection.key(props.server)
+    const actualServerKey: string = ServerConnection.key(props.server)
     const parsed = explicitSelection(query)
     const activeSelection = selection()
     const epoch = ++discoveryAttempt

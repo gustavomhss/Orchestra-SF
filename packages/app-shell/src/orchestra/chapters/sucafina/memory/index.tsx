@@ -61,7 +61,7 @@ const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "signal
 export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Element {
   // UI62 has a real C09/C17 producer and its own owner-fenced typed consumer.
   // UI61/UI63 retain the original seven A14 operations unchanged.
-  if (props.surfaceId === "UI62") return <SfSimilarCasesView {...props} />
+  if (props.surfaceId === "UI62") return <SfSimilarCasesView {...(props as SfSurfaceProps<"UI62">)} />
   const owner = useSfContext()
   const language = useLanguage()
   const k = (value: keyof typeof SF_U26_COPY | "sf.common.loading" | "sf.common.empty" |

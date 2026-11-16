@@ -174,7 +174,9 @@ export async function runReportRecovery(input: Readonly<{
     )
     if (!input.current()) return
     if (prepared && (prepared.kind !== "response" || prepared.body.status !== "ok")) {
-      const reason = prepared.kind === "response" ? prepared.body.status + ": " + prepared.body.reason : prepared.reason
+      const body = prepared.kind === "response" ? prepared.body : undefined
+      const detail = body && "reason" in body ? body.reason : undefined
+      const reason = prepared.kind === "response" ? prepared.body.status + (detail === undefined ? "" : ": " + detail) : prepared.reason
       console.error("Sucafina report preparation did not settle", prepared.kind === "response" ? prepared.body.status : prepared.reason)
       update(input.drafts, intent, { reason })
       return
