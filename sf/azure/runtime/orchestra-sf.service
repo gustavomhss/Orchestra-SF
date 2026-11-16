@@ -1,0 +1,37 @@
+[Unit]
+Description=Orchestra-SF Web and Linux host (frozen C)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=/var/lib/orchestra-sf
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=orchestra-sf
+Group=orchestra-sf
+WorkingDirectory=/var/lib/orchestra-sf/home
+EnvironmentFile=/etc/orchestra-sf/public.env
+Environment=HOME=/var/lib/orchestra-sf/home
+Environment=XDG_DATA_HOME=/var/lib/orchestra-sf/home/.local/share
+Environment=ORCHESTRA_WEB_UI_DIR=/opt/orchestra-sf/current/web
+UMask=0077
+ExecStart=/opt/orchestra-sf/current/bin/orchestra serve --hostname 127.0.0.1 --port ${SF_PORT} --allowed-host ${SF_FQDN} --installation /opt/orchestra-sf/current/factory/installation.mjs
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ReadWritePaths=/var/lib/orchestra-sf
+
+[Install]
+WantedBy=multi-user.target

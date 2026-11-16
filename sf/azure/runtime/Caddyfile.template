@@ -1,0 +1,13 @@
+# managed-orchestra-sf -- never activate without owner approval and real Entra/OIDC.
+__SF_FQDN__ {
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        Strict-Transport-Security "max-age=31536000"
+    }
+    reverse_proxy 127.0.0.1:__SF_PORT__ {
+        # Original Host must survive; browser-supplied Forwarded is not trusted.
+        header_up -Forwarded
+    }
+}
