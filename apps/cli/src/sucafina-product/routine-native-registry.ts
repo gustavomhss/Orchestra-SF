@@ -263,7 +263,11 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
     }
     const sync = () => active && !disposed && input.resources() === resources && resources.current() &&
       input.requestFor(context) === request && !signal.aborted && now() < until && performance.now() < monotonicUntil &&
-      context.kind === "ui" && digestSfValue(context.binding) === contextDigest &&
+      (context.kind === "ui" || context.kind === "native" &&
+        context.binding.hostId === resources.identity.hostId &&
+        context.binding.locationId === digestSfValue(resources.identity.location) &&
+        context.binding.providerGeneration === generation) &&
+      digestSfValue(context.binding) === contextDigest &&
       digestSfValue(resources.identity) === identityDigest && digestSfValue([...request.headers]) === headersDigest &&
       context.binding.installationId === resources.identity.installationId &&
       context.binding.projectId === resources.identity.projectId
@@ -278,9 +282,19 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
         !await observeSfRoutineNative(() => evidence.current(context, request), signal) || !sync()) return undefined
       const sessionCurrent = async () => {
         const session = await observeSfRoutineNative(() => Effect.runPromise(resources.store.get(evidence.authoritySessionID)), signal)
-        return !!session && !session.time.archived && session.projectID === resources.identity.projectId &&
-          (session.agent === undefined || session.agent === AgentV2.defaultID) &&
-          isDeepStrictEqual(session.location, resources.identity.location)
+        if (!session || session.time.archived || session.projectID !== resources.identity.projectId ||
+          (session.agent !== undefined && session.agent !== AgentV2.defaultID) ||
+          !isDeepStrictEqual(session.location, resources.identity.location)) return false
+        // A native C11/C16 read retains its own consumed Request and real resident profile, not the
+        // independent Maestro parent as a substitute Task owner. The phase separately proves origin/history.
+        if (context.kind === "native") {
+          const resident = await observeSfRoutineNative(() =>
+            Effect.runPromise(resources.store.get(SessionSchema.ID.make(context.binding.nativeSessionId))), signal)
+          if (!resident || resident.time.archived || resident.agent !== context.binding.profileId ||
+            resident.agent === AgentV2.defaultID || resident.projectID !== resources.identity.projectId ||
+            !isDeepStrictEqual(resident.location, resources.identity.location)) return false
+        }
+        return true
       }
       if (!await sessionCurrent() || !sync()) return undefined
       const current = async () => {

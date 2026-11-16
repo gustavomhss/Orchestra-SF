@@ -34,6 +34,13 @@ test("the actual server root registers resident agents and skills and releases t
         roles: [{ surface: context.surface, role: context.surface === "procurement" ? "requester" : "viewer" }] } : null,
       grants: [{ principalRef: "person", namespaces: ["cases"], operations: ["sf_work_list", "sf_case_read"] }],
       environment: async () => ({ at: new Date().toISOString(), id: () => crypto.randomUUID(), directory: [] }) })
+    // This boots the real Host graph, not an isolated replacement of SessionV2 or the Task engine.
+    const nativeIds = runtime.contributions.map((contribution) => contribution.id)
+    expect(nativeIds).toContain("sucafina/native-phase-provider-fence")
+    expect(nativeIds).toContain("sucafina/native-phase-prompt")
+    expect(nativeIds).toContain("sucafina/routine-native-governance")
+    expect(nativeIds).toContain("sucafina/routine-native-runtime")
+    expect(nativeIds).toContain("sucafina-routine-publication")
     const workbench = createSfWorkbenchHttp({ origin: "http://localhost", mount: "/sucafina", runtime: () => runtime.services?.() })
     const web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
       .pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true, memoMap: Layer.makeMemoMapUnsafe() })

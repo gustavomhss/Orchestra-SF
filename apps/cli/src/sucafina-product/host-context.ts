@@ -1,5 +1,5 @@
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
-import { randomUUID } from "node:crypto"
+import { createHash, randomUUID } from "node:crypto"
 import { createSfPersonalViews } from "../../../../modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
 import { createSfPersonalViewAuthority } from "./personal-view-authority.ts"
 import path from "node:path"
@@ -67,18 +67,21 @@ import type { SfProductHtml } from "../../../../modules/sucafina/Sucafinav1/prod
 import { createSfRoutinePublicationContribution } from "./routine-publication.ts"
 import { createSfInstalledRoutinePublication } from "./routine-installed-publication.ts"
 import { createSfRoutineInputReaders } from "./routine-inputs.ts"
-import { createSfRoutineServices } from "./routine-services.ts"
-import { createSfRoutineNativeAdapter } from "./routine-native-adapter.ts"
+import { createSfRoutineNativePhaseComposition } from "./routine-native-phase-composition.ts"
+import { createSfNativePhasePromptContribution } from "./host-native-phase-prompt.ts"
+import { SF_ROUTINE_PHASE_PLAYBOOK } from "./routine-native-phase-scope.ts"
+import { ExecutionHost } from "@orchestra/core/session/runner"
+import { SkillV2 } from "@orchestra/core/skill"
+import type { SessionSchema } from "@orchestra/core/session/schema"
 import { createSfReviewsProjectionHandlers } from "./native-ui/reviews.ts"
-import { createSfRoutineNativeAdmission, type SfRoutineNativeAdmissionOrigin, type SfRoutineNativeAdmissionIntent } from "./routine-native-admission.ts"
+import type { SfRoutineNativeAdmissionOrigin } from "./routine-native-admission.ts"
 import { createSfRoutineNativeOwnerRegistry } from "./routine-native-registry.ts"
 import type { SfRoutineNativeHistoricalAuthority } from "./routine-native-registry.ts"
-import { createSfRoutineNativeOrigin } from "./routine-native-origin.ts"
 import type { SfRoutineNativeOriginalAdmission } from "./routine-native-origin.ts"
 import { createSfRoutineNativeGovernance } from "./routine-native-governance.ts"
 import { createSfRoutineNativeRuntime } from "./routine-native-runtime.ts"
-import { readSfRoutineNativeInput } from "./routine-native-input.ts"
 import { createSfRoutineHumanRun219, sfRoutineHumanRunCommand219 } from "./native-routine-producer219.ts"
+import type { SfRoutineNativeHumanRunCommand } from "./native-routine-producer219.ts"
 import { createSfDashboardHttp } from "./dashboard-http.ts"
 import { createSfSourcingInputs } from "./sourcing-inputs.ts"
 import { createProcurementDecisionHttp } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
@@ -129,7 +132,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   nativeRoutineOrigin?: () => SfRoutineNativeAdmissionOrigin | undefined,
   nativeRoutineProducer?: SfRoutineNativeProducer,
 ): Promise<SfHostRuntime> => {
-  if (nativeRoutineOrigin && nativeRoutineProducer) throw new Error("SF_ROUTINE_NATIVE_ORIGIN_CONFLICT")
+  if (nativeRoutineOrigin || nativeRoutineProducer) throw new Error("SF_ROUTINE_NATIVE_LEGACY_ORIGIN_UNSUPPORTED")
   if (!input.installationId.trim() || !path.isAbsolute(input.directory) || path.resolve(input.directory) !== input.directory) throw new Error("SF_HOST_PLACEMENT_INVALID")
   const directory = AbsolutePath.make(input.directory)
   const bundle = await createResidentAiBundle({ root: input.sourceRoot, manifestPath: path.join(input.sourceRoot, "manifests/resident.json") })
@@ -139,7 +142,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
       operationIds: profile.allowedOperations.filter((operation) => skills.some((skill) => skill.allowedOperations.includes(operation))) }
   })
   const state: { identity?: ReturnType<SfHostRuntime["identity"]>; store?: SessionStore.Interface; api?: SfNativeHostApi;
-    models?: SfHostServices["models"]; configuration?: string; generation: number } = { generation: 0 }
+    models?: SfHostServices["models"]; configuration?: string; generation: number;
+    verifyGovernedLoad?: (session: SessionSchema.Info) => Promise<boolean> } = { generation: 0 }
   const requests = new Map<string, Request>()
   const admittedInputs = new Map<string, SfAdmittedAnalysisInput>()
   const replayContexts = new WeakMap<TrustedDomainContext, string>()
@@ -198,8 +202,15 @@ export const createSfHostRuntimeWithRoutineNative = async (
       revokedNativeBindings.add(binding)
       if (liveNativeBindings.get(binding.nativeSessionId) === binding) liveNativeBindings.delete(binding.nativeSessionId)
       nativeRegistry.revoke(binding)
+      const request = requests.get(binding.runId)
+      if (request) { nativePhases.phase.revoke(request); routineOwners.revoke(request) }
     },
-    invalidateGeneration: (generation) => { invalidNativeGenerations.add(generation); nativeRegistry.invalidateGeneration(generation) },
+    invalidateGeneration: (generation) => {
+      invalidNativeGenerations.add(generation)
+      nativeRegistry.invalidateGeneration(generation)
+      nativePhases.phase.invalidateGeneration(generation)
+      routineOwners.invalidateGeneration(generation)
+    },
   }
   const evidence = createSfNativeEvidenceStore({ state: authority.state, nativeEvidenceWrites: authority.nativeEvidenceWrites,
     persistence: input.persistence, createId: randomUUID, requestForRun: (id) => requests.get(id),
@@ -324,13 +335,14 @@ export const createSfHostRuntimeWithRoutineNative = async (
     installed: installedRoutinePublication.publication })
   const routineInputs = createSfRoutineInputReaders({ cases: business.cases, context: business.context, resolveCase: business.resolveCase, revalidate: authority.host.revalidate })
   const routineGovernance = createSfRoutineNativeGovernance({ records: () => routineRuntime.resources()?.records,
-    ownerHook: () => routineAdmission })
+    ownerHook: () => ({ run: nativePhases.phase.withInvocation }) })
   const routineRuntime = createSfRoutineNativeRuntime({ installationId: input.installationId, identity, governance: routineGovernance,
-    onReady: () => {
-      // No origin is installed by default. A future origin still needs a real live registry binding
-      // before this registration boundary; this callback does not implement dynamic tool registration.
-      if (routineAdmission.readiness() !== "ready") return
-      const installed = routineServices.descriptors
+    onReady: (resources) => {
+      // Use only the original Location's Task/Relay and native-host descriptors.
+      if (!resources.current() || !resources.sessions || !resources.originDirectory ||
+        !routineGovernance.installed(resources.governance) ||
+        !routineGovernance.guardsInstalled(resources.safety, resources.relay)) return
+      const installed = nativePhases.services.descriptors
       if (installed.some((descriptor) => business.descriptors.some((current) => current.id === descriptor.id)))
         throw new Error("SF_ROUTINE_OPERATION_REGISTRY_CONFLICT")
       business.descriptors.push(...installed)
@@ -342,67 +354,44 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const routineOwners = createSfRoutineNativeOwnerRegistry({ resources: routineRuntime.resources,
     requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
     generation: async () => await state.models?.() ? state.generation : undefined })
-  // Validate a native C15 locator against the EXACT original A09 human POST command.
-  // A plan/authorization/ref is never an owner; only the existing core Task frame can issue it.
-  const authorizeNativeHumanRun = async (context: TrustedUiContext, intent: SfRoutineNativeAdmissionIntent) => {
-    const resources = routineRuntime.resources()
-    if (!resources?.current() || context.kind !== "ui") return false
-    const before = await resources.records.readAdmission(intent.authorizationId).catch(() => undefined)
-    if (!before || before.state !== "admitted" || !before.reservation ||
-      before.authorizationID !== intent.authorizationId || before.reference !== before.reservation.id ||
-      before.revision.id !== intent.planRevisionId || before.revision.sessionID !== before.parent.id ||
-      before.parent.projectID !== resources.identity.projectId) return false
-    const retained = readSfRoutineNativeInput(before.revision)
-    const generation = await state.models?.() ? state.generation : undefined
-    if (!retained || generation === undefined || retained.owner.providerGeneration !== generation ||
-      retained.owner.authoritySessionId !== before.parent.id ||
-      retained.owner.principalRef !== context.binding.principalRef ||
-      retained.owner.installationId !== context.binding.installationId ||
-      retained.owner.projectId !== context.binding.projectId ||
-      retained.inputDigest !== intent.inputDigest ||
-      digestSfValue(retained.input.caseRef) !== digestSfValue(intent.caseRef)) return false
-    const command = sfRoutineHumanRunCommand219({
-      admissionRef: before.reference, expectedAdmissionVersion: before.version,
-      caseRef: { ...intent.caseRef },
-    })
-    const current = async () => {
-      if (resources !== routineRuntime.resources() || !resources.current() || generation !== state.generation ||
-        !await authority.authority.revalidateDomainContext(context)) return false
-      const after = await resources.records.readAdmission(intent.authorizationId).catch(() => undefined)
-      return !!after && after.state === "admitted" && after.reference === before.reference &&
-        after.version === before.version && after.authorizationID === before.authorizationID &&
-        after.revision.id === before.revision.id && resources === routineRuntime.resources() && resources.current()
-    }
-    return await current() && await authority.human.authorize(context, "routines.run", command) &&
-      await current() && await authority.human.authorize(context, "routines.run", command) && await current()
-  }
-  const routineOriginBridge = createSfRoutineNativeOrigin({ ready: () => nativeRoutineProducer?.ready() === true,
-    resources: routineRuntime.resources, requestFor: authority.host.requestFor,
-    authorize: authority.authority.revalidateDomainContext,
-    authorizeIntent: authorizeNativeHumanRun,
-    generation: async () => await state.models?.() ? state.generation : undefined })
-  const unsubscribeNativeOrigin = nativeRoutineProducer?.subscribe(routineOriginBridge.admit)
-  const routineAdmission = createSfRoutineNativeAdmission({ resources: routineRuntime.resources, registry: routineOwners,
-    governance: routineGovernance, origin: () => nativeRoutineProducer ? routineOriginBridge.origin : nativeRoutineOrigin?.(),
-    requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
-    authorizeIntent: authorizeNativeHumanRun,
-    generation: async () => await state.models?.() ? state.generation : undefined,
-    publication: routinePublication.publication, resolveCase: business.resolveCase, ...routineInputs })
-  const routineNative = createSfRoutineNativeAdapter({ resources: routineRuntime.resources, owners: () => routineOwners.owners,
-    requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
-    generation: async () => await state.models?.() ? state.generation : undefined,
-    publication: routinePublication.publication, governance: routineGovernance, resolveCase: business.resolveCase, ...routineInputs })
-  const routineServices = createSfRoutineServices({ authority: authority.authority, publication: routinePublication.publication,
-    native: routineNative.native, resolveCase: business.resolveCase, prepareWatch: memory.prepareWatch, ...routineInputs })
-  const reauthenticatedRoutineHistory = async <A>(context: TrustedUiContext, read: () => Promise<A>): Promise<A | undefined> => {
+  // The original A09 POST remains the only human run continuation. IDs and approvals cannot stand in for it.
+  const authorizeNativeHumanRun = async (context: TrustedUiContext, command: SfRoutineNativeHumanRunCommand) => {
     const request = authority.host.requestFor(context)
-    if (!nativeRoutineProducer || !request || request.signal.aborted) return undefined
-    // The installed producer must read durable principal/native-origin evidence independently; plan.owner
-    // and client IDs are not an attestation. The default host never supplies this source.
-    const evidence = await nativeRoutineProducer.historical(context, request).catch(() => undefined)
-    if (!evidence) return undefined
-    return routineOwners.withReauthenticatedRead(context, request, evidence, read)
+    const resources = routineRuntime.resources()
+    if (context.kind !== "ui" || !request || request.method !== "POST" || request.signal.aborted ||
+      !resources?.current() || !state.identity ||
+      digestSfValue(command) !== digestSfValue(sfRoutineHumanRunCommand219(command.input))) return false
+    const snapshot = digestSfValue(context.binding)
+    const headers = digestSfValue([...request.headers])
+    const current = async () => !!resources.current() && routineRuntime.resources() === resources &&
+      state.identity === resources.identity && authority.host.requestFor(context) === request && !request.signal.aborted &&
+      digestSfValue(context.binding) === snapshot && digestSfValue([...request.headers]) === headers &&
+      await authority.authority.revalidateDomainContext(context)
+    if (!await current() || !await authority.human.authorize(context, "routines.run", command) || !await current()) return false
+    // The phase separately verifies genuine native approval, Task frame, original Permission and Relay.
+    return await authority.human.authorize(context, "routines.run", command) && await current()
   }
+  const nativePhases = createSfRoutineNativePhaseComposition({
+    resources: routineRuntime.resources,
+    sessions: () => routineRuntime.resources()?.sessions,
+    originDirectory: () => routineRuntime.resources()?.originDirectory,
+    registry: routineOwners,
+    governance: routineGovernance,
+    requestFor: authority.host.requestFor,
+    authorize: authority.authority.revalidateDomainContext,
+    generation: async () => await state.models?.() ? state.generation : undefined,
+    authorizeRun: authorizeNativeHumanRun,
+    publication: routinePublication.publication,
+    resolveCase: business.resolveCase,
+    ...routineInputs,
+    authority: authority.authority,
+    prepareWatch: memory.prepareWatch,
+    watchAvailable: () => false, // No native ScheduledTask admission is available.
+  })
+  const nativePhasePrompt = createSfNativePhasePromptContribution({
+    beforeTurn: nativePhases.phase.beforeTurn,
+    verifiedGovernedLoad: (session) => state.verifyGovernedLoad?.(session) ?? Promise.resolve(false),
+  })
   // The existing watch function has no native Schedule admission. It remains unadvertised.
   // Task-backed descriptors install only after the actual Location bindings and private owner capability exist.
   const sourcingInputs = createSfSourcingInputs({ authority, business })
@@ -672,7 +661,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
         const saved = await store.transition(id, current.value.version, "cancelled", "human-cancelled", call)
         return saved.status === "ok" ? { status: "ok", value: { cancelled: true } } : saved
       } }
-      const analysisHost = createSfAnalysisHost({ store, execution, analysis, routines: routineServices.routines, withRunContext, withLifecycleContext: lifecycle.withContext,
+      const analysisHost = createSfAnalysisHost({ store, execution, analysis, routines: nativePhases.routines, withRunContext, withLifecycleContext: lifecycle.withContext,
         alternativeForOutput: async (id, resultDigest, call) => {
           const found = await nativeInputs.readAlternativeCapture(id, resultDigest, call)
           return found.status === "ok" ? { status: "ok", value: found.value.record } : found
@@ -902,18 +891,55 @@ export const createSfHostRuntimeWithRoutineNative = async (
           api: { id: model.api.id, type: model.api.type }, variants: model.variants.map((variant) => variant.id).toSorted(), limit: model.limit }))
           .toSorted((left, right) => `${left.providerID}:${left.id}`.localeCompare(`${right.providerID}:${right.id}`)),
           servers: data.servers })
-        if (state.configuration !== digest) { state.configuration = digest; state.generation += 1 }
+        if (state.configuration !== digest) {
+          const previous = state.generation
+          state.configuration = digest
+          state.generation += 1
+          if (previous > 0) authority.native.invalidateGeneration(previous)
+        }
         return data.models.map((model) => ({ providerID: model.providerID, id: model.id }))
+      }
+      // The same installed execution host owns the genuine one-use governed-load facts.
+      state.verifyGovernedLoad = async (session) => {
+        const resources = routineRuntime.resources()
+        if (!resources?.current() || resources.identity.projectId !== session.projectID ||
+          digestSfValue(resources.identity.location) !== digestSfValue(session.location)) return false
+        const scope = await Effect.runPromise(resources.store.scope(session.id)).catch(() => undefined)
+        if (!scope || scope.scope.skills.entry !== SF_ROUTINE_PHASE_PLAYBOOK) return false
+        return Effect.runPromise(Effect.gen(function* () {
+          const skills = yield* SkillV2.Service
+          const winner = (yield* skills.list()).find((entry) => entry.name === SF_ROUTINE_PHASE_PLAYBOOK)
+          const source = winner && skills.sourceOf?.(winner)
+          if (!winner || !source?.reserved || !source.key.trim()) return false
+          const engine = yield* ExecutionHost.engineOf(resources.agents, resources.store)(session)
+          if (!engine) {
+            // The original Orchestra runner has no external ExecutionHost receipt: require its
+            // durable synthetic load and the unchanged reserved winner, never a claimed held flag.
+            const messages = yield* resources.store.context(session.id)
+            return messages.some((entry) => entry.type === "synthetic" &&
+              entry.text.startsWith(`<skill_content name="${SF_ROUTINE_PHASE_PLAYBOOK}">\n# Skill: ${SF_ROUTINE_PHASE_PLAYBOOK}\n\n${winner.content.trim()}\n\n`))
+          }
+          const hosts = yield* ExecutionHost.Service
+          const real = hosts.get(engine)
+          if (!real?.observedSkillLoad) return false
+          const facts = yield* real.observedSkillLoad({ sessionID: session.id, skillName: SF_ROUTINE_PHASE_PLAYBOOK })
+          if (!facts || facts.sessionID !== session.id || facts.skillName !== SF_ROUTINE_PHASE_PLAYBOOK ||
+            !facts.source.reserved || facts.source.key !== source.key ||
+            facts.source.location !== winner.location || !/^[a-f0-9]{64}$/.test(facts.source.contentDigest)) return false
+          const delivered = yield* resources.store.message(facts.loadedMessageID)
+          return delivered?.sessionID === session.id && delivered.message.type === "synthetic" &&
+            createHash("sha256").update(delivered.message.text, "utf8").digest("hex") === facts.source.contentDigest
+        }).pipe(Effect.provide(locations.get(session.location)))).catch(() => false)
       }
       yield* Effect.addFinalizer(() => Effect.gen(function* () {
         if (state.identity !== identity) return
         // Revoke Request/native capabilities synchronously before any asynchronous shutdown can yield.
-        unsubscribeNativeOrigin?.(); routineOriginBridge.dispose(); routineAdmission.dispose(); routineOwners.dispose()
+        nativePhases.phase.dispose(); nativePhases.admission.dispose(); routineOwners.dispose()
         yield* Effect.promise(() => Promise.allSettled([...executions.values()].map((execution) => execution.shutdown())))
         executions.clear()
         routineRuntime.dispose(); routineGovernance.dispose()
         stopped.forEach((entry) => clearTimeout(entry.timer)); stopped.clear()
-        state.identity = undefined; state.store = undefined; state.models = undefined; requests.clear(); admittedInputs.clear(); observed.clear(); alternativeCaptures.clear(); alternativeBindings.clear(); liveNativeBindings.clear(); invalidNativeGenerations.clear(); decisionDomain.dispose(); business.dispose(); extended.dispose(); documents?.dispose()
+        state.identity = undefined; state.store = undefined; state.models = undefined; state.verifyGovernedLoad = undefined; requests.clear(); admittedInputs.clear(); observed.clear(); alternativeCaptures.clear(); alternativeBindings.clear(); liveNativeBindings.clear(); invalidNativeGenerations.clear(); decisionDomain.dispose(); business.dispose(); extended.dispose(); documents?.dispose()
       }))
     })),
   })
@@ -944,9 +970,9 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const nativeUiProducts = Object.freeze({
     ...nativeUiContext,
     routines: Object.freeze({
-      ...routineServices.routines,
+      ...nativePhases.routines,
       run: createSfRoutineHumanRun219({
-        run: routineServices.routines.run,
+        run: nativePhases.routines.run,
         requestFor: authority.host.requestFor,
         authorize: (context, command) => authority.human.authorize(context, "routines.run", command),
         current: () => !!identity(),
@@ -965,17 +991,18 @@ export const createSfHostRuntimeWithRoutineNative = async (
     productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work, workDestinations: { read: workDestinations.read },
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
-    routineRuns: { discoverRuns: async (context) =>
-      context.kind !== "ui" || !nativeRoutineProducer ? routineServices.routineRuns.discoverRuns(context)
-        : (await reauthenticatedRoutineHistory(context, () => routineServices.routineRuns.discoverRuns(context))
-          ?? { status: "denied" as const, reason: "native-routine-historical-origin-unavailable" }) },
+    routineRuns: nativePhases.services.routineRuns,
     productHttp: async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }
       requests.set(request.runId, request.request)
-      request.request.signal.addEventListener("abort", () => { if (requests.get(request.runId) === request.request) requests.delete(request.runId) }, { once: true })
+      request.request.signal.addEventListener("abort", () => {
+        nativePhases.phase.revoke(request.request)
+        routineOwners.revoke(request.request)
+        if (requests.get(request.runId) === request.request) requests.delete(request.runId)
+      }, { once: true })
       return Effect.runPromise(state.api.prepare(request), { signal: request.request.signal })
     },
     execute: (binding) => state.api ? Effect.runPromise(state.api.execute(binding), { signal: requests.get(binding.runId)?.signal }) : Promise.resolve({ status: "unavailable", reason: "native-host-unavailable" }),
@@ -985,7 +1012,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
   return { identity, services: () => identity() ? services : undefined,
     contributions: [{ id: "sucafina-host-context", nodes: [node] }, gate.contribution, native.contribution,
       installedRoutinePublication.contribution, routinePublication.contribution,
-      routineGovernance.contribution, routineRuntime.contribution, routineRuntime.mount(product)] }
+      routineGovernance.contribution, nativePhases.contribution, nativePhasePrompt,
+      routineRuntime.contribution, routineRuntime.mount(product)] }
 }
 
 function admissionDigest(admission: SfNativeAdmission) {
