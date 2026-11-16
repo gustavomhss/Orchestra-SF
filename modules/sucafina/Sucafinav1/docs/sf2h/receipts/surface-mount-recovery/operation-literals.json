@@ -1,0 +1,767 @@
+{
+  "base": "e5ef7b5beca75ef5b196a25eaf2023d417cc538f",
+  "method": "Literal operation IDs found in app surface sources; evidence only, not an authorization map. Helpers, imported consumers and dynamic lookups may be omitted. Read vs mutation and route kinds are not classified.",
+  "files": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+      "operations": [
+        "bi.bi-options",
+        "bi.bi-data",
+        "bi.bi-source"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx",
+      "operations": [
+        "collaboration.confirmation-prepare",
+        "collaboration.confirmation-confirm",
+        "collaboration.confirmation-project",
+        "collaboration.storage-version"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx",
+      "operations": [
+        "collaboration.relation-read",
+        "collaboration.storage-version",
+        "collaboration.relation-create",
+        "collaboration.relation-remove"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx",
+      "operations": [
+        "collaboration.thread-read",
+        "collaboration.storage-version",
+        "collaboration.thread-reply"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "operations": [
+        "projection.case"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
+      "operations": [
+        "domain.page.CAP03",
+        "domain.command.CAP03.",
+        "domain.command.CAP03.save-month",
+        "domain.command.CAP03.save-revenue"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/edit.tsx",
+      "operations": [
+        "domain.command.CAP01.save-users",
+        "domain.command.CAP01.save-benchmark",
+        "domain.command.CAP03.save-month",
+        "domain.command.CAP03.save-revenue",
+        "domain.page.CAP01",
+        "domain.page.CAP03"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
+      "operations": [
+        "domain.page.CAP01",
+        "domain.command.CAP01.",
+        "domain.command.CAP01.save-users",
+        "domain.command.CAP01.save-benchmark"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/reader.ts",
+      "operations": [
+        "domain.page.CAP01",
+        "domain.page.CAP03"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/edit.tsx",
+      "operations": [
+        "domain.page.CAP02",
+        "domain.command.CAP02.save"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/index.tsx",
+      "operations": [
+        "domain.command.CAP02.delete"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/reader.ts",
+      "operations": [
+        "domain.page.CAP02",
+        "domain.command.CAP02."
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/model.ts",
+      "operations": [
+        "domain.command.CAP04.save",
+        "domain.page.CAP04",
+        "domain.page.CAP05",
+        "domain.command.CAP05.save",
+        "domain.command.CAP04.delete",
+        "domain.command.CAP05.delete",
+        "domain.command.CAP04.save-entry",
+        "domain.command.CAP05.save-entry",
+        "domain.command.CAP04.save-deviation",
+        "domain.command.CAP05.save-deviation",
+        "domain.command.CAP04.annual-entry",
+        "domain.command.CAP05.annual-entry",
+        "domain.command.CAP04.year-amount",
+        "domain.command.CAP05.year-amount"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+      "operations": [
+        "domain.page.",
+        "domain.command.",
+        "domain.page.CAP04",
+        "domain.page.CAP05"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+      "operations": [
+        "decisions.choice.read",
+        "decisions.current-choice-prepare"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
+      "operations": [
+        "intelligence.analysis.choices",
+        "intelligence.analysis.read",
+        "intelligence.analysis.output",
+        "intelligence.analysis.prepare",
+        "intelligence.analysis.list",
+        "intelligence.analysis.start",
+        "intelligence.analysis.cancel"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/create.tsx",
+      "operations": [
+        "projection.cases",
+        "decisions.command.sf_case_draft"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/index.tsx",
+      "operations": [
+        "decisions.command.sf_case_draft"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/model.ts",
+      "operations": [
+        "projection.case",
+        "projection.cases"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+      "operations": [
+        "projection.case",
+        "decisions.decision-review",
+        "decisions.decision-apply",
+        "decisions.decision-recover"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/index.tsx",
+      "operations": [
+        "decisions.choice.read",
+        "decisions.current-choice-prepare",
+        "decisions.current-choice-promote"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/model.ts",
+      "operations": [
+        "projection.case",
+        "decisions.choice.read",
+        "decisions.current-choice-prepare",
+        "decisions.decision-review"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/answer.tsx",
+      "operations": [
+        "collaboration.answer-read",
+        "collaboration.answer-prepare",
+        "collaboration.storage-version",
+        "collaboration.answer-confirm"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/consume.tsx",
+      "operations": [
+        "collaboration.question-output",
+        "collaboration.question-consume",
+        "collaboration.storage-version"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/cycles.tsx",
+      "operations": [
+        "collaboration.selection-list",
+        "collaboration.cycle-read"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
+      "operations": [
+        "collaboration.recipients",
+        "decisions.command.sf_question_prepare"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
+      "operations": [
+        "projection.case",
+        "decisions.decision-recover"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+      "operations": [
+        "files.document-requests",
+        "files.document-sources",
+        "files.document-candidates",
+        "files.document-open",
+        "files.document-search",
+        "files.document-scenario-targets",
+        "files.document-scenario-preview",
+        "files.document-admit",
+        "files.document-schema",
+        "files.document-extract",
+        "files.document-confirm"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+      "operations": [
+        "projection.home"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts",
+      "operations": [
+        "files.import-reference",
+        "files.import-detail"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+      "operations": [
+        "files.import-targets",
+        "files.import-preview",
+        "files.import-detail",
+        "files.import-reference",
+        "files.import-admit",
+        "files.import-apply",
+        "files.export.",
+        "files.export.xlsx",
+        "files.export.suppliers",
+        "files.export.register",
+        "files.export.json"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+      "operations": [
+        "projection.local-admin"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+      "operations": [
+        "intelligence.memory-conditions",
+        "intelligence.memory-signals",
+        "intelligence.memory-materiality",
+        "intelligence.memory-outcome",
+        "intelligence.memory-catalog"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+      "operations": [
+        "intelligence.memory-similar-cases",
+        "projection.cases",
+        "projection.case"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+      "operations": [
+        "domain.command.CAP16.save",
+        "domain.command.CAP16.save-item",
+        "domain.command.CAP16.save-sub",
+        "domain.command.CAP16.delete-item",
+        "domain.command.CAP16.delete-sub",
+        "domain.page.CAP16"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/index.tsx",
+      "operations": [
+        "domain.command.CAP13.save",
+        "domain.page.CAP13",
+        "domain.command.CAP13.delete"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+      "operations": [
+        "domain.page.CAP12",
+        "domain.command.CAP12.save-kpi",
+        "domain.command.CAP12.delete-kpi",
+        "domain.command.CAP12.save-action",
+        "domain.command.CAP12.delete-action",
+        "domain.command.CAP12.save-incident",
+        "domain.command.CAP12.delete-incident",
+        "domain.command.CAP12.save-campaign",
+        "domain.command.CAP12.delete-campaign"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/model.ts",
+      "operations": [
+        "domain.page.CAP12",
+        "domain.command.CAP12.save-kpi",
+        "domain.command.CAP12.delete-kpi",
+        "domain.command.CAP12.save-action",
+        "domain.command.CAP12.delete-action",
+        "domain.command.CAP12.save-incident",
+        "domain.command.CAP12.delete-incident",
+        "domain.command.CAP12.save-campaign",
+        "domain.command.CAP12.delete-campaign"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+      "operations": [
+        "domain.page.CAP11",
+        "domain.command.CAP11.save-sla",
+        "domain.command.CAP11.save-categories",
+        "domain.command.CAP11.save-items",
+        "domain.command.CAP11.save-tickets",
+        "domain.command.CAP11.save-heatmap",
+        "domain.command.CAP11.import-month"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/model.ts",
+      "operations": [
+        "domain.page.CAP11",
+        "domain.command.CAP11.save-tickets",
+        "domain.command.CAP11.save-sla",
+        "domain.command.CAP11.save-heatmap",
+        "domain.command.CAP11.save-categories",
+        "domain.command.CAP11.save-items",
+        "domain.command.CAP11.import-month"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/stakeholders/index.tsx",
+      "operations": [
+        "domain.command.CAP15.save",
+        "domain.page.CAP15",
+        "domain.command.CAP15.delete"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+      "operations": [
+        "domain.page.CAP06",
+        "domain.page.CAP07"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/editor.tsx",
+      "operations": [
+        "domain.command.CAP07.saveCio",
+        "domain.command.CAP07.saveLeader",
+        "domain.command.CAP07.saveMember",
+        "domain.command.CAP08.save",
+        "domain.page.CAP07",
+        "domain.page.CAP08"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
+      "operations": [
+        "domain.page.CAP07",
+        "domain.command.CAP07.saveMember",
+        "domain.command.CAP07.saveCio",
+        "domain.command.CAP07.saveLeader",
+        "domain.command.CAP07.deleteLeader",
+        "domain.command.CAP07.deleteMember"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/session.ts",
+      "operations": [
+        "domain.command.",
+        "domain.page."
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+      "operations": [
+        "domain.page.CAP08",
+        "domain.command.CAP08.save",
+        "domain.command.CAP08.delete"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+      "operations": [
+        "domain.page.CAP21",
+        "domain.command.CAP21.common",
+        "domain.command.CAP21.delete",
+        "domain.command.CAP21.save"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
+      "operations": [
+        "domain.page.CAP17"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
+      "operations": [
+        "domain.page.CAP22",
+        "domain.command.CAP22.delete",
+        "domain.command.CAP22.save"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+      "operations": [
+        "domain.page.CAP20",
+        "domain.command.CAP20.sync",
+        "domain.command.CAP20.delete",
+        "domain.command.CAP20.save"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+      "operations": [
+        "domain.page.CAP18",
+        "domain.page.CAP19",
+        "planner.monthly.preview",
+        "planner.monthly.apply",
+        "domain.command.CAP18.delete",
+        "domain.command.CAP18.spread",
+        "domain.command.CAP18.reset",
+        "domain.command.CAP18.save",
+        "domain.command.CAP19.delete",
+        "domain.command.CAP19.spread",
+        "domain.command.CAP19.reset",
+        "domain.command.CAP19.save"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/index.tsx",
+      "operations": [
+        "domain.page.CAP17",
+        "domain.page.CAP23",
+        "domain.command.CAP17.import-workbook"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+      "operations": [
+        "domain.command.CAP23.save",
+        "domain.command.CAP23.copy",
+        "domain.command.CAP23.official",
+        "domain.command.CAP23.lock",
+        "domain.command.CAP23.unlock",
+        "domain.command.CAP23.delete",
+        "domain.page.CAP23"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/model.ts",
+      "operations": [
+        "domain.page.CAP23",
+        "domain.command.CAP23."
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/index.tsx",
+      "operations": [
+        "domain.page.CAP09"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
+      "operations": [
+        "domain.page.CAP10",
+        "domain.command.CAP10.save",
+        "domain.command.CAP10.delete",
+        "domain.command.CAP10.save-milestone",
+        "domain.command.CAP10.delete-milestone",
+        "domain.command.CAP10.import",
+        "domain.command.CAP10."
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/producer.ts",
+      "operations": [
+        "domain.page.CAP09",
+        "domain.page.CAP10",
+        "domain.command.CAP10.save",
+        "domain.command.CAP10.delete",
+        "domain.command.CAP10.save-milestone",
+        "domain.command.CAP10.delete-milestone"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
+      "operations": [
+        "portfolio.decision-portfolio-preview",
+        "portfolio.decision-portfolio-evaluate"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/producer.ts",
+      "operations": [
+        "decisions.controls.read",
+        "portfolio.decision-portfolio-results",
+        "portfolio.decision-portfolio-read",
+        "portfolio.decision-portfolio-preview",
+        "portfolio.decision-portfolio-evaluate",
+        "portfolio.decision-sensitivity-units",
+        "portfolio.decision-sensitivity-read",
+        "portfolio.decision-sensitivity-evaluate"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx",
+      "operations": [
+        "portfolio.decision-sensitivity-evaluate",
+        "portfolio.decision-sensitivity-units"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/draft.ts",
+      "operations": [
+        "domain.page.CAP26"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
+      "operations": [
+        "domain.page.CAP26",
+        "domain.command.CAP26.approve",
+        "domain.command.CAP26.reject"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/model.ts",
+      "operations": [
+        "domain.page.CAP26"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/index.tsx",
+      "operations": [
+        "domain.command.CAP26.",
+        "domain.page.CAP26",
+        "domain.command.CAP26.approve",
+        "domain.command.CAP26.reject"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/model.ts",
+      "operations": [
+        "domain.page.CAP26"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+      "operations": [
+        "domain.page.CAP14",
+        "domain.command.CAP14.save",
+        "domain.command.CAP14.delete"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts",
+      "operations": [
+        "domain.page.CAP14",
+        "domain.command.CAP14.save",
+        "domain.command.CAP14.delete"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+      "operations": [
+        "domain.page.CAP24",
+        "domain.page.CAP25"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/model.ts",
+      "operations": [
+        "domain.page.CAP25",
+        "domain.command.CAP25.create",
+        "domain.command.CAP25.save",
+        "domain.command.CAP25.submit_pr",
+        "domain.command.CAP25.submit_po"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+      "operations": [
+        "domain.page.CAP25",
+        "domain.command.CAP25.create",
+        "domain.command.CAP25.save",
+        "domain.command.CAP25.submit_pr",
+        "domain.command.CAP25.submit_po",
+        "domain.command.CAP25.issue",
+        "domain.command.CAP25.cancel",
+        "domain.command.CAP25.delete",
+        "domain.command.CAP25."
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/index.tsx",
+      "operations": [
+        "domain.page.CAP28",
+        "domain.command.CAP28.save"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/model.ts",
+      "operations": [
+        "domain.page.CAP28",
+        "domain.command.CAP28.save"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/case-comparison.tsx",
+      "operations": [
+        "procurement.sourcing.prepare",
+        "procurement.procurement-scenario-controls",
+        "procurement.procurement-scenario-preview"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+      "operations": [
+        "domain.command.CAP25.",
+        "domain.page.CAP25",
+        "domain.command.CAP25.save",
+        "domain.command.CAP25.select_quote",
+        "domain.command.CAP25.submit_sourcing"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/model.ts",
+      "operations": [
+        "domain.page.CAP25",
+        "domain.command.CAP25.submit_sourcing"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+      "operations": [
+        "files.export.suppliers",
+        "domain.command.CAP27.",
+        "domain.page.CAP27",
+        "domain.command.CAP27.create",
+        "domain.command.CAP27.save",
+        "domain.command.CAP27.activate",
+        "domain.command.CAP27.block",
+        "domain.command.CAP27.inactivate",
+        "domain.command.CAP27.delete",
+        "domain.command.CAP27.change-bank"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/model.ts",
+      "operations": [
+        "domain.page.CAP27",
+        "domain.command.CAP27.save"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+      "operations": [
+        "projection.review"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+      "operations": [
+        "reviews.review-update"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+      "operations": [
+        "reviews.export.docx",
+        "reviews.export.pptx"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/index.tsx",
+      "operations": [
+        "intelligence.analysis.choices",
+        "routines.catalog",
+        "routines.prepare-admission",
+        "routines.read-admission",
+        "routines.run"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/index.tsx",
+      "operations": [
+        "projection.residents"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/index.tsx",
+      "operations": [
+        "intelligence.analysis.choices",
+        "projection.routine",
+        "routines.read-run"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+      "operations": [
+        "projection.search"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/views/index.tsx",
+      "operations": [
+        "views.list",
+        "views.open",
+        "views.save",
+        "views.remove"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+      "operations": [
+        "collaboration.work-list",
+        "projection.work-item",
+        "projection.work-selection",
+        "collaboration.work-destination"
+      ]
+    }
+  ]
+}
