@@ -663,6 +663,9 @@ function requireRegisteredLiveCase(
 ): void {
   const selected = nativeHarness.selected
   if (!selected || selected.suite !== (surfaceId === "CAP04" ? "U39" : "U40") ||
+      // 199 must bind this exact test to its genuinely authenticated case.
+      // Merely registering a private scenario file is not selecting its actor.
+      nativeHarness.selectedCase !== caseName ||
       !selected.selections.some((entry) => entry.caseId === caseName)) {
     throw new Error("F04_REQUIRED_" + surfaceId + "_SELECTED_LIVE_CASE_" + caseName)
   }
