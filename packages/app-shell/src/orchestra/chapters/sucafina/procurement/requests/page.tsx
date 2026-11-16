@@ -305,9 +305,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const snapshot = controller?.snapshot()
     if (!ready || (!ref && !(kind === "pr" && creating())) || snapshot?.availability !== "active" || snapshot.pendingOperation ||
         view.sending || view.outcomeUnknown) return
-    const selection = { surfaceId: "CAP25" as const, identity: ref
-      ? { kind: "record" as const, recordRef: ref }
-      : { kind: "new" as const, newIntentRef: view.newIntentRef },
+    const selection = { surfaceId: "CAP25" as const, identity: kind === "pr" && creating()
+      ? { kind: "new" as const, newIntentRef: view.newIntentRef }
+      : { kind: "record" as const, recordRef: ref! },
       editScopeKey: kind === "pr" ? prScope : poScope }
     ready.drafts.discard(selection)
     if (ready.drafts.peek(selection)) return
@@ -401,11 +401,15 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       })()
       if (!ownerMatches(ownerKey, epoch)) return
       if (result.kind !== "response") {
-        const uncertain = !["contract-unavailable", "contract-mismatch"].includes(result.reason)
-        prController?.setPhase(uncertain ? "outcome-unknown" : "failed")
-        poController?.setPhase(uncertain ? "outcome-unknown" : "failed")
-        setView({ sending: false, reviewing: undefined, outcomeUnknown: uncertain,
-          notice: uncertain ? "sf.u11.remaining.unknown" : "sf.u11.remaining.notAvailable" })
+        prController?.setPhase("outcome-unknown")
+        poController?.setPhase("outcome-unknown")
+        setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })
+        return
+      }
+      if (result.status >= 500 || (result.body.ok ? result.status < 200 || result.status >= 300 : result.body.status !== result.status)) {
+        prController?.setPhase("outcome-unknown")
+        poController?.setPhase("outcome-unknown")
+        setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })
         return
       }
       if (result.status === 401 || result.status === 403) {
@@ -422,10 +426,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           notice: "sf.u11.remaining.missingVersion" })
         return
       }
-      if (result.status >= 500 || result.status === 409) {
-        prController?.setPhase("outcome-unknown")
-        poController?.setPhase("outcome-unknown")
-        setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })
+      if (result.status === 422 && !result.body.ok && result.body.status === 422) {
+        prController?.rejectSave({ status: 422, operation: pending })
+        poController?.rejectSave({ status: 422, operation: pending })
+        setView({ sending: false, reviewing: undefined, notice: po ? "sf.u11.remaining.invalidPo" : "sf.u11.remaining.invalidPr" })
         return
       }
       if (result.status < 200 || result.status >= 300 || result.body.ok !== true) {

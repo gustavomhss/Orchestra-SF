@@ -68,7 +68,7 @@ export type SfDraftController<Value> = Readonly<{
   setPhase(phase: SfDraftPhase): void
   setPending(operation: SfPendingOperation): void
   confirmSave(result: SfSaveConfirmation<Value>): void
-  rejectSave(result: Readonly<{ status: 409; operation: SfPendingOperation }>): void
+  rejectSave(result: Readonly<{ status: 409 | 422; operation: SfPendingOperation }>): void
   quarantine(): void
   restoreSameAuthority(newOwnerKey: SfOwnerKey): void
   revoke(reason: "logout" | "owner-changed" | "access-revoked" | "authority-changed"): void
@@ -191,10 +191,10 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
     },
     rejectSave(result) {
       const state = active(), pending = state?.pendingOperation, operation = result.operation
-      if (result.status !== 409 || !state || state.phase !== "submitting" || !pending || outcomeUnknown ||
+      if ((result.status !== 409 && result.status !== 422) || !state || state.phase !== "submitting" || !pending || outcomeUnknown ||
           pending.operationRef !== operation.operationRef || pending.idempotencyKey !== operation.idempotencyKey ||
           pending.payloadDigest !== operation.payloadDigest || !Object.is(pending.expectedVersion, operation.expectedVersion)) return
-      publish({ ...state, pendingOperation: null, phase: "conflict" })
+      publish({ ...state, pendingOperation: null, phase: result.status === 409 ? "conflict" : "validation-error" })
     },
     confirmSave(result) {
       const state = active()
