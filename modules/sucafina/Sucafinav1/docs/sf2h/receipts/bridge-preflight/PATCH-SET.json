@@ -1,0 +1,41 @@
+{
+  "base": "81d183dd0ee520e1accf4543ed05de70c1c2d8b8",
+  "status": "PROPOSED_NOT_VALIDATED",
+  "entries": [
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238.ts",
+      "preimage": "ab66d187a26fff499aed7afba905166e48825472",
+      "postimage": "be5b2e209d0aba14cdb2e0ac2e546454938a9d26",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bridge-preflight/patches/01.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+      "preimage": "825b0878294f65ea64e7c16d6f20901516fcb64e",
+      "postimage": "1487bd94d9355aad01528a4b3cba51429c6cab7f",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bridge-preflight/patches/02.inert.txt"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "preimage": "026847fd66f79e8e525c1b958e3ea106ff299f93",
+      "postimage": "89eb0a0dc4f145d580c9b29c6ad96e912abf6bba",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bridge-preflight/patches/03.inert.txt"
+    },
+    {
+      "target": "modules/sucafina/Sucafinav1/test/product/closure238/origin-bridge.negative.test.ts",
+      "preimage": "868981b4609a1b7f8c98c631423510b931944267",
+      "postimage": "4d7f316abd47f7947d1876e371d9737787d142f9",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bridge-preflight/patches/04.inert.txt"
+    }
+  ],
+  "consumers": [
+    "211: compare all current preimages, reconcile drift and compose atomically",
+    "authorized CI dispatcher: execute targeted integration tests on composed commit",
+    "independent reviewer: audit lifecycle and real host evidence"
+  ],
+  "rules": [
+    "Postimages are inert; do not install when any preimage differs.",
+    "If target equals postimage treat as already present; otherwise reconcile against live target.",
+    "Do not release connections when discarding a candidate.",
+    "Tests, typecheck, guard, CI and installed host: NOT_RUN."
+  ]
+}
