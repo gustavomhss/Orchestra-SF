@@ -1,0 +1,85 @@
+{
+  "schema": "sf2h.inert-operational-delta.v1",
+  "mission": 225,
+  "epoch": "functional-export-e1-browser225",
+  "status": "INERT_NOT_INSTALLED",
+  "source_branch": "sf-supplier-csv",
+  "source_head_before_images": "34355ba9ca53c0e8fa63fbf19b1b5e3ce82c3f42",
+  "original_product_base": "c5703ca53399a4ead279cdf4df3c1261eef1dd8e",
+  "consumer": "211/PR191",
+  "reason": "F02, D01, old reviewer journey are outside mission225 write_paths; IDs in registry alone are not operation admission",
+  "base_policy": "For each patch verify current target branch blob equals before. If diverged, rebase/reconcile manually and record new pre/post; never replace newer source blindly.",
+  "patches": [
+    {
+      "key": "f02",
+      "owner": "211/I00(F02)",
+      "source": "packages/client/src/sucafina/transport.ts",
+      "before": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+      "after": "829309cd3a9cc5411474709884e738e10e8db354",
+      "contract": "Exact GET producer response bytes, fresh ctx.context principal/policy/access revision + CAP27 read and files.exports recheck; no generic byte bypass",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/inert-211/transport.f02.postimage.ts.txt",
+      "postimage_blob": "829309cd3a9cc5411474709884e738e10e8db354",
+      "postimage_literal": "complete Git blob attached as inert *.txt, not runtime or test input",
+      "test_status": "NOT_RUN"
+    },
+    {
+      "key": "d01-protocol",
+      "owner": "211/I00(D01)",
+      "source": "apps/desktop/src/main/sucafina/protocol.ts",
+      "before": "0b2152a22811d19a3b04ab1e4ebf5218c564b2eb",
+      "after": "ec9636ed5005c8057c5d6656f7b8c54034e6365f",
+      "contract": "Closed A06 source input codec + exact registry route; original producer retains authorization",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/inert-211/protocol.d01.postimage.ts.txt",
+      "postimage_blob": "ec9636ed5005c8057c5d6656f7b8c54034e6365f",
+      "postimage_literal": "complete Git blob attached as inert *.txt, not runtime or test input",
+      "test_status": "NOT_RUN"
+    },
+    {
+      "key": "d01-broker",
+      "owner": "211/I00(D01)",
+      "source": "apps/desktop/src/main/sucafina/index.ts",
+      "before": "a3f09c2a9006c016d51c660043d1189bb2df4c29",
+      "after": "7b61a4f203d49598b0feb6c929cc85ed07a6df39",
+      "contract": "Non-success supplier byte response returns status without leaking body; preserve revoked/session invalidation",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/inert-211/index.d01.postimage.ts.txt",
+      "postimage_blob": "7b61a4f203d49598b0feb6c929cc85ed07a6df39",
+      "postimage_literal": "complete Git blob attached as inert *.txt, not runtime or test input",
+      "test_status": "NOT_RUN"
+    },
+    {
+      "key": "d01-headers",
+      "owner": "211/I00(D01)",
+      "source": "apps/desktop/src/main/sucafina/network.ts",
+      "before": "912cade1f8213c0014f27ed75adb85b2b64f33c2",
+      "after": "5b1cb5eebd73599a48f43a24c2b0985142f4d4a4",
+      "contract": "Allow exactly original safe RFC5987 suppliers.csv Content-Disposition, no broadened arbitrary filenames",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/inert-211/network.d01.postimage.ts.txt",
+      "postimage_blob": "5b1cb5eebd73599a48f43a24c2b0985142f4d4a4",
+      "postimage_literal": "complete Git blob attached as inert *.txt, not runtime or test input",
+      "test_status": "NOT_RUN"
+    },
+    {
+      "key": "legacy-journey",
+      "owner": "211/207",
+      "source": "packages/app-shell/e2e/sucafina/native/journeys/u14.spec.ts",
+      "before": "3c77809d69825e193b985a1d3c0c192c0ba12815",
+      "after": "7db2c9d67a724db736169251659d66cdeb457fea",
+      "contract": "Replace outdated disabled/noop success oracle with admitted real GET/download; protect general bank read-only assertion",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/inert-211/u14.legacy.postimage.spec.ts.txt",
+      "postimage_blob": "7db2c9d67a724db736169251659d66cdeb457fea",
+      "postimage_literal": "complete Git blob attached as inert *.txt, not runtime or test input",
+      "test_status": "NOT_RUN"
+    }
+  ],
+  "integration_requirements": [
+    "Compositor 211 consumes these exact post-images, with current 211 HEAD and source blobs reconciled; only 211 writes shared paths.",
+    "I00 must preserve closed operation metadata and install the exact typed A06 byte source, never promote catalog manifest to an entitlement.",
+    "Keep original server serveDownload and downloads.ts and its role/bankKey/status/CSV columns unchanged.",
+    "Ensure real ctx.context availability.files.exports lists files.export.suppliers operational=true only when host producer and byte port actually installed and admitted; no fabricated grant.",
+    "223 sole CI dispatcher tests integrated candidate; 207 independently rechecks U14-AC01/02 and absence of any private bytes across owner/policy changes.",
+    "Do not run any local test/build/typecheck/validator or self-trigger CI; GLOBAL_RELEASE remains false."
+  ],
+  "tested": false,
+  "checks": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}
