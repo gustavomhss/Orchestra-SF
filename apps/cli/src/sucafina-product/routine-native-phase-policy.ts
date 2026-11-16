@@ -58,7 +58,7 @@ export function createSfRoutineNativePhasePolicy(resources: SfRoutineNativeRunti
         observation.active = witness
         observation.call = { messageID: witness.task.assistantMessageID, callID: witness.task.toolCallID }
         return true
-      }), (acquired) => acquired ? effect : Effect.fail(new ToolSafety.Denied({ reason: "SF_NATIVE_PHASE_NATIVE_TASK_BUSY" })),
+      }), (acquired): Effect.Effect<A, E | ToolSafety.Denied, R> => acquired ? effect : Effect.fail(new ToolSafety.Denied({ reason: "SF_NATIVE_PHASE_NATIVE_TASK_BUSY" })),
       () => Effect.sync(() => { if (observation.active === witness) observation.active = undefined }))
     }),
   }
