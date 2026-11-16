@@ -11,10 +11,15 @@ import {
   SfIntelligenceMemorySignals,
 } from "../../../../../packages/schema/src/sucafina/memory.ts"
 
-// These codecs are pure: the union type widens the requirements channel, so the
-// single cast restores the never-requirement decoder they actually are.
-const decode = <A>(schema: Schema.Schema<A>, value: unknown): A =>
-  Schema.decodeUnknownSync(schema as Schema.Decoder<A, never>)(value)
+// Effect 4 Decoder<A, RD> retains decoding-service requirements; RD=never is enforced.
+const decode = <A>(schema: Schema.Decoder<A, never>, value: unknown): A =>
+  Schema.decodeUnknownSync(schema)(value)
+
+// For a schema whose public type erases its service requirements, validate the
+// *decoded type* (not the encoded wire). toType removes decoder effects without
+// an unsafe cast; never claim this verifies its context-dependent wire decoder.
+const validateDecoded = <S extends Schema.Top>(schema: S, value: unknown): S["Type"] =>
+  Schema.decodeUnknownSync(Schema.toType(schema))(value)
 
 const query = { caseId: "case-1", incarnation: "inc-1", version: 3 }
 const period = { start: "2026-01-01", end: "2026-12-31" } as const
@@ -113,11 +118,11 @@ describe("A14: closed memory operation catalog", () => {
         criterionId: "criterion-1", label: "Review", period },
     ] } as const
     expect(decode(SfIntelligenceMemoryConditions.output, one)).toEqual(one)
-    expect(decode(SfIntelligenceMemorySignals.output, { status: "unavailable" })).toEqual({ status: "unavailable" })
-    expect(decode(SfIntelligenceMemorySignals.output, { status: "denied", reason: "memory-authority-unavailable" })).toEqual({
+    expect(validateDecoded(SfIntelligenceMemorySignals.output, { status: "unavailable" })).toEqual({ status: "unavailable" })
+    expect(validateDecoded(SfIntelligenceMemorySignals.output, { status: "denied", reason: "memory-authority-unavailable" })).toEqual({
       status: "denied", reason: "memory-authority-unavailable",
     })
-    expect(() => decode(SfIntelligenceMemorySignals.output, {
+    expect(() => validateDecoded(SfIntelligenceMemorySignals.output, {
       status: "ok", signals: [{ action: "auto-approve", label: "Review", impact: {} }],
     })).toThrow()
     expect(() => decode(SfIntelligenceMemoryConditions.output, {
@@ -137,12 +142,12 @@ describe("A14: closed memory operation catalog", () => {
       sourceRefs: [evidence], baselineRefs: [evidence], limitations: [],
       observation: { caseRef: condition.caseRef, expected: 0, observed: 0, cutoff: "2026-11-15T00:00:00.000Z", currency: "BRL", sourceRefs: [evidence], limitations: [] },
     } as const
-    expect(decode(SfIntelligenceMemoryOutcome.output, comparison)).toEqual(comparison)
-    expect(decode(SfIntelligenceMemoryOutcome.output, { status: "unavailable" })).toEqual({ status: "unavailable" })
-    expect(() => decode(SfIntelligenceMemoryOutcome.output, {
+    expect(validateDecoded(SfIntelligenceMemoryOutcome.output, comparison)).toEqual(comparison)
+    expect(validateDecoded(SfIntelligenceMemoryOutcome.output, { status: "unavailable" })).toEqual({ status: "unavailable" })
+    expect(() => validateDecoded(SfIntelligenceMemoryOutcome.output, {
       ...comparison, summary: { ...comparison.summary, causality: "verified-by-ai" },
     })).toThrow()
-    expect(() => decode(SfIntelligenceMemoryOutcome.output, { ...comparison, privateChoice: {} })).toThrow()
+    expect(() => validateDecoded(SfIntelligenceMemoryOutcome.output, { ...comparison, privateChoice: {} })).toThrow()
   })
 
   test("mutation acknowledgement is not a fabricated persistent receipt", () => {
