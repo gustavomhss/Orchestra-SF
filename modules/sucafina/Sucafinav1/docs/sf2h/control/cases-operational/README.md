@@ -7,3 +7,5 @@ Base: 27a2a5a4de019b6319a1751651ea86a4bf43dd5d. Shared preimages:
 Consumer: verify the preimages and integrate the postimages, merging the entry callback with any independently integrated home producer. The observer invokes the actual case-list implementation with the original Request, retaining UI admission, participant-filtered state read, per-case admission/dispatch, list-stability and lease fences. Live context supplies the outer re-admission/stamp fences. Schema validation and binding comparison precede the readiness observation. Empty lists are valid only after the state read succeeds.
 
 Validation NOT RUN. Test fixture covers an empty list and actual UI authority, denial, revocation and source failure; it does not claim production acceptance. Run hosted scoped tests, typecheck and guards before use.
+
+The readiness observation samples at most one authorized case to bound dispatch fanout; the actual user-facing producer retains its complete behavior. This is an infrastructure and representative-sample observation, not proof for every case. The cases producer retains its existing 100-case ceiling. Volume fixtures are supplied but not run.
