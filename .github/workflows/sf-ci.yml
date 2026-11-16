@@ -55,12 +55,15 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: ./.github/actions/setup-bun
-      - name: Verify generated business boundaries
+
+      - name: Verify generated business boundaries (generation and clean tree)
         run: |
           set -euo pipefail
-          (cd modules/atlas/boundary && bun run check:generated)
+          # Do not replace the historical generator execution with check-only.
+          (cd modules/atlas/boundary && bun run check:generated && bun run generate && git diff --exit-code -- .)
           (cd packages/client && bun run check:generated)
-      - name: Typecheck runtime, host, product, app and E2E
+
+      - name: Typecheck runtime, host, product and app
         run: |
           set -euo pipefail
           (cd modules/atlas/boundary && bun run typecheck)
@@ -70,23 +73,120 @@ jobs:
           (cd packages/client && bun run typecheck)
           (cd apps/cli && bun run typecheck)
           (cd packages/app-shell && bun run typecheck)
-          (cd packages/app-shell && bun run typecheck:sf-e2e)
-      - name: Verify Linux web production build
-        run: (cd apps/web && bun run build)
-      - name: Security and dependency guards
-        # Run independently from product typecheck failures; keep this job red
-        # when protected files or security boundaries need human approval.
+      - name: Prove Sucafina E2E compiler inclusion even after another typecheck RED
         if: ${{ !cancelled() }}
-        env:
-          # PRs compare to their actual target; the isolated pilot compares
-          # to its frozen source, not all unrelated canonical changes on dev.
-          SF_GUARD_BASE: ${{ github.event.pull_request.base.sha || 'ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f' }}
+        shell: bash
         run: |
           set -euo pipefail
-          git cat-file -e "$SF_GUARD_BASE^{commit}"
-          bun run check:spawn-imports
-          bun run check:guards --base "$SF_GUARD_BASE"
+          evidence="$GITHUB_WORKSPACE/sf-e2e-typecheck-evidence"
+          mkdir -p "$evidence"
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          export SF_PRODUCT_TREE="$(git rev-parse 'HEAD^{tree}')"
+          bun --version > "$evidence/bun-version.txt"
+          cd packages/app-shell
+          set +e
+          bun run typecheck:sf-e2e --showConfig > "$evidence/effective-config.json" 2> "$evidence/config.stderr.log"
+          config_status=$?
+          bun run typecheck:sf-e2e --listFiles --pretty false > "$evidence/typecheck.log" 2>&1
+          typecheck_status=$?
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          set +e
+          node script/sf2h/final-bundle/verify-e2e-typecheck.mjs \
+            --config "$evidence/effective-config.json" \
+            --log "$evidence/typecheck.log" \
+            --config-status "$config_status" \
+            --typecheck-status "$typecheck_status" \
+            --output "$evidence/inclusion.json"
+          verification_status=$?
+          set -e
+          printf '{"config_status":%d,"typecheck_status":%d,"verification_status":%d}\n' \
+            "$config_status" "$typecheck_status" "$verification_status" > "$evidence/command-statuses.json"
+          sha256sum "$evidence/bun-version.txt" "$evidence/effective-config.json" \
+            "$evidence/config.stderr.log" "$evidence/typecheck.log" > "$evidence/sha256sums.txt"
+          grep -E 'error TS[0-9]+:' "$evidence/typecheck.log" || true
+          test "$config_status" -eq 0 && test "$typecheck_status" -eq 0 && test "$verification_status" -eq 0
+      - name: Publish E2E compiler inclusion proof (including RED evidence)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-e2e-inclusion-${{ github.sha }}-${{ github.run_attempt }}
+          path: sf-e2e-typecheck-evidence
+          if-no-files-found: error
+          retention-days: 14
+      - name: Verify Linux web production build
+        run: (cd apps/web && bun run build)
 
+      - name: Security and dependency guards with both original and PR bases
+        if: ${{ !cancelled() }}
+        env:
+          SF_PR_BASE: ${{ github.event.pull_request.base.sha }}
+          GH_READ_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          mkdir -p guard-evidence
+          # checkout has persist-credentials:false; the read-only token exists
+          # only for this fetch and is never saved in git config or artifacts.
+          auth="$(printf 'x-access-token:%s' "$GH_READ_TOKEN" | base64 -w0)"
+          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+            GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+            git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev
+          if [ -z "$SF_PR_BASE" ]; then
+            GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+              GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+              git fetch --no-tags origin +refs/heads/close-final-candidate:refs/remotes/origin/close-final-candidate
+            SF_PR_BASE="$(git rev-parse refs/remotes/origin/close-final-candidate)"
+          fi
+          unset auth GH_READ_TOKEN
+          git cat-file -e "$SF_PR_BASE^{commit}"
+          dev_sha="$(git rev-parse 'origin/dev^{commit}')"
+          test -n "$dev_sha"
+          set +e
+          bun run check:spawn-imports > guard-evidence/spawn.log 2>&1
+          spawn_status=$?
+          bun run check:guards --base origin/dev > guard-evidence/guard-dev.log 2>&1
+          dev_status=$?
+          bun run check:guards --base "$SF_PR_BASE" > guard-evidence/guard-pr-base.log 2>&1
+          pr_status=$?
+          set -e
+          SF_GUARD_DEV_SHA="$dev_sha" SF_GUARD_PR_SHA="$SF_PR_BASE" \
+          SF_SPAWN_STATUS="$spawn_status" SF_GUARD_DEV_STATUS="$dev_status" SF_GUARD_PR_STATUS="$pr_status" \
+            node --input-type=module -e '
+              import { writeFileSync } from "node:fs"
+              import { execFileSync } from "node:child_process"
+              const sha = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
+              const tree = execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()
+              if (sha !== process.env.GITHUB_SHA) process.exit(2)
+              const receipt = {
+                schema: "sf-ci-guard-bases-v1", candidate: sha, tree,
+                run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+                runner_os: process.env.RUNNER_OS, runner_arch: process.env.RUNNER_ARCH,
+                canonical_base: process.env.SF_GUARD_DEV_SHA,
+                pr_base: process.env.SF_GUARD_PR_SHA,
+                commands: [
+                  { command: "bun run check:spawn-imports", status: Number(process.env.SF_SPAWN_STATUS) },
+                  { command: "bun run check:guards --base origin/dev", status: Number(process.env.SF_GUARD_DEV_STATUS) },
+                  { command: "bun run check:guards --base <PR base SHA>", status: Number(process.env.SF_GUARD_PR_STATUS) },
+                ],
+              }
+              writeFileSync("guard-evidence/receipt.json", JSON.stringify(receipt, null, 2) + "\n")
+            '
+          sha256sum guard-evidence/{spawn,guard-dev,guard-pr-base}.log guard-evidence/receipt.json \
+            > guard-evidence/sha256sums.txt
+          printf 'guards canonical dev=%s status=%s; PR base=%s status=%s; spawn=%s\n' \
+            "$dev_sha" "$dev_status" "$SF_PR_BASE" "$pr_status" "$spawn_status"
+          test "$spawn_status" -eq 0 && test "$dev_status" -eq 0 && test "$pr_status" -eq 0
+      - name: Publish independent guard-base evidence (including RED)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-guard-bases-${{ github.sha }}-${{ github.run_attempt }}
+          path: guard-evidence
+          if-no-files-found: error
+          retention-days: 14
   omni:
     name: sf/linux-native-omni
     runs-on: ubuntu-24.04
