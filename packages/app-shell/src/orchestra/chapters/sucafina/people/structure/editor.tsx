@@ -78,7 +78,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
     identity: props.recordRef ? { kind: "record", recordRef: props.recordRef } :
       { kind: "new", newIntentRef: intentRef },
     editScopeKey: (props.scopeKey + ":" + props.entity) as SfEditScopeKey,
-    baseVersion: props.recordRef ? props.version : null,
+    baseVersion: props.version,
     base: props.original,
     value: initialValues(props),
     revalidation: {
@@ -129,9 +129,8 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
     const operationRef = local.reviewRef
     if (!current || !operationRef || current.phase !== "reviewing" ||
         current.pendingOperation || current.conflict || !props.admitted || busy()) return
-    if (current.baseVersion === null && props.recordRef) return
-    const version = current.baseVersion ?? props.version
-    if (!Number.isSafeInteger(version) || version < 0) return
+    if (typeof current.baseVersion !== "number" || !Number.isSafeInteger(current.baseVersion) || current.baseVersion < 0) return
+    const version = current.baseVersion
     const value = { ...current.value }
     const key = crypto.randomUUID()
     setLocal("busy", true)
@@ -140,7 +139,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
         operationId: props.action.operationId, id: props.recordRef ?? null, version, values: value,
       }))
       // The draft fences the exact source version, intent, digest and key.
-      draft().setPending({ operationRef, idempotencyKey: key, payloadDigest, expectedVersion: current.baseVersion })
+      draft().setPending({ operationRef, idempotencyKey: key, payloadDigest, expectedVersion: version })
       draft().setPhase("submitting")
       const controller = new AbortController()
       const result = await props.onCommit(value, version, key, controller.signal)
