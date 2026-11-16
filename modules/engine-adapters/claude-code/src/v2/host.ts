@@ -139,9 +139,15 @@ export const make = Effect.gen(function* () {
     const oldest = governed.values().next().value
     if (governed.size > GOVERNED_SESSIONS && oldest !== undefined) governed.delete(oldest)
   }
-  return {
+  const host: ExecutionHost.Interface = {
     id: ID,
     stateKey: STATE_KEY,
+    observeSkillLoad: (receipt) => Effect.sync(() => {
+      const facts = ExecutionHost.consumeSkillLoad(receipt, host)
+      if (facts?.skillName !== GOVERNED_PLAYBOOK || !facts.source.reserved || !facts.source.key.trim() ||
+        !facts.source.location.trim() || !/^[0-9a-f]{64}$/.test(facts.source.contentDigest)) return
+      governedLoad(facts.sessionID)
+    }),
     stream: (turn) =>
       Stream.unwrap(
         Effect.gen(function* () {
@@ -502,7 +508,8 @@ export const make = Effect.gen(function* () {
           return Stream.concat(Stream.make(LLMEvent.stepStart({ index: 0 })), frames)
         }),
       ),
-  } satisfies ExecutionHost.Interface
+  }
+  return host
 })
 
 /** Replaces the empty ExecutionHost registry with one holding the Claude Code host. */
