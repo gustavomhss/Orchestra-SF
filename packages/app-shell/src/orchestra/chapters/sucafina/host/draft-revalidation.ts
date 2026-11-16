@@ -2,6 +2,8 @@ import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfContextStamp, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { revalidateRequestsDraft } from "./draft-revalidation-requests"
+import { revalidateSupplierCreateDraft } from "./draft-revalidation-supplier"
+import { revalidateSettingsDraft } from "./draft-revalidation-settings"
 
 export async function revalidateSfNativeDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -12,6 +14,10 @@ export async function revalidateSfNativeDraft(
       input.originalOwner.principalRef !== fresh.stamp.principalRef) return { status: "authority-changed" }
   if (input.read.operationId === "domain.page.CAP25")
     return revalidateRequestsDraft(input, fresh, transport, signal)
+  if (input.read.operationId === "domain.page.CAP27")
+    return revalidateSupplierCreateDraft(input, fresh, transport, signal)
+  if (input.read.operationId === "domain.page.CAP28")
+    return revalidateSettingsDraft(input, fresh, transport, signal)
   if (input.read.operationId !== "projection.case" || input.identity.kind !== "record" ||
       input.read.fieldPaths.length || input.read.actionIds.length) return { status: "unavailable" }
 
@@ -20,7 +26,7 @@ export async function revalidateSfNativeDraft(
   if (!ready) return { status: "denied" }
   const originalInput = input.read.input
   if (!originalInput || typeof originalInput !== "object" || Array.isArray(originalInput) ||
-      originalInput.caseRef !== input.identity.recordRef || Object.keys(originalInput).length !== 1)
+      !("caseRef" in originalInput) || originalInput.caseRef !== input.identity.recordRef || Object.keys(originalInput).length !== 1)
     return { status: "denied" }
   const result = await createSfDecisionsClient(transport)["projection.case"]({
     caseRef: input.identity.recordRef,

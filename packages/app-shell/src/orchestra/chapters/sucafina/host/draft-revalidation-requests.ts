@@ -21,15 +21,17 @@ export async function revalidateRequestsDraft(
       input.read.actionIds.length !== 1 || input.read.actionIds[0] !== action) return { status: "unavailable" }
   const source = input.read.input
   if (!source || typeof source !== "object" || Array.isArray(source)) return { status: "unavailable" }
-  if (creating ? Object.keys(source).length !== 0 :
-    Object.keys(source).length !== 1 || source.request !== input.identity.recordRef) return { status: "unavailable" }
+  if (input.identity.kind === "new" ? Object.keys(source).length !== 0 :
+    Object.keys(source).length !== 1 || !("request" in source) || source.request !== input.identity.recordRef) return { status: "unavailable" }
   const fields = input.editScopeKey === "pr.details" ? prFields : poFields
   const prefix = input.editScopeKey === "pr.details" ? "pr." : "po."
   if (input.read.fieldPaths.some((path) => !fields.some((field) => path === prefix + field)))
     return { status: "unavailable" }
-  const destination = fresh.destinations.find((item) => item.capabilityId === "CAP25" && item.canRead)
+  const destination = fresh.destinations.find((item) => item.capabilityId === "CAP25" &&
+    item.surface === "procurement" && item.page === "Requests" && item.canRead)
   if (!destination || !destination.allowedActionIds.includes(action)) return { status: "denied" }
-  if (!fresh.availability.some((resource) => resource.operations.some((operation) =>
+  if (!fresh.availability.some((resource) => resource.family === "procurement" && resource.resource === "CAP25" &&
+    resource.state !== "denied" && resource.state !== "unavailable" && resource.operations.some((operation) =>
     operation.operationId === "domain.page.CAP25" && operation.state === "ready" && operation.operational)))
     return { status: "denied" }
   const result = await createSfProcurementClient(transport)["domain.page.CAP25"](
@@ -42,6 +44,10 @@ export async function revalidateRequestsDraft(
   if (read.kind === "denied" || read.kind === "unauthenticated") return { status: "denied" }
   if (read.kind === "stale") return { status: "authority-changed" }
   if (read.kind !== "ready") return { status: "unavailable" }
+  if (result.body.status !== "ok" || (input.identity.kind === "new"
+    ? Object.keys(result.body.value.selection).length !== 0
+    : Object.keys(result.body.value.selection).length !== 1 ||
+      result.body.value.selection.request !== input.identity.recordRef)) return { status: "unavailable" }
   if (!read.actionIds.includes(action)) return { status: "denied" }
   if (input.identity.kind === "new")
     return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: null }
