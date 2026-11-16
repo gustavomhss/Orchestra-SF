@@ -179,6 +179,13 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     // scenario budget on a detached/hidden forecast control.
     const activeForm = editor.locator('form[data-command="save-entry"][data-record="reports-opex-01"]')
     await expect(activeForm).toHaveCount(1)
+    // The producer renders each monthly save form inside a closed native
+    // <details> beneath the row's visible Edit dialog. Open that real human
+    // disclosure before interacting; a visible dialog alone does not expand it.
+    const monthPanel = activeForm.locator("xpath=ancestor::details[1]")
+    await expect(monthPanel).toHaveCount(1)
+    await monthPanel.locator("summary").click()
+    await expect(monthPanel).toHaveAttribute("open", "")
     const forecast = activeForm.getByLabel("Forecast", { exact: true })
     await expect(forecast).toBeVisible({ timeout: 10_000 })
     await expect(forecast).toHaveValue("110")
