@@ -36,7 +36,7 @@ test("A02 exports exactly the 7 page reads, 29 legacy commands and 3 Planner por
   expect(ids.length).toBe(39)
   expect(new Set(ids).size).toBe(39)
   for (const [id, binding] of Object.entries(SfPlanner.operations)) {
-    expect(binding.operationId).toBe(id)
+    expect<string>(binding.operationId).toBe(id)
     expect(binding.pathTemplate.startsWith("{mount}/")).toBe(true)
     expect(binding.responseMode).toBe("json")
     expect(binding.method).toBe(id.startsWith("domain.page.") ? "GET" : "POST")
@@ -135,7 +135,7 @@ test("unknown outcome is retained verbatim; partial known success retains only n
 test("closed source command schema refuses extra fields and preserves CAS", () => {
   const input = SfPlanner.operations["domain.command.CAP18.save"].input
   const command = { page: "OPEX", action: "save", version: 7, id: "line", values: { versionId: "plan", closed: 4 } }
-  expect(Schema.decodeUnknownSync(input, { onExcessProperty: "error" })(command)).toEqual(command)
+  expect<object>(Schema.decodeUnknownSync(input, { onExcessProperty: "error" })(command)).toEqual(command)
   expect(() => Schema.decodeUnknownSync(input, { onExcessProperty: "error" })({
     ...command, values: { ...command.values, shouldNeverPass: true },
   })).toThrow()
@@ -169,7 +169,7 @@ test("A02 C64: Effect beta.83 enforces exactly 12 periods and retains zero versu
   }
   const command = { page: "OPEX", action: "save", id: "line", version: 7, values }
   const decode = Schema.decodeUnknownSync(input, { onExcessProperty: "error" })
-  expect(decode(command)).toEqual(command)
+  expect<object>(decode(command)).toEqual(command)
   for (const field of ["b", "a", "f"] as const) {
     for (const count of [0, 11, 13]) {
       expect(() => decode({
@@ -194,7 +194,7 @@ test("A02 C64: monthly preview/apply retain closed 1..36 cells, 1..500 rows and 
       action, input: { page: "OPEX", versionId: "plan", drafts },
     })
     const valid = request([draft(1, [cell(1), cell(12)])])
-    expect(decode(valid)).toEqual(valid)
+    expect<object>(decode(valid)).toEqual(valid)
     expect(() => decode(request([]))).toThrow()
     expect(() => decode(request([draft(1, [])]))).toThrow()
     expect(() => decode(request([draft(1, Array(37).fill(cell(1)))]))).toThrow()
@@ -227,7 +227,7 @@ test("A02 C64: authorized page projections preserve 12 slots and nullable financ
     },
   }
   const overviewDecode = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP17"].output)
-  expect(overviewDecode(overview)).toEqual(overview)
+  expect<object>(overviewDecode(overview)).toEqual(overview)
   for (const count of [0, 11, 13]) {
     expect(() => overviewDecode({
       ...overview,
@@ -248,7 +248,7 @@ test("A02 C64: authorized page projections preserve 12 slots and nullable financ
     },
   }
   const headcountDecode = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP20"].output)
-  expect(headcountDecode(headcount)).toEqual(headcount)
+  expect<object>(headcountDecode(headcount)).toEqual(headcount)
   expect(() => headcountDecode({
     ...headcount,
     value: { ...headcount.value, data: {
