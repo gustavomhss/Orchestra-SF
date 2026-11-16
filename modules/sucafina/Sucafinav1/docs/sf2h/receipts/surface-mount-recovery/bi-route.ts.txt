@@ -1,0 +1,7 @@
+import type { SfContext } from "@orchestra/schema/sucafina/context"
+
+/** Availability is a prerequisite; the leaf still performs the authorized producer read. */
+export function sfBiCatalogAvailable(context: SfContext): boolean {
+  return context.availability.some((entry) => entry.family === "bi" && entry.resource === "catalog" &&
+    entry.operations.some((operation) => operation.operationId === "bi.bi-options" && operation.state === "ready" && operation.operational))
+}
