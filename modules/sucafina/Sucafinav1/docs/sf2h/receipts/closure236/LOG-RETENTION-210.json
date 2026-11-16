@@ -1,0 +1,690 @@
+{
+  "schema": "sf2h.release-proof236.log-retention210.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 236,
+  "branch": "sf-release-proof",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "approved_ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "GLOBAL_RELEASE": false,
+  "source": {
+    "original_historical_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "source_210_commit": "cca757a0e125de371cb677342802509fb769bbd2",
+    "index_blob": "0a623f990bd5974e3c7217f2f50977ecdb54fd6e",
+    "handoff_blob": "14986fe8ead6e778e712fbad056d05d92498d1ea",
+    "prepost_blob": "5645027f4104a38f0de3cd98b67dcc91b377bb2a",
+    "consumer_catalog_blob": "22871e18c2c291ed725abd59808489e704e8966a"
+  },
+  "readback_236": {
+    "method": "GitHub MCP GET contents for 20 exact directories at product base HEAD, compare each log's Git blob SHA and reported byte size to source INDEX-210",
+    "product_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "product_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "paths_checked": 55,
+    "distinct_directories": 20,
+    "matching_blob_and_size": 55,
+    "missing": 0,
+    "disagreeing": 0,
+    "scope": "STATIC_FILE_PRESERVATION_ONLY_NOT_DYNAMIC_READER_EQUIVALENCE_NOT_GUARD"
+  },
+  "original_210_readback": {
+    "reported_full_blob_readbacks": 55,
+    "reported_known_documentary_consumers": 9,
+    "reported_additional_lexical_candidates": 60,
+    "scanned_files": 363,
+    "repo_wide_and_dynamic_reader_proof": "NOT_RUN"
+  },
+  "retain_policy": {
+    "delete_any_logs": false,
+    "delete_authorized": 0,
+    "deleted_by_236": 0,
+    "do_not_copy_log_contents_into_receipts": true,
+    "source_receipts_immutable": true,
+    "DO_NOT_RELAX_GUARD_OR_SKIP": true
+  },
+  "open_findings": [
+    {
+      "id": "B210-01",
+      "issue": "Legacy immutable receipts/paths and unknown dynamic readers; equivalence not proven",
+      "owner": "S0/189-authorized integrator and independent 208",
+      "status": "BLOCKED"
+    },
+    {
+      "id": "B210-02",
+      "issue": "Repository-wide active consumer scan and end-to-end byte-equivalent readback NOT_RUN",
+      "owner": "authorized integrator+independent reviewer",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "B210-03",
+      "issue": "reports36-semantic-review.json expected package blob c0e1c3baff457e94f18e7d7a8c2179e541209d; actual base 998f blob c0e1c3baff457e94f18e7d7a7d8c2179e541209d, rechecked directly with GitHub MCP",
+      "owner": "189/integrator",
+      "status": "UNRECONCILED_NO_MUTATION"
+    },
+    {
+      "id": "B210-04",
+      "issue": "Historical guard163 FAIL_66 does not prove present C or D; only 190 fresh G7 and S0/190 fresh G8 may judge",
+      "owner": "190/S0",
+      "status": "NOT_RUN"
+    }
+  ],
+  "inert_prior_reader": {
+    "source": "archive210/READER-210.mjs",
+    "source_blob": "ddf452e52692e8bbc552b2bf40594a2c3ae205c3",
+    "patch": "archive210/INERT-189-READER.patch",
+    "patch_blob": "25b420f611f7cb7e8feddb8b33687e9c9a84f92c",
+    "action": "REUSE_EXISTING_ONLY_IF_AUTHORIZED; not applied by 236"
+  },
+  "logs": [
+    {
+      "id": "AS-01",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/01-43649352799.log",
+      "git_blob_sha": "87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+      "bytes": 4272,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-02",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/02-43649823660.log",
+      "git_blob_sha": "ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+      "bytes": 2548,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-03",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/03-43650319287.log",
+      "git_blob_sha": "bfc6bc6750156ced1e59197a22d3872716ae8d65",
+      "bytes": 3439,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-04",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/04-43650994005.log",
+      "git_blob_sha": "e456a2ed570611a7990ac0065f85598bdcd60111",
+      "bytes": 3265,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-05",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/05-43651791685.log",
+      "git_blob_sha": "8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+      "bytes": 5350,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-06",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/06-43653108315.log",
+      "git_blob_sha": "4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+      "bytes": 4188,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-07",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/07-43653855014.log",
+      "git_blob_sha": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+      "bytes": 2464,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-08",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/08-43654981768.log",
+      "git_blob_sha": "8731d2ba584b31a85c8c030a676b850df70ce8b4",
+      "bytes": 1693,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-09",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/B0-test-excerpt.log",
+      "git_blob_sha": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+      "bytes": 2572,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-10",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/R1-test-excerpt.log",
+      "git_blob_sha": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+      "bytes": 19381,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-11",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/test-output.log",
+      "git_blob_sha": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+      "bytes": 3378,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-12",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/test-output.log",
+      "git_blob_sha": "8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+      "bytes": 8833,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-13",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/test-output.log",
+      "git_blob_sha": "065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+      "bytes": 8616,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-14",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B0-test-output.log",
+      "git_blob_sha": "342c7129f4bfd11bc4cacdff44e56147ba15d503",
+      "bytes": 8544,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-15",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B1-test-output.log",
+      "git_blob_sha": "8dd8b50207df51748d964edccd74dc266cefc228",
+      "bytes": 2129,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-16",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B2-test-output.log",
+      "git_blob_sha": "8d66dbba8fb077552e87ee01f78f07106f95309f",
+      "bytes": 7914,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-17",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/P03-test-output.log",
+      "git_blob_sha": "42e39293213abf1c84323718acf1817cdda9d164",
+      "bytes": 5291,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-18",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/R1-test-output.log",
+      "git_blob_sha": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+      "bytes": 7700,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-19",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4-tests.log",
+      "git_blob_sha": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+      "bytes": 5061,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-20",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1-tests.log",
+      "git_blob_sha": "1b71cd92c92de2cb59ea257915abb6367a54724a",
+      "bytes": 55851,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-21",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2-tests.log",
+      "git_blob_sha": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+      "bytes": 24507,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-22",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3-tests.log",
+      "git_blob_sha": "b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+      "bytes": 2151,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-23",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-tests.log",
+      "git_blob_sha": "b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+      "bytes": 40064,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-24",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-tests.log",
+      "git_blob_sha": "aeb1c529e74a6411248e32c16f7429b7cad6383f",
+      "bytes": 16232,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-25",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-tests.log",
+      "git_blob_sha": "e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+      "bytes": 14914,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-26",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/cleanup-job-132671266536.log",
+      "git_blob_sha": "2f4b0d063c560cd3028994472cdabc78829ab65b",
+      "bytes": 2304,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-27",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/test-job-132670817059.log",
+      "git_blob_sha": "55a6bca3959f2759ff763dfc64614e62235331fb",
+      "bytes": 88508,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-28",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam-output.log",
+      "git_blob_sha": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+      "bytes": 970,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-29",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.log",
+      "git_blob_sha": "947131337f1c1f5c821116bea961ce309d44f044",
+      "bytes": 1037,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-30",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/bun.log",
+      "git_blob_sha": "f84898708ac3db90f5bc392ac20a0bed97042103",
+      "bytes": 3744,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-31",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error-output.log",
+      "git_blob_sha": "25a631e7b551a518b5545dcd496100f21193b93e",
+      "bytes": 2698,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-32",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.log",
+      "git_blob_sha": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+      "bytes": 3491,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-33",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main-output.log",
+      "git_blob_sha": "b67c8061ef612343a3801304a1715efeffa262d0",
+      "bytes": 3294,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-34",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.log",
+      "git_blob_sha": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+      "bytes": 4087,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-35",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam-output.log",
+      "git_blob_sha": "71a2da26f85e3c1af4551aacbbc63b745ee92483",
+      "bytes": 1279,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-36",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.log",
+      "git_blob_sha": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+      "bytes": 1346,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-37",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error-output.log",
+      "git_blob_sha": "ac7855f087b4566bbd73665cbda703000e48137f",
+      "bytes": 2506,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-38",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.log",
+      "git_blob_sha": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+      "bytes": 3299,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-39",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main-output.log",
+      "git_blob_sha": "562a28955b912b1fa99103821cbed77d479dbbb4",
+      "bytes": 2526,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-40",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.log",
+      "git_blob_sha": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+      "bytes": 3319,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-41",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam-output.log",
+      "git_blob_sha": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+      "bytes": 1279,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-42",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.log",
+      "git_blob_sha": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+      "bytes": 1346,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-43",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-job.log",
+      "git_blob_sha": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+      "bytes": 89896,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-44",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-job.log",
+      "git_blob_sha": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+      "bytes": 98644,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-45",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-job.log",
+      "git_blob_sha": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+      "bytes": 72850,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-46",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/r3-failure-excerpt.log",
+      "git_blob_sha": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+      "bytes": 16310,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-47",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/r1-failure-excerpt.log",
+      "git_blob_sha": "6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+      "bytes": 7563,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-48",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/r3-failure-excerpt.log",
+      "git_blob_sha": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+      "bytes": 10169,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-49",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.tests.log",
+      "git_blob_sha": "c718f517eacbacc224a9b842b51e93e1d8517832",
+      "bytes": 89377,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-50",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.tests.log",
+      "git_blob_sha": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+      "bytes": 53310,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-51",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.tests.log",
+      "git_blob_sha": "0c1c59e36aafb156504098adcdb64ce50262d63c",
+      "bytes": 28708,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-52",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.tests.log",
+      "git_blob_sha": "509326e2921e600367231470f7fc375a808e15f0",
+      "bytes": 10285,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-53",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/client-and-collection.log",
+      "git_blob_sha": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+      "bytes": 3521,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-54",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/nominal-03.log",
+      "git_blob_sha": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+      "bytes": 3234,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    },
+    {
+      "id": "AS-55",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/source-guards.log",
+      "git_blob_sha": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+      "bytes": 3981,
+      "mode": "100644",
+      "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "verification": "SHA_AND_SIZE_MATCHED_IN_GITHUB_CONTENTS_METADATA_AT_998f",
+      "deletion_authorized": false,
+      "dynamic_consumer_equivalence": "NOT_RUN"
+    }
+  ]
+}

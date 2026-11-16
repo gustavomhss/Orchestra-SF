@@ -1,0 +1,105 @@
+{
+  "schema": "sf2h.release-proof236.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 236,
+  "branch": "sf-release-proof",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "approved_ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "GLOBAL_RELEASE": false,
+  "actor": {
+    "model": "GPT-6",
+    "session_id": null,
+    "session_id_exposed": false
+  },
+  "epoch": "release-proof-e1-browser236",
+  "initial_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "initial_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+  "prewrite_head_verified": true,
+  "prewrite_fence": "FENCE.json",
+  "status": "ACCEPTED_RECEIPTS_ONLY_NOT_C_NOT_D",
+  "source_readset": {
+    "207": {
+      "commit": "67f1963e42769dfb94ba1080ca0b5b883b54eb58",
+      "handoff_blob": "b426dce8ab053da0dcf9eee82648925434fe7081",
+      "verdict": "PRE_FREEZE_FIX_FIRST"
+    },
+    "208": {
+      "commit": "b3e674c66e9c7e0a3f6ade6353905539a8e326fd",
+      "handoff_blob": "ea2c0ca048d8d0ca8710a00e1313de357b77a804",
+      "verdict": "PRE_FREEZE_FIX_FIRST"
+    },
+    "209": {
+      "commit": "84c9eb170b826c4c595120e62b78efe31f904d0d",
+      "handoff_blob": "173acf91b427341c616c6ffda39e42377cebf8c5",
+      "verdict": "PRE_FREEZE_FIX_FIRST"
+    },
+    "210": {
+      "commit": "cca757a0e125de371cb677342802509fb769bbd2",
+      "handoff_blob": "14986fe8ead6e778e712fbad056d05d92498d1ea",
+      "index_blob": "0a623f990bd5974e3c7217f2f50977ecdb54fd6e",
+      "consumers_blob": "22871e18c2c291ed725abd59808489e704e8966a",
+      "prepost_blob": "5645027f4104a38f0de3cd98b67dcc91b377bb2a"
+    },
+    "229": {
+      "commit": "1e17d546ca5a4116693da449f5d2ecfb4c5cb18d",
+      "ack_blob": "47c633468ca38f388880163b9d51c5d210db4626",
+      "terminal_handoff": "NOT_OBSERVED"
+    },
+    "230": {
+      "commit": "b8d0e46d6fcca835f345bd5e0d5f719d8047c757",
+      "handoff_blob": "fa233a19e8aa52eb3dff77bf0a780872646bef1f",
+      "decision": "FIX_FIRST",
+      "inert_patches": 10
+    },
+    "231": {
+      "commit": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "fence_blob": "c70c099ea29e0651085fb439a37d82b445c9d982",
+      "terminal_handoff": "NOT_OBSERVED"
+    },
+    "232": {
+      "commit": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+      "handoff_blob": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+      "queue_blob": "c2180b83566acbd773903357a2bff59d73225052",
+      "request_manifest_blob": "f5c93194b81ac6cd594a7a08d0a4062b89b889fe",
+      "status": "RELEASED_NO_ACTIVE_DISPATCH"
+    },
+    "base_product": {
+      "commit": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+      "tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580"
+    },
+    "detached_228": {
+      "commit": "33474b2158a4703f256191f61f1a16ac85c26004",
+      "tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+      "status": "INERT_NOT_CONSUMED"
+    }
+  },
+  "plan_readset": {
+    "AGENTS_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "START_blob": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW_blob": "043205bee6031b4517a98591b3588fca0ab12925",
+    "COMMON_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "WP10_blob": "1c7fef239ba8d4e8de77b13ec4803e87d493c133",
+    "CI_RECIPES_blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+  },
+  "products_edited": 0,
+  "guards": {
+    "G7": "NOT_RUN",
+    "G8": "NOT_RUN"
+  },
+  "tests": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "build": "NOT_RUN",
+  "validators": "NOT_RUN",
+  "CI": "NOT_RUN",
+  "native_proofs": "NOT_RUN",
+  "independent_final_approvals": "NOT_RUN",
+  "release": "NO_RELEASE",
+  "notes": "Preparation evidence on release-proof branch; closure236 is NOT automatically an allowed D evidence prefix."
+}
