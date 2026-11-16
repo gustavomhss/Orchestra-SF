@@ -49,6 +49,7 @@ describe("request title original source binding", () => {
     const { allowedDraftActions, ...old } = row
     expect(allowedDraftActions).toEqual(["save-pr"])
     expect(await revalidate(body([old]))).toEqual({ status: "unavailable" })
+    expect(await revalidate(body([{ ...old, status: "po_draft" }]))).toEqual({ status: "unavailable" })
     expect(await revalidate(body([{ ...row, allowedDraftActions: [] }]))).toEqual({ status: "denied" })
     expect(await revalidate(body([{ ...row, status: "po_draft" }]))).toEqual({ status: "denied" })
     expect(await revalidate(body([row], 7, []))).toEqual({ status: "denied" })
