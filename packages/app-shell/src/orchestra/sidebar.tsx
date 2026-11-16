@@ -19,6 +19,7 @@ import { tabKey, type SessionTab, type Tab, useTabs } from "@/context/tabs"
 import { HugrBrand } from "@/orchestra/brand"
 import { chapterPages } from "@/orchestra/chapter-route"
 import { FlightNavChip } from "@/orchestra/chapters/flight-engineer/entry"
+import { requestSfOwnerShellExit237 } from "@/orchestra/chapters/sucafina/host/owner-runtime231"
 import { createAdvancedNavigation } from "@/orchestra/compact-navigation"
 import { advancedNavigation, navigation, primaryNavigation, settingsNavigation, showWip } from "@/orchestra/navigation"
 import { OrchestraNavigationToggle } from "@/orchestra/navigation-toggle"
@@ -262,6 +263,7 @@ export function OrchestraSidebar(props: {
 
   async function selectProject(conn: ServerConnection.Any, project: LocalProject, draft = false) {
     if (global.servers.health[ServerConnection.key(conn)]?.healthy === false) return
+    if (!(await requestSfOwnerShellExit237())) return
     const current = ++requests.profile
     const route = layout.route()
     const ctx = global.ensureServerCtx(conn)
@@ -318,7 +320,11 @@ export function OrchestraSidebar(props: {
     })
   }
 
-  function openChapter(id: string, view = "") {
+  async function openChapter(id: string, view = "") {
+    // Switching to another Orchestra chapter leaves the SF owner; keep same-owner
+    // native SF chapter transitions under F01's original navigation instead.
+    if (id !== "sf-home" && id !== "sf-decisions" &&
+        !(await requestSfOwnerShellExit237())) return
     // Chapter pages read the Home selection; carry the profile the user is looking at.
     const target = profile()
     const directory = target.project?.worktree ?? target.directory
@@ -429,8 +435,15 @@ export function OrchestraSidebar(props: {
             onPointerEnter={() => preload(item.id)}
             onFocus={() => preload(item.id)}
             onClick={() => {
+              if (item.id === "home") {
+                void requestSfOwnerShellExit237().then((accepted) => {
+                  if (!accepted) return
+                  props.onNavigate?.()
+                  navigate("/")
+                })
+                return
+              }
               props.onNavigate?.()
-              if (item.id === "home") return navigate("/")
               if (item.id === "chat") return openChat()
               if (item.id === "maestro") return openMaestro()
               if (item.id === "search") return command.show()
@@ -593,12 +606,15 @@ export function OrchestraSidebar(props: {
                               disabled={
                                 !layout.ready() || !tabs.ready() || global.servers.health[group.key]?.healthy === false
                               }
-                              onSelect={() => {
-                                // Only what moves focus or opens tabs waits for the menu to unmount. The profile
-                                // applies now: a chapter opened while the menu closes would otherwise mount
-                                // against the previous profile and mount again when the selection lands.
-                                layout.home.setSelection({ server: group.key, directory: worktree })
-                                afterProfileClose(() => selectProject(group.conn, project()))
+                              onSelect={(event) => {
+                                event.preventDefault()
+                                // An existing SF editor must decide before ANY change to the
+                                // shell's server/project selection; never preselect then prompt.
+                                void requestSfOwnerShellExit237().then((accepted) => {
+                                  if (!accepted || requests.disposed) return
+                                  layout.home.setSelection({ server: group.key, directory: worktree })
+                                  afterProfileClose(() => selectProject(group.conn, project()))
+                                })
                               }}
                             >
                               <DropdownMenu.ItemLabel class="orchestra-profile-item-name">
@@ -661,7 +677,11 @@ export function OrchestraSidebar(props: {
                       class="orchestra-profile-item"
                       onSelect={() => {
                         const target = item()
-                        afterProfileClose(() => home.project.close(target.conn, target.project.worktree))
+                        afterProfileClose(() => {
+                          void requestSfOwnerShellExit237().then((accepted) => {
+                            if (accepted) home.project.close(target.conn, target.project.worktree)
+                          })
+                        })
                       }}
                     >
                       <Icon name="close" />

@@ -48,8 +48,12 @@ export type SfDraftReadBinding = Readonly<{
   actionIds: readonly string[]
 }>
 export type SfDraftRegistry = Readonly<{
+  /** An existing draft is never fabricated by a read-only lookup. */
+  peek<Value>(input: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>): SfPublicDraftController<Value> | undefined
   acquire<Value>(input: Omit<SfDraftInput<Value>, "ownerKey"> & Readonly<{ revalidation: SfDraftReadBinding }>): SfPublicDraftController<Value>
   discard(selection: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>): void
+  /** Tracks submitted original correlation without fabricating a server operationRef. */
+  markUnresolved(selection: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>, unresolved: boolean): void
 }>
 export type SfDraftRevalidationInput = Readonly<{
   surfaceId: SurfaceId
@@ -82,6 +86,8 @@ export type SfContextHandle = Readonly<{
   generation: Accessor<number>
   /** Reads the original owner draft registry, including quarantined edits. */
   hasDirtyDrafts: () => boolean
+  /** Only after explicit discard consent; refuses pending/unknown or quarantined operations. */
+  discardDrafts: () => boolean
   ready: Accessor<Readonly<{ context: SfContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
   reload: () => Promise<void>
   invalidate: (reason: "logout" | "revoked" | "owner-changed" | "host-changed") => void

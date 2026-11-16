@@ -1,11 +1,12 @@
 import { A } from "@solidjs/router"
-import { createMemo, For, Show, type JSX } from "solid-js"
+import { createEffect, createMemo, For, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { SfCreateCase } from "./create"
+import { SfCreateCase, sfUi33DraftSelection, type SfUi33DraftFields } from "./create"
+import { useSfContext } from "../../context"
 import { useSfCases, sfOperationReady } from "./model"
 import { sfDecisionHref } from "./route"
 import "./n24.css"
@@ -17,7 +18,12 @@ export function SfCasesView(props: SfSurfaceProps): JSX.Element {
   const language = useLanguage()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const cases = useSfCases()
+  const owner = useSfContext()
   const [ui, setUi] = createStore({ filter: "", create: props.surfaceId === "UI33" && props.route.kind === "new" })
+  createEffect(() => {
+    const active = owner.ready()?.drafts.peek<SfUi33DraftFields>(sfUi33DraftSelection)?.snapshot()
+    if (active?.availability === "active" && active.dirty) setUi("create", true)
+  })
   const isPage = () => props.surfaceId === "UI33"
   const route = () => isPage() ? props.route as SfSurfaceProps<"UI33">["route"] : undefined
   const visible = createMemo(() => {

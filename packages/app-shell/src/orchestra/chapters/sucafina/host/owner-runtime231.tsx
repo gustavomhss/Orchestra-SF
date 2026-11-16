@@ -7,11 +7,12 @@
  * ctx.context and projection.case. Desktop capabilities are not substituted.
  * Requires the exact 227 context/navigation leaves and 228 adapter postimages.
  */
-import { useLocation, useNavigate } from "@solidjs/router"
+import { useBeforeLeave, useLocation, useNavigate } from "@solidjs/router"
 import { createEffect, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { usePlatform } from "@/context/platform"
+import { useLanguage } from "@/context/language"
 import { ServerConnection } from "@/context/server"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
@@ -30,6 +31,27 @@ import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
+
+/** The shell asks the live F01 owner, never a second source of draft authority. */
+let liveExitGuard237: (() => Promise<boolean>) | undefined
+let exitInFlight237: Promise<boolean> | undefined
+export function bindSfOwnerShellExit237(guard: () => Promise<boolean>): () => void {
+  if (liveExitGuard237 && liveExitGuard237 !== guard) throw new Error("SF_F01_MULTIPLE_EXIT_OWNERS")
+  liveExitGuard237 = guard
+  return () => {
+    if (liveExitGuard237 === guard) liveExitGuard237 = undefined
+  }
+}
+export function requestSfOwnerShellExit237(): Promise<boolean> {
+  if (!liveExitGuard237) return Promise.resolve(true)
+  if (exitInFlight237) return exitInFlight237
+  const request = liveExitGuard237()
+  exitInFlight237 = request.finally(() => {
+    if (exitInFlight237 === settled) exitInFlight237 = undefined
+  })
+  const settled = exitInFlight237
+  return settled
+}
 
 export type SfOwnerRuntime231Props = Readonly<{
   server: ServerConnection.Any
@@ -171,6 +193,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const location = useLocation()
   const navigate = useNavigate()
   const platform = usePlatform()
+  const language = useLanguage()
   const fetcher = platform.fetch ?? globalThis.fetch
   const source = createSfInstalledOwnerSource231(props.server, fetcher)
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
@@ -179,6 +202,51 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   let mounted: SfContextHandle | undefined
   let ownerEpoch = 0
   let disposed = false
+  let lastEditorFocus: HTMLElement | undefined
+  const restoreEditorFocus = () => {
+    if (lastEditorFocus?.isConnected) lastEditorFocus.focus()
+  }
+  const confirmDiscard = async () => typeof window !== "undefined" &&
+    window.confirm(language.t("sf.ui67.discardNavigate"))
+  const confirmExit = async () => {
+    const handle = mounted
+    if (!handle || !handle.hasDirtyDrafts()) return true
+    const before = handle.state()
+    if (before.status !== "ready") return false // quarantined: no private restore without revalidation
+    const accepted = await confirmDiscard()
+    if (!accepted) {
+      restoreEditorFocus()
+      return false
+    }
+    if (disposed || mounted !== handle) return false
+    const now = handle.state()
+    if (now.status !== "ready" || now.ownerKey !== before.ownerKey) return false
+    const discarded = handle.discardDrafts()
+    if (!discarded) restoreEditorFocus()
+    else setView({ status: "resolving", route: undefined }) // purge mounted private surface before shell selection
+    return discarded
+  }
+  const unbindExit = bindSfOwnerShellExit237(confirmExit)
+  const unload = (event: BeforeUnloadEvent) => {
+    if (!mounted?.hasDirtyDrafts()) return
+    event.preventDefault()
+    event.returnValue = ""
+  }
+  if (typeof window !== "undefined") window.addEventListener("beforeunload", unload)
+  useBeforeLeave((event) => {
+    // The two Sucafina chapters retain the SAME F01 owner and drafts.
+    const target = new URL(event.to.toString(), window.location.href)
+    if (target.origin === window.location.origin &&
+      ((target.pathname === "/orchestra/sf-home" ||
+        target.pathname.startsWith("/orchestra/sf-home/")) ||
+        target.pathname === "/orchestra/sf-decisions" ||
+        target.pathname.startsWith("/orchestra/sf-decisions/"))) return
+    if (!mounted?.hasDirtyDrafts()) return
+    event.preventDefault()
+    void requestSfOwnerShellExit237().then((accepted) => {
+      if (accepted && !disposed) event.retry(true)
+    })
+  })
   const currentHref = () => location.pathname + location.search
   const selection = () => discovery.status === "ready" ? discovery.selection : undefined
   const sameServer = (value: SfOwnerSelection) =>
@@ -258,13 +326,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       return state?.status === "ready" ? state.ownerKey : undefined
     },
     hasDirtyDrafts: () => mounted?.hasDirtyDrafts() ?? true,
-    confirmDiscard: async () => {
-      if (typeof window === "undefined") return false
-      const message = window.navigator.language.toLowerCase().startsWith("pt")
-        ? "Descartar alterações não salvas antes de mudar a instalação Sucafina?"
-        : "Discard unsaved changes before changing the Sucafina installation?"
-      return window.confirm(message)
-    },
+    confirmDiscard,
     invalidateOwner: () => {
       ownerEpoch += 1
       mounted?.invalidate("owner-changed")
@@ -354,24 +416,12 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       return
     }
     if (parsed.kind === "selected") {
-      if (parsed.selection.serverKey !== actualServerKey) {
+      if (parsed.selection.serverKey !== actualServerKey && !selection()) {
         setDiscovery({ status: "denied", selection: undefined })
         setView({ status: "denied", route: undefined })
         return
       }
-      if (selection() && sameSelection(selection()!, parsed.selection)) return
-      if (selection()) {
-        // Keep the provider bound to the old owner until navigation has
-        // admitted the new owner and the user has confirmed any discard.
-        const abort = new AbortController()
-        const previousHref = untrack(() => view.route?.href)
-        void navigation.requestNativeTransition(currentHref(), "deep-link", { signal: abort.signal }).then((result) => {
-          if (disposed || abort.signal.aborted || result.status === "committed" || result.status === "aborted") return
-          if (previousHref) navigate(String(previousHref), { replace: true })
-        })
-        onCleanup(() => abort.abort())
-        return
-      }
+      if (selection()) return // The existing F01 navigation must admit/confirm before owner changes.
       setDiscovery({ status: "ready", selection: parsed.selection })
       return
     }
@@ -409,17 +459,21 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const providerStatus = provider.status
     const providerGeneration = provider.generation
     if (!selected || disposed || providerStatus !== "ready" || providerGeneration < 0) return
-    const requested = explicitSelection(location.search)
-    // The discovery effect owns cross-owner admission and discard confirmation.
-    if (requested.kind === "selected" && !sameSelection(requested.selection, selected)) return
     if (untrack(() => view.status === "ready" && view.route?.href === href &&
       sameSelection(view.route.ownerSelection, selected))) return
     const epoch = ++routeEpoch
-    setView({ status: "resolving", route: undefined })
+    // Keep the editor mounted during the decision; cancel retains value AND focus.
+    const previous = untrack(() => view.status === "ready" ? view.route : undefined)
+    if (!previous) setView({ status: "resolving", route: undefined })
     const abort = new AbortController()
     void navigation.requestNativeTransition(href, "deep-link", { signal: abort.signal }).then((result) => {
       if (disposed || abort.signal.aborted || epoch !== routeEpoch ||
         result.status === "committed" || result.status === "aborted") return
+      if (result.status === "kept-editing" && previous) {
+        navigate(String(previous.href), { replace: true })
+        restoreEditorFocus()
+        return
+      }
       setView({ status: result.status, route: undefined })
     })
     onCleanup(() => abort.abort())
@@ -428,10 +482,17 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     disposed = true
     ownerEpoch += 1
     navigation.dispose()
+    unbindExit()
+    if (typeof window !== "undefined") window.removeEventListener("beforeunload", unload)
   })
 
   return (
-    <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231">
+    <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
+      onFocusIn={(event) => {
+        if (event.target instanceof HTMLElement &&
+          (event.target.matches("input, textarea, select, [contenteditable='true']")))
+          lastEditorFocus = event.target
+      }}>
       <Show when={selection()} fallback={
         <p role="status" data-sf-f01={discovery.status}>
           {discovery.status === "ambiguous" ? "Sucafina installation selection required"

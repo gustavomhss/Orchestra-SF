@@ -27,6 +27,7 @@ export function createSfOwnerDrafts(
   initial: Readonly<{ key: SfOwnerKey; identity: SfOwnerIdentity }>,
 ) {
   const entries = new Map<string, DraftEntry>()
+  const unresolved = new Set<string>()
   let owner = initial
   let state: RegistryState = "active"
   const identityKey = (surfaceId: SurfaceId, identity: SfDraftIdentity, editScopeKey: SfEditScopeKey) =>
@@ -47,6 +48,11 @@ export function createSfOwnerDrafts(
     confirmSave: (result) => { if (live()) raw.confirmSave(result) },
   })
   const registry: SfDraftRegistry = {
+    peek<Value>(input: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>) {
+      if (!live()) return undefined
+      return entries.get(identityKey(input.surfaceId, input.identity, input.editScopeKey))
+        ?.facade as SfPublicDraftController<Value> | undefined
+    },
     acquire<Value>(input: Omit<SfDraftInput<Value>, "ownerKey"> & Readonly<{ revalidation: SfDraftReadBinding }>) {
       if (!live()) throw new Error("Sucafina draft authority unavailable")
       const key = identityKey(input.surfaceId, input.identity, input.editScopeKey)
@@ -78,9 +84,30 @@ export function createSfOwnerDrafts(
       if (!live()) return
       const key = identityKey(input.surfaceId, input.identity, input.editScopeKey)
       const found = entries.get(key)
-      found?.controller.discard()
+      if (!found) return
+      const snapshot = found.controller.snapshot()
+      if (snapshot.availability !== "active" || snapshot.pendingOperation !== null || unresolved.has(key)) return
+      found.controller.discard()
       entries.delete(key)
     },
+    markUnresolved(input, pending) {
+      if (!live()) return
+      const key = identityKey(input.surfaceId, input.identity, input.editScopeKey)
+      if (pending) unresolved.add(key)
+      else unresolved.delete(key)
+    },
+  }
+
+  const discardAll = () => {
+    if (!live() || unresolved.size > 0) return false
+    // A submitted command's status cannot be cleared by a UI discard prompt.
+    if ([...entries.values()].some((entry) => {
+      const snapshot = entry.controller.snapshot()
+      return snapshot.availability !== "active" || snapshot.pendingOperation !== null
+    })) return false
+    entries.forEach((entry) => entry.controller.revoke("owner-changed"))
+    entries.clear()
+    return true
   }
 
   const quarantine = () => {
@@ -100,6 +127,7 @@ export function createSfOwnerDrafts(
     state = "revoked"
     entries.forEach((entry) => entry.controller.revoke(reason))
     entries.clear()
+    unresolved.clear()
   }
   const sameAuthority = (left: SfOwnerIdentity, right: SfOwnerIdentity) =>
     left.serverKey === right.serverKey &&
@@ -150,9 +178,9 @@ export function createSfOwnerDrafts(
     state = "active"
     return true
   }
-  const dirty = () => [...entries.values()].some((entry) => {
+  const dirty = () => unresolved.size > 0 || [...entries.values()].some((entry) => {
     const snapshot = entry.controller.snapshot()
     return snapshot.availability === "active" && (snapshot.dirty || snapshot.pendingOperation !== null)
   })
-  return Object.freeze({ registry, quarantine, revoke, revalidate, dirty, sameAuthority, owner: () => owner, state: () => state })
+  return Object.freeze({ registry, discardAll, quarantine, revoke, revalidate, dirty, sameAuthority, owner: () => owner, state: () => state })
 }

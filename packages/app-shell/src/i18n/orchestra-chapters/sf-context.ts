@@ -14,6 +14,7 @@ export const SF_CONTEXT_COPY = {
   "sf.ui67.mismatch": "This context no longer matches the installed host.",
   "sf.ui67.loading": "Loading…",
   "sf.ui67.select": "Select server, project and installation to continue.",
+  "sf.ui67.discardNavigate": "Discard the draft and change context?",
 } as const
 
 export const SF_CONTEXT_COPY_BR: Record<keyof typeof SF_CONTEXT_COPY, string> = {
@@ -31,4 +32,5 @@ export const SF_CONTEXT_COPY_BR: Record<keyof typeof SF_CONTEXT_COPY, string> = 
   "sf.ui67.mismatch": "Este contexto não corresponde mais ao host instalado.",
   "sf.ui67.loading": "Carregando…",
   "sf.ui67.select": "Selecione servidor, projeto e instalação para continuar.",
+  "sf.ui67.discardNavigate": "Descartar o rascunho e mudar de contexto?",
 }
