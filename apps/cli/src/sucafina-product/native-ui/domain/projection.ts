@@ -184,17 +184,28 @@ export function projectSfDomainData(cap: SfDomainCapability, source: Record<stri
 
 /** Version values are CAS integers only, never version.by or private record IDs. */
 export function projectSfDomainVersions(cap: SfDomainCapability, source: Record<string, { version: number; by: string }>) {
+  if (cap === "CAP03") {
+    for (const key of ["budgetCurrentMonth", "revenueByYear"] as const) {
+      if (Object.hasOwn(source, key) && (!source[key] || !Number.isSafeInteger(source[key].version) || source[key].version < 0))
+        throw new Error("Malformed authorized singleton version")
+    }
+  }
   const keys: readonly string[] = cap === "CAP01" || cap === "CAP03" ? budgetVersionKeys :
     cap === "CAP04" ? ["opexOwners", "opexEntries", "budgetYtd", "deviations"] :
       cap === "CAP05" ? ["capexProjects", "capexEntries", "budgetYtd", "deviations"] :
         cap === "CAP09" || cap === "CAP10" ? ["projects"] :
           cap === "CAP13" ? ["risks"] : cap === "CAP14" ? ["contracts"] :
             cap === "CAP15" ? ["stakeholders"] : ["itperf"]
-  return Object.fromEntries(Object.entries(source).filter(([key, value]) =>
+  const projected = Object.fromEntries(Object.entries(source).filter(([key, value]) =>
     Number.isSafeInteger(value.version) && value.version >= 0 &&
     keys.some((allowed) => key === allowed || key.startsWith(`${allowed}:`)) &&
     (cap !== "CAP04" && cap !== "CAP05" ||
       !key.startsWith("deviations:") ||
       key.startsWith(`deviations:${cap === "CAP04" ? "opex" : "capex"}-`)))
     .map(([key, value]) => [key, value.version]))
+  if (cap === "CAP03") {
+    for (const key of ["budgetCurrentMonth", "revenueByYear"] as const)
+      if (!Object.hasOwn(source, key)) projected[key] = 0
+  }
+  return projected
 }
