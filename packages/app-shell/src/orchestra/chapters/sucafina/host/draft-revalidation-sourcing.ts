@@ -2,6 +2,7 @@ import { createSfProcurementClient } from "@orchestra/client/sucafina/procuremen
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { editableStages, isSourcingSourceField, requestVersion, sourcingSourceFields, uniqueRequest } from "../procurement/sourcing/model"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidateSourcingDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -14,12 +15,10 @@ export async function revalidateSourcingDraft(
   if (!source || typeof source !== "object" || Array.isArray(source) ||
       Object.keys(source).length !== 1 || !("request" in source) || source.request !== input.identity.recordRef)
     return { status: "unavailable" }
+  const availability = draftAvailability(fresh, "procurement", "CAP25", ["domain.page.CAP25", "domain.command.CAP25.save"])
+  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP25" && item.surface === "procurement" &&
-      item.page === "Requests" && item.canRead && item.allowedActionIds.includes("save")) ||
-      !fresh.availability.some((resource) => resource.family === "procurement" && resource.resource === "CAP25" &&
-        resource.state !== "denied" && resource.state !== "unavailable" &&
-        ["domain.page.CAP25", "domain.command.CAP25.save"].every((id) => resource.operations.some((operation) =>
-          operation.operationId === id && operation.state === "ready" && operation.operational))))
+      item.page === "Requests" && item.canRead && item.allowedActionIds.includes("save")))
     return { status: "denied" }
   const result = await createSfProcurementClient(transport)["domain.page.CAP25"](
     { request: input.identity.recordRef }, { signal },
@@ -40,6 +39,7 @@ export async function revalidateSourcingDraft(
   const row = uniqueRequest(page, input.identity.recordRef)
   if (!row) return { status: "unavailable" }
   if (!editableStages.some((stage) => stage === row.status)) return { status: "denied" }
+  if (row.allowedDraftActions === undefined) return { status: "unavailable" }
   if (row.allowedDraftActions?.includes("save-sourcing") !== true) return { status: "denied" }
   const visible = sourcingSourceFields(row)
   if (!visible) return { status: "unavailable" }

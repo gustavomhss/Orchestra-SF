@@ -3,6 +3,7 @@ import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfDomainPageCap21 } from "@orchestra/schema/sucafina/planner"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidatePlannerCatalogDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -17,12 +18,10 @@ export async function revalidatePlannerCatalogDraft(
       input.identity.kind === "new" && input.read.fieldPaths.length) return { status: "unavailable" }
   const selection = Schema.decodeUnknownOption(SfDomainPageCap21.input, { onExcessProperty: "error" })(input.read.input)
   if (Option.isNone(selection)) return { status: "unavailable" }
+  const availability = draftAvailability(fresh, "planner", "CAP21", ["domain.page.CAP21", "domain.command.CAP21.save"])
+  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP21" && item.surface === "planner" &&
-      item.page === "Entities & allocations" && item.canRead && item.allowedActionIds.includes("save")) ||
-      !fresh.availability.some((resource) => resource.family === "planner" && resource.resource === "CAP21" &&
-        resource.state !== "denied" && resource.state !== "unavailable" &&
-        ["domain.page.CAP21", "domain.command.CAP21.save"].every((id) => resource.operations.some((operation) =>
-          operation.operationId === id && operation.state === "ready" && operation.operational)))) return { status: "denied" }
+      item.page === "Entities & allocations" && item.canRead && item.allowedActionIds.includes("save"))) return { status: "denied" }
   const result = await createSfPlannerClient(transport)["domain.page.CAP21"](selection.value, { signal }).catch(() => undefined)
   if (signal.aborted || !result || result.kind !== "response") return { status: "unavailable" }
   if (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" ||

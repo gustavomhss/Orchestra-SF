@@ -1,6 +1,7 @@
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 const contractFields = ["name", "year"]
 const itemFields = ["name", "description", "color", "totalWeight", "ownerWeight", "co1Weight", "co2Weight"]
@@ -18,12 +19,10 @@ export async function revalidatePerformanceDraft(
   if (input.read.fieldPaths.some((field) => !fields.includes(field))) return { status: "unavailable" }
   const source = input.read.input
   if (!source || typeof source !== "object" || Array.isArray(source) || Object.keys(source).length) return { status: "unavailable" }
+  const availability = draftAvailability(fresh, "domain-read", "CAP16", ["domain.page.CAP16", "domain.command.CAP16." + action])
+  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP16" && item.surface === "dashboard" &&
-      item.page === "IT Performance Contract" && item.canRead && item.allowedActionIds.includes(action)) ||
-      !fresh.availability.some((resource) => resource.family === "domain-read" && resource.resource === "CAP16" &&
-        resource.state !== "denied" && resource.state !== "unavailable" &&
-        ["domain.page.CAP16", "domain.command.CAP16." + action].every((id) => resource.operations.some((operation) =>
-          operation.operationId === id && operation.state === "ready" && operation.operational)))) return { status: "denied" }
+      item.page === "IT Performance Contract" && item.canRead && item.allowedActionIds.includes(action))) return { status: "denied" }
   const result = await createSfDomainClient(transport)["domain.page.CAP16"]({}, { signal }).catch(() => undefined)
   if (signal.aborted || !result || result.kind !== "response") return { status: "unavailable" }
   if (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" ||

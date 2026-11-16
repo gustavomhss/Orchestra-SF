@@ -3,6 +3,7 @@ import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfProcurementSettings } from "@orchestra/schema/sucafina/procurement"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { SETTINGS_REF } from "../procurement/settings/model"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidateSettingsDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -23,6 +24,9 @@ export async function revalidateSettingsDraft(
   if (input.editScopeKey !== JSON.stringify(["CAP28", selection.year ?? null, selection.month ?? null]) ||
       !input.read.actionIds.length || input.read.actionIds.some((action) => action !== "save" && action !== "reset") ||
       input.read.fieldPaths.some((field) => !Object.hasOwn(SfProcurementSettings.fields, field))) return { status: "unavailable" }
+  const availability = draftAvailability(fresh, "procurement", "CAP28", ["domain.page.CAP28",
+    ...input.read.actionIds.map((action) => "domain.command.CAP28." + action)])
+  if (availability) return availability
   const destination = fresh.destinations.find((item) => item.capabilityId === "CAP28" &&
     item.surface === "procurement" && item.page === "Settings" && item.canRead)
   if (!destination || input.read.actionIds.some((action) => !destination.allowedActionIds.includes(action)))

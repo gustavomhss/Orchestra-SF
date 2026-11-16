@@ -2,6 +2,7 @@ import { createSfProcurementClient } from "@orchestra/client/sucafina/procuremen
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { bankFields, generalFields, supplierSourceFields, supplierVersion, uniqueSupplier } from "../procurement/suppliers/model"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidateSupplierDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -20,11 +21,10 @@ export async function revalidateSupplierDraft(
     return { status: "unavailable" }
   const knownFields: readonly string[] = bank ? bankFields : [...generalFields, "contacts", "commercial.notes", "compliance.notes"]
   if (input.read.fieldPaths.some((field) => !knownFields.includes(field))) return { status: "unavailable" }
+  const availability = draftAvailability(fresh, "procurement", "CAP27", ["domain.page.CAP27", "domain.command.CAP27." + action])
+  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP27" && item.surface === "procurement" &&
-      item.page === "Suppliers" && item.canRead && item.allowedActionIds.includes(action)) ||
-      !fresh.availability.some((resource) => resource.family === "procurement" && resource.resource === "CAP27" &&
-        resource.state !== "denied" && resource.state !== "unavailable" && resource.operations.some((operation) =>
-          operation.operationId === "domain.command.CAP27." + action && operation.state === "ready" && operation.operational)))
+      item.page === "Suppliers" && item.canRead && item.allowedActionIds.includes(action)))
     return { status: "denied" }
   const result = await createSfProcurementClient(transport)["domain.page.CAP27"](
     input.identity.kind === "record" ? { supplier: input.identity.recordRef } : {}, { signal },

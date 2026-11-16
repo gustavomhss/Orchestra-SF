@@ -15,6 +15,7 @@ import { revalidateProjectDraft } from "./draft-revalidation-project"
 import { revalidatePerformanceDraft } from "./draft-revalidation-performance"
 import { revalidateSecurityDraft } from "./draft-revalidation-security"
 import { revalidateServiceDraft } from "./draft-revalidation-service"
+import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidateSfNativeDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -54,13 +55,12 @@ export async function revalidateSfNativeDraft(
   if (input.read.operationId !== "projection.case" || input.identity.kind !== "record" ||
       input.read.fieldPaths.length || input.read.actionIds.length) return { status: "unavailable" }
 
-  const ready = fresh.availability.some((resource) => resource.operations.some((operation) =>
-    operation.operationId === "projection.case" && operation.state === "ready" && operation.operational))
-  if (!ready) return { status: "denied" }
+  const availability = draftAvailability(fresh, "decisions", "cases", ["projection.case"])
+  if (availability) return availability
   const originalInput = input.read.input
   if (!originalInput || typeof originalInput !== "object" || Array.isArray(originalInput) ||
       !("caseRef" in originalInput) || originalInput.caseRef !== input.identity.recordRef || Object.keys(originalInput).length !== 1)
-    return { status: "denied" }
+    return { status: "unavailable" }
   const result = await createSfDecisionsClient(transport)["projection.case"]({
     caseRef: input.identity.recordRef,
   }, { signal }).catch(() => undefined)
@@ -75,9 +75,9 @@ export async function revalidateSfNativeDraft(
       projection.context.projectId !== fresh.stamp.projectId ||
       projection.context.principalRef !== fresh.stamp.principalRef ||
       projection.context.policyVersion !== fresh.stamp.policyVersion ||
-      projection.context.accessRevision !== fresh.stamp.accessRevision ||
-      !projection.case.id || !projection.case.incarnation ||
-      !Number.isSafeInteger(projection.case.version)) return { status: "denied" }
+      projection.context.accessRevision !== fresh.stamp.accessRevision) return { status: "authority-changed" }
+  if (!projection.case.id || !projection.case.incarnation ||
+      !Number.isSafeInteger(projection.case.version)) return { status: "unavailable" }
   return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: projection.case.version }
 }
 

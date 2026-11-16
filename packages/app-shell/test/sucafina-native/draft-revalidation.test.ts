@@ -29,7 +29,8 @@ const fresh = Schema.decodeUnknownSync(SfContext)({
   ],
   availability: [
     { family: "procurement", resource: "CAP25", state: "ready", operations: [operation("domain.page.CAP25"), operation("domain.command.CAP25.save"), operation("domain.command.CAP25.create")] },
-    { family: "procurement", resource: "CAP27", state: "ready", operations: [operation("domain.command.CAP27.create"), operation("domain.command.CAP27.save"), operation("domain.command.CAP27.change-bank")] },
+    { family: "procurement", resource: "CAP27", state: "ready", operations: [operation("domain.page.CAP27"), operation("domain.command.CAP27.create"), operation("domain.command.CAP27.save"), operation("domain.command.CAP27.change-bank")] },
+    { family: "procurement", resource: "CAP28", state: "ready", operations: [operation("domain.page.CAP28"), operation("domain.command.CAP28.save"), operation("domain.command.CAP28.reset")] },
     { family: "decisions", resource: "cases", state: "ready", operations: [operation("projection.case")] },
     { family: "planner", resource: "CAP23", state: "ready", operations: [operation("domain.page.CAP23"), operation("domain.command.CAP23.save")] },
     { family: "domain-read", resource: "CAP14", state: "ready", operations: [operation("domain.page.CAP14"), operation("domain.command.CAP14.save")] },
@@ -89,7 +90,7 @@ describe("source-bound draft revalidation", () => {
     const { allowedDraftActions, ...oldPo } = po
     expect(allowedDraftActions).toEqual(["save-po"])
     expect(await run(input, page({ data: { requests: [oldPo], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } })))
-      .toEqual({ status: "denied" })
+      .toEqual({ status: "unavailable" })
     expect(await run(input, page({ data: { requests: [{ ...po, status: "po_issued" }], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } })))
       .toEqual({ status: "denied" })
     expect(await run(recordInput, page({ data: { requests: [{ number: requestRef, status: "po_draft", createdBy: "actor", pr: { description: "visible" } }], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } })))
@@ -98,7 +99,7 @@ describe("source-bound draft revalidation", () => {
   test("field and action losses, unknown scopes and missing versions fail closed", async () => {
     expect(await run(recordInput, page({ allowedActionIds: [] }))).toEqual({ status: "denied" })
     expect(await run(recordInput, page({ data: { requests: [{ number: requestRef, status: "draft", createdBy: "actor", allowedDraftActions: ["save-pr"], pr: {} }], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } }))).toEqual({ status: "denied" })
-    expect(await run(recordInput, page({ data: { requests: [{ number: requestRef, status: "draft", createdBy: "actor", pr: { description: "visible" } }], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } }))).toEqual({ status: "denied" })
+    expect(await run(recordInput, page({ data: { requests: [{ number: requestRef, status: "draft", createdBy: "actor", pr: { description: "visible" } }], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } }))).toEqual({ status: "unavailable" })
     expect(await run(recordInput, page({ data: { requests: [{ number: requestRef, status: "draft", createdBy: "another", allowedDraftActions: ["save-pr"], pr: { description: "visible" } }], suppliers: [], directory: [], formSettings: {}, bankVerificationAvailable: false } }))).toMatchObject({ status: "authorized", sourceVersion: 7 })
     expect(await run({ ...recordInput, read: { ...recordInput.read, fieldPaths: ["pr.title"] } }, page())).toEqual({ status: "unavailable" })
     expect(await run(recordInput, page({ versions: {} }))).toEqual({ status: "unavailable" })
@@ -168,7 +169,7 @@ describe("source-bound draft revalidation", () => {
     expect(await run(input, page({ data: { ...data, requests: [{ ...row, allowedDraftActions: [] }] } }))).toEqual({ status: "denied" })
     const { allowedDraftActions, ...oldRow } = row
     expect(allowedDraftActions).toEqual(["save-sourcing"])
-    expect(await run(input, page({ data: { ...data, requests: [oldRow] } }))).toEqual({ status: "denied" })
+    expect(await run(input, page({ data: { ...data, requests: [oldRow] } }))).toEqual({ status: "unavailable" })
     expect(await run(input, page({ data: { ...data, requests: [{ ...row, status: "po_draft" }] } }))).toEqual({ status: "denied" })
     expect(await run(input, page({ data: { ...data, requests: [{ ...row, sourcing: { ...row.sourcing, quotes: [{ id: "q2", supplier: "visible" }] } }] } }))).toEqual({ status: "denied" })
     expect(await run(input, page({ data, allowedActionIds: [] }))).toEqual({ status: "denied" })
@@ -352,7 +353,7 @@ describe("source-bound draft revalidation", () => {
       events: [], evidenceRefs: [], checkedAt: "now" }
     const body = { status: "ok", context: stamp, value: { projection } }
     expect(await run(input, body)).toMatchObject({ status: "authorized", sourceVersion: 4 })
-    expect(await run(input, { ...body, value: { projection: { ...projection, context: { ...projection.context, principalRef: "other" } } } })).toEqual({ status: "denied" })
+    expect(await run(input, { ...body, value: { projection: { ...projection, context: { ...projection.context, principalRef: "other" } } } })).toEqual({ status: "authority-changed" })
     expect(await run({ ...input, read: { ...input.read, actionIds: ["save"] } }, body)).toEqual({ status: "unavailable" })
   })
 })
