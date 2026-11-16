@@ -1,0 +1,229 @@
+{
+  "schema": "sf2h.closure228.reconciliation-and-conditional-composition.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 228,
+  "actor_id": "CLOSURE-RECONCILIATION-228",
+  "title": "Reconciliar todas as entregas e concluir a composição após handoff",
+  "branch": "sf-closure-intake",
+  "epoch": "closure-reconcile-e1-browser228",
+  "state": "PREPARED_NOT_STARTED",
+  "product_branch": "sf-closure-bundle",
+  "product_pr": 191,
+  "product_observed_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "initial_write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure228/**"
+  ],
+  "product_write_authority": "NONE_UNTIL_PREDECLARED_HANDOFF_RECEIPT_VERIFIED",
+  "authority_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/closure-ledger/HANDOFF-211-228.json on sf2-control",
+  "authority_receipt_requirements": [
+    "S0 recorded explicit confirmed termination/release of211, not merely Git silence.",
+    "Receipt identifies old/new actors, epochs, branch, old observed head and CAS-fenced current product head.",
+    "No active conflicting writer and no unreviewed late source output; preserve all211 code."
+  ],
+  "known_ready_batch": {
+    "base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "changes": [
+      {
+        "mission": 220,
+        "path": "packages/schema/src/sucafina/decisions.ts",
+        "pre": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+        "post": "52fc1a3fc52b39c0d18f0064bcc17417421ce3c7",
+        "kind": "SOURCE",
+        "actual": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "pre": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+        "post": "dbdbde9d95ffcdf59c50ee64b880e631b37e433a",
+        "kind": "SOURCE",
+        "actual": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+        "pre": "33650407123163ea881eca9d4940fde364b27c54",
+        "post": "d96709db609b399ef801f487e443a381863d6298",
+        "kind": "SOURCE",
+        "actual": "33650407123163ea881eca9d4940fde364b27c54",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+        "pre": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+        "post": "f9c99a8a886211d1aba60371a2d3b0aa287293b5",
+        "kind": "SOURCE",
+        "actual": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "pre": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+        "post": "3a13c3401d7629904155664b3b5e08665c2713cc",
+        "kind": "INERT_REQUIRES_AUTHORITY_REVIEW",
+        "actual": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "pre": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+        "post": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+        "kind": "INERT_REQUIRES_AUTHORITY_REVIEW",
+        "actual": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 220,
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+        "pre": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+        "post": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+        "kind": "INERT_REQUIRES_AUTHORITY_REVIEW",
+        "actual": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 221,
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+        "pre": "f20fdab67655572f181f78e64b3023f993346d7c",
+        "post": "55aec41da6c1f1dd30c1b31c3a96e4b04bbc9ed8",
+        "kind": "SOURCE",
+        "actual": "f20fdab67655572f181f78e64b3023f993346d7c",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 222,
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "pre": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+        "post": "aa48bb72137de7e123cbb38625e396825bbfa99e",
+        "kind": "SOURCE",
+        "actual": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+        "state": "PREIMAGE_MATCH_READY"
+      },
+      {
+        "mission": 222,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts",
+        "pre": "57f9d00320d08e8890712f9a8525e7a2c56f22fc",
+        "post": "93d24c34b73bdd6d1a6ef4c6fe57a855f6820b26",
+        "kind": "SOURCE",
+        "actual": "57f9d00320d08e8890712f9a8525e7a2c56f22fc",
+        "state": "PREIMAGE_MATCH_READY"
+      }
+    ]
+  },
+  "contracted_sources": [
+    {
+      "mission": 215,
+      "branch": "sf-bi-units",
+      "observed_head": "0d37528d52eb27c2cfafd9772508914e03f2f7f4",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 216,
+      "branch": "sf-atlas-sequence",
+      "observed_head": "14f894e3c70d14092a50931cc511250d276e107c",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 217,
+      "branch": "sf-similar-cases",
+      "observed_head": "155091aa164f18e65a7fb6c398dad3d6789d22c7",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 218,
+      "branch": "sf-import-history",
+      "observed_head": "6ec7d43fdaa63268540f30e80d590d9af85d2988",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 219,
+      "branch": "sf-native-admission",
+      "observed_head": "8f4f7e102ac1b73dc014e23737cc62bba84043ee",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 220,
+      "branch": "sf-decisions-capture",
+      "observed_head": "f4fc2af5809f8af6c2dc5b8ddcb176ee3409f002",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 221,
+      "branch": "sf-am01-selection",
+      "observed_head": "8781a3b7c4c648e5e637caf94bfd187f87c9327a",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 222,
+      "branch": "sf-am02-authority",
+      "observed_head": "b3d7fcfe5a1a76a673de1914eb01bff2f233f647",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 223,
+      "branch": "sf-ci-validation",
+      "observed_head": "783becc0c5df4c2f1667a51d287710131a92b655",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 224,
+      "branch": "sf-talent-files",
+      "observed_head": "55118255658694e09b1c79affd309e309224662d",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 225,
+      "branch": "sf-supplier-csv",
+      "observed_head": "34355ba9ca53c0e8fa63fbf19b1b5e3ce82c3f42",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 226,
+      "branch": "sf-files-transport",
+      "observed_head": "585bad394015bb7937c07e79f8bd9d754f208427",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    },
+    {
+      "mission": 227,
+      "branch": "sf-today-resume",
+      "observed_head": "8bd1035dba47152733e042492891b7a45b8bb7ac",
+      "state": "Read current terminal receipt and lease before consumption; never infer completion from age"
+    }
+  ],
+  "scope": "Same approved15WPs74tasks17contracts1610criteria and allUXworkorders; reconcile original behavior, not just path counts.",
+  "required_reads": [
+    "Applicable AGENTS; pinned START.md, WORKFLOW.md, execution/COMMON.md, complete S0 actor pack and mandatory appendices at dbf9547211d9b0fade619790de7c19c0869b7c7d.",
+    "Complete packet; original criterion/task/contract ledger and FINITE-GAPS/C-SOURCE-PREPOST in receipts/closure211 at998f0af; normative UX cbac654784714f68779ae1434d30e6ea8970c4d1 and next30source1d9d49ec26281ffd6486d722a97298596289605d.",
+    "Source code, full producer handoffs/inert patches/contracts and current epochs for every consumed output; preserve213desktop,214/223CIhistory and allpreviousinputs."
+  ],
+  "work_now": [
+    "Reconcile all ready producer outputs and original-source orphan recovery. Ten220–222paths were independently preimage-checked byS0 at998f0af; do not repeat unchanged broad discovery. Validate source provenance and readback before materializing each patch.",
+    "Prepare a COMPLETE inert integration patch/manifest for every compatible released output from215–222, including cross-lease changes; reconcile overlaps with211 instead of applying old whole sourcebranches. Review220 human review/apply/idempotency/financial authority behavior; no guard/permission waiver.",
+    "Prepare exact candidate tree/diff, dependency closure, contracts, consumer mappings and surgical CI requests. Write these as inert source payloads/receipts on sf-closure-intake while product write authority is absent. No live product ref updates, source rewrites, CI dispatch, second controller or fake acceptedC.",
+    "Continue relevant source/code completeness review of18finitegaps and future contracted224–227outputs; finish all independent reconciliation. Do not wait idle for a global wave or user chat message. New releases within this fixed scope are Git data, not late instructions."
+  ],
+  "after_handoff": [
+    "Only after the predeclared S0 receipt exists AND validates real211release/current authority: adopt the exclusive product branch epoch specified there, reconcile current head/late commits, and CAS-apply the complete prepared product changes to sf-closure-bundle. Never infer receipt/authority from a timeout, comment, name or silence.",
+    "Continue the full original closure: consume all contracted released sources, compose consumers, fix integration defects and finish an immutable candidate proposal forS0 acceptance. All runtime/AM01–06/desktop/CI/guards/reviews/Dproof remain mandatory; no scope reduction or doneflag success.",
+    "CI dispatcher remains223 until a separately recorded reliable transfer. Do not duplicate CI or dispatch from hooks. Hand new material W/tree plus requests to the source queue. Prepare provenance/guard inputs and independent delta rechecks; never approve your own FINAL."
+  ],
+  "rules": [
+    "Fresh chat. No authorship claim as an independent reviewer;228isreconciliation/composition, notS0supervisor. Record actual model/session if exposed.",
+    "Remote GitHubMCP only,CASexpected-head/force:false. No gh/push/newtoken/devmerge/deploy/Azure/engines/restart/secrets/guardbypass.",
+    "No local tests/typechecks/builds/validators or own CI. Complete code-level reconciliation, meaningful fixes and driver/config artifacts without fabricating native outcomes.",
+    "No product writes before verified authority. If handoff still absent when all independent work is complete, save exact inert patch and pending activation receipt path; do not poll in an empty loop or claim completion.",
+    "Keep ready source artifacts/prepost/validation history. Never merge sf2-control wholesale. D must preserve acceptedC product blobs and remain evidence-only; actual C/G7 andD/G8 guards separate.",
+    "NativeGoal remains paused. No watchdog/newS0. GLOBAL_RELEASEfalse until full acceptance predicate."
+  ],
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "expected_head": "2c1c2b089e76b8f135988cb849c725bc8dc89b16"
+}
