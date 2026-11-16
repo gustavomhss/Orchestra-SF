@@ -1,0 +1,78 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "actual_product_change": {
+    "branch": "sf-closure-bundle",
+    "pr": 191,
+    "base": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "bootstrap": {
+      "branch": "sf-closure-bundle",
+      "sha": "e24ff7e595bc5566bfe3273579b0123eb47fc95b",
+      "tree": "d5d5b338f9f476cc1a09b08d6199c87c405de154",
+      "parent": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "paths": 15,
+      "state": "PROPOSED_NOT_ACCEPTED_C"
+    },
+    "followup": "7abf6c425e9b480bb43ba4a82f29c02a55445b92",
+    "tests": "NOT_RUN"
+  },
+  "new_sessions": [
+    {
+      "mission": 211,
+      "title": "Compor e fechar integralmente o produto candidato",
+      "branch": "sf-closure-bundle",
+      "epoch": "closure-composer-e1-browser211",
+      "head": "569b3213525aa6eb23741cb1034bd0f054ccd381",
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "mission": 212,
+      "title": "Resolver a falha causal do cenário hipotético AM01",
+      "branch": "sf-hypothetical-fix",
+      "epoch": "hypothetical-e1-browser212",
+      "head": "6260333fbd2d717562ba94de8658bf904ac37e30",
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "mission": 213,
+      "title": "Instanciar o broker Sucafina no desktop real",
+      "branch": "sf-desktop-bootstrap",
+      "epoch": "desktop-bootstrap-e1-browser213",
+      "head": "5f604d6412823c004394a319285de9da581a835e",
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "mission": 214,
+      "title": "Fechar CI cirúrgico e todo o bundle final",
+      "branch": "sf-ci-validation",
+      "epoch": "product-ci-e7-browser214",
+      "head": "32c60ae4e56d8aa773840fe9cfd2a00ee18183fc",
+      "state": "PREPARED_NOT_STARTED"
+    }
+  ],
+  "existing": {
+    "stack189": "PRESERVED",
+    "compiler190": "PRESERVED",
+    "reviews": [
+      207,
+      208,
+      209
+    ],
+    "archive": 210,
+    "installed_host": 199
+  },
+  "CI": {
+    "old": 200,
+    "new": 214,
+    "old_handoff": "ec2d7474061388b47d4aa34b559e57fa28400d26",
+    "running": 0,
+    "queued": 0,
+    "waiting": 0
+  },
+  "closed_packet_rule": "Complete scope and named ready/future producers supplied before startup. New outputs are read by the consumer from Git, not late chat instructions. Notices do not imply delivery.",
+  "u15_correction": "199 test runner complaint superseded:194 postblob already has const test=nativeInstalledFixture.",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
