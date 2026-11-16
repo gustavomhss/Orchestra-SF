@@ -1,0 +1,104 @@
+{
+  "schema": "sf2h-canonical-ci-request.v1",
+  "mission": 216,
+  "request_id": "REV208-NEW-002:AM05:atlas-sequence216",
+  "finding": "REV208-NEW-002",
+  "issuer": "sf-atlas-sequence",
+  "dispatcher": 214,
+  "related_proof_owner": 198,
+  "scope": "SURGICAL_INCREMENTAL_ONLY",
+  "state": "REQUESTED_NOT_DISPATCHED",
+  "source": {
+    "branch": "sf-atlas-sequence",
+    "commit": "a47a987ac65041ef32782822739256f6b1b90591",
+    "tree": "3fcabc65ff2a5068385120b1647860dd861ae0b5",
+    "blobs": {
+      "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts": "b5caa2d662e12b9e74460a7c9291b61b967b32e2",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts": "a935ce97e97f03f1f6a02f03cabc6b271a0ec645"
+    }
+  },
+  "pr": {
+    "number": 195,
+    "head": "sf-atlas-sequence",
+    "base": "sf-closure-bundle",
+    "integrator_pr": 191
+  },
+  "dispatch_after": [
+    "Mission211 incorporates full mission216 source commit into accepted same-C candidate",
+    "Mission211 applies OUT-OF-LEASE-211.md to atlas-memory.ts with correct source preimage and acknowledges it",
+    "Mission214 confirms this selection is not identical to an already running request from mission198 on the same candidate"
+  ],
+  "selection": {
+    "runner": "bun",
+    "package_alias": "sucafina",
+    "os": "linux",
+    "test_files": [
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts"
+    ],
+    "source_command": "bun run test:ci sucafina modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts --runner bun --os linux --timeout 360000",
+    "test_timeout_ms": 360000,
+    "workflows": "use existing sole 214-approved test-ci dispatcher and validated workflow, no new runner",
+    "dependent_existing_tests": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts"
+    ]
+  },
+  "deduplication": {
+    "same_candidate_required": true,
+    "canonical_identity_fields": [
+      "accepted_C_tree_sha",
+      "workflow_and_runner_source_sha",
+      "test_selector_normalized",
+      "runner",
+      "os",
+      "fixture_sha_and_input",
+      "scanner_artifact_sha",
+      "source_dependency_digest"
+    ],
+    "coalesce_with_mission198_if_equivalent": true,
+    "do_not_rerun_unchanged_failures": true,
+    "same_C_required": true,
+    "unknown_active_run_ids": "NOT_OBSERVED",
+    "run_id": null
+  },
+  "fixtures_and_inputs": {
+    "storage": "production openLocalStore SQLite/C08 and source lifecycle, disposable fixture only",
+    "ledger": "original f.ledger + enqueueSfLedgerEvent + real C09 emitFromLedger",
+    "scanner": "existing pinned real Gitleaks from wp02/atlas-consumer-fixture.ts via prepareAtlasScanner, no fake scanner",
+    "scanner_release_version": "8.30.1",
+    "scanner_archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3a7ca7b3f2470eb",
+    "required_external_inputs": [
+      "authorized CI Linux x64 runner with Bun and repo dependencies",
+      "existing pinned scanner release available for fixture",
+      "mission211 final same-C source and consumer patch SHA"
+    ],
+    "not_needed": [
+      "Azure changes",
+      "new access credentials",
+      "native session or model provider",
+      "deployment",
+      "new supervisor"
+    ]
+  },
+  "expected_proof": [
+    "two genuine C09 settled committed Atlas records in one owner journal with seq [1,2]",
+    "restart/reopen same real SQLite yields two original records in physical order",
+    "post-reopen genuine C09 append produces seq [1,2,3]",
+    "canonical lost-response retry for second event remains already-committed after 211 consumer patch",
+    "duplicate ordinals [1,1], physical out-of-order [2,1], ordinal tamper [1,9] each produce full read refusal, no record disclosure, no committed append/outbox settlement",
+    "existing clean/hit/absent scanner proofs preserve fail-closed behavior"
+  ],
+  "actual": {
+    "test": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "run_ids": []
+  },
+  "review_owner": 208,
+  "review_acceptance": "independent causal recheck only after 211 same-C integration and real 214 receipts",
+  "GLOBAL_RELEASE": false,
+  "notes": "No direct CI triggered by mission216; dispatcher214 resolves existing workflow names and records real run IDs. Completion of one selection cannot substitute canonical final gates."
+}

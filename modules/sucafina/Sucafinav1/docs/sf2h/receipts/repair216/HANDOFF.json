@@ -1,0 +1,228 @@
+{
+  "schema": "sf2h.review-repair-handoff.v1",
+  "mission": 216,
+  "epoch": "review-fix-e1-browser216",
+  "finding": "REV208-NEW-002",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "initial": {
+    "head": "f9aca032271d1b683647b701f2c02c703eaaea20",
+    "fence": "31710282a0d8342891865213506b85c5525c271e",
+    "fence_state": "PREPARED_NOT_STARTED",
+    "product_base": "7abf6c425e9b480bb43ba4a82f29c02a55445b92"
+  },
+  "actor": {
+    "name": "review-fix-e1-browser216",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_status": "NOT_EXPOSED"
+  },
+  "source_commit": "a47a987ac65041ef32782822739256f6b1b90591",
+  "source_tree": "3fcabc65ff2a5068385120b1647860dd861ae0b5",
+  "source_parent": "f9aca032271d1b683647b701f2c02c703eaaea20",
+  "branch": "sf-atlas-sequence",
+  "pr": 195,
+  "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/195",
+  "target": {
+    "branch": "sf-closure-bundle",
+    "pr": 191,
+    "last_observed_head": "95609f35caaae47214f4d4e8ae7dd4a67d25edd6",
+    "composition_owner": 211
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "preimage_blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+      "postimage_blob": "b5caa2d662e12b9e74460a7c9291b61b967b32e2",
+      "change": "strict true persisted physical ordinal 1..N, canonical Atlas identity independently of seq, reject duplicate/gap/reorder, no sort; append from validated head"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "a935ce97e97f03f1f6a02f03cabc6b271a0ec645",
+      "change": "real SQLite/C08/C09/Atlas/scanner >=2-event write/reopen/monotonic append and 3 corrupt persisted multi-event owner scenarios"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair216/ACK.json",
+      "preimage_blob": null,
+      "postimage_blob": "a87061d5f7e7754482e04c6610644f381b3a7e14",
+      "change": "FENCE/HEAD authority ACK, model/session transparency"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair216/OUT-OF-LEASE-211.md",
+      "preimage_blob": null,
+      "postimage_blob": "46ab8de5c5851fc255b5247f244b6b4b20395fee",
+      "change": "complete inert unified diff for sparse authorized Atlas reader, owner 211"
+    }
+  ],
+  "causal_fix": {
+    "root": "Older integrity compared an event after replacing stored seq with versioned([record]).seq (constant Atlas kernel hint 0), then sorted the untrusted physical journal by stored seq",
+    "after": "Each stored ordinal must match physical append index in the snapshot; canonical event identity is compared without seq; zero exposure/append on rejected owner journal",
+    "seq_semantics": "first event 1, successive event ordinal previous+1, unique contiguous safe integer; no in-place migration, sorting, mass reset or destructive replay",
+    "callchain": [
+      "openLocalStore SQLite snapshot (C08)",
+      "createSfProductState.transaction",
+      "enqueueSfLedgerEvent C09 outbox",
+      "createSfAtlasMemory.emitFromLedger",
+      "createMemoryEmit + pinned createSfAtlasScanner",
+      "createSfAtlasDurableMemory.append/read",
+      "createMemoryRead/recalled authorised evidence",
+      "C08 transaction commit or rollback"
+    ],
+    "source_read_pins": [
+      "modules/atlas/packages/kernel/src/log.ts",
+      "modules/atlas/packages/memory/src/respawn.ts",
+      "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+      "modules/atlas/packages/adapter-io/src/memory-store.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts"
+    ],
+    "preexisting_real_producer_reuse": true
+  },
+  "criteria": {
+    "finding": "REV208-NEW-002",
+    "contracts": [
+      "C08",
+      "C09",
+      "C17"
+    ],
+    "task_ids": [
+      "WP10.T07",
+      "A14",
+      "U26"
+    ],
+    "criteria_ids": [
+      "AM05",
+      "U26-AC01",
+      "WP10.QLT.40"
+    ],
+    "cases": [
+      {
+        "id": "216-P01",
+        "input": "original two settled C09 records in one owner",
+        "expected": "SQLite persisted [1,2], canonical IDs unique, both records survive reopen",
+        "observed": "NOT_RUN"
+      },
+      {
+        "id": "216-P02",
+        "input": "real append after SQLite driver close/reopen",
+        "expected": "third persisted ordinal 3; idempotent second record retry already-committed",
+        "observed": "NOT_RUN"
+      },
+      {
+        "id": "216-N01",
+        "input": "physical [1,1] persisted through SQLite C08",
+        "expected": "full owner read refused; no leaked records, pending C09 append not committed",
+        "observed": "NOT_RUN"
+      },
+      {
+        "id": "216-N02",
+        "input": "physical [2,1] persisted through SQLite C08",
+        "expected": "no sort, full owner read refused; no leaked records or committed append",
+        "observed": "NOT_RUN"
+      },
+      {
+        "id": "216-N03",
+        "input": "physical [1,9] persisted through SQLite C08",
+        "expected": "full owner read refused; no leaked records, pending C09 append not committed",
+        "observed": "NOT_RUN"
+      },
+      {
+        "id": "216-R01",
+        "input": "existing AM05 real scanner and C08 tests",
+        "expected": "clean, hit, unavailable, rollback unchanged",
+        "observed": "NOT_RUN"
+      }
+    ]
+  },
+  "out_of_lease": {
+    "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+    "preimage_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+    "artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair216/OUT-OF-LEASE-211.md",
+    "owner": 211,
+    "scope": "INERT patch only; consumer not changed in 216 source",
+    "reason": "The already-validated full physical journal may be narrowed to non-contiguous authorized records for readOriginal/settled receipt retry; ephemeral subset must be given contiguous local read ordinals without rewriting physical persisted source",
+    "postimage_blob": null,
+    "dependency": "211 must apply before final validation or claiming end-to-end closure"
+  },
+  "handoffs": [
+    {
+      "to": 211,
+      "artifact": "OUT-OF-LEASE-211.md",
+      "expects": "consume source commit and apply consumer patch with current source preimage, no branch changes by 216",
+      "ack": "NOT_OBSERVED"
+    },
+    {
+      "to": 214,
+      "artifact": "CI-REQUEST-214.json",
+      "expects": "sole dispatcher dedup with 198, qualified same-C surgical test with real run IDs",
+      "ack": "NOT_OBSERVED"
+    },
+    {
+      "to": 208,
+      "artifact": "RECHECK-208.md",
+      "expects": "new independent causal review with actual 214 evidence",
+      "ack": "NOT_OBSERVED"
+    }
+  ],
+  "dependencies": [
+    {
+      "type": "integration",
+      "owner": 211,
+      "status": "PENDING",
+      "must": "same accepted material C + out-of-lease sparse consumer patch"
+    },
+    {
+      "type": "testing",
+      "owner": 214,
+      "status": "NOT_RUN",
+      "must": "surgical selectors and real evidence, dedup with 198"
+    },
+    {
+      "type": "review",
+      "owner": 208,
+      "status": "NOT_RUN",
+      "must": "independent causal check after integration and CI"
+    }
+  ],
+  "checks": {
+    "static_source_and_code_read": "DONE_NO_EXECUTION",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "CI_run_ids": [],
+    "review208": "NOT_RUN"
+  },
+  "external_inputs_min": [
+    "integrator 211 merges source and owns consumer patch on accepted C",
+    "dispatcher 214 has authorized Linux x64 Bun runner + existing pinned Gitleaks artifact",
+    "reviewer 208 consumes same source+real run evidence"
+  ],
+  "preservation": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "MCP_operations": 39,
+    "UX": "UNCHANGED",
+    "scanner": "UNCHANGED",
+    "C08": "UNCHANGED",
+    "C09": "UNCHANGED",
+    "engine": "UNCHANGED",
+    "Azure": "UNTOUCHED"
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "work_status": "ARTIFACT_READY_SOURCE; END_TO_END_PENDING_211_214_208",
+  "no_claims": [
+    "no CI pass",
+    "no runtime/session id invented",
+    "no reviewer ack",
+    "no merge/deploy/release"
+  ]
+}
