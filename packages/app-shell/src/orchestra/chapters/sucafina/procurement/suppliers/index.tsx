@@ -780,7 +780,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           busy:false,onInvoke:()=>setUi("mode","edit")} : undefined}
         secondaryActions={[
           ...(["activate","block","inactivate"] as const).filter(can).map((action) =>
-            ({id:action,labelKey:k(({activate:"sf.u14.activate",block:"sf.u14.block",inactivate:"sf.u14.inactivate"})[action]),tone:"secondary" as const,
+            ({id:action,labelKey:k(({activate:"sf.u14.activate",block:"sf.u14.block",inactivate:"sf.u14.inactivate"} as const)[action]),tone:"secondary" as const,
               disabled:active(ui.phase),busy:false,onInvoke:()=>begin(action)})),
           ...(can("delete") ? [{id:"delete",labelKey:k("sf.u14.delete"),tone:"danger" as const,
             disabled:active(ui.phase) || selected.status !== "pending" || linked.length !== 0,
