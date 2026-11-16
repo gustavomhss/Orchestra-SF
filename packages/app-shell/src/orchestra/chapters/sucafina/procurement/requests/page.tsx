@@ -85,6 +85,33 @@ function stageOf(status: string): "pr" | "sourcing" | "po" | "closed" {
   return "closed"
 }
 
+export type RequestsDispatchFence = Readonly<{
+  reviewing: object | undefined
+  mode: "create" | "pr" | "po"
+  newIntentRef: SfIntentRef
+  ref: SfRef | undefined
+  sourceRevision: string
+  stage: ReturnType<typeof stageOf>
+  version: number | undefined
+  row: object | undefined
+  ownerKey: string | undefined
+  epoch: number
+  prController: object | undefined
+  poController: object | undefined
+  payload: string
+}>
+
+/** The reviewed row, source and draft owner must survive the digest unchanged. */
+export function sameRequestsDispatchFence(before: RequestsDispatchFence, after: RequestsDispatchFence): boolean {
+  return before.reviewing === after.reviewing &&
+    before.mode === after.mode && before.newIntentRef === after.newIntentRef &&
+    before.ref === after.ref && before.sourceRevision === after.sourceRevision &&
+    before.stage === after.stage && before.version === after.version &&
+    before.row === after.row && before.ownerKey === after.ownerKey &&
+    before.epoch === after.epoch && before.prController === after.prController &&
+    before.poController === after.poController && before.payload === after.payload
+}
+
 export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const sf = useSfContext()
   const language = useLanguage()
@@ -134,6 +161,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const canPr = () => !!row() && isPrWritable(row()!) && actionAllowed("save-pr")
   const canPo = () => !!row() && isPoWritable(row()!) && actionAllowed("save-po")
   const stage = () => row() ? stageOf(row()!.status) : "pr"
+  const sourceRevision = () => JSON.stringify({
+    row: row(), version: version(), actionIds: view.read?.actionIds, stamp: sf.ready()?.context.stamp,
+  })
   const stageHref = (ref: SfRef, part: "detail" | "requisition" | "po" | "history" | "sourcing" | "quotes") => {
     const url = new URL(props.route.href, "http://orchestra.invalid")
     const query = new URLSearchParams()
@@ -335,6 +365,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         (review.ref && activePr()?.baseVersion !== review.version))) return
     if (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
         activePo()?.baseVersion !== review.version)) return
+    // These are the originating controllers, not whichever row is selected after hashing.
+    const prController = pr ? prDraft() : undefined
+    const poController = po ? poDraft() : undefined
+    if ((pr && !prController) || (po && !poController)) return
     const client = createSfProcurementClient(ready.transport)
     const ownerKey = actor.ownerKey
     const epoch = sf.generation()
@@ -356,24 +390,72 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         case "delete": return { ...base, action: "delete" as const, values: {} }
       }
     })()
+    const payloadJson = JSON.stringify(input)
+    const fence: RequestsDispatchFence = {
+      reviewing: review, mode: creating() ? "create" : stage() === "po" ? "po" : "pr",
+      newIntentRef: view.newIntentRef, ref: selectedRef(), sourceRevision: sourceRevision(),
+      stage: stage(), version: version(), row: row(), ownerKey, epoch,
+      prController, poController, payload: payloadJson,
+    }
+    const declineBeforePost = () => {
+      if (inFlight !== abort) return
+      inFlight = undefined
+      abort.abort()
+      if (!ownerMatches(ownerKey, epoch)) return
+      // Return only the originating draft to edit mode; never modify the newly selected row.
+      prController?.setPhase("dirty")
+      poController?.setPhase("dirty")
+      if (view.reviewing === review) setView("reviewing", undefined)
+      setView("sending", false)
+    }
     let digest: string
     try {
-      const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(input)))
+      const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(payloadJson))
       digest = Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, "0")).join("")
     } catch (error) {
       console.error("CAP25 intent digest failed", error)
-      setView({ sending: false, notice: "sf.u11.remaining.notAvailable", reviewing: undefined })
+      if (ownerMatches(ownerKey, epoch) && view.reviewing === review)
+        setView("notice", "sf.u11.remaining.notAvailable")
+      declineBeforePost()
       return
     }
-    if (!ownerMatches(ownerKey, epoch) || abort.signal.aborted) return
-    const prController = pr ? prDraft() : undefined
-    const poController = po ? poDraft() : undefined
+    const currentOwner = sf.state()
+    if (!ownerMatches(ownerKey, epoch) || abort.signal.aborted ||
+        !sameRequestsDispatchFence(fence, {
+          reviewing: view.reviewing, mode: creating() ? "create" : stage() === "po" ? "po" : "pr",
+          newIntentRef: view.newIntentRef, ref: selectedRef(), sourceRevision: sourceRevision(),
+          stage: stage(), version: version(), row: row(),
+          ownerKey: currentOwner.status === "ready" ? currentOwner.ownerKey : undefined,
+          epoch: sf.generation(), prController: pr ? prDraft() : undefined,
+          poController: po ? poDraft() : undefined, payload: JSON.stringify(input),
+        }) || !stageAllowed(review.action) ||
+        (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
+          activePr()?.baseVersion !== (review.ref ? review.version : null))) ||
+        (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
+          activePo()?.baseVersion !== review.version))) {
+      declineBeforePost()
+      return
+    }
     const pending = {
       operationRef: review.operationRef, idempotencyKey: review.idempotencyKey,
       payloadDigest: digest, expectedVersion: review.ref ? review.version : null,
     }
     prController?.setPending(pending)
     poController?.setPending(pending)
+    const prState = prController?.snapshot()
+    const poState = poController?.snapshot()
+    const pendingMatches = (state: typeof prState | typeof poState) => {
+      const recorded = state?.availability === "active" ? state.pendingOperation : null
+      return !!recorded && recorded.operationRef === pending.operationRef &&
+        recorded.idempotencyKey === pending.idempotencyKey &&
+        recorded.payloadDigest === pending.payloadDigest &&
+        Object.is(recorded.expectedVersion, pending.expectedVersion)
+    }
+    if ((prController && !pendingMatches(prState)) || (poController && !pendingMatches(poState))) {
+      if (view.reviewing === review) setView("notice", "sf.u11.remaining.notAvailable")
+      declineBeforePost()
+      return
+    }
     prController?.setPhase("submitting")
     poController?.setPhase("submitting")
     const options = { signal: abort.signal, idempotencyKey: review.idempotencyKey }
