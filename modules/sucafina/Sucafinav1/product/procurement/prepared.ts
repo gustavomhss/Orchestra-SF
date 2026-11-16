@@ -93,8 +93,11 @@ export function procurementPreparationIssue(snapshot: Snapshot, command: Command
   if (!["draft", "pr_rejected"].includes(text(request.status))) return "requisition-stage-not-editable"
   const values = Object.entries(object(command.values.pr))
   if (values.length && values.every(([key, value]) => object(request.pr)[key] === value)) return "requisition-already-matches"
-  // Retained commands must not bypass the same missing financial-approval composition.
-  if (Object.hasOwn(object(command.values.pr), "estAmount")) return "financial-approval-command-unavailable"
+  // A changed estimate is only a draft save, not an approval. C12 requires a
+  // recorded human choice, current save-estimate review and separate Apply; the
+  // domain still enforces stage, actor, CAS and procurement policy at execution.
+  // Missing/true confirmed is NOT an admitted explicit draft-save command.
+  if (Object.hasOwn(object(command.values.pr), "estAmount") && command.confirmed !== false) return "explicit-draft-command-required"
 }
 
 /** Read the command CAS revision, which is independent from scoped evidence versions. */

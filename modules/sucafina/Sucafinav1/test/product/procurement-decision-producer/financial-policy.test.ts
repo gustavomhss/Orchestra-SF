@@ -15,7 +15,12 @@ test("canonical approval reviews the exact proposed amount and ends outside the 
   const fixture = createRequisition()
   const initial = structuredClone(fixture.snapshot)
   expect(procurementPreparationIssue(fixture.snapshot, fixture.command("save", { pr: { estAmount: 100 } }))).toBe("requisition-already-matches")
-  expect(procurementPreparationIssue(fixture.snapshot, fixture.command("save", { pr: { estAmount: 140 } }))).toBe("financial-approval-command-unavailable")
+  // A legacy command without explicit draft intent cannot enter C12.
+  const legacy = fixture.command("save", { pr: { estAmount: 140 } })
+  expect(procurementPreparationIssue(fixture.snapshot, legacy)).toBe("explicit-draft-command-required")
+  expect(procurementPreparationIssue(fixture.snapshot, { ...legacy, confirmed: true })).toBe("explicit-draft-command-required")
+  // The already authorized draft edit is permissible, but read-only preparation is not approval.
+  expect(procurementPreparationIssue(fixture.snapshot, { ...legacy, confirmed: false })).toBeUndefined()
   expect(fixture.run(holder, "approve").ok).toBe(false)
   expect(fixture.snapshot).toEqual(initial)
 
