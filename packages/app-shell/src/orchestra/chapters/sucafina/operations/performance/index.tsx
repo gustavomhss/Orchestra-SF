@@ -362,7 +362,10 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
       editScopeKey: ("cap16:" + kind + ":" + (itemId || "root")) as SfEditScopeKey,
       identity, baseVersion: store.cas!, base: kind === "contract" || !!item || !!sub ? value : null,
       value, revalidation: { operationId: "domain.page.CAP16", input: {},
-        fieldPaths: EDIT_FIELDS[kind].map((field) => field.name), actionIds: [operation] },
+        fieldPaths: EDIT_FIELDS[kind].filter((field) => {
+          const source = kind === "contract" ? data() : kind === "item" ? item : sub
+          return source && Object.hasOwn(source, field.name)
+        }).map((field) => field.name), actionIds: [operation] },
     })
     setActive({ controller: draft, identity, record: kind === "contract" ? data()
       : kind === "sub" ? sub : item, sourceSub: kind === "sub" ? sub : undefined,
