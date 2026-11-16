@@ -59,6 +59,9 @@ function data(r){if(!/^application\/json(?:\s*;|$)/i.test(String(r.headers["cont
 function safe(r){return /\bno-store\b/i.test(String(r.headers["cache-control"]||""))&&
   (!r.headers["access-control-allow-origin"]||r.headers["access-control-allow-origin"]===origin)}
 function is(r,status,shape){return status.includes(r.status)&&safe(r)&&(!shape||shape.includes(data(r)?.status))}
+function csrfDeny(r){return r.status===403&&
+  (!r.headers["access-control-allow-origin"]||r.headers["access-control-allow-origin"]===origin)}
+
 function qp(changes={}){
   return new URLSearchParams({installationId:c.installationId,projectId:c.projectId,hostId:c.hostId,...changes}).toString()
 }
@@ -85,7 +88,7 @@ async function preflight(){
   await check("CROSS_ORIGIN_GET","400",async()=>{const r=await send("GET",ctx(),{"Origin":"https://unauthorized.invalid"});return{status:r.status,ok:is(r,[400])}});
   await check("CROSS_SITE_GET","400",async()=>{const r=await send("GET",ctx(),{"Sec-Fetch-Site":"cross-site"});return{status:r.status,ok:is(r,[400])}});
   for(const [id,h] of [["NO_ORIGIN",{}],["OTHER_ORIGIN",{"Origin":"https://unauthorized.invalid"}],["CROSS_SITE",{"Origin":origin,"Sec-Fetch-Site":"cross-site"}]])
-    await check("CSRF_"+id,"403",async()=>{const r=await send("POST",mount+"/auth/logout",h);return{status:r.status,ok:is(r,[403])}});
+    await check("CSRF_"+id,"403",async()=>{const r=await send("POST",mount+"/auth/logout",h);return{status:r.status,ok:csrfDeny(r)}});
   await check("OIDC_REDIRECT","303 confidential code+PKCE S256; secure login cookie",async()=>{
     const r=await send("GET",mount+"/auth/login");
     const u=new URL(String(r.headers.location||"https://invalid.invalid/")),q=u.searchParams;
@@ -123,7 +126,7 @@ async function actors(){
   await check("DISTINCT_ACTORS","distinct sessions and principalRefs",async()=>({ok:okActors.length===2&&
     okActors[0].raw!==okActors[1].raw&&okActors[0].id!==okActors[1].id}));
   for(const [id,h] of [["NO_ORIGIN",{}],["OTHER_ORIGIN",{"Origin":"https://unauthorized.invalid"}],["CROSS_SITE",{"Origin":origin,"Sec-Fetch-Site":"cross-site"}]])
-    await check("AUTH_CSRF_"+id,"403, session preserved",async()=>{const r=await send("POST",mount+"/auth/logout",{"Cookie":cookie("requester"),...h});return{status:r.status,ok:is(r,[403])}});
+    await check("AUTH_CSRF_"+id,"403, session preserved",async()=>{const r=await send("POST",mount+"/auth/logout",{"Cookie":cookie("requester"),...h});return{status:r.status,ok:csrfDeny(r)}});
 }
 async function producer(){
   assert(has("confirm-producer-writes")&&c.isolated?.approvedForNegativeWrites===true&&
@@ -136,7 +139,9 @@ async function producer(){
     assert(r.status===200&&v?.status==="ok"&&Object.prototype.hasOwnProperty.call(v.value?.versions||{},k),"SOURCE_SNAPSHOT_REQUIRED");
     const row=v.value.data?.requests?.find(x=>x.number===c.isolated.requestId);
     assert(row,"VISIBLE_SANDBOX_REQUEST_REQUIRED");
-    return{version:v.value.versions[k],row:JSON.stringify(row)};
+    const wireVersion=v.value.versions[k];
+    assert(wireVersion&&typeof wireVersion==="object"&&Number.isSafeInteger(wireVersion.version)&&wireVersion.version>=0,"PRODUCER_VERSION_INVALID");
+    return{version:wireVersion.version,versionRecord:JSON.stringify(wireVersion),row:JSON.stringify(row)};
   }
   const before=await snapshot();
   for(const [id,file,status] of [["CAS_409",c.isolated.cas409BodyFile,409],["VALIDATION_422",c.isolated.validation422BodyFile,422]])
@@ -169,7 +174,11 @@ async function logout(){
   await check("REPLAY_AFTER_LOGOUT","401|403 same cookie",async()=>{const r=await send("GET",ctx(),h);return{status:r.status,ok:is(r,[401,403],["unauthenticated","denied"])}});
 }
 async function restart(){
-  assert(arg("restart-receipt"),"A7_RESTART_RECEIPT_REQUIRED");privateRead(arg("restart-receipt"));
+  assert(arg("restart-receipt"),"A7_RESTART_RECEIPT_REQUIRED");
+  const receipt=JSON.parse(privateRead(arg("restart-receipt")));
+  assert(receipt.schema==="sf.az02.a7-restart-witness.v1"&&receipt.candidateSha===c.candidateSha&&
+    receipt.artifactSha256===c.artifactSha256&&receipt.restartObserved===true&&
+    typeof receipt.witness==="string"&&receipt.witness.trim().length>=4,"A7_RESTART_WITNESS_INVALID");
   await check("REPLAY_AFTER_RESTART","401|403 same cookie after A7 witness",async()=>{
     const r=await send("GET",ctx(),{"Cookie":cookie("requester")});
     return{status:r.status,ok:is(r,[401,403],["unauthenticated","denied"])}
