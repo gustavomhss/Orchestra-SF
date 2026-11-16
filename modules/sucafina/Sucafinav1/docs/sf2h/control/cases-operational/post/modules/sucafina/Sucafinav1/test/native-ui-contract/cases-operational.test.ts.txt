@@ -1,0 +1,38 @@
+import { expect, test } from "bun:test"
+import { observeSfCases } from "../../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
+import { createSfUiAuthority } from "../../product/integration/ui-authority.ts"
+
+const stamp = Object.freeze({ installationId: "installation", projectId: "project", hostId: "host",
+  principalRef: "person", policyVersion: "policy", accessRevision: "revision" })
+
+test("case list probe admits the original Request and fences authority and source", async () => {
+  const original = new Request("http://localhost/sucafina/api/ui/context")
+  let revision = "revision"
+  let granted = true
+  const ui = createSfUiAuthority({
+    createId: () => crypto.randomUUID(), now: Date.now, commandIdentity: async () => crypto.randomUUID(),
+    authorize: async (request, operation) => {
+      expect(request).toBe(original)
+      if (!granted || operation !== "sf_case_read") return undefined
+      return { installationId: stamp.installationId, projectId: stamp.projectId, principalRef: stamp.principalRef,
+        policyVersion: stamp.policyVersion, accessRevision: revision }
+    },
+  })
+  let reads = 0
+  const runtime = { ui, state: { read: async (request: Request, namespace: string, callback: (state: { cases: Record<string, never> }, authority: typeof stamp) => unknown) => {
+    expect(request).toBe(original)
+    expect(namespace).toBe("cases")
+    reads++
+    return { status: "ok", value: callback({ cases: {} }, stamp) }
+  } } }
+  const deps = { runtime: () => runtime }
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([
+    { operationId: "projection.cases", state: "ready", reason: null, operational: true },
+  ])
+  expect(reads).toBe(2)
+  revision = "revoked"
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  granted = false
+  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  expect(await observeSfCases({ runtime: () => undefined } as never, original, stamp)).toEqual([])
+})
