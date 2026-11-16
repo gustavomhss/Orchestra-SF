@@ -29,6 +29,8 @@ import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
   SfDraftRevalidation, SfSurfaceProps } from "../context/contracts"
 import { parsePlannerRouteQuery, plannerRouteAvailable, plannerOverviewSelectionMatches } from "./planner-route"
 import { isExtendedSurface, parseExtendedRouteQuery, extendedRouteAvailable, SfExtendedPages } from "./extended-routes"
+import { isPlannerPagesSurface, plannerPagesRouteAvailable } from "./planner-pages-route"
+import { plannerPagesNeedsPreflight, preflightPlannerPages } from "./planner-pages-preflight"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import { SfPlannerOverviewView } from "../planner/overview"
 import { SfPlannerVersionsView } from "../planner/versions"
@@ -524,6 +526,15 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         !context.value.availability.some((resource) => resource.operations.some((operation) =>
           operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
         return { status: "denied" }
+      if (isPlannerPagesSurface(candidate.surfaceId) && extendedQuery && plannerPagesNeedsPreflight(candidate, extendedQuery)) {
+        const result = await preflightPlannerPages({ candidate, query: extendedQuery, transport: preflightTransport(), stamp,
+          signal, current: () => currentGeneration === ownerEpoch })
+        if (result !== "authorized") return { status: result }
+        const fresh = await readPreflightContext()
+        if (signal.aborted || currentGeneration !== ownerEpoch) return { status: "unavailable" }
+        if (fresh.status !== "ok" || !sameStamp(stamp, fresh.value.stamp) ||
+          !plannerPagesRouteAvailable(fresh.value, candidate)) return { status: "denied" }
+      }
       if (candidate.surfaceId === "CAP17" && plannerQuery && (plannerQuery.version || plannerQuery.filter)) {
         const input = {
           ...(plannerQuery.year === undefined ? {} : { year: plannerQuery.year }),
@@ -533,7 +544,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         const transport = preflightTransport()
         const result = await createSfPlannerClient(transport)["domain.page.CAP17"](input, { signal })
         if (signal.aborted || currentGeneration !== ownerEpoch) return { status: "unavailable" }
-        if (result.kind !== "response" || result.body.status !== "ok") return { status: "denied" }
+        if (result.kind !== "response" || result.status < 200 || result.status >= 300 || result.body.status !== "ok") return { status: "denied" }
+        if (!sameStamp(stamp, result.body.context) ||
+          plannerQuery.version && result.body.value.selection.versionId !== plannerQuery.version ||
+          plannerQuery.year !== undefined && result.body.value.data.selectedVersion?.year !== plannerQuery.year)
+          return { status: "denied" }
         if (!plannerOverviewSelectionMatches(plannerQuery, result.body.value)) return { status: "denied" }
         const fresh = await readPreflightContext()
         if (signal.aborted || currentGeneration !== ownerEpoch) return { status: "unavailable" }
