@@ -177,3 +177,14 @@ export const SF_U11_REMAINING_COPY_BR: Record<keyof typeof SF_U11_REMAINING_COPY
   "sf.u11.remaining.awaitingApproval": "Aguardando aprovação",
   "sf.u11.remaining.select": "Selecionar pedido",
 }
+
+/**
+ * U11 leaf copy belongs to this feature. The shared Orchestra dictionary does
+ * not yet register its remaining-field keys; never render a blank action label
+ * (which also makes its accessible name disappear) when a translation is absent.
+ * Prefer a registered translation; otherwise use the pinned leaf en/pt-BR copy.
+ */
+export function sfU11Label(key: keyof typeof SF_U11_REMAINING_COPY, locale: string, translated?: string): string {
+  if (translated && translated.trim() && translated !== key) return translated
+  return locale === "br" ? SF_U11_REMAINING_COPY_BR[key] : SF_U11_REMAINING_COPY[key]
+}
