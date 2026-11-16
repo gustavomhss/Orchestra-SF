@@ -221,12 +221,16 @@ test("M4 authentic baseline cannot silently shrink into one test", () => {
   data.manifest = structuredClone(manifest)
   const suite = data.manifest.suites.find((item) => item.id === "CI-APP-SRC")
   suite.coverageBaseline.minimumCases += 1
+  const digest = createHash("sha256").update(JSON.stringify(data.manifest)).digest("hex")
+  for (const receipt of Object.values(data.receipts)) receipt.manifestSha256 = digest
   assert.throws(() => verifyAll(data), /missing\/changed baseline case or file/)
 })
 test("M4 missing baseline remains BLOCKED rather than passing with one test", () => {
   const data = fixture()
   data.manifest = structuredClone(manifest)
   data.manifest.suites.find((item) => item.id === "CI-SF").coverageBaseline.status = "PENDING_REAL_COMPLETE_RUN"
+  const digest = createHash("sha256").update(JSON.stringify(data.manifest)).digest("hex")
+  for (const receipt of Object.values(data.receipts)) receipt.manifestSha256 = digest
   assert.throws(() => verifyAll(data), /coverage baseline requires authentic successful run/)
 })
 test("B2 changing a selected file without the executed file evidence is RED", () => {
