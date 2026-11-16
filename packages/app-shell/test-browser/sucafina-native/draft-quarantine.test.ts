@@ -36,6 +36,38 @@ function dependencies(revalidateDraft: SfContextDependencies["revalidateDraft"])
 }
 
 describe("owner draft quarantine", () => {
+  test("only an exact first-attempt 409 permits discard; unknown and quarantined operations stay fenced", async () => {
+    const pending = { operationRef: "op" as SfOperationRef, idempotencyKey: "key", payloadDigest: "digest", expectedVersion: 1 }
+    const registry = createSfOwnerDrafts(dependencies(async () => authorized()), { key: "one" as SfOwnerKey, identity })
+    const draft = open(registry.registry, "r1")
+    draft.edit({ text: "private" }); draft.setPending(pending)
+    draft.rejectSave({ status: 409, operation: pending }) // not yet submitting
+    expect(draft.snapshot()).toMatchObject({ pendingOperation: pending })
+    draft.setPhase("submitting")
+    draft.rejectSave({ status: 503 as 409, operation: pending })
+    expect(draft.snapshot()).toMatchObject({ phase: "submitting", pendingOperation: pending })
+    for (const wrong of [{ ...pending, operationRef: "other" as SfOperationRef }, { ...pending, idempotencyKey: "other" },
+      { ...pending, payloadDigest: "other" }, { ...pending, expectedVersion: 2 }]) {
+      draft.rejectSave({ status: 409, operation: wrong })
+      expect(draft.snapshot()).toMatchObject({ phase: "submitting", pendingOperation: pending })
+    }
+    draft.rejectSave({ status: 409, operation: pending })
+    expect(draft.snapshot()).toMatchObject({ phase: "conflict", pendingOperation: null, baseVersion: 1, value: { text: "private" } })
+    registry.registry.discard(selected("r1"))
+    expect(registry.registry.peek(selected("r1"))).toBeUndefined()
+
+    const unknown = open(registry.registry, "r2")
+    unknown.edit({ text: "unknown" }); unknown.setPending(pending); unknown.setPhase("submitting"); unknown.setPhase("outcome-unknown")
+    unknown.setPhase("submitting"); unknown.rejectSave({ status: 409, operation: pending })
+    registry.registry.discard(selected("r2"))
+    expect(unknown.snapshot()).toMatchObject({ pendingOperation: pending, value: { text: "unknown" } })
+    registry.quarantine(); unknown.rejectSave({ status: 409, operation: pending })
+    expect(await registry.revalidate({ key: "two" as SfOwnerKey, identity }, context, transport, new AbortController().signal)).toBe(true)
+    unknown.setPhase("submitting"); unknown.rejectSave({ status: 409, operation: pending })
+    expect(unknown.snapshot()).toMatchObject({ pendingOperation: pending })
+    registry.revoke("logout"); unknown.rejectSave({ status: 409, operation: pending })
+    expect(unknown.snapshot()).toEqual({ availability: "revoked", reason: "logout" })
+  })
   test("unavailable retry keeps values hidden, then restores the same drafts", async () => {
     let proof: SfDraftRevalidation = { status: "unavailable" }
     const registry = createSfOwnerDrafts(dependencies(async () => proof), { key: "one" as SfOwnerKey, identity })

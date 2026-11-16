@@ -81,4 +81,14 @@ describe("source readiness is not access revocation", () => {
     expect(draftAvailability(get("ready", [{ operationId: "domain.page.CAP08", state: "denied", operational: false, reason: "revoked" }]), "domain-read", "CAP08", ["domain.page.CAP08"]))
       .toEqual({ status: "denied" })
   })
+
+  test("a partial resource permits only independently ready required operations", () => {
+    const context = Schema.decodeUnknownSync(SfContext)({ ...ready, availability: [{ family: "procurement", resource: "CAP25", state: "partial", operations: [
+      op("domain.page.CAP25"), op("domain.command.CAP25.save"),
+      { operationId: "domain.command.CAP25.create", state: "unavailable", operational: false, reason: "network" },
+    ] }] })
+    expect(draftAvailability(context, "procurement", "CAP25", ["domain.page.CAP25", "domain.command.CAP25.save"])).toBeUndefined()
+    expect(draftAvailability(context, "procurement", "CAP25", ["domain.page.CAP25", "domain.command.CAP25.create"])).toEqual({ status: "unavailable" })
+    expect(draftAvailability(context, "procurement", "CAP25", ["domain.page.CAP25", "domain.command.CAP25.missing"])).toEqual({ status: "unavailable" })
+  })
 })

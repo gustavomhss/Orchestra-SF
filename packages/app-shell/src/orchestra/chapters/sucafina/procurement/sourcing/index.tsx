@@ -370,7 +370,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         setUi("phase","outcome-unknown");setUi("unknownOperation",intentRef)
         setUi("review",null);return
       }
-      if(response.status>=500){
+      if(response.status>=500||response.status===409&&(response.body.ok||response.body.status!==409)){
         controllerDraft?.setPhase("outcome-unknown")
         setUi("phase","outcome-unknown");setUi("unknownOperation",intentRef)
         setUi("review",null);return
@@ -379,7 +379,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         const code=response.body.ok?response.status:response.body.status
         setUi("sourceWarnings",response.body.ok?[]:response.body.fieldErrors?.map((error)=>
           error.field+": "+error.message)??response.body.errors??[])
-        if(response.status===409)controllerDraft?.rejectSave({status:409,operation:pending})
+        if(response.status===409&&!response.body.ok&&response.body.status===409)controllerDraft?.rejectSave({status:409,operation:pending})
         else controllerDraft?.setPhase("failed")
         setUi("review",null)
         setUi("phase",code===409?"conflict":"failed")
