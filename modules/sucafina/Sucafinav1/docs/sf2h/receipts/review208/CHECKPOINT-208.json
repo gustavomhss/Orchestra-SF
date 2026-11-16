@@ -24,8 +24,43 @@
     "Mark APPROVE without complete proofs"
   ],
   "notifications": [
-    "189/PR65 early notification 6903575603",
-    "PR106 pending request (to publish)",
-    "Author PRs pending notices"
-  ]
+    {
+      "target": "189/PR65",
+      "comment_id": 6903575603,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "A08/BI source PR142",
+      "comment_id": 6903760752,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "N26 BI consumer PR155",
+      "comment_id": 6903761393,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "Atlas original memory PR79",
+      "comment_id": 6903761912,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "AM05 proof author198 PR183",
+      "comment_id": 6903762423,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "200/PR106 sole CI dispatcher",
+      "comment_id": 6903762951,
+      "status": "PUBLISHED_CONDITIONAL_NO_DISPATCH"
+    }
+  ],
+  "latest_complete_receipt_commit": "e18ff0c3fbfeb3f79205a60c28822b83f9c08954",
+  "checkpoint_finalized": true,
+  "remote_commit_verification": {
+    "source_branch_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "review_branch_head_before_checkpoint": "e18ff0c3fbfeb3f79205a60c28822b83f9c08954",
+    "receipt_files_present": 7,
+    "product_files_modified": 0
+  }
 }
