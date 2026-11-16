@@ -19,7 +19,7 @@ describe("I00 frozen 70 surface route consumer (129 surgical test)", () => {
     const original = "case/ç/ß?version=4"
     const route = matchSfNativeRoutePath("/orchestra/sf-decisions/" + encodeSfRouteRef(original))
     expect(route?.surfaceId).toBe("UI34")
-    expect(route?.parameters.caseRef).toBe(original)
+    expect<string | undefined>(route?.parameters.caseRef).toBe(original)
   })
   test("rejects unencoded refs, aliases, malformed UTF8, percent encodings and extra segments", () => {
     for (const value of [
