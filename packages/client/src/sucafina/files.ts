@@ -218,5 +218,10 @@ export function createSfFilesClient(transport: SfTransport) {
     if (!plain(input) || !only(input, ["surface"]) || input.surface !== "dashboard") return Promise.resolve(rejectContract)
     return transport.execute(SfFiles.operations["files.export.members"], input, options)
   },
+  "files.export.review": (input: SfFilesOperationInput<"files.export.review">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.export.review">>> => {
+    if (!plain(input) || !only(input, ["surface", "artifactRef"]) || input.surface !== "dashboard" ||
+        typeof input.artifactRef !== "string" || !/^report:[a-f0-9]{64}$/.test(input.artifactRef)) return Promise.resolve(rejectContract)
+    return transport.execute(SfFiles.operations["files.export.review"], input, options)
+  },
   })
 }

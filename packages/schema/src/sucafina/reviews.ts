@@ -7,6 +7,7 @@
  * The host performs current admission, redaction and source revalidation.
  */
 import { Schema } from "effect"
+import { EvidenceRef, Receipt } from "./bi/wire"
 
 const Text = Schema.NonEmptyString
 const Integer = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0))
@@ -174,6 +175,33 @@ export const SfReviewsExportDocx = {
 export const SfReviewsExportPptx = {
   operationId: "reviews.export.pptx" as const, input: ReportRequest, output: Schema.Never,
 }
+const ReportRef = Schema.String.check(Schema.isPattern(/^report:[a-f0-9]{64}$/))
+const UnboundReceipt = Schema.Struct({
+  kind: Schema.Literal("unbound"), operation: Schema.String,
+  code: Schema.Literals(["invalid-binding", "provider-conflict", "invalid-input", "unavailable"]),
+  callId: Schema.optional(Schema.String), at: Schema.String,
+})
+export const SfReviewsReportPrepare = {
+  operationId: "reviews.report.prepare" as const,
+  input: Schema.Struct({ reviewRef: Text, sectionRefs: Schema.Array(Text), format: Schema.Literals(["docx", "pptx"]) })
+    .annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: Schema.Union([
+    Schema.Struct({
+      status: Schema.Literal("ok"), outputRef: ReportRef,
+      result: Schema.Struct({
+        reviewSelectionRef: Text, orderedResultRefs: Schema.Array(Text),
+        coverage: Schema.Array(Schema.Struct({ sectionRef: Text, includedCount: Integer, totalCount: Integer })),
+        gaps: Schema.Array(Schema.Struct({ id: Schema.String, category: Schema.String, reason: Schema.String,
+          evidenceRefs: Schema.Array(EvidenceRef), questionRef: Schema.optional(Schema.String) })),
+      }),
+      receipt: Receipt,
+    }),
+    Schema.Struct({
+      status: Schema.Literals(["needs-input", "stale", "denied", "unavailable", "provider-conflict", "failed"]),
+      reason: Schema.String, receipt: Schema.optional(Schema.Union([Receipt, UnboundReceipt])),
+    }),
+  ]),
+}
 export const SfReviewsReviewSource = {
   operationId: "reviews.review-source" as const,
   input: Schema.Struct({ reviewRef: Text, referenceId: Text }).annotate({ parseOptions: { onExcessProperty: "error" } }),
@@ -202,6 +230,7 @@ export const SfReviews = {
   "projection.review": SfProjectionReview,
   "reviews.export.docx": SfReviewsExportDocx,
   "reviews.export.pptx": SfReviewsExportPptx,
+  "reviews.report.prepare": SfReviewsReportPrepare,
   "reviews.review-source": SfReviewsReviewSource,
   "reviews.review-update": SfReviewsReviewUpdate,
 } as const

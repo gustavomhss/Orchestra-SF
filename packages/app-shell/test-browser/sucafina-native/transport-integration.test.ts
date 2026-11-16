@@ -37,12 +37,20 @@ describe("Q01 integrated transport contract / original producer", () => {
     expect(SfOperationExtensions).toEqual({
       "files.export.members": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
         responseMode: "bytes", fixedQuery: { download: "members" } },
+      "files.export.review": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
+        responseMode: "bytes", fixedQuery: { sf: "review-download" } },
+      "reviews.report.prepare": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "prepare",
+        responseMode: "json", fixedQuery: { sf: "review-report" }, maxRequestBytes: 65536 },
     })
     expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
-    const expected = [...Object.keys(catalog.operations), "files.export.members"].sort()
+    expect(Object.hasOwn(catalog.operations, "files.export.review")).toBe(false)
+    expect(Object.hasOwn(catalog.operations, "reviews.report.prepare")).toBe(false)
+    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions)].sort()
     expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
     expect([...SfOperationIds].sort()).toEqual(expected)
     expect(SfOperationRegistry["files.export.members"]).toEqual(SfOperationExtensions["files.export.members"])
+    expect(SfOperationRegistry["files.export.review"]).toEqual(SfOperationExtensions["files.export.review"])
+    expect(SfOperationRegistry["reviews.report.prepare"]).toEqual(SfOperationExtensions["reviews.report.prepare"])
     for (const [id, source] of Object.entries(catalog.operations)) {
       const actual: SfNativeOperationRoute = SfOperationRegistry[id as keyof typeof SfOperationRegistry]
       expect(actual, "Q01 integrated metadata missing " + id).toBeDefined()

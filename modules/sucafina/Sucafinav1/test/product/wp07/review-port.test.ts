@@ -110,6 +110,17 @@ test("preserved review survives changed projections and is denied after access r
       },
     }
     const reportInput = { reviewRef: "review-1", format: "docx", sectionRefs: ["forecast"] }
+    expect((await prepareReport({ ...reportInput, format: "html" }, binding, host)).status).toBe("needs-input")
+    expect((await prepareReport({ ...reportInput, sectionRefs: ["missing"] }, binding, host)).status).not.toBe("ok")
+    let reads = 0
+    const staleHost: ReviewCapabilityHost = { ...host, reviews: { ...port, read: async (id, context) => {
+      const result = await port.read(id, context)
+      reads++
+      return result.status === "ok" && reads === 2
+        ? { ...result, value: { ...result.value, version: result.value.version + 1 } } : result
+    } } }
+    expect(await prepareReport(reportInput, binding, staleHost)).toMatchObject({ status: "stale", reason: "review-changed" })
+    expect(artifacts).toHaveLength(0)
     expect((await prepareReport(reportInput, binding, host)).status).toBe("ok")
     const document = await (await JSZip.loadAsync(artifacts[0]!)).file("word/document.xml")!.async("string")
     expect(document).toContain("1320")
@@ -152,6 +163,7 @@ test("preserved review survives changed projections and is denied after access r
     expect(response.status).toBe(200)
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(Uint8Array.from(documentArtifact.bytes))
     expect((await handler(new Request("https://example.test/report", { method: "POST" }), savedArtifact.value.artifactRef)).status).toBe(405)
+    expect((await handler(new Request("https://example.test/report"), "https://evil.invalid/report")).status).toBe(403)
     access.comments = false
     expect((await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)).status).toBe(403)
     expect((await persisted.download(savedArtifact.value.artifactRef, binding)).status).toBe(403)
@@ -674,5 +686,4 @@ test("decision exports retain conditioned coverage and reject an invented comple
     expect(xml).not.toContain("Complete difference: 20")
   }
 })
-
 

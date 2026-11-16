@@ -13,3 +13,7 @@ To extract a field, select an accessible document and create a field schema. Giv
 Each candidate shows its field, value, unit, document revision and the exact source excerpt. **Open original** uses the existing authorized attachment route. **Confirm this field** records the explicit human action without changing a Request, approving a purchase, or applying an import. The same evidence identity and source offsets remain available to consumers before and after confirmation; the confirmed reference also identifies its confirmation version. Revoked or replaced files cannot continue to supply an apparently current value.
 
 Ambiguous numbers, currencies or dates are not guessed. Use unambiguous decimal numbers and ISO dates, or review the source and choose a text field when the meaning is not settled. Invalid, protected, empty and scanned documents report a reason; they do not create fabricated candidates. The current search is bounded to the admitted document index and reports its lexical and scan limits.
+
+## Preserved review reports
+
+Open a preserved review, select its sections and choose DOCX or PPTX. The report uses the preserved sections in their displayed order, including their recorded periods; its title is generated from the review reference. To change the underlying content or period, prepare and preserve another review rather than editing the export. Report preparation and downloading are separately authorized and may become unavailable if access or source data changes. Reported coverage gaps remain visible; a preparation receipt is not a file.

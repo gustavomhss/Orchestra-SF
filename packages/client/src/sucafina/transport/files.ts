@@ -9,7 +9,7 @@ export const SF_FILE_ASSET_LIMIT = 25 * 1024 * 1024
 export function sfIsByteOperation(id: SfOperationId): boolean {
   return id === "files.asset.download" || id === "files.export.xlsx" ||
     id === "files.export.suppliers" || id === "files.export.register" || id === "files.export.json" ||
-    id === "files.export.members"
+    id === "files.export.members" || id === "files.export.review"
 }
 
 export function sfIsUploadOperation(id: SfOperationId): boolean {
@@ -24,6 +24,8 @@ export function sfAllowedByteMime(id: SfOperationId, raw: string | null | undefi
   if (id === "files.export.xlsx" || id === "files.export.members") return type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   if (id === "files.export.suppliers" || id === "files.export.register") return type === "text/csv"
   if (id === "files.export.json") return type === "application/json"
+  if (id === "files.export.review") return type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+    type === "application/vnd.openxmlformats-officedocument.presentationml.presentation"
   return [
     "application/pdf", "application/json", "application/octet-stream", "application/msword",
     "application/vnd.ms-excel", "application/vnd.ms-powerpoint",
@@ -47,6 +49,11 @@ const record = (value: unknown): value is Readonly<Record<string, unknown>> =>
  */
 export function sfFilesSourceQuery(id: SfOperationId, value: unknown): Readonly<Record<string, string>> | undefined {
   if (!record(value)) return undefined
+  if (id === "files.export.review") {
+    if (value.surface !== "dashboard" || typeof value.artifactRef !== "string" ||
+        !/^report:[a-f0-9]{64}$/.test(value.artifactRef)) return undefined
+    return { artifactRef: value.artifactRef }
+  }
   if (id === "files.import-targets") {
     if (value.surface !== "planner" && value.surface !== "dashboard") return undefined
     if ((value.start === undefined) !== (value.end === undefined) ||
