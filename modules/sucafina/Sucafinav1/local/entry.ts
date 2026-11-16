@@ -8,6 +8,7 @@ import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucaf
 import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
+import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
 import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
 import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
 import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
@@ -194,6 +195,7 @@ export async function createConfiguredInstallation(
   const nativeHandlers = [
       ...createSfDomainProjectionHandlers(nativeDependencies),
       ...createSfPeopleProjectionHandlers(nativeDependencies),
+      ...createSfOperationsProjectionHandlers(nativeDependencies),
       ...createSfWorkProjectionHandlers(nativeDependencies),
       ...createSfPlannerProjectionHandlers(nativeDependencies),
       ...createSfProcurementProjectionHandlers(nativeDependencies),
