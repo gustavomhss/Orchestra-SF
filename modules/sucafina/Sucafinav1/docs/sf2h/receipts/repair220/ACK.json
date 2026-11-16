@@ -1,0 +1,22 @@
+{
+  "schema": "sf2h.repair220.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 220,
+  "branch": "sf-decisions-capture",
+  "epoch": "causal-ci-e1-browser220",
+  "observed_head": "c5db89c85817b8b12f535b51717313133c296e12",
+  "observed_tree": "586304dd33684f83e93740709ed31b673b030b7d",
+  "fence_blob": "678f8fe6df7c691c7cef9b514a0153c2678a205a",
+  "product_base": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+  "model": "GPT-6",
+  "session_id": "NOT_EXPOSED",
+  "authority": "ACCEPTED_WRITE_PATHS_ONLY",
+  "observed_failures": [
+    "B9: projection.cases accepts includePrivate",
+    "B11/B18: prepareC12Change gets HTTP 400",
+    "B11: AM05 original C12 capture unavailable"
+  ],
+  "checks": "NOT_RUN (mission forbids local or own CI)",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
