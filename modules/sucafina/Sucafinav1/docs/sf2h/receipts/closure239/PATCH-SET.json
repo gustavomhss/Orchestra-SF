@@ -1,0 +1,137 @@
+{
+  "schema": "sf2h.closure239.inert-composition.v1",
+  "mission": 239,
+  "classification": "COMPATIBLE_EXISTING_DRAFT_ONLY",
+  "source_review": "closure230@sf-c12-review",
+  "source_review_decision": "FIX_FIRST",
+  "baseline": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "target": "sf-integration-preview",
+  "source_policy_unchanged": true,
+  "product_writes": false,
+  "group_atomic": [
+    "SRC-01",
+    "SRC-02",
+    "SRC-03",
+    "REG-01",
+    "REG-02",
+    "REG-03"
+  ],
+  "items": [
+    {
+      "id": "SRC-01",
+      "kind": "PRODUCTION",
+      "target_path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "expected_pre_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+      "proposed_post_blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+      "inert_full_postimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/SRC-01.inert.txt",
+      "source": "closure230/HANDOFF.json and INERT-PATCH.json",
+      "preimage_observed_on_initial_C": true,
+      "postimage_git_object_verified": true,
+      "applied_to_product_by_239": false
+    },
+    {
+      "id": "SRC-02",
+      "kind": "PRODUCTION",
+      "target_path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "expected_pre_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+      "proposed_post_blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+      "inert_full_postimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/SRC-02.inert.txt",
+      "source": "closure230/HANDOFF.json and INERT-PATCH.json",
+      "preimage_observed_on_initial_C": true,
+      "postimage_git_object_verified": true,
+      "applied_to_product_by_239": false
+    },
+    {
+      "id": "SRC-03",
+      "kind": "PRODUCTION",
+      "target_path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "expected_pre_blob": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+      "proposed_post_blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+      "inert_full_postimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/SRC-03.inert.txt",
+      "source": "closure230/HANDOFF.json and INERT-PATCH.json",
+      "preimage_observed_on_initial_C": true,
+      "postimage_git_object_verified": true,
+      "applied_to_product_by_239": false
+    },
+    {
+      "id": "REG-01",
+      "kind": "MANDATORY_REGRESSION",
+      "target_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+      "expected_pre_blob": "6e795a84dbab450a280f4c2043e166743ca5df78",
+      "proposed_post_blob": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+      "inert_full_postimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/REG-01.inert.txt",
+      "source": "closure230/HANDOFF.json and INERT-PATCH.json",
+      "preimage_observed_on_initial_C": true,
+      "postimage_git_object_verified": true,
+      "applied_to_product_by_239": false
+    },
+    {
+      "id": "REG-02",
+      "kind": "MANDATORY_REGRESSION",
+      "target_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+      "expected_pre_blob": "3c37f7868a62182658adf2b22d88e66869de8d73",
+      "proposed_post_blob": "191021892019874e9ec8dec594b019f5addf7f3f",
+      "inert_full_postimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/REG-02.inert.txt",
+      "source": "closure230/HANDOFF.json and INERT-PATCH.json",
+      "preimage_observed_on_initial_C": true,
+      "postimage_git_object_verified": true,
+      "applied_to_product_by_239": false
+    },
+    {
+      "id": "REG-03",
+      "kind": "MANDATORY_REGRESSION",
+      "target_path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "expected_pre_blob": "d71a7b8003071bcbc0f144f682cc34920cd00d0a",
+      "proposed_post_blob": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+      "inert_full_postimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/REG-03.inert.txt",
+      "source": "closure230/HANDOFF.json and INERT-PATCH.json",
+      "preimage_observed_on_initial_C": true,
+      "postimage_git_object_verified": true,
+      "applied_to_product_by_239": false
+    }
+  ],
+  "already_in_C": [
+    {
+      "id": "FIX-01",
+      "target_path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "observed_blob": "d96709db609b399ef801f487e443a381863d6298",
+      "status": "PRESENT_ON_PR208_HEAD_NO_REAPPLY"
+    },
+    {
+      "id": "FIX-02",
+      "target_path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+      "observed_blob": "f9c99a8a886211d1aba60371a2d3b0aa287293b5",
+      "status": "PRESENT_ON_PR208_HEAD_NO_REAPPLY"
+    },
+    {
+      "id": "SCHEMA-01",
+      "target_path": "packages/schema/src/sucafina/decisions.ts",
+      "observed_blob": "52fc1a3fc52b39c0d18f0064bcc17417421ce3c7",
+      "status": "PRESENT_ON_PR208_HEAD_NO_REAPPLY"
+    },
+    {
+      "id": "SCHEMA-02",
+      "target_path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "observed_blob": "dbdbde9d95ffcdf59c50ee64b880e631b37e433a",
+      "status": "PRESENT_ON_PR208_HEAD_NO_REAPPLY"
+    }
+  ],
+  "application_order": [
+    "check current target blob against expected_pre_blob",
+    "ensure matching baseline and read all six exact full postimages",
+    "apply production SRC-01..03 plus REG-01..03 together under explicit owner lease",
+    "if any mismatch HOLD and author-owned three-way reconciliation; no reset/force",
+    "run original test-ci selection on actual new C with authorized successor only",
+    "independent recheck and same-C AM04/AM05/campaign gates",
+    "do not merge on source-only review"
+  ],
+  "out_of_scope": [
+    "sf-home-binding/closure231",
+    "sf-native-origin/229",
+    "sf-shell-guard/237",
+    "financial policy changes",
+    "engines",
+    "Azure"
+  ],
+  "release": "NOT_GLOBAL_RELEASE"
+}

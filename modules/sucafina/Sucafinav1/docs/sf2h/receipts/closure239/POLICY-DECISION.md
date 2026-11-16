@@ -1,0 +1,25 @@
+# Closure239 — verificação independente do contrato financeiro C12
+
+**Baseline:** `sf-integration-preview` / PR #208 / `395012bcf4e142f0769ae6fa8138c4b7097a04b9`. **Plano imutável:** `dbf9547211d9b0fade619790de7c19c0869b7c7d`. **UX aprovada:** `cbac654784714f68779ae1434d30e6ea8970c4d1`. **Escopo da revisão:** seis postimages centrais da closure230 (SRC-01..03 e REG-01..03). Nenhuma mutação de política financeira, engine, fluxo Azure ou host.
+
+## Decisão
+
+**COMPATÍVEL CONDICIONALMENTE COM A POLÍTICA EXISTENTE; NÃO INTEGRADO / NOT_RUN.** Autorizar a composição *somente como proposta inerte revisável* dos seis blobs após validação do preimage, teste sobre commit C composto e recheck independente. Isso **não** autoriza aprovar, submeter ou liberar efeitos financeiros. O rascunho original permite `Requests.save` por criador/admin nas etapas `draft` e `pr_rejected`; a aprovação formal continua independente, no snapshot de valor submetido e com holder. O `confirmed:false` é intenção explícita para o C12 de preparar um **save de rascunho**, não um certificado de alçada; o humano deve revisar e acionar Apply separadamente.
+
+## Evidências — critério → código e resultado
+
+- **C12** (contracts.json): PreparedChange vincula `case/version/target/expectedVersion/operation/preview/requiredAuthority/idempotencyKey`, exige revalidação no domínio, receipt atômico com mutação, retry mesma chave+digest sem novo efeito, conflito de digest diferente; **prova após commit/antes da resposta** pendente no C composto.
+- **WP11.T03.INV.01 / WP11.T03.DOD.01:** escolha gerencial não é aprovação formal. `product/procurement/scenario-preparation.ts` SRC-01: operação deve pertencer ao ChoiceRecord; fonte atual + evidencia + horizon/currency; `createProcurementApprovalLifecycle.review/prepare(save-estimate)` retorna plano com `approvalGranted:false,receipt:null,requiresExplicitAction:true`; `prepareProcurementMutation` gera previsão por clone com `Requests.save`, `confirmed:false` e não grava domínio.
+- **WP04.INV.01 / WP04.T04.INV.01 / WP04.T03.INV.01:** sem mudança de holder, autoaprovação, níveis, FX ou transições. O domínio `runtime/procurement.ts` (commit C, linhas 421–510 e 602–651) mantém `canWrite`, `prEdit` por `createdBy === actor.id || admin`, estágio `draft/pr_rejected`; `submitPR` e `approve` continuam comandos separados. `decision-preparation.ts` (linhas 75–196) lê ator real e roleMap/record/policy digests, role, fonte e CAS, e limita `save-estimate` a criador/admin em draft.
+- **WP11.T04.DOD.02 / WP11.T04.INV.01 / C12 / AM04:** `product/procurement/prepared.ts` SRC-02 só remove a vedação incondicional do `estAmount` quando `confirmed === false`; mantém `prepareProcurementMutation` com escopo, source incarnation, actor, valid roleMap, CAS, preview digest e domain.execute; a implementação de receipt `product/decisions/apply.ts` exige aplicação distinta, compara receipt materializado e reconcilia caso depois, sem transação global.
+- **WP11.T03.QLT.01 / C12 review:** `prepared-review.ts` SRC-03 condiciona a revisão de estimativa a `confirmed:false` e `procurement:write`; a fonte é reemitida, compara before/after e impede stage, amount, fields, evidence ou version inconsistentes.
+- **C03 / C08 / C09 / C17 / WP10.INV.02:** nenhum desses patches modifica guarda de transaction/receipt/Atlas; os quatro itens adjacentes FIX-01, FIX-02, SCHEMA-01, SCHEMA-02 da closure230 já estão presentes em PR208 nos blobs esperados; fixtures sintéticas não provam scanner/identity/CI empresarial.
+- **WP10.T04.INV.40 / WP10.T05.INV.10:** nenhum check foi executado nesta sessão. A prova é source-static com testes futuros selecionados pelo dispatcher, não PASS ou GLOBAL_RELEASE.
+
+## Limitações e decisões de consumo
+
+1. A mudança é **permitida conceitualmente**, mas a aplicação é **HOLD** até o compositor autorizado admitir os seis arquivos como grupo, com seus SHAs exatos e recheck de dependências; a PR239 carrega apenas arquivos `closure239` e payloads inertes, não altera o produto.
+2. Os seis payloads sob `receipts/closure239/patches` referenciam *objetos Git existentes* da revisão independente 230, byte a byte. `PATCH-SET.json` fixa preimage/postimage e ordem de composição. O grupo de três testes corrige oráculos históricos inválidos **sem remover** negativos de holder, CAS, stage, origem, perda de resposta ou idempotência.
+3. Testes novos sob `test/product/closure239` cobrem origem real no fixture SQLite, read-only, identidade, divergência de escolha, revogação, CAS, holder, submissão e receipt/recovery. **Status NOT_RUN**; fixture não equivale a credencial corporativa.
+4. O receptor é o **compositor explicitamente autorizado** de `sf-integration-preview`/C, seguido pelo **dispatcher sucessor autorizado e equipado com a capacidade oficial**, pois closure232 liberou sem capacidade MCP de despacho inicial. Sem essa admissão não há CI; nenhuma execução automática é alegada.
+5. closure231 F01/home e 229 Task/Relay permanecem independentes; não incorporar, repetir ou substituir seus deltas. Preservam-se 15 WPs, 74 tasks, 17 contratos, 1.610 critérios, e a UX aprovada. PR239 é proposta; **NOT_GLOBAL_RELEASE**.
