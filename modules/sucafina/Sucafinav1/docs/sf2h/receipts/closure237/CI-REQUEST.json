@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.closure237.ci-request.v1",
+  "requester": 237,
+  "dispatcher": 232,
+  "triggered": false,
+  "all_status": "NOT_RUN",
+  "candidate": "Exact new C only after 211 applies full postimages; author HEAD/PR receipt SHA is not tested C",
+  "requires": [
+    "211 exclusive product integration and preimage CAS",
+    "227/228/231 full composition",
+    "Genuine F04 private 0600 manifest + already authenticated host-owned CDP browser",
+    "Original UI33 create grant and source-backed UI29",
+    "Second real authorized owner for positive owner-switch proof, never fabricate it"
+  ],
+  "selections": [
+    {
+      "kind": "typecheck",
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck",
+      "status": "NOT_RUN"
+    },
+    {
+      "kind": "browser_negative",
+      "cwd": "packages/app-shell",
+      "command": "bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts ./test-browser/sucafina-native/shell-guard237.test.ts ./test-browser/sucafina-native/context.test.ts ./test-browser/sucafina-native/host-binding231.test.ts ./test-browser/sucafina-native/today-resume227.test.ts",
+      "status": "NOT_RUN"
+    },
+    {
+      "kind": "e2e_types",
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e",
+      "status": "NOT_RUN"
+    },
+    {
+      "kind": "installed",
+      "cwd": "packages/app-shell",
+      "command": "playwright test e2e/sucafina/native/journeys/shell-guard237.spec.ts e2e/sucafina/native/journeys/u01.spec.ts",
+      "status": "NOT_RUN"
+    }
+  ],
+  "transitive_rechecks": [
+    "F01 context draft/quarantine/return focus",
+    "U01 Hoje original read and resume",
+    "UI33 create unknown result and original idempotency marker",
+    "UI34 owner-scoped details",
+    "root shell sidebar/chapter/history/unload",
+    "same-C final suites, AM01–AM06 and 3 independent reviewers remain mandatory"
+  ],
+  "prohibited": [
+    "Local test/typecheck/build",
+    "Explicit CI trigger",
+    "Fake grant or mock positive proof",
+    "Merge dev",
+    "GLOBAL_RELEASE"
+  ]
+}

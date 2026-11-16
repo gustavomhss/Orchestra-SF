@@ -1,0 +1,42 @@
+{
+  "schema": "sf2h.closure237.recheck.v1",
+  "status": "NOT_RUN",
+  "findings": [
+    {
+      "id": "231-DIRTY-EDITOR-CONSUMER",
+      "status": "ARTIFACT_READY_NOT_RUN",
+      "patch_ids": [
+        "contracts",
+        "context",
+        "drafts",
+        "casecreate",
+        "caselist"
+      ],
+      "expect": "UI33 edits to objective/dates/currency/criteria register only on actual typing with original owner identity; preserve across same-owner chapters, no private persistence, purge after explicit discard; unresolved pending cannot be treated as success."
+    },
+    {
+      "id": "231-ROOT-SHELL-EXIT",
+      "status": "ARTIFACT_READY_NOT_RUN",
+      "patch_ids": [
+        "owner",
+        "sidebar",
+        "copy",
+        "context",
+        "drafts"
+      ],
+      "expect": "A single F01-owned guard intercepts sidebar / root navigation and native router leave; cancel keeps owner/URL/draft/focus; confirm purges first; profile switch cannot mutate global selection prematurely."
+    }
+  ],
+  "negative_regressions": [
+    "cancelled discard never changes owner",
+    "confirmed discard clears all scoped data",
+    "same owner return restores UI33 fields",
+    "new owner starts empty and old facade revoked",
+    "quarantined/unknown command does not silently discard",
+    "real browser unload guard and focus",
+    "wrong project cannot inherit original private data",
+    "other Orchestra chapters unaffected"
+  ],
+  "qualification": "NOT_RUN_INSTALLED_HOST_REQUIRED",
+  "global_release": false
+}

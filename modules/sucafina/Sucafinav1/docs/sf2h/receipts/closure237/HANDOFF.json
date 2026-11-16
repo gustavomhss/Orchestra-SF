@@ -1,0 +1,195 @@
+{
+  "schema": "sf2h.closure237.handoff.v1",
+  "mission": 237,
+  "state": "ARTIFACT_READY_INERT_NOT_INTEGRATED",
+  "branch": "sf-shell-guard",
+  "parent_head": "95322577a4f4b1392163695b990199e5f88655fb",
+  "pr208_verified_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "scope": {
+    "wp": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "findings": [
+    "231-DIRTY-EDITOR-CONSUMER",
+    "231-ROOT-SHELL-EXIT"
+  ],
+  "patchset": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/PATCH-SET.json",
+  "patches": [
+    {
+      "id": "contracts",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+      "preimage": "01e879a9bb60f9752af617c5e3528f56c4d89245",
+      "postimage": "7671320cf8cb6476bdf9288b54fb322f4461983e",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/contracts.inert.txt",
+      "status": "REQUIRES_211_EXCLUSIVE_INTEGRATION",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "context",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "preimage": "d67d17782c4f02673cb6b6b82bc647dd39e55eef",
+      "postimage": "136b6d6ae4535c8f3f72833621764fc25db9c53c",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/context.inert.txt",
+      "status": "REQUIRES_211_EXCLUSIVE_INTEGRATION",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "drafts",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/drafts.ts",
+      "preimage": "aee71e7b1aa922dc24d74e771d8e6f24880f371f",
+      "postimage": "18fbb53513def44496966960c0753cbfb4c7d565",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/drafts.inert.txt",
+      "status": "REQUIRES_211_EXCLUSIVE_INTEGRATION",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "casecreate",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/create.tsx",
+      "preimage": "f8c6cea6b8b2fc54721780af790cf0577e8e4c29",
+      "postimage": "187145b462d807acc7d5fc07da2f752b5728aed1",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/casecreate.inert.txt",
+      "status": "REQUIRES_211_EXCLUSIVE_INTEGRATION",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "caselist",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/index.tsx",
+      "preimage": "a22b650d1388545a58f165fb0ca91c70d84071b2",
+      "postimage": "3d000baa7db58283afcf85d0ba399449f0933c92",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/caselist.inert.txt",
+      "status": "REQUIRES_211_EXCLUSIVE_INTEGRATION",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "owner",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "preimage": "fd5e173de15a42431d5053d1fd132b593564752b",
+      "postimage": "3b302da0312399dd9f4df03cca8ba13b45b57ad3",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/owner.inert.txt",
+      "status": "REQUIRES_211_EXCLUSIVE_INTEGRATION",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "sidebar",
+      "path": "packages/app-shell/src/orchestra/sidebar.tsx",
+      "preimage": "fdcaca8d91711f544c5c80200819ab4348fb7237",
+      "postimage": "85de9279407a43b0523f925fa209c022e8364969",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/sidebar.inert.txt",
+      "status": "REQUIRES_211_EXCLUSIVE_INTEGRATION",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "copy",
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+      "preimage": "f2d2af69c10120ffe71ce9cd2c4bdad445229326",
+      "postimage": "30fa78562bccf66602c2f48c86fb7bc870d073fb",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/copy.inert.txt",
+      "status": "REQUIRES_211_EXCLUSIVE_INTEGRATION",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "chapter-route231",
+      "path": "packages/app-shell/src/orchestra/chapter-route.tsx",
+      "preimage": "3243780b050ad1cbeb2848731010bd769d72ee4c",
+      "postimage": "3243780b050ad1cbeb2848731010bd769d72ee4c",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/chapter-route231.inert.txt",
+      "status": "ALREADY_IN_PR208_UNCHANGED_DEPENDENCY",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "navigation231",
+      "path": "packages/app-shell/src/orchestra/navigation.ts",
+      "preimage": "6af26a8f07e90d1c4ee8e58d9e8d1fc46e9547d4",
+      "postimage": "6af26a8f07e90d1c4ee8e58d9e8d1fc46e9547d4",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/navigation231.inert.txt",
+      "status": "ALREADY_IN_PR208_UNCHANGED_DEPENDENCY",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "navigation-state227",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+      "preimage": "6e74148eb42efb18f15ecf25d098cbe1bf5f038d",
+      "postimage": "6e74148eb42efb18f15ecf25d098cbe1bf5f038d",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/navigation-state227.inert.txt",
+      "status": "ALREADY_IN_PR208_UNCHANGED_DEPENDENCY",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    },
+    {
+      "id": "today-resume-binding228",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/today-resume-binding.tsx",
+      "preimage": "80874de468b3891057008380a498d949e9d0a3ff",
+      "postimage": "80874de468b3891057008380a498d949e9d0a3ff",
+      "inert_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/patches/today-resume-binding228.inert.txt",
+      "status": "ALREADY_IN_PR208_UNCHANGED_DEPENDENCY",
+      "source_pr208_head": "22209d92fa1fd64c487dded102f3acb233dc689e",
+      "full_file": true
+    }
+  ],
+  "tests": [
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/shell-guard237.test.ts",
+      "blob": "825898ea47323d90d0f61f2d6e53b2c0869220cb",
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/shell-guard237.spec.ts",
+      "blob": "f959cb2a1f3d5d12909b1bb5d9aa511821f5187e",
+      "status": "NOT_RUN"
+    }
+  ],
+  "ci_request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/CI-REQUEST.json",
+  "recheck": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure237/RECHECK.json",
+  "checks": {
+    "head": "READ_PASS",
+    "upstream_12_preimages": "READ_PASS",
+    "local_unit": "NOT_RUN",
+    "installed_e2e": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "ci": "NOT_RUN"
+  },
+  "global_release": false,
+  "behavior": [
+    "UI33 first real input acquires exact F01 draft; all five fields and review state stay local",
+    "F01 one owner and registry used for all shell exits, no parallel controller",
+    "Confirm discard erases draft before selection; cancel leaves editor and restores focus",
+    "Original pending creation key remains after uncertain response; no optimistic confirmation",
+    "Same-owner sf-home/sf-decisions edits persist; revoked old owner does not repopulate new owner",
+    "Browser unload prompts only when dirty/pending; no claim of persistence"
+  ],
+  "dependencies": [
+    "227 navigation-state and scoped resume focus",
+    "228 adapter postimage",
+    "231 owner runtime + root navigation postimages",
+    "211 exclusive compositor to apply inert postimages",
+    "232 only CI dispatcher"
+  ],
+  "limits": [
+    "No author-product write: complete source patch content lives ONLY under closure237",
+    "Positive real installed-host, UI33 grant, second authorized owner and desktop tests NOT_RUN",
+    "Any new PR208 head requires exact source-preimage verification and independent composition",
+    "No global release/merge dev/Goal reactivation"
+  ],
+  "authority": {
+    "owner_writer": 211,
+    "ci_dispatcher": 232,
+    "goal": "PAUSED",
+    "released_after": "expected-head CAS and verified draft PR",
+    "new_controller": false
+  }
+}
