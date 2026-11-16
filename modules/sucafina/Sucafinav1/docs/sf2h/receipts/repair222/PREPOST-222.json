@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.repair222.prepost.v1",
+  "mission": 222,
+  "branch": "sf-am02-authority",
+  "epoch": "causal-ci-e1-browser222",
+  "initial_head": "99d55d36d37842fa9893c5161b1aa2d04b87fa70",
+  "ack_commit": "5a624374a215655d8152f5c094c7f7cec40c0458",
+  "source_commit": "6c2002b712ce08a6c1f335458d4175f8420743e9",
+  "source_tree": "24f61d0f1042578869a1c851c4255e6be17eae02",
+  "sourceblobs": {
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts": {
+      "pre": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+      "post": "aa48bb72137de7e123cbb38625e396825bbfa99e"
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts": {
+      "pre": "57f9d00320d08e8890712f9a8525e7a2c56f22fc",
+      "post": "93d24c34b73bdd6d1a6ef4c6fe57a855f6820b26"
+    }
+  },
+  "untouched_sourceblobs": {
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+    "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts": "87e36883d92f6982cc8765337f8802ffacd6e52c",
+    "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+    "modules/sucafina/Sucafinav1/product/integration/product-authority.ts": "a4204ff29aa060031a47709b665cd69915904526",
+    "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+    "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+    "modules/sucafina/Sucafinav1/product/contracts/host-context.ts": "d21526bdfb2f48877a1ca77463ef8bcef6cdf87d"
+  },
+  "historical_evidence": {
+    "run": 43781314836,
+    "job": 133018910748,
+    "request_blob": "45c363d1e5413b87b882c4db40172b55fcabe03d",
+    "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+    "W_tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+    "status": "FAIL_SCOPED"
+  },
+  "cause": "test-specific native lease was never consumed before readBiPresentation, receiptFor correctly returned undefined",
+  "resolution": "new authenticated product.ui.admit plus product.ui.validate before BI presentation; preserve native unconsumed-lease denial, add out-of-grant/revoked-owner controls",
+  "runtime_producer_patch": {
+    "required": false,
+    "reason": "No runtime defect established; real public APIs already supply consumed UI admission"
+  },
+  "validation": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "build": "NOT_RUN",
+  "ci_by_222": "NOT_RUN",
+  "independent_review": "NOT_RUN",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h.repair222.request214.v1",
+  "owner": 214,
+  "producer": 222,
+  "integrator": 211,
+  "compiler": 190,
+  "status": "REQUESTED_PENDING_211_CONSUMPTION",
+  "dispatch_after": "211 has admitted both exact post blobs into one composed product candidate C and 214 has confirmed its CAS fence",
+  "workflow": ".github/workflows/test-ci.yml",
+  "invocation": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "--timeout",
+      "240000",
+      "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts"
+    ],
+    "env": {},
+    "selected_test_count": 1
+  },
+  "exact_full_path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+  "source_commit": "6c2002b712ce08a6c1f335458d4175f8420743e9",
+  "source_tree": "24f61d0f1042578869a1c851c4255e6be17eae02",
+  "sourceblobs": {
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts": "aa48bb72137de7e123cbb38625e396825bbfa99e",
+    "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts": "93d24c34b73bdd6d1a6ef4c6fe57a855f6820b26"
+  },
+  "previous_failed_selection": {
+    "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+    "tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+    "S": "c3dc581eb80ac614d06185bde88659ccf3b35681",
+    "input_request_blob": "45c363d1e5413b87b882c4db40172b55fcabe03d",
+    "job": 133018910748,
+    "result": "FAIL_SCOPED"
+  },
+  "new_dedup_key_requirements": [
+    "new C commit and its exact tree; never substitute 222's source branch tree for product C",
+    "normalized same 1-file request blob and workflow source; record final request/inputs/fixture tree",
+    "same package/runner/toolchain/environment; sourceblobs must be post 222",
+    "if W/tree/request identical to active valid request, 214 adopts existing run; failed historical B16 never cached as pass"
+  ],
+  "new_candidate_C": null,
+  "new_W": null,
+  "new_input_blob": null,
+  "new_run_id": null,
+  "new_job_id": null,
+  "expected_effect": [
+    "3 authentic operations sf_dashboard_read, sf_kpi_explain, sf_bi_view compare UI/C16-private-MCP canonical receipts and equal values",
+    "BI01 readBiPresentation positive with consumed authenticated UI lease; unconsumed native lease stays denied authority-unavailable",
+    "new SessionV2/SkillLoadReceipt + provider generation 2 after reopen; old bindings and callIDs denied",
+    "outside-grant, replay, forged field, unauthenticated Request and revoked role deny before or after expected stages",
+    "Dashboard confirmed zero and absent null, KPI totalBudget 1300, BI01 actual series, no persisted business mutation before owner revocation",
+    "capture real emitted SF_AM02_PERFORMANCE_C16_CONSUMED and SF_AM02_PERFORMANCE_C16_REVOKED records per operation; do not infer provider turn"
+  ],
+  "evidence_required": [
+    "GitHub action run + job URLs",
+    "true dispatched W/tree/normalized input SHA/selected file",
+    "output logs showing 3 operations in generation1 and generation2 and their real receipts",
+    "negative outcomes + BI consumer projection",
+    "fresh criteria observations, not legacy B16 result"
+  ],
+  "forbid": [
+    "222 executing own CI",
+    "new generic all-suite run",
+    "claim PASS before logs",
+    "reuse failed B16 as new C proof"
+  ],
+  "validation": "NOT_RUN",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

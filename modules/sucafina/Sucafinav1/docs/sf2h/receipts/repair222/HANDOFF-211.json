@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.repair222.handoff211.v1",
+  "mission": 222,
+  "producer_branch": "sf-am02-authority",
+  "producer_commit": "6c2002b712ce08a6c1f335458d4175f8420743e9",
+  "producer_tree": "24f61d0f1042578869a1c851c4255e6be17eae02",
+  "target": {
+    "actor": 211,
+    "branch": "sf-closure-bundle",
+    "pr": 191,
+    "mode": "consume exact source blobs, not commentary; respect composer control"
+  },
+  "epoch": "causal-ci-e1-browser222",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+      "pre_blob": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+      "post_blob": "aa48bb72137de7e123cbb38625e396825bbfa99e",
+      "action": "cherry-pick or reproduce exact blob in composed C"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts",
+      "pre_blob": "57f9d00320d08e8890712f9a8525e7a2c56f22fc",
+      "post_blob": "93d24c34b73bdd6d1a6ef4c6fe57a855f6820b26",
+      "action": "cherry-pick or reproduce exact blob in composed C"
+    }
+  ],
+  "required_unchanged": [
+    "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+    "resident 39 operations and 18 skills from 196"
+  ],
+  "necessary_runtime_patch": "NONE: failure originated in unconsumed direct BI test lease; no new C16 API needed",
+  "minimum_external_dependencies": [
+    "existing AppNodeBuilder/SessionV2/SkillV2/ToolRegistry Host contribution",
+    "existing product C08 principal/role-map Request authentication",
+    "existing private C16 in-process MCP bridge and Dashboard/BI source",
+    "existing durable local store; no Azure/deploy/restart required"
+  ],
+  "expected_effect": "legitimate UI presentation consumes exact public BI admission; C16 native wrapper and UI compare real domain; two generations; unconsumed/old/forged/out-of-grant/owner-revoked denied",
+  "followed_by": {
+    "dispatcher": 214,
+    "select": "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+    "new_run_required": true
+  },
+  "actual_new_run": "NOT_RUN",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

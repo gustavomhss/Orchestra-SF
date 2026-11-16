@@ -1,0 +1,89 @@
+{
+  "schema": "sf2h.repair222.cases.v1",
+  "mission": 222,
+  "source_commit": "6c2002b712ce08a6c1f335458d4175f8420743e9",
+  "validation": "NOT_RUN",
+  "route_selection": [
+    {
+      "route": "dashboard",
+      "operation": "sf_dashboard_read",
+      "profile": "sf_maestro",
+      "skill": "sf-produzir-bi-contextual",
+      "consumer": "dashboard-public-ui-view",
+      "semantic_checks": [
+        "2026-01 actual equals 0 confirmed",
+        "2026-02 actual equals null absent"
+      ]
+    },
+    {
+      "route": "kpi",
+      "operation": "sf_kpi_explain",
+      "profile": "sf_finance",
+      "skill": "sf-explicar-forecast",
+      "consumer": "dashboard-public-ui-view",
+      "semantic_checks": [
+        "budgetMetrics.2026.totalBudget equals 1300"
+      ]
+    },
+    {
+      "route": "bi",
+      "operation": "sf_bi_view",
+      "profile": "sf_finance",
+      "skill": "sf-produzir-bi-contextual",
+      "consumer": "authenticated readBiPresentation BI01",
+      "semantic_checks": [
+        "BI01 projection equals canonical native C16 output",
+        "at least one actual series",
+        "unconsumed native lease denied authority-unavailable"
+      ]
+    }
+  ],
+  "generations": [
+    {
+      "stage": "before_reopen",
+      "expected_generation": 1,
+      "positive": [
+        "UI authenticated operation",
+        "real ToolRegistry/C16/private-MCP operation",
+        "canonical receipts equal on operation/handlerExport/inputDigest/resultDigest/principalRef/accessRevision"
+      ],
+      "negative": [
+        "unbound tool denied",
+        "missing SkillLoadReceipt denied",
+        "ungranted Request principal denied",
+        "out-of-grant skill operation denied",
+        "same tool call replay denied",
+        "payload principalRef forgery denied"
+      ]
+    },
+    {
+      "stage": "after_reopen",
+      "expected_generation": 2,
+      "positive": [
+        "fresh source selection refs",
+        "fresh native SessionV2 and loaded SkillLoadReceipt",
+        "new binding from original Request and C08 principal",
+        "3 UI/C16 private MCP results and receipts equal"
+      ],
+      "negative": [
+        "old tool context denied",
+        "old admission bind denied",
+        "out-of-grant skill operation denied",
+        "unconsumed BI lease denied",
+        "same call replay and forged payload denied"
+      ]
+    }
+  ],
+  "owner_revoke": {
+    "control": "remove authenticated Dashboard role from persisted dashboard snapshot after positives",
+    "expected": "each of 3 product.ui.admit and private MCP wrapper denied with no native/ui receipt",
+    "note": "this is an explicit authorization negative; baseline snapshot equality was checked before revocation"
+  },
+  "witness_limits": {
+    "provider_turn_observed": false,
+    "agent_inference_witness": false,
+    "AM02Qualified": false,
+    "new_C_proof": "NOT_RUN",
+    "legacy_B16": "FAIL_SCOPED"
+  }
+}

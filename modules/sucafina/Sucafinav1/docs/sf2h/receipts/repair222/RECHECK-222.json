@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h.repair222.recheck.v1",
+  "mission": 222,
+  "source_commit": "6c2002b712ce08a6c1f335458d4175f8420743e9",
+  "performed_without_execution": {
+    "kind": "source_read_and_remote_diff_review",
+    "scope": "exact 2-file GitHub diff and C08/C15/C16/BI contract callchain",
+    "observed": [
+      "source commit contains only allowed test and fixture paths",
+      "UI presentation explicitly calls admit then validate, awaits BI read before finish",
+      "native unconsumed-lease rejection preserved",
+      "out-of-grant negative appears in both generations",
+      "role revoked through persisted role map, not fabricated grants",
+      "no host-context.ts, runtime, observer, operations or manifests edited"
+    ],
+    "limitation": "Source inspection is not a test, typecheck, build, runtime proof or independent reviewer approval"
+  },
+  "independent_review": {
+    "actor": "S3-R3 or distinct authorized reviewer",
+    "status": "NOT_RUN",
+    "after": "211 composition + 214 real new C selected run",
+    "checks": [
+      "inspect C source blob exactness and no forbidden paths",
+      "inspect authenticated Request and SkillLoadReceipt/sourceDigest/session chain",
+      "cross-check UI/C16 private MCP receipt fields vs actual callID and business outputs",
+      "confirm denial unconsumed lease, old binding, missing receipt, out-of-grant and revoked owner after reopen",
+      "verify generation object/identity and no fabricated provider turn",
+      "qualify AM02 only under canonical full proof requirements, including 39 paths from 196 separately"
+    ]
+  },
+  "observed_new_C": null,
+  "VALIDATION": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}
