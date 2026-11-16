@@ -35,6 +35,12 @@ describe("Planner route admission", () => {
     }
     expect(resolveSfUrlSelection("/orchestra/sf-planner/versions?project=project-b", "/orchestra/sf-home", selection).status).toBe("invalid-link")
   })
+  test("accepts valid encoded server URLs and rejects malformed escapes", () => {
+    const query = new URLSearchParams({ server: "http://127.0.0.1:4096", project: "project-a", installation: "install-a" })
+    const destination = "/orchestra/sf-planner/versions?" + query.toString()
+    expect(resolveSfUrlSelection(destination, "/orchestra/sf-home", selection).status).toBe("selected")
+    expect(resolveSfUrlSelection("/orchestra/sf-planner/versions?server=%G0&project=p&installation=i", "/orchestra/sf-home", selection).status).toBe("invalid-link")
+  })
   test("reads require the matching destination and operational producer", () => {
     expect(plannerRouteAvailable(context(true, true), versions)).toBe(true)
     expect(plannerRouteAvailable(context(false, true), versions)).toBe(false)
