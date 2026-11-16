@@ -1,0 +1,444 @@
+{
+  "schema": "sf2h.closure211.finite-open-gaps.v1",
+  "mission": 211,
+  "epoch": "closure-composer-e1-browser211",
+  "source_candidate_W": "c5703ca53399a4ead279cdf4df3c1261eef1dd8e",
+  "source_tree": "20ee35f1ca2033647238dc827981de44088bb2f6",
+  "review_sources": {
+    "functional207": "8b91f7617ba6ce1c456ea7912efd2deeee5b19f7",
+    "integrity208": "8dd0f76923e9f6e7ba8e43ad4bb9ffe5304d1401",
+    "runtime209": "review209/FINDINGS.json",
+    "archive210": "14986fe8ead6e778e712fbad056d05d92498d1ea"
+  },
+  "counts": {
+    "finite_gaps": 18,
+    "code_unimplemented": 3
+  },
+  "rule": "This finite list is an OPEN WORK ledger, not a list of accepted exceptions. Code defects remain CODE_GAP despite mock tests or absent identity. Authentic external identity blocks only its dependent proof. Nothing here qualifies original criterion PASS or permits merging sf2-stack.",
+  "items": [
+    {
+      "id": "C-001",
+      "kind": "CODE_GAP",
+      "source": [
+        "S1-R1-207-002",
+        "S1-R1-207-005",
+        "WP06.T04"
+      ],
+      "subjects": [
+        "UI55",
+        "UI56",
+        "UI57",
+        "UI68",
+        "CAP27",
+        "U14",
+        "U23"
+      ],
+      "files": [
+        "packages/schema/src/sucafina/files.ts",
+        "packages/client/src/sucafina/files.ts",
+        "packages/client/package.json",
+        "apps/cli/src/sucafina-product/native-ui/files.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+        "packages/client/src/sucafina/transport.ts"
+      ],
+      "fact": "Frozen SfOperationRegistry lists files.import-* and files.export.*, UI68 imports missing typed Schema/Client files module and UI CAP27 disables CSV; F02 explicitly rejects responseMode bytes until bounded original download-handle/chunk consumer. No typed authorized file admission/client route exists in this W.",
+      "next": "Implement closed typed F02 files operation input/output, true original import multipart admission and bounded byte download over authorized installed transport; connect existing source export/import adapters and both UI consumers, add negative/real recheck; no arbitrary fetch, URL grant or synthetic CSV.",
+      "minimum_input": "Source-backed files operation codecs & authenticated downloadable byte-handle contract with original installed authority; must be implemented in W, not a proof waiver",
+      "owner": "211 product composition with 190 compiler and 214 CI",
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "C-002",
+      "kind": "CODE_GAP",
+      "source": [
+        "S1-R1-207-001"
+      ],
+      "subjects": [
+        "UI62",
+        "U26",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "files": [
+        "packages/app-shell/src/orchestra/chapters/sucafina"
+      ],
+      "fact": "Approved Similar Cases source/typed producer and consumer absent; UI permanently unavailable, cannot synthesize related cases.",
+      "next": "Obtain approved related-case original producer and source-scoped typed contract; implement UI consumer and denial/unknown/revoke cases.",
+      "minimum_input": "Exact source producer + admitted related-case selector/case reference/version contract",
+      "owner": "211/S0 source contract",
+      "status": "BLOCKED_CONTRACT"
+    },
+    {
+      "id": "C-003",
+      "kind": "CODE_GAP",
+      "source": [
+        "S1-R1-207-003",
+        "WP02.T02"
+      ],
+      "subjects": [
+        "CAP08",
+        "U47"
+      ],
+      "files": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+        "packages/schema/src/sucafina/people.ts"
+      ],
+      "fact": "CAP08 import/export route and buttons remain disabled; legacy mutation catalog does not provide safe full file download/import bytes and receipt semantics.",
+      "next": "Implement true original People import/versioned preview and export artifact producer, strict authorized typed file/download consumer; never fake bytes or principal.",
+      "minimum_input": "Approved authenticated file admission and source artifact/receipt contract for talent, including typed original bytes",
+      "owner": "211 with F02/People source",
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "C-004",
+      "kind": "CODE_GAP",
+      "source": [
+        "PRE-R01-146-005"
+      ],
+      "subjects": [
+        "UI29",
+        "U01",
+        "UI34"
+      ],
+      "files": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts"
+      ],
+      "fact": "Today renders valid source items but canResume remains false without actual SfTodayResumePort.resumeCase in context; no authorized focusable UI34 transition for genuine case ref+version.",
+      "next": "Implement original owner-bound F01 UI34 admission and return/focus port wired into existing context, with stale/denial/removed revocation and keyboard regressions.",
+      "minimum_input": "Authorized case route target/ref and true F01 owner-bound returnRef builder/transition, no route guessed from title",
+      "owner": "211 F01 live context",
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "C-005",
+      "kind": "CODE_GAP",
+      "source": [
+        "PRE-R01-146-006"
+      ],
+      "subjects": [
+        "UI30",
+        "UI41",
+        "D01"
+      ],
+      "files": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+        "apps/desktop/src/main/sucafina/bootstrap.ts"
+      ],
+      "fact": "D01 package/bootstrap code received, but work-item native desktop source link still needs original internal broker navigation verification.",
+      "next": "Implement only admitted same-owner desktop navigation; prove packaged Electron original broker/return/invalid-link with D01.",
+      "minimum_input": "Real installed original Desktop owner and F01 native route; no arbitrary web URL",
+      "owner": "211/213 + installed host 199",
+      "status": "SOURCE_RECHECK_REQUIRED"
+    },
+    {
+      "id": "C-006",
+      "kind": "CODE_GAP",
+      "source": [
+        "PRE-R01-146-003"
+      ],
+      "subjects": [
+        "UI31",
+        "U42"
+      ],
+      "files": [
+        "packages/client/src/sucafina/transport.ts",
+        "apps/cli/src/sucafina-product/native-ui/operations/projection.ts"
+      ],
+      "fact": "Native search registry/source declared private POST read; semantic source admissions, no URL query and original SDK parity need actual recheck.",
+      "next": "Recheck exact request body/metadata/bounds/privacy/denial in hosted F02 and browser, after new C.",
+      "minimum_input": "Original authorized source search provider and genuine private text source for negative privacy witness",
+      "owner": "211/214/190",
+      "status": "CODE_PRESENT_NOT_QUALIFIED"
+    },
+    {
+      "id": "C-007",
+      "kind": "CODE_PROOF_GAP",
+      "source": [
+        "S1-R1-207-004",
+        "PRE-R01-146-004"
+      ],
+      "subjects": [
+        "CAP06",
+        "CAP07",
+        "CAP24",
+        "CAP25",
+        "U03",
+        "U10"
+      ],
+      "files": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx"
+      ],
+      "fact": "211 restored original owner-scoped route candidates and conditional actions; native F01 transition reauthorization, keyboard, denial and generation still unvalidated.",
+      "next": "190 compile new helper and 214 run owner/capability negative+positive original browser with genuine installed context.",
+      "minimum_input": "190 hosted compiler + 214 hosted same-W tests; installed authorized F01 context for positive",
+      "owner": "190/214",
+      "status": "CODE_COMPOSED_NOT_RUN"
+    },
+    {
+      "id": "C-008",
+      "kind": "CODE_PROOF_GAP",
+      "source": [
+        "PRE-R01-146-002"
+      ],
+      "subjects": [
+        "UI47",
+        "U25",
+        "A07"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "fact": "211 connected native projection.review to original A07 Review handler; missing Review source fails explicitly 503.",
+      "next": "190 hosted types and 214 A07 original authentication/denial/stale tests, reviewer recheck.",
+      "minimum_input": "Real scoped Review application/persistence installed, authorized principal and original projection record",
+      "owner": "190/214/207",
+      "status": "CODE_COMPOSED_NOT_RUN"
+    },
+    {
+      "id": "C-009",
+      "kind": "EXTERNAL_PROOF_DEPENDENCY",
+      "source": [
+        "199",
+        "213",
+        "D01",
+        "F04"
+      ],
+      "subjects": [
+        "D01",
+        "F04",
+        "U15",
+        "U39",
+        "U40"
+      ],
+      "files": [
+        "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+        "apps/desktop/test/sucafina-bootstrap213/d01-packaged-driver.ts"
+      ],
+      "fact": "Code/drivers/packager composed, but no real authenticated Microsoft context, installed source actors or attested packaged Electron observed.",
+      "next": "Attach authentic private installed fixture and per-capability principals, exact candidate SHA, Electron package build/hash and original broker; 214 runs proofs against same C.",
+      "minimum_input": "Private 0600 SF_NATIVE_INSTALLED_MANIFEST with original installation actors and real Microsoft principals/grants, SF_NATIVE_CANDIDATE_SHA equal pinned C, true packaged Electron artifact SHA, private SF_NATIVE_D01_PACKAGED_ATTESTATION",
+      "owner": "199/213 provide host + 214 proof",
+      "status": "BLOCKED_EXTERNAL_PROOF"
+    },
+    {
+      "id": "C-010",
+      "kind": "EXTERNAL_PROOF_DEPENDENCY",
+      "source": [
+        "R3-NATIVE-01",
+        "R3-MCP-02"
+      ],
+      "subjects": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06",
+        "39-operation parity"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs"
+      ],
+      "fact": "Native AM01–AM06 source and negatives composed but full five profiles/18 skills/39 operation real witness and revoke has no hosted same-C completion.",
+      "next": "Run exact authenticated native profiles/skills/operation parity/rollback/denial, verify original first-party receipts and revocation, never mock success.",
+      "minimum_input": "Admitted real 5-profile/18-skill/39-operation source and host session with original 39-operation SDK receipts",
+      "owner": "199/214 with 207-209 cold reviews",
+      "status": "PROOF_NOT_RUN"
+    },
+    {
+      "id": "C-011",
+      "kind": "CODE_OR_EXTERNAL_PROOF_GAP",
+      "source": [
+        "R3-TASK-03"
+      ],
+      "subjects": [
+        "C07",
+        "Task",
+        "Relay"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/product"
+      ],
+      "fact": "First-party original Task execution and Relay external outcome/receipt linkage not fully proven.",
+      "next": "Finish source-backed original Task/Relay adapter and terminal outcome/receipt parity, negative revocation and retry.",
+      "minimum_input": "Actual first-party Task and Relay original endpoints+accepted contracts and receipts from installed host",
+      "owner": "211 native product + 199/214",
+      "status": "NOT_QUALIFIED"
+    },
+    {
+      "id": "C-012",
+      "kind": "EXTERNAL_PROOF_DEPENDENCY",
+      "source": [
+        "R3-ATLAS-04",
+        "R3-SCANNER-05"
+      ],
+      "subjects": [
+        "AM05",
+        "AM06",
+        "Atlas",
+        "Scanner"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05"
+      ],
+      "fact": "211 enforced sequence monotonicity; authorized durable reopens, real scanners and persistence across original restart still lack tested receipts.",
+      "next": "Hosted authentic same-C Atlas durable restart readback, scanner source inventory and revocation, 190 schema/types, 214 negative cases.",
+      "minimum_input": "Original Atlas configured scanner and durable storage + admitted principal and restart proof harness",
+      "owner": "190/214/208/209",
+      "status": "CODE_COMPOSED_PROOF_NOT_RUN"
+    },
+    {
+      "id": "C-013",
+      "kind": "EXTERNAL_PROOF_DEPENDENCY",
+      "source": [
+        "R3-EXPORT-06"
+      ],
+      "subjects": [
+        "UI55",
+        "UI57",
+        "UI68",
+        "CAP08",
+        "CAP27"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure"
+      ],
+      "fact": "Document bytes/import/export source privacy and complete download/open/reopen remain unqualified in original UI/host; missing files typed client compounds gap C-001.",
+      "next": "Implement source-backed typed binary F02, perform authorized download/reopen and verify digest and owner wipe across auth revocation.",
+      "minimum_input": "Real source export artifact bytes and signed/authenticated original receipt + transport/download handle",
+      "owner": "211/F02 then 214",
+      "status": "NOT_QUALIFIED"
+    },
+    {
+      "id": "C-014",
+      "kind": "SDK_COMPILER_GATE",
+      "source": [
+        "190",
+        "CLIENT-CODEGEN"
+      ],
+      "subjects": [
+        "F02",
+        "SDK"
+      ],
+      "files": [
+        "packages/client/src/generated-effect/client.ts",
+        "packages/client/src/generated/client.ts",
+        "packages/client/src/generated/types.ts"
+      ],
+      "fact": "190 generated historic real SDK patch (artifact 14182790522 at W690a...), but 3 declared postimage blobs were never published to Git (404), not consumed; current W input parity and actual SDK consumer parity need hosted proof.",
+      "next": "190 check current public schema/protocol/ClientApi/codegen preimages, run existing official hosted SDK generate if changed; make three generated blobs accessible, never manually recreate generated code, return exact post blobs/patch/CI provenance to 211/189.",
+      "minimum_input": "Actual Git-accessible generated postimages + 190 hosted generator artifact verified against same candidate input SHA; no hand editing",
+      "owner": "190",
+      "status": "NOT_CONSUMED"
+    },
+    {
+      "id": "C-015",
+      "kind": "COMPILER_CI_GATE",
+      "source": [
+        "190",
+        "214",
+        "R3-CI-07"
+      ],
+      "subjects": [
+        "C",
+        "G4",
+        "G7",
+        "e2e"
+      ],
+      "files": [
+        "packages/schema",
+        "packages/client",
+        "modules/sucafina",
+        "apps/cli",
+        "apps/desktop",
+        "packages/app-shell"
+      ],
+      "fact": "Old W77e compiler failed 6/9; newer producer corrections and 211 composition never hosted typechecked/build/tested on same final C, original eight minimum CI suites not run on current W.",
+      "next": "190 run exact compiler/generation/AST/guard requests and 214 sole-dispatcher eight full existing recipes plus causal targets on identical accepted C; repair any actual failures by new code + new C.",
+      "minimum_input": "One accepted full code C SHA/tree, 190 and 214 genuine Actions runs/jobs/artifacts/coverage and all 8 required suites; no empty or stale PASS",
+      "owner": "190/214/189",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "C-016",
+      "kind": "GUARD_EVIDENCE_GATE",
+      "source": [
+        "210",
+        "208",
+        "R3-CI-07"
+      ],
+      "subjects": [
+        "G7",
+        "G8",
+        "archive55",
+        "guards66"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210"
+      ],
+      "fact": "210 confirmed 55 historical source logs readable and 69 potential consumers; no files deleted; 1 reports36 old-vs-live preimage discrepancy, 55 gates and 66 historical failures not cleared. C/G7 and D/G8 guards independent and not run.",
+      "next": "189 reconcile 210 inert reader on actual W, perform repository-wide dynamic consumer equivalence before deletion; 208 cold review; 190 executes guards separately C and D with real SHA, no waiver.",
+      "minimum_input": "Exact historical reports36 consumer preimage, read-equivalence and live guard outputs pinned C/G7 and D/G8",
+      "owner": "189/190/208/210",
+      "status": "GUARDS_NOT_RUN"
+    },
+    {
+      "id": "C-017",
+      "kind": "UX_COVERAGE_PROOF_GATE",
+      "source": [
+        "195",
+        "194",
+        "206",
+        "207"
+      ],
+      "subjects": [
+        "U15",
+        "U39",
+        "U40",
+        "Q01",
+        "approved_70_surfaces_165_routes"
+      ],
+      "files": [
+        "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts"
+      ],
+      "fact": "194 U15 exact blob present, 206 latest six U39/U40 specs present replacing 195 (no rollback); approved exact 70/165 route manifest restored but all native browser criteria remain unqualified.",
+      "next": "214 productized installed Original F04/Playwright per exact permissions and 320/768/1024/1280/1440 plus accessibility and negative actor; 207 independent recheck.",
+      "minimum_input": "Admitted real source permissions/records/identities plus hosted same-C browser screenshots/semantics and run IDs",
+      "owner": "214/207/199",
+      "status": "SOURCE_PRESENT_NOT_RUN"
+    },
+    {
+      "id": "C-018",
+      "kind": "S0_ACCEPTANCE_AND_D_GATE",
+      "source": [
+        "R3-CANDIDATE-08"
+      ],
+      "subjects": [
+        "C_acceptance",
+        "D_provenance",
+        "G7D",
+        "G8",
+        "final3_reviews",
+        "GLOBAL_RELEASE"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure211"
+      ],
+      "fact": "211 composes draft C, does not own 189 sf2-stack acceptance; no independent D, no post-C reviews 207/208/209, no separately qualified G7D/G8.",
+      "next": "189 reconcile/accept C only after real product + validations, create strictly append-only D/evidence with provenance, 190 guard D separate, 207-209 independent cold reviews against same C, release only under original S0.",
+      "minimum_input": "189 CAS acceptance and actual qualified same-C external+CI receipts; D manifest/guard run+three independent reviews and explicit authorized release",
+      "owner": "189 S0, 190 compiler guard, 214 product CI, 207-209 reviewers",
+      "status": "HOLD_GLOBAL_RELEASE"
+    }
+  ],
+  "GLOBAL_RELEASE": false,
+  "C_accepted": false
+}

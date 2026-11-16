@@ -1,0 +1,306 @@
+{
+  "schema": "sf2h.closure211.product-ci214.request.v1",
+  "mission": 211,
+  "recipient": "214 sole product dispatcher (successor of 200/191)",
+  "mission_214_epoch": "product-ci-e7-browser214",
+  "branch": "sf-closure-bundle",
+  "pr": 191,
+  "source_candidate_W": "c5703ca53399a4ead279cdf4df3c1261eef1dd8e",
+  "source_candidate_tree": "20ee35f1ca2033647238dc827981de44088bb2f6",
+  "scope": "Same C for all 8 mandatory minimum recipes; selectors below are additive causal runs only, not replacement for full recipe suites.",
+  "run_policy": "REQUEST_ONLY_NOT_DISPATCHED_BY_211",
+  "full_8_recipes": [
+    {
+      "id": "CI-SF",
+      "scope": "Suite completa do módulo Sucafina, inclusive casos novos",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "cwd": "modules/sucafina",
+      "required": true,
+      "planned_files": null,
+      "qualification": "NOT_RUN_ON_C"
+    },
+    {
+      "id": "CI-CLI",
+      "scope": "Suite completa do pacote CLI cujo composition root foi alterado",
+      "request": {
+        "package": "cli",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "cwd": "apps/cli",
+      "required": true,
+      "planned_files": null,
+      "qualification": "NOT_RUN_ON_C"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "scope": "Suíte Bun do app na árvore src, com condição solid; args vazios respeitam bunfig test.root=./src.",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "cwd": "packages/app-shell",
+      "required": true,
+      "planned_files": null,
+      "qualification": "NOT_RUN_ON_C"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "scope": "Suíte Bun da árvore test-browser do app; workflow usa condição browser, happydom e controleomni.",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ],
+        "env": {}
+      },
+      "cwd": "packages/app-shell",
+      "required": true,
+      "planned_files": null,
+      "qualification": "NOT_RUN_ON_C"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "scope": "Suíte completa da boundary alterada, incluindo import/export das duas portas, preservação dos exports bound e negativos de AST no teste business-memory-ports; geração/AST/check:spawn-imports/typecheck são gates estáticos explícitos adicionais.",
+      "request": {
+        "package": "atlas-boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ],
+        "env": {}
+      },
+      "cwd": "modules/atlas/boundary",
+      "required": true,
+      "planned_files": [
+        "modules/atlas/boundary/test/business-memory-ports.test.ts"
+      ],
+      "qualification": "NOT_RUN_ON_C"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "scope": "UI real das 28 capacidades, edição, import e colaboração",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {}
+      },
+      "cwd": "packages/app-shell",
+      "required": true,
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/operations.spec.ts"
+      ],
+      "qualification": "NOT_RUN_ON_C"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "scope": "Caso, portfólio, memória e estados as síncronos pela UI real",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ],
+        "env": {}
+      },
+      "cwd": "packages/app-shell",
+      "required": true,
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts"
+      ],
+      "qualification": "NOT_RUN_ON_C"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "scope": "Reunião, documentos e exportações com conteúdo completo",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ],
+        "env": {}
+      },
+      "cwd": "packages/app-shell",
+      "required": true,
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/reports.spec.ts"
+      ],
+      "qualification": "NOT_RUN_ON_C"
+    }
+  ],
+  "surgical_playwright": [
+    {
+      "selector": "native-ux-U15-U39-U40",
+      "package": "app",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/native/journeys/u15.spec.ts",
+        "e2e/sucafina/native/journeys/u39.spec.ts",
+        "e2e/sucafina/native/journeys/u40.spec.ts"
+      ],
+      "requires_real_installed_f04": true
+    },
+    {
+      "selector": "native-D01-packaged",
+      "package": "app",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts"
+      ],
+      "requires_real_installed_f04": true
+    },
+    {
+      "selector": "native-AM02-browser",
+      "package": "app",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/native/integrated-proofs/am02/performance-knowledge-consumers.spec.ts"
+      ],
+      "requires_real_installed_f04": true
+    }
+  ],
+  "surgical_bun": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/",
+      "kind": "test-directory",
+      "observed_blob": null,
+      "observed_count": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/",
+      "kind": "test-directory",
+      "observed_blob": null,
+      "observed_count": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/",
+      "kind": "test-directory",
+      "observed_blob": null,
+      "observed_count": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/",
+      "kind": "test-directory",
+      "observed_blob": null,
+      "observed_count": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/",
+      "kind": "test-directory",
+      "observed_blob": null,
+      "observed_count": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/",
+      "kind": "test-directory",
+      "observed_blob": null,
+      "observed_count": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/semantics.test.ts",
+      "kind": "test-file",
+      "observed_blob": "4b9c23ac245dd85fcf64820c3fbd8c6c2e9022ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "kind": "test-file",
+      "observed_blob": "88b771c19f211850d3a3d36a7402f35d0ce510e1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts",
+      "kind": "test-file",
+      "observed_blob": "9f2edb98f220c741e9b5cbb9c80b7ebf916867cc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "kind": "test-file",
+      "observed_blob": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+      "kind": "test-file",
+      "observed_blob": "1ccd3e4b2181e927321d95d5ab4afe6788aa6a99"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts",
+      "kind": "test-file",
+      "observed_blob": "09d294a0ff7131f625420aa1a94c560891f880bf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "kind": "test-file",
+      "observed_blob": "1d0e5816d15865b2df8459c6535980b65d27f20c"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+      "kind": "test-file",
+      "observed_blob": "6214f06108cf45abcf987454fb9707d2fdb1588c"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "kind": "test-file",
+      "observed_blob": "313372865426a047cc500d1dba891a75cb8fa047"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+      "kind": "test-file",
+      "observed_blob": "238d8329bc5677cdc98b9fa238426783bf4add65"
+    },
+    {
+      "path": "apps/desktop/test/sucafina-bootstrap213/enrollment-bridge.test.ts",
+      "kind": "test-file",
+      "observed_blob": "b33bbab29041342727df5d9f9e9b33f45d77870c"
+    },
+    {
+      "path": "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts",
+      "kind": "test-file",
+      "observed_blob": "fef5c0a8702ffde3921a7cd65829cfba9259716d"
+    }
+  ],
+  "real_blockers_ref": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure211/FINITE-GAPS.json",
+  "dependencies": {
+    "installed": "199 terminal F04 and 213 packaged D01: real manifest original Microsoft actors for positive; run independent proof-free unit selection without waiting",
+    "version": "Require exact W/tree and original branch; never transfer an earlier W verdict to new C",
+    "request_validation": "Use original test-ci-request.ts validateRequest + location resolver on actual candidate S; do not claim this JSON itself is an executed .ci-run.json"
+  },
+  "negative_oracles": [
+    "No mock/auth bypass",
+    "No skip treated green",
+    "No relaxation of historical assertions",
+    "Original source revocation and owner mismatch",
+    "AM01 genuine hypothetical noncommitting command",
+    "Atlas ordinal and unit tamper negs",
+    "D01 installed broker and Electron original",
+    "U15 lost response CAS/denial",
+    "U39/U40 zero vs absence, roles and responsiveness",
+    "A07 original Review producer",
+    "F02 search private q body only and transport MIME"
+  ],
+  "current_ci": {
+    "all_new_runs": "NOT_RUN",
+    "prior_runs": "HISTORIC_FAILURE_NOT_RECHECKED",
+    "tests_locally": "NOT_RUN"
+  },
+  "next": "214 performs authorised hosted dispatch only after exact C acceptance readiness/independent source fixes; publishes real run/job/artifact and per-selector verdict; request C changes require repin.",
+  "GLOBAL_RELEASE": false
+}
