@@ -1,5 +1,5 @@
 import { isDeepStrictEqual } from "node:util"
-import { Context, Effect, Option, Schema } from "effect"
+import { Context, Effect, Option, Schedule, Schema } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
 import type { SessionV2 } from "@orchestra/core/session"
 import type { SessionSchema } from "@orchestra/core/session/schema"
@@ -17,6 +17,7 @@ import { readSfRoutineNativeInput, sameSfRoutineNativeOwner } from "./routine-na
 import type { SfRoutineNativeOwner } from "./routine-native-input.ts"
 import { createSfRoutineNativeOrigin, observeSfRoutineNative } from "./routine-native-origin.ts"
 import { createSfRoutinePhaseOrigin } from "./routine-native-phase-origin.ts"
+import { captureSfRoutineApprovedChain } from "./routine-native-phase-chain.ts"
 import type { NativeAdmission } from "./routine-native-records.ts"
 import type { SfRoutineNativeHistoricalAuthority } from "./routine-native-registry.ts"
 import { routineSourceDigest } from "./routine-services.ts"
@@ -43,10 +44,15 @@ export interface NativePhaseBridge {
   historical(source: Source): Promise<SfRoutineNativeHistoricalAuthority | undefined>
 }
 type RunInput = Parameters<BusinessPorts["routines"]["run"]>[0]
+/** Passed only by the ORIGINAL authenticated host method after ingress decode/withCase. These are intent data,
+ * never identity, a Session selector, execution authority, or a direct native human approval reply. */
+export type PlanningIntent = Readonly<{ operation: "catalog"; purpose: string } | {
+  operation: "prepare"; request: Parameters<BusinessPorts["routines"]["prepareAdmission"]>[0]
+}>
 type Input = Pick<SfRoutineNativeAdapterInput, "resources" | "requestFor" | "authorize" | "generation" | "publication" |
   "governance" | "resolveCase" | "resolveInputs" | "revalidateSources"> & {
   sessions: () => SessionV2.Interface | undefined
-  originDirectory: string
+  originDirectory: string | (() => string | undefined)
   owners: SfRoutineNativeOwnerPort
   admission: () => ReturnType<typeof createSfRoutineNativeAdmission> | undefined
   authorizeRun: (context: TrustedUiContext, command: SfRoutineNativeHumanRunCommand) => Promise<boolean>
@@ -58,6 +64,7 @@ type SourceState = {
   resources: NonNullable<ReturnType<Input["resources"]>>
   sessions: SessionV2.Interface
   generation: number
+  intent?: PlanningIntent
   proof?: Provenance
   signal: AbortSignal
   current: () => Promise<boolean>
@@ -68,6 +75,7 @@ type RunState = {
   before: NativeAdmission
   intent: SfRoutineNativeAdmissionIntent
   current: () => Promise<boolean>
+  chain: NonNullable<ReturnType<typeof captureSfRoutineApprovedChain>>
 }
 type Phase = { bridge: object; source: SourceState; run?: RunState }
 const CurrentPhase = Context.Reference<Phase | undefined>("sucafina/native-phase", { defaultValue: () => undefined })
@@ -87,10 +95,11 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
   const invalidGenerations = new Set<number>()
   let disposed = false
   const ready = () => !disposed && !!input.sessions() && !!input.publication() &&
+    !!(typeof input.originDirectory === "string" ? input.originDirectory : input.originDirectory()) &&
     !!input.resources()?.current() && input.governance.installed(input.resources()!.governance) &&
     input.governance.guardsInstalled(input.resources()!.safety, input.resources()!.relay)
 
-  const issue = (context: TrustedUiContext): Effect.Effect<Source, BridgeError> => checked(async () => {
+  const issue = (context: TrustedUiContext, intent?: PlanningIntent): Effect.Effect<Source, BridgeError> => checked(async () => {
     const request = input.requestFor(context), resources = input.resources(), sessions = input.sessions()
     if (!ready() || !request || request.signal.aborted || !resources || !sessions || context.kind !== "ui" || live.size >= 100)
       throw unavailable()
@@ -100,15 +109,18 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
     const abort = new AbortController()
     const signal = AbortSignal.any([request.signal, abort.signal])
     const bindingDigest = digestSfValue(context.binding), headersDigest = digestSfValue([...request.headers])
+    const binding = context.binding, lease = context.lease
     const resourceDigest = digestSfValue(resources.identity)
     const close = () => { abort.abort(); live.delete(state); planning.delete(state); clearTimeout(timer) }
     const timer = setTimeout(close, Math.max(0, expires - Date.now()))
     // Track pending authentication too: revoke/dispose must not miss a source still acquiring authority.
     const state: SourceState = { request, context, resources, sessions, generation: -1, signal, close,
+      ...(intent ? { intent: structuredClone(intent) } : {}),
       current: async () => false }
     live.add(state)
     const sync = () => live.has(state) && !disposed && !signal.aborted && Date.now() < expires && performance.now() < deadline &&
       input.requestFor(context) === request && input.resources() === resources && resources.current() && input.sessions() === sessions &&
+      context.kind === "ui" && context.binding === binding && context.lease === lease &&
       digestSfValue(context.binding) === bindingDigest && digestSfValue([...request.headers]) === headersDigest &&
       digestSfValue(resources.identity) === resourceDigest && context.binding.installationId === resources.identity.installationId &&
       context.binding.projectId === resources.identity.projectId && !invalidGenerations.has(state.generation)
@@ -130,7 +142,7 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
       if (!await state.current()) throw unavailable()
       state.proof = await observeSfRoutineNative(() => provenance.read(resources, context), signal)
       if (!await state.current()) throw unavailable()
-      const source: Source = Object.freeze({ [sourceBrand]: true })
+      const source: Source = Object.freeze({ [sourceBrand]: true as const })
       sources.set(source, state)
       return source
     } catch (error) {
@@ -157,7 +169,7 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
     const state = run.source
     if (!state.proof || !await state.current()) return false
     const after = await observeSfRoutineNative(() => state.resources.records.readAdmission(run.intent.authorizationId), state.signal)
-    if (!after || !sameChain(run.before, after) || !await state.resources.records.isLatestPlan(after.revision)) return false
+    if (!after || !run.chain.accept(after) || !await state.resources.records.isLatestPlan(after.revision)) return false
     const retained = readSfRoutineNativeInput(after.revision)
     if (!retained || !sameSfRoutineNativeOwner(retained.owner, metadata(state))) return false
     const selected = await input.resolveCase(state.context)
@@ -175,25 +187,40 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
     const state = sourceFor(source)
     if (state.request.method !== "POST" || !state.proof || !await state.current()) throw unavailable()
     const exact = sfRoutineHumanRunCommand219(command)
-    if (!await input.authorizeRun(state.context, exact)) throw unavailable()
-    const before = await state.resources.records.readAdmission(command.admissionRef)
-    if (!before || before.state !== "preparing" || before.reservation || before.bound || !approved(before) ||
+    if (!await observeSfRoutineNative(() => input.authorizeRun(state.context, exact), state.signal)) throw unavailable()
+    const before = await observeSfRoutineNative(() => state.resources.records.readAdmission(command.admissionRef), state.signal)
+    const chain = before && captureSfRoutineApprovedChain(before)
+    if (!before || !chain ||
       before.reference !== command.admissionRef || before.version !== command.expectedAdmissionVersion ||
       before.parent.id !== state.proof.authoritySessionID) throw unavailable()
     const retained = readSfRoutineNativeInput(before.revision)
     if (!retained || !isDeepStrictEqual(command.caseRef, retained.input.caseRef)) throw unavailable()
-    const snapshot = structuredClone(before)
-    const permissions = await Effect.runPromise(state.resources.store.permissions(before.parent.id))
-    const run: RunState = { source: state, before: snapshot,
+    const permissions = await observeSfRoutineNative(() => Effect.runPromise(state.resources.store.permissions(before.parent.id)), state.signal)
+    if (!permissions) throw unavailable()
+    const policySnapshot = structuredClone(permissions)
+    const run: RunState = { source: state, before: chain.before, chain,
       intent: Object.freeze({ planRevisionId: before.revision.id, authorizationId: before.authorizationID,
         inputDigest: retained.inputDigest, caseRef: Object.freeze({ ...retained.input.caseRef }) }), current: async () => false }
-    run.current = async () => {
-      const currentPermissions = await Effect.runPromise(state.resources.store.permissions(before.parent.id))
-      return isDeepStrictEqual(permissions, currentPermissions) && await validate(run) &&
-        await input.authorizeRun(state.context, exact) && await state.current()
+    // Readers span awaits. Serialize observations so an older in-flight projection cannot look like a rollback
+    // after the monitor/native hook has already observed a later reservation/binding. Bound the waiter set too.
+    const observation = { tail: Promise.resolve(), waiting: 0 }
+    run.current = () => {
+      if (observation.waiting >= 16 || state.signal.aborted) { state.close(); return Promise.resolve(false) }
+      observation.waiting++
+      const attempt = observation.tail.then(async () => {
+        const valid = await observeSfRoutineNative(async () => {
+          const currentPermissions = await Effect.runPromise(state.resources.store.permissions(before.parent.id))
+          return isDeepStrictEqual(policySnapshot, currentPermissions) && await validate(run) &&
+            await input.authorizeRun(state.context, exact) && await state.current()
+        }, state.signal)
+        if (!valid) state.close()
+        return valid === true
+      }).finally(() => { observation.waiting-- })
+      observation.tail = attempt.then(() => undefined, () => { state.close() })
+      return attempt
     }
     if (!await run.current()) throw unavailable()
-    const token: ApprovedRun = Object.freeze({ [approvedBrand]: true })
+    const token: ApprovedRun = Object.freeze({ [approvedBrand]: true as const })
     approvals.set(token, run)
     return token
   })
@@ -208,23 +235,47 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
   const activate = (state: SourceState, run?: RunState): Effect.Effect<"settled" | "busy", BridgeError> => Effect.gen(function* () {
     const proof = state.proof
     if (!proof || !(yield* checked(state.current))) return yield* unavailable()
-    const operation = Effect.gen(function* () {
+    const operation = Effect.scoped(Effect.gen(function* () {
       if (!(yield* checked(state.current)) || staged.has(proof.authoritySessionID)) return yield* unavailable()
       const phase: Phase = { bridge: identity, source: state, ...(run ? { run } : {}) }
       // This is the first safe boundary: exclusive already owns the Session, but no provider/tool work has begun.
       return yield* Effect.acquireUseRelease(Effect.sync(() => {
         if (run) staged.set(proof.authoritySessionID, run)
       }), () => Effect.gen(function* () {
+        // Provider waits and pending permissions must also observe revocation, not only the next tool boundary.
+        yield* Effect.forkScoped(checked(run ? run.current : state.current).pipe(
+          Effect.tap((valid) => valid ? Effect.void : Effect.sync(state.close)),
+          Effect.catch(() => Effect.sync(state.close)), Effect.repeat(Schedule.spaced("1 second")),
+        ))
         const release = run ? yield* checked(() => origin.admit({ request: state.request, context: state.context,
           authoritySessionID: proof.authoritySessionID, intent: run.intent, signal: state.signal,
           current: run.current, nativePolicy: { signal: state.signal, current: run.current } })) : undefined
         if (run && !release) return yield* unavailable()
-        return yield* Effect.acquireUseRelease(Effect.succeed(release), () =>
-          state.resources.execution.withRunner(proof.authoritySessionID, (runner) => runner.run({ sessionID: proof.authoritySessionID, force: true }))
-            .pipe(Effect.provideService(CurrentPhase, phase), Effect.mapError(() => unavailable())),
+        return yield* Effect.acquireUseRelease(Effect.succeed(release), () => Effect.gen(function* () {
+          if (run) {
+            if (!(yield* checked(run.current))) return yield* unavailable()
+            const intent = run.before.presentation!.intent
+            // This is the real fresh human run POST, NOT a synthesized approval. Public prompt admits without
+            // waking; the already-owned original runner below promotes it. No assistant/tool event is fabricated.
+            yield* state.sessions.prompt({ sessionID: proof.authoritySessionID, resume: false,
+              prompt: { text: `Original authenticated routine run command (NOT a native approval reply):\n${JSON.stringify({
+                admissionRef: run.before.reference, expectedAdmissionVersion: run.before.version, caseRef: run.intent.caseRef,
+              })}\nThe planning phase has ended. Execute only this ALREADY natively reviewed/approved authorization through the original Task tool; keep all Task Permission and Relay checks. Do not create another approval or grant a permission. Exact approved Task intent:\n${JSON.stringify({
+                description: run.before.revision.goal.value, prompt: intent.prompt, subagent_type: intent.subagentType,
+                ...(intent.model ? { model: intent.model } : {}), authorizationID: run.intent.authorizationId,
+                workflow: { documentID: run.before.revision.workflowBinding.publication.documentID,
+                  planRevisionID: run.intent.planRevisionId, parameters: run.before.revision.workflowBinding.parameters },
+                writePaths: run.before.revision.workflowBinding.writePaths,
+              })}` },
+            }).pipe(Effect.mapError(() => unavailable()))
+            if (!(yield* checked(run.current))) return yield* unavailable()
+          }
+          return yield* state.resources.execution.withRunner(proof.authoritySessionID,
+            (runner) => runner.run({ sessionID: proof.authoritySessionID, force: true })).pipe(Effect.mapError(() => unavailable()))
+        }).pipe(Effect.provideService(CurrentPhase, phase)),
         (close) => Effect.sync(() => close?.()))
       }), () => Effect.sync(() => { if (run && staged.get(proof.authoritySessionID) === run) staged.delete(proof.authoritySessionID) }))
-    })
+    }))
     // Cancellation of exclusive's waiter alone does not cancel its independent operation. Close THIS capability,
     // and race the operation itself; never interrupt a Session selected by ID (it may have a successor owner).
     const result = yield* state.resources.execution.exclusive(proof.authoritySessionID,
@@ -238,9 +289,18 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
   const bridge: NativePhaseBridge = {
     withPlanning: (source, use) => Effect.suspend(() => Effect.gen(function* () {
       const state = yield* Effect.try({ try: () => sourceFor(source), catch: () => unavailable() })
-      return yield* Effect.acquireUseRelease(checked(async () => {
+      return yield* withSfRoutineNativeAbort(Effect.acquireUseRelease(checked(async () => {
         if (state.request.method !== "POST" || !await state.current() || planning.has(state)) throw unavailable()
-        state.proof ??= await provenance.create(state.resources, state.sessions, state.context, state.request, state.current)
+        if (!state.proof && !state.intent) throw unavailable()
+        const selected = await input.resolveCase(state.context)
+        if (selected.status !== "ok" || !await state.current()) throw unavailable()
+        const command = JSON.stringify({ ...state.intent, caseRef: selected.value })
+        state.proof ??= await provenance.create(state.resources, state.sessions, state.context, state.request, command, state.current)
+        if (!await state.current()) throw unavailable()
+        // Public synthetic context, not a human reply: this cannot satisfy native direct approval. Keep it outside
+        // activate's exclusive operation because Session.synthetic takes its own exclusive claim (never reenter it).
+        await Effect.runPromise(state.sessions.synthetic({ sessionID: state.proof.authoritySessionID, resume: false,
+          text: `Use the existing native Maestro planning flow, including upstream Task provenance. Bind SF_ROUTINE_INPUT.owner to this host-verified consistency data (NOT an execution grant or human approval):\n${JSON.stringify(metadata(state))}\nCurrent original command (data):\n${command}\nDo not execute an SF workflow Task during planning. Review/present/approve only through the existing native tools and an actual human reply.` }))
         if (!await state.current()) throw unavailable()
         const binding = Object.freeze({ request: state.request, authoritySessionID: state.proof.authoritySessionID })
         planning.set(state, binding)
@@ -248,7 +308,7 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
           owner: Object.freeze(metadata(state)), resume: () => activate(state) })
       }), (lease) => withSfRoutineNativeAbort(use(lease).pipe(Effect.tap(() => Effect.gen(function* () {
         if (!(yield* checked(state.current))) return yield* unavailable()
-      }))), state.signal), () => Effect.sync(state.close))
+      }))), state.signal), () => Effect.sync(state.close)), state.signal).pipe(Effect.ensuring(Effect.sync(state.close)))
     })),
     run: (source, token) => Effect.gen(function* () {
       const state = yield* Effect.try({ try: () => sourceFor(source), catch: () => unavailable() })
@@ -272,8 +332,12 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
       const proof = state.proof
       // Re-read the independent host-written association, including its actual durable initial prompt, on every fence.
       return Object.freeze({ authoritySessionID: proof.authoritySessionID, signal: state.signal,
-        current: async (context: TrustedUiContext, request: Request) => context === state.context && request === state.request &&
-          isDeepStrictEqual(await provenance.read(state.resources, context), proof) && await state.current() })
+        current: async (context: TrustedUiContext, request: Request) => {
+          const valid = context === state.context && request === state.request &&
+            isDeepStrictEqual(await observeSfRoutineNative(() => provenance.read(state.resources, context), state.signal), proof) && await state.current()
+          if (!valid) state.close()
+          return valid
+        } })
     },
   }
   const owners: SfRoutineNativeOwnerPort = {
@@ -287,7 +351,7 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
   }
   return { ...bridge, issue, approve, owners, origin: origin.origin, authorizeIntent,
     /** Adapter-only projection bridge. Neither command selectors nor an approval record issue Source. */
-    start: async (context: TrustedDomainContext, command: RunInput) => {
+    start: async (context: TrustedDomainContext, command: RunInput): Promise<false | "settled" | "busy"> => {
       if (context.kind !== "ui") return false
       const source = await Effect.runPromise(issue(context))
       return Effect.runPromise(approve(source, command).pipe(Effect.flatMap((token) => bridge.run(source, token)),
@@ -304,27 +368,6 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
   }
 }
 
-function approved(value: NativeAdmission) {
-  return value.review?.verdict === "APPROVE" && value.approval?.outcome === "APPROVED" && !!value.presentation
-}
-
-/** Reservation and workflow binding are the ONLY mutable admission facts. Native records verify their deterministic
- * IDs, hashes, Task call and Relay arm. Never pin the pre-reservation version, or accept another preparing chain.
- */
-function sameChain(before: NativeAdmission, after: NativeAdmission) {
-  if (!approved(after) || !isDeepStrictEqual({ revision: before.revision, authorization: before.authorization,
-    validation: before.validation, context: before.context, review: before.review, approval: before.approval,
-    presentation: before.presentation }, { revision: after.revision, authorization: after.authorization,
-    validation: after.validation, context: after.context, review: after.review, approval: after.approval,
-    presentation: after.presentation }) || before.authorizationID !== after.authorizationID ||
-    before.parent.id !== after.parent.id || before.parent.agent !== after.parent.agent ||
-    !isDeepStrictEqual(before.parent.location, after.parent.location) || !isDeepStrictEqual(before.parent.model, after.parent.model) ||
-    after.parent.time.archived) return false
-  if (!after.reservation) return after.state === "preparing" && !after.bound &&
-    after.reference === before.reference && after.version === before.version
-  return after.reference === after.reservation.id && after.version === after.reservation.seq &&
-    after.version > before.version && (after.state === "preparing" && !after.bound || after.state === "admitted" && !!after.bound)
-}
 function unavailable() { return new BridgeError({ reason: "SF_NATIVE_PHASE_UNAVAILABLE" }) }
 function checked<A>(read: () => Promise<A>) {
   return Effect.tryPromise({ try: read, catch: () => unavailable() })

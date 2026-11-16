@@ -187,7 +187,13 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
       const admitted = await readRecord("admission", request.admissionRef, context)
       if (admitted.status !== "ok") return admitted
       const before = structuredClone(admitted.value)
-      if (before.result.admission !== "admitted") return { status: "needs-input", reason: "admission-required" }
+       // This marker is projected only from native APPROVE + APPROVED + Authorization.Granted under source-backed
+       // planning authority. A generic preparing result is never executable; the phase bridge rechecks the full chain.
+       const approvedPreparing = before.result.admission === "preparing" &&
+         before.result.pending.length === 1 && before.result.pending[0] === "native-approved-run-required" &&
+         !!before.result.authorizationId && before.result.admissionRef === before.result.authorizationId &&
+         !before.result.runRef && !before.result.armRef && !before.result.childSessionId && !before.result.resultRef
+       if (before.result.admission !== "admitted" && !approvedPreparing) return { status: "needs-input", reason: "admission-required" }
       if (before.result.admissionVersion !== request.expectedAdmissionVersion || digestSfValue(before.input.caseRef) !== digestSfValue(request.caseRef)) return { status: "stale", reason: "routine-admission-changed" }
       if (!await sameNative(native, context)) return denied()
       const started = await native.start({ ...request, inputDigest: before.inputDigest }, context)
@@ -195,10 +201,13 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
       const checked = await validateRecord(started.value, native, context)
       if (checked.status !== "ok") return checked
       const after = checked.value
-      if (after.result.admission !== "admitted" || !after.result.runRef || after.result.admissionRef !== before.result.admissionRef ||
-        after.result.admissionVersion !== before.result.admissionVersion || after.inputDigest !== before.inputDigest ||
+       if (after.result.admission !== "admitted" || !after.result.runRef || !after.result.armRef ||
+         (approvedPreparing ? !after.result.admissionRef || after.result.admissionRef === before.result.admissionRef ||
+           after.result.admissionVersion === undefined || before.result.admissionVersion === undefined ||
+           after.result.admissionVersion <= before.result.admissionVersion : after.result.admissionRef !== before.result.admissionRef ||
+           after.result.admissionVersion !== before.result.admissionVersion) || after.inputDigest !== before.inputDigest ||
         digestSfValue(after.workflow) !== digestSfValue(before.workflow) || after.result.correlationId !== before.result.correlationId ||
-        after.result.authorizationId !== before.result.authorizationId || after.result.armRef !== before.result.armRef ||
+         after.result.authorizationId !== before.result.authorizationId || (!approvedPreparing && after.result.armRef !== before.result.armRef) ||
         digestSfValue(after.result.sourceRefs) !== digestSfValue(before.result.sourceRefs) ||
         (before.result.childSessionId !== undefined && after.result.childSessionId !== before.result.childSessionId) ||
         (before.result.runRef !== undefined && after.result.runRef !== before.result.runRef) ||
@@ -308,4 +317,3 @@ export function routineSourceDigest(sources: readonly SourceRef[]) {
 }
 function unavailable(reason: string) { return { status: "unavailable" as const, reason } }
 function denied() { return { status: "denied" as const, reason: "routine-authority-unavailable" } }
-
