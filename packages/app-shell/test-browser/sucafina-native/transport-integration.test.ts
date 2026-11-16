@@ -1,6 +1,7 @@
 /**
  * Q01.complete / F02 + F04 transport integration.
- * Public I00 metadata is compared to the pinned 305-operation catalog. Actual
+ * Public I00 metadata is compared to the pinned 305-operation catalog and the
+ * explicit source-backed members download extension. Actual
  * requests exercise the installed producer's guest denial without cookies;
  * a real authenticated principal is proved by E2E/F04, NOT faked here.
  */
@@ -11,7 +12,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { Schema } from "effect"
 import { SfOperationIds } from "@orchestra/schema/sucafina/common"
-import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
+import { SfOperationExtensions, SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import type { SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
 import { createSfTransport } from "@orchestra/client/sucafina/transport"
 import { readNativeManifest } from "../../e2e/sucafina/native/fixture/readiness"
@@ -31,10 +32,17 @@ const catalog = JSON.parse(catalogText) as {
 }
 
 describe("Q01 integrated transport contract / original producer", () => {
-  test("Q01-TRANSPORT-REGISTRY exactly matches every frozen catalog operation", () => {
+  test("Q01-TRANSPORT-REGISTRY preserves the frozen catalog and its explicit source extension", () => {
     expect(Object.keys(catalog.operations)).toHaveLength(305)
-    expect(Object.keys(SfOperationRegistry).sort()).toEqual(Object.keys(catalog.operations).sort())
-    expect([...SfOperationIds].sort()).toEqual(Object.keys(catalog.operations).sort())
+    expect(SfOperationExtensions).toEqual({
+      "files.export.members": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
+        responseMode: "bytes", fixedQuery: { download: "members" } },
+    })
+    expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
+    const expected = [...Object.keys(catalog.operations), "files.export.members"].sort()
+    expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
+    expect([...SfOperationIds].sort()).toEqual(expected)
+    expect(SfOperationRegistry["files.export.members"]).toEqual(SfOperationExtensions["files.export.members"])
     for (const [id, source] of Object.entries(catalog.operations)) {
       const actual: SfNativeOperationRoute = SfOperationRegistry[id as keyof typeof SfOperationRegistry]
       expect(actual, "Q01 integrated metadata missing " + id).toBeDefined()

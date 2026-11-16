@@ -272,7 +272,7 @@ export function createSfTransport(options: Readonly<{
       }
 
       const headers: Record<string, string> = {
-        Accept: operation.operationId === "files.export.xlsx"
+        Accept: operation.operationId === "files.export.xlsx" || operation.operationId === "files.export.members"
           ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           : operation.operationId === "files.export.json" ? "application/json"
           : operation.operationId === "files.export.suppliers" || operation.operationId === "files.export.register"
