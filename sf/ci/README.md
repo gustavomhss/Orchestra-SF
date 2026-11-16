@@ -1,0 +1,82 @@
+# Orchestra-SF CI — Linux/Azure product boundary
+
+**State: isolated CI pilot. NO MERGE, NO RELEASE.** The existing Epic and branch
+protection remain unchanged until the replacement has live negative controls
+and the owner explicitly authorizes required-check migration.
+
+## Source of truth and precedence
+
+- Product contract: `dbf9547211d9b0fade619790de7c19c0869b7c7d`,
+  `modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json`.
+- Approved present platform decision: **Azure Linux x86_64 only**.
+- Initial frozen integration snapshot: `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f`.
+- `sf/ci/suites.json`: exactly eight normative CI selections, defined once.
+- `sf/release-target.json`: explicit, initially **BLOCKED**, Azure activation.
+- The full functional scope is unchanged: 15 WPs, 74 tasks, 17 contracts,
+  1,610 criteria, 5 profiles, 18 skills, 8 MCP packs/39 operations and
+  AM01–AM06. This CI is not itself acceptance of those six live proofs.
+
+## Required SF CI
+
+`.github/workflows/sf-ci.yml` intentionally has no path filter and no
+Windows/macOS matrix. An Ubuntu runner prepares native Omni once; the five
+normative Bun suites and three actual SF Playwright journeys execute as a
+bounded, explicit matrix. The only required final result is `sf/verify`,
+which rejects a missing/skipped/cancelled job, missing/extra suite, empty
+results, report/receipt digest mismatch, wrong commit/run/attempt, non-Linux
+runner and failed or skipped tests.
+
+`sf/static-and-contracts` retains Linux host/product typechecks, generated
+client and Atlas boundary, E2E typecheck, actual Web build, spawn boundaries
+and guardrails. We do not report this pilot as green without a run.
+
+The initial pilot intentionally runs **all eight approved selections**, not
+a new untested dependency-based filter. This already removes the 59-job
+canonical-multi-OS topology. Later PR-only path reduction requires a
+separately proven classifier with unknown/shared/lock/config changes falling
+back to full coverage. No hidden missing-test shortcuts.
+
+The source checkout and receipts point to the *actual* tested `github.sha`.
+For a pull request that is normally the merge commit, not its head. A green
+pull-request merge cannot replace a final qualification of frozen product
+candidate `C`. Any product/config/test mutation creates a new candidate.
+
+Receipts are machine-checked; report files stay non-secret. Do not upload
+Playwright traces, cookies or real business data. Each Playwright spec runs
+one worker with zero retries. Failure means RED; a deadline does not turn
+a proof into NOT_APPLICABLE.
+
+## Out of scope (never required for this SF product)
+
+Windows and macOS jobs/installers, desktop/Electron delivery, Windows/MUSL
+distribution guests, Nix packages for other delivery models, platform
+ABI release matrices and complete canonical Core sharding unrelated to
+the Linux installed SF product. Do not delete shared source code on
+platform-name matching. Linux-native Omni, process isolation, Atlas,
+scanner and host permissions remain required where consumed by SF.
+
+The archived `.github/inherited-workflows/*.disabled` are historic,
+not active. They are not reenabled to solve a false-green; the Epic remains
+unchanged during pilot. The optional `test-ci` is separately being fenced
+to Linux only as part of this migration.
+
+## Release boundary
+
+`.github/workflows/sf-release.yml` is deliberately an **inert red gate**.
+The separate `azure-hardening` branch currently contains an Azure foundation
+with Caddy replying 503, not a running SF application. No release can pass
+until the real, protected, owner-approved Azure activation is wired to
+this exact artifact and SHA, plus Entra/origin/authorization, persistence,
+rollback/restore and AM01–AM06 evidence. A 200/health endpoint or an empty
+staging parameter is never acceptable.
+
+## Adoption checklist
+
+1. Push **only** the isolated CI branch and observe its jobs and self-tests.
+2. Fix runner/selector problems in the CI branch; classify real product
+   failures separately rather than altering runtime policy.
+3. Confirm all eight receipts, invalidation/negative controls and Linux-only
+   execution. Keep failed/blocked proofs visible until resolved.
+4. Qualify exact frozen C, complete AM01–AM06 and independent reviews.
+5. Only then propose a separately approved branch-protection migration,
+   retire the old Epic and integrate/qualify Azure application activation.

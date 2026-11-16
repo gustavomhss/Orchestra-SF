@@ -1,0 +1,256 @@
+name: sf-ci
+
+# SF product CI only. Legacy sf2-epic stays intact until this candidate is
+# independently validated and required checks are explicitly migrated.
+on:
+  push:
+    branches: [sf-ci-lean]
+  pull_request:
+    branches: [close-final-candidate, go-live-close]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  preflight:
+    name: sf/preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Require exact checkout and Linux x64
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux
+          test "$RUNNER_ARCH" = X64
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          node script/sf-ci/gate.mjs manifest
+          node --test script/sf-ci/gate.test.mjs
+
+  static:
+    name: sf/static-and-contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - name: Verify generated business boundaries
+        run: |
+          set -euo pipefail
+          bun --cwd modules/atlas/boundary run check:generated
+          bun --cwd packages/client run check:generated
+      - name: Typecheck runtime, host, product, app and E2E
+        run: |
+          set -euo pipefail
+          bun --cwd modules/atlas/boundary run typecheck
+          bun --cwd modules/sucafina run typecheck
+          bun --cwd packages/core run typecheck
+          bun --cwd packages/server run typecheck
+          bun --cwd packages/client run typecheck
+          bun --cwd apps/cli run typecheck
+          bun --cwd packages/app-shell run typecheck
+          bun --cwd packages/app-shell run typecheck:sf-e2e
+      - name: Verify Linux web production build
+        run: bun --cwd apps/web run build
+      - name: Security and dependency guards
+        run: |
+          set -euo pipefail
+          bun run check:spawn-imports
+          bun run check:guards --base origin/dev
+
+  omni:
+    name: sf/linux-native-omni
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/omni-binaries
+      - name: Require actual Linux binary artifacts
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test -s "$HUGR_OMNI_ADDON"
+          test -x "$HUGR_OMNI_SUPERVISOR"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-omni-linux-${{ github.sha }}
+          path: |
+            ${{ env.HUGR_OMNI_ADDON }}
+            ${{ env.HUGR_OMNI_SUPERVISOR }}
+          if-no-files-found: error
+          retention-days: 3
+
+  unit:
+    name: sf/test-${{ matrix.id }}
+    needs: [omni]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        id: [CI-SF, CI-CLI, CI-APP-SRC, CI-APP-BROWSER, CI-ATLAS-BUSINESS]
+    env:
+      SF_SUITE_ID: ${{ matrix.id }}
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+        with:
+          artifact: sf-omni-linux-${{ github.sha }}
+      - name: Execute exact required Bun selection
+        shell: bash
+        run: |
+          set -uo pipefail
+          root="$GITHUB_WORKSPACE"
+          evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
+          mkdir -p "$evidence"
+          {
+            case "$SF_SUITE_ID" in
+              CI-SF)
+                cd "$root/modules/sucafina"
+                bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                ;;
+              CI-CLI)
+                cd "$root/apps/cli"
+                bun run test --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                ;;
+              CI-APP-SRC)
+                cd "$root/packages/app-shell"
+                bun test --conditions=solid --preload ../../script/test-omni-control.ts --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                ;;
+              CI-APP-BROWSER)
+                cd "$root/packages/app-shell"
+                bun run test:browser --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                ;;
+              CI-ATLAS-BUSINESS)
+                cd "$root/modules/atlas/boundary"
+                bun test --timeout 30000 --preload ../../../script/test-omni-control.ts --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                ;;
+              *) echo "Unknown suite: $SF_SUITE_ID" >&2; exit 2 ;;
+            esac
+          } 2>&1 | tee "$evidence/run.log"
+          status=$?
+          # PIPESTATUS[0] is captured through pipefail: failing tests never become success.
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          cd "$root"
+          python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
+          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Publish only bounded reports and the proven receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-evidence-${{ matrix.id }}
+          path: |
+            sf-ci-evidence/${{ matrix.id }}/summary.json
+            sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+  ui:
+    name: sf/test-${{ matrix.id }}
+    needs: [omni]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - id: CI-UI-OPERATIONS
+            spec: e2e/sucafina/operations.spec.ts
+          - id: CI-UI-DECISIONS
+            spec: e2e/sucafina/decisions.spec.ts
+          - id: CI-UI-REPORTS
+            spec: e2e/sucafina/reports.spec.ts
+    env:
+      SF_SUITE_ID: ${{ matrix.id }}
+      SF_SPEC: ${{ matrix.spec }}
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+      PLAYWRIGHT_WORKERS: "1"
+      PLAYWRIGHT_NO_VIDEO: "1"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+        with:
+          artifact: sf-omni-linux-${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Install Chromium for Linux only
+        working-directory: packages/app-shell
+        run: bunx playwright install --with-deps chromium
+      - name: Run installed SF UI journey
+        shell: bash
+        run: |
+          set -uo pipefail
+          root="$GITHUB_WORKSPACE"
+          evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
+          mkdir -p "$evidence"
+          export PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.json"
+          cd "$root/packages/app-shell"
+          bun run test:e2e:local "$SF_SPEC" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --reporter json,line 2>&1 | tee "$evidence/run.log"
+          status=$?
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          cd "$root"
+          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Publish JSON result and the proven receipt, never operator traces
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-evidence-${{ matrix.id }}
+          path: |
+            sf-ci-evidence/${{ matrix.id }}/report.json
+            sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+  verify:
+    name: sf/verify
+    if: always()
+    needs: [preflight, static, omni, unit, ui]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Collect all eight exact results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: sf-evidence-*
+          path: sf-ci-collected
+          merge-multiple: true
+      - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA
+        env:
+          SF_NEEDS_JSON: ${{ toJSON(needs) }}
+        run: node script/sf-ci/gate.mjs verify

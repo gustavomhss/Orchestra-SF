@@ -1,0 +1,84 @@
+import { test } from "node:test"
+import assert from "node:assert/strict"
+import { createHash } from "node:crypto"
+import { countBunReport, countPlaywrightReport, verifyAll, REQUIRED, validateManifest } from "./gate.mjs"
+
+const report = Buffer.from(JSON.stringify({ status: "PASS", counts: { product_executed: 2, failures: 0, errors: 0, skipped: 0 } }))
+const digest = createHash("sha256").update(report).digest("hex")
+const sha = "a".repeat(40)
+const runId = "123"
+const attempt = "1"
+const manifest = {
+  schemaVersion: 1, product: "Orchestra-SF", target: { os: "Linux", arch: "X64" },
+  suites: REQUIRED.map((id) => id.startsWith("CI-UI-")
+    ? { id, kind: "playwright", directory: "packages/app-shell", specFile: "e2e/sucafina/" + id.split("-").at(-1).toLowerCase() + ".spec.ts" }
+    : { id, kind: "bun", directory: "modules/sucafina" }),
+  separateReleaseProofs: ["AM01","AM02","AM03","AM04","AM05","AM06"],
+}
+function playwright(suite) {
+  const data = {
+    suites: [{ file: suite.specFile, specs: [{ tests: [{ expectedStatus: "passed", results: [{ status: "passed" }] }] }] }],
+    stats: { expected: 1, unexpected: 0, flaky: 0, skipped: 0 },
+  }
+  return Buffer.from(JSON.stringify(data))
+}
+function fixture() {
+  const reports = {}
+  const receipts = {}
+  for (const suite of manifest.suites) {
+    const bytes = suite.kind === "bun" ? report : playwright(suite)
+    reports[suite.id] = bytes
+    receipts[suite.id] = {
+      schemaVersion: 1, suiteId: suite.id, kind: suite.kind, status: "PASS",
+      exitCode: 0, sourceSha: sha, checkoutSha: sha, runId, attempt,
+      runnerOS: "Linux", runnerArch: "X64", executedTests: suite.kind === "bun" ? 2 : 1,
+      reportSha256: createHash("sha256").update(bytes).digest("hex"),
+    }
+  }
+  const needs = Object.fromEntries(["preflight","static","omni","unit","ui"].map((name) => [name, { result: "success" }]))
+  return { manifest, reports, receipts, needs, sha, runId, attempt }
+}
+test("eight normative suites and six independent AM proofs remain explicit", () => {
+  assert.equal(validateManifest(manifest).length, 8)
+  assert.equal(verifyAll(fixture()).suiteCount, 8)
+})
+test("zero product tests fail", () => {
+  assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))
+})
+test("playwright requires the exact requested spec and one clean execution", () => {
+  const suite = manifest.suites[5]
+  assert.equal(countPlaywrightReport(playwright(suite).toString(), suite.specFile), 1)
+  assert.throws(() => countPlaywrightReport(playwright(suite).toString(), "e2e/sucafina/other.spec.ts"))
+})
+const mutations = [
+  ["missing suite", (a) => { delete a.receipts["CI-SF"] }],
+  ["missing artifact", (a) => { delete a.reports["CI-SF"] }],
+  ["job cancelled", (a) => { a.needs.unit.result = "cancelled" }],
+  ["job skipped", (a) => { a.needs.ui.result = "skipped" }],
+  ["job failed", (a) => { a.needs.static.result = "failure" }],
+  ["missing job", (a) => { delete a.needs.omni }],
+  ["different source SHA", (a) => { a.receipts["CI-SF"].sourceSha = "b".repeat(40) }],
+  ["different checkout SHA", (a) => { a.receipts["CI-SF"].checkoutSha = "b".repeat(40) }],
+  ["different run", (a) => { a.receipts["CI-SF"].runId = "999" }],
+  ["different attempt", (a) => { a.receipts["CI-SF"].attempt = "2" }],
+  ["wrong OS", (a) => { a.receipts["CI-SF"].runnerOS = "Windows" }],
+  ["wrong arch", (a) => { a.receipts["CI-SF"].runnerArch = "ARM64" }],
+  ["unexecuted", (a) => { a.receipts["CI-SF"].executedTests = 0 }],
+  ["forged digest", (a) => { a.receipts["CI-SF"].reportSha256 = "0".repeat(64) }],
+  ["false pass", (a) => { a.receipts["CI-SF"].status = "BLOCKED" }],
+  ["error code", (a) => { a.receipts["CI-SF"].exitCode = 1 }],
+  ["extra suite", (a) => { a.receipts.EXTRA = a.receipts["CI-SF"]; a.reports.EXTRA = report }],
+]
+for (const [name, mutate] of mutations) test(name + " cannot produce green", () => {
+  const data = fixture()
+  mutate(data)
+  assert.throws(() => verifyAll(data), { message: /SF_CI_FAIL_CLOSED|Expected values to be strictly equal/ })
+})
+test("manifest removed requirement cannot produce green", () => {
+  const data = fixture()
+  data.manifest.suites.pop()
+  assert.throws(() => verifyAll(data), /SF_CI_FAIL_CLOSED/)
+})
+test("test reporter skips cannot produce green", () => {
+  assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 2, failures: 0, errors: 0, skipped: 1 } })))
+})

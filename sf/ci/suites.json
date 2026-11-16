@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "product": "Orchestra-SF",
+  "target": {
+    "os": "Linux",
+    "arch": "X64",
+    "hosting": "Azure Linux VM",
+    "releaseArtifact": "web + Linux native runtime"
+  },
+  "provenance": {
+    "approvedPlan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "candidateBase": "ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f"
+  },
+  "suites": [
+    {
+      "id": "CI-SF",
+      "kind": "bun",
+      "directory": "modules/sucafina"
+    },
+    {
+      "id": "CI-CLI",
+      "kind": "bun",
+      "directory": "apps/cli"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "kind": "bun",
+      "directory": "packages/app-shell"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "kind": "bun",
+      "directory": "packages/app-shell"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "kind": "bun",
+      "directory": "modules/atlas/boundary"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "kind": "playwright",
+      "directory": "packages/app-shell",
+      "specFile": "e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "kind": "playwright",
+      "directory": "packages/app-shell",
+      "specFile": "e2e/sucafina/decisions.spec.ts"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "kind": "playwright",
+      "directory": "packages/app-shell",
+      "specFile": "e2e/sucafina/reports.spec.ts"
+    }
+  ],
+  "separateReleaseProofs": [
+    "AM01",
+    "AM02",
+    "AM03",
+    "AM04",
+    "AM05",
+    "AM06"
+  ],
+  "policy": {
+    "emptySelection": "FAIL",
+    "missingSuite": "FAIL",
+    "cancelledJob": "FAIL",
+    "differentSha": "FAIL",
+    "skippedTests": "FAIL",
+    "azureRelease": "BLOCKED_UNTIL_REAL_ENVIRONMENT"
+  }
+}
