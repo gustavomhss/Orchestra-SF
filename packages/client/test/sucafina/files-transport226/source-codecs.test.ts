@@ -10,21 +10,21 @@ import {
 // Structural source-compatibility tests only. No fake principal, success grant,
 // provider, Request, live file or claimed server acceptance is generated here.
 describe("226 A06/F02 source-locked file transport", () => {
-  test("25 original schemas each have exactly one frozen route and codec", () => {
+  test("26 source schemas each have exactly one frozen route and codec", () => {
     const ids = Object.keys(SfFiles.operations)
-    expect(ids.length).toBe(25)
-    expect(new Set(ids).size).toBe(25)
+    expect(ids.length).toBe(26)
+    expect(new Set(ids).size).toBe(26)
     for (const id of ids) {
       expect(SfOperationRegistry[id as keyof typeof SfOperationRegistry]).toBeDefined()
       expect(SfFilesOperationBindings[id as keyof typeof SfFilesOperationBindings]).toBeDefined()
     }
   })
 
-  test("original five byte producers have byte-only mode; no implicit URL or extra byte route", () => {
+  test("source byte producers have byte-only mode; no implicit URL or extra byte route", () => {
     const ids = Object.keys(SfFiles.operations).filter((id) =>
       sfIsByteOperation(id as keyof typeof SfFiles.operations))
     expect(ids.sort()).toEqual([
-      "files.asset.download", "files.export.json", "files.export.register",
+      "files.asset.download", "files.export.json", "files.export.members", "files.export.register",
       "files.export.suppliers", "files.export.xlsx",
     ])
     for (const id of ids) {

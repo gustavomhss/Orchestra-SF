@@ -18,10 +18,10 @@ function fixture() {
 const options = () => ({ signal: new AbortController().signal, idempotencyKey: uuid })
 
 describe("A06 source-bound files contracts (component-only; NOT installed E2E)", () => {
-  test("each of 25 catalogued operation names is literal and unique", () => {
+  test("each of 26 catalogued operation names is literal and unique", () => {
     const ids = Object.keys(SfFiles.operations)
-    expect(ids).toHaveLength(25)
-    expect(new Set(ids).size).toBe(25)
+    expect(ids).toHaveLength(26)
+    expect(new Set(ids).size).toBe(26)
     expect(ids.every((id) => id.startsWith("files."))).toBe(true)
     for (const id of ids) {
       expect(SfFiles.operations[id as keyof typeof SfFiles.operations].operationId).toBe(id)
