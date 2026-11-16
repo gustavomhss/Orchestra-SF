@@ -314,9 +314,7 @@ export function createSfTransport(options: Readonly<{
               for (const part of parts) { bytes.set(part, at); at += part.byteLength }
               response = { status: result.status, headers: publicHeaders(result.headers), body: bytes }
             } else response = failure("invalid-response")
-            // The main broker owns revocation and byte-handle cleanup; this
-            // abort is idempotent after completed transfer and releases handles.
-            await options.desktop.abort({ ...owner, requestId }).catch(() => undefined)
+            // Completion is followed by unconditional finally cleanup below.
           } else if (result.kind === "json-response" && metadata.responseMode === "json" &&
                    isJsonContentType(result.headers["content-type"])) {
             response = { status: result.status, headers: publicHeaders(result.headers), body: result.body }
@@ -327,7 +325,12 @@ export function createSfTransport(options: Readonly<{
           else response = failure("invalid-response")
         } catch {
           response = failure("network")
-        } finally { call.signal.removeEventListener("abort", cancel) }
+        } finally {
+          // A failed or aborted chunk pull must not leave an owner-bound handle
+          // or net stream alive. Main owns revocation, AbortController and cleanup.
+          if (isBytes) await options.desktop.abort({ ...owner, requestId }).catch(() => undefined)
+          call.signal.removeEventListener("abort", cancel)
+        }
       } else {
         try {
           dispatched = true
