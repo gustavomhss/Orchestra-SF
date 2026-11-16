@@ -11,6 +11,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
+import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
 import { SF_U11_REMAINING_COPY } from "./copy"
 import {
@@ -201,11 +202,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         !(creating() ? actionAllowed("create") : actionAllowed("save-pr")) ||
         (!creating() && (!currentRow || !isPrWritable(currentRow) || currentVersion === undefined))) return undefined
     const original = prFromRecord(creating() ? undefined : currentRow)
-    return ready.drafts.acquire<SfPrEdit>({
-      surfaceId: "CAP25",
-      identity: creating() ? { kind: "new", newIntentRef: view.newIntentRef } :
-        { kind: "record", recordRef: selectedRef()! },
-      editScopeKey: prScope,
+    const selection = { surfaceId: "CAP25" as const,
+      identity: creating() ? { kind: "new" as const, newIntentRef: view.newIntentRef } :
+        { kind: "record" as const, recordRef: selectedRef()! }, editScopeKey: prScope }
+    return sfRetainDraft<SfPrEdit>(ready.drafts, {
+      ...selection,
       baseVersion: creating() ? null : currentVersion!,
       base: creating() ? null : original,
       value: original,
@@ -226,10 +227,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         !currentRow || !isPoWritable(currentRow) || currentVersion === undefined ||
         !actionAllowed("save-po")) return undefined
     const original = poFromRecord(currentRow)
-    return ready.drafts.acquire<SfPoEdit>({
-      surfaceId: "CAP25",
-      identity: { kind: "record", recordRef: selectedRef()! },
-      editScopeKey: poScope,
+    const selection = { surfaceId: "CAP25" as const,
+      identity: { kind: "record" as const, recordRef: selectedRef()! }, editScopeKey: poScope }
+    return sfRetainDraft<SfPoEdit>(ready.drafts, {
+      ...selection,
       baseVersion: currentVersion,
       base: original,
       value: original,
@@ -244,20 +245,25 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   })
   const activePr = () => {
     const snapshot = prDraft()?.snapshot()
-    return snapshot?.availability === "active" ? snapshot : undefined
+    return sfDraftForEdit(snapshot, creating() ? null : version())
   }
   const activePo = () => {
     const snapshot = poDraft()?.snapshot()
-    return snapshot?.availability === "active" ? snapshot : undefined
+    return sfDraftForEdit(snapshot, version())
   }
+  const prConflict = () => sfDraftConflicted(prDraft()?.snapshot(), creating() ? null : version())
+  const poConflict = () => sfDraftConflicted(poDraft()?.snapshot(), version())
+  const prPending = () => { const state = prDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
+  const poPending = () => { const state = poDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
   const editPr = (next: SfPrEdit) => {
-    if (!view.sending && !view.reviewing && !view.outcomeUnknown) prDraft()?.edit(next)
+    if (activePr() && !view.sending && !view.reviewing && !view.outcomeUnknown) prDraft()?.edit(next)
   }
   const editPo = (next: SfPoEdit) => {
-    if (!view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
+    if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
   }
   const stageAllowed = (action: SfRequestCommand) => {
-    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown || view.sending) return false
+    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown || view.sending ||
+        prConflict() || poConflict() || prPending() || poPending()) return false
     const current = row()
     if (action === "create") return creating() && !!activePr()
     if (!current || version() === undefined) return false
@@ -294,6 +300,18 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     if (po) poDraft()?.setPhase("reviewing")
   }
   const refresh = () => setView("refresh", view.refresh + 1)
+  const discardConflict = (kind: "pr" | "po") => {
+    const ready = sf.ready(), ref = selectedRef(), controller = kind === "pr" ? prDraft() : poDraft()
+    const snapshot = controller?.snapshot()
+    if (!ready || !ref || snapshot?.availability !== "active" || snapshot.pendingOperation ||
+        view.sending || view.outcomeUnknown) return
+    const selection = { surfaceId: "CAP25" as const, identity: { kind: "record" as const, recordRef: ref },
+      editScopeKey: kind === "pr" ? prScope : poScope }
+    ready.drafts.discard(selection)
+    if (ready.drafts.peek(selection)) return
+    setView({ read: undefined, state: "loading", reviewing: undefined })
+    refresh()
+  }
   const cancelReview = () => {
     if (view.sending) return
     prDraft()?.setPhase("dirty")
@@ -557,6 +575,14 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <a href={stageHref(ref!, "history")}>{t("sf.u11.remaining.history")}</a>
         </nav>
       </Show>
+      <Show when={prPending() || poPending()}><p role="alert">{t("sf.u11.remaining.unknown")}</p></Show>
+      <Show when={prConflict()}>
+        <section class="sf-u11-stage" data-draft-conflict="pr">
+          <p role="alert">{language.t("sf.common.conflict")}</p>
+          <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || prPending()}
+            onClick={() => discardConflict("pr")}>{t("sf.u11.remaining.discard")}</button>
+        </section>
+      </Show>
       <Show when={activePr() && (creating() || isPrWritable(current!))}>
         <section class="sf-u11-stage" data-stage="pr">
           <Show when={current && !creating()}>
@@ -597,6 +623,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       <Show when={current && stage() === "po"}>
         <section class="sf-u11-stage" data-stage="po">
           <h3>{t("sf.u11.remaining.po")}</h3>
+          <Show when={poConflict()}>
+            <div data-draft-conflict="po"><p role="alert">{language.t("sf.common.conflict")}</p>
+              <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || poPending()}
+                onClick={() => discardConflict("po")}>{t("sf.u11.remaining.discard")}</button></div>
+          </Show>
           <Show when={canPo() && activePo()} fallback={<p>{t("sf.u11.remaining.readonly")}</p>}>
             <SfPurchaseOrderForm value={activePo()!.value}
               disabled={view.sending || !!view.reviewing || view.outcomeUnknown}

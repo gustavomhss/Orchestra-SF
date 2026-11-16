@@ -16,25 +16,15 @@ export const bankFields = ["iban", "account", "bankName", "swift", "accountHolde
 export const booleanFields: readonly (keyof SupplierEdit)[] = ["dueDiligence","nda","dpa"]
 export const multilineFields: readonly (keyof SupplierEdit)[] = ["address","notes","certifications","categories"]
 
-/** Field names actually disclosed by this supplier projection for this editor. */
-export function supplierSourceFields(source: Supplier, bank: boolean): readonly string[] {
-  if (bank) return bankFields.filter((field) => source[field] !== undefined)
-  return [
-    ...generalFields.filter((field) => source[field] !== undefined),
-    ...(source.contacts === undefined ? [] : ["contacts"]),
-    ...(source.commercial?.notes === undefined ? [] : ["commercial.notes"]),
-    ...(source.compliance?.notes === undefined ? [] : ["compliance.notes"]),
-  ]
-}
+/** Stable source-issued edit groups, including optional fields initially absent. */
+export const generalDraftFields = [...generalFields, "contacts", "commercial.notes", "compliance.notes"] as const
 
 // Never copy bank data from source projection into a general draft. Buyer
 // source values are redacted; privileged bank updates use their own intent.
 export function supplierEdit(source: Supplier): SupplierEdit {
   return Object.fromEntries([
-    ...generalFields.filter((field) => source[field] !== undefined).map((field) => [field, source[field]]),
-    ...(source.contacts === undefined ? [] : [["contacts",source.contacts]]),
-    ...(source.commercial === undefined ? [] : [["commercial",source.commercial]]),
-    ...(source.compliance === undefined ? [] : [["compliance",source.compliance]]),
+    ...generalFields.map((field) => [field, source[field]]),
+    ["contacts", source.contacts], ["commercial", source.commercial], ["compliance", source.compliance],
   ]) as SupplierEdit
 }
 
