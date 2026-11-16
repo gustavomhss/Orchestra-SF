@@ -89,6 +89,14 @@ async function main() {
     "F04_GATE_EIGHT_CI_RECIPE_RECEIPTS_REQUIRED")
   exactMembers(ci.recipeReceipts, CI.filter((v) => v.startsWith("sf/test-")), "id")
   exactMembers(b.proofs, PROOFS, "id")
+  const witnessKeyPath = process.env.SF_NATIVE_WITNESS_PUBLIC_KEY_FILE
+  const witnessPin = process.env.SF_NATIVE_WITNESS_TRUST_SHA256
+  must(typeof witnessKeyPath === "string" && path.isAbsolute(witnessKeyPath) &&
+    SHA256.test(witnessPin ?? ""), "F04_GATE_WITNESS_TRUST_PIN_REQUIRED")
+  const witnessKeyBytes = await readFile(witnessKeyPath)
+  must(sha(witnessKeyBytes) === witnessPin, "F04_GATE_WITNESS_KEY_PIN_MISMATCH")
+  const witnessKey = createPublicKey(witnessKeyBytes)
+  must(witnessKey.asymmetricKeyType === "ed25519", "F04_GATE_WITNESS_KEY_TYPE_INVALID")
   const proofDir = path.join(root, "proofs")
   for (const proof of b.proofs) {
     must(proof.status === "PASS_REVIEWED" &&
@@ -101,7 +109,30 @@ async function main() {
     const folder = path.join(proofDir, mode)
     const processName = mode === "q01" ? proof.id.toLowerCase() + ".json" : "receipt.json"
     const processBytes = await checkedEvidence(path.join(folder, processName), folder)
+    const batchBytes = await checkedEvidence(path.join(folder, "receipt.json"), folder)
     const observationBytes = await checkedEvidence(path.join(folder, "observation-receipt.json"), folder)
+    const witnessBytes = await privateFile(path.join(root, mode + "-witness.json"), root)
+    const witnessSignature = (await privateFile(path.join(root, mode + "-witness.sig"), root, 2048))
+      .toString("utf8").trim()
+    must(/^[A-Za-z0-9+/]{86}==$/.test(witnessSignature) &&
+      verifySignature(null, witnessBytes, witnessKey, Buffer.from(witnessSignature, "base64")),
+      "F04_GATE_WITNESS_SIGNATURE_NOT_VERIFIED")
+    const w = JSON.parse(witnessBytes)
+    must(w.schema === "sf2h.native-original-producer-witness.v1" &&
+      w.proofId === mode && w.candidateSha === ctx.candidateSha &&
+      w.treeSha === ctx.treeSha && w.artifactSha256 === ctx.artifactSha256 &&
+      w.manifestSha256 === installed.manifestSha256 &&
+      w.processReceiptSha256 === sha(batchBytes) &&
+      w.reportSha256 === JSON.parse(batchBytes).reportSha256 &&
+      SHA256.test(w.originalProducerSha256 ?? "") &&
+      SHA256.test(w.actorAuthorizationSha256 ?? "") &&
+      SHA256.test(w.taskPermissionRelaySha256 ?? "") &&
+      (mode !== "q01" || (SHA256.test(w.negativeDenialSha256 ?? "") &&
+        SHA256.test(w.zeroNetworkDispatchSha256 ?? ""))) &&
+      (mode === "q01" || (SHA256.test(w.sourceCasSha256 ?? "") &&
+        Array.isArray(w.operationReceiptSha256) && w.operationReceiptSha256.length > 0 &&
+        w.operationReceiptSha256.every((v) => SHA256.test(v)))),
+      "F04_GATE_SIGNED_ORIGINAL_PRODUCER_WITNESS_INCOMPLETE")
     must(sha(processBytes) === proof.processReceiptSha256 &&
       sha(observationBytes) === proof.originalProducerObservationSha256,
       "F04_GATE_PROOF_EVIDENCE_DIGEST_DRIFT")
@@ -111,7 +142,10 @@ async function main() {
       "F04_GATE_PROOF_ID_MISMATCH")
     must(processReceipt.status === "TEST_EXECUTED_REQUIRE_ORIGINAL_PRODUCER_WITNESS_AND_REVIEW" &&
       observed.status === "SIGNED_ORIGINAL_PRODUCER_OBSERVATION_PENDING_INDEPENDENT_REVIEW" &&
-      observed.proofId === mode && processReceipt.exitCode === 0 &&
+      observed.proofId === mode && observed.processReceiptSha256 === sha(batchBytes) &&
+      observed.witnessSha256 === sha(witnessBytes) &&
+      observed.witnessKeySha256 === sha(witnessKeyBytes) &&
+      processReceipt.exitCode === 0 &&
       processReceipt.skipped === 0 && processReceipt.retries === 0 &&
       processReceipt.executedCount > 0 &&
       processReceipt.candidateSha === ctx.candidateSha &&
