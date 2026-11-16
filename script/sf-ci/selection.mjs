@@ -27,11 +27,13 @@ function ensureContained(root, relative, kind) {
   return resolved
 }
 function discover(root, relative) {
-  const dir = ensureContained(root, relative, "directory")
+  // "." is the one literal full-module root, not an untrusted relative path.
+  // CI-SF must include porta/*.test.ts as well as Sucafinav1/test/**.
+  const dir = relative === "." ? realpathSync(root) : ensureContained(root, relative, "directory")
   const found = []
   const walk = (physical, name) => {
     for (const entry of readdirSync(physical, { withFileTypes: true })) {
-      const next = name + "/" + entry.name
+      const next = name ? name + "/" + entry.name : entry.name
       if (entry.isSymbolicLink()) {
         // E.g. app-shell/src/custom-elements.d.ts is an existing harmless type
         // symlink. Do not traverse links or admit linked test files/directories.
@@ -46,7 +48,7 @@ function discover(root, relative) {
       }
     }
   }
-  walk(dir, relative)
+  walk(dir, relative === "." ? "" : relative)
   return found.sort()
 }
 /** Paths are relative to suite.directory; stdout select is the only command input to the runner. */
