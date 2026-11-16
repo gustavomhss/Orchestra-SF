@@ -1,7 +1,7 @@
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfPlannerOpexView } from "../planner/opex"
@@ -29,19 +29,19 @@ export function isPlannerPagesSurface(surfaceId: string): surfaceId is keyof typ
   return Object.hasOwn(operations, surfaceId)
 }
 
-/** Only producer-validated period selectors; text searches remain in memory. */
+/** Only producer-validated period/version selectors; text searches remain in memory. */
 export function parsePlannerPagesRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-planner" || !isPlannerPagesSurface(candidate.surfaceId) ||
     !kinds[candidate.surfaceId].includes(candidate.kind)) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", "year"].includes(key))) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", "year", ...(candidate.surfaceId === "CAP21" ? [] : ["version"])].includes(key))) return
   const selected = ["server", "project", "installation"].map((key) => params.get(key))
   if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
-  const year = params.get("year")
-  if (year !== null && !/^\d{4}$/.test(year)) return
-  const input = year === null ? {} : { year: Number(year) }
+  const year = params.get("year"), version = params.get("version")
+  if (year !== null && !/^\d{4}$/.test(year) || version !== null && (!version.trim() || /[\u0000-\u001f\u007f]/.test(version))) return
+  const input = { ...(year === null ? {} : { year: Number(year) }), ...(version === null ? {} : { version }) }
   if (Option.isNone(Schema.decodeUnknownOption(operations[candidate.surfaceId].input, { onExcessProperty: "error" })(input))) return
-  return input
+  return { ...(year === null ? {} : { year: Number(year) }), ...(version === null ? {} : { version: version as SfRef }) }
 }
 
 export function plannerPagesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
