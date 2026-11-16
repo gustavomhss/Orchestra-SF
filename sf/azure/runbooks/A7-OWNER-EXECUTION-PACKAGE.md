@@ -53,7 +53,7 @@ Em caso de Omni ausente, web vazio, ELF errado, checkout/manifest divergente, pa
 
 - [ ] PublicOrigin=https://FQDN, mount real SF, listenerOrigin interno http://127.0.0.1:4096 e ingresso/origem de Host compatíveis com o produtor. O CLI recusa Host diferente de ingressOrigin. A8 determina o binding correto; nunca habilitar CORS aberto ou remover validação Host.
 - [ ] Tenant issuer, clientId, redirect URI, consentimento, authority/claims, CSRF/state/nonce, cookie HttpOnly/Secure/SameSite e expiry/revogação, principalRef real, installationId/projectId/hostId reais; negativas anônimo/ator denied/cross-owner. Registrar sem enviar credenciais ao agente.
-- [ ] Secrets OIDC e keys através de KeyVault/arquivos privados fora do repo; A8 fornece cookie de sessão Microsoft **real** de navegador autorizado para o teste positivo num arquivo EFÊMERO root 0600, uma linha iniciada por Cookie: (não em argv/stdout/artefato). Revogar/apagar após prova.
+- [ ] **Dois domínios secretos separados**: /etc/orchestra-sf root 0700 é só para config/approval/cookie DO OPERADOR; **o processo não-root NÃO consegue ler dali**. Config OIDC/keys que a factory A8 precisar devem vir por KeyVault+systemd LoadCredential ou diretório privado 0700, arquivos 0600, de orchestra-sf em /var/lib/orchestra-sf/home/.config/orchestra-sf, com A8 validando ownership/caminho e revogação. Nenhuma credencial vai em public.env, argv, Git, PR ou stdout. A8 fornece cookie de sessão Microsoft **real** de navegador autorizado num arquivo EFÊMERO root 0600, linha iniciada por Cookie: apenas para o health operado pelo root; revogar/apagar após prova.
 - [ ] Approval humano para C exato/tree/digest/janela/backup/risco; ambiente protegido do A10. Sem isso Caddy permanece 503.
 - [ ] DNS e CA reais; health positivo exige **bytes exatos de Web** e contexto original Microsoft, não apenas HTTP 200.
 
@@ -163,6 +163,7 @@ sudo python3 "$SRC/sf/azure/recovery/recovery.py" rollback-code \
   --target-candidate REQUIRES_OLD_C --target-tree REQUIRES_OLD_TREE \
   --target-archive-sha REQUIRES_OLD_BUNDLE_SHA256 \
   --approval /etc/orchestra-sf/approve-rollback.json \
+  --compatibility-proof /etc/orchestra-sf/A10-reviewed-schema-compatibility.json \
   --cookie /etc/orchestra-sf/A8-real-browser-cookie
 ~~~
 Schema incompatível: STOP, colocar app em manutenção, restaurar/reconciliar em ambiente isolado, obter decisão do dono sobre escritas pós-ponto de recuperação; jamais downgrade automático no volume vivo.
@@ -179,6 +180,8 @@ Schema incompatível: STOP, colocar app em manutenção, restaurar/reconciliar e
 | recovery.py vault-backup / restore-disks | Jobs Azure Backup/Restore reais com IDs/Completed | App de clone íntegra, auth ou CAS |
 | recovery.py verify-clone | Exame offline de arquivo em host Azure isolado real | Restore Azure e smoke de negócio completos |
 | recovery.py rollback-code | Troca de C imutável com approval, health de leitura | Recuperação sem perda de dados |
+
+**Validação estática obrigatória antes do handoff em Linux X64 (não substitui W4):** executar no checkout C python3 -m unittest discover -s sf/azure/runtime -p 'test_*.py' -v e python3 -m py_compile sf/azure/runtime/{bundle,package,identity_health}.py sf/azure/vm/deploy.py sf/azure/recovery/recovery.py; conferir exit codes reais. O pacote não declara esse resultado PASS antes de uma execução observada. O verifier testa file hash, modos, symlinks, Omni/CLI/ELF, C/tree, recibos e controles negativos; não é atestado Azure.
 
 ## 4. Escada de aceitação
 
