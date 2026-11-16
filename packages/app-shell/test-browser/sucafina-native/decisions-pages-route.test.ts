@@ -6,6 +6,7 @@ import { decisionPagesRouteAvailable, parseDecisionPagesRouteQuery } from "../..
 
 describe("decision page routing", () => {
   test("retains canonical case and detail selectors and rejects controls", () => {
+    expect(matchSfNativeRoutePath("/orchestra/sf-decisions/new")).toMatchObject({ surfaceId: "UI33", kind: "new" })
     const root = `/orchestra/sf-decisions/${encodeSfRouteRef("case")}`
     for (const path of ["alternatives", "assumptions", "questions", "choice", "changes", "history", "analyses"]) {
       const candidate = matchSfNativeRoutePath(`${root}/${path}`)!

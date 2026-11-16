@@ -533,6 +533,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         return { status: "denied" }
       const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
         : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
+      if (candidate.surfaceId === "UI33" && candidate.kind === "new" &&
+        !context.value.destinations.some((item) => item.capabilityId === "UI33" && item.canRead))
+        return { status: "denied" }
       if (candidate.chapterId === "sf-dashboard" ? !dashboardRouteAvailable(context.value, candidate) :
         candidate.chapterId === "sf-procurement" ? !procurementRouteAvailable(context.value, candidate) :
         candidate.chapterId === "sf-people" ? !peopleRouteAvailable(context.value, candidate) :
