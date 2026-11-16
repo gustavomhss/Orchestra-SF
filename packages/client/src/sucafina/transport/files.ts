@@ -46,6 +46,14 @@ const record = (value: unknown): value is Readonly<Record<string, unknown>> =>
  */
 export function sfFilesSourceQuery(id: SfOperationId, value: unknown): Readonly<Record<string, string>> | undefined {
   if (!record(value)) return undefined
+  if (id === "files.import-targets") {
+    if (value.surface !== "planner" && value.surface !== "dashboard") return undefined
+    if ((value.start === undefined) !== (value.end === undefined) ||
+        value.start !== undefined && (!cleanRef(value.start, 32) || !cleanRef(value.end, 32)))
+      return undefined
+    return { surface: value.surface,
+      ...(value.start !== undefined ? { start: value.start as string, end: value.end as string } : {}) }
+  }
   if (id === "files.asset.link") {
     return cleanRef(value.assetId) ? { "asset-link": value.assetId } : undefined
   }

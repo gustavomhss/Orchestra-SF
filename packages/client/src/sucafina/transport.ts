@@ -172,7 +172,8 @@ export function createSfTransport(options: Readonly<{
            operation.operationId === "files.asset.download")) return failure("contract-unavailable")
       if (metadata.responseMode !== "json" && metadata.responseMode !== "empty" && !isBytes)
         return failure("contract-unavailable")
-      if ((isBytes || upload) && !stamp) return failure("contract-unavailable")
+      if (operation.operationId.startsWith("files.") && !stamp)
+        return failure("contract-unavailable")
       // ctx.context expectations are ALWAYS taken from the approved descriptor.
       // The frozen F01 signatures allow an undefined public argument, while the
       // catalog requires exactly this private three-field query; never trust an
@@ -484,7 +485,7 @@ function operationUrl(
     }
     const special = operationId.startsWith("files.") && source
       ? sfFilesSourceQuery(operationId, source) : undefined
-    if (["files.asset.link","files.asset.download","files.asset.upload",
+    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload",
       "files.document-open","files.document-scenario-targets"].includes(operationId) && !special)
       return undefined
     if (special) {

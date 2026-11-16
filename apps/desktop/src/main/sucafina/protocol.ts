@@ -95,7 +95,7 @@ export function planSfOperation(input: Readonly<{
     target.searchParams.set(key, value)
   }
   const special = operationId.startsWith("files.") && source ? sfFilesSourceQuery(operationId, source) : undefined
-  if (["files.asset.link", "files.asset.download", "files.asset.upload",
+  if (["files.import-targets", "files.asset.link", "files.asset.download", "files.asset.upload",
     "files.document-open", "files.document-scenario-targets"].includes(operationId) && !special)
     return { status: "invalid-response" }
   if (special) {
