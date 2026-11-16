@@ -17,6 +17,7 @@ import { revalidateSecurityDraft } from "./draft-revalidation-security"
 import { revalidateServiceDraft } from "./draft-revalidation-service"
 import { draftAvailability } from "./draft-revalidation-availability"
 import { revalidateDashboardScalarDraft } from "./draft-revalidation-dashboard-scalar"
+import { revalidateRequestTitleDraft } from "../procurement/requests/title-revalidation"
 
 export async function revalidateSfNativeDraft(
   input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
@@ -27,6 +28,8 @@ export async function revalidateSfNativeDraft(
       input.originalOwner.principalRef !== fresh.stamp.principalRef) return { status: "authority-changed" }
   if (input.read.operationId === "domain.page.CAP01" || input.read.operationId === "domain.page.CAP03")
     return revalidateDashboardScalarDraft(input, fresh, transport, signal)
+  if (input.read.operationId === "domain.page.CAP25" && input.editScopeKey === "pr.title")
+    return revalidateRequestTitleDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP25" && input.editScopeKey === "CAP25:sourcing")
     return revalidateSourcingDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP25")

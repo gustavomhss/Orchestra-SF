@@ -22,7 +22,6 @@ import { SfInstallationList, type SfContext, type SfHref, type SfInstallationDes
 import { createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
-import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { createSfDraft } from "../shared/draft"
 import { createSfNavigationState, type SfNativeNavigationState } from "../navigation-state"
 import { isSfNativeChapter, matchSfNativeRoutePath } from "../route-registry"
@@ -62,6 +61,7 @@ import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { revalidateReportRecovery } from "../reviews/reports/recovery"
+import { revalidateSfNativeDraft } from "./draft-revalidation"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
 import { createSfDesktopOriginBridge238 } from "./desktop-origin-bridge238"
 import { bindSfNativeChapterNavigation, confirmSfOwnerExit, rejectInvalidSfOwnerQuery, sfCaptureReadyOwner, sfReadyOwnerSelection, sfSameReadyOwnerSnapshot, transitionSfNativeChapter } from "./native-chapter-entry"
@@ -422,38 +422,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     revalidateDraft: async (input: SfDraftRevalidationInput, fresh, transport, signal): Promise<SfDraftRevalidation> => {
       if (input.surfaceId === "UI50" && input.read.operationId === "dashboard.dashboard-review")
         return revalidateReportRecovery(input, fresh, transport, signal)
-      // Retained record reads only. No guessed field/action grants or automatic
-      // restoration of pending writes; those require producer-specific proofs.
-      if (signal.aborted || input.read.operationId !== "projection.case" ||
-        input.identity.kind !== "record" || input.read.fieldPaths.length ||
-        input.read.actionIds.length) return { status: "unavailable" }
-      const ready = fresh.availability.some((resource) => resource.operations.some((operation) =>
-        operation.operationId === "projection.case" && operation.state === "ready" && operation.operational))
-      if (!ready) return { status: "denied" }
-      const result = await createSfDecisionsClient(transport)["projection.case"]({
-        caseRef: input.identity.recordRef,
-      }, { signal }).catch(() => undefined)
-      if (signal.aborted || !result || result.kind !== "response" ||
-        result.body.status !== "ok") return { status: "unavailable" }
-      const projection = result.body.value.projection
-      // The original case selector is opaque, NOT equal to projection.case.id.
-      // Confirm it matches the registered revalidation input, then require the
-      // original producer's independently stamped case read and intact version.
-      const originalInput = input.read.input
-      if (!originalInput || typeof originalInput !== "object" ||
-        Array.isArray(originalInput) ||
-        originalInput.caseRef !== input.identity.recordRef ||
-        !sameStamp(result.body.context, fresh.stamp) ||
-        projection.context.installationId !== fresh.stamp.installationId ||
-        projection.context.projectId !== fresh.stamp.projectId ||
-        projection.context.principalRef !== fresh.stamp.principalRef ||
-        projection.context.policyVersion !== fresh.stamp.policyVersion ||
-        projection.context.accessRevision !== fresh.stamp.accessRevision ||
-        !projection.case.id || !projection.case.incarnation ||
-        !Number.isSafeInteger(projection.case.version))
-        return { status: "denied" }
-      return { status: "authorized", authority: "unchanged",
-        stamp: fresh.stamp, sourceVersion: projection.case.version }
+      // Every other retained edit is proved again at its original producer. No
+      // guessed field/action grant and no restoration of pending writes.
+      return revalidateSfNativeDraft(input, fresh, transport, signal)
     },
   }
 
