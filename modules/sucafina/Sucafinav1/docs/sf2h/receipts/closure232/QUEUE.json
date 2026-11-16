@@ -1,0 +1,848 @@
+{
+  "schema": "sf2h.product-ci232.dependency-queue.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 232,
+  "epoch": "product-ci-e9-browser232",
+  "role": "SOLE_SUCCESSOR_TERMINAL_HANDOFF_WHEN_EXTERNAL_BLOCKED",
+  "snapshot": {
+    "product_sha": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "product_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "source_commits_211_not_consumed": true,
+    "formal_accepted_C": false,
+    "detached_proposal_228": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1"
+  },
+  "status": "FINITE_NORMALIZED_PENDING_EXTERNAL_DISPATCH_AND_PRODUCT_CONSUMPTION",
+  "counts": {
+    "normalized_requests": 27,
+    "by_group": {
+      "SURGICAL_CAUSAL": 19,
+      "FINAL_SAME_C": 8
+    },
+    "duplicates_collapsed": 0,
+    "new_run_ids": 0,
+    "inflight": 0
+  },
+  "workflow": {
+    "candidate_branch": "sf-closure-bundle",
+    "head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "material_after_source": false,
+    "accepted_final_C": false,
+    "workflow_path": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator_path": "script/test-ci-request.ts",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "run_uploader": "script/test-ci.ts",
+    "run_uploader_blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+    "original_recipe_blob": "ae5a1949876eef23450fa51167498be8a2334d35",
+    "prohibited_alternative": "No gh, curl, user tokens, git push or custom branch-as-dispatch. Only official existing test:ci via authorized supported interface.",
+    "available_GitHub_MCP_actions": [
+      "fetch_workflow_run_jobs",
+      "fetch_workflow_run_artifacts",
+      "fetch_commit_workflow_runs",
+      "rerun_workflow_job",
+      "rerun_failed_workflow_run_jobs"
+    ],
+    "initial_workflow_dispatch_MCP": "NOT_EXPOSED"
+  },
+  "ci_request_entries": [
+    {
+      "id": "S215-BI-UNITS",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/analytics/unit-integrity215.test.ts\",\"Sucafinav1/test/product/wp05/semantics.test.ts\",\"Sucafinav1/test/product/wp05/semantic-discriminants.test.ts\",\"Sucafinav1/test/product/wp05/consumer-dashboard.test.ts\",\"Sucafinav1/test/product/wp05/planner-integration.test.ts\",\"Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 215,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair215/CI-REQUEST214.json",
+          "receipt_blob": "c058c0293bfc9b0f4cc348112f45cc7a91eb796a"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S216-ATLAS-SEQUENCE",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"360000\",\"Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 216,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair216/CI-REQUEST-214.json",
+          "receipt_blob": "4e033f94ebaaaf6a9d1b4a4c8911ed6e886c3571"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S217-SIMILAR-CASES",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/similarity217/installed.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 217,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair217/REQUEST-214.json",
+          "receipt_blob": "a378bde653c78f13b083a4d6d8670b17e3898e2b"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S217-UI62-U26-F04",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER",
+        "211_ACTUAL_SIMILAR_CASES_PORT_AND_UI_CONSUMER"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/native/journeys/similarity217/ui62.spec.ts\",\"e2e/sucafina/native/journeys/u26.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "provenance": [
+        {
+          "mission": 217,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair217/REQUEST-214.json",
+          "receipt_blob": "a378bde653c78f13b083a4d6d8670b17e3898e2b"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S218-IMPORT-RECEIPTS",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "A06_ORIGINAL_READ_LIST_CONTRACT_AUTHORITY"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/import-history218/real-receipts.test.ts\",\"Sucafinav1/test/native-ui-contract/files.test.ts\",\"Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts\",\"Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 218,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/REQUEST214.json",
+          "receipt_blob": "9dc7697683d0dc246f41b755cfae39ef364fbc0f"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S218-IMPORT-HISTORY-F04",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/native/journeys/import-history218/authorized-history.spec.ts\",\"e2e/sucafina/native/journeys/u23.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "provenance": [
+        {
+          "mission": 218,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair218/REQUEST214.json",
+          "receipt_blob": "9dc7697683d0dc246f41b755cfae39ef364fbc0f"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S219-NATIVE-HUMAN-REQUEST",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/native-admission219/human-command.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 219,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair219/CI-REQUEST-214.json",
+          "receipt_blob": "dc5f23c4197be80e43e6c37787b73a4b4e636ac9"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S219-REAL-TASK-RELAY",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER",
+        "229_ACTUAL_TASK_RELAY_ORIGIN_HANDOFF_AND_211_CONSUMPTION"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/native-admission-closure/admission.test.ts\",\"Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts\",\"Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts\",\"Sucafinav1/test/native-ui-contract/routines.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 219,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair219/CI-REQUEST-214.json",
+          "receipt_blob": "dc5f23c4197be80e43e6c37787b73a4b4e636ac9"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S220-DECISIONS",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/native-ui-contract/decisions.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 220,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair220/HANDOFF-211-214.json",
+          "receipt_blob": "9cf2877266055ae57ad337e06564749d7e260205"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S220-AM04",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts\",\"Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 220,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair220/HANDOFF-211-214.json",
+          "receipt_blob": "9cf2877266055ae57ad337e06564749d7e260205"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S220-AM05",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts\",\"Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 220,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair220/HANDOFF-211-214.json",
+          "receipt_blob": "9cf2877266055ae57ad337e06564749d7e260205"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S221-AM01-CAUSAL",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"240000\",\"Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts\",\"Sucafinav1/test/product/wp03/scenario-costs.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 221,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair221/CI-REQUEST214.json",
+          "receipt_blob": "11b2f0817e6680dde6b12a2e670ea2d4623753c2"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S222-AM02-CAUSAL",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"240000\",\"Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 222,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair222/REQUEST-214.json",
+          "receipt_blob": "2608cb9ed28ee8764966b33971432be867f2c10f"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S225-CSV-ADMISSION",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/supplier-csv225/admission.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 225,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/request223.json",
+          "receipt_blob": "d78e1162880fe1fda5bb4dd6a92016c089841f59"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S225-SUPPLIER-CSV-F04",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/native/journeys/supplier-csv225/export.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "provenance": [
+        {
+          "mission": 225,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure225/request223.json",
+          "receipt_blob": "d78e1162880fe1fda5bb4dd6a92016c089841f59"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S226-FILES-CODECS",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "228_226_SEMANTIC_TRANSPORT_PREPOST_CONFLICT"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"client\",\"directory\":\"packages/client\",\"runner\":\"bun\",\"args\":[\"test/sucafina/files-transport226/source-codecs.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 226,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/REQUEST-223.json",
+          "receipt_blob": "96ade07f3b1fd6f788af04d3462bb2a9b0e0b831"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S226-FILES-CONTRACT",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "218_226_ORIGINAL_25_OPERATION_PRODUCER_CONSUMER_PARITY"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/native-ui-contract/files.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 226,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure226/REQUEST-223.json",
+          "receipt_blob": "96ade07f3b1fd6f788af04d3462bb2a9b0e0b831"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S227-TODAY-RESUME-BROWSER",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"bun\",\"args\":[\"test-browser/sucafina-native/today-resume227.test.ts\",\"test-browser/sucafina-native/context.test.ts\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": 227,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/REQUEST-223.json",
+          "receipt_blob": "336c2bd32678db10496f725875a6fe2941945383"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "S227-TODAY-F04",
+      "group": "SURGICAL_CAUSAL",
+      "requires": [
+        "211_INTEGRATES_CAUSAL_SOURCE_POSTIMAGES",
+        "NEW_MATERIAL_W_TREE_WITH_REAL_CONSUMER",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "SAME_WORKFLOW_VALIDATOR_AND_UNMODIFIED_ORACLES",
+        "AUTHORIZED_ORIGINAL_INSTALLED_F04_ACTORS_AND_PROVIDER",
+        "231_ACTUAL_HOME_F01_HOST_BINDING_HANDOFF_AND_COMPOSITION"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/native/journeys/u01.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "provenance": [
+        {
+          "mission": 227,
+          "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure227/REQUEST-223.json",
+          "receipt_blob": "336c2bd32678db10496f725875a6fe2941945383"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "CI-SF",
+      "group": "FINAL_SAME_C",
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "CI-CLI",
+      "group": "FINAL_SAME_C",
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"cli\",\"directory\":\"apps/cli\",\"runner\":\"bun\",\"args\":[],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "CI-APP-SRC",
+      "group": "FINAL_SAME_C",
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"bun\",\"args\":[],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "group": "FINAL_SAME_C",
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"bun\",\"args\":[\"test-browser\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "group": "FINAL_SAME_C",
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"atlas-boundary\",\"directory\":\"modules/atlas/boundary\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"30000\"],\"env\":{}}]",
+      "provenance": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "group": "FINAL_SAME_C",
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/operations.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "provenance": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "group": "FINAL_SAME_C",
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/decisions.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "provenance": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "group": "FINAL_SAME_C",
+      "requires": [
+        "211_CONSUMES_ALL_SCOPE",
+        "S0_ACCEPTS_ONE_IMMUTABLE_C",
+        "INITIAL_TEST_CI_DISPATCH_CAPABILITY",
+        "ORIGINAL_VALIDATED_TEST_SELECTION",
+        "VALID_REAL_HOST_RESOURCES_WHERE_NEEDED"
+      ],
+      "request_id": "[\"linux\",{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/reports.spec.ts\"],\"env\":{},\"config\":\"e2e/playwright.production.config.ts\"}]",
+      "provenance": [
+        {
+          "mission": "IMMUTABLE_PLAN",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "blob": "ae5a1949876eef23450fa51167498be8a2334d35"
+        }
+      ],
+      "source_consumer": "NOT_CONSUMED",
+      "W_material": null,
+      "C_accepted": null,
+      "run": "NOT_RUN",
+      "run_id": null,
+      "duplicate_of": null
+    }
+  ],
+  "source_missions": {
+    "ready_source_unconsumed": [
+      215,
+      216,
+      217,
+      218,
+      219,
+      220,
+      221,
+      222,
+      225,
+      226,
+      227
+    ],
+    "input_only_not_yet_handoff": [
+      224,
+      229,
+      230,
+      231
+    ],
+    "not_dispatchable_receipts_only": [
+      228
+    ],
+    "predecessor_terminal": [
+      223
+    ],
+    "separate_owners": {
+      "composition": 211,
+      "compiler_and_G7": 190,
+      "D_G8": "NOT_232",
+      "remoteproof": 199,
+      "desktop": 213
+    }
+  },
+  "earlier_failure_recheck": [
+    "B9 decisions",
+    "B11 original C12",
+    "B16 AM02 real authority",
+    "B18 AM04 HTTP400",
+    "B19 AM01 selection"
+  ],
+  "zero_selection_run": {
+    "run_id": 43781292706,
+    "result": "FAIL_ZERO_SELECTED",
+    "corrected_run_id": 43781695995
+  },
+  "final_cumulative": {
+    "required_min_eight": [
+      "CI-SF",
+      "CI-CLI",
+      "CI-APP-SRC",
+      "CI-APP-BROWSER",
+      "CI-ATLAS-BUSINESS",
+      "CI-UI-OPERATIONS",
+      "CI-UI-DECISIONS",
+      "CI-UI-REPORTS"
+    ],
+    "epic_e2e": {
+      "state": "NOT_RUN",
+      "same_C_required": true,
+      "rule": "Mínimo desta footprint: CI-SF, CI-CLI, CI-APP-SRC, CI-APP-BROWSER, CI-ATLAS-BUSINESS e três recipes Playwright SF. Em G0, S0-C inventaria as suites exigidas pelo epic/AGENTS e os pacotes afetados; cada uma recebe recipe executável com alias existente. Qualquer suite adicional obrigatória continua sendo gate. Não chamar este mínimo de suíte global de Orchestra nem presumir workflows ausentes."
+    },
+    "AM01_06": [
+      {
+        "id": "AM01",
+        "required": "REAL_INSTALLED_POSITIVE_ORIGINAL_CONSUMPTION",
+        "state": "NOT_RUN",
+        "no_component_substitution": true
+      },
+      {
+        "id": "AM02",
+        "required": "REAL_INSTALLED_POSITIVE_ORIGINAL_CONSUMPTION",
+        "state": "NOT_RUN",
+        "no_component_substitution": true
+      },
+      {
+        "id": "AM03",
+        "required": "REAL_INSTALLED_POSITIVE_ORIGINAL_CONSUMPTION",
+        "state": "NOT_RUN",
+        "no_component_substitution": true
+      },
+      {
+        "id": "AM04",
+        "required": "REAL_INSTALLED_POSITIVE_ORIGINAL_CONSUMPTION",
+        "state": "NOT_RUN",
+        "no_component_substitution": true
+      },
+      {
+        "id": "AM05",
+        "required": "REAL_INSTALLED_POSITIVE_ORIGINAL_CONSUMPTION",
+        "state": "NOT_RUN",
+        "no_component_substitution": true
+      },
+      {
+        "id": "AM06",
+        "required": "REAL_INSTALLED_POSITIVE_ORIGINAL_CONSUMPTION",
+        "state": "NOT_RUN",
+        "no_component_substitution": true
+      }
+    ],
+    "F04_installed": {
+      "U15": "NOT_RUN",
+      "U39": "NOT_RUN",
+      "U40": "NOT_RUN",
+      "D01": "NOT_RUN"
+    },
+    "C_G7": {
+      "owner": 190,
+      "state": "NOT_RUN"
+    },
+    "D_G8": {
+      "owner": "S0/190",
+      "state": "NOT_RUN"
+    },
+    "independent_reviews": [
+      "R1_NOT_FINAL",
+      "R2_NOT_FINAL",
+      "R3_NOT_FINAL"
+    ]
+  },
+  "rules": {
+    "source_ready_not_consumption": true,
+    "development_surgical_requires": "NEW MATERIAL W + actual consumption, not accepted final C",
+    "final_requires": "SINGLE S0 ACCEPTED C FOR EIGHT+EPIC+AM",
+    "no_redispatch_unchanged_failed": true,
+    "not_green_other_SHA": true,
+    "no_fabricated_mocks_providers_or_oracles": true,
+    "receipt_branch_never_merged_to_product": true
+  },
+  "next_consumer": "211 integrates valid postimages with CAS, future authorized product CI dispatcher with initial workflow-dispatch capability re-evaluates manifests; 190 independently owns compiler guards.",
+  "GLOBAL_RELEASE": false
+}

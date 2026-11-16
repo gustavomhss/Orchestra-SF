@@ -1,0 +1,235 @@
+{
+  "schema": "sf2h.product-ci232.handoff.v1",
+  "version": 1,
+  "campaign": "sf2h-integral-20261112",
+  "mission": 232,
+  "epoch": "product-ci-e9-browser232",
+  "state": "TERMINAL_REQUEST_MANIFESTS_AND_RECONCILIATION_PUBLISHED_EXTERNAL_DISPATCH_UNAVAILABLE",
+  "branch": "sf-ci-closure",
+  "pr_base": "sf-ci-validation",
+  "pr_base_sha": "783becc0c5df4c2f1667a51d287710131a92b655",
+  "actor": {
+    "model": "GPT-6",
+    "session_id": null,
+    "session_exposed": false,
+    "github_login": "gustavomhss"
+  },
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/ACK.json",
+    "commit": "0e14ef4c7fdddc2cfe7ba3f65a00e307eb8adf35",
+    "blob": "72670fec7857302038e001ffa044f8268593e2dc",
+    "CAS": true,
+    "force": false
+  },
+  "s0_fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/S0-FENCE.json",
+    "blob": "ae3d8c46360c2641f51ba162446a7c877aa1d91b",
+    "initial_head": "840effa220ad1f5ba80d1914865febc7fc4cffe4"
+  },
+  "source_version": {
+    "predecessor223": "783becc0c5df4c2f1667a51d287710131a92b655",
+    "product211": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "product211_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "detached228_commit": "33474b2158a4703f256191f61f1a16ac85c26004",
+    "detached228_proposal_tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+    "detached_not_consumed": true,
+    "accepted_C": null
+  },
+  "deliverables": {
+    "new_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/INERT-PATCH-MANIFEST.json",
+        "pre_blob": null,
+        "post_blob": "953730d788bc606ffe6af43a76aa6d868eef0ba5",
+        "mode": "100644",
+        "change": "ADD_RECEIPT_ONLY"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/SOURCE-PARITY.json",
+        "pre_blob": null,
+        "post_blob": "9821126644bb1101fe74a239add220dacac1777d",
+        "mode": "100644",
+        "change": "ADD_RECEIPT_ONLY"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/REQUEST-MANIFESTS.json",
+        "pre_blob": null,
+        "post_blob": "f5c93194b81ac6cd594a7a08d0a4062b89b889fe",
+        "mode": "100644",
+        "change": "ADD_RECEIPT_ONLY"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/QUEUE.json",
+        "pre_blob": null,
+        "post_blob": "c2180b83566acbd773903357a2bff59d73225052",
+        "mode": "100644",
+        "change": "ADD_RECEIPT_ONLY"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/RUNS.json",
+        "pre_blob": null,
+        "post_blob": "f01ddb1e4a1f01552e30922500ff5cbbb5cd63a6",
+        "mode": "100644",
+        "change": "ADD_RECEIPT_ONLY"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/FINDINGS.json",
+        "pre_blob": null,
+        "post_blob": "876518b6de4b48953507987359e7d490ea60dfba",
+        "mode": "100644",
+        "change": "ADD_RECEIPT_ONLY"
+      }
+    ],
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/HANDOFF.json",
+    "existing_read_only": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/ACK.json",
+        "sha": "72670fec7857302038e001ffa044f8268593e2dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/S0-FENCE.json",
+        "sha": "ae3d8c46360c2641f51ba162446a7c877aa1d91b"
+      }
+    ],
+    "inert_patches": {
+      "file": "INERT-PATCH-MANIFEST.json",
+      "entries": 70,
+      "conflicts": 8,
+      "complete_bytes": "Exact Git pre/post blobs and content-addressed full inert payload locations in closure228, NO live source change or product ref update"
+    },
+    "queue": {
+      "file": "QUEUE.json",
+      "normalized_dependency_requests": 27,
+      "surgical": 19,
+      "final_eight": 8,
+      "duplicates": 0,
+      "all_not_run": true
+    },
+    "executable_inputs": {
+      "file": "REQUEST-MANIFESTS.json",
+      "request_shape": "Original .ci-run.json with package/directory/runner/args/env/config plus official test:ci invocations",
+      "dispatch_not_performed": true
+    },
+    "source_parity": {
+      "file": "SOURCE-PARITY.json",
+      "sampled_github_blob_readbacks": 15,
+      "producer_post_present": 15,
+      "consumed_by_211": 0
+    },
+    "run_history": {
+      "file": "RUNS.json",
+      "historical": 15,
+      "complete": 15,
+      "success": 7,
+      "failure": 8,
+      "passing_tests": 134,
+      "failing_tests": 12,
+      "artifacts": 0,
+      "active": 0,
+      "queued": 0,
+      "new": 0
+    },
+    "findings": {
+      "file": "FINDINGS.json",
+      "new_findings": 9,
+      "predecessor_223_preserved": true
+    }
+  },
+  "behavior": {
+    "no_code_outside_assigned_path": true,
+    "new_source_code_or_patch_applied_to_product": false,
+    "no_new_runner_workflow_or_infrastructure": true,
+    "no_modified_fixtures_or_oracles": true,
+    "product_211_unchanged": true,
+    "CI_reconciliation": "15 historical runs checked individually against actual GitHub Actions; no queued/in_progress runs observed",
+    "CI_dispatch_capability": "NO_EXPOSED_INITIAL_TEST_CI_DISPATCH_IN_CONNECTED_GITHUB_MCP",
+    "native_goal": "PAUSED",
+    "GLOBAL_RELEASE": false,
+    "dedup": "full key requires material W/tree + normalized request + workflow/validator + runtime/config + fixture/source selection; provisional key cannot claim cached PASS",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "official_test_ci": "NOT_RUN",
+    "guards_G7_G8": "NOT_RUN",
+    "release_status": "NO_GLOBAL_RELEASE"
+  },
+  "scope_preserved": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "acceptance_criteria": 1610,
+    "UX": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "T0": "2026-11-13T04:01:10Z",
+    "clock": "CONTINUING_LATE"
+  },
+  "criteria_covered": [
+    "Historical run IDs, job IDs, W/S/request source parity preserved without invalid PASS promotion",
+    "S0-FENCE/branch HEAD verified before ACK; CAS expected_head no force",
+    "15 real historical Actions run terminal statuses rechecked; zero queued and active",
+    "Source requests 215–222 and 225–227 normalized into finite 19 surgical + 8 final CI manifests",
+    "Source/consumer blob readbacks prove producer outputs not yet material in 211",
+    "Detached 228 merge proposals preserved inert with exact complete pre/post blob references",
+    "Explicit AM01–AM06, eight final same-C, epic/E2E and static C/G7/D/G8 boundaries"
+  ],
+  "criteria_open": [
+    "211 consumes causal postimages with CAS into a coherent new material W and produces source-to-consumer proof",
+    "224/229/230/231 only admitted after terminal source handoffs; 229 Task/Relay native origin unproven, 230 C12 recovery review unproven",
+    "Initial official test:ci dispatch interface absent from current authorized GitHub MCP; no replacement or token/push workaround",
+    "199/213 original installed host/authenticated native actors and packaged D01 evidence absent",
+    "S0 accepts exact immutable C for final eight and epic, required installed AM01–AM06 real positives; no component substitutions",
+    "190 owns compiler/typecheck and C/G7 guard, S0/190 D/G8, final R1/R2/R3 and remoteproof"
+  ],
+  "findings_open": [
+    "M232-01",
+    "M232-02",
+    "M232-03",
+    "M232-04",
+    "M232-05",
+    "M232-06",
+    "M232-07",
+    "M232-08",
+    "M232-09"
+  ],
+  "historical_nonpass": [
+    43780028332,
+    43780060382,
+    43780062327,
+    43781269811,
+    43781292706,
+    43781314836,
+    43781497192,
+    43781520064
+  ],
+  "external_limit": "Only connected GitHub MCP; fetch/rerun existing jobs exposed, starting a new official test:ci workflow not exposed. No CI runs claimed or initiated.",
+  "next_consumers": [
+    {
+      "actor": 211,
+      "action": "Consume exact source/consumer postimages and resolve 8 semantic conflicts under the existing product lease; produce actual new material W and handoff before CI"
+    },
+    {
+      "actor": "FUTURE_AUTHORIZED_CI_DISPATCHER_WITH_VERIFIED_OFFICIAL_CAPABILITY",
+      "action": "After explicit accepted authority/epoch and W, dedup/validate 19 causal requests; after S0 accepts C, dispatch 8 final and epic/E2E and real AM gates exclusively via original test:ci; record real S/run/job/artifact IDs"
+    },
+    {
+      "actor": 190,
+      "action": "Own original compiler/typecheck/guards C/G7 and D/G8; do not transfer to 232"
+    },
+    {
+      "actor": "S0/199/213",
+      "action": "Provide formal C and authentic installed host resources; no guessed credentials or identity"
+    }
+  ],
+  "authority_release": {
+    "epoch": "product-ci-e9-browser232",
+    "accepted": "exclusive successor after verified terminal 223",
+    "released_at": "terminal handoff publication",
+    "state": "RELEASED_NO_ACTIVE_DISPATCH",
+    "live_run_leases": 0,
+    "no_automatic_new_owner": true,
+    "no_heartbeat_watchdog_or_goal_reactivation": true
+  },
+  "no_merges": true,
+  "do_not_merge_receipts_branch_into_product": true
+}
