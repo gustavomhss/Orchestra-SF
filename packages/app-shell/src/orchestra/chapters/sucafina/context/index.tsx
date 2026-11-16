@@ -223,15 +223,21 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     }
   }
   const invalidate: SfContextHandle["invalidate"] = (reason) => {
-    fence(props.selection())
+    const selection = props.selection()
+    fence(selection)
     props.dependencies.navigation?.clearResumeFocus()
+    if (reason === "session-expired") {
+      current?.drafts.quarantine()
+      epoch += 1
+      publish(store.generation, { status: "unavailable", selection, reason: "connection-auth-unavailable" })
+      return
+    }
     const lostDrafts = reason === "revoked" && current?.drafts.dirty() === true
     current?.drafts.revoke(reason === "logout" ? "logout" : reason === "revoked" ? "access-revoked" : "owner-changed")
     current = undefined
     currentOwner = undefined
     ownerKey = undefined
     epoch += 1
-    const selection = props.selection()
     publish(store.generation, { status: reason === "revoked" ? "denied" : "resolving", selection })
     if (lostDrafts) notifyDraftRevoked()
   }

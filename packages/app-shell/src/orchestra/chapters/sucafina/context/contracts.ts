@@ -88,11 +88,12 @@ export type SfContextHandle = Readonly<{
   generation: Accessor<number>
   /** Reads the original owner draft registry, including quarantined edits. */
   hasDirtyDrafts: () => boolean
-  /** Only after explicit discard consent; refuses pending/unknown or quarantined operations. */
+  /** Only after explicit consent; quarantined unsent drafts may be purged, never pending/unknown operations. */
   discardDrafts: () => boolean
   ready: Accessor<Readonly<{ context: SfContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
   reload: () => Promise<void>
-  invalidate: (reason: "logout" | "revoked" | "owner-changed" | "host-changed") => void
+  /** Session expiry quarantines for same-owner revalidation; other reasons purge. */
+  invalidate: (reason: "logout" | "revoked" | "session-expired" | "owner-changed" | "host-changed") => void
   /** Only installed with the real F01 navigation; no optimistic fallback. */
   resumeCase?: SfTodayResumePort["resumeCase"]
   /** Consumes an owner/access-scoped returnRef once after Home renders. */
