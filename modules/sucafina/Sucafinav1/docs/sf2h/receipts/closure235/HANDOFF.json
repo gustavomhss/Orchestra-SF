@@ -1,0 +1,237 @@
+{
+  "schema": "sf2h.closure235.handoff.v1",
+  "mission": 235,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "status": "PREPARATION_COMPLETE_REVIEW_NOT_STARTED",
+  "global_release": false,
+  "actor": {
+    "model": "GPT-6",
+    "session_id": null,
+    "role": "preparer, not any final reviewer"
+  },
+  "branch": "sf-review-prep",
+  "starting_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "parent_committed": "a7b8db134adcf2d47146691fb16cd7d61d792b4a",
+  "pr_base": "sf-closure-bundle",
+  "pr_draft": true,
+  "source": {
+    "product_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "product_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "candidate_C_accepted": false,
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "initial_reviewed_product": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "review207_blob": "8b91f7617ba6ce1c456ea7912efd2deeee5b19f7",
+    "review208_blob": "8dd0f76923e9f6e7ba8e43ad4bb9ffe5304d1401",
+    "review209_blob": "9ac53500ea7e4d409dcb0b1a2ad7abfd24f35379",
+    "detached228_commit": "33474b2158a4703f256191f61f1a16ac85c26004",
+    "detached228_tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+    "C12_230_handoff": "fa233a19e8aa52eb3dff77bf0a780872646bef1f",
+    "ci232_terminal_handoff": "57b66b43bcd1eff480fe2986da2f36c7580216db"
+  },
+  "deliverables": {
+    "exact_complete_paths_prepost_consumers": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/ACK.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "0ad8050c82d1c0363e09e3546bfb89f58e466acd",
+        "consumer": "S0/211, 190 and future reviewers"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/CI-DISPATCH-REQUESTS.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "2f4dcc791091919f664445d9247c9ad2de8f0e62",
+        "consumer": "sole authorized dispatcher successor"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/FINDING-TRACE.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "2a62c16cbef2815116b939d9544c374942c87399",
+        "consumer": "S0/211, 190 and future reviewers"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REUSED-INERT-PREPOST.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "03981bfbaf154b16023de3665691bb17fe2a22e0",
+        "consumer": "S0/211, 190 and future reviewers"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-INDEX.md",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "be3dbca512726f30f9f3c6cc125f1893550a919f",
+        "consumer": "S0/211, 190 and future reviewers"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R1-START.md",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "4b920bbe5d6ba81e56395410335a45759a3930bb",
+        "consumer": "new independent reviewer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R1.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "d1fbadb8510641bc805ae3ebfd34e458c90500eb",
+        "consumer": "new independent reviewer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R2-START.md",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "8fa83eb7a531c222396752c3980bb8693f91a6fd",
+        "consumer": "new independent reviewer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R2.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "3cdc40846f4ea287cc18a69c6f22d54dc12be264",
+        "consumer": "new independent reviewer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R3-START.md",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "cec58723c5b87479045adb16bc48ee09f50fdfcc",
+        "consumer": "new independent reviewer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R3.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "32160342869b9ba8473288f19cdafdec90151df0",
+        "consumer": "new independent reviewer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/S0-FENCE.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "6cb484cbb77e8d4fdc66f4278fdbd1a71697df58",
+        "consumer": "S0/211, 190 and future reviewers"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof235/PROOF-INPUT-MATRIX.json",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "8d1c6e5091dc7f43c9c63db8f751e6bf9b9cad6e",
+        "consumer": "reviewer real-witness intake"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/proof235/README.md",
+        "preimage_git_blob": null,
+        "postimage_git_blob": "542bb3eda274a449ad0d9b2c804c5d3fb2de2664",
+        "consumer": "human reviewer"
+      }
+    ],
+    "write_paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/**",
+      "modules/sucafina/Sucafinav1/test/product/proof235/**"
+    ],
+    "finding_matrix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/FINDING-TRACE.json",
+    "complete_inert_reuse": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REUSED-INERT-PREPOST.json",
+    "exact_232_requests": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/CI-DISPATCH-REQUESTS.json",
+    "fresh_reviewer_packs": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R1.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R2.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R3.json"
+    ],
+    "fresh_entryprompts": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R1-START.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R2-START.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/REVIEW-R3-START.md"
+    ],
+    "proof_requests": "modules/sucafina/Sucafinav1/test/product/proof235/PROOF-INPUT-MATRIX.json"
+  },
+  "counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "findings207": 11,
+    "findings208": 6,
+    "findings209": 9,
+    "total": 26,
+    "review208_known_dedup": 4,
+    "existing_inert_228": 70,
+    "semantic_conflicts": 8,
+    "existing_inert_230": 10,
+    "surgical_ci_requests_232": 19,
+    "final_ci_requests_232": 8,
+    "new_ci_runs_235": 0,
+    "product_writes_235": 0
+  },
+  "criteria": {
+    "per_reviewer_WP10_T03_full_texts": 40,
+    "full_original_1610_retained": true,
+    "acceptance": "On formally accepted C, genuine original positive/negative, identity/permission/source/consumer/CI provenance and independent no-authorship reviews only",
+    "still_open": [
+      "original C with immutable tree",
+      "actual F04 installed identity and all AM01–AM06 positives and negatives",
+      "same-C 8 final CI plus epic",
+      "3 fresh independent reviewers without authorship conflicts",
+      "G7 in real checkout C; D evidence-only; G8 in real checkout D separately"
+    ]
+  },
+  "actors": {
+    "product_composer": "211/S0, own exclusive product ref",
+    "cross_refs_224_229_230_231": "ACK/terminal handoffs must be honored, no duplicate writes",
+    "compiler_and_G7_G8": "190",
+    "original_installed_host": "199/213",
+    "single_dispatcher": "232 terminal successor only with official initial test:ci capability",
+    "independent_reviews": "3 future new sessions on candidate C only",
+    "D_final_delivery": "S0"
+  },
+  "behavior": {
+    "no_product_changes": true,
+    "no_sf2_control_changes": true,
+    "no_dev_merge": true,
+    "no_new_supervisor": true,
+    "native_goal": "PAUSED",
+    "no_unauthorized_provider_or_finance_or_Azure": true,
+    "proposed_patches_not_applied": true,
+    "source_211_consumption_required": true,
+    "source_status_is_not_pass": true,
+    "review_207_208_209": "HISTORIC_FIX_FIRST_NOT_APPROVAL"
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM01_AM06": "NOT_RUN",
+    "F04": "NOT_RUN",
+    "G7_on_C": "NOT_RUN",
+    "G8_on_D": "NOT_RUN",
+    "new_final_R1": "NOT_RUN",
+    "new_final_R2": "NOT_RUN",
+    "new_final_R3": "NOT_RUN",
+    "global_release": false
+  },
+  "next_consumers": [
+    {
+      "actor": "211/S0",
+      "action": "Accept actual source handoffs, reconcile 228 full inert 70 postimages/8 conflicts, publish verified immutable C and W/tree"
+    },
+    {
+      "actor": "199/213",
+      "action": "Provide installed original corporate auth/F04, scanner and D01 or classify unavailable"
+    },
+    {
+      "actor": "190",
+      "action": "Original compiler/guards plus G7 on true checkout C and G8 on true checkout D after delivery"
+    },
+    {
+      "actor": "sole authorized successor of 232",
+      "action": "Dedup scoped 19 on material W, only after C accepted 8 final same-C + AM/epic; record real S/run/job/attempt/artefacts"
+    },
+    {
+      "actor": "future 3 independent reviewers",
+      "action": "Open 3 fresh contexts with no product authorship on SAME C, recheck each of 26 and blockers with source positive/negative"
+    },
+    {
+      "actor": "S0 D delivery",
+      "action": "Only evidence-only append on allocated exact paths, full C→D diff and original G8 evidence"
+    }
+  ],
+  "write_release": {
+    "final_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure235/RELEASE.json",
+    "no_runtime_session_revocation_claim": true,
+    "state": "PENDING_PUBLICATION"
+  },
+  "no_global_release": true
+}
