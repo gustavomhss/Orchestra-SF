@@ -19,7 +19,9 @@
     "failedFile": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
     "failedLine": 32,
     "failedReason": "baseline-coverage-case-not-selected",
-    "passedFile": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+    "passedFile": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+    "Wtree": "1c0d7f71f22a034b984eb15f3a810cc86538eaa3",
+    "Stree": "8752fb5e2e13349ebfac83ed9fce66a7149885a1"
   },
   "candidate": {
     "branch": "sf-closure-bundle",
@@ -117,5 +119,46 @@
     "CI": "NOT_DISPATCHED"
   },
   "nativeGoal": "PAUSED",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "historicalInputRefs": {
+    "caseRef": {
+      "id": "d2cbc932-16ae-40f3-8d32-61cdeacc52d1",
+      "incarnation": "5bc9f62f-f152-4e76-9f00-5a0095b025f6",
+      "version": 4
+    },
+    "basisId": "wp12-renewal-inventory:d2cbc932-16ae-40f3-8d32-61cdeacc52d1",
+    "variants": [
+      {
+        "key": "baseline",
+        "resultRef": "decision-result:130b9e244b093f59aa70a39fad938a2dd11818ca2f9978c14f51f3913d678b82",
+        "coverageRef": "baseline-coverage:d06dc8cb559a9eb9a52cbb0feed16ec1c1a895f59013e1ce04d50beabd3feafc",
+        "preview": {
+          "subtotal": 240000,
+          "total": null,
+          "coverage": "complete"
+        }
+      },
+      {
+        "key": "pending",
+        "resultRef": "decision-result:62b43c81993f0dbfc898f0f722534e34db4ff779856b6259b1a456480e7f81a4",
+        "coverageRef": "baseline-coverage:0276153cc1f758001854a38be5b5ae0acec921f0f4d1cb43099db14df10e585c",
+        "preview": {
+          "subtotal": 210000,
+          "total": null,
+          "coverage": "pending"
+        }
+      },
+      {
+        "key": "complete",
+        "resultRef": "decision-result:3261c92421836b751b83ca092f3332d574c1746aee91cec569b41926dee04bca",
+        "coverageRef": "baseline-coverage:c25d473fbe62696dd0182d0fda5628e500bfc3edfdeb3a90363bdc87e54189cc",
+        "preview": {
+          "subtotal": 250000,
+          "total": null,
+          "coverage": "complete"
+        }
+      }
+    ],
+    "origin": "HISTORICAL_ONLY_FROM_JOB_133019558133_LINE_848"
+  }
 }
