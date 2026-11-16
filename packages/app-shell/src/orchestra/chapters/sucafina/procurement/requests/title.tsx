@@ -119,6 +119,12 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
   }
   const matches = (result: Awaited<ReturnType<typeof readRequestTitle>>, intent: Intent) =>
     result.status === "authorized" && result.version === intent.version && result.stage === intent.stage && result.title === intent.original
+  const staleIntent = (intent: Intent, abort: AbortController) => {
+    // Cleanup has already hidden the old owner's values and must not publish an old notice.
+    if (abort.signal.aborted || authority() !== intent.token) return
+    console.error("CAP25 title action lost its review fence")
+    setUi({ review: null, state: "unavailable", notice: "sf.u11.remaining.notAvailable" })
+  }
 
   const begin = async () => {
     const state = editable(), source = ui.source, token = authority(), ref = refValue(), ready = sf.ready()
@@ -133,7 +139,11 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     stop(); active = abort
     const fresh = await readRequestTitle(ready.context, ready.transport, ref, abort.signal)
     // Navigation/owner cleanup already hid this review; no old notice is safe to show.
-    if (!current(review) || abort.signal.aborted) { if (active === abort) busy = false; return }
+    if (!current(review) || abort.signal.aborted) {
+      staleIntent(review, abort)
+      if (active === abort) { busy = false; setUi("busy", false) }
+      return
+    }
     if (!matches(fresh, review)) {
       console.error("CAP25 title review preflight failed", fresh.status === "authorized" ? "source-changed" : fresh.status)
       rejectSource(fresh); busy = false; setUi("busy", false); return
@@ -159,10 +169,10 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     try {
       const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(payload)))
       // Cleanup on navigation or owner change hides the prior action and its values.
-      if (!current(intent) || abort.signal.aborted) return
+      if (!current(intent) || abort.signal.aborted) { staleIntent(intent, abort); return }
       const digest = Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, "0")).join("")
       const fresh = await readRequestTitle(ready.context, ready.transport, intent.ref, abort.signal)
-      if (!current(intent) || abort.signal.aborted) return
+      if (!current(intent) || abort.signal.aborted) { staleIntent(intent, abort); return }
       if (!matches(fresh, intent)) {
         console.error("CAP25 title save preflight failed", fresh.status === "authorized" ? "source-changed" : fresh.status)
         rejectSource(fresh); return
