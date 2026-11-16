@@ -27,7 +27,9 @@ import { matchSfNativeRoutePath } from "../route-registry"
 import { useSfContext } from "../context"
 import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
   SfDraftRevalidation, SfSurfaceProps } from "../context/contracts"
-import { parsePlannerRouteQuery, plannerRouteAvailable } from "./planner-route"
+import { parsePlannerRouteQuery, plannerRouteAvailable, plannerOverviewSelectionMatches } from "./planner-route"
+import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
+import { SfPlannerOverviewView } from "../planner/overview"
 import { SfPlannerVersionsView } from "../planner/versions"
 import { SfPlannerCompareView } from "../planner/compare"
 import { SfTodayView } from "../home"
@@ -183,6 +185,9 @@ function MountedSurface(props: Readonly<{
       </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "UI34"}>
         <SfIntentView surfaceId="UI34" route={current() as SfSurfaceProps<"UI34">["route"]} />
+      </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP17"}>
+        <SfPlannerOverviewView surfaceId="CAP17" route={current() as SfSurfaceProps<"CAP17">["route"]} />
       </Match>
       <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP23" && current()?.kind === "compare"}>
         <SfPlannerCompareView surfaceId="CAP23" route={current() as SfSurfaceProps<"CAP23">["route"]} />
@@ -386,8 +391,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       } catch { return { status: "invalid-link" } }
       const candidate = matchSfNativeRoutePath(url.pathname)
       if (!candidate) return { status: "invalid-link" }
-      const plannerQuery = candidate.surfaceId === "CAP23" ? parsePlannerRouteQuery(url.searchParams, candidate) : undefined
-      if (candidate.surfaceId === "CAP23" ? !plannerQuery :
+      const plannerQuery = (candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17") ? parsePlannerRouteQuery(url.searchParams, candidate) : undefined
+      if (candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerQuery :
         [...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)) || !(
           candidate.surfaceId === "UI29" && candidate.kind === "entry" ||
           candidate.surfaceId === "UI33" && candidate.kind === "entry" ||
@@ -409,10 +414,26 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         return { status: "denied" }
       const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
         : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
-      if (candidate.surfaceId === "CAP23" ? !plannerRouteAvailable(context.value, candidate) :
+      if (candidate.surfaceId === "CAP23" || candidate.surfaceId === "CAP17" ? !plannerRouteAvailable(context.value, candidate) :
         !context.value.availability.some((resource) => resource.operations.some((operation) =>
           operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
         return { status: "denied" }
+      if (candidate.surfaceId === "CAP17" && plannerQuery && (plannerQuery.version || plannerQuery.filter)) {
+        const input = {
+          ...(plannerQuery.year === undefined ? {} : { year: plannerQuery.year }),
+          ...(plannerQuery.version ? { version: plannerQuery.version } : {}),
+          ...(plannerQuery.filter ? { filter: plannerQuery.filter } : {}),
+        }
+        const transport = newTransport(binding, currentGeneration, () => ownerEpoch)
+        const result = await createSfPlannerClient(transport)["domain.page.CAP17"](input, { signal })
+        if (signal.aborted || currentGeneration !== ownerEpoch) return { status: "unavailable" }
+        if (result.kind !== "response" || result.body.status !== "ok") return { status: "denied" }
+        if (!plannerOverviewSelectionMatches(plannerQuery, result.body.value)) return { status: "denied" }
+        const fresh = await readContext(binding, signal, currentGeneration, () => ownerEpoch)
+        if (signal.aborted || currentGeneration !== ownerEpoch) return { status: "unavailable" }
+        if (fresh.status !== "ok" || !sameStamp(stamp, fresh.value.stamp) ||
+            !plannerRouteAvailable(fresh.value, candidate)) return { status: "denied" }
+      }
       // UI34 data admission remains at original useSfCase. When returning from
       // UI29, the exact 227 resume port alone performs BOTH original case reads
       // (preflight and pre-commit), not a third implicit prefetch here.

@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import type { SfContext, SfOwnerSelection, SfRef, SfServerKey } from "@orchestra/schema/sucafina/context"
 import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
 import { resolveSfUrlSelection } from "../../src/orchestra/chapters/sucafina/navigation-state"
-import { parsePlannerRouteQuery, plannerRouteAvailable } from "../../src/orchestra/chapters/sucafina/host/planner-route"
+import { parsePlannerRouteQuery, plannerRouteAvailable, plannerOverviewSelectionMatches } from "../../src/orchestra/chapters/sucafina/host/planner-route"
 
 const versions = matchSfNativeRoutePath("/orchestra/sf-planner/versions")!
 const compare = matchSfNativeRoutePath("/orchestra/sf-planner/versions/compare")!
@@ -47,5 +47,27 @@ describe("Planner route admission", () => {
     expect(plannerRouteAvailable(context(true, false), compare)).toBe(false)
     expect(plannerRouteAvailable(context(true, true, false), compare)).toBe(false)
     expect(plannerRouteAvailable(context(true, true), compare)).toBe(true)
+  })
+})
+
+
+describe("Planner overview deep links", () => {
+  const overview = matchSfNativeRoutePath("/orchestra/sf-planner/overview")!
+  test("validates closed selector syntax and the producer year", () => {
+    expect(parsePlannerRouteQuery(new URLSearchParams("year=2026&version=v1&filter=v2"), overview)).toEqual({ year: 2026, version: "v1", filter: "v2" })
+    expect(parsePlannerRouteQuery(new URLSearchParams("version=v1&version=v2"), overview)).toBeUndefined()
+    expect(parsePlannerRouteQuery(new URLSearchParams("version="), overview)).toBeUndefined()
+    expect(parsePlannerRouteQuery(new URLSearchParams("year=2028"), overview)).toBeUndefined()
+    expect(parsePlannerRouteQuery(new URLSearchParams("unknown=x"), overview)).toBeUndefined()
+  })
+  test("rejects removed versions, wrong year, and filters outside current comparison choices", () => {
+    const page = { data: { selectedVersion: { id: "v1", year: 2026 }, versions: [
+      { id: "v1", year: 2026 }, { id: "v2", year: 2026 }, { id: "v3", year: 2025 },
+    ] } } as Parameters<typeof plannerOverviewSelectionMatches>[1]
+    expect(plannerOverviewSelectionMatches({ year: 2026, version: "v1", filter: "v2" }, page)).toBe(true)
+    expect(plannerOverviewSelectionMatches({ version: "removed" }, page)).toBe(false)
+    expect(plannerOverviewSelectionMatches({ year: 2025, version: "v1" }, page)).toBe(false)
+    expect(plannerOverviewSelectionMatches({ filter: "v3" }, page)).toBe(false)
+    expect(plannerOverviewSelectionMatches({ filter: "v1" }, page)).toBe(false)
   })
 })

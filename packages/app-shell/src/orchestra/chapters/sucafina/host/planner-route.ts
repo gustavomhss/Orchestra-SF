@@ -1,5 +1,5 @@
 import { Option, Schema } from "effect"
-import { SfDomainPageCap23 } from "@orchestra/schema/sucafina/planner"
+import { SfDomainPageCap17, SfDomainPageCap23 } from "@orchestra/schema/sucafina/planner"
 import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
 
@@ -7,25 +7,43 @@ const selectorKeys = ["server", "project", "installation"] as const
 
 /** Strict selectors are hints only; this parser never authorizes a destination. */
 export function parsePlannerRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
-  if (candidate.surfaceId !== "CAP23" || !["entry", "new", "detail", "compare"].includes(candidate.kind)) return
+  if (!(candidate.surfaceId === "CAP17" && candidate.kind === "entry") &&
+      !(candidate.surfaceId === "CAP23" && ["entry", "new", "detail", "compare"].includes(candidate.kind))) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => ![...selectorKeys, "year"].includes(key as typeof selectorKeys[number]))) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => ![...selectorKeys, "year", ...(candidate.surfaceId === "CAP17" ? ["version", "filter"] : [])].includes(key))) return
   const selectors = selectorKeys.map((key) => params.get(key))
   if (selectors.some((item) => item !== null) && !selectors.every((item) => !!item)) return
   const rawYear = params.get("year")
-  if (rawYear === null) return {}
-  if (!/^\d{4}$/.test(rawYear)) return
-  const year = Number(rawYear)
-  if (Option.isNone(Schema.decodeUnknownOption(SfDomainPageCap23.input, { onExcessProperty: "error" })({ year }))) return
-  return { year }
+  if (rawYear !== null && !/^\d{4}$/.test(rawYear)) return
+  const input = {
+    ...(rawYear === null ? {} : { year: Number(rawYear) }),
+    ...(params.has("version") ? { version: params.get("version")! } : {}),
+    ...(params.has("filter") ? { filter: params.get("filter")! } : {}),
+  }
+  if (("version" in input && !input.version) || ("filter" in input && !input.filter)) return
+  const parsed = candidate.surfaceId === "CAP17"
+    ? Schema.decodeUnknownOption(SfDomainPageCap17.input, { onExcessProperty: "error" })(input)
+    : Schema.decodeUnknownOption(SfDomainPageCap23.input, { onExcessProperty: "error" })(input)
+  if (Option.isNone(parsed)) return
+  return input as SfResolvedQuery
 }
 
 /** Context availability is necessary, not a grant: each mounted leaf still performs its original producer read. */
 export function plannerRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
-  if (candidate.surfaceId !== "CAP23" || !["entry", "new", "detail", "compare"].includes(candidate.kind)) return false
-  const required = candidate.kind === "compare" ? ["CAP23", "CAP17"] : ["CAP23"]
+  if (!(candidate.surfaceId === "CAP17" && candidate.kind === "entry") &&
+      !(candidate.surfaceId === "CAP23" && ["entry", "new", "detail", "compare"].includes(candidate.kind))) return false
+  const required = candidate.surfaceId === "CAP17" ? ["CAP17"] : candidate.kind === "compare" ? ["CAP23", "CAP17"] : ["CAP23"]
   return required.every((id) => context.destinations.some((item) => item.capabilityId === id && item.canRead) &&
     context.availability.some((resource) => resource.family === "planner" && resource.resource === id &&
       resource.operations.some((operation) => operation.operationId === `domain.page.${id}` &&
         operation.state === "ready" && operation.operational)))
+}
+
+/** Only references actually returned in the authorized page can survive an overview deep link. */
+export function plannerOverviewSelectionMatches(query: SfResolvedQuery, page: Extract<Schema.Schema.Type<typeof SfDomainPageCap17.output>, { status: "ok" }>["value"]): boolean {
+  if (query.version && (page.data.selectedVersion?.id !== query.version ||
+      (query.year !== undefined && page.data.selectedVersion?.year !== query.year))) return false
+  if (query.filter && !page.data.versions.some((version) => version.id === query.filter &&
+      version.year === page.data.selectedVersion?.year && version.id !== page.data.selectedVersion?.id)) return false
+  return true
 }
