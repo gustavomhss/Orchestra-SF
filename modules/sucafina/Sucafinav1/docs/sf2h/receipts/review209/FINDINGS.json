@@ -1,0 +1,660 @@
+{
+  "schema": "sf2h.review209.v1",
+  "mission": 209,
+  "actor": "S3-R3",
+  "epoch": "cold-review-e1-browser209",
+  "review_kind": "PRE_FREEZE_DELTA_AND_UNCOVERED_CRITERIA_NOT_FINAL",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "candidate": {
+    "branch": "sf2-stack",
+    "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+    "state": "NOT_ACCEPTED_C"
+  },
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+    "blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+    "sole_integrator": "189/PR65"
+  },
+  "immutable": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "next30": "1d9d49ec26281ffd6486d722a97298596289605d",
+    "wp": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "execution": {
+    "local_tests": "NOT_RUN_BY_S3_R3",
+    "build": "NOT_RUN_BY_S3_R3",
+    "typecheck": "NOT_RUN_BY_S3_R3",
+    "own_ci": "NOT_DISPATCHED",
+    "product_writes": 0
+  },
+  "goal": "PAUSED",
+  "global_release": false,
+  "final_approve": false,
+  "verdict": "FIX_FIRST",
+  "source_spec": {
+    "actor_pack_blob": "6c8de729cc156f6672738c2f8403472a8c478338",
+    "common_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "review148_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/",
+    "review148_finding_blob": "157220ae4dd6f36608f24c8c6b3f9888000efac4"
+  },
+  "dedup": {
+    "inherited_ids": [
+      "R148-NATIVE-01",
+      "R3-NATIVE-01",
+      "R3-MCP-02",
+      "R3-TASK-03",
+      "R3-ATLAS-04",
+      "R3-SCANNER-05",
+      "R3-EXPORT-06",
+      "R3-CI-07",
+      "R3-CANDIDATE-08"
+    ],
+    "new_finding_count": 0,
+    "require_preserve_existing_ids": true,
+    "notes": "Old R3-* and R148-NATIVE-01 reused; confirmed default C07 gap not inflated into new ID. Separate missing-proof release gates from actual source defect."
+  },
+  "finite_release_blockers": [
+    {
+      "id": "B209-01",
+      "finding_ids": [
+        "R3-TASK-03"
+      ],
+      "blocker": "C07 first-party native owner absent; AM06 and Schedule no admissible positive"
+    },
+    {
+      "id": "B209-02",
+      "finding_ids": [
+        "R3-NATIVE-01",
+        "R3-EXPORT-06"
+      ],
+      "blocker": "AM01 full 5/18 executed typed outputs and real UI/doc consumers post-restart absent"
+    },
+    {
+      "id": "B209-03",
+      "finding_ids": [
+        "R3-MCP-02"
+      ],
+      "blocker": "39 routes private MCP parity/public binding/narrow/revoke true runtime not attested"
+    },
+    {
+      "id": "B209-04",
+      "finding_ids": [
+        "R3-ATLAS-04",
+        "R3-SCANNER-05"
+      ],
+      "blocker": "Atlas scanner real + C08 commit/restart/ACL and generated guard not attested"
+    },
+    {
+      "id": "B209-05",
+      "finding_ids": [
+        "R148-NATIVE-01"
+      ],
+      "blocker": "Lifecycle patch static corrected, full failure/recovery oracle on accepted C still missing"
+    },
+    {
+      "id": "B209-06",
+      "finding_ids": [
+        "R3-CI-07"
+      ],
+      "blocker": "Eight final CI + epic/G7D/G8 same accepted C missing; one surgical AM/190 run failing on other W"
+    },
+    {
+      "id": "B209-07",
+      "finding_ids": [
+        "R3-CANDIDATE-08"
+      ],
+      "blocker": "189 accepted immutable C/3 independent final post-C/D evidence-only preserved blobs not established"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R148-NATIVE-01",
+      "inherited_from": "148/preliminary148",
+      "severity": "P1",
+      "kind": "PREVIOUS_CODE_DEFECT_CAUSAL_RECHECK",
+      "state": "REMEDIATED_STATIC_RECHECK_PENDING",
+      "new_bug": false,
+      "trigger": "SessionV2.create denied/mismatched, SkillLoadReceipt rejected or store.narrow failing after C08 durable reservation; Request abort and reload/retry/revocation.",
+      "loci": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "blob": "b22f8c528d394549475106736a96727be7277152",
+          "lines": "143-280",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+          "blob": "85c745581cc327646dadbf4df344b51409c8655e",
+          "lines": "47-100, 100-147",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "previous_loci": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+          "commit": "d8f14f81855858120f914af4f3934406bfdb74f1",
+          "lines": "143-170, 208-216"
+        }
+      ],
+      "criteria": [
+        "WP10.INV.40",
+        "WP10.T03.CHK.40",
+        "WP10.DOD.40"
+      ],
+      "proof": "PREVIOUS early-return bug visible in old blob. W6130 has outer acquireUseRelease/abort/session cleanup and C08 settlePreparation terminal private marker. This is a STATIC REMEDIATION, not a witnessed full lifecycle or security exploit. Existing 200 C08 selection run 43775214053 passed on different SHA; six fault/restart oracles on final C are not individually attested.",
+      "owner": "Source161/PR104 correction and integrator189; 200/PR106 only surgical proof; 190 guards",
+      "recheck": "On accepted C same exact blobs inject create/mismatch/load/narrow/abort, same runId retry, reload/revocation with C08 marker and fail-closed ownership; bind accepted runId/artifact + W/tree; ensure no double grant or orphan replay.",
+      "release_blocking": true
+    },
+    {
+      "id": "R3-NATIVE-01",
+      "inherited_from": "old R03/PR98 + 148",
+      "severity": "P1",
+      "kind": "NATIVE_POSITIVE_EVIDENCE_GAP",
+      "state": "NOT_PROVEN",
+      "new_bug": false,
+      "trigger": "Real installed model chosen and SessionV2 prompts/skill messages executed for each of 5 profiles and all 18 distinct skills; accepted typed output consumed after reload.",
+      "loci": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "blob": "b22f8c528d394549475106736a96727be7277152",
+          "lines": "143-280",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+          "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+          "lines": "1-180",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+          "blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+          "lines": "1-220",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+          "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+          "lines": "60-188",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+          "blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+          "lines": "10-60",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "blob": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+          "lines": "14-140",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "criteria": [
+        "WP10.DOD.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof": "Structural manifest/DirectorySource, SkillV2 load and SessionV2 exists and 18 SKILL.md blobs are shipped in repository. The AM01 portfolio case is one integrated test source, not 18 accepted execution receipts. No provider/model actual native session -> persisted C11 outputRef -> authorized C09 consumer after restart for all 18 on one accepted C.",
+      "owner": "WP12/196 PR182 (sources/proofs), 199/PR190 (installed host), 189 integration; 200 witnessed test",
+      "recheck": "Supply exact accepted C/run artifacts with real effective provider/model, profile/skill/source/instructions/manifest digests, loadedMessageId, nativeSessionId, actual operations, outputRef/version and consumer action after reload for all 18 skills; revalidate own reviewer separate SessionV2.",
+      "release_blocking": true
+    },
+    {
+      "id": "R3-MCP-02",
+      "inherited_from": "old R03/PR98 + 148",
+      "severity": "P1",
+      "kind": "REAL_MCP_PARITY_PROOF_GAP",
+      "state": "NOT_PROVEN",
+      "new_bug": false,
+      "trigger": "An installed native sf_* call for every one of 39 operations/8 packs reaches actual MCP initialize/listTools/callTool via private transport, same canonical UI domain and receipt, tested under different scopes and provider conflicts.",
+      "loci": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+          "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+          "lines": "manifest: profiles,skills,packs,operation_call_routes",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+          "blob": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+          "lines": "1-220",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+          "blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469",
+          "lines": "60-190",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+          "blob": "6ba1b02eee73d44133c78599284f9772b26007b1",
+          "lines": "1-210",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+          "blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+          "lines": "14-19, 62-116",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+          "blob": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+          "lines": "12-100",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "criteria": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof": "39 distinct routes and 8 packs exist. MCP SDK InMemoryTransport and guarded ToolRegistry code visible. am02/forecast-domain-correlation.test.ts explicitly says synthetic identity/run/session fixture and NOT real native inference; am03 provider-generation.test.ts manually flips fixture generation and is NOT a real provider restart. Therefore neither test is 39-route positive/negative multi-principal MCP attestation.",
+      "owner": "WP10/C16 producers + WP12/196 PR182, WP10 189 integration; 200 executes selected witness",
+      "recheck": "On accepted C capture real MCP exchange, each route UI/native source/receipt comparison; prove public binding, permission intersection and narrowed scope, revoke/discovery/reuse expiry, generation/object provider swap and actual restart; no fallback to homonymous remote provider.",
+      "release_blocking": true
+    },
+    {
+      "id": "R3-TASK-03",
+      "inherited_from": "old R03/PR98 + 148",
+      "severity": "P1",
+      "kind": "CONFIRMED_DEFAULT_RUNTIME_MISSING_DEPENDENCY",
+      "state": "FAIL",
+      "new_bug": false,
+      "trigger": "Authenticated human invokes sf_routine_run on default installed host; expects published C07 workflow, approved Task/Relay native owner, run/result/return to product; Schedule watch must not fake positive.",
+      "loci": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+          "blob": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+          "lines": "22-112",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+          "blob": "0d34ddeb14e9da525d6acc4960a54f35be18d577",
+          "lines": "17-130",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+          "blob": "5383051da7cda4523d81f34d93430871e564bb06",
+          "lines": "62-222",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+          "blob": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+          "lines": "32-149",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+          "blob": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+          "lines": "20-155",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+          "blob": "0e8edac9d862cd68db387695d8aa476ad775c235",
+          "lines": "5-49",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+          "blob": "673a0f0d8c039cda65c4fd88dc13b638db4ab27a",
+          "lines": "12-96",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "criteria": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof": "host-context.ts:107-125 default createSfHostRuntime supplies no nativeRoutineProducer; comments mark first-party producer NOT IMPLEMENTED. Lines320-355 prevent advertising Task-backed descriptors until native C15 Request origin readiness; Schedule/watch explicitly unadvertised. Installed Relay/Task read-only captures do not mint owner. AM06 correlator tests are negative-only; no real admitted Task->Relay child->result->UI. Static blocker on default construction; no claim of exploited permission failure.",
+      "owner": "Legitimate first-party native owner/199 PR190/189 PR65; WP07 business C07 writer only after genuine public Task/Relay admission; 200 requested CI only if causal input arrives",
+      "recheck": "Produce supported PUBLIC/native Task/Relay owner provenance from original authenticated human POST (Request, live TaskTool frame, C15 owner, Permission, approval, provider generation and publisher pin) with real admission/child W/tree/run/result and human reread. If existing engine exposes no supported origin, remain FAIL (no engine substitute, IDs or private API).",
+      "release_blocking": true
+    },
+    {
+      "id": "R3-ATLAS-04",
+      "inherited_from": "old R03/PR98 + 148",
+      "severity": "P1",
+      "kind": "DURABLE_ATLAS_POSITIVE_PROOF_GAP",
+      "state": "NOT_PROVEN",
+      "new_bug": false,
+      "trigger": "C09 case event and evidence are authorized -> C08 append/commit Atlas+outbox -> recall/original after true process restart; two actors same profile, ACL revoke, source replacement, replay/commit loss.",
+      "loci": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "lines": "295-463",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+          "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+          "lines": "60-188",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+          "blob": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+          "lines": "generated file",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+          "blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+          "lines": "20-91",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "criteria": [
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.CMP.60",
+        "WP10.T03.CHK.40"
+      ],
+      "proof": "atlas-memory.ts stores partition/outbox in C08 snapshot under one transaction and revalidates case/source/actor. business-memory-ports generated JS is present. am05 scanner-write-gates exercises component emitted snapshot, not a witnessed C08 committed read after restart on W6130. No positive two-principal revocation/source-replacement/read recovery package.",
+      "owner": "WP10/Atlas producer (prior WP10.T07) and 198/PR183 for AM05, 189 integration, 199 installed host, 200 hosted proof",
+      "recheck": "Record real C09 source, owner-derived Atlas partition and scanner receipt; same C08 commit version/outbox and original+recall read after true restart, two authenticated actors and revocation/replacement+zero-append failure before/after commit; preserve source digests.",
+      "release_blocking": true
+    },
+    {
+      "id": "R3-SCANNER-05",
+      "inherited_from": "old R03/PR98 + 148",
+      "severity": "P1",
+      "kind": "SCANNER_PACKAGE_AND_GUARD_PROOF_GAP",
+      "state": "NOT_PROVEN",
+      "new_bug": false,
+      "trigger": "Host provisions pinned gitleaks via BackendToolkit with genuine absolute binary/version and physically generated Atlas boundary subpaths; scanner allows benign, refuses canary, times out/absent fail-closed; generator/AST/spawn guards verified on C.",
+      "loci": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+          "blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+          "lines": "1-43",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+          "lines": "5-50",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+          "blob": "06f8085df12d57baf7973d0df500da3e366dc29a",
+          "lines": "1-8",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+          "blob": "fb3d542eb22e9b8dc9a139ce1ff98189812d6e0d",
+          "lines": "1-45",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+          "blob": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+          "lines": "generated file",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/native-memory.js",
+          "blob": "820a3010be24a817edae7ff26299919d448ad4bf",
+          "lines": "generated file",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+          "blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+          "lines": "20-91",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "criteria": [
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.QLT.60",
+        "WP10.CMP.60"
+      ],
+      "proof": "Source code pins native-memory and verifies gitleaks --version; generated JS/d.ts both subpaths exist (business-memory-ports & native-memory). Does not prove installed scanner path/version or generated-file parity, AST no forbidden subprocess/import, check:generated, check:spawn-imports and G7D/G8 on same C. 190 run 43774116387 failed on other SHA; cause requires log.",
+      "owner": "199/PR190 installation/provisioner; 190/PR107 compiler/guards; 198/PR183 AM05; 189 for integrator",
+      "recheck": "199 supplies nonsecret binary path/version or classified unavailable via installed toolkit; 190 attaches check:generated, typecheck, AST and check:spawn-imports G7D/G8 exact C artifacts; 200 real scanner positive/negative selected proof; no modifications to guard/allowlist.",
+      "release_blocking": true
+    },
+    {
+      "id": "R3-EXPORT-06",
+      "inherited_from": "old R03/PR98 + 148",
+      "severity": "P1",
+      "kind": "DOCUMENT_AND_CONSUMER_EGRESS_PROOF_GAP",
+      "state": "NOT_PROVEN",
+      "new_bug": false,
+      "trigger": "A document evidence candidate PDF digital/DOCX/text is extracted/confirmed with version/blob digest and traverses C14->C17->C11/C09 and real product UI/resume; unauthorized and stale egress denied, not fake ready.",
+      "loci": [
+        {
+          "path": "apps/cli/src/sucafina-product/document-services.ts",
+          "blob": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+          "lines": "17-55",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+          "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+          "lines": "1-72",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+          "blob": "b968936724192eaab050cf48e69dc5a634dc54d9",
+          "lines": "1-51",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+          "blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+          "lines": "10-60",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+          "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+          "lines": "83-175",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "blob": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+          "lines": "14-140",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "criteria": [
+        "WP10.DOD.10",
+        "WP10.CMP.10",
+        "WP10.SUC.10",
+        "WP10.T03.CHK.40"
+      ],
+      "proof": "Real @orchestra/rag-studio adapters, version/span/chunk validation and contribution reader are present. No accepted run+outputRef+consumer observed after reload for all 18 skills or document RAG confirmed/revoked/changed with authorized UI link; no claim source code absent.",
+      "owner": "WP06.T05 document source and WP12/196 PR182 consumers, 189 integrates; 200 evidence and 199 installed host",
+      "recheck": "Accepted C document source bytes/revision and C17 ref, PDF/DOCX/text extraction/candidate->human confirmation/deny, authorized and revoked refresh, contribution outputRef/run receipts, consumer read/action after restart; classify export C-blobs vs UI projections separately.",
+      "release_blocking": true
+    },
+    {
+      "id": "R3-CI-07",
+      "inherited_from": "old R03/PR98 + 148",
+      "severity": "P1",
+      "kind": "FINAL_C_CI_PROVENANCE_GAP",
+      "state": "NOT_PROVEN",
+      "new_bug": false,
+      "trigger": "Declare G7/G8, eight final CI and epic PASS using a common immutable accepted C commit/tree and exact run/job IDs, source selection, artifacts, W/S matching.",
+      "loci": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/BATCH-03-AM01-AM06-CONSUMPTION.json",
+          "blob": "86c001c0472fa3e5cfd6695172fc7315c9b6a89e",
+          "lines": "proof inventory and validation NOT_RUN",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/HANDOFF-190-191-AM01-AM06.json",
+          "blob": "c1c5dbeae84d47f76f9bc732fbb5128ce4389cdc",
+          "lines": "all AM proof status NOT_RUN",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+          "blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+          "lines": "189 integration authority",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "criteria": [
+        "WP10.DOD.02",
+        "WP10.QLT.02",
+        "WP10.T03.CHK.03",
+        "WP10.T03.DOD.01"
+      ],
+      "proof": "Queried GitHub checks and Actions for W6130: 0 check-runs, 0 Actions runs and combined status pending. Existing surgical 200 greens on different SHAs 12a1a845 and 30fdda6d, red AM 63dd323a; compiler 190 run red on b935f51. Historical artifacts do not certify accepted C.",
+      "owner": "190/PR107 compiler G7D/G8; 200/PR106 sole product CI dispatcher; 189/PR65 acceptance; reviewers independent",
+      "recheck": "Accepted C W/tree + immutable run/job/attempt/selector/matrix/artifact IDs for exact eight CI-SF, CI-CLI, CI-APP-SRC, CI-APP-BROWSER, CI-ATLAS-BUSINESS, CI-UI-OPERATIONS, CI-UI-DECISIONS, CI-UI-REPORTS and epic/G7/G8. Record no skipped hard obligation and same C. Classify existing 200 AM failure from log instead of dispatch duplicate.",
+      "release_blocking": true
+    },
+    {
+      "id": "R3-CANDIDATE-08",
+      "inherited_from": "old R03/PR98 + 148",
+      "severity": "P1",
+      "kind": "FINAL_C_D_INDEPENDENCE_AND_RECHECK_GAP",
+      "state": "NOT_PROVEN",
+      "new_bug": false,
+      "trigger": "Any FINAL/APPROVE claim before 189 accepted C and independent post-C frozen review, 3 independent reviews, evidence-only D preserves every C blob, no product edits and guard passes.",
+      "loci": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+          "blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+          "lines": "189 integration authority",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/BATCH-03-AM01-AM06-CONSUMPTION.json",
+          "blob": "86c001c0472fa3e5cfd6695172fc7315c9b6a89e",
+          "lines": "proof inventory and validation NOT_RUN",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/HANDOFF-190-191-AM01-AM06.json",
+          "blob": "c1c5dbeae84d47f76f9bc732fbb5128ce4389cdc",
+          "lines": "all AM proof status NOT_RUN",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "criteria": [
+        "WP10.DOD.01",
+        "WP10.DOD.02",
+        "WP10.T03.DOD.01",
+        "WP10.T03.SUC.01",
+        "WP10.T03.CMP.02"
+      ],
+      "proof": "Mission209 is expressly PRE_FREEZE. C W6130 is moving integrated source, not accepted/frozen. Earlier S0-FENCE/candidate C labels and preliminary reviewer receipts are historical; D envelope and 3 independent post-accepted-C reconciled judgments not evidenced. Any post-C change invalidates a prior causal PASS.",
+      "owner": "189 sole C integrator; 190 G7D/G8; 207/208/209 reviewers independently after accepted C; 200 on C only",
+      "recheck": "189 publishes accepted C full tree/blob inventory and no moving source; three independent final reviews verify same C and all previously open findings; 190 verifies D evidence-only envelope keeps all C blobs byte-for-byte plus 3 reviews and G8, no C CI misattributed to D; any later change triggers independent causal recheck.",
+      "release_blocking": true
+    }
+  ],
+  "evidence": {
+    "positive_native": "NO_SAME_C_NATIVE_POSITIVE_RUN_OR_INTEGRAL_AM01_AM06_WITNESS_OBSERVED",
+    "am_intake": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/BATCH-03-AM01-AM06-CONSUMPTION.json",
+      "blob": "86c001c0472fa3e5cfd6695172fc7315c9b6a89e",
+      "state": "COMPOSED_SOURCE_NOT_RUN"
+    },
+    "am_handoff": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/HANDOFF-190-191-AM01-AM06.json",
+      "blob": "c1c5dbeae84d47f76f9bc732fbb5128ce4389cdc",
+      "state": "AM01_AM06_NOT_RUN"
+    },
+    "ci_C": {
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "check_runs": 0,
+      "actions_runs": 0,
+      "combined_status": "pending"
+    },
+    "ci_surgical": [
+      {
+        "run_id": 43775214053,
+        "job_id": 132999863918,
+        "head_sha": "12a1a84593c5b060a1168faf607e8b7abe2bfab8",
+        "purpose": "C08 lifecycle",
+        "conclusion": "success",
+        "candidate_match": false
+      },
+      {
+        "run_id": 43775606150,
+        "job_id": 133001082279,
+        "head_sha": "30fdda6d68a0f8d917ba75136b0124f8aac80966",
+        "purpose": "F04 journeys",
+        "conclusion": "success",
+        "candidate_match": false
+      },
+      {
+        "run_id": 43775802204,
+        "job_id": 133001695266,
+        "head_sha": "63dd323ae114238d817a915d3b97d6ae5f5f66e5",
+        "purpose": "AM unrun 165/169 selection",
+        "conclusion": "failure",
+        "failed_step": "Run tests",
+        "root_cause": "NOT_READ_FROM_LOG",
+        "candidate_match": false
+      },
+      {
+        "run_id": 43774116387,
+        "job_id": 132996345366,
+        "head_sha": "b935f51ca9333c77d2b13ced8e7ad743df79468d",
+        "purpose": "190 compiler guards installed-E2E",
+        "conclusion": "failure",
+        "failed_step": "Run guards and causal installed E2E compilation",
+        "root_cause": "NOT_READ_FROM_LOG",
+        "candidate_match": false
+      }
+    ]
+  },
+  "signoff": "NOT_FINAL_NO_APPROVE_FIX_FIRST"
+}
