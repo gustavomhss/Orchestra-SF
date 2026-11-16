@@ -1,0 +1,30 @@
+{
+  "schema": "sf2h.repair-ack.v1",
+  "mission": 217,
+  "finding": "S1-R1-207-001",
+  "epoch": "review-fix-e1-browser217",
+  "branch": "sf-similar-cases",
+  "expected_head": "41dfcd8fa5063129d5ed0968d7f9d1ed081238a6",
+  "verified_head": "41dfcd8fa5063129d5ed0968d7f9d1ed081238a6",
+  "verified_fence_blob": "b9dd97e3453628a0fd8ffc2556c978a2fe140c2d",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not-exposed",
+  "actor": "review-fix-e1-browser217",
+  "lease_accepted": true,
+  "write_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/memory/**",
+    "packages/schema/src/sucafina/memory.ts",
+    "packages/schema/src/sucafina/memory/**",
+    "packages/client/src/sucafina/memory.ts",
+    "modules/sucafina/Sucafinav1/test/product/similarity217/**",
+    "packages/app-shell/e2e/sucafina/native/journeys/similarity217/**",
+    "modules/sucafina/Sucafinav1/product/memory/similarity217.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair217/**"
+  ],
+  "lifecycle": "ACK_AUTHORING_NOT_QUALIFIED",
+  "runs": [],
+  "ci": "NOT_RUN",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
