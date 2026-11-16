@@ -118,7 +118,12 @@ async function review(view: Awaited<ReturnType<typeof mount>>) {
   reviewButton!.click()
   await waitFor(() => !!view.node.querySelector('[data-component="sf-change-review"]'))
   expect(view.writes).toEqual([]) // Positive control: the review really precedes the POST.
-  return view.button("Confirm action")!
+  const confirm = view.button("Confirm action")
+  // Retain the exact accessible confirmation label; an unregistered U11
+  // dictionary key must be a visible test failure, never a silent selection
+  // of the shared S03 primary button by position or CSS.
+  expect(confirm, `Missing source-reviewed confirmation label. Rendered actions: ${[...view.node.querySelectorAll("button")].map((item) => item.textContent?.trim()).join(" | ")}`).toBeDefined()
+  return confirm!
 }
 
 function gateDigest() {
