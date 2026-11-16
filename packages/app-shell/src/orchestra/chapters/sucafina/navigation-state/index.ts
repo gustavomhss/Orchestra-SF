@@ -88,6 +88,8 @@ export type SfNavigationDependencies = Readonly<{
     | Readonly<{ status: "authorized"; route: SfResolvedRoute; ownerKey: SfOwnerKey }>
     | Readonly<{ status: "denied" | "unavailable" | "invalid-link" }>
   >
+  /** A staged host binding is committed only after authorization and discard confirmation. */
+  finishPreflight?: (signal: AbortSignal, commit: boolean) => boolean
   selected: () => SfOwnerSelection
   currentHref: () => string
   currentOwnerKey: () => SfOwnerKey | undefined
@@ -176,6 +178,7 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
             resolved.ownerKey !== options.expectedOwnerKey
           )) ||
           (options?.admit && !options.admit(resolved.route))) return { status: "aborted" }
+      if (deps.finishPreflight && !deps.finishPreflight(abort.signal, true)) return { status: "aborted" }
       if (changingOwner) {
         deps.invalidateOwner("owner-changed")
         retained.clear()
@@ -185,6 +188,7 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
       batch(() => deps.commit({ route: resolved.route, selection: selected.selection, ownerKey: resolved.ownerKey, cause }))
       return { status: "committed", route: resolved.route }
     } finally {
+      deps.finishPreflight?.(abort.signal, false)
       options?.signal?.removeEventListener("abort", cancel)
       if (inflight === abort) inflight = undefined
     }

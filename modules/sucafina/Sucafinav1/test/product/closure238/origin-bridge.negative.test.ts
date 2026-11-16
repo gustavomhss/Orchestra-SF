@@ -237,3 +237,148 @@ test("reconnect bind completing after abort is released and cannot publish an ow
     expect(bridge.transportIdentity(selected)).toBe("")
   } finally { bridge.dispose() }
 })
+
+function stagedFixture() {
+  const callbacks = new Map<string, (event: SfDesktopInvalidation) => void>()
+  const released: string[] = []
+  const revoked: string[] = []
+  let delay: Promise<void> = Promise.resolve()
+  let next = 0
+  const desktop: SfDesktopCapability = {
+    registerConnection: async (candidate) => {
+      await delay
+      return { status: "approved", serverKey: candidate.serverKey, projectId: candidate.projectId,
+        transportIdentity: candidate.projectId, generation: 7 }
+    },
+    bind: async (selection, callback) => {
+      const handle = `handle-${++next}`
+      callbacks.set(handle, callback)
+      return { status: "ok", bindingHandle: handle, generation: 7,
+        descriptor: { ...descriptor, projectId: selection.projectId, installationId: selection.installationId } }
+    },
+    invoke: async () => ({ kind: "transport-error", reason: "contract-unavailable" }),
+    abort: async () => undefined,
+    login: async () => ({ status: "denied" }),
+    logout: async () => ({ status: "cleared", remote: "unavailable" }),
+    release: async (request) => { if (request.kind === "binding") released.push(request.bindingHandle) },
+  }
+  const bridge = createSfDesktopOriginBridge238({ desktop, server, directory: "/real/project",
+    fetch: async () => { throw new Error("unexpected renderer fetch") }, onInvalidated: (reason) => revoked.push(reason) })
+  return { bridge, callbacks, released, revoked, delay: (value: Promise<void>) => { delay = value } }
+}
+const other = { ...selected, projectId: "other-project", installationId: "other-install" } as SfOwnerSelection
+
+test("preflight retains the active binding until promotion and discard only releases the candidate", async () => {
+  const f = stagedFixture()
+  expect(await f.bridge.listByIds(selected, new AbortController().signal)).toBeDefined()
+  const stage = f.bridge.stage(other, new AbortController().signal)
+  expect(await stage.listByIds()).toBeDefined()
+  expect(f.bridge.transportIdentity(selected)).toBe(selected.projectId)
+  expect(f.bridge.transportIdentity(other)).toBe("")
+  stage.discard()
+  expect(f.released).toEqual(["handle-2"])
+  expect(f.bridge.transportIdentity(selected)).toBe(selected.projectId)
+  f.bridge.dispose()
+})
+
+test("promotion transfers invalidation ownership and releases the old binding", async () => {
+  const f = stagedFixture()
+  await f.bridge.listByIds(selected, new AbortController().signal)
+  const stage = f.bridge.stage(other, new AbortController().signal)
+  await stage.listByIds()
+  expect(stage.promote()).toBe(true)
+  expect(f.released).toEqual(["handle-1"])
+  expect(f.bridge.transportIdentity(other)).toBe(other.projectId)
+  f.callbacks.get("handle-1")?.({ bindingHandle: "handle-1", generation: 7, reason: "access-revoked" })
+  expect(f.revoked).toEqual([])
+  f.callbacks.get("handle-2")?.({ bindingHandle: "handle-2", generation: 7, reason: "access-revoked" })
+  expect(f.revoked).toEqual(["access-revoked"])
+  expect(f.bridge.transportIdentity(other)).toBe("")
+  f.bridge.dispose()
+})
+
+test("aborted and superseded candidates cannot publish a late binding", async () => {
+  const f = stagedFixture()
+  await f.bridge.listByIds(selected, new AbortController().signal)
+  let unblock = () => {}
+  f.delay(new Promise<void>((resolve) => { unblock = resolve }))
+  const abort = new AbortController()
+  const late = f.bridge.stage(other, abort.signal)
+  const pending = late.listByIds()
+  abort.abort()
+  unblock()
+  expect(await pending).toBeUndefined()
+  expect(late.promote()).toBe(false)
+  expect(f.bridge.transportIdentity(selected)).toBe(selected.projectId)
+  f.delay(Promise.resolve())
+  const first = f.bridge.stage(other, new AbortController().signal)
+  const second = f.bridge.stage(other, new AbortController().signal)
+  await first.listByIds()
+  await second.listByIds()
+  expect(second.promote()).toBe(true)
+  expect(first.promote()).toBe(false)
+  first.discard()
+  expect(f.bridge.transportIdentity(other)).toBe(other.projectId)
+  f.bridge.dispose()
+})
+
+test("revocation during preflight fences candidate promotion", async () => {
+  const f = stagedFixture()
+  await f.bridge.listByIds(selected, new AbortController().signal)
+  const stage = f.bridge.stage(other, new AbortController().signal)
+  await stage.listByIds()
+  f.callbacks.get("handle-1")?.({ bindingHandle: "handle-1", generation: 7, reason: "access-revoked" })
+  expect(stage.promote()).toBe(false)
+  stage.discard()
+  expect(f.bridge.transportIdentity(other)).toBe("")
+  expect(f.released).toContain("handle-2")
+  f.bridge.dispose()
+})
+
+test("navigation retains the old binding when discard is declined and promotes after confirmation", async () => {
+  const { createSfNavigationState } = await import("../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/navigation-state")
+  const f = stagedFixture()
+  await f.bridge.listByIds(selected, new AbortController().signal)
+  const staged = new WeakMap<AbortSignal, ReturnType<typeof f.bridge.stage>>()
+  let discard = false
+  let invalidations = 0
+  let commits = 0
+  const route = { surfaceId: "UI29", kind: "entry", params: {}, ownerSelection: other,
+    pathname: "/orchestra/sf-home", href: "/orchestra/sf-home" as never, query: {} } as const
+  const nav = createSfNavigationState({
+    selected: () => selected, currentHref: () => "http://shell.example/orchestra/sf-home",
+    currentOwnerKey: () => "old" as never, hasDirtyDrafts: () => true,
+    confirmDiscard: async () => {
+      expect(f.bridge.transportIdentity(selected)).toBe(selected.projectId)
+      return discard
+    },
+    invalidateOwner: () => { invalidations++ },
+    commit: () => { commits++ }, validateRetained: (_, values) => values,
+    resolveAuthorizedRoute: async (_, selection, signal) => {
+      const stage = f.bridge.stage(selection, signal)
+      staged.set(signal, stage)
+      if (!await stage.listByIds()) return { status: "denied" }
+      return { status: "authorized", route, ownerKey: "new" as never }
+    },
+    finishPreflight: (signal, commit) => {
+      const stage = staged.get(signal)
+      if (!stage) return false
+      staged.delete(signal)
+      if (commit) return stage.promote()
+      stage.discard()
+      return true
+    },
+  })
+  const href = `/orchestra/sf-home?server=${encodeURIComponent(other.serverKey)}&project=${other.projectId}&installation=${other.installationId}`
+  expect((await nav.requestNativeTransition(href, "link")).status).toBe("kept-editing")
+  expect(f.bridge.transportIdentity(selected)).toBe(selected.projectId)
+  expect(commits).toBe(0)
+  expect(invalidations).toBe(0)
+  discard = true
+  expect((await nav.requestNativeTransition(href, "link")).status).toBe("committed")
+  expect(f.bridge.transportIdentity(other)).toBe(other.projectId)
+  expect(commits).toBe(1)
+  expect(invalidations).toBe(1)
+  nav.dispose()
+  f.bridge.dispose()
+})

@@ -14,12 +14,30 @@ import type {
   SfInstallationDescriptor, SfInstallationList, SfOwnerSelection, SfResolvedRoute,
 } from "@orchestra/schema/sucafina/context"
 
-type Bound = Readonly<{
+type Bound = {
   key: string
   selection: SfOwnerSelection
   binding: SfDesktopBinding
   transportIdentity: string
   connectionGeneration: number
+  invalidate: (event: SfDesktopInvalidation) => void
+}
+type Stage = Readonly<{
+  listByIds: () => Promise<SfInstallationList | undefined>
+  createTransport: (binding: SfInstallationDescriptor, generation: number, currentGeneration: () => number) => SfTransport
+  promote: () => boolean
+  discard: () => void
+}>
+type Bridge = Readonly<{
+  listByIds: (selection: SfOwnerSelection, signal: AbortSignal) => Promise<SfInstallationList | undefined>
+  listByLocation: (directory: string, signal: AbortSignal) => Promise<SfInstallationList | undefined>
+  createTransport: (binding: SfInstallationDescriptor, generation: number, currentGeneration: () => number) => SfTransport
+  login: (route: SfResolvedRoute) => ReturnType<SfDesktopCapability["login"]>
+  dispose: () => void
+  stage: (selection: SfOwnerSelection, signal: AbortSignal) => Stage
+  take: () => Bound | undefined
+  discard: () => void
+  transportIdentity: (selection: SfOwnerSelection) => string
 }>
 const sameDescriptor = (a: SfInstallationDescriptor, b: SfInstallationDescriptor) =>
   a.installationId === b.installationId && a.projectId === b.projectId &&
@@ -35,7 +53,7 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
   directory: string
   fetch: typeof globalThis.fetch
   onInvalidated: (reason: SfDesktopInvalidation["reason"]) => void
-}>) {
+}>): Bridge {
   const serverKey = ServerConnection.key(deps.server)
   const origin = deps.server.http.url
   const validEndpoint = (() => {
@@ -116,11 +134,9 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
           serverKey, projectId: selected.projectId, installationId: selected.installationId!,
         }, (event) => {
           if (!established) { invalidatedBeforeSet = true; return }
-          if (current !== established || event.bindingHandle !== established.binding.bindingHandle ||
+          if (event.bindingHandle !== established.binding.bindingHandle ||
             event.generation !== established.binding.generation) return
-          current = undefined
-          epoch += 1
-          deps.onInvalidated(event.reason)
+          established.invalidate(event)
         })
       } catch { return }
       if (answer.status !== "ok") return
@@ -136,6 +152,12 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
         key, selection: selected, binding: answer,
         transportIdentity: consent.transportIdentity,
         connectionGeneration: consent.generation,
+        invalidate: (event) => {
+          if (current !== established) return
+          current = undefined
+          epoch += 1
+          deps.onInvalidated(event.reason)
+        },
       }
       current = established
       return established
@@ -206,6 +228,60 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
     )) return { status: "denied" as const }
     return result
   }
+  const take = () => {
+    if (disposed || pending || !current) return
+    const entry = current
+    current = undefined
+    disposed = true
+    epoch += 1
+    return entry
+  }
+  const discard = () => {
+    if (disposed) return
+    disposed = true
+    retire()
+  }
+  const stage = (selected: SfOwnerSelection, signal: AbortSignal) => {
+    const attempt = epoch
+    const existing = current && sameSelection(current.selection, selected) ? current : undefined
+    const child = existing ? undefined : createSfDesktopOriginBridge238({ ...deps, onInvalidated: () => undefined })
+    let finished = false
+    const cancel = () => { finished = true; child?.discard() }
+    signal.addEventListener("abort", cancel, { once: true })
+    if (signal.aborted) cancel()
+    return {
+      listByIds: () => existing
+        ? Promise.resolve(!finished && current === existing ? { installations: [existing.binding.descriptor] } : undefined)
+        : child!.listByIds(selected, signal),
+      createTransport: (binding: SfInstallationDescriptor, generation: number, currentGeneration: () => number) =>
+        (child ?? api).createTransport(binding, generation, currentGeneration),
+      promote: () => {
+        if (finished || signal.aborted || disposed || epoch !== attempt) return false
+        if (existing) {
+          finished = true
+          signal.removeEventListener("abort", cancel)
+          return current === existing
+        }
+        const entry = child!.take()
+        if (!entry) return false
+        retire()
+        current = entry
+        entry.invalidate = (event) => {
+          if (current !== entry) return
+          current = undefined
+          epoch += 1
+          deps.onInvalidated(event.reason)
+        }
+        finished = true
+        signal.removeEventListener("abort", cancel)
+        return true
+      },
+      discard: () => {
+        signal.removeEventListener("abort", cancel)
+        cancel()
+      },
+    }
+  }
   const dispose = () => {
     if (disposed) return
     disposed = true
@@ -218,9 +294,10 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
       }).catch(() => undefined)
     }
   }
-  return Object.freeze({
-    listByIds, listByLocation, createTransport, login, dispose,
+  const api = Object.freeze({
+    listByIds, listByLocation, createTransport, login, dispose, stage, take, discard,
     transportIdentity: (selection: SfOwnerSelection) =>
       current && sameSelection(current.selection, selection) ? current.transportIdentity : "",
   })
+  return api
 }

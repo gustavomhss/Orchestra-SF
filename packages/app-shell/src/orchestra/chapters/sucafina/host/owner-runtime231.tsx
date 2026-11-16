@@ -359,7 +359,20 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     },
   }
 
+  const preflights = new WeakMap<AbortSignal, ReturnType<NonNullable<typeof desktopBridge>["stage"]>>()
   const navigation: SfNativeNavigationState = createSfNavigationState({
+    finishPreflight: (signal, commit) => {
+      const stage = preflights.get(signal)
+      if (!stage) return !desktopBridge
+      preflights.delete(signal)
+      if (commit) {
+        const promoted = stage.promote()
+        if (!promoted) stage.discard()
+        return promoted
+      }
+      stage.discard()
+      return true
+    },
     selected: () => {
       const selected = selection()
       if (!selected) throw new Error("SF_F01_SELECTION_NOT_DISCOVERED")
@@ -400,12 +413,23 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           candidate.surfaceId === "UI33" && candidate.kind === "entry" ||
           candidate.surfaceId === "UI34" && candidate.kind === "entry"
         )) return { status: "invalid-link" }
-      const found = await source.listByIds(selected, signal)
+      const staged = desktopBridge?.stage(selected, signal)
+      if (staged) preflights.set(signal, staged)
+      const found = await (staged ? staged.listByIds() : source.listByIds(selected, signal))
       if (signal.aborted || !found) return { status: "unavailable" }
       if (found.installations.length !== 1) return { status: "denied" }
       const binding = found.installations[0]!
       const currentGeneration = ownerEpoch
-      const context = await readContext(binding, signal, currentGeneration, () => ownerEpoch)
+      const preflightTransport = () => staged
+        ? staged.createTransport(binding, currentGeneration, () => ownerEpoch)
+        : newTransport(binding, currentGeneration, () => ownerEpoch)
+      const readPreflightContext = async () => {
+        const answer = await createSfContextClient(preflightTransport())["ctx.context"]({
+          installationId: binding.installationId, projectId: binding.projectId, hostId: binding.hostId,
+        }, { signal })
+        return answer.kind === "response" ? answer.body : { status: "unavailable" as const, reason: "host-unavailable" as const }
+      }
+      const context = await readPreflightContext()
       if (signal.aborted) return { status: "unavailable" }
       if (context.status !== "ok")
         return { status: context.status === "denied" || context.status === "unauthenticated"
@@ -426,12 +450,12 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           ...(plannerQuery.version ? { version: plannerQuery.version } : {}),
           ...(plannerQuery.filter ? { filter: plannerQuery.filter } : {}),
         }
-        const transport = newTransport(binding, currentGeneration, () => ownerEpoch)
+        const transport = preflightTransport()
         const result = await createSfPlannerClient(transport)["domain.page.CAP17"](input, { signal })
         if (signal.aborted || currentGeneration !== ownerEpoch) return { status: "unavailable" }
         if (result.kind !== "response" || result.body.status !== "ok") return { status: "denied" }
         if (!plannerOverviewSelectionMatches(plannerQuery, result.body.value)) return { status: "denied" }
-        const fresh = await readContext(binding, signal, currentGeneration, () => ownerEpoch)
+        const fresh = await readPreflightContext()
         if (signal.aborted || currentGeneration !== ownerEpoch) return { status: "unavailable" }
         if (fresh.status !== "ok" || !sameStamp(stamp, fresh.value.stamp) ||
             !plannerRouteAvailable(fresh.value, candidate)) return { status: "denied" }
