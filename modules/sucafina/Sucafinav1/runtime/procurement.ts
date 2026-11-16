@@ -175,10 +175,8 @@ export function procurementCurrentRequestActions(snapshot: Snapshot, actor: Acto
   if (!text(actor.id).trim() || !actor.canWrite || actor.roles.every((role) => role === "viewer")) return []
   const actions = new Set<string>()
   const requests = object(object(snapshot.data.store).requests)
-  let inspected = 0
   for (const id in requests) {
     if (!Object.hasOwn(requests, id)) continue
-    if (++inspected > 100) break
     const request = object(object(requests[id]).request)
     if (!visibleRequests([{ createdBy: text(request.createdBy) }], actor).length) continue
     const drafts = requestDraftActions(request, actor)
@@ -197,6 +195,7 @@ export function procurementCurrentRequestActions(snapshot: Snapshot, actor: Acto
     }
     if ((request.createdBy === actor.id || has(actor, "admin")) && !["cancelled", "po_issued"].includes(status)) actions.add("cancel")
     if ((request.createdBy === actor.id || has(actor, "admin")) && status === "draft") actions.add("delete")
+    if (["save", "submit_pr", "submit_sourcing", "select_quote", "submit_po", "issue", "approve", "reject", "cancel", "delete"].every((action) => actions.has(action))) break
   }
   return [...actions]
 }

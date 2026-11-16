@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
+import { createSfLiveContext } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 import { createSfUiAuthority } from "../../product/integration/ui-authority.ts"
 import { digestSfValue } from "../../product/contracts/canonical.ts"
 import { operationalCase } from "./operational-fixture.ts"
@@ -37,29 +38,35 @@ test("case list probe admits the original Request and fences authority and sourc
     return { status: "ok", storageVersion: version, aggregateRevision: version, incarnation: "state", value }
   } } }
   const deps = { runtime: () => runtime, readContext: async () => { throw new Error("recursive context read") } }
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([
+  const handlers = createSfDecisionsProjectionHandlers(deps as never)
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([
     { operationId: "projection.cases", state: "ready", reason: null, operational: true },
+    { operationId: "projection.case", state: "ready", reason: null, operational: true },
   ])
   expect(reads).toBe(1)
+  expect(await observeSfCases(deps as never, handlers.filter((item) => item.operationId === "projection.case"), original, stamp)).toEqual([
+    { operationId: "projection.case", state: "ready", reason: null, operational: true },
+  ])
+  expect(await observeSfCases(deps as never, [], original, stamp)).toEqual([])
   available = false
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([])
   available = true
   revision = "revoked"
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([])
   revision = "revision"
   actor = "other"
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([])
   actor = "person"
   changeDuringRead = true
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([])
   changeDuringRead = false
   revokeDuringRead = true
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([])
   revision = "revision"
   revokeDuringRead = false
   granted = false
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([])
-  expect(await observeSfCases({ runtime: () => undefined } as never, original, stamp)).toEqual([])
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([])
+  expect(await observeSfCases({ runtime: () => undefined } as never, handlers, original, stamp)).toEqual([])
 })
 
 test("case readiness observes health without case dispatch; the actual list remains complete", async () => {
@@ -86,14 +93,17 @@ test("case readiness observes health without case dispatch; the actual list rema
     },
   }
   const deps = { runtime: () => runtime, readContext: async () => { throw new Error("recursive context read") } }
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([
+  const handlers = createSfDecisionsProjectionHandlers(deps as never)
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([
     { operationId: "projection.cases", state: "ready", reason: null, operational: true },
+    { operationId: "projection.case", state: "ready", reason: null, operational: true },
   ])
   expect(dispatches).toBe(0)
   count = 500
   dispatches = 0
-  expect(await observeSfCases(deps as never, original, stamp)).toEqual([
+  expect(await observeSfCases(deps as never, handlers, original, stamp)).toEqual([
     { operationId: "projection.cases", state: "ready", reason: null, operational: true },
+    { operationId: "projection.case", state: "ready", reason: null, operational: true },
   ])
   expect(dispatches).toBe(0)
   count = 2
@@ -124,4 +134,40 @@ test("case detail leaves the item lease for the dispatcher and rejects revocatio
   expect((await handler.handle(request())).status).toBe(200)
   revoke = true
   expect((await handler.handle(request())).status).toBe(403)
+})
+
+test("F01 publishes both mounted case operations only while original C08 health is current", async () => {
+  const original = new Request("http://localhost/sucafina/api/ui/context?installationId=installation&projectId=project&hostId=host")
+  const binding = Object.freeze({ installationId: stamp.installationId, projectId: stamp.projectId, hostId: stamp.hostId })
+  let available = true
+  const ui = createSfUiAuthority({ createId: () => crypto.randomUUID(), now: Date.now, commandIdentity: async () => crypto.randomUUID(),
+    authorize: async (request, operation) => {
+      expect(request).toBe(original)
+      return operation === "sf_case_read" ? { installationId: stamp.installationId, projectId: stamp.projectId,
+        principalRef: stamp.principalRef, policyVersion: stamp.policyVersion, accessRevision: stamp.accessRevision } : undefined
+    } })
+  const runtime = { ui, state: { read: async (request: Request, namespace: string,
+    callback: (state: { versions: { cases: number }; revision: number; incarnation: string }, authority: typeof stamp) => unknown) => {
+    expect(request).toBe(original)
+    expect(namespace).toBe("cases")
+    if (!available) return { status: "unavailable" }
+    const state = { versions: { cases: 7 }, revision: 9, incarnation: "state", get cases() { throw new Error("case enumeration") } }
+    return { status: "ok", storageVersion: 7, aggregateRevision: 9, incarnation: "state", value: callback(state, stamp) }
+  } } }
+  const deps = { runtime: () => runtime }
+  const handlers = createSfDecisionsProjectionHandlers(deps as never)
+  const live = createSfLiveContext({ origin: "http://localhost", mount: "/sucafina", currentBinding: () => binding,
+    admit: async () => ({ status: "ok", stamp, authMode: "local-operator", destinations: [] }),
+    operational: (request, current) => observeSfCases(deps as never, handlers, request, current) })
+  const first = await live.readContext(original, binding)
+  if (first.status !== "ok") throw new Error("healthy F01 unavailable")
+  const operations = first.value.availability.flatMap((resource) => resource.operations)
+  expect(operations.find((item) => item.operationId === "projection.cases")?.state).toBe("ready")
+  expect(operations.find((item) => item.operationId === "projection.case")?.state).toBe("ready")
+  available = false
+  const second = await live.readContext(original, binding)
+  if (second.status !== "ok") throw new Error("unavailable source should not invalidate identity")
+  const unavailable = second.value.availability.flatMap((resource) => resource.operations)
+  expect(unavailable.find((item) => item.operationId === "projection.cases")?.state).toBe("unavailable")
+  expect(unavailable.find((item) => item.operationId === "projection.case")?.state).toBe("unavailable")
 })

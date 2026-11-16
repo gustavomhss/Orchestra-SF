@@ -234,7 +234,7 @@ export async function createConfiguredInstallation(
       observeSfDashboardPages(nativeApplication, request, stamp),
       observeSfDomainHealth(nativeDependencies, nativeHandlers, request, stamp),
       observeSfHome(runtime?.services?.(), request, stamp),
-      observeSfCases(nativeDependencies, request, stamp),
+      observeSfCases(nativeDependencies, nativeHandlers, request, stamp),
       actions.operational(request, stamp),
     ])
     return observed.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])

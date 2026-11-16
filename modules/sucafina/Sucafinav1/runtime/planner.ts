@@ -308,10 +308,39 @@ export function plannerCanAdmin(actor: Actor) {
 export function plannerAdminSourceAvailable(snapshot: Snapshot, actor: Actor) {
   return plannerCanAdmin(actor) && plannerData(snapshot.data).errors.length === 0
 }
-export function plannerAdminImportAvailable(snapshot: Snapshot, actor: Actor) {
-  if (!plannerCanAdmin(actor)) return false
+function plannerWorkbookField(version: Version, official: string | undefined, actor: Actor, field: string, line?: Row) {
+  return plannerField(field, version, official, actor, line ? {
+    ownerId: idOf(object(line.owner).id) || idOf(line.owner), domain: text(line.domain), hr: line.synthetic === true,
+  } : undefined)
+}
+export function plannerCanImportRoster(actor: Actor) {
+  return actor.canWrite && actor.roles.some((role) => ["admin", "hr"].includes(role))
+}
+export function plannerWorkbookImportAvailable(snapshot: Snapshot, actor: Actor) {
+  if (!actor.canWrite || !actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role))) return false
   const normalized = plannerData(snapshot.data)
-  return normalized.errors.length === 0 && rows(normalized.data.versions).some((version) => !!idOf(version.id))
+  if (normalized.errors.length) return false
+  return rows(normalized.data.versions).map(versionOf).some((version) => {
+    if (!version.id) return false
+    if (plannerCanAdmin(actor) || plannerCanImportRoster(actor)) return true
+    const official = idOf(object(normalized.data.officials)[String(version.year)])
+    const allowed = (field: string, line?: Row) => plannerWorkbookField(version, official, actor, field, line)
+    if (["fx", "headcount", "rate"].some((field) => allowed(field))) return true
+    if (version.lines.some((line) => {
+      if (line.sec !== "opex" && line.sec !== "capex") return false
+      const matchById = !!idOf(line.id) && !idOf(line.id).startsWith("HR:")
+      const matchByName = OPEX_ELEMENTS.some((el) => el === line.el && !(line.sec === "opex" && el === "hr") && !(line.sec === "capex" && el === "depr"))
+      if (!matchById && !matchByName) return false
+      if (line.sec === "capex" && !version.projects.some((project) =>
+        (matchById && project.id === line.proj) || text(project.code).trim() || text(project.name).trim())) return false
+      return allowed("actual", line) || allowed("forecast", line)
+    })) return true
+    if (Object.entries(version.hc.hrAF).some(([domain, value]) => !!domain && (allowed("actual", { ...object(value), domain, synthetic: true }) ||
+      allowed("forecast", { ...object(value), domain, synthetic: true })))) return true
+    // The original importer can create a synthetic HR actual or an assigned-domain forecast.
+    if (allowed("actual", { synthetic: true })) return true
+    return (actor.domains ?? []).some((domain) => !!domain && allowed("forecast", { domain, synthetic: true }))
+  })
 }
 /** Page-level capability from the same normalized version and field predicate used by execute. */
 export function plannerCurrentPageActions(snapshot: Snapshot, actor: Actor, page: string): readonly string[] {
@@ -2120,20 +2149,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
       return { ok: false, status: 422, errors: ["Duplicate version id"] }
   }
   const official = idOf(object(snapshot.data.officials)[String(version.year)])
-  const can = (field: string, line?: Row) =>
-    plannerField(
-      field,
-      version,
-      asNew ? undefined : official,
-      actor,
-      line
-        ? {
-            ownerId: idOf(object(line.owner).id) || idOf(line.owner),
-            domain: text(line.domain),
-            hr: line.synthetic === true,
-          }
-        : undefined,
-    )
+  const can = (field: string, line?: Row) => plannerWorkbookField(version, asNew ? undefined : official, actor, field, line)
   const budgetOK = can("budget")
   const issue: ImportIssue = { warnings: [] }
   const workbookVersion = idOf(sheets.Info?.find((row) => row.Field === "Version ID")?.Value)
@@ -2527,7 +2543,7 @@ function readWorkbookHeadcount(
     ) && !headcount.some((row) => ["Position ID", "FTE", "Start month"].some((key) => key in row))
   let roster: Row[] | undefined
   if (rosterRows) {
-    if (!actor.roles.some((role) => ["admin", "hr"].includes(role))) issue.result = { ok: false, status: 403 }
+    if (!plannerCanImportRoster(actor)) issue.result = { ok: false, status: 403 }
     else {
       roster = []
       for (const row of headcount ?? []) {

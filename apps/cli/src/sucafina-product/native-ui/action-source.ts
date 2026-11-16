@@ -8,7 +8,7 @@ import { DashboardBudget, budgetAdminCanWrite, budgetCanEditAnyLine } from "../.
 import { DashboardPeople, peopleCanWrite } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people.ts"
 import { DashboardOperations, operationsCanWrite } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts"
 import { DashboardPortfolio, portfolioCanWrite, portfolioCanImport } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts"
-import { PlannerModule, plannerAdminSourceAvailable, plannerAdminImportAvailable, plannerCurrentPageActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/planner.ts"
+import { PlannerModule, plannerAdminSourceAvailable, plannerWorkbookImportAvailable, plannerCurrentPageActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/planner.ts"
 import { ProcurementModule, procurementCanCreateRequest, procurementCurrentRequestActions, procurementCanManageSettings, procurementSupplierRoleAllows } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../../../../../modules/sucafina/Sucafinav1/src/nav.ts"
 import { SF_OPERATIONS_ACTIONS } from "./operations/projection.ts"
@@ -33,13 +33,13 @@ const sources: readonly Source[] = [
   { surface: "dashboard", page: "Vendor Contracts", id: "CAP14", domain: DashboardPortfolio.domain, actions: (a) => portfolioCanWrite(a, "contracts") ? ["save", "delete"] : [] },
   { surface: "dashboard", page: "Stakeholder Management", id: "CAP15", domain: DashboardPortfolio.domain, actions: (a) => portfolioCanWrite(a, "stakeholders") ? ["save", "delete"] : [] },
   { surface: "dashboard", page: "IT Performance Contract", id: "CAP16", domain: DashboardPortfolio.domain, actions: (a) => portfolioCanWrite(a, "itperf") ? ["save", "save-item", "delete-item", "save-sub", "delete-sub"] : [] },
-  { surface: "planner", page: "Overview", id: "CAP17", domain: PlannerModule.domain, actions: (a, s) => plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [] },
-  { surface: "planner", page: "Entities & allocations", id: "CAP21", domain: PlannerModule.domain, actions: (a, s) => plannerAdminSourceAvailable(s, a) ? ["save", "delete", "common", ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] : [] },
-  { surface: "planner", page: "OPEX", id: "CAP18", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "OPEX"), ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] },
-  { surface: "planner", page: "CAPEX", id: "CAP19", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "CAPEX"), ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] },
-  { surface: "planner", page: "Headcount", id: "CAP20", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "Headcount"), ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] },
-  { surface: "planner", page: "FX rates", id: "CAP22", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "FX rates"), ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] },
-  { surface: "planner", page: "Versions", id: "CAP23", domain: PlannerModule.domain, actions: (a, s) => plannerAdminSourceAvailable(s, a) ? ["save", "copy", "official", "lock", "unlock", "delete", ...(plannerAdminImportAvailable(s, a) ? ["import-workbook"] : [])] : [] },
+  { surface: "planner", page: "Overview", id: "CAP17", domain: PlannerModule.domain, actions: (a, s) => plannerWorkbookImportAvailable(s, a) ? ["import-workbook"] : [] },
+  { surface: "planner", page: "Entities & allocations", id: "CAP21", domain: PlannerModule.domain, actions: (a, s) => [...(plannerAdminSourceAvailable(s, a) ? ["save", "delete", "common"] : []), ...(plannerWorkbookImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "OPEX", id: "CAP18", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "OPEX"), ...(plannerWorkbookImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "CAPEX", id: "CAP19", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "CAPEX"), ...(plannerWorkbookImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "Headcount", id: "CAP20", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "Headcount"), ...(plannerWorkbookImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "FX rates", id: "CAP22", domain: PlannerModule.domain, actions: (a, s) => [...plannerCurrentPageActions(s, a, "FX rates"), ...(plannerWorkbookImportAvailable(s, a) ? ["import-workbook"] : [])] },
+  { surface: "planner", page: "Versions", id: "CAP23", domain: PlannerModule.domain, actions: (a, s) => [...(plannerAdminSourceAvailable(s, a) ? ["save", "copy", "official", "lock", "unlock", "delete"] : []), ...(plannerWorkbookImportAvailable(s, a) ? ["import-workbook"] : [])] },
   { surface: "procurement", page: "Requests", id: "CAP25", domain: ProcurementModule.domain, actions: (a, s) => [...(procurementCanCreateRequest(a) ? ["create"] : []), ...procurementCurrentRequestActions(s, a)] },
   { surface: "procurement", page: "My approvals", id: "CAP26", domain: ProcurementModule.domain, actions: (a, s) => procurementCurrentRequestActions(s, a).filter((id) => id === "approve" || id === "reject") },
   { surface: "procurement", page: "Suppliers", id: "CAP27", domain: ProcurementModule.domain, actions: (a, _s, key) => ["create", "save", "activate", "block", "inactivate", "delete", "change-bank"].filter((action) => procurementSupplierRoleAllows(a, action) && (action !== "change-bank" || key?.length === 32)) },

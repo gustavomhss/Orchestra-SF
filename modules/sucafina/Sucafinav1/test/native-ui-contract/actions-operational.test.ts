@@ -15,7 +15,7 @@ import { createSfSourcePersistence } from "../../product/integration/source-life
 import { enumerateSfSources } from "../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../product/integration/source-projections.ts"
 import { act, canApproveCurrentRequest } from "../../../porta/act.ts"
-import { plannerCurrentPageActions } from "../../runtime/planner.ts"
+import { plannerCurrentPageActions, plannerWorkbookImportAvailable } from "../../runtime/planner.ts"
 import { budgetCanEditAnyLine } from "../../runtime/dashboard-budget.ts"
 import { procurementCurrentRequestActions } from "../../runtime/procurement.ts"
 
@@ -120,6 +120,27 @@ test("Planner and budget page capabilities respect original source ownership and
   expect(budgetCanEditAnyLine(snapshot, { ...other, roles: ["domain leader"] }, "opexOwners")).toBe(false)
 })
 
+test("Planner workbook availability follows original fields, importable targets and roster authority", () => {
+  const actor = { id: "owner", canWrite: true, roles: ["budget owner"], domains: [] as string[] }
+  const snapshot = { data: { versions: [{ id: "v1", year: 2026, locked: true,
+    lines: [{ id: "line", sec: "opex", el: "lic", owner: { id: "owner" } }] }], officials: { "2026": "v1" } },
+    versions: {}, sequences: {}, audit: [], notices: [] }
+  expect(plannerWorkbookImportAvailable(snapshot, actor)).toBe(true)
+  expect(plannerWorkbookImportAvailable(snapshot, { ...actor, id: "other" })).toBe(false)
+  expect(plannerWorkbookImportAvailable(snapshot, { ...actor, canWrite: false })).toBe(false)
+  expect(plannerWorkbookImportAvailable(snapshot, { ...actor, roles: ["finance"] })).toBe(true)
+  expect(plannerWorkbookImportAvailable(snapshot, { ...actor, roles: ["hr"] })).toBe(true) // roster remains writable
+  expect(plannerWorkbookImportAvailable(snapshot, { ...actor, roles: ["admin"] })).toBe(true) // newVersion
+  const noLines = { ...snapshot, data: { ...snapshot.data, versions: [{ ...snapshot.data.versions[0]!, lines: [] }] } }
+  expect(plannerWorkbookImportAvailable(noLines, actor)).toBe(false)
+  expect(plannerWorkbookImportAvailable(noLines, { ...actor, domains: ["  "] })).toBe(true)
+  const unreachable = { ...snapshot, data: { ...snapshot.data, versions: [{ ...snapshot.data.versions[0]!, lines: [
+    { id: "line", sec: "other", owner: { id: "owner" } }, { id: "capex", sec: "capex", owner: { id: "owner" } },
+  ] }] } }
+  expect(plannerWorkbookImportAvailable(unreachable, actor)).toBe(false)
+  expect(plannerWorkbookImportAvailable({ ...snapshot, data: { ...snapshot.data, versions: [] } }, { ...actor, roles: ["admin"] })).toBe(false)
+})
+
 test("request action health cannot use another owner's draft", () => {
   const snapshot = { data: { store: { requests: {
     own: { request: { createdBy: "person", status: "draft" } },
@@ -131,4 +152,25 @@ test("request action health cannot use another owner's draft", () => {
   delete (snapshot.data.store.requests as { own?: unknown }).own
   expect(procurementCurrentRequestActions(snapshot, actor)).toEqual([])
   expect(procurementCurrentRequestActions(snapshot, { ...actor, canWrite: false })).toEqual([])
+})
+
+test("request action source reaches eligible owner and approval records beyond 100 entries", () => {
+  const actor = { id: "person", canWrite: true, roles: ["requester", "approver"] }
+  const settings = { currency: "USD", levels: [{ id: "L1", name: "Level", threshold: 0, holderId: "person" }],
+    prApprovalMode: "first", blockSelfApproval: true, fxRates: [{ code: "USD", rate: 1 }] }
+  const own = { request: { number: "own", status: "draft", createdBy: "person" } }
+  const approval = { request: { number: "pending", status: "pr_pending", createdBy: "other",
+    pr: { estAmount: 100, recurring: false, expenseType: "OPEX" },
+    prApproval: { amount: 100, fxRate: 1, steps: [{ levelId: "L1", levelName: "Level", threshold: 0, holderId: "person", status: "pending" }] },
+    sourcing: null, po: null, history: [] } }
+  const earlier = Array.from({ length: 150 }, (_, index) => [`irrelevant-${index}`, { request: { createdBy: "other", status: "po_issued" } }] as const)
+  const make = (entries: readonly (readonly [string, unknown])[]) => ({ data: { store: { requests: Object.fromEntries(entries), settings } },
+    versions: {}, sequences: {}, audit: [], notices: [] })
+  for (const entries of [[...earlier, ["own", own], ["approval", approval]], [["approval", approval], ["own", own], ...earlier]] as const) {
+    const actions = procurementCurrentRequestActions(make(entries), actor)
+    expect(actions).toContain("save")
+    expect(actions).toContain("delete")
+    expect(actions).toContain("approve")
+    expect(actions).toContain("reject")
+  }
 })
