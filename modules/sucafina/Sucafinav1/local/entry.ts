@@ -145,9 +145,11 @@ export async function createConfiguredInstallation(
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
   let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
+  let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
   runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
     operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
+    nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
     nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
     isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
     persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
@@ -196,6 +198,17 @@ export async function createConfiguredInstallation(
     ...nativeDependenciesBase,
     readContext: nativeContext.readContext,
   }
+  // Resolve the real host producer per Request; it may not yet be live at route registration.
+  const nativeReviewHandler = Object.freeze({
+    operationId: "projection.review" as const,
+    handle: async (request: Request) => {
+      const producer = runtime?.services?.()?.nativeReviewProjection
+      return producer ? producer.handle(request) : Response.json(
+        { status: "unavailable", reason: "review-producer-unavailable" },
+        { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } },
+      )
+    },
+  })
   const nativeHandlers = [
       ...createSfDomainProjectionHandlers(nativeDependencies),
       ...createSfPeopleProjectionHandlers(nativeDependencies),
@@ -205,26 +218,21 @@ export async function createConfiguredInstallation(
       ...createSfProcurementProjectionHandlers(nativeDependencies),
       ...createSfDecisionsProjectionHandlers(nativeDependencies),
       ...createSfRoutinesHandlers(nativeDependencies),
-      // Resolve the real host producer per Request: host services may not yet be
-      // live when this installation factory first registers its routes.
-      // An absent Review service is an explicit 503, never synthetic data.
-      {
-        operationId: "projection.review" as const,
-        handle: async (request: Request) => {
-          const producer = runtime?.services?.()?.nativeReviewProjection
-          return producer ? producer.handle(request) : Response.json(
-            { status: "unavailable", reason: "review-producer-unavailable" },
-            { status: 503, headers: { "Cache-Control": "no-store",
-              "X-Content-Type-Options": "nosniff" } },
-          )
-        },
-      },
+      nativeReviewHandler,
     ]
   const nativeProjections = mountSfNativeProjections({
     mount: config.mount,
     context: nativeContext,
     handlers: nativeHandlers,
   })
+  const productBinding = applicationServices.product
+  nativeReadBinding = (operationId, producer) => {
+    const current = runtime?.services?.()
+    if (!current) return undefined
+    if (operationId === "projection.review")
+      return current.nativeReviewProjection === producer && nativeHandlers.includes(nativeReviewHandler) ? nativeReviewHandler : undefined
+    return current.productHttp === producer && applicationServices.product === productBinding ? productBinding : undefined
+  }
   const actions = createSfActionSource(nativeDependencies, nativeHandlers)
   nativeActions = actions.actions
   // Router construction above proves these exact handlers were installed.
@@ -334,7 +342,7 @@ export async function createConfiguredInstallation(
       return localChrome(response)
 
     },
-    async dispose() { await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
+    async dispose() { nativeReadBinding = undefined; await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
   }
 
   function localChrome(response: Response) {
