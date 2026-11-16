@@ -343,7 +343,7 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
   const activate = (state: SourceState, run?: RunState): Effect.Effect<"settled" | "busy", BridgeError> => Effect.gen(function* () {
     const sessionID = state.sessionID
     if (state.mode === "history" || run && state.mode !== "run" || !state.scope || !(yield* checked(state.current))) return yield* unavailable()
-    const operation = fence.enter(sessionID, {
+    const operation = fence.enter<void, BridgeError, never>(sessionID, {
       ready: () => !!state.registrations,
       signal: run ? AbortSignal.any([state.signal, run.nativePolicy.signal]) : state.signal,
       current: run ? async () => await run.current() && await run.nativePolicy.current() : state.current,
@@ -446,7 +446,7 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
       approvals.delete(token)
       return yield* activate(state, run).pipe(Effect.ensuring(Effect.sync(state.close)))
     }),
-    withInvocation: (invocation, effect) => Effect.gen(function* () {
+    withInvocation: <A, E, R>(invocation: ToolSafety.Invocation, effect: Effect.Effect<A, E, R>): Effect.Effect<A, E | ToolSafety.Denied, R> => Effect.gen(function* () {
       const phase = yield* CurrentPhase
       if (phase && invocation.sessionID === phase.source.sessionID) {
         if (!sfRoutinePhaseArsenalAllowed(invocation, phase.source.sessionID))
