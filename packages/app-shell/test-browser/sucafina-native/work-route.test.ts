@@ -14,10 +14,14 @@ describe("work route composition", () => {
     expect(parseWorkRouteQuery(new URLSearchParams("source=record"), relation)).toEqual({ source: "record" })
     expect(parseWorkRouteQuery(new URLSearchParams("source="), relation)).toBeUndefined()
   })
-  test("unresolved detail references remain denied", () => {
-    for (const path of [`relations/${encodeSfRouteRef("relation")}`, `confirmations/${encodeSfRouteRef("selection")}`]) {
+  test("detail selectors require their original read operations", () => {
+    for (const [path, surface, id] of [[`relations/${encodeSfRouteRef("relation")}`, "UI51", "collaboration.relation-read"], [`confirmations/${encodeSfRouteRef("selection")}`, "UI53", "collaboration.confirmation-project"]]) {
       const candidate = matchSfNativeRoutePath(`/orchestra/sf-work/${path}`)!
-      expect(parseWorkRouteQuery(new URLSearchParams(), candidate)).toBeUndefined()
+      const context = { destinations: [{ capabilityId: surface, canRead: true }], availability: [{ family: "domain-read", resource: "relations", operations: [{ operationId: id, state: "ready", operational: true }] }] } as unknown as SfContext
+      expect(parseWorkRouteQuery(new URLSearchParams(), candidate)).toEqual({})
+      expect(workRouteAvailable(context, candidate)).toBe(true)
+      expect(workRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
+      expect(workRouteAvailable({ ...context, destinations: [{ ...context.destinations[0]!, canRead: false }] }, candidate)).toBe(false)
     }
   })
   test("requires the original operation and readable destination", () => {

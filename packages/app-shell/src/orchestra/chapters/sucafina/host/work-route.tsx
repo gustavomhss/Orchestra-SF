@@ -12,7 +12,7 @@ import { SfThreadView } from "../collaboration-pages/threads"
 import { SfConfirmationView } from "../collaboration-pages/confirmations"
 
 const kinds: Readonly<Record<string, readonly string[]>> = {
-  UI30: ["entry"], UI32: ["list", "new", "entry"], UI51: ["new", "case-alias"], UI52: ["entry"], UI53: [],
+  UI30: ["entry"], UI32: ["list", "new", "entry"], UI51: ["new", "case-alias", "entry"], UI52: ["entry"], UI53: ["entry"],
 }
 export function isWorkSurface(id: string): boolean { return Object.hasOwn(kinds, id) }
 export function parseWorkRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
@@ -32,7 +32,8 @@ export function workRouteAvailable(context: SfContext, candidate: SfNativeRouteC
   const operations = candidate.surfaceId === "UI30" ? [SfWork.operations["projection.work-selection"].operationId, SfCollaboration.operations["collaboration.work-list"].operationId] :
     candidate.surfaceId === "UI32" ? [candidate.kind === "entry" ? SfWork.operations["views.open"].operationId : SfWork.operations["views.list"].operationId] :
     candidate.surfaceId === "UI51" ? [SfCollaboration.operations["collaboration.relation-read"].operationId] :
-    candidate.surfaceId === "UI52" ? [SfCollaboration.operations["collaboration.thread-read"].operationId] : []
+    candidate.surfaceId === "UI52" ? [SfCollaboration.operations["collaboration.thread-read"].operationId] :
+    candidate.surfaceId === "UI53" ? [SfCollaboration.operations["collaboration.confirmation-project"].operationId] : []
   return operations.length > 0 && operations.every((id) => context.availability.some((resource) =>
     resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational)))
 }
