@@ -115,14 +115,15 @@ async function readCases(request: Request, deps: SfNativeHostDependencies, expec
   try {
     if (!matches(stamp, admitted.value.binding) || !await runtime.ui.validate(admitted.value, "sf_case_read", operationDigest))
       return failed(request, "denied", "case-list-access-changed")
-    const identities = () => runtime.state.read(request, "cases", (state, authority) =>
-      authority.principalRef === admitted.value.binding.principalRef &&
-      authority.policyVersion === admitted.value.binding.policyVersion &&
-      authority.accessRevision === admitted.value.binding.accessRevision
-        ? (expected
-          ? Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).slice(0, 1)
-          : Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef))).map(encodeCaseRef)
-        : undefined)
+    const identities = () => runtime.state.read(request, "cases", (state, authority) => {
+      if (authority.principalRef !== admitted.value.binding.principalRef ||
+        authority.policyVersion !== admitted.value.binding.policyVersion ||
+        authority.accessRevision !== admitted.value.binding.accessRevision) return undefined
+      const visible = Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef))
+      // Preserve the existing producer's 100-case limit while bounding the
+      // context observation to one actual dispatch within that limit.
+      return (expected ? visible.slice(0, visible.length > 100 ? 101 : 1) : visible).map(encodeCaseRef)
+    })
     const listed = await identities()
     if (listed.status !== "ok" || !listed.value || listed.value.length > 100)
       return failed(request, "unavailable", "case-list-source-unavailable")
