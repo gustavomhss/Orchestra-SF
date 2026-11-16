@@ -3,7 +3,7 @@ import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
-import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
+import type { SfDraftRegistry, SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { SfChangeReview, type SfReviewField } from "../../shared/change-review"
 import { SfStatePanel } from "../../shared/states"
@@ -21,6 +21,9 @@ const data = (text: string) => ({ kind: "data" as const, text })
 const field = (title: string): SfReviewField => ({ path: "pr.title", label: message("sf.u11.remaining.field.title"),
   value: { kind: "text", text: data(title) } })
 const scope = "pr.title" as SfEditScopeKey
+// Stage is a source fence, not part of the title-only draft value. Its lifetime
+// follows the owner registry so an unmount cannot silently admit a changed stage.
+const stages = new WeakMap<SfDraftRegistry, Map<SfRef, string>>()
 
 export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ requestRef?: SfRef; onConfirmed?: () => void }>) {
   const sf = useSfContext()
@@ -81,12 +84,17 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
         return
       }
       const controller = ready.drafts.peek<{ title: string }>(selection(ref)), state = controller?.snapshot()
+      const recorded = stages.get(ready.drafts) ?? new Map<SfRef, string>()
+      stages.set(ready.drafts, recorded)
       if (state?.availability === "active" && (state.baseVersion !== result.version ||
           !state.base || state.base.title !== result.title ||
+          recorded.has(ref) && recorded.get(ref) !== result.stage ||
           !!previous && (previous.stage !== result.stage || previous.title !== result.title))) {
         if (state.dirty) controller?.setPhase("conflict")
         else controller?.receiveRemote({ baseVersion: result.version, value: { title: result.title } })
       }
+      if (!state || state.availability === "active" && !state.dirty && !state.pendingOperation)
+        recorded.set(ref, result.stage)
       setUi({ source: result, state: "ready" })
     })
     onCleanup(stop)
@@ -188,6 +196,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
         controller.confirmSave({ kind: "projected", operationRef: intent.operationRef,
           baseVersion: projected.version, value: { title: projected.title } })
         submitted = undefined
+        stages.get(ready.drafts)?.set(intent.ref, projected.stage)
         setUi({ source: projected, review: null, state: "ready", notice: "sf.u11.remaining.saved" })
         props.onConfirmed?.()
         return
@@ -211,6 +220,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     if (!ref || !ready || busy || state?.availability !== "active" || state.pendingOperation ||
         state.phase === "outcome-unknown" || state.phase === "submitting") return
     ready.drafts.discard(selection(ref))
+    stages.get(ready.drafts)?.delete(ref)
     refresh()
   }
   const visible = () => ui.token === authority() && ui.state === "ready" && !!editable()
