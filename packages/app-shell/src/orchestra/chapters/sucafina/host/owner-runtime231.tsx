@@ -27,6 +27,9 @@ import { matchSfNativeRoutePath } from "../route-registry"
 import { useSfContext } from "../context"
 import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
   SfDraftRevalidation, SfSurfaceProps } from "../context/contracts"
+import { parsePlannerRouteQuery, plannerRouteAvailable } from "./planner-route"
+import { SfPlannerVersionsView } from "../planner/versions"
+import { SfPlannerCompareView } from "../planner/compare"
 import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
@@ -81,12 +84,11 @@ const sameStamp = (
 
 function explicitSelection(query: string): { kind: "none" } | { kind: "invalid" } |
   { kind: "selected"; selection: SfOwnerSelection } {
-  if (!query || query === "?") return { kind: "none" }
   const params = new URLSearchParams(query)
-  const entries = [...params]
-  if (entries.length !== 3 || new Set(entries.map(([key]) => key)).size !== 3 ||
-    entries.some(([key, value]) => !["server", "project", "installation"].includes(key) || !value))
-    return { kind: "invalid" }
+  const values = ["server", "project", "installation"].map((key) => params.getAll(key))
+  if (values.some((items) => items.length > 1)) return { kind: "invalid" }
+  if (values.every((items) => items.length === 0)) return { kind: "none" }
+  if (!values.every((items) => items.length === 1 && items[0])) return { kind: "invalid" }
   return { kind: "selected", selection: {
     serverKey: params.get("server")! as SfServerKey,
     projectId: params.get("project")! as SfRef,
@@ -182,6 +184,12 @@ function MountedSurface(props: Readonly<{
       <Match when={props.view().status === "ready" && current()?.surfaceId === "UI34"}>
         <SfIntentView surfaceId="UI34" route={current() as SfSurfaceProps<"UI34">["route"]} />
       </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP23" && current()?.kind === "compare"}>
+        <SfPlannerCompareView surfaceId="CAP23" route={current() as SfSurfaceProps<"CAP23">["route"]} />
+      </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP23"}>
+        <SfPlannerVersionsView surfaceId="CAP23" route={current() as SfSurfaceProps<"CAP23">["route"]} />
+      </Match>
     </Switch>
   )
 }
@@ -240,7 +248,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       ((target.pathname === "/orchestra/sf-home" ||
         target.pathname.startsWith("/orchestra/sf-home/")) ||
         target.pathname === "/orchestra/sf-decisions" ||
-        target.pathname.startsWith("/orchestra/sf-decisions/"))) return
+        target.pathname.startsWith("/orchestra/sf-decisions/") ||
+        target.pathname === "/orchestra/sf-planner" || target.pathname.startsWith("/orchestra/sf-planner/"))) return
     if (!mounted?.hasDirtyDrafts()) return
     event.preventDefault()
     void requestSfOwnerShellExit237().then((accepted) => {
@@ -375,14 +384,15 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         if (url.origin !== window.location.origin || url.hash || url.username || url.password)
           return { status: "invalid-link" }
       } catch { return { status: "invalid-link" } }
-      if ([...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)))
-        return { status: "invalid-link" }
       const candidate = matchSfNativeRoutePath(url.pathname)
-      if (!candidate || !(
-        candidate.surfaceId === "UI29" && candidate.kind === "entry" ||
-        candidate.surfaceId === "UI33" && candidate.kind === "entry" ||
-        candidate.surfaceId === "UI34" && candidate.kind === "entry"
-      )) return { status: "invalid-link" }
+      if (!candidate) return { status: "invalid-link" }
+      const plannerQuery = candidate.surfaceId === "CAP23" ? parsePlannerRouteQuery(url.searchParams, candidate) : undefined
+      if (candidate.surfaceId === "CAP23" ? !plannerQuery :
+        [...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)) || !(
+          candidate.surfaceId === "UI29" && candidate.kind === "entry" ||
+          candidate.surfaceId === "UI33" && candidate.kind === "entry" ||
+          candidate.surfaceId === "UI34" && candidate.kind === "entry"
+        )) return { status: "invalid-link" }
       const found = await source.listByIds(selected, signal)
       if (signal.aborted || !found) return { status: "unavailable" }
       if (found.installations.length !== 1) return { status: "denied" }
@@ -399,8 +409,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         return { status: "denied" }
       const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
         : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
-      if (!context.value.availability.some((resource) => resource.operations.some((operation) =>
-        operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
+      if (candidate.surfaceId === "CAP23" ? !plannerRouteAvailable(context.value, candidate) :
+        !context.value.availability.some((resource) => resource.operations.some((operation) =>
+          operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
         return { status: "denied" }
       // UI34 data admission remains at original useSfCase. When returning from
       // UI29, the exact 227 resume port alone performs BOTH original case reads
@@ -416,7 +427,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const route = {
         surfaceId: candidate.surfaceId, kind: candidate.kind,
         params: candidate.parameters, ownerSelection: selected,
-        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: {},
+        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: plannerQuery ?? {},
       } as SfResolvedRoute
       return { status: "authorized", route, ownerKey }
     },
