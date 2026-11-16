@@ -26,7 +26,7 @@ export type Report = {
 }
 
 function git(cwd: string, args: string[]) {
-  return execFileSync("git", ["-C", cwd, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 512 * 1024 * 1024 })
+  return execFileSync("git", ["-C", cwd, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] })
 }
 
 function sourceFile(file: string) {
