@@ -899,15 +899,19 @@ jobs:
                   GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" --conditions=solid --preload ../../script/test-omni-control.ts "${unit[@]}" "${common[@]}" || status=$?
                 fi
                 if [ ${#browser[@]} -gt 0 ]; then
-                  GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts "${browser[@]}" "${common[@]}" || status=$?
+                  GITHUB_ACTIONS=false bun run test:browser --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" || status=$?
                 fi
                 exit $status
               fi
               if [ "$DIRECTORY" = "modules/atlas/boundary" ]; then
-              GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" --preload ../../../script/test-omni-control.ts "${args[@]}"
-              exit $?
-            fi
-            GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" "${args[@]}"
+                GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" --preload ../../../script/test-omni-control.ts "${args[@]}"
+                exit $?
+              fi
+              if [ "$DIRECTORY" = "apps/cli" ]; then
+                GITHUB_ACTIONS=false bun run test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" "${args[@]}"
+                exit $?
+              fi
+              GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" "${args[@]}"
               ;;
             node)
               for file in "${args[@]}"; do
