@@ -64,7 +64,9 @@ def main():
                 "F04_JUNIT_FAILED_SKIPPED_OR_TODO_CASE")
         if control:
             continue
-        identity = " ".join(ancestors + [classname, name]).replace("\\", "/")
+        # Bun can attach its path to a testcase rather than the testsuite.
+        # A reported source file still needs a concrete executed testcase.
+        identity = " ".join(ancestors + [case.attrib.get("file", ""), classname, name]).replace("\\", "/")
         require(bool(name.strip()), "F04_JUNIT_TESTCASE_UNNAMED")
         cases.append({"name": name, "identity": identity})
     require(len(cases) > 0, "F04_JUNIT_NO_EXECUTED_PRODUCT_TESTS")
