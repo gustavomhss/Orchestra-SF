@@ -3,7 +3,14 @@ import type { Position, RateCard, HrAf } from "../src/planner-accounts.ts"
 import { finite, object, rows, text } from "./contract.ts"
 import type { Actor, Environment, Snapshot } from "./contract.ts"
 import type { ArtifactResult } from "./artifact.ts"
-import type { Cell, CellValue, Worksheet } from "exceljs"
+import type { Cell, CellValue, PaperSize, Worksheet } from "exceljs"
+
+// ExcelJS 4.4.0 writes A3 (8) but omits it from its public PaperSize const enum.
+declare module "exceljs" {
+  export const enum PaperSize {
+    A3 = 8,
+  }
+}
 
 const type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -375,7 +382,7 @@ export async function exportPlanner(
 function configureXlsxPrint(
   sheet: Worksheet,
   pagesWide: number,
-  paperSize: 8 | 9,
+  paperSize: PaperSize,
   landscape: boolean,
   repeatHeader: boolean,
   repeatColumns?: string,

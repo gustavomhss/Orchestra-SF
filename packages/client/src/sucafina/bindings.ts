@@ -33,7 +33,7 @@ const invalid = (): SfWireDecodeResult => ({ status: "invalid" })
 function decode(schema: Schema.Top, value: unknown): SfWireDecodeResult {
   // The exact source shape must parse before its JSON wire representation
   // can be admitted. No JSON passthrough, guessed response or relaxed parsing.
-  const parsed = Schema.decodeUnknownOption(schema)(value)
+  const parsed = Schema.decodeUnknownOption(Schema.toType(schema), { onExcessProperty: "error" })(value)
   if (Option.isNone(parsed)) return invalid()
   const json = Schema.decodeUnknownOption(Schema.Json)(parsed.value)
   if (Option.isNone(json)) return invalid()

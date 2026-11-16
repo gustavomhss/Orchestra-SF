@@ -66,7 +66,7 @@ describe("A10 Pessoas and Talent — source-boundary contract", () => {
     ]
     expect(Object.keys(SfPeople.operations).sort()).toEqual(expected.sort())
     Object.entries(SfPeople.operations).forEach(([id, operation]) => {
-      expect(operation.operationId).toBe(id)
+      expect(id).toBe(operation.operationId)
     })
     expect(SF_PEOPLE_PAGES).toEqual({
       CAP02: "Hot Topics & Actions", CAP06: "Headcount Overview",
@@ -78,7 +78,7 @@ describe("A10 Pessoas and Talent — source-boundary contract", () => {
     const input = {
       id: "m1", version: 0,
       values: { name: "Alice", type: "Employee", status: "Active", cls: "", outlook: "" },
-    }
+    } as const
     const op = SfPeople.operations["domain.command.CAP08.save"]
     expect(Schema.decodeUnknownSync(op.input, { onExcessProperty: "error" })(input)).toEqual(input)
     expect(() => Schema.decodeUnknownSync(op.input, { onExcessProperty: "error" })({
@@ -221,7 +221,7 @@ describe("A10 Pessoas and Talent — source-boundary contract", () => {
     }
     const client = createSfPeopleClient(transport)
     const controller = new AbortController()
-    const base = { id: "m1", version: 0, values: { name: "Alice", cls: "Talent" } }
+    const base = { id: "m1", version: 0, values: { name: "Alice", cls: "Talent" } } as const
     const result = await client["domain.command.CAP08.save"](base, {
       signal: controller.signal, idempotencyKey: "stable-people-intent",
     })

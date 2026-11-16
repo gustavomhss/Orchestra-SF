@@ -1,0 +1,493 @@
+{
+  "schema": "sf2h.closure211.intake.v1",
+  "campaign": "sf2h-integral-20261112",
+  "epoch": "closure-composer-e1-browser211",
+  "mission": 211,
+  "role": "CANDIDATE_PROPOSAL_COMPOSER",
+  "parent_head": "76fa5205c5524c3c1b6d4b2bab034cf763b97959",
+  "parent_tree": "a503f04423ee9353812f1ce4d9c83d61e11b5d57",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "source_sets": [
+    {
+      "mission": 196,
+      "branch": "sf-proof-profiles",
+      "pinned_code_source": "89b90ca617e2ce8cca659b3d1c0cbf41be75ebc3",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/HANDOFF.json"
+    },
+    {
+      "mission": 199,
+      "branch": "sf-installed-host",
+      "pinned_code_source": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json"
+    },
+    {
+      "mission": 202,
+      "branch": "sf-context-types",
+      "pinned_code_source": "3b0d6e5c08b11dd2a152b2f455e80113f1188755",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair202/HANDOFF-202.json"
+    },
+    {
+      "mission": 203,
+      "branch": "sf-transport-types",
+      "pinned_code_source": "4c4c3f4071e0efd8c212d93a3e6dde6e1cd95d3c",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/handoff-203.json"
+    },
+    {
+      "mission": 205,
+      "branch": "sf-thread-newlines",
+      "pinned_code_source": "c8af58da3cb7c8734c2d2f126e63fd1ddabd0440",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair205/ARTIFACT.json"
+    },
+    {
+      "mission": 206,
+      "branch": "sf-ux-n13",
+      "pinned_code_source": "6a309ca2e0c9f4adc1f9b0d9097b234b44e77c82",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/ARTIFACT.json"
+    },
+    {
+      "mission": 204,
+      "branch": "sf-fixture-types",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair204/HANDOFF-204.md"
+    }
+  ],
+  "applied": [
+    {
+      "mission": 196,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+      "source_ref": "89b90ca617e2ce8cca659b3d1c0cbf41be75ebc3",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/HANDOFF.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "71170944471b600c01d80d921bb4bf356931ba8a",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 196,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+      "source_ref": "89b90ca617e2ce8cca659b3d1c0cbf41be75ebc3",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/HANDOFF.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 196,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+      "source_ref": "89b90ca617e2ce8cca659b3d1c0cbf41be75ebc3",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/HANDOFF.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 196,
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/am02/performance-knowledge-consumers.spec.ts",
+      "source_ref": "89b90ca617e2ce8cca659b3d1c0cbf41be75ebc3",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/HANDOFF.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "35affab324432817d366ecab70ce86c5fd5805eb",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 196,
+      "path": "script/sf2h/proofs/am01/correlate-hosted-evidence.ts",
+      "source_ref": "89b90ca617e2ce8cca659b3d1c0cbf41be75ebc3",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/HANDOFF.json",
+      "pre": "45332299e15db0259c3b4cfd735ba6c99bf96e7a",
+      "source_pre": "45332299e15db0259c3b4cfd735ba6c99bf96e7a",
+      "post": "2851de47ba3d5b5f6dc6d468a95f2164c4f9c7fb",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 196,
+      "path": "script/sf2h/proofs/am02/reconcile-hosted-traces.ts",
+      "source_ref": "89b90ca617e2ce8cca659b3d1c0cbf41be75ebc3",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/HANDOFF.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "a848d1641966c3af2988acaefad897b566a924dd",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": "cc7818e623e61e4217dfb2ada18ca3e1fa5f7e12",
+      "source_pre": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "post": "a67dfce9c79309b182bb25100eeb2a51e49d9a3b",
+      "kind": "PRODUCER_CODE",
+      "action": "REBASING_F04_IMPORTED_PREVIOUSLY"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "567ef2bf1d472e248468ad4eed93ead751aaaa22",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "7a85a85d13895ce7e1a95c543f1b3a8f13757582",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/desktop-host.ts",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "1a6f2081664db3da72554df46fe347ae7a616352",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "2925ff518a78c2034f855561589f504b9ca7e48b",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 199,
+      "path": "script/sf2h/proofs/installed/register.ts",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "5fa9b5d1c82a9a70ea6351f4403b8854a64a2296",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 199,
+      "path": "script/sf2h/proofs/installed/consume.ts",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "ce5191c0217cc581ee4258cc244ca146e1d42f06",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 199,
+      "path": "script/sf2h/proofs/installed/attest-d01.ts",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "97bde2fea8f707aafebf7bd408a21bc43bfaa4d3",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 199,
+      "path": "script/sf2h/proofs/installed/README.md",
+      "source_ref": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ARTIFACT.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "726b6cb98e697d4c583fa72e8289debf74258a5e",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 202,
+      "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+      "source_ref": "3b0d6e5c08b11dd2a152b2f455e80113f1188755",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair202/HANDOFF-202.json",
+      "pre": "03a47cf080fc5b9751dbadad272c14d17f5cfc34",
+      "source_pre": "03a47cf080fc5b9751dbadad272c14d17f5cfc34",
+      "post": "1406e7aa7b4832ccf923cf02f1789b6a1defccce",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 202,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts",
+      "source_ref": "3b0d6e5c08b11dd2a152b2f455e80113f1188755",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair202/HANDOFF-202.json",
+      "pre": "9fc888c5ceba20ca321e90ff8bc8e64e0c3acdad",
+      "source_pre": "9fc888c5ceba20ca321e90ff8bc8e64e0c3acdad",
+      "post": "aa0feb2c58be8276dfdf3256693a22dda17f64e0",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 203,
+      "path": "packages/client/src/sucafina/transport.ts",
+      "source_ref": "4c4c3f4071e0efd8c212d93a3e6dde6e1cd95d3c",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/handoff-203.json",
+      "pre": "c9fc831156c94f062f0493a14458f84f61f7dff3",
+      "source_pre": "c9fc831156c94f062f0493a14458f84f61f7dff3",
+      "post": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 203,
+      "path": "packages/client/src/sucafina/bindings.ts",
+      "source_ref": "4c4c3f4071e0efd8c212d93a3e6dde6e1cd95d3c",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/handoff-203.json",
+      "pre": "e0d5d853b0f86537bc0f1a6f3cb28d85d561f0a5",
+      "source_pre": "e0d5d853b0f86537bc0f1a6f3cb28d85d561f0a5",
+      "post": "aff16695246561bd2cfe154c1ac892084ce119a4",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 203,
+      "path": "packages/client/src/sucafina/people.ts",
+      "source_ref": "4c4c3f4071e0efd8c212d93a3e6dde6e1cd95d3c",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/handoff-203.json",
+      "pre": "57278f55bb2b36a69c93653c54bb7b8129b1e41f",
+      "source_pre": "57278f55bb2b36a69c93653c54bb7b8129b1e41f",
+      "post": "2b07a465d2208a57b192147e6bca229b76ec6b3d",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 203,
+      "path": "packages/client/src/sucafina/context.ts",
+      "source_ref": "4c4c3f4071e0efd8c212d93a3e6dde6e1cd95d3c",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/handoff-203.json",
+      "pre": "a08206d7aa17379520f2372fd14e9e4e9d7916c3",
+      "source_pre": "a08206d7aa17379520f2372fd14e9e4e9d7916c3",
+      "post": "aac93d7c9e34674db51a143b3638a4f626b6398a",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 203,
+      "path": "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts",
+      "source_ref": "4c4c3f4071e0efd8c212d93a3e6dde6e1cd95d3c",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/handoff-203.json",
+      "pre": null,
+      "source_pre": null,
+      "post": "6f470dcc23300873223ec2c01bb7d36c6a5c23ea",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 205,
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "source_ref": "c8af58da3cb7c8734c2d2f126e63fd1ddabd0440",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair205/ARTIFACT.json",
+      "pre": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "source_pre": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "post": "619402f411f6592cc7bfdcd9d2d97a834d36c26c",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 205,
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "source_ref": "c8af58da3cb7c8734c2d2f126e63fd1ddabd0440",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair205/ARTIFACT.json",
+      "pre": "5d02157e04299a299cd3c4fada3dd19913a59598",
+      "source_pre": "5d02157e04299a299cd3c4fada3dd19913a59598",
+      "post": "313372865426a047cc500d1dba891a75cb8fa047",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 206,
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "source_ref": "6a309ca2e0c9f4adc1f9b0d9097b234b44e77c82",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/ARTIFACT.json",
+      "pre": "285db9bfdd046366f8fd814991f9f0724eff445f",
+      "source_pre": "285db9bfdd046366f8fd814991f9f0724eff445f",
+      "post": "f72347df8d20a465e478053c976e62fde124348d",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 206,
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "source_ref": "6a309ca2e0c9f4adc1f9b0d9097b234b44e77c82",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/ARTIFACT.json",
+      "pre": "83ee904b4ecf79248410a7714bb63ed7baf4aaf5",
+      "source_pre": "83ee904b4ecf79248410a7714bb63ed7baf4aaf5",
+      "post": "3c1fa87f3b1d36e6ebbe2801ca7a9856381893de",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 204,
+      "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "source_ref": "e6e8ecdc63ea7cc8070c15aec16c001c4b657a13",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair204/HANDOFF-204.md",
+      "pre": "2cae2a7f0a8b76f4759572099d8e27729c698b98",
+      "source_pre": "2cae2a7f0a8b76f4759572099d8e27729c698b98",
+      "post": "a1b569413d4214a4c4310429b1d7a139e6d12204",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 204,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts",
+      "source_ref": "e6e8ecdc63ea7cc8070c15aec16c001c4b657a13",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair204/HANDOFF-204.md",
+      "pre": "26017329781b67185ffdfb2b0e5cfdfc00c001b2",
+      "source_pre": "26017329781b67185ffdfb2b0e5cfdfc00c001b2",
+      "post": "09d294a0ff7131f625420aa1a94c560891f880bf",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 204,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts",
+      "source_ref": "e6e8ecdc63ea7cc8070c15aec16c001c4b657a13",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair204/HANDOFF-204.md",
+      "pre": "0f5d05fba397355585e8a96013387f146f4208f5",
+      "source_pre": "0f5d05fba397355585e8a96013387f146f4208f5",
+      "post": "16661879c65c608e63451743c13caabe97b63feb",
+      "kind": "PRODUCER_CODE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 196,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/patches/189-WP12-native-C16-receipts.json",
+      "pre": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "source_pre": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "post": "ebd55c6798bd81f37b29a62f8364dfff28edaee7",
+      "kind": "PRODUCER_INERT_POSTIMAGE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 203,
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/inert-router.ts.diff",
+      "pre": "17db52d914ca49934953e1161461b03856eb29c5",
+      "source_pre": "17db52d914ca49934953e1161461b03856eb29c5",
+      "post": "2c718174ec9554689e1879425e525f0c9fd555ba",
+      "kind": "PRODUCER_INERT_POSTIMAGE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 203,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/inert-transport.test.ts.diff",
+      "pre": "0789f34911cd97d82a870dcee2f17fa37c8b4578",
+      "source_pre": "0789f34911cd97d82a870dcee2f17fa37c8b4578",
+      "post": "1d0e5816d15865b2df8459c6535980b65d27f20c",
+      "kind": "PRODUCER_INERT_POSTIMAGE",
+      "action": "APPLY_EXACT_BLOB"
+    },
+    {
+      "mission": 206,
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+      "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure206/patches/189-budget-surface.json",
+      "pre": "ed94efe4d919eb80e4592057170d03c4b2348eb6",
+      "source_pre": "ed94efe4d919eb80e4592057170d03c4b2348eb6",
+      "post": "1ba0272bee68c30175f779e733eb77bf4485c3f9",
+      "kind": "PRODUCER_INERT_POSTIMAGE",
+      "action": "APPLY_EXACT_BLOB"
+    }
+  ],
+  "already_present": [
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+      "sha": "3cbd63012f43c43bbbe3d2c66c03fd2ded6343f9"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+      "sha": "0f2463a8e6dcc201f5a8a630172e3d88c7bb3d91"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+      "sha": "71adbaaf679331a5a201aae663123ba87bc4a0b5"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
+      "sha": "bc84476891d97e7baad4f6462933c60688c11847"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+      "sha": "66e269a78af8262764228557e2eeccd29bca1a36"
+    },
+    {
+      "mission": 199,
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+      "sha": "238d8329bc5677cdc98b9fa238426783bf4add65"
+    }
+  ],
+  "f04_rebase": {
+    "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+    "consumer_pre": "cc7818e623e61e4217dfb2ada18ca3e1fa5f7e12",
+    "source199_pre": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+    "source199_post": "a67dfce9c79309b182bb25100eeb2a51e49d9a3b",
+    "reason": "Existing F04 187 exports and assertions already in consumer; 199 post includes all prior public fixture symbols plus browser/context selection/rechecks; exact source post chosen to avoid duplicate partial rewrites",
+    "static_exports_checked": [
+      "nativeInstalledFixture",
+      "nativeCorpus",
+      "registerNativeInstalledManifest",
+      "readNativeManifest",
+      "requireNativeJourney",
+      "armLostResponse",
+      "armHeldResponse",
+      "requestRealRevocation",
+      "NativeJourneyPrecondition",
+      "InstalledNativeHarness"
+    ],
+    "tests": "NOT_RUN"
+  },
+  "additional_inert_patches": [
+    {
+      "name": "199 production Playwright config",
+      "status": "UNAPPLIED_NEEDS_CAUSAL_RECONCILIATION"
+    },
+    {
+      "name": "210 historical evidence reader",
+      "status": "UNAPPLIED_NEEDS_CAUSAL_RECONCILIATION"
+    }
+  ],
+  "future_contracts": [
+    212,
+    213
+  ],
+  "reviews": [
+    207,
+    208,
+    209
+  ],
+  "compiler": 190,
+  "sole_product_ci": 214,
+  "validation": "NOT_RUN",
+  "hosted_proofs": "NOT_RUN",
+  "accepted_C": false,
+  "GLOBAL_RELEASE": false,
+  "native_goal": "paused"
+}

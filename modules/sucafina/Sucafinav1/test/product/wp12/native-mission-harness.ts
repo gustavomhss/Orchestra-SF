@@ -224,10 +224,19 @@ export async function executeWp12NativeMission(context: Wp12NativeMissionContext
   expect(assistants.length).toBeGreaterThan(0)
   const tools = assistants.flatMap((message) => message.content.flatMap((part) => {
     if (part.type !== "tool" || part.state.status !== "completed") return []
-    const receipt = object(part.state.structured.receipt)
-    return part.state.structured.status === "ok" && receipt.kind === "native" && receipt.operation === part.name &&
-      receipt.runId === runRef && receipt.nativeSessionId === native.sessionID && receipt.principalRef === context.principalRef && receipt.callId === part.id
-      ? [{ operation: part.name, handlerExport: receipt.handlerExport, toolCallId: part.id }] : []
+    const structured = object(part.state.structured)
+    const receipt = object(structured.receipt)
+    return structured.status === "ok" && receipt.kind === "native" && receipt.operation === part.name &&
+      receipt.runId === runRef && receipt.nativeSessionId === native.sessionID && receipt.principalRef === context.principalRef && receipt.callId === part.id &&
+      typeof receipt.inputDigest === "string" && /^[a-f0-9]{64}$/.test(receipt.inputDigest) &&
+      typeof receipt.resultDigest === "string" && receipt.resultDigest === digestSfValue(structured.result) &&
+      receipt.accessRevision === run.value.accessRevision &&
+      typeof receipt.handlerExport === "string" && Number.isSafeInteger(receipt.providerGeneration)
+      ? [{ operation: part.name, handlerExport: receipt.handlerExport, toolCallId: part.id,
+        inputDigest: receipt.inputDigest, resultDigest: receipt.resultDigest,
+        principalRef: receipt.principalRef, accessRevision: receipt.accessRevision,
+        providerGeneration: receipt.providerGeneration,
+        outputRef: typeof structured.outputRef === "string" ? structured.outputRef : null }] : []
   }))
   for (const required of incoming.requiredTools) expect(tools.some((tool) => tool.operation === required.operation &&
     (required.handlerExport === undefined || tool.handlerExport === required.handlerExport))).toBe(true)
@@ -257,7 +266,8 @@ export async function readWp12NativeMissionAfterReload(context: Wp12NativeMissio
     githubSha: process.env.GITHUB_SHA ?? null, identityKind: "explicit-synthetic-authentication-harness",
     profileId: completed.receipt.profileId, skillId: completed.receipt.skillId, runRef: completed.runRef,
     caseRef: completed.caseRef, inputDigest: completed.inputDigest, outputRef: completed.output.id, outputDigest: completed.output.outputDigest,
-    receipt: completed.receipt, actualModel: completed.actualModel, toolCallIds: completed.toolCallIds,
+    receipt: completed.receipt, actualModel: completed.actualModel,
+    toolCallIds: completed.toolCallIds, tools: completed.tools,
     consumerRef: "handleSfAnalysis:output", consumerObservedAction: "reopened-host-rendered-persisted-output",
     inferenceExecuted: true, allEighteenSkillsAccepted: false, independentGnativeReview: false }))
   return { html: value.html, output: output.value }

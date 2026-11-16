@@ -56,7 +56,7 @@ describe("A08 — source-faithful BI schemas", () => {
         accessRevision: "rev-3", at: "2026-11-15T12:00:00Z", requestId: "request-1",
       },
     }
-    const decoded = Schema.decodeUnknownSync(SfBi.operations["bi.bi-data"].output)(body)
+    const decoded = Schema.decodeUnknownSync(Schema.toEncoded(SfBi.operations["bi.bi-data"].output))(body)
     expect(decoded).toMatchObject(body)
     if (!("projection" in decoded)) throw new Error("expected producer BI data output")
     expect(decoded.projection.version).toBe(0)
@@ -114,8 +114,8 @@ describe("A08 — source-faithful BI schemas", () => {
 
   test("redaction/stale/denial remain explicit and never become empty BI values", () => {
     for (const key of ["bi.bi-data", "bi.bi-source", "bi.bi-decision", "bi.bi-options"] as const) {
-      const denied = Schema.decodeUnknownSync(SfBi.operations[key].output)({ status: "denied", reason: "access-revoked" })
-      const stale = Schema.decodeUnknownSync(SfBi.operations[key].output)({ status: "stale", reason: "source-changed" })
+      const denied = Schema.decodeUnknownSync(Schema.toEncoded(SfBi.operations[key].output))({ status: "denied", reason: "access-revoked" })
+      const stale = Schema.decodeUnknownSync(Schema.toEncoded(SfBi.operations[key].output))({ status: "stale", reason: "source-changed" })
       expect(denied).toEqual({ status: "denied", reason: "access-revoked" })
       expect(stale).toEqual({ status: "stale", reason: "source-changed" })
     }

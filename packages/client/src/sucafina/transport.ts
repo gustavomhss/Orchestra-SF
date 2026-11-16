@@ -8,10 +8,11 @@ import type {
   SfJson, SfOperation, SfOperationBindings, SfOperationId, SfPublicHeaders,
   SfTransportFailure, SfTransportResult,
 } from "@orchestra/schema/sucafina/common"
-import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
-import type {
-  SfContext, SfContextStamp, SfInstallationDescriptor, SfResolvedRoute,
-} from "@orchestra/schema/sucafina/context"
+import { SfOperationRegistry, type SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
+import { SfContextStamp, type SfContext, type SfInstallationDescriptor, type SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+
+// Keep the Client public type identical to the canonical, browser-safe wire union.
+export type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 
 export type SfCallOptions = Readonly<{ signal: AbortSignal; idempotencyKey?: string }>
 export type SfTransport = Readonly<{
@@ -95,6 +96,12 @@ const MUTATION_LIMIT = 256
 type ErrorReason = SfTransportFailure["reason"]
 const failure = (reason: ErrorReason): SfTransportFailure => ({ kind: "transport-error", reason })
 
+// Preserve the full route contract: the catalog literals happen to omit
+// response modes owned by dedicated consumers, but that does not narrow F02.
+function cataloguedRoute(operationId: SfOperationId): SfNativeOperationRoute | undefined {
+  return SfOperationRegistry[operationId]
+}
+
 export function createSfTransport(options: Readonly<{
   binding: SfInstallationDescriptor
   generation: number
@@ -125,7 +132,7 @@ export function createSfTransport(options: Readonly<{
       if (!validBinding || !owned || !isCurrent()) return failure("contract-mismatch")
       if (call.signal.aborted) return failure("aborted")
       if (!options.desktop && !webOrigin()) return failure("contract-mismatch")
-      const metadata = SfOperationRegistry[operation.operationId]
+      const metadata = cataloguedRoute(operation.operationId)
       if (!metadata || metadata.effect === "authentication" || operation.operationId === "ctx.installations") {
         // Auth and global discovery have their own canonical SDK/navigation.
         return failure("contract-unavailable")
@@ -142,7 +149,7 @@ export function createSfTransport(options: Readonly<{
       }
       const codec = options.operations[operation.operationId]
       if (!codec) return failure("contract-unavailable")
-      const parsedInput = Schema.decodeUnknownOption(operation.input)(input)
+      const parsedInput = Schema.decodeUnknownOption(Schema.toType(operation.input), { onExcessProperty: "error" })(input)
       if (Option.isNone(parsedInput)) return failure("contract-mismatch")
       const decoded = (() => {
         try { return codec.decodeInput(parsedInput.value) }
@@ -185,7 +192,9 @@ export function createSfTransport(options: Readonly<{
       const bodyValue = metadata.method === "POST" ? operationBody(metadata, wireInput) : undefined
       if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")
       const body = bodyValue === undefined ? undefined : JSON.stringify(bodyValue)
-      if (body !== undefined && metadata.maxRequestBytes !== undefined && new TextEncoder().encode(body).byteLength > metadata.maxRequestBytes) {
+      if (body !== undefined && metadata.maxRequestBytes !== undefined &&
+          (!Number.isSafeInteger(metadata.maxRequestBytes) || metadata.maxRequestBytes < 0 ||
+            new TextEncoder().encode(body).byteLength > metadata.maxRequestBytes)) {
         return failure("contract-mismatch")
       }
       const legacyMutation = mutating && /\{surface\}|\/dashboard$|\/planner$|\/procurement$/.test(metadata.pathTemplate)
@@ -227,6 +236,7 @@ export function createSfTransport(options: Readonly<{
             kind: "request", ...owner, requestId, operationId: operation.operationId,
             input: wireInput, ...(key ? { idempotencyKey: key } : {}),
           })
+          if ("status" in result && (result.status === 401 || result.status === 403)) stamp = undefined
           if (result.kind === "transport-error") response = result
           else if (result.kind === "json-response" && metadata.responseMode === "json" &&
                    isJsonContentType(result.headers["content-type"])) {
@@ -269,7 +279,7 @@ export function createSfTransport(options: Readonly<{
         if (mutating && dispatched) return failure("outcome-unknown")
         return failure("aborted")
       }
-      if ("kind" in response && response.kind === "transport-error") {
+      if ("kind" in response) {
         // Once invoked, only a confirmed producer response can settle a write.
         if (mutating && dispatched) return failure("outcome-unknown")
         if (mutating) pending.delete(key!)
@@ -285,7 +295,7 @@ export function createSfTransport(options: Readonly<{
         catch { return { status: "invalid" } as const }
       })()
       if (wireDecoded.status !== "ok") return failure(uncertain ? "outcome-unknown" : "invalid-response")
-      const parsedOutput = Schema.decodeUnknownOption(operation.output)(wireDecoded.value)
+      const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
       if (operation.operationId === "ctx.context") {
         if (!validContextOutcome(parsedOutput.value, options.binding, response.status)) {
@@ -455,9 +465,11 @@ function validContextOutcome(value: unknown, binding: SfInstallationDescriptor, 
 }
 
 function validContextStamp(value: unknown): value is SfContextStamp {
-  if (!value || typeof value !== "object") return false
-  const fields = ["installationId", "projectId", "hostId", "principalRef", "policyVersion", "accessRevision"] as const
-  return fields.every((field) => field in value && typeof value[field] === "string" && value[field].trim().length > 0)
+  if (!Schema.is(SfContextStamp)(value)) return false
+  return [
+    value.installationId, value.projectId, value.hostId,
+    value.principalRef, value.policyVersion, value.accessRevision,
+  ].every((field) => field.trim().length > 0)
 }
 
 function nativeOwnerHeader(stamp: SfContextStamp): string | undefined {

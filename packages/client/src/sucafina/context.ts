@@ -2,11 +2,11 @@ import {
   SfContextResult,
   SfExpectedContextBinding,
 } from "@orchestra/schema/sucafina/context"
-import type { SfCallOptions, SfTransport } from "./transport"
+import type { SfCallOptions, SfTransport, SfTransportResult } from "./transport"
 
 /** Context reads are bound to the installed descriptor, never a caller-provided URL. */
 export function createSfContextClient(transport: SfTransport): Readonly<{
-  "ctx.context"(input: SfExpectedContextBinding, options: SfCallOptions): Promise<import("./transport").SfTransportResult<import("@orchestra/schema/sucafina/context").SfContextResult>>
+  "ctx.context"(input: SfExpectedContextBinding, options: SfCallOptions): Promise<SfTransportResult<SfContextResult>>
 }> {
   const operation = {
     operationId: "ctx.context" as const,

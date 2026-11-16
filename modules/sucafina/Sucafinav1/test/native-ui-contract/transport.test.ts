@@ -298,8 +298,9 @@ test("projection POST enforces the catalog byte cap before invoking the original
   expect(received).toBe(atLimit)
 })
 
-test("projection GET without maxRequestBytes stays bodyless and preserves Request identity", async () => {
+test("NAV-01: search accepts bounded private POST only, preserving the original Request", async () => {
   let received: Request | undefined
+  let called = 0
   const route = mountSfNativeProjections({
     mount: "/sucafina",
     context: {
@@ -309,17 +310,36 @@ test("projection GET without maxRequestBytes stays bodyless and preserves Reques
     handlers: [{
       operationId: "projection.search",
       handle: async (request) => {
+        called++
         received = request
         return Response.json({ status: "ok" })
       },
     }],
   })
   const url = "https://sf.example.test/sucafina/api/ui/projections/search"
-  const request = new Request(url)
+  const privateBody = JSON.stringify({ q: "sensitive search text" })
+  const request = new Request(url, {
+    method: "POST", headers: { "content-type": "application/json" }, body: privateBody,
+  })
   expect((await route(request))?.status).toBe(200)
   expect(received).toBe(request)
+  expect(called).toBe(1)
+  expect(new URL(request.url).search).toBe("")
+  // The router has not consumed or cloned the Request. The producer owns the body.
+  expect(await request.text()).toBe(privateBody)
 
-  const bodyDeclared = new Request(url, { headers: { "content-length": "1" } })
-  expect((await route(bodyDeclared))?.status).toBe(400)
+  const legacyGet = new Request(url + "?q=sensitive")
+  expect((await route(legacyGet))?.status).toBe(405)
+  const leakedQuery = new Request(url + "?q=sensitive", { method: "POST", body: privateBody })
+  expect((await route(leakedQuery))?.status).toBe(400)
+  const oversized = new Request(url, {
+    method: "POST", headers: { "content-length": "4097" }, body: privateBody,
+  })
+  expect((await route(oversized))?.status).toBe(413)
+  const malformed = new Request(url, {
+    method: "POST", headers: { "content-length": "0001" }, body: privateBody,
+  })
+  expect((await route(malformed))?.status).toBe(400)
+  expect(called).toBe(1)
   expect(received).toBe(request)
 })
