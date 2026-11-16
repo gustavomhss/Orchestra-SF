@@ -295,7 +295,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
           proposed={{ kind: "draft", intentRef: item().intentRef, sourceRef: item().ref, sourceVersion: item().version, fields }}
           effects={[{ id: "save", domain: "procurement", title: { kind: "message", message: message("sf.u11.remaining.save") }, state: "proposed", details: fields }]}
           coverage={{ state: "complete", summary: message("sf.u11.remaining.reviewSummary"), reasons: [], knownCount: 1, expectedCount: 1 }}
-          blockingReasons={[]} confirmation={{ kind: "admitted", labelKey: key("sf.u11.remaining.confirm"), purpose: "save",
+          blockingReasons={[]} confirmation={{ kind: "admitted", labelKey: key("sf.u02.confirmSave"), purpose: "save",
             binding: { kind: "catalog-command", operationId: "domain.command.CAP25.save",
               version: { kind: "record", expectedVersion: item().version }, confirmation: "presentation-only" } }}
           state="ready" onConfirm={() => { void confirm() }} onRevise={cancel} onCancel={cancel} />
