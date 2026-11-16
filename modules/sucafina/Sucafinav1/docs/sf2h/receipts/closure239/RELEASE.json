@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.closure239.release.v1",
+  "mission": 239,
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "approved_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "campaign": "sf2h-integral-20261112",
+  "counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "original_integration_head": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "observed_new_integration_head": "216011de368a4489aa61c38cf0739b31d993ccad",
+  "target_pr": 208,
+  "target_branch": "sf-integration-preview",
+  "target_advance": {
+    "commits": 2,
+    "scope": "closure233+closure234 test drivers and closure231 F01 host binding",
+    "impacts_c12_target_preimages": false,
+    "requires_rechecking_at_consumption": true
+  },
+  "status": "REVIEW_ARTIFACT_READY_FOR_CONTROLLED_CONSUMPTION",
+  "product_composed": false,
+  "financial_policy": "UNCHANGED",
+  "global_release": false,
+  "allowed_consumption": "Only six exact inerts after re-reading preimages, in product owner lease; tests then verified by authorized successor",
+  "blocked_until": [
+    "source composition on actual integration tree",
+    "authorized official hosted CI on actual product C",
+    "AM04 AM05 real positive and negatives",
+    "independent finance/security reviewer plus three final campaign reviewers",
+    "G7/G8 and full campaign acceptance"
+  ],
+  "authority_outbound": "INERT_PATCH_AND_SOURCE_VERDICT_ONLY",
+  "no_automatic_handoff": true,
+  "checks": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "global_release": "NOT_AUTHORIZED"
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "schema": "sf2h.closure239.handoff.v1",
+  "version": 1,
+  "mission": 239,
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "approved_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "campaign": "sf2h-integral-20261112",
+  "counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "original_integration_head": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "observed_new_integration_head": "216011de368a4489aa61c38cf0739b31d993ccad",
+  "target_pr": 208,
+  "target_branch": "sf-integration-preview",
+  "target_advance": {
+    "commits": 2,
+    "scope": "closure233+closure234 test drivers and closure231 F01 host binding",
+    "impacts_c12_target_preimages": false,
+    "requires_rechecking_at_consumption": true
+  },
+  "epoch": "c12-contract-239-independent",
+  "actor": {
+    "model": "GPT-6",
+    "session_id": null,
+    "session_exposed": false,
+    "github_auth_login": "gustavomhss",
+    "source_role": "DETACHED_C12_CONTRACT_REVIEWER",
+    "no_financial_policy_grant": true
+  },
+  "decision": "COMPATIBLE_EXISTING_DRAFT_SAVE_ONLY_WITH_STAGED_INERT_COMPOSITION",
+  "financial_policy": "UNCHANGED",
+  "new_financial_approval_required": false,
+  "approval_granted": false,
+  "source_refs": {
+    "original_C12": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json @ dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "handoff230": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/HANDOFF.json @ sf-c12-review",
+    "handoff231": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure231/HANDOFF.json @ sf-home-binding",
+    "handoff232": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/HANDOFF.json @ sf-ci-closure",
+    "original_runtime": "modules/sucafina/Sucafinav1/runtime/procurement.ts @ 395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+    "lifecycle": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts @ 395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+    "integration_pr": "https://github.com/gustavomhss/Orchestra-SF/pull/208"
+  },
+  "deliverables": {
+    "ack": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/ACK.json",
+      "blob": "7074c5756fcedb53c887cf768f384338ef2c2a15",
+      "commit": "213b5d0c00ede3ef21683124e7e35e71a9e4fa59"
+    },
+    "policy": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/POLICY-DECISION.md",
+      "blob": "665b7f21f0dab1b947cdd2ed78c612dc210d92fe"
+    },
+    "manifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/PATCH-SET.json",
+      "blob": "12fcf836eab7de98143aea00bf34e9c9d943ed29"
+    },
+    "inert_postimages": [
+      {
+        "id": "SRC-01",
+        "target": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "pre_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+        "post_blob": "3a13c3401d7629904155664b3b5e08665c2713cc",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/SRC-01.inert.txt",
+        "mode": "100644",
+        "applied": false
+      },
+      {
+        "id": "SRC-02",
+        "target": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "pre_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+        "post_blob": "68a309ddc7c637ba1c473fb2edb4848250a51ab6",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/SRC-02.inert.txt",
+        "mode": "100644",
+        "applied": false
+      },
+      {
+        "id": "SRC-03",
+        "target": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+        "pre_blob": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+        "post_blob": "7af4f596f6eabce32d2c3a21947300278c345cd9",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/SRC-03.inert.txt",
+        "mode": "100644",
+        "applied": false
+      },
+      {
+        "id": "REG-01",
+        "target": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+        "pre_blob": "6e795a84dbab450a280f4c2043e166743ca5df78",
+        "post_blob": "51288f53dcda77f721cb6395e7f4eeeebbcef0d5",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/REG-01.inert.txt",
+        "mode": "100644",
+        "applied": false
+      },
+      {
+        "id": "REG-02",
+        "target": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+        "pre_blob": "3c37f7868a62182658adf2b22d88e66869de8d73",
+        "post_blob": "191021892019874e9ec8dec594b019f5addf7f3f",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/REG-02.inert.txt",
+        "mode": "100644",
+        "applied": false
+      },
+      {
+        "id": "REG-03",
+        "target": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+        "pre_blob": "d71a7b8003071bcbc0f144f682cc34920cd00d0a",
+        "post_blob": "f0c056bd742647c66ae0afd57067cfa53eb003b7",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/patches/REG-03.inert.txt",
+        "mode": "100644",
+        "applied": false
+      }
+    ],
+    "actual_test_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/closure239/draft-authority239.test.ts",
+        "blob": "UPDATED_IN_FINAL_COMMIT",
+        "tests": "NOT_RUN"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/closure239/receipt-recovery239.test.ts",
+        "blob": "04abcd3442295646b31df5efb7ebdc7b92d050b0",
+        "tests": "NOT_RUN"
+      }
+    ],
+    "CI_request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/CI-REQUEST.json",
+    "recheck": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/RECHECK.json",
+    "release": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure239/RELEASE.json"
+  },
+  "semantics": [
+    "prepare is deterministic read-only, binds exact original choice/source/draft target and versioned domain plan",
+    "confirmed:false is explicit draft command intent not authority approval",
+    "original Requests.save actor creator/admin/stage/CAS rules apply; submit_pr and holder approval remain independent",
+    "Apply requires subsequent human versioned review and original transaction receipt; retry reads original receipt without duplicating effect"
+  ],
+  "criteria": [
+    "C12",
+    "WP04.INV.01",
+    "WP04.T04.INV.01",
+    "WP04.T03.INV.01",
+    "WP11.T03.INV.01",
+    "WP11.T04.DOD.02",
+    "WP11.T04.INV.01",
+    "WP10.INV.02",
+    "WP10.T04.INV.40",
+    "WP10.T05.INV.10",
+    "AM04",
+    "AM05",
+    "C03",
+    "C08",
+    "C09",
+    "C17"
+  ],
+  "no_duplicate": [
+    "229 Task/Relay native producer",
+    "231 F01 and host integration",
+    "237 shell guards"
+  ],
+  "release": {
+    "authority_only": "REVIEW_ARTIFACT_RELEASED_TO_EXISTING_COMPOSER",
+    "product_authority_transferred": false,
+    "ci_dispatch_authority_transferred": false,
+    "closure239_lease": "RELEASED_AFTER_REVIEW_ARTIFACT_PUBLICATION",
+    "original_prod_lease": "UNCHANGED",
+    "next_consumers": [
+      {
+        "role": "EXPLICITLY_AUTHORIZED_CURRENT_INTEGRATION_COMPOSER",
+        "task": "Consume six exact postimages if preimage matches current sf-integration-preview; reconcile newer owner changes; release new true product C"
+      },
+      {
+        "role": "FUTURE_AUTHORIZED_CI_DISPATCHER_WITH_VERIFIED_OFFICIAL_CAPABILITY",
+        "task": "Read CI-REQUEST on accepted C; issue original hosted test-ci selective request, record real runs; successor not inferred from closure232"
+      },
+      {
+        "role": "INDEPENDENT_REVIEWERS",
+        "task": "Recheck security semantics and exact C + complete required campaign gates"
+      }
+    ],
+    "not_global_release": true
+  },
+  "observed_checks": {
+    "local_unit": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "AM_positive": "NOT_RUN",
+    "real_authority_positive": "NOT_RUN"
+  },
+  "source_only_verdict": true,
+  "product_committed_outside_lease": false,
+  "global_release": false
+}

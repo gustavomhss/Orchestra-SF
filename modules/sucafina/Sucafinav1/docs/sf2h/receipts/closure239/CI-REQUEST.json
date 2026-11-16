@@ -1,0 +1,140 @@
+{
+  "schema": "sf2h.closure239.ci-request.v1",
+  "mission": 239,
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "approved_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "campaign": "sf2h-integral-20261112",
+  "counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "original_integration_head": "395012bcf4e142f0769ae6fa8138c4b7097a04b9",
+  "observed_new_integration_head": "216011de368a4489aa61c38cf0739b31d993ccad",
+  "target_pr": 208,
+  "target_branch": "sf-integration-preview",
+  "target_advance": {
+    "commits": 2,
+    "scope": "closure233+closure234 test drivers and closure231 F01 host binding",
+    "impacts_c12_target_preimages": false,
+    "requires_rechecking_at_consumption": true
+  },
+  "status": "REQUEST_ONLY_NOT_DISPATCHED",
+  "dispatch_requested_via_receipt": true,
+  "dispatch_performed": false,
+  "dispatcher": {
+    "predecessor": 232,
+    "predecessor_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/HANDOFF.json",
+    "predecessor_state": "RELEASED_NO_ACTIVE_DISPATCH",
+    "current_dispatcher": "NOT_IDENTIFIED",
+    "required_role": "FUTURE_AUTHORIZED_CI_DISPATCHER_WITH_VERIFIED_OFFICIAL_CAPABILITY",
+    "current_connected_github_mcp_initial_dispatch": "NOT_EXPOSED",
+    "no_new_supervisor_or_goal": true
+  },
+  "pinned_workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator": "script/test-ci-request.ts",
+    "orchestration": "Original bun run test:ci via authorized dispatcher; no local invocation"
+  },
+  "requires": [
+    "Explicit 211-authorized or current valid exclusive composer integration of all six pre/post blobs into NEW product C, with the two closure239 tests",
+    "Original six source files on new material C with exact hashes verified again, no other-author overwrite",
+    "Only authorized dispatcher with available official dispatch interface may start a request, after dedupe by exact product tree and normalized selection",
+    "Do not use 239 receipt-only SHA as tested product C; keep legacy security tests intact",
+    "Use original workflow/validator and record real run IDs, jobs, failing assertions and artifacts; do not infer PASS"
+  ],
+  "selections": [
+    {
+      "id": "C12-AUTHORITY-AND-COMPOSITION",
+      "status": "NOT_RUN",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/closure239/draft-authority239.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+          "Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+          "Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts"
+        ]
+      },
+      "expected": [
+        "chosen draft Requests.save with confirmed:false, no approval and no pre-Apply write",
+        "actual existing owner/admin draft stage only, current role and holder unaffected",
+        "retries deterministic, no mutation during prepare",
+        "reject forged choice and foreign principal, revoked lease and stale scope/CAS",
+        "must retain assertions enforcing approve only by actual pending holder; do not weaken"
+      ]
+    },
+    {
+      "id": "C12-RECEIPT-RECOVERY",
+      "status": "NOT_RUN",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/closure239/receipt-recovery239.test.ts",
+          "Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+          "Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts"
+        ]
+      },
+      "expected": [
+        "lost HTTP reply after real SQLite commit yields exactly one Requests.save and matching receipt",
+        "normal retry stale or indeterminate; receipt-only recovery permitted",
+        "missing receipt no implicit dispatch, mismatched key/digest foreign owner denied",
+        "fresh authorization on recovery; C08 atomic domain receipt and C09 original source"
+      ]
+    },
+    {
+      "id": "C12-CROSS-PROOF-AM04-AM05",
+      "status": "NOT_RUN",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/proof234/am04-c12-return.test.ts",
+          "Sucafinav1/test/product/proof234/am05-atlas-source.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts"
+        ]
+      },
+      "expected": [
+        "AM04 fresh same-C source+receipt+Apply identity",
+        "AM05 source original/scanner/outbox evidence on real authorized provider, fixture-only is not enough",
+        "no rollback or cross-owner leakage; negative statuses preserved"
+      ]
+    }
+  ],
+  "dependent_gates": [
+    "Same-C full eight final selections and AM01–AM06 required by existing plan, not replaced by C12 surgical",
+    "Original compiler/typecheck/guards C/G7 and D/G8 owned by authorized gate actor 190; no detached dispatch",
+    "Three independent reviewers after final candidate, no automatic GLOBAL_RELEASE"
+  ],
+  "checks": {
+    "local_unit": "NOT_RUN",
+    "source_browser": "NOT_RUN",
+    "hosted_workflow": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM04": "NOT_RUN",
+    "AM05": "NOT_RUN",
+    "G7": "NOT_RUN",
+    "G8": "NOT_RUN"
+  }
+}

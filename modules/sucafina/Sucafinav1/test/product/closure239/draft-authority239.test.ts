@@ -76,12 +76,8 @@ test("C12 draft preparation is read-only, identity-bound, deterministic, and rej
     expect(await fixture.snapshot()).toEqual(before)
     expect(fixture.writes).toHaveLength(writes)
 
-    fixture.access.allowed = false
-    expect((await prepare(selection, fixture.context)).status).not.toBe("ok")
-    fixture.access.allowed = true
-    expect(await fixture.snapshot()).toEqual(before)
-    expect(fixture.writes).toHaveLength(writes)
-
+    // First prove stale CAS, then revoke. UI leases are intentionally destroyed
+    // by a failed revalidation; restoring fixture access cannot resurrect them.
     const edit = await fixture.execute(fixture.requester, {
       page: "Requests", action: "save", id: fixture.requestId,
       version: before.versions[`requests:${fixture.requestId}`]!.version,
@@ -91,6 +87,10 @@ test("C12 draft preparation is read-only, identity-bound, deterministic, and rej
     const changed = await fixture.snapshot()
     expect((await prepare(selection, fixture.context)).status).toBe("stale")
     expect(await fixture.snapshot()).toEqual(changed)
+    fixture.access.allowed = false
+    expect((await prepare(selection, fixture.context)).status).toBe("denied")
+    expect(await fixture.snapshot()).toEqual(changed)
+    expect(fixture.writes).toHaveLength(writes + 1)
   } finally {
     await fixture.dispose()
   }
