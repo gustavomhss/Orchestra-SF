@@ -152,7 +152,7 @@ export function createSfFilesClient(transport: SfTransport) {
     return transport.execute(SfFiles.operations["files.document-requests"], input, options)
   },
   "files.document-search": (input: SfFilesOperationInput<"files.document-search">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.document-search">>> => {
-    if (!validIdempotency(options.idempotencyKey) || !validDocumentSearch(input)) return Promise.resolve(rejectContract)
+    if (!validDocumentSearch(input)) return Promise.resolve(rejectContract)
     return transport.execute(SfFiles.operations["files.document-search"], input, options)
   },
   "files.document-open": (input: SfFilesOperationInput<"files.document-open">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.document-open">>> => {
@@ -189,7 +189,7 @@ export function createSfFilesClient(transport: SfTransport) {
     return transport.execute(SfFiles.operations["files.document-scenario-targets"], input, options)
   },
   "files.document-scenario-preview": (input: SfFilesOperationInput<"files.document-scenario-preview">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.document-scenario-preview">>> => {
-    if (!validIdempotency(options.idempotencyKey) || !validDocumentScenarioPreview(input)) return Promise.resolve(rejectContract)
+    if (!validDocumentScenarioPreview(input)) return Promise.resolve(rejectContract)
     return transport.execute(SfFiles.operations["files.document-scenario-preview"], input, options)
   },
   "files.asset.link": (input: SfFilesOperationInput<"files.asset.link">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.asset.link">>> => {

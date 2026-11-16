@@ -239,6 +239,12 @@ export function createSfTransport(options: Readonly<{
         if (mutating) pending.delete(key!)
         return failure("aborted")
       }
+      if (operation.operationId.startsWith("files.") && stamp &&
+          !options.desktop &&
+          !await refreshSfFileAuthority(options, stamp, operation.operationId)) {
+        if (mutating) pending.delete(key!)
+        return failure("contract-unavailable")
+      }
 
       const headers: Record<string, string> = {
         Accept: operation.operationId === "files.export.xlsx"
@@ -339,7 +345,7 @@ export function createSfTransport(options: Readonly<{
             const bytes = sfAllowedByteMime(operation.operationId, result.headers.get("content-type")) && stamp
               ? await readSfBytesBounded(result, call.signal, async () =>
                   isCurrent() && webOrigin() && !!stamp &&
-                  await refreshSfFileAuthority(options, stamp)) : undefined
+                  await refreshSfFileAuthority(options, stamp, operation.operationId)) : undefined
             response = bytes
               ? { status: result.status, headers: extracted, body: bytes }
               : failure("invalid-response")
@@ -384,6 +390,9 @@ export function createSfTransport(options: Readonly<{
       if (wireDecoded.status !== "ok") return failure(uncertain ? "outcome-unknown" : "invalid-response")
       const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
+      if (operation.operationId.startsWith("files.") && stamp && !options.desktop &&
+          !await refreshSfFileAuthority(options, stamp, operation.operationId))
+        return failure(mutating ? "outcome-unknown" : "contract-unavailable")
       if (operation.operationId === "ctx.context") {
         if (!validContextOutcome(parsedOutput.value, options.binding, response.status)) {
           stamp = undefined
@@ -684,7 +693,7 @@ async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
 async function refreshSfFileAuthority(options: Readonly<{
   binding: SfInstallationDescriptor; fetch: typeof globalThis.fetch;
   operations: SfOperationBindings;
-}>, expected: SfContextStamp): Promise<boolean> {
+}>, expected: SfContextStamp, operationId: SfOperationId): Promise<boolean> {
   const meta = cataloguedRoute("ctx.context")
   const codec = options.operations["ctx.context"]
   if (!meta || !codec || meta.method !== "GET" || meta.responseMode !== "json") return false
@@ -707,9 +716,19 @@ async function refreshSfFileAuthority(options: Readonly<{
         value.status !== "ok" || !("value" in value) || !value.value ||
         typeof value.value !== "object" || !("stamp" in value.value)) return false
     const current = value.value.stamp
-    return validContextStamp(current) && sameStampInstallation(current, options.binding) &&
+    const availability = "availability" in value.value ? value.value.availability : undefined
+    const permitted = Array.isArray(availability) && availability.some((resource: unknown) =>
+      !!resource && typeof resource === "object" && "operations" in resource &&
+      Array.isArray(resource.operations) && resource.operations.some((item: unknown) =>
+        !!item && typeof item === "object" && "operationId" in item &&
+        "state" in item && "operational" in item && item.operationId === operationId &&
+        item.state === "ready" && item.operational === true))
+    return permitted && validContextStamp(current) && sameStampInstallation(current, options.binding) &&
       current.principalRef === expected.principalRef &&
       current.policyVersion === expected.policyVersion &&
       current.accessRevision === expected.accessRevision
   } catch { return false }
 }
+
+// Reuse the public, already-exported transport entry for desktop protocol and broker.
+export { sfAllowedByteMime, sfFilesSourceQuery, sfIsByteOperation, sfIsUploadOperation, SF_FILE_BYTE_LIMIT } from "./transport/files"
