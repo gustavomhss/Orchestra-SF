@@ -7,7 +7,10 @@ import type {
   SfConnectionCandidate, SfDesktopInvocation, SfDesktopInvocationResult,
   SfDesktopInvalidation, SfDesktopLoginResult, SfDesktopOwnerRequest,
 } from "@orchestra/client/sucafina/transport"
-import { createSfConnectionRegistry, type SfApprovedConnection, type SfDesktopOwner } from "./connections"
+import {
+  createSfConnectionRegistry, validateSfOwnedLocationProbe,
+  type SfApprovedConnection, type SfDesktopOwner,
+} from "./connections"
 import { loginSfLocal, loginSfMicrosoft, loadSfDesktopContext, requestSfReturnIntent } from "./auth"
 import { decodeSfWireBody, planSfOperation } from "./protocol"
 import { requestSfHttp, type SfByteSource } from "./network"
@@ -60,22 +63,22 @@ const nonempty = (value: unknown, max = 2048): value is string =>
 const failure = (reason: "aborted" | "network" | "invalid-response" | "contract-mismatch" | "contract-unavailable" | "outcome-unknown") =>
   ({ kind: "transport-error" as const, reason })
 
-function validDescriptor(value: unknown, candidate: SfApprovedConnection, projectId: string, installationId: string):
+function validDescriptor(value: unknown, publicOrigin: string, projectId: string, installationId: string):
   value is SfInstallationDescriptor {
   if (!isRecord(value) || !closed(value, [
     "installationId", "projectId", "hostId", "publicOrigin", "mount", "contractRevision", "authMode",
   ])) return false
   if (
     value.installationId !== installationId || value.projectId !== projectId
-    || !nonempty(value.hostId) || value.publicOrigin !== candidate.origin
+    || !nonempty(value.hostId) || value.publicOrigin !== publicOrigin
     || value.contractRevision !== "sf-native-ui/1"
     || !nonempty(value.mount, 128)
     || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(value.mount)
     || !["microsoft", "local-operator"].includes(String(value.authMode))
   ) return false
-  if (value.authMode === "microsoft" && new URL(candidate.origin).protocol !== "https:") return false
+  if (value.authMode === "microsoft" && new URL(publicOrigin).protocol !== "https:") return false
   if (value.authMode === "local-operator") {
-    const url = new URL(candidate.origin)
+    const url = new URL(publicOrigin)
     if (url.protocol !== "http:" || !["127.0.0.1", "[::1]"].includes(url.hostname)) return false
   }
   return true
@@ -90,7 +93,7 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
   const watching = new Map<number, { sender: WebContents; dispose(): void }>()
   const purges = new Map<string, Promise<void>>()
   const channels = [
-    "sf-native-register-connection", "sf-native-bind", "sf-native-invoke",
+    "sf-native-register-connection", "sf-native-discover-location", "sf-native-bind", "sf-native-invoke",
     "sf-native-abort", "sf-native-login", "sf-native-logout", "sf-native-release",
   ] as const
   let disposed = false
@@ -217,6 +220,66 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     return registry.register(candidate, current)
   }
 
+  /**
+   * Project-free discovery exists only for the exact main-owned server;
+   * unowned/remote connections must use the approved explicit-ID bind.
+   * Reuses original ctx.installations/LocationMiddleware; no invented owner.
+   */
+  async function discoverLocation(event: IpcMainInvokeEvent, raw: unknown) {
+    const current = owner(event)
+    if (!current) return { status: "denied" } as const
+    const probe = validateSfOwnedLocationProbe(raw, deps.ownedConnection())
+    if (!probe) return { status: "unavailable", reason: "connection-unapproved" } as const
+    watch(current)
+    const codec = deps.operations["ctx.installations"]
+    if (!codec) return { status: "unavailable", reason: "contract-mismatch" } as const
+    const input = { select: "location" as const, location: probe.location }
+    try {
+      if (codec.decodeInput(input).status !== "ok")
+        return { status: "unavailable", reason: "contract-mismatch" } as const
+    } catch { return { status: "unavailable", reason: "contract-mismatch" } as const }
+    const ephemeral = deps.electron.session.fromPartition("sf-native-discovery-" + randomUUID())
+    try {
+      const query = new URLSearchParams({ select: "location", "location[directory]": probe.location.directory })
+      if (probe.location.workspace) query.set("location[workspace]", probe.location.workspace)
+      const headers: Record<string, string> = { Accept: "application/json" }
+      if (probe.credentials.kind === "basic") {
+        headers.Authorization = "Basic " +
+          Buffer.from(probe.credentials.username + ":" + probe.credentials.password, "utf8").toString("base64")
+      }
+      const reply = await requestSfHttp({
+        net: deps.electron.net, session: ephemeral, origin: probe.baseUrl,
+        url: probe.baseUrl + "/api/sucafina/installations?" + query,
+        method: "GET", mode: "json", headers, maxResponseBytes: 32 * 1024,
+      })
+      // A navigation, main-side server switch or owner revocation while IO was
+      // pending prevents the stale discovery from crossing IPC.
+      if (!validOwner(current) || !validateSfOwnedLocationProbe(raw, deps.ownedConnection()))
+        return { status: "denied" } as const
+      if (reply.kind !== "buffer" || reply.status !== 200)
+        return { status: "unavailable", reason: "network" } as const
+      if (!/^application\/json(?:\s*;[^\r\n]*)?$/i.test(reply.headers["content-type"] ?? ""))
+        return { status: "unavailable", reason: "contract-mismatch" } as const
+      let decoded
+      try {
+        const parsed = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(reply.bytes))
+        decoded = codec.decodeOutput(parsed)
+      } catch { return { status: "unavailable", reason: "contract-mismatch" } as const }
+      if (decoded.status !== "ok" || !isRecord(decoded.value) || !Array.isArray(decoded.value.installations))
+        return { status: "unavailable", reason: "contract-mismatch" } as const
+      const values = decoded.value.installations as unknown[]
+      if (values.some((value) => !isRecord(value) ||
+        !nonempty(value.projectId) || !nonempty(value.installationId) ||
+        !validDescriptor(value, probe.baseUrl, value.projectId, value.installationId)))
+        return { status: "unavailable", reason: "contract-mismatch" } as const
+      return { status: "ok", installations: values as SfInstallationDescriptor[] } as const
+    } catch { return { status: "unavailable", reason: "network" } as const }
+    finally {
+      await ephemeral.clearStorageData().catch(() => undefined)
+      await ephemeral.clearCache().catch(() => undefined)
+    }
+  }
+
   async function bind(event: IpcMainInvokeEvent, selection: unknown) {
     const current = owner(event)
     if (!current || !isRecord(selection) || !closed(selection, ["serverKey", "projectId", "installationId"])
@@ -258,7 +321,7 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       if (decoded.status !== "ok" || !isRecord(decoded.value) || !Array.isArray(decoded.value.installations))
         return { status: "unavailable", reason: "contract-mismatch" } as const
       const matches = decoded.value.installations
-        .filter((item: unknown) => validDescriptor(item, connection, selection.projectId as string, selection.installationId as string))
+        .filter((item: unknown) => validDescriptor(item, connection.origin, selection.projectId as string, selection.installationId as string))
       if (matches.length !== 1 || decoded.value.installations.length !== 1)
         return { status: "unavailable", reason: "installation-unavailable" } as const
       const descriptor = matches[0] as SfInstallationDescriptor
@@ -504,6 +567,7 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
 
   for (const channel of channels) {
     if (channel === "sf-native-register-connection") deps.electron.ipcMain.handle(channel, register)
+    if (channel === "sf-native-discover-location") deps.electron.ipcMain.handle(channel, discoverLocation)
     if (channel === "sf-native-bind") deps.electron.ipcMain.handle(channel, bind)
     if (channel === "sf-native-invoke") deps.electron.ipcMain.handle(channel, invoke)
     if (channel === "sf-native-abort") deps.electron.ipcMain.handle(channel, abort)

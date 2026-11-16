@@ -35,6 +35,7 @@ import { resetZoom, setPinchZoomEnabled, setZoomFailureReport, webviewZoom, zoom
 import { windowFullscreen } from "./window-fullscreen"
 import { caffeinate, setCaffeinate } from "./caffeinate"
 import { createResponseDownloader } from "./response-download"
+import { createSfDesktopCapability } from "./sucafina"
 import { availableStartupServer, readyWslConnections } from "./wsl/connections"
 import "./styles.css"
 import { useTheme } from "@orchestra/ui/theme/context"
@@ -174,6 +175,7 @@ const createPlatform = (windowState: DesktopWindowState): Platform => {
 
   return {
     platform: "desktop",
+    sucafina: createSfDesktopCapability(window.api.sucafina),
     os,
     version: pkg.version,
     windowID: windowState.id,

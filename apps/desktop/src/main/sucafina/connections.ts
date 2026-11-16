@@ -4,6 +4,12 @@ import type { SfConnectionCandidate, SfRegisterConnectionResult } from "@orchest
 import { SF_DESKTOP_COPY, SF_DESKTOP_COPY_BR } from "./copy"
 
 export type SfDesktopOwner = Readonly<{ window: BrowserWindow; sender: WebContents; frame: WebFrameMain }>
+export type SfOwnedLocationProbe = Readonly<{
+  serverKey: string
+  baseUrl: string
+  credentials: SfConnectionCandidate["credentials"]
+  location: Readonly<{ directory: string; workspace?: string }>
+}>
 export type SfApprovedConnection = Readonly<{
   candidate: SfConnectionCandidate
   origin: string
@@ -50,6 +56,38 @@ export function validateSfCandidate(value: unknown, owned: Pick<SfConnectionCand
     && JSON.stringify(value.credentials) === JSON.stringify(owned.credentials)
   if (value.serverKey !== value.baseUrl && !exactOwned) return
   return value as SfConnectionCandidate
+}
+
+/**
+ * Before a project is known, only the exact connection already owned by
+ * Electron main may inspect the producer's admitted LocationMiddleware.
+ * No project ID, credential or host is inferred from a renderer request.
+ */
+export function validateSfOwnedLocationProbe(raw: unknown,
+  owned: Pick<SfConnectionCandidate, "serverKey" | "baseUrl" | "credentials"> | undefined):
+  SfOwnedLocationProbe | undefined {
+  if (!owned || !isRecord(raw) ||
+    !closed(raw, ["serverKey", "baseUrl", "credentials", "location"]) ||
+    !text(raw.serverKey) || !text(raw.baseUrl) ||
+    !isRecord(raw.credentials) ||
+    !closed(raw.credentials, ["kind", "username", "password"]) ||
+    (raw.credentials.kind === "none" && Object.keys(raw.credentials).length !== 1) ||
+    (raw.credentials.kind === "basic" && (
+      Object.keys(raw.credentials).length !== 3 ||
+      !text(raw.credentials.username) || !text(raw.credentials.password, 8192))) ||
+    !["none", "basic"].includes(String(raw.credentials.kind)) ||
+    !isRecord(raw.location) || !closed(raw.location, ["directory", "workspace"]) ||
+    !text(raw.location.directory, 8192) ||
+    (raw.location.workspace !== undefined && !text(raw.location.workspace, 8192)) ||
+    raw.serverKey !== owned.serverKey || raw.baseUrl !== owned.baseUrl ||
+    JSON.stringify(raw.credentials) !== JSON.stringify(owned.credentials)) return
+  let url: URL
+  try { url = new URL(raw.baseUrl as string) } catch { return }
+  if (raw.baseUrl !== url.origin || url.username || url.password ||
+    url.pathname !== "/" || url.search || url.hash || !url.hostname) return
+  const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)
+  if (url.protocol !== "https:" && !(url.protocol === "http:" && loopback)) return
+  return raw as unknown as SfOwnedLocationProbe
 }
 
 const identical = (a: SfConnectionCandidate, b: SfConnectionCandidate) =>

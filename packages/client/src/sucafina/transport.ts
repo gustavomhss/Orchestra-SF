@@ -37,6 +37,18 @@ export type SfTransport = Readonly<{
   ) => Promise<SfSupplierCsvExportResult>
 }>
 
+/** Main-only, owner-verified location lookup; not arbitrary renderer networking. */
+export type SfDesktopLocationProbe = Readonly<{
+  serverKey: string
+  baseUrl: string
+  credentials: SfConnectionCandidate["credentials"]
+  location: Readonly<{ directory: string; workspace?: string }>
+}>
+export type SfDesktopLocationResult =
+  | Readonly<{ status: "ok"; installations: readonly SfInstallationDescriptor[] }>
+  | Readonly<{ status: "denied" }>
+  | Readonly<{ status: "unavailable"; reason: "connection-unapproved" | "network" | "contract-mismatch" }>
+
 export type SfDesktopBinding = Readonly<{
   bindingHandle: string
   generation: number
@@ -87,6 +99,8 @@ export type SfDesktopLoginResult =
   | Readonly<{ status: "unavailable"; reason: "auth-unavailable" | "identity-unavailable" | "enrollment-unavailable" | "network" | "contract-mismatch" }>
 export type SfDesktopCapability = Readonly<{
   registerConnection(candidate: SfConnectionCandidate): Promise<SfRegisterConnectionResult>
+  /** Optional until the original, main-owned location producer is composed. */
+  discoverLocation?: (probe: SfDesktopLocationProbe) => Promise<SfDesktopLocationResult>
   bind(selection: Readonly<{ serverKey: string; projectId: string; installationId: string }>, onInvalidated: (event: SfDesktopInvalidation) => void): Promise<SfDesktopBindResult>
   invoke(request: SfDesktopInvocation): Promise<SfDesktopInvocationResult>
   abort(request: SfDesktopOwnerRequest & Readonly<{ requestId: string }>): Promise<void>

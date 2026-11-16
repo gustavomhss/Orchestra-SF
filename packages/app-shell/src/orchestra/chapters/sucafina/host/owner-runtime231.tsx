@@ -31,6 +31,7 @@ import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
+import { createSfDesktopOriginBridge238 } from "./desktop-origin-bridge238"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -195,7 +196,6 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const platform = usePlatform()
   const language = useLanguage()
   const fetcher = platform.fetch ?? globalThis.fetch
-  const source = createSfInstalledOwnerSource231(props.server, fetcher)
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
   const [view, setView] = createStore<View>({ status: "resolving" })
   const [provider, setProvider] = createStore({ status: "unmounted", generation: -1 })
@@ -247,14 +247,41 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       if (accepted && !disposed) event.retry(true)
     })
   })
+
+  const alignedOrigin = (() => {
+    try { return typeof window !== "undefined" &&
+      window.location.origin === new URL(props.server.http.url).origin }
+    catch { return false }
+  })()
+  const desktopBridge = !alignedOrigin && platform.platform === "desktop" && platform.sucafina
+    ? createSfDesktopOriginBridge238({
+        desktop: platform.sucafina, server: props.server, directory: props.directory,
+        fetch: fetcher, onInvalidated: (reason) => {
+          ownerEpoch += 1
+          mounted?.invalidate(reason === "logout" ? "logout" :
+            reason === "access-revoked" || reason === "session-expired" ? "revoked" : "owner-changed")
+          setView({ status: "denied", route: undefined })
+        },
+      }) : undefined
+  // Web discovery is admitted only on the identical server origin. An
+  // unbridged cross-origin renderer cannot fall back to fetch or Basic auth.
+  const source = desktopBridge ?? (alignedOrigin
+    ? createSfInstalledOwnerSource231(props.server, fetcher)
+    : {
+        listByIds: async (_selection: SfOwnerSelection, _signal: AbortSignal) => undefined,
+        listByLocation: async (_directory: string, _signal: AbortSignal) => undefined,
+      })
+
   const currentHref = () => location.pathname + location.search
   const selection = () => discovery.status === "ready" ? discovery.selection : undefined
   const sameServer = (value: SfOwnerSelection) =>
     value.serverKey === ServerConnection.key(props.server)
   const newTransport = (binding: SfInstallationDescriptor, generation: number,
-    currentGeneration: () => number): SfTransport => createSfTransport({
-    binding, generation, currentGeneration, fetch: fetcher, operations: SfNativeOperationBindings,
-  })
+    currentGeneration: () => number): SfTransport => desktopBridge
+    ? desktopBridge.createTransport(binding, generation, currentGeneration)
+    : createSfTransport({
+        binding, generation, currentGeneration, fetch: fetcher, operations: SfNativeOperationBindings,
+      })
   const readContext = async (binding: SfInstallationDescriptor, signal: AbortSignal,
     generation: number, currentGeneration: () => number) => {
     const transport = newTransport(binding, generation, currentGeneration)
@@ -276,7 +303,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     createTransport: (binding, generation) => newTransport(
       binding, generation, () => mounted?.generation() ?? generation,
     ),
-    resolveTransportIdentity: (selected) => sameServer(selected) ? source.transportIdentity : "",
+    resolveTransportIdentity: (selected) => !sameServer(selected) ? "" :
+      desktopBridge ? desktopBridge.transportIdentity(selected) :
+      alignedOrigin ? ServerConnection.key(props.server) : "",
     createDraft: createSfDraft,
     revalidateDraft: async (input: SfDraftRevalidationInput, fresh, transport, signal): Promise<SfDraftRevalidation> => {
       // Retained record reads only. No guessed field/action grants or automatic
@@ -500,10 +529,42 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   onCleanup(() => {
     disposed = true
     ownerEpoch += 1
+    desktopBridge?.dispose()
     navigation.dispose()
     unbindExit()
     if (typeof window !== "undefined") window.removeEventListener("beforeunload", unload)
   })
+
+  const desktopLogin = async () => {
+    const selected = selection()
+    if (!desktopBridge || !selected || disposed || provider.status !== "unauthenticated") return
+    const parsed = explicitSelection(location.search)
+    const routePath = matchSfNativeRoutePath(location.pathname)
+    if (parsed.kind === "invalid" || parsed.kind === "selected" &&
+        !sameSelection(parsed.selection, selected) ||
+        !routePath || routePath.kind !== "entry" ||
+        !["UI29", "UI33", "UI34"].includes(routePath.surfaceId)) {
+      setView({ status: "invalid-link", route: undefined })
+      return
+    }
+    const returnRoute = {
+      surfaceId: routePath.surfaceId, kind: routePath.kind, params: routePath.parameters,
+      ownerSelection: selected, pathname: location.pathname,
+      href: (location.pathname + location.search) as SfHref, query: {},
+    } as SfResolvedRoute
+    try {
+      const auth = await desktopBridge.login(returnRoute)
+      if (auth.status !== "authenticated") {
+        console.error("SF_NATIVE_AUTH_NOT_CONFIRMED", auth.status)
+        setView({ status: "unavailable", route: undefined })
+        return
+      }
+      await mounted?.reload()
+    } catch (error) {
+      console.error("SF_NATIVE_AUTH_FAILED", error instanceof Error ? error.name : "unknown")
+      setView({ status: "unavailable", route: undefined })
+    }
+  }
 
   return (
     <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
@@ -512,6 +573,12 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           (event.target.matches("input, textarea, select, [contenteditable='true']")))
           lastEditorFocus = event.target
       }}>
+
+      <Show when={desktopBridge && provider.status === "unauthenticated"}>
+        <button type="button" data-sf-desktop-login="required"
+          onClick={() => { void desktopLogin() }}>{language.t("sf.common.loginAgain")}</button>
+      </Show>
+
       <Show when={selection()} fallback={
         <p role="status" data-sf-f01={discovery.status}>
           {discovery.status === "ambiguous" ? "Sucafina installation selection required"
