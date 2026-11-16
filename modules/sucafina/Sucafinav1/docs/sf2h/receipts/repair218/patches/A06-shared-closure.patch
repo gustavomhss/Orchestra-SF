@@ -1,0 +1,1042 @@
+diff --git a/packages/schema/src/sucafina/files/structures.ts b/packages/schema/src/sucafina/files/structures.ts
+new file mode 100644
+index 0000000..72859baa8ae358038274edd14bb20d9a3334a031
+--- /dev/null
++++ b/packages/schema/src/sucafina/files/structures.ts
+@@ -0,0 +1,246 @@
++import { Schema } from "effect"
++import { NonNegativeInt, PositiveInt, optional } from "../../schema"
++
++/**
++ * A06 source-locked public file shapes. The private product remains the sole
++ * authority for admission, scanner verdicts, version CAS and financial math.
++ * Never import product/runtime sources into the browser contract.
++ */
++export const SfFileSurface = Schema.Literals(["dashboard", "planner", "procurement"])
++export const SfImportSurface = Schema.Literals(["dashboard", "planner"])
++export const SfAssetSurface = Schema.Literals(["dashboard", "procurement"])
++export const SfFilePeriod = Schema.Struct({ start: Schema.String, end: Schema.String })
++export const SfFileFields = Schema.Array(Schema.String)
++export const SfFileDigest = Schema.Struct({
++  algorithm: Schema.Literal("sha256"),
++  value: Schema.String,
++})
++export const SfDocumentRef = Schema.Struct({
++  schema: Schema.Literal("sf-evidence-v1"),
++  kind: Schema.Literal("document"),
++  refId: Schema.String,
++  installationId: Schema.String,
++  projectId: Schema.String,
++  refDigest: Schema.String,
++  evidenceLevel: Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
++  target: Schema.Struct({
++    documentId: Schema.String,
++    incarnation: Schema.String,
++    revision: PositiveInt,
++    blobDigest: SfFileDigest,
++    segment: Schema.Struct({
++      start: NonNegativeInt,
++      end: NonNegativeInt,
++      unit: Schema.Literal("utf16"),
++      textDigest: SfFileDigest,
++    }),
++    ragSourceId: Schema.String.pipe(optional),
++    ragRevisionId: Schema.String.pipe(optional),
++    ragSourceHash: Schema.Struct({ algorithm: Schema.Literal("blake3"), value: Schema.String }).pipe(optional),
++    fieldCandidateId: Schema.String.pipe(optional),
++    confirmationVersion: PositiveInt.pipe(optional),
++  }),
++}).annotate({ identifier: "SfFiles.DocumentRef" })
++export interface SfDocumentRef extends Schema.Schema.Type<typeof SfDocumentRef> {}
++
++export const SfDocumentEvidence = Schema.Struct({
++  id: Schema.String,
++  fileRef: Schema.String,
++  version: PositiveInt,
++  location: Schema.String,
++  textRange: Schema.Struct({ start: NonNegativeInt, end: NonNegativeInt, unit: Schema.Literal("utf16") }),
++  fieldCandidate: Schema.String,
++  value: Schema.Union([Schema.String, Schema.Finite, Schema.Boolean, Schema.Null]),
++  unit: Schema.String.pipe(optional),
++  status: Schema.Literals(["extracted", "confirmed", "rejected", "stale"]),
++  ref: SfDocumentRef,
++}).annotate({ identifier: "SfFiles.DocumentEvidence" })
++export interface SfDocumentEvidence extends Schema.Schema.Type<typeof SfDocumentEvidence> {}
++
++export const SfDocumentField = Schema.Struct({
++  id: Schema.String,
++  type: Schema.Literals(["string", "number", "boolean", "date"]),
++  unit: Schema.String.pipe(optional),
++})
++export const SfDocumentFieldDefinition = Schema.Struct({
++  documentRef: Schema.String,
++  fields: Schema.Array(SfDocumentField),
++  id: Schema.String.pipe(optional),
++  expectedVersion: PositiveInt.pipe(optional),
++})
++export const SfDocumentFieldRecord = Schema.Struct({
++  id: Schema.String,
++  version: PositiveInt,
++  ref: Schema.String,
++  fields: Schema.Array(SfDocumentField),
++})
++export const SfImportPreviewOptions = Schema.Struct({
++  sheet: Schema.String.pipe(optional),
++  replace: Schema.Boolean.pipe(optional),
++  headerRow: PositiveInt.pipe(optional),
++})
++export const SfImportOptions = Schema.Struct({
++  newVersion: Schema.Boolean,
++  removeMissing: Schema.Boolean,
++  preview: SfImportPreviewOptions,
++})
++export const SfImportSourceRef = Schema.Struct({
++  surface: SfFileSurface,
++  type: Schema.String,
++  id: Schema.String,
++  incarnation: Schema.String,
++  version: NonNegativeInt,
++  fields: SfFileFields,
++  period: SfFilePeriod,
++  observedAt: Schema.String,
++})
++export const SfImportContext = Schema.Struct({
++  installationId: Schema.String,
++  projectId: Schema.String,
++  principalRef: Schema.String,
++  accessRevision: Schema.String,
++  policyVersion: Schema.String,
++  surface: SfFileSurface,
++  period: SfFilePeriod,
++  currency: Schema.String,
++  sourceRefs: Schema.Array(SfImportSourceRef),
++  capabilities: Schema.Array(Schema.String),
++})
++export const SfImportProjectionComponent = Schema.Struct({
++  id: Schema.String,
++  amount: Schema.NullOr(Schema.Finite),
++  currency: Schema.String,
++  period: SfFilePeriod,
++  sourceRefs: Schema.Array(SfImportSourceRef),
++  evidenceState: Schema.Literals(["confirmed", "estimated", "hypothetical", "absent"]),
++})
++// Domain projections/decision analysis are maintained by other domain contracts.
++// Their rich nested decisions are opaque to this file adapter: no computation or
++// authorizing decisions from this field is permitted by A06.
++export const SfImportDomainProjection = Schema.Struct({
++  context: SfImportContext,
++  version: NonNegativeInt,
++  engineVersion: Schema.String,
++  components: Schema.Array(SfImportProjectionComponent),
++  values: Schema.Array(Schema.Struct({
++    id: Schema.String,
++    value: Schema.Union([Schema.String, Schema.Finite, Schema.Boolean, Schema.Null]),
++    unit: Schema.String.pipe(optional),
++    currency: Schema.String.pipe(optional),
++    period: SfFilePeriod,
++    granularity: Schema.Literals(["record", "month", "year", "aggregate"]),
++    sourceRefs: Schema.Array(Schema.Json),
++    drilldown: Schema.NullOr(Schema.Json),
++    evidenceState: Schema.Literals(["confirmed", "estimated", "hypothetical", "absent"]),
++  })),
++  missing: Schema.Array(Schema.Struct({
++    field: Schema.String,
++    reason: Schema.Literals(["missing","unavailable","restricted","not-applicable","incompatible-currency","missing-fx","missing-rate","unconfirmed"]),
++  })),
++  comparison: Schema.Json.pipe(optional),
++  decision: Schema.Json.pipe(optional),
++})
++export const SfImportReceipt = Schema.Struct({
++  id: Schema.String,
++  idempotencyKey: Schema.String,
++  commandDigest: Schema.String,
++  targetIncarnation: Schema.String,
++  principalRef: Schema.String,
++  surface: SfFileSurface,
++  version: NonNegativeInt,
++  at: Schema.String,
++  status: Schema.Literals(["applied", "awaiting-approval", "conflict", "failed", "cancelled"]),
++  resultRef: Schema.String.pipe(optional),
++  errors: Schema.Array(Schema.String),
++})
++export const SfImportManifest = Schema.Struct({
++  id: Schema.String,
++  version: PositiveInt,
++  sourceDigest: Schema.String,
++  format: Schema.String,
++  context: SfImportContext,
++  baseIdentity: Schema.Array(SfImportSourceRef),
++  commands: Schema.Array(Schema.Struct({
++    id: Schema.String,
++    target: SfImportSourceRef,
++    idempotencyKey: Schema.String,
++    commandDigest: Schema.String,
++    expectedVersion: NonNegativeInt,
++    requiredAuthority: Schema.Array(Schema.String),
++    preview: SfImportDomainProjection,
++    action: Schema.String,
++    operationRef: Schema.String,
++    receiptRef: Schema.String.pipe(optional),
++  })),
++  issues: Schema.Array(Schema.Struct({ row: PositiveInt, field: Schema.String, reason: Schema.String })),
++  state: Schema.Literals(["preview", "stale", "blocked", "applied"]),
++  domainApplied: Schema.Boolean,
++  receipts: Schema.Array(SfImportReceipt),
++}).annotate({ identifier: "SfFiles.ImportManifest" })
++
++export const SfImportDetail = Schema.Struct({
++  manifestId: Schema.String,
++  version: PositiveInt,
++  sourceDigest: Schema.String,
++  changes: Schema.Array(Schema.Struct({
++    path: Schema.String,
++    kind: Schema.Literals(["added", "changed", "removed", "unchanged", "ignored", "rejected"]),
++    before: Schema.Union([
++      Schema.Struct({ state: Schema.Literals(["absent", "undefined"]) }),
++      Schema.Struct({ state: Schema.Literal("present"), value: Schema.Json }),
++    ]),
++    after: Schema.Union([
++      Schema.Struct({ state: Schema.Literals(["absent", "undefined"]) }),
++      Schema.Struct({ state: Schema.Literal("present"), value: Schema.Json }),
++    ]),
++    source: Schema.Union([
++      Schema.Struct({
++        kind: Schema.Literal("file"),
++        sheet: Schema.String,
++        row: PositiveInt,
++        column: PositiveInt,
++        address: Schema.String,
++        field: Schema.String,
++      }),
++      Schema.Struct({ kind: Schema.Literal("domain"), reference: Schema.String }),
++    ]),
++    reason: Schema.String.pipe(optional),
++  })),
++})
++export const SfImportReceiptSummary = Schema.Struct({
++  receiptId: Schema.String,
++  manifestId: Schema.String,
++  idempotencyKey: Schema.String,
++  commandDigest: Schema.String,
++  outcome: Schema.Literals(["applied", "unchanged", "rejected"]),
++  changedFields: NonNegativeInt,
++})
++export const SfFilesFailure = Schema.Struct({
++  status: Schema.Literals(["denied", "unavailable", "stale", "conflict", "needs-input", "invalid", "provider-conflict", "failed"]),
++  reason: Schema.String.pipe(optional),
++})
++export const SfFilesLegacyFailure = Schema.Struct({
++  ok: Schema.Literal(false),
++  status: Schema.Int,
++  errors: Schema.Array(Schema.String).pipe(optional),
++})
++export const SfFilesPortResult = <S extends Schema.Top>(value: S) => Schema.Union([
++  Schema.Struct({ status: Schema.Literal("ok"), value }),
++  SfFilesFailure,
++])
++
++export const SfImportReadReference = Schema.Struct({
++  manifest: SfImportManifest,
++  detail: SfImportDetail,
++  digest: Schema.String,
++  receipt: SfImportReceiptSummary.pipe(optional),
++})
++export const SfImportReadDetail = Schema.Struct({
++  digest: Schema.String,
++  detail: SfImportDetail,
++  receipt: SfImportReceiptSummary.pipe(optional),
++})
++
++export const SfFilesDownloadBytes = Schema.Uint8ArrayFromSelf.annotate({ identifier: "SfFiles.DownloadBytes" })
++/** Bytes are never represented as JSON, a local pathname, a detached link or a fake clean-scan status. */
++export const SfFilesUploadBytes = Schema.Uint8ArrayFromSelf.annotate({ identifier: "SfFiles.UploadBytes" })
+
+diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts
+new file mode 100644
+index 0000000..1c4d58aaf184a277ca2dd04b263ce0ad500a66d6
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts
+@@ -0,0 +1,156 @@
++import { describe, expect, test } from "bun:test"
++import { SfFiles } from "@orchestra/schema/sucafina/files"
++import type { SfTransport } from "@orchestra/client/sucafina/transport"
++import { createSfFilesClient, readSfFilesSignedAssetQuery } from "@orchestra/client/sucafina/files"
++import { createSfFilesHostBindings } from "../../../../../apps/cli/src/sucafina-product/native-ui/files"
++
++const uuid = "123e4567-e89b-42d3-a456-426614174000"
++function fixture() {
++  const operations: string[] = []
++  const transport: SfTransport = {
++    async execute(operation) {
++      operations.push(operation.operationId)
++      return { kind: "transport-error", reason: "contract-unavailable" }
++    },
++  }
++  return { operations, client: createSfFilesClient(transport) }
++}
++const options = () => ({ signal: new AbortController().signal, idempotencyKey: uuid })
++
++describe("A06 source-bound files contracts (component-only; NOT installed E2E)", () => {
++  test("each of 25 catalogued operation names is literal and unique", () => {
++    const ids = Object.keys(SfFiles.operations)
++    expect(ids).toHaveLength(25)
++    expect(new Set(ids).size).toBe(25)
++    expect(ids.every((id) => id.startsWith("files."))).toBe(true)
++    for (const id of ids) {
++      expect(SfFiles.operations[id as keyof typeof SfFiles.operations].operationId).toBe(id)
++    }
++  })
++
++  test("import upload is staged only via existing producer, and scanner failure is never inferred clean", async () => {
++    const { client, operations } = fixture()
++    const result = await client["files.import-admit"]({
++      surface: "planner", selectionRef: "selection-1",
++      options: { newVersion: false, removeMissing: false, preview: {} },
++      fileName: "budget.xlsx", mediaType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
++      bytes: new Uint8Array([1, 2, 3]),
++    }, options())
++    expect(result).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
++    expect(operations).toEqual(["files.import-admit"])
++  })
++
++  test("invalid binary, extension, options and missing idempotency do not reach transport", async () => {
++    const { client, operations } = fixture()
++    const base = {
++      surface: "planner" as const, selectionRef: "selection-1",
++      options: { newVersion: false, removeMissing: false, preview: {} },
++      fileName: "budget.xlsx", mediaType: "application/octet-stream",
++      bytes: new Uint8Array([1]),
++    }
++    const invalid = [
++      { ...base, bytes: new Uint8Array() },
++      { ...base, fileName: "budget.exe" },
++      { ...base, options: { ...base.options, ownerOverride: true } },
++      { ...base, bytes: new Uint8Array(16 * 1024 * 1024 + 1) },
++    ]
++    for (const input of invalid) {
++      const result = await client["files.import-admit"](input as never, options())
++      expect(result).toEqual({ kind: "transport-error", reason: "contract-mismatch" })
++    }
++    expect(await client["files.import-admit"](base, {
++      signal: new AbortController().signal,
++    })).toEqual({ kind: "transport-error", reason: "contract-mismatch" })
++    expect(operations).toEqual([])
++  })
++
++  test("preview/apply are distinct, and prepare does not invent an apply receipt", async () => {
++    const { client, operations } = fixture()
++    await client["files.import-preview"]({
++      surface: "planner", admittedFileRef: "staged-ref", format: "xlsx", options: {},
++    }, options())
++    await client["files.import-apply"]({
++      surface: "planner", manifestId: "manifest-1", version: 1,
++    }, options())
++    expect(operations).toEqual(["files.import-preview", "files.import-apply"])
++  })
++
++  test("an incomplete or inverted period is not dispatched", async () => {
++    const { client, operations } = fixture()
++    const signals = options()
++    expect(await client["files.import-targets"]({
++      surface: "planner", start: "2026-11-01",
++    }, signals)).toEqual({ kind: "transport-error", reason: "contract-mismatch" })
++    expect(await client["files.import-targets"]({
++      surface: "planner", start: "2026-12-01", end: "2026-11-01",
++    }, signals)).toEqual({ kind: "transport-error", reason: "contract-mismatch" })
++    expect(operations).toEqual([])
++  })
++
++  test("document extraction cannot be confirmed with a pending/partial response", async () => {
++    const { client, operations } = fixture()
++    const fake = { id: "candidate-1", status: "stale" }
++    const result = await client["files.document-confirm"]({
++      surface: "dashboard", evidence: fake as never,
++    }, options())
++    expect(result).toEqual({ kind: "transport-error", reason: "contract-mismatch" })
++    expect(operations).toEqual([])
++  })
++
++  test("document schema validation preserves version CAS and disallows duplicate field IDs", async () => {
++    const { client, operations } = fixture()
++    const input = {
++      surface: "dashboard" as const, documentRef: "doc-1",
++      fields: [{ id: "amount", type: "number" as const }, { id: "amount", type: "number" as const }],
++    }
++    expect(await client["files.document-schema"](input, options())).toEqual({
++      kind: "transport-error", reason: "contract-mismatch",
++    })
++    expect(operations).toEqual([])
++  })
++
++  test("assets carry raw bytes to original server, never a local scanner flag or path", async () => {
++    const { client, operations } = fixture()
++    const mismatched = {
++      surface: "dashboard" as const, upload: "supplier" as const,
++      record: "supplier-1", recordVersion: 0,
++      name: "supplier.pdf", page: "Vendor Contracts",
++      mediaType: "application/pdf", bytes: new Uint8Array([10]),
++    }
++    expect(await client["files.asset.upload"](mismatched, options())).toEqual({
++      kind: "transport-error", reason: "contract-mismatch",
++    })
++    expect(operations).toEqual([])
++  })
++
++  test("signed asset query parsing accepts only exactly one of each server field", () => {
++    const signature = "a".repeat(64)
++    const good = "asset=record42&expires=1797000000000&signature=" + signature
++    expect(readSfFilesSignedAssetQuery(good)).toEqual({
++      assetId: "record42", expires: 1797000000000, signature,
++    })
++    expect(readSfFilesSignedAssetQuery(good + "&asset=attacker")).toBeUndefined()
++    expect(readSfFilesSignedAssetQuery(good + "&url=https://evil.invalid")).toBeUndefined()
++    expect(readSfFilesSignedAssetQuery("?" + good)).toBeUndefined()
++    expect(readSfFilesSignedAssetQuery("asset=r&expires=0&signature=" + signature)).toBeUndefined()
++  })
++
++  test("server-only delegates preserve original Response including streamed bytes and refusal", async () => {
++    const denial = Response.json({ status: "denied" }, { status: 403 })
++    const bytes = new Response(new Uint8Array([12, 13]), {
++      status: 200, headers: { "Content-Type": "application/octet-stream" },
++    })
++    const bindings = createSfFilesHostBindings({
++      documents: async () => denial,
++      application: async () => bytes,
++    })
++    const req = new Request("https://installation.invalid/sf/dashboard?sf=document-open")
++    const denied = await bindings["files.document-open"](req, "dashboard")
++    expect(denied).toBe(denial)
++    expect(denied.status).toBe(403)
++    const downloaded = await bindings["files.asset.download"](req, "dashboard")
++    expect(downloaded).toBe(bytes)
++    expect(downloaded.headers.get("content-type")).toBe("application/octet-stream")
++    expect(await bindings["files.import-admit"](req, "planner")).toHaveProperty("status", 503)
++  })
++})
+
+diff --git a/packages/schema/package.json b/packages/schema/package.json
+index d4b28cceb8c5695fbf290a6d9a1e0c319e28c337..8e6d85d91f233762f243b294f8d3428b3fdd9376 100644
+--- a/packages/schema/package.json
++++ b/packages/schema/package.json
+@@ -1,149 +1,151 @@
+-{
+-  "$schema": "https://json.schemastore.org/package.json",
+-  "name": "@orchestra/schema",
+-  "private": true,
+-  "type": "module",
+-  "license": "MIT",
+-  "exports": {
+-    ".": "./src/index.ts",
+-    "./actions": "./src/actions.ts",
+-    "./actions/command": "./src/actions/command.ts",
+-    "./actions/identity": "./src/actions/identity.ts",
+-    "./actions/operation": "./src/actions/operation.ts",
+-    "./actions/resource": "./src/actions/resource.ts",
+-    "./actions/run": "./src/actions/run.ts",
+-    "./actions/workflow": "./src/actions/workflow.ts",
+-    "./agent": "./src/agent.ts",
+-    "./agent-file": "./src/agent-file.ts",
+-    "./atlas-knowledge": "./src/atlas-knowledge.ts",
+-    "./atlas-review": "./src/atlas-review.ts",
+-    "./atlas-screen": "./src/atlas-screen.ts",
+-    "./atlas-setup": "./src/atlas-setup.ts",
+-    "./behavior": "./src/behavior.ts",
+-    "./board": "./src/board.ts",
+-    "./board-queue": "./src/board-queue.ts",
+-    "./capability": "./src/capability.ts",
+-    "./catalog": "./src/catalog.ts",
+-    "./command": "./src/command.ts",
+-    "./config-mcp": "./src/config-mcp.ts",
+-    "./config-maestro": "./src/config-maestro.ts",
+-    "./connection": "./src/connection.ts",
+-    "./credential": "./src/credential.ts",
+-    "./durable-event-manifest": "./src/durable-event-manifest.ts",
+-    "./elf": "./src/elf.ts",
+-    "./event": "./src/event.ts",
+-    "./event-manifest": "./src/event-manifest.ts",
+-    "./file-diff": "./src/file-diff.ts",
+-    "./filesystem": "./src/filesystem.ts",
+-    "./filesystem-watcher": "./src/filesystem-watcher.ts",
+-    "./hook-glob": "./src/hook-glob.ts",
+-    "./hook-match": "./src/hook-match.ts",
+-    "./ide-event": "./src/ide-event.ts",
+-    "./identifier": "./src/identifier.ts",
+-    "./index": "./src/index.ts",
+-    "./installation-event": "./src/installation-event.ts",
+-    "./integration": "./src/integration.ts",
+-    "./integration-id": "./src/integration-id.ts",
+-    "./lean-coverage": "./src/lean-coverage.ts",
+-    "./lean-dashboard": "./src/lean-dashboard.ts",
+-    "./lean-engine": "./src/lean-engine.ts",
+-    "./lean-metrics": "./src/lean-metrics.ts",
+-    "./llm": "./src/llm.ts",
+-    "./location": "./src/location.ts",
+-    "./lsp-event": "./src/lsp-event.ts",
+-    "./maestro-context": "./src/maestro-context.ts",
+-    "./maestro-event": "./src/maestro-event.ts",
+-    "./mcp": "./src/mcp.ts",
+-    "./mcp-event": "./src/mcp-event.ts",
+-    "./model": "./src/model.ts",
+-    "./models-dev": "./src/models-dev.ts",
+-    "./permission": "./src/permission.ts",
+-    "./permission-saved": "./src/permission-saved.ts",
+-    "./plugin": "./src/plugin.ts",
+-    "./project": "./src/project.ts",
+-    "./sucafina/common": "./src/sucafina/common.ts",
+-    "./sucafina/context": "./src/sucafina/context.ts",
+-    "./sucafina/operation-registry": "./src/sucafina/operation-registry.ts",
+-    "./sucafina/procurement": "./src/sucafina/procurement.ts",
+-    "./sucafina/planner": "./src/sucafina/planner.ts",
+-    "./sucafina/decisions": "./src/sucafina/decisions.ts",
+-    "./sucafina/portfolio": "./src/sucafina/portfolio.ts",
+-    "./project-copy": "./src/project-copy.ts",
+-    "./project-directories": "./src/project-directories.ts",
+-    "./project-id": "./src/project-id.ts",
+-    "./prompt": "./src/prompt.ts",
+-    "./prompt-context": "./src/prompt-context.ts",
+-    "./prompt-input": "./src/prompt-input.ts",
+-    "./provider": "./src/provider.ts",
+-    "./pty": "./src/pty.ts",
+-    "./pty-ticket": "./src/pty-ticket.ts",
+-    "./inbox": "./src/inbox.ts",
+-    "./guardrail": "./src/guardrail.ts",
+-    "./meeting": "./src/meeting.ts",
+-    "./pull-request": "./src/pull-request.ts",
+-    "./question": "./src/question.ts",
+-    "./rag-studio": "./src/rag-studio.ts",
+-    "./reference": "./src/reference.ts",
+-    "./relay-arm": "./src/relay-arm.ts",
+-    "./relay-authoring": "./src/relay-authoring.ts",
+-    "./relay-external": "./src/relay-external.ts",
+-    "./relay-hook": "./src/relay-hook.ts",
+-    "./relay-ledger": "./src/relay-ledger.ts",
+-    "./relay-run": "./src/relay-run.ts",
+-    "./relay-sprint": "./src/relay-sprint.ts",
+-    "./research": "./src/research.ts",
+-    "./research-event": "./src/research-event.ts",
+-    "./revert": "./src/revert.ts",
+-    "./review-precision-event": "./src/review-precision-event.ts",
+-    "./scheduled-task": "./src/scheduled-task.ts",
+-    "./schema": "./src/schema.ts",
+-    "./server-event": "./src/server-event.ts",
+-    "./session": "./src/session.ts",
+-    "./session-compaction-event": "./src/session-compaction-event.ts",
+-    "./session-delivery": "./src/session-delivery.ts",
+-    "./session-event": "./src/session-event.ts",
+-    "./session-id": "./src/session-id.ts",
+-    "./session-activity": "./src/session-activity.ts",
+-    "./session-input": "./src/session-input.ts",
+-    "./session-message": "./src/session-message.ts",
+-    "./session-status-event": "./src/session-status-event.ts",
+-    "./session-subagent-models": "./src/session-subagent-models.ts",
+-    "./session-todo": "./src/session-todo.ts",
+-    "./skill": "./src/skill.ts",
+-    "./tui-event": "./src/tui-event.ts",
+-    "./upstream-attribution": "./src/upstream-attribution.ts",
+-    "./vcs": "./src/vcs.ts",
+-    "./vcs-event": "./src/vcs-event.ts",
+-    "./workspace": "./src/workspace.ts",
+-    "./workspace-event": "./src/workspace-event.ts",
+-    "./workspace-id": "./src/workspace-id.ts",
+-    "./worktree-event": "./src/worktree-event.ts",
+-    "./capability-artifact-management": "./src/capability-artifact-management.ts",
+-    "./capability-management": "./src/capability-management.ts",
+-    "./capability-schedule-management": "./src/capability-schedule-management.ts",
+-    "./capability-setup": "./src/capability-setup.ts",
+-    "./lsp": "./src/lsp.ts",
+-    "./sucafina/analyses": "./src/sucafina/analyses.ts",
+-    "./sucafina/bi": "./src/sucafina/bi.ts",
+-    "./sucafina/collaboration": "./src/sucafina/collaboration.ts",
+-    "./sucafina/domain": "./src/sucafina/domain.ts",
+-    "./sucafina/memory": "./src/sucafina/memory.ts",
+-    "./sucafina/operations": "./src/sucafina/operations.ts",
+-    "./sucafina/people": "./src/sucafina/people.ts",
+-    "./sucafina/reviews": "./src/sucafina/reviews.ts",
+-    "./sucafina/routines": "./src/sucafina/routines.ts",
+-    "./sucafina/work": "./src/sucafina/work.ts"
+-  },
+-  "scripts": {
+-    "test": "bun test ./test --preload ../../script/test-guard.ts --timeout 30000 --only-failures",
+-    "typecheck": "tsgo --noEmit"
+-  },
+-  "dependencies": {
+-    "effect": "catalog:"
+-  },
+-  "devDependencies": {
+-    "@tsconfig/bun": "catalog:",
+-    "@types/bun": "catalog:",
+-    "@typescript/native-preview": "catalog:"
+-  }
+-}
++{
++  "$schema": "https://json.schemastore.org/package.json",
++  "name": "@orchestra/schema",
++  "private": true,
++  "type": "module",
++  "license": "MIT",
++  "exports": {
++    ".": "./src/index.ts",
++    "./actions": "./src/actions.ts",
++    "./actions/command": "./src/actions/command.ts",
++    "./actions/identity": "./src/actions/identity.ts",
++    "./actions/operation": "./src/actions/operation.ts",
++    "./actions/resource": "./src/actions/resource.ts",
++    "./actions/run": "./src/actions/run.ts",
++    "./actions/workflow": "./src/actions/workflow.ts",
++    "./agent": "./src/agent.ts",
++    "./agent-file": "./src/agent-file.ts",
++    "./atlas-knowledge": "./src/atlas-knowledge.ts",
++    "./atlas-review": "./src/atlas-review.ts",
++    "./atlas-screen": "./src/atlas-screen.ts",
++    "./atlas-setup": "./src/atlas-setup.ts",
++    "./behavior": "./src/behavior.ts",
++    "./board": "./src/board.ts",
++    "./board-queue": "./src/board-queue.ts",
++    "./capability": "./src/capability.ts",
++    "./catalog": "./src/catalog.ts",
++    "./command": "./src/command.ts",
++    "./config-mcp": "./src/config-mcp.ts",
++    "./config-maestro": "./src/config-maestro.ts",
++    "./connection": "./src/connection.ts",
++    "./credential": "./src/credential.ts",
++    "./durable-event-manifest": "./src/durable-event-manifest.ts",
++    "./elf": "./src/elf.ts",
++    "./event": "./src/event.ts",
++    "./event-manifest": "./src/event-manifest.ts",
++    "./file-diff": "./src/file-diff.ts",
++    "./filesystem": "./src/filesystem.ts",
++    "./filesystem-watcher": "./src/filesystem-watcher.ts",
++    "./hook-glob": "./src/hook-glob.ts",
++    "./hook-match": "./src/hook-match.ts",
++    "./ide-event": "./src/ide-event.ts",
++    "./identifier": "./src/identifier.ts",
++    "./index": "./src/index.ts",
++    "./installation-event": "./src/installation-event.ts",
++    "./integration": "./src/integration.ts",
++    "./integration-id": "./src/integration-id.ts",
++    "./lean-coverage": "./src/lean-coverage.ts",
++    "./lean-dashboard": "./src/lean-dashboard.ts",
++    "./lean-engine": "./src/lean-engine.ts",
++    "./lean-metrics": "./src/lean-metrics.ts",
++    "./llm": "./src/llm.ts",
++    "./location": "./src/location.ts",
++    "./lsp-event": "./src/lsp-event.ts",
++    "./maestro-context": "./src/maestro-context.ts",
++    "./maestro-event": "./src/maestro-event.ts",
++    "./mcp": "./src/mcp.ts",
++    "./mcp-event": "./src/mcp-event.ts",
++    "./model": "./src/model.ts",
++    "./models-dev": "./src/models-dev.ts",
++    "./permission": "./src/permission.ts",
++    "./permission-saved": "./src/permission-saved.ts",
++    "./plugin": "./src/plugin.ts",
++    "./project": "./src/project.ts",
++    "./sucafina/common": "./src/sucafina/common.ts",
++    "./sucafina/context": "./src/sucafina/context.ts",
++    "./sucafina/files": "./src/sucafina/files.ts",
++    "./sucafina/files/structures": "./src/sucafina/files/structures.ts",
++    "./sucafina/operation-registry": "./src/sucafina/operation-registry.ts",
++    "./sucafina/procurement": "./src/sucafina/procurement.ts",
++    "./sucafina/planner": "./src/sucafina/planner.ts",
++    "./sucafina/decisions": "./src/sucafina/decisions.ts",
++    "./sucafina/portfolio": "./src/sucafina/portfolio.ts",
++    "./project-copy": "./src/project-copy.ts",
++    "./project-directories": "./src/project-directories.ts",
++    "./project-id": "./src/project-id.ts",
++    "./prompt": "./src/prompt.ts",
++    "./prompt-context": "./src/prompt-context.ts",
++    "./prompt-input": "./src/prompt-input.ts",
++    "./provider": "./src/provider.ts",
++    "./pty": "./src/pty.ts",
++    "./pty-ticket": "./src/pty-ticket.ts",
++    "./inbox": "./src/inbox.ts",
++    "./guardrail": "./src/guardrail.ts",
++    "./meeting": "./src/meeting.ts",
++    "./pull-request": "./src/pull-request.ts",
++    "./question": "./src/question.ts",
++    "./rag-studio": "./src/rag-studio.ts",
++    "./reference": "./src/reference.ts",
++    "./relay-arm": "./src/relay-arm.ts",
++    "./relay-authoring": "./src/relay-authoring.ts",
++    "./relay-external": "./src/relay-external.ts",
++    "./relay-hook": "./src/relay-hook.ts",
++    "./relay-ledger": "./src/relay-ledger.ts",
++    "./relay-run": "./src/relay-run.ts",
++    "./relay-sprint": "./src/relay-sprint.ts",
++    "./research": "./src/research.ts",
++    "./research-event": "./src/research-event.ts",
++    "./revert": "./src/revert.ts",
++    "./review-precision-event": "./src/review-precision-event.ts",
++    "./scheduled-task": "./src/scheduled-task.ts",
++    "./schema": "./src/schema.ts",
++    "./server-event": "./src/server-event.ts",
++    "./session": "./src/session.ts",
++    "./session-compaction-event": "./src/session-compaction-event.ts",
++    "./session-delivery": "./src/session-delivery.ts",
++    "./session-event": "./src/session-event.ts",
++    "./session-id": "./src/session-id.ts",
++    "./session-activity": "./src/session-activity.ts",
++    "./session-input": "./src/session-input.ts",
++    "./session-message": "./src/session-message.ts",
++    "./session-status-event": "./src/session-status-event.ts",
++    "./session-subagent-models": "./src/session-subagent-models.ts",
++    "./session-todo": "./src/session-todo.ts",
++    "./skill": "./src/skill.ts",
++    "./tui-event": "./src/tui-event.ts",
++    "./upstream-attribution": "./src/upstream-attribution.ts",
++    "./vcs": "./src/vcs.ts",
++    "./vcs-event": "./src/vcs-event.ts",
++    "./workspace": "./src/workspace.ts",
++    "./workspace-event": "./src/workspace-event.ts",
++    "./workspace-id": "./src/workspace-id.ts",
++    "./worktree-event": "./src/worktree-event.ts",
++    "./capability-artifact-management": "./src/capability-artifact-management.ts",
++    "./capability-management": "./src/capability-management.ts",
++    "./capability-schedule-management": "./src/capability-schedule-management.ts",
++    "./capability-setup": "./src/capability-setup.ts",
++    "./lsp": "./src/lsp.ts",
++    "./sucafina/analyses": "./src/sucafina/analyses.ts",
++    "./sucafina/bi": "./src/sucafina/bi.ts",
++    "./sucafina/collaboration": "./src/sucafina/collaboration.ts",
++    "./sucafina/domain": "./src/sucafina/domain.ts",
++    "./sucafina/memory": "./src/sucafina/memory.ts",
++    "./sucafina/operations": "./src/sucafina/operations.ts",
++    "./sucafina/people": "./src/sucafina/people.ts",
++    "./sucafina/reviews": "./src/sucafina/reviews.ts",
++    "./sucafina/routines": "./src/sucafina/routines.ts",
++    "./sucafina/work": "./src/sucafina/work.ts"
++  },
++  "scripts": {
++    "test": "bun test ./test --preload ../../script/test-guard.ts --timeout 30000 --only-failures",
++    "typecheck": "tsgo --noEmit"
++  },
++  "dependencies": {
++    "effect": "catalog:"
++  },
++  "devDependencies": {
++    "@tsconfig/bun": "catalog:",
++    "@types/bun": "catalog:",
++    "@typescript/native-preview": "catalog:"
++  }
++}
+
+diff --git a/packages/client/package.json b/packages/client/package.json
+index 89c376ac148db0c3ba2a5f5b0a0aece932c72a6f..c2a2958bc63e2c10379ca57018b17ce11c19d940 100644
+--- a/packages/client/package.json
++++ b/packages/client/package.json
+@@ -1,55 +1,56 @@
+-{
+-  "$schema": "https://json.schemastore.org/package.json",
+-  "name": "@orchestra/client",
+-  "private": true,
+-  "type": "module",
+-  "license": "MIT",
+-  "exports": {
+-    ".": "./src/index.ts",
+-    "./effect": "./src/effect.ts",
+-    "./contract": "./src/contract.ts",
+-    "./sucafina/context": "./src/sucafina/context.ts",
+-    "./sucafina/transport": "./src/sucafina/transport.ts",
+-    "./sucafina/procurement": "./src/sucafina/procurement.ts",
+-    "./sucafina/planner": "./src/sucafina/planner.ts",
+-    "./sucafina/decisions": "./src/sucafina/decisions.ts",
+-    "./sucafina/portfolio": "./src/sucafina/portfolio.ts",
+-    "./sucafina/analyses": "./src/sucafina/analyses.ts",
+-    "./sucafina/bi": "./src/sucafina/bi.ts",
+-    "./sucafina/collaboration": "./src/sucafina/collaboration.ts",
+-    "./sucafina/domain": "./src/sucafina/domain.ts",
+-    "./sucafina/memory": "./src/sucafina/memory.ts",
+-    "./sucafina/operations": "./src/sucafina/operations.ts",
+-    "./sucafina/people": "./src/sucafina/people.ts",
+-    "./sucafina/reviews": "./src/sucafina/reviews.ts",
+-    "./sucafina/routines": "./src/sucafina/routines.ts",
+-    "./sucafina/work": "./src/sucafina/work.ts",
+-    "./sucafina/bindings": "./src/sucafina/bindings.ts"
+-  },
+-  "scripts": {
+-    "generate": "bun run script/build.ts",
+-    "check:generated": "bun run generate && git diff --exit-code -- src/generated src/generated-effect",
+-    "test": "bun test --timeout 5000",
+-    "typecheck": "tsgo --noEmit"
+-  },
+-  "dependencies": {
+-    "@orchestra/schema": "workspace:*",
+-    "@orchestra/protocol": "workspace:*"
+-  },
+-  "peerDependencies": {
+-    "effect": "4.0.0-beta.83"
+-  },
+-  "peerDependenciesMeta": {
+-    "effect": {
+-      "optional": true
+-    }
+-  },
+-  "devDependencies": {
+-    "@effect/platform-node": "catalog:",
+-    "@orchestra/httpapi-codegen": "workspace:*",
+-    "@tsconfig/bun": "catalog:",
+-    "@types/bun": "catalog:",
+-    "@typescript/native-preview": "catalog:",
+-    "effect": "catalog:"
+-  }
+-}
++{
++  "$schema": "https://json.schemastore.org/package.json",
++  "name": "@orchestra/client",
++  "private": true,
++  "type": "module",
++  "license": "MIT",
++  "exports": {
++    ".": "./src/index.ts",
++    "./effect": "./src/effect.ts",
++    "./contract": "./src/contract.ts",
++    "./sucafina/context": "./src/sucafina/context.ts",
++    "./sucafina/files": "./src/sucafina/files.ts",
++    "./sucafina/transport": "./src/sucafina/transport.ts",
++    "./sucafina/procurement": "./src/sucafina/procurement.ts",
++    "./sucafina/planner": "./src/sucafina/planner.ts",
++    "./sucafina/decisions": "./src/sucafina/decisions.ts",
++    "./sucafina/portfolio": "./src/sucafina/portfolio.ts",
++    "./sucafina/analyses": "./src/sucafina/analyses.ts",
++    "./sucafina/bi": "./src/sucafina/bi.ts",
++    "./sucafina/collaboration": "./src/sucafina/collaboration.ts",
++    "./sucafina/domain": "./src/sucafina/domain.ts",
++    "./sucafina/memory": "./src/sucafina/memory.ts",
++    "./sucafina/operations": "./src/sucafina/operations.ts",
++    "./sucafina/people": "./src/sucafina/people.ts",
++    "./sucafina/reviews": "./src/sucafina/reviews.ts",
++    "./sucafina/routines": "./src/sucafina/routines.ts",
++    "./sucafina/work": "./src/sucafina/work.ts",
++    "./sucafina/bindings": "./src/sucafina/bindings.ts"
++  },
++  "scripts": {
++    "generate": "bun run script/build.ts",
++    "check:generated": "bun run generate && git diff --exit-code -- src/generated src/generated-effect",
++    "test": "bun test --timeout 5000",
++    "typecheck": "tsgo --noEmit"
++  },
++  "dependencies": {
++    "@orchestra/schema": "workspace:*",
++    "@orchestra/protocol": "workspace:*"
++  },
++  "peerDependencies": {
++    "effect": "4.0.0-beta.83"
++  },
++  "peerDependenciesMeta": {
++    "effect": {
++      "optional": true
++    }
++  },
++  "devDependencies": {
++    "@effect/platform-node": "catalog:",
++    "@orchestra/httpapi-codegen": "workspace:*",
++    "@tsconfig/bun": "catalog:",
++    "@types/bun": "catalog:",
++    "@typescript/native-preview": "catalog:",
++    "effect": "catalog:"
++  }
++}
+
+diff --git a/packages/client/src/sucafina/bindings.ts b/packages/client/src/sucafina/bindings.ts
+index aff16695246561bd2cfe154c1ac892084ce119a4..b6a88b465e76edc93d8d5c2f3a4b011b3c1dbece 100644
+--- a/packages/client/src/sucafina/bindings.ts
++++ b/packages/client/src/sucafina/bindings.ts
+@@ -1,98 +1,100 @@
+-/**
+- * I00: the single client codec assembly from released, browser-safe source
+- * schemas. Route metadata is ONLY in SfOperationRegistry, never inferred here.
+- * A codec checks shape; it is neither an entitlement nor a producer admission.
+- */
+-import { Option, Schema } from "effect"
+-import { SfOperationId, type SfOperationBindings, type SfOperationCodec, type SfWireDecodeResult } from "@orchestra/schema/sucafina/common"
+-import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
+-import { SfExpectedContextBinding, SfContextResult, SfInstallationSelector, SfInstallationList } from "@orchestra/schema/sucafina/context"
+-import { SfDomain } from "@orchestra/schema/sucafina/domain"
+-import { SfPeople } from "@orchestra/schema/sucafina/people"
+-import { SfOperations } from "@orchestra/schema/sucafina/operations"
+-import { SfPlanner } from "@orchestra/schema/sucafina/planner"
+-import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
+-import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
+-import { SfPortfolio } from "@orchestra/schema/sucafina/portfolio"
+-import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
+-import { SfBi } from "@orchestra/schema/sucafina/bi"
+-import { SfReviews } from "@orchestra/schema/sucafina/reviews"
+-import { SfRoutines } from "@orchestra/schema/sucafina/routines"
+-import { SfWork } from "@orchestra/schema/sucafina/work"
+-import { SfMemory } from "@orchestra/schema/sucafina/memory"
+-import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
+-
+-type Contract = Readonly<{
+-  operationId: string
+-  input: Schema.Top
+-  output: Schema.Top
+-}>
+-
+-const invalid = (): SfWireDecodeResult => ({ status: "invalid" })
+-
+-function decode(schema: Schema.Top, value: unknown): SfWireDecodeResult {
+-  // The exact source shape must parse before its JSON wire representation
+-  // can be admitted. No JSON passthrough, guessed response or relaxed parsing.
+-  const parsed = Schema.decodeUnknownOption(Schema.toType(schema), { onExcessProperty: "error" })(value)
+-  if (Option.isNone(parsed)) return invalid()
+-  const json = Schema.decodeUnknownOption(Schema.Json)(parsed.value)
+-  if (Option.isNone(json)) return invalid()
+-  return { status: "ok", value: json.value }
+-}
+-
+-function codec(source: Contract): SfOperationCodec {
+-  return Object.freeze({
+-    decodeInput: (value: unknown) => decode(source.input, value),
+-    decodeOutput: (value: unknown) => decode(source.output, value),
+-  })
+-}
+-
+-/**
+- * Read-only canonical binding map. The transport independently enforces
+- * installation, ownership generation, method, route, origin, idempotency,
+- * native-owner fence and source response admission. Absent operation => 503.
+- */
+-export const SfNativeOperationBindings: SfOperationBindings = (() => {
+-  const bindings = new Map<SfOperationId, SfOperationCodec>()
+-  const add = (family: Readonly<Record<string, Contract>>) => {
+-    for (const [key, source] of Object.entries(family)) {
+-      if (!Schema.is(SfOperationId)(key) || source.operationId !== key) {
+-        throw new Error("SF_NATIVE_CODEC_CATALOG_MISMATCH")
+-      }
+-      if (bindings.has(key)) throw new Error("SF_NATIVE_DUPLICATE_CODEC")
+-      const metadata = SfOperationRegistry[key]
+-      if (!metadata) throw new Error("SF_NATIVE_MISSING_ROUTE_METADATA")
+-      // Download/navigation responses need their own real installed consumers.
+-      // They must never masquerade as JSON or receive a fabricated receipt.
+-      if (metadata.responseMode !== "json" && metadata.responseMode !== "empty") continue
+-      bindings.set(key, codec(source))
+-    }
+-  }
+-  add({
+-    "ctx.context": {
+-      operationId: "ctx.context",
+-      input: SfExpectedContextBinding,
+-      output: SfContextResult,
+-    },
+-    "ctx.installations": {
+-      operationId: "ctx.installations",
+-      input: SfInstallationSelector,
+-      output: SfInstallationList,
+-    },
+-  })
+-  add(SfDomain.operations)
+-  add(SfPeople.operations)
+-  add(SfOperations.operations)
+-  add(SfPlanner.operations)
+-  add(SfProcurement.operations)
+-  add(SfDecisions.operations)
+-  add(SfPortfolio)
+-  add(SfCollaboration.operations)
+-  add(SfBi.operations)
+-  add(SfReviews)
+-  add(SfRoutines.operations)
+-  add(SfWork.operations)
+-  add(SfMemory.operations)
+-  add(SfAnalyses.operations)
+-  return Object.freeze(Object.fromEntries(bindings))
+-})()
++/**
++ * I00: the single client codec assembly from released, browser-safe source
++ * schemas. Route metadata is ONLY in SfOperationRegistry, never inferred here.
++ * A codec checks shape; it is neither an entitlement nor a producer admission.
++ */
++import { Option, Schema } from "effect"
++import { SfOperationId, type SfOperationBindings, type SfOperationCodec, type SfWireDecodeResult } from "@orchestra/schema/sucafina/common"
++import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
++import { SfExpectedContextBinding, SfContextResult, SfInstallationSelector, SfInstallationList } from "@orchestra/schema/sucafina/context"
++import { SfDomain } from "@orchestra/schema/sucafina/domain"
++import { SfPeople } from "@orchestra/schema/sucafina/people"
++import { SfOperations } from "@orchestra/schema/sucafina/operations"
++import { SfPlanner } from "@orchestra/schema/sucafina/planner"
++import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
++import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
++import { SfPortfolio } from "@orchestra/schema/sucafina/portfolio"
++import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
++import { SfBi } from "@orchestra/schema/sucafina/bi"
++import { SfReviews } from "@orchestra/schema/sucafina/reviews"
++import { SfRoutines } from "@orchestra/schema/sucafina/routines"
++import { SfWork } from "@orchestra/schema/sucafina/work"
++import { SfMemory } from "@orchestra/schema/sucafina/memory"
++import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
++import { SfFiles } from "@orchestra/schema/sucafina/files"
++
++type Contract = Readonly<{
++  operationId: string
++  input: Schema.Top
++  output: Schema.Top
++}>
++
++const invalid = (): SfWireDecodeResult => ({ status: "invalid" })
++
++function decode(schema: Schema.Top, value: unknown): SfWireDecodeResult {
++  // The exact source shape must parse before its JSON wire representation
++  // can be admitted. No JSON passthrough, guessed response or relaxed parsing.
++  const parsed = Schema.decodeUnknownOption(Schema.toType(schema), { onExcessProperty: "error" })(value)
++  if (Option.isNone(parsed)) return invalid()
++  const json = Schema.decodeUnknownOption(Schema.Json)(parsed.value)
++  if (Option.isNone(json)) return invalid()
++  return { status: "ok", value: json.value }
++}
++
++function codec(source: Contract): SfOperationCodec {
++  return Object.freeze({
++    decodeInput: (value: unknown) => decode(source.input, value),
++    decodeOutput: (value: unknown) => decode(source.output, value),
++  })
++}
++
++/**
++ * Read-only canonical binding map. The transport independently enforces
++ * installation, ownership generation, method, route, origin, idempotency,
++ * native-owner fence and source response admission. Absent operation => 503.
++ */
++export const SfNativeOperationBindings: SfOperationBindings = (() => {
++  const bindings = new Map<SfOperationId, SfOperationCodec>()
++  const add = (family: Readonly<Record<string, Contract>>) => {
++    for (const [key, source] of Object.entries(family)) {
++      if (!Schema.is(SfOperationId)(key) || source.operationId !== key) {
++        throw new Error("SF_NATIVE_CODEC_CATALOG_MISMATCH")
++      }
++      if (bindings.has(key)) throw new Error("SF_NATIVE_DUPLICATE_CODEC")
++      const metadata = SfOperationRegistry[key]
++      if (!metadata) throw new Error("SF_NATIVE_MISSING_ROUTE_METADATA")
++      // Download/navigation responses need their own real installed consumers.
++      // They must never masquerade as JSON or receive a fabricated receipt.
++      if (metadata.responseMode !== "json" && metadata.responseMode !== "empty") continue
++      bindings.set(key, codec(source))
++    }
++  }
++  add({
++    "ctx.context": {
++      operationId: "ctx.context",
++      input: SfExpectedContextBinding,
++      output: SfContextResult,
++    },
++    "ctx.installations": {
++      operationId: "ctx.installations",
++      input: SfInstallationSelector,
++      output: SfInstallationList,
++    },
++  })
++  add(SfDomain.operations)
++  add(SfPeople.operations)
++  add(SfOperations.operations)
++  add(SfPlanner.operations)
++  add(SfProcurement.operations)
++  add(SfDecisions.operations)
++  add(SfPortfolio)
++  add(SfCollaboration.operations)
++  add(SfBi.operations)
++  add(SfReviews)
++  add(SfRoutines.operations)
++  add(SfWork.operations)
++  add(SfMemory.operations)
++  add(SfAnalyses.operations)
++  add(SfFiles.operations)
++  return Object.freeze(Object.fromEntries(bindings))
++})()
