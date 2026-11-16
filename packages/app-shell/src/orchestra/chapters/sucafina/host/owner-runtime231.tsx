@@ -23,7 +23,7 @@ import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { createSfDraft } from "../shared/draft"
 import { createSfNavigationState, type SfNativeNavigationState } from "../navigation-state"
-import { matchSfNativeRoutePath } from "../route-registry"
+import { isSfNativeChapter, matchSfNativeRoutePath } from "../route-registry"
 import { useSfContext } from "../context"
 import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
   SfDraftRevalidation, SfSurfaceProps } from "../context/contracts"
@@ -309,17 +309,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   }
   if (typeof window !== "undefined") window.addEventListener("beforeunload", unload)
   useBeforeLeave((event) => {
-    // The two Sucafina chapters retain the SAME F01 owner and drafts.
+    // Canonical Sucafina chapters retain the SAME F01 owner and drafts.
     const target = new URL(event.to.toString(), window.location.href)
-    if (target.origin === window.location.origin &&
-      ((target.pathname === "/orchestra/sf-home" ||
-        target.pathname.startsWith("/orchestra/sf-home/")) ||
-        target.pathname === "/orchestra/sf-decisions" ||
-        target.pathname.startsWith("/orchestra/sf-decisions/") ||
-        target.pathname === "/orchestra/sf-planner" || target.pathname.startsWith("/orchestra/sf-planner/") ||
-        target.pathname === "/orchestra/sf-bi" || target.pathname.startsWith("/orchestra/sf-bi/") ||
-        target.pathname === "/orchestra/sf-dashboard" || target.pathname.startsWith("/orchestra/sf-dashboard/") ||
-        target.pathname === "/orchestra/sf-procurement" || target.pathname.startsWith("/orchestra/sf-procurement/"))) return
+    const parts = target.pathname.split("/")
+    if (target.origin === window.location.origin && parts[1] === "orchestra" &&
+      isSfNativeChapter(parts[2] ?? "")) return
     if (!mounted?.hasDirtyDrafts()) return
     event.preventDefault()
     void requestSfOwnerShellExit237().then((accepted) => {
