@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h-repair-ack-v1",
+  "mission": 216,
+  "actor": "review-fix-e1-browser216",
+  "finding": "REV208-NEW-002",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-atlas-sequence",
+  "expected_head": "f9aca032271d1b683647b701f2c02c703eaaea20",
+  "observed_head": "f9aca032271d1b683647b701f2c02c703eaaea20",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair216/S0-FENCE.json",
+    "blob": "31710282a0d8342891865213506b85c5525c271e",
+    "state": "PREPARED_NOT_STARTED",
+    "epoch": "review-fix-e1-browser216"
+  },
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "NOT_EXPOSED",
+  "runtime_lifecycle_claim": "NONE",
+  "ack": "S0-FENCE_AND_HEAD_OBSERVED; accepted only exact mission216 write paths; producer/Atlas/scanner/C08/C09 inspected before changes",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair216/**"
+  ],
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "execution_status": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "CI": "NOT_RUN"
+  }
+}
