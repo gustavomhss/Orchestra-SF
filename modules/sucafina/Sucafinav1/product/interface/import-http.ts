@@ -192,14 +192,17 @@ function parseImportOptions(raw: string): ImportTarget["options"] | undefined {
   const value: unknown = (() => { try { return JSON.parse(raw) } catch { return undefined } })()
   if (!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).some((key) => !["newVersion", "removeMissing", "preview"].includes(key)) || !("newVersion" in value) || typeof value.newVersion !== "boolean" || !("removeMissing" in value) || typeof value.removeMissing !== "boolean" || !("preview" in value) || !value.preview || typeof value.preview !== "object" || Array.isArray(value.preview) || Object.keys(value.preview).some((key) => !["sheet", "replace", "headerRow"].includes(key))) return undefined
   const preview = value.preview
-  if (("sheet" in preview && preview.sheet !== undefined && typeof preview.sheet !== "string") || ("replace" in preview && preview.replace !== undefined && typeof preview.replace !== "boolean") || ("headerRow" in preview && preview.headerRow !== undefined && (typeof preview.headerRow !== "number" || !Number.isSafeInteger(preview.headerRow) || preview.headerRow !== 1))) return undefined
+  const sheet = "sheet" in preview ? preview.sheet : undefined
+  const replace = "replace" in preview ? preview.replace : undefined
+  const headerRow = "headerRow" in preview ? preview.headerRow : undefined
+  if ((sheet !== undefined && typeof sheet !== "string") || (replace !== undefined && typeof replace !== "boolean") || (headerRow !== undefined && (typeof headerRow !== "number" || !Number.isSafeInteger(headerRow) || headerRow !== 1))) return undefined
   return {
     newVersion: value.newVersion,
     removeMissing: value.removeMissing,
     preview: {
-      ...("sheet" in preview && preview.sheet !== undefined ? { sheet: preview.sheet } : {}),
-      ...("replace" in preview && preview.replace !== undefined ? { replace: preview.replace } : {}),
-      ...("headerRow" in preview && preview.headerRow !== undefined ? { headerRow: preview.headerRow } : {}),
+      ...(sheet !== undefined ? { sheet } : {}),
+      ...(replace !== undefined ? { replace } : {}),
+      ...(headerRow !== undefined ? { headerRow } : {}),
     },
   }
 }
@@ -211,7 +214,9 @@ async function readImportForm(request: Request, contentType: string, timeoutMs: 
   if (body.status !== "ok") return body
   const boundary = multipartBoundary(contentType)
   if (!boundary || !withinMultipartPartLimit(body.bytes, boundary, maxParts)) return { status: "invalid" }
-  const form = await new Request(request.url, { method: "POST", headers: { "content-type": contentType }, body: body.bytes }).formData().catch(() => undefined)
+  const requestBody = new ArrayBuffer(body.bytes.byteLength)
+  new Uint8Array(requestBody).set(body.bytes)
+  const form = await new Request(request.url, { method: "POST", headers: { "content-type": contentType }, body: requestBody }).formData().catch(() => undefined)
   return form ? { status: "ok", form } : { status: "invalid" }
 }
 
