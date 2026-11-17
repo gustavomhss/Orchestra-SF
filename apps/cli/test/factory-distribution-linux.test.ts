@@ -5,6 +5,7 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { prepareLocalConfiguration } from "../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
 import { archiveDistribution, prepareDistribution, verifyDistribution } from "../script/distribution-payload"
+import { prepareNpmDistribution } from "../script/distribution-npm"
 
 const target = "linux-x64-baseline"
 const cli = path.resolve(import.meta.dir, "..")
@@ -98,6 +99,18 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       await writeFile(file, original)
     }
     expect(await verifyDistribution(extracted, { version, target })).toEqual(manifest)
+
+    // The npm channel reconstructs each target package from the verified payload.
+    // It must retain the SF declaration instead of rejecting its copied assets.
+    const npmRoot = path.join(external, "npm")
+    await prepareNpmDistribution({ payloads: [payload], out: npmRoot })
+    const npmTarget = path.join(npmRoot, `cli-${target}`)
+    const npmManifest = await verifyDistribution(npmTarget, { version, target })
+    const npmMetadata = await Bun.file(path.join(npmTarget, "package.json")).json()
+    expect(npmMetadata.sfFactory).toBe("bin/local/entry.mjs")
+    expect(npmManifest.files.find((file) => file.path === "bin/local/entry.mjs")?.sha256)
+      .toBe(closure.bundle.sha256)
+    expect(await Bun.file(path.join(npmRoot, "cli/package.json")).exists()).toBe(true)
 
     const config = await prepareLocalConfiguration(privateDir)
     const env = {
