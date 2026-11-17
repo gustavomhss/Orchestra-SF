@@ -49,6 +49,8 @@ export function createSfProductAuthority(input: {
   environment: Application["environment"]
   isAuthenticated?: (request: Request) => Promise<boolean>
   grants: readonly SfProductGrant[]
+  /** Server-only persisted policy resolver; never accepts a client-provided grant. */
+  grantsForSnapshot?: (dashboard: Snapshot) => readonly SfProductGrant[]
   createId: () => string
   now: () => number
   commandIdentity: (request: Request, operation: string, inputDigest: string) => Promise<string | undefined>
@@ -69,9 +71,9 @@ export function createSfProductAuthority(input: {
   /** Only the composition's active prepared execution may resolve a Procurement receipt target. */
   authorizePreparedTarget?: (request: Request, snapshot: Snapshot, targetRef: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
 }) {
-  const grants = structuredClone(input.grants)
+  const initialGrants = structuredClone(input.grants)
   if (!input.installationId.trim() || !input.policyVersion.trim() || !URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin ||
-    new Set(grants.map((grant) => grant.principalRef)).size !== grants.length || grants.some((grant) => !grant.principalRef.trim() ||
+    new Set(initialGrants.map((grant) => grant.principalRef)).size !== initialGrants.length || initialGrants.some((grant) => !grant.principalRef.trim() ||
       new Set(grant.namespaces).size !== grant.namespaces.length || new Set(grant.operations).size !== grant.operations.length ||
       new Set(grant.humanActions).size !== (grant.humanActions?.length ?? 0) || grant.humanActions?.some((action) => !sfHumanActions.some((value) => value === action))))
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
@@ -106,6 +108,12 @@ export function createSfProductAuthority(input: {
     const present = observed.filter((entry) => entry !== undefined)
     const first = present[0]?.actor
     if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) return undefined
+    const grants = input.grantsForSnapshot ? input.grantsForSnapshot(dashboard) : initialGrants
+    // Do not trust persisted input until the installation validator has accepted it.
+    if (!Array.isArray(grants) || new Set(grants.map((entry) => entry.principalRef)).size !== grants.length ||
+      grants.some((entry) => !entry.principalRef || !Array.isArray(entry.namespaces) || !Array.isArray(entry.operations) ||
+        (entry.humanActions !== undefined && !Array.isArray(entry.humanActions))))
+      throw new Error("SF_PRODUCT_AUTHORITY_GRANTS_INVALID")
     const grant = grants.find((entry) => entry.principalRef === first.id)
     if (!grant) return undefined
     const roles = present.flatMap((entry) => entry.actor.roles.filter((role) => role.surface === entry.surface))
