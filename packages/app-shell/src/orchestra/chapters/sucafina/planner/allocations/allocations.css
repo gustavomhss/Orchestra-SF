@@ -45,6 +45,13 @@
 .sf-n20-editor { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
 .sf-n20-editor h2,
 .sf-n20-editor .sf-n20-actions { grid-column: 1 / -1; }
+.sf-n20-allocation-splits { grid-column: 1 / -1; display: grid; gap: .6rem; min-width: 0; }
+.sf-n20-allocation-splits h3, .sf-n20-allocation-splits p { margin: 0; }
+.sf-n20-allocation-splits label { display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 9rem); gap: .75rem; align-items: center; }
+.sf-n20-allocation-splits input { width: 100%; font-variant-numeric: tabular-nums; }
+@media (max-width: 500px) {
+  .sf-n20-allocation-splits label { grid-template-columns: minmax(0, 1fr); }
+}
 .sf-n20-detail dl { display: grid; gap: .25rem .75rem; grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); }
 .sf-n20-detail dt { font-weight: 600; }
 .sf-n20-detail dd { margin: 0; overflow-wrap: anywhere; }

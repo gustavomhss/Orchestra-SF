@@ -127,6 +127,10 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
       id: id(v.id), name: text(v.name), revision: revision(view, key + ":" + id(v.id)),
       ...(string(v.code) !== undefined ? { code: v.code } : {}),
       ...(string(v.desc) !== undefined ? { desc: v.desc } : {}),
+      ...(key === "allocations" && string(v.contractRef) !== undefined ? { contractRef: v.contractRef } : {}),
+      ...(key === "allocations" && Array.isArray(v.splits) ? { splits: rows(v.splits)
+        .filter((split) => id(split.entityRef) !== "" && typeof split.percent === "number" && Number.isFinite(split.percent))
+        .map((split) => ({ entityRef: id(split.entityRef), percent: split.percent })) } : {}),
     })).filter((v) => v.id !== "")
     return { entities: list("entities"), allocations: list("allocations") }
   }
@@ -181,6 +185,9 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
         ...(string(p.code) !== undefined ? { code: p.code } : {}),
         ...(string(p.desc) !== undefined ? { desc: p.desc } : {}),
         ...(owner(p) ? { owner: owner(p) } : {}),
+        ...(string(p.approvalState) !== undefined ? { approvalState: p.approvalState } : {}),
+        ...(string(p.investmentStart) !== undefined ? { investmentStart: p.investmentStart } : {}),
+        ...(string(p.investmentEnd) !== undefined ? { investmentEnd: p.investmentEnd } : {}),
       })).filter((p) => p.id !== "")
       return { ...base, ...(grid ? { grid } : {}), lines, projects }
     }
@@ -231,6 +238,9 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
   const rates = rows(current?.fx).map((r) => ({
     id: id(r.id), cur: text(r.cur), rate: typeof r.rate === "string" ? r.rate : money(r.rate),
     revision: revision(view, id(current?.id) + ":fx:" + id(r.id)),
+    ...(string(r.sourceRef) !== undefined ? { sourceRef: r.sourceRef } : {}),
+    ...(string(r.provider) !== undefined ? { provider: r.provider } : {}),
+    ...(string(r.observedAt) !== undefined ? { observedAt: r.observedAt } : {}),
   })).filter((r) => r.id !== "")
   const raw = object(current?.summary).warnings
   const warnings = Array.isArray(raw) ? raw.filter((v): v is string => typeof v === "string") : []
