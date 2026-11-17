@@ -159,7 +159,7 @@ export function applySfAdminChange(input: {
 }
 
 const htmlEscape = (value: string) => esc(value)
-const input = (name: string, value: string) =>
+const hiddenField = (name: string, value: string) =>
   '<input type="hidden" name="' + htmlEscape(name) + '" value="' + htmlEscape(value) + '">'
 const checklist = (name: string, choices: readonly string[], current: readonly string[]) =>
   '<div class="sf-checkgrid">' + choices.map((value) =>
@@ -249,8 +249,8 @@ export function renderSfAdminAccess(input: {
       (selected === group.id ? ' selected' : '') + '>' +
       htmlEscape(group.name + (group.team ? " (Teams)" : " (grupo)") + " — " + group.id) + '</option>').join("")
     return '<tr><td>' + htmlEscape(row.surface) + '</td><td>' + htmlEscape(row.role) + '</td><td>' +
-      '<form method="post" action="' + mount + '/admin/access">' + input("action", "group") + input("surface", row.surface) +
-      input("role", row.role) + input("version", String(version)) + '<label class="sr-only" for="sf-group-' +
+      '<form method="post" action="' + mount + '/admin/access">' + hiddenField("action", "group") + hiddenField("surface", row.surface) +
+      hiddenField("role", row.role) + hiddenField("version", String(version)) + '<label class="sr-only" for="sf-group-' +
       htmlEscape(row.surface + "-" + row.role.replaceAll(" ", "-")) + '">Grupo atribuído a ' + htmlEscape(row.role) + '</label>' +
       '<select id="sf-group-' + htmlEscape(row.surface + "-" + row.role.replaceAll(" ", "-")) + '" name="group">' +
       '<option value=""' + (!selected ? ' selected' : '') + '>Sem grupo atribuído</option>' +
@@ -307,7 +307,7 @@ export function renderSfAdminAccess(input: {
 }
 
 function inputField(action: string, id: string, version: number) {
-  return input("action", action) + input("principalRef", id) + input("version", String(version))
+  return hiddenField("action", action) + hiddenField("principalRef", id) + hiddenField("version", String(version))
 }
 
 /** Bounded, browser-native form submission; CSRF + supreme membership are checked by the mounted handler. */
