@@ -26,7 +26,7 @@ export function createSfDocumentHost(input: {
   verifyFieldSchema: DocumentEvidenceHost["verifyFieldSchema"]
   operationIdentity: DocumentEvidenceHost["operationIdentity"]
   confirmDocument: DocumentEvidenceHost["confirmDocument"]
-  rejectDocument: DocumentEvidenceHost["rejectDocument"]
+  rejectDocument?: DocumentEvidenceHost["rejectDocument"]
   createId: DocumentEvidenceHost["createId"]
   now: DocumentEvidenceHost["now"]
 }) {
@@ -54,7 +54,11 @@ export function createSfDocumentHost(input: {
     if (record.status !== "ok" || record.value.evidence.ref.target.documentId !== documentId) return { status: "unavailable", accessRevision: context.binding.accessRevision }
     return { status: "ok", snapshot: record.value.snapshot }
   }, documents, parser)
-  const capability: DocumentEvidenceHost = { ...input, documents, parser, reader }
+  // Older direct document hosts may not compose a rejection grant; fail closed.
+  const capability: DocumentEvidenceHost = {
+    ...input, documents, parser, reader,
+    rejectDocument: input.rejectDocument ?? (async () => false),
+  }
   return {
     evidenceHost: capability,
     documents,
