@@ -57,8 +57,7 @@ vault=kv-orchsf-2611162127
 secret_name=entra-client-secret
 scratch="$(mktemp -d /run/orchestra-sf-kv.XXXXXXXX)"
 chmod 0700 "$scratch"
-next=""
-cleanup() { [[ -z "$next" ]] || rm -f -- "$next"; rm -rf -- "$scratch"; }
+cleanup() { rm -rf -- "$scratch"; }
 trap cleanup EXIT
 curl --noproxy '*' --proto '=http' --fail --silent --show-error \
   --connect-timeout 3 --max-time 15 -H 'Metadata: true' \
@@ -87,13 +86,54 @@ if not value.endswith(b"\n") or not 1 <= len(value[:-1]) <= 4096 or \
    any(ch < 33 or ch > 126 for ch in value[:-1]):
     raise SystemExit("SF_PRIVATE_CREDENTIAL_FORMAT_INVALID")
 PY
-next="$(mktemp "$config_dir/.client-secret.XXXXXXXX")"
-cp -- "$scratch/value" "$next"
-chown "$uid:$gid" "$next"
-chmod 0600 "$next"
-sync -f "$next"
-mv -T -- "$next" "$dest"
-next=""
-[[ ! -L "$dest" && "$(stat -c %u:%g:%a:%h -- "$dest")" == "$uid:$gid:600:1" ]] ||
-  fail "materialized secret identity/mode mismatch"
+# Never trust a pathname under a user-writable directory with root cp/chown.
+# Open the directory once with O_NOFOLLOW, create via openat(O_EXCL|O_NOFOLLOW)
+# and renameat in that SAME directory; no symlink race to a root-owned path.
+python3 - "$scratch/value" "$config_dir" "$uid" "$gid" <<'PY'
+import os
+from pathlib import Path
+import secrets
+import stat
+import sys
+source, directory, uid_text, gid_text = sys.argv[1:]
+uid, gid = int(uid_text), int(gid_text)
+data = Path(source).read_bytes()
+dfd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+name = ".client-secret." + secrets.token_hex(16)
+created = False
+try:
+    st = os.fstat(dfd)
+    if not stat.S_ISDIR(st.st_mode) or st.st_uid != uid or st.st_gid != gid or stat.S_IMODE(st.st_mode) != 0o700:
+        raise SystemExit("SF_CONFIG_DIR_IDENTITY_CHANGED")
+    try:
+        previous = os.stat("client-secret.txt", dir_fd=dfd, follow_symlinks=False)
+    except FileNotFoundError:
+        previous = None
+    if previous is not None and (not stat.S_ISREG(previous.st_mode) or previous.st_uid != uid or
+                                 previous.st_gid != gid or previous.st_nlink != 1 or
+                                 stat.S_IMODE(previous.st_mode) != 0o600):
+        raise SystemExit("SF_EXISTING_CREDENTIAL_UNSAFE")
+    fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=dfd)
+    created = True
+    with os.fdopen(fd, "wb") as out:
+        out.write(data)
+        out.flush()
+        os.fchown(out.fileno(), uid, gid)
+        os.fchmod(out.fileno(), 0o600)
+        os.fsync(out.fileno())
+    os.replace(name, "client-secret.txt", src_dir_fd=dfd, dst_dir_fd=dfd)
+    created = False
+    os.fsync(dfd)
+    check = os.open("client-secret.txt", os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=dfd)
+    try:
+        st = os.fstat(check)
+        if not stat.S_ISREG(st.st_mode) or st.st_uid != uid or st.st_gid != gid or st.st_nlink != 1 or stat.S_IMODE(st.st_mode) != 0o600:
+            raise SystemExit("SF_MATERIALIZED_CREDENTIAL_UNSAFE")
+    finally:
+        os.close(check)
+finally:
+    if created:
+        os.unlink(name, dir_fd=dfd)
+    os.close(dfd)
+PY
 printf '%s\n' 'SF_KV_SECRET_PRESTART_OK (materialized 0600; no value displayed)'
