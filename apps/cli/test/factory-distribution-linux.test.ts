@@ -1,14 +1,22 @@
 import { expect, test } from "bun:test"
-import { createHash } from "node:crypto"
+import { createHash, randomUUID } from "node:crypto"
 import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises"
-import { tmpdir } from "node:os"
+import { tmpdir, userInfo } from "node:os"
 import { pathToFileURL } from "node:url"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+import { createOperatorIdentity } from "../../../modules/sucafina/Sucafinav1/runtime/operator-identity.ts"
+import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
+import { createSfSourceScopeProjector } from "../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+import { createSfProductAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+import { Location } from "@orchestra/core/location"
+import { AbsolutePath } from "@orchestra/core/schema"
+import { createSfBusinessServices } from "../src/sucafina-product/business-services.ts"
 import { createCurrentChoiceFence, isCurrentChoiceFence } from "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { createSfCurrentChoiceServices } from "../src/sucafina-product/current-choice-services.ts"
 import { prepareOperatorAccess } from "../../../modules/sucafina/Sucafinav1/local/enroll.ts"
 import path from "node:path"
-import { prepareLocalConfiguration } from "../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
+import { loadLocalConfiguration, prepareLocalConfiguration } from "../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
 import { archiveDistribution, prepareDistribution, verifyDistribution } from "../script/distribution-payload"
 import { prepareNpmDistribution } from "../script/distribution-npm"
 import { verifyFactoryPackageReceipt } from "../script/factory-receipt-check"
@@ -196,10 +204,10 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const config = await prepareLocalConfiguration(privateDir)
     // An unconfigured /status never builds the decisions host. Activate a real
     // local operator so the CLI/factory identity split fails during composition.
-    await prepareOperatorAccess(config, true) // Activate the real owner profile before boot.
+    const enrollment = await prepareOperatorAccess(config, true) // Activate the real owner profile before boot.
     const env = {
       ...Object.fromEntries(Object.entries(process.env).filter(([key]) =>
-        ["PATH", "LANG", "LC_ALL", "TZ"].includes(key))),
+        ["PATH", "LANG", "LC_ALL", "TZ", "USER", "LOGNAME"].includes(key))),
       HOME: privateDir,
       XDG_DATA_HOME: path.join(privateDir, "host-data"),
       XDG_CONFIG_HOME: path.join(privateDir, "host-config"),
@@ -222,8 +230,9 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const logs: string[] = []
     const collect = (stream: ReadableStream<Uint8Array>) =>
       new Response(stream).text().then((output) => { logs.push(output.slice(-5000)) }).catch(() => undefined)
-    const drains = [collect(child.stdout as ReadableStream<Uint8Array>),
-      collect(child.stderr as ReadableStream<Uint8Array>)]
+    if (!(child.stdout instanceof ReadableStream) || !(child.stderr instanceof ReadableStream))
+      throw new Error("SF_FACTORY_PROCESS_LOG_PIPES_REQUIRED")
+    const drains = [collect(child.stdout), collect(child.stderr)]
     let response: Response | undefined
     for (let attempt = 0; attempt < 120; attempt++) {
       if (child.exitCode !== null) break
@@ -264,6 +273,98 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     })
     expect(currentChoice.status).toBe(303)
     expect(currentChoice.headers.get("location")).toContain("current-choice")
+    // Redeem the genuine one-time, owner-only enrollment in the exact persisted
+    // business-local SQLite store. The extracted compiled process must recognize
+    // that encrypted session on the wire; no forged cookie or test auth adapter.
+    const loaded = await loadLocalConfiguration(config)
+    if (loaded.config.authentication !== "local-operator" || !loaded.config.localOperator)
+      throw new Error("SF_FACTORY_OPERATOR_ACTIVATION_UNAVAILABLE")
+    const html = await readFile(enrollment.artifact, "utf8")
+    const navigation = html.match(/location\.replace\(("[^\n]+")\)/)?.[1]
+    if (!navigation) throw new Error("SF_FACTORY_OPERATOR_PRIVATE_HANDOFF_MISSING")
+    const destination: unknown = JSON.parse(navigation)
+    if (typeof destination !== "string") throw new Error("SF_FACTORY_OPERATOR_HANDOFF_INVALID")
+    const loginUrl = new URL(destination)
+    if (loginUrl.origin !== loaded.config.origin || loginUrl.pathname !== "/sucafina/auth/local" ||
+      !/^[a-f0-9]{64}$/.test(loginUrl.searchParams.get("code") ?? ""))
+      throw new Error("SF_FACTORY_OPERATOR_HANDOFF_UNTRUSTED")
+    const credentials = await openLocalStore(path.join(privateDir, "business-local"))
+    let cookie: string
+    try {
+      const identity = createOperatorIdentity({
+        origin: loaded.config.origin, mount: loaded.config.mount,
+        operator: { ...loaded.config.localOperator, name: userInfo().username },
+        key: loaded.keys.session, secrets: credentials.secrets,
+      })
+      // This canonical consumer executes the same single-use encrypted exchange
+      // as /auth/local. The deployed binary then independently authenticates it.
+      const redeemed = await identity.handle(new Request(loginUrl))
+      expect(redeemed?.status).toBe(303)
+      const setCookie = redeemed?.headers.get("set-cookie")
+      if (!setCookie) throw new Error("SF_FACTORY_OPERATOR_SESSION_MISSING")
+      cookie = setCookie.split(";")[0]!
+      expect(await identity.person(new Request("http://localhost:4110/sucafina/dashboard", {
+        headers: { cookie },
+      }))).toMatchObject({ id: `macos:${loaded.config.localOperator.installationId}:${loaded.config.localOperator.uid}` })
+    } finally { await credentials.dispose() }
+    const authenticatedDashboard = await fetch("http://localhost:4110/sucafina/dashboard", {
+      headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
+    })
+    expect(authenticatedDashboard.status).toBe(200)
+    // A virgin installation has no C08 decision state. Author the first case
+    // using the compiled installation's real authenticated human command,
+    // never by writing raw SQLite, bypassing authorization, or forging a fence.
+    const objective = "Installed factory authenticated fence witness"
+    const created = await fetch("http://localhost:4110/sucafina/dashboard?sf=workbench-command", {
+      method: "POST", redirect: "manual", signal: AbortSignal.timeout(15000),
+      headers: { cookie, origin: "http://localhost:4110", "content-type": "application/json",
+        "idempotency-key": randomUUID() },
+      body: JSON.stringify({ operation: "sf_case_draft", input: {
+        objective, horizon: { start: "2027-01-01", end: "2027-12-31" },
+        currency: "USD", criteria: ["Business continuity"], sourceRefs: [],
+      } }),
+    })
+    const createdBody: unknown = await created.json()
+    if (created.status !== 200)
+      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_CREATION_FAILED " + JSON.stringify({
+        status: created.status, result: createdBody,
+      }))
+    expect(createdBody).toMatchObject({ status: "ok", value: { objective, currency: "USD" } })
+    // The public workbench response intentionally does not expose an identity
+    // receipt in every transport. The read must locate the sole persisted case
+    // by its owner-authored title, and independently validate its opaque ref.
+    const authenticatedChoice = await fetch("http://localhost:4110" + currentChoiceEndpoint, {
+      headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
+    })
+    const currentChoiceBody: unknown = await authenticatedChoice.json()
+    if (authenticatedChoice.status !== 200)
+      throw new Error("SF_FACTORY_AUTHENTICATED_CHOICE_FAILED " + JSON.stringify({
+        status: authenticatedChoice.status, result: currentChoiceBody,
+      }))
+    // sf_case_read, real product state and WeakSet-registered current-choice
+    // fence are executed by the extracted CLI against an actual human case.
+    expect(currentChoiceBody).toMatchObject({ status: "ok", value: { cases: [
+      { title: objective, version: 1 },
+    ] } })
+    if (!currentChoiceBody || typeof currentChoiceBody !== "object" ||
+      !("value" in currentChoiceBody) || !currentChoiceBody.value ||
+      typeof currentChoiceBody.value !== "object" ||
+      !("cases" in currentChoiceBody.value) || !Array.isArray(currentChoiceBody.value.cases))
+      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_LIST_UNAVAILABLE")
+    const observedCases = currentChoiceBody.value.cases
+    expect(observedCases).toHaveLength(1)
+    const observed = observedCases[0]
+    if (!observed || typeof observed !== "object" || !("ref" in observed) ||
+      typeof observed.ref !== "string" || observed.ref.length === 0)
+      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_REFERENCE_UNAVAILABLE")
+    expect(observed.ref).toMatch(/^[A-Za-z0-9:._%-]+$/)
+    const authenticatedChoiceState = currentChoiceBody !== null && typeof currentChoiceBody === "object" &&
+      "status" in currentChoiceBody ? currentChoiceBody.status : undefined
+    console.info("SF_FACTORY_CURRENT_CHOICE_AUTHENTICATED " + JSON.stringify({
+      dashboardStatus: authenticatedDashboard.status, creationStatus: created.status,
+      currentChoiceStatus: authenticatedChoice.status, state: authenticatedChoiceState,
+      observedCases: 1, caseMatchesHumanCreation: true,
+    }))
     // Re-read the real checkout HEAD immediately before certifying the archive.
     // The success receipt MUST be rejected if the source branch changed in-flight.
     const runIdentity = verifiedRunIdentity()
@@ -293,6 +394,9 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       authentication: "local-operator", loginLandingStatus: authLanding.status,
       dashboardGateStatus: dashboard.status,
       currentChoiceEndpoint, currentChoiceGateStatus: currentChoice.status,
+      authenticatedDashboardStatus: authenticatedDashboard.status,
+      authenticatedCurrentChoiceStatus: authenticatedChoice.status,
+      authenticatedCurrentChoiceState: authenticatedChoiceState,
       origin: "http://localhost:4110",
       extractedOutsideCheckout: true,
     }
@@ -323,7 +427,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const receiptFile = path.join(evidenceDir, "factory-package-receipt.json")
     const genuineReceiptBytes = await readFile(receiptFile)
     try {
-      await writeFile(receiptFile, JSON.stringify({ ...receipt, currentChoiceGateStatus: 503 }) + "\n")
+      await writeFile(receiptFile, JSON.stringify({ ...receipt, authenticatedCurrentChoiceStatus: 303 }) + "\n")
       await expect(verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity))
         .rejects.toThrow("SF_FACTORY_RECEIPT_QUALIFICATION_FIELDS_INVALID")
     } finally {
@@ -408,15 +512,30 @@ test("a real fence from a second bundled module fails the CLI's exact anti-forge
       identity: () => undefined,
       operationIdentity: () => undefined,
     }
-    const foreignFence = foreign.createCurrentChoiceFence(deps) as ReturnType<typeof createCurrentChoiceFence>
+    const foreignFence = foreign.createCurrentChoiceFence(deps)
     expect(foreign.isCurrentChoiceFence(foreignFence)).toBe(true)
     expect(isCurrentChoiceFence(foreignFence)).toBe(false)
-    // Deliberately unreachable collaborators: the real service must reject
-    // the valid-but-foreign fence *before* touching authority or business.
-    expect(() => createSfCurrentChoiceServices({
-      authority: undefined as never, business: undefined as never,
-      fence: foreignFence, proposalCoverageWrites: new WeakSet(),
-    })).toThrow("SF_CURRENT_CHOICE_REAL_FENCE_REQUIRED")
+    // Real authority and business objects: no fabricated collaborator types or
+    // undefined casts. The service still must reject a foreign fence at entry.
+    const persistence = createSfSourcePersistence({ persistence: driver,
+      enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => "2026-11-17T00:00:00Z"), createId: randomUUID })
+    const authority = createSfProductAuthority({
+      identity: () => ({ installationId: "fence-test", hostId: "fence-host", projectId: "fence-project",
+        location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
+      installationId: "fence-test", origin: "https://fence.test", policyVersion: "fence-test-policy",
+      persistence, authenticate: async () => null,
+      environment: async () => ({ at: "2026-11-17T00:00:00Z", id: randomUUID, directory: [] }),
+      grants: [], createId: randomUUID, now: Date.now,
+      commandIdentity: async () => randomUUID(), inspectSession: async () => undefined,
+      verifySelection: async () => false, verifySkillReceipt: async () => false,
+      providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
+    })
+    const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet() })
+    try {
+      expect(() => createSfCurrentChoiceServices({
+        authority, business, fence: foreignFence, proposalCoverageWrites: new WeakSet(),
+      })).toThrow("SF_CURRENT_CHOICE_REAL_FENCE_REQUIRED")
+    } finally { business.dispose() }
     const owned = createCurrentChoiceFence(deps)
     expect(isCurrentChoiceFence(owned)).toBe(true)
     expect(isCurrentChoiceFence({ ...owned })).toBe(false)
