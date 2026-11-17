@@ -92,7 +92,9 @@ test("operations pages normalize visible technical labels while retaining exact 
 })
 
 test("planner chart has keyed colors, visible months and USD scale, preserves signed amounts and closed-month zero rules", () => {
-  const summary = { budget: [120, -60, ...Array(10).fill(0)], actual: Array(12).fill(0), outlook: [100, -60, ...Array(10).fill(0)], total: 60, actualYTD: 0, fullYear: 40 }
+  // Domain totals alone do not establish an observed actual: supply genuine line-level evidence.
+  const observed = [0, ...Array(11).fill(null)]
+  const summary = { budget: [120, -60, ...Array(10).fill(0)], actual: observed, outlook: [100, -60, ...Array(10).fill(0)], lines: [{ a: observed, actual: observed, cur: "USD" }], total: 60, actualYTD: 0, fullYear: 40 }
   const before = structuredClone(summary)
   const html = planner(summary)!
   const chart = figure(html, monthlyTitle)
@@ -103,6 +105,34 @@ test("planner chart has keyed colors, visible months and USD scale, preserves si
   expect(chart).not.toContain("Actual 2:")
   expect(chart).toContain("Budget 1: $120")
   expect(chart).toContain("Budget 2: -$60")
+  expect(summary).toEqual(before)
+})
+
+test("planner actual chart proves missing versus observed zero versus signed recorded actual across close boundary", () => {
+  // A numeric domain total is NOT sufficient when no contributing line was observed.
+  const withoutEvidence = { budget: [120, ...Array(11).fill(0)], actual: [0, ...Array(11).fill(null)], outlook: [] }
+  const missing = figure(planner(withoutEvidence), monthlyTitle)
+  expect(missing).not.toContain('data-planner-series="actual"')
+  expect(missing).not.toContain("Actual 1: $0")
+
+  // Month 1 is closed and observed zero; month 2 is an open recorded negative;
+  // month 3 is an open observed zero; month 4 has a numeric domain value but
+  // is missing line-level proof and must not be silently converted into zero.
+  const domain = [0, -25, 0, 0, ...Array(8).fill(null)]
+  const observed = [0, -25, 0, null, ...Array(8).fill(null)]
+  const summary = { ...withoutEvidence, actual: domain, lines: [{ cur: "USD", a: observed, actual: observed }] }
+  const before = structuredClone(summary)
+  const chart = figure(planner(summary), monthlyTitle)
+  const markers = [...chart.matchAll(/<circle\b[^>]*data-planner-series="actual"[^>]*>[\s\S]*?<\/circle>/g)].map((match) => match[0])
+  expect(markers).toHaveLength(3)
+  expect(markers[0]).toContain('data-month="1"')
+  expect(markers[0]).toContain('fill="#b54a22"')
+  expect(markers[0]).toContain("Actual 1: $0")
+  expect(markers[1]).toContain('data-month="2"')
+  expect(markers[1]).toContain("Actual 2: -$25")
+  expect(markers[2]).toContain('data-month="3"')
+  expect(markers[2]).toContain("Actual 3: $0")
+  expect(chart).not.toContain("Actual 4:")
   expect(summary).toEqual(before)
 })
 

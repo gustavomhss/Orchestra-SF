@@ -159,10 +159,11 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
 
   const before = await f.snapshot("procurement")
   const denied = await f.post(first, "save", { pr: { title: "ATTACKER-REPLACEMENT" } }, secondId, 1)
-  expect(denied.status).toBe(403)
+  // Inaccessible records must be indistinguishable from absent records, regardless of version.
+  expect(denied.status).toBe(404)
   expect(await denied.text()).not.toContain(secondTitle)
   const stale = await f.post(first, "save", { pr: { title: "ATTACKER-STALE" } }, secondId, 0)
-  expect(stale.status).toBe(409)
+  expect(stale.status).toBe(404)
   const conflict = await stale.text()
   expect(conflict).not.toContain(secondTitle)
   expect(conflict).not.toContain("stored")
