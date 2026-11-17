@@ -1,5 +1,8 @@
 # A9 / F04–AM | Runbook fail-closed (W1 preparado; execução W4 NÃO REALIZADA)
 
+> **ADENDO OPERACIONAL (2026-11-16):** este runbook W1 preserva o inventário histórico. Para as instruções executáveis e os paths reais dos dois produtores, usar **sf/proofs/F04-AM-C-GATE-CHECKLIST.md** (checklist único ordenado) e **sf/proofs/go-no-go-bundle.template.json**. A factory agora é **bin/local/entry.mjs** de um tar extraído fora do checkout, instalado como **/opt/orchestra-sf/releases/<C>/factory/installation.mjs** com os 24 assets em **/product/ai**; o CLI é **/opt/orchestra-sf/releases/<C>/bin/orchestra** originado de **orchestra-sf-linux-<C>**. Recibo factory com sourceSHA/checkoutSHA diferente de HEAD C ou do run.headSha é **RED**; não aceitar o PR run 43988598685 como qualificação de C. O workflow factory em Ubuntu não comprova Entra, F04, AM ou Azure. Dono: Daniel França; vault/MI já informados, execução de host e atores ainda BLOQUEADA.
+
+
 **Data:** 2026-11-16. **Nesta W1:** planejamento e inventário apenas. **AZ-04/05 = BLOCKED_BY_ENV**, U39/U40, AM01–AM06 e restore Linux = **NOT_RUN**. Documento NÃO autoriza VM, Entra, deploy, fabricação de manifesto nem execução. Ler `F04-AM-W1-MATRIX.md` para inventário das oito recipes, casos e testes sob lease.
 
 ## 1. Caminho crítico e critérios de entrada
