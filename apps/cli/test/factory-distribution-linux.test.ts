@@ -6,11 +6,37 @@ import path from "node:path"
 import { prepareLocalConfiguration } from "../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
 import { archiveDistribution, prepareDistribution, verifyDistribution } from "../script/distribution-payload"
 import { prepareNpmDistribution } from "../script/distribution-npm"
+import { requireSfFactoryRunIdentity } from "./fixture/factory-proof-identity"
 
 const target = "linux-x64-baseline"
 const cli = path.resolve(import.meta.dir, "..")
 const root = path.resolve(cli, "../..")
 const digest = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex")
+
+function actualCheckoutSha() {
+  const result = Bun.spawnSync(["git", "rev-parse", "--verify", "HEAD"], {
+    cwd: root, stdout: "pipe", stderr: "pipe",
+  })
+  const sha = result.stdout.toString().trim()
+  if (result.exitCode !== 0 || !/^[0-9a-f]{40}$/.test(sha))
+    throw new Error("SF_FACTORY_CHECKOUT_SHA_UNAVAILABLE")
+  return sha
+}
+
+function verifiedRunIdentity() {
+  const expectedSourceSHA = process.env.SF_FACTORY_EXPECTED_SOURCE_SHA ?? ""
+  return requireSfFactoryRunIdentity({
+    // The selected source SHA comes from the event's actual PR head (or push).
+    // Do not use GITHUB_SHA as sourceSHA for a pull_request: that is refs/pull/*/merge.
+    sourceSHA: expectedSourceSHA,
+    checkoutSHA: actualCheckoutSha(),
+    expectedSourceSHA,
+    workflowSHA: process.env.GITHUB_SHA ?? "",
+    eventName: process.env.SF_FACTORY_EVENT_NAME as "push" | "pull_request",
+    runID: process.env.SF_FACTORY_RUN_ID ?? "",
+    runAttempt: process.env.SF_FACTORY_RUN_ATTEMPT ?? "",
+  })
+}
 
 // Dedicated Ubuntu native lane, not a unit fixture. Builds a REAL compiled Bun
 // executable, archives, extracts, launches it and reads the real SF status route.
@@ -18,8 +44,14 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
   if (process.env.CI !== "true" || process.env.RUNNER_OS !== "Linux" ||
     process.platform !== "linux" || process.arch !== "x64" || process.versions.bun !== "1.3.14")
     throw new Error("SF_FACTORY_HOSTED_LINUX_X64_BUN_1_3_14_REQUIRED")
+  const initialIdentity = verifiedRunIdentity()
+  const tracked = Bun.spawnSync(["git", "status", "--porcelain", "--untracked-files=no"], {
+    cwd: root, stdout: "pipe", stderr: "pipe",
+  })
+  if (tracked.exitCode !== 0 || tracked.stdout.toString().trim())
+    throw new Error("SF_FACTORY_TRACKED_CHECKOUT_DIRTY")
   const workspace = await realpath(root)
-  const external = await mkdtemp(path.join(await realpath(tmpdir()), "sf-factory-package-"))
+  const external = await mkdtemp(path.join(await realpath(tmpdir()), `sf-factory-package-${initialIdentity.runID}-${initialIdentity.runAttempt}-`))
   if (external === workspace || external.startsWith(workspace + path.sep))
     throw new Error("SF_FACTORY_TEST_NOT_OUTSIDE_CHECKOUT")
   const privateDir = path.join(external, "private-installation")
@@ -156,8 +188,17 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const status: unknown = await response.json()
     expect(status).toMatchObject({ login: "not-configured", uploads: "unavailable-scanner-not-configured" })
     expect(child.exitCode).toBeNull()
+    // Re-read the real checkout HEAD immediately before certifying the archive.
+    // The success receipt MUST be rejected if the source branch changed in-flight.
+    const runIdentity = verifiedRunIdentity()
+    if (runIdentity.sourceSHA !== initialIdentity.sourceSHA ||
+      runIdentity.runID !== initialIdentity.runID || runIdentity.runAttempt !== initialIdentity.runAttempt)
+      throw new Error("SF_FACTORY_RUN_IDENTITY_CHANGED")
     const receipt = {
-      schema: "sf-factory-package-proof-v1", sourceSHA: process.env.GITHUB_SHA, version, target,
+      schema: "sf-factory-package-proof-v1", sourceSHA: runIdentity.sourceSHA,
+      checkoutSHA: runIdentity.checkoutSHA, expectedSourceSHA: runIdentity.expectedSourceSHA,
+      workflowSHA: runIdentity.workflowSHA, eventName: runIdentity.eventName,
+      runID: runIdentity.runID, runAttempt: runIdentity.runAttempt, version, target,
       archiveFile: "orchestra-sf-factory-linux-x64-baseline.tar.gz",
       archiveSha256: archive.sha256,
       manifestSha256: digest(await readFile(path.join(payload, "distribution.json"))),
@@ -169,7 +210,8 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       origin: "http://localhost:4110",
       extractedOutsideCheckout: true,
     }
-    const evidenceDir = path.join(root, "distribution-logs")
+    // An upload from another workflow run/attempt must never share this namespace.
+    const evidenceDir = path.join(root, "distribution-logs", `${runIdentity.runID}-${runIdentity.runAttempt}`)
     await mkdir(evidenceDir, { recursive: true })
     // Publish only qualification artifacts (not a GitHub release). Hashes pin
     // the same compressed bytes that were extracted and executed above.
@@ -194,3 +236,26 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     await rm(external, { recursive: true, force: true })
   }
 }, 1_800_000)
+
+test("factory receipt fails closed on divergent source SHA, PR synthetic merge SHA, dirty checkout and invalid run identity", () => {
+  const base = {
+    sourceSHA: "a".repeat(40),
+    checkoutSHA: "a".repeat(40),
+    expectedSourceSHA: "a".repeat(40),
+    workflowSHA: "b".repeat(40),
+    eventName: "pull_request" as const,
+    runID: "43988598685",
+    runAttempt: "1",
+  }
+  expect(requireSfFactoryRunIdentity(base).sourceSHA).toBe(base.checkoutSHA)
+  expect(() => requireSfFactoryRunIdentity({ ...base, sourceSHA: base.workflowSHA }))
+    .toThrow("SF_FACTORY_SOURCE_SHA_MISMATCH")
+  expect(() => requireSfFactoryRunIdentity({ ...base, checkoutSHA: "c".repeat(40) }))
+    .toThrow("SF_FACTORY_SOURCE_SHA_MISMATCH")
+  expect(() => requireSfFactoryRunIdentity({ ...base, expectedSourceSHA: "c".repeat(40) }))
+    .toThrow("SF_FACTORY_SOURCE_SHA_MISMATCH")
+  expect(() => requireSfFactoryRunIdentity({ ...base, eventName: "push" }))
+    .toThrow("SF_FACTORY_PUSH_WORKFLOW_SHA_MISMATCH")
+  expect(() => requireSfFactoryRunIdentity({ ...base, runID: "../other-run" }))
+    .toThrow("SF_FACTORY_RUN_IDENTITY_INVALID")
+})
