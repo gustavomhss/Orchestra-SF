@@ -71,7 +71,7 @@ test("Microsoft validator, CAS, audit from→to and anti-self-escalation on grou
   expect(self).toEqual({ ok: false, status: 403 })
   expect(snapshots.planner.audit).toHaveLength(0)
   expect(change(persons.Caio, { action: "group", surface: "dashboard", role: "contributor",
-    group: team.buyers, version: "0" })).toEqual({ ok: false, status: 503 })
+    group: team.buyers, version: "0" })).toEqual({ ok: false, status: 403 })
   expect(change(oid, { action: "group", surface: "dashboard", role: "superuser",
     group: team.buyers, version: "0" })).toEqual({ ok: false, status: 422 })
   expect(change(oid, { action: "group", surface: "dashboard", role: "contributor",
