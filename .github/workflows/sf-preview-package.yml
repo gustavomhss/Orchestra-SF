@@ -34,10 +34,12 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Prove Microsoft owner-configured roles and synthetic OIDC request admission
         working-directory: modules/sucafina
+        env:
+          ORCHESTRA_OMNI_CONTROL: declared
         run: |
           bun test --timeout 30000 \
             Sucafinav1/test/local-bootstrap.test.ts \
-            Sucafinav1/test/microsoft-routes.test.ts
+            Sucafinav1/test/microsoft-first-login.test.ts
       - name: Build real native Omni companions
         working-directory: native/omni
         run: |
