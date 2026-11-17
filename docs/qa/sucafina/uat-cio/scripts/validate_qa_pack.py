@@ -57,9 +57,13 @@ report={
  'surface_coverage':{x['surface_id']:dict(primary=x['primary_story'],adversarial=x['negative_story']) for x in surfaces},
  'routes_by_surface': dict(collections.Counter(x['surface_id'] for x in routes)),
  'e2e_by_priority':dict(collections.Counter(x['priority'] for x in e2e)),
- 'e2e_by_condition':dict(collections.Counter(x.get('condition','BASELINE') for x in e2e)),
+ 'e2e_by_condition':dict(collections.Counter(x.get('conditional_release_feature') or x.get('condition','BASELINE') for x in e2e)),
  'file_sha256':checksums, 'not_run':True,'executed_tests':0,'live_tenant_tests':0,'go_live_approved':False
 }
-(ROOT/'QA-TRACEABILITY.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+existing=json.loads((ROOT/'QA-TRACEABILITY.json').read_text(encoding='utf-8'))
+for key in ('surface_count','route_count','surface_stories','e2e_stories','distinct_stories','route_probes','coverage_journeys','e2e_by_priority','e2e_by_condition'):
+    require(existing[key]==report[key], f'QA trace mismatch for {key}')
+require(existing.get('file_sha256')==checksums, 'QA trace checksum mismatch: repair artifact in design builder; NEVER silently rewrite during a read-only validation')
+require(existing.get('v2_cold_review',{}).get('status')=='GAPS_IDENTIFIED_NOT_SOTA', 'V2 review marker missing')
 print('VALIDATED: 70 surfaces / 165 routes / 140+45=185 full stories / 825 manual route probes / 8 journeys / 25 projects / 10 suppliers')
 print('STATUS: static design validation ONLY; no product/tenant/VM acceptance executed.')

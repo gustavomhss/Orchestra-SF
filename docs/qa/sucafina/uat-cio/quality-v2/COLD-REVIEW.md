@@ -29,6 +29,7 @@ O alcance não deve ser medido por **185+825**. Muitas das 825 verificações pa
 | V2-10 | P1 | Os scores P0 são **39 de 45 histórias E2E**, sem critérios explícitos de impacto/residual risk. | Prioridade pouco discriminante; execução crítica não cabe na janela. | FMEA leve por impacto × frequência × detectabilidade, owner e tempo de execução; selecionar tranche de bloqueio real. |
 | V2-11 | P1 | Entidades sintéticas básicas (`Projeto IT Global XX`) pouco próximas de cotidiano multi-país do comércio internacional de café. | Experiência do CIO e situações de dados globais subrepresentadas. | Instalar cenários **hipotéticos** para interfaces logísticas/embarques, FX temporal, fuso, origem/destino e anomalias de qualidade, sem alegar existência de CTRM/SAP/Fabric integrado. |
 | V2-12 | P0 | Fonte do catálogo vem de SHA histórico; releases e PRs paralelos seguem mudando sem um diff semântico de cobertura. | Gate mede versão errada. | Diff de `manifest+route+registry+producer+policies` do C; todo novo comando/guard exige nova prova. |
+| V2-13 | P1 | O validador v1 dizia ser somente-leitura, mas reescrevia `QA-TRACEABILITY.json` e contava todas as 45 E2E como BASELINE. **Corrigido no V2 para validar sem mutar o relatório, e exigir hashes completos.** | Auditoria altera a própria evidência e oculta feature gates. | Validar sem efeitos colaterais; qualquer divergência aborta. |
 
 ## Critérios para qualificar como SOTA sem marketing
 
