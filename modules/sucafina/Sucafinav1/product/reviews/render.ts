@@ -17,6 +17,8 @@ import type { ArtifactResult } from "../../runtime/artifact.ts"
 
 /** The caller must obtain the review through an access-revalidating port immediately before rendering. */
 export async function renderPreservedReview(review: PreservedReview, options: { title: string; format: "pptx" | "docx"; sectionRefs: readonly string[] }): Promise<ArtifactResult> {
+  const trace = (stage: string) => { if (process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_" + stage) }
+  trace("RENDER_ENTER")
   if (new Set(options.sectionRefs).size !== options.sectionRefs.length) return { ok: false, status: 422, errors: ["Duplicate section."] }
   const sections = options.sectionRefs.map((id) => review.sections.find((section) => section.id === id))
   if (sections.some((section) => !section)) return { ok: false, status: 422, errors: ["Selected section is unavailable."] }
@@ -26,6 +28,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   })) return { ok: false, status: 422, errors: ["Section content is invalid."] }
   const comments = selectedReviewComments(review, options.sectionRefs, digestSfValue)
   if (!comments) return { ok: false, status: 422, errors: ["Comment association is invalid."] }
+  trace("RENDER_BEFORE_CONTENT")
   const content = sections.flatMap((section) => {
     if (!section) return []
     const projection = section.content as DomainProjection
@@ -101,9 +104,11 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   }) })
   const coverage = reviewCoverageLines(review, options.sectionRefs)
   if (coverage) content.unshift({ title: "Coverage", images: [], table: [], figureCaption: "", lines: [...coverage] })
+  trace("RENDER_CONTENT_DONE")
   const name = options.title.replace(/[^a-z0-9]+/gi, "_") || "Review"
   if (options.format === "docx") {
     const { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } = await import("docx")
+    trace("RENDER_DOCX_IMPORTED")
     const document = new Document({
       title: options.title,
       creator: "Sucafina",
@@ -177,7 +182,9 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
         ],
       }],
     })
+    trace("RENDER_DOCX_CONSTRUCTED")
     const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: new Uint8Array(await Packer.toBuffer(document)) }
+    trace("RENDER_DOCX_PACKED")
     sealReviewArtifact(artifact, review, options)
     return artifact
   }
