@@ -28,7 +28,6 @@ export async function prepareMicrosoftInstallation(
   // configuration only when no map exists, preserving explicit admin edits.
   const store = await openLocalStore(path.join(directory, "business-microsoft"))
   try {
-    for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
     await initializeConfiguredMicrosoftRoleMaps({ groups: config.groups, store })
   } finally {
     await store.dispose()
