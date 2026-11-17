@@ -68,13 +68,28 @@ export async function verifyDistributionOnDisk(distribution, ctx, root){
   const cliRaw=await privateBytes(path.join(privateDir,"build-receipt.json"),privateDir)
   const factoryRaw=await privateBytes(path.join(privateDir,"factory-package-receipt.json"),privateDir)
   const runRaw=await privateBytes(path.join(privateDir,"factory-run.json"),privateDir)
+  const installationRaw=await privateBytes(path.join(privateDir,"a7-installed-receipt.json"),privateDir)
   requireProof(sha256(cliRaw)===d.cli.buildReceiptSha256 &&
     sha256(factoryRaw)===d.factory.factoryReceiptSha256 &&
-    sha256(runRaw)===d.factory.githubRunSnapshotSha256,
+    sha256(runRaw)===d.factory.githubRunSnapshotSha256 &&
+    sha256(installationRaw)===d.installed.installationReceiptSha256,
     "F04_DISTRIBUTION_RAW_RECEIPT_DIGEST_MISMATCH")
   const cli=JSON.parse(cliRaw.toString("utf8"))
   const factory=JSON.parse(factoryRaw.toString("utf8"))
   const runMeta=JSON.parse(runRaw.toString("utf8"))
+  const installedReceipt=JSON.parse(installationRaw.toString("utf8"))
+  requireProof(installedReceipt.schema==="sf2h.a7-installed-distribution-pairing.v1" &&
+    installedReceipt.status==="A7_INSTALLED_BYTES_OBSERVED_NOT_F04_ACCEPTANCE" &&
+    installedReceipt.sourceSha===ctx.candidateSha &&
+    installedReceipt.treeSha===ctx.treeSha &&
+    installedReceipt.artifactSha256===ctx.artifactSha256 &&
+    installedReceipt.cliBinarySha256===d.cli.binarySha256 &&
+    installedReceipt.factoryBundleSha256===d.factory.bundleSha256 &&
+    installedReceipt.policyAssetCount===24 &&
+    installedReceipt.releaseRoot===d.installed.releaseRoot &&
+    typeof installedReceipt.observedUtc==="string" &&
+    Number.isFinite(Date.parse(installedReceipt.observedUtc)),
+    "F04_A7_INSTALLED_PRODUCER_PAIRING_RECEIPT_WRONG_C_OR_DIGEST")
   requireProof(runMeta.id===d.factory.runId &&
     runMeta.head_sha===ctx.candidateSha &&
     runMeta.run_attempt===d.factory.attempt &&
