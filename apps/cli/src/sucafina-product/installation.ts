@@ -8,6 +8,7 @@ import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerRespo
 import { limitRequestBody, requestBodyLength, RequestBodyError } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
 import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
 import type { SfFilesHostSources } from "./native-ui/files"
+import type { SfTrustedInstallationSource } from "../../../../packages/server/src/sucafina-installations.ts"
 import { mountSfFilesOriginalRoutes } from "./native-ui/files-routing"
 
 export type SfInstallation = {
@@ -16,6 +17,8 @@ export type SfInstallation = {
   dispose: () => void | Promise<void>
   host?: ReadonlyArray<Host.Contribution>
   transport?: MicrosoftTransport
+  /** Only the host-loaded installation may supply discovery, never a request. */
+  discovery?: SfTrustedInstallationSource
   /** Private owner-injected ORIGINAL producers; absence remains fail-closed. */
   nativeFiles?: SfFilesHostSources
 }
@@ -23,10 +26,13 @@ export type SfInstallation = {
 /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
 export async function loadSfInstallation(file: string, origin: string) {
   if (!path.isAbsolute(file) || new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ABSOLUTE_PATH_AND_ORIGIN_REQUIRED")
-  const { createSfHostRuntime } = await import("./host-context")
-  const module = await import(pathToFileURL(await realpath(file)).href)
+  const { createSfHostRuntime, createCurrentChoiceFence } = await import("./host-context")
+  const resolved = await realpath(file)
+  const module = await import(pathToFileURL(resolved).href)
   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
-  const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime })
+  // Owner-selected factory and its colocated, read-only AI policy tree; do not rely on bundler-rewritten import.meta.dir.
+  const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime, createCurrentChoiceFence,
+    sourceRoot: path.resolve(path.dirname(resolved), "../product/ai") })
   return composeSfInstallation(value, origin)
 }
 
@@ -52,9 +58,6 @@ export async function composeSfInstallation(value: unknown, origin: string) {
     const source = sanitized.source instanceof Request ? sanitized.source : undefined
     const url = source ? new URL(source.url) : Option.getOrUndefined(HttpServerRequest.toURL(sanitized))
     if (!url || url.origin !== requestOrigin) return rejectIncoming(incoming, 403)
-    const authTrace = process.env.SF_AUTH_DIAG === "1" &&
-      ["dashboard", "planner", "procurement"].some((surface) => url.pathname === `${installation.mount}/${surface}`)
-    if (authTrace) console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "sf-route", stage: "enter", path: url.pathname }))
     if ((incoming.method === "GET" || incoming.method === "HEAD") && (sanitized.headers["transfer-encoding"] !== undefined || Number(sanitized.headers["content-length"]) > 0)) return rejectIncoming(incoming, 400)
     const configured = yield* HttpServerRequest.MaxBodySize
     const maximum = Number(configured ?? 16 * 1024 * 1024)
@@ -162,7 +165,6 @@ export async function composeSfInstallation(value: unknown, origin: string) {
       },
       catch: (error) => error instanceof RequestBodyError ? error : "installation-unavailable" as const,
     }).pipe(Effect.catch((error) => Effect.succeed(error instanceof RequestBodyError ? bodyFailure(error.status) : new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", connection: "close" } }))))
-    if (authTrace) console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "sf-route", stage: "exit", status: response.status }))
     return HttpServerResponse.fromWeb(response)
   }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503, headers: { "cache-control": "no-store", "x-content-type-options": "nosniff", connection: "close" } }))))
   // The listener must install privacy before HttpRouter.serve, outside the request route.
