@@ -67,7 +67,7 @@ for (const palette of ["dark", "light"] as const) {
 
       const logo = sidebar.locator('.sucafina-logo img[data-slot="orchestra-brand-logo-' + (palette === "dark" ? "dark" : "light") + '"]').first()
       await expect(logo).toBeVisible()
-      expect(await logo.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+      expect(await logo.evaluate((element) => element instanceof HTMLImageElement ? element.naturalWidth : 0)).toBeGreaterThan(0)
       await page.evaluate(() => document.fonts.ready)
 
       // Only after authentic identity, installation, route, native frame and asset checks.

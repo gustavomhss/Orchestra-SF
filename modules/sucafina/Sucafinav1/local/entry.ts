@@ -123,7 +123,9 @@ export async function createConfiguredInstallation(
     }
   }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
-  await initializeAbsentSfProductState(store, randomUUID)
+  // Only the explicitly isolated, OS-owned scratch profile needs an empty native first-run state.
+  // Never materialize or migrate the corporate/Microsoft product namespace before admission.
+  if (operator) await initializeAbsentSfProductState(store, randomUUID)
   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })

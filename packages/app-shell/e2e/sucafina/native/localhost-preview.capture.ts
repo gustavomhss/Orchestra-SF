@@ -2,6 +2,20 @@ import { chromium, expect } from "@playwright/test"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import path from "node:path"
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+}
+
+function contextOperation(body: unknown, resource: string, operationId: string): Record<string, unknown> | undefined {
+  const envelope = isRecord(body) ? body : undefined
+  const value = isRecord(envelope?.value) ? envelope.value : undefined
+  const availability: unknown[] = Array.isArray(value?.availability) ? value.availability : []
+  const chapter = availability.find((item) => isRecord(item) && item.resource === resource)
+  const operations: unknown[] = isRecord(chapter) && Array.isArray(chapter.operations) ? chapter.operations : []
+  const operation = operations.find((item) => isRecord(item) && item.operationId === operationId)
+  return isRecord(operation) ? operation : undefined
+}
+
 // Capture REAL native SF chapters against the locally running installed server.
 // No route interception, HTML stubs, fake SSO or synthetic UI components.
 // The installation is a dedicated local-operator scratch with no corporate data.
@@ -39,8 +53,8 @@ const candidates = selectedBody && typeof selectedBody === "object" &&
 if (selectedResponse.status !== 200 || candidates.length !== 1)
   throw new Error("SF_VISUAL_EXACT_INSTALLED_OWNER_REQUIRED_HTTP_" + selectedResponse.status +
     "_COUNT_" + candidates.length)
-const installed = candidates[0] as Record<string, unknown>
-if (installed.publicOrigin !== base || installed.mount !== "/sucafina" ||
+const installed = candidates[0]
+if (!isRecord(installed) || installed.publicOrigin !== base || installed.mount !== "/sucafina" ||
     typeof installed.projectId !== "string" || !installed.projectId ||
     typeof installed.installationId !== "string" || !installed.installationId ||
     typeof installed.hostId !== "string" || !installed.hostId ||
@@ -59,25 +73,14 @@ const contextResponse = await fetch(nativeContextURL, {
     Authorization: "Basic " + token, Accept: "application/json" },
 })
 const contextBody: unknown = await contextResponse.json().catch(() => undefined)
-const ctx = contextBody && typeof contextBody === "object" ? contextBody as Record<string, unknown> : {}
-const value = ctx.value && typeof ctx.value === "object" ? ctx.value as Record<string, unknown> : {}
-const availability = Array.isArray(value.availability) ? value.availability : []
-const cap01 = availability.find((item: unknown) => item && typeof item === "object" &&
-  "resource" in item && item.resource === "CAP01") as
-  { operations?: { operationId: string; state: string; operational: boolean }[] } | undefined
-const op = cap01?.operations?.find((row) => row.operationId === "domain.page.CAP01")
-const home = availability.find((item: unknown) => item && typeof item === "object" &&
-  "resource" in item && item.resource === "home")
-const homeOps = home && typeof home === "object" && "operations" in home &&
-  Array.isArray(home.operations) ? home.operations : []
-const homeOp: unknown = homeOps.find((row: unknown) =>
-  row && typeof row === "object" && "operationId" in row && row.operationId === "projection.home")
-const homeField = (key: "state" | "operational" | "reason") =>
-  homeOp && typeof homeOp === "object" && key in homeOp ? homeOp[key] : undefined
+const ctx = isRecord(contextBody) ? contextBody : undefined
+const op = contextOperation(contextBody, "CAP01", "domain.page.CAP01")
+const homeOp = contextOperation(contextBody, "home", "projection.home")
+const homeField = (key: "state" | "operational" | "reason") => homeOp?.[key]
 console.log("SF_VISUAL_DIRECT_HOME_STATUS_" + String(homeField("state") ?? "absent") +
   "_OPERATIONAL_" + String(homeField("operational") ?? false) + "_REASON_" + String(homeField("reason") ?? "none"))
 console.log("SF_VISUAL_DIRECT_CONTEXT_HTTP_" + contextResponse.status + "_STATUS_" +
-  String(ctx.status ?? "unparsed") + "_CAP01_" + String(op?.state ?? "absent") +
+  String(ctx?.status ?? "unparsed") + "_CAP01_" + String(op?.state ?? "absent") +
   "_OPERATIONAL_" + String(op?.operational ?? false))
 const cases = [
   { id: "today", route: "/orchestra/sf-home", title: "Today" },
@@ -120,14 +123,9 @@ try {
           }).catch(() => diagnostics.push("discovery " + response.status() + " unreadable"))
         } else if (url.pathname === "/sucafina/api/ui/context") {
           void response.json().then((body: unknown) => {
-            const ctx = body && typeof body === "object" ? body as Record<string, unknown> : {}
-            const value = ctx.value && typeof ctx.value === "object" ? ctx.value as Record<string, unknown> : {}
-            const availability = Array.isArray(value.availability) ? value.availability : []
-            const cap01 = availability.find((item: unknown) =>
-              item && typeof item === "object" && "resource" in item && item.resource === "CAP01") as
-              { operations?: { operationId: string; state: string; operational: boolean }[] } | undefined
-            const op = cap01?.operations?.find((value) => value.operationId === "domain.page.CAP01")
-            diagnostics.push("ctx.context HTTP " + response.status() + " status=" + String(ctx.status) +
+            const ctx = isRecord(body) ? body : undefined
+            const op = contextOperation(body, "CAP01", "domain.page.CAP01")
+            diagnostics.push("ctx.context HTTP " + response.status() + " status=" + String(ctx?.status) +
               " CAP01=" + String(op?.state ?? "absent") + " operational=" + String(op?.operational ?? false))
           }).catch(() => diagnostics.push("ctx.context HTTP " + response.status() + " unreadable"))
         } else if (response.status() >= 400) diagnostics.push("HTTP " + response.status() + " " + url.pathname)

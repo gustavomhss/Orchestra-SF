@@ -19,7 +19,7 @@ import { showToast } from "@/utils/toast"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfContext, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
-import { createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
+import { createSfTransport, type SfTransport, type SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfDraft } from "../shared/draft"
@@ -386,7 +386,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   // Discovery already sends the selected ServerConnection's HTTP credentials.
   // Native F01/F02 reads must use that SAME connection, not an unauthenticated
   // global fetch. Never forward Basic to another origin or outside this mount.
-  const nativeFetch: typeof globalThis.fetch = (input, init) => {
+  const nativeFetch: SfTransportFetch = (input, init) => {
     const target = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url,
       window.location.href)
     if (!alignedOrigin || target.origin !== window.location.origin ||
