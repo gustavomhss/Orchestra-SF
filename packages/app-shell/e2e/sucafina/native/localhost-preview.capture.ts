@@ -48,7 +48,29 @@ if (installed.publicOrigin !== base || installed.mount !== "/sucafina" ||
   throw new Error("SF_VISUAL_SELECTED_OWNER_PROVENANCE_INVALID")
 console.log("SF_VISUAL_REAL_INSTALLED_SELECTION_OK")
 const owner = { server: base, project: installed.projectId, installation: installed.installationId }
+// Diagnostic ONLY: original producer admission, without exposing user/context contents.
+const nativeContextURL = new URL("/sucafina/api/ui/context", base)
+nativeContextURL.search = new URLSearchParams({
+  installationId: installed.installationId, projectId: installed.projectId, hostId: installed.hostId,
+}).toString()
+const contextResponse = await fetch(nativeContextURL, {
+  method: "GET", cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(15_000),
+  headers: { Cookie: cookie[1] + "=" + cookie[2],
+    Authorization: "Basic " + token, Accept: "application/json" },
+})
+const contextBody: unknown = await contextResponse.json().catch(() => undefined)
+const ctx = contextBody && typeof contextBody === "object" ? contextBody as Record<string, unknown> : {}
+const value = ctx.value && typeof ctx.value === "object" ? ctx.value as Record<string, unknown> : {}
+const availability = Array.isArray(value.availability) ? value.availability : []
+const cap01 = availability.find((item: unknown) => item && typeof item === "object" &&
+  "resource" in item && item.resource === "CAP01") as
+  { operations?: { operationId: string; state: string; operational: boolean }[] } | undefined
+const op = cap01?.operations?.find((row) => row.operationId === "domain.page.CAP01")
+console.log("SF_VISUAL_DIRECT_CONTEXT_HTTP_" + contextResponse.status + "_STATUS_" +
+  String(ctx.status ?? "unparsed") + "_CAP01_" + String(op?.state ?? "absent") +
+  "_OPERATIONAL_" + String(op?.operational ?? false))
 const cases = [
+  { id: "today", route: "/orchestra/sf-home", title: "Today" },
   { id: "dashboard", route: "/orchestra/sf-dashboard/executive", title: "Executive Dashboard" },
   { id: "planner", route: "/orchestra/sf-planner/overview", title: "Overview" },
   { id: "procurement", route: "/orchestra/sf-procurement/contracts", title: "Vendor Contracts" },
