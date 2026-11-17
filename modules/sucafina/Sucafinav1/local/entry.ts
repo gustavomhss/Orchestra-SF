@@ -34,6 +34,8 @@ import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
+import { microsoftPolicy } from "../runtime/microsoft-policy.ts"
+import { applySfAdminChange, readSfAdminForm, renderSfAdminAccess, sfSupremeRoleMap, SF_SUPREME_ADMIN_GROUP_ID } from "../runtime/admin-surface.ts"
 import type { EntraOptions } from "../runtime/local-contract.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
@@ -83,6 +85,7 @@ export async function createConfiguredInstallation(
   microsoft?: Awaited<ReturnType<typeof prepareMicrosoftInstallation>>,
 ) {
   const config = loaded.config
+  const sfAdminConfiguration = microsoft ? { groups: microsoft.loaded.config.groups, grants: microsoft.grants } : undefined
   if (context.origin !== config.origin) throw new Error("Installation origin mismatch")
   const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
   const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
@@ -153,6 +156,9 @@ export async function createConfiguredInstallation(
     nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
     isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
     persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+    ...(sfAdminConfiguration ? { grantsForSnapshot: (dashboard: import("../runtime/contract.ts").Snapshot) =>
+      microsoftPolicy({ groups: sfAdminConfiguration.groups,
+        grants: dashboard.data.sfAdminGrants === undefined ? sfAdminConfiguration.grants : dashboard.data.sfAdminGrants }).grants } : {}),
     grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
       operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : []) })
@@ -180,6 +186,7 @@ export async function createConfiguredInstallation(
       return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a><a href="?sf=current-choice">Escolha vigente</a>`), surface)
     },
     maxJsonBytes: 2 * 1024 * 1024,
+    allowGroupConfiguration: !microsoft,
     assets,
   }
   const business = createModule(config.mount, applicationServices)
@@ -265,6 +272,49 @@ export async function createConfiguredInstallation(
         return auth
       }
       await identity.prepare(request)
+      // This is a separate installation-owned admin route, NOT a new surface
+      // fabricated inside the frozen 70-view native UI manifest.
+      if (microsoft && sfAdminConfiguration && url.pathname === config.mount + "/admin/access") {
+        if (!["GET", "HEAD", "POST"].includes(request.method))
+          return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST", "Cache-Control": "no-store" } })
+        // Fresh Entra /me/checkMemberGroups read on every request, not a roles
+        // claim, friendly name, client state or stale product admin mapping.
+        const supreme = await identity.authenticate(request, { surface: "dashboard", roleMap: sfSupremeRoleMap }).catch(() => null)
+        if (!supreme?.roles.some((role) => role.surface === "dashboard" && role.role === "admin"))
+          return new Response("Access denied", { status: 403, headers: { "Cache-Control": "no-store" } })
+        const directory = await identity.graphDirectory?.(request).catch(() => undefined)
+        if (!directory || !directory.users.some((person) => person.id === supreme.id && person.groupIds.includes(SF_SUPREME_ADMIN_GROUP_ID)))
+          return new Response("Microsoft directory unavailable", { status: 503, headers: { "Cache-Control": "no-store" } })
+        if (!store.transactionAll)
+          return new Response("Atomic installation policy store unavailable", { status: 503, headers: { "Cache-Control": "no-store" } })
+        if (request.method === "POST") {
+          const form = await readSfAdminForm(request)
+          if (!form) return new Response("Invalid admin form", { status: 422, headers: { "Cache-Control": "no-store" } })
+          const outcome = await store.transactionAll(async (snapshots) => {
+            const applied = applySfAdminChange({
+              snapshots, configured: sfAdminConfiguration, directory, principalRef: supreme.id, form, at: now(),
+            })
+            return { commit: applied.ok, value: applied }
+          }, { signal: request.signal }).catch(() => ({ ok: false as const, status: 503 as const }))
+          if (!outcome.ok) return new Response("Admin change rejected", {
+            status: outcome.status, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" },
+          })
+          return new Response(null, {
+            status: 303, headers: { "Cache-Control": "no-store", location: config.mount + "/admin/access" },
+          })
+        }
+        const html = await store.transactionAll(async (snapshots) => ({
+          commit: false, value: renderSfAdminAccess({
+            mount: config.mount, directory, snapshots, configured: sfAdminConfiguration, actorId: supreme.id,
+          }),
+        }), { signal: request.signal }).catch(() => undefined)
+        if (!html) return new Response("Installation policy unavailable", { status: 503, headers: { "Cache-Control": "no-store" } })
+        return new Response(request.method === "HEAD" ? null : html, {
+          headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer",
+            "Content-Security-Policy": htmlPolicy(html) },
+        })
+      }
       if (operator && (url.pathname === `${config.mount}/notifications` || url.pathname === `${config.mount}/backups`)) {
         if (!["GET", "HEAD", "POST"].includes(request.method)) return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST" } })
         const person = await identity.person(request)
@@ -338,6 +388,20 @@ export async function createConfiguredInstallation(
       if (nativeResponse) return nativeResponse
       const response = await presentationRequest.run(request, () => business(request))
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
+      // In the existing workbench chrome this link is *only* published after a
+      // fresh server-side supreme group check. Other actors have no link or route.
+      if (microsoft && response?.ok && request.method === "GET" &&
+        response.headers.get("content-type")?.includes("text/html") && !url.searchParams.has("download")) {
+        const supreme = await identity.authenticate(request, { surface: "dashboard", roleMap: sfSupremeRoleMap }).catch(() => null)
+        if (supreme?.roles.some((role) => role.surface === "dashboard" && role.role === "admin")) {
+          const original = await response.text()
+          const html = original.replace("<!--local-tools-->", '<a href="' + config.mount + '/admin/access" data-sf-admin-link>Administração de acessos</a>')
+          const headers = new Headers(response.headers)
+          headers.delete("content-length")
+          headers.set("Content-Security-Policy", htmlPolicy(html))
+          return new Response(html, { status: response.status, headers })
+        }
+      }
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
       return localChrome(response)
 
