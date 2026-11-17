@@ -1,0 +1,40 @@
+{
+  "version": "v2-review",
+  "status": "DESIGNED_NOT_EXECUTED",
+  "surfaces": 70,
+  "original_stories": 140,
+  "cross_domain_stories": 45,
+  "step_level_dossiers_added": 8,
+  "route_cases": 825,
+  "routes_static": 83,
+  "routes_dynamic": 82,
+  "all_70_primary_share_same_first_step": true,
+  "all_70_primary_share_same_last_step": true,
+  "all_70_negative_share_same_step_count": true,
+  "generic_route_case_variants": [
+    "CROSS_CONTEXT",
+    "LIVE_AUTHORIZED",
+    "MALFORMED_REF_OR_QUERY",
+    "REVOKED_GRANT",
+    "UNAUTHORIZED"
+  ],
+  "conditional_count": 11,
+  "e2e_by_condition": {
+    "BASELINE": 34,
+    "PR270_NOT_PROMOTED": 7,
+    "WHITE_LABEL_RELEASE_FEATURE_UNVERIFIED": 1,
+    "PR268_DRAFT_NOT_PROMOTED": 1,
+    "PLATFORM_CAPABILITY_DEPENDENT": 1,
+    "RELEASE_POLICY_OWNER_APPROVAL": 1
+  },
+  "execution_count": 0,
+  "operation_map_status": "STRUCTURAL_ONLY_306_UNVERIFIED",
+  "step_level_dossier_status": "NOT_RUN",
+  "required_closure": {
+    "producer_seeding": "BLOCKED_NOT_EXECUTABLE",
+    "operation_transition_coverage": "NOT_MEASURED",
+    "live_principals": "NOT_PROVED",
+    "new_release_sha": "NOT_PINNED",
+    "CI_and_vm": "NOT_PROVED"
+  }
+}
