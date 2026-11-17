@@ -223,8 +223,12 @@ function isWebSourceMap(file: string) {
 
 function requirePayload(captured: Captured, target: string, version: string) {
   // Reject a manually reconstructed or modified payload that reintroduces maps.
-  if ([...captured.keys()].some((file) => file.startsWith("bin/web/") && isWebSourceMap(file)))
-    throw new Error("Public web sourcemap forbidden")
+  for (const [file, asset] of captured) {
+    if (!file.startsWith("bin/web/")) continue
+    if (isWebSourceMap(file)) throw new Error("Public web sourcemap forbidden")
+    if (/\.(?:js|css)$/i.test(file) && /sourceMappingURL\s*=\s*data:/i.test(asset.bytes.toString("utf8")))
+      throw new Error(`Public web inline sourcemap forbidden: ${file}`)
+  }
   const tuple = requireTarget(target, version)
   const metadata = JSON.parse(captured.get("package.json")?.bytes.toString("utf8") ?? "null")
   if (!metadata || metadata.name !== `@humanguardrail/cli-${target}` || metadata.version !== version || JSON.stringify(metadata.os) !== JSON.stringify([tuple.os]) || JSON.stringify(metadata.cpu) !== JSON.stringify([tuple.arch]))
