@@ -3,9 +3,14 @@ from pathlib import Path
 import tempfile
 import unittest
 
+from runtime_campaign.control import (
+    build_exact_campaign,
+    verify_exact_campaign,
+)
 from runtime_campaign.prepare import (
     build_campaign,
     check_campaign,
+    digest,
     write_campaign,
 )
 
@@ -53,7 +58,8 @@ class RuntimeCampaignTests(unittest.TestCase):
 
     def test_builds_exact_campaign_and_verifies_every_job(self) -> None:
         inventory = self.inventory()
-        manifest, jobs = build_campaign(inventory, self.selection(inventory), max_parallel=8)
+        selection = self.selection(inventory)
+        manifest, jobs = build_exact_campaign(inventory, selection, max_parallel=8)
         self.assertEqual(manifest["story_count"], 94)
         self.assertEqual(len(jobs), 94)
         self.assertEqual(
@@ -66,7 +72,7 @@ class RuntimeCampaignTests(unittest.TestCase):
             root.mkdir()
             output = base / "private-campaign"
             write_campaign(output, manifest, jobs, root=root)
-            verified = check_campaign(output)
+            verified = verify_exact_campaign(output, inventory, selection)
             self.assertEqual(verified["campaign_id"], manifest["campaign_id"])
             self.assertEqual(verified["execution_status"], "NOT_RUN")
 
@@ -107,6 +113,34 @@ class RuntimeCampaignTests(unittest.TestCase):
             job_path.write_text(json.dumps(job), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "digest mismatch"):
                 check_campaign(output)
+
+    def test_rejects_coordinated_job_and_manifest_tampering(self) -> None:
+        inventory = self.inventory()
+        selection = self.selection(inventory)
+        manifest, jobs = build_exact_campaign(inventory, selection)
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            root = base / "repo"
+            root.mkdir()
+            output = base / "private-campaign"
+            write_campaign(output, manifest, jobs, root=root)
+            story_id = sorted(inventory)[0]
+            job_path = output / "jobs" / f"{story_id}.json"
+            job = json.loads(job_path.read_text(encoding="utf-8"))
+            job["source_story"]["title"] = "coordinated tamper"
+            job_path.write_text(json.dumps(job), encoding="utf-8")
+
+            manifest_path = output / "manifest.json"
+            changed_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            entry = next(item for item in changed_manifest["jobs"] if item["story_id"] == story_id)
+            entry["sha256"] = digest(job)
+            manifest_path.write_text(json.dumps(changed_manifest), encoding="utf-8")
+
+            # The low-level structural checker sees matching internal digests.
+            self.assertEqual(check_campaign(output)["story_count"], 94)
+            # The supported controller rebuilds from external reviewed inputs.
+            with self.assertRaisesRegex(ValueError, "canonical selection"):
+                verify_exact_campaign(output, inventory, selection)
 
     def test_refuses_to_store_campaign_inside_repository(self) -> None:
         inventory = self.inventory()

@@ -1,30 +1,29 @@
 # Runtime campaign for the 94 path-present model journeys
 
-This package closes the missing **execution-control layer** between the model-user-journey audit and the existing append-only UAT evidence controller.
+This package closes the missing **execution-control layer** between the model-user-journey audit and the append-only UAT evidence controller.
 
-The audit records an aggregate of 94 `PATH_PRESENT_RUNTIME_REQUIRED` journeys, but its Markdown report does not publish a machine-readable per-story membership list. This package therefore refuses to guess those IDs. A reviewer must supply an immutable classification receipt containing **exactly 94 unique story IDs**; only then does the builder produce runnable agent packets.
+The audit reports an aggregate of 94 `PATH_PRESENT_RUNTIME_REQUIRED` journeys, but it does not publish a machine-readable per-story membership list. The controller therefore refuses to guess those IDs. A cold-reviewed selection receipt must contain **exactly 94 unique story IDs** before any agent packets are produced.
 
-## What it does
+## Supported entrypoint
 
-`docs/qa/sucafina/uat-cio/scripts/runtime_campaign/prepare.py`:
+Use `docs/qa/sucafina/uat-cio/scripts/runtime_campaign/control.py` for both build and verification. `prepare.py` is the lower-level library; its structural checker alone is not the acceptance oracle.
+
+The controller:
 
 - reads the canonical 185 stories from `stories_70x2.jsonl` and `stories_e2e.jsonl`;
 - requires exact candidate commit, tree and installed artifact SHA-256;
-- requires exactly 94 unique stories, each explicitly classified `PATH_PRESENT_RUNTIME_REQUIRED` with an evidence reference;
-- rejects conditional-release stories and any story no longer in `DESIGNED_NOT_EXECUTED` source state;
-- emits one closed JSON job per story, preserving the original steps, expected outcomes, contraproofs and evidence requirements;
-- assigns deterministic waves with no overlap in surface, actor or fixture lease keys;
-- limits each wave to a configured parallelism cap;
-- permits only `PASSED_WITH_EVIDENCE`, `FAILED_PRODUCT`, `BLOCKED_CAPABILITY` or `BLOCKED_ENVIRONMENT` as eventual outcomes;
-- creates an `sf-uat-evidence-v1` template for later review and import through the existing `reconcile_execution.py` ledger;
-- refuses to write the campaign or evidence inside the repository;
-- verifies every job digest, wave mapping, lease collision and unexpected file before execution.
+- requires exactly 94 unique stories explicitly classified `PATH_PRESENT_RUNTIME_REQUIRED`;
+- rejects conditional-release stories, duplicates, unknown IDs, source-state drift and secret-bearing keys;
+- emits one closed JSON job per story with original steps, expected outcomes, contraproofs and evidence requirements;
+- creates deterministic waves with no overlap in surface, actor or fixture leases and bounded parallelism;
+- refuses to write campaign or evidence inside the checkout;
+- verifies structure, digests and exact equality with a fresh rebuild from the external reviewed selection and canonical source inventory.
 
 It **does not** open a browser, log in, seed data, grant authority, execute a story, update `MATRIX-185-STORIES.csv`, or claim a PASS.
 
 ## Classification input
 
-The private selection must validate against `runtime-campaign/selection.schema.json` and have this shape:
+The private selection validates against `runtime-campaign/selection.schema.json`:
 
 ```json
 {
@@ -44,19 +43,20 @@ The private selection must validate against `runtime-campaign/selection.schema.j
 }
 ```
 
-The `stories` array must contain exactly 94 entries. The example is intentionally incomplete and cannot pass validation by itself.
+The array must contain exactly 94 entries. The example is intentionally incomplete and cannot pass validation. The selection and its classification receipt remain external review inputs; this repository does not invent them.
 
 ## Build and verify
 
-Run only in an authorized operator environment, with the output path outside the checkout:
+Run only in an authorized operator environment. Keep selection, output and evidence outside Git:
 
 ```bash
-python3 docs/qa/sucafina/uat-cio/scripts/runtime_campaign/prepare.py build \
+python3 docs/qa/sucafina/uat-cio/scripts/runtime_campaign/control.py build \
   --selection /private/orchestra-sf/runtime-ready-94.json \
   --output /private/orchestra-sf/campaign-94 \
   --max-parallel 8
 
-python3 docs/qa/sucafina/uat-cio/scripts/runtime_campaign/prepare.py check \
+python3 docs/qa/sucafina/uat-cio/scripts/runtime_campaign/control.py check \
+  --selection /private/orchestra-sf/runtime-ready-94.json \
   --directory /private/orchestra-sf/campaign-94
 ```
 
@@ -67,11 +67,13 @@ manifest.json
 jobs/SF-....json
 ```
 
-`manifest.json` pins the candidate, tree, artifact, audit receipt, source inventory digest, selection digest, job digests and deterministic waves. The execution status is always `NOT_RUN` at preparation time.
+`manifest.json` pins the candidate, tree, artifact, classification receipt, source inventory digest, selection digest, job digests and deterministic waves. Preparation always records `execution_status: NOT_RUN`.
+
+The build command prints the manifest SHA-256. Preserve that value with the reviewed selection receipt. The check command does not trust a self-consistent manifest: it rebuilds the expected campaign from the supplied selection and current canonical story inventory, then requires byte-equivalent JSON objects for the manifest and every job.
 
 ## Evidence admission
 
-After an agent finishes one job, an independent reviewer must complete the generated `sf-uat-evidence-v1` record and keep raw screenshots, traces and authorization snapshots in secured storage. The sanitized record is then admitted through the existing command:
+After an agent finishes one job, an independent reviewer must complete the generated `sf-uat-evidence-v1` template. Raw screenshots, traces, authorization snapshots and private refs stay in secured storage. The sanitized record is admitted only through the existing append-only controller:
 
 ```bash
 python3 docs/qa/sucafina/uat-cio/scripts/reconcile_execution.py \
@@ -79,16 +81,17 @@ python3 docs/qa/sucafina/uat-cio/scripts/reconcile_execution.py \
   --evidence-ref QA-RUN-ALIAS
 ```
 
-The campaign builder never bypasses that ledger, its hash chain or its independent-review rules.
+A generated template is not an admitted result. All placeholder fields must be replaced and the independent-review rules still apply.
 
 ## CI and adversarial checks
 
-The test module is deliberately named `runtime_campaign/test_reconcile_history.py`, so the existing UAT preflight discovery command executes it without adding a workflow or runner. It checks:
+The test module remains named `runtime_campaign/test_reconcile_history.py`, so the existing UAT preflight discovery executes it without a workflow change. Coverage includes:
 
 - exact 94-story cardinality;
 - duplicate and conditional-story rejection;
 - private-output enforcement;
-- full job/wave verification;
-- tampered-job digest rejection.
+- full job/wave structural verification;
+- ordinary job-digest tampering;
+- coordinated job plus manifest-digest tampering rejected by canonical rebuild.
 
-No protected workflow, guard, waiver, product, tenant or Azure path is changed by this package.
+No product, workflow, guard, waiver, tenant or Azure path is changed by this package.
