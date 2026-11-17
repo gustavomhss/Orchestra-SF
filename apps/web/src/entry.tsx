@@ -3,7 +3,7 @@
 import * as Sentry from "@sentry/solid"
 import { render } from "solid-js/web"
 import { AppBaseProviders, AppInterface, type Platform, PlatformProvider, ServerConnection } from "@orchestra/app"
-import { loadInitialLocale, createBrowserDraftStore, en, zh, authFromToken } from "@orchestra/app/web"
+import { loadInitialLocale, createBrowserDraftStore, en, zh, authFromToken, checkServerHealth } from "@orchestra/app/web"
 import pkg from "../package.json" with { type: "json" }
 
 const DEFAULT_SERVER_URL_KEY = "orchestra.settings.dat:defaultServerUrl"
@@ -143,7 +143,7 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 }
 
 if (root instanceof HTMLElement) {
-  void loadInitialLocale().then((locale) => {
+  void loadInitialLocale().then(async (locale) => {
     const auth = authFromToken(new URLSearchParams(location.search).get("auth_token"))
     clearAuthToken()
     const server: ServerConnection.Http = {
@@ -154,14 +154,20 @@ if (root instanceof HTMLElement) {
         ...auth,
       },
     }
+    // Same-origin HTML is not proof of an Orchestra server. Use the existing typed health protocol
+    // before admitting the canonical local connection; no localStorage seed or implicit remote trust.
+    const health = server.http.url === location.origin
+      ? await checkServerHealth(server.http, globalThis.fetch, { timeoutMs: 4_000, retryCount: 0 })
+      : undefined
+    const canonical = health?.healthy === true && !!health.version ? server : undefined
     render(
       () => (
         <PlatformProvider value={platform}>
           <AppBaseProviders locale={locale}>
             <AppInterface
               defaultServer={ServerConnection.Key.make(getDefaultUrl())}
-              canonicalLocalServer={ServerConnection.key(server)}
-              servers={[server]}
+              canonicalLocalServer={canonical ? ServerConnection.key(canonical) : undefined}
+              servers={canonical ? [canonical] : undefined}
             />
           </AppBaseProviders>
         </PlatformProvider>
