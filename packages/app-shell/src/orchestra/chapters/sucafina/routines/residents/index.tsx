@@ -20,8 +20,9 @@ type Output = Extract<(typeof SfAnalyses.operations["intelligence.analysis.outpu
 type CaseProjection = Extract<(typeof SfDecisions.operations["projection.case"]["output"])["Type"], { status: "ok" }>["value"]["projection"]
 type HumanChoice = CaseProjection["case"]["choices"][number]
 type LedgerEvent = CaseProjection["case"]["ledger"][number]
-const sameCase = (left: Case["caseRef"], right: Case["caseRef"]) =>
-  left.id === right.id && left.incarnation === right.incarnation && left.version === right.version
+const sameCaseHistory = (left: Case["caseRef"], right: Case["caseRef"]) =>
+  left.id === right.id && left.incarnation === right.incarnation &&
+  left.version > 0 && left.version <= right.version
 const caseKey = (item: Case["caseRef"]) => JSON.stringify([item.id, item.incarnation, item.version])
 const caseRouteRef = (item: Case["caseRef"]) => `case:${encodeURIComponent(item.id)}:${encodeURIComponent(item.incarnation)}`
 
@@ -170,7 +171,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
       // tuple; arbitrary runRef prefixes and resident IDs prove nothing.
       const matching = history.body.value.filter((run) =>
         run.profileId === profile.id && run.profileVersion === profile.version &&
-        !!run.caseRef && sameCase(run.caseRef, originalCase) &&
+        !!run.caseRef && sameCaseHistory(run.caseRef, originalCase) &&
         !!run.updatedAt && Number.isFinite(Date.parse(run.updatedAt)))
         .sort((a, b) => Date.parse(b.updatedAt ?? "") - Date.parse(a.updatedAt ?? ""))
       if (!matching.length) { setView("runState", "empty"); return }
@@ -191,7 +192,9 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
       const run = response.body.value
       if (run.runRef !== selectedRun.runRef || run.version !== selectedRun.version ||
           run.profileId !== profile.id || run.profileVersion !== profile.version ||
-          !run.caseRef || !sameCase(run.caseRef, originalCase)) {
+          !run.caseRef || !selectedRun.caseRef ||
+          !sameCaseHistory(run.caseRef, originalCase) ||
+          run.caseRef.version !== selectedRun.caseRef.version) {
         setView("runState", "stale")
         return
       }
