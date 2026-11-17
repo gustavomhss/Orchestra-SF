@@ -101,7 +101,13 @@ test("real Microsoft-authenticated dashboard route grants only its assigned view
   const write = await f.request("/dashboard", cookie, { page: "Executive Dashboard", action: "configure-summaries", version: 0, values: { pages: ["Talent Review"] } })
   expect(write.status).toBe(403)
   expect(await f.snapshot("dashboard")).toEqual(before)
-  expect((await f.request("/dashboard?page=Executive%20Dashboard")).status).toBe(401)
+  for (const surface of ["dashboard", "planner", "procurement"]) {
+    const anonymous = await f.request(`/${surface}`)
+    expect(anonymous.status).toBe(303)
+    const destination = new URL(anonymous.headers.get("location")!, publicOrigin)
+    expect(destination.pathname).toBe("/sucafina/auth/login")
+    expect(destination.searchParams.get("returnTo")).toBe(`/sucafina/${surface}`)
+  }
 })
 
 test("actual routes deny a signed-in guest with no group role and revalidate role removal", async () => {
