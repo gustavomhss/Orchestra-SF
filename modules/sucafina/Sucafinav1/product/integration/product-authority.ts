@@ -203,7 +203,7 @@ export function createSfProductAuthority(input: {
           principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
       }
       if (!actor || !(operation.startsWith("sf-human:")
-        ? (actor.canWrite || sfHumanReadActions.some((action) => operation === `sf-human:${action}`)) && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
+        ? (actor.canWrite || sfHumanReadActions.some((action) => operation === `sf-human:${action}`)) && actor.grant.humanActions?.some((action: SfHumanAction) => operation === `sf-human:${action}`)
         : actor.grant.operations.includes(operation))) return undefined
       return { installationId: actor.identity.installationId, projectId: actor.identity.projectId,
         principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
