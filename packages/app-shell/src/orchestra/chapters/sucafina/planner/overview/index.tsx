@@ -328,7 +328,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                       onSelect={(ref) => setView("selectedMonth", ref)}
                       onOpenSource={() => undefined}
                     >
-                      <svg class="sf-u06-plot" viewBox="0 0 390 155" aria-hidden={"true"} focusable={"false"}>
+                      <svg class="sf-u06-plot" viewBox="0 0 390 155" aria-hidden={"true"}>
                         <path d="M 16 10 V 128 H 380" fill="none" stroke="currentColor" opacity=".4"/>
                         <For each={plot()}>
                           {(point) => <circle class={point.className} cx={point.x} cy={point.y} r="4" />}

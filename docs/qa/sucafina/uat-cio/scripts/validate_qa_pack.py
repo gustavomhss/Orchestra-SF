@@ -30,7 +30,7 @@ require(all(x['surface_ids'] and set(x['surface_ids'])<=all_surface_ids for x in
 require(all(x['primary_story'] in all_story_ids and x['negative_story'] in all_story_ids for x in surfaces),'every surface has actual paired stories')
 require(all(x['canonical_story'] in all_story_ids and x['adversarial_story'] in all_story_ids for x in routes),'every route has canonical and adversarial story')
 require(all(x['surface_id'] in all_surface_ids and x['primary_story'] in all_story_ids for x in probes),'each probe traces to surface story')
-require(all(x['status']=='NOT_RUN' for x in probes),'never pre-fill route status')
+require(all(x['status'] in ('NOT_RUN','PASSED_WITH_EVIDENCE','FAILED_PRODUCT','BLOCKED_ENVIRONMENT','BLOCKED_CAPABILITY','NOT_APPLICABLE_APPROVED') for x in probes),'unsupported route status')
 require(all(x.get('priority') in ('P0','P1','P2') and len(x.get('steps',[]))>=3 and len(x.get('expected',[]))>=2 for x in surface_cases+e2e),'stories are actionable and have oracles')
 require(all(x.get('id','').startswith('SF-') for x in surface_cases+e2e),'stable QA identifiers')
 require(set(j for x in e2e for j in x['journeys'])=={f'J{i:02}' for i in range(1,9)},'all 8 original journeys')
@@ -70,5 +70,7 @@ for key in ('surface_count','route_count','surface_stories','e2e_stories','disti
     require(existing[key]==report[key], f'QA trace mismatch for {key}')
 require(existing.get('file_sha256')==checksums, 'QA trace checksum mismatch: repair artifact in design builder; NEVER silently rewrite during a read-only validation')
 require(existing.get('v2_cold_review',{}).get('status')=='GAPS_IDENTIFIED_NOT_SOTA', 'V2 review marker missing')
+import subprocess
+subprocess.run([sys.executable, str(ROOT/'scripts/reconcile_execution.py'), '--check'], check=True)
 print('VALIDATED: 70 surfaces / 165 routes / 140+45=185 full stories / 825 manual route probes / 8 journeys / 25 projects / 10 suppliers')
 print('STATUS: static design validation ONLY; no product/tenant/VM acceptance executed.')

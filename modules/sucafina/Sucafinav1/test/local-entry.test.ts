@@ -87,6 +87,7 @@ test("explicit local operator opens all surfaces after private enrollment and vi
     expect(anonymous?.status).toBe(303)
     const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
     expect(enrolled?.status).toBe(303)
+    expect(enrolled?.headers.get("location")).toBe("/")
     const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
     for (const surface of ["dashboard", "planner", "procurement"]) {
       const response = await installation.handler(new Request(`${origin}/sucafina/${surface}`, { headers: { cookie } }))
