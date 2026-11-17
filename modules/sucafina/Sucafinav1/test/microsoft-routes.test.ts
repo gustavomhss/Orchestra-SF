@@ -21,9 +21,21 @@ const cleanups: (() => Promise<void>)[] = []
 afterEach(async () => { for (const close of cleanups.splice(0)) await close() })
 
 /** Actual private store + signed OIDC + module HTTP routes; no substituted authenticator or domain. */
-async function fixture() {
+async function fixture(options: { buyerGroup?: string } = {}) {
   const disk = await privateFixture()
   cleanups.push(disk.close)
+  if (options.buyerGroup) {
+    // The second phase of the ownership proof grants read-only visibility to a
+    // buyer. Initial requester isolation still runs with no such membership.
+    // The installed profile is assembled before the role map is persisted.
+    await Bun.write(disk.file, JSON.stringify({
+      ...disk.config,
+      groups: {
+        ...disk.config.groups,
+        procurement: { ...disk.config.groups.procurement, buyer: `group:${options.buyerGroup}` },
+      },
+    }))
+  }
   const provider = await microsoftFixture({ claims: { name: "Same synthetic display name", email: "same-synthetic@example.test", preferred_username: "same-synthetic@example.test", roles: ["admin"] } })
   provider.account.name = "Same synthetic display name"
   provider.second.name = provider.account.name
@@ -114,7 +126,8 @@ test("actual routes deny a signed-in guest with no group role and revalidate rol
 })
 
 test("actual Procurement HTTP ownership uses resource-tenant oid despite matching names and email claims", async () => {
-  const f = await fixture()
+  const buyerGroup = randomUUID()
+  const f = await fixture({ buyerGroup })
   const first = await f.login()
   const second = await f.login(other)
   const firstTitle = "PRIVATE-SYNTHETIC-REQUEST-A"
@@ -157,6 +170,12 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
     expect(await deepLink.text()).not.toContain(hiddenTitle)
   }
 
+  // With only requester membership, the foreign PR is intentionally undiscoverable
+  // (404 on direct writes). Give the first actor synthetic buyer visibility only
+  // after confirming hidden request titles/IDs are not disclosed. This exercises
+  // the distinct visible-but-unauthorized 403 and stale-CAS 409 contracts without
+  // teaching the product to reveal undiscoverable resource existence.
+  f.provider.account.groups.push(buyerGroup)
   const before = await f.snapshot("procurement")
   const denied = await f.post(first, "save", { pr: { title: "ATTACKER-REPLACEMENT" } }, secondId, 1)
   expect(denied.status).toBe(403)
