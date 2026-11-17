@@ -41,6 +41,8 @@ export function runnerIdentity() {
   const artifactSha256 = process.env.SF_NATIVE_INSTALLED_ARTIFACT_SHA256
   must(SHA40.test(candidateSha ?? "") && SHA40.test(treeSha ?? "") &&
     SHA256.test(artifactSha256 ?? ""), "F04_FROZEN_C_TREE_ARTIFACT_REQUIRED")
+  must(process.env.GITHUB_SHA === candidateSha,
+    "F04_ACTIONS_EVENT_SHA_MUST_EQUAL_CHECKOUT_C")
   must(git(["rev-parse", "HEAD"]) === candidateSha &&
     git(["rev-parse", "HEAD^{tree}"]) === treeSha,
     "F04_CHECKOUT_MUST_EQUAL_FROZEN_C")
