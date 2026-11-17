@@ -47,6 +47,8 @@ jobs:
         run: |
           set -euo pipefail
           (cd packages/core && bun test test/test-ci-request.test.ts)
+          # Independent early witness: exact signed OIDC consent before the slow full CI-SF inventory.
+          (cd modules/sucafina && bun test --timeout 30000 Sucafinav1/test/microsoft-entra-client.test.ts)
 
   static:
     name: sf/static-and-contracts
