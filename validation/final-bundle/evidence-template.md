@@ -67,13 +67,14 @@ Todos os nomes abaixo são normativos em `.github/workflows/sf-ci.yml` e `sf/ci/
 |---|---|---|
 | `CI_HARNESS_VALIDATED` | PARTIAL (histórico; requer C novo) | controles reais, equivalência, integridade e revisor |
 | `PRODUCT_CI_GREEN` | NO | mesma seleção completa, 12 conclusões success e `sf/verify` success no SHA correto |
-| `AZURE_RELEASE_QUALIFIED` | BLOCKED | C servido, Azure+Entra+F04+AM01–06+restore/rollback e 3 cold reviews |
+| `AZURE_RELEASE_QUALIFIED` | BLOCKED | C servido, Azure+Entra+F04+AM01–06+restore/rollback, **ADM-01..06** e 3 cold reviews |
 
 ## 5. Azure instalado — provas release-only do MESMO C
 | Prova | Run/host control ID, digest, resultado observável | Estado inicial |
 |---|---|---|
 | AZ-01: app Web + host realmente instalado em VM Linux x64, HTTPS/URL e processo | NOT_OBSERVED | BLOCKED_BY_ENV |
-| AZ-02: login Microsoft Entra/OIDC, origem, CSRF, cookies/sessão e revogação, CAS, Task/Permission/Relay | NOT_OBSERVED | BLOCKED_BY_ENV |
+| AZ-02: login Microsoft Entra/OIDC, origem, CSRF, cookies/sessão e revogação, CAS, Task/Permission/Relay; delegated Graph requested/consented/used | NOT_OBSERVED | BLOCKED_BY_ENV/OWNER |
+| **ADM-01..06 (novo): admin supremo, Graph, papéis por tela, zero writes Entra/Teams, demo sintética** | **NOT_OBSERVED** | **BLOCKED_BY_SOURCE/OWNER/ENV / NOT_RUN** |
 | AZ-03: migração/dados privados + restart, backup/restore Linux e rollback | NOT_OBSERVED | BLOCKED_BY_ENV |
 | AZ-04: F04 real, manifesto `sf2h.native-installed-manifest.v1`, diretório privado 0700, testemunhas + 3 negativos Q01 | NOT_OBSERVED | BLOCKED_BY_ENV |
 | AZ-05: oito recipes integradas e AM01/02/03/04/05/06, U39/U40 com atores reais | NOT_OBSERVED | BLOCKED_BY_ENV |
@@ -138,6 +139,8 @@ ci:
   eight_receipt_artifact_ids_and_sha256: NOT_OBSERVED
   sf_verify_provenance_and_positive_negative_controls: NOT_OBSERVED
   coverage_equivalence_B1_B2_B3_M2_M3_M4_review: NOT_OBSERVED
+  admin_surface_cases_included_in_CI_and_negative_controls: NOT_OBSERVED
+  demo_flamengo_scenario_receipts_and_isolation: NOT_OBSERVED
 artifact:
   source_C: NOT_OBSERVED
   immutable_id_and_restricted_uri: NOT_OBSERVED
@@ -153,6 +156,8 @@ azure:
   deploy_job_run_id_and_environment_approval: NOT_OBSERVED
   app_start_restart_transacting_smoke_evidence: NOT_OBSERVED
   entra_tenant_issuer_callback_login_and_revocation_evidence: NOT_OBSERVED
+  delegated_graph_four_scopes_requested_vs_consented_AllPrincipals: NOT_OBSERVED
+  delegated_scopes_issued_in_scp_vs_actually_used_per_endpoint: NOT_OBSERVED
   origin_CSRF_owner_project_installation_CAS_negatives: NOT_OBSERVED
   backup_job_and_consistency_receipt: NOT_OBSERVED
   recovery_point_and_restore_job_receipt: NOT_OBSERVED
@@ -162,6 +167,21 @@ azure:
   U39_U40_case_counts_and_results: NOT_OBSERVED
   AM01_AM02_AM03_AM04_AM05_AM06_receipts: NOT_OBSERVED
   eight_native_recipes_cases_witness_and_digests: NOT_OBSERVED
+admin_surface:
+  requirement_source: OWNER_DECISION_2026_11_16_NOT_PROOF
+  implementation_candidate_commit_and_PR_review: NOT_OBSERVED
+  demo_flamengo_fixture_commit_and_execution: NOT_OBSERVED
+  microsoft_graph_delegated_permission_grants_AllPrincipals_export_digest: NOT_OBSERVED
+  consented_vs_token_issued_vs_used_scopes_and_read_endpoints: NOT_OBSERVED
+  graph_organogram_teams_profiles_read_only_projection_receipts: NOT_OBSERVED
+  required_supreme_group_name: fla-supreme-admin
+  required_supreme_group_id: a739232b-d5cb-4f41-873b-4c9d2340831e
+  supreme_member_backend_UI_and_API_allowed_witness: NOT_OBSERVED
+  nonmembers_anonymous_expired_revoked_cross_tenant_denial_witnesses: NOT_OBSERVED
+  dashboard_planner_procurement_roles_cas_audit_and_per_screen_enforcement: NOT_OBSERVED
+  graph_and_teams_zero_write_allowlist_network_and_audit_witness: NOT_OBSERVED
+  synthetic_demo_positive_negative_and_denied_Zico_receipts: NOT_OBSERVED
+  ADM_01_02_03_04_05_06_results_with_link_digest_and_review: NOT_OBSERVED
 reviews:
   security_reviewer_identity_timestamp_finding_closeout: NOT_OBSERVED
   linux_data_reviewer_identity_timestamp_finding_closeout: NOT_OBSERVED
@@ -179,6 +199,7 @@ verdicts:
   CI_HARNESS_VALIDATED: PARTIAL
   PRODUCT_CI_GREEN: NO
   AZURE_RELEASE_QUALIFIED: BLOCKED
+  ADMIN_SURFACE_REQUIRED_GATE: BLOCKED_NOT_PROVEN
   GO_LIVE: BLOCKED
 signatures:
   reviewer_1: NOT_SIGNED
@@ -203,3 +224,22 @@ signatures:
 | PR separado de aposentadoria Epic | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_OBSERVED | NOT_AUTHORIZED |
 
 Cada linha precisa de **observação e link** antes de abandonar NOT_OBSERVED. Guardar IDs de VM/usuários, logs completos, tokens/cookies e manifesto F04 bruto apenas em storage de acesso restrito; a referência pública contém URL opaca/hash e verificação de um revisor autorizado. Nenhum script gera assinatura humana.
+
+---
+
+## 9. ADMIN-SURFACE — nova matriz de evidência, decisão do dono 2026-11-16
+
+**Esta é a linha de release obrigatória adicionada pela decisão do owner, não é prova e não altera retroativamente o significado de runs antigos.** `AZ-02` passa a cobrir o Microsoft Graph e o gate novo `ADM-01..ADM-06` entra em `AZURE_RELEASE_QUALIFIED`. Código implementado por ADMIN-SURFACE; dados sintéticos por DEMO-FLAMENGO; evidência em tenant real por A8 + security reviewer. **Não existem aqui evidências positivas.**
+
+| ID | Identidade e recibos exigidos no C/tenant real | Valor observado | Gate inicial |
+|---|---|---|---|
+| ADM-01 — consentimento Graph | Export sanitizado Entra app reg / service principal / `oauth2PermissionGrant.consentType=AllPrincipals`; quatro scopes delegados `User.Read`, `User.Read.All`, `GroupMember.Read.All`, `Directory.Read.All`: **requested / consented / issued `scp` / actually used** por endpoint e principal; não inferir uso dos quatro só por pedido | NOT_OBSERVED | NOT_RUN/BLOCKED_BY_OWNER |
+| ADM-02 — Graph leitura | Lista real sanitizada de endpoints read-only e paginação para organograma/times/perfis; prova de falha sem consentimento, escopo ou Graph; nenhuma fixture sintética aceita como tenant real | NOT_OBSERVED | NOT_RUN/BLOCKED_BY_ENV |
+| ADM-03 — supreme-only | Membro de `fla-supreme-admin` (`a739232b-d5cb-4f41-873b-4c9d2340831e`) permite UI+API; não membros/guest/tenant errado/revogado recebem 401/403 também por API direta, sem efeitos; ID e binding server-side | NOT_OBSERVED | NOT_RUN/BLOCKED_BY_ENV |
+| ADM-04 — roles por tela | Admin autorizado altera papéis **Dashboard, Planner e Procurement** só na policy do Orchestra-SF, CAS/audit/restart; prova ações permitidas e negadas por tela/ação para destinatários reais | NOT_OBSERVED | NOT_RUN/BLOCKED_BY_ENV |
+| ADM-05 — nenhuma escrita Entra/Teams | Política Graph read-only/allowlist, request trace sanitizado, logs do tenant/revisão e contraprova de operação mutável bloqueada; nenhuma chamada alterou usuários, grupos ou Teams, e mudança de papel é apenas local | NOT_OBSERVED | NOT_RUN/BLOCKED_BY_ENV |
+| ADM-06 — org demo | Fixtures `sf/demo/flamengo/{org.json,catalog.json,scenarios.json,seed.mjs}` integradas, cenário positivo e negado incluindo Zico sem grupo, receipt/digest e isolamento de produção; **não substitui** os recibos ADM-01..05 no Entra real | NOT_OBSERVED | NOT_RUN/BLOCKED_BY_SOURCE |
+
+**Critérios de custódia:** por prova anexar ID/URL restrita e hash SHA256, C/tree/artifact SHA, run/attempt/caso/ator opaco e timestamp, status HTTP sem valores sensíveis, revisor independente e contraste esperado/observado. Guardar tokens `scp` íntegros, segredos, cookies, membros reais, perfis e logs brutos em storage protegido, nunca no Git/Actions público. **Scope consentido não significa scope usado; ausência de Graph write precisa de contraprovas e inspeção server-side, não só ausência de linha de log.**
+
+**Entrada na linha de chegada:** `ADM-01..06=PASS` exige resultado real observável no C final. A ausência de qualquer campo ou dono da prova mantém `ADMIN_SURFACE_REQUIRED_GATE=BLOCKED_NOT_PROVEN` e `GO_LIVE=BLOCKED`, mesmo com 12 jobs verdes.
