@@ -1489,7 +1489,9 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         return [
           projected ? queueRequestLink(projected, `?page=Requests&request=${encodeURIComponent(projected.id)}&q=${encodeURIComponent(projected.id)}#${encodeURIComponent(projected.id)}`) : `<a href="#${encodeURIComponent(String(request.number ?? ""))}">${esc(String(request.number ?? ""))}</a>`,
           esc(projected ? projected.subject ?? "Unavailable" : text(object(request.pr).title)),
-          esc(projected && !projected.status ? "Unknown status" : requestStatusLabel(status)),
+          // The human-readable stage stays primary; show the persisted state code as
+          // a small audit reference so operators can verify each workflow transition.
+          `${esc(projected && !projected.status ? "Unknown status" : requestStatusLabel(status))}${status ? ` <small aria-label="Recorded workflow status">(${esc(status)})</small>` : ""}`,
           esc(requestStageGuidance(status).stage),
           esc(projected ? projected.nextStep ?? "Unavailable" : requestStageGuidance(status).next),
           esc(`Requester: ${text(request.requesterName) || text(directory.find((person) => person.id === request.createdBy)?.name) || text(request.createdBy) || "Unavailable"}; buyer: ${text(directory.find((person) => person.id === request.buyerId)?.name) || text(request.buyerId) || "Unassigned"}; current holder: ${status.endsWith("_pending") ? text(directory.find((person) => person.id === holder)?.name) || holder || "Unassigned" : "Not awaiting approval"}`),
