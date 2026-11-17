@@ -22,6 +22,54 @@ import { procurementApprovalGroups, readProcurementQueueView } from "../../../pr
 const states = ["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled", "imported-unknown"]
 const at = "2026-11-13T00:00:00Z"
 
+test("first Requests visit on an empty installed Procurement store renders the authorized empty C02 queue", async () => {
+  const fixture = await pageFixture({ emptyProcurement: true })
+  try {
+    const before = await fixture.material()
+    expect(before.store).toBeUndefined()
+    const source = await fixture.persistence.transaction("procurement", async (snapshot) => ({
+      commit: false,
+      value: snapshot.sfSources?.records[JSON.stringify(["procurement-request-selection", "all"])],
+    }))
+    expect(source).toMatchObject({ alive: true, version: 1 })
+
+    // Dashboard never exercises the queue admission path; Requests must also render on the first visit.
+    expect((await fixture.get("requester", undefined)).response.status).toBe(200)
+    const first = await fixture.get("requester", "Requests")
+    expect(first.response.status).toBe(200)
+    expect(first.response.headers.get("content-type")).toContain("text/html")
+    expect(first.html).not.toContain("procurement-queue-unavailable")
+    const queue = readProcurementQueueView(fixture.prepared.at(-1)?.data.procurementQueueView)
+    expect(queue?.rows).toEqual([])
+    expect(queue?.aging).toEqual([])
+    expect(queue?.stock.values).toEqual([])
+    expect(queue?.stock.context.currency).toBe("USD")
+
+    const approvals = await fixture.get("buyer", "My approvals")
+    expect(approvals.response.status).toBe(200)
+    expect(readProcurementQueueView(fixture.prepared.at(-1)?.data.procurementQueueView)?.rows).toEqual([])
+    expect(await fixture.material()).toEqual(before)
+
+    // The empty-state default must not promote a principal without a product grant.
+    expect((await fixture.get("ungranted-reader", "Requests")).response.status).toBe(403)
+    fixture.revoke("requester")
+    expect((await fixture.get("requester", "Requests")).response.status).toBe(403)
+  } finally { await fixture.dispose() }
+})
+
+test("missing settings in a persisted Procurement store remain unavailable, never silently replaced", async () => {
+  const fixture = await pageFixture({ emptyProcurement: true })
+  try {
+    await fixture.persistence.transaction("procurement", async (snapshot) => {
+      snapshot.data.store = { settings: {}, requests: {}, suppliers: [] }
+      return { commit: true, value: undefined }
+    })
+    const result = await fixture.get("requester", "Requests")
+    expect(result.response.status).toBe(503)
+    expect(JSON.parse(result.html)).toEqual({ status: "unavailable", reason: "procurement-queue-unavailable" })
+  } finally { await fixture.dispose() }
+})
+
 test("authorized Requests and My approvals render the actual C02 queue across baseline states", async () => {
   const fixture = await pageFixture()
   try {
@@ -113,7 +161,7 @@ test("the page fence refuses material changes and revocation between C02 prepara
   } finally { await fixture.dispose() }
 })
 
-async function pageFixture() {
+async function pageFixture(options: { emptyProcurement?: boolean } = {}) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-queue-view-"))
   const store = await openLocalStore(directory)
   const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID })
@@ -126,7 +174,7 @@ async function pageFixture() {
     const role = id === "requester" ? "requester" : id === "buyer" ? "buyer" : "viewer"
     return { id, canWrite: role !== "viewer", roles: [{ surface: "procurement", role }] }
   }
-  await persistence.transaction("procurement", async (snapshot) => {
+  if (!options.emptyProcurement) await persistence.transaction("procurement", async (snapshot) => {
     const entries = states.map((status) => {
       const number = `PR-${status}`
       const approval = { amount: 100, steps: [{ status: "pending", holderId: status === "pr_pending" ? "buyer" : status === "src_pending" ? "other-holder" : null, levelName: "Recorded approval" }] }
