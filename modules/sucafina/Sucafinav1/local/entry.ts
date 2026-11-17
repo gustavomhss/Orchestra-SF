@@ -52,7 +52,7 @@ import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 
-type SfFactoryContext = { origin: string; createHostRuntime?: CreateSfHostRuntime; sourceRoot?: string }
+type SfFactoryContext = { origin: string; createHostRuntime?: CreateSfHostRuntime; createCurrentChoiceFence?: typeof createCurrentChoiceFence; sourceRoot?: string }
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
 export default async function installation(context: SfFactoryContext) {
@@ -92,7 +92,9 @@ export async function createConfiguredInstallation(
   const projectScope = createSfSourceScopeProjector(now)
   const driver = await openLocalStore(path.join(loaded.directory, microsoft ? "business-microsoft" : operator ? "business-local" : "business"))
   let runtime: SfHostRuntime | undefined
-  const currentChoiceFence = createCurrentChoiceFence({ persistence: driver,
+  // The packaged host supplies its own WeakSet-registered constructor; direct source
+  // installations retain the original module implementation and its strict guard.
+  const currentChoiceFence = (context.createCurrentChoiceFence ?? createCurrentChoiceFence)({ persistence: driver,
     host: () => {
       const host = runtime?.services?.()?.host
       if (!host) throw new Error("SF_CURRENT_CHOICE_HOST_UNAVAILABLE")

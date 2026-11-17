@@ -54,6 +54,9 @@ export async function verifyFactoryPackageReceipt(directory: string, expected: F
     receipt.target !== "linux-x64-baseline" || receipt.assetCount !== 24 ||
     !Number.isSafeInteger(receipt.compilerInputCount) || Number(receipt.compilerInputCount) < 1 ||
     receipt.checkedEndpoint !== "/sucafina/status" || receipt.status !== 200 ||
+    receipt.authentication !== "local-operator" || receipt.loginLandingStatus !== 200 ||
+    receipt.dashboardGateStatus !== 303 || receipt.currentChoiceGateStatus !== 303 ||
+    receipt.currentChoiceEndpoint !== "/sucafina/dashboard?sf=current-choice&format=json" ||
     receipt.origin !== "http://localhost:4110" || receipt.extractedOutsideCheckout !== true)
     fail("QUALIFICATION_FIELDS_INVALID")
   const web = receipt.web

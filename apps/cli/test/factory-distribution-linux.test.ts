@@ -2,6 +2,11 @@ import { expect, test } from "bun:test"
 import { createHash } from "node:crypto"
 import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
+import { pathToFileURL } from "node:url"
+import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+import { createCurrentChoiceFence, isCurrentChoiceFence } from "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+import { createSfCurrentChoiceServices } from "../src/sucafina-product/current-choice-services.ts"
+import { prepareOperatorAccess } from "../../../modules/sucafina/Sucafinav1/local/enroll.ts"
 import path from "node:path"
 import { prepareLocalConfiguration } from "../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
 import { archiveDistribution, prepareDistribution, verifyDistribution } from "../script/distribution-payload"
@@ -189,6 +194,9 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     expect(await Bun.file(path.join(npmRoot, "cli/package.json")).exists()).toBe(true)
 
     const config = await prepareLocalConfiguration(privateDir)
+    // An unconfigured /status never builds the decisions host. Activate a real
+    // local operator so the CLI/factory identity split fails during composition.
+    await prepareOperatorAccess(config, true) // Activate the real owner profile before boot.
     const env = {
       ...Object.fromEntries(Object.entries(process.env).filter(([key]) =>
         ["PATH", "LANG", "LC_ALL", "TZ"].includes(key))),
@@ -230,13 +238,32 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     if (!response) throw new Error(`SF_FACTORY_COMPILED_INSTALLATION_NEVER_READY exit=${child.exitCode} ${logs.join("\n")}`)
     expect(response.headers.get("content-type")).toContain("application/json")
     const status: unknown = await response.json()
-    expect(status).toMatchObject({ login: "not-configured", uploads: "unavailable-scanner-not-configured" })
+    expect(status).toMatchObject({ login: "local-operator", uploads: "unavailable-scanner-not-configured" })
     expect(child.exitCode).toBeNull()
     const webResponse = await fetch("http://localhost:4110/", {
       redirect: "error", signal: AbortSignal.timeout(15000),
     })
     expect(webResponse.status).toBe(200)
     expect(digest(new Uint8Array(await webResponse.arrayBuffer()))).toBe(webIndexSha256)
+    // The configured local-operator branch forces complete host + decisions
+    // composition before the installed listener starts; /status alone previously
+    // masked the foreign WeakSet error. Assert real non-status routes too.
+    const authLanding = await fetch("http://localhost:4110/sucafina/auth/login", {
+      redirect: "manual", signal: AbortSignal.timeout(15000),
+    })
+    expect(authLanding.status).toBe(200)
+    expect(await authLanding.text()).toContain("local")
+    const dashboard = await fetch("http://localhost:4110/sucafina/dashboard", {
+      redirect: "manual", signal: AbortSignal.timeout(15000),
+    })
+    expect(dashboard.status).toBe(303)
+    expect(dashboard.headers.get("location")).toContain("/sucafina/auth/login")
+    const currentChoiceEndpoint = "/sucafina/dashboard?sf=current-choice&format=json"
+    const currentChoice = await fetch("http://localhost:4110" + currentChoiceEndpoint, {
+      redirect: "manual", signal: AbortSignal.timeout(15000),
+    })
+    expect(currentChoice.status).toBe(303)
+    expect(currentChoice.headers.get("location")).toContain("current-choice")
     // Re-read the real checkout HEAD immediately before certifying the archive.
     // The success receipt MUST be rejected if the source branch changed in-flight.
     const runIdentity = verifiedRunIdentity()
@@ -263,6 +290,9 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       },
       checkedEndpoint: "/sucafina/status",
       status: 200,
+      authentication: "local-operator", loginLandingStatus: authLanding.status,
+      dashboardGateStatus: dashboard.status,
+      currentChoiceEndpoint, currentChoiceGateStatus: currentChoice.status,
       origin: "http://localhost:4110",
       extractedOutsideCheckout: true,
     }
@@ -292,6 +322,13 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     expect(attested.webSourceMaps).toBe(0)
     const receiptFile = path.join(evidenceDir, "factory-package-receipt.json")
     const genuineReceiptBytes = await readFile(receiptFile)
+    try {
+      await writeFile(receiptFile, JSON.stringify({ ...receipt, currentChoiceGateStatus: 503 }) + "\n")
+      await expect(verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity))
+        .rejects.toThrow("SF_FACTORY_RECEIPT_QUALIFICATION_FIELDS_INVALID")
+    } finally {
+      await writeFile(receiptFile, genuineReceiptBytes)
+    }
     try {
       await writeFile(receiptFile, JSON.stringify({ ...receipt, sourceSHA: "0".repeat(40) }) + "\n")
       await expect(verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity))
@@ -349,3 +386,43 @@ test("factory receipt fails closed on divergent source SHA, PR synthetic merge S
   expect(() => requireSfFactoryRunIdentity({ ...base, runID: "../other-run" }))
     .toThrow("SF_FACTORY_RUN_IDENTITY_INVALID")
 })
+
+test("a real fence from a second bundled module fails the CLI's exact anti-forgery guard", async () => {
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-fence-identity-"))
+  const driver = await openLocalStore(path.join(directory, "business"))
+  try {
+    // Match the real packaging boundary: a separately bundled copy carries
+    // another module-private WeakSet, even if it wraps the same real driver.
+    const built = await Bun.build({
+      entrypoints: [path.resolve(import.meta.dir, "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts")],
+      target: "bun", format: "esm", splitting: false, minify: true,
+    })
+    expect(built.success).toBe(true)
+    expect(built.outputs).toHaveLength(1)
+    const otherModule = path.join(directory, "foreign-current-choice.mjs")
+    await Bun.write(otherModule, await built.outputs[0]!.arrayBuffer())
+    const foreign = await import(pathToFileURL(otherModule).href)
+    const deps = {
+      persistence: driver,
+      host: () => { throw new Error("SF_CURRENT_CHOICE_HOST_UNAVAILABLE") },
+      identity: () => undefined,
+      operationIdentity: () => undefined,
+    }
+    const foreignFence = foreign.createCurrentChoiceFence(deps) as ReturnType<typeof createCurrentChoiceFence>
+    expect(foreign.isCurrentChoiceFence(foreignFence)).toBe(true)
+    expect(isCurrentChoiceFence(foreignFence)).toBe(false)
+    // Deliberately unreachable collaborators: the real service must reject
+    // the valid-but-foreign fence *before* touching authority or business.
+    expect(() => createSfCurrentChoiceServices({
+      authority: undefined as never, business: undefined as never,
+      fence: foreignFence, proposalCoverageWrites: new WeakSet(),
+    })).toThrow("SF_CURRENT_CHOICE_REAL_FENCE_REQUIRED")
+    const owned = createCurrentChoiceFence(deps)
+    expect(isCurrentChoiceFence(owned)).toBe(true)
+    expect(isCurrentChoiceFence({ ...owned })).toBe(false)
+    expect(foreign.isCurrentChoiceFence(owned)).toBe(false)
+  } finally {
+    await driver.dispose()
+    await rm(directory, { recursive: true, force: true })
+  }
+}, 30_000)
