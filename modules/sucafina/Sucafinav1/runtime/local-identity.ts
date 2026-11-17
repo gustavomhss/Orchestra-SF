@@ -222,6 +222,14 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       if (!actor || actor.id !== current.value.person.id || !actor.roles.length || actor.roles.some((role) => role.surface !== context.surface)) return null
       return (await ready(request))?.handle === current.handle ? actor : null
     },
+    async graphDirectory(request) {
+      if (options.client.profile !== "web-confidential") throw new Error("Microsoft admin directory unavailable")
+      const current = await ready(request)
+      if (!current) throw new Error("Microsoft admin session unavailable")
+      const result = await options.client.graphDirectory(current.value.tokens.accessToken)
+      if ((await ready(request))?.handle !== current.handle) throw new Error("Microsoft admin session changed")
+      return result
+    },
     async directory(request) {
       const current = await ready(request)
       if (!current) return []
