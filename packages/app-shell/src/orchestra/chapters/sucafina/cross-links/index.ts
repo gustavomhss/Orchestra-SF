@@ -63,7 +63,7 @@ export function sfExecutiveLinkRequest(from: SfResolvedRoute, target: SfExecutiv
   const query = new URLSearchParams({
     server: owner.serverKey, project: owner.projectId, installation: owner.installationId,
   })
-  let path: string
+  let path = ""
   switch (target.kind) {
     case "agenda": path = "/orchestra/sf-reviews/agenda"; break
     case "projects": path = "/orchestra/sf-portfolio/projects"; break
