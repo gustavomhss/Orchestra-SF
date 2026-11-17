@@ -11,11 +11,13 @@ const retiring = new Set<Worker>()
 const maxActive = 2
 const maxResidentWorkers = maxActive * 2
 
-type ParserRuntimeOptions = {
+export type ParserRuntimeOptions = {
   createWorker?: (kind: "pdf" | "docx") => Worker
   retirementGraceMs?: number
   terminationTimeoutMs?: number
 }
+
+type WorkerTermination = { settled: boolean; completion: Promise<void> }
 
 export function createPrivateDocumentParser(
   limits: { maxBytes: number; maxTextLength: number; maxPages: number; maxXmlBytes: number; maxZipEntries: number; timeoutMs?: number },
@@ -83,6 +85,7 @@ export function createPrivateDocumentParser(
       if (signal?.aborted) return { status: "unavailable", reason: "cancelled" }
       const remaining = timeout - (performance.now() - started)
       if (remaining <= 0) return { status: "unavailable", reason: "document-parser-timeout" }
+      // Transfer one dedicated copy. The caller retains its bytes and the worker no longer clones them again.
       const payload = bytes.slice()
       return await new Promise<PortResult<string>>((resolve) => {
         let settled = false
@@ -112,7 +115,10 @@ export function createPrivateDocumentParser(
     } catch {
       return { status: "unavailable", reason: "document-parser-unavailable" }
     } finally {
-      try { await terminateWorker(worker, terminationTimeout) } finally {
+      try {
+        const termination = await terminateWorker(worker, terminationTimeout)
+        if (!termination.settled) retainUntilStopped(worker, termination.completion)
+      } finally {
         try { if (directory) await rm(directory, { recursive: true, force: true }) } finally { release() }
       }
     }
@@ -150,16 +156,26 @@ function retireWorker(worker: Worker, ready: Promise<boolean>, graceMs: number, 
   worker.unref()
   void (async () => {
     await Promise.race([ready.then(() => undefined, () => undefined), delay(graceMs)])
-    await terminateWorker(worker, terminationTimeoutMs)
-  })().finally(() => retiring.delete(worker))
+    const termination = await terminateWorker(worker, terminationTimeoutMs)
+    if (termination.settled) retiring.delete(worker)
+    else void termination.completion.then(() => retiring.delete(worker))
+  })()
 }
 
-async function terminateWorker(worker: Worker, timeoutMs: number) {
+async function terminateWorker(worker: Worker, timeoutMs: number): Promise<WorkerTermination> {
   worker.unref()
-  await Promise.race([
-    worker.terminate().then(() => undefined, () => undefined),
-    delay(timeoutMs),
-  ])
+  let settled = false
+  const completion = worker.terminate().then(
+    () => { settled = true },
+    () => { settled = true },
+  )
+  await Promise.race([completion, delay(timeoutMs)])
+  return { settled, completion }
+}
+
+function retainUntilStopped(worker: Worker, completion: Promise<void>) {
+  retiring.add(worker)
+  void completion.then(() => retiring.delete(worker))
 }
 
 function delay(ms: number) {
