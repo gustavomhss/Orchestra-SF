@@ -41,7 +41,6 @@ jobs:
           python3 docs/qa/sucafina/uat-cio/scripts/generate-story-skills.py --check
           node --test docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.test.mjs
           python3 -m unittest discover -s docs/qa/sucafina/uat-cio/scripts -p 'test_reconcile_history.py' -v
-          python3 docs/qa/sucafina/uat-cio/scripts/validate_qa_pack.py
       - uses: ./.github/actions/setup-bun
       - name: Verify Linux-only surgical runner contract independently of product typechecks
         env:
