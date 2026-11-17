@@ -1,9 +1,11 @@
 import { For, Show, createEffect, createMemo, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
+import { decodeVendorContractsPage, vendorRef, vendorVersion } from "./model"
 import {
   decodeRequestsPage, isPoWritable, poFromRecord, requestRef, requestVersion, validatePo,
   type SfPoEdit, type SfRequestsRead,
@@ -173,7 +175,27 @@ export function SfContractRequestLinks(props: Props) {
     }
     writeController = new AbortController()
     const signal = writeController.signal
-    setState({ busy: true, status: "sending", notice: "Submitting PO contract reference with source version…" })
+    setState({ busy: true, status: "sending",
+      notice: "Revalidating the contract source before the PO relationship mutation…" })
+    // A stale or deleted CAP14 contract MUST NOT be linked by a writable CAP25 PO.
+    // The existing producer owns both authoritative sources; this is a read
+    // fence, not a substitute for server-side referential integrity.
+    const contractSource = await createSfDomainClient(ready.transport)["domain.page.CAP14"](
+      {}, { signal },
+    )
+    if (signal.aborted || !current(expected)) return
+    const freshContract = contractSource.kind === "response" && contractSource.status === 200
+      ? decodeVendorContractsPage(contractSource.body, ready.context.stamp) : undefined
+    if (!freshContract || freshContract.kind !== "ready" ||
+        !freshContract.records.some((row) => {
+          const ref = vendorRef(row)
+          return ref === expected.contract && vendorVersion(freshContract, ref) === expected.version
+        })) {
+      setState({ busy: false, status: "stale", review: undefined,
+        notice: "Contract source is not current or accessible. No PO link was sent." })
+      return
+    }
+    setState("notice", "Submitting source-version-bound PO contract relation…")
     const result = await createSfProcurementClient(ready.transport)["domain.command.CAP25.save"]({
       page: "Requests", action: "save", id: review.request, version: review.requestVersion,
       values: { po: review.po },
