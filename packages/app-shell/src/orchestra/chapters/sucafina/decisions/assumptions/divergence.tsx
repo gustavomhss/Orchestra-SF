@@ -1,4 +1,4 @@
-import { For, onCleanup, Show } from "solid-js"
+import { createEffect, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
 import type { SfContextHandle } from "../../context/contracts"
@@ -22,6 +22,13 @@ export function SfAssumptionDivergence(props: {
   }>({ sourceId: "", text: "", phase: "editing", error: "" })
   let controller: AbortController | undefined
   onCleanup(() => controller?.abort())
+  createEffect(() => {
+    props.owner.generation()
+    props.record.id
+    props.record.incarnation
+    controller?.abort()
+    setUi({ sourceId: "", text: "", phase: "editing", error: "", receipt: undefined })
+  })
   const eligible = () => props.record.sourceRefs.filter((source) =>
     source.kind === "record" && source.target.version > 0 &&
     source.target.incarnation.length > 0,
