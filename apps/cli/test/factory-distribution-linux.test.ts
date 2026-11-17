@@ -192,14 +192,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const config = await prepareLocalConfiguration(privateDir)
     // An unconfigured /status never builds the decisions host. Activate a real
     // local operator so the CLI/factory identity split fails during composition.
-    const access = await prepareOperatorAccess(config, true)
-    const handoff = (await readFile(access.artifact, "utf8"))
-      .match(/location\.replace\(("(?:\\.|[^"\\])*")\)/)?.[1]
-    if (!handoff) throw new Error("SF_FACTORY_OPERATOR_HANDOFF_UNAVAILABLE")
-    const loginUrl: string = JSON.parse(handoff)
-    if (new URL(loginUrl).origin !== "http://localhost:4110" ||
-      new URL(loginUrl).pathname !== "/sucafina/auth/local")
-      throw new Error("SF_FACTORY_OPERATOR_HANDOFF_ORIGIN_INVALID")
+    await prepareOperatorAccess(config, true) // Activate the real owner profile before boot.
     const env = {
       ...Object.fromEntries(Object.entries(process.env).filter(([key]) =>
         ["PATH", "LANG", "LC_ALL", "TZ"].includes(key))),
@@ -248,8 +241,23 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     })
     expect(webResponse.status).toBe(200)
     expect(digest(new Uint8Array(await webResponse.arrayBuffer()))).toBe(webIndexSha256)
-    // This is the full extracted native binary with real owner enrollment.
+    // Issue the one-time code against the running installed service's durable
+    // operator store, as the real local-owner enrollment workflow does.
+    const authLanding = await fetch("http://localhost:4110/sucafina/auth/login", {
+      redirect: "manual", signal: AbortSignal.timeout(15000),
+    })
+    expect(authLanding.status).toBe(200)
+    const access = await prepareOperatorAccess(config)
+    const handoff = (await readFile(access.artifact, "utf8"))
+      .match(/location\.replace\(("(?:\\.|[^"\\])*")\)/)?.[1]
+    if (!handoff) throw new Error("SF_FACTORY_OPERATOR_HANDOFF_UNAVAILABLE")
+    const loginUrl: string = JSON.parse(handoff)
+    if (new URL(loginUrl).origin !== "http://localhost:4110" ||
+      new URL(loginUrl).pathname !== "/sucafina/auth/local")
+      throw new Error("SF_FACTORY_OPERATOR_HANDOFF_ORIGIN_INVALID")
     const login = await fetch(loginUrl, { redirect: "manual", signal: AbortSignal.timeout(15000) })
+    if (login.status !== 303)
+      throw new Error("SF_FACTORY_REAL_OPERATOR_LOGIN_" + login.status + ": " + (await login.text()).slice(0, 100))
     expect(login.status).toBe(303)
     const cookie = login.headers.get("set-cookie")?.split(";")[0]
     if (!cookie) throw new Error("SF_FACTORY_AUTHENTICATED_COOKIE_MISSING")
