@@ -368,12 +368,14 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     requestValue(
       {
         ...draft("x", "draft"),
-        po: { lines: [{ qty: 0, unitPrice: 5 }] },
+        po: { currency: "USD", lines: [{ qty: 0, unitPrice: 5 }] },
         pr: { estAmount: 9 },
       },
       rates,
     ),
   ).toBe(0)
+  // A zero-valued row is valid only with a recorded currency; absence is not zero.
+  expect(requestValue({ ...draft("x", "draft"), po: { lines: [{ qty: 0, unitPrice: 5 }] } }, rates)).toBeNull()
 })
 
 function draft(

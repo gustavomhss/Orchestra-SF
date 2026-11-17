@@ -276,8 +276,12 @@ jobs:
           {
             case "$SF_SUITE_ID" in
               CI-SF)
+                # Bun positional operands behave as filters and discover files
+                # lexicographically, defeating WP01 start/lease/finalize ordering.
+                # --files-from consumes the exact manifest A2 ordered path list.
                 bun test --timeout 30000 --bail=5 \
-                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                  --reporter=junit "--reporter-outfile=$evidence/report.xml" \
+                  --files-from "$evidence/selection.txt"
                 ;;
               CI-CLI)
                 bun test --timeout 30000 --reporter=junit \

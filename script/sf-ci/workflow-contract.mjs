@@ -144,8 +144,11 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
     const body = arms.get(suite.id)
     const flat = body.replace(/\\\n\s*/g, " ")
     const commands = flat.split("\n").filter((line) => /\bbun test\b/.test(line))
-    requireContract(commands.length === 1 && /"\$\{files\[@\]\}"/.test(commands[0]),
-      `${suite.id}: Bun must consume all files from selector as argv, exactly once`)
+    const selectedFromManifest = suite.id === "CI-SF"
+      ? /--files-from "\$evidence\/selection\.txt"/.test(commands[0]) && !/"\$\{files\[@\]\}"/.test(commands[0])
+      : /"\$\{files\[@\]\}"/.test(commands[0]) && !/--files-from/.test(commands[0])
+    requireContract(commands.length === 1 && selectedFromManifest,
+      `${suite.id}: Bun must consume exactly the complete manifest-selected files`)
     if (suite.id === "CI-APP-BROWSER" || suite.id === "CI-SF") {
       requireContract(/(?:^|\s)--bail=5(?:\s|$)/.test(commands[0]), `${suite.id}: --bail=5 lost`)
     }

@@ -57,14 +57,15 @@ async function requireLifecycleSelection() {
   // runs before the driver is started or Chromium is created.
   // Bun test exposes only the current entry and passthrough in process.argv.
   // This Linux lane reads its actual OS command line, never a stale request file.
-  const invalid = () => new Error("WP01 requires Linux explicit files, startup first and finalizer last; only --timeout or exact verified CI-SF reporter flags. Autodiscovery, filters, isolation, sharding, partial and parallel/reordered selections are forbidden.")
+  const invalid = () => new Error("WP01 requires Linux and exact startup-first/last-finalizer explicit selection or full CI-SF manifest --files-from selection. Filters, isolation, sharding, partial and parallel/reordered selections are forbidden.")
   if (process.platform !== "linux") throw invalid()
   const command = (await bounded(Bun.file("/proc/self/cmdline").text(), "read actual Linux test selection", 5_000)).split("\0")
   if (command.at(-1) === "") command.pop()
   const executable = command[0]
   if (!executable || executable !== "bun" && resolve(executable) !== resolve(process.execPath) || command[1] !== "test") throw invalid()
   const args = command.slice(2)
-  const files: string[] = []
+  let files: string[] = []
+  let listFile: string | undefined
   let ciBail = false, ciReporter = false, ciReportFile = false
   for (let index = 0; index < args.length; index++) {
     const arg = args[index]
@@ -74,6 +75,8 @@ async function requireLifecycleSelection() {
       continue
     }
     if (/^--timeout=[1-9]\d*$/.test(arg)) continue
+    // Exact CI-SF file-list mode bypasses Bun positional filter/discovery order.
+    if (arg === "--files-from" && !listFile) { listFile = args[++index]; if (!listFile) throw invalid(); continue }
     // CI-SF is the complete Linux module selection, not a filtered WP01 run.
     if (arg === "--bail=5" && !ciBail) { ciBail = true; continue }
     if (arg === "--reporter=junit" && !ciReporter) { ciReporter = true; continue }
@@ -81,12 +84,19 @@ async function requireLifecycleSelection() {
     if (arg.startsWith("-") || !arg.endsWith(".test.ts") || /[*?\[\]{}]/.test(arg)) throw invalid()
     files.push(resolve(arg))
   }
+  if (listFile) {
+    const workspace = process.env.GITHUB_WORKSPACE
+    if (!workspace || process.env.SF_SUITE_ID !== "CI-SF" || resolve(listFile) !== resolve(workspace, "sf-ci-evidence/CI-SF/selection.txt")) throw invalid()
+    const list = await bounded(Bun.file(resolve(listFile)).text(), "read complete CI-SF file list", 5_000)
+    if (!list.endsWith("\n")) throw invalid()
+    files = list.trimEnd().split("\n").map((name) => resolve(workspace, "modules/sucafina", name))
+  }
   const startup = resolve(import.meta.dir, "browser-startup.test.ts")
   const finalizer = resolve(import.meta.dir, "browser-lifecycle.test.ts")
   if (files.length < 3 || files[0] !== startup || files.at(-1) !== finalizer || new Set(files).size !== files.length) throw invalid()
   if (ciBail || ciReporter || ciReportFile) {
     const workspace = process.env.GITHUB_WORKSPACE
-    if (!ciBail || !ciReporter || !ciReportFile || process.env.SF_SUITE_ID !== "CI-SF" || !workspace) throw invalid()
+    if (!ciBail || !ciReporter || !ciReportFile || process.env.SF_SUITE_ID !== "CI-SF" || !workspace || !listFile) throw invalid()
     // Prove the complete A2 selector's ordered argv before admitting a lease.
     const source = await bounded(Bun.file(resolve(workspace, "sf-ci-evidence/CI-SF/selection.txt")).text(), "read full CI-SF selector evidence", 5_000)
     const expected = source.trimEnd().split("\n").map((name) => resolve(workspace, "modules/sucafina", name))

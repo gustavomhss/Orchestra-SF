@@ -174,6 +174,11 @@ export async function createExportArtifactFixture(options: { maxBytes?: number }
   }
   return { origin, directory, clock, period, note, owner, sessions, maxBytes, persistence, authority, business, app, incoming, request, handle, withCall, preserve,
     durable: () => resources.store.transactionAll!(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) })),
+    inRoot: <T>(work: () => Promise<T>): Promise<T> => {
+      const read = resources.store.readSnapshotRoot
+      if (!read) throw new Error("Export proof requires actual read-only snapshot root")
+      return read(work)
+    },
     productState: () => persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(object(snapshot.data.__sfProductV1)) })),
     document: (ref: string) => persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(object(object(object(snapshot.data.__sfProductV1).documents)[ref])) })),
     corrupt: (ref: string, replacement: Record<string, unknown> | null) => persistence.transaction("dashboard", async (snapshot) => {
