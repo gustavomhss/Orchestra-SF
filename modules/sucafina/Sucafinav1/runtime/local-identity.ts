@@ -223,7 +223,7 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       return (await ready(request))?.handle === current.handle ? actor : null
     },
     async graphDirectory(request) {
-      if (options.client.profile !== "web-confidential") throw new Error("Microsoft admin directory unavailable")
+      if (options.client.profile !== "web-confidential" || !options.client.graphDirectory) throw new Error("Microsoft admin directory unavailable")
       const current = await ready(request)
       if (!current) throw new Error("Microsoft admin session unavailable")
       const result = await options.client.graphDirectory(current.value.tokens.accessToken)
