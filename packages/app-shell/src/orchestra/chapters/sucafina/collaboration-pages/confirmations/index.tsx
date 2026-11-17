@@ -42,6 +42,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     "sf.common.stale" | "sf.common.partial"): Key => copy as Key
   const t = (copy: keyof typeof SF_U44_COPY) => language.t(copy as Parameters<typeof language.t>[0])
   const selectedRef = () => String(props.route.params.selectionRef)
+  const recordedRoute = () => !selectedRef().startsWith("confirmation-selection:")
   const [manualScope, setManualScope] = createSignal("")
   const [scope, setScope] = createSignal<Scope>()
   const [prepared, setPrepared] = createSignal<Prepared>()
@@ -147,10 +148,6 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     } catch { if (current(s, abort.signal)) setState("unavailable") }
     finally { if (current(s, abort.signal)) setBusy(false) }
   }
-  createEffect(on(() => {
-    const state = owner.state()
-    return state.status === "ready" ? `${state.ownerKey}|${owner.generation()}|${selectedRef()}` : ""
-  }, (value) => { if (value) void readSelection() }))
   const project = async (id: string) => {
     const s = snapshot()
     if (!s || !id.trim() || busy()) return
@@ -173,6 +170,18 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     } catch { if (current(s, abort.signal)) setState("unavailable") }
     finally { if (current(s, abort.signal)) setBusy(false) }
   }
+  // UI30 may open a *recorded* confirmation id. It is read-only and must
+  // reproject by id at the original producer; it is never a prepared selection.
+  createEffect(on(() => {
+    const state = owner.state()
+    return state.status === "ready" ? `${state.ownerKey}|${owner.generation()}|${selectedRef()}` : ""
+  }, (value) => {
+    if (!value) return
+    if (recordedRoute()) {
+      setConfirmationId(selectedRef())
+      void project(selectedRef())
+    } else void readSelection()
+  }))
   const confirm = async (request: { selectionRef: SfRef; materialVersion: SfVersion }) => {
     const s = snapshot(), selected = scope(), material = prepared(), version = storageVersion()
     if (!s || !selected || !material || version === undefined || busy() || pendingKey() ||
@@ -231,8 +240,8 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
       density="comfortable" layout="reading" onLayoutMode={() => undefined}
     >
       <section class="sf-u44-confirm" data-sf-surface="UI53">
-        <p>{t("sf.u44.navigationSelection")}: <code data-sf-selection-ref>{selectedRef()}</code></p>
-        <Show when={owner.state().status === "ready" && !confirmed()}>
+        <p>{t(recordedRoute() ? "sf.u44.confirmationId" : "sf.u44.navigationSelection")}: <code data-sf-selection-ref>{selectedRef()}</code></p>
+        <Show when={owner.state().status === "ready" && !confirmed() && !recordedRoute()}>
           <details><summary>{t("sf.u44.prepareMaterial")}</summary>
             <form class="sf-u44-scope-form" onSubmit={(event) => { event.preventDefault(); void prepareManual() }}>
               <label>{t("sf.u44.scopeJson")}<textarea data-sf-confirm-scope rows={9} required value={manualScope()}
@@ -252,6 +261,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
           onRetryRead={() => {
             if (pendingKey()) return
             if (confirmed()) void project(confirmed()!.id)
+            else if (recordedRoute()) void project(selectedRef())
             else void readSelection()
           }}>
           <Show when={scope() && prepared() && !confirmed()}>
@@ -285,6 +295,16 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
                 onConfirm={(request) => void confirm(request)}
                 onRevalidate={() => void readSelection()}
               />
+            </section>
+          </Show>
+          <Show when={recordedRoute() && projection()}>
+            <section class="sf-u44-receipt" data-sf-confirm-record-project>
+              <h2>{t("sf.u44.revalidateMaterial")}</h2>
+              <dl>
+                <div><dt>{t("sf.u44.confirmationId")}</dt><dd><code>{projection()!.confirmationId}</code></dd></div>
+                <div><dt>{t("sf.u44.status")}</dt><dd>{projection()!.state}</dd></div>
+                <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{projection()!.evaluatedSourceVersion}</dd></div>
+              </dl>
             </section>
           </Show>
           <Show when={confirmed()}>
