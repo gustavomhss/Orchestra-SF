@@ -1,4 +1,23 @@
-# Consolidação do backlog — 2026-11-17 (lead-authored, verificado por git)
+# Snapshot histórico do backlog — 2026-11-17
+
+> **NÃO CANÔNICO PARA EXECUÇÃO.** Este arquivo preserva a visão do lead em um momento específico.  
+> O plano atual está em `consolidation/README.md` e `consolidation/execution-plan.md`.
+
+## Correções obrigatórias de leitura
+
+1. Este arquivo **não** era o inventário completo de tudo que estava aberto; ele cobria um subconjunto numerado principalmente entre #205 e #331.
+2. A fila viva possuía **242 PRs abertos** na consulta posterior de 2026-11-17.
+3. A base avançou para `close-final-candidate@9c2a43e2ed63254a94ae698cac52c476a3fb2653` antes da elaboração do plano canônico.
+4. Nenhum vermelho compartilhado é aceito depois de B0.
+5. As palavras “Superseded”, “Crítico” e “Not-checked” abaixo são hipóteses históricas; exigem ledger e prova atual.
+6. O PR `#237` não está superseded: é a rota de promoção de `close-final-candidate` para `go-live-close`.
+7. O PR `#333` foi mergeado como documentação; o conteúdo abaixo não substitui inventário completo.
+8. Nenhuma linha abaixo autoriza merge, close, deploy, VM ou GO.
+
+---
+
+## Registro original preservado
+
 
 **O que é isto:** o inventário limpo de tudo que estava aberto no repo no fim do dia 2026-11-17, dividido em 4 blocos de ~20, com uma recomendação de disposição por item.
 **O que NÃO é isto:** autorização para executar nada. Nenhuma linha deste documento autoriza merge, close, rebase, rodar deploy ou ligar a VM. Toda execução continua sob a régua do dono: cada PR só desembarca **verde exceto os jobs compartilhados** (`sf/static-and-contracts` = guards dev=1, `sf/test-CI-SF` = microsoft integration fixture + local-browser.ts + `presentation.test.ts` #b54a22, `sf/test-CI-UI-DECISIONS`/`sf/test-CI-UI-REPORTS` = console installed specs, `sf/verify` = agregador); review fria mínima quando toca comportamento de produto; merges em lote sempre deram por slice, nunca por contágio.
