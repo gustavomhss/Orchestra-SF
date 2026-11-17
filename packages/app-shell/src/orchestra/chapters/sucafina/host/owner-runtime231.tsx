@@ -687,7 +687,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const parsed = explicitSelection(query)
     // Async outcomes must not themselves restart discovery: failed/denied reads
     // are terminal for this owner query until its URL or profile changes.
-    const activeSelection = untrack(selection)
+    const activeSelection = untrack(selection) // discovery writes must not retrigger discovery
     const epoch = ++discoveryAttempt
     // A changed route/server/directory immediately drops stale candidate IDs.
     setInstallationChoices("items", [])
