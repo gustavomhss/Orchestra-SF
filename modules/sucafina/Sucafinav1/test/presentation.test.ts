@@ -92,7 +92,11 @@ test("operations pages normalize visible technical labels while retaining exact 
 })
 
 test("planner chart has keyed colors, visible months and USD scale, preserves signed amounts and closed-month zero rules", () => {
-  const summary = { budget: [120, -60, ...Array(10).fill(0)], actual: Array(12).fill(0), outlook: [100, -60, ...Array(10).fill(0)], total: 60, actualYTD: 0, fullYear: 40 }
+  // The first month has a recorded actual in a priced source line; later months do not.
+  // An aggregate zero without the line-level evidence is intentionally unavailable.
+  const summary = { budget: [120, -60, ...Array(10).fill(0)], actual: Array(12).fill(0), outlook: [100, -60, ...Array(10).fill(0)], total: 60, actualYTD: 0, fullYear: 40,
+    lines: [{ sec: "opex", el: "services", cur: "USD", a: [0], actual: [0] }],
+  }
   const before = structuredClone(summary)
   const html = planner(summary)!
   const chart = figure(html, monthlyTitle)

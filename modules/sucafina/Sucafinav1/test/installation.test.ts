@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import { createInstallationHandler } from "../installation.ts"
 import type { Installation } from "../installation.ts"
 import type { ResolvedActor } from "../src/identity.ts"
-import { procurementScreen } from "../src/procurement-screen.ts"
+import { procurementDashboard, procurementScreen } from "../src/procurement-screen.ts"
 
 const own = {
   number: "PR-2026-0001",
@@ -15,7 +15,8 @@ const other = {
   status: "po_issued",
   createdBy: "directory-2",
   pr: { title: "Private request" },
-  po: { expenseType: "CAPEX", lines: [{ qty: 1, unitPrice: 91827 }] },
+  // An issued PO contributes only with a recorded source currency and approval base.
+  po: { currency: "USD", approvalBaseCurrency: "USD", expenseType: "CAPEX", lines: [{ qty: 1, unitPrice: 91827 }] },
 }
 
 function installation(actor: ResolvedActor | null) {
@@ -140,4 +141,20 @@ test("requester cannot read another request through aggregates, detail or an unr
   })
   expect(buyer.html).toContain(other.number)
   expect(buyer.html).toContain('data-capex="91827"')
+})
+
+test("issued CAPEX with absent or incompatible currency evidence is unavailable, never guessed", () => {
+  const actor = { id: "directory-1", canWrite: true, roles: ["buyer"] }
+  const missingBase = { ...other, po: { ...other.po, approvalBaseCurrency: undefined } }
+  const missingCurrency = { ...other, po: { ...other.po, currency: undefined } }
+
+  for (const request of [missingBase, missingCurrency]) {
+    const screen = procurementScreen({ actor, requests: [request], rates: { currency: "USD" } })
+    expect(screen.html).toContain('data-capex="0"')
+    expect(procurementDashboard([request], { currency: "USD" }).unavailable).toEqual([other.number])
+  }
+
+  const changedBase = procurementScreen({ actor, requests: [other], rates: { currency: "EUR" } })
+  expect(changedBase.html).toContain('data-capex="0"')
+  expect(procurementDashboard([other], { currency: "EUR" }).unavailable).toEqual([other.number])
 })
