@@ -67,10 +67,15 @@ const cap01 = availability.find((item: unknown) => item && typeof item === "obje
   { operations?: { operationId: string; state: string; operational: boolean }[] } | undefined
 const op = cap01?.operations?.find((row) => row.operationId === "domain.page.CAP01")
 const home = availability.find((item: unknown) => item && typeof item === "object" &&
-  "resource" in item && item.resource === "home") as { operations?: { operationId: string; state: string; operational: boolean; reason: string | null }[] } | undefined
-const homeOp = home?.operations?.find((row) => row.operationId === "projection.home")
-console.log("SF_VISUAL_DIRECT_HOME_STATUS_" + String(homeOp?.state ?? "absent") +
-  "_OPERATIONAL_" + String(homeOp?.operational ?? false) + "_REASON_" + String(homeOp?.reason ?? "none"))
+  "resource" in item && item.resource === "home")
+const homeOps = home && typeof home === "object" && "operations" in home &&
+  Array.isArray(home.operations) ? home.operations : []
+const homeOp: unknown = homeOps.find((row: unknown) =>
+  row && typeof row === "object" && "operationId" in row && row.operationId === "projection.home")
+const homeField = (key: "state" | "operational" | "reason") =>
+  homeOp && typeof homeOp === "object" && key in homeOp ? homeOp[key] : undefined
+console.log("SF_VISUAL_DIRECT_HOME_STATUS_" + String(homeField("state") ?? "absent") +
+  "_OPERATIONAL_" + String(homeField("operational") ?? false) + "_REASON_" + String(homeField("reason") ?? "none"))
 console.log("SF_VISUAL_DIRECT_CONTEXT_HTTP_" + contextResponse.status + "_STATUS_" +
   String(ctx.status ?? "unparsed") + "_CAP01_" + String(op?.state ?? "absent") +
   "_OPERATIONAL_" + String(op?.operational ?? false))
