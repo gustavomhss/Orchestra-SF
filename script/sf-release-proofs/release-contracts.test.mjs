@@ -1,6 +1,7 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { generateKeyPairSync, sign } from "node:crypto"
+import { readFileSync } from "node:fs"
 import {
   CI_JOB_IDS, CI_RECIPE_IDS, PROOF_IDS, AZURE_IDS, sha256,
   assertFactoryReceipt, validateSignedBundleStructure,
@@ -186,4 +187,17 @@ test("non-GO owner or a different out-of-band owner identity fails",()=>{
   const c=bundle()
   assert.throws(()=>validateSignedBundleStructure(c,CTX,"someone-else"),
     /F04_GATE_EXPLICIT_SEPARATE_HUMAN_OWNER_GO_REQUIRED/)
+})
+
+test("published go-no-go JSON template enumerates exactly 12 jobs, 8 receipts, 11 proofs, 4 Azure and three reviews, default NO_GO",()=>{
+  const raw=readFileSync(new URL("../../sf/proofs/go-no-go-bundle.template.json",import.meta.url),"utf8")
+  const b=JSON.parse(raw)
+  assert.deepEqual(b.ci.jobs.map(j=>j.id),[...CI_JOB_IDS])
+  assert.deepEqual(b.ci.recipeReceipts.map(r=>r.id),[...CI_RECIPE_IDS])
+  assert.deepEqual(b.proofs.map(p=>p.id),[...PROOF_IDS])
+  assert.deepEqual(b.azure.map(a=>a.id),[...AZURE_IDS])
+  assert.equal(b.reviews.length,3)
+  assert.equal(b.owner.decision,"NO_GO")
+  assert.throws(()=>validateSignedBundleStructure(b,CTX,OWNER),
+    /F04_GATE_FROZEN_C_TREE_MANIFEST_ARTIFACT_MISMATCH/)
 })
