@@ -21,3 +21,5 @@ The previously discussed photographic background also needs a licensed/original 
 3. Pixel-diff real Orchestra-SF before/after: page geometry, glass, blur, panels, shadows, navigation, charts, procurement, planner and admin unchanged.
 4. Test web desktop/mobile and reduced-motion, failure/loading and auth states. No artificial loading delay, invented dashboard, neon accent or new glass rule.
 5. Do not merge until official assets and visual evidence pass; no changes to go-live assembly branch.
+
+Brand-specific assertions run separately via `node --test script/sucafina/brand-identity.test.mjs` and `sucafina-brand-identity` Actions. The SF app source suite has a signed exact historical case inventory; do not widen or weaken it to admit brand tests without review.
