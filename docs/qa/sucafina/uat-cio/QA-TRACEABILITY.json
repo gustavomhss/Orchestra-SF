@@ -1,0 +1,424 @@
+{
+  "schema": "sf-uat-360-static-verification-v1",
+  "status": "STATIC_DESIGN_CHECKS_PASSED_NOT_PRODUCT_EXECUTION",
+  "surface_count": 70,
+  "route_count": 165,
+  "surface_stories": 140,
+  "e2e_stories": 45,
+  "distinct_stories": 185,
+  "route_probes": 825,
+  "coverage_journeys": [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08"
+  ],
+  "surface_coverage": {
+    "CAP01": {
+      "primary": "SF-CAP01-P01",
+      "adversarial": "SF-CAP01-N01"
+    },
+    "CAP02": {
+      "primary": "SF-CAP02-P01",
+      "adversarial": "SF-CAP02-N01"
+    },
+    "CAP03": {
+      "primary": "SF-CAP03-P01",
+      "adversarial": "SF-CAP03-N01"
+    },
+    "CAP04": {
+      "primary": "SF-CAP04-P01",
+      "adversarial": "SF-CAP04-N01"
+    },
+    "CAP05": {
+      "primary": "SF-CAP05-P01",
+      "adversarial": "SF-CAP05-N01"
+    },
+    "CAP06": {
+      "primary": "SF-CAP06-P01",
+      "adversarial": "SF-CAP06-N01"
+    },
+    "CAP07": {
+      "primary": "SF-CAP07-P01",
+      "adversarial": "SF-CAP07-N01"
+    },
+    "CAP08": {
+      "primary": "SF-CAP08-P01",
+      "adversarial": "SF-CAP08-N01"
+    },
+    "CAP09": {
+      "primary": "SF-CAP09-P01",
+      "adversarial": "SF-CAP09-N01"
+    },
+    "CAP10": {
+      "primary": "SF-CAP10-P01",
+      "adversarial": "SF-CAP10-N01"
+    },
+    "CAP11": {
+      "primary": "SF-CAP11-P01",
+      "adversarial": "SF-CAP11-N01"
+    },
+    "CAP12": {
+      "primary": "SF-CAP12-P01",
+      "adversarial": "SF-CAP12-N01"
+    },
+    "CAP13": {
+      "primary": "SF-CAP13-P01",
+      "adversarial": "SF-CAP13-N01"
+    },
+    "CAP14": {
+      "primary": "SF-CAP14-P01",
+      "adversarial": "SF-CAP14-N01"
+    },
+    "CAP15": {
+      "primary": "SF-CAP15-P01",
+      "adversarial": "SF-CAP15-N01"
+    },
+    "CAP16": {
+      "primary": "SF-CAP16-P01",
+      "adversarial": "SF-CAP16-N01"
+    },
+    "CAP17": {
+      "primary": "SF-CAP17-P01",
+      "adversarial": "SF-CAP17-N01"
+    },
+    "CAP18": {
+      "primary": "SF-CAP18-P01",
+      "adversarial": "SF-CAP18-N01"
+    },
+    "CAP19": {
+      "primary": "SF-CAP19-P01",
+      "adversarial": "SF-CAP19-N01"
+    },
+    "CAP20": {
+      "primary": "SF-CAP20-P01",
+      "adversarial": "SF-CAP20-N01"
+    },
+    "CAP21": {
+      "primary": "SF-CAP21-P01",
+      "adversarial": "SF-CAP21-N01"
+    },
+    "CAP22": {
+      "primary": "SF-CAP22-P01",
+      "adversarial": "SF-CAP22-N01"
+    },
+    "CAP23": {
+      "primary": "SF-CAP23-P01",
+      "adversarial": "SF-CAP23-N01"
+    },
+    "CAP24": {
+      "primary": "SF-CAP24-P01",
+      "adversarial": "SF-CAP24-N01"
+    },
+    "CAP25": {
+      "primary": "SF-CAP25-P01",
+      "adversarial": "SF-CAP25-N01"
+    },
+    "CAP26": {
+      "primary": "SF-CAP26-P01",
+      "adversarial": "SF-CAP26-N01"
+    },
+    "CAP27": {
+      "primary": "SF-CAP27-P01",
+      "adversarial": "SF-CAP27-N01"
+    },
+    "CAP28": {
+      "primary": "SF-CAP28-P01",
+      "adversarial": "SF-CAP28-N01"
+    },
+    "UI29": {
+      "primary": "SF-UI29-P01",
+      "adversarial": "SF-UI29-N01"
+    },
+    "UI30": {
+      "primary": "SF-UI30-P01",
+      "adversarial": "SF-UI30-N01"
+    },
+    "UI31": {
+      "primary": "SF-UI31-P01",
+      "adversarial": "SF-UI31-N01"
+    },
+    "UI32": {
+      "primary": "SF-UI32-P01",
+      "adversarial": "SF-UI32-N01"
+    },
+    "UI33": {
+      "primary": "SF-UI33-P01",
+      "adversarial": "SF-UI33-N01"
+    },
+    "UI34": {
+      "primary": "SF-UI34-P01",
+      "adversarial": "SF-UI34-N01"
+    },
+    "UI35": {
+      "primary": "SF-UI35-P01",
+      "adversarial": "SF-UI35-N01"
+    },
+    "UI36": {
+      "primary": "SF-UI36-P01",
+      "adversarial": "SF-UI36-N01"
+    },
+    "UI37": {
+      "primary": "SF-UI37-P01",
+      "adversarial": "SF-UI37-N01"
+    },
+    "UI38": {
+      "primary": "SF-UI38-P01",
+      "adversarial": "SF-UI38-N01"
+    },
+    "UI39": {
+      "primary": "SF-UI39-P01",
+      "adversarial": "SF-UI39-N01"
+    },
+    "UI40": {
+      "primary": "SF-UI40-P01",
+      "adversarial": "SF-UI40-N01"
+    },
+    "UI41": {
+      "primary": "SF-UI41-P01",
+      "adversarial": "SF-UI41-N01"
+    },
+    "UI42": {
+      "primary": "SF-UI42-P01",
+      "adversarial": "SF-UI42-N01"
+    },
+    "UI43": {
+      "primary": "SF-UI43-P01",
+      "adversarial": "SF-UI43-N01"
+    },
+    "UI44": {
+      "primary": "SF-UI44-P01",
+      "adversarial": "SF-UI44-N01"
+    },
+    "UI45": {
+      "primary": "SF-UI45-P01",
+      "adversarial": "SF-UI45-N01"
+    },
+    "UI46": {
+      "primary": "SF-UI46-P01",
+      "adversarial": "SF-UI46-N01"
+    },
+    "UI47": {
+      "primary": "SF-UI47-P01",
+      "adversarial": "SF-UI47-N01"
+    },
+    "UI48": {
+      "primary": "SF-UI48-P01",
+      "adversarial": "SF-UI48-N01"
+    },
+    "UI49": {
+      "primary": "SF-UI49-P01",
+      "adversarial": "SF-UI49-N01"
+    },
+    "UI50": {
+      "primary": "SF-UI50-P01",
+      "adversarial": "SF-UI50-N01"
+    },
+    "UI51": {
+      "primary": "SF-UI51-P01",
+      "adversarial": "SF-UI51-N01"
+    },
+    "UI52": {
+      "primary": "SF-UI52-P01",
+      "adversarial": "SF-UI52-N01"
+    },
+    "UI53": {
+      "primary": "SF-UI53-P01",
+      "adversarial": "SF-UI53-N01"
+    },
+    "UI54": {
+      "primary": "SF-UI54-P01",
+      "adversarial": "SF-UI54-N01"
+    },
+    "UI55": {
+      "primary": "SF-UI55-P01",
+      "adversarial": "SF-UI55-N01"
+    },
+    "UI56": {
+      "primary": "SF-UI56-P01",
+      "adversarial": "SF-UI56-N01"
+    },
+    "UI57": {
+      "primary": "SF-UI57-P01",
+      "adversarial": "SF-UI57-N01"
+    },
+    "UI58": {
+      "primary": "SF-UI58-P01",
+      "adversarial": "SF-UI58-N01"
+    },
+    "UI59": {
+      "primary": "SF-UI59-P01",
+      "adversarial": "SF-UI59-N01"
+    },
+    "UI60": {
+      "primary": "SF-UI60-P01",
+      "adversarial": "SF-UI60-N01"
+    },
+    "UI61": {
+      "primary": "SF-UI61-P01",
+      "adversarial": "SF-UI61-N01"
+    },
+    "UI62": {
+      "primary": "SF-UI62-P01",
+      "adversarial": "SF-UI62-N01"
+    },
+    "UI63": {
+      "primary": "SF-UI63-P01",
+      "adversarial": "SF-UI63-N01"
+    },
+    "UI64": {
+      "primary": "SF-UI64-P01",
+      "adversarial": "SF-UI64-N01"
+    },
+    "UI65": {
+      "primary": "SF-UI65-P01",
+      "adversarial": "SF-UI65-N01"
+    },
+    "UI66": {
+      "primary": "SF-UI66-P01",
+      "adversarial": "SF-UI66-N01"
+    },
+    "UI67": {
+      "primary": "SF-UI67-P01",
+      "adversarial": "SF-UI67-N01"
+    },
+    "UI68": {
+      "primary": "SF-UI68-P01",
+      "adversarial": "SF-UI68-N01"
+    },
+    "UI69": {
+      "primary": "SF-UI69-P01",
+      "adversarial": "SF-UI69-N01"
+    },
+    "UI70": {
+      "primary": "SF-UI70-P01",
+      "adversarial": "SF-UI70-N01"
+    }
+  },
+  "routes_by_surface": {
+    "UI45": 1,
+    "CAP03": 1,
+    "CAP05": 4,
+    "CAP01": 1,
+    "CAP02": 4,
+    "CAP04": 4,
+    "UI33": 2,
+    "UI58": 3,
+    "UI29": 1,
+    "UI69": 1,
+    "UI67": 1,
+    "UI31": 1,
+    "UI57": 3,
+    "UI68": 1,
+    "UI55": 1,
+    "UI61": 2,
+    "UI62": 1,
+    "UI63": 2,
+    "CAP16": 3,
+    "CAP13": 4,
+    "CAP12": 5,
+    "CAP11": 4,
+    "CAP15": 4,
+    "CAP06": 1,
+    "CAP07": 6,
+    "CAP08": 5,
+    "CAP21": 3,
+    "CAP19": 5,
+    "CAP22": 1,
+    "CAP20": 6,
+    "CAP18": 4,
+    "CAP17": 1,
+    "CAP23": 4,
+    "CAP09": 1,
+    "CAP10": 5,
+    "UI42": 2,
+    "UI44": 2,
+    "CAP26": 3,
+    "CAP14": 4,
+    "CAP24": 1,
+    "CAP25": 8,
+    "CAP28": 1,
+    "CAP27": 4,
+    "UI47": 1,
+    "UI49": 1,
+    "UI50": 2,
+    "UI48": 3,
+    "UI64": 3,
+    "UI70": 1,
+    "UI65": 2,
+    "UI66": 3,
+    "UI30": 1,
+    "UI51": 3,
+    "UI32": 3,
+    "UI46": 1,
+    "UI54": 1,
+    "UI34": 1,
+    "UI35": 3,
+    "UI41": 2,
+    "UI36": 1,
+    "UI39": 2,
+    "UI38": 1,
+    "UI40": 2,
+    "UI37": 1,
+    "UI59": 1,
+    "UI60": 1,
+    "UI56": 1,
+    "UI53": 1,
+    "UI52": 1,
+    "UI43": 1
+  },
+  "e2e_by_priority": {
+    "P0": 39,
+    "P1": 6
+  },
+  "e2e_by_condition": {
+    "BASELINE": 45
+  },
+  "file_sha256": {
+    "TEST-STRATEGY.md": "a3a6a8f2489254caa6430161cc1cf6a0cdaee0833e0b5eb40c50a60e1c32063d",
+    "EXECUTION-RUNBOOK.md": "93df8d9d1ac9bbc48d935fa98fac9d5259e5cf1ce436f6faf985ab3c939c03a0",
+    "MATRIX-70-SURFACES.csv": "d988d04b4300caaa96d5092f62ee0970ac0df084c8a63a4655192f0ba1ef15df",
+    "EVIDENCE-RECORD.json": "33f546731969b2a2061e3ea399fc3f78e21a8c90150e8668b6e858bf2ea9ff8c",
+    "ROUTE-TEST-CASES.csv": "02977be0e6a733050e30ffbf29505949531ca32098fa563f068ccd6669422e95",
+    "stories_e2e.jsonl": "97bc449e00aac7cd6e5902f7b3da328a4a8fea66c29703a065cc6699d13a89fc",
+    "MATRIX-165-ROUTES.csv": "c0cd340da7608a49fad163e84921defcce1131f5fcbae0855360c04da4944cc3",
+    "README.md": "ca7722be32d5736a80611c6861123b077e8b3b07105dea769af9f04652860c76",
+    "STORIES-70-SURFACES.md": "8cd492f9da27499cd555bc8c92959654ea1755a2d5d3f63034b31c9277375f4e",
+    "GO-NOGO-GATE.md": "6a6e9ac3a1e3ad3a5839e53fdbf398135de04a425e2a0bc7c5ff93d5cd2484ad",
+    "ACTORS-AND-DATA.md": "f1d8cc4bd52edac410f46b731b8f492e19e1c7cb34190ad60e359ed11d7751a7",
+    "stories_70x2.jsonl": "27fa984e485431288897a3cfa6db8bf310b1d81704802199489957a54ea182a5",
+    "STORIES-END-TO-END.md": "a0271b1f515eea281fd047c11f1a5bf87b2c94f853e74d8bb89836eab1345882",
+    "ROUTE-TEST-CASES.jsonl": "8e7365e01489cdfed86069aa2f0ce801ace8665c4050853be89b091284eec94d",
+    "research/SHA256SUMS.txt": "5eddbb794a4cbf983c96b21bf62066d6ee7873de407057c2f9f065ac5eb6f090",
+    "research/qa_validate.py": "f663f1cdefa9f18a7725a1887a48601d14c1d99977c2d09752519a35f6bc5cab",
+    "research/build_atlas.py": "cdb454a95827f9724e1b1ef2c4d63d5cda19a6f35b9b5079caee63fd52092b48",
+    "research/orchestra_sf_superficies_70.csv": "e6e17015fab79ada12c4a040dd74f96dbbd17a3b3cadc0f4085ec97cab552ae3",
+    "research/README_REPRODUZIR.md": "eb932ff6f97cd1aa9e6e7772717ffbdb06464890c6dbb9901b3a752fb1a54531",
+    "research/Orchestra_SF_Atlas_Interativo.html": "46d101baf2b00dc3b0e7dcb6873367e19b92cdbcf2f4f208f004d9d91a1db604",
+    "research/orchestra_sf_rotas_165.csv": "50dc20df01a20561a338fcd6fe4e6dff17dc115bef41ef471f50a794b02e963c",
+    "research/Orchestra_SF_Matriz_Triple_Check_70.csv": "3e41178e9b6db753c77cda9ff9dfd3bec1833607fbc59279c178589481337276",
+    "research/Orchestra_SF_Proveniencia_Triple_Check.json": "ea7b30f79551681b7c744f6a71c6d07bd4f71a60d33d874e63d6ab323db61400",
+    "research/Orchestra_SF_Atlas_Completo.md": "ae82fa1dc672715c6fdabac51a7de6d8762b454d3db6da64ab28e9c50fb39715",
+    "research/Triple_Check_Adversarial.md": "521a644c9af8e32bd5b8eb74dc2cc549462e62bad2e4707b89c941825c9b3d31",
+    "research/Orchestra_SF_Atlas_Auditoria_Completa.zip": "9dd722457d3069b5d44512d2a3317e280da9042d89602bd1b72ff35c69bd8168",
+    "research/Orchestra_SF_Validacao_Navegador.json": "44116bae651a2986dc0184d2a555467d48f20f26c79813cebd4d10295813920c",
+    "research/browser_qa.py": "1cdd72bf4e58afd23726305467f2875677a428b5ec98e4bbecd64b96d2f0467a",
+    "research/Orchestra_SF_Validacao_Artefatos.json": "fde02447ed4dd1ba727252f650fc9af3b30caed8bbfe56183d2a505f48bb911a",
+    "research/Orchestra_SF_Producers_Digest_Drift.csv": "20808219833b44f0ba5be4ca5ad88223e2d4ba431cef879b94f4b8959f338f01",
+    "research/Orchestra_SF_Triple_Check_v2.zip": "0f9a8ee63fb443f55660c19e4dd02d1b41197aa92c6529fea12b73e7ed555404",
+    "research/build_qa_matrix.py": "67dde51f165e20a0aeca0636ee4f2d456c3ca4b23add00a91d9563e027ab06eb",
+    "scripts/validate_qa_pack.py": "64630c1cb6915dd5dae182192a8ff10f78e7c9a24b5b96207a1a266899b6768a",
+    "fixtures/SF-LAB-2026.json": "d469616b09fc4a2d982ae7b99c8bca9164d3a8bcc801f6d0d27d8d2dc4a43d34",
+    "fixtures/IMPORT-OPEX-VALID.xlsx": "35e8e9d9694e8475cbfbba2bc0a11c7ebdcff61eaf65e27ad7da7cb508ba6951",
+    "fixtures/IMPORT-README.md": "3024906a7a08e26f83aa8b2b4a449f635b2b9135d716050b803d56148e384f3c",
+    "fixtures/IMPORT-OPEX-ADVERSARIAL.xlsx": "1daf869354a1a110d455e46a08e5a60c5d80db1e63a0f9c81ba192dcf514991d"
+  },
+  "not_run": true,
+  "executed_tests": 0,
+  "live_tenant_tests": 0,
+  "go_live_approved": false
+}
