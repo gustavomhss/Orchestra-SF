@@ -20,7 +20,7 @@ export async function readDocumentEvidence(id: string, context: TrustedDomainCon
   if (digestSfValue(record.snapshot.evidence) !== digestSfValue(record.evidence) || record.snapshot.confirmationVersion !== record.confirmationVersion || (record.evidence.status === "confirmed" && (!Number.isSafeInteger(record.confirmationVersion) || (record.confirmationVersion ?? 0) < 1)) || (record.evidence.status === "extracted" && record.confirmationVersion !== undefined) ||
       (record.evidence.status === "rejected" && (record.confirmationVersion !== undefined || !record.evidence.rejection ||
         record.evidence.rejection.reason.trim() !== record.evidence.rejection.reason || record.evidence.rejection.reason.length < 5 ||
-        record.evidence.rejection.reason.length > 500 || /[\\r\\n\\0]/.test(record.evidence.rejection.reason) ||
+        record.evidence.rejection.reason.length > 500 || /[\r\n\0]/.test(record.evidence.rejection.reason) ||
         !Number.isSafeInteger(record.evidence.rejection.page) || record.evidence.rejection.page < 1 || record.evidence.rejection.page > 500)) ||
       (record.evidence.status !== "rejected" && record.evidence.rejection !== undefined)) return { status: "unavailable", reason: "candidate-invalid" }
   const source = await input.documents.read(record.snapshot.documentRef, context)

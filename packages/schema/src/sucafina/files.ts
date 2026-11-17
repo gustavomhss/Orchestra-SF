@@ -66,8 +66,8 @@ const DocumentRejection = Schema.Struct({
   evidence: SfDocumentEvidence, reason: Schema.String, page: PositiveInt,
 })
 const DocumentLink = Schema.Struct({
-  surface: SfFileSurface, action: Schema.Literal("link"),
   ...DocumentScenarioInput.fields,
+  action: Schema.Literal("link"),
 })
 const DocumentLinkReceipt = Schema.Struct({
   kind: Schema.Literal("scenario-link"), id: Schema.String, at: Schema.String,

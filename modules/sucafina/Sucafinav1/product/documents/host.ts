@@ -26,6 +26,7 @@ export function createSfDocumentHost(input: {
   verifyFieldSchema: DocumentEvidenceHost["verifyFieldSchema"]
   operationIdentity: DocumentEvidenceHost["operationIdentity"]
   confirmDocument: DocumentEvidenceHost["confirmDocument"]
+  rejectDocument: DocumentEvidenceHost["rejectDocument"]
   createId: DocumentEvidenceHost["createId"]
   now: DocumentEvidenceHost["now"]
 }) {
