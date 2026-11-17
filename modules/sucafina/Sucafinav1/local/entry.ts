@@ -285,12 +285,26 @@ export async function createConfiguredInstallation(
         const directory = await identity.graphDirectory?.(request).catch(() => undefined)
         if (!directory || !directory.users.some((person) => person.id === supreme.id && person.groupIds.includes(SF_SUPREME_ADMIN_GROUP_ID)))
           return new Response("Microsoft directory unavailable", { status: 503, headers: { "Cache-Control": "no-store" } })
+        // Graph enumeration may be slow: recheck effective directory membership
+        // after the read and before any view or commit. Revocation is fail-closed.
+        const afterGraph = await identity.authenticate(request, { surface: "dashboard", roleMap: sfSupremeRoleMap }).catch(() => null)
+        if (!afterGraph || afterGraph.id !== supreme.id ||
+          !afterGraph.roles.some((role) => role.surface === "dashboard" && role.role === "admin"))
+          return new Response("Access denied", { status: 403, headers: { "Cache-Control": "no-store" } })
         if (!store.transactionAll)
           return new Response("Atomic installation policy store unavailable", { status: 503, headers: { "Cache-Control": "no-store" } })
         if (request.method === "POST") {
           const form = await readSfAdminForm(request)
           if (!form) return new Response("Invalid admin form", { status: 422, headers: { "Cache-Control": "no-store" } })
           const outcome = await store.transactionAll(async (snapshots) => {
+            // Same fresh principal binding is observed inside the serializable
+            // write transaction, never recovered from the submitted form.
+            const atCommit = await identity.authenticate(request, {
+              surface: "dashboard", roleMap: sfSupremeRoleMap,
+            }).catch(() => null)
+            if (!atCommit || atCommit.id !== supreme.id ||
+              !atCommit.roles.some((role) => role.surface === "dashboard" && role.role === "admin"))
+              return { commit: false, value: { ok: false as const, status: 403 as const } }
             const applied = applySfAdminChange({
               snapshots, configured: sfAdminConfiguration, directory, principalRef: supreme.id, form, at: now(),
             })
