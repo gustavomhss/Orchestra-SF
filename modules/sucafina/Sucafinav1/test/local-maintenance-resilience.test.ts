@@ -42,20 +42,23 @@ async function seedCurrentProgress(store: LocalStore, archives: Record<Surface, 
   }
 }
 
+function archivesFor(surface: Surface, monthlyCount: number): Archive[] {
+  const monthly = Array.from({ length: monthlyCount }, (_, index): Archive => ({
+    id: `${surface}-monthly-${String(index).padStart(3, "0")}`,
+    at: index === monthlyCount - 1 ? "2026-11-01T00:00:00.000Z" : new Date(Date.UTC(2019, index % 12, 1)).toISOString(),
+    assets: 0,
+    bytes: 0,
+    tier: "monthly",
+  }))
+  return [{ id: `${surface}-daily-current`, at, assets: 0, bytes: 0, tier: "daily" }, ...monthly]
+}
+
 function archiveInventory(monthlyCount: number): Record<Surface, Archive[]> {
-  return Object.fromEntries(surfaces.map((surface) => {
-    const monthly = Array.from({ length: monthlyCount }, (_, index): Archive => ({
-      id: `${surface}-monthly-${String(index).padStart(3, "0")}`,
-      at: index === monthlyCount - 1 ? "2026-11-01T00:00:00.000Z" : new Date(Date.UTC(2019, index % 12, 1)).toISOString(),
-      assets: 0,
-      bytes: 0,
-      tier: "monthly",
-    }))
-    return [surface, [
-      { id: `${surface}-daily-current`, at, assets: 0, bytes: 0, tier: "daily" as const },
-      ...monthly,
-    ]]
-  })) as Record<Surface, Archive[]>
+  return {
+    dashboard: archivesFor("dashboard", monthlyCount),
+    planner: archivesFor("planner", monthlyCount),
+    procurement: archivesFor("procurement", monthlyCount),
+  }
 }
 
 test("overlapping maintenance triggers coalesce into one cycle instead of creating an immediate rerun storm", async () => {
@@ -111,21 +114,15 @@ test("scheduled maintenance rearms only after the active cycle completes", async
   const archives = archiveInventory(2)
   await seedCurrentProgress(store, archives)
   const scheduled: Array<{ delayMs: number; task: () => void }> = []
-  const entered: Array<() => void> = []
-  const released: Array<Promise<void>> = []
+  const entered: Promise<void>[] = []
+  const markEntered: Array<() => void> = []
+  const blocked: Promise<void>[] = []
   const release: Array<() => void> = []
   for (let index = 0; index < 2; index++) {
-    let markEntered!: () => void
-    let unblock!: () => void
-    released.push(new Promise<void>((resolve) => { unblock = resolve }))
-    release.push(unblock)
-    entered.push(markEntered = () => {})
-    const observed = new Promise<void>((resolve) => { markEntered = resolve })
-    entered[index] = () => { void observed }
-    Object.assign(entered[index], { observed })
+    entered.push(new Promise<void>((resolve) => { markEntered.push(resolve) }))
+    blocked.push(new Promise<void>((resolve) => { release.push(resolve) }))
   }
   let verifyIndex = 0
-  const observedAt = (index: number) => (entered[index] as (() => void) & { observed: Promise<void> }).observed
   const jobs = await createLocalJobs({
     store,
     backupDirectory: join(root, "unused-backups"),
@@ -149,9 +146,9 @@ test("scheduled maintenance rearms only after the active cycle completes", async
       verify: async (_surface, _id, valueAt, options) => {
         const index = verifyIndex++
         if (index >= 2) throw new Error("scheduled-maintenance-unexpected-verification")
-        ;(entered[index] as (() => void) & { observed: Promise<void> })()
+        markEntered[index]!()
         await Promise.race([
-          released[index]!,
+          blocked[index]!,
           new Promise<never>((_resolve, reject) => options?.signal?.addEventListener("abort", () => reject(options.signal?.reason), { once: true })),
         ])
         return { at: valueAt, durationMs: 1 }
@@ -159,13 +156,13 @@ test("scheduled maintenance rearms only after the active cycle completes", async
     },
   })
   try {
-    await observedAt(0)
+    await entered[0]
     expect(scheduled).toHaveLength(0)
     release[0]!()
     await waitFor(() => scheduled.length === 1, "first cycle did not arm exactly one completion-relative timer")
     expect(scheduled[0]!.delayMs).toBe(1000)
     scheduled.shift()!.task()
-    await observedAt(1)
+    await entered[1]
     expect(scheduled).toHaveLength(0)
     release[1]!()
     await waitFor(() => scheduled.length === 1, "second cycle did not rearm after completion")
