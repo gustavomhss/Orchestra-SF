@@ -58,3 +58,10 @@ O cenário fictício `SF-LAB-2026` foi desenhado para essas pessoas. Ele evoca a
 - Demo: `sf/demo/flamengo/` no branch `sfa-demo-flamengo`; dry-run/seed propostas, **não prova live**.
 
 **Regra de ouro para QA:** `Read → Prepare/Preview → Review → Confirm → Producer apply → Receipt → Authorized reread`. Uma seleção, prompt, export, snapshot, análise ou mensagem **não** autoriza transação de domínio por si só.
+
+
+## Revisão fria V2 — maturidade e limites
+
+Após peer review independente, **este pacote NÃO é declarado state of the art**. Ver `quality-v2/COLD-REVIEW.md` para 12 gaps classificados e o significado restrito da cobertura 70/165/306. Foram corrigidos o protagonista gramatical nas 45 E2E, uma inversão de título em SF-E2E-006 e a contagem de condições de release (34 baseline + 11 condicionais).
+
+`quality-v2/STEP-LEVEL-DOSSIERS.md` adiciona **8 dossiês exemplares** com ação, esperado e testemunho por etapa; `quality-v2/TRANSITION-COVERAGE-PLAN.csv` é **modelo hipotético não certificado** de transições críticas. Uma vez fechado o seed pelo produtor e a matriz semântica, reescrever cada caso genérico com essa qualidade. Rodar `python scripts/audit_uat_quality_v2.py` para validar a documentação; isso **não** testa o Orchestra-SF.

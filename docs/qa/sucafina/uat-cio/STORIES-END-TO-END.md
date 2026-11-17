@@ -11,7 +11,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Às 08:00, CIO revisa backlog EDI HOT-EDI-07, R-07, forecast USD590000 e pedido PR-32000.
 
-**História do usuário:** Como CIO, LEADER, FINANCE, diante da situação descrita, preciso reunir prioridades, orçamento, riscos e encaminhamentos de TI em um briefing confiável, para orientar a reunião das 8h e responsabilizar a pessoa correta por cada pendência.
+**História do usuário:** Como CIO, com apoio de LEADER, FINANCE, diante da situação descrita, preciso reunir prioridades, orçamento, riscos e encaminhamentos de TI em um briefing confiável, para orientar a reunião das 8h e responsabilizar a pessoa correta por cada pendência.
 
 **Por que importa ao negócio:** orientar a reunião das 8h e responsabilizar a pessoa correta por cada pendência.
 
@@ -51,7 +51,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Sofie e Budget Owner discordam do aumento anual da licença; official=590000, WhatIf-A=602000, WhatIf-B=596000.
 
-**História do usuário:** Como FINANCE, BUDGET_OWNER, CIO, diante da situação descrita, preciso comparar hipóteses conflitantes de renovação de licença com budget e actual oficiais intactos, para apresentar ao comitê as diferenças financeiras verificáveis antes de uma decisão.
+**História do usuário:** Como FINANCE, com apoio de BUDGET_OWNER, CIO, diante da situação descrita, preciso comparar hipóteses conflitantes de renovação de licença com budget e actual oficiais intactos, para apresentar ao comitê as diferenças financeiras verificáveis antes de uma decisão.
 
 **Por que importa ao negócio:** apresentar ao comitê as diferenças financeiras verificáveis antes de uma decisão.
 
@@ -91,7 +91,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · PR-32000: integrar dados de embarques; três cotações A32400USD, B28000EUR×1.08=30240USD, C29000USD inelegível.
 
-**História do usuário:** Como REQUESTER, APPROVER, BUYER, SUPPLIER_ADMIN, CIO, diante da situação descrita, preciso percorrer a compra com ofertas de moedas, elegibilidade técnica e autoridades distintas, para evitar escolha inválida ou aprovação por ator fora da etapa.
+**História do usuário:** Como REQUESTER, com apoio de APPROVER, BUYER, SUPPLIER_ADMIN, CIO, diante da situação descrita, preciso percorrer a compra com ofertas de moedas, elegibilidade técnica e autoridades distintas, para evitar escolha inválida ou aprovação por ator fora da etapa.
 
 **Por que importa ao negócio:** evitar escolha inválida ou aprovação por ator fora da etapa.
 
@@ -135,7 +135,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · CIO prepara reunião com 25 projetos, notas extensas, períodos mistos e snapshot R1.
 
-**História do usuário:** Como CIO, LEADER, AUDITOR, diante da situação descrita, preciso guardar a fotografia dos 25 projetos e reproduzi-la após os registros vivos mudarem, para comprovar exatamente o que foi discutido sem reescrever o passado.
+**História do usuário:** Como CIO, com apoio de LEADER, AUDITOR, diante da situação descrita, preciso guardar a fotografia dos 25 projetos e reproduzi-la após os registros vivos mudarem, para comprovar exatamente o que foi discutido sem reescrever o passado.
 
 **Por que importa ao negócio:** comprovar exatamente o que foi discutido sem reescrever o passado.
 
@@ -175,7 +175,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Import planner XLSX alinhado à coluna OPEX; renovação 72000→84000; não editar o 518000 inalterado.
 
-**História do usuário:** Como FINANCE, LEADER, AUDITOR, diante da situação descrita, preciso aplicar uma única importação de OPEX, perder a resposta e reconciliar o recibo, para evitar dupla gravação financeira após timeout.
+**História do usuário:** Como FINANCE, com apoio de LEADER, AUDITOR, diante da situação descrita, preciso aplicar uma única importação de OPEX, perder a resposta e reconciliar o recibo, para evitar dupla gravação financeira após timeout.
 
 **Por que importa ao negócio:** evitar dupla gravação financeira após timeout.
 
@@ -210,13 +210,13 @@
 **Evidências:** screenshot_or_video_timeline, before_after_source_snapshot, sanitized_HTTP_statuses, receipt_or_no_commit_proof, actor_tenant_policy_snapshot, artifact_sha256. **Estado:** `DESIGNED_NOT_EXECUTED`
 
 
-## SF-E2E-006 · O documento diz 60, a extração leu 6
+## SF-E2E-006 · O documento diz 6 dias; a extração sugere 60
 
 **Prioridade:** P0 · **Atores:** LEADER, CIO, FINANCE · **Jornadas:** J05, J07 · **IDs UI:** UI58, UI59, UI60, UI33, UI36, UI42 · **Condição:** `BASELINE`
 
 **Situação de negócio.** SF-LAB-2026 · Relatório DOC-EDI-01 contém prazo atrasado 6 dias; extrator sintetiza erroneamente 60.
 
-**História do usuário:** Como LEADER, CIO, FINANCE, diante da situação descrita, preciso confrontar dado extraído com documento de origem antes de aprovar o uso em um cenário, para impedir que erro de IA vire valor oficial.
+**História do usuário:** Como LEADER, com apoio de CIO, FINANCE, diante da situação descrita, preciso confrontar dado extraído com documento de origem antes de aprovar o uso em um cenário, para impedir que erro de IA vire valor oficial.
 
 **Por que importa ao negócio:** impedir que erro de IA vire valor oficial.
 
@@ -255,7 +255,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Executivo questiona por que forecast indica 590000 mas outra visualização indica 602000.
 
-**História do usuário:** Como CIO, FINANCE, LEADER, diante da situação descrita, preciso rastrear KPIs de BI até registros originais, filtros, moedas e data de referência, para sustentar decisões com números conciliáveis e sem contagem dupla.
+**História do usuário:** Como CIO, com apoio de FINANCE, LEADER, diante da situação descrita, preciso rastrear KPIs de BI até registros originais, filtros, moedas e data de referência, para sustentar decisões com números conciliáveis e sem contagem dupla.
 
 **Por que importa ao negócio:** sustentar decisões com números conciliáveis e sem contagem dupla.
 
@@ -294,7 +294,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Plano 42 FTE, 40 ativos e 2 posições vagas; 1 contrata em outubro sem alterar setembro.
 
-**História do usuário:** Como HR, FINANCE, CIO, diante da situação descrita, preciso planejar vaga e cenário de contratação sem expor dados de pessoa ou folha a leitores indevidos, para preservar privacidade e precisão do custo de pessoal.
+**História do usuário:** Como HR, com apoio de FINANCE, CIO, diante da situação descrita, preciso planejar vaga e cenário de contratação sem expor dados de pessoa ou folha a leitores indevidos, para preservar privacidade e precisão do custo de pessoal.
 
 **Por que importa ao negócio:** preservar privacidade e precisão do custo de pessoal.
 
@@ -333,7 +333,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · P-004 tem milestone 15/dez e risco R-07; stakeholder externo exige novo prazo.
 
-**História do usuário:** Como LEADER, RISK_OWNER, CIO, diante da situação descrita, preciso ligar atraso do projeto, risco e impacto material a uma decisão humana, para priorizar corretamente e preservar justificativa.
+**História do usuário:** Como LEADER, com apoio de RISK_OWNER, CIO, diante da situação descrita, preciso ligar atraso do projeto, risco e impacto material a uma decisão humana, para priorizar corretamente e preservar justificativa.
 
 **Por que importa ao negócio:** priorizar corretamente e preservar justificativa.
 
@@ -372,7 +372,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Uptime 99.7% vs 99.9% SLA, 3 incidentes e 4 de 200 endpoints sem patch.
 
-**História do usuário:** Como SECURITY, OPS, CIO, diante da situação descrita, preciso levar um incidente realista de TI até métricas, risco e escalonamento de gestão, para garantir resposta tempestiva sem inflar ou esconder métricas.
+**História do usuário:** Como SECURITY, com apoio de OPS, CIO, diante da situação descrita, preciso levar um incidente realista de TI até métricas, risco e escalonamento de gestão, para garantir resposta tempestiva sem inflar ou esconder métricas.
 
 **Por que importa ao negócio:** garantir resposta tempestiva sem inflar ou esconder métricas.
 
@@ -411,7 +411,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · SUP-003 tem dados financeiros sensíveis sintéticos; buyer somente vê elegibilidade.
 
-**História do usuário:** Como SUPPLIER_ADMIN, BUYER, CIO, diante da situação descrita, preciso revisar cadastro, aprovação e leitura de campos restritos em diferentes perfis, para não permitir exposição financeira indevida.
+**História do usuário:** Como SUPPLIER_ADMIN, com apoio de BUYER, CIO, diante da situação descrita, preciso revisar cadastro, aprovação e leitura de campos restritos em diferentes perfis, para não permitir exposição financeira indevida.
 
 **Por que importa ao negócio:** não permitir exposição financeira indevida.
 
@@ -450,7 +450,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Duas janelas no mesmo registro OPEX-LIC-01 v3; Sofie muda para 84000 e Budget Owner tenta salvar 78000 sobre v3.
 
-**História do usuário:** Como FINANCE, BUDGET_OWNER, diante da situação descrita, preciso preservar a edição válida e rejeitar submissão obsoleta sob CAS, para não perder atualizações em períodos de fechamento.
+**História do usuário:** Como FINANCE, com apoio de BUDGET_OWNER, diante da situação descrita, preciso preservar a edição válida e rejeitar submissão obsoleta sob CAS, para não perder atualizações em períodos de fechamento.
 
 **Por que importa ao negócio:** não perder atualizações em períodos de fechamento.
 
@@ -488,7 +488,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Leitor autorizado abriu revisão confidencial R1 e documento de Supplier; acesso é revogado antes do download.
 
-**História do usuário:** Como CIO, AUDITOR, LEADER, diante da situação descrita, preciso cortar acesso a tela, histórico e download após perda da permissão, para assegurar que material sensível não sobreviva à revogação.
+**História do usuário:** Como CIO, com apoio de AUDITOR, LEADER, diante da situação descrita, preciso cortar acesso a tela, histórico e download após perda da permissão, para assegurar que material sensível não sobreviva à revogação.
 
 **Por que importa ao negócio:** assegurar que material sensível não sobreviva à revogação.
 
@@ -527,7 +527,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Instalação A SF-LAB e B SF-ISOLATED; IDs sintéticos parecidos mas projetos/principals distintos.
 
-**História do usuário:** Como CIO, FINANCE, BUYER, diante da situação descrita, preciso trocar instalação/tenant com referências visualmente parecidas, para impedir leitura e escrita no conjunto errado.
+**História do usuário:** Como CIO, com apoio de FINANCE, BUYER, diante da situação descrita, preciso trocar instalação/tenant com referências visualmente parecidas, para impedir leitura e escrita no conjunto errado.
 
 **Por que importa ao negócio:** impedir leitura e escrita no conjunto errado.
 
@@ -565,7 +565,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Entra B2B resource tenant; sem gravar tokens/segredos em artefatos.
 
-**História do usuário:** Como CIO, LEADER, BUYER, diante da situação descrita, preciso validar retorno do OIDC, sessão e proteção de origem/replay, para impedir impersonação e autorização por contexto falso.
+**História do usuário:** Como CIO, com apoio de LEADER, BUYER, diante da situação descrita, preciso validar retorno do OIDC, sessão e proteção de origem/replay, para impedir impersonação e autorização por contexto falso.
 
 **Por que importa ao negócio:** impedir impersonação e autorização por contexto falso.
 
@@ -604,7 +604,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Feature proposta no PR #270: /sucafina/admin/access, FORA das 70 nativas; executar só após montagem real.
 
-**História do usuário:** Como CIO, LEADER, BUYER, diante da situação descrita, preciso inspecionar hierarquia, cargo, times e grupos da organização de forma atual e completa, para administrar papéis a partir de identidade real, não cadastro paralelo.
+**História do usuário:** Como CIO, com apoio de LEADER, BUYER, diante da situação descrita, preciso inspecionar hierarquia, cargo, times e grupos da organização de forma atual e completa, para administrar papéis a partir de identidade real, não cadastro paralelo.
 
 **Por que importa ao negócio:** administrar papéis a partir de identidade real, não cadastro paralelo.
 
@@ -644,7 +644,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Admin supremo define role por grupo para Dashboard, Planner, Procurement e grants diretos separados.
 
-**História do usuário:** Como CIO, PROC_ADMIN, BUYER, diante da situação descrita, preciso configurar papel herdado de grupo e permissão direta por perfil sem confundi-los, para aplicar o modelo de acesso projetado pelo administrador.
+**História do usuário:** Como CIO, com apoio de PROC_ADMIN, BUYER, diante da situação descrita, preciso configurar papel herdado de grupo e permissão direta por perfil sem confundi-los, para aplicar o modelo de acesso projetado pelo administrador.
 
 **Por que importa ao negócio:** aplicar o modelo de acesso projetado pelo administrador.
 
@@ -722,7 +722,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Diretório Graph remove perfil de empregado, persistindo grant órfão na instalação.
 
-**História do usuário:** Como CIO, HR, diante da situação descrita, preciso localizar identidades desaparecidas e revogar grants sem reconstruir pessoa falsa, para fechar acesso residual com auditoria.
+**História do usuário:** Como CIO, com apoio de HR, diante da situação descrita, preciso localizar identidades desaparecidas e revogar grants sem reconstruir pessoa falsa, para fechar acesso residual com auditoria.
 
 **Por que importa ao negócio:** fechar acesso residual com auditoria.
 
@@ -800,7 +800,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Daniel e André alteram roleMap de mesmo grupo em duas abas com revisão V7.
 
-**História do usuário:** Como CIO, HR, diante da situação descrita, preciso submeter edições concorrentes do mapa de papéis e conferir CAS, auditoria e rollback, para não sobrescrever política de segurança silenciosamente.
+**História do usuário:** Como CIO, com apoio de HR, diante da situação descrita, preciso submeter edições concorrentes do mapa de papéis e conferir CAS, auditoria e rollback, para não sobrescrever política de segurança silenciosamente.
 
 **Por que importa ao negócio:** não sobrescrever política de segurança silenciosamente.
 
@@ -839,7 +839,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Pedro já está logado; Daniel revoga operação grant de sourcing.
 
-**História do usuário:** Como CIO, BUYER, APPROVER, diante da situação descrita, preciso retirar ou acrescentar grant e comprovar releitura server-side sem depender de relogin, para manter autorização efetiva atualizada.
+**História do usuário:** Como CIO, com apoio de BUYER, APPROVER, diante da situação descrita, preciso retirar ou acrescentar grant e comprovar releitura server-side sem depender de relogin, para manter autorização efetiva atualizada.
 
 **Por que importa ao negócio:** manter autorização efetiva atualizada.
 
@@ -878,7 +878,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Import XLSX MIME correto, arquivo XLSX com conteúdo CSV disfarçado e planilha com coluna Finance inválida.
 
-**História do usuário:** Como FINANCE, AUDITOR, diante da situação descrita, preciso rejeitar arquivo malformado, duplicado e parcialmente válido sem commit parcial, para proteger dados financeiros e trilha de importação.
+**História do usuário:** Como FINANCE, com apoio de AUDITOR, diante da situação descrita, preciso rejeitar arquivo malformado, duplicado e parcialmente válido sem commit parcial, para proteger dados financeiros e trilha de importação.
 
 **Por que importa ao negócio:** proteger dados financeiros e trilha de importação.
 
@@ -917,7 +917,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Snapshot R1 de 25 projetos com DOCX/PPTX; worker de geração atrasado intencionalmente.
 
-**História do usuário:** Como CIO, AUDITOR, diante da situação descrita, preciso executar geração lenta e observar timeout, falha, cancelamento e recuperação, para evitar informar êxito quando o documento não existe.
+**História do usuário:** Como CIO, com apoio de AUDITOR, diante da situação descrita, preciso executar geração lenta e observar timeout, falha, cancelamento e recuperação, para evitar informar êxito quando o documento não existe.
 
 **Por que importa ao negócio:** evitar informar êxito quando o documento não existe.
 
@@ -956,7 +956,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Pauta R1 com 25 projetos, 6 seções, notas multilinha e valores null/zero.
 
-**História do usuário:** Como CIO, AUDITOR, diante da situação descrita, preciso capturar, navegar e exportar relatório volumoso em múltiplas larguras, para levar uma reunião executiva completa sem perda ou duplicação de conteúdo.
+**História do usuário:** Como CIO, com apoio de AUDITOR, diante da situação descrita, preciso capturar, navegar e exportar relatório volumoso em múltiplas larguras, para levar uma reunião executiva completa sem perda ou duplicação de conteúdo.
 
 **Por que importa ao negócio:** levar uma reunião executiva completa sem perda ou duplicação de conteúdo.
 
@@ -995,7 +995,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Run “analisar riscos de fornecedor” oferece recomendação para PR32000, mas não tem grant de aplicar negócio.
 
-**História do usuário:** Como CIO, FINANCE, BUYER, diante da situação descrita, preciso executar rotina com skill e verificador, diferenciando proposta de mutação efetiva, para usar IA com controle humano e prova técnica.
+**História do usuário:** Como CIO, com apoio de FINANCE, BUYER, diante da situação descrita, preciso executar rotina com skill e verificador, diferenciando proposta de mutação efetiva, para usar IA com controle humano e prova técnica.
 
 **Por que importa ao negócio:** usar IA com controle humano e prova técnica.
 
@@ -1034,7 +1034,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Recorrência 08:00 America/Sao_Paulo e revisão de ocorrência; producer native scheduleDetails.read pode estar indisponível.
 
-**História do usuário:** Como CIO, OPS, diante da situação descrita, preciso programar execução, verificar ocorrência real e lidar com DST e indisponibilidade de detalhes, para não confundir agendamento com resultado concluído.
+**História do usuário:** Como CIO, com apoio de OPS, diante da situação descrita, preciso programar execução, verificar ocorrência real e lidar com DST e indisponibilidade de detalhes, para não confundir agendamento com resultado concluído.
 
 **Por que importa ao negócio:** não confundir agendamento com resultado concluído.
 
@@ -1073,7 +1073,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Busca sobre título “EDI Santos”, dois objetos homônimos e documento privado DOC-EDI-01.
 
-**História do usuário:** Como CIO, LEADER, AUDITOR, diante da situação descrita, preciso buscar termos sensíveis sem colocá-los na URL, sob papéis diferentes, para evitar vazamento em logs, histórico e resultados.
+**História do usuário:** Como CIO, com apoio de LEADER, AUDITOR, diante da situação descrita, preciso buscar termos sensíveis sem colocá-los na URL, sob papéis diferentes, para evitar vazamento em logs, histórico e resultados.
 
 **Por que importa ao negócio:** evitar vazamento em logs, histórico e resultados.
 
@@ -1112,7 +1112,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · VIEW-EDI-Caio; no snapshot da auditoria UI32 V2 native indisponível.
 
-**História do usuário:** Como LEADER, CIO, diante da situação descrita, preciso salvar filtro e restaurar visão somente com produtor versionado instalado, para não oferecer falsa persistência de visão.
+**História do usuário:** Como LEADER, com apoio de CIO, diante da situação descrita, preciso salvar filtro e restaurar visão somente com produtor versionado instalado, para não oferecer falsa persistência de visão.
 
 **Por que importa ao negócio:** não oferecer falsa persistência de visão.
 
@@ -1150,7 +1150,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Tema white-label Sucafina proposto, sem redesenhar glass/blur/geometria da arquitetura Orchestra.
 
-**História do usuário:** Como CIO, LEADER, HR, diante da situação descrita, preciso avaliar white-label em loading, navegação, vidro, blur e acessibilidade, para entregar identidade visual premium sem regressão de UX.
+**História do usuário:** Como CIO, com apoio de LEADER, HR, diante da situação descrita, preciso avaliar white-label em loading, navegação, vidro, blur e acessibilidade, para entregar identidade visual premium sem regressão de UX.
 
 **Por que importa ao negócio:** entregar identidade visual premium sem regressão de UX.
 
@@ -1189,7 +1189,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · PR #268 em DRAFT: org FLAMENGO sintética com 3 diretorias, 6 departamentos, 12 centros de custo e 10 fornecedores.
 
-**História do usuário:** Como CIO, LEADER, FINANCE, BUYER, APPROVER, diante da situação descrita, preciso executar campanha sintética com atores reais do tenant e efeitos verificáveis, para apresentar uma demo íntegra e reproduzível.
+**História do usuário:** Como CIO, com apoio de LEADER, FINANCE, BUYER, APPROVER, diante da situação descrita, preciso executar campanha sintética com atores reais do tenant e efeitos verificáveis, para apresentar uma demo íntegra e reproduzível.
 
 **Por que importa ao negócio:** apresentar uma demo íntegra e reproduzível.
 
@@ -1230,7 +1230,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Contexto Sucafina inclui CTRM/ERP/SAP/Microsoft Fabric como possíveis sistemas externos, sem conector comprovado.
 
-**História do usuário:** Como CIO, FINANCE, BUYER, diante da situação descrita, preciso distinguir conector real de mock, link e hipótese de integração, para evitar prometer fluxo externo que não foi executado.
+**História do usuário:** Como CIO, com apoio de FINANCE, BUYER, diante da situação descrita, preciso distinguir conector real de mock, link e hipótese de integração, para evitar prometer fluxo externo que não foi executado.
 
 **Por que importa ao negócio:** evitar prometer fluxo externo que não foi executado.
 
@@ -1269,7 +1269,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Após import aplicado e PR aprovada, processo e store são reiniciados de forma controlada.
 
-**História do usuário:** Como OPS, AUDITOR, CIO, diante da situação descrita, preciso persistir transações e provar recuperação após restart/rollback, para não duplicar compras, decisões ou importações.
+**História do usuário:** Como OPS, com apoio de AUDITOR, CIO, diante da situação descrita, preciso persistir transações e provar recuperação após restart/rollback, para não duplicar compras, decisões ou importações.
 
 **Por que importa ao negócio:** não duplicar compras, decisões ou importações.
 
@@ -1309,7 +1309,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · 70 superfícies e 165 variantes de rota da revisão auditada; execução deve escolher atores/grants da política corrente.
 
-**História do usuário:** Como CIO, LEADER, HR, BUYER, diante da situação descrita, preciso percorrer famílias de telas, rotas e estados de acesso usando matriz de risco, para identificar regressões que testes isolados não encontram.
+**História do usuário:** Como CIO, com apoio de LEADER, HR, BUYER, diante da situação descrita, preciso percorrer famílias de telas, rotas e estados de acesso usando matriz de risco, para identificar regressões que testes isolados não encontram.
 
 **Por que importa ao negócio:** identificar regressões que testes isolados não encontram.
 
@@ -1349,7 +1349,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Orchestra host integra sessões, agentes, skills, ferramentas, Maestro, Relay/MCP e estado de execução nativo, quando instalado.
 
-**História do usuário:** Como CIO, OPS, diante da situação descrita, preciso inspecionar orquestração e permissões de sessão, skill, MCP e Relay, para preservar limites entre plataforma e produto de negócio.
+**História do usuário:** Como CIO, com apoio de OPS, diante da situação descrita, preciso inspecionar orquestração e permissões de sessão, skill, MCP e Relay, para preservar limites entre plataforma e produto de negócio.
 
 **Por que importa ao negócio:** preservar limites entre plataforma e produto de negócio.
 
@@ -1389,7 +1389,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Matriz de 165 routes com 21 padrões sintaticamente sobrepostos e refs r_base64url canônicos.
 
-**História do usuário:** Como CIO, AUDITOR, diante da situação descrita, preciso testar referências opacas, padrões de rotas e manipulação de IDs, para impedir acesso por guessing ou colisões de roteamento.
+**História do usuário:** Como CIO, com apoio de AUDITOR, diante da situação descrita, preciso testar referências opacas, padrões de rotas e manipulação de IDs, para impedir acesso por guessing ou colisões de roteamento.
 
 **Por que importa ao negócio:** impedir acesso por guessing ou colisões de roteamento.
 
@@ -1428,7 +1428,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · PR32000 sofre rejeição no estágio PR; após correção segue sourcing, rejeição SRC e reenvio.
 
-**História do usuário:** Como REQUESTER, APPROVER, BUYER, diante da situação descrita, preciso fazer a mesma compra percorrer rejeição, correção e nova submissão, para garantir histórico e segregação nas três etapas.
+**História do usuário:** Como REQUESTER, com apoio de APPROVER, BUYER, diante da situação descrita, preciso fazer a mesma compra percorrer rejeição, correção e nova submissão, para garantir histórico e segregação nas três etapas.
 
 **Por que importa ao negócio:** garantir histórico e segregação nas três etapas.
 
@@ -1469,7 +1469,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Actual setembro fechado, forecast outubro aberto e versão annual locked.
 
-**História do usuário:** Como FINANCE, BUDGET_OWNER, CIO, diante da situação descrita, preciso tentar reabrir actual fechado e editar versão locked por diferentes perfis, para preservar integridade do fechamento contábil.
+**História do usuário:** Como FINANCE, com apoio de BUDGET_OWNER, CIO, diante da situação descrita, preciso tentar reabrir actual fechado e editar versão locked por diferentes perfis, para preservar integridade do fechamento contábil.
 
 **Por que importa ao negócio:** preservar integridade do fechamento contábil.
 
@@ -1508,7 +1508,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Probe histórico mostrou 403/422/503 em jornadas autorizadas; negar a pessoa errada é esperado, negar autorizado pode ser defeito.
 
-**História do usuário:** Como AUDITOR, LEADER, FINANCE, diante da situação descrita, preciso reproduzir falhas de autorização, validação e backend sem mascarar causas, para abrir defeito correto e impedir falso PASS.
+**História do usuário:** Como AUDITOR, com apoio de LEADER, FINANCE, diante da situação descrita, preciso reproduzir falhas de autorização, validação e backend sem mascarar causas, para abrir defeito correto e impedir falso PASS.
 
 **Por que importa ao negócio:** abrir defeito correto e impedir falso PASS.
 
@@ -1547,7 +1547,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Release novo exige admin supreme, identidade Entra, demo Flamengo e o tema visual apenas se aprovado pelo owner.
 
-**História do usuário:** Como CIO, AUDITOR, OPS, diante da situação descrita, preciso cruzar release candidate, admin, white-label, dados e tenant com evidência única, para assinar um go-live com rastreabilidade de ponta a ponta.
+**História do usuário:** Como CIO, com apoio de AUDITOR, OPS, diante da situação descrita, preciso cruzar release candidate, admin, white-label, dados e tenant com evidência única, para assinar um go-live com rastreabilidade de ponta a ponta.
 
 **Por que importa ao negócio:** assinar um go-live com rastreabilidade de ponta a ponta.
 
@@ -1586,7 +1586,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Instalação nova sem import/seed de produto, mas login e capítulos disponíveis.
 
-**História do usuário:** Como CIO, LEADER, diante da situação descrita, preciso abrir todas as superfícies relevantes sem dados provisionados, para distinguir vazio verdadeiro de erro de serviço.
+**História do usuário:** Como CIO, com apoio de LEADER, diante da situação descrita, preciso abrir todas as superfícies relevantes sem dados provisionados, para distinguir vazio verdadeiro de erro de serviço.
 
 **Por que importa ao negócio:** distinguir vazio verdadeiro de erro de serviço.
 
@@ -1625,7 +1625,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Usuários executivos em monitores grandes, notebook e mobile; idioma pode variar, dark/light.
 
-**História do usuário:** Como CIO, HR, LEADER, diante da situação descrita, preciso executar interações críticas com zoom, teclado, contraste e textos longos, para servir colaboradores em ambientes e necessidades diversas.
+**História do usuário:** Como CIO, com apoio de HR, LEADER, diante da situação descrita, preciso executar interações críticas com zoom, teclado, contraste e textos longos, para servir colaboradores em ambientes e necessidades diversas.
 
 **Por que importa ao negócio:** servir colaboradores em ambientes e necessidades diversas.
 
@@ -1665,7 +1665,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Conexão da filial perde 10s enquanto alteração CAS é enviada e comprovante de negócio pode ou não existir.
 
-**História do usuário:** Como CIO, FINANCE, BUYER, diante da situação descrita, preciso injetar queda de conectividade antes e depois do commit, para não executar uma segunda operação por engano.
+**História do usuário:** Como CIO, com apoio de FINANCE, BUYER, diante da situação descrita, preciso injetar queda de conectividade antes e depois do commit, para não executar uma segunda operação por engano.
 
 **Por que importa ao negócio:** não executar uma segunda operação por engano.
 
@@ -1704,7 +1704,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Dataset 25 projetos, notas longas, 200 usuários Graph fixture e 10 jobs; nenhum SLA inventado.
 
-**História do usuário:** Como CIO, FINANCE, OPS, diante da situação descrita, preciso simular acesso concorrente a dados, agendas e relatórios volumosos, para manter respostas íntegras e estados honestos sob pressão.
+**História do usuário:** Como CIO, com apoio de FINANCE, OPS, diante da situação descrita, preciso simular acesso concorrente a dados, agendas e relatórios volumosos, para manter respostas íntegras e estados honestos sob pressão.
 
 **Por que importa ao negócio:** manter respostas íntegras e estados honestos sob pressão.
 
@@ -1742,7 +1742,7 @@
 
 **Situação de negócio.** SF-LAB-2026 · Audit do workbench inclui actor, before, after e UTC; export pode conter informação corporativa restrita.
 
-**História do usuário:** Como AUDITOR, CIO, HR, diante da situação descrita, preciso revisar atores, evidências, horários, mudanças, recibos e retenção, para permitir responsabilização e revisão independente.
+**História do usuário:** Como AUDITOR, com apoio de CIO, HR, diante da situação descrita, preciso revisar atores, evidências, horários, mudanças, recibos e retenção, para permitir responsabilização e revisão independente.
 
 **Por que importa ao negócio:** permitir responsabilização e revisão independente.
 
