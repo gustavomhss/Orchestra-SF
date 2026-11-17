@@ -380,38 +380,132 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     else setState({ phase: "reviewing", status: "ready" })
     setState("busy", false)
   }
+  const poCandidates = () => {
+    const read = state.poRead
+    if (!read) return []
+    return read.records.filter((row) => {
+      const ref = requestRef(row)
+      return !!ref && !!row.po && !!row.po.number &&
+        requestVersion(read, ref) !== undefined && /^[A-Za-z0-9._:-]{1,128}$/.test(ref)
+    })
+  }
+  // A new PO selection MUST come from an authorized CAP25 projection, never a free-text URL.
+  createEffect(() => {
+    if (props.surfaceId !== "UI68" || state.exportKind !== "po") return
+    const expectedOwner = ownerStamp()
+    const ready = auth.ready()
+    const generationAtRead = auth.generation()
+    void state.poRefresh
+    setState({ poRead: undefined, poSelection: "", poState: "loading" })
+    if (!ready || !expectedOwner ||
+        !ready.context.destinations.some((item) => item.capabilityId === "CAP25" && item.canRead) ||
+        !ready.context.availability.some((item) => item.family === "procurement" && item.resource === "CAP25" &&
+          item.operations.some((operation) => operation.operationId === "domain.page.CAP25" &&
+            operation.state === "ready" && operation.operational))) {
+      setState("poState", "denied")
+      return
+    }
+    const abort = new AbortController()
+    void createSfProcurementClient(ready.transport)["domain.page.CAP25"]({}, { signal: abort.signal })
+      .then((reply) => {
+        if (abort.signal.aborted || expectedOwner !== ownerStamp() || generationAtRead !== auth.generation()) return
+        if (reply.kind !== "response") { setState("poState", "unavailable"); return }
+        if (reply.status === 401 || reply.status === 403) { setState("poState", "denied"); return }
+        const read = decodeRequestsPage(reply.body, ready.context.stamp)
+        if (read.kind !== "ready") {
+          setState("poState", read.kind === "stale" ? "stale" :
+            read.kind === "denied" || read.kind === "unauthenticated" ? "denied" : "unavailable")
+          return
+        }
+        setState({ poRead: read, poState: "ready" })
+      }).catch(() => {
+        if (!abort.signal.aborted && generationAtRead === auth.generation()) setState("poState", "unavailable")
+      })
+    onCleanup(() => abort.abort())
+  })
   const download = async () => {
     const api = client()
-    if (!api || state.busy || !permitted("files.export." + state.exportKind)) {
+    const kind = state.exportKind
+    const poSelection = state.poSelection
+    const poRead = state.poRead
+    const selectedPo = kind === "po" && poRead
+      ? poCandidates().find((row) => requestRef(row) === poSelection) : undefined
+    const selectedRef = selectedPo && requestRef(selectedPo)
+    const selectedVersion = selectedRef && poRead
+      ? requestVersion(poRead, selectedRef) : undefined
+    if (!api || state.busy || !permitted("files.export." + kind) ||
+        kind === "po" && (!selectedPo || !selectedRef || selectedVersion === undefined ||
+          !poRead || state.poState !== "ready")) {
       setState("status", "unavailable")
       return
     }
     const token = fence()
     revokeExport()
     setState({ busy: true, status: "loading" })
-    const result = state.exportKind === "xlsx"
-      ? await api["files.export.xlsx"]({ surface: "planner" }, { signal: token.signal })
-      : state.exportKind === "suppliers"
-        ? await api["files.export.suppliers"]({ surface: "procurement" }, { signal: token.signal })
-        : state.exportKind === "register"
-          ? await api["files.export.register"]({ surface: "procurement" }, { signal: token.signal })
-          : await api["files.export.json"]({ surface: "dashboard" }, { signal: token.signal })
+    // Re-read the selected PO from its authorized producer immediately before exporting.
+    if (kind === "po") {
+      const ready = auth.ready()
+      if (!ready || !selectedPo || !selectedRef || selectedVersion === undefined) {
+        if (current(token)) failure({ state: "denied" })
+        return
+      }
+      const fresh = await createSfProcurementClient(ready.transport)["domain.page.CAP25"](
+        { request: selectedRef }, { signal: token.signal },
+      )
+      if (!current(token)) return
+      if (fresh.kind !== "response" || fresh.status !== 200) {
+        failure({ state: fresh.kind === "response" && fresh.status === 403 ? "denied" : "unavailable" })
+        return
+      }
+      const verified = decodeRequestsPage(fresh.body, ready.context.stamp)
+      if (verified.kind !== "ready" || !verified.records.some((row) => {
+        const ref = requestRef(row)
+        return ref === selectedRef && !!row.po && !!row.po.number &&
+          requestVersion(verified, ref) === selectedVersion
+      })) {
+        failure({ state: "stale" })
+        return
+      }
+    }
+    const result = kind === "po"
+      ? await api["files.export.po"]({ surface: "procurement", request: poSelection }, { signal: token.signal })
+      : kind === "xlsx"
+        ? await api["files.export.xlsx"]({ surface: "planner" }, { signal: token.signal })
+        : kind === "suppliers"
+          ? await api["files.export.suppliers"]({ surface: "procurement" }, { signal: token.signal })
+          : kind === "register"
+            ? await api["files.export.register"]({ surface: "procurement" }, { signal: token.signal })
+            : await api["files.export.json"]({ surface: "dashboard" }, { signal: token.signal })
     if (!current(token)) return
-    if (result.kind !== "response" || result.status >= 400) {
-      failure({ state: result.kind === "transport-error" && result.reason === "outcome-unknown"
-        ? "outcome-unknown" : result.kind === "response" && result.status === 403 ? "denied" : "unavailable" })
+    if (result.kind !== "response" || result.status !== 200 || !(result.body instanceof Uint8Array) ||
+        result.body.byteLength === 0) {
+      failure({ state: result.kind === "response" && result.status === 403 ? "denied" :
+        result.kind === "response" && (result.status === 404 || result.status === 409) ? "stale" : "unavailable" })
       return
     }
-    const blob = new Blob([Uint8Array.from(result.body)], {
-      type: result.headers["content-type"] || "application/octet-stream",
-    })
+    if (kind === "po" && (state.poSelection !== poSelection || state.poState !== "ready" ||
+        !poCandidates().some((row) => requestRef(row) === poSelection))) {
+      failure({ state: "stale" })
+      return
+    }
     const disposition = result.headers["content-disposition"] ?? ""
     const matched = /filename="?([^";\r\n]+)"?/i.exec(disposition)
     const originalName = matched?.[1]?.replace(/[^a-zA-Z0-9_.-]/g, "_")
-    const filename = originalName && !originalName.startsWith(".")
-      ? originalName : "sucafina-" + state.exportKind + (state.exportKind === "xlsx" ? ".xlsx" : state.exportKind === "json" ? ".json" : ".csv")
-    exportHref = URL.createObjectURL(blob)
-    setState({ download: { href: exportHref, name: filename }, status: "ready", busy: false })
+    const suffix = kind === "po" ? ".html" : kind === "xlsx" ? ".xlsx" :
+      kind === "json" ? ".json" : ".csv"
+    const filename = originalName && !originalName.startsWith(".") && originalName.endsWith(suffix)
+      ? originalName : "sucafina-" + kind +
+        (kind === "po" ? "-" + poSelection.replace(/[^A-Za-z0-9._-]/g, "_") : "") + suffix
+    const href = URL.createObjectURL(new Blob([new Uint8Array(result.body)], {
+      type: result.headers["content-type"] ?? "application/octet-stream",
+    }))
+    const anchor = document.createElement("a")
+    anchor.href = href
+    anchor.download = filename
+    anchor.click()
+    requestAnimationFrame(() => URL.revokeObjectURL(href))
+    // Terminal result only: there is no persistent authorization-free download link.
+    setState({ download: { name: filename }, status: "ready", busy: false })
   }
 
   createEffect(() => {
