@@ -1,4 +1,4 @@
-import { batch, createContext, createEffect, onCleanup, useContext, type JSX } from "solid-js"
+import { batch, createContext, createEffect, onCleanup, untrack, useContext, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { createStore, reconcile } from "solid-js/store"
 import { SfPageFrame } from "../shared/frame"
@@ -296,7 +296,13 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
       },
     } : {}),
   }
-  createEffect(() => { const selection = props.selection(); void load(selection) })
+  createEffect(() => {
+    const selected = props.selection()
+    // load() synchronously fences and reads its own store before the first
+    // await. Track only the selected installation, never these internal reads,
+    // or the effect restarts discovery and aborts its own authenticated context.
+    untrack(() => { void load(selected) })
+  })
   onCleanup(() => {
     disposed = true
     inFlight?.abort()
