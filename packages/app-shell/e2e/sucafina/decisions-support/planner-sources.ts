@@ -7,7 +7,9 @@ export const sourceNames = { baseline: "Decisions baseline plan", candidate: "De
 export async function createPlannerSources(page: Page, origin: string, actorId: string, observations: Record<string, unknown>[]) {
   const planner = (name: string, version?: string) => `${origin}/sucafina/planner?${new URLSearchParams({ page: name, ...(version ? { version } : {}) })}`
   const versionRow = (id: string) => page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${id}"]`) })
+  console.log("[sf decisions:planner] opening Versions")
   await page.goto(planner("Versions"))
+  console.log("[sf decisions:planner] Versions open")
   await plannerCommand(page, page.getByRole("button", { name: "Create first version", exact: true }), "save", observations)
   // Normal runtime replies omit business values; observe the authorized refreshed UI.
   const first = page.locator('form[data-page="Versions"][data-command="save"]:not([data-record=""])')
@@ -78,10 +80,14 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
 }
 
 async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
+  const location = new URL(page.url())
+  console.log(`[sf decisions:planner] awaiting enabled ${action} ${location.pathname} page=${location.searchParams.get("page")} button=${(await button.innerText()).trim()}`)
   await expect(button).toBeEnabled()
   const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
   await button.click()
+  console.log(`[sf decisions:planner] clicked ${action}; awaiting POST`)
   const response = await pending
+  console.log(`[sf decisions:planner] POST ${action} status=${response.status()} content-type=${response.headers()["content-type"]}`)
   expect(response.status()).toBe(200)
   expect(response.headers()["content-type"]).toContain("application/json")
   const result = asRecord(await response.json())
