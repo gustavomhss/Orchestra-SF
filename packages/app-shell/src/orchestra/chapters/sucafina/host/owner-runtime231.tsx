@@ -8,7 +8,7 @@
  * Requires the exact 227 context/navigation leaves and 228 adapter postimages.
  */
 import { useBeforeLeave, useLocation, useNavigate } from "@solidjs/router"
-import { createEffect, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
+import { createEffect, onCleanup, Show, Switch, Match, For, untrack, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { usePlatform } from "@/context/platform"
@@ -312,6 +312,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const language = useLanguage()
   const fetcher = platform.fetch ?? globalThis.fetch
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
+  // Candidates are discovery descriptors only, never an F01 owner grant.
+  const [installationChoices, setInstallationChoices] = createStore<{ items: readonly SfInstallationDescriptor[] }>({ items: [] })
+  const [installationPicker, setInstallationPicker] = createStore({ index: "" })
   const [view, setView] = createStore<View>({ status: "resolving" })
   const [provider, setProvider] = createStore({ status: "unmounted", generation: -1 })
   const [reconnect, setReconnect] = createStore({ required: false, busy: false })
@@ -686,6 +689,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     // are terminal for this owner query until its URL or profile changes.
     const activeSelection = untrack(selection)
     const epoch = ++discoveryAttempt
+    // A changed route/server/directory immediately drops stale candidate IDs.
+    setInstallationChoices("items", [])
+    setInstallationPicker("index", "")
     if (parsed.kind === "invalid") {
       rejectInvalidSfOwnerQuery({ ownerMounted: !!mounted, selectionPresent: !!activeSelection,
         previousHref: untrack(() => view.route?.href) }, {
@@ -741,7 +747,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       } else if (found.installations.length === 0) {
         setDiscovery({ status: "denied", selection: undefined })
       } else if (found.installations.length !== 1) {
-        // Distinct genuine installations require explicit owner selection.
+        // No implicit owner authority from a directory. Only the exact
+        // server-scoped installation descriptors can be offered as candidates.
+        setInstallationChoices("items", found.installations)
         setDiscovery({ status: "ambiguous", selection: undefined })
       } else {
         const only = found.installations[0]
@@ -761,6 +769,24 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     })
     onCleanup(() => abort.abort())
   })
+
+
+  const selectDiscoveredInstallation = (event: SubmitEvent): void => {
+    event.preventDefault()
+    // Selection is an *intent*. The provider, original ctx.context and F01
+    // preflight re-discover and re-authorize the tuple before any private UI.
+    if (disposed || discovery.status !== "ambiguous" || mounted ||
+        installationPicker.index === "") return
+    const index = Number(installationPicker.index)
+    if (!Number.isSafeInteger(index) || index < 0 || index >= installationChoices.items.length) return
+    const candidate = installationChoices.items[index]
+    if (!candidate?.projectId || !candidate.installationId) return
+    const query = new URLSearchParams({
+      server: ServerConnection.key(props.server),
+      project: candidate.projectId, installation: candidate.installationId,
+    })
+    navigate("/orchestra/sf-home/context?" + query.toString())
+  }
 
   let routeEpoch = 0
   createEffect(() => {
@@ -906,11 +932,32 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       </Show>
 
       <Show when={selection()} fallback={
-        <p role="status" data-sf-f01={discovery.status}>
-          {discovery.status === "ambiguous" ? "Sucafina installation selection required"
-            : discovery.status === "resolving" ? "Resolving installed Sucafina"
-            : "Sucafina installation unavailable or unauthorized"}
-        </p>
+        <Show when={discovery.status === "ambiguous"} fallback={
+          <p role="status" data-sf-f01={discovery.status}>
+            {discovery.status === "resolving" ? language.t("sf.ui67.loading") :
+              discovery.status === "denied" ? language.t("sf.ui67.denied") :
+              language.t("sf.ui67.unavailable")}
+          </p>
+        }>
+          <form class="mx-card flex flex-col gap-3 p-4" data-sf-f01="ambiguous"
+            data-sf-installation-selector onSubmit={selectDiscoveredInstallation}>
+            <h2>{language.t("sf.ui67.title")}</h2>
+            <p role="status">{language.t("sf.ui67.multipleChoices")}</p>
+            <label for="sf-ui67-installation-select">{language.t("sf.ui67.installation")}</label>
+            <select id="sf-ui67-installation-select" required
+              value={installationPicker.index} onChange={(event) => setInstallationPicker("index", event.currentTarget.value)}>
+              <option value="" disabled>{language.t("sf.ui67.chooseOption")}</option>
+              <For each={installationChoices.items}>{(candidate, index) =>
+                <option value={String(index())} data-sf-installation-choice>
+                  {candidate.projectId} · {candidate.installationId}
+                </option>
+              }</For>
+            </select>
+            <button type="submit" class="mx-btn primary" disabled={!installationPicker.index || !installationChoices.items.length}>
+              {language.t("sf.ui67.authorizeChoice")}
+            </button>
+          </form>
+        </Show>
       }>
         {(selected) => <SfTodayBoundOwnerProvider
           selection={selected}
