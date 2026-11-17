@@ -49,6 +49,7 @@ jobs:
           export TMPDIR="$SF_LOCAL_ROOT/host-tmp"
           export XDG_DATA_HOME="$SF_LOCAL_ROOT/host-data"
           export XDG_CONFIG_HOME="$SF_LOCAL_ROOT/host-config"
+          export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
           export XDG_CACHE_HOME="$SF_LOCAL_ROOT/host-cache"
           export XDG_STATE_HOME="$SF_LOCAL_ROOT/host-state"
           export ORCHESTRA_SERVER_PASSWORD="$(openssl rand -hex 24)"
