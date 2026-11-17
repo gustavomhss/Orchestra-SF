@@ -144,7 +144,7 @@ function manifestWiredWorkflowFixture(actualManifest) {
   const arms = buns.map((suite) => [
     `              ${suite.id})`,
     `                cd "$root/${suite.directory}"`,
-    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 "${files[@]}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
+    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 "${'${files[@]}'}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
     "                ;;",
   ].join("\n")).join("\n")
   const selected = [
