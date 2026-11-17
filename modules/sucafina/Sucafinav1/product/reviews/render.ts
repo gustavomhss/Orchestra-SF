@@ -1,10 +1,11 @@
-import { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } from "docx"
+import { Document, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } from "docx"
 import PptxGenJS from "pptxgenjs"
 import type { ReviewOutcomeComparison } from "./outcome.ts"
 import { reviewOutcomeComparisonLines, validOutcomeComparison, reviewOutcomeLines, validReviewOutcome } from "./outcome.ts"
 import type { ObservedResultProjection } from "../contracts/decisions.ts"
 import { reviewDecisionLines, validReviewDecision } from "./decision.ts"
 import { addReportTextSlides, addReportValueSlides, fitSlideText, reviewCoverageLines, SLIDE_HEADING } from "./report-layout.ts"
+import { packPreservedDocx } from "./zip-store.ts"
 import { createHash } from "node:crypto"
 import { reviewInclusion } from "./inclusion.ts"
 import type { ReviewInclusion } from "./inclusion.ts"
@@ -184,27 +185,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
       }],
     })
     trace("RENDER_DOCX_CONSTRUCTED")
-    // docx@9.5.1's Packer.toBuffer hardcodes JSZip DEFLATE. On Bun's HTTP
-    // handler that path can stall for minutes; the original OOXML parts are
-    // unchanged when the archive uses ZIP STORE (supported by Office and CI).
-    // The pinned docx compiler is validated here rather than monkey-patched.
-    trace("RENDER_ZIP_COMPILE_ENTER")
-    const compiler: unknown = Reflect.get(Packer, "compiler")
-    if (!compiler || typeof compiler !== "object" || !("compile" in compiler) || typeof compiler.compile !== "function")
-      throw new Error("DOCX compiler unavailable")
-    const zip: unknown = compiler.compile(document)
-    if (!zip || typeof zip !== "object" || !("generateAsync" in zip) || typeof zip.generateAsync !== "function")
-      throw new Error("DOCX ZIP generator unavailable")
-    trace("RENDER_ZIP_COMPILED")
-    let lastProgress = -1
-    const bytes: unknown = await zip.generateAsync({ type: "uint8array", compression: "STORE",
-      mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
-      (metadata: { percent: number }) => {
-        const progress = Math.floor(metadata.percent / 10)
-        if (progress > lastProgress) { lastProgress = progress; trace(`RENDER_ZIP_PROGRESS_${progress}`) }
-      })
-    if (!(bytes instanceof Uint8Array)) throw new Error("Unexpected DOCX ZIP output")
-    const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes }
+    const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: await packPreservedDocx(document) }
     trace("RENDER_DOCX_PACKED")
     sealReviewArtifact(artifact, review, options)
     return artifact
