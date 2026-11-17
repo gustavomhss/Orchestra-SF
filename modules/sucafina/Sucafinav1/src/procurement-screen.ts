@@ -430,8 +430,9 @@ function matches(request: RequestView, query: string): boolean {
     request.pr?.costCenter,
     request.po?.number,
     request.po?.supplier,
+    // Search only displayable business fields; immutable identity keys are not
+    // searchable display names and must not cause invisible matches.
     request.requesterName,
-    request.createdBy,
     request.buyerId,
     approvalOf(request)?.steps?.find((step) => step.status === "pending")?.holderId,
     requestStageGuidance(request.status).stage,
