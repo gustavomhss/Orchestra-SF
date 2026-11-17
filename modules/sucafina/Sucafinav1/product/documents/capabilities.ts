@@ -27,6 +27,7 @@ export type DocumentEvidenceHost = {
   verifyFieldSchema: (state: Readonly<SfProductState>, expected: { id: string; version: string; fields: readonly { id: string; type: "string" | "number" | "boolean" | "date"; unit?: string }[] }, documentRef: string, context: TrustedDomainContext) => boolean
   operationIdentity: (context: TrustedDomainContext, operation?: { name: "sf_document_extract"; digest: string }) => string | undefined
   confirmDocument: (evidence: DocumentEvidence, context: TrustedDomainContext) => Promise<boolean>
+  rejectDocument: (review: { evidence: DocumentEvidence; reason: string; page: number }, context: TrustedDomainContext) => Promise<boolean>
   createId: () => string
   now: () => string
 }
@@ -146,6 +147,69 @@ export async function confirmDocumentEvidence(id: string, context: TrustedDomain
   if (!(await input.host.revalidate(context)) || !(await input.documents.revalidate(record.snapshot.documentRef, identity, context)) || !(await input.confirmDocument(admittedEvidence, context))) return { status: "stale", reason: "document-changed" }
   const versioned = { ...saved.value.ref, target: { ...saved.value.ref.target, confirmationVersion: 1 }, refDigest: "" }
   return { status: "ok", value: { ...saved.value, ref: { ...versioned, refDigest: digestSfEvidenceRef(versioned) } } }
+}
+
+
+/** Rejection is a human decision against the original extracted candidate, not a new extraction.
+ * Both the reason/page and the negative state are committed in the original document namespace.
+ * No retry upgrades a rejected candidate to confirmed. */
+export async function rejectDocumentEvidence(
+  id: string, reason: string, page: number, context: TrustedDomainContext, input: DocumentEvidenceHost,
+): Promise<PortResult<DocumentEvidence>> {
+  if (context.kind !== "ui") return { status: "denied", reason: "human-rejection-required" }
+  if (reason.trim() !== reason || reason.length < 5 || reason.length > 500 || /[\r\n\0]/.test(reason) ||
+      !Number.isSafeInteger(page) || page < 1 || page > 500)
+    return { status: "needs-input", reason: "invalid-rejection-review" }
+  const request = input.host.requestFor(context)
+  const operationId = input.operationIdentity(context)
+  if (!request || !operationId || !(await input.host.revalidate(context))) return { status: "denied", reason: "authority-unavailable" }
+  const loaded = await input.state.read(request, "documents", (state, authority) =>
+    authority.principalRef === context.binding.principalRef &&
+    authority.accessRevision === context.binding.accessRevision &&
+    authority.policyVersion === context.binding.policyVersion
+      ? { record: state.documents[id], assets: state.documents } : undefined)
+  if (loaded.status !== "ok" || !loaded.value || !loaded.value.record || typeof loaded.value.record !== "object")
+    return { status: "unavailable", reason: "candidate-unavailable" }
+  const record = loaded.value.record as StoredDocumentEvidence
+  if (record.schema !== "sf-document-v1" || record.evidence?.id !== id ||
+      record.evidence.status !== "extracted" || record.confirmationVersion !== undefined ||
+      record.evidence.ref.refDigest !== digestSfEvidenceRef(record.evidence.ref))
+    return { status: "conflict", reason: "candidate-not-extracted" }
+  const reviewed = { evidence: record.evidence, reason, page }
+  if (!(await input.rejectDocument(reviewed, context))) return { status: "denied", reason: "human-rejection-required" }
+  const verified = await readDocumentEvidence(id, context, {
+    state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate,
+  })
+  if (verified.status !== "ok" || digestSfValue(verified.value) !== digestSfValue(record))
+    return { status: "stale", reason: "candidate-changed" }
+  const identity = { incarnation: record.snapshot.incarnation, revision: record.snapshot.revision, blobDigest: record.snapshot.blobDigest }
+  const asset = documentAsset({ documents: loaded.value.assets }, record.snapshot.documentRef)
+  if (!asset || !(await input.documents.revalidate(record.snapshot.documentRef, identity, context)))
+    return { status: "stale", reason: "document-changed" }
+  const rejected: DocumentEvidence = { ...record.evidence, status: "rejected", rejection: { reason, page } }
+  const saved = await input.state.transaction<DocumentEvidence | null>(request, {
+    namespace: "documents", domainSurface: asset.surface, expectedStorageVersion: loaded.storageVersion,
+    idempotencyKey: operationId, commandDigest: digestSfValue({ action: "reject", id, evidence: record.evidence, reason, page }),
+    targetRef: record.snapshot.documentRef, targetIncarnation: identity.incarnation,
+  }, async (state, authority, snapshot) => {
+    const current = state.documents[id]
+    if (authority.principalRef !== context.binding.principalRef ||
+        authority.accessRevision !== context.binding.accessRevision ||
+        authority.policyVersion !== context.binding.policyVersion ||
+        !documentSourceCurrent(state, snapshot, record.snapshot.documentRef, identity, asset.surface) ||
+        !await input.documents.revalidate(record.snapshot.documentRef, identity, context).catch(() => false) ||
+        digestSfValue(current) !== digestSfValue(record) || !await input.rejectDocument(reviewed, context))
+      return { commit: false, value: null }
+    state.documents[id] = { ...record, evidence: rejected, snapshot: { ...record.snapshot, evidence: rejected } }
+    return { commit: true, value: rejected }
+  })
+  if (saved.status !== "ok" || !saved.value) return { status: "conflict", reason: "candidate-changed" }
+  const current = await readDocumentEvidence(id, context, {
+    state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate,
+  })
+  if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(rejected))
+    return { status: "stale", reason: "rejection-not-verified" }
+  return { status: "ok", value: current.value.evidence }
 }
 
 export async function searchDocumentEvidence(request: KnowledgeSearchRequest, context: TrustedDomainContext, input: DocumentEvidenceHost): Promise<PortResult<EvidenceSearchResult>> {
