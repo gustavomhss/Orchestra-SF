@@ -16,6 +16,7 @@ import { SF_U06_COPY, SF_U06_COPY_BR } from "./orchestra-chapters/sf-u06"
 import { SF_U07_COPY, SF_U07_COPY_BR } from "./orchestra-chapters/sf-u07"
 import { SF_U08_COPY, SF_U08_COPY_BR } from "./orchestra-chapters/sf-u08"
 import { SF_U09_COPY, SF_U09_COPY_BR } from "./orchestra-chapters/sf-u09"
+import { SF_U11_REMAINING_COPY, SF_U11_REMAINING_COPY_BR } from "../orchestra/chapters/sucafina/procurement/requests/copy"
 import { SF_U12_COPY, SF_U12_COPY_BR } from "./orchestra-chapters/sf-u12"
 import { SF_U13_COPY, SF_U13_COPY_BR } from "./orchestra-chapters/sf-u13"
 import { SF_U14_COPY, SF_U14_COPY_BR } from "./orchestra-chapters/sf-u14"
@@ -432,6 +433,7 @@ export const ORCHESTRA_COPY = {
   ...SF_U07_COPY,
   ...SF_U08_COPY,
   ...SF_U09_COPY,
+  ...SF_U11_REMAINING_COPY,
   ...SF_U12_COPY,
   ...SF_U13_COPY,
   ...SF_U14_COPY,
@@ -834,6 +836,7 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...SF_U07_COPY_BR,
   ...SF_U08_COPY_BR,
   ...SF_U09_COPY_BR,
+  ...SF_U11_REMAINING_COPY_BR,
   ...SF_U12_COPY_BR,
   ...SF_U13_COPY_BR,
   ...SF_U14_COPY_BR,

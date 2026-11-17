@@ -37,6 +37,9 @@ jobs:
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
           node script/sf-ci/gate.mjs manifest
           node --test script/sf-ci/gate.test.mjs
+          # Existing preflight, no extra job/runner: generated maintenance QA consistency.
+          python3 docs/qa/sucafina/uat-cio/scripts/generate-story-skills.py --check
+          node --test docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.test.mjs
       - uses: ./.github/actions/setup-bun
       - name: Verify Linux-only surgical runner contract independently of product typechecks
         env:
@@ -346,7 +349,13 @@ jobs:
       - name: Install Chromium for Linux only
         working-directory: packages/app-shell
         run: bunx playwright install --with-deps chromium
+      - name: Qualify real loopback ClamD for Operations uploads
+        if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}
+        shell: bash
+        run: bash script/sf-ci/operations-clamd.sh
       - name: Run installed SF UI journey
+        env:
+          SF_OPERATIONS_CLAMD_PORT: ${{ matrix.id == 'CI-UI-OPERATIONS' && '3310' || '' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -379,6 +388,9 @@ jobs:
           test "$status" -eq 0
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
+          # The coverage gate needs a baseline versioned from an authentic successful
+          # run and independently reviewed. Until that baseline exists in the
+          # manifest, calling it here would only fail closed on every PR.
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
       - name: Publish only minimized JSON and receipt for a clean run
         if: success()

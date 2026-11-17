@@ -133,6 +133,15 @@ export function bunCoverageIdentity(raw) {
     casesSha256: sha256Lines(cases), filesSha256: sha256Lines(files) }
 }
 
+/** Playwright emits a testDir-relative file; canonicalize only that one known
+ * root against the exact manifest entry, never by suffix or wildcard. */
+function canonicalPlaywrightSpec(reported, exactSpec) {
+  const file = validateRelative(String(reported).replaceAll("\\", "/"))
+  if (!/^e2e\/sucafina\/[\w-]+\.spec\.ts$/.test(exactSpec)) fail("invalid Playwright manifest spec")
+  const canonical = file.startsWith("e2e/") ? file : "e2e/" + file
+  if (canonical !== exactSpec) fail("wrong Playwright spec selected: " + file)
+  return canonical
+}
 /** Playwright minimized evidence retains only salted-free opaque case IDs and source file paths. */
 export function playwrightCoverageIdentity(raw, exactSpec) {
   let data
@@ -142,8 +151,8 @@ export function playwrightCoverageIdentity(raw, exactSpec) {
   const visit = (suite, inheritedFile = "") => {
     const suiteFile = suite.file || inheritedFile
     for (const spec of suite.specs || []) {
-      const file = validateRelative(String(spec.file || suiteFile).replaceAll("\\", "/"))
-      if (file !== exactSpec || !Array.isArray(spec.tests) || !/^[a-f0-9]{64}$/.test(spec.idHash || "")) {
+      const file = canonicalPlaywrightSpec(spec.file || suiteFile, exactSpec)
+      if (!Array.isArray(spec.tests) || !/^[a-f0-9]{64}$/.test(spec.idHash || "")) {
         fail("unbound Playwright case identity/file: " + file)
       }
       files.add(file)
@@ -258,8 +267,7 @@ export function countPlaywrightReport(raw, exactSpec) {
   const visit = (suite, inheritedFile = "") => {
     const suiteFile = suite.file || inheritedFile
     for (const spec of suite.specs || []) {
-      const file = String(spec.file || suiteFile).replaceAll("\\", "/")
-      if (!file.endsWith(exactSpec)) fail("wrong Playwright spec selected: " + file)
+      canonicalPlaywrightSpec(spec.file || suiteFile, exactSpec)
       if (!Array.isArray(spec.tests) || spec.tests.length === 0) fail("unexecuted Playwright spec")
       for (const test of spec.tests) {
         if (test.expectedStatus !== "passed" || !Array.isArray(test.results) || test.results.length !== 1 ||

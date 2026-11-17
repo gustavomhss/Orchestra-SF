@@ -297,11 +297,11 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     } : {}),
   }
   createEffect(() => {
-    const selected = props.selection()
-    // load() synchronously fences and reads its own store before the first
-    // await. Track only the selected installation, never these internal reads,
-    // or the effect restarts discovery and aborts its own authenticated context.
-    untrack(() => { void load(selected) })
+    const selection = props.selection()
+    // The owner selection alone triggers loading. The synchronous part of load()
+    // reads state and generation; tracking either here would launch competing
+    // reloads after each fence, revoking or resurrecting an unrelated owner.
+    untrack(() => { void load(selection) })
   })
   onCleanup(() => {
     disposed = true

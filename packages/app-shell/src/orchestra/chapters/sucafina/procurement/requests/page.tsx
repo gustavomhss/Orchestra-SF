@@ -291,8 +291,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const editPo = (next: SfPoEdit) => {
     if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
   }
-  const stageAllowed = (action: SfRequestCommand) => {
-    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown || view.sending ||
+  const stageAllowed = (action: SfRequestCommand, inCurrentDispatch = false) => {
+    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown ||
+        (view.sending && !inCurrentDispatch) ||
         prConflict() || poConflict() || prPending() || poPending()) return false
     const current = row()
     if (action === "create") return creating() && !!activePr()
@@ -428,7 +429,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           ownerKey: currentOwner.status === "ready" ? currentOwner.ownerKey : undefined,
           epoch: sf.generation(), prController: pr ? prDraft() : undefined,
           poController: po ? poDraft() : undefined, payload: JSON.stringify(input),
-        }) || !stageAllowed(review.action) ||
+        }) || inFlight !== abort || !stageAllowed(review.action, true) ||
         (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
           activePr()?.baseVersion !== (review.ref ? review.version : null))) ||
         (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
