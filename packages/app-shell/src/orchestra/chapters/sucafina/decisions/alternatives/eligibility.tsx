@@ -118,7 +118,10 @@ export function SfEligibilityRegistration(props: {
           {(receipt) => <div role="status" class="sf-n24-review">
             <p>Escolha confirmada pelo produtor: case v{receipt().version} · correlação <bdi>{receipt().key}</bdi></p>
             <Show when={receipt().resultRef}><p>Resultado: <bdi>{receipt().resultRef}</bdi></p></Show>
-            <button type="button" class="mx-btn" onClick={props.onReload}>Releitura autorizada</button>
+            <button type="button" class="mx-btn" onClick={() => {
+              props.onReload()
+              setUi({ phase: "editing", request: undefined, receipt: undefined, reason: "", error: "" })
+            }}>Releitura autorizada</button>
           </div>}
         </Show>
         <Show when={ui.error}><p role="alert">{ui.error}</p></Show>
