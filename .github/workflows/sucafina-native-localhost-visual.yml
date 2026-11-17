@@ -6,6 +6,8 @@ on:
     paths:
       - ".github/workflows/sucafina-native-localhost-visual.yml"
       - "packages/app-shell/e2e/sucafina/native/localhost-preview.capture.ts"
+      - "packages/client/src/sucafina/transport.ts"
+      - "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx"
   workflow_dispatch:
 
 permissions:
