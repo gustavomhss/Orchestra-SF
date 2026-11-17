@@ -37,6 +37,9 @@ jobs:
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
           node script/sf-ci/gate.mjs manifest
           node --test script/sf-ci/gate.test.mjs
+          # Existing preflight, no extra job/runner: generated maintenance QA consistency.
+          python3 docs/qa/sucafina/uat-cio/scripts/generate-story-skills.py --check
+          node --test docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.test.mjs
       - uses: ./.github/actions/setup-bun
       - name: Verify Linux-only surgical runner contract independently of product typechecks
         env:

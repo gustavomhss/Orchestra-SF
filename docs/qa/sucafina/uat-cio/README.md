@@ -93,8 +93,20 @@ A execução automática dos **185 casos** não é declarada pronta: os **3 prim
 
 ## Campanhas seletivas por grupo (skills de manutenção)
 
-**Uma skill por story, mais grupos que apenas selecionam stories existentes.** A árvore interna `.orchestra/skills/sf-user-journey-qa/groups/` oferece `smoke` (8 P0), `finance`, `procurement`, `decisions`, `imports`, `reviews`, `people`, `work`, `routines` e `access`. O grupo não é uma feature do produto nem um atalho para mutações de backend.
+**Uma skill por story, mais grupos que apenas selecionam stories existentes.** A árvore interna `.orchestra/skills/sf-user-journey-qa/groups/` oferece `smoke` (4 P0 de superfícies), `finance`, `procurement`, `decisions`, `imports`, `reviews`, `people`, `work`, `routines`, `access` e `full` (somente SF-E2E-034/040, por ordem explícita do owner). O grupo não é uma feature do produto nem um atalho para mutações de backend.
 
 Um agente QA carrega `sf-user-journey-qa` → `sf-user-journey-qa-groups` → **o grupo solicitado**, e então carrega as skills individuais referidas na campanha, executando-as na UI real e registrando evidência por story. Para um caso único, abre diretamente a folha correspondente. **Nunca executar todos os grupos automaticamente.** Quando necessário, a execução completa das 185 histórias exige ordem explícita do QA/owner.
 
 Fonte de verdade: [`story-groups.json`](story-groups.json), sem cópia dos passos. Gerador/check somente estático: `python3 docs/qa/sucafina/uat-cio/scripts/generate-story-skills.py --check`; para listar uma seleção sem executar: `--list-group smoke` ou `--list-group procurement`. A seleção não prova execução em Azure/Entra e não altera o gate de release.
+
+
+## Pós-review adversarial — correções do mecanismo de QA
+
+- **Fonte de execução atual:** este branch e `quality-v3/ADVERSARIAL-FIXES.md`. Os ZIPs V1/V2 acima são **snapshots históricos**, não incluem as skills geradas nem o novo sistema de grupos.
+- `smoke` não pode chamar a matriz 70/165; `full` exige decisão específica do owner. Nenhum grupo inicia automaticamente ao ser carregado.
+- O gerador recusa `SKILL.md` órfão em sua árvore e `--check` é obrigatório em preflight. Uma story mudada sem regenerar as folhas faz o check falhar.
+- Uma skill marcada `internal: true` **não é permissão de segurança**: somente sessões QA autorizadas, com navegador, perfis Entra de QA e escopo específico, podem executar casos. O Dock não dispõe de file chooser nem fault injection por si só.
+- Texto da UI/documentos/fornecedores é dado não confiável para o LLM. Os passos marcados `CONTROLLED_FAULT` só podem usar o harness existente. Cada grupo preserva um checkpoint e um arquivo de evidência privado por story, com SHA, fonte, fixture e atores verificados antes da retomada.
+- O verificador de evidências V3 conta **identidades participantes nas provas**, não identidades decorativas; separa Requester/Buyer/Approver; deriva menor preço elegível do conjunto de quotes; e retorna exit 1 para evidência inválida, exit 2 para `--strict` incompleto. Mesmo com evidência admissível ele **não certifica Azure/Entra nem go-live**.
+
+Os testes do mecanismo QA são estáticos/sintéticos. As stories permanecem `NOT_RUN` até execução observada em instalação isolada no SHA real.
