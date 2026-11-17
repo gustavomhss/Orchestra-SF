@@ -346,7 +346,13 @@ jobs:
       - name: Install Chromium for Linux only
         working-directory: packages/app-shell
         run: bunx playwright install --with-deps chromium
+      - name: Qualify real loopback ClamD for Operations uploads
+        if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}
+        shell: bash
+        run: bash script/sf-ci/operations-clamd.sh
       - name: Run installed SF UI journey
+        env:
+          SF_OPERATIONS_CLAMD_PORT: ${{ matrix.id == 'CI-UI-OPERATIONS' && '3310' || '' }}
         shell: bash
         run: |
           set -euo pipefail
