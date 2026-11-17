@@ -217,8 +217,12 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     },
     async authenticate(request, context) {
       const current = await ready(request)
+      const diag = process.env.SF_AUTH_DIAG === "1"
+      if (diag) console.error("SF_AUTH_DIAG", JSON.stringify({ stage: "ready", session: !!current, context: !!context, surface: context?.surface, rows: context?.roleMap.length }))
       if (!current || !context) return null
-      const actor = await options.client.resolve(current.value.tokens.accessToken, context.roleMap.filter((row) => row.surface === context.surface)).catch(() => null)
+      const actor = await options.client.resolve(current.value.tokens.accessToken, context.roleMap.filter((row) => row.surface === context.surface))
+        .catch((error) => { if (diag) console.error("SF_AUTH_DIAG", JSON.stringify({ stage: "resolve-threw", message: String(error).slice(0, 400) })); return null })
+      if (diag) console.error("SF_AUTH_DIAG", JSON.stringify({ stage: "resolved", actor: !!actor, idMatch: actor?.id === current.value.person.id, roles: actor?.roles.length }))
       if (!actor || actor.id !== current.value.person.id || !actor.roles.length || actor.roles.some((role) => role.surface !== context.surface)) return null
       return (await ready(request))?.handle === current.handle ? actor : null
     },
