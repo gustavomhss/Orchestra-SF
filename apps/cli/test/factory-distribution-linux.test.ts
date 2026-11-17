@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { createHash } from "node:crypto"
-import { chmod, lstat, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises"
+import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { prepareLocalConfiguration } from "../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
@@ -12,6 +12,20 @@ const target = "linux-x64-baseline"
 const cli = path.resolve(import.meta.dir, "..")
 const root = path.resolve(cli, "../..")
 const digest = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex")
+const isWebSourceMap = (name: string) => /\\.map(?:\\.(?:gz|br))?$/i.test(name)
+
+async function webBuildFilePaths(root: string, current = ""): Promise<string[]> {
+  const entries = await readdir(path.join(root, current), { withFileTypes: true })
+  const files: string[] = []
+  for (const entry of entries) {
+    const relative = current ? `${current}/${entry.name}` : entry.name
+    if (entry.isSymbolicLink()) throw new Error("SF_FACTORY_WEB_SOURCE_SYMLINK")
+    if (entry.isDirectory()) files.push(...await webBuildFilePaths(root, relative))
+    else if (entry.isFile()) files.push(relative)
+    else throw new Error("SF_FACTORY_WEB_SOURCE_NOT_REGULAR")
+  }
+  return files.sort()
+}
 
 function actualCheckoutSha() {
   const result = Bun.spawnSync(["git", "rev-parse", "--verify", "HEAD"], {
@@ -54,6 +68,13 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
   const external = await mkdtemp(path.join(await realpath(tmpdir()), `sf-factory-package-${initialIdentity.runID}-${initialIdentity.runAttempt}-`))
   if (external === workspace || external.startsWith(workspace + path.sep))
     throw new Error("SF_FACTORY_TEST_NOT_OUTSIDE_CHECKOUT")
+  const webDist = path.join(root, "apps/web/dist")
+  const preexistingWeb = await lstat(webDist).then(() => true, (error: unknown) => {
+    if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") return false
+    throw error
+  })
+  if (preexistingWeb) throw new Error("SF_FACTORY_WEB_DIST_NOT_CLEAN")
+  let ownsWeb = false
   const privateDir = path.join(external, "private-installation")
   const modelFile = path.join(external, "models.json")
   const payload = path.join(external, "payload")
@@ -75,10 +96,31 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     ])
     if (buildCode !== 0) throw new Error(`SF_FACTORY_NATIVE_BUILD_FAILED (${buildCode}):\n${buildErr.slice(-8000)}\n${buildOut.slice(-2000)}`)
 
-    const manifest = await prepareDistribution({ dist: path.join(cli, "dist"), out: payload, version, target })
+    // Qualify the very same archive containing CLI + SF factory + public Web.
+    // Original Vite maps stay in the private build tree; #254 strips them only
+    // from the published payload, rejects inline maps and checks verification.
+    ownsWeb = true
+    const webBuild = Bun.spawn([
+      process.execPath, "run", "--cwd", path.join(root, "apps/web"), "build",
+    ], { cwd: root, env: process.env, stdout: "pipe", stderr: "pipe" })
+    const [webOut, webErr, webCode] = await Promise.all([
+      new Response(webBuild.stdout).text(), new Response(webBuild.stderr).text(), webBuild.exited,
+    ])
+    if (webCode !== 0) throw new Error(`SF_FACTORY_WEB_BUILD_FAILED (${webCode}):\n${webErr.slice(-8000)}\\n${webOut.slice(-2000)}`)
+    const rawWebFiles = await webBuildFilePaths(webDist)
+    const rawWebSourceMaps = rawWebFiles.filter(isWebSourceMap)
+    expect(rawWebSourceMaps.length).toBeGreaterThan(0) // Negative control: builder still contains private maps.
+    const webIndexSha256 = digest(await readFile(path.join(webDist, "index.html")))
+    const manifest = await prepareDistribution({ dist: path.join(cli, "dist"), web: webDist, out: payload, version, target })
     expect((await verifyDistribution(payload, { version, target }))).toEqual(manifest)
     const metadata = await Bun.file(path.join(payload, "package.json")).json()
     expect(metadata.sfFactory).toBe("bin/local/entry.mjs")
+    const publishedWebFiles = manifest.files.filter((item) => item.path.startsWith("bin/web/"))
+    expect(publishedWebFiles.length).toBe(rawWebFiles.length - rawWebSourceMaps.length)
+    expect(publishedWebFiles.length).toBeGreaterThan(0)
+    expect(publishedWebFiles.filter((entry) => isWebSourceMap(entry.path))).toHaveLength(0)
+    expect(manifest.files.find((entry) => entry.path === "bin/web/index.html")?.sha256)
+      .toBe(webIndexSha256)
     const sf = (name: string) => manifest.files.find((item) => item.path === name)
     for (const filename of ["bin/orchestra", "bin/local/entry.mjs", "bin/local/closure.json",
       "bin/product/ai/manifests/resident.json"]) {
@@ -118,6 +160,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       }
     }
     expect(await verifyDistribution(extracted, { version, target })).toEqual(manifest)
+    expect([...files.keys()].filter((name) => name.startsWith("bin/web/") && isWebSourceMap(name))).toHaveLength(0)
     expect(await lstat(path.join(extracted, "node_modules")).then(() => true, () => false)).toBe(false)
     expect(path.join(extracted, "bin/local/entry.mjs").startsWith(workspace + path.sep)).toBe(false)
 
@@ -188,6 +231,11 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const status: unknown = await response.json()
     expect(status).toMatchObject({ login: "not-configured", uploads: "unavailable-scanner-not-configured" })
     expect(child.exitCode).toBeNull()
+    const webResponse = await fetch("http://localhost:4110/", {
+      redirect: "error", signal: AbortSignal.timeout(15000),
+    })
+    expect(webResponse.status).toBe(200)
+    expect(digest(new Uint8Array(await webResponse.arrayBuffer()))).toBe(webIndexSha256)
     // Re-read the real checkout HEAD immediately before certifying the archive.
     // The success receipt MUST be rejected if the source branch changed in-flight.
     const runIdentity = verifiedRunIdentity()
@@ -205,6 +253,13 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       bundleSha256: closure.bundle.sha256,
       compilerInputCount: closure.inputs.length,
       assetCount: closure.assets.length,
+      web: {
+        originalFileCount: rawWebFiles.length,
+        originalSourceMapCount: rawWebSourceMaps.length,
+        publishedFileCount: publishedWebFiles.length,
+        publishedSourceMapCount: 0,
+        indexSha256: webIndexSha256,
+      },
       checkedEndpoint: "/sucafina/status",
       status: 200,
       origin: "http://localhost:4110",
@@ -234,6 +289,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       await child.exited
     }
     await rm(external, { recursive: true, force: true })
+    if (ownsWeb) await rm(webDist, { recursive: true, force: true })
   }
 }, 1_800_000)
 
