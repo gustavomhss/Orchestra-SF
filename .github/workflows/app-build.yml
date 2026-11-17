@@ -1,6 +1,9 @@
 name: app-build
 
+# Isolated, push-triggered qualification of PR #254; never publishes or deploys.
 on:
+  push:
+    branches: [sf-package-qualify]
   workflow_dispatch:
     inputs:
       revision:
@@ -10,7 +13,7 @@ on:
         default: ""
 
 concurrency:
-  group: app-build
+  group: sf-package-qualify
   cancel-in-progress: false
 
 permissions:
@@ -22,14 +25,14 @@ defaults:
 
 jobs:
   build:
-    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev'"
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/sf-package-qualify' && github.event_name == 'push'"
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - name: Select revision
         id: source
         env:
-          REQUESTED_REVISION: ${{ inputs.revision || github.sha }}
+          REQUESTED_REVISION: ${{ github.event_name == 'push' && 'b67cb17eef6962e4007dab7a0cde27672367f92b' || inputs.revision || github.sha }}
         run: |
           set -euo pipefail
           if [[ ! "$REQUESTED_REVISION" =~ ^[0-9a-f]{40}$ ]]; then
