@@ -241,6 +241,6 @@ test("mounted form applies role/grant CAS to private installation store, rejects
   expect(html).toContain("1 · Operations: 1 · Human actions: 1")
   expect(f.provider.requests.filter((entry) => entry.url.startsWith("https://graph.microsoft.com") &&
     !["GET", "POST"].includes(entry.method))).toHaveLength(0)
-  expect(f.provider.requests.some((entry) => /^https:\/\/graph.microsoft.com\/v1.0\/groups\/.test(entry.url) &&
+  expect(f.provider.requests.some((entry) => entry.url.startsWith("https://graph.microsoft.com/v1.0/groups/") &&
     entry.method !== "GET")).toBe(false)
 })
