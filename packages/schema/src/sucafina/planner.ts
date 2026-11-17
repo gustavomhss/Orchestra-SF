@@ -76,6 +76,8 @@ const RecordMeta = Schema.Struct({
 const PlanProject = Schema.Struct({
   id: NonEmpty, name: Schema.String, revision: NonNegativeInt,
   code: Optional(Schema.String), owner: Optional(Schema.String), desc: Optional(Schema.String),
+  approvalState: Optional(Schema.Literals(["draft", "pending", "approved", "rejected"])),
+  investmentStart: Optional(Schema.String), investmentEnd: Optional(Schema.String),
 })
 const HeadcountPosition = Schema.Struct({
   id: NonEmpty, name: Schema.String, revision: NonNegativeInt,
@@ -91,12 +93,15 @@ const Rate = Schema.Struct({
   cur: Schema.String, annual: NullableAmount,
   locs: Optional(Schema.Union([Schema.String, Schema.Array(Schema.String)])),
 })
+const AllocationSplit = Schema.Struct({ entityRef: NonEmpty, percent: Schema.Finite })
 const CatalogEntry = Schema.Struct({
   id: NonEmpty, name: Schema.String, revision: NonNegativeInt,
   code: Optional(Schema.String), desc: Optional(Schema.String),
+  contractRef: Optional(Schema.String), splits: Optional(Schema.Array(AllocationSplit)),
 })
 const FxEntry = Schema.Struct({
   id: NonEmpty, cur: Schema.String, rate: EditableAmount, revision: NonNegativeInt,
+  sourceRef: Optional(Schema.String), provider: Optional(Schema.String), observedAt: Optional(Schema.String),
 })
 const PageData = {
   CAP17: Schema.Struct({ versions: Schema.Array(PlanVersion), selectedVersion: Optional(PlanVersion), summary: Optional(MoneySummary), comparisons: Schema.Array(Schema.Struct({ id: NonEmpty, name: Schema.String, year: Schema.Finite, total: NullableAmount, fte: NullableAmount })) }),
@@ -170,6 +175,8 @@ const ProjectSave = Schema.Struct({
   versionId: NonEmpty, collection: Schema.Literal("projects"),
   name: Optional(Schema.String), desc: Optional(Schema.String),
   owner: Optional(Schema.String), code: Optional(Schema.String),
+  approvalState: Optional(Schema.Literals(["draft", "pending", "approved", "rejected"])),
+  investmentStart: Optional(Schema.String), investmentEnd: Optional(Schema.String),
 })
 const OpexSave = Schema.Union([
   Schema.Struct({ versionId: NonEmpty, closed: Schema.Union([Through, Schema.String]) }),
@@ -203,6 +210,7 @@ const HeadcountSave = Schema.Union([
 const CatalogSave = Schema.Struct({
   collection: Schema.Literals(["entities", "allocations"]),
   name: Optional(Schema.String), code: Optional(Schema.String), desc: Optional(Schema.String),
+  contractRef: Optional(Schema.String), splits: Optional(Schema.Array(AllocationSplit)),
 })
 const Empty = Schema.Struct({})
 const CommandValues = {
@@ -232,7 +240,8 @@ const CommandValues = {
     "import-workbook": ImportValues,
   },
   CAP22: {
-    save: Schema.Struct({ versionId: NonEmpty, cur: Optional(Schema.String), rate: Optional(Schema.Union([Schema.String, NullableAmount])) }),
+    save: Schema.Struct({ versionId: NonEmpty, cur: Optional(Schema.String), rate: Optional(Schema.Union([Schema.String, NullableAmount])),
+      sourceRef: Optional(Schema.String), provider: Optional(Schema.String), observedAt: Optional(Schema.String) }),
     delete: Schema.Struct({ versionId: NonEmpty }), "import-workbook": ImportValues,
   },
   CAP23: {

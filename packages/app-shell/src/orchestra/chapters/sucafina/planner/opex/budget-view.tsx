@@ -45,6 +45,7 @@ type BudgetSurface = SfSurfaceProps<"CAP18" | "CAP19">
 type Edit = Readonly<{
   name: string; desc: string; owner: string; entity: string; alloc: string;
   cls: string; cur: string; el: string; proj: string; code: string;
+  approvalState: string; investmentStart: string; investmentEnd: string;
 }>
 type ReviewKind = "line-save" | "project-save" | "line-delete" | "project-delete" |
   "spread" | "reset" | "closed" | "split"
@@ -65,6 +66,9 @@ const initialEdit = (row: PlanLine | PlanProject): Edit => ({
   el: "el" in row ? row.el ?? "" : "",
   proj: "proj" in row ? row.proj ?? "" : "",
   code: "code" in row ? row.code ?? "" : "",
+  approvalState: "approvalState" in row ? row.approvalState ?? "" : "",
+  investmentStart: "investmentStart" in row ? row.investmentStart ?? "" : "",
+  investmentEnd: "investmentEnd" in row ? row.investmentEnd ?? "" : "",
 })
 const cellKey = (coord: SfCellCoordinate) =>
   JSON.stringify([coord.measure, coord.month])
@@ -188,8 +192,9 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           setState({ phase: "stale", page: null }); return
         }
         const projection = body.value
-        for (const rec of projection.data.lines) {
-          const handle = editors.get(JSON.stringify([projection.selection.year, projection.data.selectedVersion?.id,rec.id]))
+        for (const rec of [...projection.data.lines,
+          ...("projects" in projection.data ? projection.data.projects : [])]) {
+          const handle = editors.get(JSON.stringify([projection.selection.year, projection.data.selectedVersion?.id, rec.id]))
           handle?.receiveRemote({ baseVersion: rec.revision, value: initialEdit(rec) })
         }
         const lineRef = "lineRef" in props.route.params ? props.route.params.lineRef : undefined
@@ -198,7 +203,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         const refMissing = lineRef && !projection.data.lines.some(row => row.id === lineRef) ||
           projectRef && !projectRows.some(row => row.id === projectRef)
         setState({ page: projection, phase: refMissing ? "not-found" :
-          projection.data.lines.length ? "ready" :
+          (projection.data.lines.length || projectRows.length) ? "ready" :
           (props.route.query.filter || props.route.query.element ? "filtered-empty" : "empty"),
           closedChoice: projection.data.selectedVersion?.closed ?? 0, error: "" })
       } catch (error) {
@@ -549,7 +554,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         if (snapshot?.availability!=="active") return
         const original=snapshot.base ?? initialEdit(project()!)
         const values=Object.fromEntries(Object.entries(snapshot.value).filter(([field,value]) =>
-          ["name","desc","owner","code"].includes(field) && value !== original[field as keyof Edit]))
+          ["name","desc","owner","code","approvalState","investmentStart","investmentEnd"].includes(field) && value !== original[field as keyof Edit]))
         reply=await client["domain.command.CAP19.save"]({
           ...base,page:"CAPEX",action:"save",id:r.id,
           values:{versionId:versionId(),collection:"projects",...values},
@@ -601,7 +606,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   }
   const documentTitle = () => isOpex() ? "sf.cap18.title" : "sf.cap19.title"
   const fieldNames = () => project()
-    ? ["name","desc","owner","code"] as const :
+    ? ["name","desc","owner","code","approvalState","investmentStart","investmentEnd"] as const :
       ["name","desc","owner","entity","alloc","cls","cur","el","proj"] as const
   const review = () => state.review
   const note = () => state.phase === "outcome-unknown" ? "sf.common.operationUnknown" :
@@ -704,7 +709,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                 <div class="sf-u07-project-list">
                   <For each={projectRows()}>{(p)=>
                     <button type="button" class="mx-btn" onClick={()=>setState("selected",p.id)}>
-                      {p.name} · {p.code??p.id}
+                      {p.name} · {p.code??p.id} · {p.approvalState || "draft"}
+                       {p.investmentStart && p.investmentEnd ? ` · ${p.investmentStart} → ${p.investmentEnd}` : ""}
                     </button>}
                   </For>
                 </div>
@@ -732,12 +738,28 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                     <div class="sf-u07-form-fields">
                       <For each={fieldNames()}>{(field)=><label>
                         {t("sf.u07."+(field==="desc"?"description":field==="cur"?"currency":field==="alloc"?"allocation":field==="cls"?"classification":field==="el"?"element":field==="proj"?"project":field))}
-                        <input value={draft().value[field]} disabled={!allowed("save")}
-                          onInput={(event)=>{
-                            const ctrl=getEditor(rec())
-                            const snapshot=ctrl?.snapshot()
-                            if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,[field]:event.currentTarget.value})
-                          }}/>
+                        <Show when={field === "approvalState"} fallback={
+                          <input type={field === "investmentStart" || field === "investmentEnd" ? "month" : "text"}
+                            value={draft().value[field]} disabled={!allowed("save")}
+                            onInput={(event)=>{
+                              const ctrl=getEditor(rec())
+                              const snapshot=ctrl?.snapshot()
+                              if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,[field]:event.currentTarget.value})
+                            }}/>
+                        }>
+                          <select value={draft().value.approvalState} disabled={!allowed("save")}
+                            onChange={(event)=>{
+                              const ctrl=getEditor(rec())
+                              const snapshot=ctrl?.snapshot()
+                              if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,approvalState:event.currentTarget.value})
+                            }}>
+                            <option value="">{t("sf.u07.approval.unset")}</option>
+                            <option value="draft">{t("sf.u07.approval.draft")}</option>
+                            <option value="pending">{t("sf.u07.approval.pending")}</option>
+                            <option value="approved">{t("sf.u07.approval.approved")}</option>
+                            <option value="rejected">{t("sf.u07.approval.rejected")}</option>
+                          </select>
+                        </Show>
                       </label>}</For>
                     </div>
                     <div class="sf-u07-actions">
