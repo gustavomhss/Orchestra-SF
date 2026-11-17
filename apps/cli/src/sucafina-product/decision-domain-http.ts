@@ -47,8 +47,10 @@ export function createSfDecisionDomainHttp(input: { origin: string; mount: strin
     }
     if (mode === "decision-controls") {
       if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
-      const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "format"]
-      if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1) || url.searchParams.has("format") && url.searchParams.get("format") !== "json") return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
+      const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "procurement", "format"]
+      if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1) ||
+          url.searchParams.has("procurement") && url.searchParams.get("procurement") !== "attached" ||
+          url.searchParams.has("format") && url.searchParams.get("format") !== "json") return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
       const runtime = input.runtime()
       if (!runtime) return reply({ status: "unavailable" }, 503)
       try {
