@@ -1,4 +1,5 @@
 import { test } from "node:test"
+import { assertWorkflowManifestSelection } from "./workflow-contract.mjs"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
@@ -129,10 +130,89 @@ test("CI workflow has one automatic trigger and preserves exhaustive green cover
   assert.match(workflow, /^  pull_request:/m)
   assert.doesNotMatch(workflow, /^  push:/m)
   assert.match(workflow, /bun test --timeout 30000 --bail=5/)
-  assert.match(workflow, /sucafina-native --bail=5/)
+  const realManifest = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  assertWorkflowManifestSelection(workflow, realManifest)
   assert.match(workflow, /--max-failures=2/)
   assert.doesNotMatch(workflow, /--pass-with-no-tests|continue-on-error: true|--retry\s+[1-9]/)
 })
+// A6 consumes this test-defined wiring contract in .github/workflows/sf-ci.yml.
+// The positive fixture is intentionally independent from the live workflow:
+// negative mutations must pass even while A6's YAML still needs updating.
+function manifestWiredWorkflowFixture(actualManifest) {
+  const buns = actualManifest.suites.filter((suite) => suite.kind === "bun")
+  const ui = actualManifest.suites.filter((suite) => suite.kind === "playwright")
+  const arms = buns.map((suite) => [
+    `              ${suite.id})`,
+    `                cd "$root/${suite.directory}"`,
+    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 "${'${files[@]}'}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
+    "                ;;",
+  ].join("\n")).join("\n")
+  const selected = [
+    '          node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?',
+    '          mapfile -t files < "$evidence/selection.txt"',
+  ].join("\n")
+  const prefix = [
+    '          root="$GITHUB_WORKSPACE"',
+    '          evidence="$root/sf-ci-evidence/$SF_SUITE_ID"',
+    selected,
+  ].join("\n")
+  return [
+    "name: sf-ci", "on:", "  pull_request:", "    branches: [close-final-candidate]", "jobs:",
+    "  unit:", "    strategy:", "      matrix:",
+    `        id: [${buns.map((suite) => suite.id).join(", ")}]`,
+    "    env:", '      SF_SUITE_ID: ${{ matrix.id }}',
+    "    steps:", "      - name: test", "        run: |", prefix,
+    '          test "${#files[@]}" -gt 0 || exit 2',
+    '          case "$SF_SUITE_ID" in', arms, '              *) exit 2 ;;', "          esac",
+    "  ui:", "    strategy:", "      matrix:", "        include:",
+    ...ui.map((suite) => `          - id: ${suite.id}`),
+    "    env:", '      SF_SUITE_ID: ${{ matrix.id }}',
+    "    steps:", "      - name: test", "        run: |", prefix,
+    '          test "${#files[@]}" -eq 1 || exit 2',
+    '          cd "$root/packages/app-shell"',
+    '          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2',
+    "",
+  ].join("\n")
+}
+
+test("manifest-to-YAML contract accepts all five Bun and three UI suites when selectors drive argv", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const workflow = manifestWiredWorkflowFixture(actual)
+  const selected = assertWorkflowManifestSelection(workflow, actual)
+  assert.deepEqual(selected.bun, actual.suites.filter((suite) => suite.kind === "bun").map((suite) => suite.id))
+  assert.deepEqual(selected.playwright, actual.suites.filter((suite) => suite.kind === "playwright").map((suite) => suite.id))
+})
+
+test("manifest-to-YAML negative mutations refuse missing selector, missing suites and hardcoded execution", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const good = manifestWiredWorkflowFixture(actual)
+  const selector = 'node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?'
+  const hardcodeInBrowser = (value) => {
+    const at = good.indexOf("              CI-APP-BROWSER)")
+    assert.ok(at > 0, "fixture browser arm exists")
+    return good.slice(0, at) + good.slice(at).replace('"${files[@]}"', value)
+  }
+  const failCases = [
+    ["missing Bun selector", good.replace(selector, "echo omitted-bun-selector")],
+    ["missing UI selector", good.slice(0, good.lastIndexOf(selector)) + good.slice(good.lastIndexOf(selector)).replace(selector, "echo omitted-ui-selector")],
+    ["missing CI-APP-BROWSER matrix ID", good.replace(", CI-APP-BROWSER", "")],
+    ["missing CI-UI-DECISIONS manifest suite", good.replace("          - id: CI-UI-DECISIONS\n", "")],
+    ["missing browser dispatch arm", good.replace(/\n {14}CI-APP-BROWSER\)[\s\S]*?\n {16};;/, "")],
+    ["browser hardcoded directory", hardcodeInBrowser('"./test-browser/sucafina-native"')],
+    ["browser hardcoded file", hardcodeInBrowser('"test-browser/sucafina-native/transport-contract.test.ts"')],
+    ["hardcoded file appended to selected array", hardcodeInBrowser('"${files[@]}" "test-browser/sucafina-native/one.test.ts"')],
+    ["hardcoded selection overrides mapfile", good.replace('mapfile -t files < "$evidence/selection.txt"', 'mapfile -t files < "$evidence/selection.txt"\n          files=("test/fake.test.ts")')],
+    ["hardcoded Playwright spec", good.replace('"${files[0]}"', '"e2e/sucafina/operations.spec.ts"')],
+    ["UI matrix.spec drift", good.replace("          - id: CI-UI-REPORTS", "          - id: CI-UI-REPORTS\n            spec: e2e/sucafina/reports.spec.ts")],
+    ["old directory filtering", hardcodeInBrowser('"${files[@]}" --path-ignore-patterns=other')],
+  ]
+  assert.doesNotThrow(() => assertWorkflowManifestSelection(good, actual))
+  for (const [name, broken] of failCases) {
+    assert.notEqual(broken, good, "mutation must actually change the fixture: " + name)
+    assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
+  }
+})
+
 test("selected files are read only from the validated Linux SF manifest", () => {
   assert.deepEqual(requiredSelection(manifest, "CI-CLI"), ["test/sf-authorized-sample.test.ts"])
   assert.deepEqual(requiredSelection(manifest, "CI-ATLAS-BUSINESS"), ["test/sf-authorized-sample.test.ts"])
