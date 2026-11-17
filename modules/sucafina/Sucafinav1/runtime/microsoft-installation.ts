@@ -1,5 +1,8 @@
 import { createEntraClient } from "./entra-client.ts"
 import { createMicrosoftIdentity } from "./local-identity.ts"
+import { initializeConfiguredMicrosoftRoleMaps } from "./local-bootstrap.ts"
+import { openLocalStore } from "./local-store.ts"
+import path from "node:path"
 import type { EntraOptions, LocalSecrets } from "./local-contract.ts"
 import { requireLocalIsolation } from "./local-configuration.ts"
 import { bindMicrosoftInstallation, loadMicrosoftConfiguration } from "./microsoft-configuration.ts"
@@ -19,6 +22,16 @@ export async function prepareMicrosoftInstallation(
   if (context.origin !== config.listenerOrigin) throw new Error("Microsoft listener origin mismatch")
   await requireLocalIsolation(directory, environment)
   await bindMicrosoftInstallation(directory, config)
+  // The validated, owner-selected group mapping must exist before the first
+  // authenticated HTTP request. A non-admin member cannot bootstrap an empty
+  // map; previously this silently made every legitimate role a 401. Apply
+  // configuration only when no map exists, preserving explicit admin edits.
+  const store = await openLocalStore(path.join(directory, "business-microsoft"))
+  try {
+    await initializeConfiguredMicrosoftRoleMaps({ groups: config.groups, store })
+  } finally {
+    await store.dispose()
+  }
   const client = createEntraClient({ tenantId: config.tenantId, clientId: config.clientId, profile: "web-confidential", clientSecret: privateConfiguration.clientSecret, ...overrides })
   const transport: MicrosoftTransport = Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: config.listenerOrigin, ingressOrigin: config.ingressOrigin, publicOrigin: config.origin })
   return {
