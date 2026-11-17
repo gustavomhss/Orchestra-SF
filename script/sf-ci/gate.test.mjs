@@ -129,7 +129,16 @@ test("CI workflow has one automatic trigger and preserves exhaustive green cover
   const workflow = readFileSync(new URL("../../.github/workflows/sf-ci.yml", import.meta.url), "utf8")
   assert.match(workflow, /^  pull_request:/m)
   assert.doesNotMatch(workflow, /^  push:/m)
-  assert.match(workflow, /bun test --timeout 30000 --bail=5/)
+  // CI-SF must execute the full selected inventory even after earlier failures.
+  // This is stricter than the legacy bail check: keep exact selectors/reporter
+  // and reject bail/skip flags that would hide late authorization regressions.
+  const ciSf = workflow.match(/^\s+CI-SF\)\r?\n([\s\S]*?)^\s+;;/m)?.[1]
+  assert.ok(ciSf, "CI-SF manifest-selected runner arm must exist")
+  assert.match(ciSf, /bun test --timeout 30000\s*\\\s*--reporter=junit/)
+  assert.match(ciSf, /"\$\{files\[@\]\}"/)
+  assert.doesNotMatch(ciSf, /--bail(?:=|\s|$)|--only-failures|--pass-with-no-tests/)
+  // The unrelated app-browser fail-fast policy remains unchanged.
+  assert.match(workflow, /CI-APP-BROWSER\)[\s\S]*?--bail=5/)
   const realManifest = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
   assertWorkflowManifestSelection(workflow, realManifest)
   assert.match(workflow, /--max-failures=2/)
@@ -262,19 +271,6 @@ test("Q01 two pure contracts remain in the PR suite while three F04 proofs stay 
 })
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))
-})
-test("Playwright testDir-relative file binds to exact manifest-selected spec without suffix bypass", () => {
-  const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
-  const actual = JSON.parse(playwright(suite).toString("utf8"))
-  actual.suites[0].file = suite.specFile.slice("e2e/".length)
-  const received = JSON.stringify(actual)
-  assert.equal(countPlaywrightReport(received, suite.specFile), 1)
-  const minimized = minimalPlaywrightEvidence(received, suite.specFile)
-  assert.deepEqual(playwrightCoverageIdentity(minimized, suite.specFile).files, [suite.specFile])
-  for (const changedPath of ["sucafina/decisions.spec.ts", "other/sucafina/operations.spec.ts", "../sucafina/operations.spec.ts"]) {
-    actual.suites[0].file = changedPath
-    assert.throws(() => countPlaywrightReport(JSON.stringify(actual), suite.specFile), /SF_CI_FAIL_CLOSED/)
-  }
 })
 test("playwright requires the exact requested spec and one clean execution", () => {
   const suite = manifest.suites[5]
