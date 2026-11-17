@@ -43,7 +43,8 @@ function bundle(){
         githubRunHeadSha:C,sourceSHA:C,checkoutSHA:C,expectedSourceSHA:C,
         archiveFile:"orchestra-sf-factory-linux-x64-baseline.tar.gz",
         archiveSha256:H,manifestSha256:H,bundleSha256:H,
-        factoryReceiptSha256:H,extractedOutsideCheckout:true,
+        factoryReceiptSha256:H,githubRunSnapshotSha256:H,
+        extractedOutsideCheckout:true,
       },
       installed:{
         sourceSha:C,artifactSha256:ART,releaseRoot,
