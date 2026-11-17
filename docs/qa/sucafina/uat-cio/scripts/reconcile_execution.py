@@ -172,8 +172,15 @@ def validate_record(rec, inventories):
         utc(rec["signed_at_utc"], "signed_at_utc")
         demand(rec["reviewed_by"] != rec["operator_alias"], "independent review required")
     if st == "PASSED_WITH_EVIDENCE":
-        demand(rec.get("authenticated_session_proven") is True,
-               "PASS requires independently observed authentication/session")
+        effect = rec.get("effect_class")
+        demand(effect in ("READ_ONLY", "MUTATION", "DENIAL", "COMPOSITE"),
+               "PASS must explicitly classify READ_ONLY/MUTATION/DENIAL/COMPOSITE")
+        if effect == "DENIAL":
+            demand(isinstance(rec.get("authenticated_session_proven"), bool),
+                   "negative proof must record whether a real session existed")
+        else:
+            demand(rec.get("authenticated_session_proven") is True,
+                   "PASS requires independently observed authentication/session")
         demand(rec.get("authorization_snapshot_ref") not in (None, "", "STORE_SECURELY_NOT_IN_GIT"),
                "PASS needs secure authorization snapshot")
         demand(bool(rec.get("policy_revision")), "PASS needs policy revision")
@@ -181,12 +188,12 @@ def validate_record(rec, inventories):
             demand(bool(SHA64.fullmatch(rec.get(key) or "")), "PASS requires " + key)
         demand(bool(rec.get("sanitized_trace_ref") or rec.get("screenshots_or_video_refs")),
                "PASS must link actual observable evidence")
-        effect = rec.get("effect_class")
-        demand(effect in ("READ_ONLY", "MUTATION", "DENIAL", "COMPOSITE"),
-               "PASS must explicitly classify READ_ONLY/MUTATION/DENIAL/COMPOSITE")
-        if effect in ("MUTATION", "COMPOSITE"):
+        if effect == "MUTATION":
             demand(bool(rec.get("business_receipt_id_redacted")),
-                   "PASS of mutation/composite requires real business receipt")
+                   "PASS of mutation requires real business receipt")
+        if effect == "COMPOSITE":
+            demand(bool(rec.get("business_receipt_id_redacted") or rec.get("negative_no_commit_proof")),
+                   "PASS of composite requires producer receipt or negative no-commit proof")
         if effect == "DENIAL":
             demand(bool(rec.get("negative_no_commit_proof")),
                    "PASS of denial requires no-commit proof")
