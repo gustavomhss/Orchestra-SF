@@ -7,10 +7,24 @@ import unittest
 
 FILE = Path(__file__).resolve().parent / "flamengo-microsoft.example.json"
 UUID = re.compile(r"^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$")
-ROLES = {
-    "dashboard": {"admin", "contributor", "viewer"},
-    "planner": {"admin", "finance", "viewer"},
-    "procurement": {"admin", "requester", "buyer", "approver", "viewer"},
+EXPECTED_GROUPS = {
+    "dashboard": {
+        "admin": "group:d9a91aba-a2fc-4efa-ad9a-4a515208b5d2",
+        "contributor": "group:05823772-b8dc-408a-94a8-3f341f72dfd9",
+        "viewer": "group:d0910680-aae4-4ebb-9834-be836150ab1a",
+    },
+    "planner": {
+        "admin": "group:457af676-7ac9-4f1c-b70c-dff1dfa61066",
+        "finance": "group:fb9fdbd9-f9d8-428d-ad57-04090a52390c",
+        "viewer": "group:6b9f6816-89f8-44e8-92e3-c5b16e35d6a2",
+    },
+    "procurement": {
+        "admin": "group:400ea7f4-cf9b-4a20-a7b0-bd094c7b7c55",
+        "requester": "group:54aa32bd-6f5d-4713-9903-90b3df524b47",
+        "buyer": "group:3f89c5a8-63cb-43f8-9235-b83f99a0c659",
+        "approver": "group:b52163db-66d7-430a-8585-80efbfef84f3",
+        "viewer": "group:aa325a71-671e-4b2b-87bd-8b5ee5e681a1",
+    },
 }
 
 
@@ -31,11 +45,9 @@ class FlamDemoExampleContract(unittest.TestCase):
         self.assertEqual(doc["mount"], "/sucafina")
 
     def test_exact_eleven_role_groups_no_extra_authority(self):
-        self.assertEqual(set(self.doc["groups"]), set(ROLES))
-        for surface, roles in ROLES.items():
-            self.assertEqual(set(self.doc["groups"][surface]), roles)
-            for role in roles:
-                group = self.doc["groups"][surface][role]
+        self.assertEqual(self.doc["groups"], EXPECTED_GROUPS)
+        for surface, groups in EXPECTED_GROUPS.items():
+            for role, group in groups.items():
                 self.assertTrue(group.startswith("group:") and UUID.fullmatch(group[6:]), (surface, role))
         self.assertEqual(sum(map(len, self.doc["groups"].values())), 11)
         self.assertEqual(self.doc["grants"], [])
