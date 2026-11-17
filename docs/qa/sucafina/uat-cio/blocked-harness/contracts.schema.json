@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orchestra.local/schemas/sf-blocked-harness-contracts-v1.json",
+  "title": "Orchestra-SF blocked-story preflight contracts",
+  "$defs": {
+    "sha40": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "sha64": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "safeRef": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#-]{1,190}$"
+    },
+    "safeAlias": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{1,90}$"
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "blocked_reason_code", "description"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_.-]{1,79}$"},
+        "kind": {
+          "enum": [
+            "operation_catalog",
+            "route_manifest",
+            "installed_feature",
+            "policy",
+            "producer_port",
+            "release_promotion",
+            "tenant",
+            "actor",
+            "vm",
+            "fault_injection",
+            "dr_restore",
+            "performance",
+            "browser",
+            "external_service"
+          ]
+        },
+        "blocked_reason_code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{1,79}$"
+        },
+        "description": {"type": "string", "minLength": 3, "maxLength": 500}
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "title": "Reviewed 13+8 story classification",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "candidate_sha",
+        "candidate_tree_sha",
+        "installed_artifact_sha256",
+        "classification_source_ref",
+        "classification_source_sha256",
+        "stories"
+      ],
+      "properties": {
+        "schema": {"const": "sf-blocked-harness-selection-v1"},
+        "candidate_sha": {"$ref": "#/$defs/sha40"},
+        "candidate_tree_sha": {"$ref": "#/$defs/sha40"},
+        "installed_artifact_sha256": {"$ref": "#/$defs/sha64"},
+        "classification_source_ref": {"$ref": "#/$defs/safeRef"},
+        "classification_source_sha256": {"$ref": "#/$defs/sha64"},
+        "stories": {
+          "type": "array",
+          "minItems": 21,
+          "maxItems": 21,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "classification",
+              "classification_evidence_ref",
+              "actor_role",
+              "requirements"
+            ],
+            "properties": {
+              "id": {"type": "string", "pattern": "^SF-[A-Z0-9-]+$"},
+              "classification": {
+                "enum": ["BLOCKED_CAPABILITY", "BLOCKED_ENVIRONMENT"]
+              },
+              "classification_evidence_ref": {"$ref": "#/$defs/safeRef"},
+              "actor_role": {"$ref": "#/$defs/safeAlias"},
+              "requirements": {
+                "type": "array",
+                "minItems": 1,
+                "items": {"$ref": "#/$defs/requirement"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Exact-candidate sanitized observations",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "candidate_sha",
+        "candidate_tree_sha",
+        "installed_artifact_sha256",
+        "observed_at_utc",
+        "operator_alias",
+        "attempt_alias",
+        "probe_bundle_sha256",
+        "observations"
+      ],
+      "properties": {
+        "schema": {"const": "sf-blocked-harness-observations-v1"},
+        "candidate_sha": {"$ref": "#/$defs/sha40"},
+        "candidate_tree_sha": {"$ref": "#/$defs/sha40"},
+        "installed_artifact_sha256": {"$ref": "#/$defs/sha64"},
+        "observed_at_utc": {"type": "string", "format": "date-time"},
+        "operator_alias": {"$ref": "#/$defs/safeAlias"},
+        "attempt_alias": {"$ref": "#/$defs/safeAlias"},
+        "probe_bundle_sha256": {"$ref": "#/$defs/sha64"},
+        "observations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "story_id",
+              "requirement_id",
+              "state",
+              "sanitized_trace_ref",
+              "observed_value_sha256"
+            ],
+            "properties": {
+              "story_id": {"type": "string", "pattern": "^SF-[A-Z0-9-]+$"},
+              "requirement_id": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_.-]{1,79}$"
+              },
+              "state": {"enum": ["PRESENT", "ABSENT", "UNAVAILABLE"]},
+              "sanitized_trace_ref": {"$ref": "#/$defs/safeRef"},
+              "observed_value_sha256": {"$ref": "#/$defs/sha64"}
+            }
+          }
+        }
+      }
+    }
+  ]
+}
