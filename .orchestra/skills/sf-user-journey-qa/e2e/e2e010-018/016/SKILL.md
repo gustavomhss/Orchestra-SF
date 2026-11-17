@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Feature proposta no PR #270: /sucafina/admin/access, FORA das 70 nativas; executar só após montagem real.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Daniel ou André autentica como membro efetivo do grupo supremo
-2. Abre /sucafina/admin/access e verifica renderização da árvore
-3. QA fornece hierarquia Graph com 2 raízes, grupos nested e perfis homônimos
-4. Valida que manager 404 fica sem manager, não usuário forjado
-5. Navega por departamentos, Teams e grupos do usuário
-6. Caio/Pedro/Zico tentam GET direto e link na UI
-7. QA confere que links admin só existem para supreme, sem confiar neles como guard
-8. Inspeciona que Graph foi acessado somente no servidor
+1. **[UI_ACTION]** Daniel ou André autentica como membro efetivo do grupo supremo
+2. **[UI_ACTION]** Abre /sucafina/admin/access e verifica renderização da árvore
+3. **[UI_ACTION]** QA fornece hierarquia Graph com 2 raízes, grupos nested e perfis homônimos
+4. **[UI_ACTION]** Valida que manager 404 fica sem manager, não usuário forjado
+5. **[UI_ACTION]** Navega por departamentos, Teams e grupos do usuário
+6. **[UI_ACTION]** Caio/Pedro/Zico tentam GET direto e link na UI
+7. **[UI_ACTION]** QA confere que links admin só existem para supreme, sem confiar neles como guard
+8. **[UI_ACTION]** Inspeciona que Graph foi acessado somente no servidor
 
 ## Oráculos observáveis (não reescrever para passar)
 

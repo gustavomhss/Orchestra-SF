@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Uptime 99.7% vs 99.9% SLA, 3 incidentes e 4 de 200 endpoints sem patch.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Operações confirma downtime em setembro
-2. Segurança valida 4 endpoints críticos sem patch
-3. Risco R-07 recebe mitigação e autoridade própria
-4. Finance/exec vê resultado agregado, não credenciais
-5. Signals identifica materialidade acima do limiar
-6. CIO inclui incidente na pauta da reunião
-7. Auditor verifica numeradores e denominadores
-8. QA marca 0 breaches com base conhecida, não missing
+1. **[UI_ACTION]** Operações confirma downtime em setembro
+2. **[UI_ACTION]** Segurança valida 4 endpoints críticos sem patch
+3. **[UI_ACTION]** Risco R-07 recebe mitigação e autoridade própria
+4. **[UI_ACTION]** Finance/exec vê resultado agregado, não credenciais
+5. **[UI_ACTION]** Signals identifica materialidade acima do limiar
+6. **[UI_ACTION]** CIO inclui incidente na pauta da reunião
+7. **[UI_ACTION]** Auditor verifica numeradores e denominadores
+8. **[UI_ACTION]** QA marca 0 breaches com base conhecida, não missing
 
 ## Oráculos observáveis (não reescrever para passar)
 

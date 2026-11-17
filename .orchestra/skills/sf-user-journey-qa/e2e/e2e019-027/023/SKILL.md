@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Import XLSX MIME correto, arquivo XLSX com conteúdo CSV disfarçado e planilha com coluna Finance inválida.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Preparar baseline sem nenhum novo lançamento
-2. Enviar XLSX legítimo e capturar manifest preview
-3. Cancelar sem Apply e comprovar banco imutável
-4. Enviar arquivo `.xlsx` com bytes inválidos
-5. Enviar workbook com header errado e linha duplicada
-6. Repetir com row válida e row inválida, sem autorizar partial
-7. Gerar nova prévia após corrigir e aplicar somente quando contratualmente admitido
-8. Auditor compara digests/receipts e contagem efetiva
+1. **[UI_ACTION]** Preparar baseline sem nenhum novo lançamento
+2. **[READ_ONLY_WITNESS]** Enviar XLSX legítimo e capturar manifest preview — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+3. **[UI_ACTION]** Cancelar sem Apply e comprovar banco imutável
+4. **[UI_ACTION]** Enviar arquivo `.xlsx` com bytes inválidos — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+5. **[UI_ACTION]** Enviar workbook com header errado e linha duplicada — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+6. **[UI_ACTION]** Repetir com row válida e row inválida, sem autorizar partial
+7. **[UI_ACTION]** Gerar nova prévia após corrigir e aplicar somente quando contratualmente admitido
+8. **[UI_ACTION]** Auditor compara digests/receipts e contagem efetiva
 
 ## Oráculos observáveis (não reescrever para passar)
 

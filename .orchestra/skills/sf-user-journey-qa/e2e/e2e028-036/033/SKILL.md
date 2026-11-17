@@ -21,17 +21,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Após import aplicado e PR aprovada, processo e store são reiniciados de forma controlada.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Capturar source SHA, schema migration e backup com hash
-2. Executar import com receipt válido A1
-3. Avançar PR32000 uma etapa e capturar receipt B1
-4. Preservar review R1 e gerar report C1
-5. Reiniciar instalação/VM sob runbook autorizado
-6. Reautenticar e consultar A1/B1/R1/C1
-7. Repetir apenas leituras, nunca repostar Apply
-8. Conferir SQLite/WAL, CAS revisions e audit intactos
-9. Simular rollback em ambiente separado e comparar snapshot
+1. **[READ_ONLY_WITNESS]** Capturar source SHA, schema migration e backup com hash
+2. **[UI_ACTION]** Executar import com receipt válido A1
+3. **[READ_ONLY_WITNESS]** Avançar PR32000 uma etapa e capturar receipt B1
+4. **[UI_ACTION]** Preservar review R1 e gerar report C1
+5. **[CONTROLLED_FAULT]** Reiniciar instalação/VM sob runbook autorizado — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+6. **[UI_ACTION]** Reautenticar e consultar A1/B1/R1/C1
+7. **[UI_ACTION]** Repetir apenas leituras, nunca repostar Apply
+8. **[READ_ONLY_WITNESS]** Conferir SQLite/WAL, CAS revisions e audit intactos
+9. **[CONTROLLED_FAULT]** Simular rollback em ambiente separado e comparar snapshot — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
 
 ## Oráculos observáveis (não reescrever para passar)
 

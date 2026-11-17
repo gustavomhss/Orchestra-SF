@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Instalação nova sem import/seed de produto, mas login e capítulos disponíveis.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Criar instalação QA vazia autorizada
-2. Fazer login real e abrir Hoje, Dashboard, Procurement e BI
-3. Inspecionar mensagens sem dados e sem permissões
-4. Tentar buscar termo não existente
-5. Tentar abrir link com referência antiga de outra instalação
-6. Verificar menu e criação de primeira versão
-7. Adicionar um dado real por produtor autorizado
-8. Reabrir dashboard e verificar transição empty→data
+1. **[UI_ACTION]** Criar instalação QA vazia autorizada
+2. **[UI_ACTION]** Fazer login real e abrir Hoje, Dashboard, Procurement e BI
+3. **[READ_ONLY_WITNESS]** Inspecionar mensagens sem dados e sem permissões
+4. **[UI_ACTION]** Tentar buscar termo não existente
+5. **[UI_ACTION]** Tentar abrir link com referência antiga de outra instalação
+6. **[READ_ONLY_WITNESS]** Verificar menu e criação de primeira versão
+7. **[UI_ACTION]** Adicionar um dado real por produtor autorizado
+8. **[READ_ONLY_WITNESS]** Reabrir dashboard e verificar transição empty→data
 
 ## Oráculos observáveis (não reescrever para passar)
 

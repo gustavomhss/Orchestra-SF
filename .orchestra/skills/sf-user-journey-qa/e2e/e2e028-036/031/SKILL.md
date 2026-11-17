@@ -21,17 +21,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - PR #268 em DRAFT: org FLAMENGO sintética com 3 diretorias, 6 departamentos, 12 centros de custo e 10 fornecedores.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Selecionar instalação QA isolada para FLA-DEMO-2026
-2. Inspecionar dados declarativos no sf/demo/flamengo sem assumir que já foram aplicados
-3. Executar seed dry-run e registrar plano de admissões
-4. Autorizar `--apply` somente com contas/portas reais e snapshots backup
-5. Daniel/André validam contexto admin quando feature integrada
-6. Caio faz request, Pedro sourcing, Gabriel aprovação, Sofie Finance
-7. Zico sem grupo tenta abrir domínio e recebe negação
-8. Auditor compara contagem seeded e IDs antes/depois de segunda aplicação
-9. CIO prepara review demonstrativa usando os dados realmente persistidos
+1. **[UI_ACTION]** Selecionar instalação QA isolada para FLA-DEMO-2026
+2. **[READ_ONLY_WITNESS]** Inspecionar dados declarativos no sf/demo/flamengo sem assumir que já foram aplicados
+3. **[READ_ONLY_WITNESS]** Executar seed dry-run e registrar plano de admissões
+4. **[UI_ACTION]** Autorizar `--apply` somente com contas/portas reais e snapshots backup
+5. **[UI_ACTION]** Daniel/André validam contexto admin quando feature integrada
+6. **[UI_ACTION]** Caio faz request, Pedro sourcing, Gabriel aprovação, Sofie Finance
+7. **[UI_ACTION]** Zico sem grupo tenta abrir domínio e recebe negação
+8. **[UI_ACTION]** Auditor compara contagem seeded e IDs antes/depois de segunda aplicação
+9. **[UI_ACTION]** CIO prepara review demonstrativa usando os dados realmente persistidos
 
 ## Oráculos observáveis (não reescrever para passar)
 

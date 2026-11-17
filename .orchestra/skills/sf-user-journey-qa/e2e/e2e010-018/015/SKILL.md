@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Entra B2B resource tenant; sem gravar tokens/segredos em artefatos.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Executar login real com principal autorizado e observar endpoint no browser
-2. Conferir origem HTTPS e redirecionamento registado
-3. Simular código OIDC reutilizado com autorização do QA
-4. Testar nonce/state inválidos em ambiente controlado
-5. Testar CSRF e origem ausente em POST de produto
-6. Alterar tid/oid de token sintético no fixture de contraprova
-7. Remover grupo do ator e validar nova negação
-8. Verificar cookies, logs, cache e ausência de token em HTML
+1. **[UI_ACTION]** Executar login real com principal autorizado e observar endpoint no browser
+2. **[READ_ONLY_WITNESS]** Conferir origem HTTPS e redirecionamento registado
+3. **[CONTROLLED_FAULT]** Simular código OIDC reutilizado com autorização do QA — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+4. **[CONTROLLED_FAULT]** Testar nonce/state inválidos em ambiente controlado — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+5. **[CONTROLLED_FAULT]** Testar CSRF e origem ausente em POST de produto — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+6. **[UI_ACTION]** Alterar tid/oid de token sintético no fixture de contraprova
+7. **[UI_ACTION]** Remover grupo do ator e validar nova negação
+8. **[READ_ONLY_WITNESS]** Verificar cookies, logs, cache e ausência de token em HTML
 
 ## Oráculos observáveis (não reescrever para passar)
 

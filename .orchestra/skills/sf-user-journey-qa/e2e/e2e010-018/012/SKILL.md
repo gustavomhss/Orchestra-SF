@@ -21,15 +21,15 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Duas janelas no mesmo registro OPEX-LIC-01 v3; Sofie muda para 84000 e Budget Owner tenta salvar 78000 sobre v3.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Ambas contas leem v3 simultaneamente
-2. Finance salva 84000 com CAS v3 e obtém v4
-3. Budget Owner mantém editor antigo carregado
-4. Budget Owner envia 78000 usando v3
-5. QA registra status e diff mostrado
-6. Usuário decide reload e cria hipótese B em vez de sobrescrever A
-7. Reabre Fonte A e B em sessões separadas
+1. **[UI_ACTION]** Ambas contas leem v3 simultaneamente
+2. **[UI_ACTION]** Finance salva 84000 com CAS v3 e obtém v4
+3. **[UI_ACTION]** Budget Owner mantém editor antigo carregado
+4. **[UI_ACTION]** Budget Owner envia 78000 usando v3
+5. **[UI_ACTION]** QA registra status e diff mostrado
+6. **[UI_ACTION]** Usuário decide reload e cria hipótese B em vez de sobrescrever A
+7. **[UI_ACTION]** Reabre Fonte A e B em sessões separadas
 
 ## Oráculos observáveis (não reescrever para passar)
 

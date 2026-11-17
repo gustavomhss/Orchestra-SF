@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Daniel e André alteram roleMap de mesmo grupo em duas abas com revisão V7.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Daniel e André abrem admin na versão V7
-2. Daniel configura group→role Buyer e salva, vira V8
-3. André tenta salvar snapshot V7 após editar Finance
-4. QA captura 409 e corpo do erro
-5. André recarrega V8 e refaz alteração válida
-6. Comparar auditoria from/to de ambas ações
-7. Reiniciar store sob QA e reler versões
-8. Validar que nenhum change parcial ficou aplicado
+1. **[UI_ACTION]** Daniel e André abrem admin na versão V7
+2. **[UI_ACTION]** Daniel configura group→role Buyer e salva, vira V8
+3. **[UI_ACTION]** André tenta salvar snapshot V7 após editar Finance
+4. **[UI_ACTION]** QA captura 409 e corpo do erro
+5. **[UI_ACTION]** André recarrega V8 e refaz alteração válida
+6. **[READ_ONLY_WITNESS]** Comparar auditoria from/to de ambas ações
+7. **[CONTROLLED_FAULT]** Reiniciar store sob QA e reler versões — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+8. **[UI_ACTION]** Validar que nenhum change parcial ficou aplicado
 
 ## Oráculos observáveis (não reescrever para passar)
 

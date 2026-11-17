@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Matriz de 165 routes com 21 padrões sintaticamente sobrepostos e refs r_base64url canônicos.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Selecionar rota estática /new e rota dinâmica /:ref do mesmo capítulo
-2. Abrir URL com ref canônica e autorizada
-3. Abrir URL com `r_` truncado ou base64url não canônico
-4. Abrir URL com ref válida de outro owner
-5. Testar encoding de barra e dot segments
-6. Testar parameter pollution e percent encoding inválido
-7. Repetir sem sessão e com revogação no meio
-8. Conferir router static precedence e resposta de host
+1. **[UI_ACTION]** Selecionar rota estática /new e rota dinâmica /:ref do mesmo capítulo
+2. **[UI_ACTION]** Abrir URL com ref canônica e autorizada
+3. **[UI_ACTION]** Abrir URL com `r_` truncado ou base64url não canônico
+4. **[UI_ACTION]** Abrir URL com ref válida de outro owner
+5. **[UI_ACTION]** Testar encoding de barra e dot segments
+6. **[UI_ACTION]** Testar parameter pollution e percent encoding inválido
+7. **[UI_ACTION]** Repetir sem sessão e com revogação no meio
+8. **[READ_ONLY_WITNESS]** Conferir router static precedence e resposta de host
 
 ## Oráculos observáveis (não reescrever para passar)
 

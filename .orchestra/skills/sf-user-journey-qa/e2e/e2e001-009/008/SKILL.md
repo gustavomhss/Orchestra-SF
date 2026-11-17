@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Plano 42 FTE, 40 ativos e 2 posições vagas; 1 contrata em outubro sem alterar setembro.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. HR inspeciona Headcount Overview setembro
-2. Abre organograma e confirma 40 pessoas sem ciclo
-3. Consulta 2 posições planejadas e custos conforme grant
-4. Cria hipótese de contratação de 1 FTE em outubro
-5. Finance revisa impacto de custo sem ver notas privadas de talento
-6. CIO abre BI agregado e verifica total não nominativo
-7. HR confirma review TAL-014 e sua classificação
-8. QA tenta exportar como Viewer sem grant
+1. **[UI_ACTION]** HR inspeciona Headcount Overview setembro
+2. **[UI_ACTION]** Abre organograma e confirma 40 pessoas sem ciclo
+3. **[UI_ACTION]** Consulta 2 posições planejadas e custos conforme grant
+4. **[UI_ACTION]** Cria hipótese de contratação de 1 FTE em outubro
+5. **[UI_ACTION]** Finance revisa impacto de custo sem ver notas privadas de talento
+6. **[UI_ACTION]** CIO abre BI agregado e verifica total não nominativo
+7. **[UI_ACTION]** HR confirma review TAL-014 e sua classificação
+8. **[UI_ACTION]** QA tenta exportar como Viewer sem grant
 
 ## Oráculos observáveis (não reescrever para passar)
 

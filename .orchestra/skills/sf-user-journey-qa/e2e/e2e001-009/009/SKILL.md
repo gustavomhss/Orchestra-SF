@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - P-004 tem milestone 15/dez e risco R-07; stakeholder externo exige novo prazo.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Caio atualiza milestone MS-04 com justificativa
-2. Risk Owner ajusta mitigação de R-07 sem mudar PR
-3. Stakeholder STK-011 recebe registro de comunicação
-4. CIO abre portfolio 25 projetos, não os duplica por vínculo
-5. CIO prepara pauta incorporando risco e milestone
-6. Revisão preserva a versão de ambos
-7. CIO encaminha action a Caio
-8. Caio confirma ação sem mexer em orçamento
+1. **[UI_ACTION]** Caio atualiza milestone MS-04 com justificativa
+2. **[UI_ACTION]** Risk Owner ajusta mitigação de R-07 sem mudar PR
+3. **[UI_ACTION]** Stakeholder STK-011 recebe registro de comunicação
+4. **[UI_ACTION]** CIO abre portfolio 25 projetos, não os duplica por vínculo
+5. **[UI_ACTION]** CIO prepara pauta incorporando risco e milestone
+6. **[UI_ACTION]** Revisão preserva a versão de ambos
+7. **[UI_ACTION]** CIO encaminha action a Caio
+8. **[UI_ACTION]** Caio confirma ação sem mexer em orçamento
 
 ## Oráculos observáveis (não reescrever para passar)
 

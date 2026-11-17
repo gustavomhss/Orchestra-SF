@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Daniel membro supreme tenta alterar seus próprios grants e role inheritance.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Abrir admin como Daniel com roles vigentes
-2. Capturar snapshots das três telas e próprio principal oid
-3. Tentar atribuir a si mesmo novo grant de supplier-admin
-4. Tentar remover o próprio grant ativo
-5. Tentar trocar grupo→role que adicione papel herdado a Daniel
-6. Tentar remover papel de um grupo do qual Daniel faz parte
-7. Confirmar que nenhuma tentativa cria audit de sucesso
-8. Reabrir como segundo admin e testar alteração legítima de outra pessoa
+1. **[UI_ACTION]** Abrir admin como Daniel com roles vigentes
+2. **[READ_ONLY_WITNESS]** Capturar snapshots das três telas e próprio principal oid
+3. **[UI_ACTION]** Tentar atribuir a si mesmo novo grant de supplier-admin
+4. **[UI_ACTION]** Tentar remover o próprio grant ativo
+5. **[UI_ACTION]** Tentar trocar grupo→role que adicione papel herdado a Daniel
+6. **[UI_ACTION]** Tentar remover papel de um grupo do qual Daniel faz parte
+7. **[UI_ACTION]** Confirmar que nenhuma tentativa cria audit de sucesso
+8. **[UI_ACTION]** Reabrir como segundo admin e testar alteração legítima de outra pessoa
 
 ## Oráculos observáveis (não reescrever para passar)
 

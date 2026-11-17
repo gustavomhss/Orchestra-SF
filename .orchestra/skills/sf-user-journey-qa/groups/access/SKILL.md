@@ -11,7 +11,9 @@ not-when: "Outro domínio ou uma única story; abra o grupo correto ou folha ind
 
 **Quando selecionar:** Mudanças em Entra/Graph, grants, tenants, privacidade, rotas, acessibilidade, white-label e promoção.
 
-**Tamanho:** 21 stories; nenhum roteiro foi executado por esta lista.
+**Tamanho:** 19 stories; nenhum roteiro foi executado por esta lista.
+
+**Escopo:** Não inclui homologação total nem promoção de release.
 
 ## Ordem sugerida (skill individual por story)
 
@@ -31,17 +33,16 @@ not-when: "Outro domínio ou uma única story; abra o grupo correto ou folha ind
 14. **SF-E2E-022** · `sf-user-journey-qa-e2e-e2e019-027-022` · Mudança de grant deve produzir efeito na sessão ativa (P0) · **CONDICIONAL:** PR270_NOT_PROMOTED
 15. **SF-E2E-030** · `sf-user-journey-qa-e2e-e2e028-036-030` · O tema Sucafina preserva a arquitetura visual do Orchestra (P1) · **CONDICIONAL:** WHITE_LABEL_RELEASE_FEATURE_UNVERIFIED
 16. **SF-E2E-031** · `sf-user-journey-qa-e2e-e2e028-036-031` · Flamengo demonstra fluxo sem inventar autoridade (P0) · **CONDICIONAL:** PR268_DRAFT_NOT_PROMOTED
-17. **SF-E2E-034** · `sf-user-journey-qa-e2e-e2e028-036-034` · Todas as telas, papéis e estados: prova transversal de UX (P0)
-18. **SF-E2E-036** · `sf-user-journey-qa-e2e-e2e028-036-036` · A URL não pode conceder acesso ao registro (P0)
-19. **SF-E2E-039** · `sf-user-journey-qa-e2e-e2e037-045-039` · 403, 422 e 503 têm significados diferentes (P0)
-20. **SF-E2E-040** · `sf-user-journey-qa-e2e-e2e037-045-040` · A promoção exige produto, identidade e governança (P0) · **CONDICIONAL:** RELEASE_POLICY_OWNER_APPROVAL
-21. **SF-E2E-042** · `sf-user-journey-qa-e2e-e2e037-045-042` · O produto continua operável para teclado, zoom e idiomas (P1)
+17. **SF-E2E-036** · `sf-user-journey-qa-e2e-e2e028-036-036` · A URL não pode conceder acesso ao registro (P0)
+18. **SF-E2E-039** · `sf-user-journey-qa-e2e-e2e037-045-039` · 403, 422 e 503 têm significados diferentes (P0)
+19. **SF-E2E-042** · `sf-user-journey-qa-e2e-e2e037-045-042` · O produto continua operável para teclado, zoom e idiomas (P1)
 
 ## Protocolo deste grupo
 
 1. Carregue `sf-user-journey-qa` (protocolo compartilhado) e identifique a versão instalada, os atores e a fixture isolada. Navegue via as skills CAP/UI/E2E existentes (não copie seus passos). O instrumento `skill` aceita o **nome exato** da folha; alternativamente percorra o índice `Next level` quando for mais conveniente.
-2. **Execute só as stories deste grupo**, na ordem acima, uma tentativa por story. Antes de cada uma, comprovar precondições e isolamento; se uma story depende de uma transação anterior, use estado autorizado e documentado, nunca mutação oculta.
-3. Em falha P0, interromper o grupo e reportar o restante `NOT_RUN`/`BLOCKED`, a menos que o QA tenha autorizado diagnóstico mais amplo. Para recurso condicional não promovido, marcar `BLOCKED_CAPABILITY` e seguir apenas casos independentes.
-4. Registre status e evidência por story, nunca um PASS único para o grupo. O grupo só é `PASS` se todas as stories exigidas foram verificadas na mesma campanha/ambiente/versão, com evidências; não deduzir de testes estáticos.
+2. **Execute só as stories deste grupo**, na ordem acima, uma tentativa por story. Antes de cada uma, capture checkpoint privado `storyId`, `attempt`, `deployedSHA`, `installation`, `fixtureRevision`, `actorAliases`, `beforeDigest` e `evidenceRef`. Não reutilize dados de outro grupo sem reconciliação; para mutações, restaure apenas via seed existente autorizado em instalação QA isolada.
+3. Ao terminar cada story, grave o resultado no próprio `EVIDENCE-RECORD.json` privado, com `afterDigest`, `receiptRef` ou motivo de bloqueio, e checkpoint `resumableFrom` da próxima story. Ao retomar, valide novamente SHA, instalação, fixture, atores e estado; se mudaram, refaça somente a story afetada, nunca marque PASS reutilizado.
+4. Em falha P0, interromper o grupo e reportar o restante `NOT_RUN`/`BLOCKED`, a menos que o QA tenha autorizado diagnóstico mais amplo. Para recurso condicional não promovido, marcar `BLOCKED_CAPABILITY` e seguir apenas casos independentes.
+5. Registre status e evidência por story, nunca um PASS único para o grupo. O grupo só é `PASS` se todas as stories exigidas foram verificadas na mesma campanha/ambiente/versão, com evidências; não deduzir de testes estáticos.
 
 **Sem execução implícita de outros grupos, sem novo runner, sem bypass de UX.**

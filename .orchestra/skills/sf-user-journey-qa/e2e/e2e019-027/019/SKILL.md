@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Diretório Graph remove perfil de empregado, persistindo grant órfão na instalação.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Admin carrega diretório completo com usuário sintético EMP-OLD-01
-2. Grava grant específico àquele objectId de teste
-3. Simula remoção do usuário do Graph na fixture
-4. Reabre admin e verifica seção de permissões órfãs
-5. Inspeciona scopes e ID sem inferir novo usuário pelo nome
-6. Revoga grant órfão via transação CAS
-7. Recarrega admin e confere desaparecimento do órfão
-8. QA relê audit, versão e snapshots depois do restart
+1. **[UI_ACTION]** Admin carrega diretório completo com usuário sintético EMP-OLD-01
+2. **[UI_ACTION]** Grava grant específico àquele objectId de teste
+3. **[UI_ACTION]** Simula remoção do usuário do Graph na fixture
+4. **[UI_ACTION]** Reabre admin e verifica seção de permissões órfãs
+5. **[UI_ACTION]** Inspeciona scopes e ID sem inferir novo usuário pelo nome
+6. **[UI_ACTION]** Revoga grant órfão via transação CAS
+7. **[UI_ACTION]** Recarrega admin e confere desaparecimento do órfão
+8. **[UI_ACTION]** QA relê audit, versão e snapshots depois do restart
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Tema white-label Sucafina proposto, sem redesenhar glass/blur/geometria da arquitetura Orchestra.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Abrir telas com tema padrão da plataforma e capturar baseline visual
-2. Ativar tema Sucafina em build que realmente o inclua
-3. Conferir wordmark, favicon, loading, naming e motion
-4. Testar glass, blur, transparências, shadows e geometria idênticos
-5. Executar dark/light, zoom 200, reduced-motion, mobile 320 e desktop 1440
-6. Percorrer navegação entre os 15 capítulos e modal
-7. Verificar contraste WCAG e foco de teclado sem depender de cor
-8. Comparar screenshots e registrar divergências pixel/semânticas
+1. **[READ_ONLY_WITNESS]** Abrir telas com tema padrão da plataforma e capturar baseline visual
+2. **[UI_ACTION]** Ativar tema Sucafina em build que realmente o inclua
+3. **[READ_ONLY_WITNESS]** Conferir wordmark, favicon, loading, naming e motion
+4. **[UI_ACTION]** Testar glass, blur, transparências, shadows e geometria idênticos
+5. **[UI_ACTION]** Executar dark/light, zoom 200, reduced-motion, mobile 320 e desktop 1440
+6. **[UI_ACTION]** Percorrer navegação entre os 15 capítulos e modal
+7. **[READ_ONLY_WITNESS]** Verificar contraste WCAG e foco de teclado sem depender de cor
+8. **[READ_ONLY_WITNESS]** Comparar screenshots e registrar divergências pixel/semânticas
 
 ## Oráculos observáveis (não reescrever para passar)
 

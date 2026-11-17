@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Pedro já está logado; Daniel revoga operação grant de sourcing.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Pedro abre página sourcing com versão V3
-2. Daniel acessa admin e revoga grant específico de Pedro
-3. Pedro tenta POST sourcing a partir de form antiga
-4. QA captura 403, snapshots before/after e accessRevision
-5. Pedro recarrega página e valida ação desabilitada
-6. Daniel readiciona grant em ambiente controlado
-7. Pedro reloga/recarrega e testa nova permissão
-8. Auditor valida que nenhuma tentativa negada escreveu PO
+1. **[UI_ACTION]** Pedro abre página sourcing com versão V3
+2. **[UI_ACTION]** Daniel acessa admin e revoga grant específico de Pedro
+3. **[UI_ACTION]** Pedro tenta POST sourcing a partir de form antiga
+4. **[UI_ACTION]** QA captura 403, snapshots before/after e accessRevision
+5. **[UI_ACTION]** Pedro recarrega página e valida ação desabilitada
+6. **[UI_ACTION]** Daniel readiciona grant em ambiente controlado
+7. **[UI_ACTION]** Pedro reloga/recarrega e testa nova permissão
+8. **[UI_ACTION]** Auditor valida que nenhuma tentativa negada escreveu PO
 
 ## Oráculos observáveis (não reescrever para passar)
 

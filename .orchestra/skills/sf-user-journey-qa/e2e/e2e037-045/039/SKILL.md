@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Probe histórico mostrou 403/422/503 em jornadas autorizadas; negar a pessoa errada é esperado, negar autorizado pode ser defeito.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Congelar SHA e fixture para reprodução
-2. Executar mesmo endpoint de import com Finance e com Zico
-3. Capturar 200/403/422 reais e discriminar causas
-4. Reproduzir JSON/headers/MIME, origem, principal, resource tenant e revision
-5. Testar Procurement supplier/host 503 isolado
-6. Conferir cada corpo e logs sem segredos
-7. Corrigir pré-condição de teste somente quando era falsa
-8. Reexecutar e associar run IDs a cada QA case
+1. **[UI_ACTION]** Congelar SHA e fixture para reprodução
+2. **[UI_ACTION]** Executar mesmo endpoint de import com Finance e com Zico
+3. **[READ_ONLY_WITNESS]** Capturar 200/403/422 reais e discriminar causas
+4. **[UI_ACTION]** Reproduzir JSON/headers/MIME, origem, principal, resource tenant e revision
+5. **[UI_ACTION]** Testar Procurement supplier/host 503 isolado
+6. **[READ_ONLY_WITNESS]** Conferir cada corpo e logs sem segredos
+7. **[UI_ACTION]** Corrigir pré-condição de teste somente quando era falsa
+8. **[UI_ACTION]** Reexecutar e associar run IDs a cada QA case
 
 ## Oráculos observáveis (não reescrever para passar)
 

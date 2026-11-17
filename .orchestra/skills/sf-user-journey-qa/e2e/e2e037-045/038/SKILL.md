@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Actual setembro fechado, forecast outubro aberto e versão annual locked.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Sofie abre versão annual e confirma setembro closed
-2. Budget Owner cria cenário para outubro sem editar actual
-3. Inspeciona import XLSX que afeta somente outubro
-4. CIO revisa impacto anual com rótulo partial/total
-5. QA tenta editar setembro closed por UI e API
-6. Simula entrada de zero legítimo em outubro
-7. Simula cell missing e compara ao zero
-8. QA verifica audit e versão official
+1. **[UI_ACTION]** Sofie abre versão annual e confirma setembro closed
+2. **[UI_ACTION]** Budget Owner cria cenário para outubro sem editar actual
+3. **[UI_ACTION]** Inspeciona import XLSX que afeta somente outubro — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+4. **[UI_ACTION]** CIO revisa impacto anual com rótulo partial/total
+5. **[UI_ACTION]** QA tenta editar setembro closed por UI e API
+6. **[UI_ACTION]** Simula entrada de zero legítimo em outubro
+7. **[UI_ACTION]** Simula cell missing e compara ao zero
+8. **[UI_ACTION]** QA verifica audit e versão official
 
 ## Oráculos observáveis (não reescrever para passar)
 

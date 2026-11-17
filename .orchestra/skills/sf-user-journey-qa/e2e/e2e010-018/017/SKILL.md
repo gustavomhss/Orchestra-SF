@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Admin supremo define role por grupo para Dashboard, Planner, Procurement e grants diretos separados.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Daniel seleciona grupo Graph existente como dashboard contributor
-2. Seleciona finance para Planner em outro grupo
-3. Configura procurement buyer para grupo de Pedro
-4. Concede a um profile object ID operações exatas de um domínio
-5. Salva via POST com revisão e confere PRG 303
-6. Reloga como Pedro e testa comandos reais de buyer, não só UI
-7. Tenta executar operação fora da grant e valida 403
-8. Volta ao admin e consulta audit from/to e versão após restart
+1. **[UI_ACTION]** Daniel seleciona grupo Graph existente como dashboard contributor
+2. **[UI_ACTION]** Seleciona finance para Planner em outro grupo
+3. **[UI_ACTION]** Configura procurement buyer para grupo de Pedro
+4. **[UI_ACTION]** Concede a um profile object ID operações exatas de um domínio
+5. **[UI_ACTION]** Salva via POST com revisão e confere PRG 303
+6. **[UI_ACTION]** Reloga como Pedro e testa comandos reais de buyer, não só UI
+7. **[UI_ACTION]** Tenta executar operação fora da grant e valida 403
+8. **[UI_ACTION]** Volta ao admin e consulta audit from/to e versão após restart
 
 ## Oráculos observáveis (não reescrever para passar)
 

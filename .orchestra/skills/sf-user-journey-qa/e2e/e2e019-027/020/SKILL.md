@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Graph paging: 2000 users, grupos nested, 429 throttle, 403 restricted guest.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Conferir leitura `/users` com múltiplas páginas
-2. Simular página com nextLink em ciclo para testar limite
-3. Simular 429 com retry autorizado e budget finito
-4. Simular grupo oculto ou transitiveMembers 403
-5. Validar que admin não renderiza org parcial como completo
-6. Tentar salvar alteração quando Graph está incompleto
-7. Recuperar Graph e repetir leitura
-8. Verificar ausência de bearer token no DOM e logs
+1. **[READ_ONLY_WITNESS]** Conferir leitura `/users` com múltiplas páginas
+2. **[CONTROLLED_FAULT]** Simular página com nextLink em ciclo para testar limite — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+3. **[CONTROLLED_FAULT]** Simular 429 com retry autorizado e budget finito — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+4. **[CONTROLLED_FAULT]** Simular grupo oculto ou transitiveMembers 403 — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+5. **[UI_ACTION]** Validar que admin não renderiza org parcial como completo
+6. **[UI_ACTION]** Tentar salvar alteração quando Graph está incompleto
+7. **[UI_ACTION]** Recuperar Graph e repetir leitura
+8. **[READ_ONLY_WITNESS]** Verificar ausência de bearer token no DOM e logs
 
 ## Oráculos observáveis (não reescrever para passar)
 

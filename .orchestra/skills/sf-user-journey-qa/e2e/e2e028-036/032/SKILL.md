@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Contexto Sucafina inclui CTRM/ERP/SAP/Microsoft Fabric como possíveis sistemas externos, sem conector comprovado.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Abrir dashboard e identificar fonte interna efetiva
-2. QA registra se há conector externo instalado e sua versão
-3. Validar leitura de contrato e origem da métrica
-4. Simular falha do sistema externo apenas quando integração existir
-5. Executar compra interna e ler receipt
-6. Verificar se existe comprovante independente de envio ao ERP
-7. Abrir BI e inspecionar linha de origem
-8. Apresentar resumo ao CIO distinguindo internal e external
+1. **[UI_ACTION]** Abrir dashboard e identificar fonte interna efetiva
+2. **[UI_ACTION]** QA registra se há conector externo instalado e sua versão
+3. **[UI_ACTION]** Validar leitura de contrato e origem da métrica
+4. **[CONTROLLED_FAULT]** Simular falha do sistema externo apenas quando integração existir — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+5. **[UI_ACTION]** Executar compra interna e ler receipt
+6. **[READ_ONLY_WITNESS]** Verificar se existe comprovante independente de envio ao ERP
+7. **[READ_ONLY_WITNESS]** Abrir BI e inspecionar linha de origem
+8. **[UI_ACTION]** Apresentar resumo ao CIO distinguindo internal e external
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Audit do workbench inclui actor, before, after e UTC; export pode conter informação corporativa restrita.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Identificar conjunto mínimo de campos de auditoria por operação
-2. Capturar PR/import/grant com consent e contexto fictícios
-3. Executar mutação admitida e observar audit atômico
-4. Testar ação negada e verificar ausência de log falso de sucesso
-5. Exercer consulta pelo auditor com grant próprio
-6. Revogar acesso a pessoa e retestar download de export
-7. Inspecionar a política de retenção assinada pelo owner
-8. Testar backup/restore de audit e consistência dos recibos
+1. **[UI_ACTION]** Identificar conjunto mínimo de campos de auditoria por operação
+2. **[READ_ONLY_WITNESS]** Capturar PR/import/grant com consent e contexto fictícios
+3. **[UI_ACTION]** Executar mutação admitida e observar audit atômico
+4. **[READ_ONLY_WITNESS]** Testar ação negada e verificar ausência de log falso de sucesso
+5. **[UI_ACTION]** Exercer consulta pelo auditor com grant próprio
+6. **[UI_ACTION]** Revogar acesso a pessoa e retestar download de export
+7. **[READ_ONLY_WITNESS]** Inspecionar a política de retenção assinada pelo owner
+8. **[UI_ACTION]** Testar backup/restore de audit e consistência dos recibos
 
 ## Oráculos observáveis (não reescrever para passar)
 

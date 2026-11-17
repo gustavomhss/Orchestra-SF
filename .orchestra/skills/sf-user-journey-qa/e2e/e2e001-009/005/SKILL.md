@@ -21,17 +21,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Import planner XLSX alinhado à coluna OPEX; renovação 72000→84000; não editar o 518000 inalterado.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Sofie exporta versão de Planner com linha renewal72000 e fixed518000
-2. Modifica workbook somente na célula permitida para 84000
-3. Seleciona destino real e admite arquivo com MIME XLSX correto
-4. Revisa preview, digest, before/after e zero efeitos prévios
-5. Confirma Apply uma vez usando attempt ID e versão fixados
-6. QA intercepta apenas entrega da resposta após producer commit
-7. Sofie aciona recuperação por attempt original sem reenviar Apply
-8. Auditor compara tokens antes/depois e recibo original
-9. Testa reabrir import em sessão nova e exportar versão
+1. **[UI_ACTION]** Sofie exporta versão de Planner com linha renewal72000 e fixed518000
+2. **[UI_ACTION]** Modifica workbook somente na célula permitida para 84000 — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+3. **[UI_ACTION]** Seleciona destino real e admite arquivo com MIME XLSX correto — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+4. **[UI_ACTION]** Revisa preview, digest, before/after e zero efeitos prévios
+5. **[UI_ACTION]** Confirma Apply uma vez usando attempt ID e versão fixados
+6. **[CONTROLLED_FAULT]** QA intercepta apenas entrega da resposta após producer commit — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+7. **[UI_ACTION]** Sofie aciona recuperação por attempt original sem reenviar Apply
+8. **[UI_ACTION]** Auditor compara tokens antes/depois e recibo original
+9. **[UI_ACTION]** Testa reabrir import em sessão nova e exportar versão
 
 ## Oráculos observáveis (não reescrever para passar)
 

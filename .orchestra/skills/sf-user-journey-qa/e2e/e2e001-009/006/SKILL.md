@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Relatório DOC-EDI-01 contém prazo atrasado 6 dias; extrator sintetiza erroneamente 60.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Caio envia documento sintético classificado
-2. Inspeciona candidato de extração 60 e rejeita citando a página
-3. Confirma apenas trecho correto “6 dias”
-4. Vincula evidência confirmada ao risco R-07
-5. CIO cria CASE-EDI-01 usando a evidência
-6. Finance verifica fonte e competências antes da comparação
-7. CIO executa cenário com rastreabilidade ao docRef
-8. Auditor consulta histórico de rejeição, sem deletar evidência de erro
+1. **[UI_ACTION]** Caio envia documento sintético classificado
+2. **[UI_ACTION]** Inspeciona candidato de extração 60 e rejeita citando a página
+3. **[UI_ACTION]** Confirma apenas trecho correto “6 dias”
+4. **[UI_ACTION]** Vincula evidência confirmada ao risco R-07
+5. **[UI_ACTION]** CIO cria CASE-EDI-01 usando a evidência
+6. **[UI_ACTION]** Finance verifica fonte e competências antes da comparação
+7. **[UI_ACTION]** CIO executa cenário com rastreabilidade ao docRef
+8. **[UI_ACTION]** Auditor consulta histórico de rejeição, sem deletar evidência de erro
 
 ## Oráculos observáveis (não reescrever para passar)
 

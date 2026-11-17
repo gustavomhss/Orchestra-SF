@@ -21,17 +21,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - PR32000 sofre rejeição no estágio PR; após correção segue sourcing, rejeição SRC e reenvio.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Caio cria PR draft 32000
-2. Gabriel rejeita PR com motivo verificável
-3. Caio reabre e reenvia a mesma requisição com versão nova
-4. Gabriel aprova PR na nova revisão
-5. Pedro cria sourcing e submete para holder SRC
-6. Holder de SRC rejeita quote incompleta
-7. Pedro substitui quote e reenvia SRC
-8. Após aprovação válida, cria PO draft e pede aprovação
-9. Auditor inspeciona histórico de todos os estágios e receipts
+1. **[UI_ACTION]** Caio cria PR draft 32000
+2. **[UI_ACTION]** Gabriel rejeita PR com motivo verificável
+3. **[UI_ACTION]** Caio reabre e reenvia a mesma requisição com versão nova
+4. **[UI_ACTION]** Gabriel aprova PR na nova revisão
+5. **[UI_ACTION]** Pedro cria sourcing e submete para holder SRC
+6. **[UI_ACTION]** Holder de SRC rejeita quote incompleta
+7. **[UI_ACTION]** Pedro substitui quote e reenvia SRC
+8. **[UI_ACTION]** Após aprovação válida, cria PO draft e pede aprovação
+9. **[UI_ACTION]** Auditor inspeciona histórico de todos os estágios e receipts
 
 ## Oráculos observáveis (não reescrever para passar)
 

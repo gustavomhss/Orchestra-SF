@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Leitor autorizado abriu revisão confidencial R1 e documento de Supplier; acesso é revogado antes do download.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. CIO cria R1 e documento acessível ao leitor temporariamente
-2. Leitor abre link da R1 e solicita relatório
-3. Admin revoga grant de leitura na instalação
-4. Leitor recarrega página sem relogar
-5. Tenta baixar DOCX já gerado e abrir revisão por URL direta
-6. Tenta pesquisa de título e similar cases
-7. Tenta usar URL antiga em segundo navegador
-8. Auditor consulta log de permissão e snapshots de ausência de vazamento
+1. **[UI_ACTION]** CIO cria R1 e documento acessível ao leitor temporariamente
+2. **[UI_ACTION]** Leitor abre link da R1 e solicita relatório
+3. **[UI_ACTION]** Admin revoga grant de leitura na instalação
+4. **[UI_ACTION]** Leitor recarrega página sem relogar
+5. **[UI_ACTION]** Tenta baixar DOCX já gerado e abrir revisão por URL direta
+6. **[UI_ACTION]** Tenta pesquisa de título e similar cases
+7. **[UI_ACTION]** Tenta usar URL antiga em segundo navegador
+8. **[UI_ACTION]** Auditor consulta log de permissão e snapshots de ausência de vazamento
 
 ## Oráculos observáveis (não reescrever para passar)
 

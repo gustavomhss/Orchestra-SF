@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Dataset 25 projetos, notas longas, 200 usuários Graph fixture e 10 jobs; nenhum SLA inventado.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Congelar ambiente, hardware e profile de browser
-2. Carregar 25 projetos e 10 documentos sintéticos
-3. Abrir Executive, Portfolio, BI e presentation sequencialmente
-4. Executar várias sessões de leitura simultânea sob contas permitidas
-5. Registrar p50/p95 de carregamento e erros
-6. Testar paginação Graph de 200 usuários somente no admin instalado
-7. Gerar dois exports e inspecionar filas de jobs
-8. Verificar que timeout mostra falha honesta e sem efeito duplicado
+1. **[UI_ACTION]** Congelar ambiente, hardware e profile de browser
+2. **[UI_ACTION]** Carregar 25 projetos e 10 documentos sintéticos
+3. **[UI_ACTION]** Abrir Executive, Portfolio, BI e presentation sequencialmente
+4. **[UI_ACTION]** Executar várias sessões de leitura simultânea sob contas permitidas
+5. **[READ_ONLY_WITNESS]** Registrar p50/p95 de carregamento e erros
+6. **[UI_ACTION]** Testar paginação Graph de 200 usuários somente no admin instalado
+7. **[READ_ONLY_WITNESS]** Gerar dois exports e inspecionar filas de jobs
+8. **[READ_ONLY_WITNESS]** Verificar que timeout mostra falha honesta e sem efeito duplicado
 
 ## Oráculos observáveis (não reescrever para passar)
 

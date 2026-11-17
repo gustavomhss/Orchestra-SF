@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Usuários executivos em monitores grandes, notebook e mobile; idioma pode variar, dark/light.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Abrir menu lateral e botões principais só com teclado
-2. Tab, Shift+Tab, Enter e Esc em diálogos
-3. Inspecionar foco após salvar/cancelar
-4. Aplicar zoom 200 e viewport320,768,1440
-5. Testar reduced-motion no loading do tema
-6. Colar texto com acentos, emoji e linha longa em nota
-7. Testar locale pt/en e fuso quando suportados
-8. Conferir contraste em estados de erro, desabilitado e sucesso
+1. **[UI_ACTION]** Abrir menu lateral e botões principais só com teclado
+2. **[UI_ACTION]** Tab, Shift+Tab, Enter e Esc em diálogos
+3. **[READ_ONLY_WITNESS]** Inspecionar foco após salvar/cancelar
+4. **[UI_ACTION]** Aplicar zoom 200 e viewport320,768,1440
+5. **[UI_ACTION]** Testar reduced-motion no loading do tema
+6. **[UI_ACTION]** Colar texto com acentos, emoji e linha longa em nota
+7. **[UI_ACTION]** Testar locale pt/en e fuso quando suportados
+8. **[READ_ONLY_WITNESS]** Conferir contraste em estados de erro, desabilitado e sucesso
 
 ## Oráculos observáveis (não reescrever para passar)
 

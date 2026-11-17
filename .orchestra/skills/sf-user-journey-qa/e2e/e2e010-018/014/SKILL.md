@@ -21,15 +21,15 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Instalação A SF-LAB e B SF-ISOLATED; IDs sintéticos parecidos mas projetos/principals distintos.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Autenticar Finance na instalação A e abrir OPEX-LIC-01
-2. Capturar referência de A e trocar instalação para B
-3. Tentar abrir OPEX e documento de A via URL adulterada
-4. Buyer tenta consultar PR-32000 de A pela sessão B
-5. CIO tenta exportar relatório de A com contexto B
-6. Reabrir B pela rota normal e validar dados próprios
-7. Trocar de volta para A e verificar ausência de novos commits
+1. **[UI_ACTION]** Autenticar Finance na instalação A e abrir OPEX-LIC-01
+2. **[READ_ONLY_WITNESS]** Capturar referência de A e trocar instalação para B
+3. **[UI_ACTION]** Tentar abrir OPEX e documento de A via URL adulterada
+4. **[UI_ACTION]** Buyer tenta consultar PR-32000 de A pela sessão B
+5. **[UI_ACTION]** CIO tenta exportar relatório de A com contexto B
+6. **[UI_ACTION]** Reabrir B pela rota normal e validar dados próprios
+7. **[READ_ONLY_WITNESS]** Trocar de volta para A e verificar ausência de novos commits
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -1,34 +1,33 @@
 ---
 name: sf-user-journey-qa-groups-smoke
-description: "Grupo de manutenção SF smoke: Smoke P0 — oito decisões críticas. Validar a espinha dorsal após mudanças pequenas ou antes de uma demo. Não equivale ao release completo."
+description: "Grupo de manutenção SF smoke: Smoke P0 — quatro verificações de superfícies, sem full regression. Canário curto de UI/identidade/Planner/Procurement/BI em instalação QA previamente preparada; não inclui impor"
 internal: true
-when: "Quando o QA solicitar grupo smoke ou mudança em Smoke P0 — oito decisões críticas"
+when: "Quando o QA solicitar grupo smoke ou mudança em Smoke P0 — quatro verificações de superfícies, sem full regression"
 not-when: "Outro domínio ou uma única story; abra o grupo correto ou folha individual"
 ---
-# Smoke P0 — oito decisões críticas
+# Smoke P0 — quatro verificações de superfícies, sem full regression
 
 **Uso:** QA/manutenção interna. **Não iniciar ao carregar a skill:** esta folha define a seleção; só executar stories quando houver ordem explícita de execução do grupo.
 
-**Quando selecionar:** Validar a espinha dorsal após mudanças pequenas ou antes de uma demo. Não equivale ao release completo.
+**Quando selecionar:** Canário curto de UI/identidade/Planner/Procurement/BI em instalação QA previamente preparada; não inclui import, fault injection, mudança de grants, release ou 70/165.
 
-**Tamanho:** 8 stories; nenhum roteiro foi executado por esta lista.
+**Tamanho:** 4 stories; nenhum roteiro foi executado por esta lista.
+
+**Escopo:** Não inclui homologação total nem promoção de release.
 
 ## Ordem sugerida (skill individual por story)
 
-1. **SF-E2E-001** · `sf-user-journey-qa-e2e-e2e001-009-001` · O briefing das 8h: o CIO precisa decidir sem alterar a fonte (P0)
-2. **SF-E2E-002** · `sf-user-journey-qa-e2e-e2e001-009-002` · Duas versões de forecast diante do comitê financeiro (P0)
-3. **SF-E2E-003** · `sf-user-journey-qa-e2e-e2e001-009-003` · A cotação mais barata não pode vencer quando é inelegível (P0)
-4. **SF-E2E-005** · `sf-user-journey-qa-e2e-e2e001-009-005` · A importação foi aplicada, mas a confirmação não chegou (P0)
-5. **SF-E2E-013** · `sf-user-journey-qa-e2e-e2e010-018-013` · Revogação deve valer inclusive para documentos já gerados (P0)
-6. **SF-E2E-015** · `sf-user-journey-qa-e2e-e2e010-018-015` · Login corporativo sem atalhos na identidade (P0)
-7. **SF-E2E-026** · `sf-user-journey-qa-e2e-e2e019-027-026` · Agente nativo produz parecer, não aprovação automática (P0)
-8. **SF-E2E-034** · `sf-user-journey-qa-e2e-e2e028-036-034` · Todas as telas, papéis e estados: prova transversal de UX (P0)
+1. **SF-UI67-P01** · `sf-user-journey-qa-ui-ui64-68-ui67-p01` · UI67: Autenticar em Microsoft e selecionar contexto corporativo válido (P0)
+2. **SF-CAP17-P01** · `sf-user-journey-qa-cap-cap16-20-cap17-p01` · CAP17: Separar versão oficial de hipóteses antes de discutir forecast (P0)
+3. **SF-CAP24-P01** · `sf-user-journey-qa-cap-cap21-25-cap24-p01` · CAP24: Diagnosticar fila de Procurement e seus atrasos por etapa (P0)
+4. **SF-UI45-P01** · `sf-user-journey-qa-ui-ui44-48-ui45-p01` · UI45: Selecionar BI com fontes autorizadas de múltiplas áreas (P0)
 
 ## Protocolo deste grupo
 
 1. Carregue `sf-user-journey-qa` (protocolo compartilhado) e identifique a versão instalada, os atores e a fixture isolada. Navegue via as skills CAP/UI/E2E existentes (não copie seus passos). O instrumento `skill` aceita o **nome exato** da folha; alternativamente percorra o índice `Next level` quando for mais conveniente.
-2. **Execute só as stories deste grupo**, na ordem acima, uma tentativa por story. Antes de cada uma, comprovar precondições e isolamento; se uma story depende de uma transação anterior, use estado autorizado e documentado, nunca mutação oculta.
-3. Em falha P0, interromper o grupo e reportar o restante `NOT_RUN`/`BLOCKED`, a menos que o QA tenha autorizado diagnóstico mais amplo. Para recurso condicional não promovido, marcar `BLOCKED_CAPABILITY` e seguir apenas casos independentes.
-4. Registre status e evidência por story, nunca um PASS único para o grupo. O grupo só é `PASS` se todas as stories exigidas foram verificadas na mesma campanha/ambiente/versão, com evidências; não deduzir de testes estáticos.
+2. **Execute só as stories deste grupo**, na ordem acima, uma tentativa por story. Antes de cada uma, capture checkpoint privado `storyId`, `attempt`, `deployedSHA`, `installation`, `fixtureRevision`, `actorAliases`, `beforeDigest` e `evidenceRef`. Não reutilize dados de outro grupo sem reconciliação; para mutações, restaure apenas via seed existente autorizado em instalação QA isolada.
+3. Ao terminar cada story, grave o resultado no próprio `EVIDENCE-RECORD.json` privado, com `afterDigest`, `receiptRef` ou motivo de bloqueio, e checkpoint `resumableFrom` da próxima story. Ao retomar, valide novamente SHA, instalação, fixture, atores e estado; se mudaram, refaça somente a story afetada, nunca marque PASS reutilizado.
+4. Em falha P0, interromper o grupo e reportar o restante `NOT_RUN`/`BLOCKED`, a menos que o QA tenha autorizado diagnóstico mais amplo. Para recurso condicional não promovido, marcar `BLOCKED_CAPABILITY` e seguir apenas casos independentes.
+5. Registre status e evidência por story, nunca um PASS único para o grupo. O grupo só é `PASS` se todas as stories exigidas foram verificadas na mesma campanha/ambiente/versão, com evidências; não deduzir de testes estáticos.
 
 **Sem execução implícita de outros grupos, sem novo runner, sem bypass de UX.**

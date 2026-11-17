@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - VIEW-EDI-Caio; no snapshot da auditoria UI32 V2 native indisponível.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Abrir Meu trabalho com filtro de Caio
-2. Descobrir capability do producer de Saved Views V2
-3. Se instalado, criar view com owner e filtros explícitos
-4. Reabrir em segunda sessão e validar persistência
-5. Se não instalado, capturar unavailable real
-6. Comparar recursos legados sem classificá-los como V2
-7. Revogar acesso e tentar reler view antiga
-8. Registrar gap por release gate em vez de marcar sucesso
+1. **[UI_ACTION]** Abrir Meu trabalho com filtro de Caio
+2. **[UI_ACTION]** Descobrir capability do producer de Saved Views V2
+3. **[UI_ACTION]** Se instalado, criar view com owner e filtros explícitos
+4. **[UI_ACTION]** Reabrir em segunda sessão e validar persistência
+5. **[READ_ONLY_WITNESS]** Se não instalado, capturar unavailable real
+6. **[READ_ONLY_WITNESS]** Comparar recursos legados sem classificá-los como V2
+7. **[UI_ACTION]** Revogar acesso e tentar reler view antiga
+8. **[READ_ONLY_WITNESS]** Registrar gap por release gate em vez de marcar sucesso
 
 ## Oráculos observáveis (não reescrever para passar)
 

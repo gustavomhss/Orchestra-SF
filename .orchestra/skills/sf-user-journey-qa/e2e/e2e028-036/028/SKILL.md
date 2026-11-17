@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Busca sobre título “EDI Santos”, dois objetos homônimos e documento privado DOC-EDI-01.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. CIO pesquisa EDI Santos via POST JSON
-2. Confere que URL não contém termo de busca
-3. Abre dois resultados homônimos por IDs distintos
-4. Auditor sem grant repete busca
-5. Inspeciona resultados de similar cases
-6. Tenta GET com parâmetros de query privados
-7. Tenta saved view com filtros do CIO em outra conta
-8. QA captura network trace sanitizada e ausência de informação privada
+1. **[UI_ACTION]** CIO pesquisa EDI Santos via POST JSON
+2. **[UI_ACTION]** Confere que URL não contém termo de busca
+3. **[UI_ACTION]** Abre dois resultados homônimos por IDs distintos
+4. **[UI_ACTION]** Auditor sem grant repete busca
+5. **[UI_ACTION]** Inspeciona resultados de similar cases
+6. **[UI_ACTION]** Tenta GET com parâmetros de query privados
+7. **[UI_ACTION]** Tenta saved view com filtros do CIO em outra conta
+8. **[UI_ACTION]** QA captura network trace sanitizada e ausência de informação privada
 
 ## Oráculos observáveis (não reescrever para passar)
 

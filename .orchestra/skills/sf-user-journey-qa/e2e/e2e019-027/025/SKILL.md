@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Pauta R1 com 25 projetos, 6 seções, notas multilinha e valores null/zero.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Criar 25 projetos ordenados e abrir pauta
-2. Selecionar seis seções com competências distintas
-3. Capturar R1 e comparar 25 projetos na apresentação
-4. Rodar zoom 200 e 400% em browser e teclado
-5. Abrir em viewport 320, 768 e 1440 px
-6. Exportar DOCX/PPTX e inspecionar texto longo
-7. Executar comparação R1/R2 depois de alterar uma nota
-8. Rever autorização com auditor externo
+1. **[UI_ACTION]** Criar 25 projetos ordenados e abrir pauta
+2. **[UI_ACTION]** Selecionar seis seções com competências distintas
+3. **[READ_ONLY_WITNESS]** Capturar R1 e comparar 25 projetos na apresentação
+4. **[UI_ACTION]** Rodar zoom 200 e 400% em browser e teclado
+5. **[UI_ACTION]** Abrir em viewport 320, 768 e 1440 px
+6. **[READ_ONLY_WITNESS]** Exportar DOCX/PPTX e inspecionar texto longo
+7. **[UI_ACTION]** Executar comparação R1/R2 depois de alterar uma nota
+8. **[UI_ACTION]** Rever autorização com auditor externo
 
 ## Oráculos observáveis (não reescrever para passar)
 

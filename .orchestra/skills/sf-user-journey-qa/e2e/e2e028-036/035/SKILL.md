@@ -21,17 +21,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Orchestra host integra sessões, agentes, skills, ferramentas, Maestro, Relay/MCP e estado de execução nativo, quando instalado.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Criar projeto/worktree isolado com duas sessões simultâneas
-2. Selecionar provider/model com orçamento explícito
-3. Admitir agente nativo com skill digest e permissões permitidas
-4. Abrir output e verificar que host executou SessionV2/AgentV2/SkillV2 real
-5. Desabilitar uma tool, testar deny e capturar provenance
-6. Cancelar o run em estado admitido e conferir transição real
-7. Abrir Relay/MCP somente se conexão está habilitada e testar contexto isolado
-8. Inspecionar conteúdo ao trocar worktree e usuário
-9. Comparar resultados com logs e event ordering
+1. **[UI_ACTION]** Criar projeto/worktree isolado com duas sessões simultâneas
+2. **[UI_ACTION]** Selecionar provider/model com orçamento explícito
+3. **[UI_ACTION]** Admitir agente nativo com skill digest e permissões permitidas
+4. **[READ_ONLY_WITNESS]** Abrir output e verificar que host executou SessionV2/AgentV2/SkillV2 real
+5. **[READ_ONLY_WITNESS]** Desabilitar uma tool, testar deny e capturar provenance
+6. **[READ_ONLY_WITNESS]** Cancelar o run em estado admitido e conferir transição real
+7. **[UI_ACTION]** Abrir Relay/MCP somente se conexão está habilitada e testar contexto isolado
+8. **[READ_ONLY_WITNESS]** Inspecionar conteúdo ao trocar worktree e usuário
+9. **[READ_ONLY_WITNESS]** Comparar resultados com logs e event ordering
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - SUP-003 tem dados financeiros sensíveis sintéticos; buyer somente vê elegibilidade.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Supplier Admin cria/edita SUP-003 autorizado
-2. Pedro consulta cadastro geral do fornecedor
-3. Pedro abre cotação no contexto de PR-32000
-4. QA tenta achar conta bancária por Busca SF
-5. QA tenta exportar PO com campos privados
-6. Revoga grant e repete URLs e downloads
-7. Verifica logs sanitizados e redaction no DOM
-8. Auditor confere ausência de commit pelo Buyer
+1. **[UI_ACTION]** Supplier Admin cria/edita SUP-003 autorizado
+2. **[UI_ACTION]** Pedro consulta cadastro geral do fornecedor
+3. **[UI_ACTION]** Pedro abre cotação no contexto de PR-32000
+4. **[UI_ACTION]** QA tenta achar conta bancária por Busca SF
+5. **[UI_ACTION]** QA tenta exportar PO com campos privados
+6. **[UI_ACTION]** Revoga grant e repete URLs e downloads
+7. **[UI_ACTION]** Verifica logs sanitizados e redaction no DOM
+8. **[UI_ACTION]** Auditor confere ausência de commit pelo Buyer
 
 ## Oráculos observáveis (não reescrever para passar)
 

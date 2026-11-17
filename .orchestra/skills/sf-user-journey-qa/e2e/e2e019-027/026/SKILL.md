@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Run “analisar riscos de fornecedor” oferece recomendação para PR32000, mas não tem grant de aplicar negócio.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Selecionar rotina com digest fixado e inputs versionados
-2. Admitir run com usuário autorizado, orçamento/modelo permitido
-3. Acompanhar estados reais até output terminal
-4. Injetar output que propõe escolher C inelegível
-5. Verifier independente aponta falha ou alerta
-6. CIO registra escolha humana apenas com fontes admitidas
-7. QA inspeciona Procurement e confirma nenhum efeito autônomo
-8. Reexecutar run após revogar grant e verificar failclosed
+1. **[UI_ACTION]** Selecionar rotina com digest fixado e inputs versionados
+2. **[UI_ACTION]** Admitir run com usuário autorizado, orçamento/modelo permitido
+3. **[UI_ACTION]** Acompanhar estados reais até output terminal
+4. **[CONTROLLED_FAULT]** Injetar output que propõe escolher C inelegível — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+5. **[UI_ACTION]** Verifier independente aponta falha ou alerta
+6. **[UI_ACTION]** CIO registra escolha humana apenas com fontes admitidas
+7. **[UI_ACTION]** QA inspeciona Procurement e confirma nenhum efeito autônomo
+8. **[READ_ONLY_WITNESS]** Reexecutar run após revogar grant e verificar failclosed
 
 ## Oráculos observáveis (não reescrever para passar)
 

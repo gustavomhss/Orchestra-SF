@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Executivo questiona por que forecast indica 590000 mas outra visualização indica 602000.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. CIO abre visão BI geral e identifica a versão mostrada
-2. Sofie abre Planner OPEX e localiza 72000 oficial/84000 cenário A
-3. CIO acessa drilldown de BI e inspeciona sourceRef
-4. Caio abre portfolio e confirma que orçamento não foi aplicado ao projeto
-5. CIO alterna de cenário A para official
-6. QA compara data de atualização, intervalo e escala de moeda
-7. Inspeciona um registro missing e outro valor zero
-8. Retorna à visão geral mantendo o filtro
+1. **[UI_ACTION]** CIO abre visão BI geral e identifica a versão mostrada
+2. **[UI_ACTION]** Sofie abre Planner OPEX e localiza 72000 oficial/84000 cenário A
+3. **[UI_ACTION]** CIO acessa drilldown de BI e inspeciona sourceRef
+4. **[UI_ACTION]** Caio abre portfolio e confirma que orçamento não foi aplicado ao projeto
+5. **[UI_ACTION]** CIO alterna de cenário A para official
+6. **[UI_ACTION]** QA compara data de atualização, intervalo e escala de moeda
+7. **[UI_ACTION]** Inspeciona um registro missing e outro valor zero
+8. **[UI_ACTION]** Retorna à visão geral mantendo o filtro
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,17 +21,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - 70 superfícies e 165 variantes de rota da revisão auditada; execução deve escolher atores/grants da política corrente.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. QA congela SHA e instala navegador real
-2. Para cada superfície, executa story SF-*-P01 e SF-*-N01 correspondente
-3. Para cada uma das 165 variantes, tenta entry/new/edit/detail/history dinamicamente com ref válida
-4. Tenta ref opaca inválida, URL truncada e prioridade static vs dynamic
-5. Repete navegação em 320/768/1440px e zoom 200%
-6. Testa foco teclado, ARIA, texto longo, estados vazios/loading/error
-7. Valida tema light/dark e redução de movimento quando disponível
-8. Reexecuta matriz após revogação e troca de owner
-9. Associa evidência a cada row, não a um print genérico
+1. **[UI_ACTION]** QA congela SHA e instala navegador real
+2. **[UI_ACTION]** Para cada superfície, executa story SF-*-P01 e SF-*-N01 correspondente
+3. **[UI_ACTION]** Para cada uma das 165 variantes, tenta entry/new/edit/detail/history dinamicamente com ref válida
+4. **[UI_ACTION]** Tenta ref opaca inválida, URL truncada e prioridade static vs dynamic
+5. **[UI_ACTION]** Repete navegação em 320/768/1440px e zoom 200%
+6. **[UI_ACTION]** Testa foco teclado, ARIA, texto longo, estados vazios/loading/error
+7. **[UI_ACTION]** Valida tema light/dark e redução de movimento quando disponível
+8. **[UI_ACTION]** Reexecuta matriz após revogação e troca de owner
+9. **[UI_ACTION]** Associa evidência a cada row, não a um print genérico
 
 ## Oráculos observáveis (não reescrever para passar)
 

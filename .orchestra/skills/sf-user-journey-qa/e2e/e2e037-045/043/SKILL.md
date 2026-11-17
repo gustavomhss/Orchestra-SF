@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Conexão da filial perde 10s enquanto alteração CAS é enviada e comprovante de negócio pode ou não existir.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar before snapshot da versão OPEX e PR
-2. Enviar save de OPEX e interromper entrega da resposta
-3. Não presumir commit nem fazer retry automático
-4. Recuperar via leitura do registro/attempt quando protocolo permitir
-5. Se não houve commit, permitir reenvio explícito com nova autorização
-6. Repetir com Apply de import em que o commit ocorreu
-7. Repetir com submissão de PR em que o commit não ocorreu
-8. Auditor registra contagem de recibos e estados finais
+1. **[READ_ONLY_WITNESS]** Registrar before snapshot da versão OPEX e PR
+2. **[UI_ACTION]** Enviar save de OPEX e interromper entrega da resposta
+3. **[UI_ACTION]** Não presumir commit nem fazer retry automático
+4. **[UI_ACTION]** Recuperar via leitura do registro/attempt quando protocolo permitir
+5. **[UI_ACTION]** Se não houve commit, permitir reenvio explícito com nova autorização
+6. **[UI_ACTION]** Repetir com Apply de import em que o commit ocorreu
+7. **[UI_ACTION]** Repetir com submissão de PR em que o commit não ocorreu
+8. **[UI_ACTION]** Auditor registra contagem de recibos e estados finais
 
 ## Oráculos observáveis (não reescrever para passar)
 

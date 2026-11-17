@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Snapshot R1 de 25 projetos com DOCX/PPTX; worker de geração atrasado intencionalmente.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Criar review R1 e registrar hash
-2. Solicitar relatório e observar estado started
-3. Simular worker travado por > timeout operacional
-4. Reabrir job em sessão nova
-5. Inspecionar se arquivo de saída realmente existe
-6. Cancelar/reexecutar apenas conforme contrato e sem duplicação
-7. Recuperar worker e gerar output válido
-8. Conferir byte/hash final contra R1
+1. **[READ_ONLY_WITNESS]** Criar review R1 e registrar hash
+2. **[UI_ACTION]** Solicitar relatório e observar estado started
+3. **[CONTROLLED_FAULT]** Simular worker travado por > timeout operacional — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+4. **[UI_ACTION]** Reabrir job em sessão nova
+5. **[READ_ONLY_WITNESS]** Inspecionar se arquivo de saída realmente existe — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+6. **[UI_ACTION]** Cancelar/reexecutar apenas conforme contrato e sem duplicação
+7. **[UI_ACTION]** Recuperar worker e gerar output válido
+8. **[READ_ONLY_WITNESS]** Conferir byte/hash final contra R1
 
 ## Oráculos observáveis (não reescrever para passar)
 

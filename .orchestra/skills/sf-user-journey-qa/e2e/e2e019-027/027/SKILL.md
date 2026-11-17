@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Recorrência 08:00 America/Sao_Paulo e revisão de ocorrência; producer native scheduleDetails.read pode estar indisponível.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Abrir schedule e confirmar leitura de detalhes
-2. Se porta indisponível, registrar BLOCKED em vez de editar às cegas
-3. Se disponível, criar schedule para 08:00 America/Sao_Paulo
-4. Observar primeira execução realmente disparada
-5. Comparar state da ocorrência e state do run
-6. Pausar schedule com autorização atual
-7. Alterar timezone para UTC e revisar o próximo horário
-8. QA confere que duas instâncias não executam mesma ocorrência duas vezes
+1. **[UI_ACTION]** Abrir schedule e confirmar leitura de detalhes
+2. **[READ_ONLY_WITNESS]** Se porta indisponível, registrar BLOCKED em vez de editar às cegas
+3. **[UI_ACTION]** Se disponível, criar schedule para 08:00 America/Sao_Paulo
+4. **[UI_ACTION]** Observar primeira execução realmente disparada
+5. **[READ_ONLY_WITNESS]** Comparar state da ocorrência e state do run
+6. **[UI_ACTION]** Pausar schedule com autorização atual
+7. **[UI_ACTION]** Alterar timezone para UTC e revisar o próximo horário
+8. **[UI_ACTION]** QA confere que duas instâncias não executam mesma ocorrência duas vezes
 
 ## Oráculos observáveis (não reescrever para passar)
 
