@@ -32,6 +32,7 @@ import { createSfDocumentTargetAuthority } from "./document-authority.ts"
 import { createSfDocumentServices } from "./document-services.ts"
 import { createSfDocumentHttp } from "../../../../modules/sucafina/Sucafinav1/product/interface/document-http.ts"
 import { createSfDocumentScenarioHttp } from "../../../../modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts"
+import { createSfDocumentScenarioLinks } from "../../../../modules/sucafina/Sucafinav1/product/documents/scenario-links.ts"
 import { createSfDossierServices } from "./dossier-services.ts"
 import { readSfDocumentAnalysisCandidate } from "./document-analysis.ts"
 import { createSfImportServices } from "./import-services.ts"
@@ -290,7 +291,19 @@ export const createSfHostRuntimeWithRoutineNative = async (
     requestForRun: (runRef) => requests.get(runRef), runForContext: (call) => replayContexts.get(call), admittedInput: (runRef) => admittedInputs.get(runRef),
     captures: (runRef) => [...alternativeCaptures.get(runRef)?.values() ?? []], revalidateCapture })
   const dossier = documents ? createSfDossierServices({ runtime: input, authority, business, documents }) : undefined
-  const documentScenarioHttp = createSfDocumentScenarioHttp({ origin: input.origin, mount: input.mount, authority, service: business.documentScenarios })
+  const documentLinks = documents && business.documentScenarios ? createSfDocumentScenarioLinks({
+    host: authority.host, state: authority.state, documents: documents.documents.documents,
+    scenarios: business.documentScenarios,
+    sourceFence: async (call) => {
+      const current = await business.readSourceFences(call)
+      return current ? digestSfValue(current) : undefined
+    },
+    authorize: (value, call) => authority.human.authorize(call, "documents.link", value),
+    operationIdentity: (call) => call.kind === "ui" ? authority.ui.operationIdentity(call) : undefined,
+    now: () => new Date().toISOString(),
+  }) : undefined
+  const documentScenarioHttp = createSfDocumentScenarioHttp({ origin: input.origin, mount: input.mount,
+    authority, service: business.documentScenarios, links: documentLinks })
   const residentReviewReaders = createSfResidentReviewReaders({ authority, business })
   questionContributions.read = residentReviewReaders.readContribution
   const baselineServices = createSfBaselineServices({ authority, business, proposalCoverageWrites, origin: input.origin, mount: input.mount })
@@ -418,7 +431,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
       return admitted
     }, finishRead: authority.ui.finish,
   })]))
-  const documentHttp = createSfDocumentHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && documents ? { ui: authority.ui, human: authority.human, ...documents } : undefined })
+  const documentHttp = createSfDocumentHttp({ origin: input.origin, mount: input.mount,
+    runtime: () => identity() && documents ? { ui: authority.ui, human: authority.human, ...documents, links: documentLinks } : undefined })
   const importHttp = createSfImportHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && imports ? { ui: authority.ui, human: authority.human, service: imports } : undefined })
   const monthly = createPlannerMonthlyHost({ host: authority.host, humanAuthorize: (context, action, value) => authority.human.authorize(context, action, value) })
   const plannerMonthly: NonNullable<SfHostServices["plannerMonthly"]> = {
