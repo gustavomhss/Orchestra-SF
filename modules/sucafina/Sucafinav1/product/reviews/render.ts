@@ -184,7 +184,20 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
       }],
     })
     trace("RENDER_DOCX_CONSTRUCTED")
-    const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: new Uint8Array(await Packer.toBuffer(document)) }
+    // docx@9.5.1's Packer.toBuffer hardcodes JSZip DEFLATE. On Bun's HTTP
+    // handler that path can stall for minutes; the original OOXML parts are
+    // unchanged when the archive uses ZIP STORE (supported by Office and CI).
+    // The pinned docx compiler is validated here rather than monkey-patched.
+    const compiler: unknown = Reflect.get(Packer, "compiler")
+    if (!compiler || typeof compiler !== "object" || !("compile" in compiler) || typeof compiler.compile !== "function")
+      throw new Error("DOCX compiler unavailable")
+    const zip: unknown = compiler.compile(document)
+    if (!zip || typeof zip !== "object" || !("generateAsync" in zip) || typeof zip.generateAsync !== "function")
+      throw new Error("DOCX ZIP generator unavailable")
+    const bytes: unknown = await zip.generateAsync({ type: "uint8array", compression: "STORE",
+      mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" })
+    if (!(bytes instanceof Uint8Array)) throw new Error("Unexpected DOCX ZIP output")
+    const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes }
     trace("RENDER_DOCX_PACKED")
     sealReviewArtifact(artifact, review, options)
     return artifact
