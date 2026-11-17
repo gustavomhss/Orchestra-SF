@@ -30,12 +30,14 @@ async function loadParser(kind: unknown): Promise<(message: DocumentMessage) => 
   const { getDocumentProxy, getResolvedPDFJS } = await import("unpdf")
   await getResolvedPDFJS()
   return async (message) => {
-    const pdf = await getDocumentProxy(message.bytes.slice())
+    const pdf = await getDocumentProxy(message.bytes)
     const pages = pdf.numPages
     await pdf.destroy()
-    if (!Number.isSafeInteger(pages) || pages < 1 || pages > message.maxPages || !message.file) return { status: "failed", reason: "PDF page limit exceeded" }
+    if (!Number.isSafeInteger(pages) || pages < 1 || pages > message.maxPages || !message.file)
+      return { status: "failed", reason: "PDF page limit exceeded" }
     const parsed = await extract(message.file)
-    if ("failed" in parsed) return { status: "failed", reason: parsed.failed === "no_text_layer" ? "PDF has no text layer" : "PDF unavailable" }
+    if ("failed" in parsed)
+      return { status: "failed", reason: parsed.failed === "no_text_layer" ? "PDF has no text layer" : "PDF unavailable" }
     return { status: "ok", value: parsed.text }
   }
 }
