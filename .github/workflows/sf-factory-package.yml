@@ -15,6 +15,11 @@ on:
       - "apps/cli/script/sf-factory-package.ts"
       - "apps/cli/src/sucafina-product/**"
       - "apps/cli/test/factory-distribution-linux.test.ts"
+      - "apps/cli/test/fixture/factory-proof-identity.ts"
+      - "apps/cli/test/distribution-web*.test.ts"
+      - "apps/cli/test/fixture/distribution-native-proof.ts"
+      - "apps/web/**"
+      - "script/distribution-deno.ts"
       - "modules/sucafina/Sucafinav1/**"
 
 permissions:
