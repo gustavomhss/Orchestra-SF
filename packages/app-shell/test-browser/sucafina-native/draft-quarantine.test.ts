@@ -9,11 +9,6 @@ import type { SfContext, SfContextDependencies, SfContextHandle, SfDraftRevalida
 import { createSfDraft } from "../../src/orchestra/chapters/sucafina/shared/draft"
 import { revalidateSfNativeDraft } from "../../src/orchestra/chapters/sucafina/host/draft-revalidation"
 
-// The native Bun TSX transform emits React.createElement; use the existing Solid DOM compiler.
-const { SfContextProvider, useSfContext }: typeof import("../../src/orchestra/chapters/sucafina/context") = await import(
-  solidDom("../../src/orchestra/chapters/sucafina/context", import.meta.dir)
-)
-
 // Contract tests with injected producer responses, not an installed identity/host proof.
 // Load the rendered provider through the Solid JSX compiler, not Bun's default JSX transform.
 const { SfContextProvider, useSfContext }: typeof import("../../src/orchestra/chapters/sucafina/context") =
