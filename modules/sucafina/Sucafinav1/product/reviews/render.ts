@@ -188,14 +188,21 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     // handler that path can stall for minutes; the original OOXML parts are
     // unchanged when the archive uses ZIP STORE (supported by Office and CI).
     // The pinned docx compiler is validated here rather than monkey-patched.
+    trace("RENDER_ZIP_COMPILE_ENTER")
     const compiler: unknown = Reflect.get(Packer, "compiler")
     if (!compiler || typeof compiler !== "object" || !("compile" in compiler) || typeof compiler.compile !== "function")
       throw new Error("DOCX compiler unavailable")
     const zip: unknown = compiler.compile(document)
     if (!zip || typeof zip !== "object" || !("generateAsync" in zip) || typeof zip.generateAsync !== "function")
       throw new Error("DOCX ZIP generator unavailable")
+    trace("RENDER_ZIP_COMPILED")
+    let lastProgress = -1
     const bytes: unknown = await zip.generateAsync({ type: "uint8array", compression: "STORE",
-      mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" })
+      mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+      (metadata: { percent: number }) => {
+        const progress = Math.floor(metadata.percent / 10)
+        if (progress > lastProgress) { lastProgress = progress; trace(`RENDER_ZIP_PROGRESS_${progress}`) }
+      })
     if (!(bytes instanceof Uint8Array)) throw new Error("Unexpected DOCX ZIP output")
     const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes }
     trace("RENDER_DOCX_PACKED")
