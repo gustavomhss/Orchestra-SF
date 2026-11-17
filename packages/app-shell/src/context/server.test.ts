@@ -58,6 +58,18 @@ describe("resolveServerList", () => {
       password: "saved",
     })
     expect(list[0]?.type === "http" ? list[0].authToken : true).toBeUndefined()
+
+    // T8 negative honey: persisted cross-origin entries remain selectable
+    // candidates, never authenticated owner evidence.
+    const canonical = "http://localhost:4110"
+    const foreign = "http://localhost:4999"
+    const canonicalServer: ServerConnection.Http = { type: "http", http: { url: canonical } }
+    const foreignStored: ServerConnection.Http = { type: "http", http: { url: foreign } }
+    const resolved = resolveServerList({ props: [canonicalServer], stored: [foreignStored] })
+    expect(resolved.map((server) => ServerConnection.key(server))).toEqual([
+      ServerConnection.Key.make(canonical),
+      ServerConnection.Key.make(foreign),
+    ])
   })
 })
 
@@ -214,6 +226,20 @@ describe("migrateCanonicalLocalServerState", () => {
       list: [],
       projects: { local: [{ worktree: "/remote", expanded: true }] },
       lastProject: { local: "/remote" },
+    })
+
+    // T8 negative honey: moving a canonical project bucket does not remove
+    // foreign saved connections or admit them as owners.
+    const canonical = "http://localhost:4110"
+    const foreignStored: ServerConnection.Http = { type: "http", http: { url: "http://localhost:4999" } }
+    expect(migrateCanonicalLocalServerState({
+      list: [foreignStored],
+      projects: { [canonical]: [{ worktree: "/previous-worktree", expanded: true }] },
+      lastProject: { [canonical]: "/previous-worktree" },
+    }, ServerConnection.Key.make(canonical))).toEqual({
+      list: [foreignStored],
+      projects: { local: [{ worktree: "/previous-worktree", expanded: true }] },
+      lastProject: { local: "/previous-worktree" },
     })
   })
 
