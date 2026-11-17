@@ -111,7 +111,7 @@ async function doSettings(){
   const mark='name="levels.0.id" type="text" value="FLA-DEMO-GABRIEL"';
   if(page.includes(mark)){
     demand(page.includes('name="currency" type="text" value="BRL"')&&page.includes('value="'+holder+'" selected'),"demo-settings-drift");
-    demand(!page.includes('name="fxRates.2.code" type="text" value="EUR"'),"EUR-rate-unexpected");
+    demand(!/name="fxRates\.\d+\.code"[^>]*value="EUR"/.test(page),"EUR-rate-unexpected");
     return status("settings","READY","same real Settings screen; no duplicate write");
   }
   const settings={currency:"BRL",levels:[{id:"FLA-DEMO-GABRIEL",name:"Gabriel demo approval",threshold:0,holderId:holder}],prApprovalMode:"first",blockSelfApproval:true,fxRates:[{code:"BRL",rate:1},{code:"USD",rate:5}],minQuotes:2,requireActiveSupplier:false};
@@ -145,6 +145,11 @@ async function register(){return wire("Caio",location("procurement",{download:"r
 async function rowOf(fixture){
   const matches=(await register()).filter(x=>x.Title===fixture.title);
   demand(matches.length<=1,"duplicate-product-requisition:"+fixture.id);
+  if(matches.length){
+    demand(matches[0]["Cost centre"]===fixture.costCenter,"existing-PR-cost-centre-drift:"+fixture.id);
+    demand(String(matches[0].Type)===fixture.type,"existing-PR-type-drift:"+fixture.id);
+    demand(Number(matches[0]["Estimated amount"])===fixture.amount,"existing-PR-amount-drift:"+fixture.id);
+  }
   return matches[0]||null;
 }
 async function stage(fixture){const row=await rowOf(fixture);return row?{id:row["PR number"],status:row.Status}:null;}
@@ -181,7 +186,7 @@ async function purchaseOrder(fixture,ids){
   await move("Pedro",fixture,"save",{po:{
     currency:"BRL",expenseType:fixture.id==="PR-APPROVED"?"CAPEX":"OPEX",
     supplier:supplier.legalName,supplierId,description:fixture.description,
-    lines:[{id:"FLA-DEMO-PO-LINE-"+fixture.id,description:fixture.description,qty:1,unitPrice:fixture.amount}],
+    lines:[{desc:fixture.description,uom:"service",qty:1,unitPrice:fixture.amount}],
     paymentTerms:"Net 30",deliveryDate:fixture.needBy,deliveryConditions:"Synthetic demo delivery only",
     contractRef:supplier.contractId,quoteRef:"FLA-DEMO-Q-"+fixture.id+"-0"
   }},'name="po.currency"');
