@@ -24,17 +24,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 ## Passos, mecanismos e limites das ferramentas
 
 1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. **[UI_ACTION]** Selecionar versão oficial V-2026-OFFICIAL e período anual
-3. **[READ_ONLY_WITNESS]** Abrir Budget Overview e inspecionar budget, actual, forecast e variações
-4. **[UI_ACTION]** Entrar em OPEX e CAPEX conferindo composição e moeda
-5. **[READ_ONLY_WITNESS]** Retornar e comparar com hipótese V-2026-WHATIF-A
-6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+2. **[READ_ONLY_WITNESS]** Abrir Planner → Versions (/orchestra/sf-planner/versions), localizar V-2026-OFFICIAL no ano 2026 e registrar ID real, lock e year como versionRef; o Dashboard não tem seletor de planVersion.
+3. **[UI_ACTION]** Navegar ao Dashboard → Budget (/orchestra/sf-dashboard/budget) e selecionar ano; ler budget, actual e forecast por competência sem atribuir a projeção a versionRef.
+4. **[READ_ONLY_WITNESS]** Abrir Dashboard → OPEX/CAPEX por ano; depois abrir Planner → OPEX/CAPEX, selecionar official pelo ID real no controle de versões e conferir fonte, ano e moeda.
+5. **[READ_ONLY_WITNESS]** Voltar a Planner → Versions, registrar versionRef de V-2026-WHATIF-A e selecionar esse ID em Planner OPEX para comparar com official; não procurar WHATIF no Dashboard.
+6. **[READ_ONLY_WITNESS]** Reabrir Dashboard por ano e Planner OPEX por versionRef separadamente; registrar fontes, IDs, período e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 
 - 600000/400000/590000 USD rotulados por medida e período
 - Desvio base vs budget é -10000 USD
-- Hipótese A 602000 USD não altera versão oficial
+- Hipótese A = 602000 USD somente na fonte Planner sob seu versionRef; official/locked permanece intacta em Versions
 - Null, zero e período incompleto recebem tratamento distinto
 - Evidência de execução deve relacionar ator, momento, URL, versão do registro, resultado e hash/recibo quando houver.
 

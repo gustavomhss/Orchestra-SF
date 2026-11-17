@@ -24,17 +24,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 ## Passos, mecanismos e limites das ferramentas
 
 1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. **[UI_ACTION]** Abrir CAPEX Projects e selecionar P-009
-3. **[READ_ONLY_WITNESS]** Registrar CAPEX-SCANNER-01 com 91827 USD, janela 2027 e responsável
-4. **[READ_ONLY_WITNESS]** Inspecionar detalhe e vínculo com portfolio
-5. **[READ_ONLY_WITNESS]** Voltar e verificar total apenas no cenário editável
-6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+2. **[READ_ONLY_WITNESS]** Inspecionar Dashboard → CAPEX (/orchestra/sf-dashboard/capex) por ano e projeto P-009; seguir para Planner → Versions e registrar versionRef real da hipótese editável.
+3. **[READ_ONLY_WITNESS]** Abrir Planner → CAPEX (/orchestra/sf-planner/capex), selecionar o mesmo versionRef e registrar CAPEX-SCANNER-01 de 91827 USD para 2027 apenas pelos campos existentes; não inventar approval ou janela.
+4. **[READ_ONLY_WITNESS]** Inspecionar detalhe e vínculo com Portfolio somente quando controle real estiver visível e autorizado; sem approval, janela ou vínculo, registrar BLOCKED_CAPABILITY.
+5. **[READ_ONLY_WITNESS]** Comparar totais por versionRef em Planner CAPEX, contra official; voltar ao Dashboard por ano sem atribuir a ele WHATIF/official.
+6. **[UI_ACTION]** Reabrir Planner e Dashboard em navegações separadas; preservar versionRef, período, status locked e evidência.
 
 ## Oráculos observáveis (não reescrever para passar)
 
-- CAPEX identifica moeda e calendário independentes de OPEX
-- Relação P-009 é exata e visível no detalhe
-- Projeto não ingressa em versão official sem governança
+- Moeda e calendário CAPEX devem estar observáveis; approval/janela ausentes são gap explícito, não controles pressupostos
+- Relação P-009 deve ser comprovada por vínculo autorizado; se a UI não o expõe, essa etapa fica BLOCKED_CAPABILITY
+- Nenhuma inclusão em official/locked sem governança da versão no Planner
 - Registros preservam histórico e owner
 - Evidência de execução deve relacionar ator, momento, URL, versão do registro, resultado e hash/recibo quando houver.
 

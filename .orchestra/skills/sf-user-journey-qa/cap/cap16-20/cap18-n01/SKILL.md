@@ -27,7 +27,7 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 ## Passos, mecanismos e limites das ferramentas
 
-1. **[UI_ACTION]** Dois usuários alteram mesma linha e período em A
+1. **[READ_ONLY_WITNESS]** No Planner Versions registrar versionRef de WHATIF-A; dois atores em perfis autenticados independentes selecionam o mesmo versionRef, ano e linha no Planner OPEX, disputam revisão stale e comprovam CAS/ausência de sobrescrita.
 
 ## Oráculos observáveis (não reescrever para passar)
 

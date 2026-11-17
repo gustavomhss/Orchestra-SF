@@ -25,15 +25,15 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 ## Setup comprovável deste caso (não substituir por fixture imaginada)
 
-1. FINANCE-A abre a mesma linha e o mesmo período do Planner e registra sourceVersion e valor original sem salvar.
-2. FINANCE-B, em perfil de navegador autenticado diferente, altera o valor e verifica a nova versão na fonte.
-3. FINANCE-A tenta salvar seu formulário antigo; validar conflito CAS, valor novo preservado e rascunho local visível.
+1. FINANCE-A registra o versionRef real de WHATIF-A em Planner Versions e abre OPEX-LIC-01 no mesmo ano/período em Planner OPEX, anotando sourceVersion sem salvar.
+2. FINANCE-B, em navegador autenticado independente, seleciona o mesmo versionRef/período e salva nova revisão da mesma linha em Planner OPEX.
+3. FINANCE-A tenta salvar formulário stale; prova CAS, valor novo preservado e rascunho local sem alterar official.
 
 **Protocolo negativo compartilhado:** abrir rota e navegação com ator real, capturar before; produzir somente a contraprova específica abaixo; repetir refresh/segunda sessão se o risco exigir; reler fonte/auditoria para comprovar não-commit. Sem precondição admitida, marcar BLOCKED, não PASS.
 
 ## Passos, mecanismos e limites das ferramentas
 
-1. **[UI_ACTION]** FINANCE-B edita mesma linha no intervalo e FINANCE-A salva revisão velha
+1. **[UI_ACTION]** No Planner OPEX, ambos os usuários escolhem o mesmo versionRef de WHATIF-A; FINANCE-B salva a linha e FINANCE-A tenta salvar a revisão antiga, verificando CAS. O Dashboard não seleciona cenários.
 
 ## Oráculos observáveis (não reescrever para passar)
 

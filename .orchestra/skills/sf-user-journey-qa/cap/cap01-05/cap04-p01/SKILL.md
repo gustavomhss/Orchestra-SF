@@ -24,18 +24,18 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 ## Passos, mecanismos e limites das ferramentas
 
 1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. **[UI_ACTION]** Abrir OPEX Detail na hipótese V-2026-WHATIF-A
-3. **[UI_ACTION]** Criar/editar linha OPEX-LIC-01 com justificativa “renovação SaaS”
-4. **[UI_ACTION]** Salvar com revisão observada e voltar à lista
-5. **[READ_ONLY_WITNESS]** Reabrir e comparar impacto anual e mensal
-6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+2. **[READ_ONLY_WITNESS]** Ler Dashboard → OPEX por ano como projeção independente; no Planner → Versions localizar/copiar baseline autorizado para WHATIF-A e registrar versionRef real, sem seletor WHATIF no Dashboard.
+3. **[READ_ONLY_WITNESS]** Abrir Planner → OPEX (/orchestra/sf-planner/opex), escolher WHATIF-A no seletor pelo versionRef, editar OPEX-LIC-01 e registrar justificativa apenas se o campo existir na UI real.
+4. **[UI_ACTION]** Salvar no Planner com revisão observada; voltar à lista e reler a linha no mesmo versionRef, nunca tratar edição do Dashboard como escrita na hipótese.
+5. **[READ_ONLY_WITNESS]** Comparar official e A por seleção de versão no Planner (ano e meses); Dashboard OPEX serve apenas como leitura de ano, não comparação de hipóteses.
+6. **[READ_ONLY_WITNESS]** Reabrir Planner OPEX com versionRef e Dashboard OPEX com ano separadamente; capturar sourceVersion, owner e recibo.
 
 ## Oráculos observáveis (não reescrever para passar)
 
-- Nova hipótese aumenta outlook 590000→602000 USD, delta +12000
-- Justificativa e ator persistem na trilha
-- Actual Jan–Set permanece 400000 e versão official intacta
-- Lista mantém filtro/competência após retorno
+- No Planner para versionRef de WHATIF-A, outlook 590000→602000 USD e delta +12000 quando a fixture existir
+- Justificativa e ator persistem somente se o editor real possuir justificativa; se ausente, reportar gap, não PASS
+- Actual Jan–Set permanece 400000 e official intacta na fonte de versões
+- Após retornar, revalidar filtro, competência e versionRef, registrando perda de estado se ocorrer
 - Evidência de execução deve relacionar ator, momento, URL, versão do registro, resultado e hash/recibo quando houver.
 
 **Fontes de teste existentes:** u39, u40. Reusar para diagnosticar, não substituir a execução da UI.

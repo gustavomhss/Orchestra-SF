@@ -1,11 +1,11 @@
 ---
 name: sf-user-journey-qa-ui-ui49-53-ui50-n01
-description: "QA manutenção SF: executar story SF-UI50-N01 (UI50: contraprova — Revogar direito de export de um usuário após g) pela UI; ator CIO, registrar evidência e contraprovas."
+description: "QA manutenção SF: executar story SF-UI50-N01 (UI50: contraprova — Revogar direito de export após gerar DOCX/PPTX) pela UI; ator CIO, registrar evidência e contraprovas."
 internal: true
-when: "O QA solicitou a story SF-UI50-N01 ou o caso específico UI50: contraprova — Revogar direito de export de um usuário após "
+when: "O QA solicitou a story SF-UI50-N01 ou o caso específico UI50: contraprova — Revogar direito de export após gerar DOCX/PPT"
 not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta SF-UI50-N01"
 ---
-# SF-UI50-N01 — UI50: contraprova — Revogar direito de export de um usuário após gerar PDF/DOCX
+# SF-UI50-N01 — UI50: contraprova — Revogar direito de export após gerar DOCX/PPTX
 
 **Uso:** QA/manutenção interna; o LLM interpreta o(s) ator(es) como usuários, não é uma skill para o cliente. **Protocolo:** carregar `sf-user-journey-qa` antes desta folha; interagir exclusivamente pela UI instalada e preservar a evidência.
 
@@ -27,17 +27,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 ## Passos, mecanismos e limites das ferramentas
 
-1. **[UI_ACTION]** Revogar direito de export de um usuário após gerar PDF/DOCX
+1. **[UI_ACTION]** Gerar DOCX/PPTX por Reviews Reports para R1; após revogação real do grant por administrador QA autorizado, tentar novo Prepare/Download pela UI com principal revogado. Não inventar URL persistente, PDF ou cancel.
 
 ## Oráculos observáveis (não reescrever para passar)
 
-- Download posterior recusa a permissão atual, mesmo com URL original
+- Novo Prepare/Download pós-revogação recusa entregar bytes ao principal revogado; não pressupor URL persistente
 - Nenhum efeito parcial, alteração em outro principal, escalada de papéis ou duplicata; erro deve ser explícito e não expor conteúdo protegido.
 - Registrar se o comportamento foi DENIED_EXPECTED, BUG ou BLOCKED_ENVIRONMENT; não marcar PASS sem confirmação da fonte.
 
 ## Contraprovas
 
-- Download posterior recusa a permissão atual, mesmo com URL original
+- Novo Prepare/Download pós-revogação recusa entregar bytes ao principal revogado; não pressupor URL persistente
 
 **Fontes de teste existentes:** u33. Reusar para diagnosticar, não substituir a execução da UI.
 

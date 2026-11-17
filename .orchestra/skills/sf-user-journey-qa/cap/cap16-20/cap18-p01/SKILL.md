@@ -24,18 +24,18 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 ## Passos, mecanismos e limites das ferramentas
 
 1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. **[UI_ACTION]** Abrir Planner OPEX na hipótese A
-3. **[UI_ACTION]** Modificar licença anual 72000→84000 com nota
-4. **[UI_ACTION]** Criar/abrir hipótese B sem copiar dados de A inadvertidamente
-5. **[READ_ONLY_WITNESS]** Comparar OPEX por centro de custo e total
-6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+2. **[READ_ONLY_WITNESS]** Em Planner → Versions localizar official locked e WHATIF-A, registrar versionRefs reais; criar A com New/Copy do baseline apenas se ausente e admitido.
+3. **[UI_ACTION]** Em Planner → OPEX selecionar WHATIF-A pelo ID no seletor; modificar licença 72000→84000 com nota apenas se controle real permitir, salvar e reler.
+4. **[READ_ONLY_WITNESS]** Voltar a Planner → Versions e criar/copiar WHATIF-B do mesmo official, não de A; registrar versionRef distinto e editar B para 78000 em Planner OPEX.
+5. **[READ_ONLY_WITNESS]** Comparar A, B e official no Planner Versions/Compare e OPEX por versionRef; Dashboard é projeção por ano, não tela de WHATIF.
+6. **[READ_ONLY_WITNESS]** Reabrir no Planner os três versionRefs e conferir ano, moeda, lock, valores e sourceVersion sem alterar official.
 
 ## Oráculos observáveis (não reescrever para passar)
 
-- A=602000, B=596000, base=590000 USD
+- Na fonte Planner versionada, A=602000, B=596000, base=590000 USD quando houver fixture
 - Deltas A +12000 e B +6000 corretos
-- Actual/official imutáveis
-- Linhas identificam currency, período e versão
+- Actual e versionRef official permanecem imutáveis
+- Linhas identificam moeda, período e versionRef real, distinto da projeção Dashboard por ano
 - Evidência de execução deve relacionar ator, momento, URL, versão do registro, resultado e hash/recibo quando houver.
 
 **Fontes de teste existentes:** u07, u48. Reusar para diagnosticar, não substituir a execução da UI.
