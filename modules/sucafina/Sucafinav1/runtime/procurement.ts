@@ -204,11 +204,15 @@ function initial() {
 }
 function load(snapshot: Snapshot): Store {
   const stored = object(snapshot.data.store)
+  // A newly provisioned installation has no Procurement store yet. Apply the
+  // canonical settings for reads without persisting a synthetic change or
+  // replacing an administrator's existing (even malformed) stored settings.
+  const settings = snapshot.data.store === undefined ? initial() : object(stored.settings)
   return structuredClone({
-    settings: object(stored.settings),
+    settings,
     form: {
-      currency: text(object(stored.settings).currency),
-      ...object(stored.settings),
+      currency: text(settings.currency),
+      ...settings,
     },
     issued: { pr: [], po: [], ...object(stored.issued) },
     sup: Array.isArray(stored.sup) ? stored.sup.filter((code): code is string => typeof code === "string") : [],
