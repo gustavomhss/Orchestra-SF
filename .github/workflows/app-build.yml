@@ -32,7 +32,7 @@ jobs:
       - name: Select revision
         id: source
         env:
-          REQUESTED_REVISION: ${{ github.event_name == 'push' && 'b67cb17eef6962e4007dab7a0cde27672367f92b' || inputs.revision || github.sha }}
+          REQUESTED_REVISION: ${{ github.event_name == 'push' && 'cfb01f61e8c48c5779288b0b4b24220cc28662ab' || inputs.revision || github.sha }}
         run: |
           set -euo pipefail
           if [[ ! "$REQUESTED_REVISION" =~ ^[0-9a-f]{40}$ ]]; then
