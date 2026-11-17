@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
+import { expect, type APIResponse, type Locator, type Page, type Request, type Response, type Route, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 
 export const draft = {
@@ -86,16 +86,33 @@ export async function fillDecision(page: Page, objective: string) {
 
 export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
   await expect(button).toBeEnabled()
-  // The command can navigate to the saved case as soon as the browser has
-  // consumed its JSON. Read the real response body at the response event,
-  // before click() completes and Chromium retires the prior document's request.
-  const reply = page.waitForResponse((response) => isCommand(response.request(), mode, method))
-    .then((response) => readReply(response, observations))
-  await button.click()
-  return await reply
+  // The real UI may parse a successful command and navigate before Chromium
+  // lets Playwright read the old document's response body. Buffer the exact
+  // upstream HTTP reply before delivering it unchanged to the browser.
+  // This is a single real request, not a mock or a second mutation.
+  const matches = (url: URL) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
+  let upstream: APIResponse | undefined
+  const forward = async (route: Route) => {
+    if (!isCommand(route.request(), mode, method)) { await route.continue(); return }
+    const response = await route.fetch({ maxRedirects: 0 })
+    upstream = response
+    await route.fulfill({ response })
+  }
+  await page.route(matches, forward)
+  try {
+    const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
+    await button.click()
+    const delivered = await pending
+    if (!upstream) throw new Error(`Missing upstream Decisions reply for ${mode}`)
+    expect(delivered.status()).toBe(upstream.status())
+    expect(delivered.headers()["content-type"]).toBe(upstream.headers()["content-type"])
+    return await readReply(upstream, observations)
+  } finally {
+    await page.unroute(matches, forward)
+  }
 }
 
-export async function readReply(response: Response, observations: Record<string, unknown>[]) {
+export async function readReply(response: Response | APIResponse, observations: Record<string, unknown>[]) {
   const contentType = response.headers()["content-type"] ?? ""
   const record = { mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(), contentType }
   observations.push(record)
