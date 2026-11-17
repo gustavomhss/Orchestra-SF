@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { Schema } from "effect"
+import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 import { createComponent, render } from "../lean-dom.test-helper"
 import { solidDom } from "../solid-dom"
 import { withBrowserPlatform } from "./platform-fixture"
@@ -36,8 +37,8 @@ const route: SfSurfaceProps<"UI55">["route"] = {
   href: "/orchestra/sf-imports/new" as SfHref,
   pathname: "/orchestra/sf-imports/new", query: {},
 }
-const operation = (operationId: string) =>
-  ({ operationId, state: "ready", operational: true, reason: null }) as const
+const operation = (operationId: SfOperationId): SfContext["availability"][number]["operations"][number] =>
+  ({ operationId, state: "ready", operational: true, reason: null })
 const context: SfContext = {
   stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft",
   destinations: [],
