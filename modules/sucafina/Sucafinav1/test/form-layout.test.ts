@@ -64,7 +64,7 @@ test("All editor screens keep readable field widths and ordered configuration se
       await page.setViewportSize({ width, height: 1000 })
       for (const surface of ["dashboard", "planner", "procurement"]) {
         await page.goto(`http://localhost:4110/sucafina/${surface}`)
-        const hrefs = await page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
+        const hrefs = await page.locator("aside.sidebar > nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
         expect(new Set(hrefs).size).toBe(hrefs.length)
         if (surface === "dashboard") {
@@ -133,7 +133,7 @@ test("All editor screens keep readable field widths and ordered configuration se
           }
           const charts = await page.locator("figure svg").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height))
           expect(charts.every((height) => height <= 241)).toBe(true)
-          const active = page.locator('nav a[aria-current="page"]')
+          const active = page.locator('aside.sidebar > nav a[aria-current="page"]')
           expect(await active.count()).toBe(1)
           if (width === 1440) {
             const name = new URL(page.url()).searchParams.get("page")!.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
