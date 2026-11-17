@@ -92,8 +92,11 @@ test("real Node ingress strips forwarded hints before toWeb and reaches the pinn
         expect(session).toContain("Secure")
         expect(session).toContain("SameSite=Lax")
         const authenticated = await request("/sucafina/dashboard", { cookie: session.split(";")[0] })
-        expect(authenticated.status).toBe(401) // Authenticated guest has no initialized product role map.
-        await authenticated.arrayBuffer()
+        // A configured member is admitted immediately; no first-admin request is required.
+        expect(authenticated.status).toBe(200)
+        expect(authenticated.headers.get("content-type")).toContain("text/html")
+        expect(await authenticated.text()).toContain("<html")
+        expect((await request("/sucafina/dashboard")).status).toBe(303)
         expect((await request("/sucafina/status", { host: "evil.example", "x-forwarded-host": new URL(ingressOrigin).host })).status).toBe(403)
         for (const pathname of ["/outside", "/sucafina-other"]) expect((await request(pathname)).status).toBe(404)
         expect(spans).toHaveLength(0)
