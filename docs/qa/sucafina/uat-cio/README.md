@@ -65,3 +65,7 @@ O cenário fictício `SF-LAB-2026` foi desenhado para essas pessoas. Ele evoca a
 Após peer review independente, **este pacote NÃO é declarado state of the art**. Ver `quality-v2/COLD-REVIEW.md` para 13 achados classificados e o significado restrito da cobertura 70/165/306. Foram corrigidos o protagonista gramatical nas 45 E2E, uma inversão de título em SF-E2E-006 e a contagem de condições de release (34 baseline + 11 condicionais).
 
 `quality-v2/STEP-LEVEL-DOSSIERS.md` adiciona **8 dossiês exemplares** com ação, esperado e testemunho por etapa; `quality-v2/TRANSITION-COVERAGE-PLAN.csv` é **modelo hipotético não certificado** de transições críticas. Uma vez fechado o seed pelo produtor e a matriz semântica, reescrever cada caso genérico com essa qualidade. Rodar `python scripts/audit_uat_quality_v2.py` para validar a documentação; isso **não** testa o Orchestra-SF.
+
+## V3 Lean — piloto de prova por resultado (sem bloat)
+
+A nova camada em [quality-v3/README.md](quality-v3/README.md) **reutiliza** este atlas, os dossiês QA2-001/002/003, os testes Bun/Playwright e o template `EVIDENCE-RECORD.json`. São **três casos prioritários, 21 provas identificadas e um verificador read-only em Node**, não outro runner, seed ou lista inflada de histórias. Estado: `NOT_RUN` até execução real; nenhum PASS hospedado ou GO-LIVE implícito.
