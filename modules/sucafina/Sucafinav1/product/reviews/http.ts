@@ -222,8 +222,14 @@ export function createReviewHttp(input: {
       }
       const result = await input.reviews.read(reviewRef, admitted.value)
       trace("HTTP_READ_PORT_DONE")
-      if (!await input.ui.revalidate(admitted.value) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-unavailable" }, 403)
-      return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
+      trace("HTTP_READ_POST_AUTH_ENTER")
+      const stillAuthorized = await input.ui.revalidate(admitted.value)
+      trace("HTTP_READ_POST_AUTH_DONE")
+      if (!stillAuthorized || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-unavailable" }, 403)
+      trace("HTTP_READ_JSON_ENTER")
+      const response = json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
+      trace("HTTP_READ_JSON_DONE")
+      return response
     } catch {
       const authorized = await input.ui.revalidate(admitted.value).catch(() => undefined)
       if (authorized === false || (validated && input.ui.requestFor(admitted.value) !== request)) return json({ status: "denied", reason: "review-unavailable" }, 403)

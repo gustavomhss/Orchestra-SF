@@ -1,3 +1,5 @@
+import { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } from "docx"
+import PptxGenJS from "pptxgenjs"
 import type { ReviewOutcomeComparison } from "./outcome.ts"
 import { reviewOutcomeComparisonLines, validOutcomeComparison, reviewOutcomeLines, validReviewOutcome } from "./outcome.ts"
 import type { ObservedResultProjection } from "../contracts/decisions.ts"
@@ -107,7 +109,6 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   trace("RENDER_CONTENT_DONE")
   const name = options.title.replace(/[^a-z0-9]+/gi, "_") || "Review"
   if (options.format === "docx") {
-    const { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } = await import("docx")
     trace("RENDER_DOCX_IMPORTED")
     const document = new Document({
       title: options.title,
@@ -188,7 +189,6 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     sealReviewArtifact(artifact, review, options)
     return artifact
   }
-  const { default: PptxGenJS } = await import("pptxgenjs")
   const presentation = new PptxGenJS()
   presentation.layout = "LAYOUT_WIDE"
   presentation.author = "Sucafina"
