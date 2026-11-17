@@ -64,7 +64,9 @@ const SourceLink = Schema.Struct({
   query: Schema.String,
   expires: Schema.String,
 })
-const AssetUploadSuccess = Schema.Struct({ ok: Schema.Literal(true) })
+const AssetUploadSuccess = Schema.Struct({ ok: Schema.Literal(true),
+  value: Schema.Struct({ id: Schema.String, name: Schema.String }).pipe(optional),
+})
 
 /**
  * 'bytes' must travel through the isolated, typed upload payload owned by F02/D01,
@@ -271,6 +273,16 @@ export const SfFilesAssetUpload = {
   output: Schema.Union([AssetUploadSuccess, SfFilesLegacyFailure]),
 } as const
 
+/** Original procurement download(kind="po"), selected by the canonical request ref. */
+export const SfFilesExportPo = {
+  operationId: "files.export.po",
+  input: Schema.Struct({
+    surface: Schema.Literal("procurement"),
+    request: Schema.String.check(Schema.isPattern(/^[A-Za-z0-9._:-]{1,128}$/)),
+  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: SfFilesDownloadBytes,
+} as const
+
 export const SfFilesExportXlsx = {
   operationId: "files.export.xlsx",
   input: Schema.Struct({ surface: Schema.Literal("planner") }),
@@ -328,6 +340,7 @@ export const SfFiles = {
     "files.asset.download": SfFilesAssetDownload,
     "files.asset.upload": SfFilesAssetUpload,
     "files.export.xlsx": SfFilesExportXlsx,
+    "files.export.po": SfFilesExportPo,
     "files.export.suppliers": SfFilesExportSuppliers,
     "files.export.register": SfFilesExportRegister,
     "files.export.json": SfFilesExportJson,
