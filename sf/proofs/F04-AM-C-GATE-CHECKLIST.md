@@ -92,14 +92,16 @@ Contrato dos arquivos: bytes UTF-8 exatos de **$SF_NATIVE_SCRATCH_ROOT/go-no-go-
     sha256sum "$BUNDLE"                      # registrar SHA dos bytes que serão assinados
     openssl pkeyutl -sign -rawin -inkey "$PRIVATE" \
       -in "$BUNDLE" -out "$SF_NATIVE_SCRATCH_ROOT/owner-signature.bin"
-    base64 -w0 "$SF_NATIVE_SCRATCH_ROOT/owner-signature.bin" \
-      > "$SF_NATIVE_SCRATCH_ROOT/go-no-go-bundle.sig"
+    openssl base64 -A -in "$SF_NATIVE_SCRATCH_ROOT/owner-signature.bin" \
+      -out "$SF_NATIVE_SCRATCH_ROOT/go-no-go-bundle.sig"
     chmod 0600 "$SF_NATIVE_SCRATCH_ROOT/go-no-go-bundle.sig"
     SF_NATIVE_OWNER_TRUST_SHA256="$(sha256sum "$PUBLIC" | awk '{print $1}')"
     sha256sum "$PUBLIC"                      # pin **bytes PEM exatos**, não fingerprint de chave textual
     openssl pkeyutl -verify -rawin -pubin -inkey "$PUBLIC" \
       -sigfile "$SF_NATIVE_SCRATCH_ROOT/owner-signature.bin" -in "$BUNDLE"
     sha256sum "$BUNDLE"                      # DEVE ser idêntico ao anterior
+
+Após computar o hash, **a variavel de ambiente deve ser exportada** no processo do runner protegido, por exemplo `export SF_NATIVE_OWNER_TRUST_SHA256=<pin_64hex_aprovado>` e `export SF_NATIVE_OWNER_PUBLIC_KEY_FILE=<public.pem_absoluto>`; SF_NATIVE_OWNER_PERSON_ID deve corresponder ao registro humano de Daniel. Computar a variável na estação de assinatura **não** a propaga automaticamente para a VM.
 
 Mover somente **public.pem** e seu hash pinned por canal autenticado independente para SF_NATIVE_OWNER_PUBLIC_KEY_FILE e SF_NATIVE_OWNER_TRUST_SHA256 do runner protegido. Definir **SF_NATIVE_OWNER_PERSON_ID** do registro humano real (Daniel França). Nunca confiar em pin fornecido pelo próprio arquivo JSON que está sendo assinado. Arquivos privados de assinatura mantidos sob 0700; se o signing station não é o runner, use transferência cifrada autenticada mantendo a **mesma sequência de bytes**.
 
