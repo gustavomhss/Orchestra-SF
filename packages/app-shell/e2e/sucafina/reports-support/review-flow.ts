@@ -174,6 +174,13 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await row.getByRole("button", { name: "Edit", exact: true }).click()
     const editor = source.getByRole("dialog", { name: "Edit record", exact: true })
     await expect(editor).toBeVisible()
+    // The installed OPEX editor places each command in a closed disclosure.
+    // Enter Save month through the real user control before filling its fields.
+    const monthPanel = editor.locator("details.editor-panel").filter({ has: form })
+    await expect(monthPanel.locator("summary")).toHaveText("Save month")
+    await monthPanel.locator("summary").click()
+    await expect(monthPanel).toHaveAttribute("open", "")
+    await expect(form).toBeVisible()
     await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("110")
     const version = Number(await form.getAttribute("data-version"))
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
