@@ -194,8 +194,14 @@ export function renderSfAdminAccess(input: {
     '<th>Herda do time</th><th>Concedido ao perfil (grants)</th></tr></thead><tbody>' +
     users.map((person) => {
       const grant = policy.grants.find((entry) => entry.principalRef === person.id)
+      const grantValues = (label: string, values: readonly string[]) =>
+        '<p><strong>' + htmlEscape(label) + '</strong>: ' +
+        (values.length ? values.map((value) => '<span class="sf-chip">' + htmlEscape(value) + '</span>').join(" ") : 'Nenhum') + '</p>'
       const granted = grant
-        ? 'Namespaces: ' + grant.namespaces.length + ' · Operations: ' + grant.operations.length + ' · Human actions: ' + (grant.humanActions?.length ?? 0)
+        ? 'Namespaces: ' + grant.namespaces.length + ' · Operations: ' + grant.operations.length + ' · Human actions: ' + (grant.humanActions?.length ?? 0) +
+          '<details data-sf-grant-profile="' + htmlEscape(person.id) + '"><summary>Ver escopos concedidos</summary>' +
+          grantValues('Namespaces', grant.namespaces) + grantValues('Operations', grant.operations) +
+          grantValues('Human actions', grant.humanActions ?? []) + '</details>'
         : 'Nenhum'
       const key = "sf:access-admin:grant:" + person.id
       const version = snapshots.dashboard.versions[key]?.version ?? 0
