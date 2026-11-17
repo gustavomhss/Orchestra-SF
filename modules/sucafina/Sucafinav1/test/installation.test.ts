@@ -15,7 +15,8 @@ const other = {
   status: "po_issued",
   createdBy: "directory-2",
   pr: { title: "Private request" },
-  po: { expenseType: "CAPEX", lines: [{ qty: 1, unitPrice: 91827 }] },
+  // Issued value is only known with the exact locked PO currency context.
+  po: { expenseType: "CAPEX", currency: "USD", approvalBaseCurrency: "USD", lines: [{ qty: 1, unitPrice: 91827 }] },
 }
 
 function installation(actor: ResolvedActor | null) {

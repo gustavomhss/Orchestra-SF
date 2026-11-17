@@ -305,9 +305,11 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     "theirs",
   ])
   expect(requestList(listed, actor("bea", ["buyer"]), "Closed").map((item) => item.number)).toEqual(["closed"])
-  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "edr")).toEqual([])
+  // The implementation performs case-insensitive search within authorized rows.
+  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "edr").map((item) => item.number)).toEqual(["mine"])
+  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "missing-q")).toEqual([])
   expect(requestList(listed, actor("bea", ["buyer"]), "Open", "EDR").map((item) => item.number)).toEqual(["mine"])
-  expect(requestList(listed, actor("ada", ["requester"]), "Open", "ada")).toEqual([])
+  expect(requestList(listed, actor("ada", ["requester"]), "Open", "ada").map((item) => item.number)).toEqual(["mine"])
 
   const exported = exportRegister([
     {

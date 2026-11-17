@@ -57,7 +57,7 @@ async function requireLifecycleSelection() {
   // runs before the driver is started or Chromium is created.
   // Bun test exposes only the current entry and passthrough in process.argv.
   // This Linux lane reads its actual OS command line, never a stale request file.
-  const invalid = () => new Error("WP01 browser tests require the Linux lane with explicit test files, browser-startup.test.ts first and browser-lifecycle.test.ts last. Use the named Actions selection; only --timeout is supported. Other platforms, autodiscovery, filters, isolation, sharding and parallel/reordered execution need an integrator-owned lifecycle.")
+  const invalid = () => new Error("WP01 requires Linux explicit files, startup first and finalizer last; only --timeout or exact verified CI-SF reporter flags. Autodiscovery, filters, isolation, sharding, partial and parallel/reordered selections are forbidden.")
   if (process.platform !== "linux") throw invalid()
   const command = (await bounded(Bun.file("/proc/self/cmdline").text(), "read actual Linux test selection", 5_000)).split("\0")
   if (command.at(-1) === "") command.pop()
@@ -65,6 +65,7 @@ async function requireLifecycleSelection() {
   if (!executable || executable !== "bun" && resolve(executable) !== resolve(process.execPath) || command[1] !== "test") throw invalid()
   const args = command.slice(2)
   const files: string[] = []
+  let ciBail = false, ciReporter = false, ciReportFile = false
   for (let index = 0; index < args.length; index++) {
     const arg = args[index]
     if (arg === undefined) throw invalid()
@@ -73,12 +74,24 @@ async function requireLifecycleSelection() {
       continue
     }
     if (/^--timeout=[1-9]\d*$/.test(arg)) continue
+    // CI-SF is the complete Linux module selection, not a filtered WP01 run.
+    if (arg === "--bail=5" && !ciBail) { ciBail = true; continue }
+    if (arg === "--reporter=junit" && !ciReporter) { ciReporter = true; continue }
+    if (/^--reporter-outfile=\/.*\/sf-ci-evidence\/CI-SF\/report\.xml$/.test(arg) && !ciReportFile) { ciReportFile = true; continue }
     if (arg.startsWith("-") || !arg.endsWith(".test.ts") || /[*?\[\]{}]/.test(arg)) throw invalid()
     files.push(resolve(arg))
   }
   const startup = resolve(import.meta.dir, "browser-startup.test.ts")
   const finalizer = resolve(import.meta.dir, "browser-lifecycle.test.ts")
   if (files.length < 3 || files[0] !== startup || files.at(-1) !== finalizer || new Set(files).size !== files.length) throw invalid()
+  if (ciBail || ciReporter || ciReportFile) {
+    const workspace = process.env.GITHUB_WORKSPACE
+    if (!ciBail || !ciReporter || !ciReportFile || process.env.SF_SUITE_ID !== "CI-SF" || !workspace) throw invalid()
+    // Prove the complete A2 selector's ordered argv before admitting a lease.
+    const source = await bounded(Bun.file(resolve(workspace, "sf-ci-evidence/CI-SF/selection.txt")).text(), "read full CI-SF selector evidence", 5_000)
+    const expected = source.trimEnd().split("\n").map((name) => resolve(workspace, "modules/sucafina", name))
+    if (expected.length !== files.length || expected.some((name, index) => name !== files[index])) throw invalid()
+  }
   const entries = await bounded(Promise.allSettled(files.map((file) => stat(file))), "verify named test files", 5_000)
   if (entries.some((entry) => entry.status !== "fulfilled" || !entry.value.isFile())) throw invalid()
   console.info("WP01 browser explicit selection admitted", { executable, command: command[1], files, startup, finalizer })

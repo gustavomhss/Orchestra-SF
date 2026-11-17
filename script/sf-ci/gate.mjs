@@ -112,6 +112,15 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
   }
   const accepted = files.filter((name) => !excluded.includes(name)).sort()
   if (accepted.length === 0 || new Set(accepted).size !== accepted.length) fail("empty/duplicate suite selection: " + suiteId)
+  if (suiteId === "CI-SF") {
+    // Preserve the complete admitted set. The shared WP01 Chromium must start
+    // before its first lease and be physically finalized after its last lease.
+    const first = "Sucafinav1/test/product/wp01/browser-startup.test.ts"
+    const last = "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    const hasFirst = accepted.includes(first), hasLast = accepted.includes(last)
+    if (hasFirst !== hasLast) fail("WP01 startup and finalizer must be admitted together")
+    if (hasFirst) return [first, ...accepted.filter((name) => name !== first && name !== last), last]
+  }
   return accepted
 }
 /** Converts summary to a stable multiset of case identities; duplicate parametrized titles stay counted. */

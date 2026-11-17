@@ -213,6 +213,23 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
   }
 })
 
+test("CI-SF keeps every test while forcing WP01 startup first and finalizer last", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "sf-wp01-order-"))
+  const write = (name) => { const filename = path.join(root, "modules/sucafina", name); mkdirSync(path.dirname(filename), { recursive: true }); writeFileSync(filename, "test('covered', () => {})") }
+  try {
+    const first = "Sucafinav1/test/product/wp01/browser-startup.test.ts"
+    const last = "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    write("Sucafinav1/test/parity-pitr.test.ts")
+    write("Sucafinav1/test/visual-layout.test.ts")
+    write("porta/more.test.ts")
+    write(first)
+    assert.throws(() => selectSuiteFiles(manifest, "CI-SF", root), /WP01 startup and finalizer/)
+    write(last)
+    const selected = selectSuiteFiles(manifest, "CI-SF", root)
+    assert.deepEqual(selected, [first, "Sucafinav1/test/visual-layout.test.ts", "porta/more.test.ts", last])
+    assert.equal(new Set(selected).size, selected.length)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
 test("selected files are read only from the validated Linux SF manifest", () => {
   assert.deepEqual(requiredSelection(manifest, "CI-CLI"), ["test/sf-authorized-sample.test.ts"])
   assert.deepEqual(requiredSelection(manifest, "CI-ATLAS-BUSINESS"), ["test/sf-authorized-sample.test.ts"])
