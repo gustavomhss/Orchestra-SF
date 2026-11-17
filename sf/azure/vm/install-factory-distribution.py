@@ -150,11 +150,7 @@ def validate_tar(artifact, c, expected_sha, receipt):
         if set(members) != set(file_index) | {"distribution.json", "checksums.sha256"}:
             refuse("tar contents differ from sealed producer file roster")
         table = archive.extractfile(checksums).read()
-        expected_table = "".join(
-            f"{file_index[key]['sha256']}  {key}\n" for key in sorted(file_index)
-        )
         # Producer checksums includes the distribution.json entry as well.
-        expected_table += ""  # re-sorted below for deterministic table equivalence
         table_entries = {**{name: entry["sha256"] for name, entry in file_index.items()},
                          "distribution.json": hashlib.sha256(manifest_bytes).hexdigest()}
         expected_table = "".join(f"{table_entries[name]}  {name}\n" for name in sorted(table_entries))
@@ -223,7 +219,7 @@ def check_release(path, source, expected_sha, file_index, manifest_bytes, *, sta
     return proof
 
 
-def vm_preflight(fqdn):
+def vm_preflight(fqdn, *, require_maintenance=True):
     if os.geteuid() != 0 or os.uname().sysname != "Linux" or os.uname().machine != "x86_64":
         refuse("root on Azure Linux x86_64 required")
     if not FQDN.fullmatch(fqdn):
@@ -253,10 +249,11 @@ def vm_preflight(fqdn):
     accepted = re.fullmatch(re.escape(fqdn) + r"\s*\{\s*respond\s+503\s*\}", caddy)
     managed = "# managed-orchestra-sf-mode: maintenance" in caddy and \
               caddy.count("{") >= 1 and fqdn + " {" in caddy and "respond 503" in caddy
-    if not (accepted or managed):
-        refuse("Caddy MUST be in 503 maintenance before changing current")
-    if subprocess.run(["systemctl", "is-active", "--quiet", "orchestra-sf.service"]).returncode == 0:
-        refuse("stop the application cleanly before switching live symlink")
+    if require_maintenance:
+        if not (accepted or managed):
+            refuse("Caddy MUST be in 503 maintenance before changing current")
+        if subprocess.run(["systemctl", "is-active", "--quiet", "orchestra-sf.service"]).returncode == 0:
+            refuse("stop the application cleanly before switching live symlink")
 
 
 def current_source():
@@ -298,7 +295,7 @@ def install(a):
     receipt = parse_receipt(receipt_file, a.candidate, a.sha256)
     archive, members, entries, manifest_bytes = validate_tar(artifact, a.candidate, a.sha256, receipt)
     try:
-        vm_preflight(a.fqdn)
+        vm_preflight(a.fqdn, require_maintenance=not a.dry_run)
         old = current_source()
         target = RELEASES / a.candidate
         if target.exists() or target.is_symlink():
@@ -371,7 +368,7 @@ def rollback(a):
     if not SHA40.fullmatch(a.from_candidate) or not SHA40.fullmatch(a.to_candidate) or \
        a.from_candidate == a.to_candidate:
         refuse("rollback from/to must be distinct exact frozen SHAs")
-    vm_preflight(a.fqdn)
+    vm_preflight(a.fqdn, require_maintenance=not a.dry_run)
     if current_source() != a.from_candidate:
         refuse("current release changed: expected --from-candidate")
     target = RELEASES / a.to_candidate
