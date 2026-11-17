@@ -241,13 +241,13 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
       kind === "supplier" ? "Suppliers" : "Requests"
     if (!api || !permitted("files.asset.upload") || state.busy || !file ||
         !mime || file.type && file.type !== mime ||
-        file.size < 1 || file.size > 20 * 1024 * 1024 ||
+        file.size < 1 || file.size > 20 * 1024 * 1024 || file.name.length > 255 ||
         !record || record.length > 1024 || /[\r\n\0]/.test(record) ||
         !/^(?:0|[1-9]\d*)$/.test(rawVersion) ||
         !Number.isSafeInteger(Number(rawVersion)) ||
         (state.surface === "dashboard" ? kind !== "contract" :
           state.surface !== "procurement" || kind === "contract")) {
-      setState({ uploadNotice: "Arquivo, classificação, registro ou versão inválidos.", status: "ready" })
+      setState({ uploadNotice: "sf.u24.uploadInvalid", status: "ready" })
       return
     }
     const token = fence()
@@ -269,7 +269,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     if (!reply.value.ok) { fail("unavailable", true); return }
     uploadFile = undefined
     mutationUnknown = false
-    setState({ uploadName: "", uploadNotice: "Documento aceito pelo scanner e salvo no registro autorizado. Selecione a fonte atualizada para extração." })
+    setState({ uploadName: "", uploadNotice: "sf.u24.uploadAccepted" })
     await loadCatalog()
   }
   const search = async () => {
@@ -286,6 +286,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     setState({ matches, status: matches.matches.length ? "ready" : "filtered-empty", busy: false })
   }
   const selected = () => state.candidates.find((item) => item.id === state.selectedCandidateId)
+  const canLinkCurrency = () => { const candidate = selected(); return !!candidate && validCurrency(candidate) }
   const openSearchSource = async (ref: Matches["matches"][number]["documentRef"]) => {
     const api = client()
     if (!api || !permitted("files.document-open")) { setState("status", "unavailable"); return }
@@ -374,15 +375,15 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     if (!current(token)) return
     if (result.kind === "failure") { fail(result.state, true); return }
     if (!("status" in result.value) || result.value.status !== "rejected" ||
-        result.value.id !== candidate.id || result.value.rejection?.reason !== reason ||
-        result.value.rejection.page !== page) {
+        result.value.id !== candidate.id || !result.value.rejection ||
+        result.value.rejection.reason !== reason || result.value.rejection.page !== page) {
       fail("outcome-unknown", true)
       return
     }
     const fresh = await readCandidates(state.documentRef, token)
     if (!current(token)) return
     if (fresh?.some((entry) => entry.id === candidate.id && entry.status === "rejected" &&
-        entry.rejection?.reason === reason && entry.rejection.page === page)) {
+        !!entry.rejection && entry.rejection.reason === reason && entry.rejection.page === page)) {
       setState({ status: "ready", phase: "candidates", busy: false })
       mutationUnknown = false
     } else fail("stale")
@@ -546,32 +547,32 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
           <Show when={catalog() && props.route.kind !== "detail"}>
             <form class="sf-files-fields" data-sf-document-upload="authorized-asset"
               onSubmit={(event) => { event.preventDefault(); void upload() }}>
-              <h2>Cadastro e upload de documento</h2>
-              <p>Documento vinculado à instalação/projeto atual e a um registro existente. O servidor decide permissão, versão e SCAN; nenhum arquivo é admitido pelo navegador.</p>
-              <label>Classificação
+              <h2>{t("sf.u24.uploadTitle")}</h2>
+              <p>{t("sf.u24.uploadHelp")}</p>
+              <label>{t("sf.u24.uploadKind")}
                 <select value={state.uploadKind} disabled={state.busy}
                   onChange={(event) => setState("uploadKind", event.currentTarget.value === "contract" ? "contract" :
                     event.currentTarget.value === "supplier" ? "supplier" :
                     event.currentTarget.value === "signed-po" ? "signed-po" : "quote")}>
                   <Show when={state.surface === "dashboard"}>
-                    <option value="contract">Contrato · Vendor Contracts</option>
+                    <option value="contract">{t("sf.u24.uploadContract")}</option>
                   </Show>
                   <Show when={state.surface === "procurement"}>
-                    <option value="quote">Cotação · Requests</option>
-                    <option value="signed-po">Pedido assinado · Requests</option>
-                    <option value="supplier">Fornecedor · Suppliers</option>
+                    <option value="quote">{t("sf.u24.uploadQuote")}</option>
+                    <option value="signed-po">{t("sf.u24.uploadSignedPo")}</option>
+                    <option value="supplier">{t("sf.u24.uploadSupplier")}</option>
                   </Show>
                 </select>
               </label>
-              <label>ID do registro existente
+              <label>{t("sf.u24.uploadRecord")}
                 <input value={state.uploadRecord} maxlength="1024" required disabled={state.busy}
                   onInput={(event) => setState("uploadRecord", event.currentTarget.value)} />
               </label>
-              <label>Versão atual do registro (CAS)
+              <label>{t("sf.u24.uploadVersion")}
                 <input type="number" min="0" step="1" required value={state.uploadVersion} disabled={state.busy}
                   onInput={(event) => setState("uploadVersion", event.currentTarget.value)} />
               </label>
-              <label>Documento · PDF, TXT ou DOCX (até 20 MiB)
+              <label>{t("sf.u24.uploadFile")}
                 <input type="file" accept=".pdf,.txt,.docx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   required disabled={state.busy} onChange={(event) => {
                     uploadFile = event.currentTarget.files?.[0]
@@ -580,8 +581,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               </label>
               <button type="submit" class="mx-btn primary" disabled={state.busy ||
                 !state.uploadName || !state.uploadRecord.trim() || !state.uploadVersion.trim() ||
-                !permitted("files.asset.upload")}>Submeter ao scanner e vincular</button>
-              <Show when={state.uploadNotice}><p role="status" data-sf-upload-outcome>{state.uploadNotice}</p></Show>
+                !permitted("files.asset.upload")}>{t("sf.u24.uploadSubmit")}</button>
+              <Show when={state.uploadNotice}><p role="status" data-sf-upload-outcome>{t(state.uploadNotice)}</p></Show>
             </form>
             <div class="sf-files-fields">
               <label>{t("sf.u24.source")}
@@ -665,7 +666,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                     </button>
                     <Show when={candidate.status === "rejected" && candidate.rejection}>
                       <p role="status" data-sf-rejection="persisted">
-                        Rejeitado · página {candidate.rejection?.page}: {candidate.rejection?.reason}
+                        {t("sf.u24.rejectPageNotice")} {candidate.rejection?.page}: {candidate.rejection?.reason}
                       </p>
                     </Show>
                     <Show when={evidence() && candidate.status === "extracted"}>
@@ -728,11 +729,11 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   onClick={() => { setState("phase", "candidates") }}>{t("sf.common.keepEditing")}</button>
                 <button type="button" class="mx-btn primary" disabled={state.busy}
                   onClick={() => { void confirm() }}>{t("sf.u24.confirmField")}</button>
-                <label>Motivo da rejeição (obrigatório)
+                <label>{t("sf.u24.rejectReason")}
                   <textarea maxlength="500" rows="3" value={state.rejectionReason} disabled={state.busy}
                     onInput={(event) => setState("rejectionReason", event.currentTarget.value)} />
                 </label>
-                <label>Página do documento analisada
+                <label>{t("sf.u24.rejectPage")}
                   <input type="number" min="1" max="500" step="1" value={state.rejectionPage}
                     disabled={state.busy}
                     onInput={(event) => setState("rejectionPage", event.currentTarget.value)} />
@@ -740,7 +741,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 <button type="button" class="mx-btn" disabled={state.busy ||
                   state.rejectionReason.trim().length < 5 || state.rejectionReason.trim().length > 500 ||
                   !/^[1-9]\d*$/.test(state.rejectionPage) || Number(state.rejectionPage) > 500}
-                  onClick={() => { void reject() }}>Rejeitar candidato e registrar motivo/página</button>
+                  onClick={() => { void reject() }}>{t("sf.u24.rejectSubmit")}</button>
               </section>
             </Show>
           </Show>
@@ -760,7 +761,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   onChange={(e) => { setState({ selectedTarget: e.currentTarget.value, preview: undefined, phase: "scenario" }) }}>
                   <option value="">{t("sf.u24.scenarioDestination")}</option>
                   <For each={state.targets}>{(target, index) =>
-                    <option value={String(index())}>{target.label}{target.linkRef ? " · vínculo persistido" : ""}</option>}</For>
+                    <option value={String(index())}>{target.label}{target.linkRef ? " " + t("sf.u24.scenarioLinkLabel") : ""}</option>}</For>
                 </select>
               </label>
               <Show when={!state.targets.length}><p role="status">{t("sf.u24.noTargets")}</p></Show>
@@ -779,18 +780,18 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   <dt>total</dt><dd>{showScenarioValue(value().scenario, "total") ?? t("sf.common.unknown")}</dd>
                 </dl>
                 <p role="status">{t("sf.u24.scenarioReady")}</p>
-                <p>Prévia não altera valores do Planner. O vínculo abaixo registra evidência confirmada no cenário do projeto.</p>
+                <p>{t("sf.u24.scenarioLinkHelp")}</p>
                 <Show when={/^\d+$/.test(state.selectedTarget) && state.targets[Number(state.selectedTarget)]?.linkRef}>
                   <p role="status" data-sf-scenario-link="persisted">
-                    Evidência vinculada: {state.targets[Number(state.selectedTarget)]?.linkRef}
+                    {t("sf.u24.scenarioLinked")} {state.targets[Number(state.selectedTarget)]?.linkRef}
                   </p>
                 </Show>
                 <button type="button" class="mx-btn primary" data-sf-scenario-link-action
                   disabled={state.busy || !permitted("files.document-confirm") ||
                     !/^\d+$/.test(state.selectedTarget) ||
                     !!state.targets[Number(state.selectedTarget)]?.linkRef ||
-                    !selected() || !validCurrency(selected()!)}
-                  onClick={() => { void linkScenario() }}>Vincular evidência confirmada ao cenário</button>
+                    !canLinkCurrency()}
+                  onClick={() => { void linkScenario() }}>{t("sf.u24.scenarioLinkSubmit")}</button>
               </section>}</Show>
           </Show>
         </SfStatePanel>

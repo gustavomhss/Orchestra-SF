@@ -44,7 +44,19 @@ const storedLink = (value: unknown): value is StoredLink => {
       !("policyVersion" in value) || typeof value.policyVersion !== "string" ||
       !("sourceFence" in value) || typeof value.sourceFence !== "string" ||
       !("receipt" in value) || !value.receipt || typeof value.receipt !== "object" ||
-      !("kind" in value.receipt) || value.receipt.kind !== "scenario-link") return false
+      !("kind" in value.receipt) || value.receipt.kind !== "scenario-link" ||
+      !("id" in value.receipt) || typeof value.receipt.id !== "string" || !/^scenario-link:[a-f0-9]{64}$/.test(value.receipt.id) ||
+      !("at" in value.receipt) || typeof value.receipt.at !== "string" ||
+      !Number.isFinite(Date.parse(value.receipt.at)) ||
+      !("baseRef" in value.receipt) || typeof value.receipt.baseRef !== "string" ||
+      !("targetRef" in value.receipt) || typeof value.receipt.targetRef !== "string" ||
+      !("evidenceVersion" in value.receipt) || !Number.isSafeInteger(value.receipt.evidenceVersion) ||
+      typeof value.receipt.evidenceVersion !== "number" || value.receipt.evidenceVersion < 1 ||
+      !("domainApplied" in value.receipt) || value.receipt.domainApplied !== false ||
+      !("documentRef" in value.receipt) || !value.receipt.documentRef ||
+      typeof value.receipt.documentRef !== "object" ||
+      !("refDigest" in value.receipt.documentRef) ||
+      typeof value.receipt.documentRef.refDigest !== "string") return false
   return true
 }
 
