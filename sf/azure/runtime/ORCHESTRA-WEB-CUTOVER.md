@@ -126,9 +126,11 @@ SNAPSHOT_ID="$(az snapshot show -g "$RG" -n "$SNAP" --query id -o tsv)"
 test -n "$SNAPSHOT_ID"
 # Review snapshot OS-disk origin, Sweden Central, size, zone, encryption/CMK,
 # TrustedLaunch compatibility and retention BEFORE creating a disk.
-# Only with a chosen unique name and matching approved SKU:
-az disk create -g "$RG" -n <approved-unique-restore-disk> --source "$SNAPSHOT_ID" \
-  --sku <approved-compatible-sku> --location swedencentral
+# Only with an approved unique name + compatible SKU (set outside this file).
+: "${APPROVED_RESTORE_DISK_NAME:?select a unique recovery disk name after review}"
+: "${APPROVED_RESTORE_DISK_SKU:?select matching disk SKU after review}"
+az disk create -g "$RG" -n "$APPROVED_RESTORE_DISK_NAME" --source "$SNAPSHOT_ID" \
+  --sku "$APPROVED_RESTORE_DISK_SKU" --location swedencentral
 ```
 
 For an **explicitly authorized full VM restore only**: isolate network/ingress, retain the current OS disk ID and the data-disk/NIC identity; independently compare disk size, zone, encryption and VM-security compatibility; choose the new disk ID returned by `az disk show`; then stop/deallocate the VM, `az vm update -g "$RG" -n "$VM" --os-disk "<approved-new-disk-resource-ID>"`, verify `az vm show ... --query storageProfile.osDisk.managedDisk.id`, and start **while ingress remains blocked**. Disable `orchestra-sf-staging.service` in the restored guest before permitting any traffic; inspect data and config, and only then rebuild the correct release. Disk swap is operationally destructive/disruptive and **not executed** here; the snapshot might be for a different disk, in which case **STOP** rather than trying an OS swap. Keep the original and restored disks until acceptance; do not delete the snapshot. Azure disk swap guidance: https://learn.microsoft.com/en-us/azure/virtual-machines/linux/os-disk-swap.
