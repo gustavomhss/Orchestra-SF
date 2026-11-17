@@ -170,18 +170,19 @@ export async function rejectDocumentEvidence(
       ? { record: state.documents[id], assets: state.documents } : undefined)
   if (loaded.status !== "ok" || !loaded.value || !loaded.value.record || typeof loaded.value.record !== "object")
     return { status: "unavailable", reason: "candidate-unavailable" }
-  const record = loaded.value.record as StoredDocumentEvidence
-  if (record.schema !== "sf-document-v1" || record.evidence?.id !== id ||
+  const verified = await readDocumentEvidence(id, context, {
+    state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate,
+  })
+  if (verified.status !== "ok") return verified
+  const record = verified.value
+  if (digestSfValue(loaded.value.record) !== digestSfValue(record))
+    return { status: "stale", reason: "candidate-changed" }
+  if (record.schema !== "sf-document-v1" || record.evidence.id !== id ||
       record.evidence.status !== "extracted" || record.confirmationVersion !== undefined ||
       record.evidence.ref.refDigest !== digestSfEvidenceRef(record.evidence.ref))
     return { status: "conflict", reason: "candidate-not-extracted" }
   const reviewed = { evidence: record.evidence, reason, page }
   if (!(await input.rejectDocument(reviewed, context))) return { status: "denied", reason: "human-rejection-required" }
-  const verified = await readDocumentEvidence(id, context, {
-    state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate,
-  })
-  if (verified.status !== "ok" || digestSfValue(verified.value) !== digestSfValue(record))
-    return { status: "stale", reason: "candidate-changed" }
   const identity = { incarnation: record.snapshot.incarnation, revision: record.snapshot.revision, blobDigest: record.snapshot.blobDigest }
   const asset = documentAsset({ documents: loaded.value.assets }, record.snapshot.documentRef)
   if (!asset || !(await input.documents.revalidate(record.snapshot.documentRef, identity, context)))
