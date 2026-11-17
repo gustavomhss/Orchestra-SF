@@ -149,7 +149,7 @@ async function checkedReply(record: { mode: string | null; httpStatus: number; c
   expect(record.contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain("application/json")
   const result = asRecord(await read())
   observations.push({ mode: record.mode, status: result.status, reason: result.reason, outputRef: result.outputRef })
-  expect(record.httpStatus, `Domain response for ${record.mode}`).toBe(200)
+  expect(record.httpStatus, `Domain response for ${record.mode} (${typeof result.status === "string" && /^[a-z-]{1,40}$/.test(result.status) ? result.status : "unknown"}/${typeof result.reason === "string" && /^[a-z-]{1,80}$/.test(result.reason) ? result.reason : "unknown"})`).toBe(200)
   expect(result.status, `Domain outcome for ${record.mode}`).toBe("ok")
   return result
 }
