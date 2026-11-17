@@ -1,0 +1,473 @@
+{
+  "schema": "sf2h.f04-am-go-no-go.v1",
+  "candidateSha": "REQUIRES_FROZEN_C_40_HEX",
+  "treeSha": "REQUIRES_TREE_SHA_40_HEX",
+  "artifactSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+  "installedArtifactSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+  "manifestSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+  "distribution": {
+    "cli": {
+      "artifactName": "orchestra-sf-linux-REQUIRES_FROZEN_C_40_HEX",
+      "runId": 0,
+      "attempt": 0,
+      "sourceSHA": "REQUIRES_FROZEN_C_40_HEX",
+      "checkoutSHA": "REQUIRES_FROZEN_C_40_HEX",
+      "selectedRevision": "REQUIRES_FROZEN_C_40_HEX",
+      "archiveFile": "orchestra-sf-linux-x64-baseline.tar.gz",
+      "archiveSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "binarySha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "buildReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    "factory": {
+      "artifactName": "sf-factory-package-REQUIRES_RUN_ID_ATTEMPT_REQUIRES_FROZEN_C_40_HEX",
+      "runId": 0,
+      "attempt": 0,
+      "githubRunHeadSha": "REQUIRES_FROZEN_C_40_HEX",
+      "sourceSHA": "REQUIRES_FROZEN_C_40_HEX",
+      "checkoutSHA": "REQUIRES_FROZEN_C_40_HEX",
+      "expectedSourceSHA": "REQUIRES_FROZEN_C_40_HEX",
+      "archiveFile": "orchestra-sf-factory-linux-x64-baseline.tar.gz",
+      "archiveSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "manifestSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "bundleSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "factoryReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "extractedOutsideCheckout": false
+    },
+    "installed": {
+      "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+      "artifactSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "releaseRoot": "/opt/orchestra-sf/releases/REQUIRES_FROZEN_C_40_HEX",
+      "binaryPath": "/opt/orchestra-sf/releases/REQUIRES_FROZEN_C_40_HEX/bin/orchestra",
+      "factoryPath": "/opt/orchestra-sf/releases/REQUIRES_FROZEN_C_40_HEX/factory/installation.mjs",
+      "policyRoot": "/opt/orchestra-sf/releases/REQUIRES_FROZEN_C_40_HEX/product/ai",
+      "webRoot": "/opt/orchestra-sf/releases/REQUIRES_FROZEN_C_40_HEX/web",
+      "cliBinarySha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "factoryBundleSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "policyAssetCount": 0,
+      "installationReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    }
+  },
+  "ci": {
+    "candidateSha": "REQUIRES_FROZEN_C_40_HEX",
+    "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+    "effectiveGithubSha": "REQUIRES_FROZEN_C_40_HEX",
+    "runId": 0,
+    "attempt": 0,
+    "verify": "NOT_RUN",
+    "jobs": [
+      {
+        "id": "sf/preflight",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/static-and-contracts",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/linux-native-omni",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/test-CI-SF",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/test-CI-CLI",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/test-CI-APP-SRC",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/test-CI-APP-BROWSER",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/test-CI-ATLAS-BUSINESS",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/test-CI-UI-OPERATIONS",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/test-CI-UI-DECISIONS",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/test-CI-UI-REPORTS",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      },
+      {
+        "id": "sf/verify",
+        "jobId": 0,
+        "runId": 0,
+        "attempt": 0,
+        "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+        "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+        "conclusion": "NOT_RUN",
+        "artifactOrLogSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+      }
+    ],
+    "recipeReceipts": [
+      {
+        "id": "sf/test-CI-SF",
+        "sha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+        "receipt": {
+          "schemaVersion": 1,
+          "suiteId": "sf/test-CI-SF",
+          "kind": "bun",
+          "status": "NOT_RUN",
+          "exitCode": null,
+          "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+          "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+          "runId": "0",
+          "attempt": "0",
+          "runnerOS": "REQUIRES_LINUX",
+          "runnerArch": "REQUIRES_X64",
+          "executedTests": 0,
+          "reportSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+        }
+      },
+      {
+        "id": "sf/test-CI-CLI",
+        "sha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+        "receipt": {
+          "schemaVersion": 1,
+          "suiteId": "sf/test-CI-CLI",
+          "kind": "bun",
+          "status": "NOT_RUN",
+          "exitCode": null,
+          "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+          "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+          "runId": "0",
+          "attempt": "0",
+          "runnerOS": "REQUIRES_LINUX",
+          "runnerArch": "REQUIRES_X64",
+          "executedTests": 0,
+          "reportSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+        }
+      },
+      {
+        "id": "sf/test-CI-APP-SRC",
+        "sha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+        "receipt": {
+          "schemaVersion": 1,
+          "suiteId": "sf/test-CI-APP-SRC",
+          "kind": "bun",
+          "status": "NOT_RUN",
+          "exitCode": null,
+          "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+          "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+          "runId": "0",
+          "attempt": "0",
+          "runnerOS": "REQUIRES_LINUX",
+          "runnerArch": "REQUIRES_X64",
+          "executedTests": 0,
+          "reportSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+        }
+      },
+      {
+        "id": "sf/test-CI-APP-BROWSER",
+        "sha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+        "receipt": {
+          "schemaVersion": 1,
+          "suiteId": "sf/test-CI-APP-BROWSER",
+          "kind": "bun",
+          "status": "NOT_RUN",
+          "exitCode": null,
+          "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+          "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+          "runId": "0",
+          "attempt": "0",
+          "runnerOS": "REQUIRES_LINUX",
+          "runnerArch": "REQUIRES_X64",
+          "executedTests": 0,
+          "reportSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+        }
+      },
+      {
+        "id": "sf/test-CI-ATLAS-BUSINESS",
+        "sha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+        "receipt": {
+          "schemaVersion": 1,
+          "suiteId": "sf/test-CI-ATLAS-BUSINESS",
+          "kind": "bun",
+          "status": "NOT_RUN",
+          "exitCode": null,
+          "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+          "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+          "runId": "0",
+          "attempt": "0",
+          "runnerOS": "REQUIRES_LINUX",
+          "runnerArch": "REQUIRES_X64",
+          "executedTests": 0,
+          "reportSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+        }
+      },
+      {
+        "id": "sf/test-CI-UI-OPERATIONS",
+        "sha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+        "receipt": {
+          "schemaVersion": 1,
+          "suiteId": "sf/test-CI-UI-OPERATIONS",
+          "kind": "playwright",
+          "status": "NOT_RUN",
+          "exitCode": null,
+          "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+          "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+          "runId": "0",
+          "attempt": "0",
+          "runnerOS": "REQUIRES_LINUX",
+          "runnerArch": "REQUIRES_X64",
+          "executedTests": 0,
+          "reportSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+        }
+      },
+      {
+        "id": "sf/test-CI-UI-DECISIONS",
+        "sha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+        "receipt": {
+          "schemaVersion": 1,
+          "suiteId": "sf/test-CI-UI-DECISIONS",
+          "kind": "playwright",
+          "status": "NOT_RUN",
+          "exitCode": null,
+          "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+          "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+          "runId": "0",
+          "attempt": "0",
+          "runnerOS": "REQUIRES_LINUX",
+          "runnerArch": "REQUIRES_X64",
+          "executedTests": 0,
+          "reportSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+        }
+      },
+      {
+        "id": "sf/test-CI-UI-REPORTS",
+        "sha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+        "receipt": {
+          "schemaVersion": 1,
+          "suiteId": "sf/test-CI-UI-REPORTS",
+          "kind": "playwright",
+          "status": "NOT_RUN",
+          "exitCode": null,
+          "sourceSha": "REQUIRES_FROZEN_C_40_HEX",
+          "checkoutSha": "REQUIRES_FROZEN_C_40_HEX",
+          "runId": "0",
+          "attempt": "0",
+          "runnerOS": "REQUIRES_LINUX",
+          "runnerArch": "REQUIRES_X64",
+          "executedTests": 0,
+          "reportSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+        }
+      }
+    ]
+  },
+  "proofs": [
+    {
+      "id": "Q01-TRANSPORT-GUEST",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "Q01-TRANSPORT-INVALID-OWNER",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "Q01-TRANSPORT-STALE-FENCE",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "U39",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "U40",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "AM01",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "AM02",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "AM03",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "AM04",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "AM05",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    },
+    {
+      "id": "AM06",
+      "status": "BLOCKED_BY_ENV",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF",
+      "processReceiptSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "originalProducerObservationSha256": "REQUIRES_OBSERVED_SHA256_64_HEX"
+    }
+  ],
+  "azure": [
+    {
+      "id": "AZ01-DEPLOY",
+      "status": "BLOCKED_BY_ENV",
+      "candidateSha": "REQUIRES_FROZEN_C_40_HEX",
+      "artifactSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "immutableEvidenceSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF"
+    },
+    {
+      "id": "AZ02-ENTRA",
+      "status": "BLOCKED_BY_ENV",
+      "candidateSha": "REQUIRES_FROZEN_C_40_HEX",
+      "artifactSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "immutableEvidenceSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF"
+    },
+    {
+      "id": "AZ03-RESTORE-ROLLBACK",
+      "status": "BLOCKED_BY_ENV",
+      "candidateSha": "REQUIRES_FROZEN_C_40_HEX",
+      "artifactSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "immutableEvidenceSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF"
+    },
+    {
+      "id": "AZ07-PROTECTED-IMMUTABLE-RELEASE",
+      "status": "BLOCKED_BY_ENV",
+      "candidateSha": "REQUIRES_FROZEN_C_40_HEX",
+      "artifactSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "immutableEvidenceSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "independentReviewRef": "REQUIRES_INDEPENDENT_REVIEW_REF"
+    }
+  ],
+  "reviews": [
+    {
+      "personId": "REQUIRES_INDEPENDENT_REVIEWER_1_NOT_OWNER",
+      "reviewRef": "REQUIRES_REVIEW_REF",
+      "signedReviewSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "disposition": "NOT_REVIEWED"
+    },
+    {
+      "personId": "REQUIRES_INDEPENDENT_REVIEWER_2_NOT_OWNER",
+      "reviewRef": "REQUIRES_REVIEW_REF",
+      "signedReviewSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "disposition": "NOT_REVIEWED"
+    },
+    {
+      "personId": "REQUIRES_INDEPENDENT_REVIEWER_3_NOT_OWNER",
+      "reviewRef": "REQUIRES_REVIEW_REF",
+      "signedReviewSha256": "REQUIRES_OBSERVED_SHA256_64_HEX",
+      "disposition": "NOT_REVIEWED"
+    }
+  ],
+  "owner": {
+    "personId": "Daniel França",
+    "decision": "NO_GO",
+    "approvalRef": "REQUIRES_EXPLICIT_GO_APPROVAL_REF",
+    "approvedUtc": "REQUIRES_REAL_ISO8601_UTC"
+  }
+}
