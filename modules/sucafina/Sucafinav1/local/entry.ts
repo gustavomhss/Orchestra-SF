@@ -282,6 +282,12 @@ export async function createConfiguredInstallation(
         const supreme = await identity.authenticate(request, { surface: "dashboard", roleMap: sfSupremeRoleMap }).catch(() => null)
         if (!supreme?.roles.some((role) => role.surface === "dashboard" && role.role === "admin"))
           return new Response("Access denied", { status: 403, headers: { "Cache-Control": "no-store" } })
+        // Lightweight owner-bound discovery for the native Sucafina Home link.
+        // HEAD never enumerates Graph identities, operations or grants.
+        if (request.method === "HEAD")
+          return new Response(null, { status: 204, headers: {
+            "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
+          } })
         const directory = await identity.graphDirectory?.(request).catch(() => undefined)
         if (!directory || !directory.users.some((person) => person.id === supreme.id && person.groupIds.includes(SF_SUPREME_ADMIN_GROUP_ID)))
           return new Response("Microsoft directory unavailable", { status: 503, headers: { "Cache-Control": "no-store" } })
