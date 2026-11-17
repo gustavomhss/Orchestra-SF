@@ -5,31 +5,42 @@ This package closes the missing fail-closed preflight for the **21 model-user jo
 - 13 `BLOCKED_CAPABILITY` candidates;
 - 8 `BLOCKED_ENVIRONMENT` candidates.
 
-It does not execute those journeys. It observes whether each reviewed prerequisite exists on one exact installed candidate and emits either a ready/incomplete result or a sanitized `sf-uat-evidence-v1` blocked record suitable for the existing append-only UAT ledger.
+It does not execute those journeys. It observes whether each reviewed prerequisite exists on one exact installed candidate and emits a ready/incomplete result or a sanitized blocked record compatible with the append-only UAT ledger.
+
+## Supported entrypoint
+
+Use `docs/qa/sucafina/uat-cio/scripts/blocked_harness/control.py` for both evaluation and verification. `evaluate.py` is the lower-level library; its structural checker alone is not the acceptance oracle.
+
+The controller additionally:
+
+- binds every selected `actor_role` to an actor explicitly declared by the canonical source story;
+- validates every generated blocked record with `reconcile_execution.validate_record`;
+- re-evaluates the complete bundle from the external reviewed selection and observations during checking;
+- rejects coordinated edits to a result/record and its manifest digest.
 
 ## Why classification is an input
 
-The model-user-journey audit publishes the aggregate counts 13 and 8, but not a machine-readable per-story membership map. The harness therefore requires a cold-reviewed classification receipt with exactly 21 unique IDs. It will not infer capability or environment status from a title, route, open PR, branch name or absence of a UI control.
+The audit publishes the aggregate counts 13 and 8, but not a machine-readable per-story membership map. The harness therefore requires a cold-reviewed classification receipt containing exactly 21 unique IDs. It will not infer capability or environment status from a title, route, branch name, open PR or absent UI control.
 
-## Closed contracts
+## Closed inputs
 
-`blocked-harness/contracts.schema.json` describes two private inputs.
+`blocked-harness/contracts.schema.json` documents two private sanitized inputs.
 
-### 1. Reviewed classification
+### Reviewed classification
 
 Each story declares:
 
-- exact story ID and actor role alias;
+- exact story ID and an actor role already present in the canonical story;
 - `BLOCKED_CAPABILITY` or `BLOCKED_ENVIRONMENT`;
 - immutable classification evidence reference;
 - one or more explicit requirements;
-- requirement kind, safe blocked reason code and human-readable description.
+- requirement kind, safe blocked reason code and description.
 
-The evaluator enforces exactly **13 capability + 8 environment** stories. Capability stories may use only capability requirement kinds; environment stories may use only environment kinds.
+The controller enforces exactly **13 capability + 8 environment** stories. Capability stories may use only capability requirement kinds; environment stories may use only environment kinds.
 
-### 2. Exact-candidate observations
+### Exact-candidate observations
 
-Every requirement must have exactly one sanitized observation pinned to the same:
+Every requirement must have one sanitized observation pinned to the same:
 
 - product commit SHA;
 - Git tree SHA;
@@ -37,17 +48,9 @@ Every requirement must have exactly one sanitized observation pinned to the same
 - preflight bundle SHA-256;
 - UTC observation timestamp.
 
-Observation states are only:
-
-- `PRESENT`;
-- `ABSENT`;
-- `UNAVAILABLE`.
-
-Raw tokens, cookies, passwords, authorization headers and client secrets are forbidden from the input and output contracts.
+Observation states are only `PRESENT`, `ABSENT` or `UNAVAILABLE`. Raw tokens, cookies, passwords, authorization headers and client secrets are forbidden from input and output contracts.
 
 ## Result semantics
-
-The evaluator deliberately distinguishes absence from inability to inspect:
 
 | Story class | Observation | Result |
 |---|---|---|
@@ -57,21 +60,23 @@ The evaluator deliberately distinguishes absence from inability to inspect:
 | Environment | any requirement `ABSENT` or `UNAVAILABLE` | `BLOCKED_ENVIRONMENT` |
 | Environment | every requirement `PRESENT` | `READY_FOR_EXECUTION` |
 
-`READY_FOR_EXECUTION` is **not PASS**. The journey still needs its real actor, browser, source reread, contraproof and evidence review.
+`READY_FOR_EXECUTION` is **not PASS**. The journey still needs its real actor, browser, source reread, contraproof and independent evidence review.
 
-For `BLOCKED_CAPABILITY` and `BLOCKED_ENVIRONMENT`, the harness creates a sanitized `sf-uat-evidence-v1` record containing the exact candidate pins, operator/actor aliases, observed result, safe reason code and secured trace reference. The existing `reconcile_execution.py --record` command remains the only writer of the committed UAT matrix and append-only ledger.
+Terminal `BLOCKED_CAPABILITY` and `BLOCKED_ENVIRONMENT` results create sanitized `sf-uat-evidence-v1` records. `READY_FOR_EXECUTION` and `PRECHECK_INCOMPLETE` create no ledger record.
 
 ## Evaluate and verify
 
-Run in an authorized operator environment. Both the inputs and output must stay outside the checkout:
+Run in an authorized operator environment. Inputs and output must remain outside the checkout:
 
 ```bash
-python3 docs/qa/sucafina/uat-cio/scripts/blocked_harness/evaluate.py evaluate \
+python3 docs/qa/sucafina/uat-cio/scripts/blocked_harness/control.py evaluate \
   --selection /private/orchestra-sf/blocked-21-selection.json \
   --observations /private/orchestra-sf/blocked-21-observations.json \
   --output /private/orchestra-sf/blocked-21-result
 
-python3 docs/qa/sucafina/uat-cio/scripts/blocked_harness/evaluate.py check \
+python3 docs/qa/sucafina/uat-cio/scripts/blocked_harness/control.py check \
+  --selection /private/orchestra-sf/blocked-21-selection.json \
+  --observations /private/orchestra-sf/blocked-21-observations.json \
   --directory /private/orchestra-sf/blocked-21-result
 ```
 
@@ -80,10 +85,10 @@ The output contains:
 ```text
 manifest.json
 results/SF-....json
-records/SF-....json   # only for terminal BLOCKED_* results
+records/SF-....json   # terminal BLOCKED_* results only
 ```
 
-The verifier rejects changed digests, mixed candidate SHAs, missing observations, unexpected files, unsafe refs, secret-bearing keys and any execution or PASS claim.
+The evaluate command prints the manifest SHA-256. Preserve it with the reviewed classification receipt and observation bundle. The check command rebuilds every result and record from those external inputs and requires exact JSON-object equality.
 
 ## Ledger admission
 
@@ -95,17 +100,18 @@ python3 docs/qa/sucafina/uat-cio/scripts/reconcile_execution.py \
   --evidence-ref QA-PREFLIGHT-ALIAS
 ```
 
-A `READY_FOR_EXECUTION` or `PRECHECK_INCOMPLETE` result intentionally has no ledger record. It is not a terminal story outcome.
+The control entrypoint validates compatibility but never writes the ledger itself.
 
 ## CI and contraproofs
 
-The tests live at `scripts/blocked_harness/test_reconcile_history.py`, matching the existing UAT preflight discovery pattern without changing workflows. They prove:
+The test module remains named `blocked_harness/test_reconcile_history.py`, matching the existing UAT preflight discovery pattern without workflow changes. It proves:
 
 - exact 13/8 cardinality;
-- compatibility of generated blocked records with `reconcile_execution.validate_record`;
-- `UNAVAILABLE` capability probes cannot be misreported as capability absence;
+- canonical actor-role binding;
+- compatibility with the append-only ledger contract;
+- `UNAVAILABLE` capability probes cannot become capability absence;
 - present dependencies yield only `READY_FOR_EXECUTION`, never PASS;
-- candidate mismatch and record tampering fail closed;
+- SHA mismatch, ordinary tampering and coordinated manifest tampering fail closed;
 - output cannot be stored in Git.
 
 No product, workflow, guard, waiver, tenant, Azure or release path is changed by this harness.

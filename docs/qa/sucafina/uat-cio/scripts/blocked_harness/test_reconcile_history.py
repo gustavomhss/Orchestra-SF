@@ -4,8 +4,13 @@ import tempfile
 import unittest
 
 import reconcile_execution
+from blocked_harness.control import (
+    evaluate_exact_preflight,
+    verify_exact_bundle,
+)
 from blocked_harness.evaluate import (
     check_bundle,
+    digest,
     evaluate,
     write_bundle,
 )
@@ -81,7 +86,7 @@ class BlockedHarnessTests(unittest.TestCase):
         inventory = self.inventory()
         selection = self.selection(inventory)
         observations = self.observations(selection)
-        manifest, results, records = evaluate(inventory, selection, observations)
+        manifest, results, records = evaluate_exact_preflight(inventory, selection, observations)
         self.assertEqual(manifest["story_count"], 21)
         self.assertEqual(manifest["result_counts"]["BLOCKED_CAPABILITY"], 13)
         self.assertEqual(manifest["result_counts"]["BLOCKED_ENVIRONMENT"], 8)
@@ -102,8 +107,31 @@ class BlockedHarnessTests(unittest.TestCase):
             root.mkdir()
             output = base / "private-preflight"
             write_bundle(output, manifest, results, records, root=root)
-            verified = check_bundle(output)
+            verified = verify_exact_bundle(output, inventory, selection, observations)
             self.assertEqual(verified["result_counts"], manifest["result_counts"])
+
+    def test_rejects_actor_role_not_declared_by_source_story(self) -> None:
+        inventory = self.inventory()
+        selection = self.selection(inventory)
+        selection["stories"][0]["actor_role"] = "FOREIGN-ROLE"
+        with self.assertRaisesRegex(ValueError, "actor_role is not declared"):
+            evaluate_exact_preflight(inventory, selection, self.observations(selection))
+
+    def test_accepts_secondary_actor_declared_by_multi_actor_story(self) -> None:
+        inventory = self.inventory()
+        first_id = sorted(inventory)[0]
+        inventory[first_id] = {
+            **inventory[first_id],
+            "actors": [inventory[first_id]["actor"], "SECONDARY-ROLE"],
+        }
+        selection = self.selection(inventory)
+        selection["stories"][0]["actor_role"] = "SECONDARY-ROLE"
+        manifest, _, _ = evaluate_exact_preflight(
+            inventory,
+            selection,
+            self.observations(selection),
+        )
+        self.assertEqual(manifest["story_count"], 21)
 
     def test_unavailable_capability_is_incomplete_not_absent(self) -> None:
         inventory = self.inventory()
@@ -113,7 +141,7 @@ class BlockedHarnessTests(unittest.TestCase):
         for row in observations["observations"]:
             if row["story_id"] == first["id"]:
                 row["state"] = "UNAVAILABLE"
-        manifest, results, records = evaluate(inventory, selection, observations)
+        manifest, results, records = evaluate_exact_preflight(inventory, selection, observations)
         self.assertEqual(results[first["id"]]["result"], "PRECHECK_INCOMPLETE")
         self.assertNotIn(first["id"], records)
         self.assertEqual(manifest["result_counts"]["PRECHECK_INCOMPLETE"], 1)
@@ -127,7 +155,7 @@ class BlockedHarnessTests(unittest.TestCase):
         for row in observations["observations"]:
             if row["story_id"] == first["id"]:
                 row["state"] = "PRESENT"
-        manifest, results, records = evaluate(inventory, selection, observations)
+        manifest, results, records = evaluate_exact_preflight(inventory, selection, observations)
         self.assertEqual(results[first["id"]]["result"], "READY_FOR_EXECUTION")
         self.assertFalse(results[first["id"]]["journey_executed"])
         self.assertNotIn(first["id"], records)
@@ -139,7 +167,7 @@ class BlockedHarnessTests(unittest.TestCase):
         selection["stories"][12]["classification"] = "BLOCKED_ENVIRONMENT"
         selection["stories"][12]["requirements"][0]["kind"] = "browser"
         with self.assertRaisesRegex(ValueError, "expected 13 capability"):
-            evaluate(inventory, selection, self.observations(selection))
+            evaluate_exact_preflight(inventory, selection, self.observations(selection))
 
     def test_rejects_candidate_mismatch(self) -> None:
         inventory = self.inventory()
@@ -147,13 +175,13 @@ class BlockedHarnessTests(unittest.TestCase):
         observations = self.observations(selection)
         observations["candidate_sha"] = "9" * 40
         with self.assertRaisesRegex(ValueError, "does not match"):
-            evaluate(inventory, selection, observations)
+            evaluate_exact_preflight(inventory, selection, observations)
 
     def test_detects_tampered_record(self) -> None:
         inventory = self.inventory()
         selection = self.selection(inventory)
         observations = self.observations(selection)
-        manifest, results, records = evaluate(inventory, selection, observations)
+        manifest, results, records = evaluate_exact_preflight(inventory, selection, observations)
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)
             root = base / "repo"
@@ -167,6 +195,33 @@ class BlockedHarnessTests(unittest.TestCase):
             path.write_text(json.dumps(record), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "record digest mismatch"):
                 check_bundle(output)
+
+    def test_rejects_coordinated_record_and_manifest_tampering(self) -> None:
+        inventory = self.inventory()
+        selection = self.selection(inventory)
+        observations = self.observations(selection)
+        manifest, results, records = evaluate_exact_preflight(inventory, selection, observations)
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            root = base / "repo"
+            root.mkdir()
+            output = base / "private-preflight"
+            write_bundle(output, manifest, results, records, root=root)
+            story_id = sorted(records)[0]
+            record_path = output / "records" / f"{story_id}.json"
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            record["actual_result"] = "coordinated but internally consistent tamper"
+            record_path.write_text(json.dumps(record), encoding="utf-8")
+
+            manifest_path = output / "manifest.json"
+            changed_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            entry = next(item for item in changed_manifest["entries"] if item["story_id"] == story_id)
+            entry["record_sha256"] = digest(record)
+            manifest_path.write_text(json.dumps(changed_manifest), encoding="utf-8")
+
+            self.assertEqual(check_bundle(output)["story_count"], 21)
+            with self.assertRaisesRegex(ValueError, "canonical selection"):
+                verify_exact_bundle(output, inventory, selection, observations)
 
     def test_refuses_repository_output(self) -> None:
         inventory = self.inventory()
