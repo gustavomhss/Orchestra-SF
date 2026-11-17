@@ -67,7 +67,6 @@ import { sfAnalysisSourceNamespaces } from "./analysis-namespaces.ts"
 import { createSfStaleAnalysisAccess } from "./analysis-stale-commit.ts"
 import { createSfAnalysisLifecycleContext, createSfAnalysisRunContext } from "./analysis-run-context.ts"
 import type { SfAnalysisStartInput } from "./analysis-http.ts"
-import type { SfProductHtml } from "../../../../modules/sucafina/Sucafinav1/product/integration/host-presentation.ts"
 import { createSfRoutinePublicationContribution } from "./routine-publication.ts"
 import { createSfInstalledRoutinePublication } from "./routine-installed-publication.ts"
 import { createSfRoutineInputReaders } from "./routine-inputs.ts"
@@ -1035,10 +1034,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
         authority, business, reviews: extended.reviews, persistence: input.persistence })
     : undefined
   const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
-  const services: SfHostServices & { productHtml: SfProductHtml; nativeUiProducts: typeof nativeUiProducts;
+  const services: SfHostServices & { nativeUiProducts: typeof nativeUiProducts;
     routineEvidence: Pick<typeof nativePhases.services, "readExecution" | "openResult"> } = { ...authority, nativeUiProducts,
     ...(nativeReviewProjection ? { nativeReviewProjection } : {}),
-    productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
+    productView: business.procurementQueueView, caseCreationRecovery: business.cases.recoverCreation,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work, workDestinations: { read: workDestinations.read },
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
     routineRuns: nativePhases.services.routineRuns,
