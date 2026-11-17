@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: PR-32000 · Gabriel holder da etapa PR. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Entrar como Gabriel no contexto correto
-3. Abrir My approvals e localizar PR-32000 pendente
-4. Analisar valores, etapa, histórico, fornecedor e orçamento
-5. Aprovar com justificativa e conferir receipt/releitura
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Entrar como Gabriel no contexto correto
+3. **[UI_ACTION]** Abrir My approvals e localizar PR-32000 pendente
+4. **[UI_ACTION]** Analisar valores, etapa, histórico, fornecedor e orçamento
+5. **[READ_ONLY_WITNESS]** Aprovar com justificativa e conferir receipt/releitura
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

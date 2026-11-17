@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: FX-EURUSD-SEP26 · EUR→USD =1.08 · fonte sintética 2026-09-30. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir FX rates e selecionar competência setembro/2026
-3. Consultar par EUR/USD e proveniência
-4. Adicionar/editar taxa 1.08 em hipótese, se policy permitir
-5. Comparar cotações de EUR 28000 de Procurement
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir FX rates e selecionar competência setembro/2026
+3. **[UI_ACTION]** Consultar par EUR/USD e proveniência
+4. **[UI_ACTION]** Adicionar/editar taxa 1.08 em hipótese, se policy permitir
+5. **[READ_ONLY_WITNESS]** Comparar cotações de EUR 28000 de Procurement
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: R-07 · EDI Logistics · likelihood 3/5 impact 4/5. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Criar risco R-07 com projeto P-004 e owner
-3. Registrar mitigação e revisão com data
-4. Alterar severidade conforme política registrada
-5. Revisar no painel de prioridades do CIO
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Criar risco R-07 com projeto P-004 e owner
+3. **[READ_ONLY_WITNESS]** Registrar mitigação e revisão com data
+4. **[UI_ACTION]** Alterar severidade conforme política registrada
+5. **[UI_ACTION]** Revisar no painel de prioridades do CIO
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

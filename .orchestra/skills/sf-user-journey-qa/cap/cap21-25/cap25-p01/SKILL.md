@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: PR-32000 · pedido USD 32000 · CC IT-BR. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Criar requisição PR-32000 com item e justificativa da integração EDI
-3. Salvar draft, reler e submeter PR
-4. Entrar como Buyer e consultar sourcing somente após etapa admitida
-5. Conferir histórico e relação com contrato CON-042
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Criar requisição PR-32000 com item e justificativa da integração EDI
+3. **[UI_ACTION]** Salvar draft, reler e submeter PR
+4. **[UI_ACTION]** Entrar como Buyer e consultar sourcing somente após etapa admitida
+5. **[READ_ONLY_WITNESS]** Conferir histórico e relação com contrato CON-042
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: PR-32000 · draft→PR→sourcing→PO · 3 pedidos sintéticos no painel. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Procurement Dashboard para a organização SF-LAB
-3. Reconstruir contagem por PR pendente, sourcing e PO com três IDs
-4. Abrir pedido PR-32000 e voltar com filtros intactos
-5. Conferir aging por timestamp de entrada no estágio e comparação com fila de Gabriel
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Procurement Dashboard para a organização SF-LAB
+3. **[UI_ACTION]** Reconstruir contagem por PR pendente, sourcing e PO com três IDs
+4. **[UI_ACTION]** Abrir pedido PR-32000 e voltar com filtros intactos
+5. **[READ_ONLY_WITNESS]** Conferir aging por timestamp de entrada no estágio e comparação com fila de Gabriel
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

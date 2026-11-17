@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: HC-SEP-26 · 42 planejados / 40 ocupados / 2 vagas. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Planner Headcount setembro/2026
-3. Inspecionar posição VAG-02, rate e centro de custo
-4. Alterar hipótese de contratação de outubro, não actual de setembro
-5. Comparar roster e custo mensal
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Planner Headcount setembro/2026
+3. **[READ_ONLY_WITNESS]** Inspecionar posição VAG-02, rate e centro de custo
+4. **[UI_ACTION]** Alterar hipótese de contratação de outubro, não actual de setembro
+5. **[READ_ONLY_WITNESS]** Comparar roster e custo mensal
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

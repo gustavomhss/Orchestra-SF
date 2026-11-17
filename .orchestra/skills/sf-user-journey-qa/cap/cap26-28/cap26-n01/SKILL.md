@@ -23,12 +23,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 - Capturar estado da fonte, revisão, permissões e contadores de aplicação ANTES da tentativa.
 - Executar a ameaça somente na instalação de QA isolada com atores autorizados para teste negativo.
 
-## Passos a executar na interface
+## Setup comprovável deste caso (não substituir por fixture imaginada)
 
-1. Abrir a superfície pela rota direta e pela navegação normal, para distinguir UI de autorização do host.
-2. Buyer Pedro tenta aprovar a etapa do holder Gabriel por URL direta
-3. Repetir a tentativa após refresh e com uma segunda sessão independente, sem alterar a intenção do teste.
-4. Reconsultar fonte, snapshot e auditoria; preservar resposta HTTP, tela e evidência de ausência de mutation.
+1. Criar ou localizar PR sintética em pr_pending com holderRef apontando para Gabriel e capturar o estágio e versão pela UI.
+2. Autenticar Pedro em outro perfil, confirmar papel buyer e ausência de papel holder nesta etapa; abrir URL autorizada somente para seu próprio perfil.
+3. Tentar aprovação no controle visível ou deep link; confirmar negação real e ausência de etapa/histórico novo.
+
+**Protocolo negativo compartilhado:** abrir rota e navegação com ator real, capturar before; produzir somente a contraprova específica abaixo; repetir refresh/segunda sessão se o risco exigir; reler fonte/auditoria para comprovar não-commit. Sem precondição admitida, marcar BLOCKED, não PASS.
+
+## Passos, mecanismos e limites das ferramentas
+
+1. **[UI_ACTION]** Buyer Pedro tenta aprovar a etapa do holder Gabriel por URL direta
 
 ## Oráculos observáveis (não reescrever para passar)
 

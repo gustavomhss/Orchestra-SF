@@ -21,18 +21,18 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - PR-32000: integrar dados de embarques; três cotações A32400USD, B28000EUR×1.08=30240USD, C29000USD inelegível.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Caio cria PR32000 em USD e submete justificativa
-2. Gabriel revisa pedido como holder atual e aprova etapa PR
-3. Pedro abre sourcing e associa fornecedores ativos
-4. Pedro registra A, B e C com suas elegibilidades
-5. Sofie confirma FX temporal 1.08 e moeda
-6. CIO abre CASE-EDI-01 para comparar A/B/C
-7. CIO escolhe B e registra justificativa
-8. Pedro avança sourcing, aprovação e PO por estados existentes
-9. Gabriel aprova somente estágio em que é holder
-10. Consultar recibo de emissão interna e não alegar transmissão a ERP
+1. **[UI_ACTION]** Caio cria PR32000 em USD e submete justificativa
+2. **[UI_ACTION]** Gabriel revisa pedido como holder atual e aprova etapa PR
+3. **[UI_ACTION]** Pedro abre sourcing e associa fornecedores ativos
+4. **[UI_ACTION]** Pedro registra A, B e C com suas elegibilidades
+5. **[UI_ACTION]** Sofie confirma FX temporal 1.08 e moeda
+6. **[READ_ONLY_WITNESS]** CIO abre CASE-EDI-01 para comparar A/B/C
+7. **[UI_ACTION]** CIO escolhe B e registra justificativa
+8. **[UI_ACTION]** Pedro avança sourcing, aprovação e PO por estados existentes
+9. **[UI_ACTION]** Gabriel aprova somente estágio em que é holder
+10. **[UI_ACTION]** Consultar recibo de emissão interna e não alegar transmissão a ERP
 
 ## Oráculos observáveis (não reescrever para passar)
 

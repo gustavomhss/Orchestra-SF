@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: HOT-EDI-07 · atraso fictício 6 dias · responsável LEADER-Caio. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Hot Topics e localizar HOT-EDI-07
-3. Criar tópico “Integração EDI Porto Santos” com prazo e owner de domínio
-4. Anexar projeto P-004 e nota M-002 usando referências selecionadas
-5. Encaminhar para revisão de Finance e verificar fila do responsável
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Hot Topics e localizar HOT-EDI-07
+3. **[UI_ACTION]** Criar tópico “Integração EDI Porto Santos” com prazo e owner de domínio
+4. **[UI_ACTION]** Anexar projeto P-004 e nota M-002 usando referências selecionadas
+5. **[READ_ONLY_WITNESS]** Encaminhar para revisão de Finance e verificar fila do responsável
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: PERF-01 · disponibilidade 99.7 vs SLA 99.9 · 3 subitens. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir IT Performance Contract
-3. Criar item PERF-01 com owner e meta
-4. Adicionar três subitens e registrar evidência mensal
-5. Revisar atraso e eventual correção
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir IT Performance Contract
+3. **[UI_ACTION]** Criar item PERF-01 com owner e meta
+4. **[READ_ONLY_WITNESS]** Adicionar três subitens e registrar evidência mensal
+5. **[UI_ACTION]** Revisar atraso e eventual correção
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

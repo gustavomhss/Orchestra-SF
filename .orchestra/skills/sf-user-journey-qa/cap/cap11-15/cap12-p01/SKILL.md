@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: SEC-SEP-26 · 4 endpoints críticos sem patch / 200 · 0 breaches conhecidos. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir IT Security KPIs e filtrar setembro/2026
-3. Revisar denominador, período, fonte e tendência
-4. Atualizar referência do KPI autorizado
-5. Inspecionar ações e incidentes ligados
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir IT Security KPIs e filtrar setembro/2026
+3. **[UI_ACTION]** Revisar denominador, período, fonte e tendência
+4. **[UI_ACTION]** Atualizar referência do KPI autorizado
+5. **[READ_ONLY_WITNESS]** Inspecionar ações e incidentes ligados
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

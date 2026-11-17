@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: ALLOC-EDI-01 · 60% Centro IT-EU · 40% IT-BR. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Entities & allocations
-3. Criar alocação ALLOC-EDI-01 para contrato EDI
-4. Registrar splits 60/40 por entidade autorizada
-5. Conferir consolidação em Planner e BI
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Entities & allocations
+3. **[UI_ACTION]** Criar alocação ALLOC-EDI-01 para contrato EDI
+4. **[READ_ONLY_WITNESS]** Registrar splits 60/40 por entidade autorizada
+5. **[READ_ONLY_WITNESS]** Conferir consolidação em Planner e BI
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

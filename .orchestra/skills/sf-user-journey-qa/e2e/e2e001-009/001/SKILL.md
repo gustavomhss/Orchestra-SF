@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Às 08:00, CIO revisa backlog EDI HOT-EDI-07, R-07, forecast USD590000 e pedido PR-32000.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. CIO autentica e escolhe instalação correta
-2. Abre Hoje e confere autoria e data de cada alerta
-3. Abre dashboard e identifica P-004/risco R-07
-4. Caio relata atraso de seis dias em Hot Topics
-5. Sofie confirma base do forecast sem aprovar mudança
-6. CIO cria pauta com data da fonte explícita
-7. Salva snapshot e delega ação a Caio
-8. CIO volta a Hoje e confirma que item foi encaminhado uma vez
+1. **[UI_ACTION]** CIO autentica e escolhe instalação correta
+2. **[UI_ACTION]** Abre Hoje e confere autoria e data de cada alerta
+3. **[UI_ACTION]** Abre dashboard e identifica P-004/risco R-07
+4. **[UI_ACTION]** Caio relata atraso de seis dias em Hot Topics
+5. **[UI_ACTION]** Sofie confirma base do forecast sem aprovar mudança
+6. **[UI_ACTION]** CIO cria pauta com data da fonte explícita
+7. **[UI_ACTION]** Salva snapshot e delega ação a Caio
+8. **[UI_ACTION]** CIO volta a Hoje e confirma que item foi encaminhado uma vez
 
 ## Oráculos observáveis (não reescrever para passar)
 

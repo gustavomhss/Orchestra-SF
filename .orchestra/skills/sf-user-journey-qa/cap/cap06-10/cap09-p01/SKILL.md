@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: PORT-2026 · 25 projetos sintéticos · P-004 crítico · P-009 CAPEX. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Portfolio Dashboard com filtro global
-3. Inspecionar distribuição por estado e orçamento dos 25 projetos
-4. Entrar no risco do P-004 e voltar ao dashboard
-5. Criar pauta executiva com projetos críticos
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Portfolio Dashboard com filtro global
+3. **[READ_ONLY_WITNESS]** Inspecionar distribuição por estado e orçamento dos 25 projetos
+4. **[UI_ACTION]** Entrar no risco do P-004 e voltar ao dashboard
+5. **[UI_ACTION]** Criar pauta executiva com projetos críticos
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

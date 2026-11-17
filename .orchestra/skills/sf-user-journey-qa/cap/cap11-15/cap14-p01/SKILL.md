@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: CON-042 · fornecedor SUP-003 · renovação 2027-02-01. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Vendor Contracts e localizar CON-042
-3. Registrar período/renovação e documento autorizado
-4. Relacionar contrato à solicitação PR-32000
-5. Verificar fornecedor vigente e link com sourcing
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Vendor Contracts e localizar CON-042
+3. **[READ_ONLY_WITNESS]** Registrar período/renovação e documento autorizado
+4. **[UI_ACTION]** Relacionar contrato à solicitação PR-32000
+5. **[READ_ONLY_WITNESS]** Verificar fornecedor vigente e link com sourcing
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

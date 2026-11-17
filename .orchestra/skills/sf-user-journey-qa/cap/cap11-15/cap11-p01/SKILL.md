@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: OPS-SEP-26 · uptime 99.7% · meta 99.9% · 3 incidentes. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir IT Operations setembro/2026
-3. Inspecionar SLO, incidentes e fonte de dados
-4. Editar mês mantendo unidade porcentagem
-5. Navegar para Security e retornar
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir IT Operations setembro/2026
+3. **[READ_ONLY_WITNESS]** Inspecionar SLO, incidentes e fonte de dados
+4. **[UI_ACTION]** Editar mês mantendo unidade porcentagem
+5. **[UI_ACTION]** Navegar para Security e retornar
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

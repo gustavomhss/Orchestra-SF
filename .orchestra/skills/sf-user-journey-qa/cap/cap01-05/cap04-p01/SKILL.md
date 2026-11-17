@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: OPEX-LIC-01 · USD 72000 → 84000 · centro de custo IT-OPS. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir OPEX Detail na hipótese V-2026-WHATIF-A
-3. Criar/editar linha OPEX-LIC-01 com justificativa “renovação SaaS”
-4. Salvar com revisão observada e voltar à lista
-5. Reabrir e comparar impacto anual e mensal
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir OPEX Detail na hipótese V-2026-WHATIF-A
+3. **[UI_ACTION]** Criar/editar linha OPEX-LIC-01 com justificativa “renovação SaaS”
+4. **[UI_ACTION]** Salvar com revisão observada e voltar à lista
+5. **[READ_ONLY_WITNESS]** Reabrir e comparar impacto anual e mensal
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

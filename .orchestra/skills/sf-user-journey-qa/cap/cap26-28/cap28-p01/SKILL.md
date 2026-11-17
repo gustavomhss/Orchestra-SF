@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: PROC-POLICY-2026 · estágios PR/SRC/PO · limite sintético 30000 USD. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Procurement Settings com papel admin de domínio
-3. Ler estágios, holders e regras efetivamente instaladas
-4. Solicitar alteração em ambiente QA sob política admitida
-5. Revalidar fluxo PR-32000 após revisão de policy
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Procurement Settings com papel admin de domínio
+3. **[UI_ACTION]** Ler estágios, holders e regras efetivamente instaladas
+4. **[UI_ACTION]** Solicitar alteração em ambiente QA sob política admitida
+5. **[UI_ACTION]** Revalidar fluxo PR-32000 após revisão de policy
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: CAPEX-SCANNER-01 · 91827 USD · 2027 · P-009. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Planner CAPEX na hipótese V-2027-WHATIF
-3. Relacionar item de CAPEX a P-009 e janela 2027
-4. Revisar aprovação e total consolidado
-5. Comparar com visão CAPEX Dashboard
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Planner CAPEX na hipótese V-2027-WHATIF
+3. **[UI_ACTION]** Relacionar item de CAPEX a P-009 e janela 2027
+4. **[UI_ACTION]** Revisar aprovação e total consolidado
+5. **[READ_ONLY_WITNESS]** Comparar com visão CAPEX Dashboard
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

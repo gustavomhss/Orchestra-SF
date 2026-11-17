@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: STK-011 · parceiro fictício Maritime Labs · owner P-003. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Stakeholder Management
-3. Registrar novo relacionamento com stakeholder STK-011
-4. Vincular HOT-EDI-07 e atualizar próxima ação
-5. Verificar que apenas papel autorizado pode ler notas restritas
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Stakeholder Management
+3. **[READ_ONLY_WITNESS]** Registrar novo relacionamento com stakeholder STK-011
+4. **[UI_ACTION]** Vincular HOT-EDI-07 e atualizar próxima ação
+5. **[READ_ONLY_WITNESS]** Verificar que apenas papel autorizado pode ler notas restritas
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

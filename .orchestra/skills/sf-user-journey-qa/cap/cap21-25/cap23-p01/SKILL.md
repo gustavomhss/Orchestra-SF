@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: V-2026-OFFICIAL locked; V-2026-WHATIF-A/B. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Versions e criar WHATIF-A a partir de baseline conhecido
-3. Inspecionar parentVersion, lock e competência
-4. Criar versão B independente
-5. Comparar A, B e official
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Versions e criar WHATIF-A a partir de baseline conhecido
+3. **[READ_ONLY_WITNESS]** Inspecionar parentVersion, lock e competência
+4. **[UI_ACTION]** Criar versão B independente
+5. **[READ_ONLY_WITNESS]** Comparar A, B e official
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

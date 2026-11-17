@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: EMP-SYN-014 · Gestão TI · líder ID P-001 · 1 FTE. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Team Structure e registrar membro sintético EMP-SYN-014
-3. Associar a líder por referência imutável e centro de custo
-4. Alterar cargo fictício e navegar pelo organograma
-5. Comparar quadro do produto com diretório Microsoft sem inferir equivalência
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[READ_ONLY_WITNESS]** Abrir Team Structure e registrar membro sintético EMP-SYN-014
+3. **[UI_ACTION]** Associar a líder por referência imutável e centro de custo
+4. **[UI_ACTION]** Alterar cargo fictício e navegar pelo organograma
+5. **[READ_ONLY_WITNESS]** Comparar quadro do produto com diretório Microsoft sem inferir equivalência
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

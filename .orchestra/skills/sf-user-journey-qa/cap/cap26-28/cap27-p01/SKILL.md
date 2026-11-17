@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: SUP-003 · Maritime Labs S.A. fictícia · status active. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Suppliers e selecionar SUP-003
-3. Atualizar contatos e status cadastral
-4. Consultar vínculo com CON-042 e PR-32000
-5. Revisar mascaramento dos dados bancários conforme grant
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Suppliers e selecionar SUP-003
+3. **[UI_ACTION]** Atualizar contatos e status cadastral
+4. **[UI_ACTION]** Consultar vínculo com CON-042 e PR-32000
+5. **[UI_ACTION]** Revisar mascaramento dos dados bancários conforme grant
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

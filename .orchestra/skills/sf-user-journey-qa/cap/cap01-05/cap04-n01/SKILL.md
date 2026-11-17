@@ -23,12 +23,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 - Capturar estado da fonte, revisão, permissões e contadores de aplicação ANTES da tentativa.
 - Executar a ameaça somente na instalação de QA isolada com atores autorizados para teste negativo.
 
-## Passos a executar na interface
+## Setup comprovável deste caso (não substituir por fixture imaginada)
 
-1. Abrir a superfície pela rota direta e pela navegação normal, para distinguir UI de autorização do host.
-2. FINANCE-B edita mesma linha no intervalo e FINANCE-A salva revisão velha
-3. Repetir a tentativa após refresh e com uma segunda sessão independente, sem alterar a intenção do teste.
-4. Reconsultar fonte, snapshot e auditoria; preservar resposta HTTP, tela e evidência de ausência de mutation.
+1. FINANCE-A abre a mesma linha e o mesmo período do Planner e registra sourceVersion e valor original sem salvar.
+2. FINANCE-B, em perfil de navegador autenticado diferente, altera o valor e verifica a nova versão na fonte.
+3. FINANCE-A tenta salvar seu formulário antigo; validar conflito CAS, valor novo preservado e rascunho local visível.
+
+**Protocolo negativo compartilhado:** abrir rota e navegação com ator real, capturar before; produzir somente a contraprova específica abaixo; repetir refresh/segunda sessão se o risco exigir; reler fonte/auditoria para comprovar não-commit. Sem precondição admitida, marcar BLOCKED, não PASS.
+
+## Passos, mecanismos e limites das ferramentas
+
+1. **[UI_ACTION]** FINANCE-B edita mesma linha no intervalo e FINANCE-A salva revisão velha
 
 ## Oráculos observáveis (não reescrever para passar)
 

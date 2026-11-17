@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - CIO prepara reunião com 25 projetos, notas extensas, períodos mistos e snapshot R1.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. CIO escolhe pauta com projetos P-001...P-025 e budget/risco
-2. Preserva R1 e registra digest e ordem dos 25 projetos
-3. Caio altera fonte do projeto P-004 e uma nota longa
-4. CIO reabre R1 em modo apresentação sem recapturar
-5. Cria R2 com mudanças explicitadas
-6. Compara R1/R2 distinguindo campos e comentário
-7. Gera DOCX e PPTX da R1 e abre os arquivos
-8. Auditor compara o conteúdo exportado ao snapshot R1, não ao estado de hoje
+1. **[UI_ACTION]** CIO escolhe pauta com projetos P-001...P-025 e budget/risco
+2. **[UI_ACTION]** Preserva R1 e registra digest e ordem dos 25 projetos
+3. **[UI_ACTION]** Caio altera fonte do projeto P-004 e uma nota longa
+4. **[UI_ACTION]** CIO reabre R1 em modo apresentação sem recapturar
+5. **[UI_ACTION]** Cria R2 com mudanças explicitadas
+6. **[UI_ACTION]** Compara R1/R2 distinguindo campos e comentário
+7. **[UI_ACTION]** Gera DOCX e PPTX da R1 e abre os arquivos
+8. **[UI_ACTION]** Auditor compara o conteúdo exportado ao snapshot R1, não ao estado de hoje
 
 ## Oráculos observáveis (não reescrever para passar)
 

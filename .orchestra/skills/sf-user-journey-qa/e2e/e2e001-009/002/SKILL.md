@@ -21,16 +21,16 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Sofie e Budget Owner discordam do aumento anual da licença; official=590000, WhatIf-A=602000, WhatIf-B=596000.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Sofie abre versão official locked e anota USD590000
-2. Cria A baseada em 72000 e altera OPEX-LIC-01 para 84000
-3. Outro ator cria B independente e altera para 78000
-4. Ambos comparam ao orçamento 600000
-5. CIO abre BI com versões A/B, sem assumir merge
-6. Finance remove FX para testar uma linha adicional EUR
-7. CIO compara cenário e registra decisão, sem publicar official
-8. Releitura por terceiro atesta que official/actual seguem imutáveis
+1. **[UI_ACTION]** Sofie abre versão official locked e anota USD590000
+2. **[UI_ACTION]** Cria A baseada em 72000 e altera OPEX-LIC-01 para 84000
+3. **[UI_ACTION]** Outro ator cria B independente e altera para 78000
+4. **[UI_ACTION]** Ambos comparam ao orçamento 600000
+5. **[UI_ACTION]** CIO abre BI com versões A/B, sem assumir merge
+6. **[UI_ACTION]** Finance remove FX para testar uma linha adicional EUR
+7. **[UI_ACTION]** CIO compara cenário e registra decisão, sem publicar official
+8. **[UI_ACTION]** Releitura por terceiro atesta que official/actual seguem imutáveis
 
 ## Oráculos observáveis (não reescrever para passar)
 
