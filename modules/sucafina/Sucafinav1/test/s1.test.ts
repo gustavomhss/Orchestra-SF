@@ -262,6 +262,8 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     draft("a", "draft", undefined, undefined, { estAmount: 7 }),
     draft("b", "po_issued", {
       expenseType: "OPEX",
+      currency: "USD",
+      approvalBaseCurrency: "USD",
       lines: [{ qty: 2, unitPrice: 15 }],
     }),
     draft("c", "po_approved", {
@@ -272,7 +274,7 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     draft(
       "e",
       "po_issued",
-      { expenseType: "CAPEX" },
+      { expenseType: "CAPEX", currency: "EUR", fxRate: 1.08, approvalBaseCurrency: "USD", lines: [{ qty: 1, unitPrice: 10 }] },
       { quotes: [{ id: "q1", total: 10, currency: "EUR" }], selectedId: "q1" },
     ),
   ]
@@ -377,6 +379,9 @@ function draft(
   status: string,
   po?: {
     expenseType?: string
+    currency?: string
+    approvalBaseCurrency?: string
+    fxRate?: number | null
     lines?: { qty: number; unitPrice: number }[]
     number?: string
     supplier?: string
