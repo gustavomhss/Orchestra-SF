@@ -89,7 +89,8 @@ function runnerEvidence(ctx, installed, mode, report, summary, files) {
   return {
     schema: "sf2h.native-proof-run-receipt.v1",
     status: "TEST_EXECUTED_REQUIRE_ORIGINAL_PRODUCER_WITNESS_AND_REVIEW",
-    proofId: mode, candidateSha: ctx.candidateSha, treeSha: ctx.treeSha,
+    proofId: mode, candidateSha: ctx.candidateSha, sourceSha: ctx.candidateSha,
+    githubEventSha: process.env.GITHUB_SHA, treeSha: ctx.treeSha,
     artifactSha256: ctx.artifactSha256, manifestSha256: installed.manifestSha256,
     gitCheckoutSha: runGit(["rev-parse", "HEAD"]),
     githubRunId: Number(runId), githubRunAttempt: Number(attempt),
@@ -169,6 +170,12 @@ async function attest(mode, installed, folder) {
   const receipt = JSON.parse(bytes)
   must(receipt.status === "TEST_EXECUTED_REQUIRE_ORIGINAL_PRODUCER_WITNESS_AND_REVIEW" &&
     receipt.proofId === mode && receipt.candidateSha === ctx.candidateSha &&
+    receipt.sourceSha === ctx.candidateSha &&
+    receipt.githubEventSha === ctx.candidateSha &&
+    receipt.gitCheckoutSha === ctx.candidateSha &&
+    Number.isSafeInteger(receipt.githubRunId) && receipt.githubRunId > 0 &&
+    receipt.githubRunId === Number(process.env.GITHUB_RUN_ID) &&
+    receipt.githubRunAttempt === Number(process.env.GITHUB_RUN_ATTEMPT) &&
     receipt.treeSha === ctx.treeSha && receipt.artifactSha256 === ctx.artifactSha256 &&
     receipt.manifestSha256 === installed.manifestSha256,
     "F04_EXECUTED_RECEIPT_BOUNDARY_MISMATCH")
