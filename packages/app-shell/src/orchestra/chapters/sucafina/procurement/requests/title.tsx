@@ -1,6 +1,7 @@
 import { createEffect, createMemo, createUniqueId, onCleanup, Show, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import type { SF_U02_COPY } from "@/i18n/orchestra-chapters/sf-u02"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfDraftRegistry, SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
@@ -11,7 +12,7 @@ import type { SfUiState } from "../../shared/frame"
 import { sfU11Label, type SF_U11_REMAINING_COPY } from "./copy"
 import { readRequestTitle, titleReadiness } from "./title-revalidation"
 
-type Key = keyof typeof SF_U11_REMAINING_COPY
+type Key = keyof typeof SF_U11_REMAINING_COPY | Extract<keyof typeof SF_U02_COPY, "sf.u02.confirmSave">
 type Source = Extract<Awaited<ReturnType<typeof readRequestTitle>>, { status: "authorized" }>
 type Intent = Readonly<{ ref: SfRef; token: string; version: number; stage: string; original: string; title: string;
   operationRef: SfOperationRef; intentRef: SfIntentRef; idempotencyKey: string }>
@@ -295,7 +296,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
           proposed={{ kind: "draft", intentRef: item().intentRef, sourceRef: item().ref, sourceVersion: item().version, fields }}
           effects={[{ id: "save", domain: "procurement", title: { kind: "message", message: message("sf.u11.remaining.save") }, state: "proposed", details: fields }]}
           coverage={{ state: "complete", summary: message("sf.u11.remaining.reviewSummary"), reasons: [], knownCount: 1, expectedCount: 1 }}
-          blockingReasons={[]} confirmation={{ kind: "admitted", labelKey: key("sf.u11.remaining.confirm"), purpose: "save",
+          blockingReasons={[]} confirmation={{ kind: "admitted", labelKey: key("sf.u02.confirmSave"), purpose: "save",
             binding: { kind: "catalog-command", operationId: "domain.command.CAP25.save",
               version: { kind: "record", expectedVersion: item().version }, confirmation: "presentation-only" } }}
           state="ready" onConfirm={() => { void confirm() }} onRevise={cancel} onCancel={cancel} />
