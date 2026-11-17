@@ -207,7 +207,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const enrollment = await prepareOperatorAccess(config, true) // Activate the real owner profile before boot.
     const env = {
       ...Object.fromEntries(Object.entries(process.env).filter(([key]) =>
-        ["PATH", "LANG", "LC_ALL", "TZ"].includes(key))),
+        ["PATH", "LANG", "LC_ALL", "TZ", "USER", "LOGNAME"].includes(key))),
       HOME: privateDir,
       XDG_DATA_HOME: path.join(privateDir, "host-data"),
       XDG_CONFIG_HOME: path.join(privateDir, "host-config"),
@@ -230,8 +230,9 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const logs: string[] = []
     const collect = (stream: ReadableStream<Uint8Array>) =>
       new Response(stream).text().then((output) => { logs.push(output.slice(-5000)) }).catch(() => undefined)
-    const drains = [collect(child.stdout as ReadableStream<Uint8Array>),
-      collect(child.stderr as ReadableStream<Uint8Array>)]
+    if (!(child.stdout instanceof ReadableStream) || !(child.stderr instanceof ReadableStream))
+      throw new Error("SF_FACTORY_PROCESS_LOG_PIPES_REQUIRED")
+    const drains = [collect(child.stdout), collect(child.stderr)]
     let response: Response | undefined
     for (let attempt = 0; attempt < 120; attempt++) {
       if (child.exitCode !== null) break
