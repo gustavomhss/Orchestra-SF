@@ -1,4 +1,3 @@
-import { useNavigate } from "@solidjs/router"
 import { createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -10,7 +9,6 @@ import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey } from "../../shared/table"
 import { sfReadProjects, sfAdmitted, sfOwnerMatches } from "../projects/producer"
-import { sfProjectHref } from "../projects/paths"
 import { SfExecutiveAction } from "../../cross-links/view"
 import { sfSourceDate, type SfProjectRecord, type SfProjectPage } from "../projects/model"
 import "./overview.css"
@@ -22,7 +20,6 @@ const kt = (value: keyof typeof SF_U05_COPY) => value as unknown as SfTableCopyK
 export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Element {
   const owner = useSfContext()
   const language = useLanguage()
-  const navigate = useNavigate()
   const t = (key: keyof typeof SF_U05_COPY) => language.t(key as Parameters<typeof language.t>[0])
   const [refresh, setRefresh] = createSignal(0)
   const [view, setView] = createStore<{ state: SfUiState; page: SfProjectPage | null }>({
@@ -40,9 +37,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
       destination.page === "All Projects" && destination.canRead)
   }
   const goProjects = () => {
-    if (!canOpenProjects()) return
-    const href = sfProjectHref(props.route, "projects")
-    if (href) navigate(href)
+    if (canOpenProjects()) void owner.followExecutiveLink?.(props.route, { kind: "projects" })
   }
 
   createEffect(() => {
