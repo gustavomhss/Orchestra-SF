@@ -264,12 +264,6 @@ jobs:
           ')"
           test -f "$root/$suite_dir/package.json"
           cd "$root/$suite_dir"
-          # Bun 1.3.14 treats bare test-browser paths as substring filters.
-          # Manifest declares the exact complete set; pass it as explicit file paths.
-          for index in "${!files[@]}"; do
-            test -f "${files[index]}" || { echo "::error::Missing manifest-selected Bun file: ${files[index]}"; exit 2; }
-            files[index]="./${files[index]#./}"
-          done
           set +e
           {
             case "$SF_SUITE_ID" in

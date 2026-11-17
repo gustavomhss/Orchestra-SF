@@ -5,7 +5,7 @@ import { createHash } from "node:crypto"
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
+import { countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles, selectedRunnerArg } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -480,5 +480,15 @@ test("CI-05 explicit selections reject symlinked parent paths inside the checkou
       /missing\/unsafe file in selected candidate/)
   } finally {
     rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test("Bun browser selector emits explicit paths without changing manifest file identities", () => {
+  const name = "test-browser/sucafina-native/context.test.ts"
+  assert.equal(selectedRunnerArg("CI-APP-BROWSER", name), "./" + name)
+  assert.equal(selectedRunnerArg("CI-SF", "Sucafinav1/test/screen.test.ts"), "Sucafinav1/test/screen.test.ts")
+  assert.equal(selectedRunnerArg("CI-APP-SRC", "src/example.test.ts"), "src/example.test.ts")
+  for (const bad of ["../secrets.test.ts", "./test-browser/one.test.ts", "/tmp/escape.test.ts", "x//test.test.ts", "test-browser/not-a-test.txt"]) {
+    assert.throws(() => selectedRunnerArg("CI-APP-BROWSER", bad), /SF_CI_FAIL_CLOSED/)
   }
 })

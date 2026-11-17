@@ -114,6 +114,12 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
   if (accepted.length === 0 || new Set(accepted).size !== accepted.length) fail("empty/duplicate suite selection: " + suiteId)
   return accepted
 }
+/** The identity stays the manifest's path; only Bun's argv needs an explicit-path marker. */
+export function selectedRunnerArg(suiteId, name) {
+  validateRelative(name)
+  if (!isTestFile(name)) fail("runner selection is not a test file: " + name)
+  return suiteId === "CI-APP-BROWSER" ? "./" + name : name
+}
 /** Converts summary to a stable multiset of case identities; duplicate parametrized titles stay counted. */
 export function bunCoverageIdentity(raw) {
   let data
@@ -454,7 +460,7 @@ function cli() {
   }
   if (command === "select") {
     if (process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") fail("selection must run on Linux X64")
-    for (const name of selectSuiteFiles(manifest, process.env.SF_SUITE_ID)) process.stdout.write(name + "\n")
+    for (const name of selectSuiteFiles(manifest, process.env.SF_SUITE_ID)) process.stdout.write(selectedRunnerArg(process.env.SF_SUITE_ID, name) + "\n")
     return
   }
   if (command === "coverage") {
