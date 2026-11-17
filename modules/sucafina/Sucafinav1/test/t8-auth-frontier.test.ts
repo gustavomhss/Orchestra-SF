@@ -16,7 +16,7 @@ import { loadSfInstallation } from "../../../../apps/cli/src/sucafina-product/in
 
 const origin = "http://localhost:4110"
 const mount = "/sucafina"
-const binding = Object.freeze({ installationId: "installation-one", projectId: "project-one", hostId: "host-one" })
+const binding: Readonly<{ installationId: string; projectId: string; hostId: string }> = Object.freeze({ installationId: "installation-one", projectId: "project-one", hostId: "host-one" })
 const contextUrl = `${origin}${mount}/api/ui/context?${new URLSearchParams(binding).toString()}`
 
 async function fixture() {
