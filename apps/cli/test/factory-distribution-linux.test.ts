@@ -6,6 +6,7 @@ import path from "node:path"
 import { prepareLocalConfiguration } from "../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
 import { archiveDistribution, prepareDistribution, verifyDistribution } from "../script/distribution-payload"
 import { prepareNpmDistribution } from "../script/distribution-npm"
+import { verifyFactoryPackageReceipt } from "../script/factory-receipt-check"
 import { requireSfFactoryRunIdentity } from "./fixture/factory-proof-identity"
 
 const target = "linux-x64-baseline"
@@ -277,6 +278,39 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       await readFile(path.join(payload, "bin/local/closure.json")), { flag: "wx" })
     await writeFile(path.join(evidenceDir, "factory-package-receipt.json"),
       JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" })
+    const expectedReceiptIdentity = {
+      sourceSHA: runIdentity.sourceSHA,
+      checkoutSHA: runIdentity.checkoutSHA,
+      workflowSHA: runIdentity.workflowSHA,
+      eventName: runIdentity.eventName,
+      runID: runIdentity.runID,
+      runAttempt: runIdentity.runAttempt,
+    }
+    // Independent reread of the uploaded bytes, not the producer's captured Map.
+    const attested = await verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity)
+    expect(attested.archiveSha256).toBe(receipt.archiveSha256)
+    expect(attested.webSourceMaps).toBe(0)
+    const receiptFile = path.join(evidenceDir, "factory-package-receipt.json")
+    const genuineReceiptBytes = await readFile(receiptFile)
+    try {
+      await writeFile(receiptFile, JSON.stringify({ ...receipt, sourceSHA: "0".repeat(40) }) + "\n")
+      await expect(verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity))
+        .rejects.toThrow("SF_FACTORY_RECEIPT_SOURCE_SHA_MISMATCH")
+    } finally {
+      await writeFile(receiptFile, genuineReceiptBytes)
+    }
+    const manifestFile = path.join(evidenceDir, "distribution.json")
+    const genuineManifestBytes = await readFile(manifestFile)
+    try {
+      await writeFile(manifestFile, Buffer.concat([genuineManifestBytes, Buffer.from("\n")]))
+      await expect(verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity))
+        .rejects.toThrow("SF_FACTORY_RECEIPT_ARCHIVE_OR_MANIFEST_DIGEST_MISMATCH")
+    } finally {
+      await writeFile(manifestFile, genuineManifestBytes)
+    }
+    // No successful receipt marker is emitted until both tamper controls pass.
+    expect((await verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity)).sourceSHA)
+      .toBe(runIdentity.checkoutSHA)
     console.info("SF_FACTORY_PACKAGE_QUALIFIED " + JSON.stringify(receipt))
     child.kill("SIGTERM")
     await Promise.race([child.exited, Bun.sleep(5000)])

@@ -142,3 +142,46 @@ certify this merged source. Report only the final branch HEAD, successful
 `head_sha === receipt.sourceSHA === receipt.checkoutSHA ===
 receipt.expectedSourceSHA`. `receipt.workflowSHA` is separate for
 PR events by GitHub design.
+
+## F. Packaging branch consolidation (single owner)
+
+Compared GitHub branch heads, retaining source provenance instead of merging
+unrelated deployments:
+
+| Branch | Head inspected | Result |
+| --- | --- | --- |
+| `sf-package-guard` (#254) | `b67cb17eef6962e4007dab7a0cde27672367f92b` | Its Web sourcemap filter, inline map rejection, and unit/native tests were already merged unchanged in commit `2a947d4e0d88fb8441bb1a9a40eb5d96c45d7eb4`. |
+| `sf-package-unified` | `cfb01f61e8c48c5779288b0b4b24220cc28662ab` | Its tree `9123743c0b9cccd0f5b24aa9cd76df554a32c8d8` is **byte-identical** to the earlier factory/guard merge tree. In particular, `apps/cli/script/distribution-payload.ts` and `apps/cli/test/distribution-web-native.test.ts` have the **same Git blob SHAs** in both branches. It is **not** a superset: `sfa-factory-package` has additional SHA-provenance, concurrency, Web+factory combined proof, and negative tests. The consolidation merge therefore retains this branch's newer tree. |
+| `sf-package-qualify` | `bc84775c05c526ad9b89ae7a4875aee81eeb69e5` | A legacy qualification lineage with `app-build.yml`, Azure infrastructure, and an **older** `distribution-payload.ts` (no `isWebSourceMap`), no packaged SF factory. Merging its source wholesale would silently restore the sourcemap leak and add unrelated infrastructure. Retain current producer bytes, absorb the useful **independent receipt/manifest/archive verifier** idea as `apps/cli/script/factory-receipt-check.ts` in the existing native factory workflow. |
+
+The merge commits record both source lineages as parents while intentionally
+keeping the owner-scoped factory+Web producer source tree. This is a content
+reconciliation, **not** approval for either old alternative PR, or for a
+different Azure/app-build release workflow. Do not close those PRs as an agent.
+
+### Independent final receipt validator
+
+The standalone `apps/cli/script/factory-receipt-check.ts` is executed by
+`.github/workflows/sf-factory-package.yml` **after** the real extracted
+factory smoke and installed Web/Omni proof, **before** artifact upload.
+It reads the persisted, run-ID-scoped JSON receipt, `distribution.json`,
+`factory-closure.json`, and exact published `.tar.gz`; independently hashes
+the archive and manifest and every archived file, checks the gzip archive
+file set and checksum table, checks declared factory/asset/compiled input
+counts and source identity, and fails if even one `bin/web` sourcemap
+appears in the descriptor. It cross-checks the Web HTML digest, Web file counts
+and `publishedSourceMapCount=0`. Its verification outcome is explicitly
+`SF_FACTORY_RECEIPT_VERIFIED`, not inferred from a build result.
+
+Two additional **real negative controls** modify the staged evidence:
+a mismatched `sourceSHA` receipt must raise
+`SF_FACTORY_RECEIPT_SOURCE_SHA_MISMATCH`, and altered
+`distribution.json` bytes must raise
+`SF_FACTORY_RECEIPT_ARCHIVE_OR_MANIFEST_DIGEST_MISMATCH`; authentic
+bytes are restored and independently reverified before emitting
+`SF_FACTORY_PACKAGE_QUALIFIED`.
+
+Scope remains Linux x64 native. The qualified archive proves a closed
+factory, Web without source maps and owner-owned ephemeral local
+`/sucafina/status` (200); Azure Entra, external integrations, governance,
+secrets and production restore are separately owner-gated.
