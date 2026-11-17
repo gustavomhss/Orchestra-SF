@@ -366,7 +366,8 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     requestValue(
       {
         ...draft("x", "draft"),
-        po: { lines: [{ qty: 0, unitPrice: 5 }] },
+        // A zero-valued PO line is still a recorded USD amount, not an unknown currency.
+        po: { currency: "USD", lines: [{ qty: 0, unitPrice: 5 }] },
         pr: { estAmount: 9 },
       },
       rates,
