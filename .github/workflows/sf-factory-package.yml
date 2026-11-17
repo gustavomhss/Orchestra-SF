@@ -56,6 +56,12 @@ jobs:
           test "$(uname -m)" = x86_64
           rustup show active-toolchain || rustup toolchain install
           cargo build --locked --release -p hugr-omni-node -p omni-supervisor
+      - name: PR 254 Web sourcemap exclusion and inline-map negative tests
+        working-directory: apps/cli
+        env:
+          ORCHESTRA_OMNI_CONTROL: declared
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+        run: bun test ./test/distribution-web.test.ts --timeout 30000
       - name: Compile, package, archive, extract outside checkout, and load factory
         working-directory: apps/cli
         env:
@@ -68,6 +74,13 @@ jobs:
           SF_FACTORY_RUN_ID: ${{ github.run_id }}
           SF_FACTORY_RUN_ATTEMPT: ${{ github.run_attempt }}
         run: bun test ./test/factory-distribution-linux.test.ts --timeout 1800000
+      - name: PR 254 installed Web/native lifecycle qualification
+        working-directory: apps/cli
+        env:
+          SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+          ORCHESTRA_OMNI_CONTROL: declared
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+        run: bun test ./test/distribution-web-native.test.ts --timeout 1800000
       - name: Upload extracted-factory qualification archive and factual proof
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
