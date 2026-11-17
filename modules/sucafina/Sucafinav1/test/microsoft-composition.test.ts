@@ -30,7 +30,7 @@ async function setup() {
   const f = await privateFixture()
   cleanups.push(f.close)
   const provider = await microsoftFixture()
-  await writeFile(f.file, JSON.stringify({ ...f.config, groups: { ...f.config.groups, dashboard: { viewer: `group:${group}`, admin: `group:${other}` } } }))
+  await writeFile(f.file, JSON.stringify({ ...f.config, groups: { ...f.config.groups, dashboard: { viewer: `group:${group}`, admin: `group:${other}` }, planner: { finance: `group:${group}` } } }))
   const application = await entry.createMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
   cleanups.push(async () => { await application.dispose() })
   const installation = await loader.composeSfInstallation(application, listenerOrigin)
@@ -72,10 +72,12 @@ test("exact proposed entry and CLI route compose Microsoft login, bootstrap and 
   const first = await f.login()
   // The validated private installation configuration is authoritative at startup.
   // A member may read their configured surface without an unrelated admin first login.
-  const memberPage = await f.request("/sucafina/dashboard", { headers: { cookie: first.cookie } })
-  expect(memberPage.status).toBe(200)
-  expect(memberPage.headers.get("content-type")).toContain("text/html")
-  expect(await memberPage.text()).toContain("<html")
+  for (const surface of ["dashboard", "planner", "procurement"]) {
+    const memberPage = await f.request(`/sucafina/${surface}`, { headers: { cookie: first.cookie } })
+    expect(memberPage.status).toBe(200)
+    expect(memberPage.headers.get("content-type")).toContain("text/html")
+    expect(await memberPage.text()).toContain("<html")
+  }
   const initialized = await f.store.transaction("dashboard", async (snapshot) => ({
     commit: false, value: { rows: snapshot.data.roleMap, audit: snapshot.audit },
   }))
@@ -88,12 +90,21 @@ test("exact proposed entry and CLI route compose Microsoft login, bootstrap and 
   expect((await f.request("/sucafina/dashboard", { headers: { cookie: first.cookie } })).status).toBe(200)
   const rows = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.roleMap }))
   expect(rows).toEqual(expect.arrayContaining([expect.objectContaining({ surface: "dashboard", role: "viewer", entra: `group:${group}` })]))
+  f.provider.second.groups.length = 0
+  const unmapped = await f.login(other)
+  for (const surface of ["dashboard", "planner", "procurement"]) {
+    const denied = await f.request(`/sucafina/${surface}`, { headers: { cookie: unmapped.cookie } })
+    expect(denied.status).toBe(401)
+    expect(await denied.text()).toBe("Authentication required")
+  }
+  f.provider.second.groups.push(group)
   const guest = await f.login(other)
   const page = await f.request("/sucafina/dashboard", { headers: { cookie: guest.cookie } })
   expect(page.status).toBe(200)
   expect(page.headers.get("content-type")).toContain("text/html")
   expect(await page.text()).not.toContain("Homologação local")
-  expect((await f.request("/sucafina/planner", { headers: { cookie: guest.cookie } })).status).toBe(401)
+  expect((await f.request("/sucafina/planner", { headers: { cookie: guest.cookie } })).status).toBe(200)
+  expect((await f.request("/sucafina/procurement", { headers: { cookie: guest.cookie } })).status).toBe(200)
   const deniedWrite = await f.request("/sucafina/dashboard?page=IT%20Risks", { method: "POST", headers: { origin: publicOrigin, cookie: guest.cookie, "content-type": "application/json" }, body: JSON.stringify({ page: "IT Risks", action: "save", version: 0, values: { name: "Denied viewer risk", impact: 3, probability: 2 } }) })
   expect(deniedWrite.status).toBe(403)
   expect(f.spans).toHaveLength(0)
