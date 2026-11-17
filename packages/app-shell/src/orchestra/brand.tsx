@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js"
 import { useLanguage } from "@/context/language"
-import { isSucafinaBrand } from "./brand-identity"
+import { hasSucafinaArtwork, isSucafinaBrand } from "./brand-identity"
 
 // Existing public component name is retained for callers; the installed brand decides its appearance.
 export function HugrBrand(props: { class?: string; compact?: boolean }) {
@@ -61,20 +61,24 @@ function SucafinaLogo(props: { compact?: boolean }) {
       role="img"
       aria-label="Sucafina"
     >
-      <img
-        data-slot="orchestra-brand-logo-dark"
-        src={props.compact ? "/brand/sucafina/mark-inverse.svg" : "/brand/sucafina/lockup-inverse.svg"}
-        alt=""
-        onLoad={() => setDarkReady(true)}
-        onError={() => setDarkReady(false)}
-      />
-      <img
-        data-slot="orchestra-brand-logo-light"
-        src={props.compact ? "/brand/sucafina/mark-primary.svg" : "/brand/sucafina/lockup-primary.svg"}
-        alt=""
-        onLoad={() => setLightReady(true)}
-        onError={() => setLightReady(false)}
-      />
+      {hasSucafinaArtwork() && (
+        <>
+          <img
+            data-slot="orchestra-brand-logo-dark"
+            src={props.compact ? "/brand/sucafina/mark-inverse.svg" : "/brand/sucafina/lockup-inverse.svg"}
+            alt=""
+            onLoad={() => setDarkReady(true)}
+            onError={() => setDarkReady(false)}
+          />
+          <img
+            data-slot="orchestra-brand-logo-light"
+            src={props.compact ? "/brand/sucafina/mark-primary.svg" : "/brand/sucafina/lockup-primary.svg"}
+            alt=""
+            onLoad={() => setLightReady(true)}
+            onError={() => setLightReady(false)}
+          />
+        </>
+      )}
       <span data-slot="sucafina-fallback-dark" aria-hidden="true">{props.compact ? "S" : "SUCAFINA"}</span>
       <span data-slot="sucafina-fallback-light" aria-hidden="true">{props.compact ? "S" : "SUCAFINA"}</span>
     </span>

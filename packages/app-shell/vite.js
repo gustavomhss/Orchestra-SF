@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import solidPlugin from "vite-plugin-solid"
 import tailwindcss from "@tailwindcss/vite"
 import { fileURLToPath } from "url"
@@ -57,7 +57,10 @@ export default [
         /<script id="oc-theme-preload-script" src="(?:\/|\.\/)oc-theme-preload\.js"><\/script>/,
         `<style id="oc-orchestra-background">${readFileSync(background, "utf8")}</style><style id="oc-orchestra-palettes">${readFileSync(palettes, "utf8")}</style><script id="oc-theme-preload-script">${readFileSync(theme, "utf8")}</script>`,
       )
-      return applyBrandIdentityToHtml(themed, process.env.ORCHESTRA_BRAND)
+      // No trademark artwork is requested until every approved SVG is actually bundled.
+      const artworkReady = ["lockup-inverse.svg", "lockup-primary.svg", "mark-inverse.svg", "mark-primary.svg"]
+        .every((name) => existsSync(fileURLToPath(new URL(`./public/brand/sucafina/${name}`, import.meta.url))))
+      return applyBrandIdentityToHtml(themed, process.env.ORCHESTRA_BRAND, artworkReady)
     },
   },
   tailwindcss(),

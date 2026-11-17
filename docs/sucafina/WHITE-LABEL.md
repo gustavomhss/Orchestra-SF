@@ -10,7 +10,7 @@ A Sucafina web distribution opts in at build time with `ORCHESTRA_BRAND=sucafina
 
 ### Unfinished assets — release blocker
 
-The official Sucafina mark, lockups and favicon require approved original artwork; none are generated or traced. See `packages/app-shell/public/brand/sucafina/README.md`. Currently the UI uses plain text in the logo slots as an explicit fallback. PWA icons and favicon are deliberately not fabricated. **Do not mark white-label complete or deploy this distribution as final until approved assets are provided, hooked into the head/manifest and reviewed.**
+The official Sucafina mark, lockups and favicon require approved original artwork; none are generated or traced. See `packages/app-shell/public/brand/sucafina/README.md`. Currently the UI uses plain text in the logo slots as an explicit fallback. The build checks for all four official assets before referencing any SVG, avoiding 404s during the pending-assets phase. PWA icons and favicon are deliberately not fabricated. **Do not mark white-label complete or deploy this distribution as final until approved assets are provided, hooked into the head/manifest and reviewed.**
 
 The previously discussed photographic background also needs a licensed/original asset and a true Orchestra screenshot for visual validation. Do not ship AI-generated UI screenshots as layouts or arbitrarily replace the existing wallpaper.
 

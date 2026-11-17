@@ -13,11 +13,18 @@ describe("white-label corporate identity", () => {
       const html = shell.replace("<html", `<html data-orchestra-palette="${palette}"`)
       const branded = applyBrandIdentityToHtml(html, "sucafina")
       expect(branded).toContain('data-orchestra-brand="sucafina"')
+      expect(branded).toContain('data-sucafina-artwork="pending"')
       expect(branded).toContain(`data-orchestra-palette="${palette}"`)
       expect(branded).toContain("<title>Sucafina</title>")
       expect(branded).toContain('href="/brand/sucafina/site.webmanifest"')
       expect(branded).not.toContain("hugr-symbol")
     }
+  })
+
+  test("approved artwork flag is independent of the palette", () => {
+    const branded = applyBrandIdentityToHtml(shell, "sucafina", true)
+    expect(branded).toContain('data-sucafina-artwork="ready"')
+    expect(branded).toContain("<title>Sucafina</title>")
   })
 
   test("unknown identity values cannot switch the distribution", () => {
