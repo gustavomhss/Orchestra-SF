@@ -529,7 +529,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
         phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
         reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
         historyRef: "", reference: undefined, detail: undefined, file: undefined,
-        busy: false, error: undefined })
+        busy: false, error: undefined, poRead: undefined, poSelection: "", poState: "idle" })
       if (chapter === "UI57" && routeKind === "history" && ready && selectedOwner) {
         // Reference/detail reads only; no inferred history collection.
         setState("historyRef", "")
@@ -569,14 +569,18 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     <SfPageFrame titleKey={key(title())} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={isExport() ? {
-        id: "export", labelKey: key("sf.ui68.primary"), tone: "primary", disabled: state.busy,
+        id: "export", labelKey: key("sf.ui68.primary"), tone: "primary",
+        disabled: state.busy || state.exportKind === "po" && (!state.poSelection || state.poState !== "ready"),
         busy: state.busy, onInvoke: () => { void download() },
       } : undefined}
     >
       <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())}
-          onRetryRead={() => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) void download() }}
+          onRetryRead={() => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
+              if (state.exportKind === "po") setState("poRefresh", state.poRefresh + 1)
+              else void download()
+            } }}
           onBack={isHistory() && state.status === "not-found" ? () => {
             fence(); clearReview(); setState({ status: "ready", historyRef: "", busy: false })
           } : undefined}>
@@ -759,16 +763,41 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             <div class="sf-files-fields">
               <label>{t("sf.u23.format")}
                 <select value={state.exportKind} disabled={state.busy}
-                  onChange={(e) => { revokeExport(); setState("exportKind", e.currentTarget.value as LeafState["exportKind"]) }}>
+                  onChange={(event) => {
+                    const value = event.currentTarget.value
+                    if (value !== "xlsx" && value !== "suppliers" && value !== "register" &&
+                        value !== "json" && value !== "po") return
+                    revokeExport()
+                    setState("exportKind", value)
+                  }}>
                   <option value="xlsx">{t("sf.u23.exportXlsx")}</option>
                   <option value="suppliers">{t("sf.u23.exportSuppliers")}</option>
                   <option value="register">{t("sf.u23.exportRegister")}</option>
                   <option value="json">{t("sf.u23.exportJson")}</option>
+                  <option value="po">Individual purchase order / approvals (HTML)</option>
                 </select>
               </label>
+              <Show when={state.exportKind === "po"}>
+                <label>Current authorized purchase order
+                  <select value={state.poSelection} disabled={state.busy || state.poState !== "ready"}
+                    onChange={(event) => { revokeExport(); setState("poSelection", event.currentTarget.value) }}>
+                    <option value="">Select a PO by its source PR reference</option>
+                    <For each={poCandidates()}>{(row) =>
+                      <option value={requestRef(row)}>{row.po?.number} · {row.number} · {row.status}</option>
+                    }</For>
+                  </select>
+                </label>
+                <p role="status">Selection: {state.poState}. Only a producer-authenticated PO is exportable;
+                  a receiving receipt is not available as a separate admitted producer.</p>
+                <button type="button" class="mx-btn" disabled={state.busy}
+                  onClick={() => { revokeExport(); setState("poRefresh", state.poRefresh + 1) }}>
+                  Refresh PO source references
+                </button>
+              </Show>
               <Show when={state.download}>
-                {(download) => <a class="mx-btn" href={download().href} download={download().name}
-                  data-sf-export="authorized-bytes">{t("sf.u23.download")}: {download().name}</a>}
+                {(download) => <p role="status" data-sf-export="authorized-bytes">
+                  {t("sf.u23.download")}: {download().name}. To download again, request fresh authorization.
+                </p>}
               </Show>
             </div>
           </Show>
