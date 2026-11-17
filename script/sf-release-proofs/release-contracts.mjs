@@ -132,7 +132,7 @@ function checkDistribution(b, ctx) {
     factory.archiveFile==="orchestra-sf-factory-linux-x64-baseline.tar.gz" &&
     factory.extractedOutsideCheckout===true &&
     [factory.archiveSha256,factory.manifestSha256,factory.bundleSha256,
-      factory.factoryReceiptSha256].every(x=>HEX64.test(x??"")),
+      factory.factoryReceiptSha256,factory.githubRunSnapshotSha256].every(x=>HEX64.test(x??"")),
     "F04_GATE_FACTORY_ARCHIVE_SOURCE_OR_HEAD_MISMATCH")
   const releaseRoot="/opt/orchestra-sf/releases/"+C
   requireProof(installed?.sourceSha === C &&
