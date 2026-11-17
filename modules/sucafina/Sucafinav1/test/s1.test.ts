@@ -262,6 +262,8 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     draft("a", "draft", undefined, undefined, { estAmount: 7 }),
     draft("b", "po_issued", {
       expenseType: "OPEX",
+      currency: "USD",
+      approvalBaseCurrency: "USD",
       lines: [{ qty: 2, unitPrice: 15 }],
     }),
     draft("c", "po_approved", {
@@ -272,7 +274,7 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     draft(
       "e",
       "po_issued",
-      { expenseType: "CAPEX" },
+      { expenseType: "CAPEX", currency: "EUR", approvalBaseCurrency: "USD", fxRate: 1.08, lines: [{ qty: 1, unitPrice: 10 }] },
       { quotes: [{ id: "q1", total: 10, currency: "EUR" }], selectedId: "q1" },
     ),
   ]
@@ -281,7 +283,11 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
   expect(board.open).toBe(2)
   expect(board.issued.OPEX).toBe(30)
   expect(board.issued.CAPEX).toBe(10.8)
+  expect(board.unavailable).toEqual([])
   expect(board.issued.OPEX).not.toBe(129)
+  const inconsistent = procurementDashboard([{ ...requests[1]!, po: { ...requests[1]!.po, approvalBaseCurrency: "EUR" } }], rates)
+  expect(inconsistent.issued.OPEX).toBe(0)
+  expect(inconsistent.unavailable).toEqual(["b"])
   expect(procurementDashboardWrite()).toEqual({ ok: false })
   expect(requests[0].status).toBe("draft")
 
@@ -377,6 +383,9 @@ function draft(
   status: string,
   po?: {
     expenseType?: string
+    currency?: string
+    approvalBaseCurrency?: string
+    fxRate?: number
     lines?: { qty: number; unitPrice: number }[]
     number?: string
     supplier?: string
