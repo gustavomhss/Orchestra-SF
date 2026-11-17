@@ -24,6 +24,30 @@ if (!cookie || !/(?:^|;\s*)Path=\/sucafina(?:;|$)/.test(rawCookie) || !/(?:^|;\s
   throw new Error("SF_VISUAL_HTTPONLY_SESSION_NOT_ISSUED")
 const token = Buffer.from("orchestra:" + password).toString("base64")
 const directory = privateRoot
+// Resolve the exact installed owner from the REAL authenticated host. No guessed
+// installation/project IDs and no implicit location fallback.
+const discoveredURL = new URL("/api/sucafina/installations", base)
+discoveredURL.search = new URLSearchParams({ select: "location", "location[directory]": directory }).toString()
+const selectedResponse = await fetch(discoveredURL, {
+  method: "GET", headers: { Accept: "application/json", Authorization: "Basic " + token },
+  cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(10_000),
+})
+const selectedBody: unknown = await selectedResponse.json().catch(() => undefined)
+const candidates = selectedBody && typeof selectedBody === "object" &&
+  "installations" in selectedBody && Array.isArray(selectedBody.installations)
+  ? selectedBody.installations : []
+if (selectedResponse.status !== 200 || candidates.length !== 1)
+  throw new Error("SF_VISUAL_EXACT_INSTALLED_OWNER_REQUIRED_HTTP_" + selectedResponse.status +
+    "_COUNT_" + candidates.length)
+const installed = candidates[0] as Record<string, unknown>
+if (installed.publicOrigin !== base || installed.mount !== "/sucafina" ||
+    typeof installed.projectId !== "string" || !installed.projectId ||
+    typeof installed.installationId !== "string" || !installed.installationId ||
+    typeof installed.hostId !== "string" || !installed.hostId ||
+    installed.contractRevision !== "sf-native-ui/1")
+  throw new Error("SF_VISUAL_SELECTED_OWNER_PROVENANCE_INVALID")
+console.log("SF_VISUAL_REAL_INSTALLED_SELECTION_OK")
+const owner = { server: base, project: installed.projectId, installation: installed.installationId }
 const cases = [
   { id: "dashboard", route: "/orchestra/sf-dashboard/executive", title: "Executive Dashboard" },
   { id: "planner", route: "/orchestra/sf-planner/overview", title: "Overview" },
@@ -62,13 +86,29 @@ try {
               Array.isArray(body.installations) ? body.installations.length : "invalid-body"
             diagnostics.push("discovery " + response.status() + " count=" + count)
           }).catch(() => diagnostics.push("discovery " + response.status() + " unreadable"))
+        } else if (url.pathname === "/sucafina/api/ui/context") {
+          void response.json().then((body: unknown) => {
+            const ctx = body && typeof body === "object" ? body as Record<string, unknown> : {}
+            const value = ctx.value && typeof ctx.value === "object" ? ctx.value as Record<string, unknown> : {}
+            const availability = Array.isArray(value.availability) ? value.availability : []
+            const cap01 = availability.find((item: unknown) =>
+              item && typeof item === "object" && "resource" in item && item.resource === "CAP01") as
+              { operations?: { operationId: string; state: string; operational: boolean }[] } | undefined
+            const op = cap01?.operations?.find((value) => value.operationId === "domain.page.CAP01")
+            diagnostics.push("ctx.context HTTP " + response.status() + " status=" + String(ctx.status) +
+              " CAP01=" + String(op?.state ?? "absent") + " operational=" + String(op?.operational ?? false))
+          }).catch(() => diagnostics.push("ctx.context HTTP " + response.status() + " unreadable"))
         } else if (response.status() >= 400) diagnostics.push("HTTP " + response.status() + " " + url.pathname)
       })
       page.on("console", (message) => {
         if (message.type() === "error") diagnostics.push("console-error " + message.text().slice(0, 160))
       })
       try {
-        const url = base + visit.route + "?auth_token=" + encodeURIComponent(token)
+        // F01's source-defined triplet is retained after the auth token is removed
+        // by the web entry, and gets rechecked by original ctx.context on each route.
+        const url = base + visit.route + "?" + new URLSearchParams({
+          ...owner, auth_token: token,
+        }).toString()
         const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30_000 })
         if (response?.status() !== 200) throw new Error("SF_VISUAL_NATIVE_HTTP_NOT_200_" + String(response?.status()))
         await expect(page.locator("html")).toHaveAttribute("data-orchestra-brand", "sucafina")
