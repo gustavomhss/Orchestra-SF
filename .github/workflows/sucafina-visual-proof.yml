@@ -1,0 +1,46 @@
+name: sucafina-visual-proof
+
+on:
+  push:
+    branches: [sfa-sucafina-white-label]
+    paths:
+      - ".github/workflows/sucafina-visual-proof.yml"
+      - "packages/app-shell/e2e/orchestra-screenshots/sucafina-brand.visual.ts"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sucafina-visual-proof-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  screenshot:
+    name: sucafina/prod-shell-screenshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    env:
+      ORCHESTRA_BRAND: sucafina
+      ORCHESTRA_CHANNEL: prod
+      ORCHESTRA_VISUAL_OUT: ${{ github.workspace }}/sucafina-visual-proof
+      CI: "true"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - name: Install Chromium
+        working-directory: packages/app-shell
+        run: bunx playwright install --with-deps chromium
+      - name: Render actual Sucafina-branded Orchestra production shell
+        working-directory: packages/app-shell
+        run: bunx playwright test e2e/orchestra-screenshots/sucafina-brand.visual.ts --config e2e/orchestra-screenshots/playwright.config.ts --workers=1 --retries=0
+      - name: Publish genuine browser captures and manifest
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sucafina-visual-proof
+          path: sucafina-visual-proof
+          if-no-files-found: warn
+          retention-days: 14
