@@ -22,6 +22,58 @@ import { procurementApprovalGroups, readProcurementQueueView } from "../../../pr
 const states = ["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled", "imported-unknown"]
 const at = "2026-11-13T00:00:00Z"
 
+test("first visit to Procurement Requests on an empty installation renders a real empty queue, never 503", async () => {
+  const fixture = await pageFixture(true)
+  try {
+    const before = await fixture.material()
+    expect(before.store).toBeUndefined()
+    const dashboard = await fixture.get("requester", undefined)
+    expect(dashboard.response.status).toBe(200)
+
+    const first = await fixture.get("requester", "Requests")
+    expect(first.response.status).toBe(200)
+    expect(first.response.headers.get("content-type")).toContain("text/html")
+    expect(first.html).not.toContain("procurement-queue-unavailable")
+    const queue = readProcurementQueueView(fixture.prepared.at(-1)?.data.procurementQueueView)
+    if (!queue) throw new Error("The first visit did not prepare the production C02 queue")
+    expect(queue.rows).toEqual([])
+    expect(queue.stock.values).toEqual([])
+
+    const approvals = await fixture.get("buyer", "My approvals")
+    expect(approvals.response.status).toBe(200)
+    expect(readProcurementQueueView(fixture.prepared.at(-1)?.data.procurementQueueView)?.rows).toEqual([])
+    expect(await fixture.material()).toEqual(before)
+
+    // Defaults do not grant an identity access or relax a revoked session.
+    const ungranted = await fixture.get("reader-without-product-grant", "Requests")
+    expect(ungranted.response.status).toBe(403)
+    // Revoke after admission but before the actual C02 page is rendered:
+    // a pre-revoked unauthenticated request is a 403, not an in-flight 401.
+    fixture.interleave(async () => { fixture.revoke("requester") })
+    const revoked = await fixture.get("requester", "Requests")
+    expect(revoked.response.status).toBe(401)
+  } finally { await fixture.dispose() }
+})
+
+test("persisted incomplete Procurement stores fail closed instead of silently rendering an empty queue", async () => {
+  for (const persisted of [{ issued: { pr: [], po: [] } }, { settings: {} }, {}]) {
+    const fixture = await pageFixture(true)
+    try {
+      await fixture.persistence.transaction("procurement", async (snapshot) => {
+        snapshot.data.store = structuredClone(persisted)
+        return { commit: true, value: undefined }
+      })
+      const before = await fixture.material()
+      const result = await fixture.get("requester", "Requests")
+      expect(result.response.status).toBe(503)
+      expect(result.response.headers.get("content-type")).toContain("application/json")
+      expect(JSON.parse(result.html)).toEqual({ status: "unavailable", reason: "procurement-queue-unavailable" })
+      expect(fixture.prepared).toEqual([])
+      expect(await fixture.material()).toEqual(before)
+    } finally { await fixture.dispose() }
+  }
+})
+
 test("authorized Requests and My approvals render the actual C02 queue across baseline states", async () => {
   const fixture = await pageFixture()
   try {
@@ -113,7 +165,7 @@ test("the page fence refuses material changes and revocation between C02 prepara
   } finally { await fixture.dispose() }
 })
 
-async function pageFixture() {
+async function pageFixture(fresh = false) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-queue-view-"))
   const store = await openLocalStore(directory)
   const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID })
@@ -126,7 +178,7 @@ async function pageFixture() {
     const role = id === "requester" ? "requester" : id === "buyer" ? "buyer" : "viewer"
     return { id, canWrite: role !== "viewer", roles: [{ surface: "procurement", role }] }
   }
-  await persistence.transaction("procurement", async (snapshot) => {
+  if (!fresh) await persistence.transaction("procurement", async (snapshot) => {
     const entries = states.map((status) => {
       const number = `PR-${status}`
       const approval = { amount: 100, steps: [{ status: "pending", holderId: status === "pr_pending" ? "buyer" : status === "src_pending" ? "other-holder" : null, levelName: "Recorded approval" }] }
