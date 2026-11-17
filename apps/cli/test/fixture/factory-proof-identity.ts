@@ -17,7 +17,7 @@ const positive = (value: string) => /^[1-9][0-9]*$/.test(value) && Number.isSafe
  *
  * - sourceSHA = actual checked-out branch commit, never github.sha on a PR;
  * - expectedSourceSHA = github.event.pull_request.head.sha (PR) or github.sha (push);
- * - workflowSHA = github.sha, which denotes refs/pull/*/merge on PR.
+ * - workflowSHA = github.sha, which denotes refs/pull/<PR_NUMBER>/merge on PR.
  *
  * These are distinct provenances and must never be conflated.
  */
