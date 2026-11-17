@@ -452,12 +452,12 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                         </div>
                         <div class="flex flex-wrap gap-2 mt-3" data-sf-executive-handoff>
                           <SfExecutiveAction from={props.route} target={{ kind: "new-topic" }}
-                            label={{ pt: "Encaminhar ação em Hot Topics", en: "Send action to Hot Topics" }} />
+                            label={{ pt: "Criar ação em Hot Topics", en: "Create Hot Topic action" }} />
                           <SfExecutiveAction from={props.route}
                             target={{ kind: "relations", source: {
                               kind: spec.id === "CAP13" ? "risk" : "stakeholder", ref: String(row().id),
                             } }}
-                            label={{ pt: "Relacionar por referência", en: "Relate by reference" }} />
+                            label={{ pt: "Encaminhar vínculo por referência", en: "Link action by reference" }} />
                         </div>
                         <SfExecutiveRelatedLinks from={props.route}
                           omit={spec.id === "CAP13" ? "risk" : "stakeholder"} />
