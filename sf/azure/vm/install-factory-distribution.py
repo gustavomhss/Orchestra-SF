@@ -212,10 +212,11 @@ def check_release(path, source, expected_sha, file_index, manifest_bytes, *, sta
     if proof.get("sourceSHA") != source or proof.get("archiveSha256") != expected_sha or \
        proof.get("manifestSha256") != expected["distribution.json"]:
         refuse("installed candidate/digest receipt does not match")
-    with (path / "bin/orchestra").open("rb") as f:
-        elf = f.read(20)
-    if elf[:4] != b"\x7fELF" or len(elf) < 20 or elf[4:6] != b"\x02\x01" or elf[18:20] != b"\x3e\x00":
-        refuse("CLI not Linux x86_64 ELF64")
+    for native in ("bin/orchestra", "bin/hugr_omni.node", "bin/hugr-omni-supervisor"):
+        with (path / native).open("rb") as f:
+            elf = f.read(20)
+        if elf[:4] != b"\x7fELF" or len(elf) < 20 or elf[4:6] != b"\x02\x01" or elf[18:20] != b"\x3e\x00":
+            refuse("native ELF not Linux x86_64 ELF64: " + native)
     return proof
 
 
