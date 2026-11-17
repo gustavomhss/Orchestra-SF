@@ -12,7 +12,7 @@ const target = "linux-x64-baseline"
 const cli = path.resolve(import.meta.dir, "..")
 const root = path.resolve(cli, "../..")
 const digest = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex")
-const isWebSourceMap = (name: string) => /\\.map(?:\\.(?:gz|br))?$/i.test(name)
+const isWebSourceMap = (name: string) => /\.map(?:\.(?:gz|br))?$/i.test(name)
 
 async function webBuildFilePaths(root: string, current = ""): Promise<string[]> {
   const entries = await readdir(path.join(root, current), { withFileTypes: true })
