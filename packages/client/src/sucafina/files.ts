@@ -72,6 +72,22 @@ function validDocumentSearch(input: SfFilesOperationInput<"files.document-search
       input.documentRefs.every((ref) => nonempty(ref)))
 }
 function validDocumentConfirm(input: SfFilesOperationInput<"files.document-confirm">): boolean {
+  if ("action" in input && input.action === "reject") {
+    return only(input, ["surface", "action", "evidence", "reason", "page"]) &&
+      input.evidence.status === "extracted" && nonempty(input.evidence.id) &&
+      nonempty(input.reason, 500) && input.reason.trim().length >= 5 &&
+      positive(input.page) && input.page <= 500 &&
+      input.evidence.ref.kind === "document" && !input.evidence.rejection
+  }
+  if ("action" in input && input.action === "link") {
+    return only(input, ["surface", "action", "documentRef", "baseRef", "targetRef", "period"]) &&
+      input.documentRef.kind === "document" &&
+      nonempty(input.documentRef.target.fieldCandidateId) &&
+      positive(input.documentRef.target.confirmationVersion) &&
+      nonempty(input.baseRef) && nonempty(input.targetRef, 256) &&
+      /^.{1,256}:(?:[1-9]|1[0-2])$/.test(input.targetRef) && period(input.period)
+  }
+  if ("action" in input) return false
   const value = input.evidence
   return only(input, ["surface","evidence"]) && plain(value) &&
     value.status === "extracted" && nonempty(value.id) &&

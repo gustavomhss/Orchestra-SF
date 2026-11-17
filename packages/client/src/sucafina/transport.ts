@@ -230,7 +230,9 @@ export function createSfTransport(options: Readonly<{
       if (metadata.method === "GET" && call.idempotencyKey !== undefined) return failure("contract-mismatch")
       const bodyValue = metadata.method === "POST"
         ? operation.operationId === "files.document-confirm" && asJsonObject(wireInput)
-          ? asJsonObject(wireInput)?.evidence
+          ? asJsonObject(wireInput)?.action === undefined
+            ? asJsonObject(wireInput)?.evidence
+            : operationBody(metadata, wireInput)
           : operationBody(metadata, wireInput)
         : undefined
       if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")

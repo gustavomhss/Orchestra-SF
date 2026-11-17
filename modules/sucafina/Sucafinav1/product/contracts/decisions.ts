@@ -151,6 +151,7 @@ export type DocumentEvidence = {
   value: string | number | boolean | null
   unit?: string
   status: "extracted" | "confirmed" | "rejected" | "stale"
+  rejection?: { reason: string; page: number }
   ref: Extract<BusinessEvidenceRef, { kind: "document" }>
 }
 type PortfolioCombinationBase = { analysis?: { scenarioResultRef: string; scenario: ScenarioResult; comparisonRef: string; comparison: ScenarioComparison }; id: string; caseRefs: readonly string[]; components: readonly ProjectionComponent[]; costCoverageRefs: readonly string[]; conflicts: readonly string[]; restrictions: readonly string[] }
