@@ -7,6 +7,7 @@ import type { SfEditScopeKey, SfIntentRef, SfRef } from "@orchestra/schema/sucaf
 import { useSfContext } from "../../context"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame, type SfCopyKey, type SfLayoutMode, type SfUiState } from "../../shared/frame"
+import { SfExecutiveAction } from "../../cross-links/view"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfSort, type SfCopyKey as SfTableCopyKey } from "../../shared/table"
 import { SfListDetail, SfRecordDetail } from "../../shared/detail"
@@ -419,6 +420,13 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
               </section>
             </Show>
           </div>
+          <Show when={props.route.kind !== "new" ? selected() : null}>
+            {(project) => <div class="flex flex-wrap gap-2" data-sf-project-canonical-relations>
+              <SfExecutiveAction from={props.route}
+                target={{ kind: "relations", source: { kind: "project", ref: project().id } }}
+                label={{ pt: "Relacionar projeto a nota", en: "Link project to note" }} />
+            </div>}
+          </Show>
           <Show when={props.route.kind === "edit" && draft()}>
             {(controller) => <section class="sf-u05-edit">
               <h2>{t("sf.u05.projects.edit")}</h2>
