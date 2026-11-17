@@ -66,6 +66,11 @@ const cap01 = availability.find((item: unknown) => item && typeof item === "obje
   "resource" in item && item.resource === "CAP01") as
   { operations?: { operationId: string; state: string; operational: boolean }[] } | undefined
 const op = cap01?.operations?.find((row) => row.operationId === "domain.page.CAP01")
+const home = availability.find((item: unknown) => item && typeof item === "object" &&
+  "resource" in item && item.resource === "home") as { operations?: { operationId: string; state: string; operational: boolean; reason: string | null }[] } | undefined
+const homeOp = home?.operations?.find((row) => row.operationId === "projection.home")
+console.log("SF_VISUAL_DIRECT_HOME_STATUS_" + String(homeOp?.state ?? "absent") +
+  "_OPERATIONAL_" + String(homeOp?.operational ?? false) + "_REASON_" + String(homeOp?.reason ?? "none"))
 console.log("SF_VISUAL_DIRECT_CONTEXT_HTTP_" + contextResponse.status + "_STATUS_" +
   String(ctx.status ?? "unparsed") + "_CAP01_" + String(op?.state ?? "absent") +
   "_OPERATIONAL_" + String(op?.operational ?? false))
@@ -185,4 +190,4 @@ await writeFile(path.join(out, "manifest.json"), JSON.stringify({
   dataset: "empty synthetic scratch installation",
   screenshots: captured,
 }, null, 2) + "\n")
-if (captured.length !== 6) throw new Error("SF_VISUAL_INCOMPLETE")
+if (captured.length !== cases.length * 2) throw new Error("SF_VISUAL_INCOMPLETE")
