@@ -143,9 +143,10 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const status: unknown = await response.json()
     expect(status).toMatchObject({ login: "not-configured", uploads: "unavailable-scanner-not-configured" })
     expect(child.exitCode).toBeNull()
-    console.info(JSON.stringify({
-      schema: "sf-factory-package-proof-v1", version, target,
+    const receipt = {
+      schema: "sf-factory-package-proof-v1", sourceSHA: process.env.GITHUB_SHA, version, target,
       archiveSha256: archive.sha256,
+      manifestSha256: digest(await readFile(path.join(payload, "distribution.json"))),
       bundleSha256: closure.bundle.sha256,
       compilerInputCount: closure.inputs.length,
       assetCount: closure.assets.length,
@@ -153,7 +154,12 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       status: 200,
       origin: "http://localhost:4110",
       extractedOutsideCheckout: true,
-    }))
+    }
+    const evidenceDir = path.join(root, "distribution-logs")
+    await mkdir(evidenceDir, { recursive: true })
+    await writeFile(path.join(evidenceDir, "factory-package-receipt.json"),
+      JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" })
+    console.info("SF_FACTORY_PACKAGE_QUALIFIED " + JSON.stringify(receipt))
     child.kill("SIGTERM")
     await Promise.race([child.exited, Bun.sleep(5000)])
     if (child.exitCode === null) child.kill("SIGKILL")
