@@ -1,7 +1,7 @@
 /**
  * Q01 F02 pure metadata and route contract (no live host).
  * Public I00 metadata is compared to the pinned 305-operation catalog and the
- * explicit source-backed members download extension. This file does not claim installed host admission or authorization.
+ * explicit source-backed file downloads. This file does not claim installed host admission or authorization.
  */
 import { describe, expect, test } from "bun:test"
 import { createHash } from "node:crypto"
@@ -32,12 +32,15 @@ describe("Q01 integrated transport contract / original producer", () => {
     expect(SfOperationExtensions).toEqual({
       "files.export.members": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
         responseMode: "bytes", fixedQuery: { download: "members" } },
+      "files.export.po": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
+        responseMode: "bytes", fixedQuery: { download: "po" } },
       "files.export.review": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
         responseMode: "bytes", fixedQuery: { sf: "review-download" } },
       "reviews.report.prepare": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "prepare",
         responseMode: "json", fixedQuery: { sf: "review-report" }, maxRequestBytes: 65536 },
     })
     expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
+    expect(Object.hasOwn(catalog.operations, "files.export.po")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.review")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "reviews.report.prepare")).toBe(false)
     // U26/UI62 added a real, separately authorized producer *after* the frozen I00 catalog.
@@ -65,6 +68,7 @@ describe("Q01 integrated transport contract / original producer", () => {
     expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
     expect([...SfOperationIds].sort()).toEqual(expected)
     expect(SfOperationRegistry["files.export.members"]).toEqual(SfOperationExtensions["files.export.members"])
+    expect(SfOperationRegistry["files.export.po"]).toEqual(SfOperationExtensions["files.export.po"])
     expect(SfOperationRegistry["files.export.review"]).toEqual(SfOperationExtensions["files.export.review"])
     expect(SfOperationRegistry["reviews.report.prepare"]).toEqual(SfOperationExtensions["reviews.report.prepare"])
     for (const [id, source] of Object.entries(catalog.operations)) {
