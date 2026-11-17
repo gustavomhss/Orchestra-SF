@@ -1,7 +1,7 @@
 [Unit]
-Description=Orchestra-SF Web and Linux host (frozen C)
-Wants=network-online.target
+Description=Orchestra-SF Linux x64 factory and Web (managed identity)
 After=network-online.target
+Wants=network-online.target
 RequiresMountsFor=/var/lib/orchestra-sf
 StartLimitIntervalSec=60
 StartLimitBurst=3
@@ -11,24 +11,25 @@ Type=simple
 User=orchestra-sf
 Group=orchestra-sf
 WorkingDirectory=/var/lib/orchestra-sf/home
-EnvironmentFile=/etc/orchestra-sf/public.env
+EnvironmentFile=/etc/orchestra-sf/runtime.env
 Environment=HOME=/var/lib/orchestra-sf/home
-Environment=XDG_DATA_HOME=/var/lib/orchestra-sf/home/.local/share
-Environment=ORCHESTRA_WEB_UI_DIR=/opt/orchestra-sf/current/web
+Environment=ORCHESTRA_WEB_UI_DIR=/opt/orchestra-sf/current/bin/web
 UMask=0077
-ExecStart=/opt/orchestra-sf/current/bin/orchestra serve --hostname 127.0.0.1 --port ${SF_PORT} --allowed-host ${SF_FQDN} --installation /opt/orchestra-sf/current/factory/installation.mjs
+# '+' applies root privileges ONLY to the prestart secret materializer.
+ExecStartPre=+/usr/local/libexec/orchestra-sf/materialize-entra-secret.sh
+ExecStart=/opt/orchestra-sf/current/bin/orchestra serve --hostname 127.0.0.1 --port 4096 --allowed-host ${SF_FQDN} --installation /opt/orchestra-sf/current/bin/local/entry.mjs
 Restart=on-failure
 RestartSec=5
 TimeoutStopSec=30
-NoNewPrivileges=true
-PrivateTmp=true
-PrivateDevices=true
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
 ProtectSystem=strict
-ProtectHome=true
-ProtectKernelTunables=true
-ProtectControlGroups=true
-ProtectKernelModules=true
-RestrictSUIDSGID=true
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+ProtectKernelModules=yes
+RestrictSUIDSGID=yes
 CapabilityBoundingSet=
 AmbientCapabilities=
 ReadWritePaths=/var/lib/orchestra-sf

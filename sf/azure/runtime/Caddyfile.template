@@ -1,4 +1,5 @@
-# managed-orchestra-sf -- never activate without owner approval and real Entra/OIDC.
+# managed-orchestra-sf-mode: proxy
+# Render __SF_FQDN__ with approved public HTTPS hostname.
 __SF_FQDN__ {
     encode zstd gzip
     header {
@@ -6,8 +7,10 @@ __SF_FQDN__ {
         Referrer-Policy strict-origin-when-cross-origin
         Strict-Transport-Security "max-age=31536000"
     }
-    reverse_proxy 127.0.0.1:__SF_PORT__ {
-        # Original Host must survive; browser-supplied Forwarded is not trusted.
+    # No handle_path, rewrite, strip_prefix or URI manipulation.
+    # /sucafina/* and built Web assets reach the same native CLI.
+    reverse_proxy 127.0.0.1:4096 {
+        header_up Host {host}
         header_up -Forwarded
     }
 }
