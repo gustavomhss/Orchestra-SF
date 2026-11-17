@@ -251,7 +251,26 @@ async function planVersion(){
   demand(own().length===1,"plan-version-readback-failed");return own()[0].id;
 }
 async function doPlanner(){
-  const id=await planVersion();let screen=await html("Daniel","planner",{page:"OPEX",version:id});
+  const id=await planVersion();
+  // The product rejects OPEX currencies absent from the version's FX catalog.
+  // BRL gets a declared synthetic conversion. EUR is catalogued with NULL rate,
+  // preserving the intentional unavailable-FX journey rather than fabricating zero.
+  let fxScreen=await html("Daniel","planner",{page:"FX rates",version:id});
+  for(const input of [{cur:"BRL",rate:0.2},{cur:"EUR",rate:null}]){
+    const fxId=key("planner-fx:"+input.cur);
+    const rows=forms(fxScreen,"FX rates","save",fxId);
+    demand(rows.length<=1,"duplicate-planner-FX-ID:"+input.cur);
+    if(rows.length){
+      demand(rows[0].content.includes('name="cur"')&&rows[0].content.includes('value="'+input.cur+'"'),"FX-existing-currency-drift");
+      if(input.rate===null)demand(rows[0].content.includes("No rate")||fxScreen.includes("No rate"),"EUR-pending-rate-must-remain-unavailable");
+      continue;
+    }
+    const add=findForm(fxScreen,"FX rates","save","");
+    await command("Daniel","planner","FX rates","save",fxId,0,{versionId:id,collection:"fx",...input});
+    fxScreen=await html("Daniel","planner",{page:"FX rates",version:id});
+    demand(forms(fxScreen,"FX rates","save",fxId).length===1,"planner-FX-rate-not-observable:"+input.cur);
+  }
+  let screen=await html("Daniel","planner",{page:"OPEX",version:id});
   for(const line of fixtures.planner.lines){
     const lineId=key("planner:"+line.id);
     if(forms(screen,"OPEX","save",lineId).length)continue;
