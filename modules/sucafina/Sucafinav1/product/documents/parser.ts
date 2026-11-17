@@ -5,16 +5,25 @@ import path from "node:path"
 import type { PortResult } from "../contracts/ports.ts"
 import type { PrivateDocumentParser } from "./extract.ts"
 
-// Shared across parser instances: creating another host does not buy another compute slot.
+// Shared across parser instances: creating another host does not buy another
+// compute slot, worker, or input-memory reservation in the same process.
 let active = 0
+let reservedInputBytes = 0
 const retiring = new Set<Worker>()
 const maxActive = 2
-const maxResidentWorkers = maxActive * 2
+// Two failed boots may retire while one bounded recovery probe is admitted.
+// A fourth resident worker is never created, even if terminate() is delayed.
+const maxResidentWorkers = maxActive + 1
+// This is an input-payload budget, not an RSS claim. Worker heaps remain bounded
+// separately by resourceLimits and the resident-worker cap below.
+const maxConcurrentInputBytes = 40 * 1024 * 1024
 
 export type ParserRuntimeOptions = {
   createWorker?: (kind: "pdf" | "docx") => Worker
   retirementGraceMs?: number
   terminationTimeoutMs?: number
+  /** Testable lower ceiling; production callers may not raise the process budget. */
+  maxConcurrentBytes?: number
 }
 
 type WorkerTermination = { settled: boolean; completion: Promise<void> }
@@ -26,7 +35,8 @@ export function createPrivateDocumentParser(
   const timeout = limits.timeoutMs ?? 15_000
   const retirementGrace = runtime.retirementGraceMs ?? timeout
   const terminationTimeout = runtime.terminationTimeoutMs ?? Math.min(timeout, 5_000)
-  if (![retirementGrace, terminationTimeout].every((value) => Number.isSafeInteger(value) && value > 0))
+  const concurrentByteLimit = runtime.maxConcurrentBytes ?? maxConcurrentInputBytes
+  if (![retirementGrace, terminationTimeout, concurrentByteLimit].every((value) => Number.isSafeInteger(value) && value > 0) || concurrentByteLimit > maxConcurrentInputBytes)
     throw new Error("Invalid document parser lifecycle limits")
   const createWorker = runtime.createWorker ?? ((kind: "pdf" | "docx") => new Worker(new URL("./parser-worker.ts", import.meta.url), {
     workerData: { kind },
@@ -39,23 +49,32 @@ export function createPrivateDocumentParser(
       return { status: "failed", reason: "invalid document limits" }
     if (kind === "pdf" && (bytes.byteLength < 5 || new TextDecoder().decode(bytes.subarray(0, 5)) !== "%PDF-"))
       return { status: "failed", reason: "invalid PDF" }
-    if (active >= maxActive || active + retiring.size >= maxResidentWorkers)
+    if (active >= maxActive || active + retiring.size >= maxResidentWorkers || reservedInputBytes + bytes.byteLength > concurrentByteLimit)
       return { status: "unavailable", reason: "document-parser-busy" }
 
     const started = performance.now()
     active += 1
-    let released = false
-    const release = () => {
-      if (released) return
-      released = true
+    reservedInputBytes += bytes.byteLength
+    let activeReleased = false
+    let reservationReleased = false
+    const releaseActive = () => {
+      if (activeReleased) return
+      activeReleased = true
       active -= 1
+    }
+    const releaseReservation = () => {
+      if (reservationReleased) return
+      reservationReleased = true
+      reservedInputBytes -= bytes.byteLength
+      if (reservedInputBytes < 0) throw new Error("Document parser byte reservation underflow")
     }
     const worker = (() => {
       try { return createWorker(kind) }
       catch { return undefined }
     })()
     if (!worker) {
-      release()
+      releaseActive()
+      releaseReservation()
       return { status: "unavailable", reason: "document-parser-unavailable" }
     }
 
@@ -72,8 +91,11 @@ export function createPrivateDocumentParser(
     })
     const start = await waitForReady(ready, timeout, signal)
     if (!start || signal?.aborted) {
+      // No document payload has crossed into this worker yet, so the input-byte
+      // reservation can be released even while the boot worker retires.
       retireWorker(worker, ready, retirementGrace, terminationTimeout)
-      release()
+      releaseActive()
+      releaseReservation()
       return { status: "unavailable", reason: signal?.aborted ? "cancelled" : "document-parser-start-timeout" }
     }
 
@@ -117,9 +139,15 @@ export function createPrivateDocumentParser(
     } finally {
       try {
         const termination = await terminateWorker(worker, terminationTimeout)
-        if (!termination.settled) retainUntilStopped(worker, termination.completion)
+        if (termination.settled) releaseReservation()
+        else {
+          retainUntilStopped(worker, termination.completion)
+          // The transferred payload may still be resident. Keep its reservation
+          // until the actual worker termination promise settles.
+          void termination.completion.then(releaseReservation)
+        }
       } finally {
-        try { if (directory) await rm(directory, { recursive: true, force: true }) } finally { release() }
+        try { if (directory) await rm(directory, { recursive: true, force: true }) } finally { releaseActive() }
       }
     }
   }
@@ -165,10 +193,16 @@ function retireWorker(worker: Worker, ready: Promise<boolean>, graceMs: number, 
 async function terminateWorker(worker: Worker, timeoutMs: number): Promise<WorkerTermination> {
   worker.unref()
   let settled = false
-  const completion = worker.terminate().then(
-    () => { settled = true },
-    () => { settled = true },
-  )
+  let completion: Promise<void>
+  try {
+    completion = worker.terminate().then(
+      () => { settled = true },
+      () => { settled = true },
+    )
+  } catch {
+    settled = true
+    completion = Promise.resolve()
+  }
   await Promise.race([completion, delay(timeoutMs)])
   return { settled, completion }
 }
