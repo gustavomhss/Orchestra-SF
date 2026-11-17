@@ -6,7 +6,7 @@ import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
 import { SfRoutineResult, SfRoutines } from "@orchestra/schema/sucafina/routines"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
-import { SfRunState, SfStatePanel } from "../../shared/states"
+import { SfRunState, SfStatePanel, type SfRunPhase } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import type { SfUiState } from "../../shared/frame"
@@ -187,6 +187,15 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
     if (!result || !task || !result.runRef || result.admission !== "admitted") return null
     return { kind: "run" as const, runRef: result.runRef as SfRef, task, inputVersion: result.admissionVersion }
   }
+  const nativeRunPhase = (): SfRunPhase => {
+    if (view.mode !== "projection" || !view.proof?.execution) return "ready"
+    const { state } = view.proof.execution
+    if (state === "completed") return view.proof.verifier === "verified" ? "complete" : "unavailable"
+    if (state === "cancelled") return "cancelled"
+    if (state === "failed") return "failed"
+    if (state === "preparing") return "running"
+    return "queued"
+  }
 
   return (
     <SfPageFrame titleKey={n29Key("sf.ui65.title")} context={[]} tabs={[]} activeTab={null}
@@ -235,7 +244,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                       state={source().admission === "admitted" ? "ready" : "needs-input"}
                       actions={[]} onOpen={() => undefined} />
                   }>
-                    {(run) => <SfRunState identity={run()} state="ready"
+                    {(run) => <SfRunState identity={run()} state={nativeRunPhase()}
                       actions={[]} onOpen={() => undefined} />}
                   </Show>
                   <p>{t("sf.u27.admission")}: <bdi>{source().admission}</bdi></p>
@@ -247,7 +256,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                     <p>{t("sf.u27.runningUnverified")}</p>
                   </Show>
                 </section>
-                <section class="mx-card" aria-label={t("sf.u27.execution")}>
+                <section class="mx-card" aria-label={t("sf.u27.execution")} data-sf-native-execution data-verifier={view.proof?.verifier ?? "unavailable"}>
                   <h2>{t("sf.u27.execution")}</h2>
                   <Show when={view.mode === "projection" && view.proof}
                     fallback={<p>{t("sf.u27.nativeProofUnavailable")}</p>}>
