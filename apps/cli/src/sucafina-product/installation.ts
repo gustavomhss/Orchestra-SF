@@ -23,10 +23,13 @@ export type SfInstallation = {
 /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
 export async function loadSfInstallation(file: string, origin: string) {
   if (!path.isAbsolute(file) || new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ABSOLUTE_PATH_AND_ORIGIN_REQUIRED")
-  const { createSfHostRuntime } = await import("./host-context")
-  const module = await import(pathToFileURL(await realpath(file)).href)
+  const { createSfHostRuntime, createCurrentChoiceFence } = await import("./host-context")
+  const resolved = await realpath(file)
+  const module = await import(pathToFileURL(resolved).href)
   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
-  const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime })
+  // Owner-selected factory and its colocated, read-only AI policy tree; do not rely on bundler-rewritten import.meta.dir.
+  const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime, createCurrentChoiceFence,
+    sourceRoot: path.resolve(path.dirname(resolved), "../product/ai") })
   return composeSfInstallation(value, origin)
 }
 

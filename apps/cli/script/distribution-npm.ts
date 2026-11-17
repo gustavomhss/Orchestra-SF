@@ -92,6 +92,9 @@ export async function prepareNpmDistribution(input: { payloads: string[]; out: s
       await writeFile(join(source, "package.json"), JSON.stringify({
         name: `@humanguardrail/cli-${target}`, version, license: "MIT", repository: repository(),
         os: metadata.os, cpu: metadata.cpu,
+        // Preserve the verified SF factory declaration when recreating the platform package.
+        // Otherwise prepareDistribution correctly rejects the copied factory files as undeclared.
+        ...(metadata.sfFactory === "bin/local/entry.mjs" ? { sfFactory: metadata.sfFactory } : {}),
         files: [...manifest.files.map((file) => file.path), "distribution.json", "checksums.sha256"].sort(),
       }, null, 2))
       const prepared = join(state.scratch, `prepared-${target}`)

@@ -1,0 +1,108 @@
+name: sf-factory-package
+
+on:
+  push:
+    branches: [sfa-factory-package]
+  # Retain this dedicated native gate when the feature branch is eventually merged.
+  # Only PRs that change the installation product or its distribution producer qualify.
+  pull_request:
+    branches: [close-final-candidate]
+    paths:
+      - ".github/workflows/sf-factory-package.yml"
+      - "apps/cli/script/build.ts"
+      - "apps/cli/script/distribution-npm.ts"
+      - "apps/cli/script/distribution-payload.ts"
+      - "apps/cli/script/sf-factory-package.ts"
+      - "apps/cli/script/factory-receipt-check.ts"
+      - "apps/cli/src/sucafina-product/**"
+      - "apps/cli/test/factory-distribution-linux.test.ts"
+      - "apps/cli/test/fixture/factory-proof-identity.ts"
+      - "apps/cli/test/distribution-web*.test.ts"
+      - "apps/cli/test/fixture/distribution-native-proof.ts"
+      - "apps/web/**"
+      - "script/distribution-deno.ts"
+      - "modules/sucafina/Sucafinav1/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf-factory-package-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-factory:
+    name: linux-factory (compiled + extracted)
+    if: github.repository == 'gustavomhss/Orchestra-SF' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/sfa-factory-package')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact event source SHA (not PR merge ref)
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          # On pull_request, github.sha is refs/pull/N/merge, NOT the branch head.
+          # Pin the actual PR head so the checkout and source receipt are identical.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Setup Bun 1.3.14 x64 baseline
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+          no-cache: true
+      - name: Install pinned dependencies
+        run: bun install --frozen-lockfile
+      - name: Build real native Omni companions
+        working-directory: native/omni
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = x86_64
+          rustup show active-toolchain || rustup toolchain install
+          cargo build --locked --release -p hugr-omni-node -p omni-supervisor
+      - name: PR 254 Web sourcemap exclusion and inline-map negative tests
+        working-directory: apps/cli
+        env:
+          ORCHESTRA_OMNI_CONTROL: declared
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+        run: bun test ./test/distribution-web.test.ts --timeout 30000
+      - name: Compile, package, archive, extract outside checkout, and load factory
+        working-directory: apps/cli
+        env:
+          # A factory packaging proof does not invoke the orchestrated core spawner.
+          # 'declared' is the enforced focused-test mode, never a fake Omni pass.
+          ORCHESTRA_OMNI_CONTROL: declared
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+          SF_FACTORY_EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          SF_FACTORY_EVENT_NAME: ${{ github.event_name }}
+          SF_FACTORY_RUN_ID: ${{ github.run_id }}
+          SF_FACTORY_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: bun test ./test/factory-distribution-linux.test.ts --timeout 1800000
+      - name: PR 254 installed Web/native lifecycle qualification
+        working-directory: apps/cli
+        env:
+          SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+          ORCHESTRA_OMNI_CONTROL: declared
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+        run: bun test ./test/distribution-web-native.test.ts --timeout 1800000
+      - name: Independently audit qualified archive, Web maps and SHA-bound receipt
+        working-directory: apps/cli
+        env:
+          SF_FACTORY_EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          # An event-provided SHA is not the observed source until HEAD agrees.
+          actual="$(git rev-parse --verify HEAD)"
+          test "$actual" = "$SF_FACTORY_EXPECTED_SOURCE_SHA" || { echo "SF_FACTORY_CHECKOUT_SHA_MISMATCH" >&2; exit 1; }
+          export SF_FACTORY_CHECKOUT_SHA="$actual"
+          bun run script/factory-receipt-check.ts "../../distribution-logs/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+      - name: Upload extracted-factory qualification archive and factual proof
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-factory-package-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: distribution-logs/${{ github.run_id }}-${{ github.run_attempt }}/
+          if-no-files-found: error
+          retention-days: 7
