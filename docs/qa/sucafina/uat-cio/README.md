@@ -69,3 +69,24 @@ Após peer review independente, **este pacote NÃO é declarado state of the art
 ## V3 Lean — piloto de prova por resultado (sem bloat)
 
 A nova camada em [quality-v3/README.md](quality-v3/README.md) **reutiliza** este atlas, os dossiês QA2-001/002/003, os testes Bun/Playwright e o template `EVIDENCE-RECORD.json`. São **três casos prioritários, 21 provas identificadas e um verificador read-only em Node**, não outro runner, seed ou lista inflada de histórias. Estado: `NOT_RUN` até execução real; nenhum PASS hospedado ou GO-LIVE implícito.
+
+## Operação por LLM: o agente executa como usuário (não como API runner)
+
+**Esta é a função das skills.** As stories acima são os *casos de negócio*. Os agentes devem conduzi-los na interface, com sessões reais e independentes de cada ator; os scripts de V3 são apenas verificadores de evidência, não o executor.
+
+Skills descobertas nativamente pelo Orchestra (não exigem plugin, MCP ou runner novos):
+
+| Skill | Papel |
+| --- | --- |
+| [`sf-user-journey-qa`](../../../../.orchestra/skills/sf-user-journey-qa/SKILL.md) | Protocolo geral `look → act → observe → prove`, autenticação, controle de sessão, classificações e evidência |
+| [`sf-finance-user-qa`](../../../../.orchestra/skills/sf-finance-user-qa/SKILL.md) | QA2-001 · Finance/CIO → cenário de forecast |
+| [`sf-procurement-user-qa`](../../../../.orchestra/skills/sf-procurement-user-qa/SKILL.md) | QA2-002 · Requester/Buyer/Approver/CIO → compra e aprovação |
+| [`sf-import-user-qa`](../../../../.orchestra/skills/sf-import-user-qa/SKILL.md) | QA2-003 · Finance/Auditor → importação, preview e recuperação |
+
+**Pedido de execução ao agente (modelo):**
+
+> Carregue `sf-user-journey-qa` e `sf-procurement-user-qa`. Execute QA2-002 como usuário no **ambiente QA isolado**, no SHA C realmente instalado. Use os perfis autenticados de Caio, Gabriel, Pedro, Sofie e CIO nas interfaces que o produto oferece. Observe cada tela antes de agir; não invoque APIs de mutação para substituir cliques. Capture provas privadas por passo e retorne `PASSED_WITH_EVIDENCE`, `FAILED_PRODUCT` ou `BLOCKED_*` com o motivo. Sem credenciais/browser/fixture real, não invente execução.
+
+**Controlador de interface:** aproveitar `dock-<site>_{look,find,act,wait,navigate}` quando o site estiver aberto no MCP Dock (`docs/guides/mcp-dock-servers.md`), ou o Playwright já presente no app-shell para a UI nativa. A escolha não altera o princípio: **interagir pela interface real**. O navegador não é concedido pela skill: o agente só usa ferramentas previamente disponíveis e autorizadas. Contas/segredos privados não entram neste repositório. Recibos e logs observados ficam num diretório privado de evidência.
+
+A execução automática dos **185 casos** não é declarada pronta: os **3 primeiros pilotos** precisam executar de ponta a ponta com perfis reais no tenant QA. Ampliar para outras stories significa reutilizar a skill-base + o catálogo existente, sem criar 185 skills.
