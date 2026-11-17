@@ -52,7 +52,8 @@ export function applySfAdminChange(input: {
   const { snapshots, configured, directory, principalRef, form, at } = input
   const actorId = principalRef.toLowerCase()
   const actor = directory.users.find((person) => person.id === actorId)
-  if (!actor || !actor.groupIds.includes(SF_SUPREME_ADMIN_GROUP_ID)) return { ok: false, status: 503 }
+  if (!actor) return { ok: false, status: 503 }
+  if (!actor.groupIds.includes(SF_SUPREME_ADMIN_GROUP_ID)) return { ok: false, status: 403 }
   if (form.getAll("action").length !== 1 || form.getAll("version").length !== 1 ||
     typeof form.get("action") !== "string" || typeof form.get("version") !== "string") return { ok: false, status: 422 }
   const rawVersion = form.get("version")
