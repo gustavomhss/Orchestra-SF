@@ -217,7 +217,12 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const row=request(),version=sourceVersion(),controller=draft()
     if(!row||version===null||!controller)return
     const state=controller.snapshot()
-    if(state.availability==="active"&&state.baseVersion!==version)
+    // A dirty draft intentionally keeps its original CAS when a newer remote
+    // version conflicts. Replaying that *same* remote witness from this effect
+    // causes receiveRemote() to publish again and recursively rerun Solid.
+    // A genuinely newer source version may still update the conflict witness.
+    if(state.availability==="active"&&state.baseVersion!==version&&
+      state.conflict?.currentVersion!==version)
       controller.receiveRemote({baseVersion:version,value:editableSourcing(row)})
   })
   const snapshot=()=>draft()?.snapshot()

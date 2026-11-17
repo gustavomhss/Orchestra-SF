@@ -22,7 +22,7 @@ if (sourceBlob !== "31dbec1726fd8147156b01dc545726650ffd49e1") {
   throw new Error("Q01_TRANSPORT_CATALOG_DRIFT_REQUIRES_I00")
 }
 const catalog = JSON.parse(catalogText) as {
-  operations: Record<string, { method: string; pathTemplate: string; effect: string; responseMode: string;
+  operations: Record<string, { method: string; pathTemplate: string; effect: string; responseMode?: string;
     fixedQuery?: Record<string, string>; fixedBodyDiscriminator?: Record<string, string> }>
 }
 
@@ -40,7 +40,28 @@ describe("Q01 integrated transport contract / original producer", () => {
     expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.review")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "reviews.report.prepare")).toBe(false)
-    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions)].sort()
+    // U26/UI62 added a real, separately authorized producer *after* the frozen I00 catalog.
+    // The original 305-operation blob and 3 declared exports are unchanged:
+    // apps/cli/src/sucafina-product/memory-http.ts binds POST, bounded JSON
+    // and current UI authority to product/memory/similarity217.ts.
+    const similarCases = "intelligence.memory-similar-cases"
+    expect(Object.hasOwn(catalog.operations, similarCases)).toBe(false)
+    expect(Object.hasOwn(SfOperationExtensions, similarCases)).toBe(false)
+    expect(SfOperationRegistry[similarCases]).toEqual({
+      method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
+      responseMode: "json", fixedQuery: { sf: "memory-similar-cases" }, maxRequestBytes: 65536,
+    })
+    // NAV-01 deliberately replaced private-search GET with bounded POST to
+    // avoid exposing the search text in URLs. Preserve the frozen source fact
+    // and pin the installed original router's *different* method explicitly.
+    // Source: apps/cli/src/sucafina-product/native-ui/router.ts.
+    const privateSearch = "projection.search"
+    expect(catalog.operations[privateSearch]?.method).toBe("GET")
+    expect(SfOperationRegistry[privateSearch]).toEqual({
+      method: "POST", pathTemplate: "{mount}/api/ui/projections/search", effect: "read",
+      responseMode: "json", maxRequestBytes: 4096,
+    })
+    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions), similarCases].sort()
     expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
     expect([...SfOperationIds].sort()).toEqual(expected)
     expect(SfOperationRegistry["files.export.members"]).toEqual(SfOperationExtensions["files.export.members"])
@@ -49,10 +70,13 @@ describe("Q01 integrated transport contract / original producer", () => {
     for (const [id, source] of Object.entries(catalog.operations)) {
       const actual: SfNativeOperationRoute = SfOperationRegistry[id as keyof typeof SfOperationRegistry]
       expect(actual, "Q01 integrated metadata missing " + id).toBeDefined()
-      expect(actual.method).toBe(source.method)
+      expect(actual.method, "Q01 producer method " + id).toBe(id === privateSearch ? "POST" : source.method)
       expect(actual.pathTemplate).toBe(source.pathTemplate)
       expect(actual.effect).toBe(source.effect)
-      expect(actual.responseMode).toBe(source.responseMode)
+      // The pinned 305 records do not encode responseMode; verify only claims
+      // actually in the frozen source, and validate the normalized enum otherwise.
+      if (source.responseMode !== undefined) expect(actual.responseMode).toBe(source.responseMode)
+      else expect(["json", "bytes", "empty", "navigation"]).toContain(actual.responseMode)
       expect(actual.fixedQuery ?? {}).toEqual(source.fixedQuery ?? {})
       expect(actual.fixedBodyDiscriminator ?? {}).toEqual(source.fixedBodyDiscriminator ?? {})
     }
