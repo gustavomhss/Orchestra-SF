@@ -253,6 +253,23 @@ export async function createConfiguredInstallation(
   return {
     mount: config.mount,
     ...(runtime ? { host: runtime.contributions } : {}),
+    // Discovery uses only the already-loaded host identity and its exact private location.
+    // It never guesses a project from cwd, accepts another workspace, or grants actor authority.
+    ...(runtime ? { discovery: {
+      current: async (signal: AbortSignal) => signal.aborted ? undefined : {
+        publicOrigin: config.origin, mount: config.mount,
+        authMode: operator ? "local-operator" as const : "microsoft" as const,
+        identity: () => runtime?.identity(),
+      },
+      forAdmittedLocation: async (location: Readonly<{ directory: string; workspace?: string }>, signal: AbortSignal) => {
+        const identity = runtime?.identity()
+        if (signal.aborted || !identity || location.workspace ||
+            location.directory !== identity.location.directory) return []
+        return [{ publicOrigin: config.origin, mount: config.mount,
+          authMode: operator ? "local-operator" as const : "microsoft" as const,
+          identity: () => runtime?.identity() }]
+      },
+    } } : {}),
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })

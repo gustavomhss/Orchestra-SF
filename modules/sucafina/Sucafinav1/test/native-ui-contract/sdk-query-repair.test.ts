@@ -41,6 +41,10 @@ test("raw URL parser retains both exact wire branches and rejects partial/mixed/
   expect(parseSfInstallationSelector(discoveryUrl(
     "select=ids&installationId=installation-A&projectId=project-A",
   ))).toEqual({ select: "ids", installationId: "installation-A", projectId: "project-A" })
+  // Effect HttpServerRequest.url is relative; a genuine handler must not throw 500 here.
+  expect(parseSfInstallationSelector(
+    "/api/sucafina/installations?select=ids&installationId=installation-A&projectId=project-A",
+  )).toEqual({ select: "ids", installationId: "installation-A", projectId: "project-A" })
   expect(parseSfInstallationSelector(discoveryUrl(
     "select=location&location%5Bdirectory%5D=%2Fwork%2Fa",
   ))).toEqual({ select: "location", location: { directory: "/work/a" } })

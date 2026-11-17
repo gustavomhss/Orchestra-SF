@@ -23,7 +23,7 @@ const cookie = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64})(?:;|$)/.exec(ra
 if (!cookie || !/(?:^|;\s*)Path=\/sucafina(?:;|$)/.test(rawCookie) || !/(?:^|;\s*)HttpOnly(?:;|$)/.test(rawCookie))
   throw new Error("SF_VISUAL_HTTPONLY_SESSION_NOT_ISSUED")
 const token = Buffer.from("orchestra:" + password).toString("base64")
-const directory = process.env.GITHUB_WORKSPACE ?? process.cwd()
+const directory = privateRoot
 const cases = [
   { id: "dashboard", route: "/orchestra/sf-dashboard/executive", title: "Executive Dashboard" },
   { id: "planner", route: "/orchestra/sf-planner/overview", title: "Overview" },

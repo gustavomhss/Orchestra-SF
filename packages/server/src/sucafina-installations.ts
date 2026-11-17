@@ -29,7 +29,7 @@ export class SfInvalidInstallationSelector extends Error {
 
 /** Validate raw URL before SDK decoding: no mixed branches, duplicates, unknowns or partial input. */
 export function parseSfInstallationSelector(url: string): SfInstallationSelector {
-  const query = new URL(url).search
+  const query = new URL(url, "http://localhost").search
   if (/%(?![\da-fA-F]{2})/.test(query)) throw new SfInvalidInstallationSelector()
   const pairs = new URLSearchParams(query)
   const entries = [...pairs.entries()]
