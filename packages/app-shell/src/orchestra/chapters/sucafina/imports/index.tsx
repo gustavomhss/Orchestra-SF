@@ -3,6 +3,8 @@ import { A } from "@solidjs/router"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfFilesClient } from "@orchestra/client/sucafina/files"
+import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import { decodeRequestsPage, requestRef, requestVersion, type SfRequestsRead } from "../procurement/requests/model"
 import type { SfFilesOperationOutput } from "@orchestra/schema/sucafina/files"
 import type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 import type { SfSurfaceProps } from "../context/contracts"
@@ -63,8 +65,12 @@ type LeafState = {
   detail: Detail | undefined
   busy: boolean
   error: SfUiState | undefined
-  exportKind: "xlsx" | "suppliers" | "register" | "json"
-  download: Readonly<{ href: string; name: string }> | undefined
+  exportKind: "xlsx" | "suppliers" | "register" | "json" | "po"
+  download: Readonly<{ name: string }> | undefined
+  poRead: Extract<SfRequestsRead, { kind: "ready" }> | undefined
+  poSelection: string
+  poState: "idle" | "loading" | "ready" | "denied" | "stale" | "unavailable"
+  poRefresh: number
 }
 
 // The document contract remains the authority for the financial result, receipt,
@@ -81,11 +87,11 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     file: undefined, newVersion: false, removeMissing: false, replace: false,
     headerRow: "", manifest: undefined, reference: undefined, detail: undefined,
     busy: false, error: undefined, exportKind: "xlsx", download: undefined,
+    poRead: undefined, poSelection: "", poState: "idle", poRefresh: 0,
   })
   let generation = 0
   let controller = new AbortController()
   let applyIntent: Readonly<{ id: string; version: number; digest: string; key: string }> | undefined
-  let exportHref: string | undefined
   let installedScope: string | undefined
 
   const ownerStamp = () => {
@@ -102,11 +108,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   }
   const current = (token: ReturnType<typeof fence>) =>
     !token.signal.aborted && token.generation === generation && token.stamp === ownerStamp()
-  const revokeExport = () => {
-    if (exportHref) URL.revokeObjectURL(exportHref)
-    exportHref = undefined
-    setState("download", undefined)
-  }
+  // Export bytes must not remain as a reusable blob URL after authorization changes.
+  const revokeExport = () => setState("download", undefined)
   const clearReview = () => {
     applyIntent = undefined
     setState({ manifest: undefined, reference: undefined, detail: undefined,
@@ -139,7 +142,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const ready = auth.ready()
     const resource = ready?.context.availability.find((entry) =>
       entry.family === "files" && entry.operations.some((op) => op.operationId === operationId))
-    return resource?.operations.some((op) => op.operationId === operationId && op.state === "ready") ?? false
+    return resource?.operations.some((op) => op.operationId === operationId && op.state === "ready" && op.operational) ?? false
   }
   const editLocked = () => state.busy || state.phase === "unknown" || state.phase === "submitting"
   const newSource = (surface: ImportSurface) => {
