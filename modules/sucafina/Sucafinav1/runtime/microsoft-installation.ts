@@ -36,7 +36,27 @@ export async function prepareMicrosoftInstallation(
   const transport: MicrosoftTransport = Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: config.listenerOrigin, ingressOrigin: config.ingressOrigin, publicOrigin: config.origin })
   return {
     loaded: { config, directory, keys }, client, grants: config.grants, workspaceDirectory: config.workspaceDirectory, transport,
-    createIdentity: (secrets: LocalSecrets) => createMicrosoftIdentity({ origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId, client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds, now: overrides.now }),
+    createIdentity: (secrets: LocalSecrets) => {
+      const identity = createMicrosoftIdentity({ origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId, client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds, now: overrides.now })
+      return {
+        ...identity,
+        handle: async (request: Request) => {
+          const handled = await identity.handle(request)
+          if (handled) return handled
+          const url = new URL(request.url)
+          // Only anonymous GETs of the three exact mounted HTML destinations
+          // enter the existing PKCE login flow; no API routes, POSTs, other
+          // mounts, or revoked session cookies gain a new admission path.
+          if (request.method !== "GET" || url.origin !== config.origin || request.headers.has("cookie") ||
+            !["dashboard", "planner", "procurement"].some((name) => url.pathname === `${config.mount}/${name}`)) return undefined
+          if (process.env.SF_AUTH_DIAG === "1") console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "microsoft-identity", stage: "anonymous-login-redirect", path: url.pathname }))
+          return new Response(null, { status: 303, headers: {
+            Location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`,
+            "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff",
+          } })
+        },
+      }
+    },
   }
 }
 
