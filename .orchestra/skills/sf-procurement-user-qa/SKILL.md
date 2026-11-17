@@ -1,6 +1,7 @@
 ---
 name: sf-procurement-user-qa
 description: Behave as the actual requester, buyer, holder approver, Finance and CIO in Orchestra-SF procurement (QA2-002, SF-E2E-003, J04): PR→quotes→sourcing→PO, with eligibility, FX and role-denial checks via the real UI.
+internal: true
 ---
 
 # SF Procurement — buyer, requester and approver sitting

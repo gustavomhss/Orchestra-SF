@@ -1,6 +1,7 @@
 ---
 name: sf-import-user-qa
 description: Act as Finance and an independent auditor in the Orchestra-SF XLSX import UI (QA2-003, SF-E2E-005, J03): upload, preview, reject stale versions, apply once, recover an original receipt after delivery loss.
+internal: true
 ---
 
 # SF Import — upload, preview, one apply, recovery

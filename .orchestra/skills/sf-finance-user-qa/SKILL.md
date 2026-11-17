@@ -1,6 +1,7 @@
 ---
 name: sf-finance-user-qa
 description: Play Finance, Budget Owner and CIO as distinct real users to execute Orchestra-SF forecast/planner UAT (QA2-001, SF-E2E-002, J02), using visible UI forms, version comparisons and independent money oracles.
+internal: true
 ---
 
 # SF Finance — actually use the planner

@@ -90,3 +90,11 @@ Skills descobertas nativamente pelo Orchestra (não exigem plugin, MCP ou runner
 **Controlador de interface:** aproveitar `dock-<site>_{look,find,act,wait,navigate}` quando o site estiver aberto no MCP Dock (`docs/guides/mcp-dock-servers.md`), ou o Playwright já presente no app-shell para a UI nativa. A escolha não altera o princípio: **interagir pela interface real**. O navegador não é concedido pela skill: o agente só usa ferramentas previamente disponíveis e autorizadas. Contas/segredos privados não entram neste repositório. Recibos e logs observados ficam num diretório privado de evidência.
 
 A execução automática dos **185 casos** não é declarada pronta: os **3 primeiros pilotos** precisam executar de ponta a ponta com perfis reais no tenant QA. Ampliar para outras stories significa reutilizar a skill-base + o catálogo existente, sem criar 185 skills.
+
+## Campanhas seletivas por grupo (skills de manutenção)
+
+**Uma skill por story, mais grupos que apenas selecionam stories existentes.** A árvore interna `.orchestra/skills/sf-user-journey-qa/groups/` oferece `smoke` (8 P0), `finance`, `procurement`, `decisions`, `imports`, `reviews`, `people`, `work`, `routines` e `access`. O grupo não é uma feature do produto nem um atalho para mutações de backend.
+
+Um agente QA carrega `sf-user-journey-qa` → `sf-user-journey-qa-groups` → **o grupo solicitado**, e então carrega as skills individuais referidas na campanha, executando-as na UI real e registrando evidência por story. Para um caso único, abre diretamente a folha correspondente. **Nunca executar todos os grupos automaticamente.** Quando necessário, a execução completa das 185 histórias exige ordem explícita do QA/owner.
+
+Fonte de verdade: [`story-groups.json`](story-groups.json), sem cópia dos passos. Gerador/check somente estático: `python3 docs/qa/sucafina/uat-cio/scripts/generate-story-skills.py --check`; para listar uma seleção sem executar: `--list-group smoke` ou `--list-group procurement`. A seleção não prova execução em Azure/Entra e não altera o gate de release.
