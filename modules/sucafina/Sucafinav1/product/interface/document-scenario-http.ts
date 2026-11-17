@@ -55,7 +55,9 @@ export function createSfDocumentScenarioHttp(input: {
       if (targets.status !== "ok") return reply(targets, code(targets.status))
       if (!await input.authority.host.revalidate(grant.value)) return reply({ status: "denied" }, 403)
       if (mode === "document-scenario-targets") {
-        if (!input.links) return reply({ status: "unavailable", reason: "document-link-service-unavailable" }, 503)
+        // Legacy read-only consumers retain their original authorized target response.
+        // Only the composed production host exposes persistent link decorations.
+        if (!input.links) return reply(targets, 200)
         const decorated = await input.links.decorateTargets(ref.value.evidenceRef, targets.value, grant.value)
         return reply(decorated, code(decorated.status))
       }
