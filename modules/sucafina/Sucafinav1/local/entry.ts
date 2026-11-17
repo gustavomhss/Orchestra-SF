@@ -326,8 +326,12 @@ export async function createConfiguredInstallation(
         return request.method === "HEAD" ? new Response(null, { status: html.status, headers: html.headers }) : html
       }
       const surface = url.pathname.slice(config.mount.length + 1)
-      if (surface === "dashboard" || surface === "planner" || surface === "procurement") {
+      const surfaceRequest = surface === "dashboard" || surface === "planner" || surface === "procurement"
+      const authTrace = process.env.SF_AUTH_DIAG === "1" && surfaceRequest
+      if (authTrace) console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "sf-entry", stage: "surface-enter", surface }))
+      if (surfaceRequest) {
         const person = await identity.person(request)
+        if (authTrace) console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "sf-entry", stage: "person", surface, session: !!person }))
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator && !microsoft) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
@@ -338,6 +342,7 @@ export async function createConfiguredInstallation(
       const nativeResponse = await nativeProjections(request)
       if (nativeResponse) return nativeResponse
       const response = await presentationRequest.run(request, () => business(request))
+      if (authTrace) console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "sf-entry", stage: "business-response", surface, status: response?.status ?? null }))
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
       return localChrome(response)
