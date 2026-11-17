@@ -9,6 +9,8 @@ The URL was discovered as the official logo image on `https://group.sucafina.com
 - `lockup-inverse.svg` preserves all vector geometry; only solid fills are changed to subdued off-white (#F1F4F2) for dark Orchestra themes.
 - `mark-primary.svg` is **only a crop** of the six existing official symbol paths, retaining #007680; no paths were invented or traced.
 - `mark-inverse.svg` is the same crop with off-white fills.
+- `wordmark-primary.svg` retains the eight original wordmark paths, and `wordmark-inverse.svg` changes only their fill for dark surfaces.
+- The sidebar uses original symbol and wordmark paths arranged horizontally to fit Orchestra's existing brand slot; splash retains the source vertical composition.
 - `favicon.svg` is identical to the mark crop, no competing logo.
 
 These light/dark/icon crops are **deployment adaptations**, not separately verified official logo variants. Their suitability and legal use in a Sucafina corporate deployment should receive brand-owner approval before production. Do not publish a claim of official certification for the derivatives.

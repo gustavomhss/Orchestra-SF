@@ -41,3 +41,12 @@ test("SUC brand CSS is scoped and never changes the Orchestra theme catalog", ()
   const catalog = readFileSync(new URL("../../packages/app-shell/src/orchestra/palette/catalog.ts", import.meta.url), "utf8")
   assert.ok(!catalog.includes('{ id: "sucafina"'))
 })
+
+test("Sucafina pieces reproduce the original vector paths", () => {
+  const original = readFileSync(new URL("../../packages/app-shell/public/brand/sucafina/logo-original.svg", import.meta.url), "utf8")
+  const wordmark = readFileSync(new URL("../../packages/app-shell/public/brand/sucafina/wordmark-primary.svg", import.meta.url), "utf8")
+  const symbol = readFileSync(new URL("../../packages/app-shell/public/brand/sucafina/mark-primary.svg", import.meta.url), "utf8")
+  assert.equal((original.match(/<path /g) || []).length, 14)
+  assert.equal((wordmark.match(/<path /g) || []).length, 8)
+  assert.equal((symbol.match(/<path /g) || []).length, 6)
+})

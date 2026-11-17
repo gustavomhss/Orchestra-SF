@@ -1,81 +1,56 @@
-/*
- * Corporate identity layer, NOT an Orchestra theme.
- * No palette, glass, blur, shadow, radius, spacing, navigation or page tokens are changed here.
- * The design system continues to own dark/light and every custom palette.
- */
+/* Sucafina identity only: Orchestra themes, palette tokens, glass, radius and layout remain unchanged. */
 html[data-orchestra-brand="sucafina"] .sucafina-logo {
-  position: relative;
-  display: inline-flex;
-  inline-size: 121px;
-  block-size: 40px;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; inline-size: 121px; block-size: 40px; flex: none;
 }
-html[data-orchestra-brand="sucafina"] .sucafina-logo[data-size="mark"] {
-  inline-size: 32px;
-  block-size: 32px;
+html[data-orchestra-brand="sucafina"] .sucafina-logo-symbol,
+html[data-orchestra-brand="sucafina"] .sucafina-logo-wordmark {
+  position: relative; display: block; flex: none;
 }
-html[data-orchestra-brand="sucafina"] .sucafina-logo > img {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  inline-size: auto;
-  block-size: auto;
-  max-inline-size: 100%;
-  max-block-size: 100%;
-  object-fit: contain;
-  visibility: hidden;
+html[data-orchestra-brand="sucafina"] .sucafina-logo-symbol { inline-size: 30px; block-size: 30px; }
+html[data-orchestra-brand="sucafina"] .sucafina-logo-wordmark { inline-size: 83px; block-size: 22px; }
+html[data-orchestra-brand="sucafina"] .sucafina-logo :is(.sucafina-logo-symbol, .sucafina-logo-wordmark) img {
+  display: block; position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: contain;
 }
-html[data-orchestra-brand="sucafina"] .sucafina-logo[data-dark-ready="true"] > img[data-slot="orchestra-brand-logo-dark"],
-html[data-orchestra-brand="sucafina"] .sucafina-logo[data-light-ready="true"] > img[data-slot="orchestra-brand-logo-light"] {
-  visibility: visible;
+html[data-orchestra-brand="sucafina"] .sucafina-logo [data-slot="orchestra-brand-logo-light"] { display: none !important; }
+html[data-orchestra-brand="sucafina"][data-color-scheme="light"] .sucafina-logo [data-slot="orchestra-brand-logo-dark"] { display: none !important; }
+html[data-orchestra-brand="sucafina"][data-color-scheme="light"] .sucafina-logo [data-slot="orchestra-brand-logo-light"] { display: block !important; }
+html[data-orchestra-brand="sucafina"] .sucafina-logo[data-size="compact"] {
+  inline-size: 32px; block-size: 32px; gap: 0;
 }
-html[data-orchestra-brand="sucafina"] .sucafina-logo > [data-slot^="sucafina-fallback-"] {
-  color: var(--v2-text-text-base);
-  font-family: var(--orchestra-font-family-sans);
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.11em;
-  white-space: nowrap;
+html[data-orchestra-brand="sucafina"] .sucafina-logo[data-size="compact"] .sucafina-logo-symbol {
+  inline-size: 100%; block-size: 100%;
 }
-html[data-orchestra-brand="sucafina"] .sucafina-logo[data-size="mark"] > [data-slot^="sucafina-fallback-"] {
-  font-size: 18px;
-  letter-spacing: 0;
+html[data-orchestra-brand="sucafina"] .orchestra-mark .sucafina-logo[data-size="compact"] {
+  inline-size: 100%; block-size: auto; aspect-ratio: 1;
 }
-html[data-orchestra-brand="sucafina"] .sucafina-logo > [data-slot="sucafina-fallback-light"],
-html[data-orchestra-brand="sucafina"] .sucafina-logo[data-dark-ready="true"] > [data-slot="sucafina-fallback-dark"] {
-  display: none;
+html[data-orchestra-brand="sucafina"] .sucafina-logo[data-size="splash"] {
+  flex-direction: column; inline-size: 240px; block-size: 160px; gap: 16px;
 }
-html[data-orchestra-brand="sucafina"][data-color-scheme="light"] .sucafina-logo > [data-slot="sucafina-fallback-dark"] {
-  display: none;
+html[data-orchestra-brand="sucafina"] .sucafina-logo[data-size="splash"] .sucafina-logo-symbol {
+  inline-size: 86px; block-size: 86px;
 }
-html[data-orchestra-brand="sucafina"][data-color-scheme="light"] .sucafina-logo[data-light-ready="false"] > [data-slot="sucafina-fallback-light"] {
-  display: inline;
-}
-html[data-orchestra-brand="sucafina"][data-color-scheme="light"] .sucafina-logo[data-light-ready="true"] > [data-slot="sucafina-fallback-light"] {
-  display: none;
-}
-html[data-orchestra-brand="sucafina"] .orchestra-mark .sucafina-logo {
-  inline-size: 100%;
-  block-size: 100%;
-  min-block-size: 24px;
+html[data-orchestra-brand="sucafina"] .sucafina-logo[data-size="splash"] .sucafina-logo-wordmark {
+  inline-size: 216px; block-size: 51px;
 }
 html[data-orchestra-brand="sucafina"] .sucafina-loading {
-  display: grid;
-  place-items: center;
-  background: var(--background-base);
+  display: grid; place-items: center; background: var(--background-base);
 }
-html[data-orchestra-brand="sucafina"] .sucafina-loading .orchestra-brand-splash {
-  animation: sucafina-brand-entrance 680ms cubic-bezier(0.22, 1, 0.36, 1) both;
+html[data-orchestra-brand="sucafina"] .sucafina-loading .sucafina-logo-symbol {
+  animation: sucafina-symbol-enter 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-@keyframes sucafina-brand-entrance {
-  from { opacity: 0; transform: translateY(5px); }
+html[data-orchestra-brand="sucafina"] .sucafina-loading .sucafina-logo-wordmark {
+  animation: sucafina-wordmark-enter 820ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
+}
+@keyframes sucafina-symbol-enter {
+  from { opacity: 0; transform: translateY(5px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes sucafina-wordmark-enter {
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[data-orchestra-brand="sucafina"] .sucafina-loading .orchestra-brand-splash {
-    animation: none;
-  }
+  html[data-orchestra-brand="sucafina"] .sucafina-loading .sucafina-logo-symbol,
+  html[data-orchestra-brand="sucafina"] .sucafina-loading .sucafina-logo-wordmark { animation: none; }
 }
