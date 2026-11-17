@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: PROPOSAL-EDI-07 · HOT-EDI-07 · LEADER Caio. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir proposta vinculada a HOT-EDI-07
-3. Inspecionar mudança preparada, responsável e origem
-4. Confirmar encaminhamento para Caio
-5. Consultar receipt e Meu trabalho do destinatário
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir proposta vinculada a HOT-EDI-07
+3. **[READ_ONLY_WITNESS]** Inspecionar mudança preparada, responsável e origem
+4. **[UI_ACTION]** Confirmar encaminhamento para Caio
+5. **[UI_ACTION]** Consultar receipt e Meu trabalho do destinatário
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

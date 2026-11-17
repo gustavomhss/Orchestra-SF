@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: RECEIPT-EDI-01 · attempt CHANGE-EDI-01. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir recibo pelo case/receiptRef
-3. Conferir origem, ator, revisão e resultado de negócio
-4. Comparar before/after com fonte relida
-5. Verificar histórico mesmo após nova leitura sem reaplicar
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir recibo pelo case/receiptRef
+3. **[READ_ONLY_WITNESS]** Conferir origem, ator, revisão e resultado de negócio
+4. **[READ_ONLY_WITNESS]** Comparar before/after com fonte relida
+5. **[READ_ONLY_WITNESS]** Verificar histórico mesmo após nova leitura sem reaplicar
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

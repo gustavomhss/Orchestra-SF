@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: SCN-PORT-01/R-001 · conjunto P-004/P-009. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir resultado R-001 de SCN-PORT-01
-3. Examinar composição, pesos, elegibilidade e data de origem
-4. Alterar origem em outro contexto e voltar
-5. Comparar com nova execução sem sobrescrever R-001
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir resultado R-001 de SCN-PORT-01
+3. **[UI_ACTION]** Examinar composição, pesos, elegibilidade e data de origem
+4. **[UI_ACTION]** Alterar origem em outro contexto e voltar
+5. **[READ_ONLY_WITNESS]** Comparar com nova execução sem sobrescrever R-001
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

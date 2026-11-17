@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: TODAY-2026-11-17 · HOT-EDI-07 · PR-32000 · R-07. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Autenticar, selecionar instalação e projeto
-3. Abrir Hoje e revisar prioridades com origem, etapa e prazo
-4. Abrir HOT-EDI-07 e voltar mantendo contexto
-5. Confirmar separação entre atividade pessoal e visão global
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Autenticar, selecionar instalação e projeto
+3. **[UI_ACTION]** Abrir Hoje e revisar prioridades com origem, etapa e prazo
+4. **[UI_ACTION]** Abrir HOT-EDI-07 e voltar mantendo contexto
+5. **[UI_ACTION]** Confirmar separação entre atividade pessoal e visão global
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

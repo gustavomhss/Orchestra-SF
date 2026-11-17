@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: DOC-EDI-01 · relatório sintético de incidente de integração. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir catálogo Documentos e adicionar DOC-EDI-01
-3. Preencher classificação e vínculo P-004
-4. Inspecionar metadata, autor e integridade
-5. Abrir extração em fluxo autorizado
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir catálogo Documentos e adicionar DOC-EDI-01
+3. **[UI_ACTION]** Preencher classificação e vínculo P-004
+4. **[READ_ONLY_WITNESS]** Inspecionar metadata, autor e integridade
+5. **[UI_ACTION]** Abrir extração em fluxo autorizado
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

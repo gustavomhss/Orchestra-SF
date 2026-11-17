@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: IMPORT-OPEX-SEP26.xlsx · 12 linhas · centro IT-BR. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Selecionar destino Dashboard/Planner admitido pelo produto
-3. Enviar workbook IMPORT-OPEX-SEP26.xlsx com linhas válidas/invalidas
-4. Solicitar preview antes de qualquer commit
-5. Registrar quantidade, digest e origem
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Selecionar destino Dashboard/Planner admitido pelo produto
+3. **[UI_ACTION]** Enviar workbook IMPORT-OPEX-SEP26.xlsx com linhas válidas/invalidas — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+4. **[UI_ACTION]** Solicitar preview antes de qualquer commit
+5. **[READ_ONLY_WITNESS]** Registrar quantidade, digest e origem
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: CONFIRM-EDI-01 · TASK-023 · versão observada v3. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir confirmação de seleção TASK-023
-3. Ler versão v3 da fonte antes de confirmar
-4. Escolher “sem alteração” com justificativa
-5. Reabrir fila e verificar registro de confirmação
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir confirmação de seleção TASK-023
+3. **[UI_ACTION]** Ler versão v3 da fonte antes de confirmar
+4. **[UI_ACTION]** Escolher “sem alteração” com justificativa
+5. **[READ_ONLY_WITNESS]** Reabrir fila e verificar registro de confirmação
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

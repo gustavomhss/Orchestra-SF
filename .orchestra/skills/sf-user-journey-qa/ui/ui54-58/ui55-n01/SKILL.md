@@ -23,12 +23,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 - Capturar estado da fonte, revisão, permissões e contadores de aplicação ANTES da tentativa.
 - Executar a ameaça somente na instalação de QA isolada com atores autorizados para teste negativo.
 
-## Passos a executar na interface
+## Setup comprovável deste caso (não substituir por fixture imaginada)
 
-1. Abrir a superfície pela rota direta e pela navegação normal, para distinguir UI de autorização do host.
-2. Enviar arquivo com macro, extensão falsa ou MIME incorreto
-3. Repetir a tentativa após refresh e com uma segunda sessão independente, sem alterar a intenção do teste.
-4. Reconsultar fonte, snapshot e auditoria; preservar resposta HTTP, tela e evidência de ausência de mutation.
+1. Separar arquivo benigno válido e adversarial sintético com extensão/MIME divergentes; nunca usar macros executáveis reais.
+2. No browser com file chooser autorizado, testar admissão via formulário da própria UI; sem suporte a upload, BLOCKED_ENVIRONMENT.
+3. Reabrir o destino autorizado e provar nenhum manifesto aplicável e nenhuma gravação em caso de rejeição.
+
+**Protocolo negativo compartilhado:** abrir rota e navegação com ator real, capturar before; produzir somente a contraprova específica abaixo; repetir refresh/segunda sessão se o risco exigir; reler fonte/auditoria para comprovar não-commit. Sem precondição admitida, marcar BLOCKED, não PASS.
+
+## Passos, mecanismos e limites das ferramentas
+
+1. **[UI_ACTION]** Enviar arquivo com macro, extensão falsa ou MIME incorreto — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
 
 ## Oráculos observáveis (não reescrever para passar)
 

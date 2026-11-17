@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: IMPORT-OPEX-SEP26 · 10 valid/1 duplicate/1 invalid synthetic. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir manifestId da prévia versionada
-3. Conferir 10 linhas válidas, 1 duplicata e 1 inválida
-4. Comparar inserts, updates e removals permitidos
-5. Corrigir a fonte e pedir nova prévia antes de aplicar
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir manifestId da prévia versionada
+3. **[READ_ONLY_WITNESS]** Conferir 10 linhas válidas, 1 duplicata e 1 inválida
+4. **[READ_ONLY_WITNESS]** Comparar inserts, updates e removals permitidos
+5. **[UI_ACTION]** Corrigir a fonte e pedir nova prévia antes de aplicar
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

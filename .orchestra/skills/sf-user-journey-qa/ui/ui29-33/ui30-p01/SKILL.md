@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: WORK-Caio · HOT-EDI-07 · TASK-023 · OPEX-LIC-01. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Meu trabalho com filtros “meu/pendente”
-3. Entrar em tarefa HOT-EDI-07 atribuída a Caio
-4. Revisar escopo e confirmar somente ação autorizada
-5. Voltar à lista e conferir alteração de estado e posição
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Meu trabalho com filtros “meu/pendente”
+3. **[UI_ACTION]** Entrar em tarefa HOT-EDI-07 atribuída a Caio
+4. **[UI_ACTION]** Revisar escopo e confirmar somente ação autorizada
+5. **[READ_ONLY_WITNESS]** Voltar à lista e conferir alteração de estado e posição
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: Q-EDI-FX-01 · finance owner Sofie. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir ciclo de perguntas de CASE-EDI-01
-3. Criar Q-EDI-FX-01 para Sofie como Finance
-4. Responder com fonte do FX e marcar dúvida resolvida
-5. Voltar ao histórico do caso
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir ciclo de perguntas de CASE-EDI-01
+3. **[UI_ACTION]** Criar Q-EDI-FX-01 para Sofie como Finance
+4. **[UI_ACTION]** Responder com fonte do FX e marcar dúvida resolvida
+5. **[UI_ACTION]** Voltar ao histórico do caso
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

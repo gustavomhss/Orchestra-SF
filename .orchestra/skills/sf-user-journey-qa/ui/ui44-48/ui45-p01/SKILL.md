@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: BI-EXEC-01 · orçamento, riscos, PR, backlog. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir catálogo BI e conferir visões habilitadas por papel
-3. Selecionar BI-EXEC-01 para período setembro/2026
-4. Conferir cobertura de origem e atualização
-5. Abrir drilldown de OPEX
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[READ_ONLY_WITNESS]** Abrir catálogo BI e conferir visões habilitadas por papel
+3. **[UI_ACTION]** Selecionar BI-EXEC-01 para período setembro/2026
+4. **[READ_ONLY_WITNESS]** Conferir cobertura de origem e atualização
+5. **[UI_ACTION]** Abrir drilldown de OPEX
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

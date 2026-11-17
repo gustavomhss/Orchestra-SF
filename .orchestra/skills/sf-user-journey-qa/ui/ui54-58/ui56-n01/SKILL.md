@@ -23,12 +23,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 - Capturar estado da fonte, revisão, permissões e contadores de aplicação ANTES da tentativa.
 - Executar a ameaça somente na instalação de QA isolada com atores autorizados para teste negativo.
 
-## Passos a executar na interface
+## Setup comprovável deste caso (não substituir por fixture imaginada)
 
-1. Abrir a superfície pela rota direta e pela navegação normal, para distinguir UI de autorização do host.
-2. Modificar linha fonte após preview e confirmar versão stale
-3. Repetir a tentativa após refresh e com uma segunda sessão independente, sem alterar a intenção do teste.
-4. Reconsultar fonte, snapshot e auditoria; preservar resposta HTTP, tela e evidência de ausência de mutation.
+1. Finance abre preview de XLSX válido e registra manifestId/version e digest da origem, sem Apply.
+2. Outro Finance com sessão independente altera a linha correspondente por controles reais do Planner e confirma mudança de versão.
+3. Retornar ao preview antigo, tentar confirmar, observar conflito/stale e confirmar no produtor que não houve aplicação parcial.
+
+**Protocolo negativo compartilhado:** abrir rota e navegação com ator real, capturar before; produzir somente a contraprova específica abaixo; repetir refresh/segunda sessão se o risco exigir; reler fonte/auditoria para comprovar não-commit. Sem precondição admitida, marcar BLOCKED, não PASS.
+
+## Passos, mecanismos e limites das ferramentas
+
+1. **[UI_ACTION]** Modificar linha fonte após preview e confirmar versão stale
 
 ## Oráculos observáveis (não reescrever para passar)
 

@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: SCN-PORT-01 · 25 candidatos · teto sintético 200000 USD. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir campanha de cenários e configurar escopo
-3. Selecionar candidatos P-001…P-025 com limites
-4. Executar avaliação admitida pela fonte
-5. Inspecionar escolhas candidatas e salvar versão do resultado
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir campanha de cenários e configurar escopo
+3. **[UI_ACTION]** Selecionar candidatos P-001…P-025 com limites
+4. **[UI_ACTION]** Executar avaliação admitida pela fonte
+5. **[READ_ONLY_WITNESS]** Inspecionar escolhas candidatas e salvar versão do resultado
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

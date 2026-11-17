@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: REV-EXEC-NOV/R1 · report DOCX/PPTX. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir relatório de R1 e solicitar DOCX e PPTX
-3. Aguardar status terminal do job sem tratar started como sucesso
-4. Baixar arquivo gerado e abrir externamente
-5. Conferir 25 projetos, valores e notas com R1
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir relatório de R1 e solicitar DOCX e PPTX
+3. **[UI_ACTION]** Aguardar status terminal do job sem tratar started como sucesso
+4. **[UI_ACTION]** Baixar arquivo gerado e abrir externamente — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+5. **[READ_ONLY_WITNESS]** Conferir 25 projetos, valores e notas com R1
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

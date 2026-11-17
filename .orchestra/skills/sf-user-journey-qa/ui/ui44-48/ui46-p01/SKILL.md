@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: BI-OPEX-01 · USD590000; linha OPEX-LIC-01. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir visual BI-OPEX-01
-3. Clicar no delta da licença e rastrear até linha OPEX
-4. Comparar com versão what-if e conferir query/updatedAt
-5. Voltar ao BI sem perder competência e versão
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir visual BI-OPEX-01
+3. **[UI_ACTION]** Clicar no delta da licença e rastrear até linha OPEX
+4. **[READ_ONLY_WITNESS]** Comparar com versão what-if e conferir query/updatedAt
+5. **[UI_ACTION]** Voltar ao BI sem perder competência e versão
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

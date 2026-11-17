@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: VIEW-EDI-Caio · filtros IT-BR e pendente. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Inspecionar se o produtor Saved Views V2 está instalado
-3. Se disponível, salvar VIEW-EDI-Caio e retornar em nova sessão
-4. Se indisponível, registrar estado de capability/unavailable sem forçar ação
-5. Confirmar que a visão legada não foi vendida como V2
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[READ_ONLY_WITNESS]** Inspecionar se o produtor Saved Views V2 está instalado
+3. **[UI_ACTION]** Se disponível, salvar VIEW-EDI-Caio e retornar em nova sessão
+4. **[CONTROLLED_FAULT]** Se indisponível, registrar estado de capability/unavailable sem forçar ação — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT
+5. **[UI_ACTION]** Confirmar que a visão legada não foi vendida como V2
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

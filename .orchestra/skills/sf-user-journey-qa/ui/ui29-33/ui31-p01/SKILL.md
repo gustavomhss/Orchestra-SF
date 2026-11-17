@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: SEARCH-EDI-07 · documentos e itens de 3 domínios. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Busca SF e pesquisar “EDI Santos”
-3. Comparar resultados por tipo/fonte, mantendo contexto
-4. Abrir um resultado e conferir ID opaco
-5. Inspecionar URL, histórico do navegador e logs sanitizados
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Busca SF e pesquisar “EDI Santos”
+3. **[READ_ONLY_WITNESS]** Comparar resultados por tipo/fonte, mantendo contexto
+4. **[READ_ONLY_WITNESS]** Abrir um resultado e conferir ID opaco
+5. **[READ_ONLY_WITNESS]** Inspecionar URL, histórico do navegador e logs sanitizados
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

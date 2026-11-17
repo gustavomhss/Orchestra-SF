@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: AN-EDI-01 · análise do CASE-EDI-01. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir análise assíncrona e admitir execução autorizada
-3. Acompanhar queued→running→completed/failed conforme retorno real
-4. Ler output e verifier independente
-5. Relacionar contribuição a CASE-EDI-01 sem aplicar
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir análise assíncrona e admitir execução autorizada
+3. **[UI_ACTION]** Acompanhar queued→running→completed/failed conforme retorno real
+4. **[UI_ACTION]** Ler output e verifier independente
+5. **[UI_ACTION]** Relacionar contribuição a CASE-EDI-01 sem aplicar
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 
