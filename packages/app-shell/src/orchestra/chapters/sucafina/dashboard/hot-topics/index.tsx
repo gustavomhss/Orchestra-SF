@@ -6,6 +6,7 @@ import type { SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { SfPageFrame } from "../../shared/frame"
+import { SfExecutiveAction, SfExecutiveRelatedLinks } from "../../cross-links/view"
 import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
@@ -165,6 +166,12 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
                 <div><dt>{t(key("sf.u38.notes"))}</dt><dd class="sf-u38-long">{topic().notes || t(key("sf.u38.unknown"))}</dd></div>
                 <div><dt>{t(key("sf.u38.version"))}</dt><dd>{version() ?? t(key("sf.u38.unknown"))}</dd></div>
               </dl>
+              <div class="sf-u38-actions" data-sf-executive-handoff>
+                <SfExecutiveAction from={props.route}
+                  target={{ kind: "relations", source: { kind: "topic", ref: topic().id } }}
+                  label={{ pt: "Relacionar ação por referência", en: "Relate action by reference" }} />
+              </div>
+              <SfExecutiveRelatedLinks from={props.route} omit="topic" />
               <div class="sf-u38-actions">
                 <button type="button" class="mx-btn primary" disabled={!source.allowed("save") || version() === undefined}
                   onClick={edit}>{t(key("sf.u38.editTopic"))}</button>
