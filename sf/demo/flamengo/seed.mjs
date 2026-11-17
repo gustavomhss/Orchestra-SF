@@ -210,7 +210,14 @@ async function ensureRequest(fixture,ids){
 }
 async function doProcurement(){
   const ids=await idsForSuppliers();
-  for(const r of fixtures.procurement.requests)await ensureRequest(r,ids);
+  for(const r of fixtures.procurement.requests){
+    await ensureRequest(r,ids);
+    if(r.id==="PR-SOURCING"){
+      const current=await stage(r);
+      const page=await html("Pedro","procurement",{page:"Requests",request:current.id,filter:"All"});
+      if(!page.includes("FLA-DEMO-Q-"+r.id))await sourcing(r,ids);
+    }
+  }
   const rev=fixtures.procurement.requests.find(x=>x.id==="PR-REVISION"),row=await stage(rev);
   const p=await html("Caio","procurement",{page:"Requests",request:row.id,filter:"All"});
   if(!p.includes("FLA-DEMO revised assumption")){
@@ -330,8 +337,12 @@ async function doDecisions(){
     const pre=await html("Daniel","dashboard",{sf:"workbench"});
     if(pre.includes(d.objective))continue;
     const cmd={operation:"sf_case_draft",input:{objective:d.objective,horizon:d.horizon,currency:d.currency,criteria:d.criteria,sourceRefs:[]}};
-    const result=await transport("Daniel","dashboard","workbench-command",cmd,"decision:"+d.id);
-    demand(typeof result.outputRef==="string"&&result.outputRef.startsWith("case:"),"real-case-reference-required");
+    const scopes=[...pre.matchAll(/data-creation-scope="([a-f0-9]{64})"/g)].map(m=>m[1]);
+    demand(scopes.length===1,"real-case-creation-scope-missing-or-ambiguous");
+    const result=await wire("Daniel",location("dashboard",{sf:"workbench-command"}),{
+      method:"POST",headers:{"Content-Type":"application/json","Idempotency-Key":key("decision:"+d.id),"X-SF-Creation-Scope":scopes[0]},body:JSON.stringify(cmd)
+    });
+    demand(result.status==="ok"&&typeof result.outputRef==="string"&&result.outputRef.startsWith("case:"),"authorized-case-creation-not-confirmed");
     demand((await html("Daniel","dashboard",{sf:"workbench"})).includes(d.objective),"created-decision-readback-missing");
   }
   status("decisions","PENDING","real draft cases may be seeded; human alternative authoring/sensitivities and approval must run in installed UI");
