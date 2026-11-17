@@ -27,7 +27,7 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 ## Passos, mecanismos e limites das ferramentas
 
-1. **[UI_ACTION]** Remover FX de EUR e abrir indicador consolidado com linha em EUR
+1. **[READ_ONLY_WITNESS]** Em Planner → FX (/orchestra/sf-planner/fx) verificar se há controle autorizado de retirar EUR para a competência de QA; só agir se existir, depois abrir Dashboard Budget por ano e observar incompatibilidade. Não inventar botão de FX no Dashboard nem manipular produtor fora da UI.
 
 ## Oráculos observáveis (não reescrever para passar)
 

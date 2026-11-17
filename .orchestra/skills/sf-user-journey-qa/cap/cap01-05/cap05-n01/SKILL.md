@@ -27,7 +27,7 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 ## Passos, mecanismos e limites das ferramentas
 
-1. **[UI_ACTION]** Tentar editar CAPEX na versão official/locked com role de leitura
+1. **[UI_ACTION]** Em Planner → Versions identificar versionRef official/locked; com role real de leitura, selecionar esse ID em Planner CAPEX e comprovar edição recusada/indisponível sem unlock. Só tentar mutação se houver controle UI autorizado; reler official, não o Dashboard, para provar não-commit.
 
 ## Oráculos observáveis (não reescrever para passar)
 

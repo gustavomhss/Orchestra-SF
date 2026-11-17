@@ -24,19 +24,19 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 ## Passos, mecanismos e limites das ferramentas
 
 1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. **[UI_ACTION]** Abrir relatório de R1 e solicitar DOCX e PPTX
-3. **[UI_ACTION]** Aguardar status terminal do job sem tratar started como sucesso
-4. **[UI_ACTION]** Baixar arquivo gerado e abrir externamente — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+2. **[UI_ACTION]** Abrir Reviews → Reports para reviewRef real R1 (/orchestra/sf-reviews/reports/:reviewRef); escolher seções e formato DOCX, acionar Prepare/Download; repetir PPTX como tentativa explícita separada.
+3. **[UI_ACTION]** Observar preparing e download real, ou unavailable/outcome-unknown; a tela não tem jobRef, started/completed, cancel ou fila async, e prepare isolado não comprova entrega.
+4. **[UI_ACTION]** Confirmar bytes DOCX/PPTX baixados no navegador, abrir externamente e calcular digest; controller de downloads autorizado é obrigatório.
 5. **[READ_ONLY_WITNESS]** Conferir 25 projetos, valores e notas com R1
-6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+6. **[READ_ONLY_WITNESS]** Reabrir Reports no mesmo owner/reviewRef, registrar receipt de prepare, estado de recuperação e artefatos realmente baixados.
 
 ## Oráculos observáveis (não reescrever para passar)
 
-- Arquivos existem, são legíveis e têm revisão R1 identificada
+- DOCX e PPTX realmente baixados existem, são legíveis e identificam R1
 - Dados e ordem coincidem com snapshot, não com fonte atual
-- Links respeitam revogação
-- Falhas/timeout deixam status e sem download fantasma
-- Evidência de execução deve relacionar ator, momento, URL, versão do registro, resultado e hash/recibo quando houver.
+- Nova tentativa de download obedece grants atuais, sem prometer revogar bytes previamente baixados
+- Preparação/preparing não equivale a completed; unavailable/outcome-unknown exige recuperação explícita, sem download fantasma
+- Evidência liga reviewRef, seções, formato, owner, receipt de prepare, bytes/digest e resultado do navegador
 
 **Fontes de teste existentes:** u33. Reusar para diagnosticar, não substituir a execução da UI.
 
