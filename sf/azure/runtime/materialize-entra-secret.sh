@@ -30,11 +30,20 @@ gid="$(id -g orchestra-sf)"
    "$(stat -c %a -- "$config")" == 600 &&
    "$(stat -c %h -- "$config")" == 1 ]] ||
   fail "installation JSON must be mode 0600, owned by orchestra-sf, nlink=1"
-jq -e '.version == 1 and .deployment == "azure-https" and .authentication == "microsoft" and
-       (.origin | type == "string" and startswith("https://")) and
-       (.tenantId | type == "string" and length > 0) and
-       (.clientId | type == "string" and length > 0)' "$config" >/dev/null ||
-  fail "actual Microsoft profile not present (no local fallback)"
+# FLAMENGO demo: fail before requesting any token if tenant/client/origin or
+# Caddy ingress are inconsistent or still contain the unresolved placeholder.
+jq -e '
+  .version == 1 and .deployment == "azure-https" and .authentication == "microsoft" and
+  .tenantId == "449dfd17-d627-45da-b22c-1be49d8df99f" and
+  .clientId == "9006dcb8-1a75-4886-9475-1e7f1dc5d7cd" and
+  .origin == "https://orchsf-spug5rxxyqkdw.swedencentral.cloudapp.azure.com" and
+  .listenerOrigin == "http://127.0.0.1:4096" and
+  .mount == "/sucafina" and
+  (.ingressOrigin | type == "string" and test("^http://[^/]+$") and (contains("REQUIRES_") | not)) and
+  (.groups | type == "object") and
+  (.grants | type == "array")
+' "$config" >/dev/null ||
+  fail "FLAMENGO Microsoft config/ingress not admitted; Key Vault was not called"
 for name in session bank assets; do
   key="$config_dir/$name.key"
   [[ -f "$key" && ! -L "$key" &&
