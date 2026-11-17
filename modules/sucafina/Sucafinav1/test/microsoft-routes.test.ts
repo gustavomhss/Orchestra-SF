@@ -35,12 +35,16 @@ async function fixture() {
   // be needed to install role bindings, and no test actor is made administrator.
   for (const surface of ["dashboard", "planner", "procurement"] as const) {
     await store.transaction(surface, async (snapshot) => {
+      if (surface === "planner") {
+        expect(snapshot.data.roleMap).toBeUndefined()
+        return { commit: false, value: undefined }
+      }
       expect(snapshot.data.roleMap).toEqual(expect.arrayContaining([
-        expect.objectContaining({ surface, entra: profile.loaded.config.groups[surface][surface === "dashboard" ? "viewer" : "requester"] ?? null,
+        expect.objectContaining({ surface, entra: profile.loaded.config.groups[surface][surface === "dashboard" ? "viewer" : "requester"],
           by: "microsoft:installation-config" }),
       ]))
       expect(snapshot.audit[0]?.who).toBe("microsoft:installation-config")
-      if (surface !== "procurement") return { commit: false, value: undefined }
+      if (surface === "dashboard") return { commit: false, value: undefined }
       snapshot.data.store = { settings: initialProcurementSettings(), issued: { pr: [], po: [] }, sup: [], suppliers: [], requests: {}, actCalls: 0, lastIssued: null }
       return { commit: true, value: undefined }
     })
