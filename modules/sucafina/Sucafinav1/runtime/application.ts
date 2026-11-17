@@ -13,6 +13,7 @@ import type { AssetKind, AssetPersistence, AssetServices, BlobTransaction } from
 import type { RenderContext } from "./ui.ts"
 import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
 import { publicSfData } from "../product/integration/public-state.ts"
+import { readProcurementQueueView } from "../product/procurement/queue-view.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -65,6 +66,13 @@ export function createApplication(mount: string, application: Application) {
     )
       return reply("Access denied", 403)
     const uploading = request.method === "POST" && url.searchParams.has("upload")
+    // The authorized C02 JSON projection is a data contract, not a second HTML
+    // console. It retains the same source selection, snapshot and revocation fence.
+    const queueProjection = surface === "procurement" && ["GET", "HEAD"].includes(request.method) &&
+      url.searchParams.get("projection") === "c02" &&
+      ["Requests", "My approvals"].includes(url.searchParams.get("page") ?? "")
+    if (queueProjection && (url.searchParams.getAll("projection").length !== 1 || url.searchParams.getAll("page").length !== 1))
+      return reply("Invalid projection selection", 400)
     // Product operations own fresh authentication and transactions; never nest them in the page lock.
     const product = await application.product?.(request, surface)
     if (product?.status === 401 && process.env.SF_AUTH_DIAG === "1")
@@ -85,7 +93,7 @@ export function createApplication(mount: string, application: Application) {
     if (request.method !== "POST" && url.searchParams.has("download"))
       return serveDownload(request, surface, application, transaction, environment)
     // Native projections were dispatched by the installation; retain authorized asset GETs.
-    if (request.method !== "POST" && !url.searchParams.has("asset") && !url.searchParams.has("asset-link"))
+    if (request.method !== "POST" && !queueProjection && !url.searchParams.has("asset") && !url.searchParams.has("asset-link"))
       return decommissioned()
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
     if (preparedUpload instanceof Response) return preparedUpload
@@ -374,6 +382,14 @@ export function createApplication(mount: string, application: Application) {
           commit: result.ok,
           value: json(response, result.ok ? 200 : result.status),
         }
+      }
+      if (queueProjection) {
+        // Never serialize a prepared projection until the very same authorized
+        // producer selection has been rechecked under the current data lock.
+        const queue = readProcurementQueueView(productView?.data.procurementQueueView)
+        if (!queue || !productView || !await productView.current(snapshot, actor))
+          return { commit: false, value: json({ status: "unavailable", reason: "procurement-queue-unavailable" }, 503) }
+        return { commit: false, value: json({ status: "ok", value: queue }, 200) }
       }
       return { commit: false, value: decommissioned() }
     }).finally(() => productView?.finish())
