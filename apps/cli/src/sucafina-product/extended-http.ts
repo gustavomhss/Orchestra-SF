@@ -41,9 +41,18 @@ export function createSfExtendedHttp(input: {
   const decisionNavigation = createSfBiDecisionNavigation(input)
   const agendaHttp = input.reviewAgenda ? createSfReviewAgendaHttp({ authority, agenda: input.reviewAgenda, origin: input.origin }) : undefined
   const handle = async (request: Request, surface: string): Promise<Response | undefined> => {
+    const diagnosticMode = new URL(request.url).searchParams.get("sf")
+    const diagnosticStamp = Date.now()
+    const trace = (stage: string) => {
+      if (process.env.SF_REPORTS_TRACE === "1" && (diagnosticMode === "review" || diagnosticMode === "review-read"))
+        console.error("SF_REPORTS_TRACE_EXT_" + stage + "_" + diagnosticStamp)
+    }
+    trace("ENTER")
     const discovered = await agendaHttp?.(request, surface)
     if (discovered) return discovered
+    trace("AFTER_AGENDA")
     const reviewed = await input.reviews?.http(request, surface)
+    trace("AFTER_HTTP")
     if (reviewed) return reviewed
     const url = new URL(request.url)
     // The installed Reports form keeps its originating dashboard page in the
@@ -245,7 +254,9 @@ export function createSfExtendedHttp(input: {
           data = { items, period, ...(reportsEntry ? { requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : {}) }
         }
       }
+      trace("BEFORE_ASSET")
       const script = await (mode === "review" ? input.assets.reviews() : input.assets.bi()).catch(() => undefined)
+      trace("AFTER_ASSET")
       if (!await authority.ui.revalidate(call)) return json({ status: "denied", reason: "authority-unavailable" }, 403)
       if (!script) return json({ status: "unavailable", reason: "browser-unavailable" }, 503)
       // Asset loading can outlive case membership. The destination producer
@@ -266,6 +277,7 @@ export function createSfExtendedHttp(input: {
         // A replacement string would interpret dollar sequences in the bundle
         // or bootstrap as substitutions of the surrounding document.
         .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
+      trace("BEFORE_RETURN")
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })
     } catch (error) {
       if (!reviewRead) throw error
