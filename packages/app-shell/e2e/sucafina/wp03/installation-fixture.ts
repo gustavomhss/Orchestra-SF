@@ -76,6 +76,8 @@ export async function startPlannerInstallation(info: TestInfo) {
     } finally {
       // DEBUG diagnostics can include authentication URLs or HTTP headers. Redact
       // known credentials and credential-shaped fields before creating an artifact.
+      const comparisonStages = state.log.split(/\\r?\\n/).filter((line) => line.includes("SF_DECISIONS_COMPARE_TRACE")).slice(-20)
+      for (const stage of comparisonStages) console.info("SF_DECISIONS_REAL_CLI_STAGE", stage.trim())
       await info.attach("wp03-real-cli.log", { body: redactDiagnostics(state.log, state.secrets), contentType: "text/plain" })
       if (exited() && listenerReleased) await rm(directory, { recursive: true, force: true })
     }
