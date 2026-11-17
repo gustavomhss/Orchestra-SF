@@ -138,6 +138,7 @@ A fonte normativa dos **nomes e campos** é o arquivo **sf/proofs/go-no-go-bundl
         build-receipt.json                            # 0600 raw app-build
         factory-package-receipt.json                  # 0600 raw sf-factory-package
         factory-run.json                              # 0600 raw GET GitHub Actions run metadata
+        a7-installed-receipt.json                    # 0600 raw installed bytes/policy pairing witness
         orchestra-sf-linux-x64-baseline.tar.gz        # original CLI archive, 0600
         orchestra-sf-factory-linux-x64-baseline.tar.gz# original factory archive, 0600
         factory-extracted/                            # real dirname, 0700, outside checkout
@@ -156,6 +157,23 @@ A fonte normativa dos **nomes e campos** é o arquivo **sf/proofs/go-no-go-bundl
       proofs/                                         # 0700
         q01/ u39/ u40/ am01/ am02/ am03/ am04/ am05/ am06/
       q01-witness.json q01-witness.sig                # + 8 other modes in same root
+
+**Interface de witness A7 para o mesmo C (NÃO existente enquanto VM não estiver instalada):** depois de comparar hashes reais do release e de 24 assets, A7/operador gera o arquivo privado 0600 **distributions/a7-installed-receipt.json**, cuja identidade não é um mock nem uma autorização. Modelo de objeto exigido pelo verificador (preencher apenas após medição na VM; não copiar com sentinelas):
+
+    {
+      "schema": "sf2h.a7-installed-distribution-pairing.v1",
+      "status": "A7_INSTALLED_BYTES_OBSERVED_NOT_F04_ACCEPTANCE",
+      "sourceSha": "<real C>",
+      "treeSha": "<HEAD^{tree} de C>",
+      "artifactSha256": "<SHA256 do A7 package imutável>",
+      "cliBinarySha256": "<sha256sum de /opt/orchestra-sf/releases/C/bin/orchestra>",
+      "factoryBundleSha256": "<sha256sum de /opt/orchestra-sf/releases/C/factory/installation.mjs>",
+      "policyAssetCount": 24,
+      "releaseRoot": "/opt/orchestra-sf/releases/<real C>",
+      "observedUtc": "<ISO 8601 UTC real>"
+    }
+
+A10 coloca **SHA256 dos bytes desse arquivo** no campo **distribution.installed.installationReceiptSha256** do go-no-go bundle; o gate abre o original 0600, recalcula o digest e confere campos antes de reler os executáveis e 24 assets da VM. Falta do documento é **BLOCKED_BY_ENV/A7**; preencher um SHA arbitrário não basta.
 
 **Casamento obrigatório:** o campo **distribution.factory.githubRunSnapshotSha256** é o SHA256 de **distributions/factory-run.json**, obtido pela API de GitHub pelo A1/A10 e preservado sem edição; ID, attempt, status=completed/conclusion=success e head_sha=C são validados pelo código. O run 43988598685 com headSha≠receipt.sourceSHA é rejeitado mesmo se a assinatura do bundle for válida. Pacote A7 final tem um SHA256 próprio **SF_NATIVE_INSTALLED_ARTIFACT_SHA256** (não confundir com digest do archive CLI nem do archive factory). Uma fábrica qualificada em Ubuntu com hash de fonte de um branch diferente de C **não** basta para o release C. O app-build manual em ref dev pode ter run.headSha dev diferente de C porque houve input revision explícito: verificar receipt.sourceSHA=C e checkout C, não aplicar a regra errada de factory PR ao workflow_dispatch.
 
