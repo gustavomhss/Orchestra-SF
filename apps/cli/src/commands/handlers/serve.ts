@@ -159,7 +159,7 @@ function bind(
 ) {
   const server = createServer()
   return Layer.build(
-    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), installation?.layer ?? Layer.empty), {
+    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts, sucafinaInstallations: installation?.discovery }), installation?.layer ?? Layer.empty), {
       disableListenLog: true,
       disableLogger: true,
     }).pipe(

@@ -19,7 +19,7 @@ import { showToast } from "@/utils/toast"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfContext, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
-import { createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
+import { createSfTransport, type SfTransport, type SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfDraft } from "../shared/draft"
@@ -383,11 +383,28 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const selection = () => discovery.status === "ready" ? discovery.selection : undefined
   const sameServer = (value: SfOwnerSelection) =>
     value.serverKey === (ServerConnection.key(props.server) as string)
+  // Discovery already sends the selected ServerConnection's HTTP credentials.
+  // Native F01/F02 reads must use that SAME connection, not an unauthenticated
+  // global fetch. Never forward Basic to another origin or outside this mount.
+  const nativeFetch: SfTransportFetch = (input, init) => {
+    const target = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url,
+      window.location.href)
+    if (!alignedOrigin || target.origin !== window.location.origin ||
+        target.origin !== new URL(props.server.http.url).origin ||
+        !target.pathname.startsWith("/sucafina/"))
+      return Promise.reject(new Error("SF_NATIVE_SELECTED_ORIGIN_REQUIRED"))
+    if (!props.server.http.password) return fetcher(input, init)
+    const headers = new Headers(init?.headers)
+    headers.set("Authorization", "Basic " + authTokenFromCredentials({
+      username: props.server.http.username, password: props.server.http.password,
+    }))
+    return fetcher(input, { ...init, headers })
+  }
   const newTransport = (binding: SfInstallationDescriptor, generation: number,
     currentGeneration: () => number): SfTransport => desktopBridge
     ? desktopBridge.createTransport(binding, generation, currentGeneration)
     : createSfTransport({
-        binding, generation, currentGeneration, fetch: fetcher, operations: SfNativeOperationBindings,
+        binding, generation, currentGeneration, fetch: nativeFetch, operations: SfNativeOperationBindings,
       })
   const readContext = async (binding: SfInstallationDescriptor, signal: AbortSignal,
     generation: number, currentGeneration: () => number) => {
@@ -665,7 +682,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const directory = props.directory
     const actualServerKey: string = ServerConnection.key(props.server)
     const parsed = explicitSelection(query)
-    const activeSelection = selection()
+    // Async outcomes must not themselves restart discovery: failed/denied reads
+    // are terminal for this owner query until its URL or profile changes.
+    const activeSelection = untrack(selection)
     const epoch = ++discoveryAttempt
     if (parsed.kind === "invalid") {
       rejectInvalidSfOwnerQuery({ ownerMounted: !!mounted, selectionPresent: !!activeSelection,
@@ -868,6 +887,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
 
   return (
     <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
+      data-sf-provider-status={provider.status}
+      data-sf-view-status={view.status}
+      data-sf-discovery-status={discovery.status}
       onFocusIn={(event) => {
         if (event.target instanceof HTMLElement &&
           (event.target.matches("input, textarea, select, [contenteditable='true']")))

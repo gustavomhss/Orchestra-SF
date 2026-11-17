@@ -1,0 +1,87 @@
+name: sucafina-vm-localhost-bundle
+
+on:
+  push:
+    branches: [sfa-sucafina-white-label]
+    paths:
+      - ".github/workflows/sucafina-vm-localhost-bundle.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    name: sf/localhost-vm-runnable-bundle
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - name: Build exact white-label web app and collect same-SHA source
+        shell: bash
+        env:
+          ORCHESTRA_BRAND: sucafina
+          ORCHESTRA_CHANNEL: prod
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/sf-localhost-bundle
+          (cd apps/web && bun run build)
+          tar -czf /tmp/sf-localhost-bundle/web-dist.tar.gz -C apps/web dist
+          git archive --format=tar HEAD | gzip -1 > /tmp/sf-localhost-bundle/repository.tar.gz
+          cp "$(command -v bun)" /tmp/sf-localhost-bundle/bun
+          chmod 0755 /tmp/sf-localhost-bundle/bun
+          printf '{"schema":"sf-localhost-bundle-v1","sourceSHA":"%s","brand":"sucafina","build":"production"}\n' "$(git rev-parse HEAD)" > /tmp/sf-localhost-bundle/receipt.json
+          sha256sum /tmp/sf-localhost-bundle/{bun,web-dist.tar.gz,repository.tar.gz} > /tmp/sf-localhost-bundle/sha256sums.txt
+          ls -lh /tmp/sf-localhost-bundle
+          du -sh node_modules apps/cli/node_modules modules/sucafina/node_modules packages/app-shell/node_modules 2>/dev/null || true
+      - name: Package runtime dependencies for offline VM execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Preserve relative workspace symlinks; do not embed any home/config/secrets.
+          find . -path '*/node_modules' -type d -prune -print0 |             tar --null -T - -I 'zstd -T2 -1' -cf /tmp/sf-localhost-bundle/node-modules.tar.zst
+          ls -lh /tmp/sf-localhost-bundle/node-modules.tar.zst
+      - name: Divide offline runtime dependencies into transport-sized parts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/sf-node-deps
+          split -b 300000000 -d -a 2 /tmp/sf-localhost-bundle/node-modules.tar.zst /tmp/sf-node-deps/node-modules-part-
+          rm /tmp/sf-localhost-bundle/node-modules.tar.zst
+          ls -lh /tmp/sf-localhost-bundle /tmp/sf-node-deps
+      - name: Upload source, browser app and Bun for local VM
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-localhost-source-web
+          path: /tmp/sf-localhost-bundle/
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
+      - name: Upload VM dependencies part 1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-localhost-deps-00
+          path: /tmp/sf-node-deps/node-modules-part-00
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
+      - name: Upload VM dependencies part 2
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-localhost-deps-01
+          path: /tmp/sf-node-deps/node-modules-part-01
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
+
+      - name: Upload VM dependencies part 3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-localhost-deps-02
+          path: /tmp/sf-node-deps/node-modules-part-02
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
