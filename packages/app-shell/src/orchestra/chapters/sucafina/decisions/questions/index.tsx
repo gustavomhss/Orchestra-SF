@@ -162,7 +162,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
       onLayoutMode={() => undefined}
       primaryAction={{
         id: "answer-question", labelKey: k("sf.ui37.primary"), tone: "primary",
-        disabled: !selectedQuestion()?.answerRef, busy: false,
+        disabled: !selectedQuestion(), busy: false,
         onInvoke: () => document.getElementById("sf-n24-answer-zone")?.focus(),
       }}
       secondaryActions={[{
@@ -264,7 +264,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
             </section>
             <Show when={selectedQuestion()}>
               {(question) => <div id="sf-n24-answer-zone" tabIndex={-1}>
-                <SfQuestionAnswer owner={caseData.owner} question={question()} onConfirmed={() => caseData.reload()} />
+                <SfQuestionAnswer owner={caseData.owner} question={question()} caseRecord={current()} onConfirmed={() => caseData.reload()} />
               </div>}
             </Show>
             <SfQuestionCycles owner={caseData.owner} caseRef={caseRef()} />
