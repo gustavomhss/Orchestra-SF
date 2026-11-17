@@ -133,5 +133,7 @@ export type CreateSfHostRuntime = (input: {
   environment: Application["environment"]
   /** Explicit installation policy, distinct from financial roles and inaccessible to model input. */
   grants?: readonly SfProductGrant[]
+  /** Trusted installation-only getter; read against the currently authorized dashboard snapshot. */
+  grantsForSnapshot?: (dashboard: import("../../runtime/contract.ts").Snapshot) => readonly SfProductGrant[]
   assets?: Application["assets"]
 }) => Promise<SfHostRuntime>
