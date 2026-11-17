@@ -24,17 +24,17 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 ## Passos, mecanismos e limites das ferramentas
 
 1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. **[UI_ACTION]** Abrir Versions e criar WHATIF-A a partir de baseline conhecido
-3. **[READ_ONLY_WITNESS]** Inspecionar parentVersion, lock e competência
-4. **[UI_ACTION]** Criar versão B independente
-5. **[READ_ONLY_WITNESS]** Comparar A, B e official
-6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+2. **[UI_ACTION]** No Planner → Versions (/orchestra/sf-planner/versions) identificar official/locked, ano e versionRef; usar New/Copy quando autorizado para criar WHATIF-A da official, não no Dashboard.
+3. **[READ_ONLY_WITNESS]** Inspecionar A no detalhe de Versions, capturar ID, ano, nome e lock; registrar parentVersion/autoria somente se o produtor ou UI autorizada os expuser.
+4. **[READ_ONLY_WITNESS]** Criar WHATIF-B por New/Copy da mesma official, não de A; conferir que os dois versionRefs são diferentes.
+5. **[READ_ONLY_WITNESS]** Comparar A, B e official em Planner Versions/Compare e selecionando versionRef em Planner OPEX/CAPEX; não procurar controle de cenário no Dashboard.
+6. **[UI_ACTION]** Reabrir cada versionRef na fonte Planner, comprovar original locked e hipóteses distintas, com evidência real.
 
 ## Oráculos observáveis (não reescrever para passar)
 
 - Oficial permanece intocado e locked
-- Histórico registra autor, base e criação
-- A/B não se mesclam implicitamente
+- Histórico de autor/base/criação só é provado quando existir leitura autorizada; sem campo/producer observável registrar gap
+- A/B possuem versionRefs distintos e não se mesclam implicitamente
 - Versão inválida não é apresentada como aprovada
 - Evidência de execução deve relacionar ator, momento, URL, versão do registro, resultado e hash/recibo quando houver.
 

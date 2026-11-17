@@ -179,6 +179,36 @@ describe("A09 schema equivalence and authority boundary", () => {
     })
   })
 
+  test("native proof wire decodes JSON output without exposing private owner authority", () => {
+    const decode = Schema.decodeUnknownOption(SfRoutines.operations["projection.routine"].output, {
+      onExcessProperty: "error",
+    })
+    const run = {
+      documentId: "recipe-1", publishedVersion: "publication-1",
+      principalRef: "principal", projectId: "project",
+      correlationId: "corr-1", sourceRefs: [], pending: [],
+      admission: "admitted", admissionVersion: 1,
+      runRef: "run-1", resultRef: "artifact-1",
+    }
+    const outputDigest = "a".repeat(64)
+    const proof = {
+      execution: { runRef: "run-1", resultRef: "artifact-1", state: "completed", revision: "revision-1", outputDigest },
+      verifier: "verified",
+      output: { runRef: "run-1", resultRef: "artifact-1", outputDigest,
+        createdAt: "2026-11-17T14:00:00Z", content: { zero: 0, null: null, false: false } },
+    }
+    expect(Option.isSome(decode({ status: "ok", value: run, proof }))).toBe(true)
+    expect(Option.isNone(decode({ status: "ok", value: run,
+      proof: { ...proof, output: { ...proof.output, authoritySessionId: "private" } } }))).toBe(true)
+    expect(Option.isNone(decode({ status: "ok", value: run,
+      proof: { ...proof, verifier: "faked-pass" } }))).toBe(true)
+    expect(Option.isNone(decode({ status: "ok", value: run,
+      proof: { ...proof, execution: { ...proof.execution, state: "success" } } }))).toBe(true)
+    // A reader that lacks C08 execution evidence cannot publish verified output.
+    expect(Option.isSome(decode({ status: "ok", value: run,
+      proof: { verifier: "unavailable", reason: "native-routine-evidence-port-unavailable" } }))).toBe(true)
+  })
+
   test("routine projection rejects extra query fields before producer access", async () => {
     const response = await handler("projection.routine")(new Request(
       `${ORIGIN}${MOUNT}/api/ui/projections/routine?runRef=r&snapshot=true`, {

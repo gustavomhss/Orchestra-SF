@@ -15,7 +15,7 @@
 .sf-u07-detail, .sf-u07-review { min-width: 0; }
 .sf-u07-form-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: .85rem; }
 .sf-u07-form-fields label { display: grid; gap: .3rem; min-width: 0; }
-.sf-u07-form-fields input { min-height: 2.5rem; width: 100%; box-sizing: border-box; }
+.sf-u07-form-fields :is(input, select) { min-height: 2.5rem; width: 100%; box-sizing: border-box; }
 .sf-u07-actions { margin-top: 1rem; }
 .sf-u07-error { overflow-wrap: anywhere; }
 .sf-u07-review { margin-block: 1rem; }

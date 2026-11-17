@@ -1,0 +1,30 @@
+name: sucafina-brand-identity
+
+on:
+  pull_request:
+    branches: [close-final-candidate]
+    paths:
+      - ".github/workflows/sucafina-brand-ci.yml"
+      - "script/sucafina/brand-identity.test.mjs"
+      - "packages/app-shell/brand-identity.js"
+      - "packages/app-shell/src/orchestra/brand*"
+      - "packages/app-shell/src/orchestra/sidebar.tsx"
+      - "packages/app-shell/src/app.tsx"
+      - "packages/app-shell/src/index.css"
+      - "packages/app-shell/vite.js"
+      - "packages/app-shell/public/brand/sucafina/**"
+
+permissions:
+  contents: read
+
+jobs:
+  identity:
+    name: sucafina/identity-contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Verify independent brand and palette contract
+        run: node --test script/sucafina/brand-identity.test.mjs

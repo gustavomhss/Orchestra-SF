@@ -3,6 +3,7 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import { parseSfDocumentScenarioRequest } from "../documents/scenario-inputs.ts"
 import type { createSfDocumentScenarios } from "../documents/scenario-inputs.ts"
+import type { createSfDocumentScenarioLinks } from "../documents/scenario-links.ts"
 import { sfDocumentScenarioWorkbench } from "../documents/scenario-workbench.ts"
 import type { createSfProductAuthority } from "../integration/product-authority.ts"
 
@@ -12,6 +13,7 @@ export function createSfDocumentScenarioHttp(input: {
   mount: string
   authority: Pick<ReturnType<typeof createSfProductAuthority>, "ui" | "human" | "host">
   service: ReturnType<typeof createSfDocumentScenarios> | undefined
+  links?: ReturnType<typeof createSfDocumentScenarioLinks>
 }) {
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
@@ -52,7 +54,13 @@ export function createSfDocumentScenarioHttp(input: {
       const targets = await service.targets(ref.value.evidenceRef, grant.value)
       if (targets.status !== "ok") return reply(targets, code(targets.status))
       if (!await input.authority.host.revalidate(grant.value)) return reply({ status: "denied" }, 403)
-      if (mode === "document-scenario-targets") return reply(targets, 200)
+      if (mode === "document-scenario-targets") {
+        // Legacy read-only consumers retain their original authorized target response.
+        // Only the composed production host exposes persistent link decorations.
+        if (!input.links) return reply(targets, 200)
+        const decorated = await input.links.decorateTargets(ref.value.evidenceRef, targets.value, grant.value)
+        return reply(decorated, code(decorated.status))
+      }
       const html = sfDocumentScenarioWorkbench(surface, ref.value.evidenceRef)
       return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
     } finally { input.authority.ui.finish(grant.value) }

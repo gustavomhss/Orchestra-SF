@@ -27,7 +27,7 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 ## Passos, mecanismos e limites das ferramentas
 
-1. **[UI_ACTION]** Contribuidor tenta publicar versão official sem autorização
+1. **[UI_ACTION]** Em Planner Versions localizar versionRef official e os grants do contribuinte; tentar ação Official só se a UI a apresentar. Com botão negado/desabilitado, provar estado da fonte intacto sem forjar escrita por API ou afirmar produtor testado.
 
 ## Oráculos observáveis (não reescrever para passar)
 

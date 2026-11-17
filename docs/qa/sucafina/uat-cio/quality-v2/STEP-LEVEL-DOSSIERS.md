@@ -241,7 +241,7 @@ Contrato do executor: cada linha exige prova da ação, do **resultado esperado 
 
 **Pré-condições que o QA deve comprovar**
 
-- Tema Sucafina incluído no SHA C e assets oficiais aprovados; temas Orchestra originais permanecem inalterados.
+- Camada de marca Sucafina incluída no SHA C e assets oficiais aprovados; temas Orchestra originais permanecem inalterados.
 - Capturar screenshot-padrão de glass/blur/shadow/geometria/layout nos mesmos breakpoints e dados, sem tolerar mock substitutivo.
 - Identidade Sucafina (logos/naming/favicon) deve sobreviver a alternância de tema sem vazar branding Orchestra.
 

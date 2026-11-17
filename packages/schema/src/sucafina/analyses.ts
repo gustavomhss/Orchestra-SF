@@ -33,6 +33,13 @@ const Run = Schema.Struct({
   state: RunState,
   version: Schema.Int,
   outputRef: Schema.String.pipe(optional),
+  // The native producer supplies attribution. Omitted for legacy runs.
+  profileId: Schema.String.pipe(optional),
+  profileVersion: Schema.String.pipe(optional),
+  skillId: Schema.String.pipe(optional),
+  caseRef: CaseRef.pipe(optional),
+  createdAt: Schema.String.pipe(optional),
+  updatedAt: Schema.String.pipe(optional),
 })
 const Failure = Schema.Struct({
   status: Schema.Literals([

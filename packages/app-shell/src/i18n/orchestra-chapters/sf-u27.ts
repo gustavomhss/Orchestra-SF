@@ -41,6 +41,13 @@ export const SF_U27_COPY = {
   "sf.u27.recheck": "Revalidate case and review",
   "sf.u27.needsInput": "The producer requires additional input or review; no execution has started.",
   "sf.u27.runningUnverified": "Admission is not evidence of a completed run.",
+  "sf.u27.execution": "Native execution and verification",
+  "sf.u27.verifier": "Verifier",
+  "sf.u27.phase": "Execution state",
+  "sf.u27.revision": "Native receipt revision",
+  "sf.u27.outputDigest": "Verified output digest",
+  "sf.u27.output": "Verified native output",
+  "sf.u27.nativeProofUnavailable": "No authorized native execution proof was returned. Admission does not prove completion.",
   "sf.u27.clear": "Clear local selection"
 } as const
 
@@ -86,5 +93,12 @@ export const SF_U27_COPY_BR: Readonly<Record<keyof typeof SF_U27_COPY, string>> 
   "sf.u27.recheck": "Revalidar caso e revisão",
   "sf.u27.needsInput": "O produtor exige informações ou revisão adicionais; nenhuma execução começou.",
   "sf.u27.runningUnverified": "A admissão não comprova a conclusão da execução.",
+  "sf.u27.execution": "Execução nativa e verificação",
+  "sf.u27.verifier": "Verificador",
+  "sf.u27.phase": "Estado da execução",
+  "sf.u27.revision": "Revisão do recibo nativo",
+  "sf.u27.outputDigest": "Digest da saída verificada",
+  "sf.u27.output": "Saída nativa verificada",
+  "sf.u27.nativeProofUnavailable": "Não foi retornada prova nativa autorizada. Admissão não comprova conclusão.",
   "sf.u27.clear": "Limpar seleção local"
 }

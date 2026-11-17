@@ -209,6 +209,28 @@ function sameAuthority(expected: SfStateAuthority, current: SfStateAuthority | u
   return current?.principalRef === expected.principalRef && current.accessRevision === expected.accessRevision && current.policyVersion === expected.policyVersion
 }
 
+/**
+ * One-time installation schema bootstrap. Materializes a real, durable empty
+ * product namespace before the first native read; never manufactures a user,
+ * role, case or grant, and never repairs an invalid existing product state.
+ * Called only after configured installation and source initialization.
+ */
+export async function initializeAbsentSfProductState(
+  persistence: Pick<Persistence, "transaction">,
+  createId: () => string,
+): Promise<void> {
+  await persistence.transaction("dashboard", async (snapshot) => {
+    if (snapshot.data.__sfProductV1 !== undefined) {
+      if (!readSfState(snapshot)) throw new Error("SF_PRODUCT_BOOTSTRAP_EXISTING_STATE_INVALID")
+      return { commit: false, value: undefined }
+    }
+    const initial = emptySfState(createId())
+    if (!initial) throw new Error("SF_PRODUCT_BOOTSTRAP_INVALID_INCARNATION")
+    snapshot.data.__sfProductV1 = initial
+    return { commit: true, value: undefined }
+  })
+}
+
 function emptySfState(incarnation: string): SfProductState | undefined {
   if (!incarnation.trim()) return undefined
   return { schemaVersion: 1, revision: 0, versions: { preferences: 0, reviews: 0, relations: 0, threads: 0, confirmations: 0, cases: 0, contributions: 0, documents: 0, receipts: 0, atlas: 0, outbox: 0, "bi-artifacts": 0 }, incarnation, preferences: {}, reviews: {}, relations: {}, threads: {}, confirmations: {}, cases: {}, contributions: {}, documents: {}, receipts: {}, atlas: {}, outbox: {}, claimBindings: {}, commandProposals: {}, compositeScenarios: {}, decisionResults: {}, nativeRuns: {}, biArtifacts: {}, transactions: {} }

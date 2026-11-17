@@ -230,7 +230,9 @@ export function createSfTransport(options: Readonly<{
       if (metadata.method === "GET" && call.idempotencyKey !== undefined) return failure("contract-mismatch")
       const bodyValue = metadata.method === "POST"
         ? operation.operationId === "files.document-confirm" && asJsonObject(wireInput)
-          ? asJsonObject(wireInput)?.evidence
+          ? asJsonObject(wireInput)?.action === undefined
+            ? asJsonObject(wireInput)?.evidence
+            : operationBody(metadata, wireInput)
           : operationBody(metadata, wireInput)
         : undefined
       if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")
@@ -279,7 +281,8 @@ export function createSfTransport(options: Readonly<{
       }
 
       const headers: Record<string, string> = {
-        Accept: operation.operationId === "files.export.xlsx" || operation.operationId === "files.export.members"
+        Accept: operation.operationId === "files.export.po" ? "text/html"
+          : operation.operationId === "files.export.xlsx" || operation.operationId === "files.export.members"
           ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           : operation.operationId === "files.export.json" ? "application/json"
           : operation.operationId === "files.export.suppliers" || operation.operationId === "files.export.register"
@@ -685,7 +688,7 @@ function operationUrl(
     }
     const special = operationId.startsWith("files.") && source
       ? sfFilesSourceQuery(operationId, source) : undefined
-    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload","files.export.review",
+    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload","files.export.review","files.export.po",
       "files.document-open","files.document-scenario-targets"].includes(operationId) && !special)
       return undefined
     if (special) {
@@ -739,7 +742,7 @@ function validInstallation(value: SfInstallationDescriptor): boolean {
     if (url.origin !== value.publicOrigin || url.username || url.password) return false
     return value.authMode === "microsoft" && url.protocol === "https:" ||
       value.authMode === "local-operator" && url.protocol === "http:" &&
-      (url.hostname === "127.0.0.1" || url.hostname === "[::1]")
+      (url.hostname === "localhost" || url.hostname === "127.0.0.1" || url.hostname === "[::1]")
   } catch { return false }
 }
 

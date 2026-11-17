@@ -34,7 +34,7 @@ export async function createLocalJobs(options: {
   backupDirectory: string
   mount: string
   operator?: { id: string; name: string }
-  recoveryDrill?: (at: string) => Promise<{ at: string; durationMs: number }>
+  recoveryDrill?: (at: string, signal?: AbortSignal) => Promise<{ at: string; durationMs: number }>
   now?: () => Date
   intervalMs?: number
   schedule?: boolean
@@ -43,8 +43,9 @@ export async function createLocalJobs(options: {
   if (options.intervalMs !== undefined && (!Number.isSafeInteger(options.intervalMs) || options.intervalMs < 1000)) throw new Error("Invalid maintenance interval")
   const backups = await createLocalBackups(options.backupDirectory)
   const now = options.now ?? (() => new Date())
-  const surfaces = ["dashboard", "planner", "procurement"] as const
-  const lifecycle = { closed: false, pending: false, active: undefined as Promise<LocalJobStatus> | undefined }
+  const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
+  const controller = new AbortController()
+  const lifecycle: { closed: boolean; active?: Promise<LocalJobStatus> } = { closed: false }
   const state: LocalJobStatus = {
     running: false,
     lastRun: null,
@@ -57,14 +58,16 @@ export async function createLocalJobs(options: {
     notifications: options.operator ? "in-app" : "queued-transport-not-configured",
   }
   const run = async () => {
+    const signal = controller.signal
     state.running = true
     state.error = null
     state.backups = {}
     state.monthly = {}
     state.drills = {}
     state.partialSurface = {}
-    const activeSurface = { value: undefined as Surface | undefined }
+    const activeSurface: { value?: Surface } = {}
     try {
+      signal.throwIfAborted()
       const instant = now()
       if (!Number.isFinite(instant.getTime())) throw new Error("Invalid maintenance clock")
       const at = instant.toISOString()
@@ -73,31 +76,37 @@ export async function createLocalJobs(options: {
       const month = at.slice(0, 7)
       state.lastRun = at
       for (const surface of surfaces) {
+        signal.throwIfAborted()
         activeSurface.value = surface
-        const previous = await readLocalJobState(options.store, surface)
-        const archives = await backups.list(surface)
-        const daily = archives.find((archive) => archive.id === previous.backupId && archive.tier === "daily")
-        if (previous.backupDay === day && previous.backupHour === hour && daily) {
+        const previous = await readLocalJobState(options.store, surface, signal)
+        const archives = await backups.list(surface, { signal })
+        const daily =
+          archives.find((archive) => archive.id === previous.backupId && archive.tier === "daily") ??
+          archives.find((archive) => archive.tier === "daily" && archive.at.slice(0, 10) === day && archive.at.slice(0, 13) === hour)
+        if (daily) {
           state.backups[surface] = daily.id
+          if (previous.backupDay !== day || previous.backupHour !== hour || previous.backupId !== daily.id)
+            await updateLocalJobState(options.store, surface, { backupDay: day, backupHour: hour, backupId: daily.id, backupAt: daily.at }, signal)
         } else {
-          const captured = await backups.capture(options.store, surface, at)
+          const captured = await backups.capture(options.store, surface, at, "daily", { signal })
           await updateLocalJobState(options.store, surface, {
             backupDay: day,
             backupHour: hour,
             backupId: captured.id,
             backupAt: at,
-          })
+          }, signal)
           state.backups[surface] = captured.id
         }
 
-        const progress = await readLocalJobState(options.store, surface)
-        const currentArchives = await backups.list(surface)
+        signal.throwIfAborted()
+        const progress = await readLocalJobState(options.store, surface, signal)
+        const currentArchives = await backups.list(surface, { signal })
         const monthly =
           (progress.monthlyMonth === month
             ? currentArchives.find((archive) => archive.id === progress.monthlyId && archive.tier === "monthly")
             : undefined) ??
           currentArchives.find((archive) => archive.tier === "monthly" && archive.at.slice(0, 7) === month) ??
-          (await backups.capture(options.store, surface, at, "monthly"))
+          (await backups.capture(options.store, surface, at, "monthly", { signal }))
         const needsDrill =
           progress.monthlyMonth !== month ||
           progress.monthlyId !== monthly.id ||
@@ -106,8 +115,8 @@ export async function createLocalJobs(options: {
           typeof progress.drillDurationMs !== "number" ||
           !Number.isFinite(progress.drillDurationMs)
         const drill = needsDrill
-          ? await backups.verify(surface, monthly.id, at)
-          : { at: text(progress.drillAt), durationMs: progress.drillDurationMs as number }
+          ? await backups.verify(surface, monthly.id, at, { signal })
+          : { at: text(progress.drillAt), durationMs: Number(progress.drillDurationMs) }
         if (needsDrill) {
           await updateLocalJobState(options.store, surface, {
             monthlyMonth: month,
@@ -115,16 +124,17 @@ export async function createLocalJobs(options: {
             drillMonth: month,
             drillAt: drill.at,
             drillDurationMs: drill.durationMs,
-          })
+          }, signal)
         }
         state.monthly[surface] = monthly.id
         state.drills[surface] = drill
         state.partialSurface[surface] = `Monthly archive and restore drill completed for ${month}.`
       }
       activeSurface.value = undefined
+      signal.throwIfAborted()
       if (options.recoveryDrill) {
         const recoveryProgress = await Promise.all(
-          surfaces.map((surface) => readLocalJobState(options.store, surface)),
+          surfaces.map((surface) => readLocalJobState(options.store, surface, signal)),
         )
         const priorRecovery = recoveryProgress[0]
         const sameRecovery =
@@ -141,11 +151,12 @@ export async function createLocalJobs(options: {
         if (sameRecovery) {
           state.recoveryDrill = {
             at: text(priorRecovery.recoveryDrillAt),
-            durationMs: priorRecovery.recoveryDrillDurationMs as number,
+            durationMs: Number(priorRecovery.recoveryDrillDurationMs),
           }
         }
         if (!sameRecovery || priorRecovery.recoveryDrillMonth !== month) {
-          const recovery = await options.recoveryDrill(at)
+          const recovery = await options.recoveryDrill(at, signal)
+          signal.throwIfAborted()
           if (!Number.isFinite(Date.parse(recovery.at)) || !Number.isFinite(recovery.durationMs) || recovery.durationMs < 0)
             throw new Error("Invalid recovery drill result")
           for (const surface of surfaces)
@@ -153,38 +164,47 @@ export async function createLocalJobs(options: {
               recoveryDrillMonth: month,
               recoveryDrillAt: recovery.at,
               recoveryDrillDurationMs: recovery.durationMs,
-            })
+            }, signal)
           state.recoveryDrill = recovery
         }
       }
+      signal.throwIfAborted()
       await queueApprovalReminders(options.store, { at }, day)
+      signal.throwIfAborted()
       if (options.operator) {
         const operator = options.operator
         const deliveryErrors: unknown[] = []
         for (const surface of surfaces) {
-          try { await deliverNotices(options.store, {
-            now,
-            leaseMs: 60000,
-            recipients: async () => [operator.id],
-            send: async (message) => {
-              if (!message.to.length || message.to.some((id) => id !== operator.id)) throw new Error("Notification recipient is unavailable in this local profile")
-              if (!message.link.startsWith(`${options.mount}/${surface}?`)) throw new Error("Invalid local notification link")
-              return options.store.transaction(surface, async (snapshot) => {
-                const inbox = rows(snapshot.data.localInbox)
-                const existing = inbox.find((item) => item.key === message.key)
-                if (existing && (existing.kind !== message.kind || existing.record !== message.record || existing.link !== message.link || JSON.stringify(existing.to) !== JSON.stringify(message.to) || existing.reason !== message.reason)) throw new Error("Conflicting local notification receipt")
-                if (!existing) snapshot.data.localInbox = [...inbox, { key: message.key, to: [...message.to], kind: message.kind, record: message.record, reason: message.reason, link: message.link, at: now().toISOString(), readBy: [] }]
-                return { commit: !existing, value: { receipt: `in-app:${surface}:${message.key}` } }
-              })
-            },
-          }, surface, options.mount) } catch (error) { deliveryErrors.push(error) }
+          signal.throwIfAborted()
+          try {
+            await deliverNotices(options.store, {
+              now: () => { signal.throwIfAborted(); return now() },
+              leaseMs: 60000,
+              recipients: async () => [operator.id],
+              send: async (message) => {
+                signal.throwIfAborted()
+                if (!message.to.length || message.to.some((id) => id !== operator.id)) throw new Error("Notification recipient is unavailable in this local profile")
+                if (!message.link.startsWith(`${options.mount}/${surface}?`)) throw new Error("Invalid local notification link")
+                return options.store.transaction(surface, async (snapshot) => {
+                  const inbox = rows(snapshot.data.localInbox)
+                  const existing = inbox.find((item) => item.key === message.key)
+                  if (existing && (existing.kind !== message.kind || existing.record !== message.record || existing.link !== message.link || JSON.stringify(existing.to) !== JSON.stringify(message.to) || existing.reason !== message.reason)) throw new Error("Conflicting local notification receipt")
+                  if (!existing) snapshot.data.localInbox = [...inbox, { key: message.key, to: [...message.to], kind: message.kind, record: message.record, reason: message.reason, link: message.link, at: now().toISOString(), readBy: [] }]
+                  return { commit: !existing, value: { receipt: `in-app:${surface}:${message.key}` } }
+                }, { signal })
+              },
+            }, surface, options.mount)
+          } catch (error) { deliveryErrors.push(error) }
         }
         if (deliveryErrors.length) throw deliveryErrors[0]
       }
+      signal.throwIfAborted()
       state.lastSuccess = at
     } catch (error) {
-      state.error = error instanceof Error ? error.message : "Local maintenance failed"
-      if (activeSurface.value) state.partialSurface[activeSurface.value] = "Maintenance failed for this surface."
+      if (!lifecycle.closed) {
+        state.error = error instanceof Error ? error.message : "Local maintenance failed"
+        if (activeSurface.value) state.partialSurface[activeSurface.value] = "Maintenance failed for this surface."
+      }
     } finally {
       state.running = false
     }
@@ -193,12 +213,12 @@ export async function createLocalJobs(options: {
   const api = {
     runOnce(): Promise<LocalJobStatus> {
       if (lifecycle.closed) return Promise.reject(new Error("Local maintenance is closed"))
-      lifecycle.pending = true
-      lifecycle.active ??= (async () => {
-        do { lifecycle.pending = false; await run() } while (lifecycle.pending && !lifecycle.closed)
-        return structuredClone(state)
-      })().finally(() => { lifecycle.active = undefined })
-      return lifecycle.active
+      if (lifecycle.active) return lifecycle.active
+      const active = run()
+      lifecycle.active = active
+      const release = () => { if (lifecycle.active === active) lifecycle.active = undefined }
+      void active.then(release, release)
+      return active
     },
     status: (): LocalJobStatus => structuredClone(state),
     async inbox(actorId: string): Promise<LocalInboxItem[]> {
@@ -228,6 +248,7 @@ export async function createLocalJobs(options: {
     async dispose() {
       lifecycle.closed = true
       if (timer) clearInterval(timer)
+      controller.abort(new Error("Local maintenance is closing"))
       await lifecycle.active
     },
   }
@@ -241,16 +262,16 @@ function inboxEntries(snapshot: Snapshot, actorId: string, mount: string) {
   return rows(snapshot.data.localInbox).filter((item) => typeof item.key === "string" && /^[a-f0-9]{64}$/.test(item.key) && Array.isArray(item.to) && item.to.includes(actorId) && typeof item.link === "string" && item.link.startsWith(`${mount}/`) && typeof item.at === "string" && Number.isFinite(Date.parse(item.at)))
 }
 
-function readLocalJobState(store: LocalStore, surface: Surface) {
+function readLocalJobState(store: LocalStore, surface: Surface, signal?: AbortSignal) {
   return store.transaction(surface, async (snapshot) => ({
     commit: false,
     value: object(snapshot.data.localJobState),
-  }))
+  }), { signal })
 }
 
-function updateLocalJobState(store: LocalStore, surface: Surface, update: Record<string, unknown>) {
+function updateLocalJobState(store: LocalStore, surface: Surface, update: Record<string, unknown>, signal?: AbortSignal) {
   return store.transaction(surface, async (snapshot) => {
     snapshot.data.localJobState = { ...object(snapshot.data.localJobState), ...update }
     return { commit: true, value: undefined }
-  })
+  }, { signal })
 }

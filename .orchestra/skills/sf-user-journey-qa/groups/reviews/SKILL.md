@@ -24,7 +24,7 @@ not-when: "Outro domínio ou uma única story; abra o grupo correto ou folha ind
 5. **SF-UI49-P01** · `sf-user-journey-qa-ui-ui49-53-ui49-p01` · UI49: Comparar duas revisões sem confundir mudança e ausência (P0)
 6. **SF-UI49-N01** · `sf-user-journey-qa-ui-ui49-53-ui49-n01` · UI49: contraprova — Comparar R1 USD setembro com R2 EUR outubro sem FX declarada (P0)
 7. **SF-UI50-P01** · `sf-user-journey-qa-ui-ui49-53-ui50-p01` · UI50: Entregar slides e documento que reproduzem revisão auditada (P0)
-8. **SF-UI50-N01** · `sf-user-journey-qa-ui-ui49-53-ui50-n01` · UI50: contraprova — Revogar direito de export de um usuário após gerar PDF/DOCX (P0)
+8. **SF-UI50-N01** · `sf-user-journey-qa-ui-ui49-53-ui50-n01` · UI50: contraprova — Revogar direito de export após gerar DOCX/PPTX (P0)
 9. **SF-E2E-001** · `sf-user-journey-qa-e2e-e2e001-009-001` · O briefing das 8h: o CIO precisa decidir sem alterar a fonte (P0)
 10. **SF-E2E-004** · `sf-user-journey-qa-e2e-e2e001-009-004` · Reunião preservada enquanto o sistema continua mudando (P0)
 11. **SF-E2E-009** · `sf-user-journey-qa-e2e-e2e001-009-009` · Risco operacional vira decisão de portfólio (P0)

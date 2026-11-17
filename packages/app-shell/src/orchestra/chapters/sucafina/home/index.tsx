@@ -1,4 +1,10 @@
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
+import { useNavigate } from "@solidjs/router"
+import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
+import type { SfPeopleTopic } from "@orchestra/schema/sucafina/people"
+import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
+import { SfDomainPageData, SfDomainRisk } from "@orchestra/schema/sucafina/domain"
+import { encodeSfRouteRef } from "../navigation-state"
 import { createStore } from "solid-js/store"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
 import { SfProjectionHome } from "@orchestra/schema/sucafina/work"
@@ -14,6 +20,31 @@ type Home = Extract<Schema.Schema.Type<typeof SfProjectionHome.Output>, { status
 type HomeCase = Extract<Home["cases"], { status: "ok" }>["items"][number]
 // Solid store state: no Readonly<> wrapper, see security/index.tsx.
 type State = { status: SfUiState; data: Home | null }
+type Risk = typeof SfDomainRisk.Type
+type Executive = typeof SfDomainPageData.CAP01.Type
+type Attention = {
+  topicState: SfUiState; topics: readonly SfPeopleTopic[]
+  riskState: SfUiState; risks: readonly Risk[]
+  forecastState: SfUiState; totals: Executive["totals"] | undefined
+}
+/** Only real CAP02/CAP13/CAP01 producer projections, never derived tasks or totals. */
+const priorityScore = (value: SfPeopleTopic["priority"]) =>
+  value === "critical" ? 0 : value === "high" ? 1 : 2
+const scalar = (value: string | number | boolean | null | undefined) =>
+  value === undefined || value === null ? "" : String(value)
+const stampEqual = (a: SfContextStamp, b: SfContextStamp) =>
+  a.installationId === b.installationId && a.projectId === b.projectId &&
+  a.hostId === b.hostId && a.principalRef === b.principalRef &&
+  a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
+const readState = (result: { kind: string; status?: number; body?: { status: string } }): SfUiState =>
+  result.status === 401 || result.body?.status === "unauthenticated" ? "session-expired" :
+  result.status === 403 || result.body?.status === "denied" ? "denied" :
+  result.body?.status === "stale" ? "stale" : "unavailable"
+const attentionMessage = (state: SfUiState): string =>
+  state === "ready" ? "sf.ui29.title" : state === "empty" ? "sf.common.empty" :
+  state === "loading" ? "sf.common.loading" : state === "denied" ? "sf.common.noAccess" :
+  state === "session-expired" ? "sf.common.loginAgain" :
+  state === "stale" ? "sf.common.stale" : "sf.common.unavailable"
 type ResumeRequest = Readonly<{
   caseRef: HomeCase["caseRef"]
   sourceVersion: HomeCase["version"]
@@ -46,8 +77,13 @@ const key = (value: string) => value as SfCopyKey
  */
 export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
   const owner = useSfContext()
-  const { t } = useSfPresentation()
+  const navigate = useNavigate()
+  const { t, locale } = useSfPresentation()
   const [screen, setScreen] = createStore<State>({ status: "loading", data: null })
+  const [attention, setAttention] = createStore<Attention>({
+    topicState: "loading", topics: [], riskState: "loading", risks: [],
+    forecastState: "loading", totals: undefined,
+  })
   const [resume, setResume] = createStore<{ caseRef: string | null; status: SfUiState | "idle" }>({
     caseRef: null, status: "idle",
   })
@@ -114,6 +150,94 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
     load(request.signal, generation)
     onCleanup(() => request.abort())
   })
+
+  // The work-selection indicator on projection.home cannot substitute for the
+  // source records. Every card is independently admitted at the current owner.
+  createEffect(() => {
+    const state = owner.state()
+    const generation = owner.generation()
+    const ready = state.status === "ready" ? owner.ready() : undefined
+    const absent = statusFromContext()
+    setAttention({
+      topicState: ready ? "loading" : absent, topics: [],
+      riskState: ready ? "loading" : absent, risks: [],
+      forecastState: ready ? "loading" : absent, totals: undefined,
+    })
+    if (!ready || state.status !== "ready") return
+    const stamp = ready.context.stamp
+    const abort = new AbortController()
+    const current = () => {
+      const live = owner.state()
+      return !abort.signal.aborted && generation === owner.generation() &&
+        live.status === "ready" && live.ownerKey === state.ownerKey &&
+        live.context.stamp.accessRevision === stamp.accessRevision &&
+        owner.ready()?.transport === ready.transport
+    }
+    const admitted = (capabilityId: "CAP01" | "CAP02" | "CAP13", operationId: string) =>
+      ready.context.destinations.some((item) => item.capabilityId === capabilityId && item.canRead) &&
+      ready.context.availability.some((resource) =>
+        resource.family === "domain-read" && resource.resource === capabilityId &&
+        resource.operations.some((item) => item.operationId === operationId &&
+          item.state === "ready" && item.operational))
+    if (admitted("CAP02", "domain.page.CAP02")) {
+      void createSfPeopleClient(ready.transport)["domain.page.CAP02"](
+        { topicStatus: "" }, { signal: abort.signal },
+      ).then((response) => {
+        if (!current()) return
+        if (response.kind === "response" && response.body.status === "ok" &&
+            response.body.value.capabilityId === "CAP02" &&
+            stampEqual(response.body.context, stamp)) {
+          const rows = response.body.value.data.hotTopics
+          setAttention({ topicState: rows.length ? "ready" : "empty", topics: rows })
+        } else setAttention({ topicState: readState(response), topics: [] })
+      }).catch(() => { if (current()) setAttention({ topicState: "unavailable", topics: [] }) })
+    } else setAttention({ topicState: "unavailable", topics: [] })
+    if (admitted("CAP13", "domain.page.CAP13")) {
+      void createSfDomainClient(ready.transport)["domain.page.CAP13"]({}, { signal: abort.signal })
+        .then((response) => {
+          if (!current()) return
+          if (response.kind === "response" && response.body.status === "ok" &&
+              response.body.value.capabilityId === "CAP13" &&
+              stampEqual(response.body.context, stamp)) {
+            const rows = response.body.value.data.risks
+            setAttention({ riskState: !rows ? "unavailable" : rows.length ? "ready" : "empty",
+              risks: rows ?? [] })
+          } else setAttention({ riskState: readState(response), risks: [] })
+        }).catch(() => { if (current()) setAttention({ riskState: "unavailable", risks: [] }) })
+    } else setAttention({ riskState: "unavailable", risks: [] })
+    if (admitted("CAP01", "domain.page.CAP01")) {
+      void createSfDomainClient(ready.transport)["domain.page.CAP01"]({}, { signal: abort.signal })
+        .then((response) => {
+          if (!current()) return
+          if (response.kind === "response" && response.body.status === "ok" &&
+              response.body.value.capabilityId === "CAP01" &&
+              stampEqual(response.body.context, stamp)) {
+            const totals = response.body.value.data.totals
+            setAttention({ forecastState: totals ? "ready" : "unavailable", totals })
+          } else setAttention({ forecastState: readState(response), totals: undefined })
+        }).catch(() => { if (current()) setAttention({ forecastState: "unavailable", totals: undefined }) })
+    } else setAttention({ forecastState: "unavailable", totals: undefined })
+    onCleanup(() => abort.abort())
+  })
+  const orderedTopics = () => [...attention.topics].sort((a, b) =>
+    Number(a.status === "done") - Number(b.status === "done") ||
+    priorityScore(a.priority) - priorityScore(b.priority) ||
+    (a.due ?? "").localeCompare(b.due ?? ""))
+  const openSource = (pathname: string): void => {
+    const state = owner.state()
+    const selected = props.route.ownerSelection
+    if (state.status !== "ready" || !selected.installationId ||
+        state.selection.serverKey !== selected.serverKey ||
+        state.selection.projectId !== selected.projectId ||
+        state.selection.installationId !== selected.installationId) return
+    const query = new URLSearchParams({
+      server: selected.serverKey, project: selected.projectId, installation: selected.installationId,
+    })
+    // This only requests the native route; F01 rechecks current source authority.
+    navigate(pathname + "?" + query.toString())
+  }
+  const formatNumber = (amount: number) =>
+    new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(amount)
   const refresh = () => { void owner.reload() }
   const data = () => screen.status === "ready" ? screen.data : null
   const caseItems = () => {
@@ -211,11 +335,54 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
         <div class="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2" data-sf-home="authorized">
           <section class="mx-card min-w-0" aria-labelledby="sf-u01-attention">
             <h2 id="sf-u01-attention">{t(key("sf.ui29.attention"))}</h2>
-            <SfStatePanel
-              state={data()?.workProducer === "available" ? "partial" : "unavailable"}
-              messageKey={key(data()?.workProducer === "available" ? "sf.ui29.workSourceReady" : "sf.ui29.workUnavailable")}
-            >
-              <p>{t(key("sf.ui29.workRequiresSelection"))}</p>
+            <h3>{t(key("sf.ui29.hotTopics"))}</h3>
+            <SfStatePanel state={attention.topicState} messageKey={key(attentionMessage(attention.topicState))} onRetryRead={refresh}>
+              <ul class="list-disc ps-5" data-sf-home-priorities>
+                <For each={orderedTopics()}>{(topic) => (
+                  <li class="py-2" data-sf-home-topic={topic.id}>
+                    <button type="button" class="mx-btn" onClick={() => openSource(
+                      "/orchestra/sf-dashboard/hot-topics/" + encodeSfRouteRef(topic.id),
+                    )}>{topic.action || topic.id}</button>
+                    <span class="block">{t(key("sf.ui29.priority"))}: {topic.priority ?? t(key("sf.ui29.notProjected"))} · {topic.status ?? t(key("sf.ui29.notProjected"))}</span>
+                    <span class="block">{t(key("sf.ui29.owner"))}: <bdi>{topic.owner || t(key("sf.ui29.notProjected"))}</bdi></span>
+                    <span class="block">{t(key("sf.ui29.deadline"))}: {topic.due || t(key("sf.ui29.notProjected"))}</span>
+                  </li>
+                )}</For>
+              </ul>
+              <p class="text-sm">{t(key("sf.ui29.authorshipUnavailable"))}</p>
+            </SfStatePanel>
+            <p class="text-sm">{t(key("sf.ui29.workRequiresSelection"))}</p>
+          </section>
+          <section class="mx-card min-w-0" aria-labelledby="sf-u01-risks" data-sf-home-risks>
+            <h2 id="sf-u01-risks">{t(key("sf.ui29.risks"))}</h2>
+            <SfStatePanel state={attention.riskState} messageKey={key(attentionMessage(attention.riskState))} onRetryRead={refresh}>
+              <ul class="list-disc ps-5">
+                <For each={attention.risks}>{(risk) => (
+                  <li class="py-2" data-sf-home-risk={String(risk.id)}>
+                    <button type="button" class="mx-btn" onClick={() => openSource(
+                      "/orchestra/sf-operations/risks/" + encodeSfRouteRef(String(risk.id)),
+                    )}>{scalar(risk.title) || scalar(risk.name) || String(risk.id)}</button>
+                    <span class="block">{t(key("sf.ui29.owner"))}: <bdi>{scalar(risk.owner) || scalar(risk.responsible) || t(key("sf.ui29.notProjected"))}</bdi></span>
+                    <span class="block">{t(key("sf.ui29.deadline"))}: {scalar(risk.due) || t(key("sf.ui29.notProjected"))}</span>
+                    <span class="block">{t(key("sf.ui29.riskStatus"))}: {scalar(risk.status) || t(key("sf.ui29.notProjected"))}</span>
+                  </li>
+                )}</For>
+              </ul>
+            </SfStatePanel>
+          </section>
+          <section class="mx-card min-w-0" aria-labelledby="sf-u01-forecast" data-sf-home-forecast>
+            <h2 id="sf-u01-forecast">{t(key("sf.ui29.forecast"))}</h2>
+            <SfStatePanel state={attention.forecastState} messageKey={key(attentionMessage(attention.forecastState))} onRetryRead={refresh}>
+              <Show when={attention.totals}>{(totals) => (
+                <dl>
+                  <dt>{t(key("sf.ui29.forecastTotal"))}</dt><dd>{formatNumber(totals().totalForecast)}</dd>
+                  <dt>{t(key("sf.ui29.forecastOpex"))}</dt><dd>{formatNumber(totals().opexForecast)}</dd>
+                  <dt>{t(key("sf.ui29.forecastCapex"))}</dt><dd>{formatNumber(totals().capexForecast)}</dd>
+                  <dt>{t(key("sf.ui29.forecastSource"))}</dt><dd>CAP01</dd>
+                  <dt>{t(key("sf.ui29.owner"))} / {t(key("sf.ui29.deadline"))}</dt>
+                  <dd>{t(key("sf.ui29.notProjected"))}</dd>
+                </dl>
+              )}</Show>
             </SfStatePanel>
           </section>
           <section class="mx-card min-w-0" aria-labelledby="sf-u01-resume">

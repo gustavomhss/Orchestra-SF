@@ -1,0 +1,27 @@
+{
+  "schema": "sf2h.microsoft49-installed-reconciliation.v1",
+  "baseline_commit": "3b3e86b2a8181dadecbfe94e5ad30619bf9ce069",
+  "historical_composition_blob": "75a96c0c2f8df772727ff1c71d2cc7a2b7085cf2",
+  "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+  "context": "Historical mission49/source74 receipts remain immutable. At the independently verified close-final-candidate base 3b3e86b2a8181dadecbfe94e5ad30619bf9ce069 the installed product bytes are represented by the exact Git blob and SHA-256 pairs below; any future code change must obtain a new explicit owner-reviewed reconciliation, never relax this fence.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "previous_postimage_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "installed_blob": "b4c4e59699c64caed3fb6dab7bcf3284021d7822",
+      "installed_sha256": "2d40e5c29a02c3f0856ea502304d1e00720e754afaf5a4a77f9a3f5ffaa61b85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "previous_postimage_blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+      "installed_blob": "b653926d8ddc478af06a228e7d51c54894a6c7e9",
+      "installed_sha256": "c38e7e235e93ed3b25d4e77909355c43facbec51b57e98d4751c5026654ea115"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "previous_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "installed_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "installed_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
+    }
+  ]
+}

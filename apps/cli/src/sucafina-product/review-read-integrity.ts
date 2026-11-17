@@ -79,6 +79,8 @@ export function protectSfReviewReads(input: {
     }
   }
   const legacyRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
+    const trace = (stage: string) => { if (process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_" + stage) }
+    trace("LEGACY_ENTER")
     const request = host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])
     const pinned = () => !!request && host.requestFor(call) === request && !request.signal.aborted && binding === digestSfValue([call.kind, call.binding])
@@ -86,6 +88,7 @@ export function protectSfReviewReads(input: {
     try {
       if (!request || !await currentAccess()) return denied()
       const first = await read(id, call)
+      trace("LEGACY_FIRST_DONE")
       if (!await currentAccess()) return denied()
       if (first.status !== "ok") return first
       const digest = digestSfValue(first.value)
@@ -103,12 +106,15 @@ export function protectSfReviewReads(input: {
         return checked.status === "ok" ? checked.value : unavailable()
       }
       const before = await proof()
+      trace("LEGACY_BEFORE_PROOF_DONE")
       if (before.status !== "ok") return before
       const current = await read(id, call)
+      trace("LEGACY_SECOND_DONE")
       if (!await currentAccess()) return denied()
       if (current.status !== "ok") return current
       if (digestSfValue(current.value) !== digest) return denied()
       const after = await proof()
+      trace("LEGACY_AFTER_PROOF_DONE")
       if (!await currentAccess()) return denied()
       if (after.status !== "ok") return after
       if (after.value !== before.value) return denied()

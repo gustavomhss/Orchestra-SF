@@ -3,6 +3,7 @@ import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
+import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import type { SfContextHandle } from "../../context/contracts"
 import type { SfUiState } from "../../shared/frame"
@@ -33,6 +34,8 @@ export function SfQuestionConsume(props: Readonly<{
     sourceRef: string
     expectedStorageVersion?: number
     consumed?: Consumed
+    linkedVersion?: number
+    linkCorrelation?: string
     submitting: boolean
   }>({ state: "loading", sourceRef: "", submitting: false })
   let commandAbort: AbortController | undefined
@@ -43,7 +46,7 @@ export function SfQuestionConsume(props: Readonly<{
     const ref = props.outputRef
     const generation = props.owner.generation()
     setUi({ state: "loading", contribution: undefined, expectedStorageVersion: undefined,
-      sourceRef: "", consumed: undefined, submitting: false })
+      sourceRef: "", consumed: undefined, linkedVersion: undefined, linkCorrelation: undefined, submitting: false })
     commandAbort?.abort()
     if (!ready || !ref || !sfOperationReady(ready.context, "collaboration.question-output")
       || !sfOperationReady(ready.context, "collaboration.storage-version")) {
@@ -121,7 +124,6 @@ export function SfQuestionConsume(props: Readonly<{
       }
       setUi({ state: "ready", consumed: result.body.value, contribution: undefined,
         expectedStorageVersion: undefined, submitting: false })
-      props.onConsumed()
     } catch (error) {
       if (!controller.signal.aborted) {
         console.error("Sucafina question confirmation outcome unknown", error)
@@ -130,6 +132,64 @@ export function SfQuestionConsume(props: Readonly<{
     } finally {
       if (commandAbort === controller) commandAbort = undefined
     }
+  }
+  // Consuming a question writes a thread; it does NOT add it to DecisionCase.questions.
+  // Link through the existing, authorized case CAS operation in a distinct human step.
+  const linkQuestion = async () => {
+    const ready = props.owner.ready()
+    const consumed = ui.consumed
+    const record = props.caseRecord
+    if (!ready || !consumed || ui.linkedVersion !== undefined || ui.submitting ||
+      !!commandAbort || !sfOperationReady(ready.context, "decisions.decision-add-question") ||
+      consumed.questionOrigin.caseRef.id !== record.id ||
+      consumed.questionOrigin.caseRef.incarnation !== record.incarnation ||
+      consumed.questionOrigin.caseRef.version !== record.version ||
+      record.questions.some((question) => question.id === consumed.id)) return
+    const caseRef = { id: record.id, incarnation: record.incarnation, version: record.version }
+    const key = crypto.randomUUID()
+    const generation = props.owner.generation()
+    const controller = new AbortController()
+    commandAbort = controller
+    setUi({ state: "loading", submitting: true, linkCorrelation: key })
+    try {
+      const result = await createSfDecisionsClient(ready.transport)["decisions.decision-add-question"]({
+        caseRef, questionRef: consumed.id,
+      }, { signal: controller.signal, idempotencyKey: key })
+      if (controller.signal.aborted || generation !== props.owner.generation()) return
+      if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
+        setUi({ state: "outcome-unknown", submitting: false })
+        return
+      }
+      if (result.body.status !== "ok") {
+        setUi({ state: sfFailureUiState(result.body.status, result.status), submitting: false })
+        return
+      }
+      if (result.body.value.caseRef.id !== caseRef.id ||
+        result.body.value.caseRef.incarnation !== caseRef.incarnation ||
+        result.body.value.caseRef.version !== caseRef.version + 1) {
+        setUi({ state: "outcome-unknown", submitting: false })
+        return
+      }
+      setUi({ state: "ready", linkedVersion: result.body.value.caseRef.version, submitting: false })
+      props.onConsumed()
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        console.error("Sucafina question case-link outcome unknown", error)
+        setUi({ state: "outcome-unknown", submitting: false })
+      }
+    } finally {
+      if (commandAbort === controller) commandAbort = undefined
+    }
+  }
+  const mayLink = () => {
+    const ready = props.owner.ready()
+    return !!ready && !!ui.consumed && ui.state === "ready" &&
+      ui.linkedVersion === undefined && !ui.submitting &&
+      sfOperationReady(ready.context, "decisions.decision-add-question") &&
+      ui.consumed.questionOrigin.caseRef.id === props.caseRecord.id &&
+      ui.consumed.questionOrigin.caseRef.incarnation === props.caseRecord.incarnation &&
+      ui.consumed.questionOrigin.caseRef.version === props.caseRecord.version &&
+      !props.caseRecord.questions.some((question) => question.id === ui.consumed?.id)
   }
   return (
     <section class="sf-n24-review" aria-label={t("sf.ui37.proposalScope")}>
@@ -158,7 +218,18 @@ export function SfQuestionConsume(props: Readonly<{
           </>}
         </Show>
       }>
-        {(consumed) => <p role="status">{t("sf.ui37.recorded")}: <bdi>{consumed().id}</bdi></p>}
+        {(consumed) => <div role="status">
+          <p>{t("sf.ui37.recorded")}: <bdi>{consumed().id}</bdi> (thread)</p>
+          <Show when={ui.linkedVersion !== undefined} fallback={
+            <button type="button" class="mx-btn primary" disabled={!mayLink()}
+              onClick={() => void linkQuestion()}>Vincular pergunta ao caso (CAS)</button>
+          }>
+            <p>Questão vinculada: case v{ui.linkedVersion} · recibo <bdi>{ui.linkCorrelation}</bdi></p>
+          </Show>
+          <Show when={ui.state === "outcome-unknown"}>
+            <p role="alert">Vínculo incerto; não reenviar. Correlação: <bdi>{ui.linkCorrelation}</bdi></p>
+          </Show>
+        </div>}
       </Show>
     </section>
   )

@@ -8,7 +8,7 @@
  * Requires the exact 227 context/navigation leaves and 228 adapter postimages.
  */
 import { useBeforeLeave, useLocation, useNavigate } from "@solidjs/router"
-import { createEffect, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
+import { createEffect, onCleanup, Show, Switch, Match, For, untrack, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { usePlatform } from "@/context/platform"
@@ -19,7 +19,7 @@ import { showToast } from "@/utils/toast"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfContext, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
-import { createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
+import { createSfTransport, type SfTransport, type SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfDraft } from "../shared/draft"
@@ -312,6 +312,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const language = useLanguage()
   const fetcher = platform.fetch ?? globalThis.fetch
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
+  // Candidates are discovery descriptors only, never an F01 owner grant.
+  const [installationChoices, setInstallationChoices] = createStore<{ items: readonly SfInstallationDescriptor[] }>({ items: [] })
+  const [installationPicker, setInstallationPicker] = createStore({ index: "" })
   const [view, setView] = createStore<View>({ status: "resolving" })
   const [provider, setProvider] = createStore({ status: "unmounted", generation: -1 })
   const [reconnect, setReconnect] = createStore({ required: false, busy: false })
@@ -383,11 +386,28 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const selection = () => discovery.status === "ready" ? discovery.selection : undefined
   const sameServer = (value: SfOwnerSelection) =>
     value.serverKey === (ServerConnection.key(props.server) as string)
+  // Discovery already sends the selected ServerConnection's HTTP credentials.
+  // Native F01/F02 reads must use that SAME connection, not an unauthenticated
+  // global fetch. Never forward Basic to another origin or outside this mount.
+  const nativeFetch: SfTransportFetch = (input, init) => {
+    const target = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url,
+      window.location.href)
+    if (!alignedOrigin || target.origin !== window.location.origin ||
+        target.origin !== new URL(props.server.http.url).origin ||
+        !target.pathname.startsWith("/sucafina/"))
+      return Promise.reject(new Error("SF_NATIVE_SELECTED_ORIGIN_REQUIRED"))
+    if (!props.server.http.password) return fetcher(input, init)
+    const headers = new Headers(init?.headers)
+    headers.set("Authorization", "Basic " + authTokenFromCredentials({
+      username: props.server.http.username, password: props.server.http.password,
+    }))
+    return fetcher(input, { ...init, headers })
+  }
   const newTransport = (binding: SfInstallationDescriptor, generation: number,
     currentGeneration: () => number): SfTransport => desktopBridge
     ? desktopBridge.createTransport(binding, generation, currentGeneration)
     : createSfTransport({
-        binding, generation, currentGeneration, fetch: fetcher, operations: SfNativeOperationBindings,
+        binding, generation, currentGeneration, fetch: nativeFetch, operations: SfNativeOperationBindings,
       })
   const readContext = async (binding: SfInstallationDescriptor, signal: AbortSignal,
     generation: number, currentGeneration: () => number) => {
@@ -665,8 +685,13 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const directory = props.directory
     const actualServerKey: string = ServerConnection.key(props.server)
     const parsed = explicitSelection(query)
-    const activeSelection = selection()
+    // Async outcomes must not themselves restart discovery: failed/denied reads
+    // are terminal for this owner query until its URL or profile changes.
+    const activeSelection = untrack(selection) // discovery writes must not retrigger discovery
     const epoch = ++discoveryAttempt
+    // A changed route/server/directory immediately drops stale candidate IDs.
+    setInstallationChoices("items", [])
+    setInstallationPicker("index", "")
     if (parsed.kind === "invalid") {
       rejectInvalidSfOwnerQuery({ ownerMounted: !!mounted, selectionPresent: !!activeSelection,
         previousHref: untrack(() => view.route?.href) }, {
@@ -722,7 +747,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       } else if (found.installations.length === 0) {
         setDiscovery({ status: "denied", selection: undefined })
       } else if (found.installations.length !== 1) {
-        // Distinct genuine installations require explicit owner selection.
+        // No implicit owner authority from a directory. Only the exact
+        // server-scoped installation descriptors can be offered as candidates.
+        setInstallationChoices("items", found.installations)
         setDiscovery({ status: "ambiguous", selection: undefined })
       } else {
         const only = found.installations[0]
@@ -742,6 +769,24 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     })
     onCleanup(() => abort.abort())
   })
+
+
+  const selectDiscoveredInstallation = (event: SubmitEvent): void => {
+    event.preventDefault()
+    // Selection is an *intent*. The provider, original ctx.context and F01
+    // preflight re-discover and re-authorize the tuple before any private UI.
+    if (disposed || discovery.status !== "ambiguous" || mounted ||
+        installationPicker.index === "") return
+    const index = Number(installationPicker.index)
+    if (!Number.isSafeInteger(index) || index < 0 || index >= installationChoices.items.length) return
+    const candidate = installationChoices.items[index]
+    if (!candidate?.projectId || !candidate.installationId) return
+    const query = new URLSearchParams({
+      server: ServerConnection.key(props.server),
+      project: candidate.projectId, installation: candidate.installationId,
+    })
+    navigate("/orchestra/sf-home/context?" + query.toString())
+  }
 
   let routeEpoch = 0
   createEffect(() => {
@@ -868,6 +913,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
 
   return (
     <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
+      data-sf-provider-status={provider.status}
+      data-sf-view-status={view.status}
+      data-sf-discovery-status={discovery.status}
       onFocusIn={(event) => {
         if (event.target instanceof HTMLElement &&
           (event.target.matches("input, textarea, select, [contenteditable='true']")))
@@ -884,11 +932,32 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       </Show>
 
       <Show when={selection()} fallback={
-        <p role="status" data-sf-f01={discovery.status}>
-          {discovery.status === "ambiguous" ? "Sucafina installation selection required"
-            : discovery.status === "resolving" ? "Resolving installed Sucafina"
-            : "Sucafina installation unavailable or unauthorized"}
-        </p>
+        <Show when={discovery.status === "ambiguous"} fallback={
+          <p role="status" data-sf-f01={discovery.status}>
+            {discovery.status === "resolving" ? language.t("sf.ui67.loading") :
+              discovery.status === "denied" ? language.t("sf.ui67.denied") :
+              language.t("sf.ui67.unavailable")}
+          </p>
+        }>
+          <form class="mx-card flex flex-col gap-3 p-4" data-sf-f01="ambiguous"
+            data-sf-installation-selector onSubmit={selectDiscoveredInstallation}>
+            <h2>{language.t("sf.ui67.title")}</h2>
+            <p role="status">{language.t("sf.ui67.multipleChoices")}</p>
+            <label for="sf-ui67-installation-select">{language.t("sf.ui67.installation")}</label>
+            <select id="sf-ui67-installation-select" required
+              value={installationPicker.index} onChange={(event) => setInstallationPicker("index", event.currentTarget.value)}>
+              <option value="" disabled>{language.t("sf.ui67.chooseOption")}</option>
+              <For each={installationChoices.items}>{(candidate, index) =>
+                <option value={String(index())} data-sf-installation-choice>
+                  {candidate.projectId} · {candidate.installationId}
+                </option>
+              }</For>
+            </select>
+            <button type="submit" class="mx-btn primary" disabled={!installationPicker.index || !installationChoices.items.length}>
+              {language.t("sf.ui67.authorizeChoice")}
+            </button>
+          </form>
+        </Show>
       }>
         {(selected) => <SfTodayBoundOwnerProvider
           selection={selected}

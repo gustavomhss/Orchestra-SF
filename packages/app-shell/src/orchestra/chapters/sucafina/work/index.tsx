@@ -6,7 +6,7 @@ import { createSfWorkClient } from "@orchestra/client/sucafina/work"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import { SfWork } from "@orchestra/schema/sucafina/work"
-import type { SfRef } from "@orchestra/schema/sucafina/context"
+import type { SfOwnerSelection, SfRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../context"
 import type { SfSurfaceProps } from "../context/contracts"
 import { encodeSfRouteRef } from "../navigation-state"
@@ -19,7 +19,7 @@ type Listed = Extract<typeof SfCollaboration.operations["collaboration.work-list
 type WorkItem = Listed["items"][number]
 type Selection = Readonly<{ selectionRef: string; period: Readonly<{ start: string; end: string }> }>
 type Details = Extract<typeof SfWork.operations["projection.work-item"]["output"]["Type"], { status: "ok" }>["value"]
-type Snapshot = Readonly<{ generation: number; ownerKey: string; accessRevision: string; transport: NonNullable<ReturnType<ReturnType<typeof useSfContext>["ready"]>>["transport"]; publicOrigin: string }>
+type Snapshot = Readonly<{ generation: number; ownerKey: string; accessRevision: string; transport: NonNullable<ReturnType<ReturnType<typeof useSfContext>["ready"]>>["transport"]; publicOrigin: string; mount: string; selection: SfOwnerSelection }>
 
 /** U41 only reads the two real product projections. It never creates a task or infers an owner. */
 function resultState(result: { kind: string; status?: number; reason?: string; body?: unknown }): SfUiState {
@@ -39,19 +39,89 @@ const dateOnly = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value)
 /** D01 transports reads; only a matching typed F01 route can navigate in-app.
  * The oc:// renderer origin is unrelated to the approved source publicOrigin.
  * A legacy workbench href is not an approved native route. */
-function admittedNativeSource(raw: string, publicOrigin: string, nativeRoute: string | undefined): string | undefined {
-  if (!nativeRoute || !raw || raw.startsWith("//") || raw.includes("\\")) return undefined
+/** This is a producer-authorized *legacy* work-item receipt, not a native URL.
+ * It only authorizes us to request a fresh F01 transition to a typed route. */
+export function admittedProducerWorkHref(
+  raw: string, publicOrigin: string, mount: string, selected: Selection, actionRef: string,
+): boolean {
+  if (!raw || raw !== raw.trim() || raw.startsWith("//") || raw.includes("\\") ||
+      raw.includes("#") || /%2f|%5c/i.test(raw)) return false
+  const prefix = mount.replace(/\/+$/, "")
+  if (!prefix.startsWith("/") || prefix.includes("..") || prefix.includes("?") || prefix.includes("#")) return false
   try {
-    const url = new URL(raw, publicOrigin)
-    if (url.origin !== publicOrigin || url.username || url.password || url.hash || url.search ||
-        url.pathname !== nativeRoute) return undefined
-    return nativeRoute
+    const origin = new URL(publicOrigin)
+    const url = new URL(raw, origin)
+    const expected = new Map([
+      ["sf", "work-item"], ["selectionRef", selected.selectionRef],
+      ["start", selected.period.start], ["end", selected.period.end], ["actionRef", actionRef],
+    ])
+    const keys = [...expected.keys()]
+    return url.origin === origin.origin && !url.username && !url.password && !url.hash &&
+      url.pathname === prefix + "/dashboard" &&
+      [...url.searchParams.keys()].length === keys.length &&
+      keys.every((key) => url.searchParams.getAll(key).length === 1 &&
+        url.searchParams.get(key) === expected.get(key))
+  } catch { return false }
+}
+
+/** A signal's destination is a source-issued workbench case link, NOT a signal
+ * identifier. Decode only the canonical case source, then let UI34 reauthorize. */
+function admittedSignalCase(raw: string, publicOrigin: string, mount: string): string | undefined {
+  if (!raw || raw !== raw.trim() || raw.startsWith("//") || raw.includes("\\") ||
+      raw.includes("#") || /%2f|%5c/i.test(raw)) return undefined
+  const prefix = mount.replace(/\/+$/, "")
+  if (!prefix.startsWith("/") || prefix.includes("..")) return undefined
+  try {
+    const origin = new URL(publicOrigin)
+    const url = new URL(raw, origin)
+    if (url.origin !== origin.origin || url.username || url.password || url.hash ||
+        !["dashboard", "planner", "procurement"].some((page) => url.pathname === prefix + "/" + page) ||
+        [...url.searchParams.keys()].length !== 2 ||
+        url.searchParams.getAll("sf").length !== 1 || url.searchParams.get("sf") !== "workbench-case" ||
+        url.searchParams.getAll("caseRef").length !== 1) return undefined
+    const ref = url.searchParams.get("caseRef") ?? ""
+    const parsed = /^case:([^:]+):([^:]+)$/.exec(ref)
+    if (!parsed) return undefined
+    const id = decodeURIComponent(parsed[1]!)
+    const incarnation = decodeURIComponent(parsed[2]!)
+    if (!id.trim() || !incarnation.trim() || `case:${encodeURIComponent(id)}:${encodeURIComponent(incarnation)}` !== ref) return undefined
+    return ref
   } catch { return undefined }
 }
-function nextNativeRoute(item: Details["item"]): string | undefined {
+
+/** Candidate only: every route must pass the original F01 owner/operation checks. */
+export function nextNativeWorkRoute(item: Details["item"], s: Snapshot | undefined): string | undefined {
+  if (!s?.selection.installationId) return undefined
   const destination = item.destination
-  if (destination?.kind !== "thread") return undefined
-  return "/orchestra/sf-work/threads/" + encodeSfRouteRef(destination.threadId)
+  let path: string
+  switch (destination?.kind) {
+    case "thread":
+      path = "/orchestra/sf-work/threads/" + encodeSfRouteRef(destination.threadId)
+      break
+    case "hot-topic":
+      path = "/orchestra/sf-dashboard/hot-topics/" + encodeSfRouteRef(destination.topicId)
+      break
+    case "procurement-request":
+      if (!item.period || item.sourceVersion === undefined) return undefined
+      path = "/orchestra/sf-procurement/requests/" + encodeSfRouteRef(destination.recordId)
+      break
+    case "confirmation":
+      path = "/orchestra/sf-work/confirmations/" + encodeSfRouteRef(destination.confirmationId)
+      break
+    case "signal": {
+      const caseRef = admittedSignalCase(destination.ref, s.publicOrigin, s.mount)
+      if (!caseRef) return undefined
+      path = "/orchestra/sf-decisions/" + encodeSfRouteRef(caseRef)
+      break
+    }
+    default: return undefined
+  }
+  // Explicit original owner tuple, never an ambient project or cross-owner link.
+  const query = new URLSearchParams({
+    server: s.selection.serverKey, project: s.selection.projectId,
+    installation: s.selection.installationId,
+  })
+  return path + "?" + query.toString()
 }
 
 export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
@@ -90,13 +160,18 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
       generation: owner.generation(), ownerKey: current.ownerKey,
       accessRevision: current.context.stamp.accessRevision,
       transport: active.transport, publicOrigin: current.binding.publicOrigin,
+      mount: current.binding.mount, selection: current.selection,
     }
   }
   const current = (source: Snapshot, signal: AbortSignal) => {
     const now = snapshot()
     return !signal.aborted && !!now && source.generation === now.generation &&
       source.ownerKey === now.ownerKey && source.accessRevision === now.accessRevision &&
-      source.transport === now.transport
+      source.transport === now.transport &&
+      source.mount === now.mount && source.publicOrigin === now.publicOrigin &&
+      source.selection.serverKey === now.selection.serverKey &&
+      source.selection.projectId === now.selection.projectId &&
+      source.selection.installationId === now.selection.installationId
   }
   // Abort and erase every private read, including detail and links, on owner/access change.
   createEffect(on(() => {
@@ -253,16 +328,17 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
         else setDestinationState(failure)
         return
       }
-      const internal = admittedNativeSource(result.body.value.href, s.publicOrigin, nextNativeRoute(view.item))
-      if (!internal) {
-        // D01 provides no arbitrary URL opening. Legacy HTML targets stay blocked
-        // until I00 supplies an authorized mapping to a typed native route.
+      const native = nextNativeWorkRoute(view.item, s)
+      if (!admittedProducerWorkHref(result.body.value.href, s.publicOrigin, s.mount, selected, actionRef) ||
+          !native) {
+        // A mismatched legacy receipt or a destination with no safe native
+        // correspondence cannot be promoted into an F01 navigation grant.
         console.error("Sucafina work destination has no admitted native route")
         setDestinationState("unavailable")
         return
       }
-      setDestination(internal); setDestinationState("ready")
-      if (open) navigate(internal)
+      setDestination(native); setDestinationState("ready")
+      if (open) navigate(native)
     } catch (error) {
       if (!current(s, abort.signal) || selection() !== selected ||
           selectedRef() !== actionRef || details() !== view) return
@@ -389,9 +465,9 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                                 <For each={view().details}>{(field) => <div><dt>{field.label}</dt><dd>{field.value}</dd></div>}</For>
                               </dl>
                               <div class="sf-work-links">
-                                 <Show when={nextNativeRoute(view().item)}>
+                                 <Show when={nextNativeWorkRoute(view().item, snapshot())}>
                                    <button class="mx-btn primary" type="button" disabled={destinationState() === "loading"}
-                                     onClick={() => void readDestination(true)}>{t("sf.u41.openThread")}</button>
+                                     onClick={() => void readDestination(true)}>{t("sf.u41.openDestination")}</button>
                                  </Show>
                                  {/* Producer-provided link labels are display-only. Their URLs do not
                                      authorize opening another origin or a private desktop window. */}

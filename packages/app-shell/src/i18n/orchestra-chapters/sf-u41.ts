@@ -20,6 +20,7 @@ export const SF_U41_COPY = {
   "sf.u41.sourceVersion": "Current source version",
   "sf.u41.observedVersion": "Observed source version",
   "sf.u41.openThread": "Open discussion",
+  "sf.u41.openDestination": "Open authorized destination",
   "sf.u41.openSource": "Open current source",
   "sf.u41.checkDestination": "Check current destination",
 } as const
@@ -44,6 +45,7 @@ export const SF_U41_COPY_BR: Readonly<Record<keyof typeof SF_U41_COPY, string>> 
   "sf.u41.sourceVersion": "Versão atual da fonte",
   "sf.u41.observedVersion": "Versão observada da fonte",
   "sf.u41.openThread": "Abrir discussão",
+  "sf.u41.openDestination": "Abrir destino autorizado",
   "sf.u41.openSource": "Abrir fonte atual",
   "sf.u41.checkDestination": "Consultar destino atual",
 }

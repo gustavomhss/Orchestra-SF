@@ -87,14 +87,23 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     const record = page.locator(`details[id="${id}"]`)
     const transition = async (action: string, status: string) => {
       console.info("browser business: transition starting", action, status)
-      await record.locator("summary").click()
+      await record.locator(":scope > summary").click()
       await submit(record.locator(`form[data-command="${action}"]`))
-      await expect(page.getByRole("row").filter({ hasText: id! }).first()).toContainText(status)
+      // The table renders human-facing stages, not internal state codes.
+      const stage: Record<string, string> = {
+        pr_pending: "Requisition approval", sourcing: "Sourcing",
+        src_pending: "Sourcing approval", po_draft: "Purchase order draft",
+        po_pending: "Purchase order approval", po_approved: "Purchase order approved",
+        po_issued: "Issued internally",
+      }
+      const expected = stage[status]
+      if (!expected) throw new Error(`Unknown recorded stage: ${status}`)
+      await expect(page.getByRole("row").filter({ hasText: id! }).first()).toContainText(expected)
       console.info("browser business: transition verified", action, status)
     }
     await transition("submit_pr", "pr_pending")
     await transition("approve", "sourcing")
-    await record.locator("summary").click()
+    await record.locator(":scope > summary").click()
     const sourcing = record.locator('form[data-command="save"]').filter({ has: page.locator('[name="sourcing.evaluator"]') })
     for (const [name, value] of Object.entries({ evaluator: "Local operator", fewQuotesJustification: "Temporary sole source acceptance", selectionJustification: "Meets acceptance", "quotes.0.supplier": "Browser acceptance vendor", "quotes.0.currency": "USD", "quotes.0.total": "500", "quotes.0.qty": "1", "quotes.0.unitPrice": "500" })) await sourcing.locator(`[name="sourcing.${name}"]`).fill(value)
     await sourcing.locator('[name="sourcing.contractStrategy"]').selectOption("new")
@@ -112,7 +121,7 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
       scores: [5, 4, 3, 4, 5],
       cscores: [0, 4, 5],
     })
-    await record.locator("summary").click()
+    await record.locator(":scope > summary").click()
     const assertSourcingRows = async () => {
       await expect(sourcing.locator('[name="sourcing.quotes.0._new"]')).toHaveCount(0)
       await expect(sourcing.locator('[name="sourcing.quotes.0._remove"]')).toHaveCount(1)
@@ -128,14 +137,14 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     await assertSourcingRows()
     await sourcing.locator('[name="sourcing.evaluator"]').fill("Local operator revised")
     await submit(sourcing)
-    await record.locator("summary").click()
+    await record.locator(":scope > summary").click()
     await expect(sourcing.locator('[name="sourcing.evaluator"]')).toHaveValue("Local operator revised")
     await assertSourcingRows()
     await record.getByLabel("Winning quote").selectOption({ label: "Browser acceptance vendor · USD 500" })
     await submit(record.locator('form[data-command="select_quote"]'))
     await transition("submit_sourcing", "src_pending")
     await transition("approve", "po_draft")
-    await record.locator("summary").click()
+    await record.locator(":scope > summary").click()
     const po = record.locator('form[data-command="save"]').filter({ has: page.locator('[name="po.description"]') })
     for (const [name, value] of Object.entries({ description: "Consulting deliverable", paymentTerms: "Net 30", deliveryDate: "2026-12-20", deliveryConditions: "Remote", contractRef: "BROWSER-C1", "lines.0.desc": "Milestone", "lines.0.qty": "1", "lines.0.unitPrice": "500" })) await po.locator(`[name="po.${name}"]`).fill(value)
     await po.locator('[name="po.expenseType"]').selectOption("OPEX")
@@ -143,7 +152,7 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     await transition("submit_po", "po_pending")
     await transition("approve", "po_approved")
     await transition("issue", "po_issued")
-    await record.locator("summary").click()
+    await record.locator(":scope > summary").click()
     await expect(record.locator('[name="po.description"]')).toHaveValue("Consulting deliverable")
     await expect(record.locator('[name="sourcing.quotes.0.total"]')).toHaveValue("500")
     await expect(record.locator('[name="pr.title"]')).toHaveValue("Browser procurement acceptance")

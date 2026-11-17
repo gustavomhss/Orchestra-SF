@@ -32,6 +32,7 @@ import { createSfDocumentTargetAuthority } from "./document-authority.ts"
 import { createSfDocumentServices } from "./document-services.ts"
 import { createSfDocumentHttp } from "../../../../modules/sucafina/Sucafinav1/product/interface/document-http.ts"
 import { createSfDocumentScenarioHttp } from "../../../../modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts"
+import { createSfDocumentScenarioLinks } from "../../../../modules/sucafina/Sucafinav1/product/documents/scenario-links.ts"
 import { createSfDossierServices } from "./dossier-services.ts"
 import { readSfDocumentAnalysisCandidate } from "./document-analysis.ts"
 import { createSfImportServices } from "./import-services.ts"
@@ -290,7 +291,19 @@ export const createSfHostRuntimeWithRoutineNative = async (
     requestForRun: (runRef) => requests.get(runRef), runForContext: (call) => replayContexts.get(call), admittedInput: (runRef) => admittedInputs.get(runRef),
     captures: (runRef) => [...alternativeCaptures.get(runRef)?.values() ?? []], revalidateCapture })
   const dossier = documents ? createSfDossierServices({ runtime: input, authority, business, documents }) : undefined
-  const documentScenarioHttp = createSfDocumentScenarioHttp({ origin: input.origin, mount: input.mount, authority, service: business.documentScenarios })
+  const documentLinks = documents && business.documentScenarios ? createSfDocumentScenarioLinks({
+    host: authority.host, state: authority.state, documents: documents.documents.documents,
+    scenarios: business.documentScenarios,
+    sourceFence: async (call) => {
+      const current = await business.readSourceFences(call)
+      return current ? digestSfValue(current) : undefined
+    },
+    authorize: (value, call) => authority.human.authorize(call, "documents.link", value),
+    operationIdentity: (call) => call.kind === "ui" ? authority.ui.operationIdentity(call) : undefined,
+    now: () => new Date().toISOString(),
+  }) : undefined
+  const documentScenarioHttp = createSfDocumentScenarioHttp({ origin: input.origin, mount: input.mount,
+    authority, service: business.documentScenarios, links: documentLinks })
   const residentReviewReaders = createSfResidentReviewReaders({ authority, business })
   questionContributions.read = residentReviewReaders.readContribution
   const baselineServices = createSfBaselineServices({ authority, business, proposalCoverageWrites, origin: input.origin, mount: input.mount })
@@ -418,7 +431,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
       return admitted
     }, finishRead: authority.ui.finish,
   })]))
-  const documentHttp = createSfDocumentHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && documents ? { ui: authority.ui, human: authority.human, ...documents } : undefined })
+  const documentHttp = createSfDocumentHttp({ origin: input.origin, mount: input.mount,
+    runtime: () => identity() && documents ? { ui: authority.ui, human: authority.human, ...documents, links: documentLinks } : undefined })
   const importHttp = createSfImportHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && imports ? { ui: authority.ui, human: authority.human, service: imports } : undefined })
   const monthly = createPlannerMonthlyHost({ host: authority.host, humanAuthorize: (context, action, value) => authority.human.authorize(context, action, value) })
   const plannerMonthly: NonNullable<SfHostServices["plannerMonthly"]> = {
@@ -719,7 +733,12 @@ export const createSfHostRuntimeWithRoutineNative = async (
       const found = await authority.state.read(request, "contributions", (stored, actor) => Object.values(stored.nativeRuns ?? {})
         .filter((run) => run.principalRef === actor.principalRef && run.policyVersion === actor.policyVersion && run.accessRevision === actor.accessRevision &&
           run.caseRef.id === caseRef.id && run.caseRef.incarnation === caseRef.incarnation && run.caseRef.version <= caseRef.version)
-        .map((run) => ({ runRef: run.runRef, state: run.state, version: run.version, ...("outputRef" in run && run.outputRef ? { outputRef: run.outputRef } : {}) })))
+        .map((run) => ({
+          runRef: run.runRef, state: run.state, version: run.version,
+          ...("outputRef" in run && run.outputRef ? { outputRef: run.outputRef } : {}),
+          profileId: run.selection.profile.id, profileVersion: run.selection.profile.version,
+          skillId: run.skillId, caseRef: run.caseRef, createdAt: run.createdAt, updatedAt: run.updatedAt,
+        })))
       if (found.status !== "ok") return "reason" in found ? { status: found.status, reason: found.reason } : { status: "unavailable", reason: "analysis-state-unavailable" }
       const again = await business.cases.read({ caseRef: encodeCaseRef(caseRef) }, context)
       if (again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(current.value.case) || !await authority.human.authorize(context, "analysis.read", intent))
@@ -1016,12 +1035,14 @@ export const createSfHostRuntimeWithRoutineNative = async (
         authority, business, reviews: extended.reviews, persistence: input.persistence })
     : undefined
   const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
-  const services: SfHostServices & { productHtml: SfProductHtml; nativeUiProducts: typeof nativeUiProducts } = { ...authority, nativeUiProducts,
+  const services: SfHostServices & { productHtml: SfProductHtml; nativeUiProducts: typeof nativeUiProducts;
+    routineEvidence: Pick<typeof nativePhases.services, "readExecution" | "openResult"> } = { ...authority, nativeUiProducts,
     ...(nativeReviewProjection ? { nativeReviewProjection } : {}),
     productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work, workDestinations: { read: workDestinations.read },
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
     routineRuns: nativePhases.services.routineRuns,
+    routineEvidence: { readExecution: nativePhases.services.readExecution, openResult: nativePhases.services.openResult },
     productHttp,
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {

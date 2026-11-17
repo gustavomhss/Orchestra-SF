@@ -38,6 +38,7 @@ import type { EntraOptions } from "../runtime/local-contract.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
+import { initializeAbsentSfProductState } from "../product/host-binding/state-provider.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
@@ -126,6 +127,9 @@ export async function createConfiguredInstallation(
     }
   }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
+  // Only the explicitly isolated, OS-owned scratch profile needs an empty native first-run state.
+  // Never materialize or migrate the corporate/Microsoft product namespace before admission.
+  if (operator) await initializeAbsentSfProductState(store, randomUUID)
   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
@@ -257,6 +261,23 @@ export async function createConfiguredInstallation(
   return {
     mount: config.mount,
     ...(runtime ? { host: runtime.contributions } : {}),
+    // Discovery uses only the already-loaded host identity and its exact private location.
+    // It never guesses a project from cwd, accepts another workspace, or grants actor authority.
+    ...(runtime ? { discovery: {
+      current: async (signal: AbortSignal) => signal.aborted ? undefined : {
+        publicOrigin: config.origin, mount: config.mount,
+        authMode: operator ? "local-operator" as const : "microsoft" as const,
+        identity: () => runtime?.identity(),
+      },
+      forAdmittedLocation: async (location: Readonly<{ directory: string; workspace?: string }>, signal: AbortSignal) => {
+        const identity = runtime?.identity()
+        if (signal.aborted || !identity || location.workspace ||
+            location.directory !== identity.location.directory) return []
+        return [{ publicOrigin: config.origin, mount: config.mount,
+          authMode: operator ? "local-operator" as const : "microsoft" as const,
+          identity: () => runtime?.identity() }]
+      },
+    } } : {}),
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })

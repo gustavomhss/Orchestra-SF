@@ -16,8 +16,22 @@ export function plannerCatalogs(snapshot: Snapshot, actor: Actor, environment: E
   const year = typeof version.year === "number" && Number.isInteger(version.year) ? version.year : undefined
   const officialId = year === undefined ? undefined : text(object(view.data.officials)[String(year)]) || undefined
   return {
-    fx: { scope: "version" as const, versionId, locked: version.locked === true, writable: year !== undefined && plannerField("fx", { id: versionId, year, locked: version.locked === true }, officialId, actor), usd: { code: "USD", rate: 1, editable: false as const }, rates: rows(version.fx).map((rate) => ({ id: text(rate.id), currency: text(rate.cur), rate: typeof rate.rate === "number" && Number.isFinite(rate.rate) ? rate.rate : null, revision: snapshot.versions[`${versionId}:fx:${text(rate.id)}`]?.version ?? 0 })), warnings: Array.isArray(warnings) ? warnings.filter((value): value is string => typeof value === "string") : [] },
-    shared: { scope: "shared" as const, writable: actor.canWrite && actor.roles.includes("admin"), commonRevision: snapshot.versions["allocations:common"]?.version ?? 0, entities: rows(view.data.entities).map((entry) => ({ id: text(entry.id), name: text(entry.name), code: text(entry.code), revision: snapshot.versions[`entities:${text(entry.id)}`]?.version ?? 0 })), allocations: rows(view.data.allocations).map((entry) => ({ id: text(entry.id), name: text(entry.name), description: text(entry.desc), classificationOnly: true as const, revision: snapshot.versions[`allocations:${text(entry.id)}`]?.version ?? 0 })) },
+    fx: { scope: "version" as const, versionId, locked: version.locked === true, writable: year !== undefined && plannerField("fx", { id: versionId, year, locked: version.locked === true }, officialId, actor), usd: { code: "USD", rate: 1, editable: false as const }, rates: rows(version.fx).map((rate) => ({ id: text(rate.id), currency: text(rate.cur),
+      rate: typeof rate.rate === "number" && Number.isFinite(rate.rate) ? rate.rate : null,
+      revision: snapshot.versions[`${versionId}:fx:${text(rate.id)}`]?.version ?? 0,
+      ...(typeof rate.sourceRef === "string" ? { sourceRef: rate.sourceRef } : {}),
+      ...(typeof rate.provider === "string" ? { provider: rate.provider } : {}),
+      ...(typeof rate.observedAt === "string" ? { observedAt: rate.observedAt } : {}),
+    })), warnings: Array.isArray(warnings) ? warnings.filter((value): value is string => typeof value === "string") : [] },
+    shared: { scope: "shared" as const, writable: actor.canWrite && actor.roles.includes("admin"), commonRevision: snapshot.versions["allocations:common"]?.version ?? 0, entities: rows(view.data.entities).map((entry) => ({ id: text(entry.id), name: text(entry.name), code: text(entry.code), revision: snapshot.versions[`entities:${text(entry.id)}`]?.version ?? 0 })), allocations: rows(view.data.allocations).map((entry) => ({
+      id: text(entry.id), name: text(entry.name), description: text(entry.desc),
+      classificationOnly: true as const,
+      revision: snapshot.versions[`allocations:${text(entry.id)}`]?.version ?? 0,
+      ...(typeof entry.contractRef === "string" ? { contractRef: entry.contractRef } : {}),
+      ...(Array.isArray(entry.splits) ? { splits: rows(entry.splits)
+        .filter((split) => text(split.entityRef) && typeof split.percent === "number" && Number.isFinite(split.percent))
+        .map((split) => ({ entityRef: text(split.entityRef), percent: split.percent })) } : {}),
+    })) },
   }
 }
 

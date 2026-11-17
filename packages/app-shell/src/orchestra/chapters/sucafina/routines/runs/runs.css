@@ -4,3 +4,6 @@
 .sf-n29-run .sf-n29-field { display: flex; flex-direction: column; gap: .4rem; }
 .sf-n29-run select { width: 100%; min-height: 44px; }
 .sf-n29-run li { overflow-wrap: anywhere; }
+
+.sf-n29-run-output { max-height: 30rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: .875rem; }
+.sf-n29-run [data-sf-native-execution] code { overflow-wrap: anywhere; }
