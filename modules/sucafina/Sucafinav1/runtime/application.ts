@@ -35,6 +35,8 @@ export type Application = {
   environment: (request: Request) => Promise<Environment>
   domains: Record<Surface, readonly Contribution[]>
   maxJsonBytes: number
+  /** Azure Entra role assignment is exclusive to the supreme-admin policy surface. */
+  allowGroupConfiguration?: boolean
   workbookLimits?: Partial<WorkbookLimits>
   assets?: { persistence: AssetPersistence; services: AssetServices }
   product?: (request: Request, surface: Surface) => Promise<Response | undefined>
@@ -307,7 +309,9 @@ export function createApplication(mount: string, application: Application) {
         const auditStart = snapshot.audit.length
         // Authorize and validate deletion in a staged draft before examining private metadata.
         const target = deletionKind ? structuredClone(snapshot) : snapshot
-        const result = parsed.action.startsWith("configure-")
+        const result = parsed.action === "configure-group" && application.allowGroupConfiguration === false
+          ? { ok: false as const, status: 403 as const }
+          : parsed.action.startsWith("configure-")
           ? configure(target, surface, actor, parsed, environment)
           : contribution.domain.execute(target, actor, parsed, environment)
         if (result.ok && deletionKind) {
@@ -431,7 +435,7 @@ export function createApplication(mount: string, application: Application) {
         pageMain(
           { drawn: true, key: page, index: allowed.indexOf(page) },
           content +
-            controls(snapshot, surface, page, actor, environment) +
+            controls(snapshot, surface, page, actor, environment, application.allowGroupConfiguration !== false) +
             privateFileControls(surface, page, actor, snapshot, environment, application.assets?.services) +
             auditControls(actor, snapshot, url.searchParams),
         ),
