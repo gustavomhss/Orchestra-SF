@@ -1,0 +1,866 @@
+{
+  "schema": "sf-lab-synthetic-fixture-v1",
+  "classification": "100% FICTITIOUS: NOT A SUCAFINA PRODUCTION RECORD",
+  "source": "QA scenario design; not a seed execution receipt",
+  "installation_id": "SF-LAB-2026 (logical alias only)",
+  "external_systems": {
+    "CTRM": "NOT_ASSERTED_INTEGRATED",
+    "SAP": "NOT_ASSERTED_INTEGRATED",
+    "MicrosoftFabric": "NOT_ASSERTED_INTEGRATED"
+  },
+  "owner_policy": {
+    "live_oid_tenant_mapping": "DO_NOT_FAKE",
+    "source": "fetch from Entra resource tenant when authorized"
+  },
+  "time_anchor": "2026-09-30",
+  "currencies": [
+    "USD",
+    "EUR",
+    "BRL"
+  ],
+  "fx": [
+    {
+      "id": "FX-EURUSD-SEP26",
+      "from": "EUR",
+      "to": "USD",
+      "value": 1.08,
+      "on": "2026-09-30",
+      "status": "SYNTHETIC"
+    }
+  ],
+  "departments": [
+    "Global IT",
+    "Finance",
+    "Procurement",
+    "HR",
+    "Security",
+    "Regional Operations"
+  ],
+  "cost_centers": [
+    "IT-BR",
+    "IT-CH",
+    "IT-ASIA",
+    "IT-AFRICA"
+  ],
+  "budget": {
+    "ref": "BUD-2026-IT",
+    "currency": "USD",
+    "year": 2026,
+    "annual_budget": 600000,
+    "actual_jan_sep": 400000,
+    "open_forecast": 190000,
+    "base_outlook": 590000,
+    "license_line": {
+      "id": "OPEX-LIC-01",
+      "amount": 72000,
+      "period": "annual",
+      "currency": "USD"
+    },
+    "what_if_a": {
+      "license_amount": 84000,
+      "outlook": 602000,
+      "delta_vs_base": 12000,
+      "margin_vs_budget": -2000
+    },
+    "what_if_b": {
+      "license_amount": 78000,
+      "outlook": 596000,
+      "delta_vs_base": 6000,
+      "margin_vs_budget": 4000
+    },
+    "fixed_line": {
+      "name": "Unchanged",
+      "amount": 518000
+    }
+  },
+  "headcount": {
+    "as_of": "2026-09-30",
+    "planned_fte": 42,
+    "occupied_fte": 40,
+    "vacancies": 2,
+    "october_new_hire_scenario": 1
+  },
+  "projects": [
+    {
+      "project_id": "P-001",
+      "name": "Projeto IT Global 01",
+      "cost_center": "IT-CH",
+      "currency": "USD",
+      "planned_capex_usd": 13250,
+      "period": "2026",
+      "status": "at-risk",
+      "owner_ref": "ROLE-02",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 01.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-002",
+      "name": "Projeto IT Global 02",
+      "cost_center": "IT-ASIA",
+      "currency": "USD",
+      "planned_capex_usd": 14500,
+      "period": "2026",
+      "status": "paused",
+      "owner_ref": "ROLE-03",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 02.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-003",
+      "name": "Projeto IT Global 03",
+      "cost_center": "IT-AFRICA",
+      "currency": "USD",
+      "planned_capex_usd": 15750,
+      "period": "2026",
+      "status": "completed",
+      "owner_ref": "ROLE-04",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 03.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-004",
+      "name": "EDI Porto Santos",
+      "cost_center": "IT-BR",
+      "currency": "USD",
+      "planned_capex_usd": 17000,
+      "period": "2026",
+      "status": "on-track",
+      "owner_ref": "ROLE-05",
+      "last_updated": "2026-09-30",
+      "note": "Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. Nota extensa de acompanhamento em três parágrafos; múltiplas evidências independentes e pendências de governança. ",
+      "risk_ids": [
+        "R-07"
+      ],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-005",
+      "name": "Projeto IT Global 05",
+      "cost_center": "IT-CH",
+      "currency": "USD",
+      "planned_capex_usd": 18250,
+      "period": "2026",
+      "status": "at-risk",
+      "owner_ref": "ROLE-01",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 05.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-006",
+      "name": "Projeto IT Global 06",
+      "cost_center": "IT-ASIA",
+      "currency": "USD",
+      "planned_capex_usd": 19500,
+      "period": "2026",
+      "status": "paused",
+      "owner_ref": "ROLE-02",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 06.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-007",
+      "name": "Projeto IT Global 07",
+      "cost_center": "IT-AFRICA",
+      "currency": "USD",
+      "planned_capex_usd": 20750,
+      "period": "2026",
+      "status": "completed",
+      "owner_ref": "ROLE-03",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 07.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-008",
+      "name": "Projeto IT Global 08",
+      "cost_center": "IT-BR",
+      "currency": "USD",
+      "planned_capex_usd": 22000,
+      "period": "2026",
+      "status": "on-track",
+      "owner_ref": "ROLE-04",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 08.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-009",
+      "name": "Scanner de Faturas Multi-moeda",
+      "cost_center": "IT-CH",
+      "currency": "USD",
+      "planned_capex_usd": 91827,
+      "period": "2027",
+      "status": "at-risk",
+      "owner_ref": "ROLE-05",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 09.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-010",
+      "name": "Projeto IT Global 10",
+      "cost_center": "IT-ASIA",
+      "currency": "USD",
+      "planned_capex_usd": 24500,
+      "period": "2026",
+      "status": "paused",
+      "owner_ref": "ROLE-01",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 10.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-011",
+      "name": "Projeto IT Global 11",
+      "cost_center": "IT-AFRICA",
+      "currency": "USD",
+      "planned_capex_usd": 25750,
+      "period": "2026",
+      "status": "completed",
+      "owner_ref": "ROLE-02",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 11.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-012",
+      "name": "Projeto IT Global 12",
+      "cost_center": "IT-BR",
+      "currency": "USD",
+      "planned_capex_usd": 27000,
+      "period": "2026",
+      "status": "on-track",
+      "owner_ref": "ROLE-03",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 12.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-013",
+      "name": "Projeto IT Global 13",
+      "cost_center": "IT-CH",
+      "currency": "USD",
+      "planned_capex_usd": 28250,
+      "period": "2026",
+      "status": "at-risk",
+      "owner_ref": "ROLE-04",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 13.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-014",
+      "name": "Projeto IT Global 14",
+      "cost_center": "IT-ASIA",
+      "currency": "USD",
+      "planned_capex_usd": 29500,
+      "period": "2026",
+      "status": "paused",
+      "owner_ref": "ROLE-05",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 14.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-015",
+      "name": "Projeto IT Global 15",
+      "cost_center": "IT-AFRICA",
+      "currency": "USD",
+      "planned_capex_usd": 30750,
+      "period": "2026",
+      "status": "completed",
+      "owner_ref": "ROLE-01",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 15.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-016",
+      "name": "Projeto IT Global 16",
+      "cost_center": "IT-BR",
+      "currency": "USD",
+      "planned_capex_usd": 32000,
+      "period": "2026",
+      "status": "on-track",
+      "owner_ref": "ROLE-02",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 16.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-017",
+      "name": "Projeto IT Global 17",
+      "cost_center": "IT-CH",
+      "currency": "USD",
+      "planned_capex_usd": 33250,
+      "period": "2026",
+      "status": "at-risk",
+      "owner_ref": "ROLE-03",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 17.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-018",
+      "name": "Projeto IT Global 18",
+      "cost_center": "IT-ASIA",
+      "currency": "USD",
+      "planned_capex_usd": 34500,
+      "period": "2026",
+      "status": "paused",
+      "owner_ref": "ROLE-04",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 18.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-019",
+      "name": "Projeto IT Global 19",
+      "cost_center": "IT-AFRICA",
+      "currency": "USD",
+      "planned_capex_usd": 35750,
+      "period": "2026",
+      "status": "completed",
+      "owner_ref": "ROLE-05",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 19.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-020",
+      "name": "Projeto IT Global 20",
+      "cost_center": "IT-BR",
+      "currency": "USD",
+      "planned_capex_usd": 37000,
+      "period": "2026",
+      "status": "on-track",
+      "owner_ref": "ROLE-01",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 20.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-021",
+      "name": "Projeto IT Global 21",
+      "cost_center": "IT-CH",
+      "currency": "USD",
+      "planned_capex_usd": 38250,
+      "period": "2026",
+      "status": "at-risk",
+      "owner_ref": "ROLE-02",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 21.",
+      "risk_ids": [],
+      "sensitivity": {
+        "null_test": true
+      }
+    },
+    {
+      "project_id": "P-022",
+      "name": "Projeto IT Global 22",
+      "cost_center": "IT-ASIA",
+      "currency": "USD",
+      "planned_capex_usd": 39500,
+      "period": "2026",
+      "status": "paused",
+      "owner_ref": "ROLE-03",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 22.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-023",
+      "name": "EDI Porto Santos",
+      "cost_center": "IT-AFRICA",
+      "currency": "USD",
+      "planned_capex_usd": 40750,
+      "period": "2026",
+      "status": "completed",
+      "owner_ref": "ROLE-04",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 23.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-024",
+      "name": "Projeto IT Global 24",
+      "cost_center": "IT-BR",
+      "currency": "USD",
+      "planned_capex_usd": 42000,
+      "period": "2026",
+      "status": "on-track",
+      "owner_ref": "ROLE-05",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 24.",
+      "risk_ids": [],
+      "sensitivity": null
+    },
+    {
+      "project_id": "P-025",
+      "name": "Projeto IT Global 25",
+      "cost_center": "IT-CH",
+      "currency": "USD",
+      "planned_capex_usd": 43250,
+      "period": "2026",
+      "status": "at-risk",
+      "owner_ref": "ROLE-01",
+      "last_updated": "2026-09-30",
+      "note": "Nota sintética do projeto 25.",
+      "risk_ids": [],
+      "sensitivity": null
+    }
+  ],
+  "suppliers": [
+    {
+      "supplier_id": "SUP-001",
+      "name": "Aurora Networks (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-001"
+    },
+    {
+      "supplier_id": "SUP-002",
+      "name": "Blue Cocoa Consulting (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-002"
+    },
+    {
+      "supplier_id": "SUP-003",
+      "name": "Maritime Labs (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-003"
+    },
+    {
+      "supplier_id": "SUP-004",
+      "name": "Equator Digital (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-004"
+    },
+    {
+      "supplier_id": "SUP-005",
+      "name": "Horizon Data (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-005"
+    },
+    {
+      "supplier_id": "SUP-006",
+      "name": "Dawn Logistics (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-006"
+    },
+    {
+      "supplier_id": "SUP-007",
+      "name": "Tropic Systems (fictícia)",
+      "status": "inactive",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-007"
+    },
+    {
+      "supplier_id": "SUP-008",
+      "name": "Riverbridge Cloud (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-008"
+    },
+    {
+      "supplier_id": "SUP-009",
+      "name": "Lighthouse Ops (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-009"
+    },
+    {
+      "supplier_id": "SUP-010",
+      "name": "Canopy Studio (fictícia)",
+      "status": "active",
+      "private_bank_account": "TEST-FAKE-NOT-VALID-010"
+    }
+  ],
+  "procurement": {
+    "request_id": "PR-32000",
+    "requested_usd": 32000,
+    "stage": "draft",
+    "buyer": "Pedro",
+    "requester": "Caio",
+    "holder": "Gabriel",
+    "contract_ref": "CON-042",
+    "case": {
+      "id": "CASE-EDI-01",
+      "question": "Qual fornecedor sustenta a integração EDI sem romper governança de budget?",
+      "sources": [
+        "PR-32000",
+        "P-004",
+        "DOC-EDI-01"
+      ],
+      "alternatives": [
+        {
+          "id": "ALT-A",
+          "supplier": "SUP-002",
+          "amount": 32400,
+          "currency": "USD",
+          "technical_eligible": true,
+          "normalized_usd": 32400
+        },
+        {
+          "id": "ALT-B",
+          "supplier": "SUP-003",
+          "amount": 28000,
+          "currency": "EUR",
+          "technical_eligible": true,
+          "fx": 1.08,
+          "normalized_usd": 30240
+        },
+        {
+          "id": "ALT-C",
+          "supplier": "SUP-004",
+          "amount": 29000,
+          "currency": "USD",
+          "technical_eligible": false,
+          "normalized_usd": 29000
+        }
+      ],
+      "choice": null,
+      "status": "draft"
+    },
+    "internal_issue_only": true
+  },
+  "risks": [
+    {
+      "id": "R-07",
+      "project_id": "P-004",
+      "likelihood": 3,
+      "impact": 4,
+      "owner": "RISK-01",
+      "days_delayed": 6
+    }
+  ],
+  "operations": {
+    "availability": 99.7,
+    "sla_target": 99.9,
+    "incidents": 3,
+    "unpatched_critical": 4,
+    "all_critical_endpoints": 200,
+    "known_breaches": 0
+  },
+  "reports": {
+    "review_ref": "REV-EXEC-NOV/R1",
+    "project_ids": [
+      "P-001",
+      "P-002",
+      "P-003",
+      "P-004",
+      "P-005",
+      "P-006",
+      "P-007",
+      "P-008",
+      "P-009",
+      "P-010",
+      "P-011",
+      "P-012",
+      "P-013",
+      "P-014",
+      "P-015",
+      "P-016",
+      "P-017",
+      "P-018",
+      "P-019",
+      "P-020",
+      "P-021",
+      "P-022",
+      "P-023",
+      "P-024",
+      "P-025"
+    ],
+    "immutable": true
+  },
+  "document": {
+    "ref": "DOC-EDI-01",
+    "text": "O projeto EDI Porto Santos acumula atraso de 6 dias, conforme relatório sintético de IT.",
+    "misread_candidate": "60 dias",
+    "confirmed_value": 6
+  },
+  "graph_fake": {
+    "synthetic_group_labels": [
+      "SYN-IT-CIO",
+      "SYN-IT-FINANCE",
+      "SYN-IT-PEOPLE",
+      "SYN-IT-OPS",
+      "SYN-PROC-REQUESTER",
+      "SYN-PROC-BUYER",
+      "SYN-PROC-APPROVER",
+      "SYN-PRIV-ADMIN"
+    ],
+    "fake_user_profiles_for_mock_only": [
+      {
+        "id": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "displayName": "Pessoa Sintética 01",
+        "department": "Finance",
+        "jobTitle": "Engineer",
+        "manager": null,
+        "groups": [
+          "SYN-IT-FINANCE"
+        ]
+      },
+      {
+        "id": "a097aa72-e335-5591-a395-211c314b6f65",
+        "displayName": "Pessoa Sintética 02",
+        "department": "Procurement",
+        "jobTitle": "Director",
+        "manager": null,
+        "groups": [
+          "SYN-IT-PEOPLE"
+        ]
+      },
+      {
+        "id": "72b038c6-5425-5c30-b3a7-45612bac7257",
+        "displayName": "Pessoa Sintética 03",
+        "department": "HR",
+        "jobTitle": "Specialist",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-IT-OPS"
+        ]
+      },
+      {
+        "id": "1f8ad489-fa4e-5131-9b3f-3bafcb28578f",
+        "displayName": "Pessoa Sintética 04",
+        "department": "Support",
+        "jobTitle": "Analyst",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-PROC-REQUESTER"
+        ]
+      },
+      {
+        "id": "bec56676-92b9-526e-98ee-87da1effb87b",
+        "displayName": "Pessoa Sintética 05",
+        "department": "Global IT",
+        "jobTitle": "Engineer",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-PROC-BUYER"
+        ]
+      },
+      {
+        "id": "769bfe17-92d6-57c9-a019-82e88d591f62",
+        "displayName": "Pessoa Sintética 06",
+        "department": "Finance",
+        "jobTitle": "Director",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-PROC-APPROVER"
+        ]
+      },
+      {
+        "id": "f5a260d4-5c05-5bb9-aeb1-57d2fe1e8e7a",
+        "displayName": "Pessoa Sintética 07",
+        "department": "Procurement",
+        "jobTitle": "Specialist",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-PRIV-ADMIN"
+        ]
+      },
+      {
+        "id": "ea764035-3ad8-5047-ba18-fb90d83d7af0",
+        "displayName": "Alex Santos",
+        "department": "HR",
+        "jobTitle": "Analyst",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-IT-CIO"
+        ]
+      },
+      {
+        "id": "07464aa0-5978-5220-81a1-b143096dd2a1",
+        "displayName": "Pessoa Sintética 09",
+        "department": "Support",
+        "jobTitle": "Engineer",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-IT-FINANCE"
+        ]
+      },
+      {
+        "id": "ca46320a-94d9-534f-bb84-dd9e4b68d8e0",
+        "displayName": "Pessoa Sintética 10",
+        "department": "Global IT",
+        "jobTitle": "Director",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-IT-PEOPLE"
+        ]
+      },
+      {
+        "id": "45e49387-e733-5392-a4fd-8a201bf78050",
+        "displayName": "Pessoa Sintética 11",
+        "department": "Finance",
+        "jobTitle": "Specialist",
+        "manager": "67e258ae-937a-5823-bad5-0f1aece51736",
+        "groups": [
+          "SYN-IT-OPS"
+        ]
+      },
+      {
+        "id": "8f86214a-95c1-5c04-b2e4-9d8531578515",
+        "displayName": "Pessoa Sintética 12",
+        "department": "Procurement",
+        "jobTitle": "Analyst",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-PROC-REQUESTER"
+        ]
+      },
+      {
+        "id": "250f6ada-3ee3-56b6-aca5-3080f306512a",
+        "displayName": "Pessoa Sintética 13",
+        "department": "HR",
+        "jobTitle": "Engineer",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-PROC-BUYER"
+        ]
+      },
+      {
+        "id": "8dcbb13d-ba81-5a75-aa11-89b86d15a440",
+        "displayName": "Pessoa Sintética 14",
+        "department": "Support",
+        "jobTitle": "Director",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-PROC-APPROVER"
+        ]
+      },
+      {
+        "id": "a0c11418-7dce-57e2-ac17-bc885d1a82fc",
+        "displayName": "Alex Santos",
+        "department": "Global IT",
+        "jobTitle": "Specialist",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-PRIV-ADMIN"
+        ]
+      },
+      {
+        "id": "fa7126cd-022a-59a0-8c80-b645012f1cd7",
+        "displayName": "Pessoa Sintética 16",
+        "department": "Finance",
+        "jobTitle": "Analyst",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-IT-CIO"
+        ]
+      },
+      {
+        "id": "74f9a6ff-b007-52df-81ce-9e6f03950933",
+        "displayName": "Pessoa Sintética 17",
+        "department": "Procurement",
+        "jobTitle": "Engineer",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-IT-FINANCE"
+        ]
+      },
+      {
+        "id": "2bea25fd-9cb4-5d8c-b366-e54b9f164e42",
+        "displayName": "Pessoa Sintética 18",
+        "department": "HR",
+        "jobTitle": "Director",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-IT-PEOPLE"
+        ]
+      },
+      {
+        "id": "f9ce696f-27a2-51f8-b998-d617e95359e4",
+        "displayName": "Pessoa Sintética 19",
+        "department": "Support",
+        "jobTitle": "Specialist",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-IT-OPS"
+        ]
+      },
+      {
+        "id": "b205caa0-0854-5b82-9536-b4ea7b152d37",
+        "displayName": "Pessoa Sintética 20",
+        "department": "Global IT",
+        "jobTitle": "Analyst",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-PROC-REQUESTER"
+        ]
+      },
+      {
+        "id": "5dbe0032-9991-5f02-8d84-0c0b6fc74374",
+        "displayName": "Pessoa Sintética 21",
+        "department": "Finance",
+        "jobTitle": "Engineer",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-PROC-BUYER"
+        ]
+      },
+      {
+        "id": "c1bd3930-56b8-5b37-a6d9-158f45088327",
+        "displayName": "Pessoa Sintética 22",
+        "department": "Procurement",
+        "jobTitle": "Director",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-PROC-APPROVER"
+        ]
+      },
+      {
+        "id": "ea427bd3-1be3-5543-9732-a9b619ca93da",
+        "displayName": "Pessoa Sintética 23",
+        "department": "HR",
+        "jobTitle": "Specialist",
+        "manager": "a097aa72-e335-5591-a395-211c314b6f65",
+        "groups": [
+          "SYN-PRIV-ADMIN"
+        ]
+      }
+    ],
+    "no_live_tenant_guids": true
+  },
+  "scoring": {
+    "a": 87.9333,
+    "b": 85,
+    "meaning": "scores only if matching explicit original test weights; do not assert formula without source"
+  },
+  "data_quality_cases": {
+    "zero_vs_missing": [
+      0,
+      null
+    ],
+    "same_display_name_different_id": [
+      "P-004",
+      "P-023"
+    ],
+    "timezone": "America/Sao_Paulo",
+    "source_version_stale": "V3 vs V4"
+  }
+}
