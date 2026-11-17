@@ -31,6 +31,7 @@ const sfModes: Readonly<Record<string, SfFilesOperationId>> = Object.freeze({
 const downloads: Readonly<Record<string, SfFilesOperationId>> = Object.freeze({
   xlsx: "files.export.xlsx", suppliers: "files.export.suppliers",
   register: "files.export.register", json: "files.export.json",
+  po: "files.export.po",
   members: "files.export.members",
 })
 const fail = (status: number) => Response.json({ status: "invalid" },

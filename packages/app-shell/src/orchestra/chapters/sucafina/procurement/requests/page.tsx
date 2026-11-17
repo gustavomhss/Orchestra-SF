@@ -10,6 +10,7 @@ import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
+import { SfBoundAssets } from "../../shared/attachments/bound-assets"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
@@ -649,6 +650,12 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const current = row()
     if (!current && !creating()) return null
     const ref = selectedRef()
+    const currentVersion = version()
+    const assetTarget = current && ref && currentVersion !== undefined
+      ? { row: current, ref, version: currentVersion } : undefined
+    const uploadKind = current?.status === "sourcing" || current?.status === "src_rejected"
+      ? "quote" : current?.status === "po_approved" || current?.status === "po_issued"
+        ? "signed-po" : undefined
     return <article class="sf-u11-detail" data-sf-request-ref={ref ?? undefined}>
       <header class="sf-u11-detail-head">
         <h2>{creating() ? t("sf.u11.remaining.new") : current?.pr?.title ?? ref}</h2>
@@ -762,7 +769,13 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       <Show when={current}>
         <section class="sf-u11-stage" data-stage="attachments">
           <h3>{t("sf.u11.remaining.attachments")}</h3>
-          <p role="status">{t("sf.u11.remaining.notUploaded")}</p>
+          <Show when={assetTarget} fallback={<p role="status">{t("sf.u11.remaining.notUploaded")}</p>}>
+            {(target) => <SfBoundAssets surface="procurement" page="Requests"
+              uploadKind={uploadKind} recordRef={target().ref} recordVersion={target().version}
+              assets={target().row.attachments ?? []}
+              disabled={view.sending || view.outcomeUnknown || !!view.reviewing || !sourceAvailable()}
+              onReconcile={refresh} />}
+          </Show>
         </section>
         <div class="sf-u11-actions">
           <Show when={stageAllowed("cancel")}>

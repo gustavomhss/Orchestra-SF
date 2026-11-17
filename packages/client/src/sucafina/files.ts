@@ -218,6 +218,12 @@ export function createSfFilesClient(transport: SfTransport) {
     if (!validIdempotency(options.idempotencyKey) || !validAssetUpload(input)) return Promise.resolve(rejectContract)
     return transport.execute(SfFiles.operations["files.asset.upload"], input, options)
   },
+  "files.export.po": (input: SfFilesOperationInput<"files.export.po">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.export.po">>> => {
+    if (!plain(input) || !only(input, ["surface", "request"]) || input.surface !== "procurement" ||
+        typeof input.request !== "string" || !/^[A-Za-z0-9._:-]{1,128}$/.test(input.request))
+      return Promise.resolve(rejectContract)
+    return transport.execute(SfFiles.operations["files.export.po"], input, options)
+  },
   "files.export.xlsx": (input: SfFilesOperationInput<"files.export.xlsx">, options: SfCallOptions): Promise<SfTransportResult<SfFilesOperationOutput<"files.export.xlsx">>> => {
     return transport.execute(SfFiles.operations["files.export.xlsx"], input, options)
   },

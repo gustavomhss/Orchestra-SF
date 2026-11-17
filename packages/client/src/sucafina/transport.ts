@@ -281,7 +281,8 @@ export function createSfTransport(options: Readonly<{
       }
 
       const headers: Record<string, string> = {
-        Accept: operation.operationId === "files.export.xlsx" || operation.operationId === "files.export.members"
+        Accept: operation.operationId === "files.export.po" ? "text/html"
+          : operation.operationId === "files.export.xlsx" || operation.operationId === "files.export.members"
           ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           : operation.operationId === "files.export.json" ? "application/json"
           : operation.operationId === "files.export.suppliers" || operation.operationId === "files.export.register"
@@ -687,7 +688,7 @@ function operationUrl(
     }
     const special = operationId.startsWith("files.") && source
       ? sfFilesSourceQuery(operationId, source) : undefined
-    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload","files.export.review",
+    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload","files.export.review","files.export.po",
       "files.document-open","files.document-scenario-targets"].includes(operationId) && !special)
       return undefined
     if (special) {
