@@ -7,8 +7,11 @@
  */
 import { createHash, createPublicKey, verify as verifySignature } from "node:crypto"
 import { lstat, readFile, realpath } from "node:fs/promises"
+import { isDeepStrictEqual } from "node:util"
 import path from "node:path"
 import { runnerIdentity, privateRoot, privateFile, verifyInstalled } from "./installed-manifest.mjs"
+import { validateSignedBundleStructure, verifyOwnerDetachedSignature, sha256 } from "./release-contracts.mjs"
+import { verifyDistributionOnDisk } from "./verify-distribution.mjs"
 
 const CI = ["sf/preflight", "sf/static-and-contracts", "sf/linux-native-omni",
   "sf/test-CI-SF", "sf/test-CI-CLI", "sf/test-CI-APP-SRC",
@@ -41,6 +44,38 @@ async function checkedEvidence(file, directory) {
     await realpath(file) === file, "F04_GATE_NONPRIVATE_EVIDENCE_FILE")
   return readFile(file)
 }
+async function checkedDir(dir) {
+  const s=await lstat(dir)
+  must(s.isDirectory()&&!s.isSymbolicLink()&&(s.mode&0o777)===0o700 &&
+    (typeof process.getuid!=="function"||s.uid===process.getuid()) &&
+    await realpath(dir)===dir, "F04_GATE_PRIVATE_DIRECTORY_0700_REQUIRED")
+  return dir
+}
+async function verifyRealCiReceiptBytes(b,root) {
+  const folder=await checkedDir(path.join(root,"ci-receipts"))
+  for(const row of b.ci.recipeReceipts){
+    const id=row.id.slice("sf/test-".length)
+    must(/^CI-[A-Z-]+$/.test(id),"F04_GATE_CI_RECEIPT_ID_INVALID")
+    const bytes=await checkedEvidence(path.join(folder,id+".json"),folder)
+    must(sha256(bytes)===row.sha256 && 
+      isDeepStrictEqual(JSON.parse(bytes.toString("utf8")),row.receipt) &&
+      row.receipt.sourceSha===b.candidateSha &&
+      row.receipt.checkoutSha===b.candidateSha,
+      "F04_GATE_RAW_CI_RECEIPT_SOURCE_OR_DIGEST_DRIFT")
+  }
+}
+async function verifyAzureFiles(b,root){
+  const folder=await checkedDir(path.join(root,"azure-evidence"))
+  for(const a of b.azure){
+    must(/^AZ0[1237]-[A-Z-]+$/.test(a.id),"F04_GATE_AZURE_ID_INVALID")
+    const bytes=await checkedEvidence(path.join(folder,a.id+".json"),folder)
+    const doc=JSON.parse(bytes.toString("utf8"))
+    must(sha256(bytes)===a.immutableEvidenceSha256 &&
+      doc.id===a.id && doc.candidateSha===b.candidateSha &&
+      doc.artifactSha256===b.artifactSha256 && doc.status==="PASS_REVIEWED",
+      "F04_GATE_RAW_AZURE_WITNESS_DIGEST_OR_C_MISMATCH")
+  }
+}
 async function main() {
   must(process.argv.length === 3 && process.argv[2] === "check",
     "F04_GATE_USAGE_CHECK")
@@ -55,39 +90,12 @@ async function main() {
   must(typeof keyFile === "string" && path.isAbsolute(keyFile) &&
     SHA256.test(keyPin ?? ""), "F04_GATE_OWNER_PUBLIC_KEY_PIN_REQUIRED")
   const key = await readFile(keyFile)
-  must(sha(key) === keyPin, "F04_GATE_OWNER_PIN_MISMATCH")
-  const signingKey = createPublicKey(key)
-  must(signingKey.asymmetricKeyType === "ed25519" &&
-    /^[A-Za-z0-9+/]{86}==$/.test(signature) &&
-    verifySignature(null, raw, signingKey, Buffer.from(signature, "base64")),
-    "F04_GATE_OWNER_SIGNATURE_INVALID")
+  verifyOwnerDetachedSignature(raw,signature,key,keyPin)
   const b = JSON.parse(raw.toString("utf8"))
-  must(b.schema === "sf2h.f04-am-go-no-go.v1" &&
-    b.candidateSha === ctx.candidateSha && b.treeSha === ctx.treeSha &&
-    b.artifactSha256 === ctx.artifactSha256 &&
-    b.installedArtifactSha256 === ctx.artifactSha256 &&
-    b.manifestSha256 === installed.manifestSha256,
-    "F04_GATE_FROZEN_C_TREE_MANIFEST_ARTIFACT_MISMATCH")
-  const ci = b.ci
-  must(ci?.candidateSha === ctx.candidateSha &&
-    ci.checkoutSha === ctx.candidateSha && ci.effectiveGithubSha === ctx.candidateSha &&
-    Number.isSafeInteger(ci.runId) && ci.runId > 0 &&
-    Number.isSafeInteger(ci.attempt) && ci.attempt > 0 &&
-    ci.verify === "success" &&
-    Array.isArray(ci.jobs), "F04_GATE_CI_NOT_PROVEN_ON_EXACT_C")
-  exactMembers(ci.jobs, CI, "id")
-  for (const job of ci.jobs) {
-    must(job.conclusion === "success" && Number.isSafeInteger(job.jobId) &&
-      job.jobId > 0 && job.runId === ci.runId && job.attempt === ci.attempt &&
-      job.checkoutSha === ctx.candidateSha &&
-      SHA256.test(job.artifactOrLogSha256),
-      "F04_GATE_CI_JOB_NOT_QUALIFIED")
-  }
-  must(Array.isArray(ci.recipeReceipts) && ci.recipeReceipts.length === 8 &&
-    ci.recipeReceipts.every((r) => typeof r.id === "string" &&
-      SHA256.test(r.sha256) && r.checkoutSha === ctx.candidateSha),
-    "F04_GATE_EIGHT_CI_RECIPE_RECEIPTS_REQUIRED")
-  exactMembers(ci.recipeReceipts, CI.filter((v) => v.startsWith("sf/test-")), "id")
+  validateSignedBundleStructure(b,{...ctx,manifestSha256:installed.manifestSha256},
+    process.env.SF_NATIVE_OWNER_PERSON_ID)
+  await verifyDistributionOnDisk(b.distribution,ctx,root)
+  await verifyRealCiReceiptBytes(b,root)
   exactMembers(b.proofs, PROOFS, "id")
   const witnessKeyPath = process.env.SF_NATIVE_WITNESS_PUBLIC_KEY_FILE
   const witnessPin = process.env.SF_NATIVE_WITNESS_TRUST_SHA256
@@ -145,6 +153,12 @@ async function main() {
       observed.proofId === mode && observed.processReceiptSha256 === sha(batchBytes) &&
       observed.witnessSha256 === sha(witnessBytes) &&
       observed.witnessKeySha256 === sha(witnessKeyBytes) &&
+      processReceipt.sourceSha === ctx.candidateSha &&
+      processReceipt.gitCheckoutSha === ctx.candidateSha &&
+      processReceipt.githubEventSha === ctx.candidateSha &&
+      Number.isSafeInteger(processReceipt.githubRunId) && processReceipt.githubRunId > 0 &&
+      Number.isSafeInteger(processReceipt.githubRunAttempt) && processReceipt.githubRunAttempt > 0 &&
+      Number.isSafeInteger(processReceipt.githubJobId) && processReceipt.githubJobId > 0 &&
       processReceipt.exitCode === 0 &&
       processReceipt.skipped === 0 && processReceipt.retries === 0 &&
       processReceipt.executedCount > 0 &&
@@ -166,6 +180,7 @@ async function main() {
       typeof a.independentReviewRef === "string" && a.independentReviewRef.length >= 8,
       "F04_GATE_AZURE_RESTORE_ENTRA_DEPLOY_RELEASE_NOT_ATTESTED")
   }
+  await verifyAzureFiles(b,root)
   const reviewers = b.reviews
   must(Array.isArray(reviewers) && reviewers.length === 3 &&
     reviewers.every((r) => typeof r.personId === "string" && r.personId &&
@@ -181,6 +196,7 @@ async function main() {
     "F04_GATE_EXPLICIT_SEPARATE_HUMAN_OWNER_GO_REQUIRED")
   console.log(JSON.stringify({ verdict: "GO_OWNER_SIGNED_EVIDENCE_ACCEPTED_NOT_DEPLOY_EXECUTED",
     candidateSha: ctx.candidateSha, manifestSha256: installed.manifestSha256,
+    cliBuildRunId: b.distribution.cli.runId, factoryRunId: b.distribution.factory.runId,
     ownerSignedBundleSha256: sha(raw), ciRunId: ci.runId, proofCount: b.proofs.length,
     azureCount: b.azure.length, independentReviewCount: reviewers.length }))
 }
