@@ -1,0 +1,51 @@
+name: sf-preview-package
+
+# Staging-preview archive only. This workflow never claims a release: the release
+# factory is produced and qualified by sf-factory-package and the SF release gate.
+on:
+  workflow_dispatch:
+  push:
+    branches: [sf-preview-package]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf-preview-package-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: linux-preview (compiled + archived)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+          no-cache: true
+      - name: Install pinned dependencies
+        run: bun install --frozen-lockfile
+      - name: Build real native Omni companions
+        working-directory: native/omni
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = x86_64
+          cargo build --locked --release -p hugr-omni-node -p omni-supervisor
+      - name: Compile, package and archive the preview
+        working-directory: apps/cli
+        env:
+          SF_PREVIEW_SOURCE_SHA: ${{ github.sha }}
+        run: bun script/preview-package.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-preview-package-${{ github.run_id }}-${{ github.sha }}
+          path: distribution-preview/
+          if-no-files-found: error
+          retention-days: 3
