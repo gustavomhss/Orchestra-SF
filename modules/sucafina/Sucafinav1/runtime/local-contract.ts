@@ -49,7 +49,7 @@ export type EntraClient = {
   person: (accessToken: string) => Promise<DirectoryPerson>
   directory: (accessToken: string) => Promise<DirectoryPerson[]>
   /** Reads complete Graph users, managers, groups and transitive members with a server-held delegated token. */
-  graphDirectory: (accessToken: string) => Promise<EntraGraphDirectory>
+  graphDirectory?: (accessToken: string) => Promise<EntraGraphDirectory>
   resolve: (accessToken: string, map: readonly RoleRow[]) => Promise<ResolvedActor>
 }
 export type EntraOptions = {
