@@ -204,9 +204,14 @@ function initial() {
 }
 function load(snapshot: Snapshot): Store {
   const stored = object(snapshot.data.store)
-  // Empty installations have no persisted Settings yet: read the same safe defaults
-  // as the explicit reset command, without writing or repairing saved policies.
-  const settings = Object.hasOwn(stored, "settings") ? object(stored.settings) : initial()
+  // Only a never-initialized store may read reset defaults. Persisted stores
+  // with missing or malformed Settings must keep their unavailable context;
+  // repairing those at read time would hide a real dependency failure.
+  const settings = Object.hasOwn(stored, "settings")
+    ? object(stored.settings)
+    : !Object.hasOwn(snapshot.data, "store")
+      ? initial()
+      : {}
   return structuredClone({
     settings,
     form: {

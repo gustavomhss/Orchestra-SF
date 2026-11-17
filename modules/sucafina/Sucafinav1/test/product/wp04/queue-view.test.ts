@@ -53,6 +53,25 @@ test("first visit to Procurement Requests on an empty installation renders a rea
   } finally { await fixture.dispose() }
 })
 
+test("persisted incomplete Procurement stores fail closed instead of silently rendering an empty queue", async () => {
+  for (const persisted of [{ issued: { pr: [], po: [] } }, { settings: {} }, {}]) {
+    const fixture = await pageFixture(true)
+    try {
+      await fixture.persistence.transaction("procurement", async (snapshot) => {
+        snapshot.data.store = structuredClone(persisted)
+        return { commit: true, value: undefined }
+      })
+      const before = await fixture.material()
+      const result = await fixture.get("requester", "Requests")
+      expect(result.response.status).toBe(503)
+      expect(result.response.headers.get("content-type")).toContain("application/json")
+      expect(JSON.parse(result.html)).toEqual({ status: "unavailable", reason: "procurement-queue-unavailable" })
+      expect(fixture.prepared).toEqual([])
+      expect(await fixture.material()).toEqual(before)
+    } finally { await fixture.dispose() }
+  }
+})
+
 test("authorized Requests and My approvals render the actual C02 queue across baseline states", async () => {
   const fixture = await pageFixture()
   try {

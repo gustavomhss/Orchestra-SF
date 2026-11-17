@@ -241,6 +241,20 @@ jobs:
       - uses: ./.github/actions/omni-binaries
         with:
           artifact: sf-omni-linux-${{ github.sha }}
+      # Run the incident's real HTTP integration before the full CI-SF suite.
+      # The full manifest suite (including its fail-closed gate and --bail)
+      # still runs unchanged; unrelated early failures cannot hide this proof.
+      - name: Verify first-install Procurement queue and corrupt-store refusal
+        if: ${{ matrix.id == 'CI-SF' }}
+        working-directory: modules/sucafina
+        shell: bash
+        env:
+          GITHUB_ACTIONS: "false"
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git -C ../.. rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          bun test --timeout 30000 Sucafinav1/test/product/wp04/queue-view.test.ts
       - name: Execute exact manifest-selected Bun files
         shell: bash
         env:
