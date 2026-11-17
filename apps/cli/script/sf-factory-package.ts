@@ -98,7 +98,7 @@ export async function stageSfFactory(input: { workspace: string; bin: string }) 
   await writeFile(ledger, JSON.stringify(closure, null, 2) + "\n", { flag: "wx", mode: 0o644 })
   if (digest(await readFile(target)) !== closure.bundle.sha256 ||
     (await Promise.all(assets.map(async (entry) =>
-      digest(await readFile(path.join(bin, "..", "..", entry.path))) === entry.sha256))).some((valid) => !valid))
+      digest(await readFile(path.join(bin, "..", entry.path))) === entry.sha256))).some((valid) => !valid))
     throw new Error("SF_FACTORY_STAGED_BYTES_CHANGED")
   return closure
 
