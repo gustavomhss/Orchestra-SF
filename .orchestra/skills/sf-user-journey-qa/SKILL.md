@@ -19,7 +19,7 @@ Choose **one story / one attempt** per run. Other stories can be separate attemp
 
 1. Confirm a **QA-only installation** and origin, exact deployed product SHA/build, installation and project, seeded synthetic records, and authorized actor accounts. Do not run mutating user journeys against production, client data, a real supplier or a real ERP.
 2. Prove the actor from the **signed-in UI** and current installation/context. Use a separate authenticated browser context/profile for every principal. Two tabs sharing a cookie jar are **not** two actors. Never synthesize cookies, change JWT/headers, or assume a display name grants a role.
-3. Confirm the feature exists on the *installed build*. CAP/UI native routes in the app-shell are not automatically equivalent to legacy `/sucafina/{dashboard|planner|procurement}` HTML. Test the actual surface the story names; if the controller cannot reach it, report `BLOCKED_BROWSER`, not a surrogate PASS.
+3. Confirm the feature exists on the *installed build*. CAP/UI native routes in the app-shell are not automatically equivalent to legacy `/sucafina/{dashboard|planner|procurement}` HTML. Test the actual surface the story names; if the controller cannot reach it, report `BLOCKED_ENVIRONMENT` with reason `BROWSER_UNAVAILABLE`, not a surrogate PASS.
 4. Conditional capabilities (supreme admin PR #270, demo Flamengo PR #268, white-label, external ERP/Fabric/CTRM) are `BLOCKED_CAPABILITY` until installed/approved. Do not silently treat their proposed source as a live feature.
 5. If an input, actor or browser controller is unavailable, report precisely which dependency is missing. Never improvise identity or source data to make a story pass.
 
@@ -49,7 +49,7 @@ Work in a **private evidence directory outside the Git checkout**. Start a recor
 Verdicts:
 - `PASSED_WITH_EVIDENCE`: every mandatory step and negative test was **observed** on the intended UI and independent witnesses agree.
 - `FAILED_PRODUCT`: observed behavior contradicts the fixed oracle. Include exact step, expected/actual, and minimal reproduction.
-- `BLOCKED_ENVIRONMENT`, `BLOCKED_BROWSER`, `BLOCKED_CAPABILITY`: prerequisite absent or feature not installed. **Not** PASS.
+- `BLOCKED_ENVIRONMENT` (including `BROWSER_UNAVAILABLE`) or `BLOCKED_CAPABILITY`: prerequisite absent or feature not installed. **Not** PASS.
 - `NOT_RUN`: no UI execution; documentation, static checks and `verify-uat-proof.mjs` alone never change this.
 
 The V3 proof verifier is **format/integrity only**, never certification of Azure/Entra/VM or a substitute for independent QA sign-off. End with a compact chronological operator log and explicit verdict. Do not modify product code, scope policies or CI gates as part of a user sitting.
