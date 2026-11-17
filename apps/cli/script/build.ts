@@ -222,6 +222,7 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
       {
         name: `@humanguardrail/${name}`,
         version: Script.version,
+        sfFactory: "bin/local/entry.mjs",
         license: "MIT",
         repository: { type: "git", url: "git+https://github.com/gustavomhss/hugr-orchestra.git" },
         os: [item.os],
