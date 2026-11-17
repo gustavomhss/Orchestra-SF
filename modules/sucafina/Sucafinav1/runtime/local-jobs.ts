@@ -81,7 +81,9 @@ export async function createLocalJobs(options: {
         const previous = await readLocalJobState(options.store, surface, signal)
         const archives = await backups.list(surface, { signal })
         const daily =
-          archives.find((archive) => archive.id === previous.backupId && archive.tier === "daily") ??
+          (previous.backupDay === day && previous.backupHour === hour
+            ? archives.find((archive) => archive.id === previous.backupId && archive.tier === "daily")
+            : undefined) ??
           archives.find((archive) => archive.tier === "daily" && archive.at.slice(0, 10) === day && archive.at.slice(0, 13) === hour)
         if (daily) {
           state.backups[surface] = daily.id
