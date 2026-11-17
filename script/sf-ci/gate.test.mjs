@@ -129,7 +129,16 @@ test("CI workflow has one automatic trigger and preserves exhaustive green cover
   const workflow = readFileSync(new URL("../../.github/workflows/sf-ci.yml", import.meta.url), "utf8")
   assert.match(workflow, /^  pull_request:/m)
   assert.doesNotMatch(workflow, /^  push:/m)
-  assert.match(workflow, /bun test --timeout 30000 --bail=5/)
+  // CI-SF must execute the full selected inventory even after earlier failures.
+  // This is stricter than the legacy bail check: keep exact selectors/reporter
+  // and reject bail/skip flags that would hide late authorization regressions.
+  const ciSf = workflow.match(/^\s+CI-SF\)\r?\n([\s\S]*?)^\s+;;/m)?.[1]
+  assert.ok(ciSf, "CI-SF manifest-selected runner arm must exist")
+  assert.match(ciSf, /bun test --timeout 30000\s*\\\s*--reporter=junit/)
+  assert.match(ciSf, /"\$\{files\[@\]\}"/)
+  assert.doesNotMatch(ciSf, /--bail(?:=|\s|$)|--only-failures|--pass-with-no-tests/)
+  // The unrelated app-browser fail-fast policy remains unchanged.
+  assert.match(workflow, /CI-APP-BROWSER\)[\s\S]*?--bail=5/)
   const realManifest = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
   assertWorkflowManifestSelection(workflow, realManifest)
   assert.match(workflow, /--max-failures=2/)
@@ -144,7 +153,7 @@ function manifestWiredWorkflowFixture(actualManifest) {
   const arms = buns.map((suite) => [
     `              ${suite.id})`,
     `                cd "$root/${suite.directory}"`,
-    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 "${'${files[@]}'}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
+    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"}${suite.id === "CI-SF" ? "" : " --bail=5"} "${'${files[@]}'}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
     "                ;;",
   ].join("\n")).join("\n")
   const selected = [
@@ -194,6 +203,7 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
   }
   const failCases = [
     ["missing Bun selector", good.replace(selector, "echo omitted-bun-selector")],
+    ["CI-SF early bail hides late consent tests", good.replace('bun test --timeout 30000 "${files[@]}"', 'bun test --timeout 30000 --bail=5 "${files[@]}"')],
     ["missing UI selector", good.slice(0, good.lastIndexOf(selector)) + good.slice(good.lastIndexOf(selector)).replace(selector, "echo omitted-ui-selector")],
     ["missing CI-APP-BROWSER matrix ID", good.replace(", CI-APP-BROWSER", "")],
     ["missing CI-UI-DECISIONS manifest suite", good.replace("          - id: CI-UI-DECISIONS\n", "")],

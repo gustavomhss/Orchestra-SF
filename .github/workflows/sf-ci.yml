@@ -48,6 +48,8 @@ jobs:
         run: |
           set -euo pipefail
           (cd packages/core && bun test test/test-ci-request.test.ts)
+          # Independent early witness: exact signed OIDC consent before the slow full CI-SF inventory.
+          (cd modules/sucafina && bun test --timeout 30000 Sucafinav1/test/microsoft-entra-client.test.ts)
 
   static:
     name: sf/static-and-contracts
@@ -309,7 +311,11 @@ jobs:
           {
             case "$SF_SUITE_ID" in
               CI-SF)
-                bun test --timeout 30000 --bail=5 \
+                # Full case/file inventory, including late Microsoft OIDC consent checks.
+                # No bail: report every failing case without weakening its expectation.
+                # Run serially: Omni's suite-scoped positive control must span every selected file.
+                # Bun --parallel isolates file-level afterAll and falsely fails this required guard.
+                bun test --timeout 30000 \
                   --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               CI-CLI)

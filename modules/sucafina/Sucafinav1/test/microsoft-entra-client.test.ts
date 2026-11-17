@@ -21,7 +21,7 @@ async function webExchange(f: Awaited<ReturnType<typeof microsoftFixture>>, clie
   return { location, ...await client.exchange({ code, verifier, redirectUri, nonce: "synthetic-web-nonce" }) }
 }
 
-test("confidential web flow uses minimum scopes and sends the private credential only to token POST", async () => {
+test("confidential web flow requests exact consented Graph membership scopes and sends secret only to token POST", async () => {
   const f = await microsoftFixture()
   const observed: { method: string; secret: boolean; authorization: boolean }[] = []
   f.hooks.before = async (request) => {
@@ -31,7 +31,7 @@ test("confidential web flow uses minimum scopes and sends the private credential
   }
   const result = await webExchange(f)
   const url = new URL(result.location)
-  expect(url.searchParams.get("scope")?.split(" ")).toEqual(["openid", "profile", "offline_access", "User.Read"])
+  expect(url.searchParams.get("scope")?.split(" ")).toEqual(["openid", "profile", "offline_access", "User.Read", "User.Read.All", "GroupMember.Read.All", "Directory.Read.All"])
   expect(url.searchParams.has("client_secret")).toBe(false)
   expect(result.person.id).toBe(oid)
   const refreshed = await f.client.refresh(result.tokens.refreshToken!)

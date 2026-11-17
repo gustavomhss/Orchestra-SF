@@ -55,6 +55,12 @@ export const authorizationLayer = Layer.effect(
         if (hasCapabilityContentTicketURL(url)) return yield* effect
         const credential = yield* credentialFromRequest(request)
         if (ServerAuth.authorized(credential, config)) return yield* effect
+        if (process.env.SF_AUTH_DIAG === "1" && /^\/sucafina\/(?:dashboard|planner|procurement)$/.test(url.pathname)) {
+          console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "server-middleware", stage: "authorization-denied", path: url.pathname }))
+          yield* HttpEffect.appendPreResponseHandler((_request, response) =>
+            Effect.succeed(HttpServerResponse.setHeader(response, "x-sf-auth-layer", "server-middleware")),
+          )
+        }
         yield* HttpEffect.appendPreResponseHandler((_request, response) =>
           Effect.succeed(HttpServerResponse.setHeader(response, "www-authenticate", WWW_AUTHENTICATE)),
         )

@@ -7,7 +7,6 @@ import { createModule } from "../index.ts"
 import type { Application } from "../runtime/application.ts"
 import { object } from "../runtime/contract.ts"
 import type { Surface } from "../src/identity.ts"
-import { emptyMap } from "../src/identity.ts"
 import { initialProcurementSettings } from "../src/initial-settings.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
@@ -32,11 +31,21 @@ async function fixture() {
   cleanups.pop()
   cleanups.push(async () => { await store.dispose(); await disk.close() })
   const identity = profile.createIdentity(store.secrets)
-  // Test setup represents an existing operator-configured product map, never a callback-derived grant.
+  // Check the actual Microsoft preflight mapping. A synthetic login must not
+  // be needed to install role bindings, and no test actor is made administrator.
   for (const surface of ["dashboard", "planner", "procurement"] as const) {
     await store.transaction(surface, async (snapshot) => {
-      snapshot.data.roleMap = emptyMap().filter((row) => row.surface === surface).map((row) => ({ ...row, entra: profile.loaded.config.groups[surface][row.role] ?? null, version: 1, by: "synthetic-server-configuration" }))
-      if (surface === "procurement") snapshot.data.store = { settings: initialProcurementSettings(), issued: { pr: [], po: [] }, sup: [], suppliers: [], requests: {}, actCalls: 0, lastIssued: null }
+      if (surface === "planner") {
+        expect(snapshot.data.roleMap).toBeUndefined()
+        return { commit: false, value: undefined }
+      }
+      expect(snapshot.data.roleMap).toEqual(expect.arrayContaining([
+        expect.objectContaining({ surface, entra: profile.loaded.config.groups[surface][surface === "dashboard" ? "viewer" : "requester"],
+          by: "microsoft:installation-config" }),
+      ]))
+      expect(snapshot.audit[0]?.who).toBe("microsoft:installation-config")
+      if (surface === "dashboard") return { commit: false, value: undefined }
+      snapshot.data.store = { settings: initialProcurementSettings(), issued: { pr: [], po: [] }, sup: [], suppliers: [], requests: {}, actCalls: 0, lastIssued: null }
       return { commit: true, value: undefined }
     })
   }
@@ -92,7 +101,13 @@ test("real Microsoft-authenticated dashboard route grants only its assigned view
   const write = await f.request("/dashboard", cookie, { page: "Executive Dashboard", action: "configure-summaries", version: 0, values: { pages: ["Talent Review"] } })
   expect(write.status).toBe(403)
   expect(await f.snapshot("dashboard")).toEqual(before)
-  expect((await f.request("/dashboard?page=Executive%20Dashboard")).status).toBe(401)
+  for (const surface of ["dashboard", "planner", "procurement"]) {
+    const anonymous = await f.request(`/${surface}`)
+    expect(anonymous.status).toBe(303)
+    const destination = new URL(anonymous.headers.get("location")!, publicOrigin)
+    expect(destination.pathname).toBe("/sucafina/auth/login")
+    expect(destination.searchParams.get("returnTo")).toBe(`/sucafina/${surface}`)
+  }
 })
 
 test("actual routes deny a signed-in guest with no group role and revalidate role removal", async () => {
@@ -133,8 +148,8 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
   expect(firstId).not.toBe(secondId)
   expect(object(object(requests[firstId]).request)).toMatchObject({ createdBy: oid, requesterName: f.provider.account.name, pr: { title: firstTitle } })
   expect(object(object(requests[secondId]).request)).toMatchObject({ createdBy: other, requesterName: f.provider.second.name, pr: { title: secondTitle } })
-  expect(created.audit.map((entry) => entry.who)).toEqual([oid, other])
-  expect(created.audit.every((entry) => entry.name === f.provider.account.name)).toBe(true)
+  expect(created.audit.map((entry) => entry.who)).toEqual(["microsoft:installation-config", oid, other])
+  expect(created.audit.slice(1).every((entry) => entry.name === f.provider.account.name)).toBe(true)
   expect(JSON.stringify(created)).not.toContain("same-synthetic@example.test")
   expect(JSON.stringify(created)).not.toContain("synthetic-access-")
   expect(JSON.stringify(created)).not.toContain("synthetic-refresh-")
