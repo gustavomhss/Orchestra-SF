@@ -3,7 +3,7 @@ import { createStore, reconcile } from "solid-js/store"
 import { createSfRoutinesClient } from "@orchestra/client/sucafina/routines"
 import { createSfAnalysesClient } from "@orchestra/client/sucafina/analyses"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
-import { SfRoutineResult } from "@orchestra/schema/sucafina/routines"
+import { SfRoutineResult, SfRoutines } from "@orchestra/schema/sucafina/routines"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
 import { SfRunState, SfStatePanel } from "../../shared/states"
@@ -17,23 +17,26 @@ import {
 import "./runs.css"
 
 type Routine = (typeof SfRoutineResult)["Type"]
+type Projection = Extract<(typeof SfRoutines.operations["projection.routine"]["output"])["Type"], { status: "ok" }>
+type Proof = NonNullable<Projection["proof"]>
 type Cases = Extract<(typeof SfAnalyses.operations["intelligence.analysis.choices"]["output"])["Type"], { status: "ok" }>["value"]["cases"]
 type View = {
   state: SfUiState
   result: Routine | null
+  proof: Proof | null
   caseChoices: Cases
   caseIndex: number | null
   caseState: SfUiState
   mode: "projection" | "original"
 }
 const initial = (): View => ({
-  state: "loading", result: null, caseChoices: [], caseIndex: null, caseState: "loading", mode: "projection",
+  state: "loading", result: null, proof: null, caseChoices: [], caseIndex: null, caseState: "loading", mode: "projection",
 })
 
-/**
- * UI65 — single run supplied by F01's opaque route decoder. No fake run list,
- * progress, cancellation, output artifact or completion: the original
- * RoutineResult carries admission, runRef, resultRef and pending, not phase.
+/** UI65 — source-backed admission plus independently revalidated native C08
+ * execution and output. Unverified execution never masquerades as completion.
+ * No cancellation is invented: the installed native routine port has no
+ * authorized cancel command, unlike the independent analysis producer.
  */
 export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
   const owner = useSfContext()
@@ -76,7 +79,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
         const state = n29ResponseState(response)
         if (response.kind !== "response" || response.body.status !== "ok") {
           setView("state", state)
-          if (state === "denied" || state === "session-expired") setView("result", null)
+          if (state === "denied" || state === "session-expired") setView({ result: null, proof: null })
           return
         }
         const run = response.body.value
@@ -84,8 +87,14 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
           setView(reconcile({ ...initial(), state: "stale" }))
           return
         }
-        setView("result", run)
-        setView("state", "ready")
+        const proof = response.body.proof ?? null
+        if (proof?.execution && proof.execution.runRef !== reference ||
+          proof?.output && (proof.verifier !== "verified" || proof.output.runRef !== reference ||
+            proof.output.resultRef !== run.resultRef || proof.output.outputDigest !== proof.execution?.outputDigest)) {
+          setView(reconcile({ ...initial(), state: "stale" }))
+          return
+        }
+        setView({ result: run, proof, state: "ready" })
         setView("mode", "projection")
       }).catch((error: unknown) => {
         if (abort.signal.aborted || !n29SameAuthority(owner, generation, stamp)) return
@@ -123,7 +132,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
     const generation = owner.generation()
     const stamp = active.context.stamp
     const abort = new AbortController()
-    setView("state", "loading")
+    setView({ state: "loading", proof: null })
     try {
       const fresh = await createSfAnalysesClient(active.transport)["intelligence.analysis.choices"]({}, { signal: abort.signal })
       if (!n29SameAuthority(owner, generation, stamp)) return
@@ -155,9 +164,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
         setView("state", "stale")
         return
       }
-      setView("result", run)
-      setView("state", "ready")
-      setView("mode", "original")
+      setView({ result: run, state: "ready", mode: "original", proof: null })
     } catch (error) {
       if (!n29SameAuthority(owner, generation, stamp)) return
       console.error("N29 UI65: original run read failed", error instanceof Error ? error.name : "unknown")
@@ -236,19 +243,47 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                   <Show when={source().runRef}>
                     <p>{t("sf.u27.runRef")}: <bdi>{source().runRef}</bdi></p>
                   </Show>
-                  <p>{t("sf.u27.runningUnverified")}</p>
+                  <Show when={view.proof?.verifier !== "verified"}>
+                    <p>{t("sf.u27.runningUnverified")}</p>
+                  </Show>
+                </section>
+                <section class="mx-card" aria-label={t("sf.u27.execution")}>
+                  <h2>{t("sf.u27.execution")}</h2>
+                  <Show when={view.mode === "projection" && view.proof}
+                    fallback={<p>{t("sf.u27.nativeProofUnavailable")}</p>}>
+                    {(proof) => <>
+                      <p><strong>{t("sf.u27.verifier")}:</strong> <bdi>{proof().verifier}</bdi></p>
+                      <Show when={proof().execution} fallback={<p>{t("sf.u27.nativeProofUnavailable")}</p>}>
+                        {(receipt) => <>
+                          <p><strong>{t("sf.u27.phase")}:</strong> <bdi>{receipt().state}</bdi></p>
+                          <p><strong>{t("sf.u27.revision")}:</strong> <bdi>{receipt().revision}</bdi></p>
+                        </>}
+                      </Show>
+                      <Show when={proof().reason}><p role="status"><bdi>{proof().reason}</bdi></p></Show>
+                      <Show when={proof().verifier === "verified" && proof().output}>
+                        {(output) => <>
+                          <p><strong>{t("sf.u27.outputDigest")}:</strong> <code><bdi>{output().outputDigest}</bdi></code></p>
+                          <p><strong>{t("sf.u27.resultRef")}:</strong> <bdi>{output().resultRef}</bdi></p>
+                          <p><strong>{t("sf.u27.output")}:</strong></p>
+                          <pre class="sf-n29-run-output">{JSON.stringify(output().content, null, 2)}</pre>
+                        </>}
+                      </Show>
+                    </>}
+                  </Show>
+                  <p>{t("sf.u27.cancelUnavailable")}</p>
                 </section>
                 <section class="mx-card" aria-label={t("sf.u27.pending")}>
                   <h2>{t("sf.u27.pending")}</h2>
                   <Show when={source().pending.length} fallback={<p>{t("sf.common.empty")}</p>}>
                     <ul><For each={source().pending}>{(item) => <li><bdi>{item}</bdi></li>}</For></ul>
                   </Show>
-                  <p>{t("sf.u27.cancelUnavailable")}</p>
                 </section>
                 <section class="mx-card" aria-label={t("sf.u27.resultRef")}>
                   <h2>{t("sf.u27.resultRef")}</h2>
                   <p><bdi>{source().resultRef ?? t("sf.u27.noResult")}</bdi></p>
-                  <p>{t("sf.u27.runningUnverified")}</p>
+                  <Show when={view.proof?.verifier !== "verified"}>
+                    <p>{t("sf.u27.runningUnverified")}</p>
+                  </Show>
                 </section>
                 <section class="mx-card" aria-label={t("sf.u27.evidence")}>
                   <h2>{t("sf.u27.evidence")}</h2>
