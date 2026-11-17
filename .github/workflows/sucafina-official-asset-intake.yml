@@ -36,7 +36,14 @@ jobs:
           print("ORIGIN=https://group.sucafina.com/img/base/logo.svg")
           print("SVG_BYTES", len(data), "SHA256", sha256(data).hexdigest())
           PY
-          echo 'SUCAFINA_OFFICIAL_SVG_B64_BEGIN'
-          base64 -w0 /tmp/sucafina-official.svg
-          echo
-          echo 'SUCAFINA_OFFICIAL_SVG_B64_END'
+      - name: Preserve downloaded first-party artwork for verification
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sucafina-official-source
+          if-no-files-found: error
+          retention-days: 5
+          path: |
+            /tmp/sucafina-official.svg
+            packages/app-shell/public/brand/sucafina/*.svg
+            packages/app-shell/src/orchestra/brand-identity.css
+            packages/app-shell/src/orchestra/theme.css
