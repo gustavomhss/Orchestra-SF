@@ -2,8 +2,13 @@ import { expect, test, type Locator, type Page } from "@playwright/test"
 import { asRecord } from "./journey"
 
 export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
-  await page.goto(`${origin}/sucafina/procurement?page=Requests`)
+  const response = await page.goto(`${origin}/sucafina/procurement?page=Requests`)
+  console.log(`[sf decisions:procurement] GET Requests status=${response?.status()} content-type=${response?.headers()["content-type"]}`)
   const form = page.locator('form[data-command="create"][data-page="Requests"]')
+  if (await form.count() !== 1) {
+    console.log(`[sf decisions:procurement] unexpected form count: ${(await form.count())}; page=${page.url().split("?")[0]}`)
+    console.log(`[sf decisions:procurement] response preview: ${(await response?.text())?.slice(0, 1600)}`)
+  }
   await expect(form).toHaveCount(1)
   const title = "CI Decisions — explicit requisition proposal"
   await form.getByLabel("Title", { exact: true }).fill(title)
