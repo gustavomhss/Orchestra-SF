@@ -3,6 +3,8 @@
 // belong to a dedicated native lane and refuse at load anywhere else. A new test file runs by default; leaving one out
 // takes an entry naming the lane that runs it.
 const elsewhere = [
+  // sf-factory-package.yml: hosted Linux Web native qualification from sf-package-guard #254.
+  "test/distribution-web-native.test.ts",
   // factory-package.yml: dedicated hosted Linux x64 compiled factory/archive/extraction proof.
   "test/factory-distribution-linux.test.ts",
   // distribution-bundle.yml: native POSIX lifecycle only.
