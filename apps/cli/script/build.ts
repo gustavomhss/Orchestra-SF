@@ -211,6 +211,10 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
     })
   // The payload admits only package.json and bin/**; the bundled hugr-lean notices ship beside the binary.
   await leanNotices(`dist/${name}/bin`)
+  // The --installation absolute import is not part of the compiled host graph.
+  // Ship a second self-contained entry, plus the disk-read resident policies, for every target.
+  const { stageSfFactory } = await import("./sf-factory-package")
+  await stageSfFactory({ workspace: workspace.root, bin: path.resolve(dir, `dist/${name}/bin`) })
 
   await Bun.write(
     `./dist/${name}/package.json`,
