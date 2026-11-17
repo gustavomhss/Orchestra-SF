@@ -1,6 +1,7 @@
 import { For, Show, createEffect, createMemo, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import {
@@ -10,7 +11,7 @@ import {
 
 type Ready = Extract<SfRequestsRead, { kind: "ready" }>
 type Review = Readonly<{
-  request: string; requestVersion: number; oldRef: string; contractRef: string
+  request: SfRef; requestVersion: number; oldRef: string; contractRef: string
   po: SfPoEdit
 }>
 type Scope = Readonly<{
@@ -71,7 +72,7 @@ export function SfContractRequestLinks(props: Props) {
       item.capabilityId === "CAP25" && item.canRead && item.allowedActionIds.includes("save")) === true &&
     operationReady("domain.command.CAP25.save")
 
-  const requestHref = (ref: string, part: "requisition" | "sourcing" | "po") => {
+  const requestHref = (ref: SfRef, part: "requisition" | "sourcing" | "po") => {
     const ownerUrl = new URL(props.routeHref, "http://orchestra.invalid")
     const query = new URLSearchParams()
     for (const key of ["server", "project", "installation"]) {
