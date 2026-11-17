@@ -179,8 +179,9 @@ def validate_tar(artifact, c, expected_sha, receipt):
         raise
 
 
-def check_release(path, source, expected_sha, file_index, manifest_bytes):
-    if path.is_symlink() or not path.is_dir() or path.parent != RELEASES or path.name != source:
+def check_release(path, source, expected_sha, file_index, manifest_bytes, *, staging=False):
+    valid_name = path.name == source or (staging and path.name.startswith(".factory-staging-"))
+    if path.is_symlink() or not path.is_dir() or path.parent != RELEASES or not valid_name:
         refuse("immutable release path missing or not canonical")
     discovered = {}
     for base, dirs, files in os.walk(path, followlinks=False):
@@ -231,12 +232,22 @@ def vm_preflight(fqdn):
     if owner.returncode != 0 or owner.stdout.strip() == "0":
         refuse("nonprivileged orchestra-sf account absent")
     parent = RELEASES.parent
-    if parent.is_symlink() or not parent.is_dir() or parent.stat().st_uid != 0:
-        refuse("managed /opt/orchestra-sf root missing")
+    if parent.is_symlink() or not parent.is_dir() or parent.stat().st_uid != 0 or \
+       stat.S_IMODE(parent.stat().st_mode) != 0o755:
+        refuse("managed root-owned 0755 /opt/orchestra-sf missing")
+    state = Path("/var/lib/orchestra-sf")
+    service_uid = int(owner.stdout.strip())
+    if state.is_symlink() or not state.is_dir() or state.stat().st_uid != service_uid or \
+       stat.S_IMODE(state.stat().st_mode) != 0o700:
+        refuse("orchestra-sf persistent data mount is not owner-only")
+    mount = subprocess.run(["findmnt", "-n", "-o", "TARGET", "--mountpoint", str(state)],
+                           capture_output=True, text=True)
+    if mount.returncode != 0 or mount.stdout.strip() != str(state):
+        refuse("/var/lib/orchestra-sf is not independently mounted")
     if RELEASES.exists() and (RELEASES.is_symlink() or not RELEASES.is_dir() or RELEASES.stat().st_uid != 0):
         refuse("unsafe release directory")
-    if not CADDY.is_file() or CADDY.is_symlink():
-        refuse("Caddy foundation not ready")
+    if not CADDY.is_file() or CADDY.is_symlink() or CADDY.stat().st_uid != 0:
+        refuse("root-owned Caddy foundation not ready")
     # Operator must independently put public traffic into fail-closed 503 maintenance.
     caddy = CADDY.read_text("utf-8").strip()
     accepted = re.fullmatch(re.escape(fqdn) + r"\s*\{\s*respond\s+503\s*\}", caddy)
@@ -298,7 +309,7 @@ def install(a):
             return
         if not a.apply:
             refuse("explicit --apply required for any mutation")
-        with open(LOCK, "a+", encoding="ascii") as mutex:
+        with os.fdopen(os.open(LOCK, os.O_WRONLY | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600), "w") as mutex:
             fcntl.flock(mutex.fileno(), fcntl.LOCK_EX)
             vm_preflight(a.fqdn)
             old = current_source()
@@ -336,11 +347,12 @@ def install(a):
                         "runID": receipt["runID"], "runAttempt": receipt["runAttempt"]
                     }, sort_keys=True) + "\n")
                     (temp / ".a7-source.json").chmod(0o444)
-                    # Validate staged content before publish (release root guard below).
                     if sha256(temp / "distribution.json") != receipt["manifestSha256"]:
                         refuse("staged distribution.json changed")
                     for folder, _, _ in os.walk(temp):
                         Path(folder).chmod(0o555)
+                    # No invalid/tampered factory release can be published even momentarily.
+                    check_release(temp, a.candidate, a.sha256, entries, manifest_bytes, staging=True)
                     os.rename(temp, target)
                 finally:
                     if temp.exists():
