@@ -280,8 +280,9 @@ jobs:
               CI-SF)
                 # Full case/file inventory, including late Microsoft OIDC consent checks.
                 # No bail: report every failing case without weakening its expectation.
+                # Two isolated file workers bound runtime without concurrent test bodies.
                 bun test --timeout 30000 \
-                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                  --reporter=junit --parallel=2 "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               CI-CLI)
                 bun test --timeout 30000 --reporter=junit \
