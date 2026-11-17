@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: RUN-EDI-RISK-01 · recipe ROUTINE-EDI-RISK-v1. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir execução RUN-EDI-RISK-01
-3. Ler estados queued/running/needs-input/completed ou failed
-4. Inspecionar saída, provenance e verifier independente
-5. Cancelar quando habilitado e conferir efeito terminal
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir execução RUN-EDI-RISK-01
+3. **[UI_ACTION]** Ler estados queued/running/needs-input/completed ou failed
+4. **[READ_ONLY_WITNESS]** Inspecionar saída, provenance e verifier independente
+5. **[READ_ONLY_WITNESS]** Cancelar quando habilitado e conferir efeito terminal
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

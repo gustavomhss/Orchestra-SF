@@ -9,19 +9,16 @@
   "groups": [
     {
       "id": "smoke",
-      "title": "Smoke P0 — oito decisões críticas",
-      "trigger": "Validar a espinha dorsal após mudanças pequenas ou antes de uma demo. Não equivale ao release completo.",
+      "title": "Smoke P0 — quatro verificações de superfícies, sem full regression",
+      "trigger": "Canário curto de UI/identidade/Planner/Procurement/BI em instalação QA previamente preparada; não inclui import, fault injection, mudança de grants, release ou 70/165.",
       "chapters": [],
       "extra_surfaces": [],
-      "e2e_ids": [
-        "SF-E2E-001",
-        "SF-E2E-002",
-        "SF-E2E-003",
-        "SF-E2E-005",
-        "SF-E2E-013",
-        "SF-E2E-015",
-        "SF-E2E-026",
-        "SF-E2E-034"
+      "e2e_ids": [],
+      "story_ids": [
+        "SF-UI67-P01",
+        "SF-CAP17-P01",
+        "SF-CAP24-P01",
+        "SF-UI45-P01"
       ]
     },
     {
@@ -183,11 +180,20 @@
         "SF-E2E-022",
         "SF-E2E-030",
         "SF-E2E-031",
-        "SF-E2E-034",
         "SF-E2E-036",
         "SF-E2E-039",
-        "SF-E2E-040",
         "SF-E2E-042"
+      ]
+    },
+    {
+      "id": "full",
+      "title": "Full UX e promoção formal (owner-only)",
+      "trigger": "Somente quando o owner pedir homologação integral 70/165 ou promoção formal após CI/identidade/VM; nunca em smoke ou regressão diária.",
+      "chapters": [],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-034",
+        "SF-E2E-040"
       ]
     }
   ]

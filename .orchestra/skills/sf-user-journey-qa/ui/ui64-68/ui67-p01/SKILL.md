@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: OIDC resource tenant · project SF-LAB · owner CIO. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Entrar via OIDC com conta Entra autorizada
-3. Inspecionar sessão, contexto e grants atuais sem exibir segredos
-4. Trocar instalação/projeto autorizado
-5. Deslogar e tentar reabrir deep link anterior
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Entrar via OIDC com conta Entra autorizada
+3. **[READ_ONLY_WITNESS]** Inspecionar sessão, contexto e grants atuais sem exibir segredos
+4. **[UI_ACTION]** Trocar instalação/projeto autorizado
+5. **[UI_ACTION]** Deslogar e tentar reabrir deep link anterior
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

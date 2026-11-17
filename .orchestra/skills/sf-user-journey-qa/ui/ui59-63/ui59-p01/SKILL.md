@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: DOC-EDI-01 · trecho “6 dias de atraso”. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir evidências candidatas extraídas
-3. Inspecionar trecho, página, score e contexto
-4. Rejeitar candidato sem suporte e confirmar candidato válido
-5. Comparar estado pending vs confirmed
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir evidências candidatas extraídas
+3. **[READ_ONLY_WITNESS]** Inspecionar trecho, página, score e contexto
+4. **[UI_ACTION]** Rejeitar candidato sem suporte e confirmar candidato válido
+5. **[READ_ONLY_WITNESS]** Comparar estado pending vs confirmed
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

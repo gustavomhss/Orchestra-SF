@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: RES-EDI-01 · agente residente de riscos · último run R-014. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Residents e conferir versão da receita e owner
-3. Inspecionar último run R-014 com fonte e hora
-4. Comparar contribution e decisão humana do CASE-EDI-01
-5. Suspender ou rever apenas capability admitida
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[READ_ONLY_WITNESS]** Abrir Residents e conferir versão da receita e owner
+3. **[READ_ONLY_WITNESS]** Inspecionar último run R-014 com fonte e hora
+4. **[READ_ONLY_WITNESS]** Comparar contribution e decisão humana do CASE-EDI-01
+5. **[UI_ACTION]** Suspender ou rever apenas capability admitida
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

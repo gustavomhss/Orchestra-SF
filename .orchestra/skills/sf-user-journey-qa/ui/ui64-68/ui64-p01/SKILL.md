@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: ROUTINE-EDI-RISK-v1 · escopo P-004 e R-07. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir catálogo de rotinas e escolher recipe publicada
-3. Conferir digest, owner, escopo, custo/modelo e permissões
-4. Preparar input com fontes autorizadas e conferir preview
-5. Admitir execução uma vez
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir catálogo de rotinas e escolher recipe publicada
+3. **[READ_ONLY_WITNESS]** Conferir digest, owner, escopo, custo/modelo e permissões
+4. **[READ_ONLY_WITNESS]** Preparar input com fontes autorizadas e conferir preview
+5. **[UI_ACTION]** Admitir execução uma vez
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

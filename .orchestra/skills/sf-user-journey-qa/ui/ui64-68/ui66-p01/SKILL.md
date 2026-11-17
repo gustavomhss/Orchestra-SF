@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: SCHED-EDI-DAILY · recipe ROUTINE-EDI-RISK-v1 · 08:00 BRT. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir schedules e selecionar SCHED-EDI-DAILY
-3. Verificar se scheduleDetails.read está realmente disponível
-4. Consultar timezone, cron, recipe e última ocorrência
-5. Pausar ou editar apenas se port corrente admitir e devolver recibo
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir schedules e selecionar SCHED-EDI-DAILY
+3. **[READ_ONLY_WITNESS]** Verificar se scheduleDetails.read está realmente disponível
+4. **[UI_ACTION]** Consultar timezone, cron, recipe e última ocorrência
+5. **[UI_ACTION]** Pausar ou editar apenas se port corrente admitir e devolver recibo
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

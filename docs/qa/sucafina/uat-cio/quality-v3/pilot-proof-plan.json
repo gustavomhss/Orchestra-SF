@@ -22,11 +22,40 @@
         "scenarioBCents": 7800000
       },
       "proofs": [
-        { "id": "F-01", "kind": "read", "actorRole": "finance" },
-        { "id": "F-02", "kind": "oracle", "actorRole": "finance" },
-        { "id": "F-03", "kind": "commit", "actorRole": "finance", "from": "draft_version", "to": "modified_version" },
-        { "id": "F-04", "kind": "deny", "actorRole": "budget owner", "from": "official_locked", "to": "official_locked", "allowedStatus": [403,409,422] },
-        { "id": "F-05", "kind": "read", "actorRole": "cio" }
+        {
+          "id": "F-01",
+          "kind": "read",
+          "actorRole": "finance"
+        },
+        {
+          "id": "F-02",
+          "kind": "oracle",
+          "actorRole": "finance"
+        },
+        {
+          "id": "F-03",
+          "kind": "commit",
+          "actorRole": "finance",
+          "from": "draft_version",
+          "to": "modified_version"
+        },
+        {
+          "id": "F-04",
+          "kind": "deny",
+          "actorRole": "budget owner",
+          "from": "official_locked",
+          "to": "official_locked",
+          "allowedStatus": [
+            403,
+            409,
+            422
+          ]
+        },
+        {
+          "id": "F-05",
+          "kind": "read",
+          "actorRole": "cio"
+        }
       ]
     },
     {
@@ -42,24 +71,123 @@
       ],
       "oracle": {
         "kind": "quote-choice-v1",
-        "quoteBEurCents": 2800000,
         "eurUsdRateNumerator": 108,
         "eurUsdRateDenominator": 100,
-        "quoteCEligible": false,
-        "expectedWinner": "B"
+        "quotes": [
+          {
+            "id": "A",
+            "currency": "USD",
+            "totalCents": 3240000,
+            "eligible": true
+          },
+          {
+            "id": "B",
+            "currency": "EUR",
+            "totalCents": 2800000,
+            "eligible": true
+          },
+          {
+            "id": "C",
+            "currency": "USD",
+            "totalCents": 2900000,
+            "eligible": false
+          }
+        ]
       },
       "proofs": [
-        { "id": "P-01", "kind": "commit", "actorRole": "requester", "from": "draft", "to": "pr_pending" },
-        { "id": "P-02", "kind": "deny", "actorRole": "requester", "from": "pr_pending", "to": "pr_pending", "allowedStatus": [403,422] },
-        { "id": "P-03", "kind": "commit", "actorRole": "approver", "from": "pr_pending", "to": "sourcing" },
-        { "id": "P-04", "kind": "deny", "actorRole": "buyer", "from": "sourcing", "to": "sourcing", "allowedStatus": [403,422] },
-        { "id": "P-05", "kind": "oracle", "actorRole": "buyer" },
-        { "id": "P-06", "kind": "commit", "actorRole": "buyer", "from": "sourcing", "to": "src_pending" },
-        { "id": "P-07", "kind": "commit", "actorRole": "approver", "from": "src_pending", "to": "po_draft" },
-        { "id": "P-08", "kind": "commit", "actorRole": "buyer", "from": "po_draft", "to": "po_pending" },
-        { "id": "P-09", "kind": "commit", "actorRole": "approver", "from": "po_pending", "to": "po_approved" },
-        { "id": "P-10", "kind": "commit", "actorRole": "buyer", "from": "po_approved", "to": "po_issued" },
-        { "id": "P-11", "kind": "deny", "actorRole": "buyer", "from": "po_issued", "to": "po_issued", "allowedStatus": [403,409,422] }
+        {
+          "id": "P-01",
+          "kind": "commit",
+          "actorRole": "requester",
+          "from": "draft",
+          "to": "pr_pending"
+        },
+        {
+          "id": "P-02",
+          "kind": "deny",
+          "actorRole": "requester",
+          "from": "pr_pending",
+          "to": "pr_pending",
+          "allowedStatus": [
+            403,
+            422
+          ]
+        },
+        {
+          "id": "P-03",
+          "kind": "commit",
+          "actorRole": "approver",
+          "from": "pr_pending",
+          "to": "sourcing"
+        },
+        {
+          "id": "P-04",
+          "kind": "deny",
+          "actorRole": "buyer",
+          "from": "sourcing",
+          "to": "sourcing",
+          "allowedStatus": [
+            403,
+            422
+          ]
+        },
+        {
+          "id": "P-05",
+          "kind": "oracle",
+          "actorRole": "buyer"
+        },
+        {
+          "id": "P-06",
+          "kind": "commit",
+          "actorRole": "buyer",
+          "from": "sourcing",
+          "to": "src_pending"
+        },
+        {
+          "id": "P-07",
+          "kind": "commit",
+          "actorRole": "approver",
+          "from": "src_pending",
+          "to": "po_draft"
+        },
+        {
+          "id": "P-08",
+          "kind": "commit",
+          "actorRole": "buyer",
+          "from": "po_draft",
+          "to": "po_pending"
+        },
+        {
+          "id": "P-09",
+          "kind": "commit",
+          "actorRole": "approver",
+          "from": "po_pending",
+          "to": "po_approved"
+        },
+        {
+          "id": "P-10",
+          "kind": "commit",
+          "actorRole": "buyer",
+          "from": "po_approved",
+          "to": "po_issued"
+        },
+        {
+          "id": "P-11",
+          "kind": "deny",
+          "actorRole": "buyer",
+          "from": "po_issued",
+          "to": "po_issued",
+          "allowedStatus": [
+            403,
+            409,
+            422
+          ]
+        }
+      ],
+      "separateRoles": [
+        "requester",
+        "approver",
+        "buyer"
       ]
     },
     {
@@ -72,11 +200,38 @@
         "modules/sucafina/Sucafinav1/product/imports/apply.ts"
       ],
       "proofs": [
-        { "id": "I-01", "kind": "preview", "actorRole": "finance" },
-        { "id": "I-02", "kind": "deny", "actorRole": "finance", "allowedStatus": [403,409,422] },
-        { "id": "I-03", "kind": "commit", "actorRole": "finance" },
-        { "id": "I-04", "kind": "recovery", "actorRole": "finance", "linksTo": "I-03" },
-        { "id": "I-05", "kind": "receipt", "actorRole": "finance", "linksTo": "I-03" }
+        {
+          "id": "I-01",
+          "kind": "preview",
+          "actorRole": "finance"
+        },
+        {
+          "id": "I-02",
+          "kind": "deny",
+          "actorRole": "finance",
+          "allowedStatus": [
+            403,
+            409,
+            422
+          ]
+        },
+        {
+          "id": "I-03",
+          "kind": "commit",
+          "actorRole": "finance"
+        },
+        {
+          "id": "I-04",
+          "kind": "recovery",
+          "actorRole": "finance",
+          "linksTo": "I-03"
+        },
+        {
+          "id": "I-05",
+          "kind": "receipt",
+          "actorRole": "finance",
+          "linksTo": "I-03"
+        }
       ]
     }
   ],

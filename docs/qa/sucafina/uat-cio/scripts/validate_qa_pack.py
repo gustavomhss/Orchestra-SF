@@ -47,8 +47,14 @@ require(fixture['classification'].startswith('100% FICTITIOUS'),'fixture classif
 for name in ('fixtures/IMPORT-OPEX-VALID.xlsx','fixtures/IMPORT-OPEX-ADVERSARIAL.xlsx'):
     with zipfile.ZipFile(ROOT/name) as z:
         z.testzip(); require('xl/workbook.xml' in z.namelist(),'xlsx archive structure '+name)
-all_files=[p for p in ROOT.rglob('*') if p.is_file() and p.name!='QA-TRACEABILITY.json']
-checksums={p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in all_files}
+# The V2 manifest pins only its own known artifacts. The later V3 skills, their generated
+# tree and verifier have independent gates; including them here would make every new QA
+# artifact silently invalidate the historical V2 digest contract.
+existing=json.loads((ROOT/'QA-TRACEABILITY.json').read_text(encoding='utf-8'))
+checked_files=existing.get('file_sha256')
+require(isinstance(checked_files,dict) and checked_files, 'V2 digest inventory unavailable')
+require(all(name and not name.startswith('/') and '..' not in Path(name).parts for name in checked_files),'V2 digest key escapes directory')
+checksums={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in checked_files}
 report={
  'schema':'sf-uat-360-static-verification-v1','status':'STATIC_DESIGN_CHECKS_PASSED_NOT_PRODUCT_EXECUTION',
  'surface_count':len(surfaces),'route_count':len(routes),'surface_stories':len(surface_cases),'e2e_stories':len(e2e),
@@ -60,7 +66,6 @@ report={
  'e2e_by_condition':dict(collections.Counter(x.get('conditional_release_feature') or x.get('condition','BASELINE') for x in e2e)),
  'file_sha256':checksums, 'not_run':True,'executed_tests':0,'live_tenant_tests':0,'go_live_approved':False
 }
-existing=json.loads((ROOT/'QA-TRACEABILITY.json').read_text(encoding='utf-8'))
 for key in ('surface_count','route_count','surface_stories','e2e_stories','distinct_stories','route_probes','coverage_journeys','e2e_by_priority','e2e_by_condition'):
     require(existing[key]==report[key], f'QA trace mismatch for {key}')
 require(existing.get('file_sha256')==checksums, 'QA trace checksum mismatch: repair artifact in design builder; NEVER silently rewrite during a read-only validation')

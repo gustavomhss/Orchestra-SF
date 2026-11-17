@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: SIG-EDI-07 · atraso de 6 dias vs limiar 3. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Sinais/materialidade
-3. Filtrar por risco e período
-4. Inspecionar SIG-EDI-07 e evidências de origem
-5. Classificar materialidade e encaminhar para revisão humana
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Sinais/materialidade
+3. **[UI_ACTION]** Filtrar por risco e período
+4. **[READ_ONLY_WITNESS]** Inspecionar SIG-EDI-07 e evidências de origem
+5. **[UI_ACTION]** Classificar materialidade e encaminhar para revisão humana
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

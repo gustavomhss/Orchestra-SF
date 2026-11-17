@@ -62,6 +62,26 @@ def grouping(story: dict) -> tuple[str, str, str]:
     raise ValueError(f"unrecognized story ID {code}")
 
 
+# Only an advisory triage; it NEVER grants a tool or manufactures the condition.
+def step_mode(value: str) -> str:
+    lower=value.casefold()
+    if re.search(r'\b(simular|interceptar|intercepta|injetar|injetada|forçar|inject|mock|nonce|csrf|429|replay|reproduzir a falha|perda de resposta|resposta perdida|falha de rede|derrubar|reiniciar|rollback)\b',lower):
+        return 'CONTROLLED_FAULT'
+    if re.search(r'\b(registrar|comparar|anotar|verificar|conferir|reconsultar|inspecionar|capturar|avaliar)\b',lower):
+        return 'READ_ONLY_WITNESS'
+    return 'UI_ACTION'
+
+
+def step_instruction(value: str) -> str:
+    kind=step_mode(value)
+    extra=''
+    if re.search(r'\b(upload|xlsx|xls|arquivo|anexo|workbook)\b',value.casefold()):
+        extra=' — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende'
+    if kind=='CONTROLLED_FAULT':
+        extra+=' — somente com harness de falha já existente e autorizado; senão BLOCKED_ENVIRONMENT'
+    return f'**[{kind}]** {value}{extra}'
+
+
 def leaf(story: dict) -> tuple[Path, str, str]:
     branch, batch, segment = grouping(story)
     directory = SKILLS / branch / batch / segment
@@ -98,7 +118,16 @@ def leaf(story: dict) -> tuple[Path, str, str]:
     elif story['kind'] == 'SURFACE_PRIMARY':
         prec = prec[2:] if len(prec)>2 else prec
     out += bullets("Pré-condições específicas", prec)
-    out += bullets("Passos a executar na interface", story.get('steps', []), ordered=True)
+    if story.get('setup'):
+        out += bullets("Setup comprovável deste caso (não substituir por fixture imaginada)", story['setup'], ordered=True)
+    if story['kind'] == 'SURFACE_ADVERSARIAL':
+        out += ("**Protocolo negativo compartilhado:** abrir rota e navegação com ator real, capturar before; "
+                "produzir somente a contraprova específica abaixo; repetir refresh/segunda sessão se o risco exigir; "
+                "reler fonte/auditoria para comprovar não-commit. Sem precondição admitida, marcar BLOCKED, não PASS.\n\n")
+        steps = [story['steps'][1]]
+    else:
+        steps = story.get('steps', [])
+    out += bullets("Passos, mecanismos e limites das ferramentas", [step_instruction(x) for x in steps], ordered=True)
     out += bullets("Oráculos observáveis (não reescrever para passar)", story.get('expected', []))
     neg = story.get('contraprovas') or ([story['negative_expected']] if story.get('negative_expected') else [])
     out += bullets("Contraprovas", neg)
@@ -138,8 +167,8 @@ def group_manifest(primary: list[dict], e2e: list[dict]) -> list[dict]:
     if manifest.get('schema') != 'sf-uat-story-groups-v1':
         raise ValueError('invalid group manifest schema')
     groups = manifest.get('groups')
-    if not isinstance(groups,list) or len(groups)!=10:
-        raise ValueError('expected exactly 10 bounded groups (smoke + 9 domain packs)')
+    if not isinstance(groups,list) or len(groups)!=11:
+        raise ValueError('expected 11 bounded groups (smoke, 9 domains, explicit full)')
     by_id={s['id']:s for s in primary+e2e}
     known_chapters={s['chapter'] for s in primary}
     group_ids=set(); covered=set(); all_e2e=set()
@@ -154,8 +183,11 @@ def group_manifest(primary: list[dict], e2e: list[dict]) -> list[dict]:
         surfaces=group.get('extra_surfaces',[])
         if not isinstance(surfaces,list):raise ValueError('invalid extra_surfaces')
         e2es=group.get('e2e_ids',[])
-        if not isinstance(e2es,list):raise ValueError('invalid e2e_ids')
+        explicit=group.get('story_ids',[])
+        if not isinstance(e2es,list) or not isinstance(explicit,list):
+            raise ValueError('invalid e2e_ids / story_ids')
         members=[s['id'] for s in primary if s['chapter'] in chapters or any(u in surfaces for u in s['surface_ids'])]
+        members.extend(explicit)
         members.extend(e2es)
         if len(members)!=len(set(members)) or not members:
             raise ValueError('duplicate or empty group: '+slug)
@@ -163,8 +195,15 @@ def group_manifest(primary: list[dict], e2e: list[dict]) -> list[dict]:
             raise ValueError('unknown story ID in '+slug)
         if any(i not in {s['id'] for s in e2e} for i in e2es):
             raise ValueError('invalid E2E id in '+slug)
-        if slug=='smoke' and (len(members)>10 or any(by_id[i]['priority']!='P0' for i in members)):
-            raise ValueError('smoke must contain <=10 P0 stories')
+        full_only={'SF-E2E-034','SF-E2E-040'}
+        if slug=='smoke':
+            if not (1<=len(members)<=6) or chapters or surfaces or e2es or any(by_id[i]['priority']!='P0' or by_id[i]['kind']!='SURFACE_PRIMARY' for i in members):
+                raise ValueError('smoke must be <=6 explicit P0 primary surface cases, never an E2E expansion')
+        elif slug=='full':
+            if set(members)!=full_only:
+                raise ValueError('full-only set must contain SF-E2E-034 and SF-E2E-040')
+        elif full_only.intersection(members):
+            raise ValueError('full/release-only cases cannot appear in domain groups: '+slug)
         if len(members)>40:raise ValueError('unbounded group: '+slug)
         group['_members']=members
         covered.update(members)
@@ -187,7 +226,7 @@ def group_nodes(groups: list[dict], by_id: dict[str,dict]) -> dict[Path,str]:
 
 **Não é uma função para usuários da Sucafina.** Cada filho é uma campanha de manutenção que aponta para skills individuais. Um grupo só é executado quando o QA o solicitar explicitamente.
 
-Seleção: para regressão rápida, abrir `smoke`; para mudanças localizadas, abrir o domínio impactado; para uma única story, usar a folha CAP/UI/E2E correspondente. **Não rodar todos os grupos por padrão.**
+Seleção: para verificação curta e não destrutiva, abrir `smoke`; para mudanças localizadas, abrir o domínio impactado; `full` contém somente os gates SF-E2E-034/040 e exige ordem explícita do owner. Para uma única story, usar a folha CAP/UI/E2E correspondente. **Não rodar todos os grupos por padrão.**
 
 Ao executar vários grupos, deduplicar stories já executadas **apenas** se SHA, fixture, instalação, versão de dados e perfis forem idênticos; caso contrário, executar novamente. `PASSED_WITH_EVIDENCE` exige UI real e observadores independentes. Nunca converter testes estáticos em PASS.
 
@@ -201,7 +240,7 @@ Os conteúdos, papéis e oráculos ficam nas 185 folhas; as listas de grupo não
         fm=frontmatter(name,'Grupo de manutenção SF '+slug+': '+group['title']+'. '+group['trigger'][:110],
                  'Quando o QA solicitar grupo '+slug+' ou mudança em '+group['title'],
                  'Outro domínio ou uma única story; abra o grupo correto ou folha individual')
-        rows=[fm+f"# {group['title']}\n\n",'**Uso:** QA/manutenção interna. **Não iniciar ao carregar a skill:** esta folha define a seleção; só executar stories quando houver ordem explícita de execução do grupo.\n\n',f"**Quando selecionar:** {group['trigger']}\n\n",f"**Tamanho:** {len(members)} stories; nenhum roteiro foi executado por esta lista.\n\n",'## Ordem sugerida (skill individual por story)\n\n']
+        rows=[fm+f"# {group['title']}\n\n",'**Uso:** QA/manutenção interna. **Não iniciar ao carregar a skill:** esta folha define a seleção; só executar stories quando houver ordem explícita de execução do grupo.\n\n',f"**Quando selecionar:** {group['trigger']}\n\n",f"**Tamanho:** {len(members)} stories; nenhum roteiro foi executado por esta lista.\n\n",'**Escopo:** '+('FULL/RELEASE somente por ordem explícita do owner; não é smoke nem regressão cotidiana.\n\n' if slug=='full' else 'Não inclui homologação total nem promoção de release.\n\n'),'## Ordem sugerida (skill individual por story)\n\n']
         for number,id in enumerate(members,1):
             story=by_id[id]
             _,_,_=grouping(story)
@@ -212,9 +251,10 @@ Os conteúdos, papéis e oráculos ficam nas 185 folhas; as listas de grupo não
 ## Protocolo deste grupo
 
 1. Carregue `sf-user-journey-qa` (protocolo compartilhado) e identifique a versão instalada, os atores e a fixture isolada. Navegue via as skills CAP/UI/E2E existentes (não copie seus passos). O instrumento `skill` aceita o **nome exato** da folha; alternativamente percorra o índice `Next level` quando for mais conveniente.
-2. **Execute só as stories deste grupo**, na ordem acima, uma tentativa por story. Antes de cada uma, comprovar precondições e isolamento; se uma story depende de uma transação anterior, use estado autorizado e documentado, nunca mutação oculta.
-3. Em falha P0, interromper o grupo e reportar o restante `NOT_RUN`/`BLOCKED`, a menos que o QA tenha autorizado diagnóstico mais amplo. Para recurso condicional não promovido, marcar `BLOCKED_CAPABILITY` e seguir apenas casos independentes.
-4. Registre status e evidência por story, nunca um PASS único para o grupo. O grupo só é `PASS` se todas as stories exigidas foram verificadas na mesma campanha/ambiente/versão, com evidências; não deduzir de testes estáticos.
+2. **Execute só as stories deste grupo**, na ordem acima, uma tentativa por story. Antes de cada uma, capture checkpoint privado `storyId`, `attempt`, `deployedSHA`, `installation`, `fixtureRevision`, `actorAliases`, `beforeDigest` e `evidenceRef`. Não reutilize dados de outro grupo sem reconciliação; para mutações, restaure apenas via seed existente autorizado em instalação QA isolada.
+3. Ao terminar cada story, grave o resultado no próprio `EVIDENCE-RECORD.json` privado, com `afterDigest`, `receiptRef` ou motivo de bloqueio, e checkpoint `resumableFrom` da próxima story. Ao retomar, valide novamente SHA, instalação, fixture, atores e estado; se mudaram, refaça somente a story afetada, nunca marque PASS reutilizado.
+4. Em falha P0, interromper o grupo e reportar o restante `NOT_RUN`/`BLOCKED`, a menos que o QA tenha autorizado diagnóstico mais amplo. Para recurso condicional não promovido, marcar `BLOCKED_CAPABILITY` e seguir apenas casos independentes.
+5. Registre status e evidência por story, nunca um PASS único para o grupo. O grupo só é `PASS` se todas as stories exigidas foram verificadas na mesma campanha/ambiente/versão, com evidências; não deduzir de testes estáticos.
 
 **Sem execução implícita de outros grupos, sem novo runner, sem bypass de UX.**
 ''')
@@ -254,8 +294,8 @@ def build() -> dict[Path,str]:
     parents=Counter(path.parent for path in outputs)
     if max(parents.values()) > 10:
         raise ValueError(f"index bloat: more than 10 children {parents}")
-    if len(outputs) != 219:
-        raise ValueError(f"expected 185 leaves + 23 indexes + 11 group nodes, got {len(outputs)}")
+    if len(outputs) != 220:
+        raise ValueError(f"expected 185 leaves + 23 indexes + 12 group nodes, got {len(outputs)}")
     return outputs
 
 
@@ -272,6 +312,14 @@ def main() -> int:
     outputs=build()
     missing=[]
     drift=[]
+    # Only these four subtrees are generated. Root SKILL.md and domain skills are hand-maintained.
+    managed=('cap','ui','e2e','groups')
+    existing={p for kind in managed for p in (SKILLS/kind).rglob('SKILL.md') if p.is_file()}
+    orphan=sorted(str(p.relative_to(ROOT)) for p in (existing-set(outputs)))
+    if orphan and not args.check:
+        print(json.dumps({'ok':False,'count_orphan':len(orphan),'orphan':orphan[:10],
+                          'reason':'Remove retired generated SKILL.md files explicitly before regenerating'},ensure_ascii=False))
+        return 1
     for path,content in outputs.items():
         if args.check:
             if not path.is_file(): missing.append(str(path.relative_to(ROOT)))
@@ -279,11 +327,12 @@ def main() -> int:
         else:
             path.parent.mkdir(parents=True,exist_ok=True)
             path.write_text(content,encoding='utf-8')
-    if args.check and (missing or drift):
+    if orphan or (args.check and (missing or drift)):
         print(json.dumps({'ok':False,'missing':missing[:10],'drift':drift[:10],
-                          'count_missing':len(missing),'count_drift':len(drift)},ensure_ascii=False))
+                          'orphan':orphan[:10],'count_missing':len(missing),'count_drift':len(drift),
+                          'count_orphan':len(orphan)},ensure_ascii=False))
         return 1
-    print(json.dumps({'ok':True,'stories':185,'new_nodes':len(outputs),'index_nodes':len(outputs)-185-11,'group_nodes':11,
+    print(json.dumps({'ok':True,'stories':185,'new_nodes':len(outputs),'index_nodes':len(outputs)-185-12,'group_nodes':12,
                       'generated':not args.check},ensure_ascii=False))
     return 0
 

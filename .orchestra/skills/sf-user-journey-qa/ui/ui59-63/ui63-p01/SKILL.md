@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: OUTCOME-EDI-01 · previsão 6 dias · observado 9 dias. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Previsto versus observado da decisão CASE-EDI-01
-3. Selecionar seleção/receipt versionada
-4. Registrar ou conferir observado 9 dias vs previsto 6
-5. Inspecionar delta e fontes com período consistente
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Previsto versus observado da decisão CASE-EDI-01
+3. **[UI_ACTION]** Selecionar seleção/receipt versionada
+4. **[READ_ONLY_WITNESS]** Registrar ou conferir observado 9 dias vs previsto 6
+5. **[READ_ONLY_WITNESS]** Inspecionar delta e fontes com período consistente
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

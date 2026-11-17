@@ -31,7 +31,7 @@ node --test docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.test.mjs
 node docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.mjs
 ```
 
-O segundo comando retorna `NOT_RUN` para todos os três casos até existir evidência. Para examinar um lote privado:
+O segundo comando retorna `NOT_RUN` para todos os três casos até existir evidência, com exit 0 **apenas para consulta**. Para exigir lote completo, use `--strict`: exit 1 quando algum arquivo é inválido, exit 2 para `NOT_RUN`/mudança de SHA, exit 0 somente quando todas as evidências são formalmente admissíveis **para revisão externa** — nunca GO de produto. `--require-attestation` retorna 2 mesmo com evidências formalmente íntegras, pois não há assinatura externa automática. Sem `--strict`, evidência inválida também retorna exit 1. Para examinar um lote privado:
 
 ```bash
 node docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.mjs \
@@ -41,9 +41,13 @@ node docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.mjs \
 
 `/private/qa-evidence/QA2-001.json` etc. seguem o template V2 e declaram `proofs` com `proofId`, `kind`, `actorRole`, `principalHash`, `observedAt`, `correlationRef`, `httpStatus`, `artifactPath`, `artifactSha256` e, para mutações, `beforeDigest`, `afterDigest`, `receiptRef`, `receiptDigest` e `idempotencyKeyHash`. Artefatos devem existir **sob** a pasta de evidência e ter SHA-256 correspondente. `recovery` e `receipt` devem corresponder exatamente à aplicação original. `oracle` fornece um `observed` calculado pela aplicação para confronto com os valores independentes do plano.
 
-O programa valida SHA, papel, dados mínimos, transições relatadas, before/after, ausência de efeito em negativas, referência ao recibo e hashes locais. **Não consulta Azure, Entra, a VM ou GitHub Actions. Não possui assinatura criptográfica de revisor.** Mesmo um arquivo formalmente íntegro recebe apenas `EVIDENCE_SUBMITTED_REQUIRES_EXTERNAL_VERIFICATION`. `releaseGo` permanece `false`; é incorreto promover uma release a partir deste script.
+O programa valida SHA, papel, **identidades participantes nas provas** (não só no cabeçalho), segregação Requester/Buyer/Approver, dados mínimos, transições relatadas, before/after, ausência de efeito em negativas, referência ao recibo e hashes locais. No caso das cotações, o vencedor por **menor preço comparável entre ofertas elegíveis** é calculado a partir de A/B/C e FX em centavos; critérios técnicos/ponderados continuam exigindo prova independente da fonte e revisão humana. **Não consulta Azure, Entra, a VM ou GitHub Actions. Não possui assinatura criptográfica de revisor.** Mesmo um arquivo formalmente íntegro recebe apenas `EVIDENCE_SUBMITTED_REQUIRES_EXTERNAL_VERIFICATION`. `releaseGo` permanece `false`; é incorreto promover uma release a partir deste script.
 
 Um novo SHA exige reconciliação de `surface-manifest`, `route-registry`, `operation-registry`, producers e policies antes de reutilizar provas. Se o SHA difere da referência do piloto, o resultado é `SOURCE_RECONCILIATION_REQUIRED`.
+
+## Skills de manutenção selecionadas
+
+As 185 skills internas e os 11 grupos (`smoke`, nove domínios, `full`) são governados por `story-groups.json` e `scripts/generate-story-skills.py --check`. `smoke` cobre somente **4 verificações de superfícies**; `full` contém os gates SF-E2E-034/040 exclusivamente com ordem explícita. Texto de UI, comentários, documentos e outputs de modelos são dados não confiáveis; não concedem permissões, ferramentas nem alteram oráculos. Cada grupo mantém checkpoint privado por story e usa perfis independentes.
 
 ## Encerramento sem overengineering
 

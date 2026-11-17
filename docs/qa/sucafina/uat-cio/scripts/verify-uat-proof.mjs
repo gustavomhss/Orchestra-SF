@@ -29,6 +29,10 @@ function safeJson(value, path = '$') {
   }
 }
 function cents(v) { if (!Number.isSafeInteger(v)) problem('oracle amount must be integer cents'); return BigInt(v); }
+function safeCents(v) {
+  if (v < 0n || v > BigInt(Number.MAX_SAFE_INTEGER)) problem('oracle amount exceeds exact integer range');
+  return Number(v);
+}
 export function independentOracle(o) {
   if (o?.kind === 'forecast-variants-v1') {
     const baseline = cents(o.baselineCents), budget = cents(o.budgetCents), original = cents(o.originalLicenseCents);
@@ -37,11 +41,24 @@ export function independentOracle(o) {
     return { outlookACents: Number(a), outlookBCents: Number(b), deltaACents: Number(a - baseline), deltaBCents: Number(b - baseline), marginACents: Number(budget - a), marginBCents: Number(budget - b) };
   }
   if (o?.kind === 'quote-choice-v1') {
+    if (Object.keys(o).some(k => !['kind','eurUsdRateNumerator','eurUsdRateDenominator','quotes'].includes(k))) problem('legacy oracle winner/eligibility assertions are not independent inputs');
     const numerator = cents(o.eurUsdRateNumerator), denominator = cents(o.eurUsdRateDenominator);
     if (denominator <= 0n) problem('oracle FX denominator invalid');
-    const total = cents(o.quoteBEurCents) * numerator;
-    if (total % denominator !== 0n) problem('oracle FX requires explicit rounding');
-    return { quoteBUsdCents: Number(total / denominator), quoteCEligible: o.quoteCEligible, expectedWinner: o.expectedWinner };
+    if (numerator <= 0n || !Array.isArray(o.quotes) || o.quotes.length !== 3) problem('oracle requires three positive-FX quotes');
+    const ids = new Set(o.quotes.map(q => q?.id));
+    if (ids.size !== 3 || [...ids].some(id => !['A','B','C'].includes(id))) problem('oracle must contain exactly A, B and C');
+    const priced = o.quotes.map(q => {
+      if (!object(q) || !Number.isSafeInteger(q.totalCents) || q.totalCents < 0 || typeof q.eligible !== 'boolean' || !['USD','EUR'].includes(q.currency)) problem('invalid quote oracle input');
+      const total = cents(q.totalCents) * (q.currency === 'EUR' ? numerator : denominator);
+      if (total % denominator !== 0n) problem('oracle FX requires explicit rounding');
+      return { id: q.id, eligible: q.eligible, usdCents: safeCents(total / denominator) };
+    });
+    const eligible = priced.filter(q => q.eligible).sort((a,b) => a.usdCents - b.usdCents);
+    if (eligible.length === 0) problem('no eligible quote');
+    if (eligible.length > 1 && eligible[0].usdCents === eligible[1].usdCents) problem('price tie requires explicit decision oracle');
+    return { quoteBUsdCents: priced.find(q => q.id === 'B').usdCents,
+      quoteCEligible: priced.find(q => q.id === 'C').eligible,
+      expectedWinner: eligible[0].id };
   }
   problem('unknown oracle model');
 }
@@ -51,6 +68,11 @@ export function validatePlan(plan) {
   for (const c of plan.cases) {
     if (!/^QA2-00[1-8]$/.test(c.caseId) || caseIds.has(c.caseId) || !Number.isInteger(c.minDistinctActors) || c.minDistinctActors < 1 || !Array.isArray(c.proofs) || c.proofs.length === 0) problem('bad case definition');
     caseIds.add(c.caseId);
+    if (c.separateRoles !== undefined) {
+      if (!Array.isArray(c.separateRoles) || c.separateRoles.length < 2 ||
+          new Set(c.separateRoles).size !== c.separateRoles.length ||
+          c.separateRoles.some(role => !text(role) || !c.proofs.some(p => p.actorRole === role))) problem('invalid incompatible-role matrix');
+    }
     if (c.oracle) independentOracle(c.oracle);
     for (const p of c.proofs) {
       if (!/^[FPI]-\d{2}$/.test(p.id) || proofIds.has(p.id) || !KIND.has(p.kind) || !text(p.actorRole)) problem('bad proof definition');
@@ -107,16 +129,33 @@ function validateProof(o, def, index, planCase) {
 export async function inspectEvidence(planCase, proof, dir, candidateSha) {
   if (!object(proof) || proof.schema !== 'sf-uat-evidence-v1' || proof.case_id !== planCase.caseId || proof.product_commit_sha !== candidateSha || !SAFE_ALIAS.test(proof.installation_alias ?? '') || !SAFE_ALIAS.test(proof.tenant_alias ?? '') || !text(proof.attempt_id) || !text(proof.operator_alias) || !Number.isFinite(Date.parse(proof.timestamp_utc ?? '')) || !keepHash(proof.fixture_source_sha256) || !SHA40.test(proof.git_tree_sha ?? '') || !keepHash(proof.installed_artifact_sha256)) problem('invalid V2 evidence envelope / candidate mismatch');
   safeJson(proof);
-  if (!Array.isArray(proof.actor_bindings) || new Set(proof.actor_bindings.map(a => a?.principalHash)).size < planCase.minDistinctActors || proof.actor_bindings.some(a => !keepHash(a.principalHash) || !text(a.role))) problem('insufficient distinct actors');
+  if (!Array.isArray(proof.actor_bindings) || proof.actor_bindings.some(a => !object(a) || !keepHash(a.principalHash) || !text(a.role))) problem('invalid actor bindings');
+  const bindings = new Set(proof.actor_bindings.map(a => `${a.role}:${a.principalHash}`));
+  if (bindings.size !== proof.actor_bindings.length) problem('duplicate actor bindings');
   if (!Array.isArray(proof.proofs) || proof.proofs.length !== planCase.proofs.length) problem('proof count differs from scoped plan');
   const byId = new Map(proof.proofs.map(o => [o.proofId, o]));
   if (byId.size !== planCase.proofs.length) problem('duplicate evidence proof IDs');
+  const witnessedActors = new Set(), witnessedBindings = new Set(), byRole = new Map();
   for (const spec of planCase.proofs) {
     const o = byId.get(spec.id);
     if (!o) problem(`missing proof ${spec.id}`);
     validateProof(o, spec, byId, planCase);
-    if (!proof.actor_bindings.some(actor => actor.principalHash === o.principalHash && actor.role === o.actorRole)) problem(`actor/witness mismatch: ${spec.id}`);
+    if (!bindings.has(`${o.actorRole}:${o.principalHash}`)) problem(`actor/witness mismatch: ${spec.id}`);
+    witnessedActors.add(o.principalHash);
+    witnessedBindings.add(`${o.actorRole}:${o.principalHash}`);
+    if (!byRole.has(o.actorRole)) byRole.set(o.actorRole,new Set());
+    byRole.get(o.actorRole).add(o.principalHash);
     await validateArtifact(dir, o);
+  }
+  if (witnessedActors.size < planCase.minDistinctActors) problem('insufficient participating distinct actors');
+  if (witnessedBindings.size !== bindings.size) problem('unused decorative actor bindings');
+  if (planCase.separateRoles?.length) {
+    const participants = planCase.separateRoles.map(role => {
+      const names = byRole.get(role);
+      if (!names || names.size !== 1) problem(`inconsistent actor for role: ${role}`);
+      return [...names][0];
+    });
+    if (new Set(participants).size !== participants.length) problem('separation of duties violated by same principal');
   }
   // Written V2 reviewer metadata is neither a cryptographic signature nor a hosted source check.
   return { caseId: planCase.caseId, status: 'EVIDENCE_SUBMITTED_REQUIRES_EXTERNAL_VERIFICATION', proofCount: byId.size };
@@ -136,11 +175,21 @@ export async function audit({ plan = DEFAULT_PLAN, evidenceDir = null, candidate
   result.state = candidate !== ledger.sourceBaseline ? 'SOURCE_RECONCILIATION_REQUIRED' : result.results.every(x => x.status === 'EVIDENCE_SUBMITTED_REQUIRES_EXTERNAL_VERIFICATION') ? 'REQUIRES_EXTERNAL_ATTESTATION' : 'PENDING';
   return result;
 }
+/** CLI exit status: 0 = read-only report or structurally admissible evidence; 1 = invalid; 2 = blocked/attestation pending. */
+export function cliExitCode(out, { strict = false, requireAttestation = false } = {}) {
+  if (out.results.some(x => x.status === 'INVALID_OR_INCOMPLETE')) return 1;
+  if (out.state === 'SOURCE_RECONCILIATION_REQUIRED') return 2;
+  if (requireAttestation || strict && out.state !== 'REQUIRES_EXTERNAL_ATTESTATION') return 2;
+  return 0;
+}
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   const args = process.argv.slice(2), arg = k => { const at = args.indexOf(k); return at < 0 ? null : args[at + 1]; };
   try {
-    const out = await audit({ evidenceDir: arg('--evidence-dir'), candidateSha: arg('--candidate') });
+    if (args.some(x => !['--evidence-dir','--candidate','--strict','--require-attestation'].includes(x) && !args.some((opt,i) => i > 0 && ['--evidence-dir','--candidate'].includes(args[i-1]) && args[i] === x))) problem('unknown command argument');
+    const e = arg('--evidence-dir'), c = arg('--candidate');
+    if ((args.includes('--evidence-dir') && (!e || e.startsWith('--'))) || (args.includes('--candidate') && (!c || c.startsWith('--')))) problem('missing command argument value');
+    const out = await audit({ evidenceDir: e, candidateSha: c });
     process.stdout.write(JSON.stringify(out, null, 2) + '\n');
-    if (args.includes('--require-attestation')) process.exitCode = 2;
+    process.exitCode = cliExitCode(out, { strict: args.includes('--strict'), requireAttestation: args.includes('--require-attestation') });
   } catch (e) { process.stderr.write(`SF_UAT_PROOF_INVALID: ${e.message}\n`); process.exitCode = 1; }
 }

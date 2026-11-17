@@ -100,3 +100,74 @@ test('source changed requires explicit reconciliation even with no evidence', as
   assert.equal(r.state, 'SOURCE_RECONCILIATION_REQUIRED');
   assert.equal(r.releaseGo, false);
 });
+
+// Adversarial regressions: role labels and a decorative actor list must not satisfy SoD.
+async function makeProcurementEvidence() {
+  const dir = await mkdtemp(join(tmpdir(), 'sf-uat-proc-'));
+  const payload = 'SYNTHETIC_OPERATOR_WITNESS\n';
+  await writeFile(join(dir,'witness.txt'),payload);
+  const c=plan.cases.find(x=>x.caseId==='QA2-002');
+  const identities = { requester: hash('requester'), approver: hash('approver'), buyer: hash('buyer') };
+  const proofs=c.proofs.map((p,i) => ({
+    proofId:p.id,kind:p.kind,actorRole:p.actorRole,principalHash:identities[p.actorRole],
+    observedAt:'2026-11-16T19:00:00Z',correlationRef:'QA2-002-'+i,
+    httpStatus:p.kind==='deny' ? p.allowedStatus[0] : 200,
+    artifactPath:'witness.txt',artifactSha256:hash(payload),
+    beforeDigest:hash('before'+i),afterDigest:p.kind==='deny'?hash('before'+i):hash('after'+i),
+    ...(p.from?{fromState:p.from,toState:p.to}:{}),
+    ...(p.kind==='commit'?{receiptRef:'receipt'+i,receiptDigest:hash('receipt'+i),idempotencyKeyHash:hash('idem'+i)}:{}),
+    ...(p.kind==='oracle'?{observed:independentOracle(c.oracle)}:{})
+  }));
+  const proof={schema:'sf-uat-evidence-v1',case_id:c.caseId,attempt_id:'synthetic-qa2-002',
+    timestamp_utc:'2026-11-16T19:00:00Z',operator_alias:'test-operator',
+    product_commit_sha:SHA,git_tree_sha:SHA,installed_artifact_sha256:hash('package'),
+    fixture_source_sha256:hash('fixture'),installation_alias:'isolated-test-only',tenant_alias:'QA-TENANT-A',
+    actor_bindings:Object.entries(identities).map(([role,principalHash])=>({role,principalHash})),proofs};
+  return { dir, c, proof, identities };
+}
+
+test('requester/approver/buyer must be participating distinct principals, not declared labels',async t=>{
+  const {dir,c,proof,identities}=await makeProcurementEvidence();
+  t.after(()=>rm(dir,{recursive:true,force:true}));
+  assert.equal((await inspectEvidence(c,proof,dir,SHA)).status,'EVIDENCE_SUBMITTED_REQUIRES_EXTERNAL_VERIFICATION');
+  const forged=structuredClone(proof);
+  for(const p of forged.proofs)p.principalHash=identities.requester;
+  forged.actor_bindings=[...forged.actor_bindings,
+    {role:'observer-1',principalHash:hash('decorative-one')},
+    {role:'observer-2',principalHash:hash('decorative-two')}];
+  for(const b of forged.actor_bindings)if(b.role!=='observer-1'&&b.role!=='observer-2')b.principalHash=identities.requester;
+  await assert.rejects(inspectEvidence(c,forged,dir,SHA),/participating distinct actors|decorative/);
+  const merged=structuredClone(proof);
+  for(const p of merged.proofs)if(p.actorRole==='approver')p.principalHash=identities.requester;
+  merged.actor_bindings=merged.actor_bindings.map(b=>b.role==='approver'?{...b,principalHash:identities.requester}:b);
+  await assert.rejects(inspectEvidence(c,merged,dir,SHA),/participating distinct actors|separation of duties/);
+  const decorative=structuredClone(proof);
+  decorative.actor_bindings.push({role:'observer',principalHash:hash('unseen-in-logs')});
+  await assert.rejects(inspectEvidence(c,decorative,dir,SHA),/unused decorative actor bindings/);
+});
+
+test('winner is computed from eligible priced quotes; fabricated claim is refused',()=>{
+  const src=plan.cases[1].oracle;
+  assert.equal(independentOracle(src).expectedWinner,'B');
+  assert.equal(independentOracle({...src,quotes:src.quotes.map(q=>q.id==='C'?{...q,eligible:true}:q)}).expectedWinner,'C');
+  assert.throws(()=>independentOracle({...src,expectedWinner:'D-inexistente'}),/legacy oracle/);
+  assert.throws(()=>independentOracle({...src,quotes:[...src.quotes.slice(0,2),{...src.quotes[2],id:'D'}]}),/exactly A, B and C/);
+});
+
+test('CLI distinguishes report-only, malformed and strict non-executed status via exit codes', async t=>{
+  const { spawnSync }=await import('node:child_process');
+  const script=fileURLToPath(new URL('./verify-uat-proof.mjs',import.meta.url));
+  const run=args=>spawnSync(process.execPath,[script,...args],{encoding:'utf8'});
+  const normal=run([]);
+  assert.equal(normal.status,0);assert.match(normal.stdout,/NOT_RUN/);
+  const strict=run(['--strict']);
+  assert.equal(strict.status,2);assert.match(strict.stdout,/NOT_RUN/);
+  const {dir}=await makeEnv();t.after(()=>rm(dir,{recursive:true,force:true}));
+  await writeFile(join(dir,'QA2-001.json'),'{"bad":"evidence"}');
+  const invalid=run(['--evidence-dir',dir,'--candidate',SHA]);
+  assert.equal(invalid.status,1);assert.match(invalid.stdout,/INVALID_OR_INCOMPLETE/);
+  const missing=run(['--evidence-dir',dir,'--candidate',SHA,'--strict']);
+  assert.equal(missing.status,1);
+  const bad=run(['--unknown-option']);
+  assert.equal(bad.status,1);assert.match(bad.stderr,/unknown command argument/);
+});

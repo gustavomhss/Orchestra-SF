@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: CASE-EDI-01 ↔ CASE-EDI-OLD-02 · score de similaridade. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Casos semelhantes a partir de CASE-EDI-01
-3. Inspecionar score e justificativa da correspondência
-4. Abrir caso autorizado e retornar
-5. Comparar com resultado de u26 + teste especializado similarity217/ui62
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Casos semelhantes a partir de CASE-EDI-01
+3. **[READ_ONLY_WITNESS]** Inspecionar score e justificativa da correspondência
+4. **[UI_ACTION]** Abrir caso autorizado e retornar
+5. **[READ_ONLY_WITNESS]** Comparar com resultado de u26 + teste especializado similarity217/ui62
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 

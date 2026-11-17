@@ -21,14 +21,14 @@ not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta S
 
 - Fixture disponível: EXPORT-PR-32000 · PO-EDI-01. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
 
-## Passos a executar na interface
+## Passos, mecanismos e limites das ferramentas
 
-1. Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
-2. Abrir Exports de dados/PO
-3. Selecionar PO e formato admitido
-4. Solicitar export, conferir status terminal e baixar
-5. Abrir arquivo e comparar valores com fonte atual/autorizada
-6. Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[UI_ACTION]** Abrir Exports de dados/PO
+3. **[UI_ACTION]** Selecionar PO e formato admitido
+4. **[READ_ONLY_WITNESS]** Solicitar export, conferir status terminal e baixar
+5. **[READ_ONLY_WITNESS]** Abrir arquivo e comparar valores com fonte atual/autorizada — requer file chooser/download habilitado no controlador de QA; Dock MCP sozinho não atende
+6. **[READ_ONLY_WITNESS]** Recarregar a rota diretamente em nova navegação e capturar evidências de fonte, versão e estado final.
 
 ## Oráculos observáveis (não reescrever para passar)
 
