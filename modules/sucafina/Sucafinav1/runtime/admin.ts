@@ -143,10 +143,11 @@ export function controls(
   page: string,
   actor: Actor,
   environment: Environment,
+  allowGroupConfiguration = true,
 ): string {
   if (!actor.roles.includes("admin")) return ""
   const disabled = !actor.canWrite
-  const groups = roleMap(snapshot, surface)
+  const groups = (allowGroupConfiguration ? roleMap(snapshot, surface) : [])
     .map((row) =>
       form(
         page,
