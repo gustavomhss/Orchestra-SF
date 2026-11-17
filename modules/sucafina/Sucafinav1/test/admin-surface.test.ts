@@ -196,6 +196,9 @@ test("mounted HTTPS admin read renders Graph departments, manager, team inherita
     for (const label of ["Administração de acessos", "Organização", "Financeiro", "Procurement", "Caio", "Sofie",
       "Manager", "Organograma", "Herda do time", "Concedido ao perfil", "Órfãs", "Flamengo Operations"])
       expect(html.toLowerCase()).toContain(label.toLowerCase())
+    for (const role of ["domain leader", "budget owner", "supplier admin", "requester", "buyer", "approver"])
+      expect(html).toContain(role)
+    expect(html).not.toContain('value="superuser"')
     expect(html).toContain("data-sf-admin-access=\"supreme\"")
     expect(html).not.toContain("synthetic-access-")
     expect(html).not.toContain("synthetic-refresh-")
@@ -248,4 +251,34 @@ test("mounted form applies role/grant CAS to private installation store, rejects
     !["GET", "POST"].includes(entry.method))).toHaveLength(0)
   expect(f.provider.requests.some((entry) => entry.url.startsWith("https://graph.microsoft.com/v1.0/groups/") &&
     entry.method !== "GET")).toBe(false)
+})
+
+
+test("orphan direct grants remain visible and revocable only by a supreme administrator", async () => {
+  const f = await fixture()
+  const daniel = await f.login(oid)
+  const caio = await f.login(persons.Caio)
+  const orphanId = "ffffffff-ffff-4fff-8fff-ffffffffffff"
+  await f.store.transaction("dashboard", async (snapshot) => {
+    snapshot.data.sfAdminGrants = [{ principalRef: orphanId, namespaces: ["preferences"], operations: [], humanActions: [] }]
+    return { commit: true, value: undefined }
+  })
+  const html = await (await f.get(daniel)).text()
+  expect(html).toContain('data-orphans')
+  expect(html).toContain(orphanId)
+  expect(html).toContain("Revogar grant órfão")
+  expect((await f.post(caio, new URLSearchParams({
+    action: "remove-grant", principalRef: orphanId, version: "0",
+  }))).status).toBe(403)
+  const revoked = await f.post(daniel, new URLSearchParams({
+    action: "remove-grant", principalRef: orphanId, version: "0",
+  }))
+  expect(revoked.status).toBe(303)
+  const persisted = await f.store.transaction("dashboard", async (snapshot) => ({
+    commit: false, value: { grants: snapshot.data.sfAdminGrants, audit: snapshot.audit },
+  }))
+  expect(persisted.grants).toEqual([])
+  expect(persisted.audit.some((entry) => entry.who === oid && entry.record === "sf:access-admin:grant:" + orphanId &&
+    entry.became === null)).toBe(true)
+  expect((await (await f.get(daniel)).text()).toContain("Nenhum grant órfão identificado")
 })
