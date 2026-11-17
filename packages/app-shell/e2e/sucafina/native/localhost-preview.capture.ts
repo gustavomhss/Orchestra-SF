@@ -50,6 +50,15 @@ try {
     }, { server: base, directory, scheme })
     for (const visit of cases) {
       const page = await context.newPage()
+      const diagnostics: string[] = []
+      page.on("pageerror", (error) => diagnostics.push("pageerror " + error.name + ": " + error.message.slice(0, 180)))
+      page.on("requestfailed", (request) => diagnostics.push("requestfailed " + new URL(request.url()).pathname + " " + String(request.failure()?.errorText ?? "")))
+      page.on("response", (response) => {
+        if (response.status() >= 400) diagnostics.push("HTTP " + response.status() + " " + new URL(response.url()).pathname)
+      })
+      page.on("console", (message) => {
+        if (message.type() === "error") diagnostics.push("console-error " + message.text().slice(0, 160))
+      })
       try {
         const url = base + visit.route + "?auth_token=" + encodeURIComponent(token)
         const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30_000 })
@@ -70,10 +79,21 @@ try {
         console.log("SF_VISUAL_CAPTURE_OK " + visit.id + " " + scheme)
       } catch (failure) {
         const text = await page.locator("body").innerText().catch(() => "")
-        // Avoid reporting private URLs, tokens, cookies and other credentials.
-        console.error("SF_VISUAL_CAPTURE_FAILED " + visit.id + " " + scheme +
-          " nativeFrames=" + await page.locator('[data-sf-frame="page"]').count() +
-          " visibleWords=" + text.replace(/[a-f0-9]{32,}/gi, "[redacted]").slice(0, 350))
+        const facts = await page.evaluate(() => ({
+          readyState: document.readyState,
+          appLoading: document.querySelectorAll("[data-app-loading]").length,
+          rootChildCount: document.getElementById("root")?.childElementCount ?? null,
+          scriptCount: document.scripts.length,
+          nativeFrameCount: document.querySelectorAll('[data-sf-frame="page"]').length,
+        })).catch(() => null)
+        const clean = (value: string) => value
+          .replace(/auth_token=[^&\\s]+/gi, "auth_token=[redacted]")
+          .replace(/[a-f0-9]{32,}/gi, "[redacted]")
+        const report = { status: "FAILED_NATIVE_FRAME_NOT_MOUNTED", sourceSHA: process.env.GITHUB_SHA,
+          chapter: visit.id, scheme, facts, text: clean(text).slice(0, 350), diagnostics: diagnostics.map(clean).slice(-50) }
+        console.error("SF_VISUAL_CAPTURE_DIAGNOSTIC " + JSON.stringify(report))
+        await writeFile(path.join(out, "FAILED-" + visit.id + "-" + scheme + ".json"), JSON.stringify(report, null, 2) + "\\n")
+        await page.screenshot({ path: path.join(out, "FAILED-" + visit.id + "-" + scheme + ".png"), animations: "disabled" }).catch(() => undefined)
         throw new Error("SF_VISUAL_NATIVE_FRAME_OR_IDENTITY_UNAVAILABLE_" + visit.id + "_" + scheme)
       } finally { await page.close() }
     }
