@@ -1,10 +1,8 @@
 // Pure request/report rules shared by the uploader, snapshot runner and cache-scoped controls.
 // Each key is also a ci-run-<os>-* branch prefix that test-ci.yml maps to the same runners.
-// Extension: linux-arm64 adds native distribution qualification on exactly ubuntu-24.04-arm; existing selectors keep their runners.
+// SF deploys to Azure Linux x86_64: other systems are rejected before snapshots are sent.
 export const systems = {
-  linux: ["ubuntu-24.04"], windows: ["windows-latest"], both: ["ubuntu-24.04", "windows-latest"],
-  macos: ["macos-14"], "macos-intel": ["macos-15-intel"], all: ["ubuntu-24.04", "windows-latest", "macos-14"],
-  "linux-arm64": ["ubuntu-24.04-arm"],
+  linux: ["ubuntu-24.04"],
 }
 // Variables a run may set (--env), and the only values they may take. test-ci.yml checks the same. The omni flag takes
 // only its two omni states: "0" (legacy rollback) turns the omni positive control off, and any other value is invalid,

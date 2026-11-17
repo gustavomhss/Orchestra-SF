@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "product": "Orchestra-SF",
+  "target": {
+    "cloud": "Azure",
+    "compute": "Linux virtual machine",
+    "os": "Linux",
+    "arch": "X64",
+    "runtime": "Bun + SF Web",
+    "webOrigin": "REQUIRES_ACTUAL_DEPLOYMENT"
+  },
+  "candidateSource": "close-final-candidate",
+  "cloudFoundation": {
+    "branch": "azure-hardening",
+    "sha": "22d8da9948810562deed2b051d4903d80d6f2370",
+    "mergedIntoCandidate": false,
+    "foundationIsApplication": false
+  },
+  "activation": {
+    "status": "BLOCKED",
+    "blockingReasons": [
+      "No verified application artifact-to-Azure activation boundary",
+      "No staging equivalent to the destination with a validated host and authenticated origin",
+      "No exact candidate SHA and artifact digest deployed and attested",
+      "No authorized Entra/OIDC, revocation, storage, migration, or rollback runtime proof",
+      "AM01-AM06 and three final independent reviews must be verified against the same frozen candidate"
+    ]
+  },
+  "safety": {
+    "doNotDisableEpic": true,
+    "doNotChangeRequiredChecks": true,
+    "doNotDeployOrClaimGoLive": true
+  }
+}

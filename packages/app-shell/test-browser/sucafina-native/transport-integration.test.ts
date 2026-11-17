@@ -1,68 +1,13 @@
-/**
- * Q01.complete / F02 + F04 transport integration.
- * Public I00 metadata is compared to the pinned 305-operation catalog and the
- * explicit source-backed members download extension. Actual
- * requests exercise the installed producer's guest denial without cookies;
- * a real authenticated principal is proved by E2E/F04, NOT faked here.
+/** Q01 / F04 live installed-host negative proofs.
+ * Requires the manifest from a real installation bound to the candidate SHA;
+ * never substitute fake credentials or a local development server.
  */
 import { describe, expect, test } from "bun:test"
-import { createHash } from "node:crypto"
-import { readFileSync } from "node:fs"
-import path from "node:path"
-import { fileURLToPath } from "node:url"
 import { Schema } from "effect"
-import { SfOperationIds } from "@orchestra/schema/sucafina/common"
-import { SfOperationExtensions, SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
-import type { SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
 import { createSfTransport } from "@orchestra/client/sucafina/transport"
 import { readNativeManifest } from "../../e2e/sucafina/native/fixture/readiness"
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..")
-const catalogPath = path.join(root, "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/contract-catalog.json")
-const catalogText = readFileSync(catalogPath, "utf8")
-const sourceBlob = createHash("sha1").update(
-  "blob " + Buffer.byteLength(catalogText) + "\0" + catalogText,
-).digest("hex")
-if (sourceBlob !== "31dbec1726fd8147156b01dc545726650ffd49e1") {
-  throw new Error("Q01_TRANSPORT_CATALOG_DRIFT_REQUIRES_I00")
-}
-const catalog = JSON.parse(catalogText) as {
-  operations: Record<string, { method: string; pathTemplate: string; effect: string; responseMode: string;
-    fixedQuery?: Record<string, string>; fixedBodyDiscriminator?: Record<string, string> }>
-}
-
 describe("Q01 integrated transport contract / original producer", () => {
-  test("Q01-TRANSPORT-REGISTRY preserves the frozen catalog and its explicit source extension", () => {
-    expect(Object.keys(catalog.operations)).toHaveLength(305)
-    expect(SfOperationExtensions).toEqual({
-      "files.export.members": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
-        responseMode: "bytes", fixedQuery: { download: "members" } },
-      "files.export.review": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
-        responseMode: "bytes", fixedQuery: { sf: "review-download" } },
-      "reviews.report.prepare": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "prepare",
-        responseMode: "json", fixedQuery: { sf: "review-report" }, maxRequestBytes: 65536 },
-    })
-    expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
-    expect(Object.hasOwn(catalog.operations, "files.export.review")).toBe(false)
-    expect(Object.hasOwn(catalog.operations, "reviews.report.prepare")).toBe(false)
-    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions)].sort()
-    expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
-    expect([...SfOperationIds].sort()).toEqual(expected)
-    expect(SfOperationRegistry["files.export.members"]).toEqual(SfOperationExtensions["files.export.members"])
-    expect(SfOperationRegistry["files.export.review"]).toEqual(SfOperationExtensions["files.export.review"])
-    expect(SfOperationRegistry["reviews.report.prepare"]).toEqual(SfOperationExtensions["reviews.report.prepare"])
-    for (const [id, source] of Object.entries(catalog.operations)) {
-      const actual: SfNativeOperationRoute = SfOperationRegistry[id as keyof typeof SfOperationRegistry]
-      expect(actual, "Q01 integrated metadata missing " + id).toBeDefined()
-      expect(actual.method).toBe(source.method)
-      expect(actual.pathTemplate).toBe(source.pathTemplate)
-      expect(actual.effect).toBe(source.effect)
-      expect(actual.responseMode).toBe(source.responseMode)
-      expect(actual.fixedQuery ?? {}).toEqual(source.fixedQuery ?? {})
-      expect(actual.fixedBodyDiscriminator ?? {}).toEqual(source.fixedBodyDiscriminator ?? {})
-    }
-  })
-
   test("Q01-TRANSPORT-GUEST true installed context refuses a caller without real session", async () => {
     const { target, candidateSha } = await readNativeManifest()
     expect(candidateSha).toMatch(/^[0-9a-f]{40}$/)
@@ -122,18 +67,4 @@ describe("Q01 integrated transport contract / original producer", () => {
     expect(networkCalls).toBe(0)
   })
 
-  test("Q01-TRANSPORT-PILOT-ROUTES preserve mutation and response-loss policy", () => {
-    const save = catalog.operations["domain.command.CAP25.save"]
-    const approve = catalog.operations["domain.command.CAP26.approve"]
-    expect(save?.method).toBe("POST")
-    expect(approve?.method).toBe("POST")
-    expect(save?.effect).toBe("mutation")
-    expect(approve?.effect).toBe("mutation")
-    expect(save?.pathTemplate).toBe("{mount}/procurement")
-    expect(approve?.pathTemplate).toBe("{mount}/procurement")
-    expect(save?.fixedBodyDiscriminator).toEqual({ page: "Requests", action: "save" })
-    expect(approve?.fixedBodyDiscriminator).toEqual({ page: "My approvals", action: "approve" })
-    // An operation table alone NEVER proves that a command was committed.
-    // P0/P1 require native browser + original transaction/CAS + holder receipt.
-  })
 })

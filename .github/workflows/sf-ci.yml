@@ -1,0 +1,419 @@
+name: sf-ci
+
+# SF product CI only. Legacy sf2-epic stays intact until this candidate is
+# independently validated and required checks are explicitly migrated.
+on:
+  pull_request:
+    branches: [close-final-candidate, go-live-close]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf-ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  preflight:
+    name: sf/preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Require exact checkout and Linux x64
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux
+          test "$RUNNER_ARCH" = X64
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          node script/sf-ci/gate.mjs manifest
+          node --test script/sf-ci/gate.test.mjs
+      - uses: ./.github/actions/setup-bun
+      - name: Verify Linux-only surgical runner contract independently of product typechecks
+        env:
+          ORCHESTRA_OMNI_CONTROL: declared
+        run: |
+          set -euo pipefail
+          (cd packages/core && bun test test/test-ci-request.test.ts)
+
+  static:
+    name: sf/static-and-contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+
+      - name: Verify generated business boundaries (generation and clean tree)
+        run: |
+          set -euo pipefail
+          # Do not replace the historical generator execution with check-only.
+          (cd modules/atlas/boundary && bun run check:generated && bun run generate && git diff --exit-code -- .)
+          (cd packages/client && bun run check:generated)
+
+      - name: Typecheck runtime, host, product and app
+        run: |
+          set -euo pipefail
+          (cd modules/atlas/boundary && bun run typecheck)
+          (cd modules/sucafina && bun run typecheck)
+          (cd packages/core && bun run typecheck)
+          (cd packages/server && bun run typecheck)
+          (cd packages/client && bun run typecheck)
+          (cd apps/cli && bun run typecheck)
+          (cd packages/app-shell && bun run typecheck)
+      - name: Prove Sucafina E2E compiler inclusion even after another typecheck RED
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$GITHUB_WORKSPACE/sf-e2e-typecheck-evidence"
+          mkdir -p "$evidence"
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          export SF_PRODUCT_TREE="$(git rev-parse 'HEAD^{tree}')"
+          bun --version > "$evidence/bun-version.txt"
+          cd packages/app-shell
+          set +e
+          bun run typecheck:sf-e2e --showConfig > "$evidence/effective-config.json" 2> "$evidence/config.stderr.log"
+          config_status=$?
+          bun run typecheck:sf-e2e --listFiles --pretty false > "$evidence/typecheck.log" 2>&1
+          typecheck_status=$?
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          set +e
+          node script/sf2h/final-bundle/verify-e2e-typecheck.mjs \
+            --config "$evidence/effective-config.json" \
+            --log "$evidence/typecheck.log" \
+            --config-status "$config_status" \
+            --typecheck-status "$typecheck_status" \
+            --output "$evidence/inclusion.json"
+          verification_status=$?
+          set -e
+          printf '{"config_status":%d,"typecheck_status":%d,"verification_status":%d}\n' \
+            "$config_status" "$typecheck_status" "$verification_status" > "$evidence/command-statuses.json"
+          sha256sum "$evidence/bun-version.txt" "$evidence/effective-config.json" \
+            "$evidence/config.stderr.log" "$evidence/typecheck.log" > "$evidence/sha256sums.txt"
+          grep -E 'error TS[0-9]+:' "$evidence/typecheck.log" || true
+          test "$config_status" -eq 0 && test "$typecheck_status" -eq 0 && test "$verification_status" -eq 0
+      - name: Publish E2E compiler inclusion proof (including RED evidence)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-e2e-inclusion-${{ github.sha }}-${{ github.run_attempt }}
+          path: sf-e2e-typecheck-evidence
+          if-no-files-found: error
+          retention-days: 14
+      - name: Verify Linux web production build
+        run: (cd apps/web && bun run build)
+
+      - name: Security and dependency guards with both original and PR bases
+        if: ${{ !cancelled() }}
+        env:
+          SF_PR_BASE: ${{ github.event.pull_request.base.sha }}
+          GH_READ_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          mkdir -p guard-evidence
+          # checkout has persist-credentials:false; the read-only token exists
+          # only for this fetch and is never saved in git config or artifacts.
+          auth="$(printf 'x-access-token:%s' "$GH_READ_TOKEN" | base64 -w0)"
+          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+            GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+            git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev
+          if [ -z "$SF_PR_BASE" ]; then
+            GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+              GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+              git fetch --no-tags origin +refs/heads/close-final-candidate:refs/remotes/origin/close-final-candidate
+            SF_PR_BASE="$(git rev-parse refs/remotes/origin/close-final-candidate)"
+          fi
+          unset auth GH_READ_TOKEN
+          git cat-file -e "$SF_PR_BASE^{commit}"
+          dev_sha="$(git rev-parse 'origin/dev^{commit}')"
+          test -n "$dev_sha"
+          set +e
+          bun run check:spawn-imports > guard-evidence/spawn.log 2>&1
+          spawn_status=$?
+          bun run check:guards --base origin/dev > guard-evidence/guard-dev.log 2>&1
+          dev_status=$?
+          bun run check:guards --base "$SF_PR_BASE" > guard-evidence/guard-pr-base.log 2>&1
+          pr_status=$?
+          set -e
+          SF_GUARD_DEV_SHA="$dev_sha" SF_GUARD_PR_SHA="$SF_PR_BASE" \
+          SF_SPAWN_STATUS="$spawn_status" SF_GUARD_DEV_STATUS="$dev_status" SF_GUARD_PR_STATUS="$pr_status" \
+            node --input-type=module -e '
+              import { writeFileSync } from "node:fs"
+              import { execFileSync } from "node:child_process"
+              const sha = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
+              const tree = execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()
+              if (sha !== process.env.GITHUB_SHA) process.exit(2)
+              const receipt = {
+                schema: "sf-ci-guard-bases-v1", candidate: sha, tree,
+                run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+                runner_os: process.env.RUNNER_OS, runner_arch: process.env.RUNNER_ARCH,
+                canonical_base: process.env.SF_GUARD_DEV_SHA,
+                pr_base: process.env.SF_GUARD_PR_SHA,
+                commands: [
+                  { command: "bun run check:spawn-imports", status: Number(process.env.SF_SPAWN_STATUS) },
+                  { command: "bun run check:guards --base origin/dev", status: Number(process.env.SF_GUARD_DEV_STATUS) },
+                  { command: "bun run check:guards --base <PR base SHA>", status: Number(process.env.SF_GUARD_PR_STATUS) },
+                ],
+              }
+              writeFileSync("guard-evidence/receipt.json", JSON.stringify(receipt, null, 2) + "\n")
+            '
+          sha256sum guard-evidence/{spawn,guard-dev,guard-pr-base}.log guard-evidence/receipt.json \
+            > guard-evidence/sha256sums.txt
+          printf 'guards canonical dev=%s status=%s; PR base=%s status=%s; spawn=%s\n' \
+            "$dev_sha" "$dev_status" "$SF_PR_BASE" "$pr_status" "$spawn_status"
+          test "$spawn_status" -eq 0 && test "$dev_status" -eq 0 && test "$pr_status" -eq 0
+      - name: Publish independent guard-base evidence (including RED)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-guard-bases-${{ github.sha }}-${{ github.run_attempt }}
+          path: guard-evidence
+          if-no-files-found: error
+          retention-days: 14
+  omni:
+    name: sf/linux-native-omni
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/omni-binaries
+      - name: Require actual Linux binary artifacts
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test -s "$HUGR_OMNI_ADDON"
+          test -x "$HUGR_OMNI_SUPERVISOR"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-omni-linux-${{ github.sha }}
+          path: |
+            ${{ env.HUGR_OMNI_ADDON }}
+            ${{ env.HUGR_OMNI_SUPERVISOR }}
+          if-no-files-found: error
+          retention-days: 3
+
+  unit:
+    name: sf/test-${{ matrix.id }}
+    needs: [omni]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        id: [CI-SF, CI-CLI, CI-APP-SRC, CI-APP-BROWSER, CI-ATLAS-BUSINESS]
+    env:
+      SF_SUITE_ID: ${{ matrix.id }}
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+        with:
+          artifact: sf-omni-linux-${{ github.sha }}
+      - name: Execute exact manifest-selected Bun files
+        shell: bash
+        env:
+          # The canonical Actions Bun runner uses this sentry; CI=true remains enforced.
+          GITHUB_ACTIONS: "false"
+        run: |
+          set -euo pipefail
+          root="$GITHUB_WORKSPACE"
+          evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
+          mkdir -p "$evidence"
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+
+          # A2 gate validates and selects every test in the admitted manifest suite.
+          # Release-only exclusions are applied there; YAML adds no paths or ignores.
+          node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
+          mapfile -t files < "$evidence/selection.txt"
+          test "${#files[@]}" -gt 0 || exit 2
+
+          # Selection paths are relative to the manifest's suite.directory.
+          suite_dir="$(node --input-type=module -e '
+            import { readFileSync } from "node:fs"
+            import { validateManifest } from "./script/sf-ci/gate.mjs"
+            const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))
+            const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "bun")
+            if (!suite) throw new Error("SF_CI_UNKNOWN_BUN_SUITE")
+            process.stdout.write(suite.directory)
+          ')"
+          test -f "$root/$suite_dir/package.json"
+          cd "$root/$suite_dir"
+          set +e
+          {
+            case "$SF_SUITE_ID" in
+              CI-SF)
+                bun test --timeout 30000 --bail=5 \
+                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                ;;
+              CI-CLI)
+                bun test --timeout 30000 --reporter=junit \
+                  "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                ;;
+              CI-APP-SRC)
+                # Preserve the existing app-shell test:unit runtime/preload flags.
+                bun test --conditions=solid --only-failures --preload ./happydom.ts \
+                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                ;;
+              CI-APP-BROWSER)
+                # Installed-host live F04 proofs are release-owned, never faked in CI.
+                ORCHESTRA_OMNI_CONTROL=declared bun test --conditions=browser \
+                  --preload ../../script/test-omni-control.ts --preload ./happydom.ts \
+                  --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                ;;
+              CI-ATLAS-BUSINESS)
+                # Generated files are checked independently by static.
+                bun test --timeout 30000 --reporter=junit \
+                  "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                ;;
+              *) echo "Unknown suite: $SF_SUITE_ID" >&2; exit 2 ;;
+            esac
+          } 2>&1 | tee "$evidence/run.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          test "$status" -eq 0
+          cd "$root"
+          python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
+          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Publish only valid summary and receipt for a clean run
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-evidence-${{ matrix.id }}
+          path: |
+            sf-ci-evidence/${{ matrix.id }}/summary.json
+            sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+  ui:
+    name: sf/test-${{ matrix.id }}
+    needs: [omni]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        id: [CI-UI-OPERATIONS, CI-UI-DECISIONS, CI-UI-REPORTS]
+    env:
+      SF_SUITE_ID: ${{ matrix.id }}
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+      PLAYWRIGHT_WORKERS: "1"
+      PLAYWRIGHT_NO_VIDEO: "1"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+        with:
+          artifact: sf-omni-linux-${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Install Chromium for Linux only
+        working-directory: packages/app-shell
+        run: bunx playwright install --with-deps chromium
+      - name: Run installed SF UI journey
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$GITHUB_WORKSPACE"
+          evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
+          mkdir -p "$evidence"
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+
+          # UI spec comes exclusively from the same A2 selector as Bun suites.
+          node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
+          mapfile -t files < "$evidence/selection.txt"
+          test "${#files[@]}" -eq 1 || exit 2
+          suite_dir="$(node --input-type=module -e '
+            import { readFileSync } from "node:fs"
+            import { validateManifest } from "./script/sf-ci/gate.mjs"
+            const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))
+            const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "playwright")
+            if (!suite) throw new Error("SF_CI_UNKNOWN_UI_SUITE")
+            process.stdout.write(suite.directory)
+          ')"
+          test -f "$root/$suite_dir/${files[0]}"
+          export PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.json"
+          cd "$root/$suite_dir"
+          set +e
+          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line 2>&1 | tee "$evidence/run.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          test "$status" -eq 0
+          cd "$root"
+          node script/sf-ci/gate.mjs sanitize-playwright
+          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Publish only minimized JSON and receipt for a clean run
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-evidence-${{ matrix.id }}
+          path: |
+            sf-ci-evidence/${{ matrix.id }}/report.json
+            sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+  verify:
+    name: sf/verify
+    if: always()
+    needs: [preflight, static, omni, unit, ui]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Diagnose upstream gates before downloading suite artifacts
+        env:
+          SF_NEEDS_JSON: ${{ toJSON(needs) }}
+        run: node script/sf-ci/gate.mjs precheck
+      - name: Collect all eight exact results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: sf-evidence-*
+          path: sf-ci-collected
+          merge-multiple: false
+      - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA
+        env:
+          SF_NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+          node script/sf-ci/gate.mjs verify

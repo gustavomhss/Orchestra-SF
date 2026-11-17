@@ -1,0 +1,45 @@
+name: sf-release
+
+# Intentionally NOT an application deployment until the Azure foundation and
+# installed-app activation are integrated. No OIDC, no secrets and no PR code.
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Exact 40-character commit SHA of the SF product candidate
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    name: sf/release-blocked-until-azure-is-real
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Validate explicit candidate SHA
+        env:
+          CANDIDATE: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$CANDIDATE" =~ ^[a-f0-9]{40}$ ]] || { echo "::error::Exact candidate SHA required"; exit 1; }
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          persist-credentials: false
+      - name: Confirm release-only proofs remain owned, not waived
+        run: |
+          set -euo pipefail
+          test -f modules/sucafina/Sucafinav1/test/parity-pitr.test.ts
+          test -f packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts
+      - name: Refuse unqualified deployment
+        env:
+          CANDIDATE: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux
+          test "$RUNNER_ARCH" = X64
+          test "$(git rev-parse HEAD)" = "$CANDIDATE"
+          node -e 'const t=require("./sf/release-target.json"); if(t.activation.status !== "BLOCKED") { console.error("::error::Unreviewed Azure release-target status"); process.exit(1) } console.error("::error::AZURE_APP_ACTIVATION_NOT_COMPOSED: the approved VM foundation is not an installed application; no deployment or readiness asserted"); process.exit(1)'
