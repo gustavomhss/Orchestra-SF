@@ -263,6 +263,19 @@ test("Q01 two pure contracts remain in the PR suite while three F04 proofs stay 
 test("zero product tests fail", () => {
   assert.throws(() => countBunReport(JSON.stringify({ status: "PASS", counts: { product_executed: 0, failures: 0, errors: 0, skipped: 0 } })))
 })
+test("Playwright testDir-relative file binds to exact manifest-selected spec without suffix bypass", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
+  const actual = JSON.parse(playwright(suite).toString("utf8"))
+  actual.suites[0].file = suite.specFile.slice("e2e/".length)
+  const received = JSON.stringify(actual)
+  assert.equal(countPlaywrightReport(received, suite.specFile), 1)
+  const minimized = minimalPlaywrightEvidence(received, suite.specFile)
+  assert.deepEqual(playwrightCoverageIdentity(minimized, suite.specFile).files, [suite.specFile])
+  for (const changedPath of ["sucafina/decisions.spec.ts", "other/sucafina/operations.spec.ts", "../sucafina/operations.spec.ts"]) {
+    actual.suites[0].file = changedPath
+    assert.throws(() => countPlaywrightReport(JSON.stringify(actual), suite.specFile), /SF_CI_FAIL_CLOSED/)
+  }
+})
 test("playwright requires the exact requested spec and one clean execution", () => {
   const suite = manifest.suites[5]
   assert.equal(countPlaywrightReport(playwright(suite).toString(), suite.specFile), 1)
