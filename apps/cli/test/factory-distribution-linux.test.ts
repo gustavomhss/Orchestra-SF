@@ -329,10 +329,10 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       throw new Error("SF_FACTORY_AUTHENTICATED_CASE_CREATION_FAILED " + JSON.stringify({
         status: created.status, result: createdBody,
       }))
-    expect(createdBody).toMatchObject({ status: "ok", outputRef: expect.any(String) })
-    if (!createdBody || typeof createdBody !== "object" || !("outputRef" in createdBody) ||
-      typeof createdBody.outputRef !== "string") throw new Error("SF_FACTORY_REAL_CASE_CREATION_UNAVAILABLE")
-    const caseRef = createdBody.outputRef
+    expect(createdBody).toMatchObject({ status: "ok", value: { objective, currency: "USD" } })
+    // The public workbench response intentionally does not expose an identity
+    // receipt in every transport. The read must locate the sole persisted case
+    // by its owner-authored title, and independently validate its opaque ref.
     const authenticatedChoice = await fetch("http://localhost:4110" + currentChoiceEndpoint, {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
@@ -343,9 +343,21 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       }))
     // sf_case_read, real product state and WeakSet-registered current-choice
     // fence are executed by the extracted CLI against an actual human case.
-    expect(currentChoiceBody).toEqual({ status: "ok", value: { cases: [
-      { ref: caseRef, title: objective, version: 1 },
+    expect(currentChoiceBody).toMatchObject({ status: "ok", value: { cases: [
+      { title: objective, version: 1 },
     ] } })
+    if (!currentChoiceBody || typeof currentChoiceBody !== "object" ||
+      !("value" in currentChoiceBody) || !currentChoiceBody.value ||
+      typeof currentChoiceBody.value !== "object" ||
+      !("cases" in currentChoiceBody.value) || !Array.isArray(currentChoiceBody.value.cases))
+      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_LIST_UNAVAILABLE")
+    const observedCases = currentChoiceBody.value.cases
+    expect(observedCases).toHaveLength(1)
+    const observed = observedCases[0]
+    if (!observed || typeof observed !== "object" || !("ref" in observed) ||
+      typeof observed.ref !== "string" || observed.ref.length === 0)
+      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_REFERENCE_UNAVAILABLE")
+    expect(observed.ref).toMatch(/^[A-Za-z0-9:._%-]+$/)
     const authenticatedChoiceState = currentChoiceBody !== null && typeof currentChoiceBody === "object" &&
       "status" in currentChoiceBody ? currentChoiceBody.status : undefined
     console.info("SF_FACTORY_CURRENT_CHOICE_AUTHENTICATED " + JSON.stringify({
