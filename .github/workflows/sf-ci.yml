@@ -249,9 +249,9 @@ jobs:
 
           # A2 gate validates and selects every test in the admitted manifest suite.
           # Release-only exclusions are applied there; YAML adds no paths or ignores.
-          node script/sf-ci/gate.mjs select > "$evidence/selection.txt"
+          node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
           mapfile -t files < "$evidence/selection.txt"
-          test "${#files[@]}" -gt 0
+          test "${#files[@]}" -gt 0 || exit 2
 
           # Selection paths are relative to the manifest's suite.directory.
           suite_dir="$(node --input-type=module -e '
@@ -271,7 +271,7 @@ jobs:
                 bun test --timeout 30000 --bail=5 \
                   --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
-              CI-CLI|CI-ATLAS-BUSINESS)
+              CI-CLI)
                 bun test --timeout 30000 --reporter=junit \
                   "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
@@ -285,6 +285,11 @@ jobs:
                 ORCHESTRA_OMNI_CONTROL=declared bun test --conditions=browser \
                   --preload ../../script/test-omni-control.ts --preload ./happydom.ts \
                   --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                ;;
+              CI-ATLAS-BUSINESS)
+                # Generated files are checked independently by static.
+                bun test --timeout 30000 --reporter=junit \
+                  "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               *) echo "Unknown suite: $SF_SUITE_ID" >&2; exit 2 ;;
             esac
@@ -348,10 +353,9 @@ jobs:
           export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
 
           # UI spec comes exclusively from the same A2 selector as Bun suites.
-          node script/sf-ci/gate.mjs select > "$evidence/selection.txt"
-          mapfile -t specs < "$evidence/selection.txt"
-          test "${#specs[@]}" -eq 1
-          SF_SPEC="${specs[0]}"
+          node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
+          mapfile -t files < "$evidence/selection.txt"
+          test "${#files[@]}" -eq 1 || exit 2
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
@@ -360,11 +364,11 @@ jobs:
             if (!suite) throw new Error("SF_CI_UNKNOWN_UI_SUITE")
             process.stdout.write(suite.directory)
           ')"
-          test -f "$root/$suite_dir/$SF_SPEC"
+          test -f "$root/$suite_dir/${files[0]}"
           export PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.json"
           cd "$root/$suite_dir"
           set +e
-          bun run test:e2e:local "$SF_SPEC" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line 2>&1 | tee "$evidence/run.log"
+          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
           test "$status" -eq 0
