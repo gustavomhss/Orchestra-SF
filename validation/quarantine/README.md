@@ -7,8 +7,8 @@
 
 Os `package.json` conservados identificam `@humanguardrail/cli-linux-x64-baseline` 1.18.27 e `sfFactory: bin/local/entry.mjs`. A versão `preview-896fc974` foi **reportada** como a única servida na VM, mas o go-live requer Orchestra Web com módulo Sucafina nativo. As ocorrências abaixo foram reportadas nessa release:
 
-- Bug de **perda de estado no formulário de import OPEX** (datas, arquivo e destino zerados no re-render) — corrigido no PR #300 (fora deste build);
-- **Fila de procurement devolvendo 503** `procurement-queue-unavailable` em instalação vazia/recem-empacotada — correção no PR #303;
+- Bug de **perda de estado no formulário de import OPEX** (datas, arquivo e destino zerados no re-render) — correção proposta no PR draft #300, não verificada neste tar;
+- **Fila de procurement devolvendo 503** `procurement-queue-unavailable` em instalação vazia/recem-empacotada — correção proposta no PR draft #303, não verificada neste tar;
 - Falhas de CI de base foram reportadas, inclusive `sf/test-CI-SF`; não há prova de que se manifestem igualmente nos quatro tars.
 - Superfície visual errada para o go-live (não é a identidade Orchestra ambicionada).
 
@@ -20,7 +20,7 @@ Os manifestos no repositório são distintos, mas não demonstram sua origem. A 
 |---|---|---|---|
 | `preview-2dcbafcf/` | `preview-2dcbafcf-quarantine.tar.gz` | `732b443aef4819d7…` | build embrionária (234M) |
 | `preview-53f20783/` | `preview-53f20783-quarantine.tar.gz` | `cb211181e8ed65ec…` | build intermediária (230M) |
-| `preview-896fc974/` | `preview-896fc974-quarantine.tar.gz` | `afdc14ae826fd06c…` | **a que estava no ar** (230M) |
+| `preview-896fc974/` | `preview-896fc974-quarantine.tar.gz` | `afdc14ae826fd06c…` | **reportada como a última servida** (230M) |
 | `staging-591424661c/` | `staging-591424661c-quarantine.tar.gz` | `299510e2630affb3…` | build mais antiga 1.18.27 (230M) |
 
 Os hashes e tamanhos abaixo são os valores **declarados** pelo arquivo `SHA256SUMS.txt` e ponteiros LFS. A alegada medição original na VM e conferência após download ainda exigem recibos de origem independentes.
