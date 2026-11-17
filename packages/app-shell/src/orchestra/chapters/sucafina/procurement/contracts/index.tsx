@@ -11,6 +11,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
 import { SfBoundAssets } from "../../shared/attachments/bound-assets"
+import { SfContractRequestLinks } from "./request-links"
 import type { SfDraftState } from "../../shared/draft"
 import { SF_U15_COPY } from "@/i18n/orchestra-chapters/sf-u15"
 import {
@@ -530,7 +531,14 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                           onReconcile={refresh} />}
                       </Show>
                     </section>
-                    <section><h3>{t("sf.u15.link")}</h3><p>{t("sf.u15.unavailableLink")}</p></section>
+                    <section>
+                      <h3>{t("sf.u15.link")}</h3>
+                      <Show when={assetTarget()} fallback={<p>{t("sf.u15.unavailableLink")}</p>}>
+                        {(target) => <SfContractRequestLinks contractRef={target().ref}
+                          contractVersion={target().version} routeHref={props.route.href}
+                          disabled={view.sending || view.outcomeUnknown || !!view.reviewing || !sourceAvailable()} />}
+                      </Show>
+                    </section>
                     <Show when={actionAllowed("delete") && currentVersion() !== undefined}>
                       <button type="button" class="mx-btn danger"
                         disabled={view.sending || view.outcomeUnknown}
