@@ -5,6 +5,7 @@ import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { createSfOwnerDrafts } from "./drafts"
 import { createSfTodayResumePort, type SfCurrentResumeOwner } from "../navigation-state/resume"
+import { sfExecutiveLinkAllowed, sfExecutiveLinkMatches, sfExecutiveLinkRequest, sfExecutiveRevalidateRef } from "../cross-links"
 import type {
   SfContext, SfContextHandle, SfContextProviderProps, SfContextState,
   SfOwnerIdentity, SfSurfaceProps,
@@ -260,6 +261,43 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   }
   const navigation = props.dependencies.navigation
   const resumePort = navigation ? createSfTodayResumePort(navigation, currentResumeOwner) : undefined
+  const followExecutiveLink: NonNullable<SfContextHandle["followExecutiveLink"]> = async (from, target) => {
+    const state = store.state
+    const active = store.active
+    const generation = store.generation
+    if (!navigation || state.status !== "ready" || !active ||
+        active.drafts.state() !== "active") return "denied"
+    const destination = sfExecutiveLinkRequest(from, target)
+    if (!destination) return "invalid-link"
+    const selection = from.ownerSelection
+    const stillSource = () => {
+      const latest = store.state
+      return !disposed && store.generation === generation && latest.status === "ready" &&
+        latest.ownerKey === state.ownerKey && store.active === active &&
+        latest.context.stamp.accessRevision === state.context.stamp.accessRevision &&
+        latest.context.stamp.policyVersion === state.context.stamp.policyVersion &&
+        latest.selection.serverKey === selection.serverKey &&
+        latest.selection.projectId === selection.projectId &&
+        latest.selection.installationId === selection.installationId &&
+        latest.context.stamp.projectId === selection.projectId &&
+        latest.context.stamp.installationId === selection.installationId &&
+        active.drafts.state() === "active"
+    }
+    if (!stillSource() || !sfExecutiveLinkAllowed(active.context, target)) return "denied"
+    const result = await navigation.requestNativeTransition(destination, "link", {
+      expectedOwnerKey: state.ownerKey,
+      admit: (resolved) => stillSource() &&
+        resolved.ownerSelection.serverKey === selection.serverKey &&
+        resolved.ownerSelection.projectId === selection.projectId &&
+        resolved.ownerSelection.installationId === selection.installationId &&
+        sfExecutiveLinkMatches(resolved, target) &&
+        sfExecutiveLinkAllowed(active.context, target),
+      preCommit: async (_resolved, signal) => stillSource() && !signal.aborted &&
+        await sfExecutiveRevalidateRef(active.transport, from, target, signal) &&
+        stillSource() && sfExecutiveLinkAllowed(active.context, target),
+    })
+    return result.status
+  };
   const handle: SfContextHandle = {
     state: () => store.state,
     generation: () => store.generation,
@@ -272,6 +310,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     },
     reload: () => load(props.selection()),
     invalidate,
+    ...(navigation ? { followExecutiveLink } : {}),
     ...(resumePort ? {
       resumeCase: resumePort.resumeCase,
       claimResumeFocus: (input: Parameters<NonNullable<SfContextHandle["claimResumeFocus"]>>[0]) => {
