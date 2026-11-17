@@ -22,7 +22,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   const limit = options.directoryLimit ?? 10000
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > 10000) throw new Error("Invalid directory limit")
 
-  async function request(url: string, init?: RequestInit, allowMissingManager = false) {
+  async function request(url: string, init?: RequestInit, allowMissingManager = false): Promise<Record<string, unknown>> {
     const signal = AbortSignal.timeout(requestTimeout)
     const aborted = Promise.withResolvers<never>()
     const abort = () => aborted.reject(new Error("Entra provider request timed out"))
@@ -35,7 +35,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     }
   }
 
-  async function readResponse(url: string, signal: AbortSignal, init?: RequestInit, allowMissingManager = false) {
+  async function readResponse(url: string, signal: AbortSignal, init?: RequestInit, allowMissingManager = false): Promise<Record<string, unknown>> {
     const response = await Promise.resolve().then(() => send(new Request(url, { ...init, redirect: "error", signal }))).catch(() => {
       throw new Error("Entra provider request failed")
     })
@@ -155,7 +155,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
       if (!Array.isArray(body.value) || body.value.some((value) => value === null || typeof value !== "object" || Array.isArray(value)) ||
         records.length + body.value.length > maximum)
         throw new Error("Incomplete admin Graph directory")
-      records.push(...body.value as Record<string, unknown>[])
+      records.push(...(body.value as Record<string, unknown>[]))
       if (body["@odata.nextLink"] === undefined) break
       if (typeof body["@odata.nextLink"] !== "string" || !body["@odata.nextLink"])
         throw new Error("Invalid admin Graph nextLink")
