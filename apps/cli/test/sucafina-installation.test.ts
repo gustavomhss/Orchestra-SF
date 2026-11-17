@@ -33,9 +33,8 @@ test("Sucafina mount retains the host fence and leaves neighboring paths unclaim
       expect(response.status).toBe(404)
     }
   } finally { await router.dispose(); await installation.dispose() }
-})
-
-test("installed Sucafina subtree is outside daemon Basic auth while Orchestra API stays protected", async () => {
+  // Independent authorization boundary proof (the product handler never sees daemon credentials).
+  {
   const installation = await loadSfInstallation(fixture, origin)
   const router = HttpRouter.toWebHandler(
     Layer.merge(
@@ -70,4 +69,6 @@ test("installed Sucafina subtree is outside daemon Basic auth while Orchestra AP
     await router.dispose()
     await installation.dispose()
   }
+  }
+
 })
