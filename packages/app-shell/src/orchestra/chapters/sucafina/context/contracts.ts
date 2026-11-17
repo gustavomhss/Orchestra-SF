@@ -7,7 +7,8 @@ import type {
 import type { SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared/draft"
-import type { SfNativeNavigationState } from "../navigation-state"
+import type { SfNativeNavigationState, SfNativeTransitionResult } from "../navigation-state"
+import type { SfExecutiveLink } from "../cross-links"
 import type { SfTodayResumePort } from "../home"
 
 export type {
@@ -94,6 +95,8 @@ export type SfContextHandle = Readonly<{
   reload: () => Promise<void>
   /** Session expiry quarantines for same-owner revalidation; other reasons purge. */
   invalidate: (reason: "logout" | "revoked" | "session-expired" | "owner-changed" | "host-changed") => void
+  /** Canonical source ref -> fresh F01 authorization -> source re-read -> commit. */
+  followExecutiveLink?: (from: SfResolvedRoute, target: SfExecutiveLink) => Promise<SfNativeTransitionResult["status"]>
   /** Only installed with the real F01 navigation; no optimistic fallback. */
   resumeCase?: SfTodayResumePort["resumeCase"]
   /** Consumes an owner/access-scoped returnRef once after Home renders. */
