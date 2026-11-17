@@ -68,11 +68,21 @@ def readcsv(name):
 
 
 def rendercsv(name, fields, rows):
-    buf = io.StringIO(newline="")
-    writer = csv.DictWriter(buf, fieldnames=fields, lineterminator="\n")
-    writer.writeheader()
-    writer.writerows(rows)
     raw = (ROOT / name).read_bytes()
+    old_fields, old_rows = readcsv(name)
+    if old_fields == fields and old_rows == rows:
+        return raw  # keep the V2 presentation/line endings when nothing changed
+    separator = "\r\n" if b"\r\n" in raw else "\n"
+    buf = io.StringIO(newline="")
+    # The operations CSV has an unquoted header but quote-all data rows.
+    if name == OPERATIONS:
+        buf.write(",".join(fields) + separator)
+        writer = csv.DictWriter(buf, fieldnames=fields,
+                                lineterminator=separator, quoting=csv.QUOTE_ALL)
+    else:
+        writer = csv.DictWriter(buf, fieldnames=fields, lineterminator=separator)
+        writer.writeheader()
+    writer.writerows(rows)
     prefix = b"\xef\xbb\xbf" if raw.startswith(b"\xef\xbb\xbf") else b""
     return prefix + buf.getvalue().encode("utf-8")
 
