@@ -80,14 +80,26 @@ export async function createLocalJobs(options: {
         activeSurface.value = surface
         const previous = await readLocalJobState(options.store, surface, signal)
         const archives = await backups.list(surface, { signal })
+        const previousId = typeof previous.backupId === "string" && previous.backupId ? previous.backupId : undefined
+        const previousHour = typeof previous.backupHour === "string" && /^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3])$/.test(previous.backupHour)
+          ? previous.backupHour
+          : undefined
+        // A current-day persisted ID without a valid hour is legacy progress, not an
+        // interrupted publication: updateLocalJobState writes ID/day/hour atomically.
+        // Force one recapture to establish the hourly contract. When no ID was ever
+        // persisted (or a prior valid hour exists), same-hour inventory remains the
+        // crash-recovery path for publication that completed before progress persisted.
+        const legacyDailyProgress = previous.backupDay === day && previousId !== undefined && previousHour === undefined
         const daily =
-          (previous.backupDay === day && previous.backupHour === hour
-            ? archives.find((archive) => archive.id === previous.backupId && archive.tier === "daily")
+          (previous.backupDay === day && previousHour === hour
+            ? archives.find((archive) => archive.id === previousId && archive.tier === "daily")
             : undefined) ??
-          archives.find((archive) => archive.tier === "daily" && archive.at.slice(0, 10) === day && archive.at.slice(0, 13) === hour)
+          (legacyDailyProgress
+            ? undefined
+            : archives.find((archive) => archive.tier === "daily" && archive.at.slice(0, 10) === day && archive.at.slice(0, 13) === hour))
         if (daily) {
           state.backups[surface] = daily.id
-          if (previous.backupDay !== day || previous.backupHour !== hour || previous.backupId !== daily.id)
+          if (previous.backupDay !== day || previousHour !== hour || previousId !== daily.id)
             await updateLocalJobState(options.store, surface, { backupDay: day, backupHour: hour, backupId: daily.id, backupAt: daily.at }, signal)
         } else {
           const captured = await backups.capture(options.store, surface, at, "daily", { signal })
