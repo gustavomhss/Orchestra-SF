@@ -23,3 +23,11 @@ The previously discussed photographic background also needs a licensed/original 
 5. Do not merge until official assets and visual evidence pass; no changes to go-live assembly branch.
 
 Brand-specific assertions run separately via `node --test script/sucafina/brand-identity.test.mjs` and `sucafina-brand-identity` Actions. The SF app source suite has a signed exact historical case inventory; do not widen or weaken it to admit brand tests without review.
+
+## Correct native SF visual acceptance (pending real installed execution)
+
+Earlier screenshots from the `sucafina-visual-proof` workflow rendered the **generic Orchestra Home**, not Orchestra-SF. They are **invalid as SF visual evidence** and must not be used to approve this white-label. The generic Home capture spec and workflow have been removed from this branch.
+
+The actual customer product uses the installed native routes `/orchestra/sf-dashboard/executive`, `/orchestra/sf-planner/overview`, and `/orchestra/sf-procurement/contracts` as defined in `e2e/sucafina/native/visual.spec.ts`. The new `e2e/sucafina/native/brand-visual.spec.ts` captures only after the existing F04 host proves a real authenticated installed session, and only when the operator explicitly attests that the installation contains authorized synthetic data. It does not invent Microsoft login or a data transport. It exercises the real Settings palette picker, confirms the Sucafina identity and native `SfPageFrame`, and captures Dark/Light screens.
+
+**Not yet executed.** It requires the Q02/F04 installed host, private authenticated CDP session, the Sucafina-branded build, and `SF_BRAND_VISUAL_SYNTHETIC_DATASET=1` in an authorized review environment. No secrets or screenshots of production records belong in public artifacts. Missing host/actor/route fails, never substitutes screenshots from Orchestra Home, design fixtures or the old standalone HTML module.
