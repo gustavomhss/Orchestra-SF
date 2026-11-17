@@ -463,7 +463,11 @@ function cli() {
   }
   if (command === "select") {
     if (process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") fail("selection must run on Linux X64")
-    for (const name of selectSuiteFiles(manifest, process.env.SF_SUITE_ID)) process.stdout.write(name + "\n")
+    // Bun 1.3.14 treats bare names as filters and silently reorders discovery.
+    // Emit "./" for CI-SF to request the exact files in the manifest's order.
+    // Canonical case/file identities used for receipts remain unprefixed.
+    for (const name of selectSuiteFiles(manifest, process.env.SF_SUITE_ID))
+      process.stdout.write((process.env.SF_SUITE_ID === "CI-SF" ? "./" : "") + name + "\n")
     return
   }
   if (command === "coverage") {

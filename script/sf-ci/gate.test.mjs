@@ -144,7 +144,7 @@ function manifestWiredWorkflowFixture(actualManifest) {
   const arms = buns.map((suite) => [
     `              ${suite.id})`,
     `                cd "$root/${suite.directory}"`,
-    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 ${suite.id === "CI-SF" ? '--files-from "$evidence/selection.txt"' : '"${files[@]}"'} --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
+    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 "${files[@]}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
     "                ;;",
   ].join("\n")).join("\n")
   const selected = [
@@ -194,8 +194,6 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
   }
   const failCases = [
     ["missing Bun selector", good.replace(selector, "echo omitted-bun-selector")],
-    ["CI-SF file-list replaced with a different file", good.replace('--files-from "$evidence/selection.txt"', '--files-from "$evidence/cropped.txt"')],
-    ["CI-SF positional operands bypass exact ordered execution", good.replace('--files-from "$evidence/selection.txt"', '"${files[@]}"')],
     ["missing UI selector", good.slice(0, good.lastIndexOf(selector)) + good.slice(good.lastIndexOf(selector)).replace(selector, "echo omitted-ui-selector")],
     ["missing CI-APP-BROWSER matrix ID", good.replace(", CI-APP-BROWSER", "")],
     ["missing CI-UI-DECISIONS manifest suite", good.replace("          - id: CI-UI-DECISIONS\n", "")],

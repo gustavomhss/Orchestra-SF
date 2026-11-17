@@ -276,12 +276,10 @@ jobs:
           {
             case "$SF_SUITE_ID" in
               CI-SF)
-                # Bun positional operands behave as filters and discover files
-                # lexicographically, defeating WP01 start/lease/finalize ordering.
-                # --files-from consumes the exact manifest A2 ordered path list.
+                # A2 emits "./" exact paths for this Bun version, not substring filters.
+                # Preserve manifest order: WP01 startup, every full-module test, finalizer.
                 bun test --timeout 30000 --bail=5 \
-                  --reporter=junit "--reporter-outfile=$evidence/report.xml" \
-                  --files-from "$evidence/selection.txt"
+                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               CI-CLI)
                 bun test --timeout 30000 --reporter=junit \
@@ -311,7 +309,22 @@ jobs:
           test "$status" -eq 0
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
+          # PENDING baseline remains fail-closed, but a fully successful raw
+          # CI-SF run must retain a reviewable, exact-case inventory candidate.
+          if [ "$SF_SUITE_ID" = CI-SF ]; then
+            node script/sf-ci/gate.mjs coverage | tee "$evidence/coverage-candidate.txt"
+          fi
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Retain complete raw CI-SF coverage candidate without claiming a green baseline
+        if: ${{ failure() && matrix.id == 'CI-SF' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-ci-sf-baseline-candidate-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            sf-ci-evidence/CI-SF/summary.json
+            sf-ci-evidence/CI-SF/coverage-candidate.txt
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Publish only valid summary and receipt for a clean run
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
