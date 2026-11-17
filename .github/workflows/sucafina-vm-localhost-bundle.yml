@@ -44,11 +44,35 @@ jobs:
           # Preserve relative workspace symlinks; do not embed any home/config/secrets.
           find . -path '*/node_modules' -type d -prune -print0 |             tar --null -T - -I 'zstd -T2 -1' -cf /tmp/sf-localhost-bundle/node-modules.tar.zst
           ls -lh /tmp/sf-localhost-bundle/node-modules.tar.zst
-      - name: Upload reproducible localhost bundle
+      - name: Divide offline runtime dependencies into transport-sized parts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/sf-node-deps
+          split -b 300000000 -d -a 2 /tmp/sf-localhost-bundle/node-modules.tar.zst /tmp/sf-node-deps/node-modules-part-
+          rm /tmp/sf-localhost-bundle/node-modules.tar.zst
+          ls -lh /tmp/sf-localhost-bundle /tmp/sf-node-deps
+      - name: Upload source, browser app and Bun for local VM
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-localhost-vm-bundle
+          name: sf-localhost-source-web
           path: /tmp/sf-localhost-bundle/
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
+      - name: Upload VM dependencies part 1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-localhost-deps-00
+          path: /tmp/sf-node-deps/node-modules-part-00
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
+      - name: Upload VM dependencies part 2
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-localhost-deps-01
+          path: /tmp/sf-node-deps/node-modules-part-01
           if-no-files-found: error
           retention-days: 2
           compression-level: 0
