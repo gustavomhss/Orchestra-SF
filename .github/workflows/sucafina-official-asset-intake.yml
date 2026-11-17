@@ -1,0 +1,42 @@
+name: sucafina-official-asset-intake
+
+on:
+  push:
+    branches: [sfa-sucafina-white-label]
+    paths:
+      - ".github/workflows/sucafina-official-asset-intake.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-source:
+    name: intake/official-sucafina-svg
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Download only from the Sucafina Group official domain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --max-time 30 \
+            --user-agent 'Mozilla/5.0 Sucafina-WhiteLabel-Asset-Verification' \
+            --output /tmp/sucafina-official.svg \
+            'https://group.sucafina.com/img/base/logo.svg'
+          python3 - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          from hashlib import sha256
+          data = Path("/tmp/sucafina-official.svg").read_bytes()
+          assert 200 < len(data) < 200000, f"unexpected asset bytes: {len(data)}"
+          root = ET.fromstring(data)
+          assert root.tag.endswith("svg"), f"unexpected root: {root.tag}"
+          assert b"<script" not in data.lower(), "script is forbidden"
+          print("ORIGIN=https://group.sucafina.com/img/base/logo.svg")
+          print("SVG_BYTES", len(data), "SHA256", sha256(data).hexdigest())
+          PY
+          echo 'SUCAFINA_OFFICIAL_SVG_B64_BEGIN'
+          base64 -w0 /tmp/sucafina-official.svg
+          echo
+          echo 'SUCAFINA_OFFICIAL_SVG_B64_END'
