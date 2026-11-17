@@ -450,6 +450,8 @@ import type {
   RelayRunsLedgerOutput,
   InstallationUpgradeInput,
   InstallationUpgradeOutput,
+  ServerSucafinaInstallationsInput,
+  ServerSucafinaInstallationsOutput,
   GuardrailRulesInput,
   GuardrailRulesOutput,
   GuardrailRunInput,
@@ -3686,6 +3688,25 @@ export function make(options: ClientOptions) {
             body: { target: input["target"] },
             successStatus: 200,
             declaredStatuses: [400, 500, 401],
+            empty: false,
+          },
+          requestOptions,
+        ),
+    },
+    "server.sucafina": {
+      installations: (input: ServerSucafinaInstallationsInput, requestOptions?: RequestOptions) =>
+        request<ServerSucafinaInstallationsOutput>(
+          {
+            method: "GET",
+            path: `/api/sucafina/installations`,
+            query: {
+              select: input["select"],
+              installationId: input["installationId"],
+              projectId: input["projectId"],
+              location: input["location"],
+            },
+            successStatus: 200,
+            declaredStatuses: [400, 401],
             empty: false,
           },
           requestOptions,

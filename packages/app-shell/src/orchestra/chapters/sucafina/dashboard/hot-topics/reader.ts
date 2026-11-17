@@ -27,7 +27,8 @@ export function useHotTopicsSource(route: SfResolvedRoute<"CAP02">) {
   const current = () => context.state().status === "ready" ? context.ready() : undefined
   const admitted = (operation: string, action?: string): boolean => {
     const ready = current()
-    const destination = ready?.context.destinations.find((item) => item.capabilityId === "CAP02")
+    if (!ready) return false
+    const destination = ready.context.destinations.find((item) => item.capabilityId === "CAP02")
     if (!destination?.canRead) return false
     if (action && (!destination.allowedActionIds.includes(action) || !store.allowedActionIds.includes(action))) return false
     return ready.context.availability.some((resource) =>

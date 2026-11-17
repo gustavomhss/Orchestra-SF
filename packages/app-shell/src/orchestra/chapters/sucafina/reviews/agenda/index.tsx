@@ -54,8 +54,10 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     resource.family === "reviews" && resource.resource === "agenda" &&
     resource.operations.some((operation) => operation.operationId === operationId && operation.state === "ready")) ?? false
   const mayPreserve = () => !!ready() && authorized("dashboard.dashboard-review-preserve")
-  const current = (generation: number, ownerKey: string) =>
-    owner.generation() === generation && owner.state().status === "ready" && owner.state().ownerKey === ownerKey
+  const current = (generation: number, ownerKey: string) => {
+    const state = owner.state()
+    return owner.generation() === generation && state.status === "ready" && state.ownerKey === ownerKey
+  }
   const issue = (status: SfUiState, message: string) => {
     if (status === "denied") setStore({ selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting" })
     setStore({ status, message })

@@ -893,7 +893,7 @@ async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
  * Server producers separately reauthenticate record/export access at egress.
  */
 async function refreshSfFileAuthority(options: Readonly<{
-  binding: SfInstallationDescriptor; fetch: typeof globalThis.fetch;
+  binding: SfInstallationDescriptor; fetch: SfTransportFetch;
   operations: SfOperationBindings;
 }>, expected: SfContextStamp, operationId: SfOperationId): Promise<boolean> {
   const meta = cataloguedRoute("ctx.context")

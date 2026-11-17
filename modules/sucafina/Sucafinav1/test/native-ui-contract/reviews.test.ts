@@ -19,7 +19,7 @@ import type { SfOperation, SfTransportResult } from "../../../../../packages/sch
 import type { SfCallOptions, SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
 
 const accepts = <A>(schema: Schema.Schema<A>, value: unknown) =>
-  Option.isSome(Schema.decodeUnknownOption(schema as Schema.Decoder<A>)(value))
+  Option.isSome(Schema.decodeUnknownOption(schema as Schema.Decoder<A, never>)(value))
 const section = {
   id: "line-one", title: "Current agenda", selectionRef: "scoped-selection",
   topic: "budget", period: { start: "2026-01-01", end: "2026-12-31" },

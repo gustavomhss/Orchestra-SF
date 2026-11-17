@@ -1,5 +1,5 @@
 import type { ResearchPack } from "../index"
-import lock from "./typescript.package-lock.json"
+import lock from "./typescript.package-lock.json" with { type: "json" }
 
 // The fallback oracle (J6.4). TypeScript stays on 6.x: 7.x is the native port without the JavaScript compiler API.
 const VERSION = "6.0.3"

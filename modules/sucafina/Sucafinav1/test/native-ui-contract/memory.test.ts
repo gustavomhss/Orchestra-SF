@@ -11,13 +11,13 @@ import {
   SfIntelligenceMemorySignals,
 } from "../../../../../packages/schema/src/sucafina/memory.ts"
 
-// Recursive, service-free wire schemas retain their runtime checks even when the
-// public Schema.Schema type does not expose a service-free Decoder constraint.
+// These codecs are pure: the union type widens the requirements channel, so the
+// single cast restores the never-requirement decoder they actually are.
 const decode = <A>(schema: Schema.Schema<A>, value: unknown): A =>
-  Schema.decodeUnknownSync(schema as Schema.Decoder<A>)(value)
+  Schema.decodeUnknownSync(schema as Schema.Decoder<A, never>)(value)
 
 const query = { caseId: "case-1", incarnation: "inc-1", version: 3 }
-const period = { start: "2026-01-01", end: "2026-12-31" }
+const period = { start: "2026-01-01", end: "2026-12-31" } as const
 const digest = "a".repeat(64)
 const source = {
   surface: "planner", type: "planner-version", id: "version-1",

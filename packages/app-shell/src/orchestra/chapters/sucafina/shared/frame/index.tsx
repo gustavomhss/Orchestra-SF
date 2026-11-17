@@ -25,7 +25,7 @@ import { SfStatePanel } from "../states"
 import "./frame.css"
 
 export type {
-  SfAction, SfChartFrameProps, SfContextBarProps, SfCopyKey, SfCoverage,
+  SfAction, SfChartFrameProps, SfChartTable, SfContextBarProps, SfCopyKey, SfCoverage,
   SfDensity, SfDisplayValue, SfLayoutMode, SfMessage, SfPageFrameProps,
   SfPlotSeries, SfRunStateProps, SfSource, SfStatePanelProps, SfText, SfUiState, SfUnit,
 } from "./types"

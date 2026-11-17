@@ -17,10 +17,10 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [ui, setUi] = createStore({ reviewing: false })
   const valid = () => props.surfaceId === "UI34"
-  const source = () => valid() ? props.route.params.caseRef : undefined
-  const caseData = useSfCase(() => String(source() ?? ""))
-  const data = () => caseData.read.projection?.case
   const route = () => valid() ? props.route as SfSurfaceProps<"UI34">["route"] : undefined
+  const source = () => route()?.params.caseRef
+  const caseData = useSfCase(() => (source() === undefined ? "" : String(source())))
+  const data = () => caseData.read.projection?.case
   const gaps = () => [...new Set(caseData.read.projection?.events.flatMap((event) => event.factualGaps) ?? [])]
   const back = () => route() ? sfDecisionHref(route()!, "list") : undefined
   return (

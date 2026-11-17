@@ -86,7 +86,7 @@ async function add(id: string) {
     path.join(PACKS, `${id}.ts`),
     [
       `import type { Pack } from "../manifest"`,
-      ...(kind === "npm" ? [`import lock from "./${id}.package-lock.json"`] : []),
+      ...(kind === "npm" ? [`import lock from "./${id}.package-lock.json" with { type: "json" }`] : []),
       "",
       `const VERSION = "${version}"`,
       "",

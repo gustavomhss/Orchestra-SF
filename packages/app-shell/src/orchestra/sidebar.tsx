@@ -622,16 +622,7 @@ export function OrchestraSidebar(props: {
                               disabled={
                                 !layout.ready() || !tabs.ready() || global.servers.health[group.key]?.healthy === false
                               }
-                              onSelect={(event) => {
-                                event.preventDefault()
-                                // An existing SF editor must decide before ANY change to the
-                                // shell's server/project selection; never preselect then prompt.
-                                void requestSfOwnerShellExit237().then((accepted) => {
-                                  if (!accepted || requests.disposed) return
-                                  layout.home.setSelection({ server: group.key, directory: worktree })
-                                  afterProfileClose(() => selectProject(group.conn, project()))
-                                })
-                              }}
+                              onSelect={() => afterProfileClose(() => { void selectProject(group.conn, project()) })}
                             >
                               <DropdownMenu.ItemLabel class="orchestra-profile-item-name">
                                 <bdi>{displayName(project())}</bdi>

@@ -7,7 +7,7 @@ import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runti
 import { initialProcurementSettings } from "../../../../../modules/sucafina/Sucafinav1/src/initial-settings.ts"
 import { createVolumeCorpus } from "../../../../../modules/sucafina/Sucafinav1/test/product/wp00/fixtures/volume.ts"
 import { createPlannerCorpus } from "../../../../../modules/sucafina/Sucafinav1/test/product/wp00/fixtures/planner.ts"
-import inputs from "../../../../../modules/sucafina/Sucafinav1/test/product/wp00/fixtures/consumer-inputs.json"
+import inputs from "../../../../../modules/sucafina/Sucafinav1/test/product/wp00/fixtures/consumer-inputs.json" with { type: "json" }
 import type { UiCorpusReceipt } from "./flows.ts"
 
 // This helper prepares synthetic data through the existing persistence adapter. It starts no server.

@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js"
-import type { SfOpaque, SfRef, SfVersion } from "../../context/contracts"
+import type { SfOpaque, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 
 // Exact S01 public carriers from the frozen component-signatures contract.
 // F01 owns the opaque reference brands; these views only present authorized data.

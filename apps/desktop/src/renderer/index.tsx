@@ -22,7 +22,7 @@ import type { AsyncStorage } from "@solid-primitives/storage"
 import { createMemoryHistory, MemoryRouter, type BaseRouterProps } from "@solidjs/router"
 import { createEffect, createMemo, createResource, createSignal, onCleanup, Show } from "solid-js"
 import { render } from "solid-js/web"
-import pkg from "../../package.json"
+import pkg from "../../package.json" with { type: "json" }
 import { t } from "./i18n"
 import { dict } from "../../../../packages/app-shell/src/i18n/en"
 import { showToast } from "@orchestra/app/toast"

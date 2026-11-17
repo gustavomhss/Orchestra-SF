@@ -141,7 +141,7 @@ async function noDarwinWriteAcl(fd: number, privateTarget = false) {
       const error = result === -1 ? library.symbols.__error() : null
       if (error && read.i32(error) === 22) return // Valid ACL + sequential NEXT at end: Darwin EINVAL (not Linux 0).
       if (result !== 0 || ordinal === 169) throw new Error("SF_NATIVE_PHASE_PRIVATE_ACL_UNAVAILABLE")
-      const value = read.ptr(ptr(entry))
+      const value = read.ptr(ptr(entry)) as Pointer | null
       if (!value || library.symbols.acl_get_tag_type(value, ptr(tag)) !== 0 ||
         library.symbols.acl_get_permset_mask_np(value, ptr(mask)) !== 0) throw new Error("SF_NATIVE_PHASE_PRIVATE_ACL_UNAVAILABLE")
       // write/add, delete, append/add-subdirectory, delete-child, write-attributes/xattrs/security, change-owner.

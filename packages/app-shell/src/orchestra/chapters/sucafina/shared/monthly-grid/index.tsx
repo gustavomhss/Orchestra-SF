@@ -18,7 +18,7 @@ import "./monthly-grid.css"
 
 export type {
   SfMonthId, SfMonth, SfCellCoordinate, SfCellValue, SfGridCell, SfDraftCell,
-  SfGridNavigation, SfGridRange, SfPasteMeasure, SfPasteCell, SfPasteRow,
+  SfGridNavigation, SfGridRange, SfMessage, SfPasteMeasure, SfPasteCell, SfPasteRow,
   SfPasteState, SfPasteRequest, SfMonthlyGridProps,
 } from "./types"
 
@@ -338,7 +338,7 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
       return <span class="sf-s02-cell-absence">{message(value.reason)}</span>
     if (value.kind === "inherited" && value.value === null)
       return <span class="sf-s02-cell-absence">{t("sf.s02.missing")}</span>
-    const amount = value.kind === "known" ? value.value : value.value
+    const amount = value.kind === "known" ? value.value : (value as Readonly<{ kind: "inherited"; value: number }>).value
     return <>
       <span class="sf-s02-cell-amount">{formatValue(amount, cell.fractionDigits)}</span>
       <span class="sf-s02-cell-unit">{unitLabel(value.unit)}</span>

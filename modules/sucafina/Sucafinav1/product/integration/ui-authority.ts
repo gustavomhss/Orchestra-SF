@@ -1,7 +1,7 @@
 import type { PortResult } from "../contracts/ports.ts"
 import type { SfBindingRegistry, SfDomainValidation } from "../contracts/runtime.ts"
 import type { BoundCapabilityReceipt, TrustedDomainContext, TrustedUiContext, TrustedUiLease } from "../contracts/sf-execution.ts"
-import freeze from "../contracts/freeze-v1.json"
+import freeze from "../contracts/freeze-v1.json" with { type: "json" }
 
 type UiIdentity = Pick<TrustedUiContext["binding"], "installationId" | "projectId" | "principalRef" | "policyVersion" | "accessRevision">
 type UiAdmission = { request: Request; operation: string; inputDigest: string; commandId: string; expiresAt: number; consumed: boolean }

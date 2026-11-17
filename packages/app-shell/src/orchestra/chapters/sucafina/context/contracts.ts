@@ -36,7 +36,7 @@ export type SfContextState =
   | Readonly<{ status: "denied"; selection: SfOwnerSelection }>
   | Readonly<{ status: "unavailable"; selection: SfOwnerSelection; reason: "installation-unavailable" | "identity-unavailable" | "host-unavailable" | "connection-auth-unavailable" | "connection-unapproved" | "network" | "contract-mismatch" }>
   | Readonly<{ status: "context-mismatch"; selection: SfOwnerSelection }>
-  | Readonly<{ status: "ready"; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfContext }>
+  | Readonly<{ status: "ready"; selection: SfOwnerSelection; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfContext }>
 
 export type SfPublicDraftController<Value> = Pick<
   SfDraftController<Value>, "snapshot" | "edit" | "discard" | "receiveRemote" | "setPhase" | "setPending" | "confirmSave" | "rejectSave"

@@ -1,41 +1,41 @@
 import type { DesktopTheme } from "./types"
-import oc2ThemeJson from "./themes/oc-2.json"
-import amoledThemeJson from "./themes/amoled.json"
-import auraThemeJson from "./themes/aura.json"
-import ayuThemeJson from "./themes/ayu.json"
-import carbonfoxThemeJson from "./themes/carbonfox.json"
-import catppuccinThemeJson from "./themes/catppuccin.json"
-import catppuccinFrappeThemeJson from "./themes/catppuccin-frappe.json"
-import catppuccinMacchiatoThemeJson from "./themes/catppuccin-macchiato.json"
-import cobalt2ThemeJson from "./themes/cobalt2.json"
-import cursorThemeJson from "./themes/cursor.json"
-import draculaThemeJson from "./themes/dracula.json"
-import everforestThemeJson from "./themes/everforest.json"
-import flexokiThemeJson from "./themes/flexoki.json"
-import githubThemeJson from "./themes/github.json"
-import gruvboxThemeJson from "./themes/gruvbox.json"
-import kanagawaThemeJson from "./themes/kanagawa.json"
-import lucentOrngThemeJson from "./themes/lucent-orng.json"
-import materialThemeJson from "./themes/material.json"
-import matrixThemeJson from "./themes/matrix.json"
-import mercuryThemeJson from "./themes/mercury.json"
-import monokaiThemeJson from "./themes/monokai.json"
-import nightowlThemeJson from "./themes/nightowl.json"
-import nordThemeJson from "./themes/nord.json"
-import oneDarkThemeJson from "./themes/one-dark.json"
-import oneDarkProThemeJson from "./themes/onedarkpro.json"
-import orchestraThemeJson from "./themes/orchestra.json"
-import orngThemeJson from "./themes/orng.json"
-import osakaJadeThemeJson from "./themes/osaka-jade.json"
-import palenightThemeJson from "./themes/palenight.json"
-import rosepineThemeJson from "./themes/rosepine.json"
-import shadesOfPurpleThemeJson from "./themes/shadesofpurple.json"
-import solarizedThemeJson from "./themes/solarized.json"
-import synthwave84ThemeJson from "./themes/synthwave84.json"
-import tokyonightThemeJson from "./themes/tokyonight.json"
-import vercelThemeJson from "./themes/vercel.json"
-import vesperThemeJson from "./themes/vesper.json"
-import zenburnThemeJson from "./themes/zenburn.json"
+import oc2ThemeJson from "./themes/oc-2.json" with { type: "json" }
+import amoledThemeJson from "./themes/amoled.json" with { type: "json" }
+import auraThemeJson from "./themes/aura.json" with { type: "json" }
+import ayuThemeJson from "./themes/ayu.json" with { type: "json" }
+import carbonfoxThemeJson from "./themes/carbonfox.json" with { type: "json" }
+import catppuccinThemeJson from "./themes/catppuccin.json" with { type: "json" }
+import catppuccinFrappeThemeJson from "./themes/catppuccin-frappe.json" with { type: "json" }
+import catppuccinMacchiatoThemeJson from "./themes/catppuccin-macchiato.json" with { type: "json" }
+import cobalt2ThemeJson from "./themes/cobalt2.json" with { type: "json" }
+import cursorThemeJson from "./themes/cursor.json" with { type: "json" }
+import draculaThemeJson from "./themes/dracula.json" with { type: "json" }
+import everforestThemeJson from "./themes/everforest.json" with { type: "json" }
+import flexokiThemeJson from "./themes/flexoki.json" with { type: "json" }
+import githubThemeJson from "./themes/github.json" with { type: "json" }
+import gruvboxThemeJson from "./themes/gruvbox.json" with { type: "json" }
+import kanagawaThemeJson from "./themes/kanagawa.json" with { type: "json" }
+import lucentOrngThemeJson from "./themes/lucent-orng.json" with { type: "json" }
+import materialThemeJson from "./themes/material.json" with { type: "json" }
+import matrixThemeJson from "./themes/matrix.json" with { type: "json" }
+import mercuryThemeJson from "./themes/mercury.json" with { type: "json" }
+import monokaiThemeJson from "./themes/monokai.json" with { type: "json" }
+import nightowlThemeJson from "./themes/nightowl.json" with { type: "json" }
+import nordThemeJson from "./themes/nord.json" with { type: "json" }
+import oneDarkThemeJson from "./themes/one-dark.json" with { type: "json" }
+import oneDarkProThemeJson from "./themes/onedarkpro.json" with { type: "json" }
+import orchestraThemeJson from "./themes/orchestra.json" with { type: "json" }
+import orngThemeJson from "./themes/orng.json" with { type: "json" }
+import osakaJadeThemeJson from "./themes/osaka-jade.json" with { type: "json" }
+import palenightThemeJson from "./themes/palenight.json" with { type: "json" }
+import rosepineThemeJson from "./themes/rosepine.json" with { type: "json" }
+import shadesOfPurpleThemeJson from "./themes/shadesofpurple.json" with { type: "json" }
+import solarizedThemeJson from "./themes/solarized.json" with { type: "json" }
+import synthwave84ThemeJson from "./themes/synthwave84.json" with { type: "json" }
+import tokyonightThemeJson from "./themes/tokyonight.json" with { type: "json" }
+import vercelThemeJson from "./themes/vercel.json" with { type: "json" }
+import vesperThemeJson from "./themes/vesper.json" with { type: "json" }
+import zenburnThemeJson from "./themes/zenburn.json" with { type: "json" }
 
 export const oc2Theme = oc2ThemeJson as DesktopTheme
 export const amoledTheme = amoledThemeJson as DesktopTheme

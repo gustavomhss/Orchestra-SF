@@ -3,7 +3,7 @@ import { cp, mkdir, mkdtemp, realpath, rm, symlink } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 
-// Twenty-two real generator runs over five bundles: Windows runners need well over two minutes.
+// Twenty real generator runs over ten bundles: Windows runners need well over two minutes.
 test("real generator reproduces committed bytes and rejects every generated-file mismatch or absence", async () => {
   const root = path.resolve(import.meta.dir, "../../../..")
   const fixture = await realpath(await mkdtemp(path.join(tmpdir(), "atlas-boundary-build-")))
@@ -17,8 +17,18 @@ test("real generator reproduces committed bytes and rejects every generated-file
     "native-header.d.ts",
     "native-memory.js",
     "native-memory.d.ts",
+    "business-memory-ports.js",
+    "business-memory-ports.d.ts",
     "surface.js",
     "surface.d.ts",
+    "mine.js",
+    "mine.d.ts",
+    "context.js",
+    "context.d.ts",
+    "record.js",
+    "record.d.ts",
+    "record-log.js",
+    "record-log.d.ts",
   ]
   const run = async (check: boolean) => {
     const child = Bun.spawn([process.execPath, "script/build.ts", ...(check ? ["--check"] : [])], {
@@ -40,7 +50,7 @@ test("real generator reproduces committed bytes and rejects every generated-file
       filter: (file) => path.basename(file) !== "node_modules",
     })
     await Promise.all(
-      ["script", "src/generated", "package.json"].map((file) =>
+      ["script", "src/generated", "src/business-memory-entry.ts", "package.json"].map((file) =>
         cp(path.join(root, "modules/atlas/boundary", file), path.join(base, file), { recursive: true }),
       ),
     )

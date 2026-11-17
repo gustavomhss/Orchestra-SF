@@ -12,7 +12,8 @@ import { useSfPresentation } from "../shared/frame/presentation"
 
 type Home = Extract<Schema.Schema.Type<typeof SfProjectionHome.Output>, { status: "ok" }>["value"]
 type HomeCase = Extract<Home["cases"], { status: "ok" }>["items"][number]
-type State = Readonly<{ status: SfUiState; data: Home | null }>
+// Solid store state: no Readonly<> wrapper, see security/index.tsx.
+type State = { status: SfUiState; data: Home | null }
 type ResumeRequest = Readonly<{
   caseRef: HomeCase["caseRef"]
   sourceVersion: HomeCase["version"]

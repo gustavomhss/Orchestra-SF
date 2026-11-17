@@ -1,7 +1,7 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { validSfSelection } from "./resident-agents.ts"
-import routes from "../contracts/normative-contracts.json"
-import freeze from "../contracts/freeze-v1.json"
+import routes from "../contracts/normative-contracts.json" with { type: "json" }
+import freeze from "../contracts/freeze-v1.json" with { type: "json" }
 import type { BindSfExecution, CreateSfExecutionBindingRegistry, SfNativeAdmission } from "../contracts/runtime.ts"
 import type { TrustedCallContext, TrustedCallLease, TrustedExecutionBinding } from "../contracts/sf-execution.ts"
 

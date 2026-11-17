@@ -16,7 +16,8 @@ import "./collection.css"
 
 type Cap = "CAP13" | "CAP15"
 type Entity = Readonly<{ id: string | number }>
-export type Filters = Readonly<{ q?: string; status?: string; filter?: string; owner?: string }>
+// Mutable: store paths write through setStore("filtersEdit", key, ...), which requires writable keys.
+export type Filters = { q?: string; status?: string; filter?: string; owner?: string }
 export type PageResult<Row> =
   | Readonly<{ kind: "ok"; rows: readonly Row[]; versions: Readonly<Record<string, number>>; actions: readonly string[] }>
   | Readonly<{ kind: "error"; state: SfUiState }>
@@ -505,15 +506,18 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                         const sourceVersion = () => { const state = current(); return state.availability === "active" ? state.baseVersion : null }
                         const proposedFields = () => { const state = current(); return state.availability === "active"
                           ? reviewFields(active().entity, state.value) : [] }
+                        const intentRef = () => {
+                          const identity = active().identity
+                          return identity.kind === "new" ? identity.newIntentRef
+                            : ("n16-review:" + String(active()!.entity!.id)) as SfIntentRef
+                        }
                         return <SfChangeReview
                           operation={{ ref: active().operationRef, label: message(spec.primary),
                             scope: { kind: "message", message: message(spec.title) } }}
                           base={originalSnapshot(active().entity)}
                           current={originalSnapshot(active().entity)}
                           proposed={{ kind: "draft",
-                            intentRef: active().identity.kind === "new"
-                              ? active().identity.newIntentRef
-                              : ("n16-review:" + String(active().entity!.id)) as SfIntentRef,
+                            intentRef: intentRef(),
                             sourceRef: active().entity ? idOf(active().entity!.id) : null,
                             sourceVersion: sourceVersion(), fields: proposedFields() }}
                           effects={[{ id: "domain-save", domain: "dashboard", state: "proposed",

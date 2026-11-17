@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import type { BusinessPorts, PortResult } from "../contracts/ports.ts"
 import type { ContributionEnvelope, SkillLoadReceipt } from "../contracts/resident-ai.ts"
-import normative from "../contracts/normative-contracts.json"
+import normative from "../contracts/normative-contracts.json" with { type: "json" }
 import { sfSkillInputSchemas } from "../contracts/output-schemas.ts"
 import { decodeSfContributionOutput, decodeSfSkillInput } from "../contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"

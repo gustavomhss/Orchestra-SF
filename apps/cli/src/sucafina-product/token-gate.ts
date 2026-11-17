@@ -15,8 +15,8 @@ import { InvalidRequestReason, LLMError, LLMRequest, Model } from "@orchestra/ll
 import { LLMClient, RequestExecutor } from "@orchestra/llm/route"
 import { Context, Effect, Exit, Layer, Stream } from "effect"
 import { HttpClient, HttpClientError } from "effect/unstable/http"
-import normative from "../../../../modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json"
-import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json"
+import normative from "../../../../modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json" with { type: "json" }
+import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { SfNativeAdmission } from "../../../../modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
 import type { TrustedExecutionBinding } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"

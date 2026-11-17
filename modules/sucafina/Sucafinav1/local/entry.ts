@@ -48,7 +48,7 @@ import { sfHumanActions } from "../product/integration/human-authority.ts"
 import { getSfProductHtml } from "../product/integration/host-presentation.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../product/contracts/canonical.ts"
-import freeze from "../product/contracts/freeze-v1.json"
+import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 

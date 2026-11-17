@@ -1,5 +1,5 @@
 import type { ResearchPack } from "../index"
-import lock from "./scip-typescript.package-lock.json"
+import lock from "./scip-typescript.package-lock.json" with { type: "json" }
 
 // Pure JavaScript with no install scripts, so one lock installs on all five targets. It carries its own TypeScript 5.x
 // compiler; the `typescript` oracle pack is separate and pinned independently.

@@ -129,7 +129,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
     if (!active.context.destinations.some((item) => item.capabilityId === "CAP25" &&
         item.surface === "procurement" && item.canRead)) return undefined
     const availability = active.context.availability.find((item) =>
-      item.family === "domain-read" && item.resource === "CAP25")
+      item.family === "procurement" && item.resource === "CAP25")
     if (!availability || availability.state === "denied" || availability.state === "unavailable" ||
         !availability.operations.some((op) => op.operationId === "domain.page.CAP25" &&
           op.state === "ready" && op.operational)) return undefined

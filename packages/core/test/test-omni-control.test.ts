@@ -138,9 +138,9 @@ const scopeVariable = /ORCHESTRA_OMNI_CONTROL(?![A-Z0-9_])/g
 const mentions: Record<string, string> = {
   "script/test-omni-control.ts": "the control reads its scope",
   ".github/workflows/test-ci.yml": "the Run tests step sets the scope from the request (pinned below)",
-  ".github/workflows/test.yml": "the focused hosted sandbox and process-query proofs run single files outside the lanes' suite scope, so they declare",
+  ".github/inherited-workflows/test.yml.disabled": "legacy focused hosted sandbox and process-query proofs run single files outside the lanes' suite scope, so they declare (provenance pin; disabled after migration to sf2-epic.yml)",
   "turbo.json": "globalEnv keys cached turbo results by the scope (pinned below)",
-  ".github/workflows/distribution-bundle.yml": "native qualification requires suite-wide spawns; focused ABI steps declare (pinned below)",
+  ".github/inherited-workflows/distribution-bundle.yml.disabled": "native qualification requires suite-wide spawns; focused ABI steps declare (provenance pin; disabled after migration to sf2-epic.yml)",
   "apps/cli/test/fixture/distribution-musl/bootstrap.sh": "strict owned musl guest runs its declaring test (pinned below)",
   "packages/core/test/distribution-bundle-workflow.test.ts": "pins the native workflow's positive suite value and declared steps",
   "packages/core/test/fixture/distribution-bundle.ts": "records the scope a bundle run saw in its evidence",
@@ -151,7 +151,7 @@ const mentions: Record<string, string> = {
 
 const ALLOWED_ASSIGNMENTS = {
   ".github/workflows/test-ci.yml": { ORCHESTRA_OMNI_CONTROL: "${{ steps.request.outputs.omni_control }}" },
-  ".github/workflows/distribution-bundle.yml": { ORCHESTRA_OMNI_CONTROL: "suite" },
+  ".github/inherited-workflows/distribution-bundle.yml.disabled": { ORCHESTRA_OMNI_CONTROL: "suite" },
   "apps/cli/test/fixture/distribution-musl/bootstrap.sh": {
     ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "strict",
     ORCHESTRA_OMNI_CONTROL: "declared",
@@ -197,7 +197,7 @@ test("native scope and strict-mode mutations of real source fail by exact path",
   const sources = Object.fromEntries(Object.keys(mentions).map((file) => [file, readFileSync(path.join(root, file), "utf8")]))
   const guest = readFileSync(path.join(root, muslGuest), "utf8")
   inspectNativeAssignments(sources, guest)
-  const workflow = ".github/workflows/distribution-bundle.yml"
+  const workflow = ".github/inherited-workflows/distribution-bundle.yml.disabled"
   const musl = "apps/cli/test/fixture/distribution-musl/bootstrap.sh"
   const mutations = [
     ...["declared", "off", "0", "1"].map((value) => [workflow, "ORCHESTRA_OMNI_CONTROL: suite", `ORCHESTRA_OMNI_CONTROL: ${value}`, "OMNI_BUNDLE_SCOPE"]),
@@ -223,7 +223,7 @@ test("scope extraction has known-file controls and rejects empty, missing, unled
   const sources = Object.fromEntries(Object.keys(mentions).map((file) => [file, readFileSync(path.join(root, file), "utf8")]))
   expect(inspectScopeSources(sources)["script/test-omni-control.ts"]).toBeGreaterThan(0)
   expect(() => inspectScopeSources(Object.fromEntries(Object.keys(sources).map((file) => [file, ""])))).toThrow("OMNI_SCOPE_EXTRACTION_EMPTY")
-  const workflow = ".github/workflows/distribution-bundle.yml"
+  const workflow = ".github/inherited-workflows/distribution-bundle.yml.disabled"
   expect(() => inspectScopeSources(Object.fromEntries(Object.entries(sources).filter(([file]) => file !== workflow)))).toThrow(`OMNI_SCOPE_STALE: ${workflow}`)
   expect(() => inspectScopeSources({ ...sources, "packages/probe/unledgered.ts": "ORCHESTRA_OMNI_CONTROL=declared" })).toThrow("OMNI_SCOPE_UNLEDGERED: packages/probe/unledgered.ts")
   expect(inspectScopeSources({ ...sources, [workflow]: `${sources[workflow]}\n# no-op control\n` })[workflow]).toBe(inspectScopeSources(sources)[workflow])
@@ -255,7 +255,7 @@ function inspectNativeAssignments(sources: Record<string, string>, guest: string
   Object.keys(ALLOWED_ASSIGNMENTS).forEach((file) =>
     requireScope(sources[file]?.trim(), `OMNI_ASSIGNMENTS_SOURCE_EMPTY: ${file}`),
   )
-  const workflow = ".github/workflows/distribution-bundle.yml"
+  const workflow = ".github/inherited-workflows/distribution-bundle.yml.disabled"
   const bundle = YAML.parse(sources[workflow]) as {
     jobs?: { qualification?: { env?: Record<string, unknown>; steps?: { name?: string; run?: string }[] } }
   }

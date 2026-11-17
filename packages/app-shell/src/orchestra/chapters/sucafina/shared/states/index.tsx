@@ -47,7 +47,7 @@ export function SfStatePanel(props: SfStatePanelProps): JSX.Element {
       <Show when={showMessage()}>
         <div class="sf-state-message" role={statusRole()} aria-atomic="true">
           <p id={`sf-state-${id}`} class="sf-state-title">{t(props.messageKey)}</p>
-          <Show when={props.detailsKey && !privacy()}>
+          <Show when={(!privacy()) ? props.detailsKey : undefined}>
             {(key) => <p class="sf-state-details">{t(key())}</p>}
           </Show>
           <Show when={loading()}>

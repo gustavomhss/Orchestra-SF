@@ -1,4 +1,4 @@
-import corpus from "./corpus-v2.json"
+import corpus from "./corpus-v2.json" with { type: "json" }
 
 /** Synthetic input recipe shared by domain checks and later browser measurements. */
 export function createVolumeCorpus() {

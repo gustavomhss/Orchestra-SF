@@ -298,8 +298,9 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
         return true
       }
       if (!await sessionCurrent() || !sync()) return undefined
+      const admittedGeneration = generation
       const current = async () => {
-        if (!sync() || invalidGenerations.has(generation) || await observeSfRoutineNative(input.generation, signal) !== generation ||
+        if (!sync() || invalidGenerations.has(admittedGeneration) || await observeSfRoutineNative(input.generation, signal) !== admittedGeneration ||
           !await sessionCurrent() || !await observeSfRoutineNative(() => input.authorize(context), signal) ||
           !await observeSfRoutineNative(() => evidence.current(context, request), signal) || !sync()) {
           close()

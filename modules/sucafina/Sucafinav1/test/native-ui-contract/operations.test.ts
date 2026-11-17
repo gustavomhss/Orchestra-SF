@@ -35,7 +35,7 @@ const expected = [
 ] as const
 
 function valid<A>(schema: Schema.Schema<A>, value: unknown): boolean {
-  return Option.isSome(Schema.decodeUnknownOption(schema as Schema.Decoder<A>)(value, { onExcessProperty: "error" }))
+  return Option.isSome(Schema.decodeUnknownOption(schema as Schema.Decoder<A, never>)(value, { onExcessProperty: "error" }))
 }
 const stamp = {
   installationId: "test-installation", projectId: "test-project",

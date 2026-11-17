@@ -139,7 +139,7 @@ test("U46 — an empty installed planner can review its first version without di
   const surface = page.locator('[data-sf-surface="CAP23"]')
   await expect(surface).toBeVisible()
   const first = surface.getByRole("button", { name: /Create first version/i })
-  test.skip(await first.count() === 0, "Requires an authorized real installation with zero planner versions")
+  await expect(first).toHaveCount(1)
   await expect(first).toBeEnabled()
   await first.click()
   const review = surface.locator('[data-component="sf-change-review"]')

@@ -198,11 +198,11 @@ export function SfListDetail(props: SfListDetailProps): JSX.Element {
         class="sf-s01-list-pane"
         id={id + "-list"}
         hidden={listHidden()}
-        onClickCapture={(event) => {
+        on:click={{ capture: true, handleEvent: (event: MouseEvent) => {
           if (!single() || !(event.target instanceof Element) || !event.target.closest('[data-sf-action="select"]')) return
           const scroll = listHost?.querySelector<HTMLElement>(".sf-s01-table-scroll")
           if (scroll) listScroll = { top: scroll.scrollTop, left: scroll.scrollLeft }
-        }}
+        } }}
       >
         {props.list}
       </div>

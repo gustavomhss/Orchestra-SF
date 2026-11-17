@@ -3,7 +3,7 @@ import type { Surface } from "../src/identity.ts"
 import type { SfProductGrant } from "../product/integration/product-authority.ts"
 import type { SfStateNamespace } from "../product/contracts/state.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
-import freeze from "../product/contracts/freeze-v1.json"
+import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 
 export const microsoftUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const namespaces: readonly SfStateNamespace[] = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"]

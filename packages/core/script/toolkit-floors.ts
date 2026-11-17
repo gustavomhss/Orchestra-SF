@@ -20,7 +20,7 @@ import { parseArgs } from "util"
 import { ENGINES, RUNTIMES, type Engine, type Runtime } from "../src/backend-toolkit/manifest"
 import { TARGETS, compareVersions, type Floor, type TargetId } from "../src/backend-toolkit/target"
 import { WHEELS } from "../src/backend-toolkit/packs/datamodel-codegen.wheels"
-import orvalLock from "../src/backend-toolkit/packs/orval.package-lock.json"
+import orvalLock from "../src/backend-toolkit/packs/orval.package-lock.json" with { type: "json" }
 import type { PinnedArtifact } from "../src/pinned-artifact"
 
 type Finding = {
