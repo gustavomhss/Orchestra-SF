@@ -10,8 +10,13 @@ export async function createRequisition(page: Page, origin: string, observations
     console.log(`[sf decisions:procurement] response preview: ${(await response?.text())?.slice(0, 1600)}`)
   }
   await expect(form).toHaveCount(1)
+  console.log(`[sf decisions:procurement] form labels=${(await form.locator("label").allTextContents()).map((label) => label.trim()).join(" | ")}`)
+  console.log(`[sf decisions:procurement] form fields=${(await form.locator("input,select,textarea").evaluateAll((fields) => fields.map((field) => field.tagName + ":" + field.getAttribute("name")))).join(", ")}`)
   const title = "CI Decisions — explicit requisition proposal"
+  console.log("[sf decisions:procurement] Title field count", await form.getByLabel("Title", { exact: true }).count())
+  await expect(form.getByLabel("Title", { exact: true })).toHaveCount(1)
   await form.getByLabel("Title", { exact: true }).fill(title)
+  console.log("[sf decisions:procurement] Title filled")
   await form.getByLabel("Type", { exact: true }).selectOption("service")
   await form.getByLabel("Description", { exact: true }).fill("Human requisition for the Decisions approval and recovery journey")
   await form.getByLabel("Estimated amount", { exact: true }).fill("100")
