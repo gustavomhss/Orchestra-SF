@@ -126,19 +126,40 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
     }
   })
   await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
+  const seen = { requests: 0, responses: 0, failures: 0 }
+  const matching = (request: Request) => isCommand(request, mode, method)
+  const onRequest = (request: Request) => { if (matching(request)) seen.requests++ }
+  const onResponse = (response: Response) => { if (matching(response.request())) seen.responses++ }
+  const onFailed = (request: Request) => { if (matching(request)) seen.failures++ }
+  page.on("request", onRequest)
+  page.on("response", onResponse)
+  page.on("requestfailed", onFailed)
   try {
+    if (mode === "decision-compare") {
+      const state = await page.locator("form[data-decision-choice]").evaluate((form: HTMLFormElement) => {
+        const values = new FormData(form)
+        const required = [...form.querySelectorAll<HTMLInputElement>('input[name="criteria"][required]')]
+        return { sameAlternative: values.get("baseline") === values.get("alternative"),
+          selected: [values.get("baseline"), values.get("alternative")].every(Boolean),
+          selectedCriteria: values.getAll("criteria").length, missingRequired: required.filter((input) => !input.checked || input.disabled).length }
+      })
+      console.info("SF_DECISIONS_COMPARE_INPUTS", JSON.stringify(state))
+    }
     console.info("SF_DECISIONS_COMMAND_SENT", mode)
     await button.click()
     let timer: ReturnType<typeof setTimeout> | undefined
     try {
       const saved = await Promise.race([captured.promise, new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error(`SF_DECISIONS_CDP_RESPONSE_NOT_CAPTURED: ${mode}`)), 20_000)
+        timer = setTimeout(() => reject(new Error(`SF_DECISIONS_CDP_RESPONSE_NOT_CAPTURED: ${mode}; observed=${JSON.stringify(seen)}`)), 12_000)
       })])
       console.info("SF_DECISIONS_COMMAND_RESPONSE", mode, saved.status)
       return checkedReply({ mode: new URL(saved.url).searchParams.get("sf"), httpStatus: saved.status, contentType: saved.contentType },
         () => JSON.parse(saved.json), observations)
     } finally { if (timer !== undefined) clearTimeout(timer) }
   } finally {
+    page.off("request", onRequest)
+    page.off("response", onResponse)
+    page.off("requestfailed", onFailed)
     await session.send("Fetch.disable")
     await session.detach()
   }
