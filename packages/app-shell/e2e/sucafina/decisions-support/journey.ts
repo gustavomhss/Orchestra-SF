@@ -1,4 +1,4 @@
-import { expect, type APIResponse, type Locator, type Page, type Request, type Response, type Route, type TestInfo } from "@playwright/test"
+import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 
 export const draft = {
@@ -84,43 +84,72 @@ export async function fillDecision(page: Page, objective: string) {
   return form
 }
 
+type PausedCommand = {
+  requestId: string
+  request: { url: string; method: string }
+  responseStatusCode?: number
+  responseHeaders?: { name: string; value: string }[]
+}
+
+/** Read the original HTTP reply before its browser document navigates.
+ * CDP pauses after the real server responds. We return those same bytes,
+ * status and headers to the browser without replaying a mutation or using
+ * a second HTTP client (which can lose the browser's authority context).
+ */
 export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
   await expect(button).toBeEnabled()
-  // The real UI may parse a successful command and navigate before Chromium
-  // lets Playwright read the old document's response body. Buffer the exact
-  // upstream HTTP reply before delivering it unchanged to the browser.
-  // This is a single real request, not a mock or a second mutation.
-  const matches = (url: URL) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
-  let upstream: APIResponse | undefined
-  const forward = async (route: Route) => {
-    if (!isCommand(route.request(), mode, method)) { await route.continue(); return }
-    const response = await route.fetch({ maxRedirects: 0 })
-    upstream = response
-    await route.fulfill({ response })
-  }
-  await page.route(matches, forward)
+  const origin = new URL(page.url()).origin
+  const session = await page.context().newCDPSession(page)
+  const captured = Promise.withResolvers<{ status: number; contentType: string; url: string; json: string }>()
+  session.once("Fetch.requestPaused", async (event: PausedCommand) => {
+    try {
+      const url = new URL(event.request.url)
+      expect(url.origin).toBe(origin)
+      expect(url.pathname).toBe("/sucafina/dashboard")
+      expect(url.searchParams.get("sf")).toBe(mode)
+      expect(event.request.method).toBe(method)
+      const status = event.responseStatusCode
+      expect(typeof status).toBe("number")
+      const headers = event.responseHeaders ?? []
+      const contentType = headers.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
+      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+      if (typeof raw.body !== "string" || typeof raw.base64Encoded !== "boolean") throw new Error("Invalid CDP response body")
+      const bytes = raw.base64Encoded ? Buffer.from(raw.body, "base64") : Buffer.from(raw.body, "utf8")
+      // The fulfilled browser response is the exact server response, not a fixture.
+      await session.send("Fetch.fulfillRequest", {
+        requestId: event.requestId, responseCode: status!, responseHeaders: headers, body: bytes.toString("base64"),
+      })
+      captured.resolve({ status: status!, contentType, url: event.request.url, json: bytes.toString("utf8") })
+    } catch (error) {
+      try { await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "Failed" }) } catch { /* Response may already be released. */ }
+      captured.reject(error)
+    }
+  })
+  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
   try {
-    const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
     await button.click()
-    const delivered = await pending
-    if (!upstream) throw new Error(`Missing upstream Decisions reply for ${mode}`)
-    expect(delivered.status()).toBe(upstream.status())
-    expect(delivered.headers()["content-type"]).toBe(upstream.headers()["content-type"])
-    return await readReply(upstream, observations)
+    const saved = await captured.promise
+    return checkedReply({ mode: new URL(saved.url).searchParams.get("sf"), httpStatus: saved.status, contentType: saved.contentType },
+      () => JSON.parse(saved.json), observations)
   } finally {
-    await page.unroute(matches, forward)
+    await session.send("Fetch.disable")
+    await session.detach()
   }
 }
 
-export async function readReply(response: Response | APIResponse, observations: Record<string, unknown>[]) {
-  const contentType = response.headers()["content-type"] ?? ""
-  const record = { mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(), contentType }
+export async function readReply(response: Response, observations: Record<string, unknown>[]) {
+  return checkedReply({ mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(),
+    contentType: response.headers()["content-type"] ?? "" }, () => response.json(), observations)
+}
+
+async function checkedReply(record: { mode: string | null; httpStatus: number; contentType: string },
+  read: () => unknown | Promise<unknown>, observations: Record<string, unknown>[]) {
   observations.push(record)
   // A legacy HTML page returned with 200 must never satisfy a domain-command assertion.
-  expect(contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain("application/json")
-  const result = asRecord(await response.json())
+  expect(record.contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain("application/json")
+  const result = asRecord(await read())
   observations.push({ mode: record.mode, status: result.status, reason: result.reason, outputRef: result.outputRef })
-  expect(response.status(), `Domain response for ${record.mode}`).toBe(200)
+  expect(record.httpStatus, `Domain response for ${record.mode}`).toBe(200)
   expect(result.status, `Domain outcome for ${record.mode}`).toBe("ok")
   return result
 }
