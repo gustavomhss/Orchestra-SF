@@ -20,9 +20,27 @@ if (!expectedSHA || !/^[0-9a-f]{40}$/.test(expectedSHA))
 if (process.platform !== "linux" || process.arch !== "x64" || process.versions.bun !== "1.3.14")
   throw new Error("SF_ORCHESTRA_WEB_LINUX_X64_BUN_1_3_14_REQUIRED")
 
-const observed = spawnSync("git", ["rev-parse", "--verify", "HEAD"], { cwd: root, encoding: "utf8" })
-if (observed.status !== 0 || observed.stdout.trim() !== expectedSHA)
-  throw new Error("SF_ORCHESTRA_WEB_SOURCE_SHA_MISMATCH")
+// The source SHA is not enough: staged, unstaged, untracked and nested
+// submodule edits can change compiled bytes without changing HEAD.
+// Check BEFORE any build output is modified and again before certification.
+function requireCleanCheckout(phase) {
+  const observed = spawnSync("git", ["rev-parse", "--verify", "HEAD"], { cwd: root, encoding: "utf8" })
+  if (observed.error || observed.status !== 0 || observed.stdout.trim() !== expectedSHA)
+    throw new Error("SF_ORCHESTRA_WEB_SOURCE_SHA_MISMATCH")
+  const porcelain = spawnSync("git", [
+    "status", "--porcelain=v1", "-z", "--untracked-files=all", "--ignore-submodules=none",
+  ], { cwd: root, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 })
+  if (porcelain.error || porcelain.status !== 0)
+    throw new Error("SF_ORCHESTRA_WEB_GIT_STATUS_UNAVAILABLE")
+  if (porcelain.stdout.length)
+    throw new Error(`SF_ORCHESTRA_WEB_DIRTY_WORKTREE_${phase}`)
+}
+const archiveWithinCheckout = path.relative(root, destination)
+if (archiveWithinCheckout === "" ||
+    (archiveWithinCheckout !== ".." && !archiveWithinCheckout.startsWith(".." + path.sep) &&
+      !path.isAbsolute(archiveWithinCheckout)))
+  throw new Error("SF_ORCHESTRA_WEB_ARCHIVE_OUTSIDE_CHECKOUT_REQUIRED")
+requireCleanCheckout("BEFORE_BUILD")
 
 // Vite publishes VITE_* values into client assets. This release has no
 // externally configured public VITE_* inputs: never inherit CI secrets or
@@ -137,8 +155,12 @@ try {
   }
   if (JSON.stringify(await verifyDistribution(extracted, { version, target })) !== JSON.stringify(manifest))
     throw new Error("SF_ORCHESTRA_WEB_EXTRACTED_DISTRIBUTION_MISMATCH")
+  // A verified archive is NOT a qualified installed/browser package. The
+  // final SF_ORCHESTRA_WEB_PACKAGE_VERIFIED receipt must be withheld until
+  // an isolated, authenticated native host proves CAP01/CAP02 on this SHA.
+  requireCleanCheckout("BEFORE_ARCHIVE_RECEIPT")
   archiveVerified = true
-  console.log("SF_ORCHESTRA_WEB_PACKAGE_VERIFIED " + JSON.stringify({
+  console.log("SF_ORCHESTRA_WEB_ARCHIVE_EXTRACTED_VERIFIED " + JSON.stringify({
     sourceSHA: expectedSHA, target, version, sha256, fileCount: manifest.files.length,
     webFileCount: manifest.files.filter((item) => item.path.startsWith("bin/web/")).length,
     brand: "sucafina", viteEnvironmentInputs: 0, extractedVerified: true,
