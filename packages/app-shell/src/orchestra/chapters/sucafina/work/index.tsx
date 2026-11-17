@@ -51,16 +51,16 @@ export function admittedProducerWorkHref(
   try {
     const origin = new URL(publicOrigin)
     const url = new URL(raw, origin)
-    const expected = {
-      sf: "work-item", selectionRef: selected.selectionRef,
-      start: selected.period.start, end: selected.period.end, actionRef,
-    }
-    const keys = Object.keys(expected)
+    const expected = new Map([
+      ["sf", "work-item"], ["selectionRef", selected.selectionRef],
+      ["start", selected.period.start], ["end", selected.period.end], ["actionRef", actionRef],
+    ])
+    const keys = [...expected.keys()]
     return url.origin === origin.origin && !url.username && !url.password && !url.hash &&
       url.pathname === prefix + "/dashboard" &&
       [...url.searchParams.keys()].length === keys.length &&
       keys.every((key) => url.searchParams.getAll(key).length === 1 &&
-        url.searchParams.get(key) === expected[key as keyof typeof expected])
+        url.searchParams.get(key) === expected.get(key))
   } catch { return false }
 }
 
