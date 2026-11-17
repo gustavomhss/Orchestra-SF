@@ -85,8 +85,14 @@ export function createApplication(mount: string, application: Application) {
     const response = await transaction(async (snapshot, blobs) => {
       // Resolve current roles INSIDE the same transaction that rereads records and locks.
       const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
-      if (!principal || !principal.id || principal.id.startsWith("local:"))
-        return { commit: false, value: reply("Authentication required", 401) }
+      if (!principal || !principal.id || principal.id.startsWith("local:")) {
+        const diag = process.env.SF_AUTH_DIAG === "1"
+        if (diag) console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({
+          layer: "sf-application", stage: "authentication-denied", surface,
+          mappedRoles: roleMap(snapshot, surface).filter((row) => !!row.entra).length,
+        }))
+        return { commit: false, value: reply("Authentication required", 401, diag ? { "X-SF-Auth-Layer": "sf-application" } : {}) }
+      }
       const access = object(object(snapshot.data.access)[principal.id])
       const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
       const actor: Actor = {
