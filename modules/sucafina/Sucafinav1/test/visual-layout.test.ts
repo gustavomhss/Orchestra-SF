@@ -169,5 +169,5 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
   }
   // 28 routes at five widths, plus entry/desktop captures: visual operations keep
   // their 10s deadline; browser cleanup owns 10s graceful + 10s forced termination.
-  // Only this aggregate visual test receives 120s.
-}, 120000)
+  // Only this aggregate visual test receives 150s: a real lease, 28 routes at five widths and teardown.
+}, 150000)

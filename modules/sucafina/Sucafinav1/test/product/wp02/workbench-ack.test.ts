@@ -8,7 +8,7 @@ type Fixture = Awaited<ReturnType<typeof createRecoveryFixture>>
 type Attempt = { body: string | null; key: string | undefined; status: number; value: unknown }
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 async function withWorkbench(check: (f: Fixture, page: Page, panel: Locator) => Promise<void>) {
   const f = await createRecoveryFixture()

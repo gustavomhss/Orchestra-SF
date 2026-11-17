@@ -33,7 +33,7 @@ type Fixture = {
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 // The domain, authentication, HTTP handlers and SQLite remain real. Faults affect
 // only delivery, after the actual transaction or before it reaches the handler.

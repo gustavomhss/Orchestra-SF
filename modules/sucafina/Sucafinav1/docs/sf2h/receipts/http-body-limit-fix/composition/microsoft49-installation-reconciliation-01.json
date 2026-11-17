@@ -1,0 +1,40 @@
+{
+  "schema": "sf2h.microsoft49-installation-reconciliation.v1",
+  "composes": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+    "blob": "75a96c0c2f8df772727ff1c71d2cc7a2b7085cf2",
+    "schema": "sf2h.microsoft49-composition.v1",
+    "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+    "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e"
+  },
+  "installed_commit": "f212c3d0ac6107e38f129d331b36fb674b39f303",
+  "installed_tree": "33832f8270e521431554cf3426db281a010b6780",
+  "reason": "Owned product commits after composition 74 changed the installed bytes of the recorded targets. The composed postimages stay byte-identical for lineage; this receipt records the installed bytes the integration tests load, so any later drift fails again and requires a new reconciliation.",
+  "authority": "The recorded target files remain the installed product sources under the repository's normal review. No source-release artifact is rewritten and no validation result is claimed here.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "composed_postimage_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "composed_postimage_sha256": "addaab0dca8ce1addcb155808a841c4ac05a55e6dbe630ee874fa69f5f3067fb",
+      "installed_postimage_blob": "b4c4e59699c64caed3fb6dab7bcf3284021d7822",
+      "installed_postimage_sha256": "2d40e5c29a02c3f0856ea502304d1e00720e754afaf5a4a77f9a3f5ffaa61b85",
+      "bytes": 31845
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "composed_postimage_blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+      "composed_postimage_sha256": "f38d0b8a880dd540052f10639d8a41640480e2dbaa65327135cc8d4dbcd13a3f",
+      "installed_postimage_blob": "b653926d8ddc478af06a228e7d51c54894a6c7e9",
+      "installed_postimage_sha256": "c38e7e235e93ed3b25d4e77909355c43facbec51b57e98d4751c5026654ea115",
+      "bytes": 12906
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "composed_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "composed_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+      "installed_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "installed_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+      "bytes": 8960
+    }
+  ]
+}

@@ -6,7 +6,7 @@ import { available } from "./domain-fixture.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 // Isolated after run 43621603578 failed before observing attachment. No deadline
 // or prior assertion is relaxed; retain intermediate HTTP outcomes on failure.

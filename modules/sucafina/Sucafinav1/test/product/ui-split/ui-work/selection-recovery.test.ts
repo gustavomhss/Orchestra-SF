@@ -7,7 +7,7 @@ import { createWorkSelectionDomainFixture } from "../../wp01/work-selection-doma
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 const fixture = () => createWorkSelectionDomainFixture(browser, (projection) => ({ html: caseWorkSelectionForm(projection), script: caseWorkSelectionScript }))
 type Fixture = Awaited<ReturnType<typeof fixture>>

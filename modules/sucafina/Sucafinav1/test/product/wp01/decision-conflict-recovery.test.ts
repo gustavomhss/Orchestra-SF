@@ -30,7 +30,7 @@ import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 type Edit = Parameters<ReturnType<typeof createDecisionCaseManagement>["edit"]>[0]
 

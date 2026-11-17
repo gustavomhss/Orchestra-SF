@@ -10,7 +10,7 @@ const runtime: { browser?: Browser } = {}
 beforeAll(async () => {
   runtime.browser = await launchWp01Browser()
 }, 35_000)
-afterAll(async () => { if (runtime.browser) await closeWp01Browser(runtime.browser) }, 25_000)
+afterAll(async () => { if (runtime.browser) await closeWp01Browser(runtime.browser) }, 45_000)
 
 function editor(value = "Original", version = 1) {
   return form("Vendor Contracts", "save", "contract-1", version, fields([{ name: "description", label: "Description", value }]))

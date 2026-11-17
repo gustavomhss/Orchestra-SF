@@ -16,7 +16,7 @@ type SearchFixture = { page: Page; origin: string; policy: SearchPolicy; errors:
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined

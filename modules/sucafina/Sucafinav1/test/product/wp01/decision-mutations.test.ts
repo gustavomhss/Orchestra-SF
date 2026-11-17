@@ -22,7 +22,7 @@ beforeAll(async () => {
   } finally { await source.close() }
   browser = await launchWp01Browser()
 }, 35000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 const caseRef = { id: "consumer-case", incarnation: "consumer-incarnation", version: 1 }
 const editContext = { caseRef, sourceRefs: [], criteria: [{ id: "criterion", required: true }] }

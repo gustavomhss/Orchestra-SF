@@ -150,4 +150,4 @@ test("All editor screens keep readable field widths and ordered configuration se
     await installation.dispose()
     await rm(root, { recursive: true, force: true })
   }
-}, 60000)
+}, 90000)

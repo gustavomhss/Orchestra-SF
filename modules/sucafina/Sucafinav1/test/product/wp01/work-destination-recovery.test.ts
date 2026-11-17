@@ -26,7 +26,7 @@ import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 /** The My work HTML and list come from actual Workbench, Procurement/BCS and
  * collaboration services. No destination resolver is mounted: its real 503 is

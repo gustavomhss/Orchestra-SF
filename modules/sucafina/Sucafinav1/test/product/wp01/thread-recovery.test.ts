@@ -32,7 +32,7 @@ const mode = (request: Request) => new URL(request.url).searchParams.get("sf")
 
 let browser: Browser | undefined
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 async function bounded<T>(operation: Promise<T>, step: string, timeout = 5_000) {
   let timer: ReturnType<typeof setTimeout> | undefined

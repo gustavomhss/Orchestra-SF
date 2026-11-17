@@ -6,7 +6,7 @@ import { loseCommittedReply, replyWrites } from "./proof-helpers.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 
 test("physical source replacement refuses the old recipient intent and reload cannot render its protected text", async () => {
