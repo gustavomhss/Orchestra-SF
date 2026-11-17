@@ -66,7 +66,9 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(previewBody).toMatchObject({ ok: true })
     await expect(planner.locator("[data-import-notice]")).toContainText("OPEX (1)")
     await submit(page, planner)
-    const importedLine = page.getByRole("row").filter({ hasText: "Browser OPEX fixture" }).first()
+    // WP01's saved-monthly-values projection adds a read-only row for the same line.
+    // Target the editable budget row, not the projection, when checking the input values.
+    const importedLine = page.getByRole("row").filter({ hasText: "Browser OPEX fixture" }).filter({ has: page.locator('[name="b0"]') }).first()
     await expect(importedLine).toBeVisible()
     // The grid renders month inputs; its annual total is verified in the exported workbook below.
     for (const month of Array.from({ length: 12 }, (_, index) => index)) await expect(importedLine.locator(`[name="b${month}"]`)).toHaveValue("125")
