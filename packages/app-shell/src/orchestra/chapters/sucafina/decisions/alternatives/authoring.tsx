@@ -333,7 +333,11 @@ export function SfAlternativeAuthoring(props: {
           {(receipt) => <div class="sf-n24-review" role="status">
             <strong>Produtor confirmou a gravação.</strong>
             <p>Case v{receipt().caseVersion} · resultado <bdi>{receipt().resultRef}</bdi> · tentativa <bdi>{receipt().correlation}</bdi>.</p>
-            <button type="button" class="mx-btn" onClick={props.onReload}>Releitura autorizada</button>
+            <button type="button" class="mx-btn" onClick={() => {
+              props.onReload()
+              setForm({ phase: "editing", receipt: undefined, selectedId: "", title: "",
+                baseRef: "", operations: [], assumptions: [], prepared: undefined, error: "" })
+            }}>Releitura autorizada / próxima alternativa</button>
           </div>}
         </Show>
         <Show when={form.error}><p role="alert">{form.error}</p></Show>
