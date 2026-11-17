@@ -79,7 +79,7 @@ async function localAccess() {
   return { ...f, store, code, operator }
 }
 
-test("explicit local operator opens all surfaces after private enrollment and visibly labels homology", async () => {
+test("explicit local operator enrollment enters Orchestra and HTML console faces are retired", async () => {
   const f = await localAccess()
   const installation = await createLocalInstallation({ origin }, f.file, f.environment)
   try {
@@ -91,12 +91,12 @@ test("explicit local operator opens all surfaces after private enrollment and vi
     const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
     for (const surface of ["dashboard", "planner", "procurement"]) {
       const response = await installation.handler(new Request(`${origin}/sucafina/${surface}`, { headers: { cookie } }))
-      expect(response?.status).toBe(200)
-      expect(response!.headers.get("content-type")).toContain("text/html")
-      const html = await response!.text()
-      expect(html).toContain("Homologação local")
-      expect(html).toContain(userInfo().username)
-      expect(html).toContain("Microsoft 365 desativado neste perfil")
+      expect(response?.status).toBe(404)
+      expect(response?.headers.get("content-type")).toContain("text/plain")
+      expect(await response!.text()).toBe("legacy console decommissioned — use /")
+      const head = await installation.handler(new Request(`${origin}/sucafina/${surface}`, { method: "HEAD", headers: { cookie } }))
+      expect(head?.status).toBe(404)
+      expect(await head!.text()).toBe("")
     }
     const status = await installation.handler(new Request(`${origin}/sucafina/status`))
     expect(await status!.json()).toMatchObject({ login: "local-operator" })
