@@ -123,6 +123,9 @@ jobs:
         env:
           SF_PR_BASE: ${{ github.event.pull_request.base.sha }}
           GH_READ_TOKEN: ${{ github.token }}
+          # Owner approval of a protected-path change travels as the
+          # guardrail-approved label; the guard engine reads this env.
+          GUARDRAIL_APPROVED: ${{ contains(github.event.pull_request.labels.*.name, 'guardrail-approved') && 'protected-paths' || '' }}
         shell: bash
         run: |
           set -euo pipefail
