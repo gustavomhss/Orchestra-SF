@@ -175,9 +175,16 @@ async function sourcing(fixture,ids){
   await move("Pedro",fixture,"save",{sourcing:{quotes,evaluator:"Sofie",selectedId:null,contractStrategy:"new"}},'name="sourcing.evaluator"');
   await move("Pedro",fixture,"select_quote",{quoteId:quotes[0].id});
 }
-async function purchaseOrder(fixture){
-  const supplier=twoSuppliers(fixture)[0];
-  await move("Pedro",fixture,"save",{po:{currency:"BRL",expenseType:fixture.id==="PR-APPROVED"?"CAPEX":"OPEX",supplier:supplier.legalName,description:fixture.description,paymentTerms:"Net 30",deliveryDate:fixture.needBy,deliveryConditions:"Synthetic demo delivery only",contractRef:supplier.contractId}},'name="po.currency"');
+async function purchaseOrder(fixture,ids){
+  const supplier=twoSuppliers(fixture)[0],supplierId=ids.get(supplier.id);
+  demand(typeof supplierId==="string"&&supplierId.length>0,"real-PO-supplier-ID-missing");
+  await move("Pedro",fixture,"save",{po:{
+    currency:"BRL",expenseType:fixture.id==="PR-APPROVED"?"CAPEX":"OPEX",
+    supplier:supplier.legalName,supplierId,description:fixture.description,
+    lines:[{id:"FLA-DEMO-PO-LINE-"+fixture.id,description:fixture.description,qty:1,unitPrice:fixture.amount}],
+    paymentTerms:"Net 30",deliveryDate:fixture.needBy,deliveryConditions:"Synthetic demo delivery only",
+    contractRef:supplier.contractId,quoteRef:"FLA-DEMO-Q-"+fixture.id+"-0"
+  }},'name="po.currency"');
 }
 async function ensureRequest(fixture,ids){
   let at=await stage(fixture);
@@ -193,7 +200,7 @@ async function ensureRequest(fixture,ids){
     const next=fixture.stageTarget==="pr_rejected"&&at.status==="pr_pending"?"pr_rejected":order[idx+1];
     demand(idx>=0&&next,"target-stage-not-reachable-without-rewind:"+fixture.id+":"+at.status);
     if(next==="src_pending")await sourcing(fixture,ids);
-    if(next==="po_pending")await purchaseOrder(fixture);
+    if(next==="po_pending")await purchaseOrder(fixture,ids);
     const t=transitions[next];demand(t,"no-real-transition:"+next);
     const actual=await move(t[0],fixture,t[1],t[2]);
     demand(actual===next,"producer-stage-"+actual+"-expected-"+next);
@@ -303,26 +310,45 @@ async function doDashboard(){
   }
 }
 
-async function fileWorkbook(){
+async function fileWorkbook(versionId){
+  // Matches runtime/workbooks.ts: Info and OPEX producer columns (not guessed).
   const require=createRequire(new URL("../../../modules/sucafina/package.json",import.meta.url));
   const {Workbook}=require("exceljs"),book=new Workbook();
   book.creator="FLA-DEMO";book.created=new Date("2026-01-01T00:00:00Z");book.modified=new Date("2026-01-01T00:00:00Z");
-  const sheet=book.addWorksheet("OPEX");sheet.addRow(["Line ID","Cost element","Vendor / item","Currency","Measure","Jan"]);
-  for(const l of fixtures.planner.lines)sheet.addRow([key("planner:"+l.id),l.element==="licenses"?"Licenses":"Services",l.description,l.currency,"Forecast",l.forecastJanuary]);
+  const info=book.addWorksheet("Info");
+  info.addRow(["IT Budget Planner — upload workbook"]);info.addRow([]);
+  info.addRow(["Version ID",versionId]);info.addRow(["Version",fixtures.planner.versionName]);
+  info.addRow(["Budget year",fixtures.planner.fiscalYear]);info.addRow(["Currency","USD"]);
+  const sheet=book.addWorksheet("OPEX");
+  const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  sheet.addRow(["Line ID","Cost element","Vendor / item","Description","Owner","Entity","Allocation","Currency","Measure",...months,"Total"]);
+  const line=fixtures.planner.lines.find(x=>x.currency==="BRL");
+  demand(line&&line.forecastJanuary>0,"deterministic-forecast-import-target-missing");
+  // This is a single scoped changed forecast, not an unreviewed replacement of all OPEX.
+  // Repeated runs derive the same values: once applied it must be an unchanged receipt.
+  sheet.addRow([key("planner:"+line.id),"Services",line.description,"FLA-DEMO reviewed import",null,null,null,"BRL","Forecast",
+    line.forecastJanuary+500,...Array(11).fill(null),null]);
   return new Uint8Array(await book.xlsx.writeBuffer());
 }
 async function doImports(){
+  const versionId=await planVersion();
   const targets=await discovery("Daniel","planner","import-targets",{surface:"planner",start:"2026-01-01",end:"2026-12-31"});
   demand(Array.isArray(targets),"real-import-targets-unavailable");
   const selection=process.env.SF_DEMO_PLANNER_SELECTION_REF;
   const candidates=targets.filter(t=>t.surface==="planner"&&Array.isArray(t.formats)&&t.formats.includes("xlsx")&&(selection?t.selectionRef===selection:String(t.label).includes(fixtures.planner.versionName)&&(!t.sheet||t.sheet==="OPEX")));
   demand(candidates.length===1,"operator-must-select-real-planner-import-target");
-  const target=candidates[0],bytes=await fileWorkbook(),options={newVersion:false,removeMissing:false,preview:{sheet:"OPEX"}};
+  const target=candidates[0],bytes=await fileWorkbook(versionId),options={newVersion:false,removeMissing:false,preview:{sheet:"OPEX"}};
   const form=new FormData();form.set("file",new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),"flamengo-opex-2026.xlsx");form.set("surface","planner");form.set("selectionRef",target.selectionRef);form.set("options",JSON.stringify(options));
   const intent="import:planner:"+target.selectionRef+":"+hash(bytes);
   const admitted=(await transport("Daniel","planner","import-admit",form,intent+":admit",true)).value;
   demand(typeof admitted?.ref==="string","no-admitted-file-ref");
   const preview=(await transport("Daniel","planner","import-preview",{admittedFileRef:admitted.ref,format:"xlsx",options:options.preview},intent+":preview")).value;
+  if(preview?.state==="applied"&&preview.domainApplied===true){
+    const prior=await discovery("Daniel","planner","import-detail",{manifestId:preview.id,version:preview.version});
+    demand(prior?.receipt,"prior-applied-import-without-receipt");
+    status("imports","READY","existing exact-key applied manifest reconciled by durable receipt; no duplicate write");
+    return;
+  }
   demand(preview?.state==="preview"&&preview.domainApplied===false&&!preview.issues?.length,"preview-nonmutating-and-clean-required");
   const details=await discovery("Daniel","planner","import-detail",{manifestId:preview.id,version:preview.version});
   demand(Array.isArray(details?.detail?.changes),"no-producer-preview-changes");
