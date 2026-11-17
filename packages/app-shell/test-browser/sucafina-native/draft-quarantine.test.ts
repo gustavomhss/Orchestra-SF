@@ -9,7 +9,7 @@ import type { SfContext, SfContextDependencies, SfContextHandle, SfDraftRevalida
 import { createSfDraft } from "../../src/orchestra/chapters/sucafina/shared/draft"
 import { revalidateSfNativeDraft } from "../../src/orchestra/chapters/sucafina/host/draft-revalidation"
 
-// Import through the existing Solid DOM compiler, not Bun\u0027s classic React TSX transform.
+// The native Bun TSX transform emits React.createElement; use the existing Solid DOM compiler.
 const { SfContextProvider, useSfContext }: typeof import("../../src/orchestra/chapters/sucafina/context") = await import(
   solidDom("../../src/orchestra/chapters/sucafina/context", import.meta.dir)
 )
