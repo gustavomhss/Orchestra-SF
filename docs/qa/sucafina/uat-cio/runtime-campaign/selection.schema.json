@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orchestra.local/schemas/sf-runtime-ready-selection-v1.json",
+  "title": "Orchestra-SF runtime-ready 94-story selection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "candidate_sha",
+    "candidate_tree_sha",
+    "installed_artifact_sha256",
+    "classification_source_ref",
+    "classification_source_sha256",
+    "stories"
+  ],
+  "properties": {
+    "schema": {"const": "sf-runtime-ready-selection-v1"},
+    "candidate_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "candidate_tree_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "installed_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "classification_source_ref": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#-]{1,190}$"
+    },
+    "classification_source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stories": {
+      "type": "array",
+      "minItems": 94,
+      "maxItems": 94,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "classification", "classification_evidence_ref"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^SF-[A-Z0-9-]+$"},
+          "classification": {"const": "PATH_PRESENT_RUNTIME_REQUIRED"},
+          "classification_evidence_ref": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#-]{1,190}$"
+          }
+        }
+      }
+    }
+  }
+}
