@@ -58,6 +58,22 @@ const ScenarioTarget = Schema.Struct({
   period: SfFilePeriod,
   currency: Schema.String,
   label: Schema.String,
+  linkRef: Schema.String.pipe(optional),
+  linkedAt: Schema.String.pipe(optional),
+})
+const DocumentRejection = Schema.Struct({
+  surface: SfFileSurface, action: Schema.Literal("reject"),
+  evidence: SfDocumentEvidence, reason: Schema.String, page: PositiveInt,
+})
+const DocumentLink = Schema.Struct({
+  ...DocumentScenarioInput.fields,
+  action: Schema.Literal("link"),
+})
+const DocumentLinkReceipt = Schema.Struct({
+  kind: Schema.Literal("scenario-link"), id: Schema.String, at: Schema.String,
+  documentRef: SfDocumentRef, baseRef: Schema.String, targetRef: Schema.String,
+  period: SfFilePeriod, evidenceVersion: PositiveInt,
+  domainApplied: Schema.Literal(false),
 })
 const SourceLink = Schema.Struct({
   ok: Schema.Literal(true),
@@ -208,10 +224,15 @@ export const SfFilesDocumentExtract = {
   output: SfFilesPortResult(SfDocumentEvidence),
 } as const
 
+/** Existing human-governed document mutation route; the legacy confirm body remains unchanged. */
 export const SfFilesDocumentConfirm = {
   operationId: "files.document-confirm",
-  input: Schema.Struct({ ...HostSurface.fields, evidence: SfDocumentEvidence }),
-  output: SfFilesPortResult(SfDocumentEvidence),
+  input: Schema.Union([
+    Schema.Struct({ ...HostSurface.fields, evidence: SfDocumentEvidence }),
+    DocumentRejection,
+    DocumentLink,
+  ]),
+  output: SfFilesPortResult(Schema.Union([SfDocumentEvidence, DocumentLinkReceipt])),
 } as const
 
 export const SfFilesDocumentCandidates = {

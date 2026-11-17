@@ -63,6 +63,14 @@ type LeafState = {
   targets: Targets
   selectedTarget: string
   preview: Preview | undefined
+  uploadKind: "contract" | "quote" | "signed-po" | "supplier"
+  uploadRecord: string
+  uploadVersion: string
+  uploadName: string
+  uploadNotice: string
+  rejectionReason: string
+  rejectionPage: string
+  linkedRef: string
   error: SfUiState | undefined
 }
 
@@ -91,11 +99,14 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     requests: [], sources: [], requestSelectionRef: "", sourceSelectionRef: "",
     documentRef: "", candidates: [], selectedCandidateId: "", opened: undefined,
     fieldId: "", fieldType: "number", fieldUnit: "", search: "", matches: undefined,
-    targets: [], selectedTarget: "", preview: undefined, error: undefined,
+    targets: [], selectedTarget: "", preview: undefined,
+    uploadKind: "quote", uploadRecord: "", uploadVersion: "", uploadName: "", uploadNotice: "",
+    rejectionReason: "", rejectionPage: "1", linkedRef: "", error: undefined,
   })
   let generation = 0
   let controller = new AbortController()
   let mutationUnknown = false
+  let uploadFile: File | undefined
   const ownerStamp = () => {
     const context = auth.state()
     return context.status === "ready"
@@ -140,7 +151,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   const clearSelection = () => {
     mutationUnknown = false
     setState({ candidates: [], selectedCandidateId: "", opened: undefined,
-      targets: [], selectedTarget: "", preview: undefined, matches: undefined, phase: "catalog" })
+      targets: [], selectedTarget: "", preview: undefined, matches: undefined,
+      rejectionReason: "", rejectionPage: "1", linkedRef: "", phase: "catalog" })
   }
   const clearOnSourceChange = () => {
     fence()
@@ -159,7 +171,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     }, { signal: token.signal })
     const value = accept(token, unpack(result))
     if (!value || !current(token)) return
-    setState({ sources: value, busy: false, status: value.length ? "ready" : "empty" })
+    setState({ sources: value, busy: false, status: "ready" })
   }
   const loadCatalog = async () => {
     const api = client()
@@ -175,7 +187,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const sourcesResult = await api["files.document-sources"]({ surface: state.surface }, { signal: token.signal })
     const sources = accept(token, unpack(sourcesResult))
     if (!sources || !current(token)) return
-    setState({ sources, status: sources.length ? "ready" : "empty", busy: false })
+    setState({ sources, status: "ready", busy: false })
   }
   const readCandidates = async (documentRef: string, token: ReturnType<typeof fence>) => {
     const api = client()
@@ -186,7 +198,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const candidates = accept(token, unpack(result))
     if (!candidates || !current(token)) return undefined
     if (documentRef !== state.documentRef) return undefined
-    setState({ candidates, status: candidates.length ? "ready" : "empty", busy: false,
+    setState({ candidates, status: "ready", busy: false,
       phase: candidates.length ? "candidates" : "catalog" })
     return candidates
   }
@@ -215,6 +227,51 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     setState("documentRef", result.value.documentRef)
     await readCandidates(result.value.documentRef, token)
   }
+  const upload = async () => {
+    const api = client()
+    const file = uploadFile
+    const kind = state.uploadKind
+    const record = state.uploadRecord.trim()
+    const rawVersion = state.uploadVersion.trim()
+    const extension = file?.name.split(".").pop()?.toLowerCase()
+    const mime = extension === "pdf" ? "application/pdf" :
+      extension === "docx" ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" :
+      extension === "txt" ? "text/plain" : undefined
+    const page = kind === "contract" ? "Vendor Contracts" :
+      kind === "supplier" ? "Suppliers" : "Requests"
+    if (!api || !permitted("files.asset.upload") || state.busy || !file ||
+        !mime || file.type && file.type !== mime ||
+        file.size < 1 || file.size > 20 * 1024 * 1024 || file.name.length > 255 ||
+        !record || record.length > 1024 || /[\r\n\0]/.test(record) ||
+        !/^(?:0|[1-9]\d*)$/.test(rawVersion) ||
+        !Number.isSafeInteger(Number(rawVersion)) ||
+        (state.surface === "dashboard" ? kind !== "contract" :
+          state.surface !== "procurement" || kind === "contract")) {
+      setState({ uploadNotice: "sf.u24.uploadInvalid", status: "ready" })
+      return
+    }
+    const token = fence()
+    setState({ busy: true, status: "loading", uploadNotice: "" })
+    let bytes: Uint8Array
+    try { bytes = new Uint8Array(await file.arrayBuffer()) }
+    catch { if (current(token)) fail("unavailable"); return }
+    if (!current(token)) return
+    if (bytes.byteLength !== file.size || bytes.byteLength === 0) { fail("invalid"); return }
+    const reply = unpack(await api["files.asset.upload"]({
+      surface: state.surface === "dashboard" ? "dashboard" : "procurement",
+      upload: kind, record, recordVersion: Number(rawVersion), name: file.name,
+      page, mediaType: mime, bytes,
+    }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
+    if (!current(token)) return
+    if (reply.kind === "failure") { fail(reply.state, true); return }
+    // Only a producer success means the scanner, record CAS and private byte store admitted it.
+    // The browser never creates a clean-scan verdict or a document source reference.
+    if (!reply.value.ok) { fail("unavailable", true); return }
+    uploadFile = undefined
+    mutationUnknown = false
+    setState({ uploadName: "", uploadNotice: "sf.u24.uploadAccepted" })
+    await loadCatalog()
+  }
   const search = async () => {
     const api = client()
     if (!api || !state.search.trim() || !permitted("files.document-search")) return
@@ -223,12 +280,13 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const result = await api["files.document-search"]({
       surface: state.surface, query: state.search.trim(), limit: 20,
       ...(state.documentRef ? { documentRefs: [state.documentRef] } : {}),
-    }, { signal: token.signal, idempotencyKey: crypto.randomUUID() })
+    }, { signal: token.signal })
     const matches = accept(token, unpack(result))
     if (!matches || !current(token)) return
     setState({ matches, status: matches.matches.length ? "ready" : "filtered-empty", busy: false })
   }
   const selected = () => state.candidates.find((item) => item.id === state.selectedCandidateId)
+  const canLinkCurrency = () => { const candidate = selected(); return !!candidate && validCurrency(candidate) }
   const openSearchSource = async (ref: Matches["matches"][number]["documentRef"]) => {
     const api = client()
     if (!api || !permitted("files.document-open")) { setState("status", "unavailable"); return }
@@ -286,7 +344,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
     if (!current(token)) return
     if (result.kind === "failure") { fail(result.state, true); return }
-    if (result.value.status !== "confirmed" || result.value.id !== candidate.id ||
+    if (!("status" in result.value) || result.value.status !== "confirmed" || result.value.id !== candidate.id ||
       result.value.ref.target.documentId !== candidate.ref.target.documentId) {
       fail("outcome-unknown", true)
       return
@@ -296,6 +354,37 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     if (fresh?.some((entry) => entry.id === result.value.id &&
       entry.status === "confirmed" && entry.version === result.value.version)) {
       setState({ phase: "confirmed", status: "ready" })
+      mutationUnknown = false
+    } else fail("stale")
+  }
+  const reject = async () => {
+    const api = client()
+    const candidate = selected()
+    const reason = state.rejectionReason.trim()
+    const page = Number(state.rejectionPage)
+    if (!api || !candidate || !state.opened || candidate.status !== "extracted" ||
+        state.phase !== "confirm-review" || state.busy || !permitted("files.document-confirm") ||
+        reason.length < 5 || reason.length > 500 || /[\r\n\0]/.test(reason) ||
+        !/^[1-9]\d*$/.test(state.rejectionPage) || !Number.isSafeInteger(page) || page > 500)
+      return
+    const token = fence()
+    setState({ phase: "confirming", busy: true, status: "loading" })
+    const result = unpack(await api["files.document-confirm"]({
+      surface: state.surface, action: "reject", evidence: candidate, reason, page,
+    }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
+    if (!current(token)) return
+    if (result.kind === "failure") { fail(result.state, true); return }
+    if (!("status" in result.value) || result.value.status !== "rejected" ||
+        result.value.id !== candidate.id || !result.value.rejection ||
+        result.value.rejection.reason !== reason || result.value.rejection.page !== page) {
+      fail("outcome-unknown", true)
+      return
+    }
+    const fresh = await readCandidates(state.documentRef, token)
+    if (!current(token)) return
+    if (fresh?.some((entry) => entry.id === candidate.id && entry.status === "rejected" &&
+        !!entry.rejection && entry.rejection.reason === reason && entry.rejection.page === page)) {
+      setState({ status: "ready", phase: "candidates", busy: false })
       mutationUnknown = false
     } else fail("stale")
   }
@@ -318,12 +407,12 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const targets = accept(token, unpack(result))
     if (!targets || !current(token)) return
     setState({ targets, selectedCandidateId: candidate.id,
-      status: targets.length ? "ready" : "empty", phase: "scenario", busy: false })
+      status: "ready", phase: "scenario", busy: false })
   }
   const scenario = async () => {
     const api = client()
     const candidate = selected()
-    const target = state.targets.find((item) => item.targetRef === state.selectedTarget)
+    const target = /^\d+$/.test(state.selectedTarget) ? state.targets[Number(state.selectedTarget)] : undefined
     if (!api || !candidate || !validCurrency(candidate) || !target ||
       !permitted("files.document-scenario-preview") || state.busy) return
     const token = fence()
@@ -331,7 +420,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const result = unpack(await api["files.document-scenario-preview"]({
       surface: state.surface, documentRef: candidate.ref,
       baseRef: target.baseRef, targetRef: target.targetRef, period: target.period,
-    }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
+    }, { signal: token.signal }))
     if (!current(token)) return
     if (result.kind === "failure") { fail(result.state, true); return }
     const preview = result.value
@@ -343,6 +432,43 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
       return
     }
     setState({ preview, phase: "preview", busy: false, status: "ready" })
+  }
+  const linkScenario = async () => {
+    const api = client()
+    const candidate = selected()
+    const target = /^\d+$/.test(state.selectedTarget) ? state.targets[Number(state.selectedTarget)] : undefined
+    const preview = state.preview
+    if (!api || !candidate || !target || !preview || target.linkRef || !validCurrency(candidate) ||
+        preview.domainApplied !== false || preview.evidence.id !== candidate.id ||
+        preview.evidence.ref.refDigest !== candidate.ref.refDigest || state.busy ||
+        state.phase !== "preview" || !permitted("files.document-confirm") ||
+        !permitted("files.document-scenario-targets")) return
+    const token = fence()
+    setState({ busy: true, status: "loading" })
+    const result = unpack(await api["files.document-confirm"]({
+      surface: state.surface, action: "link", documentRef: candidate.ref,
+      baseRef: target.baseRef, targetRef: target.targetRef, period: target.period,
+    }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
+    if (!current(token)) return
+    if (result.kind === "failure") { fail(result.state, true); return }
+    if (!("kind" in result.value) || result.value.kind !== "scenario-link" ||
+        result.value.domainApplied !== false || result.value.targetRef !== target.targetRef ||
+        result.value.documentRef.refDigest !== candidate.ref.refDigest) {
+      fail("outcome-unknown", true)
+      return
+    }
+    const receipt = result.value
+    const refreshed = unpack(await api["files.document-scenario-targets"]({
+      surface: state.surface, ref: candidate.ref,
+    }, { signal: token.signal }))
+    if (!current(token)) return
+    if (refreshed.kind === "failure") { fail(refreshed.state); return }
+    if (!refreshed.value.some((item) => item.linkRef === receipt.id &&
+        item.baseRef === target.baseRef && item.targetRef === target.targetRef &&
+        item.linkedAt === receipt.at)) { fail("stale"); return }
+    mutationUnknown = false
+    setState({ targets: refreshed.value, linkedRef: receipt.id, phase: "preview",
+      status: "ready", busy: false })
   }
   const safeHref = () => {
     const href = state.opened?.href
@@ -365,7 +491,10 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const section = props.surfaceId
     fence()
     mutationUnknown = false
+    uploadFile = undefined
     setState({
+      uploadName: "", uploadNotice: "", uploadKind: "quote", uploadRecord: "", uploadVersion: "",
+      rejectionReason: "", rejectionPage: "1", linkedRef: "",
       status: ready ? "ready" : auth.state().status === "resolving" ? "loading" :
         auth.state().status === "unauthenticated" ? "session-expired" :
         auth.state().status === "denied" ? "denied" : "unavailable",
@@ -416,10 +545,50 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
             </div>
           </Show>
           <Show when={catalog() && props.route.kind !== "detail"}>
+            <form class="sf-files-fields" data-sf-document-upload="authorized-asset"
+              onSubmit={(event) => { event.preventDefault(); void upload() }}>
+              <h2>{t("sf.u24.uploadTitle")}</h2>
+              <p>{t("sf.u24.uploadHelp")}</p>
+              <label>{t("sf.u24.uploadKind")}
+                <select value={state.uploadKind} disabled={state.busy}
+                  onChange={(event) => setState("uploadKind", event.currentTarget.value === "contract" ? "contract" :
+                    event.currentTarget.value === "supplier" ? "supplier" :
+                    event.currentTarget.value === "signed-po" ? "signed-po" : "quote")}>
+                  <Show when={state.surface === "dashboard"}>
+                    <option value="contract">{t("sf.u24.uploadContract")}</option>
+                  </Show>
+                  <Show when={state.surface === "procurement"}>
+                    <option value="quote">{t("sf.u24.uploadQuote")}</option>
+                    <option value="signed-po">{t("sf.u24.uploadSignedPo")}</option>
+                    <option value="supplier">{t("sf.u24.uploadSupplier")}</option>
+                  </Show>
+                </select>
+              </label>
+              <label>{t("sf.u24.uploadRecord")}
+                <input value={state.uploadRecord} maxlength="1024" required disabled={state.busy}
+                  onInput={(event) => setState("uploadRecord", event.currentTarget.value)} />
+              </label>
+              <label>{t("sf.u24.uploadVersion")}
+                <input type="number" min="0" step="1" required value={state.uploadVersion} disabled={state.busy}
+                  onInput={(event) => setState("uploadVersion", event.currentTarget.value)} />
+              </label>
+              <label>{t("sf.u24.uploadFile")}
+                <input type="file" accept=".pdf,.txt,.docx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  required disabled={state.busy} onChange={(event) => {
+                    uploadFile = event.currentTarget.files?.[0]
+                    setState("uploadName", uploadFile?.name ?? "")
+                  }} />
+              </label>
+              <button type="submit" class="mx-btn primary" disabled={state.busy ||
+                !state.uploadName || !state.uploadRecord.trim() || !state.uploadVersion.trim() ||
+                !permitted("files.asset.upload")}>{t("sf.u24.uploadSubmit")}</button>
+              <Show when={state.uploadNotice}><p role="status" data-sf-upload-outcome>{t(state.uploadNotice)}</p></Show>
+            </form>
             <div class="sf-files-fields">
               <label>{t("sf.u24.source")}
                 <select value={state.surface} disabled={state.busy}
-                  onChange={(e) => { clearOnSourceChange(); setState("surface", e.currentTarget.value as FileSurface); void loadCatalog() }}>
+                  onChange={(e) => { clearOnSourceChange(); uploadFile = undefined; setState({ surface: e.currentTarget.value as FileSurface,
+                  uploadKind: e.currentTarget.value === "dashboard" ? "contract" : "quote", uploadName: "" }); void loadCatalog() }}>
                   <option value="procurement">Procurement</option><option value="dashboard">Dashboard</option>
                 </select>
               </label>
@@ -495,6 +664,11 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                       {candidate.fieldCandidate}: {candidate.value === null ? "null" : String(candidate.value)}
                       {" "}{candidate.unit ?? ""} · {candidate.status} · {candidate.version}
                     </button>
+                    <Show when={candidate.status === "rejected" && candidate.rejection}>
+                      <p role="status" data-sf-rejection="persisted">
+                        {t("sf.u24.rejectPageNotice")} {candidate.rejection?.page}: {candidate.rejection?.reason}
+                      </p>
+                    </Show>
                     <Show when={evidence() && candidate.status === "extracted"}>
                       <button type="button" class="mx-btn" disabled={state.busy || !canSelect(candidate) || state.selectedCandidateId !== candidate.id || !state.opened}
                         onClick={() => {
@@ -555,6 +729,19 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   onClick={() => { setState("phase", "candidates") }}>{t("sf.common.keepEditing")}</button>
                 <button type="button" class="mx-btn primary" disabled={state.busy}
                   onClick={() => { void confirm() }}>{t("sf.u24.confirmField")}</button>
+                <label>{t("sf.u24.rejectReason")}
+                  <textarea maxlength="500" rows="3" value={state.rejectionReason} disabled={state.busy}
+                    onInput={(event) => setState("rejectionReason", event.currentTarget.value)} />
+                </label>
+                <label>{t("sf.u24.rejectPage")}
+                  <input type="number" min="1" max="500" step="1" value={state.rejectionPage}
+                    disabled={state.busy}
+                    onInput={(event) => setState("rejectionPage", event.currentTarget.value)} />
+                </label>
+                <button type="button" class="mx-btn" disabled={state.busy ||
+                  state.rejectionReason.trim().length < 5 || state.rejectionReason.trim().length > 500 ||
+                  !/^[1-9]\d*$/.test(state.rejectionPage) || Number(state.rejectionPage) > 500}
+                  onClick={() => { void reject() }}>{t("sf.u24.rejectSubmit")}</button>
               </section>
             </Show>
           </Show>
@@ -573,8 +760,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 <select value={state.selectedTarget} disabled={state.busy || !state.targets.length}
                   onChange={(e) => { setState({ selectedTarget: e.currentTarget.value, preview: undefined, phase: "scenario" }) }}>
                   <option value="">{t("sf.u24.scenarioDestination")}</option>
-                  <For each={state.targets}>{(target) =>
-                    <option value={target.targetRef}>{target.label}</option>}</For>
+                  <For each={state.targets}>{(target, index) =>
+                    <option value={String(index())}>{target.label}{target.linkRef ? " " + t("sf.u24.scenarioLinkLabel") : ""}</option>}</For>
                 </select>
               </label>
               <Show when={!state.targets.length}><p role="status">{t("sf.u24.noTargets")}</p></Show>
@@ -593,6 +780,18 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   <dt>total</dt><dd>{showScenarioValue(value().scenario, "total") ?? t("sf.common.unknown")}</dd>
                 </dl>
                 <p role="status">{t("sf.u24.scenarioReady")}</p>
+                <p>{t("sf.u24.scenarioLinkHelp")}</p>
+                <Show when={/^\d+$/.test(state.selectedTarget) && state.targets[Number(state.selectedTarget)]?.linkRef}>
+                  <p role="status" data-sf-scenario-link="persisted">
+                    {t("sf.u24.scenarioLinked")} {state.targets[Number(state.selectedTarget)]?.linkRef}
+                  </p>
+                </Show>
+                <button type="button" class="mx-btn primary" data-sf-scenario-link-action
+                  disabled={state.busy || !permitted("files.document-confirm") ||
+                    !/^\d+$/.test(state.selectedTarget) ||
+                    !!state.targets[Number(state.selectedTarget)]?.linkRef ||
+                    !canLinkCurrency()}
+                  onClick={() => { void linkScenario() }}>{t("sf.u24.scenarioLinkSubmit")}</button>
               </section>}</Show>
           </Show>
         </SfStatePanel>

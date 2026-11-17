@@ -1,5 +1,7 @@
 import { htmlPolicy } from "../../runtime/application.ts"
 import { sfDocumentWorkbench } from "../documents/workbench.ts"
+import { parseSfDocumentScenarioRequest } from "../documents/scenario-inputs.ts"
+import type { createSfDocumentScenarioLinks } from "../documents/scenario-links.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { createSfUiAuthority } from "../integration/ui-authority.ts"
@@ -11,7 +13,7 @@ import type { CapabilityResult, TrustedDomainContext } from "../contracts/sf-exe
 import type { SfDocumentAssetCatalogEntry } from "../documents/byte-port.ts"
 
 /** Private same-origin presentation route; the signed asset endpoint rechecks access when opened. */
-export function createSfDocumentHttp(input: { origin: string; mount: string; runtime: () => { ui: ReturnType<typeof createSfUiAuthority>; human: ReturnType<typeof createSfHumanAuthority>; documents: Pick<ReturnType<typeof createSfDocumentHost>, "resolvePresentation" | "extract" | "confirm" | "list" | "search">; schemas: ReturnType<typeof createSfDocumentSchemas>; dispatch: (operation: "sf_document_extract" | "sf_knowledge_search", payload: unknown, context: TrustedDomainContext) => Promise<CapabilityResult>; discoverRequests: (context: TrustedDomainContext) => Promise<PortResult<readonly { selectionRef: string; label: string }[]>>; discover: (context: TrustedDomainContext, requestSelectionRef?: string) => Promise<PortResult<readonly { selectionRef: string; label: string; surface: "dashboard" | "procurement" }[]>>; admitSelection: (selectionRef: string, context: TrustedDomainContext) => Promise<PortResult<SfDocumentAssetCatalogEntry>> } | undefined }) {
+export function createSfDocumentHttp(input: { origin: string; mount: string; runtime: () => { ui: ReturnType<typeof createSfUiAuthority>; human: ReturnType<typeof createSfHumanAuthority>; documents: Pick<ReturnType<typeof createSfDocumentHost>, "resolvePresentation" | "extract" | "confirm" | "reject" | "list" | "search">; links?: ReturnType<typeof createSfDocumentScenarioLinks>; schemas: ReturnType<typeof createSfDocumentSchemas>; dispatch: (operation: "sf_document_extract" | "sf_knowledge_search", payload: unknown, context: TrustedDomainContext) => Promise<CapabilityResult>; discoverRequests: (context: TrustedDomainContext) => Promise<PortResult<readonly { selectionRef: string; label: string }[]>>; discover: (context: TrustedDomainContext, requestSelectionRef?: string) => Promise<PortResult<readonly { selectionRef: string; label: string; surface: "dashboard" | "procurement" }[]>>; admitSelection: (selectionRef: string, context: TrustedDomainContext) => Promise<PortResult<SfDocumentAssetCatalogEntry>> } | undefined }) {
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
@@ -87,11 +89,66 @@ export function createSfDocumentHttp(input: { origin: string; mount: string; run
       const runtime = input.runtime()
       if (!runtime) return reply({ status: "unavailable" }, 503)
       if (mode === "document-confirm") {
+        // Existing source-bound mutation route: strict, discriminated human actions.
+        // No new generic router or non-authorized browser-to-server write path.
+        if (payload && typeof payload === "object" && !Array.isArray(payload) && "action" in payload) {
+          if (payload.action === "reject") {
+            if (Object.keys(payload).length !== 4 || !("evidence" in payload) ||
+                !("reason" in payload) || !("page" in payload) ||
+                typeof payload.reason !== "string" ||
+                payload.reason.trim() !== payload.reason || payload.reason.length < 5 ||
+                payload.reason.length > 500 || /[\r\n\0]/.test(payload.reason) ||
+                !Number.isSafeInteger(payload.page) || typeof payload.page !== "number" ||
+                payload.page < 1 || payload.page > 500)
+              return reply({ status: "invalid" }, 400)
+            const evidence = decodeSfOperationOutput("sf_document_extract", payload.evidence)
+            if (!evidence.ok || evidence.value.status !== "extracted" || evidence.value.rejection)
+              return reply({ status: "invalid" }, 400)
+            const review = { evidence: evidence.value, reason: payload.reason, page: payload.page }
+            const human = await runtime.human.admit(request, "documents.reject", review)
+            if (human.status !== "ok") return reply({ status: human.status }, 403)
+            try {
+              const result = await runtime.documents.reject(evidence.value.id, review.reason, review.page, human.value)
+              if (!await runtime.ui.revalidate(human.value)) return reply({ status: "denied" }, 403)
+              return result.status === "ok" ? reply({ status: "ok", value: result.value }, 200) :
+                reply({ status: result.status, reason: documentFailure(result.reason) },
+                  result.status === "denied" ? 403 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
+            } finally { runtime.human.finish(human.value) }
+          }
+          if (payload.action === "link") {
+            if (Object.keys(payload).length !== 5 || !runtime.links)
+              return reply({ status: "unavailable", reason: "document-link-unavailable" }, 503)
+            const parsed = parseSfDocumentScenarioRequest({
+              documentRef: "documentRef" in payload ? payload.documentRef : undefined,
+              baseRef: "baseRef" in payload ? payload.baseRef : undefined,
+              targetRef: "targetRef" in payload ? payload.targetRef : undefined,
+              period: "period" in payload ? payload.period : undefined,
+            })
+            if (!parsed) return reply({ status: "invalid" }, 400)
+            const human = await runtime.human.admit(request, "documents.link", parsed)
+            if (human.status !== "ok") return reply({ status: human.status }, 403)
+            try {
+              const result = await runtime.links.link(parsed, human.value)
+              if (!await runtime.ui.revalidate(human.value)) return reply({ status: "denied" }, 403)
+              return result.status === "ok" ? reply({ status: "ok", value: result.value }, 200) :
+                reply({ status: result.status, reason: documentFailure(result.reason) },
+                  result.status === "denied" ? 403 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
+            } finally { runtime.human.finish(human.value) }
+          }
+          return reply({ status: "invalid" }, 400)
+        }
         const evidence = decodeSfOperationOutput("sf_document_extract", payload)
-        if (!evidence.ok || evidence.value.status !== "extracted") return reply({ status: "invalid" }, 400)
+        if (!evidence.ok || evidence.value.status !== "extracted" || evidence.value.rejection)
+          return reply({ status: "invalid" }, 400)
         const human = await runtime.human.admit(request, "documents.confirm", evidence.value)
         if (human.status !== "ok") return reply({ status: human.status }, 403)
-        try { const result = await runtime.documents.confirm(evidence.value.id, human.value); return result.status === "ok" ? reply({ status: "ok", value: result.value }, 200) : reply({ status: result.status, reason: documentFailure(result.reason) }, result.status === "denied" ? 403 : result.status === "conflict" || result.status === "stale" ? 409 : 503) } finally { runtime.human.finish(human.value) }
+        try {
+          const result = await runtime.documents.confirm(evidence.value.id, human.value)
+          if (!await runtime.ui.revalidate(human.value)) return reply({ status: "denied" }, 403)
+          return result.status === "ok" ? reply({ status: "ok", value: result.value }, 200) :
+            reply({ status: result.status, reason: documentFailure(result.reason) },
+              result.status === "denied" ? 403 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
+        } finally { runtime.human.finish(human.value) }
       }
       const parsed = decodeSfOperationInput("sf_document_extract", payload)
       if (!parsed.ok) return reply({ status: "invalid" }, 400)
