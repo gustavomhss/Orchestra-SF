@@ -311,20 +311,47 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
     expect(authenticatedDashboard.status).toBe(200)
+    // A virgin installation has no C08 decision state. Author the first case
+    // using the compiled installation's real authenticated human command,
+    // never by writing raw SQLite, bypassing authorization, or forging a fence.
+    const objective = "Installed factory authenticated fence witness"
+    const created = await fetch("http://localhost:4110/sucafina/dashboard?sf=workbench-command", {
+      method: "POST", redirect: "manual", signal: AbortSignal.timeout(15000),
+      headers: { cookie, origin: "http://localhost:4110", "content-type": "application/json",
+        "idempotency-key": randomUUID() },
+      body: JSON.stringify({ operation: "sf_case_draft", input: {
+        objective, horizon: { start: "2027-01-01", end: "2027-12-31" },
+        currency: "USD", criteria: ["Business continuity"], sourceRefs: [],
+      } }),
+    })
+    const createdBody: unknown = await created.json()
+    if (created.status !== 200)
+      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_CREATION_FAILED " + JSON.stringify({
+        status: created.status, result: createdBody,
+      }))
+    expect(createdBody).toMatchObject({ status: "ok", outputRef: expect.any(String) })
+    if (!createdBody || typeof createdBody !== "object" || !("outputRef" in createdBody) ||
+      typeof createdBody.outputRef !== "string") throw new Error("SF_FACTORY_REAL_CASE_CREATION_UNAVAILABLE")
+    const caseRef = createdBody.outputRef
     const authenticatedChoice = await fetch("http://localhost:4110" + currentChoiceEndpoint, {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
-    if (authenticatedChoice.status !== 200) throw new Error(`SF_FACTORY_AUTHENTICATED_CURRENT_CHOICE_FAILED status=${authenticatedChoice.status} body=${(await authenticatedChoice.text()).slice(0, 500)}`)
-    expect(authenticatedChoice.status).toBe(200)
     const currentChoiceBody: unknown = await authenticatedChoice.json()
-    // Empty valid case inventory still traverses sf_case_read, real service,
-    // current-choice fence.run and the current UI authorization scope.
-    expect(currentChoiceBody).toEqual({ status: "ok", value: { cases: [] } })
+    if (authenticatedChoice.status !== 200)
+      throw new Error("SF_FACTORY_AUTHENTICATED_CHOICE_FAILED " + JSON.stringify({
+        status: authenticatedChoice.status, result: currentChoiceBody,
+      }))
+    // sf_case_read, real product state and WeakSet-registered current-choice
+    // fence are executed by the extracted CLI against an actual human case.
+    expect(currentChoiceBody).toEqual({ status: "ok", value: { cases: [
+      { ref: caseRef, title: objective, version: 1 },
+    ] } })
     const authenticatedChoiceState = currentChoiceBody !== null && typeof currentChoiceBody === "object" &&
       "status" in currentChoiceBody ? currentChoiceBody.status : undefined
     console.info("SF_FACTORY_CURRENT_CHOICE_AUTHENTICATED " + JSON.stringify({
-      dashboardStatus: authenticatedDashboard.status, currentChoiceStatus: authenticatedChoice.status,
-      state: authenticatedChoiceState, emptyCases: true,
+      dashboardStatus: authenticatedDashboard.status, creationStatus: created.status,
+      currentChoiceStatus: authenticatedChoice.status, state: authenticatedChoiceState,
+      observedCases: 1, caseMatchesHumanCreation: true,
     }))
     // Re-read the real checkout HEAD immediately before certifying the archive.
     // The success receipt MUST be rejected if the source branch changed in-flight.
