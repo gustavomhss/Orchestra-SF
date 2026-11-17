@@ -1,5 +1,7 @@
 # A7 — implantação real via Azure Run Command: factory + Managed Identity
 
+**FLAMENGO — atualização do dono (2026-11-16):** os valores de tenant, client, 11 grupos e origin HTTPS estão preenchidos em [flamengo-microsoft.example.json](../runtime/flamengo-microsoft.example.json), com paths não secretos em [runtime.env.flamengo.example](../runtime/runtime.env.flamengo.example). **O único origin não decidido é ingressOrigin**, deliberadamente inválido no exemplo até A8 observar o Host encaminhado por Caddy. Leia [A7-FLAMENGO-MICROSOFT-INGRESS.md](./A7-FLAMENGO-MICROSOFT-INGRESS.md) antes de executar qualquer passo daqui. O mapeamento dos grupos NÃO é prova de membership/autoridade dos atores; grants permanecem [] até os objectIds e capacidades reais serem admitidos.
+
 **Status: PREPARED_NOT_RUN — AZ-01 e AZ-03 seguem BLOCKED_BY_OWNER/ENV.** PR #248 continua DRAFT. Nenhum comando abaixo foi executado. Este runbook substitui as instruções legadas para o bundle experimental; a fábrica CI REAL tem `bin/orchestra`, `bin/web`, `bin/local/entry.mjs`, `distribution.json` e `checksums.sha256`, target `linux-x64-baseline`. Os scripts antigos `sf/azure/vm/deploy.py` e `sf/azure/runtime/package.py` NÃO são compatíveis com esse tar.
 
 ## 1. Inventário aceito do dono (não pedir novamente)
@@ -16,14 +18,14 @@
 | --- | --- |
 | `AZ_SUBSCRIPTION_ID` | Assinatura Azure contendo RG orchestra-sf-mvp. |
 | `AZ_VM_NAME` | Nome real da VM no RG, confirmado por az vm show. IP/FQDN e fingerprint TLS devem ser inventariados, sem presumir SSH público. |
-| `SF_FQDN` | Hostname HTTPS real, DNS na VM, certificado CA válido, sem IP literal/porta extra. |
+| `SF_FQDN` | **FORNECIDO: `orchsf-spug5rxxyqkdw.swedencentral.cloudapp.azure.com`** (ainda confirmar DNS/certificado efetivamente servido pela VM; não inventar prova de TLS). |
 | `SF_C` | Commit Git C exato de 40 hex congelado por A10, CI sf/verify FULL GREEN no C e factory proof nova com sourceSHA == C. Não usar PR merge SHA divergente. |
 | `SF_FACTORY_TAR_ON_VM` | Caminho absoluto do TAR.GZ interno produzido no mesmo run/attempt de factory. |
 | `SF_FACTORY_TAR_SHA256` | SHA256 64 hex do TAR.GZ interno, idêntico a factory-package-receipt.archiveSha256. |
 | `SF_FACTORY_RECEIPT_ON_VM` | Caminho absoluto do factory-package-receipt.json desse mesmo TAR/run/C. |
 | `A7_OPERATOR_TREE_ON_VM` | Código A7 revisado, root-owned e SHA verificado, em /opt/orchestra-sf/operator (copiar via Bastion/SCP/transferência privada aprovada antes de Run Command). |
 | `SF_PRIVATE_CONFIG_DIR` | Diretório absoluto no volume /var/lib/orchestra-sf/home, owner orchestra-sf 0700, configuração/keys originais do A8. |
-| `SF_ENTRA_TENANT_ID`, `SF_ENTRA_CLIENT_ID` e `SF_A8_GRANTS_GROUPS_WORKSPACE` | Tenant/client UUID, grants e workspace do Entra/product owner no installation.json privado. NUNCA defaults fictícios. |
+| `SF_ENTRA_TENANT_ID`, `SF_ENTRA_CLIENT_ID`, `SF_A8_GRANTS_GROUPS_WORKSPACE` | **Tenant já fornecido `449dfd17-d627-45da-b22c-1be49d8df99f` e clientId `9006dcb8-1a75-4886-9475-1e7f1dc5d7cd`; 11 grupos já no exemplo.** Resta A8 aprovar **objectIds/grants de operações**, memberships reais e provisionar workspace privado (paths propostos no exemplo, não observados). |
 | `SF_A8_OWNER_JSON`, `SF_A8_COOKIE_FILE` | Arquivos root 0600 de binding e sessão Microsoft reais, providos por A8 para prova HTTP positiva, não impressos. |
 | `SF_OLD_C` | SHA 40 hex de uma release anterior compatível e retida. Sem anterior, rollback de versão = NOT_RUN. |
 | `A10_COMPATIBILITY_PROOF`, `A10_ROLLBACK_APPROVAL` | Arquivos JSON root 0600, hash do laudo de schema/backup, revisão independente e autorização humana; ver G7. |
@@ -43,11 +45,11 @@
 
 A8 deve criar `SF_PRIVATE_CONFIG_DIR/installation.json` com UID orchestra-sf, 0600, dir 0700; keys `session.key`, `bank.key`, `assets.key` de 32 bytes (0600), `host-credential.key` 0600 e dirs host-data/config/cache/state/tmp privados. Microsoft profile exige:
 - `deployment=azure-https`, `authentication=microsoft`, `origin=https://SF_FQDN`;
-- `listenerOrigin=http://127.0.0.1:4096` e `ingressOrigin=http://SF_FQDN` (Host real preservado pelo Caddy);
+- `listenerOrigin=http://127.0.0.1:4096`; `ingressOrigin` **AINDA NÃO RESOLVIDO**: o valor esperado é `http://SF_FQDN` somente **se** o Host realmente entregue por Caddy for `SF_FQDN` sem porta. Não preencher sem verificação do Host; veja A7-FLAMENGO-MICROSOFT-INGRESS.md.
 - `mount=/sucafina`, tenantId/clientId reais, grants/grupos/workspaceDirectory separados do config. `SUCAFINA_LOCAL_CONFIG` deve estar AUSENTE.
 - `SUCAFINA_MICROSOFT_CONFIG` absoluto apontando para installation.json. Chave cliente virá do Key Vault **apenas no ExecStartPre**.
 
-Preparar `/etc/orchestra-sf/runtime.env` root:root 0600 a partir de `sf/azure/runtime/runtime.env.example` substituindo somente `REQUIRES_PUBLIC_FQDN` e `REQUIRES_PRIVATE_CONFIG_DIR` em todos os caminhos. Não colocar valor de segredo em env. O systemd manager root lê EnvironmentFile; o processo não-root não lê /etc/orchestra-sf.
+Para **FLAMENGO**, preparar `/etc/orchestra-sf/runtime.env` root:root 0600 a partir de `sf/azure/runtime/runtime.env.flamengo.example` (FQDN e paths não secretos já explícitos, sujeitos à escolha/provisionamento A8). O template genérico `runtime.env.example` continua disponível apenas para outras organizações. Não colocar valor de segredo em env. O systemd manager root lê EnvironmentFile; o processo não-root não lê /etc/orchestra-sf.
 
 ## 5. Ordem exata de execução pelo dono (G0–G8), NOT_RUN pelo A7
 
