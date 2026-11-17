@@ -27,6 +27,7 @@ import {
   type Totals,
 } from "./kpis-data"
 import { createWarm } from "../warm"
+import { isSucafinaBrand } from "../brand-identity"
 import "./kit.css"
 import "./kpis.css"
 
@@ -650,7 +651,7 @@ export function KpiDashboard(props: {
         </div>
         <footer class="home-foot">
           <span>
-            {language.t("orchestra.home.footer", { name: props.name })} ·{" "}
+            {isSucafinaBrand() ? props.name : language.t("orchestra.home.footer", { name: props.name })} ·{" "}
             <b>{language.t("orchestra.home.footerSource")}</b> {language.t("orchestra.home.footerDetail")}
           </span>
           <span>
