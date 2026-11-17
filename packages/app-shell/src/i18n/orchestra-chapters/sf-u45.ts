@@ -48,7 +48,7 @@ export const SF_U45_COPY_BR: Record<keyof typeof SF_U45_COPY, string> = {
   "sf.cap22.fixed": "1 (fixed)",
   "sf.cap22.field.cur.label": "Currency",
   "sf.cap22.field.code.label": "Code",
-  "sf.cap22.field.rate.label": "Taxa",
+  "sf.cap22.field.rate.label": "Rate",
   "sf.cap22.field.sourceRef.label": "Referência da fonte",
   "sf.cap22.field.provider.label": "Provedor da taxa",
   "sf.cap22.field.observedAt.label": "Observado em (ISO 8601)",

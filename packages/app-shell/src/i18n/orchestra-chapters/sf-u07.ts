@@ -107,7 +107,7 @@ export const SF_U07_COPY_BR: Readonly<Record<keyof typeof SF_U07_COPY,string>> =
   "sf.u07.currency": "Currency",
   "sf.u07.element": "Element",
   "sf.u07.project": "Project",
-  "sf.u07.code": "Código",
+  "sf.u07.code": "Code",
   "sf.u07.approvalState": "Estado de aprovação",
   "sf.u07.investmentStart": "Início do investimento",
   "sf.u07.investmentEnd": "Fim do investimento",

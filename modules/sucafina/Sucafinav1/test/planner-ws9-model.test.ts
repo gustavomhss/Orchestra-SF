@@ -1,14 +1,14 @@
 import { expect, test } from "bun:test"
 import { domain } from "../runtime/planner.ts"
 import { rows } from "../runtime/contract.ts"
-import type { Actor, Snapshot } from "../runtime/contract.ts"
+import type { Actor, Snapshot, Environment } from "../runtime/contract.ts"
 
 const admin: Actor = { id: "admin", canWrite: true, roles: ["admin"] }
 const finance: Actor = { id: "finance", canWrite: true, roles: ["finance"] }
-const environment = {
+const environment: Environment = {
   at: "2026-11-17T12:00:00Z",
   id: () => "generated",
-  directory: [] as { id: string; name: string }[],
+  directory: [],
 }
 
 function seed(): Snapshot {
@@ -67,6 +67,24 @@ test("WS9 CAP19 retains approval state and investment window; invalid windows an
   }, 1, admin)).toMatchObject({ ok: true })
   expect(rows(plan(state).projects)[0]?.approvalState).toBe("approved")
   expect(state.audit.at(-1)?.record).toBe("v:projects:capex-1")
+})
+
+test("WS9 preserves legacy project shape when optional metadata is not submitted", () => {
+  const state = seed()
+  expect(run(state, "CAPEX", "save", "legacy", {
+    collection: "projects", name: "Existing compatible project",
+  })).toMatchObject({ ok: true })
+  const record = rows(plan(state).projects)[0]!
+  expect(Object.hasOwn(record, "approvalState")).toBe(false)
+  expect(Object.hasOwn(record, "investmentStart")).toBe(false)
+  expect(Object.hasOwn(record, "investmentEnd")).toBe(false)
+  expect(run(state, "CAPEX", "save", "legacy", {
+    collection: "projects", desc: "Description update",
+  }, 1)).toMatchObject({ ok: true })
+  const updated = rows(plan(state).projects)[0]!
+  expect(Object.hasOwn(updated, "approvalState")).toBe(false)
+  expect(Object.hasOwn(updated, "investmentStart")).toBe(false)
+  expect(Object.hasOwn(updated, "investmentEnd")).toBe(false)
 })
 
 test("WS9 CAP21 stores contract distribution only at exact 100%; references and stale writes are fenced", () => {

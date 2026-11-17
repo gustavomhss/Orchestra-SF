@@ -907,25 +907,29 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     }
     if (records.some((row) => row.id !== id && normName(text(row.code)) === normName(text(next.code))))
       return invalid("Duplicate project code")
+    const approvalStates = ["draft", "pending", "approved", "rejected"]
     if (values.approvalState !== undefined &&
-      !["draft", "pending", "approved", "rejected"].includes(text(values.approvalState)))
-      return invalid("Invalid CAPEX approval state")
-    if (values.approvalState !== undefined &&
-      !actor.roles.includes("admin")) return reject
+      !approvalStates.includes(text(values.approvalState))) return invalid("Invalid CAPEX approval state")
+    if (values.approvalState !== undefined && !actor.roles.includes("admin")) return reject
     if ((values.investmentStart !== undefined && typeof values.investmentStart !== "string") ||
       (values.investmentEnd !== undefined && typeof values.investmentEnd !== "string"))
       return invalid("Invalid CAPEX investment window")
-    next.approvalState = text(next.approvalState) || "draft"
-    if (!["draft", "pending", "approved", "rejected"].includes(text(next.approvalState)))
-      return invalid("Invalid CAPEX approval state")
-    const investmentStart = text(next.investmentStart).trim()
-    const investmentEnd = text(next.investmentEnd).trim()
-    const monthPattern = /^\d{4}-(?:0[1-9]|1[0-2])$/
-    if ((investmentStart || investmentEnd) &&
-      (!monthPattern.test(investmentStart) || !monthPattern.test(investmentEnd) || investmentStart > investmentEnd))
-      return invalid("CAPEX investment window requires an ordered start and end month")
-    next.investmentStart = investmentStart
-    next.investmentEnd = investmentEnd
+    // Preserve older project records byte-for-byte when these optional fields were not edited.
+    if (values.approvalState !== undefined || stored?.approvalState !== undefined) {
+      if (!approvalStates.includes(text(next.approvalState))) return invalid("Invalid CAPEX approval state")
+      next.approvalState = text(next.approvalState)
+    }
+    if (values.investmentStart !== undefined || values.investmentEnd !== undefined ||
+      stored?.investmentStart !== undefined || stored?.investmentEnd !== undefined) {
+      const investmentStart = text(next.investmentStart).trim()
+      const investmentEnd = text(next.investmentEnd).trim()
+      const monthPattern = /^\d{4}-(?:0[1-9]|1[0-2])$/
+      if ((investmentStart || investmentEnd) &&
+        (!monthPattern.test(investmentStart) || !monthPattern.test(investmentEnd) || investmentStart > investmentEnd))
+        return invalid("CAPEX investment window requires an ordered start and end month")
+      next.investmentStart = investmentStart
+      next.investmentEnd = investmentEnd
+    }
     const match = text(next.code).match(/^CPX-\d{4}-(\d+)$/i)
     if (match) snapshot.sequences.cpx = Math.max(finite(snapshot.sequences.cpx), Number(match[1]))
   }
@@ -966,6 +970,8 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       return invalid("Rate must be positive")
     if (next.rate !== null) next.rate = Math.round(Number(next.rate) * 1e6) / 1e6
     const provenanceFields = ["sourceRef", "provider", "observedAt"]
+    if (provenanceFields.some((field) => values[field] !== undefined && typeof values[field] !== "string"))
+      return invalid("Invalid FX provenance field")
     const provenanceSupplied = provenanceFields.some((field) => !!text(values[field]).trim())
     const previouslyAttributed = provenanceFields.some((field) => !!text(stored?.[field]).trim())
     if (values.rate !== undefined && previouslyAttributed &&

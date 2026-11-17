@@ -53,7 +53,7 @@ export const SF_U09_COPY_BR: Record<keyof typeof SF_U09_COPY, string> = {
   "sf.cap21.allocations": "allocations",
   "sf.cap21.field.name.label": "Name",
   "sf.cap21.field.code.label": "Details",
-  "sf.cap21.field.desc.label": "Detalhes",
+  "sf.cap21.field.desc.label": "Details",
   "sf.cap21.field.contractRef.label": "Referência do contrato",
   "sf.cap21.field.splits.label": "Distribuição entre entidades",
   "sf.cap21.field.percent.label": "Percentual",
