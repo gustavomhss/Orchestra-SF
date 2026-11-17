@@ -1,4 +1,4 @@
-import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
+import { createEffect, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
 import { SfProjectionHome } from "@orchestra/schema/sucafina/work"
@@ -48,6 +48,36 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
   const owner = useSfContext()
   const { t } = useSfPresentation()
   const [screen, setScreen] = createStore<State>({ status: "loading", data: null })
+  const [adminHref, setAdminHref] = createSignal<string | null>(null)
+  // This is a *discovery* hint only: HEAD verifies the live group membership
+  // on the installed server. All GET/POST checks still happen server-side.
+  createEffect(() => {
+    const state = owner.state()
+    const ready = owner.ready()
+    const generation = owner.generation()
+    setAdminHref(null)
+    if (!ready || state.status !== "ready" || state.binding.authMode !== "microsoft" ||
+      state.context.authMode !== "microsoft" || typeof window === "undefined") return
+    const { publicOrigin, mount } = state.binding
+    if (!URL.canParse(publicOrigin) || new URL(publicOrigin).origin !== publicOrigin ||
+      publicOrigin !== window.location.origin ||
+      !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(mount)) return
+    const href = publicOrigin + mount + "/admin/access"
+    const ownerKey = state.ownerKey
+    const abort = new AbortController()
+    void fetch(href, {
+      method: "HEAD", credentials: "include", cache: "no-store", redirect: "error",
+      signal: abort.signal,
+    }).then((response) => {
+      const latest = owner.state()
+      if (!abort.signal.aborted && generation === owner.generation() &&
+        latest.status === "ready" && latest.ownerKey === ownerKey &&
+        latest.binding.publicOrigin === publicOrigin && latest.binding.mount === mount &&
+        response.status === 204) setAdminHref(href)
+    }).catch(() => undefined)
+    onCleanup(() => { abort.abort(); setAdminHref(null) })
+  })
+
   const [resume, setResume] = createStore<{ caseRef: string | null; status: SfUiState | "idle" }>({
     caseRef: null, status: "idle",
   })
@@ -203,6 +233,18 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
+      <Show when={adminHref()}>
+        {(href) => (
+          <section class="mx-card mb-4 flex min-w-0 flex-wrap items-center justify-between gap-4"
+            data-sf-native-admin-entry="supreme" aria-label="Governança de acessos">
+            <div class="min-w-0">
+              <h2 class="m-0">Governança de acessos · Sucafina</h2>
+              <p class="mt-1 text-sm">Estrutura real do Teams, papéis por tela e grants por perfil Entra.</p>
+            </div>
+            <a class="mx-btn" href={href()} rel="noreferrer">Administração de acessos</a>
+          </section>
+        )}
+      </Show>
       <SfStatePanel
         state={screen.status}
         messageKey={key(screen.status === "ready" ? "sf.ui29.title" : screen.status === "denied" ? "sf.common.noAccess" : screen.status === "session-expired" ? "sf.common.loginAgain" : screen.status === "loading" ? "sf.common.loading" : "sf.common.unavailable")}
