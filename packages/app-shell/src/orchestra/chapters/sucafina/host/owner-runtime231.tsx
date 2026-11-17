@@ -665,7 +665,9 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const directory = props.directory
     const actualServerKey: string = ServerConnection.key(props.server)
     const parsed = explicitSelection(query)
-    const activeSelection = selection()
+    // Async outcomes must not themselves restart discovery: failed/denied reads
+    // are terminal for this owner query until its URL or profile changes.
+    const activeSelection = untrack(selection)
     const epoch = ++discoveryAttempt
     if (parsed.kind === "invalid") {
       rejectInvalidSfOwnerQuery({ ownerMounted: !!mounted, selectionPresent: !!activeSelection,

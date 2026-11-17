@@ -54,7 +54,15 @@ try {
       page.on("pageerror", (error) => diagnostics.push("pageerror " + error.name + ": " + error.message.slice(0, 180)))
       page.on("requestfailed", (request) => diagnostics.push("requestfailed " + new URL(request.url()).pathname + " " + String(request.failure()?.errorText ?? "")))
       page.on("response", (response) => {
-        if (response.status() >= 400) diagnostics.push("HTTP " + response.status() + " " + new URL(response.url()).pathname)
+        const url = new URL(response.url())
+        if (url.pathname === "/api/sucafina/installations") {
+          // Never log IDs, Location.Ref or bearer credentials; status plus count only.
+          void response.json().then((body: unknown) => {
+            const count = body && typeof body === "object" && "installations" in body &&
+              Array.isArray(body.installations) ? body.installations.length : "invalid-body"
+            diagnostics.push("discovery " + response.status() + " count=" + count)
+          }).catch(() => diagnostics.push("discovery " + response.status() + " unreadable"))
+        } else if (response.status() >= 400) diagnostics.push("HTTP " + response.status() + " " + url.pathname)
       })
       page.on("console", (message) => {
         if (message.type() === "error") diagnostics.push("console-error " + message.text().slice(0, 160))
@@ -85,6 +93,9 @@ try {
           rootChildCount: document.getElementById("root")?.childElementCount ?? null,
           scriptCount: document.scripts.length,
           nativeFrameCount: document.querySelectorAll('[data-sf-frame="page"]').length,
+          discoveryState: document.querySelector("[data-sf-f01]")?.getAttribute("data-sf-f01") ?? null,
+          selectedServerOriginMatches: Object.keys(localStorage).filter((name) => name.endsWith(":server")).length > 0,
+          rootOrigin: location.origin,
         })).catch(() => null)
         const clean = (value: string) => value
           .replace(/auth_token=[^&\s]+/gi, "auth_token=[redacted]")
