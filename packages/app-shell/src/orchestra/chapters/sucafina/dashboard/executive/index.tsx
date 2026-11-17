@@ -3,6 +3,7 @@ import type { JSX } from "solid-js"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
+import { SfExecutiveAction } from "../../cross-links/view"
 import { SfStatePanel } from "../../shared/states"
 import { sfCommonKey, useSfPresentation, SF_STATE_FALLBACK_KEY } from "../../shared/frame/presentation"
 import type { SfCopyKey } from "../../shared/frame/types"
@@ -82,6 +83,16 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
   return <SfPageFrame titleKey={key("sf.cap01.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
     <div class="sf-u02-page" data-sf-surface="CAP01">
+      <nav class="flex flex-wrap gap-2" aria-label="Executive cross-links" data-sf-executive-crosslinks>
+        <SfExecutiveAction from={props.route} target={{ kind: "agenda" }}
+          label={{ pt: "Criar pauta de revisão", en: "Create review agenda" }} />
+        <SfExecutiveAction from={props.route} target={{ kind: "topics" }}
+          label={{ pt: "Hot Topics e ações", en: "Hot Topics & actions" }} />
+        <SfExecutiveAction from={props.route} target={{ kind: "risks" }}
+          label={{ pt: "Riscos", en: "Risks" }} />
+        <SfExecutiveAction from={props.route} target={{ kind: "stakeholders" }}
+          label={{ pt: "Stakeholders", en: "Stakeholders" }} />
+      </nav>
       <SfStatePanel state={reader.state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[reader.state()])}
         onRetryRead={reader.refresh}>
         <section class="sf-u02-section" aria-labelledby="sf-u02-period">
