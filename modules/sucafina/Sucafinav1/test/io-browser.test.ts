@@ -68,8 +68,15 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     await submit(page, planner)
     const importedLine = page.getByRole("row").filter({ hasText: "Browser OPEX fixture" }).first()
     await expect(importedLine).toBeVisible()
-    // The grid renders month inputs; its annual total is verified in the exported workbook below.
-    for (const month of Array.from({ length: 12 }, (_, index) => index)) await expect(importedLine.locator(`[name="b${month}"]`)).toHaveValue("125")
+    // The canonical read-only monthly projection no longer embeds legacy b0..b11 editors.
+    // Verify the saved Budget through all twelve projected forecast cells and the XLSX below.
+    const monthlyGrid = page.locator("details.planner-monthly-state")
+    await expect(monthlyGrid).toHaveCount(1)
+    await monthlyGrid.locator("summary").click()
+    const projectedLine = monthlyGrid.locator("tbody tr[data-planner-line]").filter({ hasText: "Browser OPEX fixture" })
+    await expect(projectedLine).toHaveCount(1)
+    await expect(projectedLine.locator("td > span")).toHaveText(Array(12).fill("125"))
+    await expect(projectedLine.locator("td > small")).toContainText(Array(12).fill("Inherited budget"))
     const exported = new Workbook()
     const plannerDownload = await expectDownload(page, page.getByRole("link", { name: "Export Excel", exact: true }).first())
     console.info("browser IO: Planner XLSX parse starting")
