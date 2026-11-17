@@ -27,10 +27,13 @@ type HostProducts = Readonly<{
     options: Readonly<{ allowHistoricalRetry?: boolean }>,
     work: () => Promise<PortResult<T>>): Promise<PortResult<T>>
 }>
-type A09Runtime = SfHostServices & Readonly<{
-  nativeUiProducts?: HostProducts
-  routineEvidence?: Pick<ReturnType<typeof createSfRoutineServices>, "readExecution" | "openResult">
-}>
+type A09Runtime = SfHostServices & Readonly<{ nativeUiProducts?: HostProducts }>
+type EvidenceReader = Pick<ReturnType<typeof createSfRoutineServices>, "readExecution" | "openResult">
+function isEvidenceReader(value: unknown): value is EvidenceReader {
+  return !!value && typeof value === "object" &&
+    "readExecution" in value && typeof value.readExecution === "function" &&
+    "openResult" in value && typeof value.openResult === "function"
+}
 type PostOperation = Exclude<SfRoutinesOperationId, "projection.routine">
 type HumanAction = "routines.admit" | "routines.run" | "schedules.create" | "schedules.read" |
   "schedules.update" | "schedules.pause"
@@ -241,7 +244,7 @@ async function projection(request: Request, deps: SfNativeHostDependencies): Pro
   if (Option.isNone(input)) return invalid()
   const sourceInput = decodeSfOperationInput("sf_routine_status", input.value)
   if (!sourceInput.ok) return invalid()
-  const runtime = deps.runtime() as A09Runtime | undefined
+  const runtime = deps.runtime()
   if (!runtime) return reply(unavailable("routine-host-unavailable"), 503)
   const digest = digestSfValue(sourceInput.value)
   const grant = await runtime.ui.admit(request, "sf_routine_status", digest)
@@ -267,7 +270,8 @@ async function projection(request: Request, deps: SfNativeHostDependencies): Pro
     let proof: unknown
     const run = result.value
     if (run.admission === "admitted" && run.runRef) {
-      const port = runtime.routineEvidence
+      const port = "routineEvidence" in runtime && isEvidenceReader(runtime.routineEvidence)
+        ? runtime.routineEvidence : undefined
       if (!port) {
         proof = { verifier: "unavailable", reason: "native-routine-evidence-port-unavailable" }
       } else {
