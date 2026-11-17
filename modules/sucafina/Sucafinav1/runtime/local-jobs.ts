@@ -166,7 +166,10 @@ export async function createLocalJobs(options: {
         state.monthly[surface] = monthly.id
         state.drills[surface] = drill
         state.partialSurface[surface] = `Monthly archive and restore drill completed for ${month}.`
-        inventories.push({ surface, archives })
+        // capture() applies retention after publication. Keep the single inventory
+        // read, but do not feed the rotating verifier entries that this same cycle
+        // has deterministically pruned from disk.
+        inventories.push({ surface, archives: archives.filter((archive) => archiveRetainedAt(surface, archive, at)) })
       }
       activeSurface.value = undefined
       signal.throwIfAborted()
@@ -327,6 +330,19 @@ function archiveSummary(id: string, manifest: { at: string; blobs: readonly { by
 
 function archiveKey(surface: Surface, id: string) {
   return `${surface}:${id}`
+}
+
+function archiveRetainedAt(surface: Surface, archive: BackupArchive, at: string) {
+  const captured = Date.parse(archive.at)
+  const instant = Date.parse(at)
+  if (!Number.isFinite(captured) || !Number.isFinite(instant)) throw new Error("Invalid backup inventory time")
+  if (archive.tier === "daily") {
+    const days = surface === "planner" ? 14 : 35
+    return captured >= instant - days * 24 * 60 * 60 * 1000
+  }
+  const cutoff = new Date(at)
+  cutoff.setUTCFullYear(cutoff.getUTCFullYear() - 7)
+  return captured >= cutoff.getTime()
 }
 
 async function inspectNextArchive(
