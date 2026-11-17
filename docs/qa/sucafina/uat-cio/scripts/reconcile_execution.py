@@ -6,6 +6,7 @@ Usage: reconcile_execution.py --check
 Records remain outside Git; only safe aliases, SHA-256 digests and statuses are committed.
 """
 import argparse
+import fcntl
 import csv
 from datetime import datetime, timedelta
 import hashlib
@@ -15,10 +16,14 @@ import os
 from pathlib import Path
 import re
 import sys
+import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parent.parent
 TRACE = "QA-TRACEABILITY.json"
+LEDGER = "EXECUTION-LEDGER.jsonl"  # created only for the first real attempt
+KINDS = ("stories", "route_probes", "operations")
+CHAIN_ZERO = "0" * 64
 SURFACES = "MATRIX-70-SURFACES.csv"
 STORIES_MATRIX = "MATRIX-185-STORIES.csv"
 ROUTES = "MATRIX-165-ROUTES.csv"
@@ -127,6 +132,109 @@ def parse_index(trace, inventories):
     if any(idx[kind] for kind in ("stories", "route_probes", "operations")):
         demand(bool(SHA40.fullmatch(idx.get("candidate_sha") or "")), "candidate SHA not pinned")
     return idx
+
+
+def canonical(value):
+    return json.dumps(value, ensure_ascii=False, sort_keys=True,
+                      separators=(",", ":")).encode("utf-8")
+
+
+def read_ledger():
+    path = ROOT / LEDGER
+    return path.read_bytes() if path.exists() else b""
+
+
+def seal_event(sequence, previous_sha256, kind, case_id, attempt):
+    event = {
+        "sequence": sequence,
+        "previous_sha256": previous_sha256,
+        "kind": kind,
+        "case_id": case_id,
+        "attempt": attempt,
+    }
+    event["entry_sha256"] = digest(canonical(event))
+    return canonical(event) + b"\n"
+
+
+def ledger_index(raw, inventories):
+    """Rebuild the index from the immutable, globally ordered chain, never vice versa."""
+    rebuilt = empty_index()
+    if not raw:
+        return rebuilt
+    demand(raw.endswith(b"\n"), "evidence ledger has a partial final line")
+    previous = CHAIN_ZERO
+    used = set()
+    for sequence, line in enumerate(raw.splitlines(), start=1):
+        demand(bool(line), "blank line in evidence ledger")
+        event = json.loads(line)
+        demand(isinstance(event, dict) and set(event) == {
+            "sequence", "previous_sha256", "kind", "case_id", "attempt", "entry_sha256"
+        }, "invalid evidence ledger event")
+        demand(type(event["sequence"]) is int and event["sequence"] == sequence,
+               "evidence ledger sequence deleted or reordered")
+        demand(event["previous_sha256"] == previous,
+               "evidence ledger chain broken or reordered")
+        expected_hash = digest(canonical({k: v for k, v in event.items()
+                                          if k != "entry_sha256"}))
+        demand(event["entry_sha256"] == expected_hash,
+               "evidence ledger event hash mismatch")
+        kind, case_id, attempt = event["kind"], event["case_id"], event["attempt"]
+        demand(kind in KINDS and isinstance(case_id, str)
+               and case_id in inventories[kind], "unknown case in evidence ledger")
+        demand(isinstance(attempt, dict), "invalid attempt in evidence ledger")
+        attempt_id = attempt.get("attempt_id")
+        demand(isinstance(attempt_id, str) and bool(ALIAS.fullmatch(attempt_id)),
+               "invalid attempt ID in evidence ledger")
+        demand((kind, case_id, attempt_id) not in used,
+               "duplicate attempt in evidence ledger")
+        used.add((kind, case_id, attempt_id))
+        sha = attempt.get("product_commit_sha")
+        demand(isinstance(sha, str) and bool(SHA40.fullmatch(sha)),
+               "invalid candidate SHA in evidence ledger")
+        demand(rebuilt["candidate_sha"] in (None, sha),
+               "mixed candidate SHAs in evidence ledger")
+        rebuilt["candidate_sha"] = sha
+        rebuilt[kind].setdefault(case_id, {"attempts": []})["attempts"].append(attempt)
+        previous = event["entry_sha256"]
+    parse_index({"execution_index": rebuilt}, inventories)
+    return rebuilt
+
+
+def assert_git_history_prefix(raw):
+    """A rewritten/rehashed chain must not erase attempts already committed in Git."""
+    try:
+        probe = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--show-toplevel"],
+                               capture_output=True, check=False)
+    except FileNotFoundError:
+        return  # hash chain + independent index remain checked outside a Git checkout
+    if probe.returncode != 0:
+        return
+    git_root = Path(os.fsdecode(probe.stdout).strip()).resolve()
+    try:
+        relative = (ROOT / LEDGER).relative_to(git_root).as_posix()
+    except ValueError:
+        return
+    for revision in ("HEAD", "HEAD^"):
+        snapshot = subprocess.run(["git", "-C", str(git_root), "show",
+                                   f"{revision}:{relative}"],
+                                  capture_output=True, check=False)
+        if snapshot.returncode == 0:
+            demand(raw.startswith(snapshot.stdout),
+                   "evidence ledger deleted/reordered/rewritten vs git " + revision)
+
+
+def verify_ledger(trace, idx, inventories):
+    raw = read_ledger()
+    demand(ledger_index(raw, inventories) == idx,
+           "execution_index history differs from append-only evidence ledger")
+    pins = trace.get("file_sha256")
+    demand(isinstance(pins, dict), "QA trace digest inventory missing")
+    demand((LEDGER in pins) == bool(raw),
+           "evidence ledger missing or digest pin unexpectedly absent")
+    if raw:
+        demand(pins[LEDGER] == digest(raw), "evidence ledger SHA-256 pin mismatch")
+    assert_git_history_prefix(raw)
+    return raw
 
 
 def latest(idx, kind, case_id):
@@ -347,7 +455,10 @@ def assert_consistent(trace, idx, updates):
         demand(trace.get("status") == expected["status"], "execution status header out of sync")
 
 
-def save_files(updates, trace):
+def save_files(updates, trace, previous_ledger, appended_event):
+    """Stage projections; append-and-fsync the ledger, NEVER replace its prior bytes."""
+    demand(appended_event.endswith(b"\n") and bool(appended_event),
+           "an immutable evidence event is required")
     outputs = dict(updates)
     outputs[TRACE] = (json.dumps(trace, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     staged = []
@@ -357,8 +468,20 @@ def save_files(updates, trace):
                                              prefix=".uat-", delete=False) as temp:
                 temp.write(data)
                 staged.append((Path(temp.name), ROOT / name))
-        for source, dest in staged:
-            os.replace(source, dest)
+        with (ROOT / LEDGER).open("a+b") as ledger:
+            fcntl.flock(ledger.fileno(), fcntl.LOCK_EX)
+            try:
+                ledger.seek(0)
+                demand(ledger.read() == previous_ledger,
+                       "evidence ledger changed concurrently: refusing to overwrite history")
+                ledger.seek(0, os.SEEK_END)
+                ledger.write(appended_event)
+                ledger.flush()
+                os.fsync(ledger.fileno())
+                for source, dest in staged:
+                    os.replace(source, dest)
+            finally:
+                fcntl.flock(ledger.fileno(), fcntl.LOCK_UN)
     finally:
         for source, _ in staged:
             source.unlink(missing_ok=True)
@@ -374,9 +497,11 @@ def main():
     trace = json.loads((ROOT / TRACE).read_text(encoding="utf-8"))
     inventories = index_source()
     idx = parse_index(trace, inventories)
+    previous_ledger = verify_ledger(trace, idx, inventories)
+    # A record must not silently repair a corrupted matrix or prior evidence history.
+    assert_consistent(trace, idx, project(idx))
     if args.check:
-        assert_consistent(trace, idx, project(idx))
-        print("UAT_RECONCILED: CSV + JSONL + QA-TRACEABILITY agree (product NOT executed by this command)")
+        print("UAT_RECONCILED: APPEND_ONLY_HISTORY_VERIFIED; CSV + JSONL + QA-TRACEABILITY agree (product NOT executed)")
         return
     demand(args.evidence_ref is not None and bool(ALIAS.fullmatch(args.evidence_ref)),
            "need safe evidence reference alias, never a token/path/UPN")
@@ -394,12 +519,21 @@ def main():
     for attempt in entry["attempts"]:
         if attempt["attempt_id"] == incoming["attempt_id"]:
             demand(attempt == incoming, "attempt_id collision: refusing overwrite of evidence")
-            break
-    else:
-        entry["attempts"].append(incoming)
+            print("UAT_RECONCILED: EXISTING_ATTEMPT_UNCHANGED", case_id, incoming["attempt_id"])
+            return  # idempotent: do not rewrite or append anything
+    previous_hash = json.loads(previous_ledger.splitlines()[-1])["entry_sha256"] \
+        if previous_ledger else CHAIN_ZERO
+    appended_event = seal_event(len(previous_ledger.splitlines()) + 1,
+                                previous_hash, kind, case_id, incoming)
+    entry["attempts"].append(incoming)
+    proposed_ledger = previous_ledger + appended_event
+    demand(ledger_index(proposed_ledger, inventories) == idx,
+           "new evidence would rewrite or reorder existing history")
     updates = project(idx)
-    newtrace = projected_trace(trace, idx, updates)
-    save_files(updates, newtrace)
+    newtrace = projected_trace(trace, idx, {**updates, LEDGER: proposed_ledger})
+    newtrace["file_sha256"][LEDGER] = digest(proposed_ledger)
+    save_files(updates, newtrace, previous_ledger, appended_event)
+    verify_ledger(newtrace, idx, inventories)
     assert_consistent(newtrace, idx, project(idx))
     print("UAT_RECONCILED:", case_id, incoming["status"], "record_sha256=" + incoming["record_sha256"])
 
