@@ -1,5 +1,8 @@
 # A7 — PACOTE REAL DE IMPLANTAÇÃO AZURE (para execução pelo dono)
 
+> **SUPERSEDED FOR REAL CI FACTORY DEPLOYMENT (A7 2026-11-16):** This document is retained for W0/W1 provenance only. The CI-produced factory is `orchestra-distribution-v1`, with `bin/local/entry.mjs` and `bin/web`, NOT the earlier experimental `bundle.py`/`deploy.py` contract. **Do not run any deployment commands from this older document.** Use [`A7-REAL-FACTORY-MI-DEPLOY.md`](./A7-REAL-FACTORY-MI-DEPLOY.md) and its explicitly staged scripts. Nothing has been executed in Azure by A7.
+
+
 **Controle: 2026-11-16 · W1 PREPARED, EXECUTION NOT_RUN.** Estados: AZ-01=BLOCKED_BY_OWNER/ENV/SOURCE; AZ-03=BLOCKED_BY_OWNER/ENV. Não confundir CI de PR com Azure instalado, Microsoft autenticado ou go-live. A7 edita só sf/azure/{vm,runtime,data,recovery,runbooks}/**; A8 é DRI de identidade/factory, A9 de F04/AM, A10 de freeze C e workflow release. O histórico azure-hardening tem Caddy 503, não app SF.
 
 ## 1. O que VOCÊ (dono) deve me entregar — checklist por degrau

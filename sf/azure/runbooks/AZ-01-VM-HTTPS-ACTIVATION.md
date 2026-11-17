@@ -1,5 +1,8 @@
 # A7 / AZ-01 — Azure Linux VM: app, HTTPS, artefato e restart
 
+> **SUPERSEDED FOR REAL CI FACTORY DEPLOYMENT (A7 2026-11-16):** This document is retained for W0/W1 provenance only. The CI-produced factory is `orchestra-distribution-v1`, with `bin/local/entry.mjs` and `bin/web`, NOT the earlier experimental `bundle.py`/`deploy.py` contract. **Do not run any deployment commands from this older document.** Use [`A7-REAL-FACTORY-MI-DEPLOY.md`](./A7-REAL-FACTORY-MI-DEPLOY.md) and its explicitly staged scripts. Nothing has been executed in Azure by A7.
+
+
 **2026-11-16 — W0/W1: RUNBOOK_PREPARED; execução NOT_RUN / BLOCKED_BY_ENV + BLOCKED_BY_OWNER + BLOCKED_BY_SOURCE.** Este guia NÃO é autorização de deploy, troca do Caddy 503 ou liberação do sf-release.
 
 ## Base comprovada por leitura de fontes

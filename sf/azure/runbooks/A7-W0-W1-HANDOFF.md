@@ -1,5 +1,8 @@
 # A7 W0/W1 handoff — AZ-01 and AZ-03
 
+> **SUPERSEDED FOR REAL CI FACTORY DEPLOYMENT (A7 2026-11-16):** This document is retained for W0/W1 provenance only. The CI-produced factory is `orchestra-distribution-v1`, with `bin/local/entry.mjs` and `bin/web`, NOT the earlier experimental `bundle.py`/`deploy.py` contract. **Do not run any deployment commands from this older document.** Use [`A7-REAL-FACTORY-MI-DEPLOY.md`](./A7-REAL-FACTORY-MI-DEPLOY.md) and its explicitly staged scripts. Nothing has been executed in Azure by A7.
+
+
 Date: 2026-11-16. Branch: sfa-vm. Owner: Agent A7. Stage: W0/W1 **documentation only**. This record is not a deployment attestation.
 
 ## W0 source checks done over GitHub MCP (READ ONLY)

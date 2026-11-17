@@ -1,5 +1,8 @@
 # A7 / AZ-03 — Linux persistence, backup, restore and rollback
 
+> **SUPERSEDED FOR REAL CI FACTORY DEPLOYMENT (A7 2026-11-16):** This document is retained for W0/W1 provenance only. The CI-produced factory is `orchestra-distribution-v1`, with `bin/local/entry.mjs` and `bin/web`, NOT the earlier experimental `bundle.py`/`deploy.py` contract. **Do not run any deployment commands from this older document.** Use [`A7-REAL-FACTORY-MI-DEPLOY.md`](./A7-REAL-FACTORY-MI-DEPLOY.md) and its explicitly staged scripts. Nothing has been executed in Azure by A7.
+
+
 **2026-11-16, W0/W1: PLANNED / NOT_RUN / BLOCKED_BY_ENV + BLOCKED_BY_OWNER.** No Azure VM, attached volume, Vault job or application DB has been observed by this agent. This document is an execution runbook, NOT a successful restore report or instruction to overwrite production.
 
 ## Source-specific model (read-only findings)
