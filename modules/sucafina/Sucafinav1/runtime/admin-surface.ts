@@ -68,6 +68,10 @@ export function applySfAdminChange(input: {
   const audit = (snapshot: Snapshot, key: string, oldValue: unknown, newValue: unknown) => {
     changed(snapshot, key, authorisedActor, at, oldValue, newValue)
     snapshot.audit[snapshot.audit.length - 1]!.name = actor.name
+    // Match native product mutation invalidation: policy changes are dataset changes.
+    snapshot.versions.dataset = {
+      version: (snapshot.versions.dataset?.version ?? 0) + 1, by: actorId,
+    }
   }
   if (action === "group") {
     if (form.getAll("surface").length !== 1 || form.getAll("role").length !== 1 ||
@@ -257,6 +261,19 @@ export function renderSfAdminAccess(input: {
   const orphanGroups = Object.entries(policy.groups).flatMap(([surface, roles]) =>
     Object.entries(roles).filter(([, ref]) => !groupsById.has(ref.slice(6))).map(([role, ref]) =>
       '<li>' + htmlEscape(surface + " / " + role + " -> " + ref) + '</li>')).join("")
+  const history = (["dashboard", "planner", "procurement"] as const).flatMap((surface) =>
+    snapshots[surface].audit.filter((entry) => entry.record.startsWith("sf:access-admin:"))
+      .map((entry) => ({ ...entry, surface })))
+    .toSorted((a, b) => b.at.localeCompare(a.at)).slice(0, 100)
+  const auditHtml = '<section class="sf-card" data-sf-admin-audit><h2>Histórico auditável de alterações</h2>' +
+    '<p>Últimas 100 alterações. Ator, instante UTC, registro e valores antes/depois persistem na transação.</p>' +
+    (history.length ? '<div class="sf-table"><table><thead><tr><th>Quando (UTC)</th><th>Quem</th><th>Registro</th><th>De</th><th>Para</th></tr></thead><tbody>' +
+      history.map((entry) => '<tr><td>' + htmlEscape(entry.at) + '</td><td>' +
+        htmlEscape((entry.name ?? "") + " (" + entry.who + ")") + '</td><td>' +
+        htmlEscape(entry.record) + '</td><td><code>' +
+        htmlEscape((JSON.stringify(entry.was) ?? "null").slice(0, 2000)) + '</code></td><td><code>' +
+        htmlEscape((JSON.stringify(entry.became) ?? "null").slice(0, 2000)) + '</code></td></tr>').join("") +
+      '</tbody></table></div>' : '<p>Nenhuma alteração de acesso registrada.</p>') + '</section>'
   const orphans = '<section class="sf-card" data-orphans><h2>Auditoria: permissões órfãs</h2>' +
     '<p>Grants cujo principalRef (Object ID) já não aparece no diretório completo do Graph. Nenhuma limpeza é automática.</p>' +
     (orphanGrants.length ? '<ul>' + orphanGrants.map((grant) => {
@@ -286,7 +303,7 @@ export function renderSfAdminAccess(input: {
     '<section class="sf-card"><h2>Organograma (manager do Graph)</h2><ul>' + chart + '</ul></section>' +
     '<section class="sf-card"><h2>Herança por time → papel por tela</h2><p>Somente os 15 papéis de ROWS podem ser vinculados. Uma pessoa herda cada papel pela pertença transitive ao grupo Entra selecionado.</p>' +
     '<div class="sf-table"><table><thead><tr><th>Tela</th><th>Papel autorizado</th><th>Grupo Entra / Teams</th></tr></thead><tbody>' +
-    groupEntries + '</tbody></table></div></section>' + orphans + '</main></body></html>'
+    groupEntries + '</tbody></table></div></section>' + orphans + auditHtml + '</main></body></html>'
 }
 
 function inputField(action: string, id: string, version: number) {
