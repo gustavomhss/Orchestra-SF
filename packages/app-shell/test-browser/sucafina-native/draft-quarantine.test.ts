@@ -3,13 +3,17 @@ import { createComponent } from "solid-js"
 import { render } from "solid-js/web"
 import type { SfEditScopeKey, SfOperationRef, SfOwnerKey, SfOwnerSelection, SfRef, SfServerKey } from "@orchestra/schema/sucafina/context"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import { SfContextProvider, useSfContext } from "../../src/orchestra/chapters/sucafina/context"
+import { solidDom } from "../solid-dom"
 import { createSfOwnerDrafts } from "../../src/orchestra/chapters/sucafina/context/drafts"
 import type { SfContext, SfContextDependencies, SfContextHandle, SfDraftRevalidation, SfOwnerIdentity } from "../../src/orchestra/chapters/sucafina/context/contracts"
 import { createSfDraft } from "../../src/orchestra/chapters/sucafina/shared/draft"
 import { revalidateSfNativeDraft } from "../../src/orchestra/chapters/sucafina/host/draft-revalidation"
 
 // Contract tests with injected producer responses, not an installed identity/host proof.
+// Load the rendered provider through the Solid JSX compiler, not Bun's default JSX transform.
+const { SfContextProvider, useSfContext }: typeof import("../../src/orchestra/chapters/sucafina/context") =
+  await import(solidDom("../../src/orchestra/chapters/sucafina/context", import.meta.dir))
+
 const stamp = { installationId: "install", projectId: "project", hostId: "host", principalRef: "actor", policyVersion: "p1", accessRevision: "a1" }
 const context: SfContext = { stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft", destinations: [], availability: [] }
 const selection: SfOwnerSelection = { serverKey: "server" as SfServerKey, projectId: "project" as SfRef, installationId: "install" as SfRef }
