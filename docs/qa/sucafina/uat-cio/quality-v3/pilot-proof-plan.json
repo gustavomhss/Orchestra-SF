@@ -1,0 +1,245 @@
+{
+  "schema": "sf-uat-pilot-proof-plan-v1",
+  "status": "DESIGNED_NOT_EXECUTED",
+  "sourceBaseline": "a1e774ec9e1fc28c81e0b42a1889c0425060aed9",
+  "scope": "Three high-risk existing QA2 dossiers. No new product API, runner, or seed engine.",
+  "cases": [
+    {
+      "caseId": "QA2-001",
+      "title": "Forecast que André vê corresponde à fonte aprovada por Finance",
+      "minDistinctActors": 2,
+      "existingProofSources": [
+        "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u06.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u07.spec.ts"
+      ],
+      "oracle": {
+        "kind": "forecast-variants-v1",
+        "baselineCents": 59000000,
+        "budgetCents": 60000000,
+        "originalLicenseCents": 7200000,
+        "scenarioACents": 8400000,
+        "scenarioBCents": 7800000
+      },
+      "proofs": [
+        {
+          "id": "F-01",
+          "kind": "read",
+          "actorRole": "finance"
+        },
+        {
+          "id": "F-02",
+          "kind": "oracle",
+          "actorRole": "finance"
+        },
+        {
+          "id": "F-03",
+          "kind": "commit",
+          "actorRole": "finance",
+          "from": "draft_version",
+          "to": "modified_version"
+        },
+        {
+          "id": "F-04",
+          "kind": "deny",
+          "actorRole": "budget owner",
+          "from": "official_locked",
+          "to": "official_locked",
+          "allowedStatus": [
+            403,
+            409,
+            422
+          ]
+        },
+        {
+          "id": "F-05",
+          "kind": "read",
+          "actorRole": "cio"
+        }
+      ]
+    },
+    {
+      "caseId": "QA2-002",
+      "title": "Buyer não escolhe cotação inelegível nem aprova a própria requisição",
+      "minDistinctActors": 3,
+      "existingProofSources": [
+        "modules/sucafina/porta/codigo.test.ts",
+        "modules/sucafina/porta/linha.test.ts",
+        "modules/sucafina/porta/s3.test.ts",
+        "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u12.spec.ts"
+      ],
+      "oracle": {
+        "kind": "quote-choice-v1",
+        "eurUsdRateNumerator": 108,
+        "eurUsdRateDenominator": 100,
+        "quotes": [
+          {
+            "id": "A",
+            "currency": "USD",
+            "totalCents": 3240000,
+            "eligible": true
+          },
+          {
+            "id": "B",
+            "currency": "EUR",
+            "totalCents": 2800000,
+            "eligible": true
+          },
+          {
+            "id": "C",
+            "currency": "USD",
+            "totalCents": 2900000,
+            "eligible": false
+          }
+        ]
+      },
+      "proofs": [
+        {
+          "id": "P-01",
+          "kind": "commit",
+          "actorRole": "requester",
+          "from": "draft",
+          "to": "pr_pending"
+        },
+        {
+          "id": "P-02",
+          "kind": "deny",
+          "actorRole": "requester",
+          "from": "pr_pending",
+          "to": "pr_pending",
+          "allowedStatus": [
+            403,
+            422
+          ]
+        },
+        {
+          "id": "P-03",
+          "kind": "commit",
+          "actorRole": "approver",
+          "from": "pr_pending",
+          "to": "sourcing"
+        },
+        {
+          "id": "P-04",
+          "kind": "deny",
+          "actorRole": "buyer",
+          "from": "sourcing",
+          "to": "sourcing",
+          "allowedStatus": [
+            403,
+            422
+          ]
+        },
+        {
+          "id": "P-05",
+          "kind": "oracle",
+          "actorRole": "buyer"
+        },
+        {
+          "id": "P-06",
+          "kind": "commit",
+          "actorRole": "buyer",
+          "from": "sourcing",
+          "to": "src_pending"
+        },
+        {
+          "id": "P-07",
+          "kind": "commit",
+          "actorRole": "approver",
+          "from": "src_pending",
+          "to": "po_draft"
+        },
+        {
+          "id": "P-08",
+          "kind": "commit",
+          "actorRole": "buyer",
+          "from": "po_draft",
+          "to": "po_pending"
+        },
+        {
+          "id": "P-09",
+          "kind": "commit",
+          "actorRole": "approver",
+          "from": "po_pending",
+          "to": "po_approved"
+        },
+        {
+          "id": "P-10",
+          "kind": "commit",
+          "actorRole": "buyer",
+          "from": "po_approved",
+          "to": "po_issued"
+        },
+        {
+          "id": "P-11",
+          "kind": "deny",
+          "actorRole": "buyer",
+          "from": "po_issued",
+          "to": "po_issued",
+          "allowedStatus": [
+            403,
+            409,
+            422
+          ]
+        }
+      ],
+      "separateRoles": [
+        "requester",
+        "approver",
+        "buyer"
+      ]
+    },
+    {
+      "caseId": "QA2-003",
+      "title": "Importação confirmada uma vez sobrevive à perda da resposta",
+      "minDistinctActors": 1,
+      "existingProofSources": [
+        "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "packages/app-shell/e2e/sucafina/operations.spec.ts",
+        "modules/sucafina/Sucafinav1/product/imports/apply.ts"
+      ],
+      "proofs": [
+        {
+          "id": "I-01",
+          "kind": "preview",
+          "actorRole": "finance"
+        },
+        {
+          "id": "I-02",
+          "kind": "deny",
+          "actorRole": "finance",
+          "allowedStatus": [
+            403,
+            409,
+            422
+          ]
+        },
+        {
+          "id": "I-03",
+          "kind": "commit",
+          "actorRole": "finance"
+        },
+        {
+          "id": "I-04",
+          "kind": "recovery",
+          "actorRole": "finance",
+          "linksTo": "I-03"
+        },
+        {
+          "id": "I-05",
+          "kind": "receipt",
+          "actorRole": "finance",
+          "linksTo": "I-03"
+        }
+      ]
+    }
+  ],
+  "deferredDossiers": [
+    "QA2-004",
+    "QA2-005",
+    "QA2-006",
+    "QA2-007",
+    "QA2-008"
+  ]
+}
