@@ -204,11 +204,15 @@ function initial() {
 }
 function load(snapshot: Snapshot): Store {
   const stored = object(snapshot.data.store)
+  // A fresh installation has not written Settings yet. Its authoritative
+  // starting values are the same defaults used by the explicit Reset command.
+  // Do not mutate storage on a read or mask explicitly saved (even invalid) settings.
+  const settings = Object.hasOwn(stored, "settings") ? object(stored.settings) : initial()
   return structuredClone({
-    settings: object(stored.settings),
+    settings,
     form: {
-      currency: text(object(stored.settings).currency),
-      ...object(stored.settings),
+      currency: text(settings.currency),
+      ...settings,
     },
     issued: { pr: [], po: [], ...object(stored.issued) },
     sup: Array.isArray(stored.sup) ? stored.sup.filter((code): code is string => typeof code === "string") : [],
