@@ -25,7 +25,7 @@ As classes de erro acima não são equivalentes. A implementação atual do `cre
 ## Evidência de testes adicionada (não certifica o end-to-end)
 
 - `modules/sucafina/Sucafinav1/test/t8-auth-frontier.test.ts`: cookie restrito + 303, sem sessão em raiz, isolamento por origin, 401 para anônimo/expirado/revogado, 403 para mutação com Origin falso, logout sem bypass, 503 quando F01 não tem host, troca de binding durante admissão, rejeição do loader de factory com caminho/origin inválidos. Usa authenticator/store reais para sessão; teste de F01 com host ausente **não** simula um grant positivo.
-- `packages/app-shell/src/context/t8-persisted-frontier.honey.test.ts`: **honey de exposição**, prova que `resolveServerList` ainda enumera uma conexão estrangeira persistida. **Não** prova que essa conexão virou owner, nem afirma que o resolvedor genérico de multi-servidores deva eliminá-la.
+- `packages/app-shell/src/context/server.test.ts` (**asserções T8 nos casos existentes**, sem novo arquivo/caso no inventário de CI-APP-SRC): **honey de exposição**, prova que `resolveServerList` ainda enumera uma conexão estrangeira persistida. **Não** prova que essa conexão virou owner, nem afirma que o resolvedor genérico de multi-servidores deva eliminá-la.
 
 ## Pendências que esta fatia NÃO comprova
 
