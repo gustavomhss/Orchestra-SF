@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import { fileURLToPath } from "node:url"
-import { Layer } from "effect"
+import { Context, Layer } from "effect"
+import { createRoutes } from "@orchestra/server/routes"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { loadSfInstallation } from "../src/sucafina-product/installation.ts"
 
@@ -32,4 +33,41 @@ test("Sucafina mount retains the host fence and leaves neighboring paths unclaim
       expect(response.status).toBe(404)
     }
   } finally { await router.dispose(); await installation.dispose() }
+})
+
+test("installed Sucafina subtree is outside daemon Basic auth while Orchestra API stays protected", async () => {
+  const installation = await loadSfInstallation(fixture, origin)
+  const router = HttpRouter.toWebHandler(
+    Layer.merge(
+      createRoutes({ password: "synthetic-daemon-password", allowedHosts: ["127.0.0.1"] }),
+      installation.layer,
+    ).pipe(Layer.provide(HttpServer.layerServices)),
+    { disableLogger: true },
+  )
+  const dispatch = (pathname: string) => router.handler(
+    new Request(origin + pathname, { headers: { host: new URL(origin).host } }),
+    Context.makeUnsafe<unknown>(new Map()),
+  )
+  try {
+    for (const pathname of [
+      "/sucafina/status",
+      "/sucafina/auth/login",
+      "/sucafina/dashboard",
+      "/sucafina/planner",
+      "/sucafina/procurement",
+    ]) {
+      const response = await dispatch(pathname)
+      // Synthetic producer is deliberately identity-free; any 401 here comes from the server boundary.
+      expect(response.status).toBe(200)
+      expect(await response.text()).toBe("GET " + pathname)
+    }
+    const privateApi = await dispatch("/api/sucafina/installations?select=ids&installationId=x&projectId=y")
+    expect(privateApi.status).toBe(401)
+    expect(privateApi.headers.get("www-authenticate")).toBe('Basic realm="Secure Area"')
+    const outside = await dispatch("/sucafina-extra/dashboard")
+    expect(outside.status).toBe(404)
+  } finally {
+    await router.dispose()
+    await installation.dispose()
+  }
 })
