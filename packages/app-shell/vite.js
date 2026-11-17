@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs"
 import solidPlugin from "vite-plugin-solid"
 import tailwindcss from "@tailwindcss/vite"
 import { fileURLToPath } from "url"
+import { applyBrandIdentityToHtml } from "./brand-identity.js"
 
 const theme = fileURLToPath(new URL("./public/oc-theme-preload.js", import.meta.url))
 const background = fileURLToPath(new URL("./src/orchestra/background.css", import.meta.url))
@@ -52,10 +53,11 @@ export default [
   {
     name: "orchestra-desktop:theme-preload",
     transformIndexHtml(html) {
-      return html.replace(
+      const themed = html.replace(
         /<script id="oc-theme-preload-script" src="(?:\/|\.\/)oc-theme-preload\.js"><\/script>/,
         `<style id="oc-orchestra-background">${readFileSync(background, "utf8")}</style><style id="oc-orchestra-palettes">${readFileSync(palettes, "utf8")}</style><script id="oc-theme-preload-script">${readFileSync(theme, "utf8")}</script>`,
       )
+      return applyBrandIdentityToHtml(themed, process.env.ORCHESTRA_BRAND)
     },
   },
   tailwindcss(),
