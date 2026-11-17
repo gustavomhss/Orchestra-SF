@@ -3,6 +3,8 @@
 **Data:** 2026-11-17 UTC (Sweden Central). **Estado:** CUSTÓDIA DE ORIGEM NÃO CERTIFICADA.
 **Decisão reportada pelo dono:** retirar as versões erradas da VM e preservar cópias forenses. Este inventário não aprova redeploy.
 
+**Alcance desta revisão:** somente artefatos e declarações presentes no GitHub foram lidos. Nenhum comando autenticado de Azure/VM foi executado nesta correção; os números ARM abaixo vieram de relatos anteriores, sem outputs brutos anexados. Não confundir esses relatos, a existência do container ou a consistência de ponteiros LFS com cadeia de custódia.
+
 ## Por que estas quatro builds foram removidas
 
 Os `package.json` conservados identificam `@humanguardrail/cli-linux-x64-baseline` 1.18.27 e `sfFactory: bin/local/entry.mjs`. A versão `preview-896fc974` foi **reportada** como a única servida na VM, mas o go-live requer Orchestra Web com módulo Sucafina nativo. As ocorrências abaixo foram reportadas nessa release:
@@ -32,19 +34,43 @@ Os hashes e tamanhos abaixo são os valores **declarados** pelo arquivo `SHA256S
 | preview-896fc974-quarantine.tar.gz | de2221d8c9de8740b2acace6bf4657b64442c10e84c19ddd7c6cec9ab21aae31 | 93132579 |
 | staging-591424661c-quarantine.tar.gz | 1654377b3c0b793ffe8ad4b91e8629521139cc77ffc7014b3c87074932182306 | 93138263 |
 
-Azure ARM confirma a existência do container `quarantine` na conta `orchsfstage2611162353`, em `swedencentral`, com `allowBlobPublicAccess=false` e TLS mínimo 1.2 na conta. **Não confirma os quatro objetos**: a leitura do data plane com `--auth-mode login` foi negada por ausência de papel `Storage Blob Data Reader`.
+Consultas ARM **descritas na revisão anterior** indicaram um container `quarantine` na conta `orchsfstage2611162353`, em `swedencentral`, com `allowBlobPublicAccess=false` e TLS mínimo 1.2 na conta. **Não há saída literal dessas consultas neste PR.** O bloqueio da leitura do data plane com `--auth-mode login` por falta de `Storage Blob Data Reader` também é um **relato anterior**, não um teste reexecutado nesta correção. Mesmo que o container exista, isso **não prova** que qualquer dos quatro Blobs foi recebido ou corresponde ao tar no LFS.
 
-## Recibos Azure independentes consultados em 2026-11-17 (UTC)
+## Metadados ARM relatados em 2026-11-17 (UTC) — **sem recibos brutos anexados**
 
-| Fonte | Comprovado | Não comprovado |
+| Fonte | Valores relatados (não certificados por output bruto neste PR) | Não comprovado |
 |---|---|---|
-| Snapshot (ARM) | `orchsf-qa-freeze-20261117`, `Succeeded`, `swedencentral`, criado `2026-11-17T14:23:14.1985736Z`, origem: **OS disk** associado à `orchsf-vm`. | Não é snapshot integral da VM/DB e não prova quem criou os tars. |
-| Activity Log: snapshot | `Microsoft.Compute/snapshots/write`, `Succeeded` em `2026-11-17T14:23:17.7845388Z`; caller `danielzinhu_ro@hotmail.com`; correlation ID `9508c981-a4c8-45f4-b18e-0906a39edf93`. | A identidade de quem solicitou o snapshot **não** é a de quem compilou o produto. |
-| Activity Log: VM | `runCommand/action` com `Succeeded` em `2026-11-17T15:52:33.4621558Z` (correlation `8675efd8-86b5-4e77-8c59-aed653f4156f`) e `2026-11-17T15:55:06.1925239Z` (`1f926682-99ce-4b17-9242-8bf7662a3eab`), mesmo caller. | Esses eventos **não exibem comandos nem saídas**; não comprovam criação, compactação, remoção ou upload dos quatro tars. |
-| Storage (ARM) | Conta em `swedencentral`, container `quarantine` existente e acesso público ao Blob desabilitado na conta. | Nenhum `PutBlob`/recebimento individual, byte-size, versão ou `ETag` dos objetos foi validado. |
-| Git LFS | Quatro ponteiros SHA256 e arquivo `SHA256SUMS.txt` internamente correspondentes. | Ponteiros/hashes autoconsistentes **não** atestam fonte independente nem conteúdo materializado de um clone. |
+| Snapshot (ARM) | Identificador e metadados relatados: `orchsf-qa-freeze-20261117`, `Succeeded`, `swedencentral`, criado `2026-11-17T14:23:14.1985736Z`, origem: **OS disk** associado à `orchsf-vm`. | Não é snapshot integral da VM/DB e não prova quem criou os tars. |
+| Activity Log: snapshot | Evento relatado: `Microsoft.Compute/snapshots/write`, `Succeeded` em `2026-11-17T14:23:17.7845388Z`; caller `danielzinhu_ro@hotmail.com`; correlation ID `9508c981-a4c8-45f4-b18e-0906a39edf93`. | A identidade de quem solicitou o snapshot **não** é a de quem compilou o produto. |
+| Activity Log: VM | Eventos relatados: `runCommand/action` com `Succeeded` em `2026-11-17T15:52:33.4621558Z` (correlation `8675efd8-86b5-4e77-8c59-aed653f4156f`) e `2026-11-17T15:55:06.1925239Z` (`1f926682-99ce-4b17-9242-8bf7662a3eab`), mesmo caller. | Esses eventos **não exibem comandos nem saídas**; não comprovam criação, compactação, remoção ou upload dos quatro tars. |
+| Storage (ARM) | Existência/configuração de conta e container relatadas; sem recibo literal do objeto ou da conta nesta rodada. | Nenhum `PutBlob`/recebimento individual, byte-size, versão ou `ETag` dos objetos foi validado. |
+| Git LFS | Consistência declarada na revisão fria entre quatro ponteiros SHA256 e `SHA256SUMS.txt` (sem 4/4 pós-download executado aqui). | Ponteiros/hashes autoconsistentes **não** atestam fonte independente nem conteúdo materializado de um clone. |
 
-Reconsulta (sem publicar segredos ou copiar tokens):
+## Recibos que faltam por arquivo — estado **FIX-FIRST**
+
+**Novos recibos ARM/VM/Blob/ETag/SHA256 de origem anexados nesta correção: NENHUM.** No ambiente de execução desta revisão, `az account show -o json` não pôde iniciar (`az: command not found`); o computador remoto associado estava offline. Isso é limitação de acesso desta rodada, **não** evidência de erro Azure nem prova adicional de RBAC 403. A negativa de Blob Data Reader descrita acima foi reportada anteriormente e não foi reproduzida aqui.
+
+| Tar | Comando/ator/UTC da criação + SHA256 pré-upload na VM | Recibo individual `PutBlob` (`x-ms-request-id`, status, `ETag`/versão) | Propriedade e SHA256 de download Blob, comparados a VM e LFS |
+|---|---|---|---|
+| `preview-2dcbafcf-quarantine.tar.gz` | **PENDENTE** | **PENDENTE** | **PENDENTE** |
+| `preview-53f20783-quarantine.tar.gz` | **PENDENTE** | **PENDENTE** | **PENDENTE** |
+| `preview-896fc974-quarantine.tar.gz` | **PENDENTE** | **PENDENTE** | **PENDENTE** |
+| `staging-591424661c-quarantine.tar.gz` | **PENDENTE** | **PENDENTE** | **PENDENTE** |
+
+Os quatro SHA256 de `SHA256SUMS.txt` são **valores declarados no Git**: não os reapresentar como `sha256sum` executado na VM, após download do Blob ou depois de `git lfs pull`. Nem a listagem ARM nem um `ETag` de objeto atual constituem, sozinhos, prova histórica de `PutBlob`.
+
+### Quem pode produzir os recibos sem fingir acesso
+
+| Fonte | Acesso/ator necessário | Evidência literal a preservar |
+|---|---|---|
+| Snapshot, recursos VM e Activity Log ARM | Operador com papel **Reader** (ou **Owner**) no escopo ARM apropriado e permissão de ler Activity Logs | Saídas JSON de `az snapshot show`, `az vm show` e `az monitor activity-log list` com IDs, `eventTimestamp`, `correlationId`, estado e escopo. **ARM runCommand/action não revela script/stdout**. |
+| Quatro objetos no container privado | Identidade com **Storage Blob Data Reader** no container/conta; papel **Reader** de ARM **não** basta. Um **Owner** / **User Access Administrator** / **Role Based Access Control Administrator** pode atribuir papel adequado sob autorização explícita; Owner sozinho não garante leitura `--auth-mode login`. | JSON integral de `az storage blob list/show --auth-mode login` para nomes reais, byte size, `lastModified`, `ETag`, versão (se disponível); downloads e `sha256sum` independentes, com horário UTC. |
+| Proveniência de criação na VM / snapshot | Operador do host com acesso autorizado a logs pré-existentes e ao conteúdo do disco; inspeção de snapshot em VM isolada requer autorização de provisionamento. Papel Reader de ARM **não** dá acesso aos arquivos do guest. | Logs originais de empacotamento/execução, comando executado, UID/ator se auditável, horário UTC, manifesto da origem e `sha256sum` local **pré-upload** para cada tar. Se não existirem, autoria/hora de criação permanecem desconhecidas. |
+| Transações de escrita `PutBlob` | Operador que fez os uploads (logs originais do cliente) ou responsável por logs diagnósticos existentes com acesso de leitura ao Log Analytics/Storage | Respostas originais com `x-ms-request-id`, `ETag`, status e UTC; `StorageBlobLogs` **somente se já estavam habilitados e retidos**. Não existe recuperação retroativa garantida de logs nunca coletados. |
+
+**Aceite futuro:** guardar os outputs literais (com dados sigilosos redigidos), datar origem e coletor, verificar os quatro hashes após baixar Blob e LFS, confrontar com SHA256 **original independente** da VM/snapshot e solicitar revisão fria. Se a evidência histórica não existir, manter **CUSTÓDIA DE ORIGEM NÃO CERTIFICADA** sem gerar recibo retroativo. Nenhuma função de upload, restauração ou alteração de RBAC foi utilizada nesta rodada.
+
+Reconsulta proposta para operador autorizado (comandos **não executados nesta correção**; sem publicar segredos ou copiar tokens):
 
 ~~~sh
 az monitor activity-log list \
@@ -59,9 +85,9 @@ az monitor activity-log list \
 1. **Origem na VM.** Para cada release: caminho original, origem (commit/CI job/produtor, caso exista), manifesto e SHA256 de cada arquivo no diretório original; saída assinada/registrada do comando de criação do tar, tamanho e SHA256 **antes do envio**, com data UTC e executor. Recuperar evidência do snapshot em VM **isolada, com disco montado somente leitura**, e logs pré-existentes. `stat` pode fornecer UID/GID e timestamps, mas `ctime` **não é horário de criação**, UID **não identifica o ator**, e data do tar não prova autoria. Sem auditoria/log, registrar autor e horário exato de geração como **desconhecidos**.
 2. **Ordem dos uploads.** Exigir log cronológico real dos quatro envios ao container privado: comando sem segredo, blob name exato, executor, UTC, status da resposta, `x-ms-request-id`/ID de transação, tamanho, `ETag`/version ID e hash local pré-upload. O ARM `runCommand` não é recibo de `PutBlob`. `Last-Modified` pode ter sido alterado por sobrescrita; sozinho não certifica a ordem original.
 3. **Recebimento independente.** Após conceder somente RBAC `Storage Blob Data Reader`, consultar propriedades dos quatro objetos e baixar cópias de inspeção; registrar horário/`ETag`/tamanho e confrontar **SHA256 independente do original** (VM/snapshot), do Blob e do LFS. Sem logs StorageBlobLogs ou recibo do cliente, registrar **lacuna irrecuperável**, sem inventar um recibo retroativo.
-4. **Fechamento.** Adicionar a este README os quatro pares de IDs de transação e hashes reconciliados somente quando verificáveis; uma revisão separada deve aceitar. O estado atual permanece **PENDENTE**, embora o snapshot e atividade ARM sejam reais.
+4. **Fechamento.** Adicionar a este README os quatro pares de IDs de transação e hashes reconciliados somente quando verificáveis; uma revisão separada deve aceitar. O estado atual permanece **PENDENTE**: identificadores de snapshot/atividade ARM foram relatados, mas seus outputs brutos não estão anexados e não substituem a proveniência dos quatro tars.
 
-Consulta de propriedades pendente de autorização de dados (não contornar RBAC via account key/SAS):
+Consulta de propriedades pendente de **Storage Blob Data Reader** e CLI autenticado (não contornar RBAC via account key/SAS; comandos abaixo ainda **não executados nesta revisão**):
 
 ~~~sh
 ACCOUNT=orchsfstage2611162353
@@ -141,7 +167,7 @@ Para re-subir, **inspecionar antes** `systemctl cat orchestra-sf-staging.service
 
 ## Não coberto / limites de afirmação
 
-- Sem prova independente do **autor/criação** dos tars, da **ordem/recibos de PutBlob**, de recebimento objeto a objeto ou de igualdade binária fonte→Blob→LFS.
+- Sem prova independente do **autor/criação** dos tars, da **ordem/recibos de PutBlob**, de recebimento objeto a objeto ou de igualdade binária fonte→Blob→LFS. **Nenhum recibo novo** desses itens foi anexado nesta correção.
 - Git LFS e um container privado **não** implicam retenção imutável/WORM, assinatura, revisão de segredos/PII/malware ou prova de que o conteúdo seja seguro.
 - Nenhum **restore, boot, re-deploy, teste de browser ou UAT** foi executado por esta revisão; isto é um procedimento de recuperação, não aceitação operacional.
 - O snapshot pode ser crash-consistent e **não é cópia full-stack**; nem a restauração do tar antigo nem a do snapshot comprovam Orchestra Web nativo, white-label, OIDC ou correções de #300/#303.

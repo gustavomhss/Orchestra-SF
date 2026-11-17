@@ -138,13 +138,12 @@ jobs:
           GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
             GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
             git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev
-          # The event's base sha can lag behind the base branch. Compare against the
-          # real fork point so base-branch churn is never attributed to this PR.
-          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
-            GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
-            git fetch --no-tags origin +refs/heads/close-final-candidate:refs/remotes/origin/close-final-candidate
-          SF_PR_BASE="$(git merge-base refs/remotes/origin/close-final-candidate HEAD)"
-          test -n "$SF_PR_BASE"
+          if [ -z "$SF_PR_BASE" ]; then
+            GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+              GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+              git fetch --no-tags origin +refs/heads/close-final-candidate:refs/remotes/origin/close-final-candidate
+            SF_PR_BASE="$(git rev-parse refs/remotes/origin/close-final-candidate)"
+          fi
           unset auth GH_READ_TOKEN
           git cat-file -e "$SF_PR_BASE^{commit}"
           dev_sha="$(git rev-parse 'origin/dev^{commit}')"
