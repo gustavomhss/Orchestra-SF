@@ -1,6 +1,6 @@
 import { createLocalJWKSet, jwtVerify } from "jose"
 import { emptyMap } from "../src/identity.ts"
-import type { EntraClient, EntraOptions, EntraTokens } from "./local-contract.ts"
+import type { EntraClient, EntraGraphDirectory, EntraOptions, EntraTokens } from "./local-contract.ts"
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const graph = "https://graph.microsoft.com/v1.0"
@@ -14,7 +14,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   const profile = options.profile === undefined ? "local-public" : options.profile
   const clientSecret = options.clientSecret
   if (!["local-public", "web-confidential"].includes(profile) || (profile === "web-confidential" ? typeof clientSecret !== "function" : clientSecret !== undefined)) throw new Error("Invalid Entra client profile")
-  const scopes = profile === "web-confidential" ? "openid profile offline_access User.Read" : "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
+  const scopes = profile === "web-confidential" ? "openid profile offline_access User.Read User.Read.All GroupMember.Read.All Directory.Read.All" : "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
   const authority = `https://login.microsoftonline.com/${tenant}`
   const issuer = `${authority}/v2.0`
   const now = options.now ?? (() => new Date())
@@ -22,23 +22,27 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   const limit = options.directoryLimit ?? 10000
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > 10000) throw new Error("Invalid directory limit")
 
-  async function request(url: string, init?: RequestInit) {
+  async function request(url: string, init?: RequestInit, allowMissingManager = false) {
     const signal = AbortSignal.timeout(requestTimeout)
     const aborted = Promise.withResolvers<never>()
     const abort = () => aborted.reject(new Error("Entra provider request timed out"))
     signal.addEventListener("abort", abort, { once: true })
     try {
       // An injected transport may ignore abort; the race still bounds its caller.
-      return await Promise.race([readResponse(url, signal, init), aborted.promise])
+      return await Promise.race([readResponse(url, signal, init, allowMissingManager), aborted.promise])
     } finally {
       signal.removeEventListener("abort", abort)
     }
   }
 
-  async function readResponse(url: string, signal: AbortSignal, init?: RequestInit) {
+  async function readResponse(url: string, signal: AbortSignal, init?: RequestInit, allowMissingManager = false) {
     const response = await Promise.resolve().then(() => send(new Request(url, { ...init, redirect: "error", signal }))).catch(() => {
       throw new Error("Entra provider request failed")
     })
+    if (allowMissingManager && response.status === 404 && !signal.aborted && !response.redirected) {
+      void response.body?.cancel().catch(() => undefined)
+      return { "_sfManagerMissing": true }
+    }
     if (signal.aborted || !response.ok || response.redirected) {
       void response.body?.cancel().catch(() => undefined)
       throw new Error("Entra provider request rejected")
@@ -118,6 +122,111 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     return tokens
   }
 
+
+  /**
+   * Independent server-only Graph read capability. No write methods and no
+   * network destinations except the selected v1.0 directory endpoints.
+   * Pagination is bounded and restricted to the exact original path.
+   */
+  async function graphAdmin(accessToken: string, address: string, missingManager = false) {
+    if (!accessToken || /[\x00-\x20\x7f]/.test(accessToken)) throw new Error("Invalid Graph token")
+    if (!URL.canParse(address)) throw new Error("Invalid admin Graph URL")
+    const url = new URL(address)
+    const userManager = /^\/v1\.0\/users\/[0-9a-f-]{36}\/manager$/i.test(url.pathname)
+    const groupMembers = /^\/v1\.0\/groups\/[0-9a-f-]{36}\/transitiveMembers$/i.test(url.pathname)
+    if (url.origin !== "https://graph.microsoft.com" || url.username || url.password || url.hash ||
+      !([ "/v1.0/users", "/v1.0/groups" ].includes(url.pathname) || userManager || groupMembers))
+      throw new Error("Unadmitted admin Graph URL")
+    // A paginated Graph link is a source of *data*, never authority for arbitrary SSRF.
+    return request(url.href, { headers: { Authorization: "Bearer " + accessToken } }, missingManager && userManager)
+  }
+
+  async function adminPages(accessToken: string, start: string, expectedPath: string, maximum: number) {
+    const seen = new Set<string>()
+    const records: Record<string, unknown>[] = []
+    let next: string | undefined = start
+    while (next) {
+      const url = new URL(next)
+      if (url.origin !== "https://graph.microsoft.com" || url.pathname !== expectedPath ||
+        url.username || url.password || url.hash || seen.has(url.href) || seen.size >= 100)
+        throw new Error("Unsafe admin Graph pagination")
+      seen.add(url.href)
+      const body = await graphAdmin(accessToken, url.href)
+      if (!Array.isArray(body.value) || body.value.some((value) => value === null || typeof value !== "object" || Array.isArray(value)) ||
+        records.length + body.value.length > maximum)
+        throw new Error("Incomplete admin Graph directory")
+      records.push(...body.value as Record<string, unknown>[])
+      if (body["@odata.nextLink"] === undefined) break
+      if (typeof body["@odata.nextLink"] !== "string" || !body["@odata.nextLink"])
+        throw new Error("Invalid admin Graph nextLink")
+      next = body["@odata.nextLink"]
+    }
+    return records
+  }
+
+  async function readGraphDirectory(accessToken: string): Promise<EntraGraphDirectory> {
+    if (profile !== "web-confidential") throw new Error("Confidential Graph profile required")
+    const people = await adminPages(accessToken,
+      graph + "/users?$select=id,displayName,department,jobTitle&$top=999", "/v1.0/users", Math.min(limit, 10000))
+    const groupsRaw = await adminPages(accessToken,
+      graph + "/groups?$select=id,displayName,resourceProvisioningOptions&$top=999", "/v1.0/groups", 10000)
+    const users = people.map((value) => {
+      if (typeof value.id !== "string" || !uuid.test(value.id) || typeof value.displayName !== "string" ||
+        value.displayName.length > 512 || (value.department !== null && value.department !== undefined && typeof value.department !== "string") ||
+        (value.jobTitle !== null && value.jobTitle !== undefined && typeof value.jobTitle !== "string"))
+        throw new Error("Invalid Graph user")
+      return { id: value.id.toLowerCase(), name: value.displayName,
+        department: typeof value.department === "string" ? value.department : "",
+        jobTitle: typeof value.jobTitle === "string" ? value.jobTitle : "" }
+    })
+    const groups = groupsRaw.map((value) => {
+      if (typeof value.id !== "string" || !uuid.test(value.id) || typeof value.displayName !== "string" ||
+        (value.resourceProvisioningOptions !== undefined && value.resourceProvisioningOptions !== null &&
+          (!Array.isArray(value.resourceProvisioningOptions) || value.resourceProvisioningOptions.some((item) => typeof item !== "string"))))
+        throw new Error("Invalid Graph group")
+      return { id: value.id.toLowerCase(), name: value.displayName,
+        team: Array.isArray(value.resourceProvisioningOptions) && value.resourceProvisioningOptions.includes("Team") }
+    })
+    if (new Set(users.map((user) => user.id)).size !== users.length ||
+      new Set(groups.map((group) => group.id)).size !== groups.length)
+      throw new Error("Ambiguous Graph directory objects")
+    const membership = new Map(users.map((user) => [user.id, new Set<string>()]))
+    const manager = new Map<string, string | null>()
+    // Bound Graph concurrency to avoid API fan-out storms; incomplete reads fail closed.
+    let index = 0
+    await Promise.all(Array.from({ length: Math.min(4, groups.length) }, async () => {
+      while (index < groups.length) {
+        const selected = groups[index++]!
+        const rows = await adminPages(accessToken,
+          graph + "/groups/" + selected.id + "/transitiveMembers?$select=id&$top=999",
+          "/v1.0/groups/" + selected.id + "/transitiveMembers", 10000)
+        const seenMembers = new Set<string>()
+        for (const row of rows) {
+          if (typeof row.id !== "string" || !uuid.test(row.id)) throw new Error("Invalid Graph group member")
+          const id = row.id.toLowerCase()
+          if (seenMembers.has(id)) throw new Error("Duplicate Graph group member")
+          seenMembers.add(id)
+          membership.get(id)?.add(selected.id)
+        }
+      }
+    }))
+    index = 0
+    await Promise.all(Array.from({ length: Math.min(4, users.length) }, async () => {
+      while (index < users.length) {
+        const person = users[index++]!
+        const value = await graphAdmin(accessToken, graph + "/users/" + person.id + "/manager?$select=id", true)
+        if (value._sfManagerMissing === true) { manager.set(person.id, null); continue }
+        if (typeof value.id !== "string" || !uuid.test(value.id)) throw new Error("Invalid Graph manager")
+        manager.set(person.id, value.id.toLowerCase())
+      }
+    }))
+    return {
+      users: users.map((user) => ({ ...user, managerId: manager.get(user.id) ?? null,
+        groupIds: [...membership.get(user.id)!].sort() })),
+      groups: groups.toSorted((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id)),
+    }
+  }
+
   const client: EntraClient = {
     tenantId: tenant,
     clientId,
@@ -150,6 +259,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
       return redeem((await discovery()).token, { grant_type: "refresh_token", refresh_token: refreshToken })
     },
     person,
+    graphDirectory: readGraphDirectory,
     async directory(accessToken) {
       // B2B guests cannot enumerate /users. The web login requires only delegated User.Read.
       if (profile === "web-confidential") return [await person(accessToken)]
