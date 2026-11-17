@@ -12,6 +12,7 @@ import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/
 import type { BusinessPorts, PortResult } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router.ts"
+import type { createSfRoutineServices } from "../routine-services.ts"
 
 type CaseRef = typeof SfRoutinesRun.input.Type["caseRef"]
 type HostProducts = Readonly<{
@@ -27,6 +28,12 @@ type HostProducts = Readonly<{
     work: () => Promise<PortResult<T>>): Promise<PortResult<T>>
 }>
 type A09Runtime = SfHostServices & Readonly<{ nativeUiProducts?: HostProducts }>
+type EvidenceReader = Pick<ReturnType<typeof createSfRoutineServices>, "readExecution" | "openResult">
+function isEvidenceReader(value: unknown): value is EvidenceReader {
+  return !!value && typeof value === "object" &&
+    "readExecution" in value && typeof value.readExecution === "function" &&
+    "openResult" in value && typeof value.openResult === "function"
+}
 type PostOperation = Exclude<SfRoutinesOperationId, "projection.routine">
 type HumanAction = "routines.admit" | "routines.run" | "schedules.create" | "schedules.read" |
   "schedules.update" | "schedules.pause"
@@ -257,9 +264,55 @@ async function projection(request: Request, deps: SfNativeHostDependencies): Pro
     }
     const result = decodeSfOperationOutput("sf_routine_status", source.result)
     if (!result.ok) return reply(unavailable("routine-source-contract-mismatch"), 503)
+    // C08 already revalidates the admitted input, terminal receipt, native
+    // output digest and source authority. Do not synthesize an execution from
+    // a status/resultRef or treat an unverified artifact as completed work.
+    let proof: unknown
+    const run = result.value
+    if (run.admission === "admitted" && run.runRef) {
+      const port = "routineEvidence" in runtime && isEvidenceReader(runtime.routineEvidence)
+        ? runtime.routineEvidence : undefined
+      if (!port) {
+        proof = { verifier: "unavailable", reason: "native-routine-evidence-port-unavailable" }
+      } else {
+        const observed = await port.readExecution(run.runRef, grant.value).catch(() => unavailable("routine-execution-unavailable"))
+        if (observed.status === "denied" || observed.status === "stale")
+          return wireResult("projection.routine", observed)
+        if (observed.status !== "ok") {
+          proof = { verifier: "unavailable", reason: observed.reason }
+        } else if (observed.value.state !== "completed") {
+          const state = observed.value.state
+          proof = { execution: observed.value, verifier:
+            state === "failed" ? "failed" : state === "cancelled" ? "cancelled" : "pending" }
+        } else {
+          const verified = await port.openResult(run.runRef, grant.value).catch(() => unavailable("routine-result-unavailable"))
+          if (verified.status === "denied" || verified.status === "stale")
+            return wireResult("projection.routine", verified)
+          if (verified.status === "ok" && digestSfValue(verified.value.run) === digestSfValue(run) &&
+              digestSfValue(verified.value.execution) === digestSfValue(observed.value)) {
+            const output = verified.value.output
+            proof = { execution: observed.value, verifier: "verified",
+              output: { runRef: output.runRef, resultRef: output.resultRef,
+                outputDigest: output.outputDigest, createdAt: output.createdAt, content: output.content } }
+          } else {
+            proof = { execution: observed.value, verifier: "unavailable",
+              reason: verified.status === "ok" ? "routine-evidence-changed" : verified.reason }
+          }
+        }
+      }
+      // Disallow a race where the UI projection moved between the initial
+      // producer read and the native receipt/artifact validation.
+      const fresh = await runtime.dispatch("sf_routine_status", sourceInput.value, grant.value)
+        .catch(() => unavailable("routine-status-producer-unavailable"))
+      if (fresh.status !== "ok") return wireResult("projection.routine", fresh)
+      const checked = decodeSfOperationOutput("sf_routine_status", fresh.result)
+      if (!checked.ok || digestSfValue(checked.value) !== digestSfValue(run))
+        return wireResult("projection.routine", { status: "stale", reason: "routine-status-changed" })
+    }
     if (deps.runtime() !== runtime || !await runtime.ui.revalidate(grant.value))
       return reply(denied("routine-authority-changed"), 403)
-    return wireResult("projection.routine", { status: "ok", value: result.value })
+    return wireResult("projection.routine", { status: "ok", value: result.value,
+      ...(proof ? { proof } : {}) })
   } finally {
     runtime.ui.finish(grant.value)
   }

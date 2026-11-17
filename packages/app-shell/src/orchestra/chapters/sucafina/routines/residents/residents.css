@@ -13,3 +13,9 @@
   .sf-n29-resident-layout:has(.sf-n29-resident-detail) { grid-template-columns: minmax(20rem,1fr) minmax(30rem,1.4fr); }
 }
 @media(max-width: 1023px) { .sf-n29-resident-layout { grid-template-columns: minmax(0,1fr); } }
+
+.sf-n29-field select { min-height: 44px; width: 100%; min-width: 0; }
+.sf-n29-resident-detail dl { display: grid; grid-template-columns: minmax(7rem,auto) minmax(0,1fr); gap: .4rem 1rem; }
+.sf-n29-resident-detail dt { font-weight: 600; }
+.sf-n29-resident-detail dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.sf-n29-contribution-output { max-height: 30rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: .875rem; }
