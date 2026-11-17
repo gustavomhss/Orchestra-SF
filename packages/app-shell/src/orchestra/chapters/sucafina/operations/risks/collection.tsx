@@ -7,6 +7,7 @@ import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { SfPageFrame } from "../../shared/frame"
+import { SfExecutiveAction, SfExecutiveRelatedLinks } from "../../cross-links/view"
 import type { SfColumn, SfCopyKey, SfUiState } from "../../shared/table"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
@@ -449,6 +450,17 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                           <Show when={admitted("delete")}><button type="button" class="mx-btn danger"
                             onClick={() => beginDeleteReview(row())}>{t("sf.u30.delete")}</button></Show>
                         </div>
+                        <div class="flex flex-wrap gap-2 mt-3" data-sf-executive-handoff>
+                          <SfExecutiveAction from={props.route} target={{ kind: "new-topic" }}
+                            label={{ pt: "Criar ação em Hot Topics", en: "Create Hot Topic action" }} />
+                          <SfExecutiveAction from={props.route}
+                            target={{ kind: "relations", source: {
+                              kind: spec.id === "CAP13" ? "risk" : "stakeholder", ref: String(row().id),
+                            } }}
+                            label={{ pt: "Encaminhar vínculo por referência", en: "Link action by reference" }} />
+                        </div>
+                        <SfExecutiveRelatedLinks from={props.route}
+                          omit={spec.id === "CAP13" ? "risk" : "stakeholder"} />
                       </article>}
                     </Show>
                     <Show when={store.mode === "edit" && activeState()?.availability === "active" ? draft() : null}>
