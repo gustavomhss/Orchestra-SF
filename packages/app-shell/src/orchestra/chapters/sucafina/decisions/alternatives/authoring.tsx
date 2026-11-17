@@ -1,4 +1,4 @@
-import { For, onCleanup, Show } from "solid-js"
+import { createEffect, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -55,6 +55,7 @@ export function SfAlternativeAuthoring(props: {
 }) {
   const [form, setForm] = createStore<{
     mode: "new" | "edit"; selectedId: string; slot: "A" | "B" | "C"
+    sourceCaseVersion?: number; sourceAlternativeVersion?: number
     title: string; baseRef: string; operations: OperationEditor[]; assumptions: AssumptionEditor[]
     phase: Phase; error: string; prepared?: PromoteInput; receipt?: Receipt
   }>({
@@ -64,6 +65,17 @@ export function SfAlternativeAuthoring(props: {
   })
   let pending: AbortController | undefined
   onCleanup(() => pending?.abort())
+  createEffect(() => {
+    props.owner.generation()
+    props.record.id
+    props.record.incarnation
+    pending?.abort()
+    setForm({
+      selectedId: "", sourceCaseVersion: undefined, sourceAlternativeVersion: undefined,
+      title: "", baseRef: "", operations: [], assumptions: [],
+      prepared: undefined, receipt: undefined, phase: "editing", error: "",
+    })
+  })
   const available = () => props.record.alternatives
   const selected = () => available().find((item) => item.id === form.selectedId)
   const canWrite = () => {
@@ -75,6 +87,8 @@ export function SfAlternativeAuthoring(props: {
     const alternative = available().find((item) => item.id === id)
     setForm({
       selectedId: alternative?.id ?? "", title: alternative?.title ?? "",
+      sourceCaseVersion: alternative ? props.record.version : undefined,
+      sourceAlternativeVersion: alternative?.version,
       baseRef: alternative?.scenario.baseRef ?? "",
       operations: alternative?.scenario.operations.map(editorOperation) ?? [],
       assumptions: alternative?.scenario.assumptions.map(editorAssumption) ?? [],
@@ -84,7 +98,9 @@ export function SfAlternativeAuthoring(props: {
   const edit = () => setForm({ phase: "editing", prepared: undefined, error: "" })
   const review = () => {
     const anchor = selected()
-    if (!canWrite() || !anchor || props.record.version < 1) {
+    if (!canWrite() || !anchor || props.record.version < 1 ||
+      form.sourceCaseVersion !== props.record.version ||
+      form.sourceAlternativeVersion !== anchor.version) {
       setForm("error", "É necessário selecionar uma alternativa fonte autorizada.")
       return
     }
@@ -105,6 +121,8 @@ export function SfAlternativeAuthoring(props: {
         assumption.valueKind === "boolean" ? assumption.value === "true" : assumption.value
       if (!assumption.id.trim() || ids.has(assumption.id) ||
         assumption.valueKind === "number" && (!assumption.value.trim() || typeof value !== "number" || !Number.isFinite(value)) ||
+        assumption.valueKind === "boolean" && assumption.value !== "true" && assumption.value !== "false" ||
+        assumption.valueKind === "text" && !assumption.value.trim() ||
         assumption.sourceIds.length === 0 ||
         assumption.sourceIds.some((id) => references.filter((ref) => ref.refId === id).length !== 1)) {
         setForm("error", "Premissas exigem ID único, valor válido e fontes do caso atual.")
@@ -140,7 +158,9 @@ export function SfAlternativeAuthoring(props: {
     if (request.caseRef.id !== props.record.id ||
       request.caseRef.incarnation !== props.record.incarnation ||
       request.caseRef.version !== props.record.version ||
-      !source || coverageReference(props.record, source) !== request.coverageRef) {
+      !source || form.sourceCaseVersion !== props.record.version ||
+      form.sourceAlternativeVersion !== source.version ||
+      coverageReference(props.record, source) !== request.coverageRef) {
       setForm({ error: "A versão ou a fonte mudou. Releia o caso.", phase: "failed", prepared: undefined })
       return
     }
@@ -335,7 +355,8 @@ export function SfAlternativeAuthoring(props: {
             <p>Case v{receipt().caseVersion} · resultado <bdi>{receipt().resultRef}</bdi> · tentativa <bdi>{receipt().correlation}</bdi>.</p>
             <button type="button" class="mx-btn" onClick={() => {
               props.onReload()
-              setForm({ phase: "editing", receipt: undefined, selectedId: "", title: "",
+              setForm({ phase: "editing", receipt: undefined, selectedId: "",
+                sourceCaseVersion: undefined, sourceAlternativeVersion: undefined, title: "",
                 baseRef: "", operations: [], assumptions: [], prepared: undefined, error: "" })
             }}>Releitura autorizada / próxima alternativa</button>
           </div>}
