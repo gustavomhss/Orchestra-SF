@@ -86,10 +86,13 @@ export async function fillDecision(page: Page, objective: string) {
 
 export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
   await expect(button).toBeEnabled()
-  const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
+  // The command can navigate to the saved case as soon as the browser has
+  // consumed its JSON. Read the real response body at the response event,
+  // before click() completes and Chromium retires the prior document's request.
+  const reply = page.waitForResponse((response) => isCommand(response.request(), mode, method))
+    .then((response) => readReply(response, observations))
   await button.click()
-  const response = await pending
-  return readReply(response, observations)
+  return await reply
 }
 
 export async function readReply(response: Response, observations: Record<string, unknown>[]) {
