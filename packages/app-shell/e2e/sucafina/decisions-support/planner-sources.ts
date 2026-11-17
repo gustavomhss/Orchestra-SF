@@ -41,7 +41,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await line.getByLabel("Name", { exact: true }).fill(sourceNames.line)
   console.log("[sf decisions:planner] Name filled")
   const ownerControl = line.getByLabel("Owner", { exact: true })
-  const ownerOptions = await ownerControl.locator("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value))
+  const ownerOptions = await ownerControl.locator("option").evaluateAll((options) => options.map((option) => option.getAttribute("value") ?? ""))
   console.log(`[sf decisions:planner] Owner options count=${ownerOptions.length} includesOperator=${ownerOptions.includes(actorId)}`)
   await ownerControl.selectOption(actorId)
   console.log("[sf decisions:planner] Owner selected; selecting Element")
