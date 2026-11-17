@@ -43,7 +43,10 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
   const valid = (value: unknown) => {
     if (!value || typeof value !== "object" || !("operator" in value) || !("expiresAt" in value) || typeof value.expiresAt !== "number" || !Number.isFinite(value.expiresAt) || value.expiresAt <= now()) return false
     if (!("origin" in value) || value.origin !== fixedOrigin || !("mount" in value) || value.mount !== mount) return false
-    return value.operator !== null && typeof value.operator === "object" && "id" in value.operator && value.operator.id === person.id && "name" in value.operator && value.operator.name === person.name
+    // The display name travels in the sealed record for presentation only. Binding
+    // the credential to it would make every session depend on the serving process
+    // environment, because Bun derives os.userInfo().username from the environment.
+    return value.operator !== null && typeof value.operator === "object" && "id" in value.operator && value.operator.id === person.id
   }
   const session = async (request: Request) => {
     if (new URL(request.url).origin !== fixedOrigin) return false
