@@ -260,8 +260,9 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
   const rates = { currency: "USD", fxRates: [{ code: "EUR", rate: 1.08 }] }
   const requests = [
     draft("a", "draft", undefined, undefined, { estAmount: 7 }),
+    // Issued POs are valued from their own frozen currency/FX, not an unfrozen quote.
     draft("b", "po_issued", {
-      expenseType: "OPEX",
+      expenseType: "OPEX", currency: "USD", approvalBaseCurrency: "USD",
       lines: [{ qty: 2, unitPrice: 15 }],
     }),
     draft("c", "po_approved", {
@@ -272,7 +273,8 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     draft(
       "e",
       "po_issued",
-      { expenseType: "CAPEX" },
+      { expenseType: "CAPEX", currency: "EUR", approvalBaseCurrency: "USD", fxRate: 1.08,
+        lines: [{ qty: 1, unitPrice: 10 }] },
       { quotes: [{ id: "q1", total: 10, currency: "EUR" }], selectedId: "q1" },
     ),
   ]
@@ -377,6 +379,9 @@ function draft(
   status: string,
   po?: {
     expenseType?: string
+    currency?: string
+    approvalBaseCurrency?: string
+    fxRate?: number
     lines?: { qty: number; unitPrice: number }[]
     number?: string
     supplier?: string

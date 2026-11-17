@@ -37,8 +37,14 @@ test("Chrome follows the private enrollment gateway into actual HTML screens wit
       expect(await page.locator("body").innerText()).not.toContain("Microsoft 365 application is not configured")
       // Other product widgets may have their own <nav>; qualify only the real sidebar.
       const sidebar = page.locator("aside.sidebar > nav")
-      const expected = surface === "dashboard" ? [...DASHBOARD_PAGES] : surface === "planner" ? [...PLANNER_TABS] : [...PROCUREMENT_NAV]
-      expect(await sidebar.locator("a").allTextContents()).toEqual(expected)
+      // Links are grouped by presentation sections, not by the registry's key index.
+      // Validate exact human-facing order and no missing/extra authorized pages.
+      const expected = surface === "dashboard" ? [...DASHBOARD_PAGES]
+        : surface === "planner" ? ["Overview", "Versions", ...PLANNER_TABS.filter((page) => page !== "Overview" && page !== "Versions")]
+        : [...PROCUREMENT_NAV]
+      const titles = await sidebar.locator("a").allTextContents()
+      expect(titles).toEqual(expected)
+      expect(new Set(titles)).toEqual(new Set(surface === "dashboard" ? DASHBOARD_PAGES : surface === "planner" ? PLANNER_TABS : PROCUREMENT_NAV))
       const hrefs = await sidebar.locator("a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
       await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `operator-${surface}.png`), fullPage: true })
       for (const href of hrefs) {
