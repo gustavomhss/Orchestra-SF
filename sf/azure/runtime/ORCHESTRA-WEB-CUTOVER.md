@@ -1,6 +1,8 @@
-# Orchestra Web + native Sucafina: release assembly, verification and VM cutover
+# Orchestra Sucafina Edition: native Orchestra Web assembly, verification and VM cutover
 
 **Status: BLOCKED / NOT GO-LIVE-READY (2026-11-17).** This is a runbook; it neither authorizes deployment nor constitutes an executed release. Do not replace a missing proof with a screenshot, HTTP 200, or an older Actions run.
+
+**Product boundary:** Sucafina is a brand layer over Orchestra's native UI and themes, not a separate installed console. References to old SF-only preview HTML or legacy `/sucafina/...` screens describe QA/forensic history; they are not the accepted Orchestra Sucafina Edition interface.
 
 ## State of the evidence — do not conflate branches
 
@@ -113,7 +115,7 @@ For each explicit entry, **SHA256 of extracted bytes must equal its `distributio
 
 ## 5. Snapshot recovery — disaster path, NOT normal rollback to go-live
 
-The snapshot `orchsf-qa-freeze-20261117` predates quarantine and therefore can reintroduce the **wrong old SF standalone UI** if blindly booted. Recover first **under network isolation** with no public ingress/load-balancer exposure; disable the restored service before reconnecting a real hostname. Prefer recreating/redeploying a verified correct candidate over promoting quarantined bytes.
+The snapshot `orchsf-qa-freeze-20261117` predates quarantine and therefore can reintroduce the **rejected legacy SF-only QA console (not the Orchestra Sucafina Edition)** if blindly booted. Recover first **under network isolation** with no public ingress/load-balancer exposure; disable the restored service before reconnecting a real hostname. Prefer recreating/redeploying a verified correct candidate over promoting quarantined bytes.
 
 ```sh
 set -eu

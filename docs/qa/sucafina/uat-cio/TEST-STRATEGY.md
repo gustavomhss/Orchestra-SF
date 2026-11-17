@@ -45,7 +45,7 @@ O objetivo não é “todas as páginas abriram”, mas provar que **cada pessoa
 - **Rota:** 165 linhas mais 825 probes positivos/negativos/contextuais com `route_kind`, `pattern`, `canonical_story`, `adversarial_story`. Cada uma exige cinco provas: ref autorizada, ator não permitido, parâmetro malformado, revogação e mudança de owner/instalação; status HTTP exato deve seguir contrato (não inventar 403 para todo caso). A matriz original aponta registro, não garante host instalado.
 - **Operação:** 305 IDs de catálogo/306 de registry no snapshot original; revalidar para o novo SHA. Usar contraprovas 401/403/409/422, idempotency/non-GET e POST de search. Não declarar cobertura de operations apenas com 70 telas.
 - **Jornada:** J01 contribuidor / J02 forecast / J03 import / J04 procurement / J05 revisão / J06 acompanhamento / J07 rotinas / J08 UX/segurança. Oito oráculos originais são baseline; epics complementam, não substituem.
-- **Novas superfícies:** Supreme Admin `/sucafina/admin/access` **não aumenta o 70 do manifesto**; incluir no gate quando integrado. White label é tema, não mutação de domínio. Flamengo é dado sintético, não permission source.
+- **Novas superfícies:** Supreme Admin `/sucafina/admin/access` **não aumenta o 70 do manifesto**; incluir no gate quando integrado. A camada de marca Sucafina da Orchestra Sucafina Edition não substitui os temas do Orchestra nem altera o domínio. Flamengo é dado sintético, não permission source.
 
 ## Aulas do review adversarial
 
