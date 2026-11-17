@@ -21,11 +21,12 @@ test("C14 report health uses actual descriptors and original C08 authority witho
   try {
     await f.preserve()
     const original = f.incoming("review-report")
-    const admitted = await f.authority.readContextAdmission(original)
+    // Original C08 admission requires the same atomic read-only multi-surface root.
+    const admitted = await f.inRoot(() => f.authority.readContextAdmission(original))
     if (admitted.status !== "ok") throw new Error("original context unavailable")
     const before = await f.productState()
     const input = { ui: f.authority.ui, state: f.authority.state, source: f.app }
-    const result = await observeSfReportHealth(input, original, admitted.stamp)
+    const result = await f.inRoot(() => observeSfReportHealth(input, original, admitted.stamp))
     const ids = result.map((item) => String(item.operationId))
     if (Object.hasOwn(SfOperationRegistry, "reviews.report.prepare")) expect(ids).toContain("reviews.report.prepare")
     if (Object.hasOwn(SfOperationRegistry, "files.export.review")) expect(ids).toContain("files.export.review")
@@ -33,7 +34,7 @@ test("C14 report health uses actual descriptors and original C08 authority witho
     expect(ids).not.toContain("reviews.export.pptx")
     expect(await f.productState()).toEqual(before)
     f.sessions.owner!.active = false
-    expect(await observeSfReportHealth(input, original, admitted.stamp)).toEqual([])
+    expect(await f.inRoot(() => observeSfReportHealth(input, original, admitted.stamp))).toEqual([])
   } finally { await f.dispose() }
 })
 

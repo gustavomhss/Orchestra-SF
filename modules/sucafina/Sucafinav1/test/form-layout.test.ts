@@ -1,32 +1,16 @@
 import { expect, test } from "bun:test"
-import { closeWp01Browser, launchWp01Browser } from "./product/wp01/browser-fixture.ts"
-import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
+import { mkdir } from "node:fs/promises"
 import path from "node:path"
-import { pathToFileURL } from "node:url"
-import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
-import { prepareOperatorAccess } from "../local/enroll.ts"
-import { createLocalInstallation } from "../local/entry.ts"
+import { localBrowser } from "./fixture/local-browser.ts"
 
 test("All editor screens keep readable field widths and ordered configuration sections", async () => {
-  const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
-  const file = await prepareLocalConfiguration(root)
-  const access = await prepareOperatorAccess(file, true)
-  const environment = {
-    ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"), ORCHESTRA_INHERIT_CREDENTIALS: "0",
-    ORCHESTRA_CONFIG_DIR: path.join(root, "host-config"), ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(root, "host-credential.key"),
-    TMPDIR: path.join(root, "host-tmp"), XDG_DATA_HOME: path.join(root, "host-data"), XDG_CONFIG_HOME: path.join(root, "host-config"),
-    XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
-  }
-  const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)
-  const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
-  const browser = await launchWp01Browser()
+  // The all-module CI-SF suite does not own a WP01 shared-pool lifecycle.
+  // Use the existing real authenticated Chrome fixture and verified OS cleanup.
+  const fixture = await localBrowser()
   const failures: string[] = []
   try {
-    const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    const page = fixture.page
     page.on("pageerror", (error) => { failures.push(error.message) })
-    await page.goto(pathToFileURL(access.artifact).href)
-    await page.waitForURL("http://localhost:4110/sucafina/dashboard")
     await mkdir(path.join(import.meta.dir, "artifacts"), { recursive: true })
     // Exercise populated planner layouts through the same durable command path as the UI.
     // This is isolated test data, never a write to the owner's installation.
@@ -64,7 +48,7 @@ test("All editor screens keep readable field widths and ordered configuration se
       await page.setViewportSize({ width, height: 1000 })
       for (const surface of ["dashboard", "planner", "procurement"]) {
         await page.goto(`http://localhost:4110/sucafina/${surface}`)
-        const hrefs = await page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
+        const hrefs = await page.locator("aside.sidebar > nav > a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
         expect(new Set(hrefs).size).toBe(hrefs.length)
         if (surface === "dashboard") {
@@ -133,7 +117,7 @@ test("All editor screens keep readable field widths and ordered configuration se
           }
           const charts = await page.locator("figure svg").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height))
           expect(charts.every((height) => height <= 241)).toBe(true)
-          const active = page.locator('nav a[aria-current="page"]')
+          const active = page.locator('aside.sidebar > nav > a[aria-current="page"]')
           expect(await active.count()).toBe(1)
           if (width === 1440) {
             const name = new URL(page.url()).searchParams.get("page")!.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
@@ -145,9 +129,7 @@ test("All editor screens keep readable field widths and ordered configuration se
     }
     expect(failures).toEqual([])
   } finally {
-    await server.stop(true)
-    await closeWp01Browser(browser)
-    await installation.dispose()
-    await rm(root, { recursive: true, force: true })
+    // Includes isolated server/installation teardown and Chrome process group verification.
+    await fixture.dispose()
   }
 }, 60000)

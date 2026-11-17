@@ -309,9 +309,10 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     "theirs",
   ])
   expect(requestList(listed, actor("bea", ["buyer"]), "Closed").map((item) => item.number)).toEqual(["closed"])
-  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "edr")).toEqual([])
+  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "edr").map((item) => item.number)).toEqual(["mine"])
+  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "missing-q")).toEqual([])
   expect(requestList(listed, actor("bea", ["buyer"]), "Open", "EDR").map((item) => item.number)).toEqual(["mine"])
-  expect(requestList(listed, actor("ada", ["requester"]), "Open", "ada")).toEqual([])
+  expect(requestList(listed, actor("ada", ["requester"]), "Open", "ada").map((item) => item.number)).toEqual(["mine"])
 
   const exported = exportRegister([
     {
@@ -370,12 +371,14 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     requestValue(
       {
         ...draft("x", "draft"),
-        po: { lines: [{ qty: 0, unitPrice: 5 }] },
+        po: { currency: "USD", lines: [{ qty: 0, unitPrice: 5 }] },
         pr: { estAmount: 9 },
       },
       rates,
     ),
   ).toBe(0)
+  // Zero is observed only with a declared currency; absence is not zero.
+  expect(requestValue({ ...draft("x", "draft"), po: { lines: [{ qty: 0, unitPrice: 5 }] } }, rates)).toBeNull()
 })
 
 function draft(
