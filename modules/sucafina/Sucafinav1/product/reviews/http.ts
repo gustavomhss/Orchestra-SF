@@ -42,6 +42,9 @@ export function createReviewHttp(input: {
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
+    const stamp = Date.now()
+    const trace = (stage: string) => { if (mode === "review-read" && process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_" + stage + "_" + stamp) }
+    trace("HTTP_READ_ENTER")
     if (mode !== "review-thread-context" && mode !== "review-read" && mode !== "review-current-thread" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-routine" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
     const json = (value: unknown, status: number) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted || url.searchParams.getAll("sf").length !== 1) return json({ status: "denied", reason: "review-unavailable" }, 403)
@@ -198,10 +201,12 @@ export function createReviewHttp(input: {
     if (currentConversation && (!commentId?.trim() || commentId.length > 8192)) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
     const digest = digestSfValue(currentConversation ? { reviewRef, commentId } : { reviewRef })
     const admitted = await input.ui.admit(request, "sf_review_prepare", digest).catch(() => ({ status: "unavailable" as const, reason: "review-authority-unavailable" }))
+    trace("HTTP_READ_ADMIT_DONE")
     if (admitted.status !== "ok") return json(admitted, readStatus(admitted.status))
     let validated = false
     try {
       if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest)) return json({ status: "denied", reason: "review-unavailable" }, 403)
+      trace("HTTP_READ_VALIDATE_DONE")
       validated = true
       if (input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-unavailable" }, 403)
       if (currentConversation) {
@@ -217,8 +222,15 @@ export function createReviewHttp(input: {
         return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
       }
       const result = await input.reviews.read(reviewRef, admitted.value)
-      if (!await input.ui.revalidate(admitted.value) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-unavailable" }, 403)
-      return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
+      trace("HTTP_READ_PORT_DONE")
+      trace("HTTP_READ_POST_AUTH_ENTER")
+      const stillAuthorized = await input.ui.revalidate(admitted.value)
+      trace("HTTP_READ_POST_AUTH_DONE")
+      if (!stillAuthorized || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-unavailable" }, 403)
+      trace("HTTP_READ_JSON_ENTER")
+      const response = json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
+      trace("HTTP_READ_JSON_DONE")
+      return response
     } catch {
       const authorized = await input.ui.revalidate(admitted.value).catch(() => undefined)
       if (authorized === false || (validated && input.ui.requestFor(admitted.value) !== request)) return json({ status: "denied", reason: "review-unavailable" }, 403)

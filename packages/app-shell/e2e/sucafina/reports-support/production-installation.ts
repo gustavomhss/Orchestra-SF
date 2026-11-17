@@ -192,6 +192,7 @@ function isolatedEnvironment(root: string) {
     XDG_CACHE_HOME: path.join(root, "host-cache"),
     XDG_STATE_HOME: path.join(root, "host-state"),
     SUCAFINA_LOCAL_CONFIG: path.join(root, "installation.json"),
+    SF_REPORTS_TRACE: "1",
   }
 }
 

@@ -174,6 +174,13 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await row.getByRole("button", { name: "Edit", exact: true }).click()
     const editor = source.getByRole("dialog", { name: "Edit record", exact: true })
     await expect(editor).toBeVisible()
+    // The installed OPEX editor places each command in a closed disclosure.
+    // Enter Save month through the real user control before filling its fields.
+    const monthPanel = editor.locator("details.editor-panel").filter({ has: form })
+    await expect(monthPanel.locator("summary")).toHaveText("Save month")
+    await monthPanel.locator("summary").click()
+    await expect(monthPanel).toHaveAttribute("open", "")
+    await expect(form).toBeVisible()
     await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("110")
     const version = Number(await form.getAttribute("data-version"))
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
@@ -221,9 +228,27 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
   await expect(button).toBeEnabled()
+  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
+  console.log("[reports-diag] generate report control visible and enabled; sf:", new URL(page.url()).searchParams.get("sf"))
+  const onRequest = (request: Request) => {
+    const url = new URL(request.url())
+    if (url.origin === app.origin && url.pathname === new URL(app.dashboardURL).pathname)
+      console.log("[reports-diag] requested", request.method(), "mode", url.searchParams.get("sf") ?? "none")
+  }
+  const onResponse = (response: Response) => {
+    const url = new URL(response.url())
+    if (url.origin === app.origin && url.pathname === new URL(app.dashboardURL).pathname)
+      console.log("[reports-diag] received", response.request().method(), "mode", url.searchParams.get("sf") ?? "none", "status", response.status())
+  }
+  page.on("request", onRequest)
+  page.on("response", onResponse)
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
   await button.click()
-  const response = await pending
+  console.log("[reports-diag] clicked generate report")
+  const monitor = setInterval(() => console.log("[reports-diag] owned CLI", app.diagnostics?.() ?? "none"), 15000)
+  const response = await pending.finally(() => clearInterval(monitor))
+  page.off("request", onRequest)
+  page.off("response", onResponse)
   expect(response.status()).toBe(200)
   expect(response.request().postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
   const body = object(await response.json())
@@ -262,9 +287,27 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
+  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
+  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
+  const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
+  await expect(open).toBeVisible()
+  await expect(open).toBeEnabled()
+  console.log("[reports-diag] open meeting control visible and enabled; sf:", new URL(page.url()).searchParams.get("sf"))
+  page.on("request", (request) => {
+    const url = new URL(request.url())
+    if (url.origin === app.origin && url.pathname === new URL(app.dashboardURL).pathname)
+      console.log("[reports-diag] requested", request.method(), "mode", url.searchParams.get("sf") ?? "none")
+  })
+  page.on("response", (response) => {
+    const url = new URL(response.url())
+    if (url.origin === app.origin && url.pathname === new URL(app.dashboardURL).pathname)
+      console.log("[reports-diag] received", response.request().method(), "mode", url.searchParams.get("sf") ?? "none", "status", response.status())
+  })
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
-  await page.getByRole("region", { name: "Prepare review", exact: true }).getByRole("button", { name: "Open meeting", exact: true }).click()
-  expect(object(await (await pending).json()).value).toEqual(saved)
+  await open.click()
+  console.log("[reports-diag] clicked open meeting; sf:", new URL(page.url()).searchParams.get("sf"))
+  const monitor = setInterval(() => console.log("[reports-diag] owned CLI", app.diagnostics?.() ?? "none"), 15000)
+  expect(object(await (await pending.finally(() => clearInterval(monitor))).json()).value).toEqual(saved)
   const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting).toHaveCount(1)
   await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
