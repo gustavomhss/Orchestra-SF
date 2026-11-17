@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import { prepareOperatorAccess } from "../local/enroll.ts"
 import { createLocalInstallation } from "../local/entry.ts"
+import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV } from "../src/nav.ts"
 
 test("Chrome follows the private enrollment gateway into actual HTML screens without Microsoft", async () => {
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
@@ -34,8 +35,11 @@ test("Chrome follows the private enrollment gateway into actual HTML screens wit
       await page.locator(`body[data-surface="${surface}"]`).waitFor()
       expect(await page.locator("#content").innerText()).toContain("Homologação local")
       expect(await page.locator("body").innerText()).not.toContain("Microsoft 365 application is not configured")
-      const hrefs = await page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
-      expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
+      // Other product widgets may have their own <nav>; qualify only the real sidebar.
+      const sidebar = page.locator("aside.sidebar > nav")
+      const expected = surface === "dashboard" ? [...DASHBOARD_PAGES] : surface === "planner" ? [...PLANNER_TABS] : [...PROCUREMENT_NAV]
+      expect(await sidebar.locator("a").allTextContents()).toEqual(expected)
+      const hrefs = await sidebar.locator("a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
       await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `operator-${surface}.png`), fullPage: true })
       for (const href of hrefs) {
         const screen = await page.goto(new URL(href, `http://localhost:4110/sucafina/${surface}`).href)
