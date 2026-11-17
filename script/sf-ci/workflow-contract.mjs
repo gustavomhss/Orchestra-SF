@@ -146,8 +146,12 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
     const commands = flat.split("\n").filter((line) => /\bbun test\b/.test(line))
     requireContract(commands.length === 1 && /"\$\{files\[@\]\}"/.test(commands[0]),
       `${suite.id}: Bun must consume all files from selector as argv, exactly once`)
-    if (suite.id === "CI-APP-BROWSER" || suite.id === "CI-SF") {
-      requireContract(/(?:^|\s)--bail=5(?:\s|$)/.test(commands[0]), `${suite.id}: --bail=5 lost`)
+    if (suite.id === "CI-SF") {
+      requireContract(!/(?:^|\s)--bail(?:=|\s|$)/.test(commands[0]),
+        "CI-SF: --bail would hide late cases in the mandatory full manifest inventory")
+    }
+    if (suite.id === "CI-APP-BROWSER") {
+      requireContract(/(?:^|\s)--bail=5(?:\s|$)/.test(commands[0]), "CI-APP-BROWSER: --bail=5 lost")
     }
     if (suite.id === "CI-APP-BROWSER") {
       requireContract(/(?:^|\s)--conditions=browser(?:\s|$)/.test(commands[0]), "CI-APP-BROWSER: browser execution condition lost")
