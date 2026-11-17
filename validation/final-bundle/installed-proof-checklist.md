@@ -13,7 +13,8 @@
 | ID | Estado A10/W1 | Owner / desbloqueio verificável |
 |---|---|---|
 | AZ-01 VM + app Web/host Linux x64 instalados | **BLOCKED_BY_ENV** | A7 + dono Azure: ID de VM/host, URL HTTPS, processo/serviço, SHA+digest do artefato servido, smoke transacional |
-| AZ-02 Microsoft Entra/OIDC + origem/sessão/CSRF/revogação | **BLOCKED_BY_ENV/OWNER** | A8 + dono tenant: app registration e atores autorizados; casos positivos+negativos com permissões reais |
+| AZ-02 Microsoft Entra/OIDC + origem/sessão/CSRF/revogação **e Graph delegated consent/usage** | **BLOCKED_BY_ENV/OWNER** | A8 + tenant owner: quatro scopes requested/consented/issued/used, grant AllPrincipals e testes reais |
+| **ADM-01..06: Admin Supremo / Graph / papéis por tela / demo FLAMENGO** | **NOT_RUN/BLOCKED_BY_OWNER/ENV/SOURCE** | ADMIN-SURFACE + DEMO-FLAMENGO; A8 prova grupo supremo e Entra real; dados demo não substituem tenant; sem writes Entra/Teams |
 | AZ-03 persistência/migrations/restart/backup/restore/rollback | **BLOCKED_BY_ENV** | A7 + dono VM/dados: restore e reversão observados no Linux, mesmo C |
 | AZ-04 F04 instalado privado/atores + 3 negativos | **BLOCKED_BY_ENV** | A9 dependente de A5/A7/A8: manifesto real `sf2h.native-installed-manifest.v1`, 0700, witness; sem anexar secrets |
 | AZ-05 AM01–AM06 + oito recipes + U39/U40 | **BLOCKED_BY_ENV** | A9 + produtores: suites integradas reais, oito recibos, mesmo C; nada de unit simulando live |
@@ -39,6 +40,7 @@
 | artifact ID/URI restrita + SHA256 + assinatura/proveniência | byte publicado = byte instalado, sem rebuild silencioso | NOT_OBSERVED |
 | 8 recibos testados com arquivo/caso, digest e 12 jobs | `sf/verify=success` real no candidato após negativa B1/B2/M4 | NOT_OBSERVED |
 | login Entra, CSRF, sessão, fonte, owner, Task/Permission/Relay e reversão | negativos reais de identidade/origem, não cookies fake | NOT_OBSERVED |
+| Admin Supremo + Graph | consent AllPrincipals/requested-vs-used, grupo a739232b-d5cb-4f41-873b-4c9d2340831e exclusivo, roles Dashboard/Planner/Procurement no produto, zero writes Entra/Teams e demo isolada | NOT_OBSERVED |
 | F04, U39/U40, AM01–06, backup Linux, smoke transacional, rollback | logs/receipts no mesmo C e mesma instalação | NOT_OBSERVED |
 | 3 revisores frios + dono | nomes/parecer/URL/tempo e findings resolvidos | NOT_OBSERVED |
 
@@ -67,3 +69,21 @@
 **Sequência de rollback exigida como pré-requisito, não pós-escrito:** antes de qualquer alteração guardar versão anterior e digest, prova de compatibilidade de schema, checkpoint com Backup job e recovery point, restore em VM isolada, RPO/RTO com dono, capacidade de fechar writes/Task/Relay e versão anterior no slot. Se falhar host mas schema compatível: switch atômico + restart + transação/Entra; se schema incompatível: não usar binário antigo no DB novo, restaurar **isoladamente** e reconciliar alterações; se falhar policy: manter a mais restritiva até Epic original voltar e ser observado. Não modificar policy ou produção enquanto estado for BLOCKED.
 
 **Nada executado nesta seção:** docs prontos para decisão, sem assinatura, sem secrets, sem Azure, sem workflow de deploy ativado e sem required checks mutados.
+
+
+## Gate adicional: administração suprema e demo FLAMENGO (owner change 2026-11-16)
+
+**Situação: escopo registrado, nenhuma prova executada.** Esta feature é novo bloqueador do go-live no mesmo SHA C, além do AZ-02 anterior. A ausência de qualquer item ADM-01..06 mantém o release BLOQUEADO.
+
+| Item | Responsável / entrada exigida | Estado |
+|---|---|---|
+| ADM-01 — app registration | Entra owner + A8: User.Read, User.Read.All, GroupMember.Read.All, Directory.Read.All **delegated**, consentType **AllPrincipals** efetivo; tabela individual de requested / granted / issued in scp / endpoint used | **NOT_OBSERVED** |
+| ADM-02 — Graph read-only | ADMIN-SURFACE + A8: organograma/times/perfis lidos do Graph real, paginação/erro/escopo ausente, allowlist de leitura sem fallback fake | **NOT_RUN** |
+| ADM-03 — supreme-only | ADMIN-SURFACE + A8: servidor confere grupo **fla-supreme-admin (a739232b-d5cb-4f41-873b-4c9d2340831e)**; membro real permitido, demais incluindo guest e revogado negados na UI e API direta | **NOT_RUN** |
+| ADM-04 — role by screen | ADMIN-SURFACE + A8: roles Dashboard/Planner/Procurement gravados **somente** na policy local, com CAS/auditoria/persistência e enforcement por tela | **NOT_RUN** |
+| ADM-05 — zero write | ADMIN-SURFACE + security reviewer: network trace/allowlist/logs Microsoft sanitizados, tentativa de mutação Graph/Teams recusada, nenhum side effect remoto | **NOT_RUN** |
+| ADM-06 — demo isolada | DEMO-FLAMENGO + A1: fixture sintética e cenários positivos/negativos incluindo Zico sem grupo; só producer/seed autorizados, sem escrita Graph; não é prova de consent real | **NOT_RUN** |
+
+**Owner handoff adicional:** pedir confirmação documentada do consent delegado AllPrincipals e grant real, atores Entra com e sem grupo supremo, escopo e consentimento de exposição dos dados de diretório no app; autorizar integração e revisão dos dois novos agentes. A2/A6 devem garantir que novos testes da feature são selecionados no CI e C refrozen; A8 entrega AZ-02 ampliado; A10 só recebe recibos, assinatura e matriz (ver sf/ci/RELEASE-ATTESTATION.md P7 e validation/final-bundle/evidence-template.md seção 9). Nenhum segredo, token, perfil real nem audit log bruto fica no repositório.
+
+**Rollback de autorização:** mudança de papel/revogação devem permanecer eficazes após restart/restore, sem ressuscitar acesso supremo; rollback local não pode alterar grants ou objetos Microsoft. Nenhum dos atos de release, required checks ou protected-paths foi executado por A10.
