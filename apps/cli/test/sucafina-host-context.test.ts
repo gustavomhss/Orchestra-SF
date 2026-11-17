@@ -8,6 +8,9 @@ import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { ProductHost } from "../src/host.ts"
 import { createSfHostRuntime } from "../src/sucafina-product/host-context.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+import { createApplication } from "../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+import type { Application } from "../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+import { domain, pages, render } from "../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
@@ -22,18 +25,16 @@ test("the actual server root registers resident agents and skills and releases t
   const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: () => crypto.randomUUID(),
     projectScope: createSfSourceScopeProjector(() => new Date().toISOString()) })
   const actor = { active: false }
+  const authenticate: Application["authenticate"] = async (_request, context) => actor.active && context ? { id: "person", canWrite: true,
+    roles: [{ surface: context.surface, role: context.surface === "procurement" ? "requester" : "viewer" }] } : null
+  const environment: Application["environment"] = async () => ({ at: new Date().toISOString(), id: () => crypto.randomUUID(), directory: [] })
   try {
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
-    await persistence.transaction("procurement", async (snapshot) => {
-      snapshot.data.store = { requests: {}, suppliers: [], settings: { currency: "USD" } }
-      return { commit: true, value: undefined }
-    })
     const runtime = await createSfHostRuntime({ installationId: "installation-1", directory, sourceRoot: path.resolve(import.meta.dir,
       "../../../modules/sucafina/Sucafinav1/product/ai"), origin: "http://localhost", mount: "/sucafina", persistence,
-      authenticate: async (_request, context) => actor.active && context ? { id: "person", canWrite: true,
-        roles: [{ surface: context.surface, role: context.surface === "procurement" ? "requester" : "viewer" }] } : null,
-      grants: [{ principalRef: "person", namespaces: ["cases"], operations: ["sf_work_list", "sf_case_read"] }],
-      environment: async () => ({ at: new Date().toISOString(), id: () => crypto.randomUUID(), directory: [] }) })
+      authenticate,
+      grants: [{ principalRef: "person", namespaces: ["cases"], operations: ["sf_work_list", "sf_case_read", "sf_request_read"] }],
+      environment })
     // This boots the real Host graph, not an isolated replacement of SessionV2 or the Task engine.
     const nativeIds = runtime.contributions.map((contribution) => contribution.id)
     expect(nativeIds).toContain("sucafina/native-phase-provider-fence")
@@ -69,6 +70,25 @@ test("the actual server root registers resident agents and skills and releases t
       const unauthenticated = await workbench(new Request("http://localhost/sucafina/dashboard?sf=workbench"), "dashboard")
       expect(unauthenticated?.status).toBe(403)
       actor.active = true
+      // Real host/SQLite installation: the very first Requests read must not need seeded settings.
+      const procurementPage = createApplication("/sucafina", {
+        persistence, authenticate, environment, maxJsonBytes: 1024 * 1024,
+        domains: { dashboard: [], planner: [], procurement: [{ domain, pages, render }] },
+        productView: services.productView,
+      })
+      const requestsUrl = "http://localhost/sucafina/procurement?page=Requests"
+      const initialProcurement = await persistence.transaction("procurement", async (snapshot) => ({
+        commit: false, value: { data: structuredClone(snapshot.data), versions: structuredClone(snapshot.versions), audit: structuredClone(snapshot.audit) },
+      }))
+      expect(initialProcurement.data.store).toBeUndefined()
+      const firstRequests = await procurementPage(new Request(requestsUrl))
+      expect(firstRequests?.status).toBe(200)
+      expect(firstRequests?.headers.get("content-type")).toContain("text/html")
+      expect(await firstRequests?.text()).not.toContain("procurement-queue-unavailable")
+      const afterRequests = await persistence.transaction("procurement", async (snapshot) => ({
+        commit: false, value: { data: structuredClone(snapshot.data), versions: structuredClone(snapshot.versions), audit: structuredClone(snapshot.audit) },
+      }))
+      expect(afterRequests).toEqual(initialProcurement)
       const request = new Request("http://localhost/sucafina/dashboard")
       const seeded = await services.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed-case",
         commandDigest: "a".repeat(64), targetRef: services.creationTarget.ref, targetIncarnation: services.creationTarget.incarnation }, async (state) => {
@@ -101,6 +121,7 @@ test("the actual server root registers resident agents and skills and releases t
       expect(selected.status).toBe("ok")
       if (selected.status === "ok") expect(selected.value).toMatchObject({ label: "Procurement requests", period })
       actor.active = false
+      expect((await procurementPage(new Request(requestsUrl)))?.status).toBe(403)
       expect((await services.procurementSelections.create(admitted.value, period)).status).toBe("denied")
       services.ui.finish(admitted.value)
     } finally { await web.dispose() }
