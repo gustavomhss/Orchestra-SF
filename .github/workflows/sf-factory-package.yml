@@ -61,11 +61,11 @@ jobs:
           ORCHESTRA_OMNI_CONTROL: declared
           ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
         run: bun test ./test/factory-distribution-linux.test.ts --timeout 1800000
-      - name: Upload factual proof receipt
+      - name: Upload extracted-factory qualification archive and factual proof
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: sf-factory-package-${{ github.sha }}
-          path: distribution-logs/factory-package-receipt.json
+          path: distribution-logs/
           if-no-files-found: error
           retention-days: 7
