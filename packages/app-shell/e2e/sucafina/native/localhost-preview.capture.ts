@@ -87,12 +87,12 @@ try {
           nativeFrameCount: document.querySelectorAll('[data-sf-frame="page"]').length,
         })).catch(() => null)
         const clean = (value: string) => value
-          .replace(/auth_token=[^&\\s]+/gi, "auth_token=[redacted]")
+          .replace(/auth_token=[^&\s]+/gi, "auth_token=[redacted]")
           .replace(/[a-f0-9]{32,}/gi, "[redacted]")
         const report = { status: "FAILED_NATIVE_FRAME_NOT_MOUNTED", sourceSHA: process.env.GITHUB_SHA,
           chapter: visit.id, scheme, facts, text: clean(text).slice(0, 350), diagnostics: diagnostics.map(clean).slice(-50) }
         console.error("SF_VISUAL_CAPTURE_DIAGNOSTIC " + JSON.stringify(report))
-        await writeFile(path.join(out, "FAILED-" + visit.id + "-" + scheme + ".json"), JSON.stringify(report, null, 2) + "\\n")
+        await writeFile(path.join(out, "FAILED-" + visit.id + "-" + scheme + ".json"), JSON.stringify(report, null, 2))
         await page.screenshot({ path: path.join(out, "FAILED-" + visit.id + "-" + scheme + ".png"), animations: "disabled" }).catch(() => undefined)
         throw new Error("SF_VISUAL_NATIVE_FRAME_OR_IDENTITY_UNAVAILABLE_" + visit.id + "_" + scheme)
       } finally { await page.close() }
