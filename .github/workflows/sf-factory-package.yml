@@ -3,6 +3,19 @@ name: sf-factory-package
 on:
   push:
     branches: [sfa-factory-package]
+  # Retain this dedicated native gate when the feature branch is eventually merged.
+  # Only PRs that change the installation product or its distribution producer qualify.
+  pull_request:
+    branches: [close-final-candidate]
+    paths:
+      - ".github/workflows/sf-factory-package.yml"
+      - "apps/cli/script/build.ts"
+      - "apps/cli/script/distribution-npm.ts"
+      - "apps/cli/script/distribution-payload.ts"
+      - "apps/cli/script/sf-factory-package.ts"
+      - "apps/cli/src/sucafina-product/**"
+      - "apps/cli/test/factory-distribution-linux.test.ts"
+      - "modules/sucafina/Sucafinav1/**"
 
 permissions:
   contents: read
@@ -14,7 +27,7 @@ concurrency:
 jobs:
   linux-factory:
     name: linux-factory (compiled + extracted)
-    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/sfa-factory-package'
+    if: github.repository == 'gustavomhss/Orchestra-SF' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/sfa-factory-package')
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
