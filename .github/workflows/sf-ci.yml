@@ -388,10 +388,23 @@ jobs:
           test "$status" -eq 0
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
+          # A complete authentic Linux run yields a reviewable candidate, not a PASS receipt.
+          if [ "$SF_SUITE_ID" = "CI-UI-DECISIONS" ]; then
+            node script/sf-ci/gate.mjs coverage
+            : > "$evidence/candidate-ready"
+          fi
           # The coverage gate needs a baseline versioned from an authentic successful
           # run and independently reviewed. Until that baseline exists in the
           # manifest, calling it here would only fail closed on every PR.
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Publish Decisions candidate evidence without a PASS receipt
+        if: ${{ !cancelled() && matrix.id == 'CI-UI-DECISIONS' && hashFiles('sf-ci-evidence/CI-UI-DECISIONS/candidate-ready') != '' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-decisions-coverage-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: sf-ci-evidence/CI-UI-DECISIONS/report.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Publish only minimized JSON and receipt for a clean run
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
