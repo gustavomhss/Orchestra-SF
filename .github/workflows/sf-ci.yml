@@ -385,6 +385,7 @@ jobs:
           test "$status" -eq 0
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
+          node script/sf-ci/gate.mjs coverage
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
       - name: Publish only minimized JSON and receipt for a clean run
         if: success()

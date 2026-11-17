@@ -14,18 +14,21 @@ import socket
 import time
 
 deadline = time.monotonic() + 120
+last_failure = "no ClamD response"
 while time.monotonic() < deadline:
     try:
         with socket.create_connection(("127.0.0.1", 3310), timeout=1) as connection:
             connection.settimeout(1)
             connection.sendall(b"zPING\0")
-            if connection.recv(16) == b"PONG\0":
+            reply = connection.recv(16)
+            if reply == b"PONG\0":
                 break
-    except OSError:
-        pass
+            last_failure = f"unexpected protocol response: {reply!r}"
+    except OSError as error:
+        last_failure = f"{type(error).__name__}: {error}"
     time.sleep(2)
 else:
-    raise SystemExit("SF_REAL_CLAMD_NOT_READY")
+    raise SystemExit("SF_REAL_CLAMD_NOT_READY: " + last_failure)
 PY
 
 # Use the product INSTREAM adapter; never substitute a fake scanner or stub.
