@@ -1,3 +1,4 @@
 [test]
-root = "./src"
+# Both manifest-selected app suites must be discoverable (src and test-browser).
+root = "."
 preload = ["../../script/test-guard.ts", "./happydom.ts"]
