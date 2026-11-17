@@ -3,6 +3,7 @@ import { Schema } from "effect"
 import {
   SfMemory,
   SfIntelligenceMemoryCatalog,
+  SfIntelligenceMemorySimilarCases,
   SfIntelligenceMemoryCondition,
   SfIntelligenceMemoryConditions,
   SfIntelligenceMemoryMateriality,
@@ -48,9 +49,10 @@ const outcome = {
 } as const
 
 describe("A14: closed memory operation catalog", () => {
-  test("the exact seven operation IDs and their schema exports stay stable", () => {
+  test("the exact eight registered memory operation IDs and their schema exports stay stable", () => {
     expect(Object.keys(SfMemory.operations)).toEqual([
       "intelligence.memory-catalog",
+      "intelligence.memory-similar-cases",
       "intelligence.memory-conditions",
       "intelligence.memory-signals",
       "intelligence.memory-materiality",
@@ -59,6 +61,12 @@ describe("A14: closed memory operation catalog", () => {
       "intelligence.memory-outcome-selection",
     ])
     expect(SfMemory.operations["intelligence.memory-catalog"]).toBe(SfIntelligenceMemoryCatalog)
+    expect(SfMemory.operations["intelligence.memory-similar-cases"]).toBe(SfIntelligenceMemorySimilarCases)
+    // The read-only case projection is an inert schema binding, not a grant.
+    const similar = { ...query, query: "supplier", period, includeHistorical: false, candidates: [{ ...query, id: query.caseId }] }
+    delete similar.candidates[0].caseId
+    expect(decode(SfIntelligenceMemorySimilarCases.input, similar)).toBeDefined()
+    expect(() => decode(SfIntelligenceMemorySimilarCases.input, { ...similar, actor: "admin" })).toThrow()
     expect(SfMemory.operations["intelligence.memory-conditions"]).toBe(SfIntelligenceMemoryConditions)
     expect(SfMemory.operations["intelligence.memory-signals"]).toBe(SfIntelligenceMemorySignals)
     expect(SfMemory.operations["intelligence.memory-materiality"]).toBe(SfIntelligenceMemoryMateriality)
