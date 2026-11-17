@@ -19,6 +19,7 @@ test("Sucafina company identity survives every Orchestra palette", () => {
     assert.match(branded, /<title>Sucafina<\/title>/)
     assert.match(branded, /href="\/brand\/sucafina\/site.webmanifest"/)
     assert.ok(!branded.includes("hugr-symbol"), "HuGR favicon leaked in branded HTML")
+    assert.match(branded, /href="\/brand\/sucafina\/favicon.svg"/)
   }
 })
 

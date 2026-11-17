@@ -8,9 +8,9 @@ The existing Orchestra palette catalog, theme picker, colors, glass, blur, borde
 
 A Sucafina web distribution opts in at build time with `ORCHESTRA_BRAND=sucafina`. This produces a Sucafina tab title, installation manifest, company identity marker and a discreet loading treatment. The default distribution retains HuGR and all existing visuals. Any palette can be selected inside the Sucafina distribution without reverting the brand.
 
-### Unfinished assets — release blocker
+### Official identity asset provenance
 
-The official Sucafina mark, lockups and favicon require approved original artwork; none are generated or traced. See `packages/app-shell/public/brand/sucafina/README.md`. Currently the UI uses plain text in the logo slots as an explicit fallback. The build checks for all four official assets before referencing any SVG, avoiding 404s during the pending-assets phase. PWA icons and favicon are deliberately not fabricated. **Do not mark white-label complete or deploy this distribution as final until approved assets are provided, hooked into the head/manifest and reviewed.**
+The actual `group.sucafina.com/img/base/logo.svg` has now been retrieved, verified and versioned. See `packages/app-shell/public/brand/sucafina/README.md`. Dark/compact derivatives preserve the source vector paths and require brand-owner final approval. Favicon/PWA now use the real mark crop.
 
 The previously discussed photographic background also needs a licensed/original asset and a true Orchestra screenshot for visual validation. Do not ship AI-generated UI screenshots as layouts or arbitrarily replace the existing wallpaper.
 

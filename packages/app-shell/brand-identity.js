@@ -5,6 +5,6 @@ export function applyBrandIdentityToHtml(html, brand, artworkReady = false) {
   return html
     .replace(/<html\b/, `<html data-orchestra-brand="sucafina" data-sucafina-artwork="${artworkReady ? "ready" : "pending"}"`)
     .replace("<title>HuGR Orchestra</title>", "<title>Sucafina</title>")
-    .replace(/<link rel="icon"[^>]*\/>/, "")
+    .replace(/<link rel="icon"[^>]*\/>/, '<link rel="icon" type="image/svg+xml" href="/brand/sucafina/favicon.svg" />')
     .replace('href="/site.webmanifest"', 'href="/brand/sucafina/site.webmanifest"')
 }
