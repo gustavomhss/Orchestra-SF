@@ -33,7 +33,14 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
       if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
       const run = result.value
-      return reply({ status: "ok", value: { runRef: run.runRef, state: run.state, version: run.version, ...(run.outputRef ? { outputRef: run.outputRef } : {}) } }, 200)
+      // Attribution originates in the reauthorized native run record, never
+      // from a substring of a runRef or the public resident inventory.
+      return reply({ status: "ok", value: {
+        runRef: run.runRef, state: run.state, version: run.version,
+        ...(run.outputRef ? { outputRef: run.outputRef } : {}),
+        profileId: run.selection.profile.id, profileVersion: run.selection.profile.version,
+        skillId: run.skillId, caseRef: run.caseRef, createdAt: run.createdAt, updatedAt: run.updatedAt,
+      } }, 200)
     }
     if (action === "prepare" && "selection" in input) {
       const selected = runtime.selected.find((entry) => entry.profile.id === input.request.profileId && entry.profile.version === input.request.profileVersion && entry.manifestDigest === input.request.manifestDigest)
