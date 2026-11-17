@@ -12,7 +12,7 @@ import { dirname, join } from "node:path";
 const dir=dirname(fileURLToPath(import.meta.url));
 const read=async f=>JSON.parse(await readFile(join(dir,f),"utf8"));
 const [org,catalog,fixtures]=await Promise.all(["org.json","catalog.json","scenarios.json"].map(read));
-const supported=["settings","suppliers","procurement","planner","imports","decisions","reports","denial","schedules"];
+const supported=["settings","suppliers","procurement","planner","dashboard","imports","decisions","reports","denial","schedules"];
 const flags=process.argv.slice(2);
 const has=x=>flags.includes("--"+x);
 const arg=(key,fallback)=>flags.find(x=>x.startsWith("--"+key+"="))?.slice(key.length+3)||fallback;
@@ -247,6 +247,55 @@ async function doPlanner(){
   }
   status("planner","READY","real version + 7 deterministic OPEX budget/forecast lines; EUR unresolved");
 }
+
+/** Original Dashboard domain: OPEX Detail and CAPEX Projects are canonical producers
+ * consumed by native U39 (CAP04) and U40 (CAP05). The legacy HTML is only read
+ * for CAS versions and producer-issued IDs; writes are product commands.
+ */
+async function doDashboard(){
+  const configured=[
+    {page:"OPEX Detail",prefix:"DEMO-OPEX-",lines:org.departments.map(d=>({name:"FLA-DEMO "+d.name,budget:d.annualBudgetBRL,monthly:d.monthForecastBRL[0]}))},
+    {page:"CAPEX Projects",prefix:"DEMO-CAPEX-",lines:org.costCenters.filter(c=>c.id.endsWith("-02")).map(c=>({name:"FLA-DEMO CAPEX "+c.label,budget:c.annualBudgetBRL,monthly:Math.round(c.annualForecastBRL/12)}))}
+  ];
+  for(const group of configured){
+    let content=await html("Daniel","dashboard",{page:group.page,year:2026});
+    for(const line of group.lines){
+      // Legacy save has producer-generated IDs; match the exact visible heading,
+      // then ask that same authorized page for the current row ID and CAS version.
+      function ownerSection(markup){
+        const head="<section><h2>"+line.name.replace(/&/g,"&amp;")+"</h2>";
+        const at=markup.indexOf(head);
+        if(at<0)return null;
+        const end=markup.indexOf("</section>",at+head.length);
+        demand(end>at,"dashboard-owner-section-not-closed");
+        return markup.slice(at,end);
+      }
+      let section=ownerSection(content);
+      if(section===null){
+        const form=findForm(content,group.page,"save","");
+        await command("Daniel","dashboard",group.page,"save",undefined,form.version,{name:line.name,budget:line.budget});
+        content=await html("Daniel","dashboard",{page:group.page,year:2026});
+        section=ownerSection(content);
+        demand(section!==null,"dashboard-owner-readback-missing:"+line.name);
+      }
+      const owners=forms(section,group.page,"save").filter(x=>x.id);
+      demand(owners.length===1,"dashboard-producer-owner-ID-ambiguous:"+line.name);
+      // One real monthly entry per cost owner; unseeded months remain missing,
+      // not fabricated as historical actuals.
+      const january=forms(section,group.page,"save-entry").filter(f=>f.content.includes('name="month" type="number" value="1"'));
+      demand(january.length===1,"dashboard-month-form-missing:"+line.name);
+      if(!january[0].id){
+        const field=group.page==="CAPEX Projects"?"projId":"ownerId";
+        await command("Daniel","dashboard",group.page,"save-entry",undefined,january[0].version,{[field]:owners[0].id,year:2026,month:1,budget:Math.round(line.budget/12),forecast:line.monthly});
+        content=await html("Daniel","dashboard",{page:group.page,year:2026});
+        section=ownerSection(content);
+        demand(section!==null&&forms(section,group.page,"save-entry").some(f=>!!f.id&&f.content.includes('name="month" type="number" value="1"')),"dashboard-month-entry-not-persisted");
+      }
+      status("dashboard","READY",group.page+" producer row and January entry: "+line.name);
+    }
+  }
+}
+
 async function fileWorkbook(){
   const require=createRequire(new URL("../../../modules/sucafina/package.json",import.meta.url));
   const {Workbook}=require("exceljs"),book=new Workbook();
@@ -307,7 +356,7 @@ async function doSchedules(){
   // The real schedules.create requires a trusted UI binding and real recipeRef/conditionRef.
   status("schedules","PENDING","native schedule admission/recipe/condition/owner not provisioned; never invent an HTTP endpoint");
 }
-const steps={settings:doSettings,suppliers:doSuppliers,procurement:doProcurement,planner:doPlanner,imports:doImports,decisions:doDecisions,reports:doReports,denial:doDenial,schedules:doSchedules};
+const steps={settings:doSettings,suppliers:doSuppliers,procurement:doProcurement,planner:doPlanner,dashboard:doDashboard,imports:doImports,decisions:doDecisions,reports:doReports,denial:doDenial,schedules:doSchedules};
 if(!apply)for(const phase of phases)status(phase,"PENDING","dry-run only; no network or execution proof");
 else {
   demand(process.env.SF_DEMO_ISOLATED_INSTALLATION==="yes","SF_DEMO_ISOLATED_INSTALLATION=yes required");
