@@ -14,7 +14,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   const profile = options.profile === undefined ? "local-public" : options.profile
   const clientSecret = options.clientSecret
   if (!["local-public", "web-confidential"].includes(profile) || (profile === "web-confidential" ? typeof clientSecret !== "function" : clientSecret !== undefined)) throw new Error("Invalid Entra client profile")
-  const scopes = profile === "web-confidential" ? "openid profile offline_access User.Read" : "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
+  const scopes = profile === "web-confidential" ? "openid profile offline_access User.Read User.Read.All GroupMember.Read.All Directory.Read.All" : "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
   const authority = `https://login.microsoftonline.com/${tenant}`
   const issuer = `${authority}/v2.0`
   const now = options.now ?? (() => new Date())
