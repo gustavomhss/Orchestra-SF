@@ -417,7 +417,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const ready = auth.ready()
     const selectedOwner = ownerStamp()
     const authStatus = auth.state().status
-    const scope = JSON.stringify([routeKind, chapter, selectedOwner, authStatus])
+    const scope = JSON.stringify([routeKind, chapter, props.route.href, selectedOwner, authStatus])
     // A same-owner context publication must not erase an in-progress import.
     // Revoke private state on an actual route, authority or session transition.
     if (scope === installedScope) return
