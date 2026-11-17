@@ -67,6 +67,8 @@ export function createApplication(mount: string, application: Application) {
     const uploading = request.method === "POST" && url.searchParams.has("upload")
     // Product operations own fresh authentication and transactions; never nest them in the page lock.
     const product = await application.product?.(request, surface)
+    if (product?.status === 401 && process.env.SF_AUTH_DIAG === "1")
+      console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "sf-product-http", stage: "early-401", surface }))
     if (product) return product
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
@@ -81,7 +83,11 @@ export function createApplication(mount: string, application: Application) {
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
     if (preparedUpload instanceof Response) return preparedUpload
     const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
-    if (productView instanceof Response) return productView
+    if (productView instanceof Response) {
+      if (productView.status === 401 && process.env.SF_AUTH_DIAG === "1")
+        console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "sf-product-view", stage: "early-401", surface }))
+      return productView
+    }
     const response = await transaction(async (snapshot, blobs) => {
       // Resolve current roles INSIDE the same transaction that rereads records and locks.
       const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
