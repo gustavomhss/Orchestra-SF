@@ -20,6 +20,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parent.parent
 TRACE = "QA-TRACEABILITY.json"
 SURFACES = "MATRIX-70-SURFACES.csv"
+STORIES_MATRIX = "MATRIX-185-STORIES.csv"
 ROUTES = "MATRIX-165-ROUTES.csv"
 PROBES = "ROUTE-TEST-CASES.csv"
 PROBES_JSONL = "ROUTE-TEST-CASES.jsonl"
@@ -232,6 +233,25 @@ def summary(rec, evidence_ref, source_bytes):
 
 def project(idx):
     updates = {}
+    catalog = {s["id"]: s for s in jlines("stories_70x2.jsonl") + jlines("stories_e2e.jsonl")}
+    fields, stories = readcsv(STORIES_MATRIX)
+    demand(len(stories) == 185 and {r["case_id"] for r in stories} == set(catalog),
+           "unified story matrix must contain each of 185 cases exactly once")
+    for row in stories:
+        original = catalog[row["case_id"]]
+        demand(row["kind"] == original["kind"] and
+               row["actor"] == original["actor"] and
+               row["priority"] == original["priority"] and
+               row["surfaces"] == ";".join(original["surface_ids"]) and
+               row["conditional_release_feature"] == (original.get("conditional_release_feature") or "") and
+               row["title"] == original["title"],
+               "story matrix drifted from authored oracle: " + row["case_id"])
+        result = latest(idx, "stories", row["case_id"])
+        row["execution_status"] = result["status"] if result else "NOT_RUN"
+        row["evidence_ref"] = result["evidence_ref"] if result else ""
+        row["attempt_id"] = result["attempt_id"] if result else ""
+        row["product_commit_sha"] = result["product_commit_sha"] if result else ""
+    updates[STORIES_MATRIX] = rendercsv(STORIES_MATRIX, fields, stories)
     fields, surface_rows = readcsv(SURFACES)
     for row in surface_rows:
         row["primary_execution"] = status(idx, "stories", row["primary_story"])
