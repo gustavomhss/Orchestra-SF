@@ -173,7 +173,7 @@ describe("UI55 Imports: preserve the same-owner upload across destination discov
       expect(destination.value).toBe(target.selectionRef)
       expect(fileInput.files?.[0]).toBe(file)
 
-      button(node, "Preview changes")!.click()
+      button(node, "Generate preview")!.click()
       await waitFor(() => node.querySelector('[data-sf-phase="reviewing"]'))
       expect(calls).toEqual([
         "files.import-targets", "files.import-admit",
