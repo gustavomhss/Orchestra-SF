@@ -1729,7 +1729,7 @@ function executeLists(
   const name = text(values.name).trim() || text(stored?.name)
   if (!name || records.some((row) => row.id !== id && normName(text(row.name)) === normName(name)))
     return invalid("Empty or duplicate name")
-  const next = {
+  const next: Row = {
     ...stored,
     id,
     name,
