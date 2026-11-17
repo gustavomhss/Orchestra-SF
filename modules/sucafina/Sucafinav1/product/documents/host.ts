@@ -2,7 +2,7 @@ import type { AssetPersistence, AssetServices } from "../../runtime/assets.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import { admitSfDocumentAsset, createSfDocumentBytePort } from "./byte-port.ts"
-import { confirmDocumentEvidence, extractDocumentEvidence, listDocumentEvidence, searchDocumentEvidence } from "./capabilities.ts"
+import { confirmDocumentEvidence, extractDocumentEvidence, listDocumentEvidence, rejectDocumentEvidence, searchDocumentEvidence } from "./capabilities.ts"
 import type { DocumentEvidenceHost } from "./capabilities.ts"
 import { createPrivateDocumentParser } from "./parser.ts"
 import { createSfDocumentEvidenceAdapter } from "./rag-adapter.ts"
@@ -68,6 +68,8 @@ export function createSfDocumentHost(input: {
     extract: (request: Parameters<typeof extractDocumentEvidence>[0], context: Parameters<typeof extractDocumentEvidence>[1]) => extractDocumentEvidence(request, context, capability),
     search: (request: Parameters<typeof searchDocumentEvidence>[0], context: Parameters<typeof searchDocumentEvidence>[1]) => searchDocumentEvidence(request, context, capability),
     confirm: (id: string, context: Parameters<typeof confirmDocumentEvidence>[1]) => confirmDocumentEvidence(id, context, capability),
+    reject: (id: string, reason: string, page: number, context: Parameters<typeof rejectDocumentEvidence>[3]) =>
+      rejectDocumentEvidence(id, reason, page, context, capability),
     list: (documentRef: string, context: Parameters<typeof listDocumentEvidence>[1]) => listDocumentEvidence(documentRef, context, capability),
   }
 }
