@@ -15,6 +15,10 @@ const { SfContextProvider, useSfContext }: typeof import("../../src/orchestra/ch
 )
 
 // Contract tests with injected producer responses, not an installed identity/host proof.
+// Load the rendered provider through the Solid JSX compiler, not Bun's default JSX transform.
+const { SfContextProvider, useSfContext }: typeof import("../../src/orchestra/chapters/sucafina/context") =
+  await import(solidDom("../../src/orchestra/chapters/sucafina/context", import.meta.dir))
+
 const stamp = { installationId: "install", projectId: "project", hostId: "host", principalRef: "actor", policyVersion: "p1", accessRevision: "a1" }
 const context: SfContext = { stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft", destinations: [], availability: [] }
 const selection: SfOwnerSelection = { serverKey: "server" as SfServerKey, projectId: "project" as SfRef, installationId: "install" as SfRef }
