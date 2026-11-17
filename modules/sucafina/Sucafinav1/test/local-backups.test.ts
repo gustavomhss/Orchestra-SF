@@ -242,20 +242,28 @@ test("pruning leaves unknown, incomplete and aliased paths untouched and never c
 })
 
 
-test("capture enters the real store exactly once and never nests a SQL transaction", async () => {
+test("capture uses short non-nested SQLite scopes and releases them before durable storage I/O", async () => {
   await fixture(async (root, store) => {
     await seed(store)
     const calls: Surface[] = []
+    const activity = { current: 0, maximum: 0 }
     const observed: LocalStore = {
       ...store,
-      transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
+      transaction: async <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
         calls.push(surface)
-        return store.transaction<T>(surface, work, options)
+        activity.current += 1
+        activity.maximum = Math.max(activity.maximum, activity.current)
+        try { return await store.transaction<T>(surface, work, options) }
+        finally { activity.current -= 1 }
       },
     }
-    const backups = await createLocalBackups(join(root, "archives"))
+    const backups = await createLocalBackups(join(root, "archives"), {
+      io: { beforeDurableWrite: async () => { expect(activity.current).toBe(0) } },
+    })
     await backups.capture(observed, "dashboard", at)
-    expect(calls).toEqual(["dashboard"])
+    expect(calls.length).toBeGreaterThanOrEqual(3)
+    expect(calls.every((surface) => surface === "dashboard")).toBe(true)
+    expect(activity.maximum).toBe(1)
   })
 })
 
