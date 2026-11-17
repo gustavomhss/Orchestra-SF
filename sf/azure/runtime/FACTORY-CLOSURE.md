@@ -52,3 +52,93 @@ The build **fails closed** if Bun cannot bundle into exactly one ESM output, if 
 - Code inspection: `apps/cli/src/sucafina-product/installation.ts`, `apps/cli/src/commands/handlers/serve.ts`, `modules/sucafina/Sucafinav1/local/entry.ts`, `modules/sucafina/Sucafinav1/index.ts`, `modules/sucafina/Sucafinav1/product/ai/resident.ts`, `apps/cli/src/sucafina-product/host-context.ts`.
 - Producer inspection: `apps/cli/script/build.ts`, `apps/cli/script/distribution-payload.ts`, `apps/cli/script/release.ts`, `apps/cli/script/targets.ts`.
 - Build/CI run IDs and conclusions are evidence only if observed, never predicted. An on-paper contract does not imply that Bun has successfully bundled this graph or that the extracted native binary has loaded it.
+
+
+## D. Integrated Web hardening from PR #254
+
+`origin/sf-package-guard@b67cb17eef6962e4007dab7a0cde27672367f92b`
+is the second parent of the merge commit
+`2a947d4e0d88fb8441bb1a9a40eb5d96c45d7eb4`, with the
+original SF factory branch as first parent
+`55a366a8920affff20adb18dd8ff32402952db29`.
+The overlapping `apps/cli/script/distribution-payload.ts` was resolved
+**on top of PR #254's Web hardening**: its optional `web` input,
+`isWebSourceMap` filter, inline `sourceMappingURL=data:` rejection and
+`verifyCaptured` policy were preserved; `requireSfFactory` was added
+only after these checks. Its two Web distribution tests, native fixture update
+and Deno pin export were imported unchanged with their original Git blobs.
+
+The previous 2026-11-16 `dev` bundle
+(`app-build` run `43982346743`) carried 2,289 `bin/web` files,
+including 989 `.map` files (owner-inspected historical evidence). It must
+not be distributed as a public SF installation. In the integrated contract:
+- the original `apps/web/dist` remains available to the build owner with
+  source maps; neither its files nor its hashes are rewritten by the producer;
+- `prepareDistribution({ dist, web, ... })` captures regular Web files,
+  **omits** `.map`, `.map.gz`, `.map.br` and rejects inline maps in JS/CSS;
+- `verifyDistribution` refuses any externally reintroduced map or inline
+  source map; `archiveDistribution` ships only the admitted file set;
+- the **same archive** must include `bin/orchestra`, `bin/local/entry.mjs`,
+  `bin/product/ai/*` and `bin/web/index.html`, and the test must prove
+  native `GET /sucafina/status` **and** the static `GET /` original Web
+  content hash from an extracted folder outside the checkout;
+- the combined proof receipt must record `web.originalSourceMapCount > 0`,
+  `web.publishedSourceMapCount === 0`, the exact number of published Web
+  files, and `web.indexSha256`; the `distribution.json` inventory must
+  contain no `bin/web/**/*.map*` entry.
+
+## E. Receipt identity incident and source provenance
+
+### Determined cause (not a race)
+
+Historical PR workflow run `43988598685` reports branch
+`head_sha=55a366a8920affff20adb18dd8ff32402952db29` but its test
+receipt had `sourceSHA=6d1ff11e018d9cca6cee82baa6a4af9cf29b4fed`.
+The latter is a **real synthetic GitHub PR merge commit**:
+- parent 1: `42d344a0efc4d85187388f149c54acac2db171da`
+  (`close-final-candidate` state at that event);
+- parent 2: `55a366a8920affff20adb18dd8ff32402952db29`
+  (the actual PR head).
+
+In `pull_request` workflows, GitHub's `github.sha` and `GITHUB_SHA`
+refer to `refs/pull/N/merge` by default, while a `push` event uses the
+branch commit. The old workflow used an implicit
+`actions/checkout` ref and the test wrote
+`sourceSHA: process.env.GITHUB_SHA` without checking
+`git rev-parse HEAD` or `github.event.pull_request.head.sha`.
+It therefore **certified the synthetic merge ref as the application source**,
+rather than the explicitly advertised PR head. The differing archive SHA
+can follow from differing checkout bytes; it is **not** evidence of shared
+runner contamination. GitHub-hosted workspaces are per-job, but the old
+artifact names were not run-attempt scoped.
+
+### Fail-closed contract
+
+`.github/workflows/sf-factory-package.yml` now checks out
+`github.event.pull_request.head.sha || github.sha` explicitly, passes
+the selected branch `SF_FACTORY_EXPECTED_SOURCE_SHA`, and separately
+retains the `github.sha` workflow identity. The test reads the actual
+`git rev-parse --verify HEAD` both before building and just before
+writing success evidence. `requireSfFactoryRunIdentity` rejects a
+`sourceSHA` or checkout SHA different from the selected branch commit.
+On `push`, it additionally requires `workflowSHA === sourceSHA`;
+on `pull_request`, the synthetic `workflowSHA` may correctly differ,
+and must be recorded **as a separate field**, never misidentified as
+`sourceSHA`.
+
+Both the isolated extraction folder and the uploaded artifact directory
+use the exact validated `github.run_id` and `github.run_attempt`;
+the uploaded artifact name also includes this pair and the selected
+source commit SHA. An invalid/mismatched identity fails before a receipt
+or qualified artifact can be published. The negative identity tests
+explicitly reject the historical PR-merge-as-source mistake, a changed
+checkout SHA, a changed expected PR head SHA, an invalid run ID and a
+push event with differing workflow SHA.
+
+**Important evidence rule:** a green result from an earlier HEAD does not
+certify this merged source. Report only the final branch HEAD, successful
+`push` and `pull_request` run IDs, the observed complete
+`SF_FACTORY_PACKAGE_QUALIFIED` line, and independently confirmed
+`head_sha === receipt.sourceSHA === receipt.checkoutSHA ===
+receipt.expectedSourceSHA`. `receipt.workflowSHA` is separate for
+PR events by GitHub design.
