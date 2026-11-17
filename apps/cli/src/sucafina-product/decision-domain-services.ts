@@ -13,6 +13,7 @@ import { createDecisionComparisonService } from "../../../../modules/sucafina/Su
 import { createDecisionPortfolioSelection } from "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts"
 import { createPortfolioResultBindings } from "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts"
 import { createDecisionIntentFences } from "../../../../modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts"
+import { createDecisionCaseManagement } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-management.ts"
 import { createDecisionEvidenceChecks } from "../../../../modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts"
 import { verifyDecisionPlannerSources } from "../../../../modules/sucafina/Sucafinav1/product/decisions/baseline-fence.ts"
 import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
@@ -63,6 +64,42 @@ export function createSfDecisionDomainServices(input: {
     proposalCoverageWrites: input.proposalCoverageWrites, now: () => new Date().toISOString() }
   const actors = createSfDecisionPlannerActors(input.authority)
   const intent = createDecisionIntentFences({ human: input.authority.human, ui: input.authority.ui, readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences })
+
+  // The installed Workbench needs its original C08 edit producer, not a
+  // fallback page/BI router. Admit the complete human intent and bind its
+  // source revisions to the same locked C08 write.
+  type EditRequest = Parameters<ReturnType<typeof createDecisionCaseManagement>["edit"]>[0]
+  const edits = new WeakMap<TrustedDomainContext, EditRequest>()
+  const freshCaseEvidence = async (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext) => {
+    if (!await host.revalidate(call)) return false
+    const selected = await business.context.context({ refs }, call)
+    return selected.length === refs.length && selected.every((entry, index) =>
+      entry.state === "fresh" && entry.accessRevision === call.binding.accessRevision &&
+      !!entry.authorizedProjection && !!entry.currentRef &&
+      digestSfValue(entry.ref) === digestSfValue(refs[index]) &&
+      digestSfValue(entry.currentRef) === digestSfValue(refs[index])) && await host.revalidate(call)
+  }
+  const management = createDecisionCaseManagement({
+    state: input.authority.state, host, authorizeCase: business.authorizeCase,
+    operationIdentity: business.operationIdentity, verifyEvidence: freshCaseEvidence,
+    authorizeEdit: async (request, call) => {
+      if (!await intent.authorize(call, "decisions.edit", request)) return false
+      edits.set(call, structuredClone(request))
+      return true
+    },
+    verifyEdit: (_snapshot, before, after, call) => {
+      const request = edits.get(call)
+      return !!request && before.id === request.caseRef.id &&
+        before.incarnation === request.caseRef.incarnation && before.version === request.caseRef.version &&
+        after.id === before.id && after.incarnation === before.incarnation && after.version === before.version + 1 &&
+        digestSfValue({ objective: after.objective, criteria: after.criteria, sourceRefs: after.sourceRefs,
+          horizon: after.horizon, currency: after.currency, assumptions: after.assumptions }) ===
+        digestSfValue({ objective: request.objective, criteria: request.criteria, sourceRefs: request.sourceRefs,
+          horizon: request.horizon ?? before.horizon, currency: request.currency ?? before.currency,
+          assumptions: request.assumptions ?? before.assumptions }) &&
+        intent.verify(call, "decisions.edit", request)
+    },
+  })
   const selectionCases = new WeakMap<TrustedDomainContext, AuthorizedCaseProjection["case"]>()
   const preview: Parameters<typeof createPlannerCriterionMetric>[0]["preview"] = (request, call) => comparePlannerPreview({ host, ...planner }, request, call)
   const checks = createDecisionEvidenceChecks({ host, evidence: business.context,
@@ -199,7 +236,7 @@ export function createSfDecisionDomainServices(input: {
     rules, selection: selectedPortfolio, portfolioBindings, comparisonBindings, sensitivityBindings, decisions, createReceipt, caseFor: input.selectedCase, idempotencyKey, exactThreshold })
   const proposals = createSfDecisionProposalServices({ ...input, selection: selectedPortfolio, checks })
   const materiality = createSfDecisionMaterialityServices({ authority: input.authority, business, selectedCase: input.selectedCase, signalRegistryWrites: input.signalRegistryWrites })
-  return { ...proposals, descriptors: [...(input.sharedPortfolio?.product ? [] : portfolio.contribution.capabilities), ...proposals.descriptors], portfolio, portfolioProof: proof, units, sensitivityBindings, comparisonBindings, portfolioBindings,
+  return { ...proposals, management, compare: input.sharedPortfolio?.compare ?? compare, descriptors: [...(input.sharedPortfolio?.product ? [] : portfolio.contribution.capabilities), ...proposals.descriptors], portfolio, portfolioProof: proof, units, sensitivityBindings, comparisonBindings, portfolioBindings,
     analysisBindings: { changeProposals: proposals.changeProposals,
       portfolio: { portfolioProof: proof, replayAlternative: proposals.replayAlternative, ...(input.readAlternativeCapture ? { readAlternativeCapture: input.readAlternativeCapture } : {}) },
       sensitivity: { portfolioProof: proof, units, bindings: sensitivityBindings }, materiality: { registry: materiality.registry, produce: materiality.produce } },
