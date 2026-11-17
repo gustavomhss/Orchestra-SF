@@ -233,19 +233,27 @@ jobs:
       - uses: ./.github/actions/omni-binaries
         with:
           artifact: sf-omni-linux-${{ github.sha }}
-      - name: Execute exact required Bun selection
+      - name: Execute exact manifest-selected Bun files
         shell: bash
         env:
-          # The canonical Actions Bun test runner uses this sentry value;
-          # CI=true remains enforced and the actual runner must be Linux x64.
+          # The canonical Actions Bun runner uses this sentry; CI=true remains enforced.
           GITHUB_ACTIONS: "false"
         run: |
-          set -uo pipefail
+          set -euo pipefail
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
-          # Consume A2's exported manifest validator; YAML does not duplicate
-          # the suite working-directory mapping.
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+
+          # A2 gate validates and selects every test in the admitted manifest suite.
+          # Release-only exclusions are applied there; YAML adds no paths or ignores.
+          node script/sf-ci/gate.mjs select > "$evidence/selection.txt"
+          mapfile -t files < "$evidence/selection.txt"
+          test "${#files[@]}" -gt 0
+
+          # Selection paths are relative to the manifest's suite.directory.
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
@@ -253,68 +261,37 @@ jobs:
             const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "bun")
             if (!suite) throw new Error("SF_CI_UNKNOWN_BUN_SUITE")
             process.stdout.write(suite.directory)
-          ')" || exit $?
-          test -f "$root/$suite_dir/package.json" || exit 2
+          ')"
+          test -f "$root/$suite_dir/package.json"
+          cd "$root/$suite_dir"
+          set +e
           {
             case "$SF_SUITE_ID" in
               CI-SF)
-                # macOS-local Litestream parity has its own release-only inventory;
-                # Azure backup/restore is blocked until the real Linux proof exists.
-                node script/sf-ci/gate.mjs release-only > "$evidence/release-only.txt" || exit $?
-                mapfile -t released < "$evidence/release-only.txt"
-                excluded=()
-                for file in "${released[@]}"; do excluded+=("--path-ignore-patterns=$file"); done
-                cd "$root/$suite_dir"
-                bun test --timeout 30000 --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${excluded[@]}"
+                bun test --timeout 30000 --bail=5 \
+                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
-              CI-CLI)
-                # The validated manifest is the sole source of selected paths.
-                node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
-                mapfile -t files < "$evidence/selection.txt"
-                test "${#files[@]}" -gt 0 || exit 2
-                cd "$root/$suite_dir"
-                bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+              CI-CLI|CI-ATLAS-BUSINESS)
+                bun test --timeout 30000 --reporter=junit \
+                  "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               CI-APP-SRC)
-                cd "$root/$suite_dir"
-                bun run test:unit --reporter=junit "--reporter-outfile=$evidence/report.xml"
+                # Preserve the existing app-shell test:unit runtime/preload flags.
+                bun test --conditions=solid --only-failures --preload ./happydom.ts \
+                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               CI-APP-BROWSER)
-                # The F04 real-installed manifest test runs only with a real
-                # installed host at release; never fake one in a PR unit lane.
-                node script/sf-ci/gate.mjs release-only > "$evidence/release-only.txt" || exit $?
-                mapfile -t released < "$evidence/release-only.txt"
-                excluded=()
-                for file in "${released[@]}"; do excluded+=("--path-ignore-patterns=$file"); done
-                test_dir="$(node --input-type=module -e '
-                  import { readFileSync } from "node:fs"
-                  import { validateManifest } from "./script/sf-ci/gate.mjs"
-                  const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))
-                  const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "bun")
-                  if (suite?.selection?.kind !== "directory") throw new Error("SF_CI_BROWSER_SELECTION_DRIFT")
-                  process.stdout.write(suite.selection.testDirectory)
-                ')" || exit $?
-                test -d "$root/$suite_dir/$test_dir" || exit 2
-                cd "$root/$suite_dir"
+                # Installed-host live F04 proofs are release-owned, never faked in CI.
                 ORCHESTRA_OMNI_CONTROL=declared bun test --conditions=browser \
                   --preload ../../script/test-omni-control.ts --preload ./happydom.ts \
-                  "./$test_dir" --bail=5 \
-                  "${excluded[@]}" --reporter=junit "--reporter-outfile=$evidence/report.xml"
-                ;;
-              CI-ATLAS-BUSINESS)
-                # Generated files are checked independently by static.
-                node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
-                mapfile -t files < "$evidence/selection.txt"
-                test "${#files[@]}" -gt 0 || exit 2
-                cd "$root/$suite_dir"
-                bun test --timeout 30000 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+                  --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
                 ;;
               *) echo "Unknown suite: $SF_SUITE_ID" >&2; exit 2 ;;
             esac
           } 2>&1 | tee "$evidence/run.log"
-          status=$?
-          # PIPESTATUS[0] is captured through pipefail: failing tests never become success.
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          status=${PIPESTATUS[0]}
+          set -e
+          test "$status" -eq 0
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
@@ -366,18 +343,23 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
-          # The matrix enumerates only normative suite IDs. Select the exact
-          # source-controlled spec and package directory from the A2 manifest.
-          suite_info="$(node --input-type=module -e '
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+
+          # UI spec comes exclusively from the same A2 selector as Bun suites.
+          node script/sf-ci/gate.mjs select > "$evidence/selection.txt"
+          mapfile -t specs < "$evidence/selection.txt"
+          test "${#specs[@]}" -eq 1
+          SF_SPEC="${specs[0]}"
+          suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
             const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))
             const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "playwright")
             if (!suite) throw new Error("SF_CI_UNKNOWN_UI_SUITE")
-            process.stdout.write([suite.directory, suite.specFile].join("\n"))
+            process.stdout.write(suite.directory)
           ')"
-          suite_dir="${suite_info%%$'\n'*}"
-          SF_SPEC="${suite_info#*$'\n'}"
           test -f "$root/$suite_dir/$SF_SPEC"
           export PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.json"
           cd "$root/$suite_dir"
@@ -385,7 +367,7 @@ jobs:
           bun run test:e2e:local "$SF_SPEC" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          test "$status" -eq 0
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
@@ -426,4 +408,8 @@ jobs:
       - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA
         env:
           SF_NEEDS_JSON: ${{ toJSON(needs) }}
-        run: node script/sf-ci/gate.mjs verify
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+          node script/sf-ci/gate.mjs verify
