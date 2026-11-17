@@ -101,7 +101,13 @@ test("real Microsoft-authenticated dashboard route grants only its assigned view
   const write = await f.request("/dashboard", cookie, { page: "Executive Dashboard", action: "configure-summaries", version: 0, values: { pages: ["Talent Review"] } })
   expect(write.status).toBe(403)
   expect(await f.snapshot("dashboard")).toEqual(before)
-  expect((await f.request("/dashboard?page=Executive%20Dashboard")).status).toBe(401)
+  for (const surface of ["dashboard", "planner", "procurement"]) {
+    const anonymous = await f.request(`/${surface}`)
+    expect(anonymous.status).toBe(303)
+    const destination = new URL(anonymous.headers.get("location")!, publicOrigin)
+    expect(destination.pathname).toBe("/sucafina/auth/login")
+    expect(destination.searchParams.get("returnTo")).toBe(`/sucafina/${surface}`)
+  }
 })
 
 test("actual routes deny a signed-in guest with no group role and revalidate role removal", async () => {
@@ -168,10 +174,11 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
 
   const before = await f.snapshot("procurement")
   const denied = await f.post(first, "save", { pr: { title: "ATTACKER-REPLACEMENT" } }, secondId, 1)
-  expect(denied.status).toBe(403)
+  // Inaccessible records must be indistinguishable from absent records, regardless of version.
+  expect(denied.status).toBe(404)
   expect(await denied.text()).not.toContain(secondTitle)
   const stale = await f.post(first, "save", { pr: { title: "ATTACKER-STALE" } }, secondId, 0)
-  expect(stale.status).toBe(409)
+  expect(stale.status).toBe(404)
   const conflict = await stale.text()
   expect(conflict).not.toContain(secondTitle)
   expect(conflict).not.toContain("stored")
