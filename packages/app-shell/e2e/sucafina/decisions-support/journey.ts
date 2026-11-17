@@ -127,10 +127,17 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
   })
   await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
   try {
+    console.info("SF_DECISIONS_COMMAND_SENT", mode)
     await button.click()
-    const saved = await captured.promise
-    return checkedReply({ mode: new URL(saved.url).searchParams.get("sf"), httpStatus: saved.status, contentType: saved.contentType },
-      () => JSON.parse(saved.json), observations)
+    let timer: ReturnType<typeof setTimeout> | undefined
+    try {
+      const saved = await Promise.race([captured.promise, new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`SF_DECISIONS_CDP_RESPONSE_NOT_CAPTURED: ${mode}`)), 20_000)
+      })])
+      console.info("SF_DECISIONS_COMMAND_RESPONSE", mode, saved.status)
+      return checkedReply({ mode: new URL(saved.url).searchParams.get("sf"), httpStatus: saved.status, contentType: saved.contentType },
+        () => JSON.parse(saved.json), observations)
+    } finally { if (timer !== undefined) clearTimeout(timer) }
   } finally {
     await session.send("Fetch.disable")
     await session.detach()
