@@ -2,7 +2,7 @@
 
 **Contratos de design:** cada caso é um roteiro de teste manual assistido por QA, com atores distintos, contexto sintético persistível, eventos ordenados, invariantes e contraprovas. Nenhum foi executado por este pacote. **Aceite de produto exige o produtor e a instalação no SHA escolhido**, com evidência de autorização, fonte original e recibo de domínio quando houver mutação.
 
-**Conexões e limites:** as stories sobre `/sucafina/admin/access` referem-se ao PR #270 (proposto, sem prova de go-live); a demo Flamengo ao PR #268 (DRAFT e não seed provado); white-label e integrações externas são condicionais, nunca características presumidamente instaladas. A arquitetura do Opera/Orchestra e a UI de 70 superfícies têm origens diferentes.
+**Conexões e limites:** as stories sobre `/sucafina/admin/access` referem-se ao PR #270 (proposto, sem prova de go-live); a demo Flamengo ao PR #268 (DRAFT e não seed provado); camada de marca Sucafina (white-label) e integrações externas são condicionais, nunca características presumidamente instaladas. As fontes históricas Opera/Orchestra e o inventário de 70 superfícies têm origens diferentes; isso não torna a versão Sucafina do Orchestra um produto separado.
 
 
 ## SF-E2E-001 · O briefing das 8h: o CIO precisa decidir sem alterar a fonte
@@ -1144,11 +1144,11 @@
 **Evidências:** screenshot_or_video_timeline, before_after_source_snapshot, sanitized_HTTP_statuses, receipt_or_no_commit_proof, actor_tenant_policy_snapshot, artifact_sha256. **Estado:** `DESIGNED_NOT_EXECUTED`
 
 
-## SF-E2E-030 · O tema Sucafina preserva a arquitetura visual do Orchestra
+## SF-E2E-030 · A camada de marca Sucafina preserva a arquitetura visual do Orchestra
 
 **Prioridade:** P1 · **Atores:** CIO, LEADER, HR · **Jornadas:** J08 · **IDs UI:** CAP01, UI29, UI47, UI67 · **Condição:** `WHITE_LABEL_RELEASE_FEATURE_UNVERIFIED`
 
-**Situação de negócio.** SF-LAB-2026 · Tema white-label Sucafina proposto, sem redesenhar glass/blur/geometria da arquitetura Orchestra.
+**Situação de negócio.** SF-LAB-2026 · Camada de marca white-label Sucafina proposta para a versão Sucafina do Orchestra, sem redesenhar glass/blur/geometria nem substituir os temas Orchestra.
 
 **História do usuário:** Como CIO, com apoio de LEADER, HR, diante da situação descrita, preciso avaliar white-label em loading, navegação, vidro, blur e acessibilidade, para entregar identidade visual premium sem regressão de UX.
 
@@ -1157,11 +1157,11 @@
 **Pré-condições**
 - QA isolado, seed determinístico e snapshot BEFORE de todos os registros envolvidos; consumidores reais disponíveis ou status BLOCKED.
 - Todos os atores autenticados como suas contas reais de teste, com grants válidos e versões de policy registradas.
-- Tema white-label Sucafina proposto, sem redesenhar glass/blur/geometria da arquitetura Orchestra.
+- Camada de marca white-label Sucafina proposta para a versão Sucafina do Orchestra, sem redesenhar glass/blur/geometria nem substituir os temas Orchestra.
 
 **Roteiro multiator, passo a passo**
-1. Abrir telas com tema padrão da plataforma e capturar baseline visual
-2. Ativar tema Sucafina em build que realmente o inclua
+1. Abrir telas com tema Orchestra vigente e capturar baseline visual
+2. Validar a camada de marca Sucafina em build que realmente a inclua, preservando o tema Orchestra
 3. Conferir wordmark, favicon, loading, naming e motion
 4. Testar glass, blur, transparências, shadows e geometria idênticos
 5. Executar dark/light, zoom 200, reduced-motion, mobile 320 e desktop 1440
@@ -1173,11 +1173,11 @@
 - Identidade Sucafina é coerente sem adulterar componentes funcionais
 - Animação respeita prefers-reduced-motion
 - Sem degradação de densidade, responsividade ou contraste
-- O tema não escreve domínio nem muda RBAC
+- A camada de marca não escreve domínio, não muda RBAC nem substitui os temas Orchestra
 - Nenhum asset é inventado como “logo oficial” sem aprovação
 
 **Contraprovas obrigatórias**
-- Tema ausente no branch: status FEATURE_NOT_INSTALLED, não reprovação falsa do build legado
+- Camada de marca ausente no branch: status FEATURE_NOT_INSTALLED, não reprovação falsa de build legado de homologação
 - Loading deve mostrar estado real e não ocultar erro de autorização
 
 **Evidências:** screenshot_or_video_timeline, before_after_source_snapshot, sanitized_HTTP_statuses, receipt_or_no_commit_proof, actor_tenant_policy_snapshot, artifact_sha256. **Estado:** `DESIGNED_NOT_EXECUTED`

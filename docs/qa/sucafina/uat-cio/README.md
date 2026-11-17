@@ -2,6 +2,8 @@
 
 **Versão:** v1 · **data do desenho:** 2026-11-16 (São Paulo) · **status:** `DESIGNED_NOT_EXECUTED` · **classificação:** documentos e dados exclusivamente sintéticos. **Não é prova de go-live.**
 
+**Enquadramento canônico:** o alvo deste UAT é **a versão Sucafina do Orchestra** (**Orchestra Sucafina Edition**): capítulos nativos na interface, no design system e nos temas do Orchestra, com **camada de marca Sucafina** (logos, naming, favicon e assets aprovados). Essa camada não é outro tema, módulo ou produto independente. Quando rotas ou telas legadas `/sucafina/...` forem citadas, são referências de homologação/legado, não prova de aceite da experiência nativa no SHA instalado.
+
 ## Para quem foi escrito
 
 O CIO global precisa confiar, em poucos minutos, que o orçamento apresentado é o orçamento certo, que atrasos de TI não desapareceram entre sistemas, que um fornecedor não foi escolhido por engano, que papéis foram respeitados e que um relatório preserva exatamente aquilo que foi visto na reunião. Um gestor regional precisa executar sua tarefa sem escalar permissões. Finance precisa comparar cenários sem mexer na versão oficial. Procurement precisa percorrer etapas sem confundir solicitação, sourcing, escolha, aprovação e emissão interna. Um auditor precisa conseguir voltar ao recibo da **mesma** aplicação, após timeout, troca de usuário ou reinício.
@@ -39,7 +41,7 @@ O cenário fictício `SF-LAB-2026` foi desenhado para essas pessoas. Ele evoca a
 
 1. **Inventário original (histórico)**: 70 superfícies / 165 rotas / 15 capítulos / 305 operações no catálogo e 306 no registro; `close-final-candidate@42d344a0efc4d85187388f149c54acac2db171da`.
 2. **Base de criação da campanha**: `close-final-candidate@a1e774ec9e1fc28c81e0b42a1889c0425060aed9`, com CI e release movendo-se em paralelo. A base de execução final precisa de pin próprio e reconciliado.
-3. **Funcionalidades propostas em branches**: Supreme Admin `/sucafina/admin/access` do PR #270, demo Flamengo PR #268, tema white-label — **fora** do inventário congelado das 70; não alterar a contagem histórica para fazer crer que já foram promovidas.
+3. **Funcionalidades propostas em branches**: Supreme Admin `/sucafina/admin/access` do PR #270, demo Flamengo PR #268, camada de marca white-label Sucafina — **fora** do inventário congelado das 70; não alterar a contagem histórica para fazer crer que já foram promovidas.
 
 ## O que é cobertura, e o que não é
 
