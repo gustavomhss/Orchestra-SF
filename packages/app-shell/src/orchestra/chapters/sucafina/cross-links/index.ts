@@ -1,7 +1,7 @@
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfContext, SfOwnerSelection, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../navigation-state"
 import { sfReadProjects } from "../portfolio/projects/producer"
 
@@ -18,6 +18,10 @@ export type SfExecutiveLink =
   | Readonly<{ kind: "agenda" | "projects" | "risks" | "stakeholders" | "topics" | "new-topic" }>
   | SfExecutiveRecord
   | Readonly<{ kind: "relations"; source: SfExecutiveRecord }>
+export type SfExecutiveSourceRoute = Readonly<{
+  ownerSelection: SfOwnerSelection
+  query: SfResolvedQuery
+}>
 
 const operationReady = (context: SfContext, operationId: string) =>
   context.availability.some((resource) => resource.operations.some((operation) =>
@@ -54,7 +58,7 @@ function isRecord(target: SfExecutiveLink): target is SfExecutiveRecord {
 const validRef = (ref: string) => ref.trim().length > 0 && ref.length <= 4096
 
 /** An explicit three-part owner selection must be transported intact. */
-export function sfExecutiveLinkRequest(from: SfResolvedRoute, target: SfExecutiveLink): string | undefined {
+export function sfExecutiveLinkRequest(from: SfExecutiveSourceRoute, target: SfExecutiveLink): string | undefined {
   const owner = from.ownerSelection
   if (!owner.serverKey || !owner.projectId || !owner.installationId) return
   if (isRecord(target) && !validRef(target.ref)) return
@@ -124,7 +128,7 @@ export function sfExecutiveLinkMatches(route: SfResolvedRoute, target: SfExecuti
  * never treated as an empty record or a successful handoff.
  */
 export async function sfExecutiveRevalidateRef(
-  transport: SfTransport, from: SfResolvedRoute, target: SfExecutiveLink, signal: AbortSignal,
+  transport: SfTransport, from: SfExecutiveSourceRoute, target: SfExecutiveLink, signal: AbortSignal,
 ): Promise<boolean> {
   if (signal.aborted) return false
   const record = target.kind === "relations" ? target.source : isRecord(target) ? target : undefined

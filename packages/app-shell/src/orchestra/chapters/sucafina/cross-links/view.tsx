@@ -1,10 +1,9 @@
 import { createEffect, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
-import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../context"
 import { useSfPresentation } from "../shared/frame/presentation"
-import { sfExecutiveLinkAllowed, type SfExecutiveLink } from "./index"
+import { sfExecutiveLinkAllowed, type SfExecutiveLink, type SfExecutiveSourceRoute } from "./index"
 
 type Label = Readonly<{ en: string; pt: string }>
 type Related = Readonly<{ kind: "risk" | "stakeholder" | "topic"; ref: string; label: string }>
@@ -13,7 +12,7 @@ const display = (value: unknown, fallback: string) =>
 
 /** No optimistic navigation: owner-bound F01 must authorize and reread first. */
 export function SfExecutiveAction(props: Readonly<{
-  from: SfResolvedRoute
+  from: SfExecutiveSourceRoute
   target: SfExecutiveLink
   label: Label
 }>): JSX.Element {
@@ -57,7 +56,7 @@ export function SfExecutiveAction(props: Readonly<{
  * click repeats the target read under the original authenticated owner.
  */
 export function SfExecutiveRelatedLinks(props: Readonly<{
-  from: SfResolvedRoute
+  from: SfExecutiveSourceRoute
   omit: Related["kind"]
 }>): JSX.Element {
   const owner = useSfContext()
