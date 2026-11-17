@@ -70,9 +70,20 @@ test("exact proposed entry and CLI route compose Microsoft login, bootstrap and 
   expect(anonymous.status).toBe(303)
   expect(anonymous.headers.get("location")).toBe("/sucafina/auth/login?returnTo=%2Fsucafina%2Fdashboard")
   const first = await f.login()
-  // An assigned viewer cannot silently become the first administrator.
-  expect((await f.request("/sucafina/dashboard", { headers: { cookie: first.cookie } })).status).toBe(401)
-  expect(await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.roleMap }))).toBeUndefined()
+  // The validated private installation configuration is authoritative at startup.
+  // A member may read their configured surface without an unrelated admin first login.
+  const memberPage = await f.request("/sucafina/dashboard", { headers: { cookie: first.cookie } })
+  expect(memberPage.status).toBe(200)
+  expect(memberPage.headers.get("content-type")).toContain("text/html")
+  expect(await memberPage.text()).toContain("<html")
+  const initialized = await f.store.transaction("dashboard", async (snapshot) => ({
+    commit: false, value: { rows: snapshot.data.roleMap, audit: snapshot.audit },
+  }))
+  expect(initialized.rows).toEqual(expect.arrayContaining([
+    expect.objectContaining({ surface: "dashboard", role: "viewer", entra: `group:${group}`, by: "microsoft:installation-config" }),
+    expect.objectContaining({ surface: "dashboard", role: "admin", entra: `group:${other}`, by: "microsoft:installation-config" }),
+  ]))
+  expect(initialized.audit[0]?.who).toBe("microsoft:installation-config")
   f.provider.account.groups.push(other)
   expect((await f.request("/sucafina/dashboard", { headers: { cookie: first.cookie } })).status).toBe(200)
   const rows = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.roleMap }))
