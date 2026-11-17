@@ -364,6 +364,38 @@ def install(a):
         archive.close()
 
 
+def check_rollback_approval(a):
+    approval_file = Path(a.approval)
+    proof_file = Path(a.compatibility_proof)
+    if not approval_file.is_absolute() or not proof_file.is_absolute():
+        refuse("rollback approval/proof must be absolute private files")
+    for path in (approval_file, proof_file):
+        metadata = must_file(path, owner=0, max_size=65536)
+        if stat.S_IMODE(metadata.st_mode) != 0o600:
+            refuse("rollback approval and independent proof must be root 0600")
+    approval = json.loads(approval_file.read_text("utf-8"))
+    proof = json.loads(proof_file.read_text("utf-8"))
+    if not isinstance(approval, dict) or \
+       approval.get("schema") != "orchestra-sf.a7-code-rollback-approval.v1" or \
+       approval.get("fromCandidate") != a.from_candidate or \
+       approval.get("toCandidate") != a.to_candidate or \
+       approval.get("schemaCompatible") is not True or \
+       approval.get("compatibilityProofSha256") != sha256(proof_file) or \
+       not isinstance(approval.get("approvedBy"), str) or not approval["approvedBy"].strip() or \
+       not isinstance(approval.get("approvedAtUtc"), str) or not approval["approvedAtUtc"].endswith("Z") or \
+       not isinstance(approval.get("backupRecoveryPointId"), str) or not approval["backupRecoveryPointId"]:
+        refuse("owner approval must bind exact rollback C, reviewed compatibility, recovery point")
+    if not isinstance(proof, dict) or \
+       proof.get("schema") != "orchestra-sf.azure-migration-compatibility.v1" or \
+       proof.get("currentCandidate") != a.from_candidate or \
+       proof.get("targetCandidate") != a.to_candidate or \
+       proof.get("compatible") is not True or \
+       not isinstance(proof.get("reviewer"), str) or not proof["reviewer"].strip() or \
+       proof["reviewer"] == approval["approvedBy"]:
+        refuse("independently reviewed compatibility proof missing")
+    return approval
+
+
 def rollback(a):
     if not SHA40.fullmatch(a.from_candidate) or not SHA40.fullmatch(a.to_candidate) or \
        a.from_candidate == a.to_candidate:
@@ -371,6 +403,7 @@ def rollback(a):
     vm_preflight(a.fqdn, require_maintenance=not a.dry_run)
     if current_source() != a.from_candidate:
         refuse("current release changed: expected --from-candidate")
+    check_rollback_approval(a)
     target = RELEASES / a.to_candidate
     if not target.is_dir() or target.is_symlink():
         refuse("retained previous release absent")
@@ -410,6 +443,8 @@ def main():
     roll = commands.add_parser("rollback")
     roll.add_argument("--from-candidate", required=True)
     roll.add_argument("--to-candidate", required=True)
+    roll.add_argument("--approval", required=True)
+    roll.add_argument("--compatibility-proof", required=True)
     for cmd in (ins, roll):
         cmd.add_argument("--fqdn", required=True)
         mode = cmd.add_mutually_exclusive_group(required=True)
