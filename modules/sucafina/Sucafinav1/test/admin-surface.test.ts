@@ -280,5 +280,5 @@ test("orphan direct grants remain visible and revocable only by a supreme admini
   expect(persisted.grants).toEqual([])
   expect(persisted.audit.some((entry) => entry.who === oid && entry.record === "sf:access-admin:grant:" + orphanId &&
     entry.became === null)).toBe(true)
-  expect((await (await f.get(daniel)).text()).toContain("Nenhum grant órfão identificado")
+  expect(await (await f.get(daniel)).text()).toContain("Nenhum grant órfão identificado")
 })
