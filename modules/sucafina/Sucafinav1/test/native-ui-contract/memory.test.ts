@@ -63,8 +63,8 @@ describe("A14: closed memory operation catalog", () => {
     expect(SfMemory.operations["intelligence.memory-catalog"]).toBe(SfIntelligenceMemoryCatalog)
     expect(SfMemory.operations["intelligence.memory-similar-cases"]).toBe(SfIntelligenceMemorySimilarCases)
     // The read-only case projection is an inert schema binding, not a grant.
-    const similar = { ...query, query: "supplier", period, includeHistorical: false, candidates: [{ ...query, id: query.caseId }] }
-    delete similar.candidates[0].caseId
+    const similar = { ...query, query: "supplier", period, includeHistorical: false,
+      candidates: [{ id: query.caseId, incarnation: query.incarnation, version: query.version }] }
     expect(decode(SfIntelligenceMemorySimilarCases.input, similar)).toBeDefined()
     expect(() => decode(SfIntelligenceMemorySimilarCases.input, { ...similar, actor: "admin" })).toThrow()
     expect(SfMemory.operations["intelligence.memory-conditions"]).toBe(SfIntelligenceMemoryConditions)
