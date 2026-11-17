@@ -110,13 +110,14 @@ test("trusted Microsoft configuration initializes only absent maps, preserving d
     await initializeConfiguredMicrosoftRoleMaps({ store, groups })
     for (const surface of ["dashboard", "planner", "procurement"] as const) {
       const expectedRole = surface === "dashboard" ? "viewer" : surface === "planner" ? "finance" : "requester"
+      const expectedGroup = surface === "dashboard" ? groups.dashboard.viewer : surface === "planner" ? groups.planner.finance : groups.procurement.requester
       const roleMap = await store.transaction(surface, async (snapshot) => {
         expect(snapshot.audit[0]?.who).toBe("microsoft:installation-config")
         expect(snapshot.versions.dataset?.by).toBe("microsoft:installation-config")
         return { commit: false, value: snapshot.data.roleMap }
       })
       expect(roleMap).toEqual(expect.arrayContaining([
-        expect.objectContaining({ surface, role: expectedRole, entra: groups[surface][expectedRole as keyof typeof groups[typeof surface]], version: 1 }),
+        expect.objectContaining({ surface, role: expectedRole, entra: expectedGroup, version: 1 }),
       ]))
     }
     await store.transaction("dashboard", async (snapshot) => {
