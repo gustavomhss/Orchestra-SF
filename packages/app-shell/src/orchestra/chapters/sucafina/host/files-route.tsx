@@ -25,7 +25,8 @@ export function filesRouteAvailable(context: SfContext, candidate: SfNativeRoute
   if ((["UI55", "UI56", "UI57", "UI68"].includes(candidate.surfaceId)) !== (candidate.chapterId === "sf-imports")) return false
   const ready = (id: string) => context.availability.some((resource) => resource.family === "files" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))
   if (candidate.surfaceId === "UI68") return [SfFiles.operations["files.export.xlsx"].operationId, SfFiles.operations["files.export.suppliers"].operationId,
-    SfFiles.operations["files.export.register"].operationId, SfFiles.operations["files.export.json"].operationId].some(ready)
+    SfFiles.operations["files.export.register"].operationId, SfFiles.operations["files.export.json"].operationId,
+    SfFiles.operations["files.export.po"].operationId].some(ready)
   const operations = candidate.surfaceId === "UI55" ? [SfFiles.operations["files.import-targets"].operationId] :
     candidate.surfaceId === "UI56" || candidate.surfaceId === "UI57" ? [SfFiles.operations["files.import-reference"].operationId] :
       candidate.surfaceId === "UI58" && candidate.kind !== "detail" ? [SfFiles.operations["files.document-requests"].operationId, SfFiles.operations["files.document-sources"].operationId] :
