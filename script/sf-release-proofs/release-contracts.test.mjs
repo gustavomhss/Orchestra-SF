@@ -146,8 +146,9 @@ test("invalid or altered owner detached Ed25519 signature fails",()=>{
   assert.equal(verifyOwnerDetachedSignature(bytes,signature,pem,sha256(pem)),true)
   assert.throws(()=>verifyOwnerDetachedSignature(Buffer.concat([bytes,Buffer.from(" ")]),
     signature,pem,sha256(pem)),/F04_GATE_OWNER_SIGNATURE_INVALID/)
+  const corrupted=(signature[0]==="A"?"B":"A")+signature.slice(1)
   assert.throws(()=>verifyOwnerDetachedSignature(bytes,
-    "A"+signature.slice(1),pem,sha256(pem)),/F04_GATE_OWNER_SIGNATURE_INVALID/)
+    corrupted,pem,sha256(pem)),/F04_GATE_OWNER_SIGNATURE_INVALID/)
   assert.throws(()=>verifyOwnerDetachedSignature(bytes,
     signature,pem,"0".repeat(64)),/F04_GATE_OWNER_PIN_MISMATCH/)
 })
