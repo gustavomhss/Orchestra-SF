@@ -7,6 +7,8 @@ import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 
 export const microsoftUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const namespaces: readonly SfStateNamespace[] = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"]
+/** UI options share the validator\'s exact allowed namespace catalog. */
+export const microsoftNamespaceOptions = namespaces
 
 /** Installation policy is trusted server configuration, never a login claim or an HTTP input. */
 export function microsoftPolicy(value: Record<string, unknown>) {
