@@ -1,4 +1,4 @@
-import { For, Show, createEffect, onCleanup, type JSX } from "solid-js"
+import { For, Show, createEffect, onCleanup, untrack, type JSX } from "solid-js"
 import { A } from "@solidjs/router"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -86,6 +86,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   let controller = new AbortController()
   let applyIntent: Readonly<{ id: string; version: number; digest: string; key: string }> | undefined
   let exportHref: string | undefined
+  let installedScope: string | undefined
 
   const ownerStamp = () => {
     const context = auth.state()
@@ -177,7 +178,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       surface: state.surface, start: state.start, end: state.end, owner,
     }
     const token = fence()
-    setState({ status: "loading", busy: true, targets: [], discovery: undefined, selectionRef: "" })
+    // Keep the native file/date controls mounted while the read is in flight.
+    // SfStatePanel removes its children on "loading", losing the browser FileList.
+    setState({ status: "ready", busy: true, targets: [], discovery: undefined, selectionRef: "" })
     const reply = await api["files.import-targets"]({
       surface: requested.surface,
       ...(requested.start && requested.end ? { start: requested.start, end: requested.end } : {}),
@@ -281,7 +284,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     }
     const token = fence()
     clearReview()
-    setState({ busy: true, status: "loading", phase: "selecting" })
+    // Admission and preview are busy actions, not a new page load. Unmounting
+    // SfStatePanel here would discard the selected native file input.
+    setState({ busy: true, status: "ready", phase: "selecting" })
     const bytes = new Uint8Array(await file.arrayBuffer())
     if (!current(token)) return
     const admit = unpack(await api["files.import-admit"]({
@@ -361,7 +366,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const ref = state.manifest?.id ?? applyIntent?.id
     if (!ref) return
     const token = fence()
-    setState({ busy: true, status: "loading" })
+    setState({ busy: true, status: isImport() ? "ready" : "loading" })
     const source = state.manifest?.context.surface ?? state.surface
     if (source !== "planner" && source !== "dashboard") { failure({ state: "invalid" }); return }
     const fresh = await refreshReference(ref, source, token)
@@ -411,24 +416,29 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const chapter = props.surfaceId
     const ready = auth.ready()
     const selectedOwner = ownerStamp()
-    fence()
-    revokeExport()
-    applyIntent = undefined
-    setState({ status: ready ? "ready" : auth.state().status === "resolving" ? "loading" :
-      auth.state().status === "unauthenticated" ? "session-expired" :
-      auth.state().status === "denied" ? "denied" : "unavailable",
-      phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
-      reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
-      historyRef: "", reference: undefined, detail: undefined, file: undefined,
-      busy: false, error: undefined })
-    if (!ready || !selectedOwner) return
-    if (chapter === "UI57" && routeKind === "history") {
-      // No auto-fetch of an unscoped collection: original Files only authorizes
-      // reference/detail reads. Never infer an empty collection or issue a grant.
-      setState("historyRef", "")
-    }
-    // Route-param consumers must request an explicit producer surface: no guessed
-    // dashboard→planner fallback and no replay of a hidden previous selection.
+    const authStatus = auth.state().status
+    const scope = JSON.stringify([routeKind, chapter, selectedOwner, authStatus])
+    // A same-owner context publication must not erase an in-progress import.
+    // Revoke private state on an actual route, authority or session transition.
+    if (scope === installedScope) return
+    installedScope = scope
+    untrack(() => {
+      fence()
+      revokeExport()
+      applyIntent = undefined
+      setState({ status: ready ? "ready" : authStatus === "resolving" ? "loading" :
+        authStatus === "unauthenticated" ? "session-expired" :
+        authStatus === "denied" ? "denied" : "unavailable",
+        phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
+        reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
+        historyRef: "", reference: undefined, detail: undefined, file: undefined,
+        busy: false, error: undefined })
+      if (chapter === "UI57" && routeKind === "history" && ready && selectedOwner) {
+        // Reference/detail reads only; no inferred history collection.
+        setState("historyRef", "")
+      }
+      // Route-param consumers require an explicit producer surface.
+    })
   })
   onCleanup(() => { fence(); revokeExport() })
 
