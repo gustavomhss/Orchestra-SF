@@ -19,6 +19,47 @@ At startup, a deployment must select **exactly one** business driver (future exp
 
 This narrower scope reduces the migration from a rewrite of all Orchestra storage to one Sucafina business adapter, with conformance against the current contract.
 
+## Mandatory European-only data residency and processing — first-delivery gate
+
+**New hard requirement (owner, 2026-11-17): the Orchestra-SF service, business and host data must remain in Europe.** This applies to the current SQLite-based pilot as well as any future PostgreSQL deployment. **Do not defer European residency until the PostgreSQL migration.** A GDPR statement or an Azure region dropdown is insufficient evidence.
+
+**Default geography proposal, not a deployment claim:** European Union region `westeurope` (Netherlands), with `northeurope` (Ireland) as the natural Azure pair for an explicitly approved intra-EU disaster-recovery strategy. If the client requests **Switzerland** instead, `switzerlandnorth` is European and within the Microsoft EU/EFTA Data Boundary framework, but is outside the political EU; confirm whether the contractual rule means (a) geography Europe, (b) EU/EFTA Data Boundary, (c) EU strictly, or (d) Switzerland only. Until clarified, default to EU-only eligible regions and prohibit routing to other geographies.
+
+All **customer-controlled** data-bearing infrastructure must be inventoried and pinned to approved Europe-based locations before real customer information is admitted:
+- Azure Linux VM and runtime, managed OS/data disks, private network and public ingress/TLS;
+- Both actual SQLite files (`business-microsoft/installation.sqlite` and `host-data/orchestra.db`), WAL files, private native artifacts, uploads/attachments, reports, audit/provenance, tenant sessions and secrets/keys;
+- Recovery Services Vault, cloud snapshots/recovery points, archives/export destinations, replica regions, restore clone, disaster-recovery and support material;
+- Key Vault, Log Analytics/Azure Monitor workspace, application traces, error telemetry, retention/export pipeline, queues/cache and any monitoring service;
+- Email/Graph/Entra/Microsoft 365 integrations, third-party analytics, BI/AI model endpoints, prompt/response processing and support tooling (never presume those are Europe-only merely because the VM is European);
+- CI, GitHub Actions, remote support and development workflows must **not receive live customer data, PII, secrets, tokens, production DB snapshots or private artifacts** outside verified locations. Synthetic fixtures only until processing/storage residency of any external provider is explicitly approved.
+
+**Provider caveat:** Microsoft EU Data Boundary has service-specific scopes and documented limited exceptions; Entra tenant geography, Microsoft 365 workload configuration and Microsoft Graph data processing must be verified with the client. The architecture can constrain customer-managed resources to European Azure regions, but cannot certify `100% Europe` for all subprocessors without a service-by-service due-diligence record. Fail closed or disable unqualified integrations/AI features when strict residency cannot be evidenced.
+
+**Azure template risk:** `infra/azure/main.bicep` in the `azure-hardening` foundation sets `location = resourceGroup().location` and does **not** hard-pin Europe. Existing real subscription, VM and Vault regions have **not** been checked by this ADR. Region pinning, denial of non-Europe deployments and a read-only inventory/receipt of actual resource locations must be delivered by the AZ-03/infra owner, not invented here. Changing a resource group's name or Caddy configuration does not move customer data. No DB migration can compensate for a non-European VM/backup/keys.
+
+**Release gate for the first pilot:** approved customer-specific definition of Europe; exact location evidence for all data stores and providers; no customer data previously sent outside approved scope (or documented remediation); verified private disk ownership, backups and isolated restore in Europe, plus legal/security review for remaining Microsoft/subprocessor exceptions. If not satisfied: `EU_RESIDENCY_QUALIFIED=NO`, customer-data UAT/production remains blocked. It is acceptable to demonstrate only synthetic data pending that qualification, without describing the demo as EU-qualified.
+
+References (verify product-specific conditions and updates):
+- https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn
+- https://learn.microsoft.com/en-us/entra/fundamentals/data-storage-eu
+- https://learn.microsoft.com/en-us/azure/reliability/regions-paired
+- https://learn.microsoft.com/en-us/azure/azure-monitor/logs/workspace-design
+- https://learn.microsoft.com/en-us/azure/postgresql/backup-restore/concepts-backup-restore
+
+## Delivery strategy — do not block a commercial pilot on optional PostgreSQL
+
+**Stage A: EU-resident SQLite-based pilot / UAT.** Deliver the current working product and complete available UAT evidence using the existing SQLite business adapter **only after** EU residency and AZ-03 persistence/backup/restore evidence are verified. Declare precisely which journeys, CI lanes and integrated-host checks passed/failed; a draft PR, Web 200 or unit-test PASS is not production go-live. With synthetic fixtures, a pre-contract demo can proceed before live-data approval while explicitly showing `NOT_QUALIFIED` for blocked release conditions. No silent change of scope.
+
+**Stage B: commercial contract or separately approved update.** PostgreSQL becomes a distinct versioned delivery/acceptance milestone *if* the client requires it, the load or compliance/SLO needs justify it, and total regional cost is approved. Post-contract delivery avoids provisioning a managed database before there is an owner and budget. A future product update is legitimate; it must not silently migrate live databases, dual-write, or switch active driver while requests are in flight. Secure migrations require a new immutable candidate, backed-up source, quiesced write window, data/receipt reconciliation and reviewed cutover. Clients must know upfront that Stage A uses SQLite and Stage B is not already implemented.
+
+**Scope/effort assessment (planning range, not commitment):**
+- Moving an empty/synthetic-data Azure deployment to approved European regions is usually a **low-to-medium** infra and integration change. Moving an existing real-data installation is **medium-to-high** because backup copies, vaults, keys, logs, cross-region transfers and deletion/retention evidence must be reconciled; do not assume the current Azure is in Europe.
+- A **Sucafina-business-only** PostgreSQL driver is **medium-to-high (~6–7/10)** engineering complexity. `local-store.ts` is ~677 LOC, with separate auth-maintenance (~294 LOC), backup, asset, startup and extensive conformance fixtures. A rough multi-week engineer effort is plausible for implementation, dual-driver tests, integration, load, incident recovery and an audited cutover, but depends on the final candidate, source size, availability of Azure credentials/CI and required performance.
+- Migrating the separate **Orchestra core** SQLite + Drizzle schemas/migration history at the same time is **high (~9/10)** and NOT proposed.
+- Most business state is stored in a handful of per-surface JSON snapshots. A PostgreSQL adapter that preserves that model is a **compatibility win, not automatic concurrency win**: it still locks hot snapshot rows and adds network round trips. Benchmark before promising lower latency or higher throughput; finer-grained normalization would be another, much larger project.
+
+**Contractual representation:** call Stage A `European pilot/UAT` if qualified, not `fully production-ready ERP` unless every mandatory Azure/identity/restore/release/CI check is real and green. Stage B can be offered as a documented post-acceptance version update with budget, tests and rollback guarantees, never as an invisible mandatory completion left after customer acceptance.
+
 ## Why no automatic SQLite fallback
 
 If PostgreSQL becomes unavailable after accepting writes, a local SQLite copy cannot be assumed current. Automatically writing to it would split decisions, purchase identifiers, budget revisions, documents, permissions and receipts into incompatible histories. Silent fallback also masks operational outages. Therefore:
@@ -37,7 +78,7 @@ Reference public list prices checked 2026-11-17; actual subscription/region, sto
 | Burstable B2s | 2 vCores / 4 GiB | USD 49.64/month |
 | General Purpose D2ds v5 | 2 vCores / 8 GiB | approximately USD 130/month |
 
-Reference Premium SSD 32 GiB: about USD 3.68/month at published USD 0.115/GiB-month, **excluding any regional premium or extra provisioned IOPS**, and network/overage. Backups up to the provisioned data-storage capacity are included in the publicly described service pricing; excess backup storage incurs charges. Regional third-party indicative Brazil South rates can be materially higher than these public reference prices; obtain an exact quote in the actual resource group region and subscription. HA adds a standby with its own compute and storage bill. Burstable CPU credits can exhaust under sustained load; Microsoft positions it primarily for dev/test, not production with sustained performance demands.
+Reference Premium SSD 32 GiB: about USD 3.68/month at published USD 0.115/GiB-month, **excluding any regional premium or extra provisioned IOPS**, and network/overage. Backups up to the provisioned data-storage capacity are included in the publicly described service pricing; excess backup storage incurs charges. Those reference prices are NOT valid quotations for the approved European region; obtain a written Azure Pricing Calculator estimate for the exact EU-region subscription before provisioning. HA adds a standby with its own compute and storage bill. Burstable CPU credits can exhaust under sustained load; Microsoft positions it primarily for dev/test, not production with sustained performance demands.
 
 Sources:
 - https://azure.microsoft.com/en-us/pricing/details/postgresql/flexible-server/
@@ -49,7 +90,7 @@ Compare three **mutually exclusive** operating choices:
 2. **PostgreSQL on the SAME Azure VM:** no new fixed VM SKU, but database competes for host CPU/RAM/disk IOPS, shares failure domain, and creates Linux patching, WAL archive/PITR, restore and monitoring ownership. Not a free HA solution. Avoid treating this as an automatic improvement over SQLite.
 3. **Managed Azure PostgreSQL:** extra fixed monthly DB compute and network/storage charges, less CPU/RAM consumed by the app VM, built-in database backup/PITR and separate fault boundary. Prefer for sustained multiuser corporate production **if measured load and approved budget justify it**. Start without HA until SLO/RTO/RPO require it; never claim HA from backups alone.
 
-**Decision gate:** collect actual Azure region, VM SKU, app memory/CPU/IOPS headroom, observed concurrent users/writers, p50/p95 request and commit latency, database size and monthly budget. Compare a realistic workload on SQLite vs managed PostgreSQL using the same candidate and data distribution. Don't introduce extra compute or add a second active driver unless the measurement and operational goals justify it.
+**Decision gate:** require the approved European region and collect actual Azure region, VM SKU, app memory/CPU/IOPS headroom, observed concurrent users/writers, p50/p95 request and commit latency, database size and monthly budget. Compare a realistic workload on SQLite vs managed PostgreSQL using the same candidate and data distribution. Don't introduce extra compute or add a second active driver unless the measurement and operational goals justify it.
 
 ## Minimal PostgreSQL business adapter
 
