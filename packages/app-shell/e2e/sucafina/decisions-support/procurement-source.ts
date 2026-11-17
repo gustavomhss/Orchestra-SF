@@ -2,22 +2,17 @@ import { expect, test, type Locator, type Page } from "@playwright/test"
 import { asRecord } from "./journey"
 
 export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
-  const response = await page.goto(`${origin}/sucafina/procurement?page=Requests`)
-  console.log(`[sf decisions:procurement] GET Requests status=${response?.status()} content-type=${response?.headers()["content-type"]}`)
+  await page.goto(`${origin}/sucafina/procurement?page=Requests`)
   const form = page.locator('form[data-command="create"][data-page="Requests"]')
-  if (await form.count() !== 1) {
-    console.log(`[sf decisions:procurement] unexpected form count: ${(await form.count())}; page=${page.url().split("?")[0]}`)
-    console.log(`[sf decisions:procurement] response preview: ${(await response?.text())?.slice(0, 1600)}`)
-  }
   await expect(form).toHaveCount(1)
-  console.log(`[sf decisions:procurement] form labels=${(await form.locator("label").allTextContents()).map((label) => label.trim()).join(" | ")}`)
-  console.log(`[sf decisions:procurement] form fields=${(await form.locator("input,select,textarea").evaluateAll((fields) => fields.map((field) => field.tagName + ":" + field.getAttribute("name")))).join(", ")}`)
   const title = "CI Decisions — explicit requisition proposal"
-  console.log("[sf decisions:procurement] Title field count", await form.getByLabel("Title", { exact: true }).count())
-  await expect(form.getByLabel("Title", { exact: true })).toHaveCount(1)
   await form.getByLabel("Title", { exact: true }).fill(title)
-  console.log("[sf decisions:procurement] Title filled")
-  await form.getByLabel("Type", { exact: true }).selectOption("service")
+  // This native select has dynamic option text inside its label. Scope by the
+  // actual submitted field rather than requiring an exact accessible name.
+  const type = form.locator('select[name="pr.type"]')
+  await expect(type).toHaveCount(1)
+  await expect(type.locator('option[value="service"]')).toHaveCount(1)
+  await type.selectOption("service")
   await form.getByLabel("Description", { exact: true }).fill("Human requisition for the Decisions approval and recovery journey")
   await form.getByLabel("Estimated amount", { exact: true }).fill("100")
   await form.getByLabel("Cost centre", { exact: true }).fill("Decisions verification")
