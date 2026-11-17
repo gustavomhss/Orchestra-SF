@@ -212,7 +212,7 @@ function load(snapshot: Snapshot): Store {
     settings,
     form: {
       currency: text(settings.currency),
-      ...settings,
+      ...object(settings),
     },
     issued: { pr: [], po: [], ...object(stored.issued) },
     sup: Array.isArray(stored.sup) ? stored.sup.filter((code): code is string => typeof code === "string") : [],
