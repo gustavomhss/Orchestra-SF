@@ -67,11 +67,20 @@ export async function verifyDistributionOnDisk(distribution, ctx, root){
   const privateDir=await privateDirectory(path.join(root,"distributions"))
   const cliRaw=await privateBytes(path.join(privateDir,"build-receipt.json"),privateDir)
   const factoryRaw=await privateBytes(path.join(privateDir,"factory-package-receipt.json"),privateDir)
+  const runRaw=await privateBytes(path.join(privateDir,"factory-run.json"),privateDir)
   requireProof(sha256(cliRaw)===d.cli.buildReceiptSha256 &&
-    sha256(factoryRaw)===d.factory.factoryReceiptSha256,
+    sha256(factoryRaw)===d.factory.factoryReceiptSha256 &&
+    sha256(runRaw)===d.factory.githubRunSnapshotSha256,
     "F04_DISTRIBUTION_RAW_RECEIPT_DIGEST_MISMATCH")
   const cli=JSON.parse(cliRaw.toString("utf8"))
   const factory=JSON.parse(factoryRaw.toString("utf8"))
+  const runMeta=JSON.parse(runRaw.toString("utf8"))
+  requireProof(runMeta.id===d.factory.runId &&
+    runMeta.head_sha===ctx.candidateSha &&
+    runMeta.run_attempt===d.factory.attempt &&
+    runMeta.event===factory.eventName &&
+    runMeta.status==="completed" && runMeta.conclusion==="success",
+    "F04_FACTORY_GITHUB_REAL_RUN_HEAD_NOT_RECEIPT_SOURCE")
   const binSha=assertCliBuildReceipt(cli,ctx.candidateSha)
   assertFactoryReceipt(factory,ctx.candidateSha,d.factory.githubRunHeadSha)
   requireProof(cli.archive.sha256===d.cli.archiveSha256 &&
@@ -117,7 +126,8 @@ export async function verifyDistributionOnDisk(distribution, ctx, root){
   const a7manifest=JSON.parse(await readFile(path.join(release,"manifest.json"),"utf8"))
   requireProof(a7manifest.schema==="orchestra-sf.azure-bundle.v1" &&
     a7manifest.candidateSha===ctx.candidateSha &&
-    a7manifest.treeSha===ctx.treeSha,
+    a7manifest.treeSha===ctx.treeSha &&
+    Array.isArray(a7manifest.files),
     "F04_A7_DEPLOYED_MANIFEST_WRONG_SHA_OR_TREE")
   const a7archive=(await readFile(path.join(release,".archive-sha256"),"utf8")).trim()
   requireProof(a7archive===ctx.artifactSha256,
@@ -137,6 +147,9 @@ export async function verifyDistributionOnDisk(distribution, ctx, root){
     const relative=asset.path.slice("bin/product/ai/".length)
     const file=path.join(d.installed.policyRoot,relative)
     expected.add(file)
+    const admittedAsset=a7manifest.files.find(x=>x.path==="product/ai/"+relative)
+    requireProof(admittedAsset?.sha256===asset.sha256 &&
+      admittedAsset.mode==="0444", "F04_A7_BUNDLE_MANIFEST_MISSING_FACTORY_ASSET")
     requireProof(await hashFile(file)===asset.sha256,
       "F04_INSTALLED_FACTORY_POLICY_ASSET_DIGEST_DRIFT")
   }
@@ -152,6 +165,16 @@ export async function verifyDistributionOnDisk(distribution, ctx, root){
   requireProof(seen.length===24 && seen.every(f=>expected.has(f)) &&
     expected.size===24,
     "F04_INSTALLED_FACTORY_POLICY_ROSTER_INCOMPLETE")
+
+  const admittedBinary=a7manifest.files.find(v=>v.path==="bin/orchestra")
+  const admittedFactory=a7manifest.files.find(v=>v.path==="factory/installation.mjs")
+  const admittedWeb=a7manifest.files.find(v=>v.path==="web/index.html")
+  requireProof(admittedBinary?.sha256===d.cli.binarySha256 &&
+    admittedFactory?.sha256===d.factory.bundleSha256 &&
+    admittedWeb?.sha256===webFile.sha256 &&
+    a7manifest.files.filter(v=>typeof v.path==="string" &&
+      v.path.startsWith("product/ai/")).length===24,
+    "F04_A7_MANIFEST_DID_NOT_ADMIT_CLI_WEB_FACTORY_AND_24_POLICY_ASSETS")
   return {sourceSha:ctx.candidateSha,cliBinarySha256:binSha,
     factoryBundleSha256:factory.bundleSha256,archiveSha256:ctx.artifactSha256,
     policyAssetCount:expected.size, status:"DISTRIBUTION_BYTES_VERIFIED_NOT_LIVE_F04_ACCEPTANCE"}
