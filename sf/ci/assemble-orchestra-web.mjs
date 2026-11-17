@@ -1,11 +1,14 @@
 // Release-only assembler. Run with Bun 1.3.14 on the exact checked-out source SHA.
 // Does not deploy, start a service, or claim authenticated native-browser acceptance.
 import { createHash } from "node:crypto"
-import { spawnSync } from "node:child_process"
 import { chmod, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
+import { Effect } from "effect"
+import { ChildProcess } from "effect/unstable/process"
+import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { AppProcess } from "@orchestra/core/process"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 const cli = path.join(root, "apps/cli")
@@ -20,18 +23,32 @@ if (!expectedSHA || !/^[0-9a-f]{40}$/.test(expectedSHA))
 if (process.platform !== "linux" || process.arch !== "x64" || process.versions.bun !== "1.3.14")
   throw new Error("SF_ORCHESTRA_WEB_LINUX_X64_BUN_1_3_14_REQUIRED")
 
+const processLayer = LayerNode.compile(AppProcess.node)
+const outputLimit = 16 * 1024 * 1024
+async function run(cmd, cwd, env, stream = false) {
+  const result = await Effect.runPromise(AppProcess.Service.use((app) => app.run(
+    ChildProcess.make(cmd[0], cmd.slice(1), { cwd, env, extendEnv: false, stdin: "ignore" }),
+    stream ? {
+      combineOutput: true,
+      maxOutputBytes: outputLimit,
+      inspect: (chunk) => process.stdout.write(chunk),
+    } : { maxOutputBytes: outputLimit, maxErrorBytes: outputLimit },
+  )).pipe(Effect.provide(processLayer)))
+  if (result.exitCode !== 0)
+    throw new Error(`SF_ORCHESTRA_WEB_COMMAND_FAILED: ${cmd.join(" ")}`)
+  return result
+}
+
 // The source SHA is not enough: staged, unstaged, untracked and nested
 // submodule edits can change compiled bytes without changing HEAD.
 // Check BEFORE any build output is modified and again before certification.
-function requireCleanCheckout(phase) {
-  const observed = spawnSync("git", ["rev-parse", "--verify", "HEAD"], { cwd: root, encoding: "utf8" })
-  if (observed.error || observed.status !== 0 || observed.stdout.trim() !== expectedSHA)
+async function requireCleanCheckout(phase) {
+  const observed = await run(["git", "rev-parse", "--verify", "HEAD"], root, process.env)
+  if (observed.stdout.toString("utf8").trim() !== expectedSHA)
     throw new Error("SF_ORCHESTRA_WEB_SOURCE_SHA_MISMATCH")
-  const porcelain = spawnSync("git", [
-    "status", "--porcelain=v1", "-z", "--untracked-files=all", "--ignore-submodules=none",
-  ], { cwd: root, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 })
-  if (porcelain.error || porcelain.status !== 0)
-    throw new Error("SF_ORCHESTRA_WEB_GIT_STATUS_UNAVAILABLE")
+  const porcelain = await run([
+    "git", "status", "--porcelain=v1", "-z", "--untracked-files=all", "--ignore-submodules=none",
+  ], root, process.env)
   if (porcelain.stdout.length)
     throw new Error(`SF_ORCHESTRA_WEB_DIRTY_WORKTREE_${phase}`)
 }
@@ -40,7 +57,7 @@ if (archiveWithinCheckout === "" ||
     (archiveWithinCheckout !== ".." && !archiveWithinCheckout.startsWith(".." + path.sep) &&
       !path.isAbsolute(archiveWithinCheckout)))
   throw new Error("SF_ORCHESTRA_WEB_ARCHIVE_OUTSIDE_CHECKOUT_REQUIRED")
-requireCleanCheckout("BEFORE_BUILD")
+await requireCleanCheckout("BEFORE_BUILD")
 
 // Vite publishes VITE_* values into client assets. This release has no
 // externally configured public VITE_* inputs: never inherit CI secrets or
@@ -76,8 +93,11 @@ for (const filename of brandFiles) {
 }
 
 async function command(cmd, cwd, env) {
-  const child = Bun.spawn({ cmd, cwd, env, stdout: "inherit", stderr: "inherit" })
-  if ((await child.exited) !== 0) throw new Error(`SF_ORCHESTRA_WEB_BUILD_FAILED: ${cmd.join(" ")}`)
+  try {
+    await run(cmd, cwd, env, true)
+  } catch {
+    throw new Error(`SF_ORCHESTRA_WEB_BUILD_FAILED: ${cmd.join(" ")}`)
+  }
 }
 
 const version = JSON.parse(await readFile(path.join(cli, "package.json"), "utf8")).version
@@ -158,7 +178,7 @@ try {
   // A verified archive is NOT a qualified installed/browser package. The
   // final SF_ORCHESTRA_WEB_PACKAGE_VERIFIED receipt must be withheld until
   // an isolated, authenticated native host proves CAP01/CAP02 on this SHA.
-  requireCleanCheckout("BEFORE_ARCHIVE_RECEIPT")
+  await requireCleanCheckout("BEFORE_ARCHIVE_RECEIPT")
   archiveVerified = true
   console.log("SF_ORCHESTRA_WEB_ARCHIVE_EXTRACTED_VERIFIED " + JSON.stringify({
     sourceSHA: expectedSHA, target, version, sha256, fileCount: manifest.files.length,
