@@ -307,11 +307,6 @@ jobs:
           test "$status" -eq 0
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
-          # CI-APP-BROWSER only: emit genuine raw case/file inventory for an
-          # independently checked baseline before the existing fail-closed gate.
-          if [ "$SF_SUITE_ID" = "CI-APP-BROWSER" ]; then
-            node script/sf-ci/gate.mjs coverage
-          fi
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
       - name: Publish only valid summary and receipt for a clean run
         if: success()
@@ -321,18 +316,6 @@ jobs:
           path: |
             sf-ci-evidence/${{ matrix.id }}/summary.json
             sf-ci-evidence/${{ matrix.id }}/receipt.json
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Preserve failed browser baseline evidence for independent review
-        if: failure() && matrix.id == 'CI-APP-BROWSER'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: sf-browser-baseline-candidate-${{ github.sha }}-${{ github.run_attempt }}
-          path: |
-            sf-ci-evidence/CI-APP-BROWSER/report.xml
-            sf-ci-evidence/CI-APP-BROWSER/selection.txt
-            sf-ci-evidence/CI-APP-BROWSER/summary.json
           if-no-files-found: error
           retention-days: 7
 
