@@ -122,6 +122,7 @@ test("search suppresses an earlier match when a later document read changes its 
       host: fixture.authority.host, state: fixture.authority.state, documents: fixture.documents.documents.documents,
       parser: createPrivateDocumentParser(sfDocumentLimits), resolveFieldSchema: fixture.documents.schemas.resolve, verifyFieldSchema: fixture.documents.schemas.verify,
       operationIdentity: (context) => context.kind === "ui" ? fixture.authority.ui.operationIdentity(context) : undefined,
+      rejectDocument: async () => false,
       confirmDocument: async () => false, createId: randomUUID, now: () => fixture.at,
       reader: async (documentId, context, candidateId, ref) => {
         if (documentId === "asset-2" && !changed) { changed = true; await changeAsset(fixture, "asset-1") }
