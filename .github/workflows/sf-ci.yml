@@ -228,6 +228,9 @@ jobs:
     timeout-minutes: 10
     env:
       ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+      # Canonical focused-file mode; full matrix CI-SF retains its suite-wide
+      # omni control. These HTTP tests declare no omni-spawn requirement.
+      ORCHESTRA_OMNI_CONTROL: declared
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:

@@ -47,7 +47,9 @@ test("first visit to Procurement Requests on an empty installation renders a rea
     // Defaults do not grant an identity access or relax a revoked session.
     const ungranted = await fixture.get("reader-without-product-grant", "Requests")
     expect(ungranted.response.status).toBe(403)
-    fixture.revoke("requester")
+    // Revoke after admission but before the actual C02 page is rendered:
+    // a pre-revoked unauthenticated request is a 403, not an in-flight 401.
+    fixture.interleave(async () => { fixture.revoke("requester") })
     const revoked = await fixture.get("requester", "Requests")
     expect(revoked.response.status).toBe(401)
   } finally { await fixture.dispose() }
