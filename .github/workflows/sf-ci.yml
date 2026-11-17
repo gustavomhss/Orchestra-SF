@@ -78,7 +78,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          evidence="$GITHUB_WORKSPACE/sf-e2e-typecheck-evidence"
+          evidence="$RUNNER_TEMP/sf-e2e-typecheck-evidence"
           mkdir -p "$evidence"
           test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
@@ -112,7 +112,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: sf-e2e-inclusion-${{ github.sha }}-${{ github.run_attempt }}
-          path: sf-e2e-typecheck-evidence
+          path: ${{ runner.temp }}/sf-e2e-typecheck-evidence
           if-no-files-found: error
           retention-days: 14
       - name: Verify Linux web production build
@@ -123,33 +123,38 @@ jobs:
         env:
           SF_PR_BASE: ${{ github.event.pull_request.base.sha }}
           GH_READ_TOKEN: ${{ github.token }}
+          # Owner approval of a protected-path change travels as the
+          # guardrail-approved label; the guard engine reads this env.
+          GUARDRAIL_APPROVED: ${{ contains(github.event.pull_request.labels.*.name, 'guardrail-approved') && 'protected-paths' || '' }}
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
-          mkdir -p guard-evidence
+          evidence_dir="$RUNNER_TEMP/guard-evidence"
+          mkdir -p "$evidence_dir"
           # checkout has persist-credentials:false; the read-only token exists
           # only for this fetch and is never saved in git config or artifacts.
           auth="$(printf 'x-access-token:%s' "$GH_READ_TOKEN" | base64 -w0)"
           GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
             GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
             git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev
-          if [ -z "$SF_PR_BASE" ]; then
-            GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
-              GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
-              git fetch --no-tags origin +refs/heads/close-final-candidate:refs/remotes/origin/close-final-candidate
-            SF_PR_BASE="$(git rev-parse refs/remotes/origin/close-final-candidate)"
-          fi
+          # The event's base sha can lag behind the base branch. Compare against the
+          # real fork point so base-branch churn is never attributed to this PR.
+          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+            GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+            git fetch --no-tags origin +refs/heads/close-final-candidate:refs/remotes/origin/close-final-candidate
+          SF_PR_BASE="$(git merge-base refs/remotes/origin/close-final-candidate HEAD)"
+          test -n "$SF_PR_BASE"
           unset auth GH_READ_TOKEN
           git cat-file -e "$SF_PR_BASE^{commit}"
           dev_sha="$(git rev-parse 'origin/dev^{commit}')"
           test -n "$dev_sha"
           set +e
-          bun run check:spawn-imports > guard-evidence/spawn.log 2>&1
+          bun run check:spawn-imports > "$evidence_dir/spawn.log" 2>&1
           spawn_status=$?
-          bun run check:guards --base origin/dev > guard-evidence/guard-dev.log 2>&1
+          bun run check:guards --base origin/dev > "$evidence_dir/guard-dev.log" 2>&1
           dev_status=$?
-          bun run check:guards --base "$SF_PR_BASE" > guard-evidence/guard-pr-base.log 2>&1
+          bun run check:guards --base "$SF_PR_BASE" > "$evidence_dir/guard-pr-base.log" 2>&1
           pr_status=$?
           set -e
           SF_GUARD_DEV_SHA="$dev_sha" SF_GUARD_PR_SHA="$SF_PR_BASE" \
@@ -172,10 +177,10 @@ jobs:
                   { command: "bun run check:guards --base <PR base SHA>", status: Number(process.env.SF_GUARD_PR_STATUS) },
                 ],
               }
-              writeFileSync("guard-evidence/receipt.json", JSON.stringify(receipt, null, 2) + "\n")
+              writeFileSync(process.env.RUNNER_TEMP + "/guard-evidence/receipt.json", JSON.stringify(receipt, null, 2) + "\n")
             '
-          sha256sum guard-evidence/{spawn,guard-dev,guard-pr-base}.log guard-evidence/receipt.json \
-            > guard-evidence/sha256sums.txt
+          sha256sum "$evidence_dir"/{spawn,guard-dev,guard-pr-base}.log "$evidence_dir"/receipt.json \
+            > "$evidence_dir/sha256sums.txt"
           printf 'guards canonical dev=%s status=%s; PR base=%s status=%s; spawn=%s\n' \
             "$dev_sha" "$dev_status" "$SF_PR_BASE" "$pr_status" "$spawn_status"
           test "$spawn_status" -eq 0 && test "$dev_status" -eq 0 && test "$pr_status" -eq 0
@@ -184,7 +189,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: sf-guard-bases-${{ github.sha }}-${{ github.run_attempt }}
-          path: guard-evidence
+          path: ${{ runner.temp }}/guard-evidence
           if-no-files-found: error
           retention-days: 14
   omni:
