@@ -43,7 +43,9 @@ jobs:
       - name: Compile, package, archive, extract outside checkout, and load factory
         working-directory: apps/cli
         env:
-          ORCHESTRA_OMNI_CONTROL: suite
+          # A factory packaging proof does not invoke the orchestrated core spawner.
+          # 'declared' is the enforced focused-test mode, never a fake Omni pass.
+          ORCHESTRA_OMNI_CONTROL: declared
           ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
         run: bun test ./test/factory-distribution-linux.test.ts --timeout 1800000
       - name: Upload factual proof receipt
