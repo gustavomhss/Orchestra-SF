@@ -390,7 +390,7 @@ async function cleanupStages(parent: string, active: ReadonlySet<string>, minimu
     const location = join(parent, name)
     if (active.has(location)) continue
     const info = await privateDirectory(location)
-    if (Date.now() - info.mtimeMs < minimumAgeMs) continue
+    if (minimumAgeMs > 0 && Date.now() - info.mtimeMs < minimumAgeMs) continue
     const files = await readdir(location)
     if (files.some((file) => !stageFile.test(file))) throw new Error("Unsafe orphan backup staging directory")
     signal?.throwIfAborted()
