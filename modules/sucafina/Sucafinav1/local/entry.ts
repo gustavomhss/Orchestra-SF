@@ -52,14 +52,16 @@ import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 
+type SfFactoryContext = { origin: string; createHostRuntime?: CreateSfHostRuntime; sourceRoot?: string }
+
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
-export default async function installation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }) {
+export default async function installation(context: SfFactoryContext) {
   if (process.env.SUCAFINA_MICROSOFT_CONFIG !== undefined) return createMicrosoftInstallation(context, process.env.SUCAFINA_MICROSOFT_CONFIG)
   return createLocalInstallation(context, process.env.SUCAFINA_LOCAL_CONFIG)
 }
 
 export async function createMicrosoftInstallation(
-  context: { origin: string; createHostRuntime?: CreateSfHostRuntime },
+  context: SfFactoryContext,
   file: string | undefined,
   environment: Readonly<Record<string, string | undefined>> = process.env,
   overrides: { fetch?: EntraOptions["fetch"]; now?: () => Date } = {},
@@ -69,7 +71,7 @@ export async function createMicrosoftInstallation(
   return { ...configured, transport: microsoft.transport }
 }
 
-export async function createLocalInstallation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
+export async function createLocalInstallation(context: SfFactoryContext, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
   if (!file) throw new Error("Explicit private installation configuration required")
   const loaded = await loadLocalConfiguration(file)
   if (context.origin !== loaded.config.origin) throw new Error("Installation origin mismatch")
@@ -78,7 +80,7 @@ export async function createLocalInstallation(context: { origin: string; createH
 }
 
 export async function createConfiguredInstallation(
-  context: { origin: string; createHostRuntime?: CreateSfHostRuntime },
+  context: SfFactoryContext,
   loaded: Awaited<ReturnType<typeof loadLocalConfiguration>>,
   microsoft?: Awaited<ReturnType<typeof prepareMicrosoftInstallation>>,
 ) {
@@ -146,7 +148,7 @@ export async function createConfiguredInstallation(
   let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
   let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
   let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
-  runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
+  runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: context.sourceRoot ?? path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
     operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
     nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),

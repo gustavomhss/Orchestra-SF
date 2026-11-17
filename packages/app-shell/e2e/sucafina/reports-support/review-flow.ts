@@ -174,10 +174,24 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await row.getByRole("button", { name: "Edit", exact: true }).click()
     const editor = source.getByRole("dialog", { name: "Edit record", exact: true })
     await expect(editor).toBeVisible()
-    await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("110")
-    const version = Number(await form.getAttribute("data-version"))
+    // The source renders editor forms inside row dialogs. Assert the exact
+    // producer-owned modal is actionable instead of waiting the entire 180s
+    // scenario budget on a detached/hidden forecast control.
+    const activeForm = editor.locator('form[data-command="save-entry"][data-record="reports-opex-01"]')
+    await expect(activeForm).toHaveCount(1)
+    // The producer renders each monthly save form inside a closed native
+    // <details> beneath the row's visible Edit dialog. Open that real human
+    // disclosure before interacting; a visible dialog alone does not expand it.
+    const monthPanel = activeForm.locator("xpath=ancestor::details[1]")
+    await expect(monthPanel).toHaveCount(1)
+    await monthPanel.locator("summary").click()
+    await expect(monthPanel).toHaveAttribute("open", "")
+    const forecast = activeForm.getByLabel("Forecast", { exact: true })
+    await expect(forecast).toBeVisible({ timeout: 10_000 })
+    await expect(forecast).toHaveValue("110")
+    const version = Number(await activeForm.getAttribute("data-version"))
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
-    await form.getByLabel("Forecast", { exact: true }).fill("190")
+    await forecast.fill("190")
     const previewed = source.waitForResponse((response) => response.url() === source.url() &&
       response.request().method() === "POST" && object(response.request().postDataJSON()).action === "preview-change")
     await form.getByRole("button", { name: "Save month", exact: true }).click()
@@ -221,8 +235,17 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
   await expect(button).toBeEnabled()
+  const reportRequest = page.waitForRequest((request) =>
+    request.method() === "POST" && new URL(request.url()).origin === app.origin &&
+    new URL(request.url()).pathname === new URL(app.dashboardURL).pathname &&
+    new URL(request.url()).searchParams.get("sf") === "review-report")
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
   await button.click()
+  // Producer-owned UI must actually issue the admitted POST; a visible button
+  // is not positive evidence of any export. Fail early for a missing request,
+  // but still require the actual 200 response and exact preserved selection.
+  const dispatched = await reportRequest
+  expect(dispatched.postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
   const response = await pending
   expect(response.status()).toBe(200)
   expect(response.request().postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
@@ -262,8 +285,16 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
+  const navigation = page.waitForNavigation({ waitUntil: "domcontentloaded" })
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   await page.getByRole("region", { name: "Prepare review", exact: true }).getByRole("button", { name: "Open meeting", exact: true }).click()
+  // Original CLI's openReview uses location.assign(reviewUrl(...)); establish
+  // that its real mounted meeting route is admitted BEFORE waiting on its
+  // subsequent current-authority review-read, never fabricating either read.
+  const opened = await navigation
+  expect(opened?.status(), "Original review navigation must be admitted").toBe(200)
+  expect(new URL(page.url()).searchParams.get("sf")).toBe("review")
+  expect(new URL(page.url()).searchParams.get("reviewRef")).toBe(saved.id)
   expect(object(await (await pending).json()).value).toEqual(saved)
   const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting).toHaveCount(1)

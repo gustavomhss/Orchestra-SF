@@ -13,7 +13,7 @@ import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../..
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
-import { SF_U11_REMAINING_COPY } from "./copy"
+import { sfU11Label, SF_U11_REMAINING_COPY } from "./copy"
 import {
   decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, prFromRecord,
   requestRef, requestVersion, uiCommandAction, validatePo, validatePr,
@@ -134,7 +134,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     newIntentRef: crypto.randomUUID() as SfIntentRef,
   })
   let inFlight: AbortController | undefined
-  const t = (key: Key) => language.t(key as Parameters<typeof language.t>[0])
+  const t = (key: Key) => sfU11Label(key, language.locale(), language.t(key as Parameters<typeof language.t>[0]))
   const routeRef = () => props.route.kind !== "entry" && props.route.kind !== "new"
     ? props.route.params.requestRef : undefined
   const selectedRef = () => routeRef() ?? view.selected
@@ -291,8 +291,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const editPo = (next: SfPoEdit) => {
     if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
   }
-  const stageAllowed = (action: SfRequestCommand) => {
-    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown || view.sending ||
+  const stageAllowed = (action: SfRequestCommand, reviewingThisDispatch = false) => {
+    // The initiating UI remains locked while sending; the exact reviewed
+    // dispatch must still recheck producer/CAS authority after digest rather
+    // than reject itself solely for owning that lock.
+    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown || (view.sending && !reviewingThisDispatch) ||
         prConflict() || poConflict() || prPending() || poPending()) return false
     const current = row()
     if (action === "create") return creating() && !!activePr()
@@ -428,7 +431,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           ownerKey: currentOwner.status === "ready" ? currentOwner.ownerKey : undefined,
           epoch: sf.generation(), prController: pr ? prDraft() : undefined,
           poController: po ? poDraft() : undefined, payload: JSON.stringify(input),
-        }) || !stageAllowed(review.action) ||
+        }) || !stageAllowed(review.action, true) ||
         (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
           activePr()?.baseVersion !== (review.ref ? review.version : null))) ||
         (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
@@ -787,12 +790,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     <SfPageFrame
       titleKey={copyKey("sf.u11.remaining.list")}
       context={[]} tabs={[]} activeTab={null}
-      primaryAction={actionAllowed("create") ? {
-        id: "create", labelKey: copyKey("sf.u11.remaining.new"), tone: "primary",
-        disabled: view.sending || view.outcomeUnknown, busy: view.sending,
-        onInvoke: () => setView({ creating: true, selected: undefined,
-          newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined }),
-      } : undefined}
+      primaryAction={undefined}
       secondaryActions={[]} density="comfortable"
       layout={view.layoutMode === "single" ? "reading" : "split"}
       onLayoutMode={(mode) => setView("layoutMode", mode)}
@@ -803,6 +801,15 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       }>
         <div class="sf-u11-layout">
           <div class="sf-u11-list">
+            {/* U11 leaf labels are local until I00 registers them in the shared dictionary.
+                Keep the authorized action visible, translated and keyboard accessible. */}
+            <Show when={actionAllowed("create")}>
+              <button type="button" class="mx-btn primary" disabled={view.sending || view.outcomeUnknown}
+                onClick={() => setView({ creating: true, selected: undefined,
+                  newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined })}>
+                {t("sf.u11.remaining.new")}
+              </button>
+            </Show>
             <label for={searchId}>{t("sf.u11.remaining.filter")}</label>
             <div class="sf-u11-filters">
               <input id={searchId} type="search" placeholder={t("sf.u11.remaining.filterPlaceholder")}

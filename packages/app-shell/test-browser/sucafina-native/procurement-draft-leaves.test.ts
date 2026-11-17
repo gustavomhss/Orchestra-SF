@@ -38,7 +38,7 @@ if (process.env.SF_PROCUREMENT_DRAFT_DOM !== "1") {
     versions: { "requests:PR-1": { version, by: "actor" } }, allowedActionIds: ["save", "create"] } })
   const waitFor = async (condition: () => unknown) => {
     for (let i = 0; i < 100; i++) { if (condition()) return; await new Promise((resolve) => setTimeout(resolve, 10)) }
-    throw new Error("Timed out waiting for procurement fixture")
+    throw new Error("Timed out waiting for procurement fixture; rendered UI: " + document.body.textContent?.trim().slice(0, 700))
   }
   const button = (node: HTMLElement, label: string) => [...node.querySelectorAll("button")].find((item) => item.textContent?.trim() === label)
   const mount = (kind: "sourcing" | "requisition", transport: SfTransport) => {
@@ -156,7 +156,7 @@ if (process.env.SF_PROCUREMENT_DRAFT_DOM !== "1") {
       await waitFor(() => view.node.querySelector('[data-field="description"] textarea'))
       edit(view.node.querySelector<HTMLTextAreaElement>('[data-field="description"] textarea')!, "private request edit")
       const save = button(view.node, "Save requisition draft") ?? button(view.node, "sf.u11.remaining.savePr")
-      expect(save).toBeDefined(); save!.click()
+      expect(save, `Rendered request actions: ${[...view.node.querySelectorAll("button")].map((item) => item.textContent?.trim()).join(" | ")}`).toBeDefined(); save!.click()
       await waitFor(() => view.node.querySelector('[data-component="sf-change-review"]'))
       view.node.querySelector<HTMLButtonElement>('.sf-s03-actions button.primary')!.click()
       await waitFor(() => view.node.querySelector('[data-draft-conflict="pr"]'))
@@ -181,7 +181,7 @@ if (process.env.SF_PROCUREMENT_DRAFT_DOM !== "1") {
       const record = view.captured.handle?.ready()?.drafts.peek(selected("pr.details"))
       expect(record?.snapshot()).toMatchObject({ value: { description: "retained record edit" } })
       const create = button(view.node, "Create request") ?? button(view.node, "sf.u11.remaining.new")
-      expect(create).toBeDefined(); create!.click()
+      expect(create, `Rendered request actions: ${[...view.node.querySelectorAll("button")].map((item) => item.textContent?.trim()).join(" | ")}`).toBeDefined(); create!.click()
       await waitFor(() => view.node.querySelector('[data-field="title"] input'))
       edit(view.node.querySelector<HTMLInputElement>('[data-field="title"] input')!, "new private request")
       const newButton = [...view.node.querySelectorAll<HTMLButtonElement>('[data-stage="pr"] button')].find((item) =>

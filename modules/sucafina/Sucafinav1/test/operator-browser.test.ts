@@ -34,8 +34,11 @@ test("Chrome follows the private enrollment gateway into actual HTML screens wit
       await page.locator(`body[data-surface="${surface}"]`).waitFor()
       expect(await page.locator("#content").innerText()).toContain("Homologação local")
       expect(await page.locator("body").innerText()).not.toContain("Microsoft 365 application is not configured")
-      const hrefs = await page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
+      // Count authoritative sidebar pages, not the separately admitted
+      // decision-controls navigation inside the product document.
+      const hrefs = await page.locator("aside.sidebar nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
       expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
+      expect(await page.locator('nav[aria-label="Controles de decisão"] a').getAttribute("href")).toBe("?sf=decision-controls")
       await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `operator-${surface}.png`), fullPage: true })
       for (const href of hrefs) {
         const screen = await page.goto(new URL(href, `http://localhost:4110/sucafina/${surface}`).href)

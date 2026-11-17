@@ -17,22 +17,41 @@ type Captured = Map<string, { bytes: Buffer; executable: boolean }>
 
 // Shares the stable, exclusively producer-owned namespace boundary documented in
 // docs/specs/runtime-closure/PRODUCER-BOUNDARY.md, including owned-path cleanup.
-export async function prepareDistribution(input: { dist: string; out: string; version: string; target: string }): Promise<DistributionManifest> {
+export async function prepareDistribution(input: { dist: string; out: string; version: string; target: string; web?: string }): Promise<DistributionManifest> {
   requireTarget(input.target, input.version)
   if (process.platform === "win32") {
     const { requireOrdinaryWindowsPath } = await import("./artifact-windows-root")
     requireOrdinaryWindowsPath(input.dist)
     requireOrdinaryWindowsPath(input.out)
   }
-  if ([input.dist, input.out].some((path) => !path || path.includes("\0") || path.split(/[\\/]/).includes("..")))
+  if ([input.dist, input.out, ...(input.web === undefined ? [] : [input.web])].some((path) => !path || path.includes("\0") || path.split(/[\\/]/).includes("..")))
     throw new Error("Unsafe distribution location")
   const source = resolve(input.dist, `cli-${input.target}`)
   const output = resolve(input.out)
-  if (source === output || source.startsWith(output + sep) || output.startsWith(source + sep))
+  const sources = [source, ...(input.web === undefined ? [] : [resolve(input.web)])]
+  if (sources.some((item) => item === output || item.startsWith(output + sep) || output.startsWith(item + sep)))
     throw new Error("Distribution source/output overlap")
-  const captured = await capture(source)
-  if ([...captured.keys()].some((file) => file !== "package.json" && !file.startsWith("bin/")))
+  const loaded = await Promise.all(sources.map(capture))
+  const nativeCaptured = loaded[0]
+  const webCaptured = input.web === undefined ? undefined : loaded[1]
+  // The Web build can retain private debugging maps for the builder or Sentry.
+  // They are never part of an installed/public distribution.
+  if (webCaptured) {
+    for (const [file, asset] of webCaptured) {
+      if (isWebSourceMap(file)) {
+        webCaptured.delete(file)
+        continue
+      }
+      if (/\.(?:js|css)$/i.test(file) && /sourceMappingURL\s*=\s*data:/i.test(asset.bytes.toString("utf8")))
+        throw new Error(`Public web inline sourcemap forbidden: ${file}`)
+    }
+  }
+  if ([...nativeCaptured.keys()].some((file) => file !== "package.json" && !file.startsWith("bin/")))
     throw new Error("Unexpected build root file")
+  if (webCaptured && !webCaptured.has("index.html")) throw new Error("Missing web entrypoint: index.html")
+  if (webCaptured && [...nativeCaptured.keys()].some((file) => file === "bin/web" || file.startsWith("bin/web/")))
+    throw new Error("Distribution web path conflict")
+  const captured = new Map([...nativeCaptured, ...(webCaptured ? [...webCaptured].map(([path, file]) => [`bin/web/${path}`, file] as [string, { bytes: Buffer; executable: boolean }]) : [])].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0))
   requirePayload(captured, input.target, input.version)
   const manifest: DistributionManifest = {
     schema: "orchestra-distribution-v1", version: input.version, target: input.target,
@@ -62,12 +81,12 @@ export async function prepareDistribution(input: { dist: string; out: string; ve
       }
       return { ancestors, missing: false }
     }
-    const origin = walk(source)
+    const origins = sources.map((dir) => walk(dir))
     const destination = walk(output, true)
     // Nofollow identity checks catch case aliases, including missing suffixes,
     // before any output ancestor is created in the stable producer-owned namespace.
-    if (destination.ancestors.some((entry) => entry.identity === origin.ancestors.at(-1)!.identity) ||
-      (!destination.missing && origin.ancestors.some((entry) => entry.identity === destination.ancestors.at(-1)!.identity)))
+    if (origins.some((origin) => destination.ancestors.some((entry) => entry.identity === origin.ancestors.at(-1)!.identity) ||
+      (!destination.missing && origin.ancestors.some((entry) => entry.identity === destination.ancestors.at(-1)!.identity))))
       throw new Error("Distribution source/output overlap")
     const absolute = dirname(output)
     const root = parse(absolute).root
@@ -198,11 +217,25 @@ function verifyCaptured(captured: Captured, expected?: { version?: string; targe
   return value
 }
 
+function isWebSourceMap(file: string) {
+  return /\.map(?:\.(?:gz|br))?$/i.test(file)
+}
+
 function requirePayload(captured: Captured, target: string, version: string) {
+  // Reject a manually reconstructed or modified payload that reintroduces maps.
+  for (const [file, asset] of captured) {
+    if (!file.startsWith("bin/web/")) continue
+    if (isWebSourceMap(file)) throw new Error("Public web sourcemap forbidden")
+    if (/\.(?:js|css)$/i.test(file) && /sourceMappingURL\s*=\s*data:/i.test(asset.bytes.toString("utf8")))
+      throw new Error(`Public web inline sourcemap forbidden: ${file}`)
+  }
   const tuple = requireTarget(target, version)
   const metadata = JSON.parse(captured.get("package.json")?.bytes.toString("utf8") ?? "null")
   if (!metadata || metadata.name !== `@humanguardrail/cli-${target}` || metadata.version !== version || JSON.stringify(metadata.os) !== JSON.stringify([tuple.os]) || JSON.stringify(metadata.cpu) !== JSON.stringify([tuple.arch]))
     throw new Error("Distribution package tuple/version mismatch")
+  if (metadata.sfFactory !== undefined && metadata.sfFactory !== "bin/local/entry.mjs")
+    throw new Error("Invalid SF factory package declaration")
+  requireSfFactory(captured, metadata.sfFactory === "bin/local/entry.mjs")
   const omni = omniTargets[target]
   if (!omni) throw new Error("Missing omni target row")
   const executable = `bin/orchestra${tuple.os === "win32" ? ".exe" : ""}`
@@ -221,6 +254,70 @@ function requirePayload(captured: Captured, target: string, version: string) {
     if (file.endsWith(".node") && !nativeHeader(value.bytes, tuple.os, NATIVE_MACHINES[`${tuple.os}-${tuple.arch}`]!))
       throw new Error(`Native binding target mismatch: ${file}`)
   }
+}
+
+/**
+ * Backward-compatible native distribution contract: legacy CLI fixtures do not
+ * claim an SF factory. A current build explicitly declares one in package.json,
+ * and then *all* of the factory, policy bytes and integrity ledger are mandatory.
+ */
+function requireSfFactory(captured: Captured, declared: boolean) {
+  const scope = [...captured.keys()].filter((name) =>
+    name.startsWith("bin/local/") || name.startsWith("bin/product/ai/"))
+  if (!declared) {
+    if (scope.length) throw new Error("Undeclared SF factory files")
+    return
+  }
+  const entry = captured.get("bin/local/entry.mjs")
+  const descriptor = captured.get("bin/local/closure.json")
+  if (!entry || !descriptor || entry.executable || descriptor.executable)
+    throw new Error("Missing SF factory entry or closure")
+  const closure: unknown = JSON.parse(descriptor.bytes.toString("utf8"))
+  if (!closure || typeof closure !== "object" || Array.isArray(closure) ||
+    Object.keys(closure).sort().join(",") !== "assets,bundle,entry,inputs,schema" ||
+    !("schema" in closure) || closure.schema !== "sf-factory-closure-v1" ||
+    !("entry" in closure) || closure.entry !== "modules/sucafina/Sucafinav1/local/entry.ts" ||
+    !("bundle" in closure) || !closure.bundle || typeof closure.bundle !== "object" ||
+    !("path" in closure.bundle) || closure.bundle.path !== "bin/local/entry.mjs" ||
+    !("sha256" in closure.bundle) || closure.bundle.sha256 !== hash(entry.bytes) ||
+    !("inputs" in closure) || !Array.isArray(closure.inputs) || !closure.inputs.length ||
+    !("assets" in closure) || !Array.isArray(closure.assets) || closure.assets.length !== 24)
+    throw new Error("Invalid SF factory closure descriptor")
+  const inputs = closure.inputs as unknown[]
+  const assets = closure.assets as unknown[]
+  const validHash = (value: unknown): value is string => typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
+  const safeRepoPath = (value: unknown): value is string =>
+    typeof value === "string" && value.length > 0 && !value.startsWith("/") &&
+    !value.includes("\\") && value.split("/").every((part) => part && part !== "." && part !== "..")
+  if (inputs.some((value) => !value || typeof value !== "object" ||
+    Object.keys(value).sort().join(",") !== "path,sha256" ||
+    !("path" in value) || !safeRepoPath(value.path) ||
+    !("sha256" in value) || !validHash(value.sha256)) ||
+    new Set(inputs.map((value) => (value as { path: string }).path)).size !== inputs.length)
+    throw new Error("Invalid SF factory compiler inputs")
+  const names: string[] = []
+  for (const value of assets) {
+    if (!value || typeof value !== "object" ||
+      Object.keys(value).sort().join(",") !== "path,sha256" ||
+      !("path" in value) || !safeRepoPath(value.path) ||
+      !("sha256" in value) || !validHash(value.sha256))
+      throw new Error("Invalid SF factory asset record")
+    const asset = value as { path: string; sha256: string }
+    const file = captured.get(asset.path)
+    if (!file || file.executable || hash(file.bytes) !== asset.sha256)
+      throw new Error(`SF factory asset bytes mismatch: ${asset.path}`)
+    names.push(asset.path)
+  }
+  const policy = "bin/product/ai/"
+  const profiles = ["sf_maestro", "sf_finance", "sf_procurement", "sf_portfolio", "sf_reviewer"]
+    .map((id) => `${policy}profiles/${id}.json`)
+  if (new Set(names).size !== 24 || !names.includes(`${policy}manifests/resident.json`) ||
+    profiles.some((name) => !names.includes(name)) ||
+    names.filter((name) => /^bin\/product\/ai\/skills\/sf-[a-z0-9]+(?:-[a-z0-9]+)*\/SKILL\.md$/.test(name)).length !== 18)
+    throw new Error("Incomplete SF factory resident roster")
+  const expected = new Set(["bin/local/entry.mjs", "bin/local/closure.json", ...names])
+  if (scope.length !== expected.size || scope.some((name) => !expected.has(name)))
+    throw new Error("Unlisted SF factory payload files")
 }
 
 function nativeHeader(data: Buffer, os: string, machine: number) {

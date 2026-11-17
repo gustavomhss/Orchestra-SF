@@ -2,7 +2,13 @@ import { expect, test, type Locator, type Page } from "@playwright/test"
 import { asRecord } from "./journey"
 
 export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
-  await page.goto(`${origin}/sucafina/procurement?page=Requests`)
+  const opened = await page.goto(`${origin}/sucafina/procurement?page=Requests`)
+  // A successful HTML/navigation response is not proof of a mounted Procurement
+  // source or an admitted human actor. Fail at the producer boundary, rather than
+  // treating a login/error page or a read-only screen as an authoring fixture.
+  expect(opened?.status(), "The original Procurement route must be installed").toBe(200)
+  await expect(page.locator("body"), "The real Procurement surface must own the form").toHaveAttribute("data-surface", "procurement")
+  await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
   const form = page.locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   const title = "CI Decisions — explicit requisition proposal"
