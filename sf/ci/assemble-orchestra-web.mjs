@@ -2,7 +2,7 @@
 // Does not deploy, start a service, or claim authenticated native-browser acceptance.
 import { createHash } from "node:crypto"
 import { spawnSync } from "node:child_process"
-import { mkdir, mkdtemp, readFile, rm, stat } from "node:fs/promises"
+import { chmod, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
@@ -23,6 +23,20 @@ if (process.platform !== "linux" || process.arch !== "x64" || process.versions.b
 const observed = spawnSync("git", ["rev-parse", "--verify", "HEAD"], { cwd: root, encoding: "utf8" })
 if (observed.status !== 0 || observed.stdout.trim() !== expectedSHA)
   throw new Error("SF_ORCHESTRA_WEB_SOURCE_SHA_MISMATCH")
+
+// Vite publishes VITE_* values into client assets. This release has no
+// externally configured public VITE_* inputs: never inherit CI secrets or
+// an untracked .env file into the immutable Sucafina browser bundle.
+const viteKeys = Object.keys(process.env).filter((key) => key.startsWith("VITE_")).sort()
+if (viteKeys.length)
+  throw new Error("SF_ORCHESTRA_WEB_VITE_INPUT_FORBIDDEN: " + viteKeys.join(","))
+for (const filename of [".env", ".env.local", ".env.production", ".env.production.local"]) {
+  if (await stat(path.join(web, filename)).then(() => true, (error) => {
+    if (error && typeof error === "object" && error.code === "ENOENT") return false
+    throw error
+  }))
+    throw new Error("SF_ORCHESTRA_WEB_VITE_ENV_FILE_FORBIDDEN: " + filename)
+}
 
 const sourceChecks = [
   ["apps/cli/src/commands/handlers/serve.ts", /sucafinaInstallations:\s*installation\?\.discovery/],
@@ -72,6 +86,8 @@ if (!/data-orchestra-brand=["']sucafina["']/.test(index) ||
 const { prepareDistribution, verifyDistribution, archiveDistribution } =
   await import(pathToFileURL(path.join(cli, "script/distribution-payload.ts")).href)
 const staging = await mkdtemp(path.join(tmpdir(), "sf-orchestra-web-release-"))
+let ownsArchive = false
+let archiveVerified = false
 try {
   const payload = path.join(staging, "payload")
   const manifest = await prepareDistribution({
@@ -93,13 +109,42 @@ try {
     throw new Error("SF_ORCHESTRA_WEB_ARCHIVE_ALREADY_EXISTS")
   await mkdir(path.dirname(destination), { recursive: true })
   const archive = await archiveDistribution({ directory: payload, file: destination })
-  const sha256 = createHash("sha256").update(await readFile(destination)).digest("hex")
+  ownsArchive = true
+  const compressed = await readFile(destination)
+  const sha256 = createHash("sha256").update(compressed).digest("hex")
   if (sha256 !== archive.sha256) throw new Error("SF_ORCHESTRA_WEB_ARCHIVE_DIGEST_MISMATCH")
+
+  // Audit the ACTUAL delivered archive, not just the build tree. Extraction
+  // outside the checkout and verifyDistribution prove every JS/CSS asset,
+  // index.html, factory entry and closure against the embedded descriptor.
+  const tarFiles = await new Bun.Archive(compressed).files()
+  const expectedFiles = new Set([
+    ...manifest.files.map((entry) => entry.path), "distribution.json", "checksums.sha256",
+  ])
+  if (tarFiles.size !== expectedFiles.size ||
+      [...tarFiles.keys()].some((name) => !expectedFiles.has(name) || name.startsWith("/") ||
+        name.split("/").some((part) => !part || part === "." || part === "..")))
+    throw new Error("SF_ORCHESTRA_WEB_ARCHIVE_FILE_SET_MISMATCH")
+  const extracted = path.join(staging, "extracted")
+  await mkdir(extracted, { recursive: true })
+  const declared = new Map(manifest.files.map((entry) => [entry.path, entry]))
+  for (const [relative, file] of tarFiles) {
+    const destinationFile = path.join(extracted, relative)
+    const descriptor = declared.get(relative)
+    await mkdir(path.dirname(destinationFile), { recursive: true })
+    await writeFile(destinationFile, Buffer.from(await file.arrayBuffer()), { flag: "wx", mode: 0o644 })
+    if (descriptor?.executable) await chmod(destinationFile, 0o755)
+  }
+  if (JSON.stringify(await verifyDistribution(extracted, { version, target })) !== JSON.stringify(manifest))
+    throw new Error("SF_ORCHESTRA_WEB_EXTRACTED_DISTRIBUTION_MISMATCH")
+  archiveVerified = true
   console.log("SF_ORCHESTRA_WEB_PACKAGE_VERIFIED " + JSON.stringify({
     sourceSHA: expectedSHA, target, version, sha256, fileCount: manifest.files.length,
     webFileCount: manifest.files.filter((item) => item.path.startsWith("bin/web/")).length,
-    brand: "sucafina", nativeBrowserProof: "REQUIRED_SEPARATELY",
+    brand: "sucafina", viteEnvironmentInputs: 0, extractedVerified: true,
+    nativeBrowserProof: "REQUIRED_SEPARATELY", fullSfCi: "REQUIRED_SEPARATELY",
   }))
 } finally {
+  if (ownsArchive && !archiveVerified) await rm(destination, { force: true })
   await rm(staging, { recursive: true, force: true })
 }
