@@ -19,8 +19,9 @@ const enrollment = JSON.parse(match[1])
 const admitted = await fetch(enrollment, { redirect: "manual", signal: AbortSignal.timeout(10_000) })
 if (admitted.status !== 303) throw new Error("SF_VISUAL_LOCAL_OPERATOR_AUTH_REJECTED")
 const rawCookie = admitted.headers.get("set-cookie") ?? ""
-const cookie = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=(\/sucafina);/.exec(rawCookie)
-if (!cookie) throw new Error("SF_VISUAL_HTTPONLY_SESSION_NOT_ISSUED")
+const cookie = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64})(?:;|$)/.exec(rawCookie)
+if (!cookie || !/(?:^|;\s*)Path=\/sucafina(?:;|$)/.test(rawCookie) || !/(?:^|;\s*)HttpOnly(?:;|$)/.test(rawCookie))
+  throw new Error("SF_VISUAL_HTTPONLY_SESSION_NOT_ISSUED")
 const token = Buffer.from("orchestra:" + password).toString("base64")
 const directory = process.env.GITHUB_WORKSPACE ?? process.cwd()
 const cases = [
@@ -33,7 +34,7 @@ const browser = await chromium.launch({ headless: true })
 try {
   for (const scheme of ["dark", "light"] as const) {
     const context = await browser.newContext({ viewport: { width: 1600, height: 940 }, deviceScaleFactor: 1, serviceWorkers: "block" })
-    await context.addCookies([{ name: cookie[1]!, value: cookie[2]!, domain: "localhost", path: cookie[3]!, httpOnly: true, secure: false, sameSite: "Lax" }])
+    await context.addCookies([{ name: cookie[1]!, value: cookie[2]!, domain: "localhost", path: "/sucafina", httpOnly: true, secure: false, sameSite: "Lax" }])
     await context.addInitScript(({ server, directory, scheme }) => {
       const projects = [{ worktree: directory, expanded: true }]
       localStorage.setItem("orchestra.global.dat:server", JSON.stringify({
