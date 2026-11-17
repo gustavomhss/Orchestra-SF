@@ -97,8 +97,9 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
         po_pending: "Purchase order approval", po_approved: "Purchase order approved",
         po_issued: "Issued internally",
       }
-      expect(stage[status]).toBeDefined()
-      await expect(page.getByRole("row").filter({ hasText: id! }).first()).toContainText(stage[status]!)
+      const expected = stage[status]
+      if (!expected) throw new Error(`No verified human-visible stage for ${status}`)
+      await expect(page.getByRole("row").filter({ hasText: id! }).first()).toContainText(expected)
       console.info("browser business: transition verified", action, status)
     }
     await transition("submit_pr", "pr_pending")
