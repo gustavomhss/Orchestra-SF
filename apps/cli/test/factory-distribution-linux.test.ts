@@ -158,6 +158,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     expect(child.exitCode).toBeNull()
     const receipt = {
       schema: "sf-factory-package-proof-v1", sourceSHA: process.env.GITHUB_SHA, version, target,
+      archiveFile: "orchestra-sf-factory-linux-x64-baseline.tar.gz",
       archiveSha256: archive.sha256,
       manifestSha256: digest(await readFile(path.join(payload, "distribution.json"))),
       bundleSha256: closure.bundle.sha256,
@@ -170,6 +171,13 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     }
     const evidenceDir = path.join(root, "distribution-logs")
     await mkdir(evidenceDir, { recursive: true })
+    // Publish only qualification artifacts (not a GitHub release). Hashes pin
+    // the same compressed bytes that were extracted and executed above.
+    await writeFile(path.join(evidenceDir, receipt.archiveFile), compressed, { flag: "wx" })
+    await writeFile(path.join(evidenceDir, "distribution.json"),
+      await readFile(path.join(payload, "distribution.json")), { flag: "wx" })
+    await writeFile(path.join(evidenceDir, "factory-closure.json"),
+      await readFile(path.join(payload, "bin/local/closure.json")), { flag: "wx" })
     await writeFile(path.join(evidenceDir, "factory-package-receipt.json"),
       JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" })
     console.info("SF_FACTORY_PACKAGE_QUALIFIED " + JSON.stringify(receipt))
