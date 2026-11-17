@@ -258,7 +258,8 @@ function withinMultipartPartLimit(bytes: Uint8Array, boundary: string, maxParts:
 }
 
 type BoundedBody = { status: "ok"; bytes: Uint8Array } | { status: "invalid" } | { status: "too-large" } | { status: "timeout" }
-type BodyPart = { status: "ok"; value: ReadableStreamDefaultReadResult<Uint8Array> } | { status: "invalid" } | { status: "timeout" }
+type BodyReadResult = Awaited<ReturnType<ReadableStreamDefaultReader<Uint8Array>["read"]>>
+type BodyPart = { status: "ok"; value: BodyReadResult } | { status: "invalid" } | { status: "timeout" }
 
 async function bounded(request: Request, limit: number, timeoutMs?: number): Promise<BoundedBody> {
   if (!request.body || request.signal.aborted) return { status: "invalid" }
