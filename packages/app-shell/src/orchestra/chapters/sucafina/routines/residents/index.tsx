@@ -290,12 +290,25 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
             <p><strong>{t("sf.u35.profiles")}:</strong> {t("sf.u35.count", { count: view.profiles.length })}</p>
             <p><strong>{t("sf.u35.skills")}:</strong> {t("sf.u35.count", { count: installedCount() })}</p>
             <p><strong>{t("sf.u35.packs")}:</strong> {t("sf.u35.noPackProof")}</p>
-            <p><strong>{t("sf.u35.execution")}:</strong> {t("sf.u35.noExecutionProof")}</p>
+            <p><strong>{t("sf.u35.execution")}:</strong> {t("sf.u35.caseScopedProof")}</p>
           </div>
           <label class="sf-n29-field">
             <span>{t("sf.u35.filter")}</span>
             <input type="search" value={view.search}
               onInput={(event) => setView("search", event.currentTarget.value)} />
+          </label>
+          <label class="sf-n29-field">
+            <span>{t("sf.u35.selectCase")}</span>
+            <select value={view.caseKey} disabled={view.caseState !== "ready"}
+              onChange={(event) => setView("caseKey", event.currentTarget.value)}>
+              <option value="">{t("sf.u35.selectCase")}</option>
+              <For each={view.cases}>
+                {(item) => <option value={caseKey(item.caseRef)}>{item.label} ({item.caseRef.version})</option>}
+              </For>
+            </select>
+            <Show when={view.caseState !== "ready"}>
+              <small role="status">{t(n29StateKey(view.caseState))}</small>
+            </Show>
           </label>
         </Show>
         <SfStatePanel state={pageState()} messageKey={n29StateKey(pageState())}
@@ -322,9 +335,21 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
                 {(profile) => (
                   <article class="mx-card sf-n29-resident-detail">
                     <h2>{t("sf.u35.profile")}: <bdi>{profile().id}</bdi></h2>
-                    <section aria-label={t("sf.u35.contribution")}>
+                    <section aria-label={t("sf.u35.contribution")} data-sf-contribution-proof data-state={view.outputState}>
                       <h3>{t("sf.u35.contribution")}</h3>
-                      <p>{t("sf.u35.noProof")}</p>
+                      <Show when={selectedCase()} fallback={<p>{t("sf.u35.selectCaseFirst")}</p>}>
+                        <Show when={view.outputState === "ready" && view.output}
+                          fallback={<p role="status">{t("sf.u35.contributionNotVerified")} · {t(n29StateKey(view.outputState))}</p>}>
+                          {(proof) => <>
+                            <p><strong>{t("sf.u35.verified")}:</strong> {t("sf.u35.producerVerified")}</p>
+                            <p><strong>{t("sf.u35.outputRef")}:</strong> <bdi>{proof().outputRef}</bdi></p>
+                            <details>
+                              <summary>{t("sf.u35.openContribution")}</summary>
+                              <pre class="sf-n29-contribution-output">{proof().html}</pre>
+                            </details>
+                          </>}
+                        </Show>
+                      </Show>
                     </section>
                     <section aria-label={t("sf.u35.coverage")}>
                       <h3>{t("sf.u35.coverage")}</h3>
@@ -358,9 +383,37 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
                       <p>{t("sf.u35.installation")}: <bdi>{currentStamp()?.installationId}</bdi></p>
                       <p>{t("sf.u35.current")}</p>
                     </section>
-                    <section aria-label={t("sf.u35.execution")}>
-                      <h3>{t("sf.u35.execution")}</h3>
-                      <p>{t("sf.u35.noExecutionProof")}</p>
+                    <section aria-label={t("sf.u35.execution")} data-sf-resident-run data-state={view.runState}>
+                      <h3>{t("sf.u35.latestRun")}</h3>
+                      <Show when={view.runState === "ready" && view.run}
+                        fallback={<p role="status">{t("sf.u35.noRunForProfile")} · {t(n29StateKey(view.runState))}</p>}>
+                        {(run) => <>
+                          <dl>
+                            <dt>{t("sf.u35.runRef")}</dt><dd><bdi>{run().runRef}</bdi></dd>
+                            <dt>{t("sf.u35.skill")}</dt><dd><bdi>{run().skillId}</bdi></dd>
+                            <dt>{t("sf.u35.status")}</dt><dd><bdi>{run().state}</bdi></dd>
+                            <dt>{t("sf.u35.version")}</dt><dd>{run().version}</dd>
+                            <dt>{t("sf.u35.observedAt")}</dt><dd><time>{run().updatedAt}</time></dd>
+                          </dl>
+                        </>}
+                      </Show>
+                    </section>
+                    <section aria-label={t("sf.u35.humanDecision")} data-sf-human-decision data-state={view.choiceState}>
+                      <h3>{t("sf.u35.humanDecision")}</h3>
+                      <Show when={view.choiceState === "ready" && view.choice}
+                        fallback={<p role="status">{t("sf.u35.noHumanChoice")} · {t(n29StateKey(view.choiceState))}</p>}>
+                        {(choice) => <>
+                          <p><strong>{t("sf.u35.choiceRef")}:</strong> <bdi>{choice().id}</bdi></p>
+                          <p><strong>{t("sf.u35.alternative")}:</strong> <bdi>{choice().alternativeId}</bdi></p>
+                          <p><strong>{t("sf.u35.decisionBy")}:</strong> <bdi>{choice().principalRef}</bdi></p>
+                          <p><strong>{t("sf.u35.observedAt")}:</strong> <time>{choice().at}</time></p>
+                          <p><strong>{t("sf.u35.rationale")}:</strong> <bdi>{choice().reason}</bdi></p>
+                        </>}
+                      </Show>
+                      <Show when={view.run && view.choice}>
+                        <p role="status">{linkedDecision() ? t("sf.u35.linkedInLedger") : t("sf.u35.noCausalLink")}</p>
+                      </Show>
+                      <p>{t("sf.u35.comparisonCaveat")}</p>
                     </section>
                   </article>
                 )}
