@@ -1,0 +1,194 @@
+{
+  "schema": "sf-uat-story-groups-v1",
+  "purpose": "Internal maintenance QA: execute only the affected subset; never treat listing as execution",
+  "source_files": [
+    "stories_70x2.jsonl",
+    "stories_e2e.jsonl"
+  ],
+  "overlap_policy": "Groups may overlap; each group deduplicates story IDs. Reuse evidence only when SHA, fixture, installation and actor set match.",
+  "groups": [
+    {
+      "id": "smoke",
+      "title": "Smoke P0 — oito decisões críticas",
+      "trigger": "Validar a espinha dorsal após mudanças pequenas ou antes de uma demo. Não equivale ao release completo.",
+      "chapters": [],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-001",
+        "SF-E2E-002",
+        "SF-E2E-003",
+        "SF-E2E-005",
+        "SF-E2E-013",
+        "SF-E2E-015",
+        "SF-E2E-026",
+        "SF-E2E-034"
+      ]
+    },
+    {
+      "id": "finance",
+      "title": "Finance, Planner e BI",
+      "trigger": "Mudanças em orçamento, forecast, OPEX, CAPEX, versões, FX, dashboards e BI.",
+      "chapters": [
+        "sf-dashboard",
+        "sf-planner",
+        "sf-bi"
+      ],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-002",
+        "SF-E2E-007",
+        "SF-E2E-012",
+        "SF-E2E-038",
+        "SF-E2E-032"
+      ]
+    },
+    {
+      "id": "procurement",
+      "title": "Procurement e aprovações",
+      "trigger": "Mudanças em requisições, fornecedores, cotações, sourcing, PO, holders e recibos.",
+      "chapters": [
+        "sf-procurement"
+      ],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-003",
+        "SF-E2E-011",
+        "SF-E2E-031",
+        "SF-E2E-032",
+        "SF-E2E-037",
+        "SF-E2E-039",
+        "SF-E2E-043"
+      ]
+    },
+    {
+      "id": "decisions",
+      "title": "Decisões e portfólio",
+      "trigger": "Mudanças em decisões, comparação, sensibilidade, projetos e aplicações governadas.",
+      "chapters": [
+        "sf-decisions",
+        "sf-portfolio"
+      ],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-006",
+        "SF-E2E-009",
+        "SF-E2E-026",
+        "SF-E2E-032",
+        "SF-E2E-045"
+      ]
+    },
+    {
+      "id": "imports",
+      "title": "Importações e documentos",
+      "trigger": "Mudanças em upload/preview/Apply, evidências e exportações.",
+      "chapters": [
+        "sf-imports",
+        "sf-documents"
+      ],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-005",
+        "SF-E2E-006",
+        "SF-E2E-023",
+        "SF-E2E-033",
+        "SF-E2E-039",
+        "SF-E2E-043"
+      ]
+    },
+    {
+      "id": "reviews",
+      "title": "Reuniões, snapshots e relatórios",
+      "trigger": "Mudanças em pauta, apresentação, preservação, comparação, DOCX/PPTX e acesso a exportações.",
+      "chapters": [
+        "sf-reviews"
+      ],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-001",
+        "SF-E2E-004",
+        "SF-E2E-009",
+        "SF-E2E-013",
+        "SF-E2E-024",
+        "SF-E2E-025",
+        "SF-E2E-044",
+        "SF-E2E-045"
+      ]
+    },
+    {
+      "id": "people",
+      "title": "People, IT Operations e riscos",
+      "trigger": "Mudanças em headcount, estrutura, segurança, operações, riscos e performance.",
+      "chapters": [
+        "sf-people",
+        "sf-operations"
+      ],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-008",
+        "SF-E2E-009",
+        "SF-E2E-010"
+      ]
+    },
+    {
+      "id": "work",
+      "title": "Home, trabalho e memória",
+      "trigger": "Mudanças em busca, Meu trabalho, views, relações, threads, sinais e casos semelhantes.",
+      "chapters": [
+        "sf-home",
+        "sf-work",
+        "sf-memory"
+      ],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-001",
+        "SF-E2E-028",
+        "SF-E2E-029",
+        "SF-E2E-036",
+        "SF-E2E-041"
+      ]
+    },
+    {
+      "id": "routines",
+      "title": "Agentes, residentes e agendas",
+      "trigger": "Mudanças em análise assíncrona, admissão de agentes, rotinas, agendamento e recorrência.",
+      "chapters": [
+        "sf-routines"
+      ],
+      "extra_surfaces": [],
+      "e2e_ids": [
+        "SF-E2E-026",
+        "SF-E2E-027",
+        "SF-E2E-035"
+      ]
+    },
+    {
+      "id": "access",
+      "title": "Identidade, autorizações e release",
+      "trigger": "Mudanças em Entra/Graph, grants, tenants, privacidade, rotas, acessibilidade, white-label e promoção.",
+      "chapters": [],
+      "extra_surfaces": [
+        "UI67",
+        "UI69"
+      ],
+      "e2e_ids": [
+        "SF-E2E-013",
+        "SF-E2E-014",
+        "SF-E2E-015",
+        "SF-E2E-016",
+        "SF-E2E-017",
+        "SF-E2E-018",
+        "SF-E2E-019",
+        "SF-E2E-020",
+        "SF-E2E-021",
+        "SF-E2E-022",
+        "SF-E2E-030",
+        "SF-E2E-031",
+        "SF-E2E-034",
+        "SF-E2E-036",
+        "SF-E2E-039",
+        "SF-E2E-040",
+        "SF-E2E-042"
+      ]
+    }
+  ]
+}
