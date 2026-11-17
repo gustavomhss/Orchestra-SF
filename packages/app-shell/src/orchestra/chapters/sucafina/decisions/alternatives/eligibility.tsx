@@ -1,4 +1,4 @@
-import { createMemo, onCleanup, Show } from "solid-js"
+import { createEffect, createMemo, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -23,6 +23,13 @@ export function SfEligibilityRegistration(props: {
   }>({ reason: "", phase: "editing", error: "" })
   let pending: AbortController | undefined
   onCleanup(() => pending?.abort())
+  createEffect(() => {
+    props.owner.generation()
+    props.record.id
+    props.record.incarnation
+    pending?.abort()
+    setUi({ reason: "", phase: "editing", error: "", request: undefined, receipt: undefined })
+  })
   const baseline = createMemo(() => props.record.alternatives.find((item) => item.id === props.selection[0]))
   const candidate = createMemo(() => props.record.alternatives.find((item) => item.id === props.selection[1]))
   const eligible = () => {
