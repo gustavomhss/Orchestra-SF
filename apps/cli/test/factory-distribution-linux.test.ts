@@ -314,6 +314,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const authenticatedChoice = await fetch("http://localhost:4110" + currentChoiceEndpoint, {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
+    if (authenticatedChoice.status !== 200) throw new Error(`SF_FACTORY_AUTHENTICATED_CURRENT_CHOICE_FAILED status=${authenticatedChoice.status} body=${(await authenticatedChoice.text()).slice(0, 500)}`)
     expect(authenticatedChoice.status).toBe(200)
     const currentChoiceBody: unknown = await authenticatedChoice.json()
     // Empty valid case inventory still traverses sf_case_read, real service,
