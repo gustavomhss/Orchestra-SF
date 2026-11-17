@@ -174,6 +174,15 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await row.getByRole("button", { name: "Edit", exact: true }).click()
     const editor = source.getByRole("dialog", { name: "Edit record", exact: true })
     await expect(editor).toBeVisible()
+    // Regression: Forecast exists in a closed Save month disclosure. The
+    // operator must open that real control; hidden-field fills are not valid.
+    const monthPanel = editor.locator("details.editor-panel").filter({ has: form })
+    await expect(monthPanel.locator("summary")).toHaveText("Save month")
+    await expect(monthPanel).not.toHaveAttribute("open", "")
+    await expect(form).toBeHidden()
+    await monthPanel.locator("summary").click()
+    await expect(monthPanel).toHaveAttribute("open", "")
+    await expect(form).toBeVisible()
     await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("110")
     const version = Number(await form.getAttribute("data-version"))
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
