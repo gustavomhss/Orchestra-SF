@@ -385,6 +385,11 @@ jobs:
           test "$status" -eq 0
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
+          if [ "$SF_SUITE_ID" = CI-UI-OPERATIONS ]; then
+            # Bootstrap a reviewed baseline from actual passing Linux tests, never invented IDs.
+            node script/sf-ci/gate.mjs coverage | tee "$evidence/coverage-candidate.txt"
+            cp "$evidence/report.json" "$evidence/candidate-minimized.json"
+          fi
           # The coverage gate needs a baseline versioned from an authentic successful
           # run and independently reviewed. Until that baseline exists in the
           # manifest, calling it here would only fail closed on every PR.
@@ -398,6 +403,16 @@ jobs:
             sf-ci-evidence/${{ matrix.id }}/report.json
             sf-ci-evidence/${{ matrix.id }}/receipt.json
           if-no-files-found: error
+          retention-days: 7
+      - name: Preserve sanitized Operations baseline candidate for independent review
+        if: ${{ failure() && matrix.id == 'CI-UI-OPERATIONS' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-operations-baseline-candidate-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            sf-ci-evidence/CI-UI-OPERATIONS/coverage-candidate.txt
+            sf-ci-evidence/CI-UI-OPERATIONS/candidate-minimized.json
+          if-no-files-found: ignore
           retention-days: 7
 
   verify:
