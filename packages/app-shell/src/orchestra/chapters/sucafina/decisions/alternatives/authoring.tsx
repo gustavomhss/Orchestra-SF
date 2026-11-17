@@ -5,8 +5,6 @@ import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import type { SfContextHandle } from "../../context/contracts"
 import { sfFailureUiState, sfOperationReady, type SfCaseRecord } from "../cases/model"
-import { SfStatePanel } from "../../shared/states"
-import type { SfUiState } from "../../shared/frame"
 
 type Alternative = SfCaseRecord["alternatives"][number]
 type PromoteInput = Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-promote"]["input"]>
@@ -106,7 +104,7 @@ export function SfAlternativeAuthoring(props: {
         assumption.valueKind === "number" ? Number(assumption.value) :
         assumption.valueKind === "boolean" ? assumption.value === "true" : assumption.value
       if (!assumption.id.trim() || ids.has(assumption.id) ||
-        assumption.valueKind === "number" && (!assumption.value.trim() || !Number.isFinite(value)) ||
+        assumption.valueKind === "number" && (!assumption.value.trim() || typeof value !== "number" || !Number.isFinite(value)) ||
         assumption.sourceIds.length === 0 ||
         assumption.sourceIds.some((id) => references.filter((ref) => ref.refId === id).length !== 1)) {
         setForm("error", "Premissas exigem ID único, valor válido e fontes do caso atual.")
@@ -138,10 +136,11 @@ export function SfAlternativeAuthoring(props: {
   const commit = async () => {
     const request = form.prepared, ready = props.owner.ready()
     if (!request || !ready || form.phase !== "reviewing" || !!pending || !canWrite()) return
+    const source = selected()
     if (request.caseRef.id !== props.record.id ||
       request.caseRef.incarnation !== props.record.incarnation ||
       request.caseRef.version !== props.record.version ||
-      !selected() || coverageReference(props.record, selected()!) !== request.coverageRef) {
+      !source || coverageReference(props.record, source) !== request.coverageRef) {
       setForm({ error: "A versão ou a fonte mudou. Releia o caso.", phase: "failed", prepared: undefined })
       return
     }
@@ -180,8 +179,6 @@ export function SfAlternativeAuthoring(props: {
       if (pending === controller) pending = undefined
     }
   }
-  const state = (): SfUiState => form.phase === "saving" ? "loading" :
-    form.phase === "unknown" ? "outcome-unknown" : "conflict"
 
   return (
     <section class="mx-card sf-n24-section" aria-label={props.assumptionsOnly ? "Revisão de premissas com CAS" : "Autoria A/B/C com CAS"}>
@@ -340,7 +337,7 @@ export function SfAlternativeAuthoring(props: {
           </div>}
         </Show>
         <Show when={form.error}><p role="alert">{form.error}</p></Show>
-        <Show when={form.phase === "unknown"}><SfStatePanel state={state()} messageKey={"sf.ui35.error"} /></Show>
+        
         <div class="sf-n24-actions">
           <button type="button" class="mx-btn primary"
             disabled={!canWrite() || !selected()}
