@@ -383,11 +383,28 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const selection = () => discovery.status === "ready" ? discovery.selection : undefined
   const sameServer = (value: SfOwnerSelection) =>
     value.serverKey === (ServerConnection.key(props.server) as string)
+  // Discovery already sends the selected ServerConnection's HTTP credentials.
+  // Native F01/F02 reads must use that SAME connection, not an unauthenticated
+  // global fetch. Never forward Basic to another origin or outside this mount.
+  const nativeFetch: typeof globalThis.fetch = (input, init) => {
+    const target = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url,
+      window.location.href)
+    if (!alignedOrigin || target.origin !== window.location.origin ||
+        target.origin !== new URL(props.server.http.url).origin ||
+        !target.pathname.startsWith("/sucafina/"))
+      return Promise.reject(new Error("SF_NATIVE_SELECTED_ORIGIN_REQUIRED"))
+    if (!props.server.http.password) return fetcher(input, init)
+    const headers = new Headers(init?.headers)
+    headers.set("Authorization", "Basic " + authTokenFromCredentials({
+      username: props.server.http.username, password: props.server.http.password,
+    }))
+    return fetcher(input, { ...init, headers })
+  }
   const newTransport = (binding: SfInstallationDescriptor, generation: number,
     currentGeneration: () => number): SfTransport => desktopBridge
     ? desktopBridge.createTransport(binding, generation, currentGeneration)
     : createSfTransport({
-        binding, generation, currentGeneration, fetch: fetcher, operations: SfNativeOperationBindings,
+        binding, generation, currentGeneration, fetch: nativeFetch, operations: SfNativeOperationBindings,
       })
   const readContext = async (binding: SfInstallationDescriptor, signal: AbortSignal,
     generation: number, currentGeneration: () => number) => {
