@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import type { SfContext } from "@orchestra/schema/sucafina/context"
-import { sfExecutiveLinkAllowed } from "../../src/orchestra/chapters/sucafina/cross-links"
+import { sfExecutiveLinkAllowed, type SfExecutiveLink } from "../../src/orchestra/chapters/sucafina/cross-links"
 
-const ready = (operationId: SfContext["availability"][number]["operations"][number]["operationId"]) => ({
+const ready = (operationId: SfContext["availability"][number]["operations"][number]["operationId"]): SfContext["availability"][number]["operations"][number] => ({
   operationId, state: "ready", reason: null, operational: true,
-}) as const
+})
 
 const access: SfContext = {
   stamp: {
@@ -58,8 +58,8 @@ describe("WS-8 executive source/target grants", () => {
     expect(sfExecutiveLinkAllowed(noSave, { kind: "new-topic" })).toBe(false)
   })
   test("project-to-note and risk-to-topic require both source and relation writer", () => {
-    const project = { kind: "relations", source: { kind: "project", ref: "project-17" } } as const
-    const risk = { kind: "relations", source: { kind: "risk", ref: "risk-17" } } as const
+    const project: SfExecutiveLink = { kind: "relations", source: { kind: "project", ref: "project-17" } }
+    const risk: SfExecutiveLink = { kind: "relations", source: { kind: "risk", ref: "risk-17" } }
     expect(sfExecutiveLinkAllowed(access, project)).toBe(true)
     expect(sfExecutiveLinkAllowed(access, risk)).toBe(true)
     const noRelationWrite = { ...access, availability: access.availability.filter((row) => row.resource !== "relations") }
