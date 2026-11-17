@@ -170,11 +170,12 @@ async function fixture() {
     return finish.headers.getSetCookie().find((entry) => entry.includes("_session="))!.split(";")[0]
   }
   const get = (cookie: string, route = "/sucafina/admin/access") => request(route, { headers: { cookie } })
+  const head = (cookie: string) => request("/sucafina/admin/access", { method: "HEAD", headers: { cookie } })
   const post = (cookie: string, parameters: URLSearchParams) => request("/sucafina/admin/access", {
     method: "POST", headers: { cookie, origin: publicOrigin, "content-type": "application/x-www-form-urlencoded" },
     body: parameters,
   })
-  return { provider, request, login, get, post, store }
+  return { provider, request, login, get, head, post, store }
 }
 
 test("mounted HTTPS admin read renders Graph departments, manager, team inheritance and direct grants only to supremes", async () => {
@@ -184,6 +185,10 @@ test("mounted HTTPS admin read renders Graph departments, manager, team inherita
   const caio = await f.login(persons.Caio)
   const pedro = await f.login(persons.Pedro)
   const zico = await f.login(persons.Zico)
+  const directoryReadsBeforeHead = f.provider.requests.filter((entry) => new URL(entry.url).pathname === "/v1.0/users").length
+  for (const cookie of [daniel, andre]) expect((await f.head(cookie)).status).toBe(204)
+  for (const cookie of [zico, caio, pedro]) expect((await f.head(cookie)).status).toBe(403)
+  expect(f.provider.requests.filter((entry) => new URL(entry.url).pathname === "/v1.0/users")).toHaveLength(directoryReadsBeforeHead)
   for (const cookie of [daniel, andre]) {
     const response = await f.get(cookie)
     expect(response.status).toBe(200)
