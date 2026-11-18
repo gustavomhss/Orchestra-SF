@@ -1,9 +1,11 @@
 import type { SfHostServices } from "../contracts/host-context.ts"
+
+type AnalysisHttpRuntime = Pick<SfHostServices, "human" | "ui" | "models" | "analyses" | "analysisInputs">
 import { digestSfValue } from "../contracts/canonical.ts"
 import { contribution } from "../ui/components.ts"
 
 /** The host owns authorization and execution; this boundary exposes no native binding. */
-export async function handleSfAnalysis(request: Request, origin: string, runtime: SfHostServices) {
+export async function handleSfAnalysis(request: Request, origin: string, runtime: AnalysisHttpRuntime) {
   const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
   if (request.method !== "POST") return reply({ status: "denied" }, 405)
   if (request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
@@ -35,9 +37,9 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     if (!result) return reply({ status: "unavailable" }, 503)
     if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
     if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-    if (action === "read" && "state" in result.value) {
-      const value = result.value as { runRef: string; state: unknown; version: unknown; outputRef?: string }
-      return reply({ status: "ok", value: { runRef: value.runRef, state: value.state, version: value.version, ...(value.outputRef ? { outputRef: value.outputRef } : {}) } }, 200)
+    if (action === "read" && runRead(result.value)) {
+      const value = result.value
+      return reply({ status: "ok", value: { runRef: value.runRef, state: value.state, version: value.version, ...(typeof value.outputRef === "string" ? { outputRef: value.outputRef } : {}) } }, 200)
     }
     if (action === "output" && "kind" in result.value) {
       const output = result.value
@@ -49,6 +51,10 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   } finally { runtime.human.finish(admitted.value) }
 }
 
+function runRead(value: unknown): value is { runRef: string; state: unknown; version: unknown; outputRef?: string } {
+  return !!value && typeof value === "object" && "runRef" in value && typeof value.runRef === "string" && "state" in value && "version" in value
+}
+
 function record(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !Array.isArray(value)
 }
@@ -58,7 +64,7 @@ function caseInput(value: unknown) {
   return { caseRef: { id: value.id, incarnation: value.incarnation, version: value.version } }
 }
 
-async function analysisInput(value: unknown, runtime: SfHostServices) {
+async function analysisInput(value: unknown, runtime: AnalysisHttpRuntime) {
   if (!record(value) || Object.keys(value).some((key) => !["request", "skillInput", "model"].includes(key)) || !("skillInput" in value) || !record(value.request)) return undefined
   const request = analysisRequest(value.request)
   if (!request) return undefined
