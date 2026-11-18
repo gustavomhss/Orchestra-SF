@@ -1,0 +1,115 @@
+{
+  "schema": "sf2h.evidence.archive210.handoff.v1",
+  "mission": 210,
+  "actor_id": "EVIDENCE-ARCHIVE",
+  "epoch": "evidence-archive-e1-browser210",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_exposed": false,
+  "branch": "sf-guard-archive",
+  "pr": {
+    "number": 192,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/192",
+    "base": "sf2-stack",
+    "draft": true,
+    "merge_performed": false
+  },
+  "original_reserved_head": "2d7b3a9c3b1ca9726f9b86518ef30297bf1c7380",
+  "pre_handoff_head": "dc6e6490f4ebd93c8e0188c39bd4f6467a4f8d9b",
+  "source_W": "690a34cdd81c12d7311f3717c19679b950276161",
+  "ancestor_confirmed": true,
+  "source_tree_unchanged": true,
+  "evidence": {
+    "index": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210/INDEX-210.json",
+    "prepost": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210/PREPOST-210.json",
+    "consumers": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210/CONSUMERS-210.json",
+    "reader": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210/READER-210.mjs",
+    "inert_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210/INERT-189-READER.patch",
+    "inert_patch_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210/INERT-189-MANIFEST.json"
+  },
+  "readbacks": {
+    "method": "GitHubMCP_fetch_file_at_historical_W_plus_fetch_blob_direct",
+    "expected_55": 55,
+    "verified_matching_55": 55,
+    "misread_or_missing": 0,
+    "working_tree_mismatches": 0,
+    "all_historical_urls_pinned": true,
+    "contents_published_to_archive": false
+  },
+  "consumers": {
+    "known_documentary": 9,
+    "additional_static_reference_candidates": 60,
+    "cataloged_total": 69,
+    "near_parent_files_scanned": 142,
+    "ancestor_files_scanned": 221,
+    "repo_wide_sweep": "NOT_RUN",
+    "dynamic_reader_equivalence": "UNPROVEN",
+    "basename_match_warning": true,
+    "discrepancy": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+      "package_blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d",
+      "actual_live_blob": "c0e1c3baff457e94f18e7d7a7d8c2179e541209d",
+      "reconciliation": "BLOCKED_NO_MUTATION"
+    }
+  },
+  "mutation": {
+    "source_log_files_changed": 0,
+    "source_log_files_removed": 0,
+    "all_changes_only_in_archive210": true,
+    "immutable_old_receipts_changed": 0,
+    "approved_plans_changed": 0,
+    "fixture_scratch_changed": false,
+    "skips_changed": false,
+    "guard_rules_changed": false,
+    "approvals_or_ignore": false,
+    "external_reader_patch_applied": false
+  },
+  "blockers": [
+    {
+      "id": "B210-01",
+      "kind": "IMMUTABLE_LEGACY_CONSUMERS",
+      "detail": "Original receipts and approved plans refer to historical paths; cannot rewrite them. Must prove every actual consumer resolves pinned Git history and consumes identical bytes before authorizing any deletion.",
+      "minimum_input": "189 independently pins live integration W and chooses exact supported reader adaptation; 208 reviews equivalence"
+    },
+    {
+      "id": "B210-02",
+      "kind": "UNFINISHED_REPOSITORY_WIDE_CONSUMER_PROOF",
+      "detail": "363 scoped documentary candidate files read, 69 references catalogued, runtime/dynamic reader coverage not proven. Mere lexical absence is insufficient.",
+      "minimum_input": "189 runs/reconciles read-only archive210 reader scan against its exact integrated checkout; checks dynamic readers and applies complete outside-lease code only with its own CAS"
+    },
+    {
+      "id": "B210-03",
+      "kind": "UNRECONCILED_CONSUMER_PREIMAGE",
+      "detail": "reports36-semantic-review package SHA differs from live SHA; preserve current doc, resolve expected historical preimage, no write",
+      "minimum_input": "189 reconciles pinned historical versus live SHA at path and records disposition"
+    },
+    {
+      "id": "B210-04",
+      "kind": "FUTURE_GUARD_PROOF",
+      "detail": "Historical 163 guard failure is not a new C/D validation, and an archive index is not a 55-gate PASS",
+      "minimum_input": "189 issues one new pinned W source request to 190 after a genuinely consumed consumer patch; 190 executes real guard; 200 only if unique product request"
+    }
+  ],
+  "release": {
+    "eligible_deletes": 0,
+    "total_logs": 55,
+    "current_guard": "NOT_RUN_BY_210",
+    "historical_guard163": "FAIL_66_GATES",
+    "typecheck": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "ci": "NOT_DISPATCHED_BY_210",
+    "GLOBAL_RELEASE": false,
+    "native_goal": "paused"
+  },
+  "routing": {
+    "integrator": 189,
+    "compiler_guard": 190,
+    "product_ci_dispatcher": 200,
+    "independent_evidence_review": 208,
+    "real_fixture": 199
+  },
+  "next_exact_action": "189: read archive210 INDEX/CONSUMERS/PREPOST/INERT-189-MANIFEST at this PR head, reconcile live sf2-stack+target preimages, apply/read the inert reader where needed under 189 lease only, run full-repository consumer scan and per-log read-equivalence; keep all 55 unless every consumer is proven; then publish a new immutable W validation request to 190 for its real guard. 208 validates proof separately; 200/PR106 alone dispatches only new, necessary product CI.",
+  "status": "COMMITTED_RECOVERY_INDEX_AND_READ_ONLY_ADAPTER_WITH_DELETION_HELD_NOT_GUARD_PASS"
+}
