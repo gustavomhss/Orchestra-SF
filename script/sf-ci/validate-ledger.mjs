@@ -173,8 +173,12 @@ async function main() {
 
   const errors = [];
   let errorCount = 0;
+  const errorKinds = new Map();
+  const invalidLines = new Set();
   const fail = (line, code, detail) => {
     errorCount++;
+    increment(errorKinds, code);
+    if (line > 0) invalidLines.add(line);
     if (errors.length < 40) errors.push("line " + line + " " + code + ": " + detail);
   };
   const recordIds = new Set();
@@ -260,7 +264,12 @@ async function main() {
     fail(0, "RECORD_COUNT_MISMATCH", "expected " + EXPECTED_LINES + ", found " + lineNo);
   }
   if (errorCount) {
-    console.error("INVALID_LEDGER errors=" + errorCount);
+    console.error("INVALID_LEDGER " + JSON.stringify({
+      records_seen: lineNo,
+      invalid_records: invalidLines.size,
+      findings: errorCount,
+      findings_by_code: sortedCounts(errorKinds),
+    }));
     for (const error of errors) console.error(error);
     if (errorCount > errors.length) console.error("... " + (errorCount - errors.length) + " further errors");
     process.exitCode = 1;
