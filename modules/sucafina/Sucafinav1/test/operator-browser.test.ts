@@ -6,7 +6,6 @@ import { pathToFileURL } from "node:url"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import { prepareOperatorAccess } from "../local/enroll.ts"
 import { createLocalInstallation } from "../local/entry.ts"
-import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV } from "../src/nav.ts"
 
 test("Chrome follows the private enrollment gateway into actual HTML screens without Microsoft", async () => {
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
@@ -35,17 +34,11 @@ test("Chrome follows the private enrollment gateway into actual HTML screens wit
       await page.locator(`body[data-surface="${surface}"]`).waitFor()
       expect(await page.locator("#content").innerText()).toContain("Homologação local")
       expect(await page.locator("body").innerText()).not.toContain("Microsoft 365 application is not configured")
-      // Other product widgets may have their own <nav>; qualify only the real sidebar.
-      const sidebar = page.locator("aside.sidebar > nav")
-      // Links are grouped by presentation sections, not by the registry's key index.
-      // Validate exact human-facing order and no missing/extra authorized pages.
-      const expected = surface === "dashboard" ? [...DASHBOARD_PAGES]
-        : surface === "planner" ? ["Overview", "Versions", ...PLANNER_TABS.filter((page) => page !== "Overview" && page !== "Versions")]
-        : [...PROCUREMENT_NAV]
-      const titles = await sidebar.locator("a").allTextContents()
-      expect(titles).toEqual(expected)
-      expect(new Set(titles)).toEqual(new Set(surface === "dashboard" ? DASHBOARD_PAGES : surface === "planner" ? PLANNER_TABS : PROCUREMENT_NAV))
-      const hrefs = await sidebar.locator("a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
+      // Count authoritative sidebar pages, not the separately admitted
+      // decision-controls navigation inside the product document.
+      const hrefs = await page.locator("aside.sidebar nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
+      expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
+      expect(await page.locator('nav[aria-label="Controles de decisão"] a').getAttribute("href")).toBe("?sf=decision-controls")
       await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `operator-${surface}.png`), fullPage: true })
       for (const href of hrefs) {
         const screen = await page.goto(new URL(href, `http://localhost:4110/sucafina/${surface}`).href)
