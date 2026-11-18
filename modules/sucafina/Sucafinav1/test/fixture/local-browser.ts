@@ -193,7 +193,7 @@ export async function localBrowser() {
     const [enrollment] = await Promise.all([
       page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/auth/local", { timeout: 10000 }),
       page.goto(destination.href, { waitUntil: "domcontentloaded", timeout: 10000 }),
-    ]).catch(() => { throw new Error("Private test browser enrollment failed") })
+    ]).catch((error) => { throw new Error("Private test browser enrollment failed: " + (error instanceof Error ? error.message : String(error))) })
     if (enrollment.status() !== 303) throw new Error(`Test enrollment failed with status ${enrollment.status()}`)
     await page.waitForURL("http://localhost:4110/sucafina/dashboard", { timeout: 10000 })
     console.info("browser fixture: authenticated")
