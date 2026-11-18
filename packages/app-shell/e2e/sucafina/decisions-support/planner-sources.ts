@@ -27,7 +27,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await expect(line).toHaveCount(1)
   await line.getByLabel("Name", { exact: true }).fill(sourceNames.line)
   const ownerSelect = line.getByLabel("Owner", { exact: true })
-  console.log("TRACE owner options", JSON.stringify(await ownerSelect.locator("option").evaluateAll((nodes) => nodes.map((node) => ({ value: (node as HTMLOptionElement).value, label: node.textContent })))), "actorId", actorId)
+  console.log("TRACE owner count", await ownerSelect.count(), "tag", await ownerSelect.evaluate((node) => node.tagName), "html", (await ownerSelect.evaluate((node) => node.outerHTML)).slice(0, 600), "actorId", actorId)
   await ownerSelect.selectOption(actorId, { timeout: 8000 })
   const elementSelect = line.getByLabel("Element", { exact: true })
   console.log("TRACE element options", JSON.stringify(await elementSelect.locator("option").evaluateAll((nodes) => nodes.map((node) => ({ value: (node as HTMLOptionElement).value, label: node.textContent })))))
