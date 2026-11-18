@@ -15,7 +15,7 @@ const other = {
   status: "po_issued",
   createdBy: "directory-2",
   pr: { title: "Private request" },
-  // A PO issued só contribui para o dashboard com moeda e base de submissão registradas.
+  // An issued PO contributes only with a recorded source currency and approval base.
   po: { currency: "USD", approvalBaseCurrency: "USD", expenseType: "CAPEX", lines: [{ qty: 1, unitPrice: 91827 }] },
 }
 

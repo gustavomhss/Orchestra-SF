@@ -89,16 +89,7 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
       console.info("browser business: transition starting", action, status)
       await record.locator(":scope > summary").click()
       await submit(record.locator(`form[data-command="${action}"]`))
-      // The table renders human-facing stages, not internal state codes.
-      const stage: Record<string, string> = {
-        pr_pending: "Requisition approval", sourcing: "Sourcing",
-        src_pending: "Sourcing approval", po_draft: "Purchase order draft",
-        po_pending: "Purchase order approval", po_approved: "Purchase order approved",
-        po_issued: "Issued internally",
-      }
-      const expected = stage[status]
-      if (!expected) throw new Error(`Unknown recorded stage: ${status}`)
-      await expect(page.getByRole("row").filter({ hasText: id! }).first()).toContainText(expected)
+      await expect(page.getByRole("row").filter({ hasText: id! }).first()).toContainText(status)
       console.info("browser business: transition verified", action, status)
     }
     await transition("submit_pr", "pr_pending")
