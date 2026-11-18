@@ -236,11 +236,10 @@ test("Planner evidence refuses coverage failures and mutation of a reused covera
 async function plannerEvidenceFixture() {
   const root = path.resolve(import.meta.dir, "../../../../product/ai")
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
-  const procurementEvidenceWrites = new WeakSet<object>()
-  const app = await createWp06Runtime({ additionalOperations: ["sf_forecast_compare"], procurementEvidenceWrites })
+  const app = await createWp06Runtime({ additionalOperations: ["sf_forecast_compare"] })
   const resources: { business?: ReturnType<typeof createSfBusinessServices> } = {}
   try {
-    const business = createSfBusinessServices({ authority: app.authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites, documentRead: app.documents.documents.reader })
+    const business = createSfBusinessServices({ authority: app.authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), documentRead: app.documents.documents.reader })
     resources.business = business
     // Actual SQLite and persisted local credentials. No scanner or remote provider claim is made.
     business.initializeAtlas(undefined, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,

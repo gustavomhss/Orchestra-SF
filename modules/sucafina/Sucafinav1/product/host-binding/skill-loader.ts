@@ -72,13 +72,11 @@ export const loadSfSkill: LoadSfSkill = (input) => Effect.gen(function* () {
     try: () => Promise.all([realpath(directory.path), realpath(skill.location)]),
     catch: () => ({ code: "invalid-skill", reason: "skill-source-unavailable" } as const),
   })
-  const currentBytes = yield* Effect.tryPromise({
-    try: () => Bun.file(skill.location).arrayBuffer(),
-    catch: () => ({ code: "invalid-skill", reason: "skill-source-unavailable" } as const),
-  })
-  // Source disposal can finish during the last file read. No await may follow this authority check.
   if (currentPhysical[0] !== physical[0] || currentPhysical[1] !== physical[1] || !sfSourceFor(input.sourceCapability, input.skills, input.selected) || !current || current.location !== skill.location || current.content !== skill.content ||
-    new Bun.CryptoHasher("sha256").update(currentBytes).digest("hex") !== sourceDigest)
+    new Bun.CryptoHasher("sha256").update(yield* Effect.tryPromise({
+      try: () => Bun.file(skill.location).arrayBuffer(),
+      catch: () => ({ code: "invalid-skill", reason: "skill-source-unavailable" } as const),
+    })).digest("hex") !== sourceDigest)
     return yield* Effect.fail({ code: "invalid-skill", reason: "skill-source-changed" } as const)
   return {
     runId: input.runId, nativeSessionId: input.sessionID, profileId: input.profile.id,
@@ -87,4 +85,3 @@ export const loadSfSkill: LoadSfSkill = (input) => Effect.gen(function* () {
     loadedMessageId: message.id, loadedAt: new Date().toISOString(), manifestDigest: input.manifestDigest,
   }
 })
-

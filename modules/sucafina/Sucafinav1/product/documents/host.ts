@@ -2,7 +2,7 @@ import type { AssetPersistence, AssetServices } from "../../runtime/assets.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import { admitSfDocumentAsset, createSfDocumentBytePort } from "./byte-port.ts"
-import { confirmDocumentEvidence, extractDocumentEvidence, listDocumentEvidence, rejectDocumentEvidence, searchDocumentEvidence } from "./capabilities.ts"
+import { confirmDocumentEvidence, extractDocumentEvidence, listDocumentEvidence, searchDocumentEvidence } from "./capabilities.ts"
 import type { DocumentEvidenceHost } from "./capabilities.ts"
 import { createPrivateDocumentParser } from "./parser.ts"
 import { createSfDocumentEvidenceAdapter } from "./rag-adapter.ts"
@@ -26,7 +26,6 @@ export function createSfDocumentHost(input: {
   verifyFieldSchema: DocumentEvidenceHost["verifyFieldSchema"]
   operationIdentity: DocumentEvidenceHost["operationIdentity"]
   confirmDocument: DocumentEvidenceHost["confirmDocument"]
-  rejectDocument?: DocumentEvidenceHost["rejectDocument"]
   createId: DocumentEvidenceHost["createId"]
   now: DocumentEvidenceHost["now"]
 }) {
@@ -54,11 +53,7 @@ export function createSfDocumentHost(input: {
     if (record.status !== "ok" || record.value.evidence.ref.target.documentId !== documentId) return { status: "unavailable", accessRevision: context.binding.accessRevision }
     return { status: "ok", snapshot: record.value.snapshot }
   }, documents, parser)
-  // Older direct document hosts may not compose a rejection grant; fail closed.
-  const capability: DocumentEvidenceHost = {
-    ...input, documents, parser, reader,
-    rejectDocument: input.rejectDocument ?? (async () => false),
-  }
+  const capability: DocumentEvidenceHost = { ...input, documents, parser, reader }
   return {
     evidenceHost: capability,
     documents,
@@ -73,8 +68,6 @@ export function createSfDocumentHost(input: {
     extract: (request: Parameters<typeof extractDocumentEvidence>[0], context: Parameters<typeof extractDocumentEvidence>[1]) => extractDocumentEvidence(request, context, capability),
     search: (request: Parameters<typeof searchDocumentEvidence>[0], context: Parameters<typeof searchDocumentEvidence>[1]) => searchDocumentEvidence(request, context, capability),
     confirm: (id: string, context: Parameters<typeof confirmDocumentEvidence>[1]) => confirmDocumentEvidence(id, context, capability),
-    reject: (id: string, reason: string, page: number, context: Parameters<typeof rejectDocumentEvidence>[3]) =>
-      rejectDocumentEvidence(id, reason, page, context, capability),
     list: (documentRef: string, context: Parameters<typeof listDocumentEvidence>[1]) => listDocumentEvidence(documentRef, context, capability),
   }
 }

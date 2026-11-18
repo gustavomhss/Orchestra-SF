@@ -9,8 +9,6 @@ import { decodeSfOperationOutput } from "../../../../product/contracts/schema-ad
 import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
 import type { SfDocumentScenarioRequest, SfDocumentScenarioResult, SfDocumentScenarioTarget } from "../../../../product/documents/scenario-inputs.ts"
 import { createSfDocumentScenarioHttp } from "../../../../product/interface/document-scenario-http.ts"
-import { createSfDocumentHttp } from "../../../../product/interface/document-http.ts"
-import { createSfDocumentScenarioLinks } from "../../../../product/documents/scenario-links.ts"
 import { sfSourceIdentity } from "../../../../product/integration/source-lifecycle.ts"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createWp06Runtime } from "../runtime-fixture.ts"
@@ -20,29 +18,14 @@ import contractFreeze from "../../../../product/contracts/freeze-v1.json" with {
 test("a confirmed document amount reaches the real Planner scenario through HTTP without copying, applying or surviving source revocation", async () => {
   const root = path.resolve(import.meta.dir, "../../../../product/ai")
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
-  const procurementEvidenceWrites = new WeakSet<object>()
-  const fixture = await createWp06Runtime({ additionalOperations: ["sf_scenario_simulate"], additionalHumanActions: ["planner.preview", "documents.link"], procurementEvidenceWrites })
-  const business = createSfBusinessServices({ authority: fixture.authority, persistence: fixture.store, proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites, documentRead: fixture.documents.documents.reader })
+  const fixture = await createWp06Runtime({ additionalOperations: ["sf_scenario_simulate"], additionalHumanActions: ["planner.preview"] })
+  const business = createSfBusinessServices({ authority: fixture.authority, persistence: fixture.store, proposalCoverageWrites: new WeakSet(), documentRead: fixture.documents.documents.reader })
   // Repository version metadata is real; the absent scanner is explicit and is not Atlas qualification.
   business.initializeAtlas(undefined, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,
     manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
   const service = business.documentScenarios
   if (!service) throw new Error("Document scenario service missing")
-  const links = createSfDocumentScenarioLinks({
-    host: fixture.authority.host, state: fixture.authority.state,
-    documents: fixture.documents.documents.documents, scenarios: service,
-    sourceFence: async (call) => {
-      const sources = await business.readSourceFences(call)
-      return sources ? digestSfValue(sources) : undefined
-    },
-    authorize: (request, call) => fixture.authority.human.authorize(call, "documents.link", request),
-    operationIdentity: (call) => call.kind === "ui" ? fixture.authority.ui.operationIdentity(call) : undefined,
-    now: () => fixture.at,
-  })
-  const http = createSfDocumentScenarioHttp({ origin: fixture.origin, mount: "/sucafina",
-    authority: fixture.authority, service, links })
-  const linkHttp = createSfDocumentHttp({ origin: fixture.origin, mount: "/sucafina",
-    runtime: () => ({ ui: fixture.authority.ui, human: fixture.authority.human, ...fixture.documents, links }) })
+  const http = createSfDocumentScenarioHttp({ origin: fixture.origin, mount: "/sucafina", authority: fixture.authority, service })
   const send = async (mode: string, options: { ref?: Extract<BusinessEvidenceRef, { kind: "document" }>; body?: unknown; cookie?: string } = {}) => {
     const url = new URL(`${fixture.origin}/sucafina/procurement`)
     url.searchParams.set("sf", mode)
@@ -125,32 +108,6 @@ test("a confirmed document amount reaches the real Planner scenario through HTTP
     expect(observed.value.scenario).toMatchObject({ comparisonStatus: "conditioned", knownSubtotal: 1142, total: null, costCoverage: { coverageState: "pending" } })
     expect(observed.value.scenario.costCoverage.issues).toContain("inventory-unavailable")
     expect(observed.value.scenario.restrictions).toContain("preview-not-applied")
-    expect(await official()).toBe(before)
-    const postLink = async (payload: unknown, cookie = fixture.cookie) => {
-      const response = await linkHttp(new Request(`${fixture.origin}/sucafina/procurement?sf=document-confirm`, {
-        method: "POST", headers: { cookie, origin: fixture.origin, "content-type": "application/json",
-          "Idempotency-Key": randomUUID() }, body: JSON.stringify(payload),
-      }), "procurement")
-      if (!response) throw new Error("Document-link mutation route missing")
-      return response
-    }
-    const linkBody = { action: "link", ...input }
-    expect((await postLink({ ...linkBody, amount: 999 })).status).toBe(400)
-    expect((await postLink(linkBody, "")).status).toBe(403)
-    const linked = await postLink(linkBody)
-    expect(linked.status).toBe(200)
-    const linkValue = await linked.json()
-    expect(linkValue).toMatchObject({ status: "ok", value: {
-      kind: "scenario-link", targetRef: target.targetRef,
-      documentRef: confirmed.value.ref, domainApplied: false,
-    } })
-    const linkedTargets = await send("document-scenario-targets", { ref: confirmed.value.ref })
-    expect(linkedTargets.status).toBe(200)
-    expect((await linkedTargets.json()).value).toContainEqual(expect.objectContaining({
-      baseRef: target.baseRef, targetRef: target.targetRef,
-      linkRef: linkValue.value.id, linkedAt: fixture.at,
-    }))
-    expect((await postLink(linkBody)).status).toBe(409)
     expect(await official()).toBe(before)
     expect((await send("document-scenario-preview", { body: { ...input, amount: 999 } })).status).toBe(400)
     expect((await send("document-scenario-preview", { body: input, cookie: "" })).status).toBe(403)
