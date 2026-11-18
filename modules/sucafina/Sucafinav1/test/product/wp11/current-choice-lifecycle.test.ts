@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
-import type { ChoiceRecord, CostCoverageAssessment, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { ChoiceRecord, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
-import { reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
-import { createCurrentChoiceFence, createCurrentChoicePreview } from "../../../product/decisions/current-choice-preview.ts"
+import { reassessScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
+import { createCurrentChoicePreview } from "../../../product/decisions/current-choice-preview.ts"
 import { createCurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { createProposalCoverageRegistry } from "../../../product/decisions/proposal-coverage.ts"
@@ -74,42 +74,23 @@ test("a current quote replays the same historical choice, requires a separate hu
     const basis = { ...fixture.basis, version: 2, sourceRefs: structuredClone(fixture.sourceRefs) }
     const coverage = await renewalCoverage({ ...fixture, basis }, "confirmed")
     expect(coverage.assessment.coverageState).toBe("complete")
-    // Bun's asymmetric matcher must observe its own copy: the assessment and
-    // source entry list share objects; classification keeps its own cloned entries.
-    const trainingObservation = structuredClone(coverage.assessment.entries.find((entry) => entry.categoryId === "training"))
-    const coverageBeforeMatcher = digestSfValue(coverage.assessment)
+    // The assertion observes a detached entry; its asymmetric matcher must not
+    // share the live classification inputs used by the canonical reassessment.
     const coverageBeforeObservation = digestSfValue({ assessment: coverage.assessment, entries: coverage.entries })
-    const trainingBeforeMatcher = digestSfValue(trainingObservation)
+    const trainingObservation = structuredClone(coverage.assessment.entries.find((entry) => entry.categoryId === "training"))
     expect(trainingObservation).toMatchObject({ status: "included", componentRefs: expect.arrayContaining(["training:11"]) })
-    const matcherObservation = (() => {
-      try { return { afterDigest: digestSfValue(trainingObservation) } }
-      catch (error) { return { afterError: error instanceof Error ? error.message : String(error) } }
-    })()
-    console.debug("WP11_CURRENT_CHOICE_MATCHER", JSON.stringify({ beforeDigest: trainingBeforeMatcher, ...matcherObservation,
-      componentRefsAreArray: trainingObservation?.status === "included" && Array.isArray(trainingObservation.componentRefs) }))
-    expect(digestSfValue(coverage.assessment)).toBe(coverageBeforeMatcher)
     expect(digestSfValue({ assessment: coverage.assessment, entries: coverage.entries })).toBe(coverageBeforeObservation)
     const plannerAfterQuote = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
     const writes = new WeakSet<object>()
-    let activeStore = fixture.store
-    const persistence: typeof fixture.store = { ...fixture.store,
-      transaction: (surface, work, options) => activeStore.transaction(surface, work, options),
-      transactionAll: (work, options) => activeStore.transactionAll!(work, options),
-      currentSnapshots: () => activeStore.currentSnapshots?.(),
-    }
-    const operationIdentity = () => `wp11-lifecycle-command-${human.round}`
-    const fence = createCurrentChoiceFence({ persistence, host: () => fixture.host, operationIdentity,
-      identity: () => ({ installationId: fixture.context.binding.installationId, projectId: fixture.context.binding.projectId }) })
-    const makeState = (store: Parameters<typeof createSfProductState>[0]["persistence"]) => createSfProductState({
+    const makeState = (store: typeof fixture.store) => createSfProductState({
       persistence: store, proposalCoverageWrites: writes, createId: () => "unused-lifecycle-incarnation",
       resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }),
       authorize: async (request) => request === fixture.request && await fixture.host.revalidate(fixture.context) ? { principalRef: "finance", policyVersion: "policy", accessRevision: "access" } : undefined,
     })
-    const state = makeState(fence.persistence)
-    const outside = makeState(persistence)
+    const state = makeState(fixture.store)
     const authorizeCase = async (decision: DecisionCase, context: TrustedDomainContext) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && decision.participants.includes(context.binding.principalRef) && await fixture.host.revalidate(context)
     const sourceFence = (snapshot: Snapshot) => human.sourceAllowed && digestSfValue({ versionId: currentSource.target.recordId, projection: projectPlannerSource(snapshot, actor, currentSource.target.recordId) }) === currentSource.target.projectionDigest
-    const sourceCurrent = async () => human.sourceAllowed && await activeStore.transaction("planner", async (snapshot) => ({ commit: false, value: sourceFence(snapshot) }))
+    const sourceCurrent = async () => human.sourceAllowed && await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: sourceFence(snapshot) }))
     const resolveEvidence = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext): Promise<readonly BusinessEvidenceResolution[]> => {
       const current = await sourceCurrent() && await fixture.host.revalidate(context)
       return Promise.all(refs.map(async (ref) => {
@@ -135,7 +116,7 @@ test("a current quote replays the same historical choice, requires a separate hu
       },
     })
     const resimulate = createCurrentPlannerChoice({
-      fence, host: fixture.host, planner: fixture.planner, persist, store: results, authorizeChoice,
+      planner: fixture.planner, persist, store: results, authorizeChoice,
       issueSource: (versionId, context) => fixture.sources.resolveForecastSource(versionId, context),
       verifyContinuity: async (original, current, context) => digestSfValue(original) === digestSfValue(originalSource) && digestSfValue(current) === digestSfValue(currentSource) && await fixture.host.revalidate(context) && await sourceCurrent()
         ? { status: "ok", value: { fence: sourceCurrent, fenceSnapshot: sourceFence, revalidate: sourceCurrent } }
@@ -159,83 +140,24 @@ test("a current quote replays the same historical choice, requires a separate hu
       },
       verifySnapshot: (snapshot, record) => sourceFence(snapshot) && digestSfValue(record.basis) === digestSfValue(basis),
     })
-    const previewTrace: { phase: string; status?: string; error?: { name: string; message: string; stack?: string } } = { phase: "not-started" }
-    const tracePreview = async <T>(phase: string, work: () => Promise<T>): Promise<T> => {
-      previewTrace.phase = `${phase}:start`
-      try {
-        const value = await work()
-        previewTrace.phase = `${phase}:complete`
-        if (value && typeof value === "object" && "status" in value) previewTrace.status = String(value.status)
-        return value
-      } catch (error) {
-        previewTrace.phase = `${phase}:threw`
-        previewTrace.error = error instanceof Error ? { name: error.name, message: error.message, stack: error.stack } : { name: typeof error, message: String(error) }
-        throw error
-      }
-    }
     const sources = {
-      resolveForecastCoverage: (reference: string, context: TrustedDomainContext) => tracePreview("coverage-baseline", async () => reference === "current-training-inventory"
+      resolveForecastCoverage: async (reference: string, context: TrustedDomainContext) => reference === "current-training-inventory"
         ? await sourceCurrent() ? { status: "ok" as const, value: { coverageRef: reference, basis, assessment: coverage.assessment } } : { status: "unavailable" as const, reason: "current-coverage-unavailable" }
-        : registry.resolveForecastCoverage(reference, context)),
-    }
-    let observedCoverage: { scenario: ScenarioResult; baseline: CostCoverageAssessment } | undefined
-    let coverageDiagnostic: unknown
-    const diagnosticFailures: { phase: string; name: string; message: string; stack?: string }[] = []
-    const recordDiagnosticFailure = (phase: string, error: unknown) => {
-      const failure = { phase, ...(error instanceof Error ? { name: error.name, message: error.message, stack: error.stack } : { name: typeof error, message: String(error) }) }
-      diagnosticFailures.push(failure)
-      console.debug("WP11_CURRENT_CHOICE_DIAGNOSTIC", JSON.stringify(failure))
+        : registry.resolveForecastCoverage(reference, context),
     }
     const preview = createCurrentChoicePreview({
-      fence, state, host: fixture.host, sources, results, authorizeCase, resimulate: (request, context) => tracePreview("resimulate", () => resimulate(request, context)), writes,
+      state, host: fixture.host, sources, results, authorizeCase, resimulate, writes,
       authorizePreview: async () => human.preview,
       registerCoverage: registry.registerProposalCoverage,
-      coverageEvidence: {
-        entries: async (scenario, baseline) => {
-          previewTrace.phase = "coverage-entries:start"
-          // This observer never mutates the inputs and must not turn a diagnostic
-          // exception into a product denial. Keep the real callback's output intact.
-          try {
-            observedCoverage = { scenario: structuredClone(scenario), baseline: structuredClone(baseline) }
-          } catch (error) {
-            observedCoverage = { scenario, baseline }
-            recordDiagnosticFailure("entries-clone", error)
-          }
-          try {
-            coverageDiagnostic = { basisVersions: { selected: basis.version, baseline: baseline.basisVersion, scenario: scenario.costCoverage.basisVersion }, coverageError: "resolution-not-observed" }
-          } catch (error) { recordDiagnosticFailure("entries-observation", error) }
-          previewTrace.phase = "coverage-entries:complete"
-          return { status: "ok", value: coverage.entries }
-        },
-        resolve: async (refs, context) => {
-          const resolutions = await resolveEvidence(refs, context)
-          const observed = observedCoverage
-          if (observed) try {
-            // Diagnostic only: reuse this exact resolver result, with no additional
-            // source reads or Planner replay and no change to the caller's output.
-            const assessed = await reassessScenarioCoverage({ scenario: observed.scenario, basis, baseline: observed.baseline, entries: coverage.entries,
-              resolveEvidence: async (wanted) => digestSfValue(wanted) === digestSfValue(refs) ? resolutions : [], supports: coverage.supports })
-            coverageDiagnostic = {
-              basisVersions: { selected: basis.version, baseline: observed.baseline.basisVersion, scenario: observed.scenario.costCoverage.basisVersion },
-              coverageError: assessed ? validateScenarioCoverage(assessed, basis, assessed.costCoverage) ?? null : "reassessment-undefined",
-              coverageState: assessed?.costCoverage.coverageState,
-              evidenceStates: resolutions.map((item) => ({ kind: item.ref.kind, refId: item.ref.refId, state: item.state, ...(item.ref.kind === "record" ? { version: item.ref.target.version } : {}) })),
-              gaps: { issues: assessed?.costCoverage.issues, missingCategories: assessed?.costCoverage.derivedMissingCategoryIds,
-                pending: assessed?.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [{ categoryId: entry.categoryId, reason: entry.reason }] : []), unresolvedConditions: assessed?.unresolvedConditions },
-            }
-          } catch (error) { recordDiagnosticFailure("coverage-observation", error) }
-          return resolutions
-        },
-        supports: coverage.supports, verifySnapshot: (snapshot, _result, candidateBasis) => sourceFence(snapshot) && digestSfValue(candidateBasis) === digestSfValue(basis),
-      },
+      coverageEvidence: { entries: async () => ({ status: "ok", value: coverage.entries }), resolve: resolveEvidence, supports: coverage.supports, verifySnapshot: (snapshot, _result, candidateBasis) => sourceFence(snapshot) && digestSfValue(candidateBasis) === digestSfValue(basis) },
       verifySnapshot: (snapshot, _request, binding) => sourceFence(snapshot) && digestSfValue(binding.originalSource) === digestSfValue(originalSource) && digestSfValue(binding.source) === digestSfValue(currentSource),
       verifySources: async (binding, context) => {
         const valid = digestSfValue(binding.originalSource) === digestSfValue(originalSource) && digestSfValue(binding.source) === digestSfValue(currentSource) && await fixture.host.revalidate(context) && await sourceCurrent()
         if (valid && human.raceCase) {
           human.raceCase = false
-          const latest = await outside.read(fixture.request, "cases", (value) => value.cases[fixture.caseRef.id])
+          const latest = await state.read(fixture.request, "cases", (value) => value.cases[fixture.caseRef.id])
           if (latest.status !== "ok" || !latest.value) throw new Error("Concurrent case unavailable")
-          const changed = await outside.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: "wp11-lifecycle-case-race", commandDigest: digestSfValue({ objective: "Review the training quote with updated context" }) }, async (value) => {
+          const changed = await state.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: "wp11-lifecycle-case-race", commandDigest: digestSfValue({ objective: "Review the training quote with updated context" }) }, async (value) => {
             const current = value.cases[fixture.caseRef.id]!
             value.cases[fixture.caseRef.id] = { ...current, version: current.version + 1, objective: "Review the training quote with updated context" }
             return { commit: true, value: true }
@@ -244,17 +166,17 @@ test("a current quote replays the same historical choice, requires a separate hu
         }
         return valid
       },
-      operationIdentity,
+      operationIdentity: () => `wp11-lifecycle-preview-${human.round}`,
     })
     const makePromotion = (currentState: SfProductStatePort) => createCurrentChoicePromotion({
-      fence, state: currentState, host: fixture.host, sources, authorizeCase,
+      state: currentState, host: fixture.host, sources, authorizeCase,
       authorizePromotion: async () => human.promote,
-      verifyProvenance: async (request, candidate, result, context, receipt) => {
-        const binding = await preview.read(request, context, receipt)
+      verifyProvenance: async (request, candidate, result, context) => {
+        const binding = await preview.read(request, context)
         return binding.status === "ok" && digestSfValue(candidate) === originalDigest && result.resultDigest === request.resultDigest && await sourceCurrent()
       },
       verifySnapshot: (snapshot, _request, candidate) => sourceFence(snapshot) && digestSfValue(candidate) === originalDigest,
-      operationIdentity, now: () => "2026-11-14T00:00:00Z",
+      operationIdentity: () => "wp11-lifecycle-human-promotion", now: () => "2026-11-14T00:00:00Z",
     })
     const promotion = makePromotion(state)
     const previewRequest = { caseRef: recorded.value.caseRef, choiceId: choice.id, alternativeRef: { id: "selected", version: 1 }, coverageRef: "current-training-inventory" }
@@ -262,10 +184,7 @@ test("a current quote replays the same historical choice, requires a separate hu
     human.preview = true
     expect((await preview.prepare({ ...previewRequest, alternativeRef: { id: "selected", version: 9 } }, fixture.context)).status).toBe("stale")
     const firstPrepared = await preview.prepare(previewRequest, fixture.context)
-    if (firstPrepared.status !== "ok") {
-      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify({ trace: previewTrace, coverage: coverageDiagnostic ?? { coverageError: "coverage-observation-unavailable" }, diagnosticFailures }))
-      throw new Error(`Current choice preview: ${JSON.stringify(firstPrepared)}`)
-    }
+    if (firstPrepared.status !== "ok") throw new Error(`Current choice preview: ${JSON.stringify(firstPrepared)}`)
     const previewResult = await results.read({ kind: "scenario", resultRef: firstPrepared.value.promotion.resultRef }, fixture.context)
     if (previewResult.status !== "ok" || previewResult.value.kind !== "scenario") throw new Error("Current choice result unavailable")
     expect(previewResult.value.result).toMatchObject({ knownSubtotal: 250000, total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "complete", alternativeId: "selected", alternativeVersion: 2 } })
@@ -293,10 +212,7 @@ test("a current quote replays the same historical choice, requires a separate hu
     expect((await promotion(firstPrepared.value.promotion, fixture.context)).status).toBe("stale")
     human.round = 2
     const prepared = await preview.prepare({ ...previewRequest, caseRef: { ...recorded.value.caseRef, version: 3 } }, fixture.context)
-    if (prepared.status !== "ok") {
-      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify({ trace: previewTrace, coverage: coverageDiagnostic ?? { coverageError: "coverage-observation-unavailable" }, diagnosticFailures }))
-      throw new Error(`Refreshed choice preview: ${JSON.stringify(prepared)}`)
-    }
+    if (prepared.status !== "ok") throw new Error(`Refreshed choice preview: ${JSON.stringify(prepared)}`)
     const promoted = await promotion(prepared.value.promotion, fixture.context)
     if (promoted.status !== "ok") throw new Error(`Current choice promotion: ${JSON.stringify(promoted)}`)
     expect(promoted.value.caseRef).toEqual({ ...recorded.value.caseRef, version: 4 })
@@ -307,9 +223,8 @@ test("a current quote replays the same historical choice, requires a separate hu
     // dispose() is idempotent; fixture.cleanup() can safely repeat it after this real restart.
     await fixture.store.dispose()
     const reopened = await openLocalStore(fixture.directory)
-    activeStore = reopened
     try {
-      const restoredState = makeState(fence.persistence)
+      const restoredState = makeState(reopened)
       const restored = await restoredState.read(fixture.request, "cases", (value) => ({ decision: value.cases[fixture.caseRef.id], result: value.decisionResults?.[promoted.value.resultRef] }))
       if (restored.status !== "ok" || !restored.value.decision) throw new Error("Current choice after reopen unavailable")
       expect(restored.value.decision.version).toBe(4)
@@ -329,4 +244,3 @@ test("a current quote replays the same historical choice, requires a separate hu
     } finally { await reopened.dispose() }
   } finally { await fixture.cleanup() }
 }, 180000)
-

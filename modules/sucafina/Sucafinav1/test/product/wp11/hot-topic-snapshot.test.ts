@@ -68,7 +68,7 @@ for (const race of ["source", "case", "authority"] as const) test(`hot-topic dra
       if (race === "source") {
         const applied = await fixture.persistence.transaction("dashboard", async (snapshot) => {
           const edited = DashboardPeople.domain.execute(snapshot, actor, { page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { notes: "Concurrent official source edit" } }, { at: plannerAt, id: randomUUID, directory: [] })
-          if (!edited.ok) throw new Error(`Concurrent Dashboard edit unavailable: ${JSON.stringify(edited)}`)
+          if (!edited.ok) throw new Error("Concurrent Dashboard edit unavailable")
           return { commit: true, value: edited }
         })
         sourceRace.committed = applied.ok
