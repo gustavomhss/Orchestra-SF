@@ -214,8 +214,8 @@ function load(snapshot: Snapshot): Store {
   return structuredClone({
     settings,
     form: {
-      currency: text(settings.currency),
       ...settings,
+      currency: text(settings.currency),
     },
     issued: { pr: [], po: [], ...object(stored.issued) },
     sup: Array.isArray(stored.sup) ? stored.sup.filter((code): code is string => typeof code === "string") : [],
