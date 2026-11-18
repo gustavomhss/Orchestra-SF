@@ -1,5 +1,6 @@
-import type { createSfContributionReader, createSfHistoricalContributionReader } from "../ai/contribution-reader.ts"
+import type { createSfContributionReader } from "../ai/contribution-reader.ts"
 import type { PortResult } from "../contracts/ports.ts"
+import type { ContributionEnvelope } from "../contracts/resident-ai.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 
@@ -21,7 +22,7 @@ export function createCampaignProposalReader(input: {
 
 /** Read an earlier proposal only as history after the C11 reader reauthorizes its sources. */
 export function createCampaignHistoricalProposalReader(input: {
-  readContribution: ReturnType<typeof createSfHistoricalContributionReader>
+  readContribution: (request: { outputRef: string; currentCase: ContributionEnvelope["caseRef"] }, context: TrustedDomainContext) => Promise<PortResult<{ state: "historical"; output: ContributionEnvelope }>>
   caseFor: (context: TrustedDomainContext) => Promise<PortResult<{ id: string; incarnation: string; version: number }>>
 }) {
   return async (outputRef: string, context: TrustedDomainContext): Promise<PortResult<{ outputDigest: string }>> => {

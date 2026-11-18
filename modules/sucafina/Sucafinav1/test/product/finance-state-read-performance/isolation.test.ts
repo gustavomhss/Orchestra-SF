@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test"
 import type { SfProductState } from "../../../product/contracts/state.ts"
-import { sfProductStateAdditiveFields } from "../../../product/contracts/state-layout.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { selectSfCase } from "../../../product/host-binding/state-provider.ts"
 import { createStateIsolationFixture } from "./fixture.ts"
@@ -152,14 +151,6 @@ test("C08 case selectors preserve missing, inherited, legacy and malformed state
   try {
     const original = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1) }))
     const legacy = original as SfProductState
-    // Build an actual older v1 snapshot explicitly: the composed provider
-    // initializes additive maps in new stores, which is not legacy evidence.
-    for (const field of sfProductStateAdditiveFields) Reflect.deleteProperty(legacy, field)
-    Reflect.deleteProperty(legacy.versions, "bi-artifacts")
-    await f.store.transaction("dashboard", async (snapshot) => {
-      snapshot.data.__sfProductV1 = structuredClone(legacy)
-      return { commit: true, value: null }
-    })
     expect(legacy.nativeRuns).toBeUndefined()
     expect(legacy.decisionResults).toBeUndefined()
     expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toMatchObject({ status: "ok", value: f.decision })

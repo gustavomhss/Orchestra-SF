@@ -146,7 +146,7 @@ test("new invalid unrequested SQL payloads reject before root Planner callback o
   })
 })
 
-test("one root emits fresh demanded sibling graphs while nested and current snapshots remain independent staged copies", async () => {
+test("one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies", async () => {
   await fixture(async (directory, open) => {
     const store = await open()
     await seed(store)
@@ -182,7 +182,7 @@ test("one root emits fresh demanded sibling graphs while nested and current snap
       expect(Object.hasOwn(second.planner.data.record as object, "optional")).toBe(true)
       return { commit: false, value: first }
     }))
-    expect(observed.counts.nativeDashboard).toBe(4)
+    expect(observed.counts.nativeDashboard).toBe(1)
     observed.value.dashboard.data.record = { value: "after-scope output mutation" }
     expect(encodeSnapshot(await read(store, "dashboard"))).toBe(dashboard)
     expect(rows(directory)).toEqual(persisted)
