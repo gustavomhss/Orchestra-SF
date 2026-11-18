@@ -1,5 +1,4 @@
 import { Schema } from "effect"
-import { optional } from "../../schema"
 import {
   SfCaseIdentity, SfDomainProjection, SfEvidenceRef, SfNonEmpty, SfNonNegative,
   SfPeriod, SfPositive, SfRecordEvidence, SfSourceRef, SfSurface,
@@ -144,9 +143,8 @@ export const SfConfirmationRecord = Schema.Struct({
 export const SfConfirmationPrepareValue = Schema.Struct({
   sourceVersion: SfPositive, incarnation: SfNonEmpty, scopeFingerprint: SfNonEmpty,
   evidence: SfRecordEvidence, projection: SfDomainProjection,
-  selectionRef: optional(Schema.String.check(Schema.isPattern(/^confirmation-selection:[a-f0-9]{64}$/))),
+  selectionRef: Schema.optional(Schema.String.check(Schema.isPattern(/^confirmation-selection:[a-f0-9]{64}$/))),
 })
-export interface SfPreparedConfirmationSelection extends Schema.Schema.Type<typeof SfPreparedConfirmationSelection> {}
 export const SfPreparedConfirmationSelection = Schema.Struct({
   kind: Schema.Literal("prepared-selection"),
   selectionRef: Schema.String.check(Schema.isPattern(/^confirmation-selection:[a-f0-9]{64}$/)),
