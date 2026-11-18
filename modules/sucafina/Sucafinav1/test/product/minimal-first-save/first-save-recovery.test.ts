@@ -121,7 +121,7 @@ async function fixture() {
           digestSfValue(item.value) === digestSfValue(draft.sourceRefs[index])) && await host.revalidate(context)
       },
       verifySnapshot: (snapshot, request, draft, context) =>
-        context.kind === "ui" && ui.matchesIntent(context, "sf-human:decisions.edit", digestSfValue(request)) && sourceCurrent(snapshot, draft, context),
+        ui.matchesIntent(context, "sf-human:decisions.edit", digestSfValue(request)) && sourceCurrent(snapshot, draft, context),
       verifyLookupSnapshot: (draft, context) => {
         const dashboard = persistence.currentSnapshots?.()?.dashboard
         return !!dashboard && sourceCurrent(dashboard, draft, context)
