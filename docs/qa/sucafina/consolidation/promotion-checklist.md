@@ -12,21 +12,28 @@
 | GitHub `refs/pull/237/merge` | `7ce5a6215818896c57a9ec7e70d41c4386dfbc85` |
 | Candidate and synthetic merge tree | `f9a188631f006e88b6ff956bd111d8ab5c3df117` |
 | Go-live distance from candidate | 0 ahead / 143 behind; go-live is an ancestor |
-| Local Git merge-tree | **NOT_RUN**; `promotion-proof.json` is pending local regeneration |
+| GitHub-only merge proof | **VERIFIED** via GitHub MCP: PR metadata, ancestry, merge-ref parents and tree equality; `promotion-proof.json` has `REMOTE_TOPOLOGY_VERIFIED` |\n| Local Git merge-tree | **NOT_RUN**; local Git is still required for the separate local-merge-tree gate |
 
 The SHA values above expire when either branch moves. `refs/pull/237/merge` is synthetic; its tree equality does not prove that the required CI and installed tests passed.
 
-## Run the actual promotion proof
+## Reproduce and check the promotion proof
 
-From a **dedicated worktree** on branch `promotion-readiness` (no source-branch checkout, no product tests):
+The published JSON was verified **remotely** by querying the GitHub API using GitHub MCP (the synthetic merge ref is a real GitHub-generated merge commit, not a locally generated commit). Reproduce GitHub-only verification with `gh` credentials; **no local Git or product test invocation** is required for this mode:
+
+```bash
+node script/sf-ci/promotion-proof.mjs --github
+node script/sf-ci/promotion-proof.mjs --github --check
+cat docs/qa/sucafina/consolidation/promotion-proof.json
+```
+
+For the **separate local merge-tree proof** required by the original WP10 scope, use an isolated worktree on `promotion-readiness` (no branch checkout on any protected branch):
 
 ```bash
 node script/sf-ci/promotion-proof.mjs
 node script/sf-ci/promotion-proof.mjs --check
-cat docs/qa/sucafina/consolidation/promotion-proof.json
 ```
 
-The script fetches refs, checks live PR metadata, verifies ancestry and ahead/behind, computes `git merge-tree --write-tree` (or detached temporary fast-forward worktree on older Git), compares candidate/tree and GitHub merge ref parentage, and writes the JSON atomically. `--check` must be nonzero if the stored proof is missing/incomplete, the PR is not a draft, or its base/head/merge ref has drifted. Never treat topology-only proof as release acceptance.
+The local mode fetches refs and invokes `git merge-tree --write-tree` (or a detached temporary fast-forward worktree on older Git). The GitHub-only mode uses the GitHub compare API, Git commit/tree objects, and `refs/pull/237/merge` parentage to independently verify the **remote topology**, while persisting `localMerge.method=NOT_RUN`. Mode-specific `--check` rejects absent/wrong-mode/stale evidence and refuses a non-draft PR or drifted base/head/merge ref. These commands do not qualify product behavior or authorize release.
 
 ## 12/12 qualification proof table
 
@@ -34,8 +41,8 @@ Each row requires a real artifact or the **exact** command below, associated wit
 
 | # | Required proof | Exact evidence artifact / retrieval command | State |
 | ---: | --- | --- | --- |
-| 01 | Fast-forward, locally built merge tree and pinned refs | `docs/qa/sucafina/consolidation/promotion-proof.json`; `node script/sf-ci/promotion-proof.mjs --check` | **NOT_VERIFIED locally** |
-| 02 | Full green baseline **and** full green PR merge-ref CI; no cancelled/skipped/unknown lanes | `gh run view "$BASELINE_RUN_ID" --repo gustavomhss/Orchestra-SF --json headSha,conclusion,jobs`; `gh run view "$MERGE_RUN_ID" --repo gustavomhss/Orchestra-SF --json headSha,conclusion,jobs`; require respective heads `ec3df1315cfd3e3077c09f7bc1f42a608448b1c0` and `7ce5a6215818896c57a9ec7e70d41c4386dfbc85` (repin when moved) | **NOT_VERIFIED** |
+| 01 | Fast-forward, locally built merge tree and pinned refs | `docs/qa/sucafina/consolidation/promotion-proof.json`; `node script/sf-ci/promotion-proof.mjs --github --check` (remote only); `node script/sf-ci/promotion-proof.mjs --check` (local, after local generation) | **PARTIAL: remote VERIFIED, local NOT_RUN** |
+| 02 | Full green baseline **and** full green PR merge-ref CI; no cancelled/skipped/unknown lanes | `gh run view "$BASELINE_RUN_ID" --repo gustavomhss/Orchestra-SF --json headSha,conclusion,jobs`; `gh run view "$MERGE_RUN_ID" --repo gustavomhss/Orchestra-SF --json headSha,conclusion,jobs`; require respective heads `ec3df1315cfd3e3077c09f7bc1f42a608448b1c0` and `7ce5a6215818896c57a9ec7e70d41c4386dfbc85` (repin when moved) | **BLOCKED: latest observed `sf-ci` run `44182616679` failed; merge-ref CI not established** |
 | 03 | Linux package plus SHA-256 of **every** distributed binary; tied to the merge SHA | `gh run download "$MERGE_RUN_ID" --repo gustavomhss/Orchestra-SF -n "sf-omni-linux-7ce5a6215818896c57a9ec7e70d41c4386dfbc85" -D /tmp/sf-237/package`; `find /tmp/sf-237/package -type f -print0 \| sort -z \| xargs -0 sha256sum > /tmp/sf-237/package-files.sha256` (Linux runner); archive/upload immutable `package-files.sha256` with run ID | **NOT_VERIFIED** |
 | 04 | Package extraction / factory acceptance on the **same** package digest | `gh run view "$MERGE_RUN_ID" --repo gustavomhss/Orchestra-SF --json jobs`; installed extraction log artifact **to be attached** as `promotion-evidence/package-extraction.json` with SHA-256 from row 03 | **NOT_VERIFIED** |
 | 05 | Installed native host / Linux x64 runtime receipt (not a mock) | `promotion-evidence/installed-host.json`, with `mergeRunId`, `treeSha`, `packageSha256` and installed-host provenance | **NOT_VERIFIED** |
@@ -53,7 +60,7 @@ Each row requires a real artifact or the **exact** command below, associated wit
 
 | Gate | Exact artifact or command | Current status |
 | --- | --- | --- |
-| Baseline green run ID | `gh run list --repo gustavomhss/Orchestra-SF --branch close-final-candidate --limit 30 --json databaseId,headSha,conclusion,url`; enter `BASELINE_RUN_ID=...` for the exact candidate SHA | **NOT_VERIFIED** |
+| Baseline green run ID | `gh run list --repo gustavomhss/Orchestra-SF --branch close-final-candidate --limit 30 --json databaseId,headSha,conclusion,url`; latest observed run `44182616679` for candidate `ec3df1315cfd3e3077c09f7bc1f42a608448b1c0` ended `failure`; require NEW successful `BASELINE_RUN_ID` | **BLOCKED — CI failure** |
 | Merge-ref run ID | `gh pr checks 237 --repo gustavomhss/Orchestra-SF`; `gh api repos/gustavomhss/Orchestra-SF/commits/7ce5a6215818896c57a9ec7e70d41c4386dfbc85/check-runs`; enter `MERGE_RUN_ID=...` | **NOT_VERIFIED** |
 | Full package digest | `/tmp/sf-237/package-files.sha256`, securely archived with the run, package filenames and SHA-256 | **NOT_VERIFIED** |
 | UAT authorized sign-off | `promotion-evidence/uat-signoff.json` — signatory/role: **NEEDS-INPUT**; signed date: **NEEDS-INPUT**; candidate tree: `f9a188631f006e88b6ff956bd111d8ab5c3df117` | **NOT_VERIFIED** |
@@ -79,4 +86,4 @@ This is **source-code rollback preparation**, not a tested deployed-runtime roll
 
 ## GO/NO-GO decision rule
 
-Default **NO-GO**. Require valid `promotion-proof.json --check`, a genuine completed green baseline and merge-ref CI, 12/12 independently evidenced rows, package digest, real installed-host + SSO qualification, UAT, approved runnable rollback, triple cold review, terminal ledger and explicit owner authorization. Any base/head movement invalidates the pack and requires recapture/requalification. PR #237 stays draft until then.
+Default **NO-GO**. Require reproducible GitHub-only `--github --check` **and** the original independent local merge-tree proof (`--check` after local regeneration), a genuine completed green baseline and merge-ref CI, 12/12 independently evidenced rows, package digest, real installed-host + SSO qualification, UAT, approved runnable rollback, triple cold review, terminal ledger and explicit owner authorization. Any base/head movement invalidates the pack and requires recapture/requalification. PR #237 stays draft until then.
