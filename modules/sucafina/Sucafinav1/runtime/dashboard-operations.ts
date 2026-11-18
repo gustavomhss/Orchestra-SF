@@ -51,7 +51,7 @@ const campaignNumbers = [
 ]
 const consequences = ["Data exfiltration", "Data loss", "Service unavailability"]
 
-export function operationsCanWrite(actor: Actor, page: string) {
+function writable(actor: Actor, page: string) {
   return (
     actor.canWrite &&
     (actor.roles.includes("admin") ||
@@ -151,12 +151,45 @@ function monthly(snapshot: Snapshot, period: { year: number; month: number }) {
     operations.slice(0, 3).map((key) => [key, rows(snapshot.data[key]).filter((row) => sameMonth(row, period))]),
   )
 }
+function validSecurityKpiValue(value: unknown): value is number | string {
+  if (typeof value === "number") return Number.isFinite(value)
+  return typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value.trim()))
+}
+function securityKpiValue(row: Record<string, unknown>, kpi: (typeof SECURITY_KPIS)[number]) {
+  if (kpi.key !== "socClosure") return row[kpi.key]
+  const manual = row.socClosure
+  const socClosure =
+    typeof manual === "number" ? manual : typeof manual === "string" && manual.trim() !== "" ? manual : null
+  return socClosureValue({ ...row, socClosure })
+}
+
+function securityTiles(data: Record<string, unknown>, year: number, month: number) {
+  const tileEntries = rows(data.secKpi)
+    .filter(
+      (row) =>
+        row.year === year &&
+        typeof row.month === "number" &&
+        Number.isInteger(row.month) &&
+        row.month >= 1 &&
+        row.month <= 12 &&
+        row.month <= month,
+    )
+    .sort((a, b) => finite(b.month) - finite(a.month))
+  return SECURITY_KPIS.map((kpi) => {
+    const value = tileEntries.map((row) => securityKpiValue(row, kpi)).find(validSecurityKpiValue) ?? null
+    return {
+      key: kpi.key,
+      value,
+      status: securityKpiStatus(kpi.better, kpi.target, kpi.moderate, value),
+    }
+  })
+}
 
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite) return { ok: false, status: 403 }
     if (!pages.some((page) => page === command.page)) return { ok: false, status: 400 }
-    if (!operationsCanWrite(actor, command.page)) return { ok: false, status: 403 }
+    if (!writable(actor, command.page)) return { ok: false, status: 403 }
     // Shared forms send textarea values as strings. Decode at the server boundary.
     const structured =
       command.action === "import-month"
@@ -430,12 +463,25 @@ export const domain: Domain = {
       ...(permitted.includes("opsTickets") ? ["ops:", "ops-list:"] : []),
       ...(permitted.includes("secKpi") ? ["security:", "secActions:", "secIncidents:", "secPhishing:"] : []),
     ]
-    return {
-      data: structuredClone(
-        Object.fromEntries(
-          permitted.filter((key) => snapshot.data[key] !== undefined).map((key) => [key, snapshot.data[key]]),
-        ),
+    const data = structuredClone(
+      Object.fromEntries(
+        permitted.filter((key) => snapshot.data[key] !== undefined).map((key) => [key, snapshot.data[key]]),
       ),
+    )
+    if (permitted.includes("secKpi") && Array.isArray(data.secKpi))
+      data.nativeSecuritySummaryByYear = Object.fromEntries(
+        [2024, 2025, 2026, 2027].map((year) => [
+          String(year),
+          Object.fromEntries(
+            Array.from({ length: 12 }, (_, index) => [
+              String(index + 1),
+              { tiles: securityTiles(data, year, index + 1) },
+            ]),
+          ),
+        ]),
+      )
+    return {
+      data,
       versions: structuredClone(
         Object.fromEntries(
           Object.entries(snapshot.versions).filter(([key]) => prefixes.some((prefix) => key.startsWith(prefix))),
@@ -497,7 +543,7 @@ function chart(title: string, labels: string[], series: { name: string; values: 
 
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
   if (!pages.some((owned) => page === owned)) return undefined
-  const disabled = !operationsCanWrite(context.actor, page)
+  const disabled = !writable(context.actor, page)
   const period = { year: context.year, month: context.month }
   const selector = `<div class="period-selector"><label>Year<select data-year="own" data-query="${page === pages[0] ? "opsYear" : "secYear"}">${[2024, 2025, 2026, 2027].map((year) => `<option${year === context.year ? " selected" : ""}>${year}</option>`).join("")}</select></label><label>Month<select data-month="own" data-query="${page === pages[0] ? "operationsMonth" : "securityMonth"}">${Array.from(
     { length: 12 },
@@ -616,13 +662,11 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     .filter((row) => row.year === context.year)
     .sort((a, b) => finite(a.month) - finite(b.month))
   const entry = entries.find((row) => row.month === context.month) ?? {}
-  const closure = socClosureValue(entry)
-  const tiles = SECURITY_KPIS.map((kpi) => {
-    const value = kpi.key === "socClosure" ? closure : entry[kpi.key]
+  const tiles = securityTiles(data, context.year, context.month).map((tile) => {
     return (
       '<div class="metric-tile">' +
-      metric(kpi.key, value == null || value === "" ? "No data" : String(value)) +
-      `<p>${securityKpiStatus(kpi.better, kpi.target, kpi.moderate, typeof value === "number" || typeof value === "string" ? value : null)}</p></div>`
+      metric(tile.key, tile.value === null ? "No data" : String(tile.value)) +
+      `<p>${tile.status}</p></div>`
     )
   })
   const kpiForm = form(
@@ -638,9 +682,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     const id = row.id == null ? "" : String(row.id)
     const version = context.versions[`${collection}:${id}`]?.version ?? 0
     return (
-      `<details class="editor-panel"><summary>${id ? `Edit ${esc(text(row.title) || text(row.name) || text(row.text) || kind)}` : `Add ${esc(kind)}`}</summary>` +
       form(page, `save-${kind}`, id, version, body, `Save ${kind}`, disabled) +
-      (id ? form(page, `delete-${kind}`, id, version, "", `Delete ${kind}`, disabled) : "") + "</details>"
+      (id ? form(page, `delete-${kind}`, id, version, "", `Delete ${kind}`, disabled) : "")
     )
   }
   const actions = [...rows(data.secActions), {}]
@@ -763,7 +806,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         return esc(value == null || value === "" ? "No data" : String(value))
       }),
     ]),
-  )}<details class="editor-panel"><summary>Edit monthly security KPIs</summary>${kpiForm}${entry.id == null ? "" : form(page, "delete-kpi", String(entry.id), context.versions[`security:${monthID}`]?.version ?? 0, periodFields(context), "Delete monthly entry", disabled)}</details></section><section><h2>Management Actions</h2><p>Current action records as of ${esc(context.at.slice(0, 10))}; the selected KPI year does not create a historical action snapshot.</p>${table(["Action", "Status"], rows(data.secActions).map((row) => [esc(text(row.text)), row.done === true ? "Done" : "Open"]))}${actions}</section>${chart(
+  )}${kpiForm}${entry.id == null ? "" : form(page, "delete-kpi", String(entry.id), context.versions[`security:${monthID}`]?.version ?? 0, periodFields(context), "Delete monthly entry", disabled)}</section><section><h2>Management Actions</h2>${actions}</section>${chart(
     "SOC trend",
     entries.map((row) => String(row.month)),
     series(["socPending", "socTP", "socFP"]),
@@ -775,7 +818,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     "Patch trend",
     entries.map((row) => String(row.month)),
     series(["patch", "patchEndpoint", "patchServer"]),
-  )}<section><h2>Phishing Simulation</h2><p>Current campaign records as of ${esc(context.at.slice(0, 10))}; the selected KPI year does not create a historical campaign snapshot.</p>${campaigns}</section><section><h2>Security Incidents with Business Impact</h2><p>Incidents dated in ${context.year}; containment, remediation and root-cause status are current as of ${esc(context.at.slice(0, 10))}.</p>${metric("Open incidents", String(incidents.filter((row) => !row.contained || !row.remediated || !row.rootCause).length))}${table(
+  )}<section><h2>Phishing Simulation</h2>${campaigns}</section><section><h2>Security Incidents with Business Impact</h2>${metric("Open incidents", String(incidents.filter((row) => !row.contained || !row.remediated || !row.rootCause).length))}${table(
     ["Title", "Date", "Status", "Impact"],
     incidents.map((row) => [
       esc(text(row.title)),

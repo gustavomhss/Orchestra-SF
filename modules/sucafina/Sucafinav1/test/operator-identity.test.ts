@@ -327,3 +327,35 @@ test("explicit local buyer policy grants buyer only on Procurement and never cha
     expect(await readonly.authenticate(request("/procurement", login.cookie), { surface: "procurement", roleMap: [] })).toEqual({ id: profile.id, canWrite: true, roles: [{ surface: "procurement", role: "admin" }] })
   })
 })
+
+test("scope is a nonsecret binding to the live session and expires with that session", async () => {
+  await fixture(async (f) => {
+    const first = await f.enroll()
+    const bound = request("/dashboard", first.cookie)
+    const scope = await f.identity.scope(bound)
+    expect(scope).toMatch(/^[a-f0-9]{64}$/)
+    expect(scope).not.toBe(first.handle)
+    expect(await f.identity.scope(bound)).toBe(scope)
+    expect(await f.identity.scope(request("/dashboard", "theme=dark; " + first.cookie))).toBe(scope)
+    expect(await f.identity.scope(request("/dashboard", "  " + first.cookie + "  ; theme=light"))).toBe(scope)
+    const second = await f.enroll()
+    const rotated = await f.identity.scope(request("/dashboard", second.cookie))
+    expect(rotated).toMatch(/^[a-f0-9]{64}$/)
+    expect(rotated).not.toBe(scope)
+    f.clock.value += 28_800_001
+    expect(await f.identity.scope(bound)).toBeUndefined()
+    expect(await f.identity.scope(request("/dashboard", second.cookie))).toBeUndefined()
+  })
+})
+
+test("scope rejects anonymous, duplicate, foreign-origin, and revoked credentials", async () => {
+  await fixture(async (f) => {
+    const login = await f.enroll()
+    expect(await f.identity.scope(request("/dashboard"))).toBeUndefined()
+    expect(await f.identity.scope(request("/dashboard", login.cookie.split("=")[0] + "=" + "z".repeat(64)))).toBeUndefined()
+    expect(await f.identity.scope(request("/dashboard", login.cookie + "; " + login.cookie))).toBeUndefined()
+    expect(await f.identity.scope(new Request("http://127.0.0.1:4110/sucafina/dashboard", { headers: { cookie: login.cookie } }))).toBeUndefined()
+    expect((await f.identity.handle(request("/auth/logout", login.cookie, { method: "POST", headers: { origin } })))?.status).toBe(204)
+    expect(await f.identity.scope(request("/dashboard", login.cookie))).toBeUndefined()
+  })
+})

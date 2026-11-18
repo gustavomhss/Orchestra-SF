@@ -41,7 +41,7 @@ export async function loadLocalConfiguration(file: string) {
   const value: unknown = await Bun.file(file).json()
   if (value === null || typeof value !== "object" || !("version" in value) || value.version !== 1 || !("origin" in value) || typeof value.origin !== "string" || !("mount" in value) || typeof value.mount !== "string") throw new Error("Invalid installation configuration")
   const origin = new URL(value.origin)
-  if (value.origin !== origin.origin || origin.protocol !== "http:" || origin.hostname !== "localhost" || origin.port !== "4110" || !/^\/[A-Za-z0-9_-]+$/.test(value.mount)) throw new Error("Fixed localhost installation origin required")
+  if (value.origin !== origin.origin || origin.protocol !== "http:" || origin.hostname !== "localhost" || !["4110", "4111"].includes(origin.port) || !/^\/[A-Za-z0-9_-]+$/.test(value.mount)) throw new Error("Fixed localhost installation origin required")
   const record = value as Record<string, unknown>
   if (record.authentication !== undefined && record.authentication !== "microsoft" && record.authentication !== "local-operator") throw new Error("Invalid authentication profile")
   if (record.authentication === "local-operator") {
@@ -54,7 +54,7 @@ export async function loadLocalConfiguration(file: string) {
     const groups: unknown = value.groups[surface as keyof typeof value.groups]
     if (!groups || typeof groups !== "object" || Array.isArray(groups) || Object.entries(groups).some(([role, group]) => !emptyMap().some((row) => row.surface === surface && row.role === role) || typeof group !== "string" || !group.trim())) throw new Error("Invalid configured group")
   }
-  if (!("scanner" in value) || (value.scanner !== null && (typeof value.scanner !== "object" || !("host" in value.scanner) || value.scanner.host !== "127.0.0.1" || !("port" in value.scanner) || typeof value.scanner.port !== "number" || !Number.isInteger(value.scanner.port) || value.scanner.port < 1 || value.scanner.port > 65535 || value.scanner.port === 4110))) throw new Error("Invalid local scanner")
+  if (!("scanner" in value) || (value.scanner !== null && (typeof value.scanner !== "object" || !("host" in value.scanner) || value.scanner.host !== "127.0.0.1" || !("port" in value.scanner) || typeof value.scanner.port !== "number" || !Number.isInteger(value.scanner.port) || value.scanner.port < 1 || value.scanner.port > 65535 || value.scanner.port === Number(origin.port)))) throw new Error("Invalid local scanner")
   const keys = await Promise.all(["session", "bank", "assets"].map(async (name) => {
     const keyFile = path.join(directory, `${name}.key`)
     await requirePrivate(keyFile, false)

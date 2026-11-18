@@ -496,7 +496,31 @@ test("viewer summary reads are restricted; contributor security writes never imp
     members: [{ notes: "secret" }],
   }
   const view = domain.view(state, { ...actor, roles: ["viewer"] }, { at, id: () => "id", directory: [] })
-  expect(view.data).toEqual({ secKpi: [] })
+  expect(view.data).toEqual({
+    secKpi: [],
+    nativeSecuritySummaryByYear: Object.fromEntries(
+      ["2024", "2025", "2026", "2027"].map((year) => [
+        year,
+        Object.fromEntries(
+          ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"].map((month) => [
+            month,
+            {
+              tiles: [
+                { key: "training", value: null, status: "No data" },
+                { key: "patch", value: null, status: "No data" },
+                { key: "patchEndpoint", value: null, status: "No data" },
+                { key: "patchServer", value: null, status: "No data" },
+                { key: "scan", value: null, status: "No data" },
+                { key: "assessment", value: null, status: "No data" },
+                { key: "socPending", value: null, status: "No data" },
+                { key: "socClosure", value: null, status: "No data" },
+              ],
+            },
+          ]),
+        ),
+      ]),
+    ),
+  })
   const assigned = { ...actor, roles: ["contributor"], assigned: ["security"] }
   expect(
     domain.execute(

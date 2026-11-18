@@ -26,11 +26,12 @@ describe("dashboard portfolio runtime", () => {
     expect(state.versions["risks:new-id"]?.version).toBe(1)
     expect(JSON.stringify(state.data)).not.toContain('"score"')
   })
-  test("denied actors and missing ownership predicate never mutate or audit", () => {
+  test("read-only and unassigned actors never mutate or audit", () => {
     for (const actor of [
       { ...admin, canWrite: false },
       { id: "c", canWrite: true, roles: ["contributor"], assigned: [] },
-      { id: "l", canWrite: true, roles: ["domain leader"] },
+      { id: "l", canWrite: false, roles: ["domain leader"] },
+      { id: "v", canWrite: true, roles: ["viewer"] },
     ]) {
       const state = snapshot({
         projects: [{ id: "p", name: "Old", leaderId: actor.id }],
@@ -53,14 +54,15 @@ describe("dashboard portfolio runtime", () => {
       risks: [{ id: "r", name: "Old", impact: 2, probability: 2, custom: "keep" }],
     })
     expect(domain.execute(state, actor, command("IT Risks", { name: "New" }, { id: "r" }), environment).ok).toBe(true)
+    expect(state.data.risks).toMatchObject([{ id: "r", name: "New", custom: "keep" }])
     const before = structuredClone(state)
     expect(
       domain.execute(state, actor, command("IT Risks", { name: "Stale" }, { id: "r" }), environment),
-    ).toMatchObject({
+    ).toEqual({
       ok: false,
       status: 409,
       by: "c",
-      stored: { name: "New", custom: "keep" },
+      stored: (domain.view(state, actor, environment).data.risks as Record<string, unknown>[])[0],
     })
     expect(state).toEqual(before)
     expect(domain.execute(state, actor, command("Vendor Contracts", { vendor: "X" }), environment)).toMatchObject({
@@ -578,12 +580,4 @@ test("invalid import batch writes no audit and only first homonym requires a ver
   expect((state.data.projects as Record<string, unknown>[])[1]).toEqual(second)
   expect(state.audit.map((entry) => entry.record)).toEqual(["projects:1"])
   expect((state.data.projects as Record<string, unknown>[])[0]?.id).toBe(1)
-})
-
-test("review signal destinations anchor visible source rows", () => {
-  const state = snapshot({ risks: [{ id: "r-1", name: "Risk", status: "open", impact: 4, probability: 4 }], contracts: [{ id: "c-1", vendor: "Vendor", renewal: "2026-12-01" }] })
-  const view = domain.view(state, admin, environment)
-  const context = { actor: admin, year: 2026, month: 11, at: environment.at, versions: view.versions }
-  expect(render("IT Risks", view.data, context)).toContain('id="record-r-1"')
-  expect(render("Vendor Contracts", view.data, context)).toContain('id="record-c-1"')
 })

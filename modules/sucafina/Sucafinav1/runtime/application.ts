@@ -2,29 +2,23 @@ import { configure, controls, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
-import { visibleRequests } from "../src/requests.ts"
+import { WorkbookDate } from "../src/workbook-date.ts"
 import { documentHtml, links, pageMain } from "../src/screen-shell.ts"
 import type { Actor, Command, Domain, Environment, Persistence, Result, Snapshot } from "./contract.ts"
-import { object, rows, text } from "./contract.ts"
+import { changed, conflict, object, rows, text } from "./contract.ts"
 import { download } from "./downloads.ts"
 import type { WorkbookLimits } from "./workbooks.ts"
-import { executeDashboardBackupImport } from "./dashboard-backup.ts"
+import { migrateDashboard } from "../src/dashboard-role.ts"
+import { prepareDashboardImport } from "./dashboard-import.ts"
 import { assetLink, captureRecordAssets, deleteRecordAssets, downloadAsset, uploadAsset } from "./assets.ts"
 import type { AssetKind, AssetPersistence, AssetServices, BlobTransaction } from "./assets.ts"
 import { esc } from "../src/screen-shell.ts"
 import type { RenderContext } from "./ui.ts"
-import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
-import { publicSfData } from "../product/integration/public-state.ts"
 
 export type Contribution = {
   pages: readonly string[]
   domain: Domain
   render: (page: string, data: Record<string, unknown>, context: RenderContext) => string | undefined
-}
-export type ApplicationPageView = {
-  data: Record<string, unknown>
-  current: (snapshot: Snapshot, actor: Actor) => boolean | Promise<boolean>
-  finish: () => void
 }
 export type Application = {
   authenticate: (
@@ -37,11 +31,7 @@ export type Application = {
   maxJsonBytes: number
   workbookLimits?: Partial<WorkbookLimits>
   assets?: { persistence: AssetPersistence; services: AssetServices }
-  product?: (request: Request, surface: Surface) => Promise<Response | undefined>
-  // Prepare outside the page lock; fence the retained projection against the authenticated snapshot inside it.
-  productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
-  // Runs within the authorized page transaction; the decorator must be synchronous and pure.
-  productHtml?: (html: string, surface: Surface, page: string) => string
+  presentation?: "native"
 }
 
 /** Mount this in the installation's existing fetch composition. It starts no listener and selects no database. */
@@ -64,14 +54,30 @@ export function createApplication(mount: string, application: Application) {
       ((origin && origin !== url.origin) || request.headers.get("sec-fetch-site") === "cross-site")
     )
       return reply("Access denied", 403)
+    // Native PageState and Command have no file or blob transports. Direct callers cannot bypass the gateway.
+    if (
+      application.presentation === "native" &&
+      ["download", "upload", "asset", "asset-link"].some((key) => url.searchParams.has(key))
+    )
+      return reply("Not found", 404)
     const uploading = request.method === "POST" && url.searchParams.has("upload")
-    // Product operations own fresh authentication and transactions; never nest them in the page lock.
-    const product = await application.product?.(request, surface)
-    if (product) return product
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
     if (parsed instanceof Response) return parsed
-    const environment = await application.environment(request)
+    if (application.presentation === "native" && parsed?.action === "preview-workbook")
+      return reply("Not found", 404)
+    const resolvedEnvironment = await application.environment(request)
+    const environment =
+      application.presentation === "native"
+        ? {
+            ...resolvedEnvironment,
+            directory: resolvedEnvironment.directory.flatMap((person) =>
+              typeof person?.id === "string" && typeof person?.name === "string"
+                ? [{ id: person.id, name: person.name }]
+                : [],
+            ),
+          }
+        : resolvedEnvironment
     const transaction: TransactionRunner = (work) =>
       application.assets
         ? application.assets.persistence.transaction(surface, work, { signal: request.signal })
@@ -80,8 +86,6 @@ export function createApplication(mount: string, application: Application) {
       return serveDownload(request, surface, application, transaction, environment)
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
     if (preparedUpload instanceof Response) return preparedUpload
-    const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
-    if (productView instanceof Response) return productView
     const response = await transaction(async (snapshot, blobs) => {
       // Resolve current roles INSIDE the same transaction that rereads records and locks.
       const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
@@ -140,11 +144,6 @@ export function createApplication(mount: string, application: Application) {
           (surface === "dashboard" ? kind !== "contract" : surface !== "procurement" || kind === "contract")
         )
           return { commit: false, value: reply("Invalid attachment", 400) }
-        if (
-          surface === "procurement" && (kind === "quote" || kind === "signed-po") &&
-          !canViewProcurementRequest(snapshot, actor, url.searchParams.get("record") ?? "")
-        )
-          return { commit: false, value: json({ ok: false, status: 404 }, 404) }
         const cap =
           kind === "contract"
             ? 25 * 1024 * 1024
@@ -234,10 +233,6 @@ export function createApplication(mount: string, application: Application) {
         }
       }
       if (parsed) {
-        if (surface === "dashboard") {
-          const preview = handleDashboardPreview(snapshot, actor, parsed, environment, decodeCommand)
-          if (preview) return { commit: preview.commit, value: json(preview.value, preview.value.ok ? 200 : preview.value.status) }
-        }
         if (!actor.canWrite)
           return {
             commit: false,
@@ -270,20 +265,38 @@ export function createApplication(mount: string, application: Application) {
               Notes: "notes",
             }
             const projects = input.map((row) => {
-              const mapped = Object.fromEntries(
+              const mapped: Record<string, unknown> = Object.fromEntries(
                 Object.entries(columns)
                   .filter(([key]) => row[key] !== undefined)
                   .map(([key, field]) => [field, row[key]]),
               )
-              const leader = rows(snapshot.data.leaders).find(
-                (item) => text(item.name).trim().toLowerCase() === text(row["IT Leader"]).trim().toLowerCase(),
-              )
-              if (leader) mapped.leaderId = leader.id
+              const leaderHeader = Object.hasOwn(row, "IT Leader / Sponsor")
+                ? "IT Leader / Sponsor"
+                : Object.hasOwn(row, "IT Leader")
+                  ? "IT Leader"
+                  : undefined
+              if (leaderHeader) {
+                const leaderName = text(row[leaderHeader]).trim()
+                const leader = leaderName
+                  ? rows(snapshot.data.leaders).find(
+                      (item) => text(item.name).trim().toLowerCase() === leaderName.toLowerCase(),
+                    )
+                  : undefined
+                mapped.leaderId = leader?.id ?? ""
+              }
+              const start = WorkbookDate.parse(mapped.start)
+              const end = WorkbookDate.parse(mapped.end)
               return {
                 ...mapped,
-                _status: text(mapped.name).trim() ? "valid" : "error",
+                ...(start !== undefined && Object.hasOwn(mapped, "start") ? { start } : {}),
+                ...(end !== undefined && Object.hasOwn(mapped, "end") ? { end } : {}),
+                _status: text(mapped.name).trim() && start !== undefined && end !== undefined ? "valid" : "error",
               }
-            })
+            }).filter(
+              (project) =>
+                text(object(project).name).trim() !== "" &&
+                !text(object(project).name).trim().startsWith("—"),
+            )
             return {
               commit: false,
               value: json({ ok: true, sheets: { "Projects Import": projects } }, 200),
@@ -295,8 +308,66 @@ export function createApplication(mount: string, application: Application) {
           }
         }
         if (parsed.action === "backup-import" && surface === "dashboard") {
-          const result = executeDashboardBackupImport(snapshot, actor, parsed, environment)
-          return { commit: result.commit, value: json(result.value, result.status) }
+          if (!actor.roles.includes("admin"))
+            return {
+              commit: false,
+              value: json({ ok: false, status: 403 }, 403),
+            }
+          const stale = conflict(snapshot, "dataset", parsed, snapshot.data)
+          if (stale) return { commit: false, value: json(stale, 409) }
+          const imported = migrateDashboard(
+            object(parsed.values.data),
+            actor,
+            parsed.confirmed === true,
+            new Date(environment.at).getFullYear(),
+          )
+          if (!imported.ok)
+            return {
+              commit: false,
+              value: json({ ok: false, errors: ["Confirm dataset replacement."] }, 422),
+            }
+          const prepared = prepareDashboardImport(snapshot.data, imported.data)
+          if (!prepared.ok) return { commit: false, value: json({ ok: false, errors: prepared.errors }, 422) }
+          const before = structuredClone(snapshot.data)
+          snapshot.data = prepared.data
+          for (const [key, version] of Object.entries(snapshot.versions))
+            if (key !== "dataset")
+              snapshot.versions[key] = {
+                version: version.version + 1,
+                by: actor.id,
+              }
+          for (const collection of [
+            "opexOwners",
+            "opexEntries",
+            "capexProjects",
+            "capexEntries",
+            "members",
+            "leaders",
+            "hotTopics",
+            "projects",
+            "risks",
+            "contracts",
+            "stakeholders",
+            "opsTickets",
+            "opsSLA",
+            "opsHeatmap",
+            "secKpi",
+            "secActions",
+            "secIncidents",
+            "secPhishing",
+          ])
+            for (const record of rows(snapshot.data[collection])) {
+              const key = `${collection}:${String(record.id ?? "")}`
+              if (!snapshot.versions[key]) snapshot.versions[key] = { version: 1, by: actor.id }
+            }
+          for (const key of ["itperf", "cio", "budgetCurrentMonth", "revenueByYear"])
+            if (snapshot.data[key] !== undefined && !snapshot.versions[key])
+              snapshot.versions[key] = { version: 1, by: actor.id }
+          changed(snapshot, "dataset", actor, environment.at, before, snapshot.data)
+          snapshot.audit[snapshot.audit.length - 1].name = environment.directory.find(
+            (person) => person.id === actor.id,
+          )?.name
+          return { commit: true, value: json({ ok: true }, 200) }
         }
         const deletionKind =
           parsed.action === "delete" && page === "Vendor Contracts"
@@ -380,9 +451,50 @@ export function createApplication(mount: string, application: Application) {
           ? (own ?? Math.min(2027, Math.max(2024, now.getFullYear())))
           : sidebar
       const auditBefore = snapshot.audit.length
-      if (productView && !await productView.current(snapshot, actor))
-        return { commit: false, value: reply("The current queue is unavailable. Refresh the page to read the current authorized records.", 503) }
-      const view = contribution.domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
+      const view = contribution.domain.view(snapshot, actor, environment)
+      const month = monthParam
+        ? Number(monthParam)
+        : surface === "dashboard" && page === "Executive Dashboard" && selected !== now.getFullYear()
+          ? 12
+          : surface === "dashboard" && page === "IT Security KPIs"
+            ? Math.max(0, ...rows(view.data.secKpi)
+                .filter((row) => row.year === selected && typeof row.month === "number" &&
+                  Number.isInteger(row.month) && row.month >= 1 && row.month <= 12)
+                .map((row) => Number(row.month))) || 12
+            : now.getMonth() + 1
+      if (application.presentation === "native") {
+        const name = environment.directory.find((person) => person.id === actor.id && person.name.trim())?.name
+        if (!name)
+          return {
+            commit: false,
+            value: reply("Directory display name is unavailable", 503),
+          }
+        // view may append member-read audit. Commit those exact rows with the JSON page.
+        return {
+          commit: snapshot.audit.length !== auditBefore,
+          value: json(
+            {
+              surface,
+              page,
+              pages: allowed,
+              actor: { ...actor, name },
+              year: selected,
+              month,
+              data: view.data,
+              versions: view.versions,
+              directory: environment.directory,
+              actions: contribution.domain.commands?.(snapshot, actor, environment, {
+                page,
+                year: selected,
+                month,
+                query: Object.fromEntries(url.searchParams),
+                view,
+              }) ?? [],
+            },
+            200,
+          ),
+        }
+      }
       const filters = Object.fromEntries(
         [
           "version",
@@ -409,11 +521,11 @@ export function createApplication(mount: string, application: Application) {
       )
       const content = contribution.render(
         page,
-        { ...publicSfData(view.data), ...filters, sidebarYear: sidebar, ...productView?.data },
+        { ...view.data, ...filters, sidebarYear: sidebar },
         {
           actor,
           year: selected,
-          month: monthParam ? Number(monthParam) : now.getMonth() + 1,
+          month,
           at: environment.at,
           versions: view.versions,
         },
@@ -440,16 +552,14 @@ export function createApplication(mount: string, application: Application) {
           ? `<label>FY<select data-year="sidebar" data-query="year">${[2024, 2025, 2026, 2027].map((year) => `<option value="${year}"${year === sidebar ? " selected" : ""}>${year}</option>`).join("")}</select></label>`
           : "",
       )
-      const toolsHtml = application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a><!--local-tools-->`) : html
-      const finalHtml = application.productHtml?.(toolsHtml, surface, page) ?? toolsHtml
       return {
         commit: snapshot.audit.length !== auditBefore,
-        value: reply(request.method === "HEAD" ? null : finalHtml, 200, {
+        value: reply(request.method === "HEAD" ? null : html, 200, {
           "Content-Type": "text/html; charset=utf-8",
-          "Content-Security-Policy": htmlPolicy(finalHtml),
+          "Content-Security-Policy": htmlPolicy(html),
         }),
       }
-    }).finally(() => productView?.finish())
+    })
     return request.method === "HEAD"
       ? new Response(null, {
           status: response.status,
@@ -482,10 +592,6 @@ async function readCommand(request: Request, maximum: number): Promise<Command |
     return offset + chunk.byteLength
   }, 0)
   const decoded: unknown = await new Response(bytes).json().catch(() => undefined)
-  return decodeCommand(decoded) ?? reply("Invalid command", 400)
-}
-
-function decodeCommand(decoded: unknown): Command | undefined {
   const input = object(decoded)
   const allowed = ["page", "action", "id", "version", "values", "confirmed"]
   if (
@@ -502,7 +608,7 @@ function decodeCommand(decoded: unknown): Command | undefined {
     (input.id !== undefined && typeof input.id !== "string") ||
     (input.confirmed !== undefined && typeof input.confirmed !== "boolean")
   )
-    return undefined
+    return reply("Invalid command", 400)
   return {
     page: text(input.page),
     action: text(input.action),
@@ -557,8 +663,8 @@ function reply(body: string | null, status: number, headers: Record<string, stri
 }
 
 export function htmlPolicy(html: string) {
-  const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)].filter((match) => !/(?:^|\s)src\s*=/i.test(match[1]!)).map((match) => `'sha256-${createHash("sha256").update(match[2]!).digest("base64")}'`)
-  return `default-src 'self'; script-src ${scripts.length ? [...new Set(scripts)].join(" ") : "'none'"}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'`
+  const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] ?? ""
+  return `default-src 'self'; script-src 'sha256-${createHash("sha256").update(script).digest("base64")}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'`
 }
 function fileControls(
   surface: Surface,
@@ -690,7 +796,7 @@ function auditValue(value: unknown): string {
   if (Array.isArray(value))
     return `<details><summary>${value.length} records</summary>${value.map(auditValue).join("")}</details>`
   if (typeof value === "object")
-    return `<dl>${Object.entries(publicSfData(object(value)))
+    return `<dl>${Object.entries(value)
       .map(
         ([key, entry]) =>
           `<dt>${esc(key)}</dt><dd>${["iban", "account", "swift"].includes(key.toLowerCase()) ? "Protected" : auditValue(entry)}</dd>`,
@@ -711,7 +817,7 @@ async function serveDownload(
 ): Promise<Response> {
   const query = new URL(request.url).searchParams
   const kind = query.get("download") ?? ""
-  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor; sourceDigest: string }>(async (snapshot) => {
+  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor }>(async (snapshot) => {
     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
     if (!principal || !principal.id || principal.id.startsWith("local:"))
       return { commit: false, value: reply("Authentication required", 401) }
@@ -767,7 +873,7 @@ async function serveDownload(
         })
     return {
       commit: readsMembers && rows(snapshot.data.members).length > 0,
-      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor, sourceDigest: downloadSnapshotDigest(snapshot) },
+      value: { snapshot: structuredClone(snapshot), actor },
     }
   })
   if (prepared instanceof Response)
@@ -781,21 +887,6 @@ async function serveDownload(
   request.signal.throwIfAborted()
   const file = await download(kind, prepared.snapshot, prepared.actor, environment, query)
   request.signal.throwIfAborted()
-  // Re-authorize AFTER generation. Neither a captured actor nor a completed export authorizes egress.
-  const current = await transaction(async (snapshot) => {
-    const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
-    if (!principal || !principal.id || principal.id.startsWith("local:")) return { commit: false, value: 403 }
-    const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
-    const actor: Actor = { id: principal.id, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), roles }
-    if (JSON.stringify(actor) !== JSON.stringify(prepared.actor)) return { commit: false, value: 403 }
-    return { commit: false, value: downloadSnapshotDigest(snapshot) === prepared.sourceDigest ? 200 : 409 }
-  })
-  request.signal.throwIfAborted()
-  if (current !== 200)
-    return new Response(request.method === "HEAD" ? null : current === 403 ? "Access denied" : "Export source changed; download again.", {
-      status: current,
-      headers: { "Cache-Control": "no-store" },
-    })
   if (!file.ok)
     return request.method === "HEAD"
       ? new Response(null, {
@@ -812,17 +903,6 @@ async function serveDownload(
     },
   })
 }
-/** The captured public surface and its versions, not private product state or read audits, define legacy export provenance. */
-function downloadSnapshotDigest(snapshot: Snapshot) {
-  return createHash("sha256").update(JSON.stringify({ data: publicSfData(snapshot.data), versions: snapshot.versions })).digest("hex")
-}
-function canViewProcurementRequest(snapshot: Snapshot, actor: { id: string; roles: string[] }, id: string) {
-  const records = object(object(snapshot.data.store).requests)
-  if (!Object.hasOwn(records, id)) return false
-  const request = object(object(records[id]).request)
-  return visibleRequests([{ createdBy: text(request.createdBy) }], actor).length > 0
-}
-
 async function prepareUpload(
   request: Request,
   surface: Surface,
@@ -841,20 +921,10 @@ async function prepareUpload(
     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
     if (
       !principal ||
-      !principal.id ||
-      principal.id.startsWith("local:") ||
       !principal.canWrite ||
       !principal.roles.some((row) => row.surface === surface && row.role !== "viewer")
     )
       return { commit: false, value: reply("Access denied", 403) }
-    if (
-      surface === "procurement" && (kind === "quote" || kind === "signed-po") &&
-      !canViewProcurementRequest(snapshot, {
-        id: principal.id,
-        roles: principal.roles.filter((row) => row.surface === surface).map((row) => row.role),
-      }, query.get("record") ?? "")
-    )
-      return { commit: false, value: json({ ok: false, status: 404 }, 404) }
     const cap =
       kind === "contract"
         ? 25 * 1024 * 1024

@@ -60,6 +60,13 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Local authentication unavailable", { status, headers: headers() })
   return {
+    async scope(request) {
+      if (!await session(request)) return undefined
+      const id = handle(request)
+      if (!id) return undefined
+      // Hash of the mount, person, and opaque handle. Never the handle itself, and stable until that session ends.
+      return createHash("sha256").update(JSON.stringify([mount, person.id, id])).digest("hex")
+    },
     async enroll() {
       const code = randomBytes(32).toString("hex")
       const storageKey = slot("enroll", code)
@@ -106,8 +113,7 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
       await secrets.put(sessionKey, seal(sessionKey, expiresAt), expiresAt)
       const responseHeaders = headers()
       responseHeaders.append("set-cookie", cookie(id, 28800))
-      // Enrollment opens the Orchestra shell; /sucafina/* remains a legacy homologation console.
-      responseHeaders.set("location", "/")
+      responseHeaders.set("location", `${mount}/dashboard`)
       return new Response(null, { status: 303, headers: responseHeaders })
     },
     async prepare() {},

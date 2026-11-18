@@ -3,7 +3,7 @@ import { chmod, lstat, mkdtemp, realpath, rm, symlink } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { loadLocalConfiguration, prepareLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
-import { bootstrapLocalSurface, initializeConfiguredMicrosoftRoleMaps } from "../runtime/local-bootstrap.ts"
+import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import type { LocalIdentity } from "../runtime/local-contract.ts"
 
@@ -83,7 +83,7 @@ test("startup refuses insecure or aliased temporary directories and incompatible
   const root = await directory()
   const file = await prepareLocalConfiguration(root)
   const config = await Bun.file(file).json()
-  config.origin = "http://localhost:4111"
+  config.origin = "http://localhost:4112"
   await Bun.write(file, JSON.stringify(config))
   await expect(loadLocalConfiguration(file)).rejects.toThrow()
   const environment = {
@@ -97,40 +97,4 @@ test("startup refuses insecure or aliased temporary directories and incompatible
   await rm(path.join(root, "host-tmp"), { recursive: true })
   await symlink(await directory(), path.join(root, "host-tmp"))
   await expect(requireLocalIsolation(root, environment)).rejects.toThrow()
-})
-
-test("trusted Microsoft configuration initializes only absent maps, preserving deliberate stored denial", async () => {
-  const store = await openLocalStore(path.join(await directory(), "configured"))
-  const groups = {
-    dashboard: { viewer: "group:44444444-4444-4444-8444-444444444444" },
-    planner: { finance: "group:55555555-5555-4555-8555-555555555555" },
-    procurement: { requester: "group:66666666-6666-4666-8666-666666666666" },
-  }
-  try {
-    await initializeConfiguredMicrosoftRoleMaps({ store, groups })
-    for (const surface of ["dashboard", "planner", "procurement"] as const) {
-      const expectedRole = surface === "dashboard" ? "viewer" : surface === "planner" ? "finance" : "requester"
-      const expectedGroup = surface === "dashboard" ? groups.dashboard.viewer : surface === "planner" ? groups.planner.finance : groups.procurement.requester
-      const roleMap = await store.transaction(surface, async (snapshot) => {
-        expect(snapshot.audit[0]?.who).toBe("microsoft:installation-config")
-        expect(snapshot.versions.dataset?.by).toBe("microsoft:installation-config")
-        return { commit: false, value: snapshot.data.roleMap }
-      })
-      expect(roleMap).toEqual(expect.arrayContaining([
-        expect.objectContaining({ surface, role: expectedRole, entra: expectedGroup, version: 1 }),
-      ]))
-    }
-    await store.transaction("dashboard", async (snapshot) => {
-      snapshot.data.roleMap = []
-      return { commit: true, value: undefined }
-    })
-    await initializeConfiguredMicrosoftRoleMaps({
-      store, groups: { ...groups, dashboard: { admin: "group:77777777-7777-4777-8777-777777777777" } },
-    })
-    const dashboard = await store.transaction("dashboard", async (snapshot) => ({
-      commit: false, value: { map: snapshot.data.roleMap, audit: snapshot.audit },
-    }))
-    expect(dashboard.map).toEqual([])
-    expect(dashboard.audit).toHaveLength(1)
-  } finally { await store.dispose() }
 })

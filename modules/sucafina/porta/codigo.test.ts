@@ -71,7 +71,7 @@ function sourcing(over: Record<string, unknown> = {}) {
   return { quotes: [quote()], selectedId: "q1" as string | null, fxSnapshot: null, approval: null, contractStrategy: "", ...over }
 }
 
-function refuse(req: unknown, action: unknown, who = actor(), set = settings(), issued = ISSUED, supplier: unknown = null) {
+function refuse(req: unknown, action: unknown, who: unknown = actor(), set: unknown = settings(), issued: unknown = ISSUED, supplier: unknown = null) {
   const before = req == null ? null : structuredClone(req)
   const result = act(req, action, who, set, AT, issued, supplier)
   return { result, before, req }
@@ -79,7 +79,7 @@ function refuse(req: unknown, action: unknown, who = actor(), set = settings(), 
 
 function expectCode(code: string, seen: ReturnType<typeof refuse>) {
   expect(seen.result).toEqual({ ok: false, code })
-  if (seen.req != null) expect(seen.req).toEqual(seen.before)
+  if (seen.req != null) expect(seen.req).toEqual(seen.before!)
 }
 
 test("C-actor-invalid extra field", () => {

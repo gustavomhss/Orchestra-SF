@@ -30,18 +30,6 @@ export type Snapshot = {
   sequences: Record<string, number>
   audit: Audit[]
   notices: Notice[]
-  sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>
-  // Host-private blob generations survive deletion and are updated atomically with blob bytes.
-  sfBlobGenerations?: Record<string, number>
-  // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.
-  sfSources?: {
-    schemaVersion: 1
-    records: Record<string, { incarnation: string; version: number; alive: boolean; inputDigest: string }>
-    scopes?: Record<string, {
-      scope: { principalRef: string; accessRevision: string; policyVersion: string; recordType: string; recordId: string; selector: unknown }
-      incarnation: string; sourceIncarnation: string; version: number; alive: boolean; inputDigest: string
-    }>
-  }
 }
 export type Environment = {
   at: string
@@ -55,18 +43,62 @@ export type Result =
       ok: false
       status: 400 | 403 | 404 | 409 | 422 | 503
       errors?: string[]
-      fieldErrors?: { field: string; message: string }[]
       stored?: unknown
       by?: string
-      currentVersionCAS?: number
     }
 export type View = {
   data: Record<string, unknown>
   versions: Snapshot["versions"]
 }
+export type NativeText = { en: string; br: string }
+export type NativePath = readonly (string | number)[]
+export type NativeChoice = { value: string | number | boolean | null; label: NativeText }
+export type NativeScalar = {
+  kind: "text" | "textarea" | "number" | "date" | "select" | "checkbox"
+  path: NativePath
+  label: NativeText
+  required?: boolean
+  readOnly?: boolean
+  blank?: "omit" | "null" | "empty"
+  min?: number
+  max?: number
+  step?: number
+  options?: readonly NativeChoice[]
+}
+export type NativeGroup = { kind: "group"; label?: NativeText; fields: readonly NativeField[] }
+export type NativeList = {
+  kind: "list"
+  path: NativePath
+  label: NativeText
+  fields: readonly NativeField[]
+  add?: Record<string, unknown>
+  remove?: boolean
+  readOnly?: boolean
+  minimum?: number
+  maximum?: number
+}
+export type NativeField = NativeScalar | NativeGroup | NativeList
+export type NativeAction = {
+  key: string
+  label: NativeText
+  group?: NativeText
+  target?: { collection: string; id: string }
+  command: Command
+  fields: readonly NativeField[]
+  confirm?: NativeText
+  danger?: boolean
+}
+export type NativeCommandContext = {
+  page: string
+  year: number
+  month: number
+  query: Readonly<Record<string, string>>
+  view: View
+}
 export type Domain = {
   execute: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => Result
   view: (snapshot: Snapshot, actor: Actor, environment: Environment) => View
+  commands?: (snapshot: Snapshot, actor: Actor, environment: Environment, context: NativeCommandContext) => readonly NativeAction[]
 }
 export type TransactionOptions = { signal?: AbortSignal }
 
@@ -77,15 +109,6 @@ export type Persistence = {
   // commit=false, cancellation, callback failure or commit failure writes nothing, including after restart.
   // Production adapters must run the conformance suite against their real driver; the test Map adapter is not durability proof.
   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
-  transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
-  currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
-  // Internal root-only scope, not source admission or business authorization.
-  // Consumers must still use their canonical transaction(surface, work) inside it
-  // so every wrapper keeps its guards. No snapshot or commit capability is exposed.
-  // Fresh SQL, independent copies, abort/lifetime fences and joined readers are
-  // required. Any attempted write poisons the root even when its error is caught.
-  // Older adapters omit this capability and retain their existing transaction path.
-  readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>
 }
 
 export function object(value: unknown): Record<string, unknown> {
@@ -106,7 +129,7 @@ export function finite(value: unknown, fallback = 0): number {
 }
 export function conflict(snapshot: Snapshot, key: string, command: Command, stored: unknown): Result | undefined {
   const current = snapshot.versions[key]
-  if ((current?.version ?? 0) !== command.version) return { ok: false, status: 409, stored, by: current?.by, currentVersionCAS: current?.version ?? 0 }
+  if ((current?.version ?? 0) !== command.version) return { ok: false, status: 409, stored, by: current?.by }
 }
 export function changed(snapshot: Snapshot, key: string, actor: Actor, at: string, was: unknown, became: unknown) {
   snapshot.versions[key] = {

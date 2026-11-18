@@ -1,11 +1,11 @@
 import type { Actor, Command, Domain, Environment, Result, Snapshot } from "./contract.ts"
+import { WorkbookAmount } from "./workbook-amount.ts"
 import { changed, conflict, finite, object, rows, text } from "./contract.ts"
 import type { RenderContext } from "./ui.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import { esc } from "../src/screen-shell.ts"
-import { renderMonthlyGrid } from "../product/planner/monthly-grid.ts"
-import { plannerActualMonth } from "../product/planner/actual-presence.ts"
-import { assignOwner, deleteRate, plannerField } from "../src/planner-role.ts"
+import { WorkbookDate } from "../src/workbook-date.ts"
+import { assignOwner, deleteRate, ownerLineScope, ownerMayEdit, plannerField } from "../src/planner-role.ts"
 import {
   changeAnnual,
   cents,
@@ -19,7 +19,6 @@ import {
   normName,
   orderSpan,
   outlookMonth,
-  plannerMonthlyAmount,
   resetSpread,
   spread,
   syncEnters,
@@ -155,11 +154,6 @@ function versionOf(row: Row): Version {
     lists: object(row.lists ?? row.els),
   }
 }
-/** Canonical normalized HR inputs for internal qualification before public redaction. */
-export function plannerHeadcountInputs(row: Record<string, unknown>) {
-  return versionOf(row).hc
-}
-
 function months(value: unknown, nullable = false): (number | null)[] {
   return Array.from({ length: 12 }, (_, i) =>
     Array.isArray(value) && value[i] != null ? finite(value[i]) : nullable ? null : 0,
@@ -174,7 +168,6 @@ function flags(value: unknown): boolean[] {
 function privateAccess(actor: Actor) {
   return actor.roles.some((role) => ["admin", "hr", "finance"].includes(role))
 }
-const publicPositionFields = new Set(["id", "name", "title", "type", "location", "include", "fte", "start", "end", "domain", "left", "src", "hasRate", "state", "states", "revision"])
 // Redact recursively: migrated data can contain salary fields outside their original container.
 function redact(value: unknown, position = false, fx = false): unknown {
   if (Array.isArray(value)) return value.map((item) => redact(item, position, fx))
@@ -183,8 +176,7 @@ function redact(value: unknown, position = false, fx = false): unknown {
     Object.entries(object(value))
       .filter(
         ([key]) =>
-          (!position || publicPositionFields.has(key)) &&
-          !/(salary|cost|override|talent)|^(rates|rateId|inc|incMonth)$/i.test(key) &&
+          !/(salary|cost|override)|^(rates|rateId|inc|incMonth)$/i.test(key) &&
           (key !== "rate" || fx) &&
           !(position && /^(annual|months|total|budget|annualCost)$/i.test(key)),
       )
@@ -211,12 +203,13 @@ function calculated(version: Version) {
       position.rateOverride as number | string | null | undefined,
     )
     const fx = rate ? convert(1, rate.cur) : 0
+    const fte = clampFte(finite(position.fte, 1))
     return {
       ...position,
       domain: text(position.domain) || "Unassigned",
       hasRate: !!rate,
       include: position.include === true,
-      fte: finite(position.fte, 1),
+      fte,
       start: finite(position.start, 1),
       end: finite(position.end, 12),
       type: text(position.type),
@@ -224,7 +217,7 @@ function calculated(version: Version) {
         hrMonth(
           position.include === true,
           !!rate,
-          finite(position.fte, 1),
+          fte,
           rate?.annual ?? 0,
           fx,
           i + 1,
@@ -302,85 +295,6 @@ function calculated(version: Version) {
     warnings: [...warnings],
   }
 }
-export function plannerCanAdmin(actor: Actor) {
-  return actor.canWrite && actor.roles.includes("admin")
-}
-export function plannerAdminSourceAvailable(snapshot: Snapshot, actor: Actor) {
-  return plannerCanAdmin(actor) && plannerData(snapshot.data).errors.length === 0
-}
-function plannerWorkbookField(version: Version, official: string | undefined, actor: Actor, field: string, line?: Row) {
-  return plannerField(field, version, official, actor, line ? {
-    ownerId: idOf(object(line.owner).id) || idOf(line.owner), domain: text(line.domain), hr: line.synthetic === true,
-  } : undefined)
-}
-export function plannerCanImportRoster(actor: Actor) {
-  return actor.canWrite && actor.roles.some((role) => ["admin", "hr"].includes(role))
-}
-export function plannerWorkbookImportAvailable(snapshot: Snapshot, actor: Actor) {
-  if (!actor.canWrite || !actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role))) return false
-  const normalized = plannerData(snapshot.data)
-  if (normalized.errors.length) return false
-  return rows(normalized.data.versions).map(versionOf).some((version) => {
-    if (!version.id) return false
-    if (plannerCanAdmin(actor) || plannerCanImportRoster(actor)) return true
-    const official = idOf(object(normalized.data.officials)[String(version.year)])
-    const allowed = (field: string, line?: Row) => plannerWorkbookField(version, official, actor, field, line)
-    if (["fx", "headcount", "rate"].some((field) => allowed(field))) return true
-    if (version.lines.some((line) => {
-      if (line.sec !== "opex" && line.sec !== "capex") return false
-      const matchById = !!idOf(line.id) && !idOf(line.id).startsWith("HR:")
-      const matchByName = OPEX_ELEMENTS.some((el) => el === line.el && !(line.sec === "opex" && el === "hr") && !(line.sec === "capex" && el === "depr"))
-      if (!matchById && !matchByName) return false
-      if (line.sec === "capex" && !version.projects.some((project) =>
-        (matchById && project.id === line.proj) || text(project.code).trim() || text(project.name).trim())) return false
-      return allowed("actual", line) || allowed("forecast", line)
-    })) return true
-    if (Object.entries(version.hc.hrAF).some(([domain, value]) => !!domain && (allowed("actual", { ...object(value), domain, synthetic: true }) ||
-      allowed("forecast", { ...object(value), domain, synthetic: true })))) return true
-    // The original importer can create a synthetic HR actual or an assigned-domain forecast.
-    if (allowed("actual", { synthetic: true })) return true
-    return (actor.domains ?? []).some((domain) => !!domain && allowed("forecast", { domain, synthetic: true }))
-  })
-}
-/** Page-level capability from the same normalized version and field predicate used by execute. */
-export function plannerCurrentPageActions(snapshot: Snapshot, actor: Actor, page: string): readonly string[] {
-  if (!actor.canWrite || !actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role))) return []
-  const normalized = plannerData(snapshot.data)
-  if (normalized.errors.length) return []
-  const actions = new Set<string>()
-  for (const version of rows(normalized.data.versions).map(versionOf)) {
-    const official = idOf(object(normalized.data.officials)[String(version.year)])
-    const allowed = (field: string, line?: Row) => plannerField(field, version, official, actor, line ? {
-      ownerId: text(line.ownerId) || text(object(line.owner).id) || text(line.owner),
-      domain: text(line.domain), hr: line.synthetic === true,
-    } : undefined)
-    if (page === "OPEX" || page === "CAPEX") {
-      const lines = version.lines.filter((line) => line.sec === (page === "OPEX" ? "opex" : "capex"))
-      if (allowed("structure")) { actions.add("save"); actions.add("delete") }
-      if (lines.some((line) => ["actual", "forecast", "budget"].some((field) => allowed(field, line)))) actions.add("save")
-      if (page === "OPEX") {
-        if (actor.roles.some((role) => ["admin", "finance"].includes(role)) && allowed("closedThrough")) actions.add("save")
-        const domains = new Set([
-          ...hrLineDomains(version.hc.positions.map((position) => ({ domain: text(position.domain) || "Unassigned" })), version.hc.hrAF),
-          // Execute can create an HR row for an assigned domain before it appears in the source.
-          ...(actor.domains ?? []),
-        ])
-        if ([...domains].some((domain) => {
-          const target = { ...object(version.hc.hrAF[domain]), domain, synthetic: true }
-          return allowed("actual", target) || allowed("forecast", target)
-        })) actions.add("save")
-      }
-      if (lines.some((line) => line.synthetic !== true && allowed("budget", line))) { actions.add("spread"); actions.add("reset") }
-    }
-    if (page === "Headcount") {
-      if (allowed("headcount") || allowed("rate") || allowed("increase")) actions.add("save")
-      if (allowed("headcount") || allowed("rate")) actions.add("delete")
-      if (allowed("headcount")) actions.add("sync")
-    }
-    if (page === "FX rates" && allowed("fx")) { actions.add("save"); actions.add("delete") }
-  }
-  return [...actions]
-}
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite || !actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role)))
@@ -433,6 +347,7 @@ export const domain: Domain = {
       ...normalized,
       versions,
       directory: structuredClone(environment.directory),
+      headcountMappingVisible: privateAccess(actor),
     }
     return {
       data: privateAccess(actor) ? data : object(redact(data)),
@@ -440,6 +355,68 @@ export const domain: Domain = {
     }
   },
 }
+function lineScope(line: Row | undefined) {
+  if (!line) return undefined
+  const ownerId = text(line.ownerId) || text(object(line.owner).id) || text(line.owner)
+  const domain = text(line.domain)
+  return { ownerId, domain: domain || undefined, hr: line.synthetic === true }
+}
+
+function postedLineScope(values: Row) {
+  const owner = values.owner
+  const ownerId = owner !== null && typeof owner === "object" ? text(object(owner).id) : text(owner)
+  const domain = text(values.domain)
+  return { ownerId, domain: domain || undefined }
+}
+
+function mergedLineScope(stored: Row, values: Row) {
+  const current = lineScope(stored)
+  const ownerId = Object.hasOwn(values, "owner")
+    ? values.owner !== null && typeof values.owner === "object"
+      ? text(object(values.owner).id)
+      : text(values.owner)
+    : current?.ownerId
+  const domain = Object.hasOwn(values, "domain") ? text(values.domain) : text(current?.domain)
+  return { ownerId, domain: domain || undefined, hr: current?.hr }
+}
+
+// A logical HR domain is an own hrAF key or a real position domain. Missing storage is not a domain.
+// An hrAF-only domain reuses structure authority, which is an unlocked admin on a version that is not official.
+function hrDomainAuthorized(version: Version, domain: string, officialId: string | undefined, actor: Actor) {
+  if (Object.hasOwn(version.hc.hrAF, domain) || version.hc.positions.some((position) => text(position.domain) === domain))
+    return true
+  return officialId !== version.id && plannerField("structure", version, officialId, actor)
+}
+
+function readJson(raw: string): { ok: true; value: unknown } | { ok: false } {
+  try {
+    return { ok: true, value: JSON.parse(raw) }
+  } catch {
+    return { ok: false }
+  }
+}
+
+// budgetEdited is a JSON string of unique month indexes. Absent keeps the legacy "every posted bN is manual" rule.
+function budgetMarks(values: Row): { ok: true; marks?: number[] } | { ok: false } {
+  if (!Object.hasOwn(values, "budgetEdited")) return { ok: true }
+  const raw = values.budgetEdited
+  if (typeof raw !== "string") return { ok: false }
+  const parsed = readJson(raw)
+  if (!parsed.ok || !Array.isArray(parsed.value)) return { ok: false }
+  const marks: number[] = []
+  for (const item of parsed.value) {
+    if (typeof item !== "number" || !Number.isInteger(item) || item < 0 || item > 11 || marks.includes(item))
+      return { ok: false }
+    const key = `b${item}`
+    if (!Object.hasOwn(values, key)) return { ok: false }
+    const posted = values[key]
+    const amount = posted === null || posted === "" ? 0 : posted
+    if (typeof amount !== "number" || !Number.isFinite(amount)) return { ok: false }
+    marks.push(item)
+  }
+  return { ok: true, marks }
+}
+
 function execute(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment): Result {
   const versions = rows(snapshot.data.versions).map(versionOf)
   const values = command.values
@@ -647,7 +624,12 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   const id = command.id || environment.id()
   const synthetic = id.startsWith("HR:") && collection === "lines"
   if (synthetic && command.page !== "OPEX") return { ok: false, status: 400 }
-  const stored = synthetic ? object(version.hc.hrAF[id.slice(3)]) : records.find((row) => row.id === id)
+  const hrDomain = synthetic ? id.slice(3) : ""
+  const stored = synthetic
+    ? Object.hasOwn(version.hc.hrAF, hrDomain)
+      ? object(version.hc.hrAF[hrDomain])
+      : undefined
+    : records.find((row) => row.id === id)
   if (stored && collection === "lines" && !synthetic && stored.sec !== (command.page === "OPEX" ? "opex" : "capex"))
     return { ok: false, status: 400 }
   const key = `${version.id}:${synthetic ? "hrAF" : collection}:${id}`
@@ -672,7 +654,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       "month",
       "value",
     ],
-    projects: ["name", "desc", "owner", "code", "approvalState", "investmentStart", "investmentEnd"],
+    projects: ["name", "desc", "owner", "code"],
     positions: [
       "name",
       "title",
@@ -687,13 +669,13 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       "rateOverride",
     ],
     rates: ["name", "locs", "annual", "cur"],
-    fx: ["cur", "rate", "sourceRef", "provider", "observedAt"],
+    fx: ["cur", "rate"],
   }
   if (
     Object.keys(values).some(
       (field) =>
         !["versionId", "collection", ...fieldsByCollection[collection]].includes(field) &&
-        !(collection === "lines" && /^[baf](?:[0-9]|1[01])$/.test(field)),
+        !(collection === "lines" && (field === "budgetEdited" || /^[baf](?:[0-9]|1[01])$/.test(field))),
     )
   )
     return invalid("Unknown field")
@@ -719,35 +701,27 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
                       : field === "cur"
                         ? "currency"
                         : "budget"
-  const target = synthetic ? { ...stored, domain: id.slice(3), synthetic: true } : stored
-  if (
-    !stored &&
-    !synthetic &&
-    !allowed(
-      collection === "positions"
-        ? "headcount"
-        : collection === "rates"
-          ? "rate"
-          : collection === "fx"
-            ? "fx"
-            : "structure",
-    )
-  )
-    return reject
+  const target = synthetic ? { ...stored, domain: hrDomain, synthetic: true } : stored
+  const authLine = stored || synthetic ? lineScope(target) : postedLineScope(values)
+  const may = (field: string) => {
+    if (allowed(field, target)) return true
+    if (collection !== "lines" || !ownerMayEdit(field, version, official, actor, authLine)) return false
+    if (!stored) return true
+    return ownerLineScope(actor, mergedLineScope(stored, values))
+  }
+  const recordField =
+    collection === "positions"
+      ? "headcount"
+      : collection === "rates"
+        ? "rate"
+        : collection === "fx"
+          ? "fx"
+          : "structure"
+  if (!stored && !synthetic && !may(recordField)) return reject
+  if (synthetic && command.action === "save" && !hrDomainAuthorized(version, hrDomain, official, actor)) return reject
   if (command.action === "delete") {
     if (synthetic || !stored) return invalid("Cannot delete this record")
-    if (
-      !allowed(
-        collection === "positions"
-          ? "headcount"
-          : collection === "rates"
-            ? "rate"
-            : collection === "fx"
-              ? "fx"
-              : "structure",
-      )
-    )
-      return reject
+    if (!may(recordField)) return reject
     if (collection === "rates" && !deleteRate(id, version.hc.positions, true).ok) return invalid("Rate card is in use")
     if (collection === "projects" && version.lines.some((line) => line.proj === id)) return invalid("Project is in use")
     if (
@@ -762,9 +736,9 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     return { ok: true }
   }
   if (!["save", "spread", "reset"].includes(command.action)) return { ok: false, status: 400 }
-  if (command.action !== "save" && (collection !== "lines" || synthetic || !allowed("budget", target))) return reject
-  for (const field of Object.keys(values).filter((field) => !["versionId", "collection"].includes(field)))
-    if (!allowed(permission(field), target)) return reject
+  if (command.action !== "save" && (collection !== "lines" || synthetic || !may("budget"))) return reject
+  for (const field of Object.keys(values).filter((field) => !["versionId", "collection", "budgetEdited"].includes(field)))
+    if (!may(permission(field))) return reject
   if (
     synthetic &&
     Object.keys(values).some(
@@ -772,6 +746,14 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
         !["versionId", "collection", "a", "f", "owner", "entity", "alloc"].includes(field) &&
         !/^[af](?:[0-9]|1[01])$/.test(field),
     )
+  )
+    return reject
+  const marker = collection === "lines" && !synthetic ? budgetMarks(values) : undefined
+  if (marker && !marker.ok) return invalid("Invalid budget edit marker")
+  if (
+    stored &&
+    command.action === "save" &&
+    Object.keys(values).every((field) => ["versionId", "collection", "budgetEdited"].includes(field))
   )
     return reject
   if (collection === "lines" && values.domain !== undefined) return invalid("Domain belongs to synthetic HR lines")
@@ -784,12 +766,13 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   const next: Row = { ...stored, id }
   for (const [field, value] of Object.entries(values).filter(
     ([field]) =>
-      !["versionId", "collection", "month", "value"].includes(field) && !/^[baf](?:[0-9]|1[01])$/.test(field),
+      !["versionId", "collection", "month", "value", "budgetEdited"].includes(field) &&
+      !/^[baf](?:[0-9]|1[01])$/.test(field),
   ))
     next[field] = value
   const warnings: string[] = []
   for (const [field, value] of Object.entries(values).filter(([field]) => /^[baf](?:[0-9]|1[01])$/.test(field))) {
-    const number = plannerMonthlyAmount(value)
+    const number = value === "" || value === null ? null : Number(value)
     if (number !== null && !Number.isFinite(number)) return invalid("Invalid monthly amount")
     if (field[0] === "b") continue
     const vector = months(next[field[0]], true)
@@ -872,16 +855,23 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
               : values.annual !== undefined
                 ? changeAnnual(base, Number(values.annual))
                 : base
-    const edited = Object.entries(values)
-      .filter(([field]) => /^b(?:[0-9]|1[01])$/.test(field))
-      .reduce(
-        (line, [field, value]) =>
-          typeMonth(line, Number(field.slice(1)), value === "" || value === null ? 0 : Number(value)),
-        plan,
-      )
-    Object.assign(next, edited)
-    next.a = months(next.a, true)
-    next.f = months(next.f, true)
+    const postedBudget = Object.entries(values).filter(([field]) => /^b(?:[0-9]|1[01])$/.test(field))
+    const explicit = marker && marker.ok ? marker.marks : undefined
+    const chosen = postedBudget.filter(([field]) => {
+      if (explicit === undefined) return true
+      return explicit.includes(Number(field.slice(1)))
+    })
+    const edited = chosen.reduce(
+      (line, [field, value]) =>
+        typeMonth(line, Number(field.slice(1)), value === "" || value === null ? 0 : Number(value)),
+      plan,
+    )
+    if (!stored || command.action !== "save" || values.month !== undefined || values.b !== undefined || values.annual !== undefined || chosen.length)
+      Object.assign(next, edited)
+    if (!stored || values.a !== undefined || Object.keys(values).some((field) => /^a(?:[0-9]|1[01])$/.test(field)))
+      next.a = months(next.a, true)
+    if (!stored || values.f !== undefined || Object.keys(values).some((field) => /^f(?:[0-9]|1[01])$/.test(field)))
+      next.f = months(next.f, true)
   }
   if (collection === "lines" || synthetic)
     for (const field of ["a", "f"])
@@ -896,7 +886,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     next.name = text(next.name).trim()
     if (!next.name) return invalid("Project name is required")
     next.code = text(values.code).trim() || text(stored?.code)
-    if (!next.code) {
+    if (!next.code && (!stored || values.code !== undefined)) {
       const sequence = nextCpx(
         version.year,
         finite(snapshot.sequences.cpx),
@@ -907,31 +897,8 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     }
     if (records.some((row) => row.id !== id && normName(text(row.code)) === normName(text(next.code))))
       return invalid("Duplicate project code")
-    const approvalStates = ["draft", "pending", "approved", "rejected"]
-    if (values.approvalState !== undefined &&
-      !approvalStates.includes(text(values.approvalState))) return invalid("Invalid CAPEX approval state")
-    if (values.approvalState !== undefined && !actor.roles.includes("admin")) return reject
-    if ((values.investmentStart !== undefined && typeof values.investmentStart !== "string") ||
-      (values.investmentEnd !== undefined && typeof values.investmentEnd !== "string"))
-      return invalid("Invalid CAPEX investment window")
-    // Preserve older project records byte-for-byte when these optional fields were not edited.
-    if (values.approvalState !== undefined || stored?.approvalState !== undefined) {
-      if (!approvalStates.includes(text(next.approvalState))) return invalid("Invalid CAPEX approval state")
-      next.approvalState = text(next.approvalState)
-    }
-    if (values.investmentStart !== undefined || values.investmentEnd !== undefined ||
-      stored?.investmentStart !== undefined || stored?.investmentEnd !== undefined) {
-      const investmentStart = text(next.investmentStart).trim()
-      const investmentEnd = text(next.investmentEnd).trim()
-      const monthPattern = /^\d{4}-(?:0[1-9]|1[0-2])$/
-      if ((investmentStart || investmentEnd) &&
-        (!monthPattern.test(investmentStart) || !monthPattern.test(investmentEnd) || investmentStart > investmentEnd))
-        return invalid("CAPEX investment window requires an ordered start and end month")
-      next.investmentStart = investmentStart
-      next.investmentEnd = investmentEnd
-    }
     const match = text(next.code).match(/^CPX-\d{4}-(\d+)$/i)
-    if (match) snapshot.sequences.cpx = Math.max(finite(snapshot.sequences.cpx), Number(match[1]))
+    if (match && (!stored || values.code !== undefined)) snapshot.sequences.cpx = Math.max(finite(snapshot.sequences.cpx), Number(match[1]))
   }
   if (collection === "positions") {
     next.name = text(next.name).trim()
@@ -969,29 +936,6 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     if (next.rate !== null && (!Number.isFinite(next.rate) || Number(next.rate) <= 0))
       return invalid("Rate must be positive")
     if (next.rate !== null) next.rate = Math.round(Number(next.rate) * 1e6) / 1e6
-    const provenanceFields = ["sourceRef", "provider", "observedAt"]
-    if (provenanceFields.some((field) => values[field] !== undefined && typeof values[field] !== "string"))
-      return invalid("Invalid FX provenance field")
-    const provenanceSupplied = provenanceFields.some((field) => !!text(values[field]).trim())
-    const previouslyAttributed = provenanceFields.some((field) => !!text(stored?.[field]).trim())
-    if (values.rate !== undefined && previouslyAttributed &&
-      next.rate !== stored?.rate &&
-      (!provenanceSupplied || text(next.observedAt) === text(stored?.observedAt)))
-      return invalid("Changing an attributed FX rate requires a new observation")
-    if (provenanceSupplied || previouslyAttributed) {
-      const sourceRef = text(next.sourceRef).trim()
-      const provider = text(next.provider).trim()
-      const observedAt = text(next.observedAt).trim()
-      const timestamp = Date.parse(observedAt)
-      if (!sourceRef || !provider || !observedAt ||
-        sourceRef.length > 256 || provider.length > 128 ||
-        !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(observedAt) ||
-        !Number.isFinite(timestamp) || !Number.isFinite(Date.parse(environment.at)) ||
-        timestamp > Date.parse(environment.at)) return invalid("FX provenance requires source, provider and a past observedAt timestamp")
-      next.sourceRef = sourceRef
-      next.provider = provider
-      next.observedAt = observedAt
-    }
   }
   if (
     ((collection === "lines" && !synthetic) || collection === "rates") &&
@@ -999,6 +943,24 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     !version.fx.some((rate) => rate.cur === next.cur)
   )
     return invalid("Unknown currency")
+  if (stored && command.action === "save") {
+    const normalized =
+      collection === "lines" && !synthetic
+        ? ["sec", "el", "cur", "cls"]
+        : collection === "projects"
+          ? ["name", "code"]
+          : collection === "positions"
+            ? ["name", "fte", "start", "end", "include", "type", "src"]
+            : collection === "rates"
+              ? ["annual", "cur"]
+              : collection === "fx"
+                ? ["cur", "rate"]
+                : []
+    for (const field of normalized.filter((field) => !Object.hasOwn(values, field))) {
+      if (Object.hasOwn(stored, field)) next[field] = stored[field]
+      else delete next[field]
+    }
+  }
   if (synthetic) version.hc.hrAF[id.slice(3)] = next
   else if (stored) records.splice(records.indexOf(stored), 1, next)
   else records.push(next)
@@ -1027,23 +989,9 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
     versions[0]
   const canWrite =
     context.actor.canWrite &&
-    context.actor.roles.some((role) =>
-      (page === "Versions" || page === "Entities & allocations"
-        ? ["admin"]
-        : page === "FX rates" ? ["admin", "finance"] : ["admin", "finance", "hr", "budget owner"]).includes(role),
-    )
+    context.actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role))
   const revision = (key: string) => context.versions[key]?.version ?? 0
   const versionField = version ? `<input type="hidden" name="versionId" value="${esc(version.id)}">` : ""
-  const allowedControl = (field: string, id?: string) => {
-    if (!version) return false
-    const line = id?.startsWith("HR:")
-      ? { ...object(version.hc.hrAF[id.slice(3)]), domain: id.slice(3), synthetic: true }
-      : version.lines.find((line) => line.id === id)
-    return plannerField(field, version, idOf(object(safe.officials)[String(version.year)]), context.actor, line ? {
-      ownerId: text(line.ownerId) || text(object(line.owner).id) || text(line.owner),
-      domain: text(line.domain), hr: line.synthetic === true,
-    } : undefined)
-  }
   const controls = (
     action: string,
     id: string,
@@ -1052,7 +1000,6 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
     label = "Save",
     key?: string,
     disabled = false,
-    permission?: string,
   ) =>
     form(
       page,
@@ -1061,16 +1008,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
       revision(key || `${version?.id}:${collection}:${id}`),
       versionField + `<input type="hidden" name="collection" value="${esc(collection)}">` + body,
       label,
-      !canWrite || disabled || (
-        !["entities", "allocations"].includes(collection) && (
-          !allowedControl(permission ?? (
-            collection === "positions" || collection === "leaderDomains" ? "headcount"
-              : collection === "rates" ? "rate" : collection === "increase" ? "increase"
-                : collection === "fx" ? "fx" : action === "spread" || action === "reset" ? "budget"
-                  : action === "delete" || !id ? "structure" : "name"
-          ), id)
-        )
-      ),
+      !canWrite || disabled,
     )
   const heading = `<h2>${esc(page)}</h2>`
   if (page === "Versions")
@@ -1098,7 +1036,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
                   value: item.year,
                   min: 2001,
                   max: 2099,
-                  readonly: item.locked || idOf(object(safe.officials)[String(item.year)]) === item.id,
+                  readonly: item.locked,
                 },
               ]),
               "Save",
@@ -1135,7 +1073,6 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
   if (page === "Entities & allocations")
     return (
       heading +
-      "<p>Shared catalogs: changes apply across all plan versions. Allocations are named classifications; choosing one does not distribute costs.</p>" +
       ["entities", "allocations"]
         .map(
           (collection) =>
@@ -1199,11 +1136,9 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
         metric("Full-year outlook", money(summary.fullYear)),
         metric("HR Staff", money(summary.hrTotal)),
       ]) +
-      monthlyChart(summary) +
-      `<p>Budget comparison uses FY ${version.year} in USD. These are budgets; outlook changes and variance to the official budget are separate measures.</p>` +
-      (safe.filter && !versions.some((item) => item.id === idOf(safe.filter) && item.year === version.year) ? '<p role="status">The comparison plan is unavailable or uses a different fiscal year.</p>' : "") +
-      `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Overview"><input type="hidden" name="version" value="${esc(version.id)}"><label>Compare budget <select name="filter"><option value="">Budgets in this fiscal year</option>${versions
-        .filter((item) => item.id !== version.id && item.year === version.year)
+      monthlyChart(summary, version.closed) +
+      `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Overview"><input type="hidden" name="version" value="${esc(version.id)}"><label>Compare budget <select name="filter"><option value="">All budgets</option>${versions
+        .filter((item) => item.id !== version.id)
         .map((item) => `<option value="${esc(item.id)}">${esc(item.name)}</option>`)
         .join("")}</select></label><button type="submit">Compare budgets</button></form>` +
       table(
@@ -1211,7 +1146,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
         zeroMonths().map((_, i) => [
           String(i + 1),
           money(numericMonths(summary.budget)[i]),
-          overviewActualCell(summary, i + 1),
+          i >= version.closed && numericMonths(summary.actual)[i] === 0 ? "–" : money(numericMonths(summary.actual)[i]),
           money(numericMonths(summary.outlook)[i]),
         ]),
       ) +
@@ -1229,7 +1164,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
       table(
         ["Version", "Budget USD", "FTE December"],
         rows(safe.versions)
-          .filter((item) => Number(item.year) === version.year && (!safe.filter || idOf(item.id) === version.id || idOf(item.id) === idOf(safe.filter)))
+          .filter((item) => !safe.filter || idOf(item.id) === version.id || idOf(item.id) === idOf(safe.filter))
           .map((item) => [
             esc(text(item.name)),
             money(object(item.summary).total),
@@ -1241,7 +1176,6 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
     return (
       heading +
       selector +
-      `<p>Exchange rates for ${esc(version.name)} · FY ${version.year}. These rates belong to this version; entities and allocations are shared catalogs.</p>` +
       metric("USD", "1 (fixed)") +
       table(
         ["Code", "Rate", "Actions"],
@@ -1382,7 +1316,6 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
   return (
     heading +
     selector +
-    renderMonthlyGrid({ data: safe, versions: context.versions }, context.actor, sec === "opex" ? "OPEX" : "CAPEX", version.id, safe.mode === "budget" || safe.mode === "actual" ? safe.mode : "forecast") +
     (sec === "opex"
       ? `<details class="editor-panel"><summary>Cost element settings</summary><div class="compact-forms">` +
         OPEX_ELEMENTS.filter((el) => el !== "hr")
@@ -1406,7 +1339,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
                   },
                 ]),
               "Set breakdown",
-              !allowedControl("structure"),
+              !canWrite || version.locked,
             ),
           )
           .join("") +
@@ -1430,7 +1363,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
               },
             ]),
           "Save closed month",
-          !allowedControl("closedThrough"),
+          !canWrite,
         ).replace("<form ", '<form class="filter-bar" ')
       : `<form method="get"><input type="hidden" name="page" value="${esc(page)}"><input type="hidden" name="version" value="${esc(version.id)}"><label>Owner <select name="owner"><option value="">All</option>${rows(
           safe.directory,
@@ -1454,7 +1387,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
               "projects",
               fields([
                 { name: "name", label: "Project", value: project.name },
-                { name: "code", label: "Code", value: project.code },
+                { name: "code", label: "Code", value: project.code, readonly: version.locked },
                 {
                   name: "owner",
                   label: "Owner",
@@ -1535,11 +1468,9 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
                     type: "number" as const,
                     value: numericMonths(line.b)[i],
                   })),
-                ),
+                ) + `<input type="hidden" name="budgetEdited" value="[]">`,
                 "Save budget",
                 key,
-                false,
-                "budget",
               ),
           ...(["a", "f"] as const).map((field) =>
             controls(
@@ -1556,8 +1487,6 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
               ),
               "Save",
               key,
-              false,
-              field === "a" ? "actual" : "forecast",
             ),
           ),
           `<span${delta.over ? ' class="over"' : ""}>${esc(String(delta.shown))}</span>`,
@@ -1584,6 +1513,7 @@ function executeVersions(
   versions: Version[],
 ): Result {
   const values = command.values
+  const admin = actor.roles.includes("admin")
   const reject: Result = { ok: false, status: 403 }
   const invalid = (message: string): Result => ({
     ok: false,
@@ -1595,14 +1525,14 @@ function executeVersions(
   const persist = () => {
     snapshot.data.versions = versions
   }
-  if (!plannerCanAdmin(actor)) return reject
+  if (!admin) return reject
   const version = versions.find((item) => item.id === command.id)
   if (!version) {
     if (command.action !== "save" || command.id || versions.length) return { ok: false, status: 400 }
     const key = "versions:first"
     const stale = conflict(snapshot, key, command, undefined)
     if (stale) return stale
-    const year = Number(environment.at.slice(0, 4)) + 1
+    const year = new Date(environment.at).getFullYear() + 1
     const first = versionOf({
       id: environment.id(),
       name: `FY${year} — Draft 1`,
@@ -1662,7 +1592,7 @@ function executeVersions(
   else if (command.action === "save") {
     if (values.year !== undefined) {
       const year = Number(values.year)
-      if (version.locked || idOf(officials[String(version.year)]) === version.id) return reject
+      if (version.locked) return reject
       if (!Number.isInteger(year) || year <= 2000 || year >= 2100) return invalid("Invalid fiscal year")
       version.year = year
     }
@@ -1682,6 +1612,7 @@ function executeLists(
   versions: Version[],
 ): Result {
   const values = command.values
+  const admin = actor.roles.includes("admin")
   const reject: Result = { ok: false, status: 403 }
   const invalid = (message: string): Result => ({
     ok: false,
@@ -1693,7 +1624,7 @@ function executeLists(
   const persist = () => {
     snapshot.data.versions = versions
   }
-  if (!plannerCanAdmin(actor)) return reject
+  if (!admin) return reject
   const collection = text(values.collection)
   if (!["entities", "allocations"].includes(collection)) return invalid("Choose entities or allocations")
   const records = rows(snapshot.data[collection]).map(identified)
@@ -1724,8 +1655,7 @@ function executeLists(
     if (
       versions.some((version) =>
         [...version.lines, ...Object.values(version.hc.hrAF).map(object)].some((line) => line[field] === id),
-      ) || (collection === "entities" && rows(snapshot.data.allocations).some((allocation) =>
-        rows(allocation.splits).some((split) => idOf(split.entityRef) === id)))
+      )
     )
       return invalid("Record is in use")
     snapshot.data[collection] = records.filter((row) => row.id !== id)
@@ -1735,48 +1665,13 @@ function executeLists(
   const name = text(values.name).trim() || text(stored?.name)
   if (!name || records.some((row) => row.id !== id && normName(text(row.name)) === normName(name)))
     return invalid("Empty or duplicate name")
-  const next: Row = {
+  const next = {
     ...stored,
     id,
     name,
     ...(collection === "entities"
       ? { code: text(values.code ?? stored?.code) }
       : { desc: text(values.desc ?? stored?.desc) }),
-  }
-  if (collection === "entities" && (values.splits !== undefined || values.contractRef !== undefined))
-    return invalid("Allocation fields cannot be saved on an entity")
-  if (collection === "allocations") {
-    if (values.contractRef !== undefined) {
-      if (typeof values.contractRef !== "string" || values.contractRef.length > 256)
-        return invalid("Invalid allocation contract reference")
-      next.contractRef = values.contractRef.trim()
-    }
-    if (values.splits !== undefined) {
-      if (!Array.isArray(values.splits)) return invalid("Allocation splits must be an array")
-      const splits: { entityRef: string; percent: number }[] = []
-      const entities = new Set(rows(snapshot.data.entities).map((entity) => idOf(entity.id)))
-      const seen = new Set<string>()
-      let basisPoints = 0
-      for (const incoming of values.splits) {
-        if (!incoming || typeof incoming !== "object" || Array.isArray(incoming))
-          return invalid("Invalid allocation split")
-        const split = object(incoming)
-        const entityRef = idOf(split.entityRef)
-        const percent = split.percent
-        if (!entities.has(entityRef) || seen.has(entityRef) ||
-          typeof percent !== "number" || !Number.isFinite(percent) || percent <= 0 || percent > 100)
-          return invalid("Allocation split requires a unique known entity and a positive percentage")
-        const units = Math.round(percent * 100)
-        if (Math.abs(percent * 100 - units) > 1e-8)
-          return invalid("Allocation split supports at most two decimal places")
-        seen.add(entityRef)
-        basisPoints += units
-        splits.push({ entityRef, percent: units / 100 })
-      }
-      if (splits.length > 0 && basisPoints !== 10000)
-        return invalid("Allocation splits must sum to exactly 100%")
-      next.splits = splits
-    }
   }
   snapshot.data[collection] = [...records.filter((row) => row.id !== id), next]
   write(key, stored, next)
@@ -1843,11 +1738,10 @@ function renderHeadcount(
     mapping +
     metricGrid([
       metric("Positions in plan", String(version.hc.positions.filter((position) => position.include).length)),
-      metric("Planned FTE December", String(finite(summary.fte))),
+      metric("FTE December", String(finite(summary.fte))),
       metric("HR Staff budget USD", money(summary.hrTotal)),
-      metric("Annual HR budget per planned December FTE", finite(summary.fte) ? money(finite(summary.hrTotal) / finite(summary.fte)) : "Unavailable — no planned December FTE"),
+      metric("Average cost per FTE", money(finite(summary.fte) ? finite(summary.hrTotal) / finite(summary.fte) : 0)),
     ]) +
-    "<p>Planned FTE describes the plan, not actual availability. The cost ratio uses the annual HR budget divided by planned FTE in December.</p>" +
     (version.hc.exampleRates === true || version.hc.ratesAreExamples === true ? "<p>Example rates</p>" : "") +
     table(
       ["Domain", "Budget USD"],
@@ -1917,13 +1811,20 @@ function renderHeadcount(
           `${version.id}:increase`,
         )
       : "") +
-    [...new Set(version.hc.positions.map((position) => text(position.domain)))].sort().map((domain) =>
-      `<h3>Positions · ${esc(domain || "Unassigned domain")}</h3>` + table(
+    table(
       ["Position", "Domain", "Status", ...(salary ? ["FY cost USD", "Actions"] : [])],
-      version.hc.positions.filter((position) => text(position.domain) === domain).map((position) => [
+      version.hc.positions.map((position) => [
         esc(text(position.name)),
         esc(text(position.domain)),
-        [position.include !== true ? "Excluded" : "In plan", position.left ? "Not in roster" : position.src === "new" ? "New hire" : "In roster", ...(position.hasRate === false ? ["No rate"] : [])].join(" · "),
+        position.include !== true
+          ? "Excluded"
+          : position.left
+            ? "Not in roster"
+            : position.hasRate === false
+              ? "No rate"
+              : position.src === "new"
+                ? "New hire"
+                : "In roster",
         ...(salary
           ? [
               money(numericMonths(position.months).reduce((a, b) => a + b, 0)),
@@ -1995,7 +1896,7 @@ function renderHeadcount(
             ]
           : []),
       ]),
-    )).join("") +
+    ) +
     (salary
       ? `<h3>Add new hire</h3>` +
         controls(
@@ -2015,29 +1916,24 @@ function renderHeadcount(
   )
 }
 
-function overviewActualCell(summary: Row, month: number): string {
-  const actual = plannerActualMonth(summary, month)
-  return `<span data-planner-actual-month="${month}" data-evidence-state="${actual.evidenceState}"${actual.domainValue === null ? "" : ` data-domain-value="${esc(String(actual.domainValue))}"`}>${actual.value === null ? "Unavailable" : money(actual.value)}<small>${actual.value === null ? "Actual data is missing or unpriced" : actual.value === 0 ? "Observed zero" : "Recorded actual"}</small></span>`
-}
-
-function monthlyChart(summary: Row): string {
+function monthlyChart(summary: Row, closed: number): string {
   const series = [
     { key: "budget", name: "Budget", color: "#245ca6" },
     { key: "actual", name: "Actual", color: "#b54a22" },
     { key: "outlook", name: "Outlook", color: "#227b48" },
   ].map((line) => ({ ...line, values: Array.from({ length: 12 }, (_, index) => {
-    if (line.key === "actual") return plannerActualMonth(summary, index + 1).value
     const months = summary[line.key]
     const value: unknown = Array.isArray(months) ? months[index] : null
     if (typeof value !== "number" || !Number.isFinite(value)) return null
-    return value
+    // Keep the original closed-month policy without turning absent months into zero.
+    return line.key === "actual" && index >= closed && value === 0 ? null : value
   }) }))
   const values = series.flatMap((line) => line.values.filter((value) => value !== null))
   const low = Math.min(0, ...values)
   const high = Math.max(1, ...values)
   const y = (value: number) => 180 - ((value - low) / (high - low)) * 150
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-  return `<figure><figcaption>Monthly Budget, Actual, Outlook (USD)</figcaption><p>Missing or unpriced actual data is unavailable. Recorded zero remains visible in open and closed months.</p><ul class="chart-legend">${series.map((line) => `<li><span aria-hidden="true" style="background:${line.color}"></span>${line.name}</li>`).join("")}</ul>${values.length ? `<svg viewBox="0 0 720 230" role="img" aria-label="Monthly Budget, Actual, Outlook in USD"><title>Monthly Budget, Actual, Outlook in USD</title><g class="chart-axis">${[...new Set([low, 0, high / 2, high])].map((value) => `<line x1="100" x2="705" y1="${y(value)}" y2="${y(value)}" stroke="#cbd5e1"/><text x="95" y="${y(value) + 4}" text-anchor="end" font-size="11">${esc(money(value))}</text>`).join("")}${months.map((month, index) => `<text x="${115 + index * 52}" y="202" text-anchor="middle" font-size="12">${month}</text>`).join("")}<text x="100" y="16" font-size="12">USD</text><text x="400" y="224" text-anchor="middle" font-size="12">Month</text></g>${series.map((line) => line.values.map((value, index) => value === null ? "" : `<circle data-planner-series="${line.key}" data-month="${index + 1}" cx="${115 + index * 52}" cy="${y(value)}" r="4" fill="${line.color}"><title>${line.name} ${index + 1}: ${esc(money(value))}</title></circle>`).join("")).join("")}</svg>` : '<p class="chart-empty">No data available for this chart.</p>'}</figure>`
+  return `<figure><figcaption>Monthly Budget, Actual, Outlook (USD)</figcaption><ul class="chart-legend">${series.map((line) => `<li><span aria-hidden="true" style="background:${line.color}"></span>${line.name}</li>`).join("")}</ul>${values.length ? `<svg viewBox="0 0 720 230" role="img" aria-label="Monthly Budget, Actual, Outlook in USD"><title>Monthly Budget, Actual, Outlook in USD</title><g class="chart-axis">${[...new Set([low, 0, high / 2, high])].map((value) => `<line x1="100" x2="705" y1="${y(value)}" y2="${y(value)}" stroke="#cbd5e1"/><text x="95" y="${y(value) + 4}" text-anchor="end" font-size="11">${esc(money(value))}</text>`).join("")}${months.map((month, index) => `<text x="${115 + index * 52}" y="202" text-anchor="middle" font-size="12">${month}</text>`).join("")}<text x="100" y="16" font-size="12">USD</text><text x="400" y="224" text-anchor="middle" font-size="12">Month</text></g>${series.map((line) => line.values.map((value, index) => value === null ? "" : `<circle cx="${115 + index * 52}" cy="${y(value)}" r="4" fill="${line.color}"><title>${line.name} ${index + 1}: ${esc(money(value))}</title></circle>`).join("")).join("")}</svg>` : '<p class="chart-empty">No data available for this chart.</p>'}</figure>`
 }
 
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
@@ -2233,7 +2129,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
   const stale = conflict(snapshot, `versions:${source.id}`, command, source)
   if (stale) return stale
   const asNew = input.newVersion === true
-  if (asNew && !plannerCanAdmin(actor)) return { ok: false, status: 403 }
+  if (asNew && !actor.roles.includes("admin")) return { ok: false, status: 403 }
   const version = structuredClone(source)
   if (asNew) {
     version.id = environment.id()
@@ -2243,7 +2139,20 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
       return { ok: false, status: 422, errors: ["Duplicate version id"] }
   }
   const official = idOf(object(snapshot.data.officials)[String(version.year)])
-  const can = (field: string, line?: Row) => plannerWorkbookField(version, asNew ? undefined : official, actor, field, line)
+  const can = (field: string, line?: Row) =>
+    plannerField(
+      field,
+      version,
+      asNew ? undefined : official,
+      actor,
+      line
+        ? {
+            ownerId: idOf(object(line.owner).id) || idOf(line.owner),
+            domain: text(line.domain),
+            hr: line.synthetic === true,
+          }
+        : undefined,
+    )
   const budgetOK = can("budget")
   const issue: ImportIssue = { warnings: [] }
   const workbookVersion = idOf(sheets.Info?.find((row) => row.Field === "Version ID")?.Value)
@@ -2347,6 +2256,8 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
         fail("HR domain is required")
         break
       }
+      if (synthetic && !hrDomainAuthorized(version, domain, asNew ? undefined : official, actor))
+        return { ok: false, status: 403 }
       const found = synthetic
         ? object(version.hc.hrAF[domain])
         : version.lines.find((line) => !!suppliedId && line.id === suppliedId && line.sec === sec) ||
@@ -2357,10 +2268,36 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
               (sec !== "capex" || line.proj === project?.id) &&
               normName(text(line.name)) === normName(name),
           )
-      if (!synthetic && !found && !can("structure")) {
+      const original = found && !synthetic ? before.lines.find((item) => item.id === found.id) : undefined
+      if (!synthetic && !found && !can("structure") && actor.roles.includes("budget owner") && measure !== "b")
+        return { ok: false, status: 403 }
+      if (
+        original && row.Owner !== undefined && actor.roles.includes("budget owner") &&
+        !can("owner", original) && !ownerLineScope(actor, lineScope(original))
+      ) {
+        const postedOwner = workbookOwner(row.Owner, undefined, environment, issue)
+        if (issue.result) break
+        if (idOf(object(postedOwner).id) === actor.id && lineScope(original)?.ownerId !== actor.id)
+          return { ok: false, status: 403 }
+      }
+      const newOwner = !synthetic && !found && !can("structure")
+        ? workbookOwner(row.Owner, undefined, environment, issue)
+        : undefined
+      if (issue.result) break
+      const scope = lineScope(original ?? found ?? (newOwner ? { owner: newOwner } : undefined))
+      const ownerBudget = !synthetic && ownerMayEdit("budget", version, asNew ? undefined : official, actor, scope)
+      if (
+        !synthetic && !found && !can("structure") &&
+        (!ownerBudget || (text(row.Domain).trim() && !ownerLineScope(actor, { domain: text(row.Domain) })))
+      ) {
         issue.warnings.push(`Unknown line unchanged: ${name || suppliedId}`)
         continue
       }
+      if (
+        original && !synthetic && measure === "b" && !budgetOK &&
+        actor.roles.includes("budget owner") && !version.locked && official !== version.id &&
+        !ownerBudget && (row.Owner !== undefined || workbookMonths.some((month) => row[month] != null && row[month] !== ""))
+      ) return { ok: false, status: 403 }
       const line: Row = synthetic
         ? { ...found, id: `HR:${domain}`, domain, synthetic: true }
         : found
@@ -2371,6 +2308,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
               el,
               proj: project?.id ?? "",
               name,
+              ...(newOwner ? { owner: newOwner } : {}),
               cur: "USD",
               annual: 0,
               b: zeroMonths(),
@@ -2384,12 +2322,12 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
         break
       }
       businessRows.add(duplicateKey)
-      if (!synthetic && budgetOK) {
+      if (!synthetic && (budgetOK || (ownerBudget && measure === "b"))) {
         line.sec = sec
         line.el = el
         line.proj = project?.id ?? text(line.proj)
         line.name = name || text(line.name)
-        line.desc = row.Description == null ? text(line.desc) : text(row.Description)
+        if (budgetOK) line.desc = row.Description == null ? text(line.desc) : text(row.Description)
         line.cur = workbookCurrency(row.Currency, line.cur, version, issue)
         if (sec === "capex") {
           const classification = normName(text(row.Classification))
@@ -2400,15 +2338,21 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
           line.cls = line.cls ?? "capex"
         }
       }
-      if (can("owner", line) && row.Owner !== undefined)
+      if ((can("owner", original ?? line) || (ownerBudget && measure === "b")) && row.Owner !== undefined)
         line.owner = workbookOwner(row.Owner, line.owner, environment, issue)
-      if (can("entity", line) && row.Entity !== undefined)
+      if (issue.result) break
+      const previous = original ?? found
+      if (
+        ownerBudget && measure === "b" && previous && !can("owner", previous) && row.Owner !== undefined &&
+        !ownerLineScope(actor, mergedLineScope(previous, { owner: line.owner }))
+      ) return { ok: false, status: 403 }
+      if ((can("entity", original ?? line) || (ownerBudget && measure === "b")) && row.Entity !== undefined)
         line.entity = workbookReference(row.Entity, line.entity, rows(snapshot.data.entities), "entity", issue)
-      if (can("allocation", line) && row.Allocation !== undefined)
+      if ((can("allocation", original ?? line) || (ownerBudget && measure === "b")) && row.Allocation !== undefined)
         line.alloc = workbookReference(row.Allocation, line.alloc, rows(snapshot.data.allocations), "allocation", issue)
       const field = measure === "b" ? "budget" : measure === "a" ? "actual" : "forecast"
-      if (!(synthetic && measure === "b") && can(field, line)) {
-        const amounts = workbookMonths.map((month) => workbookNumber(row[month], measure === "b" ? 0 : null))
+      if (!(synthetic && measure === "b") && (can(field, original ?? line) || (measure === "b" && ownerBudget))) {
+        const amounts = workbookMonths.map((month) => WorkbookAmount.parse(row[month], measure === "b" ? 0 : null))
         if (amounts.some((amount) => amount === undefined)) {
           fail(`${section}: Invalid monthly amount`)
           break
@@ -2441,7 +2385,20 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
         else version.lines.push(line)
       }
     }
-  const headcountImport = readWorkbookHeadcount(sheets.Headcount, version, actor, can, issue, allocate, seen.positions)
+  if (membersWorkbook && !actor.roles.some((role) => ["admin", "hr"].includes(role)))
+    return { ok: false, status: 403 }
+  const lockedMembers = membersWorkbook && (version.locked || (!asNew && official === version.id))
+  if (lockedMembers) issue.warnings.push("Roster unchanged: version is locked")
+  const headcountImport = readWorkbookHeadcount(
+    lockedMembers ? undefined : sheets.Headcount,
+    rows(snapshot.data.roster),
+    version,
+    actor,
+    can,
+    issue,
+    allocate,
+    seen.positions,
+  )
   if (issue.result) return issue.result
   const importedRoster = headcountImport.roster
   const syncMembersPositions = membersWorkbook && importedRoster !== undefined && can("headcount") && !version.locked
@@ -2488,7 +2445,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
           !sheets[line.sec === "opex" ? "OPEX" : "CAPEX"] ||
           seen[line.sec === "opex" ? "opex" : "capex"].has(idOf(line.id)),
       )
-    if (sheets.Headcount && !headcountImport.rosterRows && can("headcount"))
+    if (sheets.Headcount && !lockedMembers && !headcountImport.rosterRows && can("headcount"))
       version.hc.positions = version.hc.positions.filter((position) => seen.positions.has(idOf(position.id)))
   }
   if (budgetOK)
@@ -2606,21 +2563,10 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
     warnings: [...new Set(issue.warnings)],
   }
 }
-function workbookDate(value: unknown): string | undefined {
-  if (value == null || value === "") return ""
-  if (typeof value === "number" && Number.isFinite(value)) {
-    const date = new Date(Date.UTC(1899, 11, 30) + value * 86400000)
-    return Number.isFinite(date.valueOf()) ? date.toISOString().slice(0, 10) : undefined
-  }
-  const token = text(value).trim()
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(token)) return undefined
-  const date = new Date(`${token}T00:00:00Z`)
-  return Number.isFinite(date.valueOf()) && date.toISOString().slice(0, 10) === token ? token : undefined
-}
-
 type WorkbookPermission = (field: string, line?: Row) => boolean
 function readWorkbookHeadcount(
   headcount: Row[] | undefined,
+  previousRoster: Row[],
   version: Version,
   actor: Actor,
   can: WorkbookPermission,
@@ -2637,7 +2583,7 @@ function readWorkbookHeadcount(
     ) && !headcount.some((row) => ["Position ID", "FTE", "Start month"].some((key) => key in row))
   let roster: Row[] | undefined
   if (rosterRows) {
-    if (!plannerCanImportRoster(actor)) issue.result = { ok: false, status: 403 }
+    if (!actor.roles.some((role) => ["admin", "hr"].includes(role))) issue.result = { ok: false, status: 403 }
     else {
       roster = []
       for (const row of headcount ?? []) {
@@ -2645,20 +2591,21 @@ function readWorkbookHeadcount(
           fail("Roster name is required")
           break
         }
-        const start = workbookDate(row["Start Date"] ?? row.Start),
-          end = workbookDate(row["End Date"] ?? row.End)
+        const start = WorkbookDate.parse(row["Start Date"] ?? row.Start),
+          end = WorkbookDate.parse(row["End Date"] ?? row.End)
         if (start === undefined || end === undefined) {
           fail("Invalid roster date")
           break
         }
+        const previous = previousRoster.find((person) => text(person.name).trim().toLowerCase() === text(row.Name).trim().toLowerCase())
         roster.push({
           name: text(row.Name).trim(),
           title: text(row.Title),
           type: text(row.Type),
           leader: text(row.Leader),
           location: text(row.Location),
-          start,
-          end,
+          start: start || previous?.start || "",
+          end: end || previous?.end || "",
           status: text(row.Status),
         })
       }
@@ -2672,7 +2619,7 @@ function readWorkbookHeadcount(
         const found =
           version.hc.positions.find((position) => !!id && position.id === id) ||
           version.hc.positions.find((position) => normName(text(position.name)) === normName(name))
-        const fte = workbookNumber(row.FTE, row.FTE === undefined && found ? finite(found.fte, 1) : 1)
+        const fte = WorkbookAmount.parse(row.FTE, row.FTE === undefined && found ? finite(found.fte, 1) : 1)
         const start = workbookSpan(row["Start month"], finite(found?.start, 1)),
           end = workbookSpan(row["End month"], finite(found?.end, 12))
         const positionName = name || text(found?.name)
@@ -2710,7 +2657,7 @@ function readWorkbookHeadcount(
         if (row["Rate card"] !== undefined)
           next.rateId = workbookReference(row["Rate card"], next.rateId, version.hc.rates, "rate card", issue)
         if (row["Rate override"] !== undefined) {
-          const override = workbookNumber(row["Rate override"], null)
+          const override = WorkbookAmount.parse(row["Rate override"], null)
           if (override === undefined || (override !== null && override < 0)) {
             fail("Invalid rate override")
             break
@@ -2736,18 +2683,25 @@ function readWorkbookRates(
     issue.result = { ok: false, status: 422, errors: [message] }
   }
   // FX runs first so currencies added in this workbook are available to later sheets.
+  // Blank rate stays null. A bad currency or rate warns and skips only that row. USD is never stored.
   if (sheets["FX rates"]) {
     if (!can("fx")) issue.warnings.push("FX rates unchanged: budget or role is read-only")
     else
-      for (const row of sheets["FX rates"]) {
-        const currency = text(row.Currency).trim().toUpperCase()
-        const rate = workbookNumber(row["USD per 1 unit"], null)
-        if (!/^[A-Z]{3}$/.test(currency) || rate == null || rate <= 0) {
-          fail("FX requires a three letter currency and a positive rate")
-          break
+      for (const [index, row] of sheets["FX rates"].entries()) {
+        const currency = (typeof row.Currency === "string" || typeof row.Currency === "number"
+          ? String(row.Currency)
+          : ""
+        )
+          .trim()
+          .toUpperCase()
+        if (!currency || currency === "USD") continue
+        if (!/^[A-Z]{3}$/.test(currency)) {
+          issue.warnings.push(`FX rates row ${index + 2}: "${currency}" is not a 3-letter currency code. Skipped.`)
+          continue
         }
-        if (currency === "USD") {
-          if (rate !== 1) fail("USD is fixed at 1")
+        const rate = parseWorkbookRate(row["USD per 1 unit"])
+        if (typeof rate === "number" && Number.isNaN(rate)) {
+          issue.warnings.push(`FX rates row ${index + 2}: rate for ${currency} is not a positive number. Skipped.`)
           continue
         }
         const found = version.fx.find((item) => item.cur === currency)
@@ -2755,11 +2709,7 @@ function readWorkbookRates(
           ...found,
           id: idOf(found?.id) || currency,
           cur: currency,
-          rate: Math.round(rate * 1e6) / 1e6,
-        }
-        if (next.rate <= 0) {
-          fail("FX rate rounds to zero")
-          break
+          rate,
         }
         if (found) version.fx.splice(version.fx.indexOf(found), 1, next)
         else version.fx.push(next)
@@ -2774,7 +2724,7 @@ function readWorkbookRates(
           version.hc.rates.find((rate) => idOf(row["Rate ID"]) && rate.id === idOf(row["Rate ID"])) ||
           version.hc.rates.find((rate) => normName(text(rate.name)) === normName(name))
         const cardName = name || text(found?.name)
-        const annual = workbookNumber(row["Annual cost per FTE"], found ? finite(found.annual) : 0)
+        const annual = WorkbookAmount.parse(row["Annual cost per FTE"], found ? finite(found.annual) : 0)
         if (!cardName || annual == null || annual < 0) {
           fail("Invalid rate card name or annual cost")
           break
@@ -2791,6 +2741,18 @@ function readWorkbookRates(
         else version.hc.rates.push(next)
       }
   }
+}
+
+function parseWorkbookRate(value: unknown): number | null {
+  if (value == null) return null
+  if (typeof value !== "number" && typeof value !== "string") return Number.NaN
+  const token = String(value).trim().replace(/\s/g, "")
+  if (!token) return null
+  const normalized = /^\d+,\d+$/.test(token) ? token.replace(",", ".") : token
+  const parsed = Number(normalized)
+  if (!Number.isFinite(parsed) || parsed <= 0) return Number.NaN
+  const rate = Math.round(parsed * 1e6) / 1e6
+  return rate > 0 ? rate : Number.NaN
 }
 
 function workbookForm(page: string, version: Version, context: RenderContext): string {
