@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "deployment": "azure-https",
+  "authentication": "microsoft",
+  "origin": "https://orchsf-spug5rxxyqkdw.swedencentral.cloudapp.azure.com",
+  "listenerOrigin": "http://127.0.0.1:4096",
+  "ingressOrigin": "REQUIRES_OBSERVED_CADDY_HTTP_INGRESS_ORIGIN",
+  "mount": "/sucafina",
+  "tenantId": "449dfd17-d627-45da-b22c-1be49d8df99f",
+  "clientId": "9006dcb8-1a75-4886-9475-1e7f1dc5d7cd",
+  "groups": {
+    "dashboard": {
+      "admin": "group:d9a91aba-a2fc-4efa-ad9a-4a515208b5d2",
+      "contributor": "group:05823772-b8dc-408a-94a8-3f341f72dfd9",
+      "viewer": "group:d0910680-aae4-4ebb-9834-be836150ab1a"
+    },
+    "planner": {
+      "admin": "group:457af676-7ac9-4f1c-b70c-dff1dfa61066",
+      "finance": "group:fb9fdbd9-f9d8-428d-ad57-04090a52390c",
+      "viewer": "group:6b9f6816-89f8-44e8-92e3-c5b16e35d6a2"
+    },
+    "procurement": {
+      "admin": "group:400ea7f4-cf9b-4a20-a7b0-bd094c7b7c55",
+      "requester": "group:54aa32bd-6f5d-4713-9903-90b3df524b47",
+      "buyer": "group:3f89c5a8-63cb-43f8-9235-b83f99a0c659",
+      "approver": "group:b52163db-66d7-430a-8585-80efbfef84f3",
+      "viewer": "group:aa325a71-671e-4b2b-87bd-8b5ee5e681a1"
+    }
+  },
+  "grants": [],
+  "workspaceDirectory": "/var/lib/orchestra-sf/home/flamengo-workspace",
+  "scanner": null,
+  "sessionSeconds": 28800,
+  "loginSeconds": 600
+}

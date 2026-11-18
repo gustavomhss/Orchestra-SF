@@ -8,14 +8,14 @@ import { useSfContext } from "../../context"
 import { SfChangeReview, type SfReviewField } from "../../shared/change-review"
 import { SfStatePanel } from "../../shared/states"
 import type { SfUiState } from "../../shared/frame"
-import type { SF_U11_REMAINING_COPY } from "./copy"
+import { sfU11Label, type SF_U11_REMAINING_COPY } from "./copy"
 import { readRequestTitle, titleReadiness } from "./title-revalidation"
 
 type Key = keyof typeof SF_U11_REMAINING_COPY
 type Source = Extract<Awaited<ReturnType<typeof readRequestTitle>>, { status: "authorized" }>
 type Intent = Readonly<{ ref: SfRef; token: string; version: number; stage: string; original: string; title: string;
   operationRef: SfOperationRef; intentRef: SfIntentRef; idempotencyKey: string }>
-const key = (value: Key) => value as Parameters<typeof SfStatePanel>[0]["messageKey"]
+const key = (value: Key | "sf.u02.confirmSave") => value as Parameters<typeof SfStatePanel>[0]["messageKey"]
 const message = (value: Key) => ({ key: key(value) })
 const data = (text: string) => ({ kind: "data" as const, text })
 const field = (title: string): SfReviewField => ({ path: "pr.title", label: message("sf.u11.remaining.field.title"),
@@ -41,7 +41,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     submitted?.setPhase("outcome-unknown")
     active?.abort()
   }
-  const t = (value: Key) => language.t(value as Parameters<typeof language.t>[0])
+  const t = (value: Key) => sfU11Label(value, language.locale(), language.t(value as Parameters<typeof language.t>[0]))
   const refValue = () => props.requestRef ?? (props.route.kind !== "entry" && props.route.kind !== "new"
     ? props.route.params.requestRef : undefined)
   const authority = () => {
@@ -295,7 +295,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
           proposed={{ kind: "draft", intentRef: item().intentRef, sourceRef: item().ref, sourceVersion: item().version, fields }}
           effects={[{ id: "save", domain: "procurement", title: { kind: "message", message: message("sf.u11.remaining.save") }, state: "proposed", details: fields }]}
           coverage={{ state: "complete", summary: message("sf.u11.remaining.reviewSummary"), reasons: [], knownCount: 1, expectedCount: 1 }}
-          blockingReasons={[]} confirmation={{ kind: "admitted", labelKey: key("sf.u11.remaining.confirm"), purpose: "save",
+          blockingReasons={[]} confirmation={{ kind: "admitted", labelKey: key("sf.u02.confirmSave"), purpose: "save",
             binding: { kind: "catalog-command", operationId: "domain.command.CAP25.save",
               version: { kind: "record", expectedVersion: item().version }, confirmation: "presentation-only" } }}
           state="ready" onConfirm={() => { void confirm() }} onRevise={cancel} onCancel={cancel} />

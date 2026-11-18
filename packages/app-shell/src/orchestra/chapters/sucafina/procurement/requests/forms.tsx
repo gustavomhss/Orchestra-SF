@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js"
 import { useLanguage } from "@/context/language"
-import { SF_U11_REMAINING_COPY } from "./copy"
+import { sfU11Label, SF_U11_REMAINING_COPY } from "./copy"
 import type { SfPoEdit, SfPoLine, SfPrEdit } from "./model"
 
 type Key = keyof typeof SF_U11_REMAINING_COPY
@@ -33,7 +33,7 @@ type PoProps = Readonly<{
 }>
 function useCopy() {
   const language = useLanguage()
-  return (key: Key) => language.t(key as Parameters<typeof language.t>[0])
+  return (key: Key) => sfU11Label(key, language.locale(), language.t(key as Parameters<typeof language.t>[0]))
 }
 
 export function SfRequisitionForm(props: PrProps) {

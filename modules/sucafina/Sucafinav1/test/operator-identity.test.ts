@@ -71,6 +71,24 @@ test("local helper issues encrypted single-use credentials and scoped opaque eig
   })
 })
 
+// The packaged install serves from its own process. Bun's os.userInfo().username
+// reads the environment and degrades to "unknown" there, so a session must not
+// depend on the display name resolved by the serving process.
+test("a sealed enrollment opens a session under a serving process with a different display name", async () => {
+  await fixture(async (f) => {
+    const code = await f.identity.enroll()
+    const serving = createOperatorIdentity({ ...f.options, operator: { ...operator, name: "unknown" } })
+    const response = await serving.handle(request(`/auth/local?code=${code}`))
+    expect(response?.status).toBe(303)
+    const cookie = response!.headers.getSetCookie()[0]!.split(";")[0]!
+    expect(await serving.person(request("/planner", cookie))).toEqual({ ...profile, name: "unknown" })
+    // The durable operator identity still binds the enrollment to the installation owner.
+    const foreign = createOperatorIdentity({ ...f.options, operator: { ...operator, uid: operator.uid + 1 } })
+    const foreignCode = await foreign.enroll()
+    expect((await f.identity.handle(request(`/auth/local?code=${foreignCode}`)))?.status).toBe(403)
+  })
+})
+
 test("authentication grants only the selected local surface and performs only secret reads", async () => {
   await fixture(async (f) => {
     const login = await f.enroll()
