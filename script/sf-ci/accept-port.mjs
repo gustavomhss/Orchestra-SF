@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises"
 
 const REQUIRED_OPTIONS = ["ledger", "manifest", "branch", "base"]
 const PORT_BUNDLES = new Set(["B0", "B1", "B2", "B3"])
+const LEDGER_BUNDLES = new Set([...PORT_BUNDLES, "FINAL"])
 const SHA = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/i
 
 class AcceptanceError extends Error {
@@ -83,6 +84,7 @@ async function loadLedger(file) {
     reject("LEDGER_UNREADABLE", `${file}: ${error.message}`)
   }
   const replay = new Set()
+  const blocked = new Set()
   const scopes = new Map()
   let records = 0
   let replayCount = 0
@@ -105,19 +107,18 @@ async function loadLedger(file) {
       reject("DIRTY_LEDGER", `conflicting path fields on line ${index + 1}`)
     }
     const pr = prNumber(entry.source_pr, "DIRTY_LEDGER")
-    if (!PORT_BUNDLES.has(entry.bundle)) {
+    if (!LEDGER_BUNDLES.has(entry.bundle)) {
       reject("DIRTY_LEDGER", `REPLAY line ${index + 1} has unsupported bundle ${JSON.stringify(entry.bundle)}`)
     }
-    if (entry.owner_decision_required === true) {
-      reject("OWNER_DECISION_REQUIRED", `REPLAY line ${index + 1} requires an owner decision`)
-    }
-    replay.add(tuple(pr, entry.bundle, path))
+    const key = tuple(pr, entry.bundle, path)
+    if (entry.owner_decision_required === true) blocked.add(key)
+    replay.add(key)
     if (!scopes.has(entry.bundle)) scopes.set(entry.bundle, new Set())
     scopes.get(entry.bundle).add(path)
     replayCount++
   }
   if (records === 0 || replayCount === 0) reject("EMPTY_LEDGER", "ledger contains no REPLAY path records")
-  return { replay, scopes, records, replayCount }
+  return { replay, blocked, scopes, records, replayCount }
 }
 
 async function loadManifest(file) {
@@ -237,6 +238,9 @@ function verify(commits, manifest, ledger) {
         reject("WRONG_BUNDLE", `${path} is not owned by ${commit.bundle} in the REPLAY ledger`)
       }
       if (!accepted) reject("LEDGER_MISMATCH", `${path} lacks REPLAY for PR #${commit.pr}, ${commit.bundle}`)
+      if (ledger.blocked.has(tuple(commit.pr, commit.bundle, path))) {
+        reject("OWNER_DECISION_REQUIRED", `${path} PR #${commit.pr} ${commit.bundle} requires an owner decision`)
+      }
       if (!declared.has(path)) reject("UNMANIFESTED_PATH", `${commit.sha} changes ${path} but manifest omits it`)
     }
     for (const path of declared) {

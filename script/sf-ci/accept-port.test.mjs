@@ -196,3 +196,20 @@ test("rejects owner-decision-required REPLAY rows", (t) => {
     ledger: [record(A, 71, "B2", { owner_decision_required: true })] })
   expectReject(result, "OWNER_DECISION_REQUIRED")
 })
+
+
+test("ignores unrelated FINAL ledger replay scope while checking B2", (t) => {
+  const f = fixture(t)
+  const sha = addCommit(f)
+  const result = invoke(f, { rows: [{ sha, pr: 71, path: A }],
+    ledger: [record(A, 71, "B2"), record(B, 272, "FINAL")] })
+  assert.equal(result.status, 0, result.stderr)
+})
+
+test("does not block an unrelated bundle for a pending owner decision", (t) => {
+  const f = fixture(t)
+  const sha = addCommit(f)
+  const result = invoke(f, { rows: [{ sha, pr: 71, path: A }],
+    ledger: [record(A), record(B, 72, "B1", { owner_decision_required: true })] })
+  assert.equal(result.status, 0, result.stderr)
+})
