@@ -58,13 +58,13 @@ export function createSfAlternativeCallScope<Value>(input: {
       }
       const sources = input.lockedSourceFences()
       // Dashboard projections use the observed UTC day even when the raw
-      // snapshots have not changed. Keep the final awaits inside C08's real
-      // SQLite read scope so a writer cannot change the bytes during them.
-      const afterDay = await observedDay(scope.request)
-      return sources && afterDay === day && current(call, scope) && await host.revalidate(call) && current(call, scope)
+      // snapshots have not changed. A proof cannot cross that boundary.
+      return sources && current(call, scope) && await host.revalidate(call)
         ? digestSfValue({ state, sources, day, caseRef: selected.value, binding: scope.binding, admission }) : undefined
     })
-    return found.status === "ok" && typeof found.value === "string" && current(call, scope) ? found.value : undefined
+    const afterDay = await observedDay(scope.request)
+    return found.status === "ok" && typeof found.value === "string" && afterDay === day && current(call, scope) &&
+      await host.revalidate(call) && current(call, scope) ? found.value : undefined
   }
   const read = async (call: TrustedDomainContext, produce: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
     const scope = active.get(call)
@@ -94,11 +94,9 @@ export function createSfAlternativeCallScope<Value>(input: {
     const scope: Scope<Value> = { request, binding: digestSfValue([call.kind, call.binding]), admitted: admitted(call) }
     active.set(call, scope)
     return execution.run(scope, async () => {
-      try {
-        const result = await work()
-        return current(call, scope) ? result : { status: "denied", reason: "alternative-call-authority-unavailable" }
-      } finally { if (active.get(call) === scope) active.delete(call) }
+      try { return await work() } finally { if (active.get(call) === scope) active.delete(call) }
     })
   }
   return { run, read }
 }
+

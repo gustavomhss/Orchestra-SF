@@ -250,11 +250,10 @@ export function createSfAnalysisHostServices(input: {
     add(createSfReevaluationInputProducer(materiality), createSfCommitmentReevaluationVerifier(materiality))
   } else absent(["sf-reavaliar-compromissos"], ["memory.materiality.selectedChanges"])
   const caseRecall = bindings.caseRecall ?? business.caseRecall
-  const memory = { ...dependencies, caseRecall, ...(caseRecall === business.caseRecall ? { withMemoryObservation: business.withMemoryObservation } : {}) }
-  add(createSfMemoryInputProducer(memory), { skillIds: ["sf-consultar-memoria-decisoria"], verify: async (value, request, call) => {
+  add(createSfMemoryInputProducer({ ...dependencies, caseRecall }), { skillIds: ["sf-consultar-memoria-decisoria"], verify: async (value, request, call) => {
     const parsed = decodeSfSkillInput("DecisionRecallInput", value)
     if (!parsed.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
-    return createSfDecisionMemoryVerifier({ ...memory, readRecallSelection: readers.recallSelection(parsed.value) }).verify(value, request, call)
+    return createSfDecisionMemoryVerifier({ ...dependencies, caseRecall, readRecallSelection: readers.recallSelection(parsed.value) }).verify(value, request, call)
   } })
 
   const bound = createSfAnalysisServices({ dependencies, selected: input.selected, bindings: {}, selectionScope: scoped.selectionScope,

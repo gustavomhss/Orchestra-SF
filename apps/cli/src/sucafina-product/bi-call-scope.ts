@@ -91,9 +91,9 @@ export function createSfBiCallScope(input: {
   const read = async (selection: StoredScenarioSelection, call: TrustedDomainContext,
     produce: () => Promise<PortResult<DomainProjection>>): Promise<PortResult<DomainProjection>> => {
     const scope = active.get(call)
-    // The exported source also serves Review. A concurrent consumer holding
-    // the same context cannot borrow or poison this dispatch's completed proof.
-    if (scope && execution.getStore() !== scope) return { status: "denied", reason: "bi-call-invocation-unavailable" }
+    // Context identity alone does not authorize borrowing another invocation's
+    // completed proof. Refuse overlap without invalidating its legitimate owner.
+    if (scope && execution.getStore() !== scope) return denied()
     if (!scope || scope.bypass) return produce()
     if (scope.invalid) return scope.invalid === "denied" ? denied() : changed()
     if (selection.selectionRef !== scope.selection.selectionRef || selection.scenarioResultRef !== scope.selection.scenarioResultRef ||
@@ -155,3 +155,4 @@ function plannerDependencies(value: unknown): readonly PlannerRef[] | undefined 
   }
   return visit(value) ? [...refs.values()] : undefined
 }
+
