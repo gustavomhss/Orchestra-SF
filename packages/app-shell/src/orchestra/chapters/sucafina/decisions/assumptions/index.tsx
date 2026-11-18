@@ -7,8 +7,6 @@ import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
-import { SfAlternativeAuthoring } from "../alternatives/authoring"
-import { SfAssumptionDivergence } from "./divergence"
 import "../cases/n24.css"
 
 const k = (value: string) => value as SfCopyKey
@@ -67,7 +65,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
             messageKey={k(caseData.read.state === "loading" ? "sf.ui36.reading" : "sf.ui36.unavailable")}
             onRetryRead={() => caseData.reload()} />
         }>
-          {(current) => <>
+          {() => <>
             <section class="mx-card sf-n24-section" aria-labelledby="sf-n24-assumptions">
               <h2 id="sf-n24-assumptions">{t("sf.ui36.record")}</h2>
               <div class="sf-n24-toolbar">
@@ -109,12 +107,9 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
                     <li><bdi>{source.refId}</bdi> · <bdi>{source.evidenceLevel}</bdi></li>}
                   </For>
                 </ul>
-                <p role="status">A premissa original é um registro do produtor. As alterações de cenário são versionadas abaixo; divergências são registradas como clarificações vinculadas à fonte.</p>
+                <p role="status">{t("sf.ui36.noMutation")}</p>
               </section>}
             </Show>
-            <SfAlternativeAuthoring owner={caseData.owner} record={current()}
-              assumptionsOnly onReload={() => caseData.reload()} />
-            <SfAssumptionDivergence owner={caseData.owner} record={current()} />
             <div class="sf-n24-grid">
               <section class="mx-card sf-n24-section" aria-labelledby="sf-n24-missing">
                 <h2 id="sf-n24-missing">{t("sf.ui36.missing")}</h2>

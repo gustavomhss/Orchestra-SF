@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { createSfCreationRecoveryHttp } from "../../../../../../apps/cli/src/sucafina-product/creation-recovery-http.ts"
+import { createSfCreationRecoveryHttp, type SfCreationRecoveryRuntime } from "../../../../../../apps/cli/src/sucafina-product/creation-recovery-http.ts"
 import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
@@ -57,21 +57,18 @@ test("111/HTTP+C08+SQLite: original key recovers once after restart; actor, revo
       },
     })
     const cases = createDecisionCasePort({
-      state,
-      host: {
-        requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined,
-        revalidate: async (context) => context.kind === "ui" && ui.revalidate(context),
-      },
+      state, host: { requestFor: ui.requestFor, revalidate: ui.revalidate },
       creationTarget: { ref: "sf-workspace:install", incarnation: targetIncarnation },
-      operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined,
-      authorizeCase: async (value, context) => context.kind === "ui" &&
-        value.participants.includes(context.binding.principalRef) && await ui.revalidate(context),
-      verifyScenarioOperations: async (_value, context) => context.kind === "ui" && ui.revalidate(context),
+      operationIdentity: ui.operationIdentity,
+      authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await ui.revalidate(context),
+      verifyScenarioOperations: async (_value, context) => ui.revalidate(context),
       evidence, createId: () => "case-id-" + ++nextId, now: () => "2026-11-15T00:00:00Z",
     })
     // No replacement lookup is installed here: this is the real case-port
     // function from mission96. An uncomposed C53 MUST fail, not get a fixture PASS.
-    const recoverCreation = cases.recoverCreation
+    const recoverCreation = (cases as typeof cases & {
+      recoverCreation?: SfCreationRecoveryRuntime["recoverCreation"]
+    }).recoverCreation
     if (!recoverCreation) throw new Error("mission96 case-port recovery not composed")
     const http = createSfCreationRecoveryHttp({
       origin: "https://sf.test", mount: "/sf",

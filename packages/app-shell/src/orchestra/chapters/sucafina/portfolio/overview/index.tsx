@@ -1,3 +1,4 @@
+import { useNavigate } from "@solidjs/router"
 import { createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -9,7 +10,7 @@ import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey } from "../../shared/table"
 import { sfReadProjects, sfAdmitted, sfOwnerMatches } from "../projects/producer"
-import { SfExecutiveAction } from "../../cross-links/view"
+import { sfProjectHref } from "../projects/paths"
 import { sfSourceDate, type SfProjectRecord, type SfProjectPage } from "../projects/model"
 import "./overview.css"
 
@@ -20,6 +21,7 @@ const kt = (value: keyof typeof SF_U05_COPY) => value as unknown as SfTableCopyK
 export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Element {
   const owner = useSfContext()
   const language = useLanguage()
+  const navigate = useNavigate()
   const t = (key: keyof typeof SF_U05_COPY) => language.t(key as Parameters<typeof language.t>[0])
   const [refresh, setRefresh] = createSignal(0)
   const [view, setView] = createStore<{ state: SfUiState; page: SfProjectPage | null }>({
@@ -37,7 +39,9 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
       destination.page === "All Projects" && destination.canRead)
   }
   const goProjects = () => {
-    if (canOpenProjects()) void owner.followExecutiveLink?.(props.route, { kind: "projects" })
+    if (!canOpenProjects()) return
+    const href = sfProjectHref(props.route, "projects")
+    if (href) navigate(href)
   }
 
   createEffect(() => {
@@ -150,7 +154,9 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
                 onSort={() => undefined}
                 onPage={() => undefined}
                 onSelect={(ref) => {
-                  if (canOpenProjects()) void owner.followExecutiveLink?.(props.route, { kind: "project", ref })
+                  if (!canOpenProjects()) return
+                  const href = sfProjectHref(props.route, "detail", ref)
+                  if (href) navigate(href)
                 }}
                 rowActions={() => []}
                 onRowAction={() => undefined}
@@ -158,19 +164,6 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
                 density="comfortable"
                 state={projects().length === 0 ? "filtered-empty" : "ready"}
               />
-              <Show when={projects().length > 0}>
-                <div class="sf-u05-overview-scroll" data-sf-project-relation-actions>
-                  <h3>{t("sf.u05.overview.projects")}</h3>
-                  <ul>
-                    <For each={projects()}>{(project) => <li class="flex flex-wrap items-center gap-2">
-                      <bdi>{project.name}</bdi>
-                      <SfExecutiveAction from={props.route}
-                        target={{ kind: "relations", source: { kind: "project", ref: project.id } }}
-                        label={{ pt: "Relacionar nota", en: "Link note" }} />
-                    </li>}</For>
-                  </ul>
-                </div>
-              </Show>
             </section>
             <section aria-label={t("sf.u05.overview.milestones")}>
               <h2>{t("sf.u05.overview.milestones")}</h2>

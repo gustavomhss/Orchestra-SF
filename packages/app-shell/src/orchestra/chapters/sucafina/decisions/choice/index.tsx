@@ -280,7 +280,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
                 </div>
               </Show>
             </section>
-            <Show when={(!privacy()) ? view.review : undefined}>
+            <Show when={view.review && !privacy()}>
               {(review) => <>
                 <SfChangeReview
                   operation={{

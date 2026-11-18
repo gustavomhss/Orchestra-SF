@@ -47,7 +47,7 @@ export async function inspectProof233Hosted(input: HostedInput233) {
       sha64.test(run.ciRequestSha256) && run.conclusion === "success" &&
       Array.isArray(run.selectedFiles) && run.selectedFiles.length > 0 &&
       new Set(run.selectedFiles).size === run.selectedFiles.length &&
-      run.selectedFiles.every((entry: string) =>
+      run.selectedFiles.every((entry) =>
         /^(Sucafinav1\/test\/product\/)[a-zA-Z0-9/_.-]+\.test\.ts$/.test(entry)) &&
       typeof run.log === "string" && run.log.length > 0
     if (!valid) gaps.push("hosted-run-fields-or-provenance-invalid:" + String(run.id))
