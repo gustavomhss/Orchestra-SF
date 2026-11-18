@@ -1,0 +1,21 @@
+{
+  "schema": "sf-review-first-agenda-legacy-regression-proposal-v1",
+  "state": "PROPOSED_NOT_EXECUTED",
+  "source_commit": "c1bd1c91b0e0d32db3074408e815e36107384073",
+  "source_test": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+  "source_modified": false,
+  "reason_not_selected": [
+    "The single existing test opens a localhost Bun.serve listener. Mission39 uses an in-memory transport adapter and does not start a server.",
+    "Its selection-revoke phase expects the previous review reference and enabled Prepare current data as a new revision control to remain after revocation. Mission39 clears private content and selection and requires an authorized host reopening.",
+    "The existing test is one monolithic case also covering report, comparison, conversation and source-navigation behavior; its workspace subsection cannot be selected independently."
+  ],
+  "stronger_future_regression": [
+    "Mount the existing caller signature with authorized initial items, without discover, through production workspace and HTTP modules and a transport adapter that starts no listener.",
+    "Keep the exact baseline-side removal, section order, agenda note, captured-comment and source-value assertions before revocation.",
+    "Lose the response body only after real durable preservation; require explicit retry with identical idempotency key and payload, identical review body and exactly one stored capture.",
+    "After confirmed revocation, require no private content, selection or source-bearing control in the DOM, and prove that an already pending authorized response cannot restore them.",
+    "Require a new authenticated host opening before a fresh selection can be offered; do not restore an old selection solely because access later returns."
+  ],
+  "mission39_coverage": "first-agenda.test.ts includes real first-use discovery and the durable lost-response/retry, drift, immutable reload and late-response revocation assertions. It does not claim the existing monolithic test was executed or passed.",
+  "assertion_policy": "No existing assertions were changed, removed, skipped or weakened. This proposal requires an owner-reviewed stronger replacement for the incompatible revocation expectation."
+}
