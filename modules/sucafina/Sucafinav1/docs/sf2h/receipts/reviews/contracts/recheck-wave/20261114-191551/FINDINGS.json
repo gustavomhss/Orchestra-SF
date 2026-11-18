@@ -1,0 +1,574 @@
+{
+  "schema": "sf2h.contract-runtime-recheck-findings.v1",
+  "review_id": "S3-R3-review-contracts-recheck-20261114-191551",
+  "normative_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "status": "DONE_REVIEW_WITH_OPEN_PRODUCT_FINDINGS",
+  "verdict": "REQUEST_CHANGES_HOLD",
+  "global_release": "NOT_GRANTED",
+  "severity_policy": "P2 is explicitly assigned to demonstrated ACK caller defect and preserved for original C11. Other existing gates/findings keep original severity or NOT_ASSIGNED_IN_SOURCE rather than inventing one.",
+  "count_semantics": "Eleven recheck dispositions, not eleven new bugs. Existing F01-F15 are retained by provenance.",
+  "findings": [
+    {
+      "id": "CR-C11-001",
+      "origin": {
+        "type": "prior_independent_finding",
+        "pr": 51,
+        "commit": "fa520193f5df9d6585d5f4c40d071215efb42923",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/contracts/ad7fcdef7739e1bc471e42fac082452799de751b/FINDING-CR-C11-001.md"
+      },
+      "classification": "BUG_HISTORICAL_RECHECK",
+      "severity": "P2",
+      "status": "RESOLVED_WITH_EVIDENCE_IN_WP10",
+      "per_sha": [
+        {
+          "sha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "status": "RESOLVED_WITH_EVIDENCE"
+        },
+        {
+          "sha": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+          "status": "FIX_ALREADY_PRESENT"
+        },
+        {
+          "sha": "ad7fcdef7739e1bc471e42fac082452799de751b",
+          "status": "OPEN_IN_UNCHANGED_OLD_COMPOSITION"
+        }
+      ],
+      "contracts": [
+        "C08",
+        "C11"
+      ],
+      "owner": [
+        "WP10",
+        "S0"
+      ],
+      "proof": "Current wrapper clones/freezes observation and passes it in both lifecycle and prepare branches; current host installs wrapper and invokes real store. Four A21 lifecycle cases PASS with six matching component/test/provider blobs. Whole A21 is failure (188/11), not global evidence.",
+      "sources": [
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+          "lines": "145-149",
+          "role": "fixed wrapper",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+          "lines": "449-454;479-483;551-565",
+          "role": "installed caller",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/apps/cli/src/sucafina-product/host-context.ts"
+        }
+      ],
+      "runs": [
+        "A21"
+      ],
+      "next_action": "Do not reimplement; intake the existing fixed closure into any candidate that still retains the old wrapper, then recheck that candidate.",
+      "limits": [
+        "Component equivalence is not whole-tree equivalence.",
+        "Old occurrence and report remain unchanged.",
+        "No native/global acceptance."
+      ]
+    },
+    {
+      "id": "CR-C03-001",
+      "origin": {
+        "type": "known_ack_problem_reappears_in_different_installed_caller",
+        "pr": 54,
+        "review_checkpoint": "7124fce97198ca37a866ee2e39641c85c0694a48",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/contracts/recheck-wave/20261114-191551/FINDING-CR-C03-001.md"
+      },
+      "classification": "BUG_STATIC",
+      "severity": "P2",
+      "status": "OPEN",
+      "contracts": [
+        "C03",
+        "C06",
+        "C08"
+      ],
+      "owner": [
+        "WP01/UI",
+        "WP10/S0"
+      ],
+      "per_sha": [
+        {
+          "sha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "status": "OPEN_TEXT_AUTHOR_ACK"
+        },
+        {
+          "sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+          "status": "SAFE_INCONCLUSIVE_RECIPIENT_PROJECTION_POSITIVE_ACK_NOT_IMPLEMENTED"
+        },
+        {
+          "sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+          "status": "EXACT_PRODUCER_RECEIPT_PRESENT_UI_NOT_COMPOSED"
+        }
+      ],
+      "proof": "WP10 UI accepts exactly one new message selected by matching body/author, then clears pending request. Same tree producer persists Boolean and returns a fresh thread. Caller does not bind outcome to idempotency key/intent and exact message tuple. Real mounted edit API allows original M1 to be edited before a same-text M2 exists; retry of M1 may match M2 instead. This is a static reachable trace, not an executed incident.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "99e0d4a9f8c265688e7488ece05ab30edf070658",
+          "lines": "165-181",
+          "role": "incorrect ACK caller",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "45f31b1f67e53f25e78ba6e26b334946889ef926",
+          "lines": "62-72",
+          "role": "Boolean producer plus current read",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "e6b1f6d0868438d0182041cd3cf23628d29d872c",
+          "lines": "41-69",
+          "role": "authorized edit preserves ID/incarnation and increments version",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "930c93a1704d0444519ffa85b8f69f57cc6c2735",
+          "lines": "22;177-181",
+          "role": "script served in real workbench",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/product/interface/http.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+          "lines": "26;101;107",
+          "role": "mount",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/local/entry.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+          "commit": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+          "blob": "175ff36fe09405e0f31dd55207d751e3753f6ffb",
+          "lines": "165-179",
+          "role": "distinct protected caller",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/92243fc68ff81df7fc563ec081ac9db686a24dfa/modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+        }
+      ],
+      "next_action": "Consume the already published exact producer; bind ACK to its full intent/principal/key/thread and reply tuple; keep inconclusive until proven. Restore pending intent across reload, with current authorization.",
+      "limits": [
+        "No test executed by reviewer.",
+        "No financial approval, attachment or revocation bypass inferred.",
+        "Known ACK cause is not counted as a new defect in corrected PR41 producer."
+      ]
+    },
+    {
+      "id": "ACK-PRODUCER-PR54",
+      "origin": {
+        "type": "owner_proposal",
+        "pr": 54,
+        "sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa"
+      },
+      "classification": "DEPENDENCY_RECHECK",
+      "severity": "NOT_ASSIGNED_IN_SOURCE",
+      "status": "RESOLVED_WITH_EVIDENCE_AT_PRODUCER_ONLY",
+      "contracts": [
+        "C03",
+        "C05",
+        "C06",
+        "C08"
+      ],
+      "owner": [
+        "WP08/Collaboration",
+        "WP01/UI",
+        "S0"
+      ],
+      "per_sha": [
+        {
+          "sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+          "status": "APPLIED_AND_SCOPED_PROOFS_OBSERVED"
+        },
+        {
+          "sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+          "status": "DOCUMENTARY_PATCH_NOT_APPLIED_RETAINED_BOOLEAN_PRODUCER"
+        },
+        {
+          "sha": "854f3dd9a5257c83b703424a8fd73d831f705f46",
+          "status": "RETAINED_BOOLEAN_PRODUCER"
+        },
+        {
+          "sha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "status": "RETAINED_BOOLEAN_PRODUCER"
+        }
+      ],
+      "proof": "PR41 commits receipt alongside thread; returns saved.value, checks full intent, replays before ID allocation/new append and releases under protected snapshots. C05 requires fresh actor/recipient self leases after final awaits. Success shape is value.mutationReceipt. Original Boolean compatibility remains unavailable. Shared C16 schema not changed.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+          "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+          "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+          "lines": "16-25;44-118;140-154",
+          "role": "new producer",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/CONTRACT.md",
+          "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+          "blob": "b007f61c444af37a4fcb788bd512baad34b7071a",
+          "lines": "entire",
+          "role": "additive contract",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/CONTRACT.md"
+        }
+      ],
+      "runs": [
+        "COLLAB_S1",
+        "COLLAB_S2",
+        "COLLAB_S3",
+        "COLLAB_CHECK"
+      ],
+      "next_action": "Intake existing producer and required authority/test closure by SHA; implement consumer ACK and browser reload intention persistence in assigned UI owner.",
+      "limits": [
+        "Reopened SQLite test keeps payload in test memory.",
+        "No positive browser ACK after reload, end-to-end attachment or native acceptance proven.",
+        "Global typecheck remains failure despite zero new diagnostics."
+      ]
+    },
+    {
+      "id": "F07-RECHECK-RECIPIENT",
+      "origin": {
+        "type": "existing_closure",
+        "ids": [
+          "F07"
+        ],
+        "pr": 61,
+        "sha": "854f3dd9a5257c83b703424a8fd73d831f705f46"
+      },
+      "classification": "INTEGRATION_GAP",
+      "severity": "NOT_ASSIGNED_IN_SOURCE",
+      "status": "OPEN",
+      "contracts": [
+        "C05",
+        "C06",
+        "C08",
+        "C09"
+      ],
+      "owner": [
+        "WP10/S0",
+        "WP07-WP09/Collaboration",
+        "WP01/UI"
+      ],
+      "proof": "WP10 business-services invokes createCollaborationHost without recipientAuthority. Source authorizer explicitly refuses a different recipient when provider is absent; commit needs the private lease. Current WP10 host is an older C05 producer closure. PR41 source closure and fixture authority do not make these providers installed. Existing decision-answer-question route is already mounted.",
+      "sources": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+          "lines": "198-213",
+          "role": "missing provider in actual composition",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/apps/cli/src/sucafina-product/business-services.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "bf1845e8673fd10425713085e20b04373885fabb",
+          "lines": "20-44",
+          "role": "safe refusal and current commit lease",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "lines": "15;53-57;89",
+          "role": "attachment route already exists",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/apps/cli/src/sucafina-product/portfolio-http.ts"
+        }
+      ],
+      "next_action": "Compose genuine recipient/review authority and current C05 closure through owner, preserving safe denial; qualify distinct-recipient flow and existing attachment route.",
+      "limits": [
+        "Missing capability is not an unauthorized access demonstrated.",
+        "Do not create another attachment endpoint or manufacture fixture grants.",
+        "No duplicate F07 counted."
+      ]
+    },
+    {
+      "id": "F07-C05-C16",
+      "origin": {
+        "type": "existing_declared_contract_gap",
+        "ids": [
+          "F07"
+        ],
+        "pr": 41,
+        "sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5"
+      },
+      "classification": "CONTRACT_CONSUMPTION_GAP",
+      "severity": "NOT_ASSIGNED_IN_SOURCE",
+      "status": "BLOCKED_FAIL_CLOSED",
+      "contracts": [
+        "C05",
+        "C06",
+        "C16"
+      ],
+      "owner": [
+        "WP00/C16",
+        "WP10/S0",
+        "WP01/UI"
+      ],
+      "proof": "Collaboration dispatch.ts returns review-answer-output-contract-unavailable for reviewContext because shared AnswerProjection does not carry the immutable C05 pin. Private HTTP receipt output is a different transport and cannot qualify shared MCP/C16 output.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+          "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+          "lines": "46-48",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+          "blob": "7d30096e973b003f222698bf2f605fc24031aba5"
+        }
+      ],
+      "next_action": "Version/adapt shared schema and consumer decoder through contract owner, preserving C05 pin and current ACL; retain fail-closed result until compatible output exists.",
+      "limits": [
+        "No permissive fallback found.",
+        "Not a new bug counted apart from existing F07 closure.",
+        "This reviewer does not edit contracts."
+      ]
+    },
+    {
+      "id": "REUSE-PR61",
+      "origin": {
+        "type": "existing_diagnostic",
+        "pr": 61,
+        "sha": "854f3dd9a5257c83b703424a8fd73d831f705f46"
+      },
+      "classification": "PERFORMANCE_AND_CONSUMPTION_GAP",
+      "severity": "NOT_ASSIGNED_IN_SOURCE",
+      "status": "OPEN_FOR_INSTALLED_CONSUMER",
+      "contracts": [
+        "C03",
+        "C06",
+        "C08"
+      ],
+      "owner": [
+        "WP08",
+        "WP10/S0",
+        "WP01/UI"
+      ],
+      "proof": "R01 measures sequential confirm/read at 6571.53ms; attachment reaches fixture fallback 404 after 6616.59ms. PR61 proposal preimage is host0376f81…, while WP10 host7d8396… differs. PR41 host1678fc9… already contains W6 optimization using answerReference and authenticated thread membership with canonical reread/fences. No post-intake latency or real attachment proof in PR61.",
+      "runs": [
+        "REUSE_R01",
+        "REUSE_R02"
+      ],
+      "next_action": "Consume published source closure once, measure same consumer with existing deadline, and exercise real mounted attachment with real recipient authority.",
+      "limits": [
+        "404 is fixture fallback, not installed endpoint failure.",
+        "Instrumented sample is not p95.",
+        "NOT_APPLIED documentary patch does not mean owner source is unimplemented."
+      ],
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+          "blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+          "lines": "187-190;212-259"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+          "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+          "blob": "012175e4acc2be40547089b43f248144beb6c712",
+          "lines": "38-149"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-state-fence.ts",
+          "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+          "blob": "7b19cf14f220adb3a01530515ec5ad1657bc8f11"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-reuse/patches/generic-answer-dedup.NOT_APPLIED.patch",
+          "commit": "854f3dd9a5257c83b703424a8fd73d831f705f46",
+          "blob": "683b343bf3df8317f7952acee89886b791e09f35"
+        }
+      ]
+    },
+    {
+      "id": "CALC-PR59-X29",
+      "origin": {
+        "type": "existing_diagnostic",
+        "pr": 59,
+        "sha": "e80fdc933dfd25956a50c22dea76bf077e79815b"
+      },
+      "classification": "PERFORMANCE_JOURNEY_RECHECK",
+      "severity": "NOT_ASSIGNED_IN_SOURCE",
+      "status": "OPEN_END_TO_END_WITH_STRUCTURAL_FIX_APPLIED",
+      "contracts": [
+        "C08",
+        "C09",
+        "C17"
+      ],
+      "owner": [
+        "WP10",
+        "financial producer owners as implicated"
+      ],
+      "proof": "PR59 documentary patch postimages exactly match W30 source-lifecycle and planner-sources. Positive resolver has two observations, six authentications, four revalidations with two transactions; C29 proves counts and F29 selected fences pass. X29 remains 0/1 deadline failure in first binding recertification; tail not reached.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+          "lines": "29-55;93-100",
+          "role": "consolidated prepare/observe",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "02d75207b2978cc5c05368cc7e3517efeb3ce3ce",
+          "lines": "47-94",
+          "role": "two independent reads and current authentication",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts"
+        }
+      ],
+      "runs": [
+        "C29",
+        "F29",
+        "X29"
+      ],
+      "next_action": "Continue residual causal diagnosis from first recertification without reapplying patch, increasing deadlines or weakening authority/fences. Qualify full persistence/recompose/retry/revocation tail at relevant candidate.",
+      "limits": [
+        "Structural count is not measured speedup or lock fairness.",
+        "Abort case used pre-materialized scope.",
+        "Do not sum inclusive spans as wall time."
+      ]
+    },
+    {
+      "id": "A27-CAPTURE-INTEGRITY",
+      "origin": {
+        "type": "historical_executed_failure",
+        "pr": 55,
+        "run": 43624030665
+      },
+      "classification": "NEEDS_RECHECK",
+      "severity": "NOT_ASSIGNED_IN_SOURCE",
+      "status": "NEEDS_RECHECK",
+      "contracts": [
+        "C11",
+        "C17"
+      ],
+      "owner": [
+        "WP10",
+        "C17 producer owner"
+      ],
+      "proof": "A27 deliberately corrupts original projection: Atlas recall refuses it but staleAccess.preflight returns ok where denied was expected. Assertion failure, not timeout; later revocation probes not reached. This is distinct from fixed observation forwarding. W28 changed sources, so no automatic claim that A27 ran on W30.",
+      "runs": [
+        "A27"
+      ],
+      "next_action": "Reconcile source deltas and qualify exact corrupted-capture preflight on owner candidate while preserving stale.preserve positive.",
+      "limits": [
+        "No observed leak or native incident.",
+        "Not a reason to reimplement CR-C11-001."
+      ]
+    },
+    {
+      "id": "R1-W23-C17-BETWEEN-OBSERVATIONS",
+      "origin": {
+        "type": "existing_finding",
+        "owner_pr": 32,
+        "source_commit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f"
+      },
+      "classification": "NEEDS_RECHECK",
+      "severity": "PRESERVED_FROM_ORIGIN_NOT_REASSIGNED",
+      "status": "NEEDS_RECHECK",
+      "contracts": [
+        "C17",
+        "C08"
+      ],
+      "owner": [
+        "WP00/PR32",
+        "WP10/S0"
+      ],
+      "proof": "business-context calculationProof pins Request object and binding and compares two history observations, without whole-interval method/url/header digest. planner-calculation-history pins those fields within each invocation. Current authority still authenticates and checks principal/access/policy; crossing interval needs its own counterproof.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+          "lines": "349-360",
+          "role": "outer two-observation wrapper",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+          "commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "blob": "dbf13c657c7d5e93837367eae7bb7b704f7577c4",
+          "lines": "65-71;141",
+          "role": "per-invocation Request identity checks",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7/apps/cli/src/sucafina-product/planner-calculation-history.ts"
+        }
+      ],
+      "next_action": "Recheck existing finding at outer wrapper with header change between observations, preserving positive/current-auth cases.",
+      "limits": [
+        "No new BUG, executed race, bypass or leakage claimed.",
+        "Intraobservation negatives and C09 continuity do not automatically cover this interval."
+      ]
+    },
+    {
+      "id": "F11-F14-NATIVE-GATES",
+      "origin": {
+        "type": "existing_acceptance_gates",
+        "ids": [
+          "F09",
+          "F11",
+          "F14"
+        ],
+        "norm": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+      },
+      "classification": "NEEDS_EVIDENCE",
+      "severity": "MANDATORY_ACCEPTANCE_GATE",
+      "status": "NOT_GRANTED",
+      "contracts": [
+        "C09",
+        "C11",
+        "C16",
+        "C17"
+      ],
+      "owner": [
+        "S0",
+        "WP10",
+        "relevant domain owners"
+      ],
+      "proof": "C16 real contribution/AgentV2/SkillV2/SessionV2/private MCP/dispatch and C17 public Atlas imports/scanner/persistence are present. This static chain and scoped existing cases do not close AM01-AM06, all 39 routes, actual model execution, new-process recall/UI and final C/D gates.",
+      "next_action": "Freeze one integrated C, obtain required CI and AM01-AM06 evidence plus three independent final reviews; only then verify evidence-only D envelope and its own guard.",
+      "limits": [
+        "This multi-head review is one preliminary S3-R3 opinion.",
+        "No GLOBAL_RELEASE.",
+        "No tests/guards/typechecks dispatched by this reviewer; explicitly user-prohibited."
+      ]
+    },
+    {
+      "id": "WP10-U30-CANCEL-VISIBILITY",
+      "origin": {
+        "type": "existing_owner_finding",
+        "pr": 29,
+        "run": 43629303473
+      },
+      "classification": "EXECUTED_UI_FAILURE",
+      "severity": "NOT_ASSIGNED_IN_SOURCE",
+      "status": "OPEN_PRESERVED",
+      "contracts": [
+        "C11",
+        "C08"
+      ],
+      "owner": [
+        "WP01/UI",
+        "WP10/S0"
+      ],
+      "proof": "U30 on frozen W30 failed analysis.cancel-hidden: isVisible returned true, expected false. Later positive assertions were not reached. Enter rejection/startup/lifecycle passed.",
+      "runs": [
+        "U30"
+      ],
+      "next_action": "Owner corrects actual cancellation visibility and proves same consumer with preserved assertions; reviewer does not modify UI.",
+      "limits": [
+        "CSS cascade explanation remains inference without computedStyle.",
+        "Not counted as a new finding of this review.",
+        "No positive financial/native journey inferred."
+      ]
+    }
+  ]
+}

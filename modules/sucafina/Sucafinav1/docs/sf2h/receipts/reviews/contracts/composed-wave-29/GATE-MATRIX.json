@@ -1,0 +1,532 @@
+{
+  "schema": "sf2h.mission29.independent-review.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "mission": 29,
+  "actor": "S3-R3",
+  "candidate": {
+    "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+    "parent": "d81dc320a82044009dd4c39f2e5d062ad46719a9"
+  },
+  "scope": "Revisão delimitada de runtime, provas nativas e evidências; não aprovação final.",
+  "verdict": "REQUEST_CHANGES",
+  "acceptance": "HOLD",
+  "independence": {
+    "product_authorship": false,
+    "reviewer_model_environment_declared": "GPT-6 Astra Pro",
+    "native_effective_model": null,
+    "backend_session_id": null,
+    "backend_session_id_reason": "Não exposto; não substituído por nome lógico de agente.",
+    "logical_reviewer": "/root",
+    "read_only_auxiliaries": [
+      "/root/runtime_mcp",
+      "/root/atlas_native",
+      "/root/ci_gates"
+    ],
+    "independent_review_count": 1,
+    "three_required_final_approvals": "Não concedidas por estes auxiliares."
+  },
+  "constraints": {
+    "remote_access": "GitHub MCP only",
+    "product_writes": 0,
+    "runtime_executions": 0,
+    "product_tests_executed": 0,
+    "typechecks_executed": 0,
+    "guards_executed": 0,
+    "ci_dispatches": 0,
+    "merge": false,
+    "GLOBAL_RELEASE": false,
+    "local_analysis": "Somente leitura de dados/textos, inventário e hashes; não importou/executou código do produto."
+  },
+  "observation_limit": {
+    "actions_inventory_closed_at": "2026-11-14T21:08:32Z",
+    "candidate_fixed": true,
+    "polling": "Consultas delimitadas; sem espera por finalfreeze ou novos runs.",
+    "native_surface": "Nenhuma capability Orchestra/SessionV2/Relay/scanner nativo anunciada na consulta ao catálogo desta superfície. Exercício proibido nesta missão.",
+    "global_host_unavailability_asserted": false,
+    "global_ci_unavailability_asserted": false
+  },
+  "publication": {
+    "branch": "review-contracts",
+    "pr": 51,
+    "initial_head": "097e545ac8dd53e97cae8c12dec47faab5b3f576",
+    "initial_tree": "27aefc85b8e8160d7ec14636153b9254189436f6",
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/contracts/composed-wave-29/",
+    "early_finding_commit": "0490eff57e2cd14b7043377eb5992552b7d529f9",
+    "early_finding_blob": "cd0f5f0de74e3e59be75c29479a3d9beceecb588",
+    "early_finding_readback": "Exact content equality observed",
+    "delivery_kind": "Novos recibos de revisão; NÃO envelope D/G8.",
+    "final_commit_identity": "Informada externamente após publicação; nenhum SHA futuro ou hash próprio é autodeclarado."
+  },
+  "recipes_source": {
+    "path": "script/sf2h/final-bundle/requests.json",
+    "blob": "3ff28507d6ae6b874f021fb8acf5088d61442c80",
+    "declared_status": "PREPARED_NOT_RUN"
+  },
+  "workflow_source": {
+    "path": ".github/workflows/sf2-epic.yml",
+    "blob": "4e92e4960e2bc371aa712d95e08acd76a5cc1ff2"
+  },
+  "selections": [
+    {
+      "id": "CI-SF",
+      "scope": "Suite completa do módulo Sucafina, inclusive casos novos",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "modules/sucafina",
+      "required": true,
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "status": "NOT_PROVEN_ON_C0",
+      "executed_request_sha256": null,
+      "snapshot_sha": null,
+      "run_id": null,
+      "job_id": null,
+      "attempt": null,
+      "executed_test_count": null,
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "null_reason": "Nenhum recibo final aceito do C observado na consulta delimitada; snapshot pode ser inaplicável no modo direto-C, mas run/job não foram observados.",
+      "related_source_evidence": [],
+      "minimum_resource": "R-CI0: S0 dispatcher autorizado/deduplicação + executor hospedado existente + composição e dependências prontas.",
+      "next_step": "S0 executa exatamente esta receita no C congelado, conserva requested/listed/executed e seus IDs/digests, e verifica todos os casos/consumidores obrigatórios; sem execução pelo revisor.",
+      "product_acceptance_granted": false
+    },
+    {
+      "id": "CI-CLI",
+      "scope": "Suite completa do pacote CLI cujo composition root foi alterado",
+      "request": {
+        "package": "cli",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "apps/cli",
+      "required": true,
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "status": "NOT_PROVEN_ON_C0",
+      "executed_request_sha256": null,
+      "snapshot_sha": null,
+      "run_id": null,
+      "job_id": null,
+      "attempt": null,
+      "executed_test_count": null,
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "null_reason": "Nenhum recibo final aceito do C observado na consulta delimitada; snapshot pode ser inaplicável no modo direto-C, mas run/job não foram observados.",
+      "related_source_evidence": [],
+      "minimum_resource": "R-CI0: S0 dispatcher autorizado/deduplicação + executor hospedado existente + composição e dependências prontas.",
+      "next_step": "S0 executa exatamente esta receita no C congelado, conserva requested/listed/executed e seus IDs/digests, e verifica todos os casos/consumidores obrigatórios; sem execução pelo revisor.",
+      "product_acceptance_granted": false
+    },
+    {
+      "id": "CI-APP-SRC",
+      "scope": "Suíte Bun do app na árvore src, com condição solid; args vazios respeitam bunfig test.root=./src.",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "packages/app-shell",
+      "required": true,
+      "renamed_from": "CI-APP",
+      "selected_roots": [
+        "packages/app-shell/src"
+      ],
+      "not_covered": [
+        "packages/app-shell/test-browser"
+      ],
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "status": "NOT_PROVEN_ON_C0",
+      "executed_request_sha256": null,
+      "snapshot_sha": null,
+      "run_id": null,
+      "job_id": null,
+      "attempt": null,
+      "executed_test_count": null,
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "null_reason": "Nenhum recibo final aceito do C observado na consulta delimitada; snapshot pode ser inaplicável no modo direto-C, mas run/job não foram observados.",
+      "related_source_evidence": [],
+      "minimum_resource": "R-CI0: S0 dispatcher autorizado/deduplicação + executor hospedado existente + composição e dependências prontas.",
+      "next_step": "S0 executa exatamente esta receita no C congelado, conserva requested/listed/executed e seus IDs/digests, e verifica todos os casos/consumidores obrigatórios; sem execução pelo revisor.",
+      "product_acceptance_granted": false
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "scope": "Suíte Bun da árvore test-browser do app; workflow usa condição browser, happydom e controleomni.",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "selected_roots": [
+        "packages/app-shell/test-browser"
+      ],
+      "required": true,
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "status": "NOT_PROVEN_ON_C0",
+      "executed_request_sha256": null,
+      "snapshot_sha": null,
+      "run_id": null,
+      "job_id": null,
+      "attempt": null,
+      "executed_test_count": null,
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "null_reason": "Nenhum recibo final aceito do C observado na consulta delimitada; snapshot pode ser inaplicável no modo direto-C, mas run/job não foram observados.",
+      "related_source_evidence": [],
+      "minimum_resource": "R-CI0: S0 dispatcher autorizado/deduplicação + executor hospedado existente + composição e dependências prontas.",
+      "next_step": "S0 executa exatamente esta receita no C congelado, conserva requested/listed/executed e seus IDs/digests, e verifica todos os casos/consumidores obrigatórios; sem execução pelo revisor.",
+      "product_acceptance_granted": false
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "scope": "Suíte completa da boundary alterada, incluindo import/export das duas portas, preservação dos exports bound e negativos de AST no teste business-memory-ports; geração/AST/check:spawn-imports/typecheck são gates estáticos explícitos adicionais.",
+      "request": {
+        "package": "atlas-boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ]
+      },
+      "directory": "modules/atlas/boundary",
+      "planned_files": [
+        "modules/atlas/boundary/test/business-memory-ports.test.ts"
+      ],
+      "required": true,
+      "selection_source": "script/module-registry.json alias atlas-boundary -> modules/atlas/boundary e package name @orchestra/atlas-boundary, resolvidos por script/test-ci-package.ts.",
+      "timeout_semantics": "Timeout por teste reproduz script test existente. Não é estimativa de duração do job; args sem filtro mantêm suíte completa e omni scope=suite.",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "status": "NOT_PROVEN_ON_C0",
+      "executed_request_sha256": null,
+      "snapshot_sha": null,
+      "run_id": null,
+      "job_id": null,
+      "attempt": null,
+      "executed_test_count": null,
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "null_reason": "Nenhum recibo final aceito do C observado na consulta delimitada; snapshot pode ser inaplicável no modo direto-C, mas run/job não foram observados.",
+      "related_source_evidence": [],
+      "minimum_resource": "R-CI0: S0 dispatcher autorizado/deduplicação + executor hospedado existente + composição e dependências prontas.",
+      "next_step": "S0 executa exatamente esta receita no C congelado, conserva requested/listed/executed e seus IDs/digests, e verifica todos os casos/consumidores obrigatórios; sem execução pelo revisor.",
+      "product_acceptance_granted": false
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "scope": "UI real das 28 capacidades, edição, import e colaboração",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/operations.spec.ts"
+      ],
+      "required": true,
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "status": "NOT_PROVEN_ON_C0",
+      "executed_request_sha256": null,
+      "snapshot_sha": null,
+      "run_id": null,
+      "job_id": null,
+      "attempt": null,
+      "executed_test_count": null,
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "null_reason": "Nenhum recibo final aceito do C observado na consulta delimitada; snapshot pode ser inaplicável no modo direto-C, mas run/job não foram observados.",
+      "related_source_evidence": [
+        "OPERATIONS-LIST"
+      ],
+      "minimum_resource": "R-CI0: S0 dispatcher autorizado/deduplicação + executor hospedado existente + composição e dependências prontas.",
+      "next_step": "S0 executa exatamente esta receita no C congelado, conserva requested/listed/executed e seus IDs/digests, e verifica todos os casos/consumidores obrigatórios; sem execução pelo revisor.",
+      "product_acceptance_granted": false
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "scope": "Caso, portfólio, memória e estados as síncronos pela UI real",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts"
+      ],
+      "required": true,
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "status": "NOT_PROVEN_ON_C0",
+      "executed_request_sha256": null,
+      "snapshot_sha": null,
+      "run_id": null,
+      "job_id": null,
+      "attempt": null,
+      "executed_test_count": null,
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "null_reason": "Nenhum recibo final aceito do C observado na consulta delimitada; snapshot pode ser inaplicável no modo direto-C, mas run/job não foram observados.",
+      "related_source_evidence": [
+        "DECISIONS-ATTEMPT"
+      ],
+      "minimum_resource": "R-CI0: S0 dispatcher autorizado/deduplicação + executor hospedado existente + composição e dependências prontas.",
+      "next_step": "S0 executa exatamente esta receita no C congelado, conserva requested/listed/executed e seus IDs/digests, e verifica todos os casos/consumidores obrigatórios; sem execução pelo revisor.",
+      "product_acceptance_granted": false
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "scope": "Reunião, documentos e exportações com conteúdo completo",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/reports.spec.ts"
+      ],
+      "required": true,
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "status": "NOT_PROVEN_ON_C0",
+      "executed_request_sha256": null,
+      "snapshot_sha": null,
+      "run_id": null,
+      "job_id": null,
+      "attempt": null,
+      "executed_test_count": null,
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "null_reason": "Nenhum recibo final aceito do C observado na consulta delimitada; snapshot pode ser inaplicável no modo direto-C, mas run/job não foram observados.",
+      "related_source_evidence": [
+        "REPORTS-PREP"
+      ],
+      "minimum_resource": "R-CI0: S0 dispatcher autorizado/deduplicação + executor hospedado existente + composição e dependências prontas.",
+      "next_step": "S0 executa exatamente esta receita no C congelado, conserva requested/listed/executed e seus IDs/digests, e verifica todos os casos/consumidores obrigatórios; sem execução pelo revisor.",
+      "product_acceptance_granted": false
+    }
+  ],
+  "static_gates": [
+    {
+      "id": "BUILD-ATLAS",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun run generate",
+      "owner_task": "WP10.T07",
+      "gate": "ATLAS-PACKAGE/T20",
+      "purpose": "Produzir os dois pares JS/d.ts pelo gerador canônico e executar a admissão AST do bundle; zero novo site spawning. Nenhum algoritmo ou teste de produto é executado por esta correção de planejamento.",
+      "receipt_required": [
+        "candidate_sha",
+        "command",
+        "exit_status",
+        "generated_files",
+        "generated_digests"
+      ],
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado existente no checkout identificado do candidato.",
+      "next_step": "Executor executa o comando canônico deste registro, recolhe exit/stdout digest e identidade do checkout; o revisor apenas reavalia o recibo."
+    },
+    {
+      "id": "CHECK-ATLAS-GENERATED",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun run check:generated",
+      "owner_task": "WP10.T07",
+      "gate": "G4/G7",
+      "purpose": "Verifica reproducibilidade/frescor dos artefatos gerados da árvore candidata; não presumir que bun test executa esse script.",
+      "receipt_required": [
+        "candidate_sha",
+        "command",
+        "exit_status",
+        "stdout_digest"
+      ],
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado existente no checkout identificado do candidato.",
+      "next_step": "Executor executa o comando canônico deste registro, recolhe exit/stdout digest e identidade do checkout; o revisor apenas reavalia o recibo."
+    },
+    {
+      "id": "TYPECHECK-ATLAS",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun typecheck",
+      "owner_task": "WP10.T07",
+      "gate": "G4/G7",
+      "purpose": "Script existente tsgo --noEmit do pacote; não usar tsc diretamente.",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado existente no checkout identificado do candidato.",
+      "next_step": "Executor executa o comando canônico deste registro, recolhe exit/stdout digest e identidade do checkout; o revisor apenas reavalia o recibo."
+    },
+    {
+      "id": "GUARDS",
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "owner_task": "WP10.T04",
+      "gate": "G7 em C; G8 em D",
+      "purpose": "Gate exigido por AGENTS no checkout real do candidato; workflow atual não fornece dispatch de guards. Disponibilidade/readiness do executor é registrada em G0, sem inventar verde ou alterar workflow. WP10.T04 verifica C para G7. WP10.T05/S0 repete este mesmo comando em D para G8 após verificar o envelope; identifica o SHA efetivamente examinado e não edita D para incluir resultado autorreferente.",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado existente no checkout identificado do candidato.",
+      "next_step": "Executor executa o comando canônico deste registro, recolhe exit/stdout digest e identidade do checkout; o revisor apenas reavalia o recibo."
+    },
+    {
+      "id": "CHECK-SPAWNS",
+      "cwd": ".",
+      "command": "bun run check:spawn-imports",
+      "owner_task": "WP10.T07",
+      "execution_actor": "S0-A",
+      "gate": "ATLAS-PACKAGE/T20 + G4/G7",
+      "purpose": "Executar o guard existente na árvore candidata após geração; nenhum novo site de spawning, computed import, edição de allowlist ou substituição do comando. Nome lógico check:spawns; script real check:spawn-imports.",
+      "receipt_required": [
+        "candidate_sha",
+        "command",
+        "exit_status",
+        "guard_source_digest",
+        "allowlist_digest",
+        "generated_artifact_digests",
+        "stdout_digest"
+      ],
+      "status": "NOT_RUN",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado existente no checkout identificado do candidato.",
+      "next_step": "Executor executa o comando canônico deste registro, recolhe exit/stdout digest e identidade do checkout; o revisor apenas reavalia o recibo."
+    },
+    {
+      "id": "TYPECHECK-SF",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado com dependências do próprio candidato.",
+      "next_step": "Resolver diretório/nome de pacote conforme o workflow e executar seu script canônico; registrar head/exit/log. Não reutilizar green de outro SHA."
+    },
+    {
+      "id": "TYPECHECK-CORE",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "cwd": "packages/core",
+      "command": "bun typecheck",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado com dependências do próprio candidato.",
+      "next_step": "Resolver diretório/nome de pacote conforme o workflow e executar seu script canônico; registrar head/exit/log. Não reutilizar green de outro SHA."
+    },
+    {
+      "id": "TYPECHECK-CLI",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "cwd": "apps/cli",
+      "command": "bun typecheck",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado com dependências do próprio candidato.",
+      "next_step": "Resolver diretório/nome de pacote conforme o workflow e executar seu script canônico; registrar head/exit/log. Não reutilizar green de outro SHA."
+    },
+    {
+      "id": "TYPECHECK-APP",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "cwd": "packages/app-shell",
+      "command": "bun typecheck",
+      "review_status": "NOT_PROVEN_ON_C0",
+      "qualified_run": null,
+      "minimum_resource": "Executor autorizado com dependências do próprio candidato.",
+      "next_step": "Resolver diretório/nome de pacote conforme o workflow e executar seu script canônico; registrar head/exit/log. Não reutilizar green de outro SHA."
+    },
+    {
+      "id": "TYPECHECK-E2E-SUCAFINA",
+      "candidate_under_review": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "review_status": "BLOCKED_COVERAGE_CONFIGURATION",
+      "finding": "M29-CI-002",
+      "required_specs": [
+        "packages/app-shell/e2e/sucafina/operations.spec.ts",
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "packages/app-shell/e2e/sucafina/reports.spec.ts"
+      ],
+      "required_helpers": "Todos os imports transitivos e fixtures executadas em processo; não só helpers nomeados no spec.",
+      "qualified_run": null,
+      "minimum_resource": "Owner missão26/configuração + projeto TS canônico + executor hospedado.",
+      "next_step": "Conectar roots/references/fixtures ao gate canônico e produzir lista real de cobertura; alteração cria novo C.",
+      "precision": "Roots/references/arestas observadas; não houve grafo --listFiles do compilador nem inspeção universal de imports."
+    }
+  ],
+  "other_required_jobs": [
+    "plan",
+    "atlas-scope",
+    "atlas",
+    "omni",
+    "unit-rest",
+    "e2e",
+    "recipe",
+    "sf-static",
+    "bundle-result"
+  ],
+  "identity_modes": [
+    {
+      "mode": "surgical_snapshot",
+      "rule": "Sj filho de C; somente .ci-run.json muda; conferir árvore produto, head_sha/event push/ref real, workflow/validator/request/selection."
+    },
+    {
+      "mode": "prepared_final_direct_C",
+      "rule": "sf2-epic.yml em sf2-epic-c faz checkout C e materializa request só no worktree; ci_snapshot_sha=null. Conservar árvore anterior à request e identidade real. Não inventar S."
+    }
+  ],
+  "validator_limits": {
+    "playwright": {
+      "blob": "1b9648c412caf1bb51c79907651e2ee263da7ebe",
+      "scope": "Pode admitir casos skipped se cada arquivo tiver execução; product_acceptance=NOT_EVALUATED. Conferir casos e critérios, não só green."
+    },
+    "junit": {
+      "blob": "9cef4f356f3b93c58f8b21ef9b1d76f342396851",
+      "scope": "Valida XML recebido, não prova origem do run nem toda cobertura. Exige produto executado; não substitui AM."
+    }
+  },
+  "G7": {
+    "candidate": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "status": "HOLD",
+    "requires": [
+      "oito seleções mínimas e adicionais",
+      "AM01-AM06",
+      "geração/frescor Atlas/typechecks/spawn/guard C",
+      "três revisões independentes sem achado obrigatório",
+      "guias/roteiro/changelog já em C"
+    ],
+    "next_step": "S0 completa provas e recheck dos deltas no mesmo C aceito. Esta revisão é uma contribuição, não três aprovações."
+  },
+  "G8": {
+    "status": "NOT_DEMONSTRATED",
+    "accepted_D": null,
+    "requires": [
+      "C ancestral de D",
+      "diff completo sem truncamento",
+      "só adições UTF-8 md/json/txt modo100644",
+      "prefixos WP00-WP14 admitidos e lista finita control pré-alocada",
+      "todos blobs/modos anteriores preservados",
+      "nenhum novo input runtime/build/test/generation/registry/glob",
+      "guard próprio de D"
+    ],
+    "minimum_resource": "S0/T05 após G7; árvore C/D e executor autorizado de guard.",
+    "next_step": "Alocar paths exatos antes de D, incorporar somente blobs de evidência com proveniência, verificar envelope completo, executar guard D e publicar resultado fora de D.",
+    "no_self_reference": "D não grava seu próprio SHA/hash nem resultado de guard posterior; o fechamento externo identifica o commit.",
+    "this_review_namespace": "Autorizado pela missão29 para PR51; não é automaticamente prefixo D. S0 pode incorporar blobs identificados sob receipts/WP10/reviews, sem merge da branch de review/control."
+  },
+  "no_dispatch_performed": true
+}
