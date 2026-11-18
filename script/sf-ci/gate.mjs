@@ -23,7 +23,7 @@ const PROOFS = ["AM01", "AM02", "AM03", "AM04", "AM05", "AM06"]
 const JOBS = ["preflight", "static", "omni", "unit", "unit-sf", "ui"]
 // CI-SF is the only suite that outgrows one Linux job. Its parts are a strict
 // partition of the manifest selection, proven complete and disjoint below.
-export const SHARDED = Object.freeze({ "CI-SF": 4 })
+export const SHARDED = Object.freeze({ "CI-SF": 8 })
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex")
 const fail = (message) => { throw new Error("SF_CI_FAIL_CLOSED: " + message) }
 
