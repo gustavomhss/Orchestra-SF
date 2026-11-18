@@ -132,9 +132,10 @@ function validCatalog(value: unknown): value is ReviewAgendaCatalog {
       if (typeof item.id !== "string" || !item.id || !isSfPeriod(item.period)) return false
       if (item.kind === "dashboard") return option.domain === "dashboard" && typeof item.topic === "string" && typeof item.selectionRef === "string" && !!item.selectionRef
       if (item.kind === "forecast-comparison") return option.domain === "planner" && typeof item.title === "string" && typeof item.baseRef === "string" && typeof item.candidateRef === "string" && typeof item.currency === "string" && Array.isArray(item.sides) && item.sides.length > 0 && item.sides.every((side) => side === "baseline" || side === "candidate")
-      if (option.domain !== "procurement" || typeof item.title !== "string") return false
+      if (option.domain !== "procurement" || !("title" in item) || typeof item.title !== "string") return false
       if (item.kind === "procurement-request") return typeof item.requestRef === "string" && !!item.requestRef
       if (item.kind !== "procurement-supplier" && item.kind !== "procurement-contract") return false
-      return typeof (item.kind === "procurement-supplier" ? item.supplierRef : item.contractRef) === "string" && Array.isArray(item.fields) && item.fields.length > 0 && item.fields.every((field) => typeof field === "string" && !!field)
+      const recordRef = item.kind === "procurement-supplier" ? item.supplierRef : "contractRef" in item ? item.contractRef : undefined
+      return typeof recordRef === "string" && Array.isArray(item.fields) && item.fields.length > 0 && item.fields.every((field) => typeof field === "string" && !!field)
     })
 }
