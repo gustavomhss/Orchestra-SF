@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test"
 import { expectSpawn } from "../../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
-import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
 import { decodeSfSkillInput } from "../../../../product/contracts/schema-admission.ts"
 import { object } from "../../../../runtime/contract.ts"
 import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload,
@@ -100,7 +99,7 @@ test("AM01 portfolio loads shared recall under its own profile and consumes the 
     await open("reopened", async (context) => {
       const scenario = initial.scenario
       const checked = await context.ui("sf_case_read", { caseRef: scenario.caseRef }, (call) =>
-        context.business.cases.read({ caseRef: encodeCaseRef(scenario.caseRef) }, call))
+        context.business.cases.read({ caseRef: scenario.caseRef }, call))
       expect(checked.status).toBe("ok")
       if (checked.status !== "ok") throw new Error("The actual scenario case became unavailable after reopen")
       expect(digestSfValue(checked.value.case)).toBe(digestSfValue(scenario.case))
