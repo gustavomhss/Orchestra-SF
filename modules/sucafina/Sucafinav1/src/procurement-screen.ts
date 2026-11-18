@@ -437,8 +437,7 @@ function matches(request: RequestView, query: string): boolean {
     approvalOf(request)?.steps?.find((step) => step.status === "pending")?.holderId,
     requestStageGuidance(request.status).stage,
   ]
-  // Preserve exact-case matching for the original S1 procurement screen contract.
-  return fields.some((field) => typeof field === "string" && field.includes(query))
+  return fields.some((field) => typeof field === "string" && field.toLowerCase().includes(query.toLowerCase()))
 }
 
 function toBase(
