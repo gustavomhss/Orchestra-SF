@@ -172,7 +172,7 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfDom
       )
       const data = projectSfDomainData(cap, publicSfData(view.data), year)
       if (!data) return { commit: snapshot.audit.length > beforeAudit, value: { kind: "unavailable" } }
-      const versions = projectSfDomainVersions(cap, view.versions, data)
+      const versions = projectSfDomainVersions(cap, view.versions)
       // This is a server-private fence, not a DTO. No actor, raw audit, role map,
       // full business snapshot, version.by or private data crosses the boundary.
       const versionFence = JSON.stringify(snapshot.versions)
