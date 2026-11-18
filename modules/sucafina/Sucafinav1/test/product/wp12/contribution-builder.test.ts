@@ -44,6 +44,21 @@ test("review provenance is assigned by the host for an independent run", () => {
   expect(buildSfContribution({ ...input, run: { ...review, reviewTarget: { ...review.reviewTarget!, targetSessionId: "review-session" } }, candidate: { kind: "CritiqueReport", payload: { claimIssues: [], unresolvedConditions: [], evidenceRefs: [] }, evidenceRefs: [] } })).toMatchObject({ status: "denied", reason: "invalid-review-output-context" })
 })
 
+test("durable output must belong to the active skill and observed model", () => {
+  const fixture = sfRunFixture()
+  expect(matchesSfRunOutput(fixture.run, fixture.output)).toBe(true)
+  const anotherSkill = { ...fixture.skill, id: "different-skill", outputSchemaRefs: ["MatchExplanation"] }
+  const wrongGrant = { ...fixture.run, selection: { ...fixture.run.selection, skills: [{ ...fixture.skill, outputSchemaRefs: ["FinancialAnalysis"] }, anotherSkill] } }
+  expect(matchesSfRunOutput(wrongGrant, fixture.output)).toBe(false)
+  expect(buildSfContribution({ ...input, run: wrongGrant })).toEqual({ status: "failed", reason: "native-output-kind-not-granted" })
+  const forgedModel = { ...fixture.output, runProvenance: { ...fixture.output.runProvenance, actualModel: "provider/unobserved" } }
+  forgedModel.outputDigest = digestSfContribution(forgedModel)
+  expect(matchesSfRunOutput(fixture.run, forgedModel)).toBe(false)
+  const forgedReceipt = { ...fixture.output, runProvenance: { ...fixture.output.runProvenance, loadedMessageId: "unobserved-message" } }
+  forgedReceipt.outputDigest = digestSfContribution(forgedReceipt)
+  expect(matchesSfRunOutput(fixture.run, forgedReceipt)).toBe(false)
+})
+
 test("standalone reviewer conditions require the same independent host-owned target as a critique", () => {
   const review = reviewRun()
   const condition = { kind: "UnresolvedCondition", payload: { id: "training-question", category: "training", reason: "Confirm the omitted training category before comparing complete costs.", evidenceRefs: [] }, evidenceRefs: [] }
@@ -87,19 +102,4 @@ test("malformed review payloads fail while missing or reused review authority st
       expect(buildSfContribution({ ...input, run: { ...selected.run, reviewTarget: { ...selected.run.reviewTarget!, targetSessionId: selected.run.native!.sessionID } }, candidate: malformed })).toEqual({ status: "denied", reason: "invalid-review-output-context" })
     }
   }
-})
-
-test("durable output must belong to the active skill and observed model", () => {
-  const fixture = sfRunFixture()
-  expect(matchesSfRunOutput(fixture.run, fixture.output)).toBe(true)
-  const anotherSkill = { ...fixture.skill, id: "different-skill", outputSchemaRefs: ["MatchExplanation"] }
-  const wrongGrant = { ...fixture.run, selection: { ...fixture.run.selection, skills: [{ ...fixture.skill, outputSchemaRefs: ["FinancialAnalysis"] }, anotherSkill] } }
-  expect(matchesSfRunOutput(wrongGrant, fixture.output)).toBe(false)
-  expect(buildSfContribution({ ...input, run: wrongGrant })).toEqual({ status: "failed", reason: "native-output-kind-not-granted" })
-  const forgedModel = { ...fixture.output, runProvenance: { ...fixture.output.runProvenance, actualModel: "provider/unobserved" } }
-  forgedModel.outputDigest = digestSfContribution(forgedModel)
-  expect(matchesSfRunOutput(fixture.run, forgedModel)).toBe(false)
-  const forgedReceipt = { ...fixture.output, runProvenance: { ...fixture.output.runProvenance, loadedMessageId: "unobserved-message" } }
-  forgedReceipt.outputDigest = digestSfContribution(forgedReceipt)
-  expect(matchesSfRunOutput(fixture.run, forgedReceipt)).toBe(false)
 })

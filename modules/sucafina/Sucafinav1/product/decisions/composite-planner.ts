@@ -1,5 +1,4 @@
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
-import { plannerScenarioDigest } from "../planner/preview-comparison.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ScenarioOperation, ScenarioRequest } from "../contracts/operations.ts"
 import type { PlannerPort, PortResult } from "../contracts/ports.ts"
@@ -23,7 +22,7 @@ export function createCompositeDecisionPlanner(input: {
         const resolve = () => Promise.all(request.operations.map((operation) => input.resolveOperation(operation, context)))
         const proofs = await resolve()
         const failure = proofs.find((item) => item.status !== "ok")
-        if (failure) return failure
+        if (failure && failure.status !== "ok") return failure
         if (proofs.some((item, index) => item.status !== "ok" || item.value.operationDigest !== digestSfValue(request.operations[index]) || item.value.kind === "external" && (!item.value.sourceRefs.length || !item.value.condition.trim()))) return { status: "unavailable", reason: "scenario-operation-proof-unavailable" }
         const plannerOperations = request.operations.filter((_operation, index) => { const proof = proofs[index]; return proof?.status === "ok" && proof.value.kind === "planner" })
         const external = proofs.flatMap((item) => item.status === "ok" && item.value.kind === "external" ? [item.value] : [])
@@ -41,7 +40,7 @@ export function createCompositeDecisionPlanner(input: {
         const conditions = external.map((item) => `external-operation:${item.operationDigest}:${item.condition}`)
         const sourceRefs = [...value.sourceRefs, ...refs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
         const costCoverage = { ...value.costCoverage, coverageState: value.costCoverage.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...new Set([...value.costCoverage.issues, "external-operation-cost-unresolved"])], evaluatedSourceRefs: [...value.costCoverage.evaluatedSourceRefs, ...refs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index) }
-        return { status: "ok", value: { ...value, id: `composite:${digestSfValue({ request, planner: plannerScenarioDigest(value), proofs })}`, sourceRefs, costCoverage, comparisonStatus: value.comparisonStatus === "incompatible" || value.comparisonStatus === "unavailable" ? value.comparisonStatus : "conditioned", total: null, unresolvedConditions: [...new Set([...value.unresolvedConditions, ...conditions])] } }
+        return { status: "ok", value: { ...value, id: `composite:${digestSfValue({ request, planner: value, proofs })}`, sourceRefs, costCoverage, comparisonStatus: value.comparisonStatus === "incompatible" || value.comparisonStatus === "unavailable" ? value.comparisonStatus : "conditioned", total: null, unresolvedConditions: [...new Set([...value.unresolvedConditions, ...conditions])] } }
       } catch { return { status: "unavailable", reason: "scenario-composition-unavailable" } }
     },
   }

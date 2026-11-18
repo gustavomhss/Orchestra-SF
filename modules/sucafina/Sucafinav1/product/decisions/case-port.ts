@@ -6,22 +6,10 @@ import type { CommandReceipt, CommandReceiptView } from "../contracts/context.ts
 import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort, SfStateResult } from "../contracts/state.ts"
-import { selectSfCase } from "../host-binding/state-provider.ts"
 
 export function encodeCaseRef(value: Pick<DecisionCase, "id" | "incarnation">) {
   return `case:${encodeURIComponent(value.id)}:${encodeURIComponent(value.incarnation)}`
 }
-
-
-/**
- * An authenticated view of the original C08 transaction, not a new create.
- * 'missing' is deliberately inconclusive while an earlier POST may be in flight.
- */
-export type CaseCreationRecovery =
-  | { state: "missing" }
-  | { state: "committed"; caseRef: string; receipt: {
-      commandDigest: string; storageVersion: number; aggregateRevision: number; incarnation: string
-    } }
 
 export function createDecisionCasePort(input: {
   state: SfProductStatePort
@@ -63,13 +51,11 @@ export function createDecisionCasePort(input: {
       }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
       if (saved.status !== "ok") return saved.status === "preview" ? { status: "conflict", reason: "case-identity-conflict" } : failure(saved)
       if (!saved.value) return { status: "conflict", reason: "case-identity-conflict" }
-      const savedCase = saved.value
-      const savedDigest = digestSfValue(savedCase)
-      if (!savedCase.participants.includes(context.binding.principalRef) || !await input.authorizeCase(savedCase, context) || !await accessible(input.evidence, savedCase.sourceRefs, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
-      const current = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[savedCase.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+      const current = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[saved.value!.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
       if (current.status !== "ok") return failure(current)
-      if (!current.value || current.value.incarnation !== savedCase.incarnation || !current.value.participants.includes(context.binding.principalRef)) return { status: "denied", reason: "case-access-unavailable" }
-      if (digestSfValue(current.value) !== savedDigest || digestSfValue(savedCase) !== savedDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
+      if (!current.value || current.value.incarnation !== saved.value.incarnation || !current.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current.value, context)) return { status: "denied", reason: "case-access-unavailable" }
+      if (current.value.version !== saved.value.version) return { status: "stale", reason: "case-changed" }
+      if (!await accessible(input.evidence, current.value.sourceRefs, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
       return { status: "ok", value: current.value }
     },
     prepareIntent: async (request, context) => {
@@ -85,31 +71,22 @@ export function createDecisionCasePort(input: {
         if (!ref) return { status: "needs-input", reason: "invalid-case-reference" }
         if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
         if (context.kind === "native" && (context.binding.caseId !== ref.id || context.binding.caseIncarnation !== ref.incarnation)) return { status: "denied", reason: "case-access-unavailable" }
-        const read = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+        const read = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[ref.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
         if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
         if (read.status !== "ok") return failure(read)
         const value = read.value
-        if (!value || value.incarnation !== ref.incarnation || (context.kind === "native" && context.binding.caseVersion !== value.version) || !value.participants.includes(context.binding.principalRef)) return { status: "denied", reason: "case-access-unavailable" }
-        const caseDigest = digestSfValue(value)
-        if (!await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
+        if (!value || value.incarnation !== ref.incarnation || (context.kind === "native" && context.binding.caseVersion !== value.version) || !value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
         const refs = evidenceReferences(value)
-        const refsDigest = digestSfValue(refs)
         if (!sourcesCovered(value, refs) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context)) return { status: "unavailable", reason: "case-evidence-unavailable" }
-        if (!await input.authorizeCase(value, context) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
-        const checkedAt = input.now()
-        // All external checks may await while C08 changes. Keep the second
-        // observation after them and release only the same complete case.
-        const again = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+        const again = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[ref.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
         if (again.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
         if (again.status !== "ok") return failure(again)
-        // Namespace authorization may await after the state callback. Check
-        // the live lease synchronously with the complete final snapshot.
-        if (!again.value || digestSfValue(again.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
-        const final = again.value
+        if (!again.value || again.value.incarnation !== value.incarnation || again.value.version !== value.version) return { status: "stale", reason: "case-changed" }
+        if (!await input.authorizeCase(again.value, context) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(again.value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
         const projection: AuthorizedCaseProjection = {
           context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },
-          case: { ...final, preparedChanges: final.preparedChanges.map(changeView), receipts: final.receipts.map((receipt) => receiptView(receipt, final.preparedChanges)) },
-          events: final.ledger, evidenceRefs: refs, checkedAt,
+          case: { ...value, preparedChanges: value.preparedChanges.map(changeView), receipts: value.receipts.map((receipt) => receiptView(receipt, value.preparedChanges)) },
+          events: value.ledger, evidenceRefs: refs, checkedAt: input.now(),
         }
         return { status: "ok", value: projection }
       } catch {
@@ -120,88 +97,18 @@ export function createDecisionCasePort(input: {
   const prepareIntentForCase = async (request: Parameters<DecisionCasePort["prepareIntent"]>[0], ref: { id: string; incarnation: string; version: number }, context: TrustedDomainContext): ReturnType<DecisionCasePort["prepareIntent"]> => {
     const parsed = decodeSfOperationInput("sf_case_draft", request)
     if (!parsed.ok || !parsed.value.objective.trim() || !parsed.value.criteria.length || !parsed.value.criteria.every((criterion) => criterion.trim()) || new Set(parsed.value.criteria.map((criterion) => criterion.trim())).size !== parsed.value.criteria.length) return { status: "needs-input", reason: "invalid-case-draft" }
-    const source = input.host.requestFor(context)
-    if (!source) return { status: "denied", reason: "invalid-authority" }
     const caseRef = encodeCaseRef(ref)
     const current = await port.read({ caseRef }, context)
     if (current.status !== "ok") return current
     if (current.value.case.version !== ref.version) return { status: "stale", reason: "case-changed" }
-    const caseDigest = digestSfValue(current.value.case)
-    const intentDigest = digestSfValue(parsed.value)
     if (parsed.value.sourceRefs.some((item) => !current.value.evidenceRefs.some((allowed) => digestSfValue(allowed) === digestSfValue(item)))) return { status: "denied", reason: "source-outside-case-scope" }
     if (!await accessible(input.evidence, parsed.value.sourceRefs, context)) return { status: "unavailable", reason: "case-evidence-unavailable" }
-    if (!await input.host.revalidate(context)) return { status: "stale", reason: "case-changed" }
     const again = await port.read({ caseRef }, context)
     if (again.status !== "ok") return again
-    if (again.value.case.version !== ref.version || digestSfValue(again.value.case) !== caseDigest || digestSfValue(current.value.case) !== caseDigest || digestSfValue(parsed.value) !== intentDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
-    return { status: "ok", value: { objective: parsed.value.objective, horizon: parsed.value.horizon, currency: parsed.value.currency, criteria: parsed.value.criteria.map((description, index) => again.value.case.criteria.find((criterion) => criterion.description === description) ?? { id: `intent:${digestSfValue({ caseRef, index, description })}`, description, required: true }), sourceRefs: parsed.value.sourceRefs, gaps: [], domainApplied: false, analysisBasis: "domain" } }
+    if (again.value.case.version !== ref.version || !await input.host.revalidate(context)) return { status: "stale", reason: "case-changed" }
+    return { status: "ok", value: { objective: parsed.value.objective, horizon: parsed.value.horizon, currency: parsed.value.currency, criteria: parsed.value.criteria.map((description, index) => current.value.case.criteria.find((criterion) => criterion.description === description) ?? { id: `intent:${digestSfValue({ caseRef, index, description })}`, description, required: true }), sourceRefs: parsed.value.sourceRefs, gaps: [], domainApplied: false, analysisBasis: "domain" } }
   }
-
-  const recoverCreation = async (key: string, context: TrustedDomainContext): Promise<PortResult<CaseCreationRecovery>> => {
-    // The sole durable correlation is the host's original operation identity,
-    // derived from the same Idempotency-Key admitted by ui-authority/host-context.
-    if (context.kind !== "ui") return { status: "denied", reason: "human-case-recovery-required" }
-    if (typeof key !== "string" || !/^[A-Za-z0-9._:-]{8,128}$/.test(key)) return { status: "needs-input", reason: "invalid-creation-key" }
-    const source = input.host.requestFor(context)
-    if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
-    const operation = digestSfValue({ operation: "sf_case_draft", key })
-    const ledgerKey = JSON.stringify([context.binding.principalRef, "cases", input.creationTarget.ref, operation])
-    type Observed = { kind: "missing" } | { kind: "changed" } | { kind: "committed"; caseRef: string; caseDigest: string;
-      receipt: Extract<CaseCreationRecovery, { state: "committed" }>["receipt"] }
-    const observe = () => input.state.read<Observed>(source, "cases", (state, authority): Observed => {
-      if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion ||
-        authority.accessRevision !== context.binding.accessRevision) return { kind: "changed" }
-      const transaction = state.transactions[ledgerKey]
-      if (!transaction) return { kind: "missing" }
-      if (transaction.namespace !== "cases" || transaction.principalRef !== authority.principalRef ||
-        transaction.targetRef !== input.creationTarget.ref || transaction.targetIncarnation !== input.creationTarget.incarnation ||
-        !/^[a-f0-9]{64}$/.test(transaction.commandDigest) || transaction.incarnation !== state.incarnation ||
-        !Number.isSafeInteger(transaction.storageVersion) || !Number.isSafeInteger(transaction.aggregateRevision))
-        return { kind: "changed" }
-      const created = transaction.value
-      if (!created || typeof created !== "object" || Array.isArray(created)) return { kind: "changed" }
-      const original = created as Partial<DecisionCase>
-      if (typeof original.id !== "string" || !original.id || typeof original.incarnation !== "string" || !original.incarnation ||
-        !Array.isArray(original.participants) || !original.participants.includes(authority.principalRef)) return { kind: "changed" }
-      const current = state.cases[original.id]
-      if (!current || current.incarnation !== original.incarnation || !current.participants.includes(authority.principalRef))
-        return { kind: "changed" }
-      return {
-        kind: "committed", caseRef: encodeCaseRef(current), caseDigest: digestSfValue(current),
-        receipt: { commandDigest: transaction.commandDigest, storageVersion: transaction.storageVersion,
-          aggregateRevision: transaction.aggregateRevision, incarnation: transaction.incarnation },
-      }
-    })
-    try {
-      const initial = await observe()
-      if (initial.status === "unavailable" && initial.reason === "product-state-uninitialized")
-        return await input.host.revalidate(context) && !source.signal.aborted && input.host.requestFor(context) === source
-          ? { status: "ok", value: { state: "missing" } }
-          : { status: "denied", reason: "case-recovery-authority-changed" }
-      if (initial.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
-      if (initial.status !== "ok") return failure(initial)
-      if (initial.value.kind === "changed") return { status: "denied", reason: "creation-correlation-unavailable" }
-      if (initial.value.kind === "missing") {
-        return await input.host.revalidate(context) && !source.signal.aborted && input.host.requestFor(context) === source
-          ? { status: "ok", value: { state: "missing" } }
-          : { status: "denied", reason: "case-recovery-authority-changed" }
-      }
-      // Never return the serialized transaction without fully reopening the
-      // live case, all its evidence and scenario-operation fences.
-      const opened = await port.read({ caseRef: initial.value.caseRef }, context)
-      if (opened.status !== "ok") return { status: opened.status, reason: "case-recovery-unavailable" }
-      const final = await observe()
-      if (final.status !== "ok" || final.value.kind !== "committed" ||
-        final.value.caseRef !== initial.value.caseRef || final.value.caseDigest !== initial.value.caseDigest ||
-        digestSfValue(final.value.receipt) !== digestSfValue(initial.value.receipt) ||
-        source.signal.aborted || input.host.requestFor(context) !== source || !await input.host.revalidate(context))
-        return { status: "stale", reason: "case-recovery-changed" }
-      return { status: "ok", value: { state: "committed", caseRef: final.value.caseRef, receipt: final.value.receipt } }
-    } catch {
-      return { status: "unavailable", reason: "case-recovery-unavailable" }
-    }
-  }
-  return { ...port, prepareIntentForCase, recoverCreation }
+  return { ...port, prepareIntentForCase }
 }
 
 export function parseCaseRef(ref: string): { id: string; incarnation: string } | undefined {
@@ -253,4 +160,3 @@ function receiptView(receipt: CommandReceipt, changes: DecisionCase["preparedCha
   const status = change && change.state !== "planned" ? change.state : result.ok ? "applied" : result.status === 409 ? "conflict" : "failed"
   return { ...view, status, errors: result.ok ? [] : [result.status === 409 ? "domain-conflict" : "domain-command-failed"] }
 }
-

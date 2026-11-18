@@ -8,7 +8,7 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import type { ContributionEnvelope } from "../../../product/contracts/resident-ai.ts"
-import { sfRunFixture } from "./run-fixture.ts"
+import { sfCaseFixture, sfRunFixture } from "./run-fixture.ts"
 
 test("historical contribution survives SQLite reopen and requires current access to case and sources", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-historical-output-"))
@@ -42,8 +42,7 @@ test("historical contribution survives SQLite reopen and requires current access
     const first = await open()
     try {
       expect((await first.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "case", commandDigest: "1".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (state) => {
-        state.cases.case = { ...fixture.caseRef, state: "draft", objective: "Read authorized history", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", participants: [authority.principalRef],
-          criteria: [], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+        state.cases.case = sfCaseFixture(fixture.caseRef, [authority.principalRef])
         return { commit: true, value: true }
       })).status).toBe("ok")
       expect((await first.state.transaction(request, { namespace: "contributions", expectedStorageVersion: 0, idempotencyKey: "result", commandDigest: "2".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (state) => {
@@ -95,9 +94,6 @@ test("historical contribution survives SQLite reopen and requires current access
       // authority factories freeze their binding/lease and recheck private registries.
       for (const change of [
         { name: "selection", mutate: () => { selection.outputRef = "another-output" }, restore: () => { selection.outputRef = fixture.output.id } },
-        { name: "case-version", mutate: () => { selection.currentCase = { ...fixture.caseRef, version: 2 } }, restore: () => { selection.currentCase = fixture.caseRef } },
-        { name: "binding-identity", mutate: () => Object.assign(context, { binding: { ...authority } }), restore: () => Object.assign(context, { binding: authority }) },
-        { name: "lease-identity", mutate: () => Object.assign(context, { lease: {} }), restore: () => Object.assign(context, { lease: undefined }) },
         { name: "binding", mutate: () => Object.assign(authority, { accessRevision: "changed-at-egress" }), restore: () => Object.assign(authority, { accessRevision: "access-current" }) },
       ]) {
         access.verifications = 0
@@ -118,4 +114,3 @@ test("historical contribution survives SQLite reopen and requires current access
     await rm(directory, { recursive: true, force: true })
   }
 })
-

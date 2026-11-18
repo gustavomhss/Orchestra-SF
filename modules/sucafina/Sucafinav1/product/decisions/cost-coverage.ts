@@ -5,7 +5,7 @@ import type { Period, ProjectionComponent } from "../contracts/context.ts"
 import type { CostCoverageAssessment, CostCoverageBasis, CostCoverageEntry } from "../contracts/decisions.ts"
 
 /** Coverage classifies evidence; monetary totals remain the responsibility of the domain engine. */
-export function assessCostCoverage(incoming: {
+export function assessCostCoverage(input: {
   basis: CostCoverageBasis
   alternativeId: string
   alternativeVersion: number
@@ -16,11 +16,6 @@ export function assessCostCoverage(incoming: {
   evidence: readonly BusinessEvidenceResolution[]
   supports: (entry: Exclude<CostCoverageEntry, { status: "pending" }>, resolutions: readonly BusinessEvidenceResolution[]) => boolean
 }): CostCoverageAssessment {
-  const resolutions = captureCoverageEvidence(incoming.evidence)
-  const input = {
-    ...structuredClone({ basis: incoming.basis, alternativeId: incoming.alternativeId, alternativeVersion: incoming.alternativeVersion, currency: incoming.currency, horizon: incoming.horizon, components: incoming.components, evidence: resolutions.map((item) => ({ state: item.state, ref: item.ref })) }),
-    ...captureCoverageEntries(incoming.entries, incoming.supports.bind(incoming)),
-  }
   const categories = requiredSfCostCategories(input.basis)
   const base = { basisId: input.basis.id, basisVersion: input.basis.version, alternativeId: input.alternativeId, alternativeVersion: input.alternativeVersion, currency: input.currency, horizon: input.horizon, evaluatedSourceRefs: input.evidence.filter((item) => item.state === "fresh").map((item) => item.ref) }
   if (!categories) return { ...base, entries: [], derivedMissingCategoryIds: [], issues: ["inventory-unavailable"], coverageState: "pending" }
@@ -36,17 +31,16 @@ export function assessCostCoverage(incoming: {
     if (entry.status === "pending") return entry
     const supported = entry.evidenceRefs.length > 0 && entry.evidenceRefs.every((ref) => input.evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))
     if (!supported) return { categoryId, status: "pending", reason: "evidence-unavailable" }
-    if (!input.supports(entry, resolutions)) return { categoryId, status: "pending", reason: "scope-not-supported" }
+    if (!input.supports(entry, input.evidence)) return { categoryId, status: "pending", reason: "scope-not-supported" }
     if (entry.status === "not-applicable") return entry.justification.trim() ? entry : { categoryId, status: "pending", reason: "missing-justification" }
     if (new Set(entry.componentRefs).size !== entry.componentRefs.length) return { categoryId, status: "pending", reason: "duplicate-component-ref" }
     const components = entry.componentRefs.map((ref) => input.components.find((component) => component.id === ref))
     if (!entry.scopeNote.trim() || !components.length || components.some((component) => !component || component.amount === null || !Number.isFinite(component.amount) || component.currency !== input.currency || component.period.start < input.horizon.start || component.period.end > input.horizon.end || component.evidenceState === "absent" || !component.sourceRefs.length || component.sourceRefs.some((source) => !entry.evidenceRefs.some((ref) => ref.kind === "record" && ref.target.surface === source.surface && ref.target.recordType === source.type && ref.target.recordId === source.id && ref.target.incarnation === source.incarnation && ref.target.version === source.version && ref.target.period !== undefined && ref.target.period.start <= source.period.start && ref.target.period.end >= source.period.end && source.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field)))))) return { categoryId, status: "pending", reason: "component-unresolved" }
     return entry
   })
-  const included = entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
+  const included = input.entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
   // One priced component may cover several categories; coverage rows never add another monetary contribution.
-  // Pending rows cannot retain componentRefs, so only a resolved inventory can establish an orphan.
-  if (entries.every((entry) => entry.status !== "pending") && input.components.some((component) => !included.includes(component.id))) issues.push("uncategorized-component")
+  if (input.components.some((component) => !included.includes(component.id))) issues.push("uncategorized-component")
   if (input.entries.some((entry) => !categories.includes(entry.categoryId))) issues.push("unexpected-category")
   if (new Set(input.components.map((item) => item.id)).size !== input.components.length) issues.push("duplicate-component")
   if (entries.some((entry) => entry.status === "pending") || issues.length) return { ...base, entries, derivedMissingCategoryIds: missing, issues, coverageState: "pending" }
@@ -55,25 +49,10 @@ export function assessCostCoverage(incoming: {
 
 /** Producer output must carry the same assessment and a complete inventory before claiming completeness. */
 export function validateScenarioCoverage(scenario: import("../contracts/decisions.ts").ScenarioResult, basis: CostCoverageBasis, assessment: CostCoverageAssessment): string | undefined {
-  const captured = structuredClone({ scenario, basis, assessment })
-  scenario = captured.scenario
-  basis = captured.basis
-  assessment = captured.assessment
   if (digestSfValue(scenario.costCoverage) !== digestSfValue(assessment) || scenario.costCoverage.basisId !== basis.id || scenario.costCoverage.basisVersion !== basis.version || scenario.costCoverage.currency !== scenario.currency || scenario.costCoverage.horizon.start !== scenario.horizon.start || scenario.costCoverage.horizon.end !== scenario.horizon.end || !scenario.costCoverage.alternativeId.trim() || !Number.isSafeInteger(scenario.costCoverage.alternativeVersion) || scenario.costCoverage.alternativeVersion < 1) return "alternative-basis-mismatch"
   const categories = requiredSfCostCategories(basis)
   if (assessment.coverageState === "complete" && (!categories || !basis.sourceRefs.length || basis.sourceRefs.some((ref) => !assessment.evaluatedSourceRefs.some((evaluated) => digestSfValue(ref) === digestSfValue(evaluated))) || assessment.issues.length || assessment.derivedMissingCategoryIds.length || assessment.entries.length !== categories.length || new Set(scenario.components.map((component) => component.id)).size !== scenario.components.length || scenario.components.some((component) => !assessment.entries.some((entry) => entry.status === "included" && entry.componentRefs.includes(component.id))) || categories.some((category) => assessment.entries.filter((entry) => entry.categoryId === category).length !== 1) || assessment.entries.some((entry) => !entry.evidenceRefs.length || entry.evidenceRefs.some((ref) => !assessment.evaluatedSourceRefs.some((evaluated) => digestSfValue(ref) === digestSfValue(evaluated))) || (entry.status === "included" ? !entry.componentRefs.length || new Set(entry.componentRefs).size !== entry.componentRefs.length || !entry.scopeNote.trim() || entry.componentRefs.some((ref) => !scenario.components.some((component) => component.id === ref && component.amount !== null && Number.isFinite(component.amount) && component.currency === scenario.currency && component.period.start >= scenario.horizon.start && component.period.end <= scenario.horizon.end && component.evidenceState !== "absent" && component.sourceRefs.length > 0 && component.sourceRefs.every((source) => entry.evidenceRefs.some((evidence) => evidence.kind === "record" && evidence.target.surface === source.surface && evidence.target.recordType === source.type && evidence.target.recordId === source.id && evidence.target.incarnation === source.incarnation && evidence.target.version === source.version && evidence.target.period !== undefined && evidence.target.period.start <= source.period.start && evidence.target.period.end >= source.period.end && source.fields.every((field) => evidence.kind === "record" && evidence.target.fields.includes(field)))))) : !entry.justification.trim())))) return "incomplete-cost-coverage"
-  const plannerSource = scenario.sourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "planner" && scenario.costCoverage.evaluatedSourceRefs.some((evidence) => digestSfValue(evidence) === digestSfValue(ref)))
-  // A standalone Procurement estimate can only enter this lane as conditioned,
-  // with the same exact source in the result, inventory and canonical assessment.
-  const source = scenario.sourceRefs.length === 1 ? scenario.sourceRefs[0] : undefined
-  const component = scenario.components.length === 1 ? scenario.components[0] : undefined
-  const procurementSource = source?.kind === "record" && source.refId.startsWith("sf-procurement:") && source.target.surface === "procurement" && source.target.recordType === "procurement-request" && source.target.fields.includes("originalAmount") &&
-    scenario.id.startsWith("procurement-scenario:") && scenario.restrictions.includes("producer:procurement-requisition-scenario-v1") && scenario.comparisonStatus === "conditioned" && scenario.total === null &&
-    assessment.coverageState === "pending" && !!categories && sameCategories(assessment.entries.map((entry) => entry.categoryId), categories) && assessment.entries.every((entry) => entry.status === "pending" && entry.reason === "missing-category") &&
-    sameCategories(assessment.derivedMissingCategoryIds, categories) && basis.sourceRefs.length === 1 && digestSfValue(basis.sourceRefs[0]) === digestSfValue(source) && assessment.evaluatedSourceRefs.length === 1 && digestSfValue(assessment.evaluatedSourceRefs[0]) === digestSfValue(source) &&
-    !!component && component.id === `procurement:${encodeURIComponent(source.target.recordId)}:PR.estAmount` && component.amount === scenario.knownSubtotal && (component.amount === null ? component.evidenceState === "absent" : Number.isFinite(component.amount) && component.amount >= 0 && (component.evidenceState === "estimated" || component.evidenceState === "hypothetical")) && component.currency === scenario.currency && digestSfValue(component.period) === digestSfValue(scenario.horizon) &&
-    component.sourceRefs.length === 1 && component.sourceRefs.every((ref) => ref.surface === "procurement" && ref.type === source.target.recordType && ref.id === source.target.recordId && ref.incarnation === source.target.incarnation && ref.version === source.target.version && digestSfValue(ref.period) === digestSfValue(source.target.period) && ref.fields.length === 1 && ref.fields[0] === "originalAmount")
-  if (!plannerSource && !procurementSource) return "planner-coverage-source-mismatch"
+  if (!scenario.sourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "planner" && scenario.costCoverage.evaluatedSourceRefs.some((evidence) => digestSfValue(evidence) === digestSfValue(ref)))) return "planner-coverage-source-mismatch"
   if (scenario.comparisonStatus !== "complete") return undefined
   if (scenario.components.reduce((sum, component) => sum + (component.amount ?? 0), 0) !== scenario.knownSubtotal) return "incomplete-cost-coverage"
   if (!categories || scenario.costCoverage.coverageState !== "complete" || scenario.costCoverage.entries.length !== categories.length || categories.some((category) => scenario.costCoverage.entries.filter((entry) => entry.categoryId === category).length !== 1) || scenario.total !== scenario.knownSubtotal || scenario.components.some((component) => component.amount === null || !Number.isFinite(component.amount) || component.evidenceState !== "confirmed" || component.currency !== scenario.currency || !component.sourceRefs.length)) return "incomplete-cost-coverage"
@@ -81,7 +60,7 @@ export function validateScenarioCoverage(scenario: import("../contracts/decision
 }
 
 /** Reassess the scenario itself; a baseline assessment cannot prove a changed preview. */
-export async function reassessScenarioCoverage(incoming: {
+export async function reassessScenarioCoverage(input: {
   scenario: import("../contracts/decisions.ts").ScenarioResult
   basis: CostCoverageBasis
   baseline: CostCoverageAssessment
@@ -90,14 +69,9 @@ export async function reassessScenarioCoverage(incoming: {
   supports: Parameters<typeof assessCostCoverage>[0]["supports"]
 }): Promise<import("../contracts/decisions.ts").ScenarioResult | undefined> {
   try {
-    const input = {
-      ...structuredClone({ scenario: incoming.scenario, basis: incoming.basis, baseline: incoming.baseline }),
-      ...captureCoverageEntries(incoming.entries, incoming.supports.bind(incoming)),
-      resolveEvidence: incoming.resolveEvidence.bind(incoming),
-    }
     if (input.baseline.basisId !== input.basis.id || input.baseline.basisVersion !== input.basis.version) return undefined
     const refs = [...input.basis.sourceRefs, ...input.scenario.sourceRefs, ...input.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
-    const evidence = captureCoverageEvidence(await input.resolveEvidence(structuredClone(refs)))
+    const evidence = await input.resolveEvidence(refs)
     if (evidence.length !== refs.length || refs.some((ref) => !evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))) return undefined
     // A baseline's generated missing-category row is still an omitted input, not a newly supplied answer.
     const derivedMissingCategories = new Set<string>(input.baseline.derivedMissingCategoryIds)
@@ -110,29 +84,3 @@ export async function reassessScenarioCoverage(incoming: {
     return undefined
   }
 }
-
-/** Read evidence identity once without copying the opaque authorized projection. */
-function captureCoverageEvidence(incoming: readonly BusinessEvidenceResolution[]): BusinessEvidenceResolution[] {
-  return incoming.map((item) => {
-    const resolution = { ...item }
-    return { ...resolution, ...structuredClone({ state: resolution.state, ref: resolution.ref }) }
-  })
-}
-
-/** Preserve the original entry capability for supports, while evaluating and returning detached data. */
-function captureCoverageEntries(incoming: readonly CostCoverageEntry[], supports: Parameters<typeof assessCostCoverage>[0]["supports"]) {
-  const originals = Array.from(incoming)
-  const entries = structuredClone(originals)
-  return {
-    entries,
-    supports: (entry: Exclude<CostCoverageEntry, { status: "pending" }>, evidence: readonly BusinessEvidenceResolution[]) => {
-      const original = originals[entries.indexOf(entry)]
-      const expected = digestSfValue(entry)
-      if (!original || original.status === "pending" || digestSfValue(original) !== expected) return false
-      const supported = supports(original, evidence)
-      return supported && digestSfValue(original) === expected
-    },
-  }
-}
-
-function sameCategories(left: readonly string[], right: readonly string[]) { return left.length === right.length && new Set(left).size === left.length && right.every((category) => left.includes(category)) }

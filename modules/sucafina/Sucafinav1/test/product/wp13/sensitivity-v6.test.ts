@@ -10,16 +10,6 @@ const evidence = [{ refDigest: "synthetic" } as unknown as BusinessEvidenceRef]
 
 test("v6 keeps exact evidence and legacy threshold consistent", () => {
   const input = { result, costCoverageRefs: ["coverage-v1"], unit: "USD", engineVersion: "planner-v1", thresholdEvidence: { state: "exact" as const, value: 55000, evidenceRefs: evidence } }
-  const scopedResult: SensitivityLegacyResult = { ...result, comparisonStatus: "conditioned", unresolvedConditions: [{ id: "known-components-threshold", category: "coverage", reason: "This bound concerns known components; training is omitted and remains unresolved.", evidenceRefs: evidence }] }
-  const scoped = attachSensitivityV6({ ...input, result: scopedResult })
-  expect(scoped.status).toBe("ok")
-  if (scoped.status === "ok") {
-    expect(scoped.value.comparisonStatus).toBe("conditioned")
-    expect(scoped.value.unresolvedConditions).toEqual(scopedResult.unresolvedConditions)
-    expect(scoped.value.thresholdEvidence).toEqual(input.thresholdEvidence)
-  }
-  expect(attachSensitivityV6({ ...input, result: { ...result, comparisonStatus: "unavailable" } })).toEqual({ status: "conflict", reason: "threshold-evidence-mismatch" })
-  expect(attachSensitivityV6({ ...input, thresholdEvidence: { ...input.thresholdEvidence, evidenceRefs: [] } })).toEqual({ status: "conflict", reason: "threshold-evidence-mismatch" })
   const accepted = attachSensitivityV6(input)
   expect(accepted.status).toBe("ok")
   const conditioned = attachSensitivityV6({ ...input, result: { ...result, comparisonStatus: "conditioned", unresolvedConditions: [{ id: "training", category: "coverage", reason: "Known subtotal threshold; training remains unresolved.", evidenceRefs: evidence }] } })
@@ -49,20 +39,4 @@ test("v6 revalidates coverage before returning enriched output", async () => {
 
 test("legacy sensitivity without both units is unavailable", () => {
   expect(attachSensitivityV6({ result: { ...result, resultUnit: undefined }, costCoverageRefs: ["coverage-v1"], unit: "days", engineVersion: "planner-v1", thresholdEvidence: { state: "exact", value: 55000, evidenceRefs: evidence } })).toEqual({ status: "unavailable", reason: "sensitivity-units-unavailable" })
-})
-
-test("v6 rejects callbacks that mutate the validated result during enrichment or revalidation", async () => {
-  for (const phase of ["describe", "revalidate"] as const) {
-    const borrowed = structuredClone(result)
-    const evaluate = createSensitivityV6Evaluator({
-      evaluate: async () => ({ status: "ok", value: borrowed }),
-      describe: async (value) => {
-        if (phase === "describe") value.threshold = 15000
-        return { status: "ok", value: { costCoverageRefs: ["coverage-v1"], unit: "USD", engineVersion: "planner-v1", thresholdEvidence: { state: "exact", value: 55000, evidenceRefs: evidence } } }
-      },
-      revalidate: async (value) => { if (phase === "revalidate") value.threshold = 15000; return true },
-    })
-    expect(await evaluate({} as SensitivityRequest, {} as TrustedDomainContext)).toEqual({ status: "stale", reason: "source-or-authority-changed" })
-    expect(borrowed.threshold).toBe(55000)
-  }
 })

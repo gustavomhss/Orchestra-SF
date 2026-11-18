@@ -20,7 +20,7 @@ export async function validatePlannerThreshold(input: {
   source: ScenarioResult
   baseline: ScenarioResult
   certificate: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] }
-  /** A freshly proved canonical domain for recertifying a persisted candidate. */
+  /** Current canonical domain proof when a persisted number is being recertified. */
   structural?: PlannerDirectIntervalProof
   preview: Parameters<typeof createPlannerSensitivity>[0]["preview"]
   context: TrustedDomainContext

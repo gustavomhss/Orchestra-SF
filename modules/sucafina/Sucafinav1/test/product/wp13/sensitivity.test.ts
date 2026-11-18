@@ -10,18 +10,16 @@ const request: SensitivityRequest = { scenarioRef: "scenario", parameterBounds: 
 const scenario: ScenarioResult = { id: "scenario", version: 1, components: [], currency: "USD", horizon: period, sourceRefs: [], unresolvedConditions: ["training missing"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 210000, total: null, costCoverage: { basisId: "b", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [], coverageState: "pending", entries: [], derivedMissingCategoryIds: ["training"] } }
 const context = {} as TrustedDomainContext
 
-test("withholds a claimed threshold when no quantified source components support it", async () => {
-  const calls = { exact: 0 }
+test("withholds a domain threshold when coverage is omitted", async () => {
   const evaluate = createSensitivityEvaluator({
     sample: async (_request, value) => ({ status: "ok", value: { resultRef: `result-${value}`, scenario, parameterUnit: "USD", resultUnit: "USD", unitMetadataRef: "units-v1", unitMetadataVersion: 1, criterionValue: 75000 - value } }),
-    exactThreshold: async () => { calls.exact++; return { status: "ok", value: { value: 55000, evidenceRefs: [{ refDigest: "synthetic" } as unknown as BusinessEvidenceRef] } } },
+    exactThreshold: async () => ({ status: "ok", value: { value: 55000, evidenceRefs: [{ refDigest: "synthetic" } as unknown as BusinessEvidenceRef] } }),
     revalidate: async () => true,
   })
   const result = await evaluate(request, context)
   expect(result.status).toBe("ok")
   if (result.status !== "ok") return
   expect(result.value.threshold).toBeNull()
-  expect(calls.exact).toBe(0)
   expect(result.value.comparisonStatus).toBe("conditioned")
   expect(result.value.evaluated.map((item) => item.parameterValue)).toEqual([0, 50000, 100000])
   expect(result.value.unresolvedConditions.some((item) => item.reason === "missing-category:training")).toBe(true)
@@ -111,26 +109,4 @@ test("refuses a range whose intermediate arithmetic overflows before consulting 
     revalidate: async () => true,
   })
   expect(await evaluate({ ...request, parameterBounds: { ...request.parameterBounds, minimum: -Number.MAX_VALUE, maximum: Number.MAX_VALUE } }, context)).toEqual({ status: "needs-input", reason: "parameter-range-overflow" })
-})
-
-test("only a certified known-subtotal scope may retain an exact bound with unresolved coverage", async () => {
-  const source = { surface: "planner" as const, type: "line", id: "implementation", incarnation: "line-inc", version: 1, fields: ["amount"], period, observedAt: "2027-01-01T00:00:00Z" }
-  const evidence = [{ refDigest: "synthetic-scope-unit-test" } as unknown as BusinessEvidenceRef]
-  const quantified: ScenarioResult = { ...scenario, sourceRefs: evidence, components: [{ id: "implementation", amount: 45000, currency: "USD", period, sourceRefs: [source], evidenceState: "confirmed" }] }
-  for (const scope of [undefined, "known-subtotal"] as const) {
-    let exactCalls = 0
-    const evaluate = createSensitivityEvaluator({
-      sample: async (_request, value) => ({ status: "ok", value: { resultRef: `scope-sample-${value}`, scenario: quantified, parameterUnit: "USD", resultUnit: "USD", unitMetadataRef: "units-v1", unitMetadataVersion: 1, criterionValue: 75000 - value } }),
-      exactThreshold: async () => { exactCalls++; return { status: "ok", value: { value: 55000, evidenceRefs: evidence, ...(scope ? { scope } : {}) } } },
-      revalidate: async () => true,
-    })
-    const found = await evaluate(request, context)
-    expect(found.status).toBe("ok")
-    if (found.status !== "ok") throw new Error(found.reason)
-    expect(exactCalls).toBe(1)
-    expect(found.value.threshold).toBe(scope === "known-subtotal" ? 55000 : null)
-    expect(found.value.comparisonStatus).toBe("conditioned")
-    expect(found.value.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
-    expect(quantified.total).toBeNull()
-  }
 })

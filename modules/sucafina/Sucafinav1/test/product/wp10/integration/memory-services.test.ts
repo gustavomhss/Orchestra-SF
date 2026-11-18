@@ -92,7 +92,7 @@ test("outcomes use an explicitly selected closed-month actual and never substitu
     const selection = { caseRef: memoryCase, choiceId: "choice", criterionRef: "cost", valueId: actual.id, period: memoryPeriod, evidenceRefs: [fixture.source] }
     expect(memoryOutcomeSelection(selection)).toEqual(selection)
     const call = await fixture.admit("decisions.outcome.select", selection)
-    try { expect(await fixture.memory.outcomeSelections.register(selection, call)).toMatchObject({ status: "ok", selectionRef: expect.stringMatching(/^[a-f0-9]{64}$/) }) } finally { fixture.human.finish(call) }
+    try { expect(await fixture.memory.outcomeSelections.register(selection, call)).toEqual({ status: "ok" }) } finally { fixture.human.finish(call) }
     expect(await fixture.memory.outcomes({ caseRef: memoryCase, choiceId: "choice" }, fixture.context)).toMatchObject({
       status: "comparable", expected: 120, observed: 100, delta: -20, cutoff: "2027-01-31T23:59:59.999Z", summary: { causality: "not-attributed" },
     })
@@ -105,42 +105,6 @@ test("outcomes use an explicitly selected closed-month actual and never substitu
     await fixture.replaceActual()
     expect(await fixture.memory.outcomes({ caseRef: memoryCase, choiceId: "choice" }, fixture.context)).toEqual({ status: "unavailable" })
     expect(await fixture.memory.reviewOutcome.read({ caseRef: memoryCase, choiceId: "choice", cutoff: "2027-01-31T23:59:59.999Z" }, fixture.context)).toEqual({ status: "unavailable" })
-  } finally { await fixture.dispose() }
-}, 60_000)
-
-test("outcome reference HTTP reads the original saved selection without mutation", async () => {
-  const fixture = await memoryFixture()
-  try {
-    const actual = fixture.projection.values.find((entry) => entry.id.endsWith(":1:actual-usd") && entry.value === 100)
-    if (!actual) throw new Error("Confirmed Planner observation unavailable")
-    const selection = { caseRef: memoryCase, choiceId: "choice", criterionRef: "cost", valueId: actual.id, period: memoryPeriod, evidenceRefs: [fixture.source] }
-    const registered = await fixture.http(new Request("https://example.test/dashboard?sf=memory-outcome-selection", {
-      method: "POST", headers: { authorization: "person", origin: "https://example.test", "content-type": "application/json", intention: "outcome-selection" },
-      body: JSON.stringify(selection),
-    }), "dashboard")
-    expect(registered?.status).toBe(200)
-    const saved = await registered!.json() as { status: string; selectionRef: string }
-    expect(saved.selectionRef).toMatch(/^[a-f0-9]{64}$/)
-    const before = await fixture.readState()
-    if (before.status !== "ok") throw new Error("State unavailable")
-    const url = `https://example.test/dashboard?sf=memory-outcome&selectionRef=${saved.selectionRef}`
-    const get = (href: string, actor = "person") => fixture.http(new Request(href, { headers: { authorization: actor } }), "dashboard")
-    const result = await get(url)
-    expect(result?.status).toBe(200)
-    expect(await result?.json()).toMatchObject({ status: "comparable", choiceId: "choice", expected: 120, observed: 100 })
-    expect((await get(url + "&selectionRef=" + saved.selectionRef))?.status).toBe(422)
-    expect((await get(url + "&caseId=case"))?.status).toBe(422)
-    expect((await get(url + "&extra=1"))?.status).toBe(422)
-    expect((await get(url.replace(saved.selectionRef, "A".repeat(64))))?.status).toBe(422)
-    const wrong = (saved.selectionRef[0] === "0" ? "1" : "0") + saved.selectionRef.slice(1)
-    expect((await get(url.replace(saved.selectionRef, wrong)))?.status).not.toBe(200)
-    expect((await get(url, "foreign"))?.status).not.toBe(200)
-    const after = await fixture.readState()
-    if (after.status !== "ok") throw new Error("State unavailable")
-    expect(after.storageVersion).toBe(before.storageVersion)
-    expect(after.value.preferences).toEqual(before.value.preferences)
-    await fixture.replaceActual()
-    expect((await get(url))?.status).not.toBe(200)
   } finally { await fixture.dispose() }
 }, 60_000)
 

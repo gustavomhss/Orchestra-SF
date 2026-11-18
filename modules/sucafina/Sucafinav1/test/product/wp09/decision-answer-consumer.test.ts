@@ -73,12 +73,7 @@ test("routine answer uses the real versioned case command and a replay cannot cr
     const evidence = createSfBusinessContext({ revalidate: host.revalidate, resolveSource: createSfDashboardRecordSourceAccess({ host, records }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
     const operationIdentity = (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.operationIdentity(binding) : undefined
     const authorizeCase = async (value: DecisionCase, binding: TrustedDomainContext) => gate.active && value.participants.includes(binding.binding.principalRef)
-    const cases = createDecisionCasePort({ state, host, evidence, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity, authorizeCase, verifyScenarioOperations: async (value, context) => {
-    const request = host.requestFor(context)
-    const selectedDigest = digestSfValue(value)
-    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
-    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
-  }, createId: randomUUID, now: () => at })
+    const cases = createDecisionCasePort({ state, host, evidence, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity, authorizeCase, createId: randomUUID, now: () => at })
     const unused = async () => ({ status: "unavailable" as const, reason: "not-selected" })
     const mutations = createDecisionMutations({ state, host, operationIdentity, authorizeCase,
       planner: { compareForecast: unused, simulateScenario: unused, compareScenarios: unused, evaluateSensitivity: unused }, sources: { resolveForecastSource: unused, resolveForecastCoverage: unused },

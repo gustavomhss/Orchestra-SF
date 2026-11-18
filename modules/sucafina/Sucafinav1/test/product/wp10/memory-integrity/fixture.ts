@@ -139,8 +139,7 @@ async function createFixture(deadline: ReturnType<typeof compositionTestDeadline
   if (preparation.status !== "ok") throw new Error(preparation.reason)
   try {
     const commands = await business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)
-    if (commands.status !== "ok") throw new Error(`Real C12 original capture unavailable: ${commands.status}${"reason" in commands ? ` / ${commands.reason}` : ""}`)
-    if (commands.value.length !== 1) throw new Error(`Real C12 original capture unavailable: expected one domain command, got ${commands.value.length}`)
+    if (commands.status !== "ok" || commands.value.length !== 1) throw new Error("Real C12 original capture unavailable")
     const receipt = await business.context.emitFromLedger(eventRef, preparation.value)
     if (receipt.status !== "committed" || receipt.scanner.status !== "clean") throw new Error("Real Atlas capture unavailable")
   } finally { authority.human.finish(preparation.value) }

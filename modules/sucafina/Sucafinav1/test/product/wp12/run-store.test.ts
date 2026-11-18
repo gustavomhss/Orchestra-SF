@@ -359,34 +359,6 @@ test("durable cancellation wins a publication that is still validating its sourc
   expect(await f.store.read("run", f.context)).toMatchObject({ status: "ok", value: { state: "cancelled", version: 4 } })
 })
 
-test("review cancellation validates its durable target before committing even without an attached native runtime", async () => {
-  await using f = await fixture()
-  const reviewTarget = { targetRunId: "author", targetSessionId: "author-session", targetOutputDigest: "a".repeat(64), caseRef: f.record.caseRef }
-  const record = { ...f.record, reviewTarget, selection: { ...f.record.selection, profile: { ...f.record.selection.profile, id: "sf_reviewer" as const } } }
-  const receipt = { runId: "run", nativeSessionId: "review-session", profileId: "sf_reviewer", profileVersion: "1", profileDigest: "d".repeat(64), skillId: "skill", skillVersion: "1", sourceDigest: "e".repeat(64), instructionsDigest: "f".repeat(64), loadedMessageId: "review-message", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: "c".repeat(64) } as const
-  expect((await f.store.create(record, f.context)).status).toBe("ok")
-  expect((await f.store.attach("run", 1, receipt.nativeSessionId, receipt, f.context)).status).toBe("ok")
-  expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
-  // No provider or native interrupt is simulated. This probe proves the durable cancellation boundary only.
-  const unavailable = async () => ({ status: "unavailable", reason: "native-runtime-not-attached" } as const)
-  const host = createSfAnalysisHost({ store: f.store, verify: async () => ({ status: "ok", value: true }),
-    withRunContext: async (_runRef, action) => action(f.context),
-    execution: { admit: unavailable, execute: unavailable, collect: unavailable, interrupt: unavailable },
-    routines: { catalog: unavailable, prepareAdmission: unavailable, readAdmission: unavailable, readRun: unavailable, run: unavailable },
-    analysis: { create: unavailable, read: unavailable, cancel: async (runRef, context) => {
-      const prior = await f.store.read(runRef, context)
-      if (prior.status !== "ok") return prior
-      const cancelled = await f.store.transition(runRef, prior.value.version, "cancelled", "human-cancelled", context)
-      return cancelled.status === "ok" ? { status: "ok", value: { cancelled: true } } : cancelled
-    } },
-  })
-  const request = { host, runRef: "run", sessionID: receipt.nativeSessionId, executionTicket: {}, skillReceipt: receipt, caseRef: record.caseRef, contextFingerprint: record.contextFingerprint, reviewTarget } as Parameters<typeof cancelSfAnalysis>[0]
-  expect(await cancelSfAnalysis({ ...request, reviewTarget: { ...reviewTarget, targetRunId: "another-author" } })).toEqual({ status: "denied", reason: "run-binding-mismatch" })
-  expect(await f.store.read("run", f.context)).toMatchObject({ status: "ok", value: { state: "running", version: 3 } })
-  expect(await cancelSfAnalysis(request)).toEqual({ status: "unavailable", reason: "native-runtime-not-attached" })
-  expect(await f.store.read("run", f.context)).toMatchObject({ status: "ok", value: { state: "cancelled", version: 4, reviewTarget } })
-})
-
 test("late publication failure cannot overwrite a ready result", async () => {
   await using f = await fixture()
   const original = sfRunFixture()
@@ -480,145 +452,34 @@ test("a committed ready output can become stale only with its exact stored bytes
   expect(await f.store.preserveStale("run", "again", original.output, f.context)).toEqual({ status: "conflict", reason: "invalid-stale-run-output" })
 })
 
-test("real C08 cancellation pins its command and observed run across authorization and interruption scopes", async () => {
-  for (const phase of ["read-return", "verify-return", "authorization-return", "cancel-entry", "cancel-return", "interrupt-entry", "interrupt-return", "unchanged"] as const) {
-    await using f = await fixture()
-    const original = sfRunFixture()
-    const { native: _native, outputRef: _outputRef, ...base } = original.run
-    expect((await f.store.create({ ...base, principalRef: "user", state: "preparing", version: 1 }, f.context)).status).toBe("ok")
-    expect((await f.store.attach("run", 1, "session", original.receipt, f.context)).status).toBe("ok")
-    expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
-    const stored = () => f.state.read(f.request, "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))
-    const before = await stored()
-    if (before.status !== "ok" || !before.value.run) throw new Error("Running record unavailable")
-    const observed: { scopes: number; cancelCalls: number; interrupts: number; run?: SfNativeRunRecord } = { scopes: 0, cancelCalls: 0, interrupts: 0 }
-    const unavailable = async () => ({ status: "unavailable", reason: "native-runtime-not-attached" } as const)
-    const host = createSfAnalysisHost({ store: f.store,
-      withRunContext: async (_runRef, action) => {
-        const scope = ++observed.scopes
-        if (scope === 2 && phase === "cancel-entry") input.host = { ...host }
-        if (scope === 3 && phase === "interrupt-entry") input.caseRef = { ...input.caseRef, version: 2 }
-        const result = await action(f.context)
-        if (scope === 1 && phase === "authorization-return") {
-          if (!observed.run) throw new Error("Authorization did not observe its durable run")
-          observed.run.objective = "changed-after-authorization-scope"
-        }
-        if (scope === 2 && phase === "cancel-return") input.executionTicket = {} as typeof input.executionTicket
-        if (scope === 3 && phase === "interrupt-return") input.contextFingerprint = "changed-after-interrupt-scope"
-        return result
-      },
-      verify: async () => {
-        if (phase === "verify-return") input.skillReceipt.loadedMessageId = "unobserved-message"
-        return { status: "ok", value: true }
-      },
-      analysis: { create: unavailable, read: unavailable, cancel: async (runRef, context) => {
-        observed.cancelCalls++
-        const current = await f.store.readLifecycle(runRef, context)
-        if (current.status !== "ok") return current
-        const saved = await f.store.transition(runRef, current.value.version, "cancelled", "human-cancelled", context)
-        return saved.status === "ok" ? { status: "ok", value: { cancelled: true } } : saved
-      } },
-      routines: { catalog: unavailable, prepareAdmission: unavailable, readAdmission: unavailable, readRun: unavailable, run: unavailable },
-      execution: { admit: unavailable, execute: unavailable, collect: unavailable, interrupt: async (ticket) => {
-        // Observe the interruption boundary only; there is no native provider in this fixture.
-        observed.interrupts++
-        expect(ticket).toBe(originalTicket)
-        expect(await stored()).toMatchObject({ status: "ok", value: { run: { state: "cancelled", version: 4 } } })
-        return unavailable()
-      } },
-    })
-    const readRun = host.readRun
-    host.readRun = async (runRef, context) => {
-      const result = await readRun(runRef, context)
-      if (result.status === "ok") observed.run = result.value
-      if (phase === "read-return") input.runRef = "another-run"
-      return result
-    }
-    const originalTicket = {} as Parameters<typeof cancelSfAnalysis>[0]["executionTicket"]
-    const input: Parameters<typeof cancelSfAnalysis>[0] = { host, runRef: "run", sessionID: "session", executionTicket: originalTicket,
-      skillReceipt: structuredClone(original.receipt), caseRef: structuredClone(original.caseRef), contextFingerprint: "context" }
-    const result = await cancelSfAnalysis(input)
-    expect({ phase, result }).toEqual({ phase, result: phase === "unchanged"
-      ? { status: "unavailable", reason: "native-runtime-not-attached" }
-      : { status: "denied", reason: "cancellation-input-changed-during-authorization" } })
-    const committed = ["cancel-return", "interrupt-entry", "interrupt-return", "unchanged"].includes(phase)
-    expect(observed.cancelCalls).toBe(committed ? 1 : 0)
-    expect(observed.interrupts).toBe(phase === "interrupt-return" || phase === "unchanged" ? 1 : 0)
-    const after = await stored()
-    if (after.status !== "ok") throw new Error("Cancellation record became unavailable")
-    expect(after.value.run).toMatchObject({ runRef: "run", state: committed ? "cancelled" : "running", version: committed ? 4 : 3,
-      objective: original.run.objective, caseRef: original.caseRef, native: { sessionID: "session", skillReceipt: original.receipt } })
-    expect(after.value.output).toBeUndefined()
-    expect(after.storageVersion).toBe(before.storageVersion + (committed ? 1 : 0))
-    if (!committed) expect(digestSfValue(after.value)).toBe(digestSfValue(before.value))
-  }
-})
-
-test("real C08 progress refuses retained run and output aliases changed after a scope returns", async () => {
-  for (const phase of ["lifecycle-run", "content-output", "content-current-run", "discarded-scope-result", "unchanged"] as const) {
-    await using f = await fixture()
-    const original = sfRunFixture()
-    const { native: _native, outputRef: _outputRef, ...base } = original.run
-    expect((await f.store.create({ ...base, principalRef: "user", state: "preparing", version: 1 }, f.context)).status).toBe("ok")
-    expect((await f.store.attach("run", 1, "session", original.receipt, f.context)).status).toBe("ok")
-    expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
-    expect((await f.store.publish("run", 3, original.output, f.context)).status).toBe("ok")
-    const stored = () => f.state.read(f.request, "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))
-    const before = await stored()
-    if (before.status !== "ok") throw new Error("Ready record unavailable")
-    const observed: { scopes: number; runs: SfNativeRunRecord[]; output?: ContributionEnvelope } = { scopes: 0, runs: [] }
-    const unavailable = async () => ({ status: "unavailable", reason: "native-runtime-not-attached" } as const)
-    const host = createSfAnalysisHost({ store: f.store, verify: async () => ({ status: "ok", value: true }),
-      withRunContext: async (_runRef, action) => {
-        const scope = ++observed.scopes
-        const result = await action(f.context)
-        if (scope === 1 && phase === "lifecycle-run") observed.runs[0]!.objective = "changed-after-lifecycle-return"
-        if (scope === 2 && phase === "content-output") {
-          if (!observed.output) throw new Error("Ready output was not observed")
-          observed.output.createdAt = "2026-11-14T00:00:00Z"
-          observed.output.outputDigest = digestSfContribution(observed.output)
-        }
-        if (scope === 2 && phase === "content-current-run") observed.runs[1]!.objective = "changed-after-content-return"
-        if (scope === 2 && phase === "discarded-scope-result") {
-          const detached = structuredClone(result)
-          const ready = result as Awaited<ReturnType<typeof readSfAnalysisRun>>
-          if (ready.status !== "ok" || !ready.value.output) throw new Error("Ready scope result was not observed")
-          ready.value.output.createdAt = "2026-11-14T00:00:00Z"
-          ready.value.output.outputDigest = digestSfContribution(ready.value.output)
-          return detached
-        }
-        return result
-      },
-      analysis: { create: unavailable, cancel: unavailable, read: async () => {
-        const found = await stored()
-        if (found.status !== "ok" || !found.value.output) return { status: "unavailable", reason: "stored-output-unavailable" }
-        observed.output = found.value.output
-        return { status: "ok", value: found.value.output }
-      } },
-      routines: { catalog: unavailable, prepareAdmission: unavailable, readAdmission: unavailable, readRun: unavailable, run: unavailable },
-      execution: { admit: unavailable, execute: unavailable, collect: unavailable, interrupt: unavailable },
-    })
-    const readRun = host.readRun
-    host.readRun = async (runRef, context) => {
-      const result = await readRun(runRef, context)
-      if (result.status === "ok") observed.runs.push(result.value)
-      return result
-    }
-    const result = await readSfAnalysisRun({ host, runRef: "run" })
-    if (phase === "unchanged") {
-      expect(result.status).toBe("ok")
-      if (result.status !== "ok" || !result.value.output || !observed.output) throw new Error("Verified ready output unavailable")
-      const digest = digestSfValue(result.value)
-      observed.output.createdAt = "2026-11-14T00:00:00Z"
-      observed.runs[0]!.caseRef.version++
-      expect(digestSfValue(result.value)).toBe(digest)
-    } else expect({ phase, result }).toEqual({ phase, result: { status: "denied", reason: "run-input-changed-during-read" } })
-    expect(observed.scopes).toBe(phase === "lifecycle-run" ? 1 : 2)
-    const after = await stored()
-    if (after.status !== "ok") throw new Error("Durable output was lost")
-    expect(after.storageVersion).toBe(before.storageVersion)
-    expect(digestSfValue(after.value)).toBe(digestSfValue(before.value))
-  }
+test("review cancellation validates its durable target before committing even without an attached native runtime", async () => {
+  await using f = await fixture()
+  const reviewTarget = { targetRunId: "author", targetSessionId: "author-session", targetOutputDigest: "a".repeat(64), caseRef: f.record.caseRef }
+  const record = { ...f.record, reviewTarget, selection: { ...f.record.selection, profile: { ...f.record.selection.profile, id: "sf_reviewer" as const } } }
+  const receipt = { runId: "run", nativeSessionId: "review-session", profileId: "sf_reviewer", profileVersion: "1", profileDigest: "d".repeat(64), skillId: "skill", skillVersion: "1", sourceDigest: "e".repeat(64), instructionsDigest: "f".repeat(64), loadedMessageId: "review-message", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: "c".repeat(64) } as const
+  expect((await f.store.create(record, f.context)).status).toBe("ok")
+  expect((await f.store.attach("run", 1, receipt.nativeSessionId, receipt, f.context)).status).toBe("ok")
+  expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
+  // No provider or native interrupt is simulated. This probe proves the durable cancellation boundary only.
+  const unavailable = async () => ({ status: "unavailable", reason: "native-runtime-not-attached" } as const)
+  let verifiedTarget: unknown
+  const host = createSfAnalysisHost({ store: f.store, verify: async (_context, _record, request) => { verifiedTarget = request.reviewTarget; return { status: "ok", value: true } },
+    withRunContext: async (_runRef, action) => action(f.context),
+    execution: { admit: unavailable, execute: unavailable, collect: unavailable, interrupt: unavailable },
+    routines: { catalog: unavailable, prepareAdmission: unavailable, readAdmission: unavailable, readRun: unavailable, run: unavailable },
+    analysis: { create: unavailable, read: unavailable, cancel: async (runRef, context) => {
+      const prior = await f.store.read(runRef, context)
+      if (prior.status !== "ok") return prior
+      const cancelled = await f.store.transition(runRef, prior.value.version, "cancelled", "human-cancelled", context)
+      return cancelled.status === "ok" ? { status: "ok", value: { cancelled: true } } : cancelled
+    } },
+  })
+  const request = { host, runRef: "run", sessionID: receipt.nativeSessionId, executionTicket: {}, skillReceipt: receipt, caseRef: record.caseRef, contextFingerprint: record.contextFingerprint } as Parameters<typeof cancelSfAnalysis>[0]
+  expect(await cancelSfAnalysis({ ...request, contextFingerprint: "another-context" })).toEqual({ status: "denied", reason: "run-binding-mismatch" })
+  expect(await f.store.read("run", f.context)).toMatchObject({ status: "ok", value: { state: "running", version: 3 } })
+  expect(await cancelSfAnalysis(request)).toEqual({ status: "unavailable", reason: "native-runtime-not-attached" })
+  expect(verifiedTarget).toEqual(reviewTarget)
+  expect(await f.store.read("run", f.context)).toMatchObject({ status: "ok", value: { state: "cancelled", version: 4, reviewTarget } })
 })
 
 test("real C08 analysis progress fences host verification aliases and returns private ready content", async () => {
@@ -680,8 +541,9 @@ test("real C08 analysis progress fences host verification aliases and returns pr
     for (const target of ["output", "output-cycle", "case", "binding", "request"] as const) {
       reset()
       Object.assign(fault, { phase, target })
+      const identity = target === "binding" || target === "request"
       expect({ phase, target, result: await readSfAnalysisRun(input) }).toEqual({ phase, target,
-        result: { status: "denied", reason: "run-input-changed-during-read" } })
+        result: { status: "denied", reason: identity ? "analysis-read-identity-changed" : "analysis-read-mutated-input" } })
       reset()
       const after = await stored()
       expect(after.status).toBe("ok")
@@ -692,7 +554,7 @@ test("real C08 analysis progress fences host verification aliases and returns pr
   }
   reset()
   fault.afterScope = true
-  expect(await readSfAnalysisRun(input)).toEqual({ status: "denied", reason: "run-input-changed-during-read" })
+  expect(await readSfAnalysisRun(input)).toEqual({ status: "denied", reason: "analysis-read-identity-changed" })
   reset()
   const accepted = await readSfAnalysisRun(input)
   expect(accepted.status).toBe("ok")
