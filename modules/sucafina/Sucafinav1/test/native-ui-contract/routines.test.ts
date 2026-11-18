@@ -187,7 +187,7 @@ describe("A09 schema equivalence and authority boundary", () => {
       documentId: "recipe-1", publishedVersion: "publication-1",
       principalRef: "principal", projectId: "project",
       correlationId: "corr-1", sourceRefs: [], pending: [],
-      admission: "admitted", admissionVersion: 1,
+      admission: "admitted", admissionRef: "admission-1", admissionVersion: 1,
       runRef: "run-1", resultRef: "artifact-1",
     }
     const outputDigest = "a".repeat(64)
