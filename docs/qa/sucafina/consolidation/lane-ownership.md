@@ -36,3 +36,22 @@ Each lane reads its own job log from run `44329483839` (head `2e5839eebb`, older
 | `sf-ui-decisions` | `134890490492` `sf/test-CI-UI-DECISIONS` | Other decisions e2e files still using a wrapping-label locator. `planner-sources.ts` and `procurement-source.ts` are already fixed in `30b8a619e0`; this run does not contain that commit |
 
 Shards 1 and 3–6 of run `44329483839` were cancelled, not green. Do not version `coverageBaseline` from this run.
+
+## Wave 2
+
+Branched from `origin/sf-red-clusters`. Evidence is `origin/sf-failure-map` `failure-map.md` plus the existing shard artifacts. No new test or CI. Do not edit files already dirty on `sf-typecheck`: `connections.ts`, `analysis-http.ts`, `personal-views.ts`, `transport.ts`, `closure238`, `export-artifact-closure`, `installed-post-cause`, `planner-fixture.ts`, `proof233`, `proof234`, `native-scenario-preparation.ts`. Do not edit `native-phase-bridge/**` or the two portfolio producers.
+
+| Branch | Owns |
+| --- | --- |
+| `sf-wp13-campaign` | `test/product/wp13/campaign-request.test.ts` and the campaign route it calls. Not `runtime/procurement.ts` |
+| `sf-auth-callback` | `microsoft-routes.test.ts`, `auth-retention-fix/**`, `microsoft-first-login.test.ts`, and the auth callback they call. Not `apps/desktop/src/main/sucafina/connections.ts` |
+| `sf-enrollment-http` | `test/fixture/local-browser.ts` and the shard tests whose log is `ERR_HTTP_RESPONSE_CODE_FAILURE` at `/sucafina/auth/local` |
+| `sf-body-limit` | `test/product/http-body-limit-fix/workbench.test.ts` and the body-limit handler it calls |
+| `sf-wp10-digest` | `test/product/wp10/integration/bi-call-scope.test.ts` and the digest producer it calls |
+| `sf-wp10-lifecycle` | `analysis-lifecycle-admission.test.ts`, `revocation-tail.test.ts`, and the admission/revocation code they call |
+| `sf-wp09-dossier` | `test/product/wp09/request-dossier.test.ts` and the dossier writer it calls |
+| `sf-planner-ws9` | `test/planner-ws9-model.test.ts` and the planner model it calls |
+| `sf-ms-receipt` | `microsoft-composition.test.ts` and the missing receipt path |
+| `sf-cli-hook` | `apps/cli/test/sucafina-native-phase-wiring.test.ts` and `host-context.ts` only. Not `native-host.ts` |
+| `sf-docx-flow` | `test/product/docx-continuation130/table-flow.test.ts` and the table-flow producer |
+| `sf-wp05-engine` | `test/product/wp05/engine-coverage.test.ts` and the coverage producer it calls |
