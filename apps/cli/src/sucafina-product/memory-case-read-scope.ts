@@ -12,7 +12,7 @@ import type { DecisionCasePort, DomainPortHost } from "../../../../modules/sucaf
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
-import type { createSfAtlasMemory } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+import { cloneSfAtlasRecallResult, type createSfAtlasMemory } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
 import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { deriveSfMemoryOwner } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts"
 import type { SfProcurementRecordObservation } from "./procurement-record-read-scope.ts"
@@ -249,7 +249,7 @@ export function createSfMemoryCaseReadScope(input: {
     if (observed.kind === "unsupported" && !invoked) return current(scope) ? work() : refused()
     if (observed.kind !== "observed" || !invoked || !completed || actual === undefined || input.readMemoryCanonical !== readCanonicalMemory ||
       digestSfValue(observed.value) !== digestSfValue(actual) || !completedCase(scope, key, proof, before)) return refused()
-    return structuredClone(observed.value)
+    return cloneSfAtlasRecallResult(observed.value)
   }
   const unavailable = () => ({ status: "unavailable" as const, reason: "memory-case-proof-changed" })
   const read: DecisionCasePort["read"] = async (incoming, call) => {
@@ -316,7 +316,7 @@ export function createSfMemoryCaseReadScope(input: {
       if (proof.fence !== before.digest || proof.inputDigest !== inputDigest || digestSfValue(incoming) !== argumentDigest) {
         scope.invalid = true; return { status: "unavailable" }
       }
-      return structuredClone(proof.value)
+      return cloneSfAtlasRecallResult(proof.value)
     }
     scope.memoryBusy.add(key)
     try {
@@ -329,8 +329,8 @@ export function createSfMemoryCaseReadScope(input: {
       if (after?.kind === "unsupported") return result
       if (after?.kind !== "sf-memory-case-fence" || before.digest !== after.digest ||
         !current(scope) || digestSfValue(incoming) !== argumentDigest) { scope.invalid = true; return { status: "unavailable" } }
-      scope.memories.set(key, { ref, inputDigest, fence: after.digest, value: structuredClone(result) })
-      return structuredClone(result)
+      scope.memories.set(key, { ref, inputDigest, fence: after.digest, value: cloneSfAtlasRecallResult(result) })
+      return cloneSfAtlasRecallResult(result)
     } finally { scope.memoryBusy.delete(key) }
   }
   const observation = async <Value>(incoming: Parameters<Recall>[0], call: TrustedDomainContext,

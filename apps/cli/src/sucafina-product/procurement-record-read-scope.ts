@@ -10,6 +10,7 @@ import type { Period, ProductContext } from "../../../../modules/sucafina/Sucafi
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { SfProductStatePort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import { cloneSfAtlasRecallResult } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
 import { sfScopedSourceIdentity, sfSourceIdentity } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { procurementRequestFields, projectProcurementScope } from "../../../../modules/sucafina/Sucafinav1/product/procurement/source-projection.ts"
 
@@ -105,7 +106,7 @@ export function createSfProcurementRecordReadScope(input: SfProcurementRecordRea
         parent.pins.add(current)
         // Every child executes its actual canonical producer. No projection,
         // pending Promise, authorization result or environment value is reused.
-        return { kind: "observed", value: structuredClone(value) }
+        return { kind: "observed", value: cloneSfAtlasRecallResult(value) }
       }
       const enteredEnvironment = await environment()
       if (!enteredEnvironment || !current() || !await input.host.revalidate(call) || !current()) return changed(parent)
@@ -170,7 +171,7 @@ export function createSfProcurementRecordReadScope(input: SfProcurementRecordRea
             if (after.kind !== "sf-procurement-evidence-fence" || after.digest !== before.digest || !live(scope))
               return { commit: false, value: changed(scope) }
             // Preserve every canonical result, including undefined, without caching it.
-            return { commit: false, value: { kind: "observed" as const, value: structuredClone(value) } }
+            return { commit: false, value: { kind: "observed" as const, value: cloneSfAtlasRecallResult(value) } }
           })
         } finally { scope.accepting = false; scope.open = false }
       }, { signal: request.signal })
