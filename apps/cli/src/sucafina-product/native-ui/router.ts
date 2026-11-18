@@ -74,11 +74,6 @@ export function mountSfNativeProjections(options: Readonly<{
     if (request.method !== route.method) return new Response(null, {
       status: 405, headers: { Allow: route.method, "Cache-Control": "no-store" },
     })
-    // NAV-01: private search accepts only bounded POST JSON; never URL query.
-    // Reject query strings before handing the original Request to the producer.
-    if (url.pathname === options.mount + "/api/ui/projections/search" && url.search) {
-      return Response.json({ status: "invalid" }, { status: 400, headers: { "Cache-Control": "no-store" } })
-    }
     if (url.username || url.password || url.hash || url.search.length > 4096 ||
         [...url.searchParams.keys()].some((key) => url.searchParams.getAll(key).length !== 1)) {
       return Response.json({ status: "invalid" }, {
