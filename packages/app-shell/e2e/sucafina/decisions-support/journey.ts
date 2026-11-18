@@ -43,16 +43,26 @@ export async function withInstallation(page: Page, info: TestInfo,
       ...(request.headers()["idempotency-key"] ? { idempotencyKey: request.headers()["idempotency-key"] } : {}) })
   }
   page.on("request", listener)
+  const diagnostics: string[] = []
+  const onConsole = (message: { type: () => string; text: () => string }) => { if (message.type() === "error") diagnostics.push(`console.error: ${message.text()}`) }
+  const onPageError = (error: Error) => diagnostics.push(`pageerror: ${error.message}`)
+  const onNavigated = (frame: { page: () => unknown }) => { if (frame.page() === page) diagnostics.push(`navigated: ${page.url()}`) }
+  page.on("console", onConsole)
+  page.on("pageerror", onPageError)
+  page.on("framenavigated", onNavigated)
   try {
     await page.context().addCookies([installation.cookie])
     await action(installation, observations)
     body.completed = true
   } finally {
     page.off("request", listener)
+    page.off("console", onConsole)
+    page.off("pageerror", onPageError)
+    page.off("framenavigated", onNavigated)
     // Never retain cookies, authorization headers, enrollment URLs or arbitrary response bodies.
     try {
       await info.attach("decisions-observations.json", { contentType: "application/json", body: JSON.stringify({
-        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests,
+        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests, diagnostics: diagnostics.slice(-200),
         verdict: "The Playwright runtime report owns the terminal test result.",
         limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
       }, null, 2) })

@@ -26,7 +26,18 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   const line = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Name", { exact: true }) })
   await expect(line).toHaveCount(1)
   await line.getByLabel("Name", { exact: true }).fill(sourceNames.line)
-  await line.getByLabel("Owner", { exact: true }).selectOption(actorId, { force: true })
+  const owner = line.getByLabel("Owner", { exact: true })
+  await expect(owner).toHaveCount(1)
+  observations.push({ stage: "trace-owner-before", url: page.url(), ownerCount: await page.locator('select[name="owner"]').count(),
+    options: await owner.locator("option").evaluateAll((nodes) => nodes.map((node) => ({ value: (node as HTMLOptionElement).value, label: node.textContent ?? null, disabled: (node as HTMLOptionElement).disabled }))) })
+  try {
+    await owner.selectOption(actorId, { force: true, timeout: 15_000 })
+  } catch (error) {
+    observations.push({ stage: "trace-owner-stall", url: page.url(), actorId, ownerHtml: await owner.evaluate((node) => node.outerHTML).catch(() => null),
+      formHtml: await line.evaluate((node) => node.outerHTML).catch(() => null),
+      ownerValues: await page.locator('select[name="owner"]').evaluateAll((nodes) => nodes.map((node) => (node as HTMLSelectElement).value)) })
+    throw error
+  }
   await line.getByLabel("Element", { exact: true }).selectOption("licenses", { force: true })
   await expect(line.getByLabel("Currency", { exact: true })).toHaveValue("USD")
   await line.getByLabel("Annual budget", { exact: true }).fill("1200")
