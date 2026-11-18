@@ -68,14 +68,14 @@ export function createSfDashboardImportPreview(input: {
     if (preview.result.status !== "preview") return { status: preview.result.status === "denied" ? "denied" : preview.result.status === "conflict" ? "stale" : "needs-input", reason: "dashboard-command-rejected" }
     if (!await input.host.revalidate(context)) return { status: "denied", reason: "import-access-unavailable" }
     if (!preview.impactDigest || !preview.before || !preview.after) return { status: "unavailable", reason: "mutation-scope-unavailable" }
-    const productContext = { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "dashboard" as const, period: source.period, currency: "USD", sourceRefs: [source], capabilities: ["sf_import_preview"] }
+    const productContext = { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "dashboard" as const, period: source.period, currency: "unspecified", sourceRefs: [source], capabilities: ["sf_import_preview"] }
     const changes = compareImportProjections(preview.before, preview.after)
     const values: DomainProjection["values"][number][] = []
     const missing: DomainProjection["missing"][number][] = []
     changes.forEach((change) => ([["before", change.before], ["after", change.after]] as const).forEach(([side, entry]) => {
       if (entry.state !== "present") { missing.push({ field: `${change.path}:${side}`, reason: "missing" }); return }
       if (entry.value !== null && typeof entry.value !== "string" && typeof entry.value !== "boolean" && !(typeof entry.value === "number" && Number.isFinite(entry.value))) return
-      values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry.value === null ? "absent" : side === "after" ? "hypothetical" : "confirmed" })
+      values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry.value === null ? "absent" : "confirmed" })
     }))
     const projection: DomainProjection = { context: productContext, version: source.version, engineVersion: "dashboard-runtime-v1", components: [], values, missing }
     const id = digestSfValue({ operationId, sourceDigest: request.parsed.sourceDigest, target: request.target, principal: context.binding.principalRef })

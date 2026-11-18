@@ -24,7 +24,6 @@ type ScopedContinuityResult =
 export type DashboardConfirmationObservation =
   | { state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: RecordEvidence; projection: DomainProjection }
   | { state: "access-unavailable" | "dependency-unavailable" | "replaced"; sourceVersion: number }
-export type DashboardPrivateDraftRead = { evidence: RecordEvidence; projection: DomainProjection; fence: () => Promise<boolean> }
 
 /** Host-private scope material and read-only transactional fence for C06. */
 export function createDashboardConfirmationObserver(input: {
@@ -33,12 +32,6 @@ export function createDashboardConfirmationObserver(input: {
   readProjection: (selection: { reference: string; recordType: string; fields: readonly string[]; period: ConfirmationScope["period"] }, context: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
 }) {
   const issueForActor = createDashboardConfirmationIssuer(input)
-  const recordIssuer = createDashboardRecordEvidenceHost({ ...input, issueRecord: createDashboardRecordSourceIssuer(input) })
-  const originalPage = async (reference: Identity) => input.host.persistence.transaction("dashboard", async (snapshot) => {
-    const entries = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.incarnation === reference.incarnation && entry.scope.recordType === reference.type && entry.scope.recordId === reference.id)
-    const page = entries.length === 1 ? object(entries[0]!.scope.selector).page : undefined
-    return { commit: false, value: typeof page === "string" && page.trim() ? page : undefined }
-  }).catch(() => undefined)
   const fences = new Map<string, readonly ScopedExpected[]>()
   const key = (scope: ConfirmationScope, context: TrustedDomainContext, fingerprint: string) => digestSfValue({ scope, principal: context.binding.principalRef, access: context.binding.accessRevision, policy: context.binding.policyVersion, fingerprint })
   const authorize = (request: Request, context: TrustedDomainContext, reference: Identity, fields: readonly string[], period: ConfirmationScope["period"]) => async (snapshot: Snapshot, scope: SfSourceScope) => {
@@ -90,15 +83,7 @@ export function createDashboardConfirmationObserver(input: {
     if (requested.some((item) => item.reference.surface !== "dashboard" || !isSfPeriod(item.period) || !item.fields.length || new Set(item.fields).size !== item.fields.length)) return { state: "dependency-unavailable", sourceVersion: 0 }
     const logical = requested.map((item) => digestSfValue({ surface: item.reference.surface, type: item.reference.type, id: item.reference.id, fields: [...item.fields].sort(), period: item.period }))
     if (new Set(logical).size !== logical.length) return { state: "dependency-unavailable", sourceVersion: 0 }
-    // The page is part of a record's scoped identity. Reissue that private selection
-    // through the current actor; a canonical page would name a different scope.
-    const issued = await Promise.all(requested.map(async (item) => {
-      const page = await originalPage(item.reference)
-      if (!page) return undefined
-      if (item.reference.type === "dashboard-page") return page === item.reference.id
-        ? issueForActor({ recordType: item.reference.type, recordId: item.reference.id, fields: item.fields, period: item.period }, context).catch(() => undefined) : undefined
-      return recordIssuer.issue({ page, recordType: item.reference.type, recordId: item.reference.id, fields: item.fields, period: item.period }, context).catch(() => undefined)
-    }))
+    const issued = await Promise.all(requested.map((item) => issueForActor({ recordType: item.reference.type, recordId: item.reference.id, fields: item.fields, period: item.period }, context).catch(() => undefined)))
     if (issued[0]?.status !== "ok") return unavailable
     if (issued.some((entry) => entry?.status !== "ok") || !await input.host.revalidate(context)) return { state: "dependency-unavailable", sourceVersion: 0 }
     const references = issued.map((entry) => (entry as { status: "ok"; value: RecordEvidence }).value)
@@ -181,11 +166,15 @@ export function createDashboardConfirmationObserver(input: {
     const currentFields = ["executive", "members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "itperf-item", "signals", "hotTopics", "secActions", "secIncidents", "secPhishing"]
     const currentState = original.target.recordType === "dashboard-page" ? original.target.fields.some((field) => currentFields.includes(field)) : currentFields.includes(original.target.recordType)
     const period = original.target.recordType === "hotTopics" ? { start: day, end: day } : currentState ? { start: `${day.slice(0, 4)}-01-01`, end: `${day.slice(0, 4)}-12-31` } : { ...original.target.period }
-    const reference = { surface: "dashboard" as const, type: original.target.recordType, id: original.target.recordId, incarnation: original.target.incarnation }
-    const page = await originalPage(reference)
-    if (!page || original.target.recordType === "dashboard-page" && page !== original.target.recordId) return { status: "unavailable", reason: "historical-source-unavailable" }
-    const issued = original.target.recordType === "dashboard-page" ? await issueForActor({ recordType: original.target.recordType, recordId: original.target.recordId, fields: original.target.fields, period }, context).catch(() => undefined) : await recordIssuer.issue({ page, recordType: original.target.recordType, recordId: original.target.recordId, fields: original.target.fields, period }, context).catch(() => undefined)
+    const originalPage = await input.host.persistence.transaction("dashboard", async (snapshot) => {
+      const entries = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.incarnation === original.target.incarnation && entry.scope.recordType === original.target.recordType && entry.scope.recordId === original.target.recordId)
+      const page = entries.length === 1 ? object(entries[0]!.scope.selector).page : undefined
+      return { commit: false, value: typeof page === "string" ? page : undefined }
+    }).catch(() => undefined)
+    if (!originalPage) return { status: "unavailable", reason: "historical-source-unavailable" }
+    const issued = original.target.recordType === "dashboard-page" ? await issueForActor({ recordType: original.target.recordType, recordId: original.target.recordId, fields: original.target.fields, period }, context).catch(() => undefined) : await createDashboardRecordEvidenceHost({ ...input, issueRecord: createDashboardRecordSourceIssuer(input) }).issue({ page: originalPage, recordType: original.target.recordType, recordId: original.target.recordId, fields: original.target.fields, period }, context).catch(() => undefined)
     if (!issued || issued.status !== "ok") return { status: "unavailable", reason: "historical-source-unavailable" }
+    const reference = { surface: "dashboard" as const, type: original.target.recordType, id: original.target.recordId, incarnation: original.target.incarnation }
     const source = await input.scopedSources.resolveScopedSource("dashboard", issued.value.target.incarnation, authorize(request, context, reference, original.target.fields, period)).catch(() => undefined)
     if (!source || source.inputDigest !== issued.value.target.projectionDigest || source.version !== issued.value.target.version || !input.scopedSources.checkScopedSource || !input.host.persistence.transactionAll) return { status: "unavailable", reason: "historical-source-unavailable" }
     const expected: ScopedExpected = { scope: source.scope, incarnation: source.incarnation, version: source.version, inputDigest: source.inputDigest, original: reference, fields: [...original.target.fields], period, physicalFingerprint: "", observedAt: new Date(environment.at).toISOString() }
@@ -200,99 +189,7 @@ export function createDashboardConfirmationObserver(input: {
     if (!stable || !await input.host.revalidate(context)) return { status: "unavailable", reason: "historical-source-unavailable" }
     return { status: "ok", value: { fence: async () => { const snapshot = input.host.persistence.currentSnapshots?.()?.dashboard; return !!snapshot && !request.signal.aborted && await validate(snapshot) } } }
   }
-  /** Retain a private draft only after its original scoped source is readable by the same principal.
-   * The result is a current read, never a replacement write binding or proof of historical values. */
-  const preparePrivateDraftRead = async (original: RecordEvidence, context: TrustedDomainContext): Promise<PortResult<DashboardPrivateDraftRead>> => {
-    const denied = { status: "denied" as const, reason: "private-draft-source-access-unavailable" }
-    const unavailable = { status: "unavailable" as const, reason: "private-draft-source-check-unavailable" }
-    const ref = (() => { try { return structuredClone(original) } catch { return undefined } })()
-    const target = ref?.target
-    if (!ref || ref.schema !== "sf-evidence-v1" || ref.kind !== "record" || ref.evidenceLevel !== "observed" ||
-      !target || target.surface !== "dashboard" || target.recordType !== "hotTopics" || typeof target.recordId !== "string" || !target.recordId.trim() ||
-      typeof target.incarnation !== "string" || !target.incarnation.trim() || !Number.isSafeInteger(target.version) || target.version < 1 ||
-      !Array.isArray(target.fields) || !target.fields.length || target.fields.some((field) => !["id", "action", "owner", "due", "status", "priority", "notes"].includes(field)) ||
-      new Set(target.fields).size !== target.fields.length || !["action", "owner", "due", "priority", "notes"].every((field) => target.fields.includes(field)) ||
-      !isSfPeriod(target.period) || target.period.start !== target.period.end || !/^[a-f0-9]{64}$/.test(target.projectionDigest) ||
-      ref.refId !== dashboardSourceSelector(target.incarnation, target.version) || ref.refDigest !== digestSfEvidenceRef(ref))
-      return { status: "needs-input", reason: "invalid-private-draft-source" }
-    if (ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) return denied
-    const request = input.host.requestFor(context)
-    if (!request) return unavailable
-    if (request.signal.aborted) return unavailable
-    const admitted = await input.host.revalidate(context).catch(() => false)
-    const environment = await input.host.environment(request).catch(() => undefined)
-    if (!environment || !Number.isFinite(Date.parse(environment.at)) || !input.scopedSources.checkScopedSource || !input.host.persistence.transactionAll) return unavailable
-    const day = new Date(environment.at).toISOString().slice(0, 10)
-    const period = { start: day, end: day }, originalPeriod = structuredClone(target.period), fields = [...target.fields].sort()
-    const reference: Identity = { surface: "dashboard", type: "hotTopics", id: target.recordId, incarnation: target.incarnation }
-    const inspect = async (snapshot: Snapshot): Promise<PortResult<{ scope: SfSourceScope; physicalIncarnation: string }>> => {
-      if (!snapshot.sfSources?.scopes) return unavailable
-      const entries = Object.values(snapshot.sfSources.scopes).filter((entry) => entry.incarnation === target.incarnation)
-      const old = entries.length === 1 ? entries[0] : undefined
-      const selector = object(old?.scope.selector)
-      const physical = snapshot.sfSources.records[JSON.stringify(["hotTopics", target.recordId])]
-      if (!old || old.scope.principalRef !== context.binding.principalRef || old.scope.recordType !== "hotTopics" || old.scope.recordId !== target.recordId ||
-        selector.page !== "Hot Topics & Actions" || digestSfValue(selector.fields) !== digestSfValue(fields) || digestSfValue(selector.period) !== digestSfValue(originalPeriod) ||
-        old.version < target.version || old.version === target.version && old.inputDigest !== target.projectionDigest ||
-        !physical?.alive || old.sourceIncarnation !== physical.incarnation) return denied
-      // Scoped versions advance in place. An older version identifies the persisted scope,
-      // but does not authorize its old values; only the newly projected fields can leave here.
-      const principal = await input.host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
-      if (request.signal.aborted) return unavailable
-      if (!principal || principal.id !== context.binding.principalRef || principal.id.startsWith("local:")) return denied
-      const access = object(object(snapshot.data.access)[principal.id])
-      const roles = principal.roles.filter((entry) => entry.surface === "dashboard").map((entry) => entry.role)
-      const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
-      const scope: SfSourceScope = { ...old.scope, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion,
-        selector: { ...selector, actor, period, roleMapDigest: digestSfValue(roleMap(snapshot, "dashboard")) } }
-      if (projectSfSourceScope("dashboard", snapshot, scope, environment.at) === undefined) return denied
-      return { status: "ok", value: { scope, physicalIncarnation: physical.incarnation } }
-    }
-    const inspectCurrent = () => input.host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await inspect(snapshot) }), { signal: request.signal }).catch(() => unavailable)
-    const first = await inspectCurrent()
-    if (first.status !== "ok") return first
-    // Admission drift or a failed authority read cannot prove that read access was revoked.
-    if (!admitted) return unavailable
-    const issued = await recordIssuer.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: target.recordId, fields, period }, context).catch(() => undefined)
-    if (!issued || issued.status !== "ok") {
-      const current = await inspectCurrent()
-      return current.status === "ok" ? unavailable : current
-    }
-    const source = await input.scopedSources.resolveScopedSource("dashboard", issued.value.target.incarnation, authorize(request, context, reference, fields, period)).catch(() => undefined)
-    const read = await recordIssuer.read(issued.value.refId, context).catch(() => undefined)
-    if (!source || !read || read.status !== "ok" || source.version !== issued.value.target.version || source.inputDigest !== issued.value.target.projectionDigest ||
-      digestSfValue(source.scope) !== digestSfValue(first.value.scope) || read.value.version !== source.version || read.value.context.sourceRefs.length !== 1 ||
-      read.value.context.sourceRefs[0]!.incarnation !== source.incarnation || read.value.values.some((value) => value.sourceRefs.some((evidence) => digestSfValue(evidence) !== digestSfValue(issued.value)))) {
-      const current = await inspectCurrent()
-      return current.status === "ok" ? { status: "stale", reason: "private-draft-source-changed-during-read" } : current
-    }
-    const expected: ScopedExpected = { scope: source.scope, incarnation: source.incarnation, version: source.version, inputDigest: source.inputDigest,
-      original: reference, fields, period, physicalFingerprint: digestSfValue({ ...reference, incarnation: first.value.physicalIncarnation }), observedAt: new Date(environment.at).toISOString() }
-    const validate = async (snapshot: Snapshot) => {
-      if (request.signal.aborted || input.host.requestFor(context) !== request) return false
-      const current = await inspect(snapshot)
-      if (current.status !== "ok" || current.value.physicalIncarnation !== first.value.physicalIncarnation || digestSfValue(current.value.scope) !== digestSfValue(expected.scope)) return false
-      const same = continuity(snapshot, reference, fields, originalPeriod, expected, context, period)
-      if (same.state !== "same" || same.physicalIncarnation !== first.value.physicalIncarnation) return false
-      const allowed = authorize(request, context, reference, fields, period)
-      return await input.scopedSources.checkScopedSource!("dashboard", expected.scope, (current) => allowed(current, expected.scope), expected)
-    }
-    const stable = await input.host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: await validate(snapshots.dashboard) }), { signal: request.signal }).catch(() => undefined)
-    if (stable === undefined) return unavailable
-    if (!await input.host.revalidate(context).catch(() => false)) {
-      const current = await inspectCurrent()
-      return current.status === "ok" ? unavailable : current
-    }
-    if (!stable) {
-      const current = await inspectCurrent()
-      return current.status === "ok" ? { status: "stale", reason: "private-draft-source-changed-during-read" } : current
-    }
-    return { status: "ok", value: { evidence: structuredClone(issued.value), projection: structuredClone(read.value), fence: async () => {
-      const snapshot = input.host.persistence.currentSnapshots?.()?.dashboard
-      return !!snapshot && await validate(snapshot) && await input.host.revalidate(context).catch(() => false)
-    } } }
-  }
-  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareHistoricalReissue, preparePrivateDraftRead }
+  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareHistoricalReissue }
 }
 
 /** Baselines come from a protected displayed-observation receipt, never from a model. */

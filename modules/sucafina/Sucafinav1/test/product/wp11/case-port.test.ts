@@ -2,9 +2,8 @@ import { expect, test } from "bun:test"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
-import { createChangeProposalStore } from "../../../product/decisions/change-proposal-store.ts"
 import { createDecisionChoiceResultLookup } from "../../../product/decisions/choice-result-lookup.ts"
 import { createDecisionCasePort, encodeCaseRef, parseCaseRef } from "../../../product/decisions/case-port.ts"
 import { createDecisionCapabilities, encodeReceiptRef } from "../../../product/decisions/capabilities.ts"
@@ -23,8 +22,7 @@ test("case draft survives a real store reopen, exact retry is idempotent and rev
   const open = async () => {
     const store = await openLocalStore(directory)
     const state = createSfProductState({ persistence: store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: "installation-incarnation" }), authorize: async () => access.allowed ? { principalRef: "principal", policyVersion: "policy", accessRevision: "access" } : undefined })
-    const retainedRequest = new Request("https://example.test/")
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => retainedRequest, revalidate: async () => access.allowed }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-incarnation" }, operationIdentity: () => "operation-1", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => access.allowed }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-incarnation" }, operationIdentity: () => "operation-1", authorizeCase: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     return { store, cases }
   }
   try {
@@ -177,8 +175,7 @@ test("revoked source suppresses an otherwise authorized case", async () => {
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((item) => ({ ref: item, state: source.fresh ? "fresh" as const : "revoked" as const, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })).reverse(), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => ({ incarnation: targetRef === "installation:install:cases" ? "installation-inc" : "source-case-2" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     const ids = { n: 0 }
-    const retainedRequest = new Request("https://example.test/")
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => retainedRequest, revalidate: async () => true }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     const draft = await cases.draft({ objective: "source-bound", currency: "USD", horizon: { start: "2027-01-01", end: "2027-12-31" }, criteria: ["cost"], sourceRefs: [ref] }, binding)
     expect(draft.status).toBe("ok")
     if (draft.status !== "ok") return
@@ -206,31 +203,102 @@ test("revoked source suppresses an otherwise authorized case", async () => {
 
 test("partial domain execution reconciles a durable receipt and never repeats it on retry", async () => {
   const { createPreparedExecution } = await import("../../../product/decisions/apply.ts")
+  const { createSfPreparedApply } = await import("../../../product/decisions/prepared-apply.ts")
+  const { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding, sameApplyRequest } = await import("../../../product/decisions/receipt-review-binding.ts")
+  const { createSfSourcePersistence } = await import("../../../product/integration/source-lifecycle.ts")
+  const { enumerateSfSources } = await import("../../../product/integration/source-inventory.ts")
+  const { createSfSourceScopeProjector, sfPlannerProjectionSelector } = await import("../../../product/integration/source-projections.ts")
+  const { createSfUiAuthority } = await import("../../../product/integration/ui-authority.ts")
+  const { createPlannerProduct } = await import("../../../product/planner/product.ts")
+  const { createPlannerPreparedReview } = await import("../../../product/planner/prepared-review.ts")
+  const { preparePlannerMutation, plannerPreparedRevision } = await import("../../../product/planner/prepared.ts")
+  const { resolve } = await import("../../../src/identity.ts")
+  const { rows } = await import("../../../runtime/contract.ts")
+  const { randomUUID } = await import("node:crypto")
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-apply-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
+  const at = "2026-11-13T00:00:00Z"
+  const ui = createSfUiAuthority({ authorize: async (http) => http.headers.get("authorization") === "finance" ? { installationId: "install", projectId: "project", principalRef: "finance", policyVersion: "policy", accessRevision: "access" } : undefined, commandIdentity: async () => "operation", createId: randomUUID, now: () => Date.parse(at) })
+  const http = new Request("https://example.test", { headers: { authorization: "finance" } })
+  const admitted = await ui.admit(http, "sf_case_read", digestSfValue({}))
+  if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_case_read", digestSfValue({}))) throw new Error("UI authority unavailable")
+  const binding = admitted.value
   try {
-    const binding = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
-    const receipt = { id: "receipt", idempotencyKey: "key", commandDigest: "a".repeat(64), targetIncarnation: "target-inc", principalRef: "principal", surface: "planner", version: 1, result: { ok: true }, at: "2026-11-13T00:00:00Z" } as const
-    const change = { id: "change", choiceId: "choice", target: { surface: "planner", id: "target", incarnation: "target-inc" }, idempotencyKey: "key", operation: { idempotencyKey: "key", commandDigest: "a".repeat(64), target: { surface: "planner", incarnation: "target-inc" } }, state: "planned" } as unknown as import("../../../product/contracts/decisions.ts").PreparedChange
-    const decision = { id: "case", incarnation: "case-inc", version: 1, state: "chosen", participants: ["principal"], sourceRefs: [], choices: [{ id: "choice" }], preparedChanges: [change, { ...change, id: "other" }], receipts: [] } as unknown as import("../../../product/contracts/decisions.ts").DecisionCase
-    const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "case-inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
-    await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "b".repeat(64), targetRef: "case", targetIncarnation: "case-inc" }, async (staged) => { staged.cases.case = decision; return { commit: true, value: true } })
-    const domain = { calls: 0, unavailable: true, loseResponse: true, confirmed: false, authorized: true, revokeOnConfirm: false }
-    const apply: import("../../../product/contracts/ports.ts").PreparedApplyPort = {
-      readReceipt: async () => domain.unavailable ? { status: "unavailable", reason: "unknown" } : store.transaction("planner", async (snapshot) => ({ commit: false, value: { status: "ok" as const, value: snapshot.data.receipt ? { state: "found" as const, receipt } : { state: "not-found" as const } } })),
-      executePrepared: async () => {
-        const result = await store.transaction("planner", async (snapshot) => { domain.calls += 1; snapshot.data.receipt = receipt; return { commit: true, value: { status: "ok" as const, value: receipt } } })
-        if (domain.loseResponse) throw new Error("response-lost")
-        return result
-      },
+    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
+    await persistence.initializeSources("dashboard")
+    await persistence.initializeSources("planner")
+    await persistence.initializeSources("procurement")
+    await persistence.transaction("planner", async (snapshot) => {
+      snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]
+      snapshot.data.versions = [{ id: "v0", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [100] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+      return { commit: true, value: true }
+    })
+    const host: import("../../../product/contracts/ports.ts").DomainPortHost = { persistence, authenticate: async (source, access) => { const id = source.headers.get("authorization"); return id ? resolve(id, [...access!.roleMap], (group) => id === "finance" && group === "finance-group") : null }, environment: async () => ({ at, id: randomUUID, directory: [] }), requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined, revalidate: (context) => context.kind === "ui" ? ui.revalidate(context) : Promise.resolve(false) }
+    const planner = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "unused" }) })
+    const issued = await planner.issueSource("v0", binding)
+    if (issued.status !== "ok" || !issued.value.evidence.target.period) throw new Error("Planner source unavailable")
+    const snapshot = await persistence.transaction("planner", async (value) => ({ commit: false, value: structuredClone(value) }))
+    const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
+    const environment = { at, id: randomUUID, directory: [] }
+    const target = { surface: "planner" as const, type: "planner-version", id: "v0", incarnation: issued.value.evidence.target.incarnation, version: issued.value.evidence.target.version, fields: issued.value.evidence.target.fields, period: issued.value.evidence.target.period, observedAt: at }
+    const scope = { principalRef: actor.id, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, recordType: target.type, recordId: target.id, selector: sfPlannerProjectionSelector(snapshot, actor) }
+    const prepare = (amount: number, operationId: string, idempotencyKey: string) => preparePlannerMutation({ snapshot, actor, environment, context: binding, target, scope, evidence: issued.value.evidence, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: amount } }, operationId, idempotencyKey })
+    const produced = prepare(42, "operation", "key")
+    const alternative = prepare(43, "other-operation", "other-key")
+    if (!produced?.preview || !alternative?.preview) throw new Error("domain producer unavailable")
+    const projection = (material: NonNullable<ReturnType<typeof prepare>>): import("../../../product/contracts/context.ts").DomainProjection => {
+      const line = rows(material.preview?.lines).find((entry) => entry.id === material.command.id)
+      const forecast = line && Array.isArray(line.f) ? line.f[0] : undefined
+      if (!line || typeof line.cur !== "string" || typeof forecast !== "number" || !Number.isFinite(forecast)) throw new Error("prepared preview unavailable")
+      return { context: { installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: actor.id, policyVersion: binding.binding.policyVersion, accessRevision: binding.binding.accessRevision, surface: "planner", period: target.period, currency: line.cur, sourceRefs: [target], capabilities: [] }, version: target.version, engineVersion: "planner-domain-preview-v1", components: [], values: [{ id: `${material.command.id}:1:forecast`, value: forecast, currency: line.cur, period: target.period, granularity: "month", sourceRefs: [issued.value.evidence], drilldown: issued.value.evidence, evidenceState: "hypothetical" }], missing: [] }
     }
-    const retainedExecutionRequest = new Request("https://example.test")
-    const execute = createPreparedExecution({ state, host: { requestFor: () => retainedExecutionRequest, revalidate: async () => true }, apply, reviewDigestFor: () => "a".repeat(64), revalidateProducer: async () => ({ status: "ok", value: { reviewDigest: "a".repeat(64) } }), authorizeCase: async () => true, authorizeApplication: async () => domain.authorized, confirmApplication: async () => { if (domain.revokeOnConfirm) domain.authorized = false; return domain.confirmed }, operationIdentity: () => "operation", classifyReceipt: async () => ({ state: "applied", evidence: { schema: "sf-evidence-v1", refId: "receipt-ref", installationId: "install", projectId: "project", refDigest: "d".repeat(64), evidenceLevel: "observed", kind: "receipt", target: { surface: "planner", receiptId: "receipt", idempotencyKey: "key", targetIncarnation: "target-inc", commandDigest: "a".repeat(64), version: 1 } } }) })
-    const request = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
+    const scenario: import("../../../product/contracts/decisions.ts").ScenarioResult = { id: "scenario", version: 1, components: [], currency: "USD", horizon: target.period, sourceRefs: [issued.value.evidence], unresolvedConditions: ["cost-coverage-unavailable"], restrictions: [], comparisonStatus: "unavailable", knownSubtotal: null, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: target.period, issues: ["cost-coverage-unavailable"], evaluatedSourceRefs: [], coverageState: "unavailable", entries: [], derivedMissingCategoryIds: [] } }
+    const change: import("../../../product/contracts/decisions.ts").PreparedChange = { id: "change", caseId: "case", caseVersion: 1, choiceId: "choice", target, expectedVersion: 0, operation: { id: "operation", target, command: produced.command, idempotencyKey: "key", commandDigest: produced.mutation.commandDigest, expectedVersion: 0, requiredAuthority: ["planner:write"], preview: projection(produced) }, preview: scenario, requiredAuthority: ["planner:write"], idempotencyKey: "key", state: "planned" }
+    const otherChange: import("../../../product/contracts/decisions.ts").PreparedChange = { ...change, id: "other", idempotencyKey: "other-key", operation: { ...change.operation, id: "other-operation", command: alternative.command, commandDigest: alternative.mutation.commandDigest, idempotencyKey: "other-key", preview: projection(alternative) } }
+    const decision: import("../../../product/contracts/decisions.ts").DecisionCase = { id: "case", incarnation: "case-inc", version: 1, state: "chosen", objective: "Apply reviewed forecast", horizon: target.period, currency: "USD", criteria: [], participants: [actor.id], sourceRefs: [issued.value.evidence], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [{ id: "choice", alternativeId: "alternative", alternativeVersion: 1, basisVersion: 1, criteria: [], values: [], evidenceRefs: [issued.value.evidence], principalRef: actor.id, reason: "Reviewed forecast change", at, scenario: { baseRef: "v0", operations: [], assumptions: [] }, result: scenario, comparison: { baselineResultRef: "baseline", alternativeResultRef: scenario.id, costCoverageRefs: [], criterionResults: [], unresolvedConditions: ["cost-coverage-unavailable"], comparisonStatus: "unavailable", knownDifference: null, completeDifference: null }, comparisonStatus: "unavailable", costCoverage: scenario.costCoverage }], preparedChanges: [change, otherChange], receipts: [], ledger: [] }
+    const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async (_request, _snapshot, namespace) => ({ incarnation: namespace === "cases" ? decision.incarnation : target.incarnation }), authorize: async () => ({ principalRef: actor.id, policyVersion: binding.binding.policyVersion, accessRevision: binding.binding.accessRevision }) })
+    const seeded = await state.transaction(http, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: digestSfValue(decision), targetRef: decision.id, targetIncarnation: decision.incarnation }, async (value) => { value.cases.case = decision; return { commit: true, value: true } })
+    if (seeded.status !== "ok") throw new Error("case seed unavailable")
+    const request = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: decision.version }, changeId: change.id, choiceId: change.choiceId }
+    const reviewDomain = createPlannerPreparedReview({ host, issueSource: planner.issueSource })
+    const digestReview = async (selected: import("../../../product/contracts/decisions.ts").PreparedChange) => {
+      const reviewed = await reviewDomain(selected.operation, binding)
+      if (reviewed.status !== "ok") return reviewed
+      return { status: "ok" as const, value: { reviewDigest: proposalReviewDigest({ caseId: decision.id, caseIncarnation: decision.incarnation, changeCaseVersion: selected.caseVersion, choiceDigest: digestSfValue(decision.choices[0]), change: selected, fields: reviewed.value.fields, sourceRefDigest: reviewed.value.source.refDigest }) } }
+    }
+    const originalReview = await digestReview(change)
+    const otherReview = await digestReview(otherChange)
+    if (originalReview.status !== "ok" || otherReview.status !== "ok") throw new Error("real review producer unavailable")
+    const approval = { available: true, digest: originalReview.value.reviewDigest }
+    const reviewDigestFor: import("../../../product/decisions/receipt-review-binding.ts").ReviewDigestFor = (context, incoming, selected) => context === binding && approval.available && sameApplyRequest(incoming, request) && digestSfValue(selected.operation) === digestSfValue(change.operation) ? approval.digest : undefined
+    const domain = { calls: 0, unavailable: true, loseResponse: true, confirmed: false, authorized: true, revokeOnConfirm: false }
+    const durableApply = createSfPreparedApply({ state, host, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), authorizeLookup: async () => domain.authorized, authorizeReceipt: async (receipt) => domain.authorized && receipt.principalRef === actor.id, confirmHuman: async () => domain.confirmed, reviewDigestFor, resolveActor: (_snapshot, context) => context === binding && domain.authorized ? actor : undefined, resolveMutation: (_snapshot, selected) => selected.id === change.id && selected.operation.commandDigest === produced.mutation.commandDigest ? produced.mutation : undefined, verifyGrant: () => domain.authorized, receiptVersion: (current, selected) => plannerPreparedRevision(current, selected.operation.command), environment: () => environment, createId: randomUUID, now: () => at })
+    const apply: import("../../../product/contracts/ports.ts").PreparedApplyPort = {
+      readReceipt: (lookup, context) => domain.unavailable ? Promise.resolve({ status: "unavailable", reason: "unknown" }) : durableApply.readReceipt(lookup, context),
+      executePrepared: async (incoming, context) => { domain.calls += 1; const result = await durableApply.executePrepared(incoming, context); if (domain.loseResponse) throw new Error("response-lost"); return result },
+    }
+    const execute = createPreparedExecution({ state, host, apply, reviewDigestFor,
+      revalidateProducer: async (incoming, context) => context === binding && sameApplyRequest(incoming, request) ? digestReview(change) : { status: "denied", reason: "review-request-changed" },
+      authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), authorizeApplication: async () => domain.authorized,
+      confirmApplication: async () => { if (domain.revokeOnConfirm) domain.authorized = false; return domain.confirmed }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined,
+      classifyReceipt: async (receipt) => {
+        if (!receipt.result.ok) return undefined
+        const evidence: Extract<import("../../../product/contracts/business-context.ts").BusinessEvidenceRef, { kind: "receipt" }> = { schema: "sf-evidence-v1", refId: `receipt:${receipt.id}`, installationId: binding.binding.installationId, projectId: binding.binding.projectId, refDigest: "", evidenceLevel: "observed", kind: "receipt", target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
+        evidence.refDigest = digestSfEvidenceRef(evidence)
+        return { state: "applied", evidence }
+      },
+    })
     expect((await execute(request, binding)).status).toBe("unavailable")
     expect(domain.calls).toBe(0)
     domain.unavailable = false
+    approval.available = false
+    expect(await execute(request, binding)).toMatchObject({ status: "needs-input", reason: "review-proof-required" })
+    approval.available = true
+    approval.digest = otherReview.value.reviewDigest
+    expect(await execute(request, binding)).toMatchObject({ status: "stale", reason: "review-proof-mismatch" })
+    expect(domain.calls).toBe(0)
+    approval.digest = originalReview.value.reviewDigest
     expect((await execute(request, binding)).status).toBe("denied")
     expect(domain.calls).toBe(0)
     domain.confirmed = true
@@ -240,13 +308,36 @@ test("partial domain execution reconciles a durable receipt and never repeats it
     domain.authorized = true
     domain.revokeOnConfirm = false
     expect((await execute(request, binding)).status).toBe("unavailable")
+    const proofKey = receiptProofTransactionKey(actor.id, target.id, change.idempotencyKey)
+    const durable = await state.read(http, "receipts", (value) => ({ receipt: Object.values(value.receipts)[0], proof: value.transactions[proofKey] }))
+    if (durable.status !== "ok" || !durable.value.receipt || !durable.value.proof) throw new Error("durable receipt proof unavailable")
+    expect(durable.value.proof).toMatchObject({ commandDigest: receiptReviewBinding(change, originalReview.value.reviewDigest), value: durable.value.receipt })
+    expect(durable.value.receipt.result.ok).toBe(true)
     domain.loseResponse = false
-    expect(await execute(request, binding)).toMatchObject({ status: "unavailable", reason: "review-proof-unbound" })
+    domain.confirmed = false
+    expect(await execute(request, binding)).toEqual({ status: "ok", value: durable.value.receipt })
+    expect(await execute(request, binding)).toEqual({ status: "ok", value: durable.value.receipt })
     expect(domain.calls).toBe(1)
-    const result = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
-    expect(result.status).toBe("ok")
-    if (result.status === "ok") expect(result.value).toMatchObject({ state: "chosen", version: 1 })
+    const result = await state.read(http, "cases", (value) => value.cases.case)
+    expect(result).toMatchObject({ status: "ok", value: { state: "partially-applied", version: 2 } })
+    const beforeRejected = await persistence.transaction("planner", async (value) => ({ commit: false, value: structuredClone(value) }))
+    const persistedVersion = rows(beforeRejected.data.versions).find((value) => value.id === target.id)
+    const persistedLine = rows(persistedVersion?.lines).find((value) => value.id === produced.command.id)
+    expect(persistedLine && Array.isArray(persistedLine.f) ? persistedLine.f[0] : undefined).toBe(42)
+    approval.digest = otherReview.value.reviewDigest
+    expect(await execute(request, binding)).toMatchObject({ status: "conflict", reason: "review-proof-mismatch" })
+    expect(domain.calls).toBe(1)
+    expect(await persistence.transaction("planner", async (value) => ({ commit: false, value: value }))).toEqual(beforeRejected)
+    expect(await state.read(http, "cases", (value) => value.cases.case)).toEqual(result)
+    const afterRejected = await state.read(http, "receipts", (value) => ({ receipt: Object.values(value.receipts)[0], proof: value.transactions[proofKey] }))
+    if (afterRejected.status !== "ok") throw new Error("receipt proof unavailable after rejection")
+    expect(afterRejected.value).toEqual(durable.value)
+    approval.digest = originalReview.value.reviewDigest
+    domain.authorized = false
+    expect((await execute(request, binding)).status).toBe("denied")
+    expect(domain.calls).toBe(1)
   } finally {
+    ui.finish(binding)
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
   }
@@ -261,13 +352,10 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const binding = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
     const horizon = { start: "2027-01-01", end: "2027-12-31" }
     const plannerRef = { schema: "sf-evidence-v1", kind: "record", refId: "planner", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: "base", incarnation: "base-inc", version: 1, fields: ["amount"], period: horizon, projectionDigest: "b".repeat(64) } } as const
-    // This persistence fixture supplies a conditioned comparison; canonical amounts are covered separately.
-    const chosenOperation = { kind: "include", targetRef: "target" } as const
-    const scenario = { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [plannerRef], unresolvedConditions: ["training:missing-category"], restrictions: ["preview-not-applied"], comparisonStatus: "conditioned", costCoverage: { basisId: "renewal", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [plannerRef], coverageState: "pending", entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"] }, knownSubtotal: 210000, total: null } as const
+    const scenario = { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [plannerRef], unresolvedConditions: ["training:missing-category"], restrictions: [], comparisonStatus: "conditioned", costCoverage: { basisId: "renewal", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [plannerRef], coverageState: "pending", entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"] }, knownSubtotal: 210000, total: null } as const
     const comparison = { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training:missing-category"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
-    const decision = { id: "case", incarnation: "inc", version: 1, state: "comparing", objective: "transition", currency: "USD", horizon, criteria: [{ id: "cost", description: "cost", required: true }], participants: ["principal"], sourceRefs: [plannerRef], alternatives: [{ id: "a", version: 1, title: "replace", scenario: { baseRef: "base", operations: [chosenOperation], assumptions: [] }, result: scenario }], costCoverageBases: [{ id: "renewal", version: 1, decisionType: "unknown", categoryIds: [], additionalCategoryIds: [], sourceRefs: [] }], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as const
-    const proposalCoverageWrites = new WeakSet<object>()
-    const state = createSfProductState({ persistence: store, proposalCoverageWrites, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
+    const decision = { id: "case", incarnation: "inc", version: 1, state: "comparing", objective: "transition", currency: "USD", horizon, criteria: [{ id: "cost", description: "cost", required: true }], participants: ["principal"], sourceRefs: [plannerRef], alternatives: [{ id: "a", version: 1, title: "replace", scenario: { baseRef: "base", operations: [], assumptions: [] }, result: scenario }], costCoverageBases: [{ id: "renewal", version: 1, decisionType: "unknown", categoryIds: [], additionalCategoryIds: [], sourceRefs: [] }], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as const
+    const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "b".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = decision; staged.decisionResults = { result: { schema: "sf-decision-result-v1", kind: "scenario", resultRef: "result", caseRef: { id: "case", incarnation: "inc", version: 1 }, principalRef: "principal", accessRevision: "access", policyVersion: "policy", requestDigest: digestSfValue(decision.alternatives[0].scenario), resultDigest: digestSfValue(scenario), sourceRefs: [plannerRef], createdAt: "2026-11-13T00:00:00Z", result: scenario } }; return { commit: true, value: true } })
     const revised = { ...scenario, id: "result-2", version: 2, costCoverage: { ...scenario.costCoverage, alternativeVersion: 2 } } as const
     const simulation: { value: import("../../../product/contracts/decisions.ts").ScenarioResult } = { value: revised }
@@ -275,9 +363,8 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const unavailable = async () => ({ status: "unavailable" as const, reason: "unused" })
     const { createDecisionProposalService } = await import("../../../product/decisions/proposals.ts")
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh" as const, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
-    const retainedRequest = new Request("https://example.test")
-    const host = { requestFor: () => retainedRequest, revalidate: async () => true }
-    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
+    const host = { requestFor: () => new Request("https://example.test"), revalidate: async () => true }
+    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const alternative = createDecisionProposalService({ cases, host, planner: { compareForecast: unavailable, simulateScenario: async () => ({ status: "ok", value: simulation.value }), compareScenarios: async () => ({ status: "ok", value: comparison }), evaluateSensitivity: unavailable }, sources: { resolveForecastSource: unavailable, resolveForecastCoverage: async () => ({ status: "ok", value: { coverageRef: "coverage-2", basis: decision.costCoverageBases[0], assessment: simulation.value.costCoverage } }) }, resolveAlternative: async () => ({ status: "ok", value: { scenario: { baseRef: "base", operations: [], assumptions: [] }, coverageRef: "coverage-2" } }), authorizeProposal: async () => true })
     const descriptors = createDecisionCapabilities({ cases, alternative, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "draftAlternative", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }) })
     expect(descriptors.some((item) => item.id === "sf_alternative_draft")).toBe(true)
@@ -305,36 +392,21 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const targetEvidence = { schema: "sf-evidence-v1", refId: "target-ref", installationId: "install", projectId: "project", refDigest: "f".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "forecast", recordId: "target", incarnation: "target-inc", version: 1, fields: ["amount"], period: horizon, projectionDigest: "a".repeat(64) } } as const
     const results = createSfDecisionResultStore({ state, host, authorizeCase: async () => true, verifySources: async (_value, refs, context) => (await evidence.context({ refs }, context)).every((item) => item.state === "fresh"), createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const resolvePreview = createDecisionChoiceResultLookup({ cases, state, results, host })
-    const proposalStore = createChangeProposalStore({ state, host, authorizeCase: async () => true, authorizeProposal: async () => true, verifySources: async () => true, verifySnapshot: () => true, operationIdentity: () => "proposal-operation", proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
-    const change = createChangeProposalService({ cases, host, store: proposalStore, resolvePreview, resolveChanges: async () => ({ status: "ok", value: { changes: [{ command: { id: "domain-command", target, expectedVersion: 0, idempotencyKey: "domain-key", commandDigest: "c".repeat(64), requiredAuthority: ["planner"], command: { page: "planner", action: "edit", version: 0, values: {} }, preview: {} as import("../../../product/contracts/context.ts").DomainProjection }, preview: scenario, targetEvidence }], conditions: [] } }), authorizeProposal: async () => true })
+    const change = createChangeProposalService({ cases, host, resolvePreview, resolveChanges: async () => ({ status: "ok", value: { changes: [{ command: { id: "domain-command", target, expectedVersion: 0, idempotencyKey: "domain-key", commandDigest: "c".repeat(64), requiredAuthority: ["planner"], command: { page: "planner", action: "edit", version: 0, values: {} }, preview: {} as import("../../../product/contracts/context.ts").DomainProjection }, preview: scenario, targetEvidence }], conditions: [] } }), authorizeProposal: async () => true })
     const changeDescriptors = createDecisionCapabilities({ cases, change, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "prepareChange", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }) })
-    const changeProposal = await changeDescriptors.find((item) => item.id === "sf_change_prepare")!.handler({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [chosenOperation] }, binding)
+    const changeProposal = await changeDescriptors.find((item) => item.id === "sf_change_prepare")!.handler({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
     expect(changeProposal.status).toBe("ok")
-    const replayedProposal = await change({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [chosenOperation] }, binding)
-    expect(replayedProposal.status).toBe("ok")
-    if (replayedProposal.status === "ok") {
-      const refs = replayedProposal.value.changes.map((item) => item.changeRef)
-      const set = await proposalStore.readSet({ caseRef: { id: "case", incarnation: "inc", version: 2 }, changeRefs: refs }, binding)
-      expect(set.status).toBe("ok")
-      if (set.status === "ok") expect(set.value.output).toEqual(replayedProposal.value)
-      expect((await proposalStore.readSet({ caseRef: { id: "case", incarnation: "inc", version: 2 }, changeRefs: [...refs, "unrelated"] }, binding)).status).toBe("unavailable")
-    }
     const afterProposal = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     if (afterProposal.status === "ok") expect(afterProposal.value?.version).toBe(2)
     admission.confirmed = false
     expect(await mutations.recordChoice(request, binding)).toEqual(chosen)
     expect((await mutations.recordChoice({ ...request, reason: "different" }, binding)).status).toBe("conflict")
     const persisted = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
-    if (persisted.status === "ok") expect(persisted.value).toMatchObject({ version: 2, state: "chosen", choices: [{ scenario: { operations: [chosenOperation] }, result: { knownSubtotal: 210000, total: null, comparisonStatus: "conditioned", restrictions: ["preview-not-applied"] }, comparison: { knownDifference: 30000, completeDifference: null } }], ledger: [{ kind: "choice-recorded", principalRef: "principal" }] })
+    if (persisted.status === "ok") expect(persisted.value).toMatchObject({ version: 2, state: "chosen", choices: [{ result: { knownSubtotal: 210000 }, comparison: { knownDifference: 30000 } }], ledger: [{ kind: "choice-recorded", principalRef: "principal" }] })
     const question = await mutations.addQuestion({ caseRef: { id: "case", incarnation: "inc", version: 2 }, questionRef: "choice-event" }, binding)
     expect(question.status).toBe("ok")
     expect((await mutations.answerQuestion({ caseRef: { id: "case", incarnation: "inc", version: 3 }, questionId: "choice-event", answerRef: "answer" }, binding)).status).toBe("denied")
-    const unchosen = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [{ kind: "include", targetRef: "unselected-target" }] }, binding)
-    expect(unchosen).toEqual({ status: "conflict", reason: "operation-not-in-choice" })
-    const afterUnchosen = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
-    if (afterUnchosen.status !== "ok") throw new Error("case unavailable after rejected operation")
-    expect(afterUnchosen.value).toMatchObject({ version: 3, preparedChanges: [], receipts: [], choices: [{ scenario: { operations: [chosenOperation] }, result: { total: null, comparisonStatus: "conditioned" } }] })
-    const prepared = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [chosenOperation] }, binding)
+    const prepared = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
     expect(prepared.status).toBe("ok")
     const after = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     if (after.status === "ok") expect(after.value).toMatchObject({ version: 4, preparedChanges: [{ state: "planned", choiceId: "choice-event", expectedVersion: 0, target: { incarnation: "target-inc", version: 1 } }] })
@@ -353,7 +425,7 @@ test("human choice persists a versioned snapshot and ledger using the planner co
       expect(await mutations.addAlternative({ caseRef: { id: "case", incarnation: "inc", version: 4 }, title: "revised", scenario: { baseRef: "base", operations: [], assumptions: [] }, coverageRef: "coverage-2", alternativeRef: { id: "a", version: 1 } }, binding)).toEqual(updated)
     }
     const reconsidered = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
-    if (reconsidered.status === "ok") expect(reconsidered.value).toMatchObject({ version: 5, state: "reconsidering", alternatives: [{ id: "a", version: 2 }], choices: [{ alternativeVersion: 1, scenario: { operations: [chosenOperation] }, result: { knownSubtotal: 210000, total: null, comparisonStatus: "conditioned" } }] })
+    if (reconsidered.status === "ok") expect(reconsidered.value).toMatchObject({ version: 5, state: "reconsidering", alternatives: [{ id: "a", version: 2 }], choices: [{ alternativeVersion: 1, result: { knownSubtotal: 210000 } }] })
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })

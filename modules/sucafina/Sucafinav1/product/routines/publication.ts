@@ -1,6 +1,5 @@
 import { Effect } from "effect"
 import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
-import type { ProjectID } from "@orchestra/schema/project-id"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 
 /** The host binds this port to the authenticated project and revalidates the real Request. */
@@ -28,19 +27,15 @@ export async function listPublishedRoutineWorkflows(host: RoutinePublicationHost
 export async function acquireRoutineWorkflow(input: {
   host: RoutinePublicationHost
   context: TrustedDomainContext
-  projectID: ProjectID
+  projectID: RoutinePublicationHost["publication"]["projectID"]
   documentId: string
-  /** Version selected by the product. A newer publication requires a fresh preparation. */
-  expectedPublishedVersion: string
   parameters: Readonly<Record<string, string>>
   writePaths: readonly string[]
 }) {
-  if (!input.expectedPublishedVersion.trim()) return { status: "needs-input", reason: "published-version-required" } as const
   if (input.projectID !== input.context.binding.projectId || input.host.publication.projectID !== input.projectID || !await input.host.authorize(input.context)) return { status: "denied", reason: "publication-unavailable" } as const
   const acquired = await Effect.runPromise(Effect.result(RelayWorkflowBinding.acquire({ port: input.host.publication, projectID: input.projectID, documentID: input.documentId, parameters: input.parameters, writePaths: input.writePaths, authorSessionID: await input.host.authorSession(input.context) })))
   if (acquired._tag === "Failure") return { status: "unavailable", reason: "publication-unavailable" } as const
   if (!await input.host.authorize(input.context)) return { status: "denied", reason: "publication-unavailable" } as const
-  if (acquired.success.definition.publication.activeVersionID !== input.expectedPublishedVersion) return { status: "stale", reason: "published-version-changed" } as const
   const checks = acquired.success.sprint.work_packages.at(-1)?.checklist ?? []
   if (!["package-verification", "cold-review"].every((name) => checks.some((check) => check.host_check === name))) return { status: "unavailable", reason: "workflow-acceptance-missing" } as const
   return { status: "ok", value: acquired.success } as const
@@ -65,4 +60,3 @@ export function createRoutinePublicationCatalog(input: {
     return { status: "ok", value: recipes.flatMap((entry) => entry.state === "ready" ? [entry.value] : []) } as const
   }
 }
-

@@ -11,14 +11,15 @@ import { domain } from "../../../runtime/procurement.ts"
 import type { Actor } from "../../../runtime/contract.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
-import { proposalReviewDigest } from "../../../product/decisions/receipt-review-binding.ts"
+import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding, sameApplyRequest } from "../../../product/decisions/receipt-review-binding.ts"
+import type { ReviewDigestFor } from "../../../product/decisions/receipt-review-binding.ts"
 import type { DecisionCase, PreparedChange } from "../../../product/contracts/decisions.ts"
 import type { ProductContext, SourceRef } from "../../../product/contracts/context.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
+import { projectSfProcurementScope } from "../../../product/integration/procurement-projections.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { createProcurementPort } from "../../../product/procurement/port.ts"
@@ -51,6 +52,7 @@ test("prepared Procurement mutation uses current actor and SQLite revision, and 
     const applied = await fixture.apply.executePrepared(prepared.request, fixture.context)
     expect(applied).toMatchObject({ status: "ok", value: { surface: "procurement", result: { ok: true } } })
     if (applied.status !== "ok") throw new Error("prepared Procurement command was not applied")
+    expect(await fixture.readReviewProof()).toMatchObject({ status: "ok", value: { commandDigest: fixture.reviewBinding, value: applied.value } })
 
     const current = await fixture.persistence.transaction("procurement", async (snapshot) => ({
       commit: false,
@@ -128,7 +130,7 @@ async function createFixture() {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-prepared-procurement-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
-  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, projectScope: projectProcurementScope, enumerate: enumerateSfSources })
+  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, projectScope: projectSfProcurementScope, enumerate: enumerateSfSources })
   await persistence.initializeSources("dashboard")
   await persistence.initializeSources("planner")
   await persistence.initializeSources("procurement")
@@ -271,14 +273,22 @@ async function createFixture() {
     return { commit: true, value: true }
   })
   if (caseSeed.status !== "ok") throw new Error("C08 case seed failed")
-  const applyRequest = { caseRef: { id: caseId, incarnation: caseIncarnation, version: 1 }, changeId, choiceId }
-  const observed = await bridge.reviewDomain(prepared.command, context)
-  if (observed.status !== "ok") throw new Error(`real Procurement review unavailable: ${observed.reason}`)
-  // This component fixture admits the real domain observation through WP11's
-  // canonical digest producer; the full human/review boundary is tested in host-integration.
-  const reviewDigest = proposalReviewDigest({ caseId, caseIncarnation, changeCaseVersion: change.caseVersion,
-    choiceDigest: digestSfValue(decision.choices[0]), change, fields: observed.value.fields, sourceRefDigest: observed.value.source.refDigest })
   const scopes = new Map([[sourceRef.id, { scope: evidence.value.scope, evidence: evidence.value.evidence, target: sourceRef }]])
+  const applyRequest = { caseRef: { id: caseId, incarnation: caseIncarnation, version: 1 }, changeId, choiceId }
+  const priorRequest = object(object(object(snapshot.data.store).requests)[sourceRef.id])
+  const beforePr = object(object(priorRequest.request).pr)
+  const afterPr = object(prepared.command.command.values.pr)
+  const reviewFields = Object.keys(afterPr).sort().map((field) => {
+    const before = beforePr[field] ?? null
+    const after = afterPr[field]
+    if ((before !== null && typeof before !== "string" && typeof before !== "number") || (typeof after !== "string" && typeof after !== "number")) throw new Error("review field unavailable")
+    return { field: `pr.${field}`, before, after }
+  })
+  const reviewDigestFor: ReviewDigestFor = (binding, incoming, selected) => binding === context && sameApplyRequest(incoming, applyRequest) && digestSfValue(selected.operation) === digestSfValue(change.operation)
+    ? proposalReviewDigest({ caseId, caseIncarnation, changeCaseVersion: selected.caseVersion, choiceDigest: digestSfValue(decision.choices[0]), change: selected, fields: reviewFields, sourceRefDigest: prepared.targetEvidence.refDigest })
+    : undefined
+  const reviewDigest = reviewDigestFor(context, applyRequest, change)
+  if (!reviewDigest || !reviewFields.length) throw new Error("real review material unavailable")
   const apply = createSfPreparedApply({
     state: productState,
     host: { requestFor: host.requestFor, revalidate: host.revalidate },
@@ -286,7 +296,7 @@ async function createFixture() {
     authorizeLookup: async (lookup, binding) => lookup.surface === "procurement" && lookup.targetRef === sourceRef.id && await ui.revalidate(binding as TrustedUiContext),
     authorizeReceipt: async (receipt, lookup, binding) => receipt.principalRef === binding.binding.principalRef && receipt.surface === lookup.surface && receipt.idempotencyKey === lookup.idempotencyKey && await ui.revalidate(binding as TrustedUiContext),
     confirmHuman: async (_incoming, _change, binding) => confirm && await ui.revalidate(binding as TrustedUiContext),
-    reviewDigestFor: (binding, incoming, selected) => binding === context && digestSfValue(incoming) === digestSfValue(applyRequest) && digestSfValue(selected) === digestSfValue(change) ? reviewDigest : undefined,
+    reviewDigestFor,
     resolveActor: (_domainSnapshot, binding) => binding.binding.principalRef === actor.id && currentRole === "requester" ? actor : undefined,
     resolveMutation: (domainSnapshot, selected, currentActor, binding) => {
       const held = scopes.get(selected.target.id)
@@ -307,6 +317,8 @@ async function createFixture() {
     apply,
     context,
     persistence,
+    reviewBinding: receiptReviewBinding(change, reviewDigest),
+    readReviewProof: () => productState.read(request, "receipts", (value) => value.transactions[receiptProofTransactionKey(actor.id, sourceRef.id, change.idempotencyKey)]),
     get confirm() { return confirm },
     set confirm(value: boolean) { confirm = value },
     get role() { return currentRole },
@@ -318,7 +330,7 @@ async function createFixture() {
       idempotencyKey: prepared.command.idempotencyKey,
       mutation: prepared.mutation,
       snapshot,
-      request: structuredClone(applyRequest),
+      request: applyRequest,
     }),
     dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
   }

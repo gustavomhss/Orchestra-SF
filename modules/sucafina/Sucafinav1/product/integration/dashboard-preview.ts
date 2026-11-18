@@ -63,4 +63,3 @@ export function handleDashboardPreview(snapshot: Snapshot, actor: Actor, command
   saved.receipt = structuredClone(receipt)
   return { commit: true, value: receipt }
 }
-

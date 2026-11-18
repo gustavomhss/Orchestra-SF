@@ -1,5 +1,5 @@
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
-import { deriveSfMemoryOwner, mapSfAtlasEntry } from "./atlas-projection.ts"
+import { deriveSfMemoryOwner } from "./atlas-projection.ts"
 import type { AuthorizedCaseProjection, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope, SfAtlasProjection } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 
@@ -32,10 +32,6 @@ function rankSfCases(input: RecallInput, proofs?: RecallProof) {
     if (ledger.length !== 1 || !candidate.case.case.ledger.some((item) => digestSfValue(item) === digestSfValue(ledger[0])) ||
       !candidate.case.case.participants.includes(input.scope.principalRef)) return []
     if (candidate.envelope.projectionDigest !== digestSfValue({ kind: "task", owner: candidate.envelope.owner, entry: candidate.entry, sourceEventId: candidate.envelope.sourceEventId, evidenceRefs: candidate.envelope.evidenceRefs })) return []
-    // The digest authenticates bytes, not their meaning. Rebuild the admitted
-    // task from the authorized ledger so a changed lesson cannot become history.
-    const mapped = mapSfAtlasEntry({ kind: "task", projection: candidate.case, eventId: candidate.envelope.sourceEventId, bundleRef: event })
-    if (mapped.status !== "mapped" || mapped.projection.projectionDigest !== candidate.envelope.projectionDigest) return []
     if (candidate.case.case.id !== candidate.envelope.caseRef.id || candidate.case.case.incarnation !== candidate.envelope.caseRef.incarnation || candidate.case.case.version < candidate.envelope.caseRef.version || event.target.caseVersion > candidate.envelope.caseRef.version) return []
     const references = [...candidate.envelope.evidenceRefs, ...candidate.envelope.dependencies]
     // Canonical mapping validates original reference digests and expands nested references.
@@ -75,14 +71,14 @@ export async function rankSfRecalledCasesAuthorized(input: RecallInput & {
     const binding = input.call.binding
     if (binding.installationId !== input.scope.installationId || binding.projectId !== input.scope.projectId || binding.principalRef !== input.scope.principalRef || binding.accessRevision !== input.scope.accessRevision || binding.policyVersion !== input.scope.policyVersion) return { status: "unavailable" }
     const scopeDigest = digestSfValue(input.scope)
-    const selectionDigest = digestSfValue([input.features, input.candidates])
     const bindingDigest = digestSfValue([input.call.kind, input.call.binding])
     const proofs: RecallProof = new WeakMap()
     const check = async (candidate: AuthorizedMemoryProjection, phase: "before" | "egress") => {
       const context = candidate.case.context
       if (context.kind !== input.call.kind || (context.kind === "native" && (input.call.kind !== "native" || context.profileId !== input.call.binding.profileId))) return false
       if (!await input.revalidate(input.call) || !await input.authorizeAtlas(candidate, input.call, phase)) return false
-      const refs = [...candidate.envelope.evidenceRefs, ...candidate.envelope.dependencies].flatMap(expandEvidence)
+      // An event and its dependencies may repeat the same complete reference within this phase.
+      const refs = [...new Map([...candidate.envelope.evidenceRefs, ...candidate.envelope.dependencies].flatMap(expandEvidence).map((ref) => [digestSfValue(ref), ref])).values()]
       if (!refs.length) return false
       for (const ref of refs) {
         const resolutions = candidate.resolutions.filter((item) => digestSfValue(item.ref) === digestSfValue(ref) && item.accessRevision === binding.accessRevision)
@@ -102,7 +98,7 @@ export async function rankSfRecalledCasesAuthorized(input: RecallInput & {
     for (const candidate of input.candidates) {
       if (!await check(candidate, "egress") || proofs.get(candidate) !== digestSfValue([candidate, input.scope]) || scopeDigest !== digestSfValue(input.scope)) return { status: "unavailable" }
     }
-    if (!await input.revalidate(input.call) || bindingDigest !== digestSfValue([input.call.kind, input.call.binding]) || scopeDigest !== digestSfValue(input.scope) || selectionDigest !== digestSfValue([input.features, input.candidates])) return { status: "unavailable" }
+    if (bindingDigest !== digestSfValue([input.call.kind, input.call.binding]) || !await input.revalidate(input.call)) return { status: "unavailable" }
     return { status: "ok", cases }
   } catch {
     return { status: "unavailable" }

@@ -265,17 +265,6 @@ async function createNativeFixture(directory: string) {
       return Effect.runPromise(materialization.settle({ sessionID: context.sessionID, agent: context.agent, assistantMessageID: context.assistantMessageID, call: { type: "tool-call", id: context.toolCallID, name: operation, input: payload } }))
     },
     presentation: (request: BiViewRequest, context: TrustedDomainContext) => readBiPresentation(request, context, source, product.authority),
-    async uiPresentation(payload: BiViewRequest) {
-      // Direct BI reads need a consumed, authenticated UI lease like dispatch.
-      // A pending native lease is neither a receipt nor a UI permission.
-      const digest = digestSfValue(payload)
-      const context = nativeValue(await product.ui.admit(request, "sf_bi_view", digest))
-      try {
-        if (!await product.ui.validate(context, "sf_bi_view", digest))
-          throw new Error("Authenticated BI presentation admission was not consumed")
-        return await readBiPresentation(payload, context, source, product.authority)
-      } finally { product.ui.finish(context) }
-    },
     async messages(sessionID: SessionSchema.ID) {
       if (!runtime.sessions) throw new Error("SessionV2 unavailable")
       return Effect.runPromise(runtime.sessions.messages({ sessionID }))
@@ -285,14 +274,6 @@ async function createNativeFixture(directory: string) {
       return Effect.runPromise(runtime.store.get(sessionID))
     },
     snapshot: () => persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) })),
-    async revokeOwner() {
-      // Invalidate the real persisted role map without mutating grants or
-      // manufacturing identity from a tool argument.
-      await persistence.transaction("dashboard", async (snapshot) => {
-        snapshot.data.roleMap = []
-        return { commit: true, value: undefined }
-      })
-    },
     async reopen() {
       bindings.forEach((binding) => product.native.revoke(binding)); bindings.clear(); observed.clear()
       await driver.current.dispose()

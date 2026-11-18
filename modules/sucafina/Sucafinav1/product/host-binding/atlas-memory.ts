@@ -4,408 +4,58 @@ import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../con
 import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope, MemoryWriteReceipt, SfAtlasProjection } from "../contracts/business-context.ts"
 import type { SourceRef } from "../contracts/context.ts"
 import type { DecisionCasePort, DomainPortHost } from "../contracts/ports.ts"
-import type { DecisionCase } from "../contracts/decisions.ts"
-import type { SfAtlasOutboxEntry, SfProductStatePort } from "../contracts/state.ts"
+import type { SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import { deriveSfMemoryOwner, mapSfAtlasEntry } from "../decision-memory/atlas-projection.ts"
 import { rankSfRecalledCasesAuthorized } from "../decision-memory/recall.ts"
 import type { AuthorizedMemoryProjection, RecallFeatures, RecallScope } from "../decision-memory/recall.ts"
 import { createSfAtlasDurableMemory } from "./atlas-store.ts"
-import { sfRunSourceFence } from "../ai/run-store.ts"
-import { mapSfEvidenceInOrder } from "./evidence-order.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
-type RecallObservation = {
-  call: TrustedDomainContext; stable: () => boolean; recordsDigest: string; sourceState: string; sourceFence: string
-  complete: (observations: readonly { records: readonly unknown[]; observed?: RecallObservation }[], call: TrustedDomainContext) => Promise<boolean>
-}
-const recallObservations = new WeakMap<readonly unknown[], RecallObservation>()
-
-/** Consume private canonical observations and reopen one C08 scope for the
- * complete result. Fabricated arrays, mixed readers and reused observations deny. */
-export async function revalidateSfAtlasRecall(groups: readonly (readonly unknown[])[], call: TrustedDomainContext) {
-  const selected = [...groups]
-  const stable = () => groups.length === selected.length && selected.every((records, index) => groups[index] === records)
-  const observations = selected.map((records) => ({ records, observed: recallObservations.get(records) }))
-  selected.forEach((records) => recallObservations.delete(records))
-  const first = observations[0]?.observed
-  if (!first || !stable() || new Set(selected).size !== selected.length || observations.some(({ observed }) => observed?.complete !== first.complete || observed.call !== call)) return false
-  try { return await first.complete(observations, call) && stable() } catch { return false }
-}
-
-/** Bind the record and scanner identity to the durable publication receipt,
- * without substituting the currently installed scanner for its historical one. */
-export function sfAtlasPublicationMatches(envelope: BusinessMemoryEnvelope, record: MemoryRecord, outbox: Readonly<Record<string, SfAtlasOutboxEntry>>) {
-  const ref = envelope.caseRef
-  const item = ref && outbox[JSON.stringify([ref.id, ref.incarnation, envelope.sourceEventId])]
-  if (!item || item.state !== "settled") return false
-  const receipt = item.receipt
-  const scanner = envelope.scannerReceipt
-  return (receipt.status === "committed" || receipt.status === "already-committed") &&
-    receipt.sourceEventId === envelope.sourceEventId && receipt.eventId === envelope.eventId &&
-    receipt.recordDigest === digestSfValue(record) && !!scanner && scanner.status === "clean" &&
-    !!scanner.name?.trim() && !!scanner.version?.trim() && scanner.digest === receipt.recordDigest &&
-    receipt.scanner.status === "clean" && receipt.scanner.name === scanner.name && receipt.scanner.version === scanner.version
+function isTaskEntry(value: unknown): value is Extract<SfAtlasProjection, { kind: "task" }>["entry"] {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false
+  return "taskId" in value && typeof value.taskId === "string" &&
+    "attempted" in value && Array.isArray(value.attempted) && value.attempted.every((item: unknown) => typeof item === "string") &&
+    "failedWith" in value && Array.isArray(value.failedWith) && value.failedWith.every((item: unknown) => typeof item === "string") &&
+    "stoppedAt" in value && typeof value.stoppedAt === "string" && "lesson" in value && typeof value.lesson === "string" && "ref" in value && typeof value.ref === "string"
 }
 
 /** C09 remains authoritative. This writer only projects an authenticated outbox event. */
 export function createSfAtlasMemory(input: {
   state: SfProductStatePort
   cases: DecisionCasePort
-  authorizeCase?: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>
-  host: Pick<DomainPortHost, "requestFor" | "revalidate" | "persistence">
+  host: Pick<DomainPortHost, "requestFor" | "revalidate">
   evidence: Pick<BusinessContextService, "resolve">
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   scanner: NamedScanner
   scannerVersion: string
   now: () => string
 }) {
-  const lockedSourceFence = () => {
-    const snapshots = input.host.persistence.currentSnapshots?.()
-    return snapshots ? digestSfValue({ dashboard: sfRunSourceFence(snapshots.dashboard),
-      planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) }) : undefined
-  }
-
-  // The callback identity binds all observations to this exact reader/store.
-  const completeRecall: RecallObservation["complete"] = async (observations, call) => {
-    const request = input.host.requestFor(call)
-    const binding = digestSfValue([call.kind, call.binding])
-    const lease = call.lease
-    const headers = request && digestSfValue([...request.headers.entries()])
-    const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
-      binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
-      observations.every(({ records, observed }) => observed?.call === call && observed.complete === completeRecall &&
-        observed.stable() && observed.recordsDigest === digestSfValue(records))
-    if (!request || !stable()) return false
-    const final = await input.state.read(request, "atlas", async (state) => {
-      if (!stable() || !await input.host.revalidate(call) || !stable()) return undefined
-      return { sourceState: digestSfValue(state), sourceFence: lockedSourceFence() }
-    }).catch(() => undefined)
-    return !!final && final.status === "ok" && !!final.value?.sourceFence && stable() && observations.every(({ observed }) =>
-      observed?.sourceState === final.value!.sourceState && observed?.sourceFence === final.value!.sourceFence)
-  }
-
-  async function readOriginalCapture(caseRef: { id: string; incarnation: string }, digest: string, call: TrustedDomainContext): Promise<AtlasPartition["originals"][string] | undefined> {
-    const selected = structuredClone(caseRef)
-    const lease = call.lease
-    const binding = digestSfValue([call.kind, call.binding])
-    const request = input.host.requestFor(call)
-    const headers = request && digestSfValue([...request.headers.entries()])
-    const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
-      binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
-      digestSfValue(caseRef) === digestSfValue(selected)
-    if (!request || !stable() || !/^[a-f0-9]{64}$/.test(digest) || !await input.host.revalidate(call) || !stable()) return undefined
-    // A continuity proof must not recursively resolve the same sources through cases.read.
-    const readCase = async () => {
-      const found = await input.state.read(request, "cases", (state, actor) => {
-        const value = state.cases[selected.id]
-        return value && value.incarnation === selected.incarnation && value.participants.includes(actor.principalRef) &&
-          actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
-          (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) ? value : undefined
-      }).catch(() => undefined)
-      if (!found || found.status !== "ok" || !found.value || !stable()) return undefined
-      const identity = digestSfValue(found.value)
-      const allowed = input.authorizeCase ? await input.authorizeCase(found.value, call) :
-        (await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)).status === "ok"
-      return allowed && stable() && identity === digestSfValue(found.value) && await input.host.revalidate(call) &&
-        stable() && identity === digestSfValue(found.value) ? found.value : undefined
-    }
-    const current = await readCase()
-    if (!current || !stable()) return undefined
-    const currentIdentity = digestSfValue(current)
-    const context: AuthorizedCaseProjection["context"] = call.kind === "ui" ? { ...call.binding, kind: "ui" } : { ...call.binding, kind: "native" }
-    const owner = deriveSfMemoryOwner(context, current)
-    if (!owner) return undefined
-    const result = await input.state.read(request, "atlas", (state) => {
-      const partition = state.atlas[owner] as AtlasPartition | undefined
-      if (!partition || !Array.isArray(partition.events) || !partition.envelopes || !partition.originals || !partition.captureDigests || createSfAtlasDurableMemory(partition).read().rejected) return undefined
-      const capture = partition.originals[digest]
-      if (!capture || capture.ref.refDigest !== digest || digestSfEvidenceRef(capture.ref) !== digest) return undefined
-      const log = createSfAtlasDurableMemory(partition).read().log
-      const linked = Object.values(partition.envelopes).some((envelope) => {
-        const event = log.get(envelope.eventId as Parameters<typeof log.get>[0])
-        const record = event?.payload as MemoryRecord | undefined
-        const boundCase = envelope.caseRef
-        if (!record || !boundCase || record.owner !== owner || record.kind !== envelope.kind || envelope.owner !== owner || boundCase.id !== selected.id || boundCase.incarnation !== selected.incarnation || partition.captureDigests[envelope.eventId]?.[digest] !== digestSfValue(capture) ||
-          !sfAtlasPublicationMatches(envelope, record, state.outbox)) return false
-        if (![...envelope.evidenceRefs, ...envelope.dependencies].some((ref) => ref.refDigest === digest)) return false
-        return envelope.projectionDigest === digestSfValue({ kind: envelope.kind, owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })
-      })
-      return linked ? structuredClone(capture) : undefined
-    }).catch(() => undefined)
-    if (!result || result.status !== "ok" || !stable()) return undefined
-    const identity = digestSfValue(result.value)
-    if (!await input.host.revalidate(call) || !stable()) return undefined
-    const again = await readCase()
-    if (!again || digestSfValue(again) !== currentIdentity || !await input.host.revalidate(call) || request.signal.aborted || input.host.requestFor(call) !== request ||
-      !stable() || digestSfValue(current) !== currentIdentity || digestSfValue(again) !== currentIdentity || identity !== digestSfValue(result.value)) return undefined
-    return result.value
-  }
-
-  /** Shared canonical reader; the selection only narrows to already captured
-   * records, never skips case/source authorization or capture integrity. */
-  async function readRecords(incomingCaseRef: { id: string; incarnation: string }, call: TrustedDomainContext,
-    selection?: { digest?: string; eventId?: string }) {
-      try {
-      const caseRef = structuredClone(incomingCaseRef)
-      const request = input.host.requestFor(call)
-      const lease = call.lease
-      const binding = digestSfValue([call.kind, call.binding])
-      const headers = request && digestSfValue([...request.headers.entries()])
-      const observations: { value: unknown; identity: string }[] = []
-      const pin = (value: unknown) => { observations.push({ value, identity: digestSfValue(value) }) }
-      const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
-        binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
-        digestSfValue(incomingCaseRef) === digestSfValue(caseRef) && observations.every((item) => digestSfValue(item.value) === item.identity)
-      const authorized = async () => stable() && await input.host.revalidate(call) && stable()
-      if (!request || !await authorized()) return { status: "unavailable" as const }
-      const caseBefore = await input.state.read(request, "cases", (state) => state.cases[caseRef.id]).catch(() => undefined)
-      if (!caseBefore || caseBefore.status !== "ok" || !caseBefore.value || !stable()) return { status: "unavailable" as const }
-      pin(caseBefore.value)
-      const found = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-      if (found.status !== "ok" || !stable()) return { status: "unavailable" as const }
-      pin(found.value)
-      const owner = deriveSfMemoryOwner(found.value.context, found.value.case)
-      if (!owner) return { status: "unavailable" as const }
-      const outbox = await input.state.read(request, "outbox", (state) => ({ items: state.outbox, version: state.versions.outbox, pending: !selection && Object.values(state.outbox).some((item) => item.state === "pending" && item.eventRef.target.caseId === caseRef.id && item.eventRef.target.caseIncarnation === caseRef.incarnation) })).catch(() => undefined)
-      if (!outbox || outbox.status !== "ok" || outbox.value.pending || !stable()) return { status: "unavailable" as const }
-      pin(outbox.value)
-      const snapshot = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
-      if (!snapshot || snapshot.status !== "ok" || !stable()) return { status: "unavailable" as const }
-      pin(snapshot.value)
-      if (snapshot.value === undefined) {
-        if (selection) return { status: "unavailable" as const }
-        const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-        if (current.status !== "ok" || digestSfValue(current.value.case) !== digestSfValue(found.value.case) || !stable()) return { status: "unavailable" as const }
-        const latest = await input.state.read(request, "atlas", async (state) => {
-          if (!await authorized()) return undefined
-          return { partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
-            sourceState: digestSfValue(state), sourceFence: lockedSourceFence() }
-        }).catch(() => undefined)
-        if (!latest || latest.status !== "ok" || !latest.value?.sourceFence || latest.value.partition !== undefined ||
-          latest.value.outboxVersion !== outbox.value.version || digestSfValue(latest.value.case) !== digestSfValue(caseBefore.value) || !stable())
-          return { status: "unavailable" as const }
-        const records: never[] = []
-        recallObservations.set(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
-          sourceState: latest.value.sourceState, sourceFence: latest.value.sourceFence })
-        return { status: "ok" as const, records }
-      }
-      const partition = snapshot.value as AtlasPartition
-      if (!partition || !Array.isArray(partition.events) || !partition.envelopes || !partition.originals || !partition.captureDigests) return { status: "unavailable" as const }
-      const loaded = createSfAtlasDurableMemory(partition).read()
-      if (loaded.rejected) return { status: "unavailable" as const }
-      const approved = []
-      for (const [id, event] of loaded.log) {
-        const record = event.payload as MemoryRecord
-        const envelope = partition.envelopes[id]
-        const boundCase = envelope?.caseRef
-        if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return { status: "unavailable" as const }
-        if (envelope.projectionDigest !== digestSfValue({ kind: "task", owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs }) ||
-          !sfAtlasPublicationMatches(envelope, record, outbox.value.items)) return { status: "unavailable" as const }
-        const bundleRef = envelope.evidenceRefs.find((ref) => ref.kind === "case-event" && ref.target.eventId === envelope.sourceEventId)
-        const mapped = bundleRef && mapSfAtlasEntry({ kind: "task", projection: found.value, eventId: envelope.sourceEventId, bundleRef })
-        if (!mapped || mapped.status !== "mapped" || mapped.projection.kind !== "task" ||
-          mapped.projection.owner !== owner || mapped.projection.projectionDigest !== envelope.projectionDigest ||
-          digestSfValue(mapped.projection.entry) !== digestSfValue(record.entry)) return { status: "unavailable" as const }
-        // A settled event/original remains readable while a later projection is
-        // pending. Public recall keeps its existing whole-outbox readiness gate.
-        if (selection && (selection.eventId ? id !== selection.eventId :
-          ![...envelope.evidenceRefs, ...envelope.dependencies].some((ref) => ref.refDigest === selection.digest))) continue
-        const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
-        try {
-          const maps = sfEvidenceSourceMaps(originals)
-          if (digestSfValue(maps.sourceVersions) !== digestSfValue(envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(envelope.sourceIncarnations)) return { status: "unavailable" as const }
-        } catch { return { status: "unavailable" as const } }
-        const refs = [...new Map(originals.flatMap(expandEvidence).map((ref) => [ref.refDigest, ref])).values()]
-        const resolutions = await mapSfEvidenceInOrder(refs, (ref) => input.evidence.resolve(ref, call))
-        if (!stable()) return { status: "unavailable" as const }
-        pin(resolutions)
-        for (const [index, resolution] of resolutions.entries()) {
-          const ref = refs[index]!
-          const capture = partition.originals[ref.refDigest]
-          if ((resolution.state !== "fresh" && resolution.state !== "historical") || resolution.accessRevision !== call.binding.accessRevision || digestSfValue(resolution.ref) !== digestSfValue(ref) || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || (resolution.state === "historical" && (resolution.differences === undefined || digestSfValue(resolution.authorizedProjection) !== digestSfValue(capture.projection))) || !await input.proveContinuity(ref, resolution.currentRef, call) || !stable()) return { status: "unavailable" as const }
-        }
-        if (!("taskId" in record.entry) || typeof record.entry.ref !== "string" || !record.entry.ref.trim()) return { status: "unavailable" as const }
-        approved.push({ id, event, envelope, resolutions, entry: { ...record.entry, ref: record.entry.ref } })
-      }
-      if (selection && !approved.length || !await authorized()) return { status: "unavailable" as const }
-      // Persisted physical journal has already passed strict owner verification.
-      // Renumber only this ephemeral authorized read subset; C08 stays untouched.
-      const filtered = createSfAtlasDurableMemory({ events: approved.map((item, index) => [item.id, { ...item.event, seq: index + 1 }]) })
-      const recalled = createMemoryRead({ store: filtered, actor: owner }).recall({ kind: "task", owner })
-      const records = approved.flatMap((item) => recalled.some((record) => digestSfValue(record) === digestSfValue(item.event.payload)) ? [{ envelope: item.envelope, entry: item.entry, resolutions: item.resolutions, case: found.value, recordDigest: digestSfValue(item.event.payload) }] : [])
-      const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-      if (current.status !== "ok" || digestSfValue(current.value.case) !== digestSfValue(found.value.case) || !await authorized()) return { status: "unavailable" as const }
-      pin(records)
-      // Source readers may issue metadata. Fence their completed observations,
-      // then check the final source round and case against the same C08 state.
-      const before = await input.state.read(request, "atlas", (state) => ({
-        partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
-        sourceState: digestSfValue(state), sourceFence: lockedSourceFence(),
-      })).catch(() => undefined)
-      if (!before || before.status !== "ok" || !before.value.sourceFence || !stable() ||
-        before.value.outboxVersion !== outbox.value.version || digestSfValue(before.value.partition) !== digestSfValue(snapshot.value) ||
-        digestSfValue(before.value.case) !== digestSfValue(caseBefore.value)) return { status: "unavailable" as const }
-      pin(before.value)
-      for (const record of records) {
-        for (const resolution of record.resolutions) {
-          const again = await input.evidence.resolve(resolution.ref, call)
-          pin(again)
-          if (!stable() || again.accessRevision !== resolution.accessRevision || digestSfValue(again.ref) !== digestSfValue(resolution.ref) || again.state !== resolution.state || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || digestSfValue(projectionForComparison(again)) !== digestSfValue(projectionForComparison(resolution)) || (again.state === "historical" && (again.differences === undefined || digestSfValue(again.differences) !== digestSfValue(resolution.differences))) || !await input.proveContinuity(resolution.ref, again.currentRef, call) || !stable()) return { status: "unavailable" as const }
-        }
-      }
-      const latest = await input.state.read(request, "atlas", async (state) => {
-        // No authority await may reopen a race after this protected read.
-        if (!await authorized()) return undefined
-        return { partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
-          sourceState: digestSfValue(state), sourceFence: lockedSourceFence() }
-      }).catch(() => undefined)
-      if (!latest || latest.status !== "ok" || !latest.value || !stable() ||
-        digestSfValue(latest.value) !== digestSfValue(before.value)) return { status: "unavailable" as const }
-      recallObservations.set(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
-        sourceState: before.value.sourceState, sourceFence: before.value.sourceFence })
-      return { status: "ok" as const, records }
-      } catch { return { status: "unavailable" as const } }
-  }
-
   return {
-    async emitFromLedger(incoming: BusinessEvidenceRef, call: TrustedDomainContext): Promise<MemoryWriteReceipt> {
-      const ref = structuredClone(incoming)
-      const lease = call.lease
-      const binding = digestSfValue([call.kind, call.binding])
-      const request = input.host.requestFor(call)
-      const headers = request && digestSfValue([...request.headers.entries()])
-      const observations: { value: unknown; identity: string }[] = []
-      const pin = (value: unknown) => { observations.push({ value, identity: digestSfValue(value) }) }
-      const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
-        binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
-        digestSfValue(incoming) === digestSfValue(ref) && observations.every((item) => digestSfValue(item.value) === item.identity)
-      const authorized = async () => stable() && await input.host.revalidate(call) && stable()
+    async emitFromLedger(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<MemoryWriteReceipt> {
       const unavailable = (reason: string): MemoryWriteReceipt => ({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: input.scanner.name, version: input.scannerVersion, status: "unavailable" }, reason })
-      if (ref.kind !== "case-event" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || !request || request.signal.aborted || !await authorized()) return unavailable("authority-unavailable")
+      const request = input.host.requestFor(call)
+      if (ref.kind !== "case-event" || !request || request.signal.aborted || !input.scannerVersion.trim() || !await input.host.revalidate(call)) return unavailable("authority-unavailable")
       try { sfEvidenceSourceMaps([ref]) } catch { return unavailable("invalid-evidence") }
-      const access = await input.state.read(request, "cases", (state, actor) => {
-        const value = state.cases[ref.target.caseId]
-        return value && value.incarnation === ref.target.caseIncarnation && value.participants.includes(actor.principalRef) &&
-          actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
-          (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) ? value : undefined
-      }).catch(() => undefined)
-      if (!access || access.status !== "ok" || !access.value || !stable()) return unavailable("authority-unavailable")
-      pin(access.value)
-      const permitted = input.authorizeCase ? await input.authorizeCase(access.value, call) :
-        (await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)).status === "ok"
-      if (!permitted || !await authorized()) return unavailable("authority-unavailable")
-      const key = JSON.stringify([ref.target.caseId, ref.target.caseIncarnation, ref.target.eventId])
-      const captured = await input.state.read(request, "atlas", (state) => ({ versions: state.versions, item: state.outbox[key] })).catch(() => undefined)
-      const confirmed = await input.state.read(request, "cases", (state) => state.cases[ref.target.caseId]).catch(() => undefined)
-      if (!confirmed || confirmed.status !== "ok" || !confirmed.value || digestSfValue(confirmed.value) !== digestSfValue(access.value) ||
-        (input.authorizeCase && !await input.authorizeCase(confirmed.value, call)) || !await authorized()) return unavailable("authority-unavailable")
-      if (!captured || captured.status !== "ok" || !captured.value.item || !stable()) return unavailable("outbox-unavailable")
-      pin(captured.value)
-      pin(confirmed.value)
-      if (digestSfValue(captured.value.item.eventRef) !== digestSfValue(ref)) return { ...unavailable("idempotency-content-changed"), status: "conflict" }
-      // A durable receipt is a recovery result, not a second append. Reauthorize it without rerunning the scanner.
-      if (captured.value.item.state === "settled") {
-        const replay = await input.state.read(request, "outbox", (state, actor) => {
-          const value = state.cases[ref.target.caseId]
-          const events = value?.ledger.filter((item) => item.id === ref.target.eventId)
-          const event = events?.length === 1 ? events[0] : undefined
-          return value && value.incarnation === ref.target.caseIncarnation && value.participants.includes(actor.principalRef) &&
-            (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) &&
-            actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
-            event && event.caseRef.id === ref.target.caseId && event.caseRef.incarnation === ref.target.caseIncarnation && event.caseRef.version === ref.target.caseVersion &&
-            event.outputDigest === ref.target.outputDigest && digestSfValue(event.evidenceRefs) === digestSfValue(ref.target.evidenceRefs)
-            ? { item: state.outbox[key], value } : undefined
-        }).catch(() => undefined)
-        if (!replay || replay.status !== "ok" || !replay.value || digestSfValue(replay.value.item) !== digestSfValue(captured.value.item)) return unavailable("outbox-unavailable")
-        if (!stable()) return unavailable("authority-unavailable")
-        pin(replay.value)
-        const selected = { id: ref.target.caseId, incarnation: ref.target.caseIncarnation }
-        // A lightweight membership ACL cannot authorize an old receipt's sources.
-        // Reopen the complete case even when authorizeCase was supplied.
-        const readable = await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)
-        if (readable.status !== "ok" || !stable()) return unavailable("case-unavailable")
-        pin(readable.value)
-        const receipt = captured.value.item.receipt
-        const committed = receipt.status === "committed" || receipt.status === "already-committed"
-        const owner = committed ? deriveSfMemoryOwner(readable.value.context, readable.value.case) : undefined
-        if (committed && !owner) return unavailable("capture-unavailable")
-        const atlas = owner ? await input.state.read(request, "atlas", (state) => ({
-          partition: state.atlas[owner], outboxVersion: state.versions.outbox,
-        })).catch(() => undefined) : undefined
-        if (!stable() || committed && (!atlas || atlas.status !== "ok" || !atlas.value.partition)) return unavailable("capture-unavailable")
-        if (atlas?.status === "ok") pin(atlas.value)
-        const records = committed ? await readRecords(selected, call, { eventId: receipt.eventId }) : undefined
-        if (!stable() || committed && (!receipt.eventId || records?.status !== "ok" ||
-          records.records.length !== 1 || records.records[0]?.recordDigest !== receipt.recordDigest ||
-          records.records[0]?.envelope.sourceEventId !== ref.target.eventId ||
-          !records.records[0]?.envelope.evidenceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))))
-          return unavailable("capture-unavailable")
-        if (records?.status === "ok") pin(records.records)
-        const sources = records?.status === "ok" ? records.records.flatMap((record) => record.resolutions) :
-          await mapSfEvidenceInOrder(expandEvidence(ref), (source) => input.evidence.resolve(source, call))
-        if (!stable() || sources.some((source) => (source.state !== "fresh" && source.state !== "historical") ||
-          !source.currentRef || !source.authorizedProjection || source.accessRevision !== call.binding.accessRevision ||
-          source.state === "historical" && source.differences === undefined)) return unavailable("source-unavailable")
-        pin(sources)
-        const current = await input.state.read(request, "cases", (state) => ({
-          replay: { value: state.cases[ref.target.caseId], item: state.outbox[key] },
-          sourceFence: lockedSourceFence(), sourceState: digestSfValue(state),
-        })).catch(() => undefined)
-        if (!current || current.status !== "ok" || !stable() || !current.value.sourceFence || digestSfValue(current.value.replay) !== digestSfValue(replay.value))
-          return unavailable("case-unavailable")
-        pin(current.value)
-        if ((input.authorizeCase && !await input.authorizeCase(current.value.replay.value!, call)) || !await authorized()) return unavailable("case-unavailable")
-        const rechecked = await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)
-        if (rechecked.status !== "ok" || !stable() || digestSfValue(rechecked.value.case) !== digestSfValue(readable.value.case))
-          return unavailable("case-unavailable")
-        const sourceIdentity = (source: BusinessEvidenceResolution) => digestSfValue({ state: source.state, ref: source.ref, currentRef: source.currentRef,
-          accessRevision: source.accessRevision, projection: projectionForComparison(source), differences: source.differences })
-        for (const source of sources) {
-          const again = await input.evidence.resolve(structuredClone(source.ref), call)
-          if (!stable() || sourceIdentity(again) !== sourceIdentity(source)) return unavailable("source-unavailable")
-          pin(again)
-        }
-        // Read-only recovery: no transaction, scanner, append or replacement
-        // receipt. Keep the durable audit's bytes and final authorization fence.
-        const latest = await input.state.read(request, committed ? "atlas" : "outbox", async (state) => {
-          // Keep the last authority await inside C08's protected read. An await
-          // after it would reopen a corruption window before receipt egress.
-          if (!await authorized()) return undefined
-          return { replay: { value: state.cases[ref.target.caseId], item: state.outbox[key] },
-            sourceFence: lockedSourceFence(), sourceState: digestSfValue(state),
-            atlas: owner ? { partition: state.atlas[owner], outboxVersion: state.versions.outbox } : undefined }
-        }).catch(() => undefined)
-        if (!latest || latest.status !== "ok" || !latest.value || !stable() || latest.value.sourceFence !== current.value.sourceFence ||
-          latest.value.sourceState !== current.value.sourceState || digestSfValue(latest.value.replay) !== digestSfValue(replay.value) ||
-          committed && (atlas?.status !== "ok" || digestSfValue(latest.value.atlas) !== digestSfValue(atlas.value))) return unavailable("case-unavailable")
-        return structuredClone(receipt.status === "committed" ? { ...receipt, status: "already-committed" as const } : receipt)
-      }
+      if (ref.target.evidenceRefs.flatMap(expandEvidence).some((dependency) => dependency.kind === "case-event")) return unavailable("nested-case-event-unavailable")
       const found = await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)
       if (found.status !== "ok") return unavailable("case-unavailable")
-      if (!input.scannerVersion.trim() || !input.host.persistence.transactionAll || !input.host.persistence.currentSnapshots) return unavailable("scanner-or-source-fence-unavailable")
-      const sourceFences = (snapshots: Record<"dashboard" | "planner" | "procurement", Parameters<typeof sfRunSourceFence>[0]>) => ({
-        dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
-      })
-      const before = await input.host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: sourceFences(snapshots) }), { signal: request.signal }).catch(() => undefined)
-      if (!before) return unavailable("source-fence-unavailable")
       const mapped = mapSfAtlasEntry({ kind: "task", projection: found.value, eventId: ref.target.eventId, bundleRef: ref })
       if (mapped.status !== "mapped") return unavailable("projection-unavailable")
       const dependencies = ref.target.evidenceRefs.flatMap(expandEvidence)
-      const resolutions = await mapSfEvidenceInOrder(dependencies, (dependency) => input.evidence.resolve(dependency, call))
-      if (!dependencies.length || resolutions.some((resolution) => resolution.state !== "fresh" || !resolution.authorizedProjection || resolution.accessRevision !== call.binding.accessRevision) || !await authorized()) return unavailable("source-unavailable")
+      const resolutions = await Promise.all(dependencies.map((dependency) => input.evidence.resolve(dependency, call)))
+      if (!dependencies.length || resolutions.some((resolution) => resolution.state !== "fresh" || !resolution.authorizedProjection || resolution.accessRevision !== call.binding.accessRevision) || !await input.host.revalidate(call)) return unavailable("source-unavailable")
       const maps = sfEvidenceSourceMaps(mapped.projection.evidenceRefs)
+      const key = JSON.stringify([ref.target.caseId, ref.target.caseIncarnation, ref.target.eventId])
+      const atlas = await input.state.read(request, "atlas", (state) => state.versions.atlas).catch(() => undefined)
+      const outbox = await input.state.read(request, "outbox", (state) => ({ version: state.versions.outbox, item: state.outbox[key] })).catch(() => undefined)
+      if (!atlas || !outbox || atlas.status !== "ok" || outbox.status !== "ok" || !outbox.value.item || digestSfValue(outbox.value.item.eventRef) !== digestSfValue(ref)) return unavailable("outbox-unavailable")
+      if (outbox.value.item.state === "settled") return outbox.value.item.receipt.status === "committed" ? { ...outbox.value.item.receipt, status: "already-committed" } : outbox.value.item.receipt
       const digest = digestSfValue({ ref, projection: mapped.projection, maps })
-      if (!await authorized()) return unavailable("authority-unavailable")
-      const checks = (["cases", "documents", "receipts"] as const).filter((namespace) => namespace === "cases" ||
-        dependencies.some((dependency) => namespace === "documents" ? dependency.kind === "document" : dependency.kind === "receipt"))
-      const saved = await input.state.transaction(request, { namespace: "atlas", expectedStorageVersion: captured.value.versions.atlas, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: captured.value.versions.outbox }],
-        checkNamespaces: checks.map((namespace) => ({ namespace, expectedStorageVersion: captured.value.versions[namespace] })), sourceFence: "all",
-        idempotencyKey: `atlas:${key}`, commandDigest: digest, targetRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }), targetIncarnation: ref.target.caseIncarnation }, async (state, authority) => {
-        const locked = input.host.persistence.currentSnapshots?.()
-        if (!locked || digestSfValue(sourceFences(locked)) !== digestSfValue(before)) return { commit: false, value: unavailable("source-changed-before-commit") }
+      if (!await input.host.revalidate(call)) return unavailable("authority-unavailable")
+      const saved = await input.state.transaction(request, { namespace: "atlas", expectedStorageVersion: atlas.value, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: outbox.value.version }], idempotencyKey: `atlas:${key}`, commandDigest: digest, targetRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }), targetIncarnation: ref.target.caseIncarnation }, async (state, authority) => {
         const item = state.outbox[key]
         const current = state.cases[ref.target.caseId]
         if (!item || item.state !== "pending" || digestSfValue(item.eventRef) !== digestSfValue(ref) || !current || current.incarnation !== ref.target.caseIncarnation || !current.ledger.some((event) => event.id === ref.target.eventId && digestSfValue(event) === digestSfValue(found.value.events.find((candidate) => candidate.id === event.id))) || authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion) return { commit: false, value: unavailable("stale-authority-or-ledger") }
@@ -442,22 +92,107 @@ export function createSfAtlasMemory(input: {
         return { commit: true, value: receipt }
       }).catch(() => undefined)
       if (!saved) return unavailable("commit-unavailable")
-      if (saved.status === "preview") return saved.value
+      if (saved.status === "preview") return unavailable("unexpected-state-preview")
       if ("reason" in saved) return unavailable(saved.reason)
-      if (!await authorized()) return unavailable("authority-unavailable")
+      if (!await input.host.revalidate(call)) return unavailable("authority-unavailable")
       return saved.value
     },
     /** A scoped Atlas read: authenticate and resolve every dependency before constructing the recall store. */
-    recall: (caseRef: { id: string; incarnation: string }, call: TrustedDomainContext) => readRecords(caseRef, call),
-    /** Host-only original egress verifies every source of its linked records. */
-    readOriginalRecords: (caseRef: { id: string; incarnation: string }, digest: string, call: TrustedDomainContext) =>
-      /^[a-f0-9]{64}$/.test(digest) ? readRecords(caseRef, call, { digest }) : Promise.resolve({ status: "unavailable" as const }),
+    async recall(caseRef: { id: string; incarnation: string }, call: TrustedDomainContext) {
+      try {
+      const request = input.host.requestFor(call)
+      if (!request || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+      const found = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+      if (found.status !== "ok") return { status: "unavailable" as const }
+      const owner = deriveSfMemoryOwner(found.value.context, found.value.case)
+      if (!owner) return { status: "unavailable" as const }
+      const outbox = await input.state.read(request, "outbox", (state) => ({ version: state.versions.outbox, pending: Object.values(state.outbox).some((item) => item.state === "pending" && item.eventRef.target.caseId === caseRef.id && item.eventRef.target.caseIncarnation === caseRef.incarnation) })).catch(() => undefined)
+      if (!outbox || outbox.status !== "ok" || outbox.value.pending) return { status: "unavailable" as const }
+      const snapshot = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
+      if (!snapshot || snapshot.status !== "ok") return { status: "unavailable" as const }
+      if (snapshot.value === undefined) {
+        const latest = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
+        const latestOutbox = await input.state.read(request, "outbox", (state) => state.versions.outbox).catch(() => undefined)
+        const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+        if (!latest || latest.status !== "ok" || latest.value !== undefined || !latestOutbox || latestOutbox.status !== "ok" || latestOutbox.value !== outbox.value.version || current.status !== "ok" || current.value.case.version !== found.value.case.version || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+        return { status: "ok" as const, records: [] }
+      }
+      const partition = snapshot.value as AtlasPartition
+      if (!partition || !Array.isArray(partition.events) || !partition.envelopes || !partition.originals || !partition.captureDigests) return { status: "unavailable" as const }
+      const loaded = createSfAtlasDurableMemory(partition).read()
+      if (loaded.rejected) return { status: "unavailable" as const }
+      const approved = []
+      for (const [id, event] of loaded.log) {
+        const record = event.payload as MemoryRecord
+        const envelope = partition.envelopes[id]
+        const boundCase = envelope?.caseRef
+        if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return { status: "unavailable" as const }
+        if (!isTaskEntry(record.entry)) return { status: "unavailable" as const }
+        if (envelope.projectionDigest !== digestSfValue({ kind: "task", owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })) return { status: "unavailable" as const }
+        const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
+        try {
+          const maps = sfEvidenceSourceMaps(originals)
+          if (digestSfValue(maps.sourceVersions) !== digestSfValue(envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(envelope.sourceIncarnations)) return { status: "unavailable" as const }
+        } catch { return { status: "unavailable" as const } }
+        if (envelope.dependencies.flatMap(expandEvidence).some((ref) => ref.kind === "case-event") || envelope.evidenceRefs.some((ref) =>
+          ref.kind === "case-event" && ref.target.evidenceRefs.flatMap(expandEvidence).some((dependency) => dependency.kind === "case-event")))
+          return { status: "unavailable" as const }
+        const refs = [...new Map(originals.flatMap(expandEvidence).map((ref) => [ref.refDigest, ref])).values()]
+        const resolutions = await Promise.all(refs.map((ref) => input.evidence.resolve(ref, call)))
+        for (const [index, resolution] of resolutions.entries()) {
+          const ref = refs[index]!
+          const capture = partition.originals[ref.refDigest]
+          if ((resolution.state !== "fresh" && resolution.state !== "historical") || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || (resolution.state === "historical" && (resolution.differences === undefined || digestSfValue(resolution.authorizedProjection) !== digestSfValue(capture.projection))) || !await input.proveContinuity(ref, resolution.currentRef, call)) return { status: "unavailable" as const }
+        }
+        approved.push({ id, event, entry: record.entry, envelope, resolutions })
+      }
+      if (!await input.host.revalidate(call)) return { status: "unavailable" as const }
+      const filtered = createSfAtlasDurableMemory({ events: approved.map((item) => [item.id, item.event]) })
+      const recalled = createMemoryRead({ store: filtered, actor: owner }).recall({ kind: "task", owner })
+      const records = approved.flatMap((item) => recalled.some((record) => digestSfValue(record) === digestSfValue(item.event.payload)) ? [{ envelope: item.envelope, entry: item.entry, resolutions: item.resolutions, case: found.value, recordDigest: digestSfValue(item.event.payload) }] : [])
+      const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+      if (current.status !== "ok" || current.value.case.version !== found.value.case.version || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+      for (const record of records) {
+        for (const resolution of record.resolutions) {
+          const again = await input.evidence.resolve(resolution.ref, call)
+          if (again.state !== resolution.state || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || digestSfValue(projectionForComparison(again)) !== digestSfValue(projectionForComparison(resolution)) || (again.state === "historical" && (again.differences === undefined || digestSfValue(again.differences) !== digestSfValue(resolution.differences))) || !await input.proveContinuity(resolution.ref, again.currentRef, call)) return { status: "unavailable" as const }
+        }
+      }
+      const latest = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
+      const latestOutbox = await input.state.read(request, "outbox", (state) => state.versions.outbox).catch(() => undefined)
+      if (!latest || latest.status !== "ok" || !latestOutbox || latestOutbox.status !== "ok" || latestOutbox.value !== outbox.value.version || digestSfValue(latest.value) !== digestSfValue(snapshot.value) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+      return { status: "ok" as const, records }
+      } catch { return { status: "unavailable" as const } }
+    },
     /** Private callback for a continuity proof, scoped to an already-authorized case. */
     async readOriginal(caseRef: { id: string; incarnation: string }, digest: string, call: TrustedDomainContext): Promise<BusinessEvidenceRef | undefined> {
-      return (await readOriginalCapture(caseRef, digest, call))?.ref
+      const request = input.host.requestFor(call)
+      if (!request || !/^[a-f0-9]{64}$/.test(digest) || !await input.host.revalidate(call)) return undefined
+      const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+      if (current.status !== "ok") return undefined
+      const owner = deriveSfMemoryOwner(current.value.context, current.value.case)
+      if (!owner) return undefined
+      const result = await input.state.read(request, "atlas", (state) => {
+        const partition = state.atlas[owner] as AtlasPartition | undefined
+        if (!partition || !Array.isArray(partition.events) || !partition.envelopes || !partition.originals || !partition.captureDigests || createSfAtlasDurableMemory(partition).read().rejected) return undefined
+        const capture = partition.originals[digest]
+        if (!capture || capture.ref.refDigest !== digest || digestSfEvidenceRef(capture.ref) !== digest) return undefined
+        const log = createSfAtlasDurableMemory(partition).read().log
+        const linked = Object.values(partition.envelopes).some((envelope) => {
+          const event = log.get(envelope.eventId as Parameters<typeof log.get>[0])
+          const record = event?.payload as MemoryRecord | undefined
+          const boundCase = envelope.caseRef
+          if (!record || !boundCase || record.owner !== owner || record.kind !== envelope.kind || envelope.owner !== owner || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || partition.captureDigests[envelope.eventId]?.[digest] !== digestSfValue(capture)) return false
+          if (![...envelope.evidenceRefs, ...envelope.dependencies].some((ref) => ref.refDigest === digest)) return false
+          return envelope.projectionDigest === digestSfValue({ kind: envelope.kind, owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })
+        })
+        return linked ? capture.ref : undefined
+      }).catch(() => undefined)
+      if (!result || result.status !== "ok" || !await input.host.revalidate(call)) return undefined
+      const again = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+      if (again.status !== "ok" || again.value.case.incarnation !== caseRef.incarnation || !await input.host.revalidate(call)) return undefined
+      return result.value
     },
-    /** The immutable projection stays paired with the verified Atlas capture. Current ACL is checked independently. */
-    readOriginalCapture,
   }
 }
 
@@ -500,15 +235,9 @@ export async function rankSfAtlasRecall(input: {
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
 }) {
   try {
-    const call = input.call, lease = call.lease
-    const selection = () => digestSfValue({ caseRefs: input.caseRefs, features: input.features,
-      runtimeVersions: input.runtimeVersions, kind: call.kind, binding: call.binding })
-    const selectionDigest = selection()
-    const stable = () => input.call === call && call.lease === lease && selection() === selectionDigest
     const candidates: AuthorizedMemoryProjection[] = []
     const observations = new Map<string, { records: readonly AtlasRecallRecord[]; fingerprint: string }>()
-    const completionGroups = new Map<string, readonly AtlasRecallRecord[]>()
-    const egress = new Set<AuthorizedMemoryProjection>()
+    const egress = new Map<AuthorizedMemoryProjection, AtlasRecallRecord>()
     const sourceVersions: Record<string, number> = {}
     const sourceIncarnations: Record<string, string> = {}
     for (const caseRef of input.caseRefs) {
@@ -517,7 +246,6 @@ export async function rankSfAtlasRecall(input: {
       const key = JSON.stringify([caseRef.id, caseRef.incarnation])
       if (observations.has(key)) return { status: "unavailable" as const }
       observations.set(key, { records: read.records, fingerprint: digestSfValue(read.records.map(recallRecordFingerprint)) })
-      completionGroups.set(key, read.records)
       for (const record of read.records) {
         const features = await input.featuresForCase(record.case, input.call)
         if (!features) return { status: "unavailable" as const }
@@ -534,7 +262,7 @@ export async function rankSfAtlasRecall(input: {
             sourceIncarnations[resolution.ref.refDigest] = incarnation
           }
         }
-        candidates.push({ envelope: record.envelope, entry: record.entry as SfAtlasProjection["entry"], case: record.case, features, resolutions: record.resolutions, atlasTrace: { module: "@orchestra/atlas-boundary/business-memory-ports", operation: "createMemoryRead.recall", recordDigest: record.recordDigest }, accessRevision: input.call.binding.accessRevision })
+        candidates.push({ envelope: record.envelope, entry: record.entry, case: record.case, features, resolutions: record.resolutions, atlasTrace: { module: "@orchestra/atlas-boundary/business-memory-ports", operation: "createMemoryRead.recall", recordDigest: record.recordDigest }, accessRevision: input.call.binding.accessRevision })
       }
     }
     const scope: RecallScope = { installationId: input.call.binding.installationId, projectId: input.call.binding.projectId, principalRef: input.call.binding.principalRef, accessRevision: input.call.binding.accessRevision, policyVersion: input.call.binding.policyVersion, ...input.runtimeVersions, sourceVersions, sourceIncarnations }
@@ -553,29 +281,11 @@ export async function rankSfAtlasRecall(input: {
         if (reread.status !== "ok" || digestSfValue(reread.records.map(recallRecordFingerprint)) !== observed.fingerprint) return false
         const records = reread.records.filter((record) => recallRecordFingerprint(record) === fingerprint)
         if (records.length !== 1) return false
-        egress.add(candidate)
-        completionGroups.set(JSON.stringify([caseRef.id, caseRef.incarnation]), reread.records)
+        egress.set(candidate, records[0]!)
         return true
       },
     })
-    if (ranked.status !== "ok" || candidates.some((candidate) => !egress.has(candidate)) || !stable()) return { status: "unavailable" as const }
-    const records: AtlasRecallRecord[] = []
-    for (const candidate of candidates) {
-      const ref = candidate.envelope.caseRef
-      const group = ref && completionGroups.get(JSON.stringify([ref.id, ref.incarnation]))
-      const fingerprint = recallRecordFingerprint({ ...candidate, recordDigest: candidate.atlasTrace.recordDigest })
-      const matches = group?.filter((record) => recallRecordFingerprint(record) === fingerprint)
-      if (matches?.length !== 1) return { status: "unavailable" as const }
-      records.push(matches[0]!)
-    }
-    const result = { status: "ok" as const, cases: ranked.cases, records }
-    const resultDigest = digestSfValue(result)
-    // Ranking performs continuity/authority awaits after its last per-candidate
-    // read. Reopen the complete private observations once, after all of them.
-    if (completionGroups.size ? !await revalidateSfAtlasRecall([...completionGroups.values()], input.call) :
-      input.caseRefs.length !== 0 || !await input.revalidate(input.call)) return { status: "unavailable" as const }
-    if (!stable() || resultDigest !== digestSfValue(result)) return { status: "unavailable" as const }
-    return result
+    if (ranked.status !== "ok" || candidates.some((candidate) => !egress.has(candidate))) return { status: "unavailable" as const }
+    return { status: "ok" as const, cases: ranked.cases, records: candidates.map((candidate) => egress.get(candidate)!) }
   } catch { return { status: "unavailable" as const } }
 }
-

@@ -29,8 +29,7 @@ test("author reader rechecks the real stored run, receipt, case, and current aut
     const output = { id: "output", caseRef: selected, kind: "MatchExplanation", schemaVersion: "sf-contribution-v1", state: "ready", payload: { candidateCaseRef: selected, matchedCriteria: [], currentDifferences: [], sourceStates: [], limitations: [] }, evidenceRefs: [], runProvenance: { ...receipt, actualModel: "provider/model", contextFingerprint: "context" }, accessRevision: "access", createdAt: "2026-11-13T00:00:00Z", outputDigest: "" } as unknown as ContributionEnvelope
     output.outputDigest = digestSfContribution(output)
     const caseWrite = await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "case", commandDigest: "a".repeat(64) }, async (state) => {
-      state.cases.case = { ...selected, state: "draft", objective: "Review the authorized result", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", participants: ["person"],
-        criteria: [], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+      state.cases.case = { ...selected, state: "draft", objective: "Review the stored author contribution", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
       return { commit: true, value: true }
     })
     expect(caseWrite.status).toBe("ok")
@@ -72,4 +71,3 @@ test("author reader rechecks the real stored run, receipt, case, and current aut
     await rm(directory, { recursive: true, force: true })
   }
 })
-
