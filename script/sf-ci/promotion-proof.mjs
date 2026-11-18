@@ -122,11 +122,94 @@ function snapshot() {
     observedAtUtc: new Date().toISOString(),
   };
 }
+/** GitHub-only topology proof; useful for MCP/CI where no local Git is available.
+ * This MUST NEVER claim that git merge-tree was run locally. */
+function api(path) {
+  const raw = command('gh', ['api', `repos/${REPO}/${path}`]).stdout;
+  try { return JSON.parse(raw); }
+  catch { fail('GITHUB_API_INVALID', 'Non-JSON response for ' + path); }
+}
+function remoteSnapshot() {
+  const prBefore = api(`pulls/${PR_NUMBER}`);
+  const validPr = (pr) => pr.number === PR_NUMBER && pr.state === 'open' &&
+    pr.draft === true && pr.base?.ref === 'go-live-close' &&
+    pr.head?.ref === 'close-final-candidate' &&
+    pr.base?.repo?.full_name === REPO && pr.head?.repo?.full_name === REPO &&
+    SHA.test(pr.base?.sha || '') && SHA.test(pr.head?.sha || '');
+  if (!validPr(prBefore)) fail('PR_NOT_DRAFT_OR_WRONG_REFS', 'PR #237 must be open, draft, and have the prescribed base/head in this repository');
+  const base = prBefore.base.sha, head = prBefore.head.sha;
+  const compared = api(`compare/${base}...${head}`);
+  if (compared.status !== 'ahead' || compared.ahead_by < 1 ||
+      !Number.isSafeInteger(compared.ahead_by) || compared.behind_by !== 0 ||
+      compared.merge_base_commit?.sha !== base || compared.base_commit?.sha !== base) {
+    fail('NOT_FAST_FORWARD', 'GitHub compare did not prove an ancestor base with 0 behind and a positive ahead count');
+  }
+  const [baseCommit, headCommit, mergeRef] = [
+    api(`git/commits/${base}`),
+    api(`git/commits/${head}`),
+    api(`git/ref/pull/${PR_NUMBER}/merge`)
+  ];
+  if (mergeRef.ref !== `refs/pull/${PR_NUMBER}/merge` ||
+      mergeRef.object?.type !== 'commit' || !SHA.test(mergeRef.object?.sha || '')) {
+    fail('MISSING_MERGE_REF', 'GitHub synthetic merge ref is missing or malformed');
+  }
+  const mergeSha = mergeRef.object.sha;
+  const mergeCommit = api(`git/commits/${mergeSha}`);
+  const expectedParents = [base, head];
+  const parents = mergeCommit.parents?.map((p) => p.sha);
+  if (JSON.stringify(parents) !== JSON.stringify(expectedParents) ||
+      mergeCommit.sha !== mergeSha || (prBefore.merge_commit_sha && prBefore.merge_commit_sha !== mergeSha)) {
+    fail('SYNTHETIC_REF_STALE', 'Synthetic merge parentage/PR merge SHA is stale or unexpected');
+  }
+  const baseTree = baseCommit.tree?.sha;
+  const candidateTree = headCommit.tree?.sha;
+  const mergedTree = mergeCommit.tree?.sha;
+  if (![baseTree, candidateTree, mergedTree].every((value) => SHA.test(value || ''))) {
+    fail('TREE_SHA_INVALID', 'GitHub did not return valid Git tree object IDs');
+  }
+  if (mergedTree !== candidateTree) {
+    fail('SYNTHETIC_TREE_MISMATCH', 'GitHub merge ref tree differs from candidate head tree');
+  }
+  const prAfter = api(`pulls/${PR_NUMBER}`);
+  if (!validPr(prAfter) || prAfter.base.sha !== base ||
+      prAfter.head.sha !== head || prAfter.merge_commit_sha !== mergeSha) {
+    fail('PR_MOVED_DURING_PROOF', 'PR #237 metadata changed during the remote proof');
+  }
+  return {
+    schemaVersion: 1,
+    repository: REPO,
+    pullRequest: { number: PR_NUMBER, state: 'open', isDraft: true,
+      baseRefName: 'go-live-close', headRefName: 'close-final-candidate' },
+    refs: {
+      goLiveClose: { sha: base, treeSha: baseTree },
+      closeFinalCandidate: { sha: head, treeSha: candidateTree },
+      githubMergeRef: { ref: `refs/pull/${PR_NUMBER}/merge`, sha: mergeSha,
+        treeSha: mergedTree, parents },
+    },
+    aheadBehind: { goLiveAhead: compared.behind_by, goLiveBehind: compared.ahead_by },
+    localMerge: { method: 'NOT_RUN', treeSha: null },
+    checks: { goLiveIsAncestor: true, localTreeMatchesCandidate: false,
+      githubMergeTreeMatchesCandidate: true, githubMergeParentsMatch: true },
+    proofStatus: 'REMOTE_TOPOLOGY_VERIFIED',
+    releaseGates: 'NOT_EVALUATED',
+    observedAtUtc: new Date().toISOString(),
+    source: 'GITHUB_API_ONLY',
+  };
+}
+
 function checkPinned(stored, live) {
-  if (stored?.proofStatus !== 'TOPOLOGY_VERIFIED_ONLY' ||
-      !['git merge-tree --write-tree', 'temporary detached worktree: git merge --ff-only'].includes(stored?.localMerge?.method) ||
-      stored?.localMerge?.treeSha !== live.localMerge.treeSha) {
+  if (stored?.proofStatus !== live.proofStatus) {
+    fail('PROOF_MODE_MISMATCH', 'Stored proof mode differs from this run: use --github for remote proof or no flag for local merge-tree');
+  }
+  if (live.proofStatus === 'TOPOLOGY_VERIFIED_ONLY' &&
+      (!['git merge-tree --write-tree', 'temporary detached worktree: git merge --ff-only'].includes(stored?.localMerge?.method) ||
+        stored?.localMerge?.treeSha !== live.localMerge.treeSha)) {
     fail('LOCAL_PROOF_MISSING', 'Stored proof has not been reproduced by local Git; rerun without --check');
+  }
+  if (live.proofStatus === 'REMOTE_TOPOLOGY_VERIFIED' &&
+      (stored?.localMerge?.method !== 'NOT_RUN' || stored?.localMerge?.treeSha !== null ||
+       stored?.checks?.localTreeMatchesCandidate !== false || stored.source !== 'GITHUB_API_ONLY')) {
+    fail('REMOTE_PROOF_INVALID', 'GitHub-only evidence must never claim a local merge-tree execution');
   }
   for (const [label, expected, actual] of [
     ['base SHA', stored.refs?.goLiveClose?.sha, live.refs.goLiveClose.sha],
@@ -147,18 +230,20 @@ function checkPinned(stored, live) {
   }
 }
 try {
-  if (process.argv.slice(2).some((arg) => arg !== '--check') ||
-      process.argv.slice(2).filter((arg) => arg === '--check').length > 1) {
-    fail('USAGE', 'Usage: node script/sf-ci/promotion-proof.mjs [--check]');
+  const flags = process.argv.slice(2);
+  if (flags.some((arg) => !['--check', '--github'].includes(arg)) ||
+      new Set(flags).size !== flags.length) {
+    fail('USAGE', 'Usage: node script/sf-ci/promotion-proof.mjs [--github] [--check]');
   }
-  const check = process.argv.includes('--check');
-  const live = snapshot();
+  const check = flags.includes('--check');
+  const github = flags.includes('--github');
+  const live = github ? remoteSnapshot() : snapshot();
   if (check) {
     let saved;
     try { saved = JSON.parse(readFileSync(OUTPUT, 'utf8')); }
     catch { fail('PROOF_MISSING', `Missing or invalid ${OUTPUT}`); }
     checkPinned(saved, live);
-    process.stdout.write(`PROMOTION_CHECK_OK pr=#237 head=${live.refs.closeFinalCandidate.sha} tree=${live.localMerge.treeSha}\n`);
+    process.stdout.write(`PROMOTION_CHECK_OK mode=${live.proofStatus} pr=#237 head=${live.refs.closeFinalCandidate.sha} tree=${live.refs.githubMergeRef.treeSha}\n`);
   } else {
     mkdirSync(dirname(OUTPUT), { recursive: true });
     const temp = `${OUTPUT}.${process.pid}.tmp`;
@@ -166,7 +251,7 @@ try {
       writeFileSync(temp, `${JSON.stringify(live, null, 2)}\n`, { flag: 'wx' });
       renameSync(temp, OUTPUT);
     } finally { rmSync(temp, { force: true }); }
-    process.stdout.write(`PROMOTION_TOPOLOGY_ONLY ${OUTPUT} go-live behind=${live.aheadBehind.goLiveBehind}\n`);
+    process.stdout.write(`PROMOTION_TOPOLOGY_ONLY mode=${live.proofStatus} ${OUTPUT} go-live behind=${live.aheadBehind.goLiveBehind}\n`);
   }
 } catch (error) {
   process.stderr.write(`${error.message}\n`);
