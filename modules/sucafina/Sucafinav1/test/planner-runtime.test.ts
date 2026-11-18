@@ -497,6 +497,25 @@ test("legacy numeric identifiers stay addressable and directory selects show nam
   expect(html).toContain('method="get"')
   expect(html).not.toContain("data-grid=")
 })
+test("the acting person stays selectable and assignable when the directory omits them", () => {
+  const state = seeded()
+  const person = { id: "macos:0b0b0b0b-1111-4222-8333-444444444444:501", canWrite: true, roles: ["admin"] }
+  const env = { at, id: () => "self-owned-line", directory: [{ id: "owner-1", name: "Budget Owner" }] }
+  expect(
+    domain.execute(
+      state,
+      person,
+      { page: "OPEX", action: "save", version: 0, values: { versionId: "v", name: "Self owned", el: "licenses", owner: person.id, annual: 100 } },
+      env,
+    ),
+  ).toMatchObject({ ok: true })
+  const data = domain.view(state, person, env).data
+  const version = (data.versions as { lines: { name: string; owner: unknown }[] }[])[0]
+  const line = version.lines.find((candidate) => candidate.name === "Self owned")
+  expect(line?.owner).toEqual({ id: person.id, name: person.id })
+  const html = render("OPEX", data, { actor: person, year: 2027, month: 1, at, versions: {} })
+  expect(html).toContain(`value="${person.id}"`)
+})
 test("CAPEX GET owner, classification and search filters affect rendered rows", () => {
   const state = seeded()
   expect(
