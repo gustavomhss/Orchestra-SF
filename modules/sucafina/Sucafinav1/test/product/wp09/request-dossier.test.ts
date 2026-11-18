@@ -78,9 +78,15 @@ test.each(["txt", "docx", "pdf"] as const)("%s Request evidence reaches the real
     const setCandidateStatus = async (status: "extracted" | "rejected") => {
       const before = await fixture.authority.state.read(fixture.request(), "documents", (state) => state.documents[candidate.value.id] as StoredDocumentEvidence)
       if (before.status !== "ok" || !before.value) throw new Error("Candidate state unavailable")
-      const evidence = { ...before.value.evidence, status }
+      const evidence = status === "rejected"
+        ? { ...before.value.evidence, status, rejection: { reason: "Price contradicted by the source page", page: 1 } }
+        : { ...before.value.evidence, status }
+      if (status === "extracted") delete evidence.rejection
       const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "documents", expectedStorageVersion: before.storageVersion, idempotencyKey: `fixture-${status}`, commandDigest: digestSfValue({ id: candidate.value.id, status }), targetRef: fixture.authority.creationTarget.ref, targetIncarnation: fixture.authority.creationTarget.incarnation }, async (state) => {
-        state.documents[candidate.value.id] = { ...before.value, evidence, snapshot: { ...before.value.snapshot, evidence } }
+        const stored = { ...before.value, evidence, snapshot: { ...before.value.snapshot, evidence } }
+        delete stored.confirmationVersion
+        delete stored.snapshot.confirmationVersion
+        state.documents[candidate.value.id] = stored
         return { commit: true, value: true }
       })
       if (saved.status !== "ok") throw new Error("Candidate fixture transition failed")
