@@ -1,7 +1,4 @@
-import { createSfProcurementScenarioServices } from "./procurement-scenario-services.ts"
-import { createSfProcurementCompositePlanner } from "./procurement-composite-planner.ts"
 import { randomUUID } from "node:crypto"
-import { AsyncLocalStorage } from "node:async_hooks"
 import { createPlannerConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { domain } from "../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
@@ -9,7 +6,7 @@ import { object, rows, text } from "../../../../modules/sucafina/Sucafinav1/runt
 import type { Actor, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { ConfirmationScope, Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
-import type { ForecastCompareRequest, WorkListRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+import type { ForecastCompareRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { CapabilityDescriptor } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -44,23 +41,13 @@ import { rankSfAtlasRecall } from "../../../../modules/sucafina/Sucafinav1/produ
 import { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
 import { createSfAtlasBusiness } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
 import type { probeSfAtlasScanner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
-import { createSfReviewCollaborationBinding } from "./review-collaboration-binding.ts"
 import { createSfDashboardServices } from "./dashboard-services.ts"
 import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
 import { createSfPlannerEvidence } from "./planner-evidence.ts"
 import { createSfPlannerCalculationServices } from "./planner-calculation-services.ts"
 import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
-import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
-import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
-import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
-import { createSfProcurementCaseReadScope } from "./procurement-case-read-scope.ts"
-import { createSfProcurementEvidenceReadScope, createSfProcurementRecordReadScope } from "./procurement-evidence-read-scope.ts"
-import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
-import { createSfSourceFenceReader } from "./source-fence-read.ts"
-import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
 import { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
 import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
-import type { WorkSignals } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
 import { createProcurementConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/confirmation.ts"
 import { createProcurementCollectionMemberIssuer } from "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts"
@@ -78,7 +65,12 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const fences = (snapshots: NonNullable<ReturnType<NonNullable<typeof input.persistence.currentSnapshots>>>) => ({
     dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
   })
-  const readSourceFences = createSfSourceFenceReader({ host, persistence: input.persistence })
+  const readSourceFences = async (call: TrustedDomainContext) => {
+    const request = host.requestFor(call)
+    if (!request || !input.persistence.transactionAll || !await host.revalidate(call)) return undefined
+    const found = await input.persistence.transactionAll(async (snapshots) => ({ commit: false, value: fences(snapshots) }), { signal: request.signal })
+    return await host.revalidate(call) && !request.signal.aborted ? found : undefined
+  }
   const lockedSourceFences = () => {
     const snapshots = input.persistence.currentSnapshots?.()
     return snapshots ? fences(snapshots) : undefined
@@ -131,18 +123,16 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
     issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
+  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites })
   const evidence: { current?: BusinessContextService } = {}
   const recall: { current?: ReturnType<typeof createSfCaseRecall> } = {}
   const caseRecall: ReturnType<typeof createSfCaseRecall> = (request, call) => recall.current
-    ? memoryCaseScope.recall(request, call, () => recall.current!(request, call)) : Promise.resolve({ status: "unavailable" as const })
+    ? recall.current(request, call) : Promise.resolve({ status: "unavailable" as const })
   const decisionEvidence: { current?: ReturnType<typeof createProcurementDecisionHost> } = {}
-  const readDecisionEvidence = createSfProcurementEvidenceReadScope({ host, state: input.authority.state, contextFor,
-    selection: selectedPeriod, readerIdentity: () => decisionEvidence.current?.resolveEvidence, lockedSourceFences,
-    resolve: (ref, call) => decisionEvidence.current?.resolveEvidence(ref, call) ?? Promise.resolve(undefined) })
   const procurementEvidence = {
     resolveEvidence: async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution | undefined> => {
       const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
-      if (ref.kind !== "record" || !ref.refId.startsWith("sf-procurement-c06:")) return readDecisionEvidence(ref, call)
+      if (ref.kind !== "record" || !ref.refId.startsWith("sf-procurement-c06:")) return decisionEvidence.current?.resolveEvidence(ref, call)
       if (ref.schema !== "sf-evidence-v1" || ref.target.surface !== "procurement" || ref.target.recordType !== "procurement-request" || !ref.target.period || ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return unavailable()
       const first = await procurementConfirmation.resolve(ref.refId, call)
       if (first.status !== "ok" || digestSfValue(first.value.evidence) !== digestSfValue(ref)) return unavailable()
@@ -160,34 +150,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     recall: (request, call) => evidence.current ? evidence.current.recall(request, call) : Promise.reject(new Error("SF_ATLAS_UNAVAILABLE")),
     emitFromLedger: (ref, call) => evidence.current ? evidence.current.emitFromLedger(ref, call) : Promise.resolve({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "atlas-unavailable" }),
   }
-  const reviewCollaboration = createSfReviewCollaborationBinding(context)
-  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites, evidence: context })
   const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
   let scenarioOperationAccess: ReturnType<typeof createSfScenarioOperationAccess> | undefined
-  const canonicalCases = createDecisionCasePort({ state: input.authority.state, host, creationTarget: input.authority.creationTarget,
+  const cases = createDecisionCasePort({ state: input.authority.state, host, creationTarget: input.authority.creationTarget,
     operationIdentity,
     authorizeCase,
     verifyScenarioOperations: (value, call) => scenarioOperationAccess ? scenarioOperationAccess(value, call) : Promise.resolve(false),
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
-  const procurementCaseRead = createSfProcurementCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
-    selection: selectedPeriod, readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences })
-  const memoryRecordRead = createSfProcurementRecordReadScope({ host, state: input.authority.state, contextFor,
-    selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
-  const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: procurementCaseRead,
-    readCanonical: async (request, call, records) => {
-      const selected = structuredClone(request)
-      const observed = await memoryRecordRead(records, call, () => canonicalCases.read(selected, call))
-      if (observed.kind === "unsupported") return procurementCaseRead(request, call)
-      return observed.kind === "observed" ? observed.value : { status: "unavailable", reason: "memory-case-read-changed" }
-    },
-    readMemoryCanonical: (records, call, work) => memoryRecordRead(records, call, work),
-    selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
-  const cases = { ...canonicalCases, read: memoryCaseScope.read }
-  const withMemoryObservation: SfMemoryObservation = (request, call, work) => {
-    const canonical = recall.current
-    return canonical ? memoryCaseScope.observe(request, call, canonical, work) : work(caseRecall)
-  }
   const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
   const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
     : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement" ? procurementConfirmation : undefined
@@ -197,36 +167,18 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     observe: async (scope, call) => (await confirmationSourceFor(scope)?.observe(scope, call)) ?? { state: "dependency-unavailable", sourceVersion: 0 },
     fence: async (scope, observation, call) => (await confirmationSourceFor(scope)?.fence(scope, observation, call)) ?? false,
   }
-  type WorkBridge = { signals: WorkSignals; destination: (selection: WorkListRequest, actionRef: string, call: TrustedDomainContext) => Promise<PortResult<{ href: string }>> }
-  const workBridge: { current?: WorkBridge } = {}
-  const collaborationProducer = createCollaborationHost({ host, state: input.authority.state, creationTarget: input.authority.creationTarget,
-    scopedSources: input.persistence, evidence: reviewCollaboration.evidence, procurement, collections: registry, cases,
-    authorizeReviewThreadContext: reviewCollaboration.authorizeReviewThreadContext, reviewRecipientAuthority: reviewCollaboration.reviewRecipientAuthority,
-    reviewAnswerSource: reviewCollaboration.reviewAnswerSource,
+  const collaboration = createCollaborationHost({ host, state: input.authority.state, creationTarget: input.authority.creationTarget,
+    scopedSources: input.persistence, evidence: context, procurement, collections: registry, cases,
     authority: input.authority.authority, human: input.authority.human, confirmationSource,
     captureWorkSource: createProcurementCollectionMemberIssuer({ collection: registry, individual, revalidate: host.revalidate }),
     issueForActor: individual.issueForActor, prepareReissueScope: individual.prepareReissueScope,
     caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
-    workSignals: async (selection, period, call) => {
-      const bound = workBridge.current
-      if (!bound) return { status: "unavailable" }
-      const result = await bound.signals(selection, period, call)
-      return workBridge.current === bound ? result : { status: "unavailable" }
-    },
     readQuestionContribution: input.readQuestionContribution, workCaseAuthority: authorizeCase,
     requiredAuthority: { sf_work_list: ["threads:read", "relations:read", "confirmations:read"], sf_question_prepare: ["threads:read", "cases:read"],
       sf_answer_read: ["threads:read"], sf_relation_read: ["relations:read"], sf_handoff_prepare: ["threads:read", "relations:read"] },
     createId: randomUUID, now: () => new Date().toISOString() })
-  const collaboration = { ...collaborationProducer,
-    resolveWorkDestination: async (selection: WorkListRequest, actionRef: string, call: TrustedDomainContext): Promise<PortResult<{ href: string }>> => {
-      const bound = workBridge.current
-      if (!bound) return { status: "unavailable", reason: "work-destination-unavailable" }
-      const result = await bound.destination(selection, actionRef, call)
-      return workBridge.current === bound ? result : { status: "unavailable", reason: "work-destination-unavailable" }
-    },
-  }
   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
-    preparePrivateDraftRead: dashboardServices.observer.preparePrivateDraftRead, proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
+    proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
   type CaseRef = { id: string; incarnation: string; version: number }
   type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
@@ -276,17 +228,12 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       !await host.revalidate(call) || !currentCaseAuthority(call, request, binding) || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
     const scope: CaseScope = { selected: captured, request, bindingDigest: binding, retainers: 1 }
     caseBindings.set(call, scope)
-    try {
-      const result = await action()
-      return await host.revalidate(call) && currentCaseAuthority(call, request, binding) && caseBindings.get(call) === scope &&
-        digestSfValue(selected) === digestSfValue(captured) ? result : { status: "denied", reason: "case-selection-authority-changed" }
-    } finally { releaseCaseScope(call, scope) }
+    try { return await action() } finally { releaseCaseScope(call, scope) }
   }
-  // This private entry receives a case from authenticated calculation stores
-  // or the recall's current C08 selection. Avoid cases.read: that projection
-  // can itself cite the calculation currently being resolved by the BCS.
-  const withCalculationCase = async <T>(call: TrustedDomainContext, selected: CaseRef, work: () => Promise<PortResult<T>>,
-    egress?: (result: PortResult<T>) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+  // This private entry receives a case only from the authenticated calculation
+  // request/result stores. Avoid cases.read: that projection can itself cite the
+  // calculation currently being resolved by the BCS.
+  const withCalculationCase = async <T>(call: TrustedDomainContext, selected: CaseRef, work: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const source = host.requestFor(call)
     const binding = callBindingDigest(call)
     const captured = structuredClone(selected)
@@ -326,54 +273,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         return { status: "denied", reason: "calculation-case-authority-changed" }
       const result = await work()
       const checked = await selectedCase(call)
-      if (checked.status !== "ok" || digestSfValue(checked.value) !== selectedDigest || !currentCaseAuthority(call, source, binding) || scope && caseBindings.get(call) !== scope)
-        return { status: "denied", reason: "calculation-case-authority-changed" }
-      if (!egress) return result
-      // Atlas fences its completed calculation proof after selectedCase's final
-      // await, while coverage still owns this exact private case retainer.
-      const final = await egress(result)
-      return digestSfValue(captured) === selectedDigest && currentCaseAuthority(call, source, binding) && (!scope || caseBindings.get(call) === scope && digestSfValue(scope.selected) === selectedDigest)
-        ? final : { status: "denied", reason: "calculation-case-authority-changed" }
+      return checked.status === "ok" && digestSfValue(checked.value) === selectedDigest && currentCaseAuthority(call, source, binding) && (!scope || caseBindings.get(call) === scope)
+        ? result : { status: "denied", reason: "calculation-case-authority-changed" }
     } finally { if (scope) releaseCaseScope(call, scope) }
-  }
-  // A historical calculation may replay the current authorized coverage of its
-  // case while its caller still retains the original Analysis selection. Keep
-  // that read-only selection lexical and private to historical coverage; it must never
-  // replace caseBindings or upgrade selectedCase/resolveCase for fresh work.
-  const historicalCalculations = new AsyncLocalStorage<{ call: TrustedDomainContext; selected: CaseRef; request: Request; binding: string; originalScope: CaseScope | undefined; open: boolean }>()
-  const historicalSelection = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
-    const scope = historicalCalculations.getStore()
-    if (!scope?.open || scope.call !== call) return { status: "denied", reason: "historical-calculation-scope-unavailable" }
-    const current = () => scope.open && historicalCalculations.getStore() === scope && currentCaseAuthority(call, scope.request, scope.binding) && caseBindings.get(call) === scope.originalScope
-    if (!current() || !await host.revalidate(call) || !current()) return { status: "denied", reason: "historical-calculation-case-authority-unavailable" }
-    const found = await input.authority.state.read(scope.request, "cases", (state, actor) => {
-      const value = state.cases[scope.selected.id]
-      return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
-        value?.id === scope.selected.id && value.incarnation === scope.selected.incarnation && value.version === scope.selected.version && value.participants.includes(actor.principalRef)
-    })
-    const authorized = await host.revalidate(call)
-    return found.status === "ok" && found.value === true && authorized && current()
-      ? { status: "ok", value: structuredClone(scope.selected) } : { status: "denied", reason: "historical-calculation-case-authority-unavailable" }
-  }
-  const withHistoricalCalculationCase = async <T>(call: TrustedDomainContext, selected: CaseRef, work: () => Promise<PortResult<T>>,
-    egress?: (result: PortResult<T>) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
-    const request = host.requestFor(call), binding = callBindingDigest(call), captured = structuredClone(selected), originalScope = caseBindings.get(call)
-    const held = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : originalScope?.selected
-    if (!request || request.signal.aborted || held && (held.id !== captured.id || held.incarnation !== captured.incarnation || held.version > captured.version || call.kind === "native" && held.version !== captured.version) ||
-      originalScope && (originalScope.request !== request || originalScope.bindingDigest !== binding)) return { status: "denied", reason: "historical-calculation-case-scope-mismatch" }
-    const scope = { call, selected: captured, request, binding, originalScope, open: true }
-    return historicalCalculations.run(scope, async (): Promise<PortResult<T>> => {
-      try {
-        const before = await historicalSelection(call)
-        if (before.status !== "ok") return before
-        const result = await work()
-        const after = await historicalSelection(call)
-        if (after.status !== "ok" || digestSfValue(before.value) !== digestSfValue(after.value)) return { status: "denied", reason: "historical-calculation-case-changed" }
-        const final = egress ? await egress(result) : result
-        return scope.open && historicalCalculations.getStore() === scope && currentCaseAuthority(call, request, binding) && caseBindings.get(call) === originalScope &&
-          digestSfValue(selected) === digestSfValue(captured) ? final : { status: "denied", reason: "historical-calculation-case-changed" }
-      } finally { scope.open = false }
-    })
   }
   const calculationVerifier: { current?: NonNullable<Parameters<typeof createSfDecisionResultStore>[0]["verifyCalculationSources"]> } = {}
   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
@@ -395,20 +297,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   type DecisionDomain = { proposalCoverage: { resolveForecastCoverage: Parameters<typeof createPlannerCoverageRouter>[0]["forecast"] }; plannerCriteria: NonNullable<Parameters<typeof createPlannerProduct>[0]["criteria"]> }
   const decisionDomain: { current?: DecisionDomain } = {}
   const plannerHolder: { current?: ReturnType<typeof createPlannerProduct>["planner"] } = {}
-  const baselineInput = { authority: input.authority, evidence: context, planner: () => plannerHolder.current,
-    proposalCoverageWrites: input.proposalCoverageWrites, readSourceFences, lockedSourceFences }
-  const baselineCoverage = createSfDecisionBaselineServices({ ...baselineInput, selectedCase })
-  const historicalCoverage = createSfDecisionBaselineServices({ ...baselineInput, selectedCase: historicalSelection })
+  const baselineCoverage = createSfDecisionBaselineServices({ authority: input.authority, evidence: context, selectedCase,
+    planner: () => plannerHolder.current, proposalCoverageWrites: input.proposalCoverageWrites, readSourceFences, lockedSourceFences })
   const bindDecisionDomain = (value: DecisionDomain) => {
     if (decisionDomain.current) throw new Error("SF_DECISION_DOMAIN_ALREADY_BOUND")
     decisionDomain.current = value
   }
-  const procurementScenarios = createSfProcurementScenarioServices({ host, state: input.authority.state, sources: individual, port: procurement, withCase: withCalculationCase })
-  const product = createPlannerProduct({ standalone: { supports: procurementScenarios.producer.supports,
-    supportsSource: (reference) => reference.startsWith("sf-procurement:"), simulateScenario: procurementScenarios.producer.simulateScenario,
-    resolveSource: procurementScenarios.resolveSource, resolveStored: procurementScenarios.resolveStored }, host, scopedSources: input.persistence, evidence: context,
+  const product = createPlannerProduct({ host, scopedSources: input.persistence, evidence: context,
     coverageFor: createPlannerCoverageRouter({ forecast: async (ref, call) => {
-      if (ref.startsWith("sf-procurement-coverage:")) return procurementScenarios.producer.resolveForecastCoverage(ref, call)
       if (ref.startsWith("proposal-coverage:")) return decisionDomain.current?.proposalCoverage.resolveForecastCoverage(ref, call) ?? { status: "unavailable", reason: "decision-domain-not-initialized" }
       // A forecast can be read without choosing a decision case. An inaccessible
       // selection still reaches its registry and retains the current denial.
@@ -419,9 +315,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     }, decision: coverage }),
     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
-  const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
-  const planner = procurementComposite.planner
-  const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
+  const planner = product.planner
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
@@ -429,42 +323,22 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
   const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources })
-  const procurementProducer = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual,
+  const procurementDecisions = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual,
     authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites ?? new WeakSet<object>(), cases, planner, plannerSources,
     operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })
-  const applicationEgress = createSfPreparedApplicationEgress(input.authority)
-  const procurementDecisions = { ...procurementProducer,
-    apply: (request: Parameters<typeof procurementProducer.apply>[0], call: TrustedDomainContext) =>
-      applicationEgress(request, call, (captured) => procurementProducer.apply(captured, call)) }
   decisionEvidence.current = procurementDecisions
   scenarioOperationAccess = createSfScenarioOperationAccess({ host, sources: plannerSources, projectPlanner: projectPlannerEvidence, scenarioInputs: product.scenarioInputs,
-    readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation,
-    procurementProof: createSfScenarioProcurementProofScope({ host, state: input.authority.state, selection: selectedPeriod,
-      readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences }),
-    recordedPlanner: createSfRecordedPlannerOperationAccess({ host, state: input.authority.state, resolveEvidence: context.resolve }) })
-  const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
+    readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation })
+  const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, resolveCase })
   const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
-    writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase, withHistoricalCalculationCase,
-    // The historical reader alone receives this coverage route. The exposed
-    // Planner and baseline registry continue using the strict original selector.
-    resolveHistoricalForecastCoverage: async (ref, call) => {
-      const scope = historicalCalculations.getStore()
-      if (!scope?.open || scope.call !== call || !currentCaseAuthority(call, scope.request, scope.binding) || caseBindings.get(call) !== scope.originalScope)
-        return { status: "denied", reason: "historical-calculation-scope-unavailable" }
-      if (ref.startsWith("proposal-coverage:")) return decisionDomain.current?.proposalCoverage.resolveForecastCoverage(ref, call) ?? { status: "unavailable", reason: "decision-domain-not-initialized" }
-      return decisionDomain.current ? historicalCoverage.resolveForecastCoverage(ref, call)
-        : forecastCoverage.current?.(ref, call) ?? historicalCoverage.resolveForecastCoverage(ref, call)
-    } })
+    writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
   calculationVerifier.current = calculations.verifyCalculationSources
-  // Standalone and composite Procurement previews are transient. Only the
-  // existing explicit human promotion may publish their C08 result.
-  const persist: typeof calculations.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && readOnlyScenario(incoming.request)
-    ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculations.persist(incoming, callId, call, replay)
+  const persist = calculations.persist
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
     ...input.extraDescriptors ?? [],
     ...createDashboardCapabilities(dashboard, async (call, operation, digest, result) => receipt(call, operation, digest, result)),
-    ...createPlannerCapabilities(planner, receipt, persist, { readOnlyScenario }),
+    ...createPlannerCapabilities(planner, receipt, persist),
     ...createProcurementCapabilities({ port: procurement, authority: input.authority.authority }),
     ...collaboration.capabilities,
     ...createDecisionCapabilities({ cases, createReceipt: receipt, requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } }),
@@ -520,8 +394,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
       procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: plannerSources, port: planner, project: projectPlannerEvidence, readEvidence: projectPlannerEvidence.readEvidence },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
-      caseForEvidence, calculation: calculations.resolveEvidence, calculationHistorical: calculations.resolveHistoricalEvidence,
-      withCalculationCase, lockedSourceFences, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
+      caseForEvidence, calculation: calculations.resolveEvidence, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
         runtimeVersions: versions, featuresForCase,
         contextSelections: async (request, call) => {
           const refs: BusinessEvidenceRef[] = []
@@ -555,9 +428,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       } })
     originalMemory.current = atlas.memory
     evidence.current = atlas.context
-    recall.current = createSfCaseRecall({ host, cases,
-      memory: { ...atlas.memory, recall: (ref, call) => memoryCaseScope.memory(ref, call, () => atlas.memory.recall(ref, call)) },
-      featuresForCase, runtimeVersions: versions,
+    recall.current = createSfCaseRecall({ host, cases, memory: atlas.memory, featuresForCase, runtimeVersions: versions,
       proveContinuity: atlas.proveContinuity, rank: rankSfAtlasRecall,
       selectCandidates: async (_source, call, scope) => {
         const request = host.requestFor(call)
@@ -602,35 +473,6 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return () => { if (pagePeriods.get(call) === selected) pagePeriods.delete(call) }
     },
   })
-  // A destination supplies context only for this exact UI invocation. The real
-  // collection/source readers still prove the selection, period and record.
-  const withProcurementWorkPeriod = async <T>(call: TrustedDomainContext, payload: { selection: WorkListRequest; actionRef: string },
-    work: () => Promise<PortResult<T>>, source?: { parent: TrustedDomainContext; requestRef: string; period: Period }): Promise<PortResult<T>> => {
-    const denied = (): PortResult<never> => ({ status: "denied", reason: "work-destination-authority-changed" })
-    const parent = source?.parent ?? call, period = source?.period ?? payload.selection.period
-    if (call.kind !== "ui" || parent.kind !== "ui" || !isSfPeriod(period) || !isSfPeriod(payload.selection.period) ||
-      digestSfValue(period) !== digestSfValue(payload.selection.period) || pagePeriods.has(call) || source && parent === call) return denied()
-    const request = host.requestFor(call)
-    const parentPeriod = source ? pagePeriods.get(parent) : undefined
-    const payloadDigest = digestSfValue(payload), binding = digestSfValue([call.binding, parent.binding])
-    const sourceDigest = source && digestSfValue({ requestRef: source.requestRef, period: source.period })
-    const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
-    const current = () => !!request && !request.signal.aborted && host.requestFor(call) === request && host.requestFor(parent) === request &&
-      digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest &&
-      digestSfValue([call.binding, parent.binding]) === binding && key(call) === key(parent) && digestSfValue(payload) === payloadDigest &&
-      (!source || !!parentPeriod && parentPeriod.expiresAt > Date.now() && pagePeriods.get(parent) === parentPeriod &&
-        digestSfValue(parentPeriod.period) === digestSfValue(period) && sourceDigest === digestSfValue({ requestRef: source.requestRef, period: source.period }) &&
-        input.authority.ui.matchesIntent(call, "sf_request_read", digestSfValue({ requestRef: source.requestRef })))
-    const authorized = async () => current() && await input.authority.human.authorize(parent, "collaboration.work.destination", payload) &&
-      await host.revalidate(call) && current()
-    if (!await authorized() || pagePeriods.has(call)) return denied()
-    const selected = { period: Object.freeze(structuredClone(period)), expiresAt: Date.now() + 5 * 60_000 }
-    pagePeriods.set(call, selected)
-    try {
-      const result = await work()
-      return await authorized() && pagePeriods.get(call) === selected && selected.expiresAt > Date.now() ? result : denied()
-    } finally { if (pagePeriods.get(call) === selected) pagePeriods.delete(call) }
-  }
   const forecastInputs = { prepare: async (call: TrustedDomainContext, request: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => {
     const wanted = structuredClone(request)
     if (call.kind !== "ui" || !input.authority.ui.matchesIntent(call, "sf_forecast_compare", digestSfValue(wanted)) || !await host.revalidate(call))
@@ -706,21 +548,13 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },
   }) }
-  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations: { ...calculations, persist }, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
-    projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
-    withMemoryObservation,
-    bindReviewCollaboration: reviewCollaboration.bind,
-    bindWorkBridge: (bridge: WorkBridge) => {
-      if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")
-      workBridge.current = Object.freeze({ ...bridge })
-    },
+  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+    projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain,
     bindForecastCoverage: (reader: PlannerSourceHost["resolveForecastCoverage"]) => {
       if (forecastCoverage.current && forecastCoverage.current !== reader) throw new Error("SF_FORECAST_COVERAGE_ALREADY_BOUND")
       forecastCoverage.current = reader
     },
     atlasRecall: () => atlasState.current,
-    caseRecallSource: () => recall.current && evidence.current && atlasState.current
-      ? { recall: recall.current, evidence: evidence.current, atlas: atlasState.current } : undefined,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
-    dispose: () => { reviewCollaboration.dispose(); workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
+    dispose: () => { plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
 }

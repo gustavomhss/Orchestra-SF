@@ -25,8 +25,7 @@ export function createSfDocumentServices(input: { runtime: Parameters<CreateSfHo
     if (!operation) return undefined
     const receipt = authority.authority.receiptFor(context, operation.name, operation.digest)
     return receipt?.kind === "native" ? digestSfValue({ runId: receipt.runId, callId: receipt.callId, operation: operation.name }) : undefined
-  }, confirmDocument: (evidence, context) => authority.human.authorize(context, "documents.confirm", evidence),
-    rejectDocument: (review, context) => authority.human.authorize(context, "documents.reject", review), createId: randomUUID, now: () => new Date().toISOString() })
+  }, confirmDocument: (evidence, context) => authority.human.authorize(context, "documents.confirm", evidence), createId: randomUUID, now: () => new Date().toISOString() })
   const selections = createSfDocumentSelections({ host: authority.host, assets: assets.persistence, services: assets.services, maxBytes: sfDocumentLimits.maxBytes, admit: documents.admit })
   const handler = async (operation: "sf_document_extract" | "sf_knowledge_search", value: unknown, context: TrustedDomainContext): Promise<CapabilityResult> => {
     const parsed = decodeSfOperationInput(operation, value)
