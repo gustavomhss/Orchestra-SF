@@ -116,8 +116,8 @@ export function createSfDocumentHttp(input: { origin: string; mount: string; run
             } finally { runtime.human.finish(human.value) }
           }
           if (payload.action === "link") {
-            if (Object.keys(payload).length !== 5 || !runtime.links)
-              return reply({ status: "unavailable", reason: "document-link-unavailable" }, 503)
+            if (Object.keys(payload).length !== 5) return reply({ status: "invalid" }, 400)
+            if (!runtime.links) return reply({ status: "unavailable", reason: "document-link-unavailable" }, 503)
             const parsed = parseSfDocumentScenarioRequest({
               documentRef: "documentRef" in payload ? payload.documentRef : undefined,
               baseRef: "baseRef" in payload ? payload.baseRef : undefined,
