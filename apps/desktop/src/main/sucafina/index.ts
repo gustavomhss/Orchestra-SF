@@ -1,16 +1,12 @@
 import { createHash, randomUUID } from "node:crypto"
 import type { BrowserWindow, IpcMainInvokeEvent, Session, WebContents } from "electron"
 import type { SfInstallationDescriptor, SfContext, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
-import type { SfOperationBindings, SfOperationId } from "@orchestra/schema/sucafina/common"
-import { sfAllowedByteMime, sfIsByteOperation, SF_FILE_BYTE_LIMIT } from "@orchestra/client/sucafina/transport"
+import type { SfOperationBindings } from "@orchestra/schema/sucafina/common"
 import type {
   SfConnectionCandidate, SfDesktopInvocation, SfDesktopInvocationResult,
   SfDesktopInvalidation, SfDesktopLoginResult, SfDesktopOwnerRequest,
 } from "@orchestra/client/sucafina/transport"
-import {
-  createSfConnectionRegistry, validateSfOwnedLocationProbe,
-  type SfApprovedConnection, type SfDesktopOwner,
-} from "./connections"
+import { createSfConnectionRegistry, type SfApprovedConnection, type SfDesktopOwner } from "./connections"
 import { loginSfLocal, loginSfMicrosoft, loadSfDesktopContext, requestSfReturnIntent } from "./auth"
 import { decodeSfWireBody, planSfOperation } from "./protocol"
 import { requestSfHttp, type SfByteSource } from "./network"
@@ -35,8 +31,6 @@ type Pending = {
   responseHandle?: string
   sequence: number
   pulling: boolean
-  fileOperation?: SfOperationId
-  byteCount?: number
 }
 type Binding = {
   active: boolean
@@ -63,22 +57,22 @@ const nonempty = (value: unknown, max = 2048): value is string =>
 const failure = (reason: "aborted" | "network" | "invalid-response" | "contract-mismatch" | "contract-unavailable" | "outcome-unknown") =>
   ({ kind: "transport-error" as const, reason })
 
-function validDescriptor(value: unknown, publicOrigin: string, projectId: string, installationId: string):
+function validDescriptor(value: unknown, candidate: SfApprovedConnection, projectId: string, installationId: string):
   value is SfInstallationDescriptor {
   if (!isRecord(value) || !closed(value, [
     "installationId", "projectId", "hostId", "publicOrigin", "mount", "contractRevision", "authMode",
   ])) return false
   if (
     value.installationId !== installationId || value.projectId !== projectId
-    || !nonempty(value.hostId) || value.publicOrigin !== publicOrigin
+    || !nonempty(value.hostId) || value.publicOrigin !== candidate.origin
     || value.contractRevision !== "sf-native-ui/1"
     || !nonempty(value.mount, 128)
     || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(value.mount)
     || !["microsoft", "local-operator"].includes(String(value.authMode))
   ) return false
-  if (value.authMode === "microsoft" && new URL(publicOrigin).protocol !== "https:") return false
+  if (value.authMode === "microsoft" && new URL(candidate.origin).protocol !== "https:") return false
   if (value.authMode === "local-operator") {
-    const url = new URL(publicOrigin)
+    const url = new URL(candidate.origin)
     if (url.protocol !== "http:" || !["127.0.0.1", "[::1]"].includes(url.hostname)) return false
   }
   return true
@@ -93,7 +87,7 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
   const watching = new Map<number, { sender: WebContents; dispose(): void }>()
   const purges = new Map<string, Promise<void>>()
   const channels = [
-    "sf-native-register-connection", "sf-native-discover-location", "sf-native-bind", "sf-native-invoke",
+    "sf-native-register-connection", "sf-native-bind", "sf-native-invoke",
     "sf-native-abort", "sf-native-login", "sf-native-logout", "sf-native-release",
   ] as const
   let disposed = false
@@ -137,40 +131,6 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     } satisfies SfDesktopInvalidation)
     if (!skipPurge && ![...bindings.values()].some((item) => item.active && item.partition === binding.partition))
       await purge(binding)
-  }
-
-  /**
-   * The existing authenticated ctx.context producer is the only trusted
-   * source of principal, policy, accessRevision and operation availability.
-   * This is not a grant manufactured from a renderer operation ID.
-   */
-  async function freshFileAuthority(binding: Binding, signal: AbortSignal,
-    operation: SfOperationId): Promise<boolean> {
-    if (!binding.active || signal.aborted || !validOwner(binding.owner) || !binding.context)
-      return false
-    const expected = binding.context.stamp
-    const current = await loadSfDesktopContext({
-      net: deps.electron.net, session: binding.session, descriptor: binding.descriptor,
-      operations: deps.operations, signal,
-    })
-    if (current.status === "unauthenticated" || current.status === "denied") {
-      await retire(binding, current.status === "unauthenticated" ? "session-expired" : "access-revoked")
-      return false
-    }
-    if (current.status !== "ok") return false
-    const stamp = current.context.stamp
-    if (stamp.installationId !== expected.installationId ||
-        stamp.hostId !== expected.hostId || stamp.projectId !== expected.projectId ||
-        stamp.principalRef !== expected.principalRef ||
-        stamp.policyVersion !== expected.policyVersion ||
-        stamp.accessRevision !== expected.accessRevision) {
-      await retire(binding, "access-revoked")
-      return false
-    }
-    return binding.active && !signal.aborted && validOwner(binding.owner) &&
-      current.context.availability.some((resource) =>
-        resource.operations.some((entry) =>
-          entry.operationId === operation && entry.state === "ready" && entry.operational === true))
   }
 
   const registry = createSfConnectionRegistry({
@@ -220,66 +180,6 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     return registry.register(candidate, current)
   }
 
-  /**
-   * Project-free discovery exists only for the exact main-owned server;
-   * unowned/remote connections must use the approved explicit-ID bind.
-   * Reuses original ctx.installations/LocationMiddleware; no invented owner.
-   */
-  async function discoverLocation(event: IpcMainInvokeEvent, raw: unknown) {
-    const current = owner(event)
-    if (!current) return { status: "denied" } as const
-    const probe = validateSfOwnedLocationProbe(raw, deps.ownedConnection())
-    if (!probe) return { status: "unavailable", reason: "connection-unapproved" } as const
-    watch(current)
-    const codec = deps.operations["ctx.installations"]
-    if (!codec) return { status: "unavailable", reason: "contract-mismatch" } as const
-    const input = { select: "location" as const, location: probe.location }
-    try {
-      if (codec.decodeInput(input).status !== "ok")
-        return { status: "unavailable", reason: "contract-mismatch" } as const
-    } catch { return { status: "unavailable", reason: "contract-mismatch" } as const }
-    const ephemeral = deps.electron.session.fromPartition("sf-native-discovery-" + randomUUID())
-    try {
-      const query = new URLSearchParams({ select: "location", "location[directory]": probe.location.directory })
-      if (probe.location.workspace) query.set("location[workspace]", probe.location.workspace)
-      const headers: Record<string, string> = { Accept: "application/json" }
-      if (probe.credentials.kind === "basic") {
-        headers.Authorization = "Basic " +
-          Buffer.from(probe.credentials.username + ":" + probe.credentials.password, "utf8").toString("base64")
-      }
-      const reply = await requestSfHttp({
-        net: deps.electron.net, session: ephemeral, origin: probe.baseUrl,
-        url: probe.baseUrl + "/api/sucafina/installations?" + query,
-        method: "GET", mode: "json", headers, maxResponseBytes: 32 * 1024,
-      })
-      // A navigation, main-side server switch or owner revocation while IO was
-      // pending prevents the stale discovery from crossing IPC.
-      if (!validOwner(current) || !validateSfOwnedLocationProbe(raw, deps.ownedConnection()))
-        return { status: "denied" } as const
-      if (reply.kind !== "buffer" || reply.status !== 200)
-        return { status: "unavailable", reason: "network" } as const
-      if (!/^application\/json(?:\s*;[^\r\n]*)?$/i.test(reply.headers["content-type"] ?? ""))
-        return { status: "unavailable", reason: "contract-mismatch" } as const
-      let decoded
-      try {
-        const parsed = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(reply.bytes))
-        decoded = codec.decodeOutput(parsed)
-      } catch { return { status: "unavailable", reason: "contract-mismatch" } as const }
-      if (decoded.status !== "ok" || !isRecord(decoded.value) || !Array.isArray(decoded.value.installations))
-        return { status: "unavailable", reason: "contract-mismatch" } as const
-      const values = decoded.value.installations as unknown[]
-      if (values.some((value) => !isRecord(value) ||
-        !nonempty(value.projectId) || !nonempty(value.installationId) ||
-        !validDescriptor(value, probe.baseUrl, value.projectId, value.installationId)))
-        return { status: "unavailable", reason: "contract-mismatch" } as const
-      return { status: "ok", installations: values as SfInstallationDescriptor[] } as const
-    } catch { return { status: "unavailable", reason: "network" } as const }
-    finally {
-      await ephemeral.clearStorageData().catch(() => undefined)
-      await ephemeral.clearCache().catch(() => undefined)
-    }
-  }
-
   async function bind(event: IpcMainInvokeEvent, selection: unknown) {
     const current = owner(event)
     if (!current || !isRecord(selection) || !closed(selection, ["serverKey", "projectId", "installationId"])
@@ -321,7 +221,7 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       if (decoded.status !== "ok" || !isRecord(decoded.value) || !Array.isArray(decoded.value.installations))
         return { status: "unavailable", reason: "contract-mismatch" } as const
       const matches = decoded.value.installations
-        .filter((item: unknown) => validDescriptor(item, connection.origin, selection.projectId as string, selection.installationId as string))
+        .filter((item: unknown) => validDescriptor(item, connection, selection.projectId as string, selection.installationId as string))
       if (matches.length !== 1 || decoded.value.installations.length !== 1)
         return { status: "unavailable", reason: "installation-unavailable" } as const
       const descriptor = matches[0] as SfInstallationDescriptor
@@ -353,40 +253,21 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
         || !nonempty(raw.requestId, 64) || !nonempty(raw.responseHandle, 128) || !Number.isSafeInteger(raw.sequence))
         return failure("invalid-response")
       const pending = binding.requests.get(raw.requestId)
-      if (!pending || pending.responseHandle !== raw.responseHandle || !pending.source ||
-        !pending.fileOperation || !sfIsByteOperation(pending.fileOperation) ||
-        pending.sequence !== raw.sequence || pending.pulling) return failure("invalid-response")
+      if (!pending || pending.responseHandle !== raw.responseHandle || !pending.source
+        || pending.sequence !== raw.sequence || pending.pulling) return failure("invalid-response")
       pending.pulling = true
       try {
-        if (!await freshFileAuthority(binding, pending.controller.signal, pending.fileOperation))
-          return failure("contract-unavailable")
         const chunk = await pending.source.next()
-        if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted ||
-          binding.requests.get(pending.requestId) !== pending) return failure("aborted")
-        // Revalidation after the read prevents a revocation racing the next IPC reply.
-        if (!await freshFileAuthority(binding, pending.controller.signal, pending.fileOperation))
-          return failure("contract-unavailable")
+        if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted
+          || binding.requests.get(pending.requestId) !== pending) return failure("aborted")
         if (chunk === undefined) {
           pending.source.cancel()
           binding.requests.delete(pending.requestId)
           return { kind: "byte-chunk", sequence: pending.sequence++, bytes: new Uint8Array(), done: true }
         }
-        if (!(chunk instanceof Uint8Array) || chunk.byteLength === 0 ||
-            chunk.byteLength > 64 * 1024 ||
-            (pending.byteCount ?? 0) + chunk.byteLength > SF_FILE_BYTE_LIMIT)
-          return failure("invalid-response")
-        pending.byteCount = (pending.byteCount ?? 0) + chunk.byteLength
         return { kind: "byte-chunk", sequence: pending.sequence++, bytes: chunk, done: false }
-      } catch { return failure("network") }
-      finally {
-        if (!binding.active || pending.controller.signal.aborted ||
-            binding.requests.get(pending.requestId) !== pending || pending.sequence === raw.sequence ||
-            (pending.byteCount ?? 0) > SF_FILE_BYTE_LIMIT) {
-          pending.source?.cancel()
-          binding.requests.delete(pending.requestId)
-        }
-        pending.pulling = false
-      }
+      } catch { binding.requests.delete(pending.requestId); return failure("network") }
+      finally { pending.pulling = false }
     }
     if (raw.kind !== "request" || !closed(raw, [
       "kind", "bindingHandle", "generation", "requestId", "operationId", "input", "upload", "idempotencyKey",
@@ -403,9 +284,6 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     binding.controller.signal.addEventListener("abort", onRetired, { once: true })
     binding.requests.set(request.requestId, pending)
     try {
-      if (request.operationId.startsWith("files.") &&
-          !await freshFileAuthority(binding, pending.controller.signal, request.operationId))
-        return failure("contract-unavailable")
       const reply = await requestSfHttp({
         net: deps.electron.net, session: binding.session, origin: binding.descriptor.publicOrigin,
         url: plan.value.url, method: plan.value.method, mode: plan.value.mode, body: plan.value.body,
@@ -414,43 +292,16 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted
         || binding.requests.get(request.requestId) !== pending) return failure("aborted")
       if (reply.status === 401 || reply.status === 403) {
-        // A new binding has no private context to revoke. Allow only the
-        // original validated unauthenticated context response so the owner
-        // can explicitly start the existing native login.
-        if (reply.status === 401 && request.operationId === "ctx.context" &&
-            !binding.context && reply.kind !== "stream") {
-          const decoded = decodeSfWireBody(plan.value, reply.bytes, reply.headers["content-type"])
-          if (decoded.status === "ok" && isRecord(decoded.value) && decoded.value.status === "unauthenticated")
-            return { kind: "json-response", status: 401, headers: reply.headers, body: decoded.value }
-        }
         await retire(binding, reply.status === 401 ? "session-expired" : "access-revoked")
         return failure("contract-unavailable")
       }
       if (reply.kind === "stream") {
-        if (!sfIsByteOperation(request.operationId) || plan.value.mode !== "bytes" ||
-            reply.status !== 200 || !sfAllowedByteMime(request.operationId, reply.headers["content-type"]) ||
-            !await freshFileAuthority(binding, pending.controller.signal, request.operationId)) {
-          reply.source.cancel()
-          return failure("invalid-response")
-        }
         pending.source = reply.source
-        pending.fileOperation = request.operationId
-        pending.byteCount = 0
         pending.responseHandle = randomUUID()
         return { kind: "byte-response", status: reply.status, headers: reply.headers, responseHandle: pending.responseHandle }
       }
-      // A06 non-success byte responses never decode or reveal their body.
-      // Original 401/403 auth revocation is already handled above.
-      if (sfIsByteOperation(request.operationId) || plan.value.mode === "bytes") {
-        if (reply.status !== 200)
-          return { kind: "empty-response", status: reply.status, headers: reply.headers }
-        return failure("invalid-response")
-      }
       const decoded = decodeSfWireBody(plan.value, reply.bytes, reply.headers["content-type"])
-      if (decoded.status !== "ok") return failure(plan.value.mutating ? "outcome-unknown" : "invalid-response")
-      if (request.operationId.startsWith("files.") &&
-          !await freshFileAuthority(binding, pending.controller.signal, request.operationId))
-        return failure(plan.value.mutating ? "outcome-unknown" : "contract-unavailable")
+      if (decoded.status !== "ok") return failure("invalid-response")
       if (request.operationId === "ctx.context" && isRecord(decoded.value) && decoded.value.status === "ok"
         && isRecord(decoded.value.value) && isRecord(decoded.value.value.stamp)) {
         const stamp = decoded.value.value.stamp
@@ -576,7 +427,6 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
 
   for (const channel of channels) {
     if (channel === "sf-native-register-connection") deps.electron.ipcMain.handle(channel, register)
-    if (channel === "sf-native-discover-location") deps.electron.ipcMain.handle(channel, discoverLocation)
     if (channel === "sf-native-bind") deps.electron.ipcMain.handle(channel, bind)
     if (channel === "sf-native-invoke") deps.electron.ipcMain.handle(channel, invoke)
     if (channel === "sf-native-abort") deps.electron.ipcMain.handle(channel, abort)

@@ -1,9 +1,6 @@
 import { randomUUID } from "node:crypto"
-import { Option, Schema } from "effect"
-import { SfSupplierCsvExportRequest } from "@orchestra/schema/sucafina/procurement"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
-import type { SfOperationBindings, SfJson, SfOperationCodec } from "@orchestra/schema/sucafina/common"
-import { sfFilesSourceQuery, sfIsByteOperation, sfIsUploadOperation } from "@orchestra/client/sucafina/transport"
+import type { SfOperationBindings, SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfDesktopInvocation } from "@orchestra/client/sucafina/transport"
 import type { SfInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 
@@ -23,18 +20,6 @@ const KEY = /^[A-Za-z0-9._:-]{8,128}$/
 const SURFACES = new Set(["dashboard", "planner", "procurement"])
 const queryKey = (value: string) => /^[A-Za-z][A-Za-z0-9._\[\]-]*$/.test(value)
 const jsonContentType = (value: string | undefined) => !!value && /^application\/json(?:\s*;[^\r\n]*)?$/i.test(value)
-
-// Strict A06 input binding for the original supplier CSV bytes.
-// Not a generic fallback, entitlement, invented endpoint or JSON-output codec.
-const supplierCsvCodec: SfOperationCodec = {
-  decodeInput: (input) => {
-    const parsed = Schema.decodeUnknownOption(
-      Schema.toType(SfSupplierCsvExportRequest), { onExcessProperty: "error" },
-    )(input)
-    return Option.isSome(parsed) ? { status: "ok", value: parsed.value } : { status: "invalid" }
-  },
-  decodeOutput: () => ({ status: "invalid" }),
-}
 
 export type SfRequestPlan = Readonly<{
   url: string
@@ -59,36 +44,12 @@ export function planSfOperation(input: Readonly<{
 }>): SfPlanResult {
   const operationId = input.request.operationId
   const meta = METADATA[operationId]
-  if (operationId.startsWith("files.") && !input.principalRef)
-    return { status: "contract-unavailable" }
-  if (sfIsUploadOperation(operationId) !== Boolean(input.request.upload))
-    return { status: "invalid-response" }
-  const csv = operationId === "files.export.suppliers"
-  const codec = input.operations[operationId] ?? (csv ? supplierCsvCodec : undefined)
-  if (csv && (
-    meta?.method !== "GET" || meta.pathTemplate !== "{mount}/{surface}" ||
-    meta.effect !== "read" || meta.responseMode !== "bytes" ||
-    meta.fixedQuery?.download !== "suppliers" ||
-    Object.keys(meta.fixedQuery).length !== 1 || !input.principalRef
-  )) return { status: "contract-unavailable" }
+  const codec = input.operations[operationId]
   if (!meta || !codec || meta.effect === "authentication" || meta.responseMode === "navigation"
     || operationId === "ctx.installations") return { status: "contract-unavailable" }
-  // IPC callers are not trusted to use the browser work-client wrapper.
-  // Do not construct a URI until the private bounded POST-read is installed.
-  if (operationId === "projection.search" &&
-      (meta.method !== "POST" || meta.effect !== "read" ||
-       meta.responseMode !== "json" ||
-       meta.pathTemplate !== "{mount}/api/ui/projections/search" ||
-       meta.maxRequestBytes !== 4096 || meta.fixedQuery !== undefined ||
-       meta.fixedBodyDiscriminator !== undefined)) {
-    return { status: "contract-unavailable" }
-  }
   let decoded
   try { decoded = codec.decodeInput(input.request.input) } catch { return { status: "invalid-response" } }
   if (decoded.status !== "ok") return { status: "invalid-response" }
-  if ((meta.responseMode === "bytes") !== sfIsByteOperation(operationId) &&
-      (meta.responseMode === "bytes" || sfIsByteOperation(operationId)))
-    return { status: "contract-unavailable" }
   if (decoded.value !== undefined && !isRecord(decoded.value)) return { status: "invalid-response" }
   const source = decoded.value as Record<string, unknown> | undefined
   if (operationId === "ctx.context" && (source === undefined
@@ -115,16 +76,7 @@ export function planSfOperation(input: Readonly<{
     if (!queryKey(key) || CONTROL.test(value)) return { status: "contract-unavailable" }
     target.searchParams.set(key, value)
   }
-  const special = operationId.startsWith("files.") && source ? sfFilesSourceQuery(operationId, source) : undefined
-  if (["files.import-targets", "files.asset.link", "files.asset.download", "files.asset.upload",
-    "files.document-open", "files.document-scenario-targets"].includes(operationId) && !special)
-    return { status: "invalid-response" }
-  if (special) {
-    for (const [key, value] of Object.entries(special)) {
-      if (target.searchParams.has(key)) return { status: "invalid-response" }
-      target.searchParams.set(key, value)
-    }
-  } else if (meta.method === "GET" && source) {
+  if (meta.method === "GET" && source) {
     for (const [key, value] of Object.entries(source)) {
       if (usesSurface && key === "surface") continue
       if (!queryKey(key) || target.searchParams.has(key)) return { status: "invalid-response" }
@@ -161,32 +113,21 @@ export function planSfOperation(input: Readonly<{
     const fixed = meta.fixedBodyDiscriminator ?? {}
     if (original && Object.entries(fixed).some(([key, value]) => key in original && original[key] !== value))
       return { status: "invalid-response" }
-    const value = operationId === "files.document-confirm"
-      ? isRecord(original?.evidence) ? original.evidence : undefined
-      : { ...(original ?? {}), ...fixed }
-    if (value === undefined) return { status: "invalid-response" }
+    const value = { ...(original ?? {}), ...fixed }
     const upload = input.request.upload
     if (upload) {
       if (operationId !== "files.import-admit" && operationId !== "files.asset.upload")
         return { status: "contract-unavailable" }
-      if ((operationId === "files.import-admit" && (
-             upload.fileName !== source?.fileName || upload.mediaType !== source?.mediaType)) ||
-          (operationId === "files.asset.upload" && (
-             upload.fileName !== source?.name || upload.mediaType !== source?.mediaType)))
-        return { status: "invalid-response" }
       if (typeof upload.fileName !== "string" || !upload.fileName || upload.fileName.length > 255
         || /[\/\\\x00-\x1f\x7f"]/.test(upload.fileName)
         || typeof upload.mediaType !== "string" || !/^[A-Za-z0-9!#$&^_.+-]+\/[A-Za-z0-9!#$&^_.+-]+$/.test(upload.mediaType)
         || !(upload.bytes instanceof Uint8Array) || upload.bytes.byteLength === 0)
         return { status: "invalid-response" }
-      const limit = meta.maxRequestBytes ?? (operationId === "files.asset.upload"
-        ? 25 * 1024 * 1024 : 16 * 1024 * 1024)
+      const limit = meta.maxRequestBytes ?? 16 * 1024 * 1024
       if (upload.bytes.byteLength > limit) return { status: "invalid-response" }
       if (operationId === "files.import-admit") {
         const ext = upload.fileName.split(".").pop()?.toLowerCase()
-        const formFields = {
-          surface: source?.surface, selectionRef: source?.selectionRef, options: source?.options,
-        }
+        const formFields = { ...value, surface: source?.surface }
         if (!ext || !["xlsx", "xls", "json"].includes(ext) || upload.bytes.byteLength > 16 * 1024 * 1024
           || typeof formFields.surface !== "string" || !SURFACES.has(formFields.surface)
           || typeof formFields.selectionRef !== "string" || !("options" in formFields))
@@ -215,9 +156,7 @@ export function planSfOperation(input: Readonly<{
     }
     if (meta.maxRequestBytes !== undefined && body.byteLength > meta.maxRequestBytes)
       return { status: "invalid-response" }
-    if (meta.maxRequestBytes === undefined && body.byteLength > (input.request.upload
-      ? operationId === "files.asset.upload" ? 25 * 1024 * 1024 : 16 * 1024 * 1024 + 65536
-      : 2 * 1024 * 1024))
+    if (meta.maxRequestBytes === undefined && body.byteLength > (input.request.upload ? 16 * 1024 * 1024 + 65536 : 2 * 1024 * 1024))
       return { status: "invalid-response" }
   } else if (input.request.upload || input.request.idempotencyKey) return { status: "invalid-response" }
   return { status: "ok", value: {

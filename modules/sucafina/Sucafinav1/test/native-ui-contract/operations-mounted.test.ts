@@ -38,11 +38,11 @@ test("mounted operations pages use real source views and fence actor, stamp and 
     let reads = 0
     let contexts = 0
     let original = new Request("http://localhost/")
-    const persistence = { ...store, transaction: async (...args: Parameters<typeof store.transaction>) => store.transaction(args[0], async (snapshot, control) => {
+    const persistence = { ...store, transaction: async (...args: Parameters<typeof store.transaction>) => store.transaction(args[0], async (snapshot) => {
       reads++
       if (stale && reads === 2) snapshot.versions["ops:2026-11"] = { version: 99, by: "other" }
       if (corrupt) snapshot.data.opsTickets = "invalid"
-      return args[1](snapshot, control)
+      return args[1](snapshot)
     }, args[2]) }
     const application = { persistence, domains: contributions,
       authenticate: async (request: Request) => {

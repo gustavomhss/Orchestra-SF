@@ -131,11 +131,6 @@ export const SfProcurementRequest = Schema.Struct({
   sourcing: Schema.optional(Schema.NullOr(Sourcing)),
   po: Schema.optional(Schema.NullOr(PurchaseOrder)),
   history: Schema.optional(Schema.Array(HistoryEntry)),
-  // Only admitted producer metadata; never expose the private storage key or scanner implementation.
-  attachments: Schema.optional(Schema.Array(Schema.Struct({
-    id: Schema.String, name: Schema.String,
-    type: Schema.optional(Schema.String), bytes: Schema.optional(NonNegativeInteger),
-  }))),
   value: Schema.optional(Amount),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const BankField = Schema.String

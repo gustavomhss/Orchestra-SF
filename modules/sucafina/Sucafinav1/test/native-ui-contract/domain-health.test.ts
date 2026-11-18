@@ -30,10 +30,10 @@ test("page health uses mounted sources and original actor without private member
     let principal = "person"
     let enabled = true
     let privateReads = 0
-    const persistence = { ...store, transaction: async (...args: Parameters<typeof store.transaction>) => store.transaction(args[0], async (snapshot, control) => {
+    const persistence = { ...store, transaction: async (...args: Parameters<typeof store.transaction>) => store.transaction(args[0], async (snapshot) => {
       if (args[0] === "dashboard" && Array.isArray(snapshot.data.members))
         Object.defineProperty(snapshot.data.members, "0", { enumerable: true, configurable: true, get: () => { privateReads++; throw new Error("private row read") } })
-      return args[1](snapshot, control)
+      return args[1](snapshot)
     }, args[2]) }
     const application = { persistence, domains: contributions,
       authenticate: async (request: Request, options: { surface: "dashboard" | "procurement" }) => {
