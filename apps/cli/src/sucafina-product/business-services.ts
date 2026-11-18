@@ -228,7 +228,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
     preparePrivateDraftRead: dashboardServices.observer.preparePrivateDraftRead, proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
   type CaseRef = { id: string; incarnation: string; version: number }
-  type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number }
+  type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number; historical?: boolean }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
   const callBindingDigest = (call: TrustedDomainContext) => digestSfValue([call.kind, call.binding])
   const currentCaseAuthority = (call: TrustedDomainContext, request: Request, bindingDigest: string) =>
@@ -241,6 +241,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   // It proves current C08 membership and identity; each producer still authorizes its sources.
   const selectedCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
     const scope = caseBindings.get(call)
+    if (call.kind === "ui" && scope?.historical) return { status: "unavailable", reason: "case-selection-unavailable" }
     const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : scope?.selected
     const request = host.requestFor(call)
     const binding = callBindingDigest(call)
@@ -260,21 +261,37 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       ? { status: "ok", value: captured } : { status: "unavailable", reason: "case-selection-unavailable" }
   }
   const resolveCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
+    if (call.kind !== "native" && caseBindings.get(call)?.historical) return { status: "unavailable", reason: "case-selection-unavailable" }
     const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
     if (!selected) return { status: "unavailable", reason: "case-selection-unavailable" }
     const current = await cases.read({ caseRef: encodeCaseRef(selected) }, call)
     return current.status === "ok" && current.value.case.version === selected.version && await host.revalidate(call)
       ? { status: "ok", value: structuredClone(selected) } : { status: "unavailable", reason: "case-selection-unavailable" }
   }
+  const boundCaseVersion = async (request: Request, call: TrustedDomainContext, captured: CaseRef) => {
+    const read = await input.authority.state.read(request, "cases", (state, actor) => {
+      const value = state.cases[captured.id]
+      return value && value.incarnation === captured.incarnation && Number.isSafeInteger(value.version) && value.participants.includes(actor.principalRef) &&
+        actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
+        ? value.version : undefined
+    })
+    return read.status === "ok" ? read.value : undefined
+  }
   const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const request = host.requestFor(call)
     const binding = callBindingDigest(call)
     const captured = structuredClone(selected)
     if (call.kind !== "ui" || !request || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
-    const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
-    if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version) ||
-      !await host.revalidate(call) || !currentCaseAuthority(call, request, binding) || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
-    const scope: CaseScope = { selected: captured, request, bindingDigest: binding, retainers: 1 }
+    const observed = options.allowHistoricalRetry ? await boundCaseVersion(request, call, captured) : undefined
+    if (observed !== undefined && observed < captured.version) return { status: "denied", reason: "case-selection-unavailable" }
+    const historical = observed !== undefined && observed > captured.version
+    if (!historical) {
+      const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
+      if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version))
+        return { status: "denied", reason: "case-selection-unavailable" }
+    }
+    if (!await host.revalidate(call) || !currentCaseAuthority(call, request, binding) || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
+    const scope: CaseScope = { selected: captured, request, bindingDigest: binding, retainers: 1, ...(historical ? { historical: true } : {}) }
     caseBindings.set(call, scope)
     try {
       const result = await action()
