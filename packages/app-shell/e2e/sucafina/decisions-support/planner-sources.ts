@@ -7,7 +7,10 @@ export const sourceNames = { baseline: "Decisions baseline plan", candidate: "De
 export async function createPlannerSources(page: Page, origin: string, actorId: string, observations: Record<string, unknown>[]) {
   const planner = (name: string, version?: string) => `${origin}/sucafina/planner?${new URLSearchParams({ page: name, ...(version ? { version } : {}) })}`
   const versionRow = (id: string) => page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${id}"]`) })
-  await page.goto(planner("Versions"))
+  const installed = await page.goto(planner("Versions"))
+  expect(installed?.status(), "Original Planner Versions route must be installed").toBe(200)
+  await expect(page.locator("body")).toHaveAttribute("data-surface", "planner")
+  await expect(page.getByRole("heading", { name: "Versions", exact: true })).toBeVisible()
   await plannerCommand(page, page.getByRole("button", { name: "Create first version", exact: true }), "save", observations)
   // Normal runtime replies omit business values; observe the authorized refreshed UI.
   const first = page.locator('form[data-page="Versions"][data-command="save"]:not([data-record=""])')
@@ -22,7 +25,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
   await expect(versionRow(baseline).getByRole("cell", { name: sourceNames.baseline, exact: true })).toBeVisible()
 
-  await page.goto(planner("OPEX", baseline))
+  expect((await page.goto(planner("OPEX", baseline)))?.status(), "Original OPEX route must be installed").toBe(200)
   const line = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Name", { exact: true }) })
   await expect(line).toHaveCount(1)
   await line.getByLabel("Name", { exact: true }).fill(sourceNames.line)
@@ -42,7 +45,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await plannerCommand(page, line.getByRole("button", { name: "Save", exact: true }), "save", observations)
   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
 
-  await page.goto(planner("Versions"))
+  expect((await page.goto(planner("Versions")))?.status(), "Original Planner Versions route must remain admitted").toBe(200)
   await versionRow(baseline).getByRole("button", { name: "Manage", exact: true }).click()
   await plannerCommand(page, manager.getByRole("button", { name: "copy", exact: true }), "copy", observations)
   const copiedRow = page.getByRole("row").filter({ has: page.getByRole("cell", { name: `${sourceNames.baseline} — Copy`, exact: true }) })
@@ -56,7 +59,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await manager.getByLabel("Name", { exact: true }).fill(sourceNames.candidate)
   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
   await expect(versionRow(candidate).getByRole("cell", { name: sourceNames.candidate, exact: true })).toBeVisible()
-  await page.goto(planner("OPEX", candidate))
+  expect((await page.goto(planner("OPEX", candidate)))?.status(), "Original candidate OPEX route must be installed").toBe(200)
   const copiedLine = page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
   await expect(copiedLine).toHaveCount(1)
   await copiedLine.getByRole("button", { name: "Manage", exact: true }).click()
