@@ -13,10 +13,17 @@ CI in flight: none. Last evidence: run `44329483839` on `2e5839eebb`.
 
 ## In flight
 
-- `sf-typecheck`: dirty in `/tmp/ag-type`, nothing pushed. Owns those dirty files.
+- Auth checkout `/tmp/ag-auth` has an uncommitted `local-identity.ts` edit. `admit()` is unused. Do not commit that throw. The lane died before push.
 - Dispatched, no remote head yet: `sf-wp13-campaign`, `sf-auth-callback`, `sf-enrollment-http`, `sf-body-limit`, `sf-wp10-digest`, `sf-wp10-lifecycle`, `sf-planner-ws9`, `sf-cli-hook`, `sf-docx-flow`, `sf-wp05-engine`.
 
 ## Published, not integrated
+
+- `sf-planner-ws9` `9b91428409`: restores the WS-9 field model in `runtime/planner.ts`. CAPEX and FX were rejected as unknown fields.
+- `sf-body-limit` `cb1dfb5c49`: `workbench-command` no longer reads the body with `request.text()`.
+- `sf-wp13-campaign` `25a9355f64`: campaign lease abort in `product/portfolio/campaign.ts`.
+- `sf-wp05-engine` `b8800b4906`: `planner-sensitivity.ts` no longer searches an exact bound while coverage is pending.
+- `sf-docx-flow` `4c4df82629`: table continuation rows in `product/reviews/render.ts`.
+- `sf-wp10-lifecycle` `b92cf424f2`: diagnosis only. Rollback makes the selector look current; revocation dies with `analysis-source-unavailable` before revoke.
 
 - `sf-ms-receipt` `79350b37ff`: restores the Microsoft login receipt tree. Real files. Review before merge; it includes patch sidecars, not only the missing JSON.
 - Diagnosis notes only, do not merge as product: `sf-failure-map`, `sf-reports-stall`, `sf-ui-operations`, `sf-app-browser`, `sf-cli-red`, `sf-procurement-queue`, `sf-wp09-dossier` (`a2525d5d4c`).
