@@ -1,0 +1,63 @@
+{
+  "schema": "sf2h.ci-triage.reading.v1",
+  "extends": "ACK-001.json",
+  "missionCommit": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+  "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "state": "COMPLETE_FOR_TRIAGE",
+  "readMechanism": "GitHub MCP immutable source retrieval; full S0-A contents read in bounded sections",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/integration-wave/COMMON.md",
+      "ref": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+      "read": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/integration-wave/ci-failure-triage.json",
+      "ref": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+      "read": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-A.json",
+      "blob": "6ff8de164c225698f97a1457817a4b31b1af5eec",
+      "read": "complete: assignment, authority, all WP/task/contract/criteria/dependency/proof/evidence sections, code_sources, resident profiles/skills/packs/routes/integrated proofs/UI/numeric oracles"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "read": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "read": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+      "read": "full"
+    }
+  ],
+  "scopePreserved": "15WPs/74tasks/17contracts/1610criteria/AM01-06/eight final selections; no planning rewrite, closure or new authority.",
+  "interpretation": [
+    "C17 original content/owner/case/incarnation/source remains required.",
+    "C06 material scope and original observation remain distinct from global version.",
+    "C10 missing category is not zero;15000/15001 obligations preserved.",
+    "Guard green is structural; skipped typecheck is not PASS; source W proof is not composed C acceptance."
+  ]
+}
