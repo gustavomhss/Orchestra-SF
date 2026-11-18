@@ -8,7 +8,6 @@ import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerRespo
 import { limitRequestBody, requestBodyLength, RequestBodyError } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
 import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
 import type { SfFilesHostSources } from "./native-ui/files"
-import type { SfTrustedInstallationSource } from "../../../../packages/server/src/sucafina-installations.ts"
 import { mountSfFilesOriginalRoutes } from "./native-ui/files-routing"
 
 export type SfInstallation = {
@@ -17,8 +16,6 @@ export type SfInstallation = {
   dispose: () => void | Promise<void>
   host?: ReadonlyArray<Host.Contribution>
   transport?: MicrosoftTransport
-  /** Only the host-loaded installation may supply discovery, never a request. */
-  discovery?: SfTrustedInstallationSource
   /** Private owner-injected ORIGINAL producers; absence remains fail-closed. */
   nativeFiles?: SfFilesHostSources
 }
