@@ -10,7 +10,7 @@ import { editNewDraft, observedApplication, openWorkbench, prepareApply, reloadA
 test("UI recovery rejects an incomplete apply ACK then recovers the exact authorized receipt after reload", async () => {
   expectSpawn(import.meta.path)
   const fixture = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-response-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const driver = await launchBrowserDriver("ui-recovery-invalid-ack").catch(async (error) => { await fixture.close(); throw error })
   try {
     const page = await driver.browser.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
@@ -52,7 +52,7 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
 test("UI recovery reauthorizes the restored attempt and purges it on real denial without another effect", async () => {
   expectSpawn(import.meta.path)
   const fixture = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const driver = await launchBrowserDriver("ui-recovery-revocation").catch(async (error) => { await fixture.close(); throw error })
   try {
     const page = await driver.browser.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
@@ -132,7 +132,7 @@ test("UI recovery reauthorizes the restored attempt and purges it on real denial
 test("UI recovery retains an ambiguous authoritative receipt outcome across repeated reloads without another apply", async () => {
   expectSpawn(import.meta.path)
   const fixture = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-egress-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const driver = await launchBrowserDriver("ui-recovery-ambiguous-receipt").catch(async (error) => { await fixture.close(); throw error })
   try {
     const page = await driver.browser.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
@@ -181,7 +181,7 @@ test("UI recovery retains an ambiguous authoritative receipt outcome across repe
 test("UI recovery distinguishes a lost first save without draftRef and never guesses its identity after reload", async () => {
   expectSpawn(import.meta.path)
   const fixture = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-draft-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const driver = await launchBrowserDriver("ui-recovery-first-save").catch(async (error) => { await fixture.close(); throw error })
   try {
     const page = await driver.browser.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
