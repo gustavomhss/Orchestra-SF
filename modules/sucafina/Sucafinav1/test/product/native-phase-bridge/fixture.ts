@@ -135,7 +135,7 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
         })
         return prepared.bridge.withInvocation(invocation, original.run(invocation, inspect, observe, outcome))
       } })
-    })) }) }
+    })) })
     const governance = { ...TaskGovernance.node, implementation: Layer.succeed(TaskGovernance.Service, {
       ...TaskGovernance.allowAll, beforeTurn: prepared.bridge.beforeTurn,
       admit: (request) => TaskGovernance.allowAll.admit(request).pipe(Effect.flatMap((admitted) => prepared.bridge.admitted(request, admitted))),
