@@ -21,6 +21,7 @@ import { SfRoutines } from "@orchestra/schema/sucafina/routines"
 import { SfWork } from "@orchestra/schema/sucafina/work"
 import { SfMemory } from "@orchestra/schema/sucafina/memory"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
+import { SfFilesOperationBindings } from "./files/codecs"
 
 type Contract = Readonly<{
   operationId: string
@@ -94,5 +95,15 @@ export const SfNativeOperationBindings: SfOperationBindings = (() => {
   add(SfWork.operations)
   add(SfMemory.operations)
   add(SfAnalyses.operations)
+  const membersId = "files.export.members"
+  const membersCodec = SfFilesOperationBindings[membersId]
+  const membersRoute = SfOperationRegistry[membersId]
+  if (!Schema.is(SfOperationId)(membersId) || !membersCodec
+    || membersRoute.method !== "GET" || membersRoute.pathTemplate !== "{mount}/{surface}"
+    || membersRoute.effect !== "read" || membersRoute.responseMode !== "bytes"
+    || membersRoute.fixedQuery?.download !== "members"
+    || Object.keys(membersRoute.fixedQuery).length !== 1
+    || bindings.has(membersId)) throw new Error("SF_NATIVE_MEMBERS_CODEC_MISSING")
+  bindings.set(membersId, membersCodec)
   return Object.freeze(Object.fromEntries(bindings))
 })()

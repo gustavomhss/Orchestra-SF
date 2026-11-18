@@ -47,6 +47,8 @@ export function planSfOperation(input: Readonly<{
   const codec = input.operations[operationId]
   if (!meta || !codec || meta.effect === "authentication" || meta.responseMode === "navigation"
     || operationId === "ctx.installations") return { status: "contract-unavailable" }
+  if (operationId === "files.export.members" && (!input.principalRef || CONTROL.test(input.principalRef)))
+    return { status: "contract-unavailable" }
   let decoded
   try { decoded = codec.decodeInput(input.request.input) } catch { return { status: "invalid-response" } }
   if (decoded.status !== "ok") return { status: "invalid-response" }
