@@ -38,7 +38,7 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
     ]
     expect(Object.keys(SfWork.operations)).toEqual(ids)
     for (const id of ids) {
-      expect<string>(SfWork.operations[id as keyof typeof SfWork.operations].operationId).toBe(id)
+      expect(SfWork.operations[id as keyof typeof SfWork.operations].operationId).toBe(id)
     }
     expect("execute" in createSfWorkClient({ execute: async () => ({
       kind: "transport-error", reason: "contract-unavailable",
@@ -48,8 +48,8 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
   test("preserves the V1 wire, per-view CAS, null creation and redacted unavailable entries", () => {
     const saveCreate = { surface: "dashboard", action: "save", input: { view, expectedVersion: null } }
     const saveChange = { surface: "dashboard", action: "save", input: { view, expectedVersion: 3 } }
-    expect<object>(Schema.decodeUnknownSync(SfViewsSave.Input)(saveCreate)).toEqual(saveCreate)
-    expect<object>(Schema.decodeUnknownSync(SfViewsSave.Input)(saveChange)).toEqual(saveChange)
+    expect(Schema.decodeUnknownSync(SfViewsSave.Input)(saveCreate)).toEqual(saveCreate)
+    expect(Schema.decodeUnknownSync(SfViewsSave.Input)(saveChange)).toEqual(saveChange)
     expect(Schema.decodeUnknownSync(SfViewsSave.Output)({ status: "ok", value: versioned }))
       .toEqual({ status: "ok", value: versioned })
     expect(Schema.decodeUnknownSync(SfViewsList.Output)({
@@ -99,7 +99,7 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
       sourceVersion: 0,
       observedVersion: 0,
     }] } }
-    expect<object>(Schema.decodeUnknownSync(SfProjectionWork.Output)(work)).toEqual(work)
+    expect(Schema.decodeUnknownSync(SfProjectionWork.Output)(work)).toEqual(work)
     expect(() => Schema.decodeUnknownSync(SfProjectionWork.Output)({
       status: "ok", value: { items: [{ ...work.value.items[0], secretRoleMap: {} }] },
     })).toThrow()
