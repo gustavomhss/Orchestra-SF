@@ -1,0 +1,56 @@
+import { expect, test } from "bun:test"
+import { createSfLiveContext } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
+import { createSfLiveOperationalSource } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-operational.ts"
+
+const binding = Object.freeze({ installationId: "installation-a", projectId: "project-a", hostId: "host-a" })
+const stamp = Object.freeze({ ...binding, principalRef: "person", policyVersion: "policy", accessRevision: "revision" })
+const request = () => new Request("http://127.0.0.1:4096/sucafina/api/ui/context?installationId=installation-a&projectId=project-a&hostId=host-a")
+
+test("operational source re-admits the exact request before and after each observation batch", async () => {
+  const original = request()
+  const seen: Request[] = []
+  const source = createSfLiveOperationalSource({
+    admit: async (current) => { seen.push(current); return { status: "ok", stamp } },
+    producers: [async (current) => { seen.push(current); return [
+      { operationId: "ctx.installations", state: "ready", reason: null, operational: true },
+    ] }],
+  })
+  expect(await source(original, stamp)).toEqual([
+    { operationId: "ctx.installations", state: "ready", reason: null, operational: true },
+  ])
+  expect(seen).toEqual([original, original, original])
+})
+
+test("failed and absent sources never promote operations to ready", async () => {
+  const operational = createSfLiveOperationalSource({
+    admit: async () => ({ status: "ok", stamp }),
+    producers: [async () => { throw new Error("provider failure") }],
+  })
+  const live = createSfLiveContext({
+    origin: "http://127.0.0.1:4096", mount: "/sucafina", currentBinding: () => binding,
+    admit: async () => ({ status: "ok", stamp, authMode: "local-operator", destinations: [] }),
+    operational,
+  })
+  const result = await live.readContext(request(), binding)
+  expect(result.status).toBe("ok")
+  if (result.status !== "ok") return
+  expect(result.value.availability.flatMap((entry) => entry.operations)
+    .filter((operation) => operation.operationId !== "ctx.context")
+    .every((operation) => operation.state === "unavailable")).toBe(true)
+})
+
+test("denial and revocation cannot publish producer observations", async () => {
+  let probes = 0
+  const denied = createSfLiveOperationalSource({
+    admit: async () => ({ status: "denied" }),
+    producers: [async () => { probes++; return [] }],
+  })
+  await expect(denied(request(), stamp)).rejects.toThrow("SF_OPERATIONAL_ADMISSION_CHANGED")
+  expect(probes).toBe(0)
+  let admissions = 0
+  const revoked = createSfLiveOperationalSource({
+    admit: async () => ({ status: "ok", stamp: { ...stamp, accessRevision: ++admissions === 1 ? "revision" : "revoked" } }),
+    producers: [async () => [{ operationId: "ctx.installations", state: "ready", reason: null, operational: true }]],
+  })
+  await expect(revoked(request(), stamp)).rejects.toThrow("SF_OPERATIONAL_ADMISSION_CHANGED")
+})

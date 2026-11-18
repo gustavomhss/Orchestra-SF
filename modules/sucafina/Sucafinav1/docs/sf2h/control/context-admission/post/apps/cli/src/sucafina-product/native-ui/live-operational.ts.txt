@@ -1,0 +1,33 @@
+import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
+import type { SfLiveOperationalObservation } from "./live-context.ts"
+
+/** Host-private producer probe. It observes its real producer without mutation. */
+export type SfLiveOperationalProducer = (request: Request) => Promise<readonly SfLiveOperationalObservation[]>
+
+type Admission =
+  | Readonly<{ status: "ok"; stamp: SfContextStamp }>
+  | Readonly<{ status: "unauthenticated" | "denied" | "unavailable" }>
+
+/**
+ * Only producer-emitted observations can establish readiness. A failed or
+ * absent producer contributes nothing, so the context marks its operations
+ * unavailable. The original Request is re-admitted around the observations.
+ */
+export function createSfLiveOperationalSource(input: Readonly<{
+  admit: (request: Request) => Promise<Admission>
+  producers: readonly SfLiveOperationalProducer[]
+}>) {
+  const sameStamp = (a: SfContextStamp, b: SfContextStamp) =>
+    a.installationId === b.installationId && a.projectId === b.projectId && a.hostId === b.hostId &&
+    a.principalRef === b.principalRef && a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
+  return async (request: Request, expected: SfContextStamp): Promise<readonly SfLiveOperationalObservation[]> => {
+    const before = await input.admit(request)
+    if (request.signal.aborted || before.status !== "ok" || !sameStamp(before.stamp, expected))
+      throw new Error("SF_OPERATIONAL_ADMISSION_CHANGED")
+    const observations = await Promise.allSettled(input.producers.map((producer) => producer(request)))
+    const after = await input.admit(request)
+    if (request.signal.aborted || after.status !== "ok" || !sameStamp(after.stamp, expected))
+      throw new Error("SF_OPERATIONAL_ADMISSION_CHANGED")
+    return observations.flatMap((result) => result.status === "fulfilled" ? result.value : [])
+  }
+}
