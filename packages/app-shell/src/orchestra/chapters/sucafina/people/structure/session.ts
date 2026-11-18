@@ -128,10 +128,13 @@ export function createPeopleSession<Data>(
     }
     // Drop all previous private content even while a same-owner read is pending.
     clear("loading", generation)
-    const stillCurrent = () => !controller.signal.aborted && serial === id &&
-      context.generation() === generation &&
-      context.state().status === "ready" &&
-      context.state().ownerKey === state.ownerKey
+    const stillCurrent = () => {
+      const live = context.state()
+      return !controller.signal.aborted && serial === id &&
+        context.generation() === generation &&
+        live.status === "ready" &&
+        live.ownerKey === state.ownerKey
+    }
     try {
       const result = await read(active.transport, controller.signal)
       if (!stillCurrent()) return
