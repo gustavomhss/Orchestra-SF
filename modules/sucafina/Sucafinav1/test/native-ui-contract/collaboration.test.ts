@@ -49,7 +49,7 @@ describe("A13 fixed source collaboration contracts", () => {
     expect(new Set(observed).size).toBe(29)
     for (const id of observed) {
       const entry = SfCollaboration.operations[id as keyof typeof SfCollaboration.operations]
-      expect<string>(entry.operationId).toBe(id)
+      expect(entry.operationId).toBe(id)
       expect(entry.input).toBeDefined()
       expect(entry.output).toBeDefined()
     }
