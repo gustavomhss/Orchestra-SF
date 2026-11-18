@@ -248,7 +248,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                   </div>
                 </Show>
                 <Show when={ui.message}><p role="status">{t(ui.message)}</p></Show>
-                <Show when={ui.proposal && ui.phase === "prepared"}>
+                <Show when={ui.phase === "prepared" ? ui.proposal : undefined}>
                   {(proposal) => <div class="sf-n24-review" aria-live="polite">
                     <p>{t("sf.ui37.preparationOnly")}</p>
                     <p><bdi>{proposal().question}</bdi> · {proposal().expectedCaseVersion}</p>

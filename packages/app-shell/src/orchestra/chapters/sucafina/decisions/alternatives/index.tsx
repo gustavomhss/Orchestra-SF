@@ -24,7 +24,10 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const valid = () => props.surfaceId === "UI35"
   const route = () => valid() ? props.route as SfSurfaceProps<"UI35">["route"] : undefined
-  const sourceRef = () => valid() ? String(props.route.params.caseRef) : ""
+  const sourceRef = () => {
+    if (props.surfaceId !== "UI35") return ""
+    return String(props.route.params.caseRef)
+  }
   const caseData = useSfCase(sourceRef)
   const [ui, setUi] = createStore<{
     selection: readonly string[]

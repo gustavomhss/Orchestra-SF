@@ -186,7 +186,7 @@ export function SfQuestionAnswer(props: Readonly<{
             onClick={() => void review()}>{t("sf.ui37.answerPrepare")}</button>
         </>}
       </Show>
-      <Show when={ui.prepared && ui.reviewState === "ready"}>
+      <Show when={ui.reviewState === "ready" ? ui.prepared : undefined}>
         {(prepared) => <section class="sf-n24-review" role="group" aria-label={t("sf.ui37.answerSelected")}>
           <p><bdi>{prepared().answer}</bdi></p>
           <p><bdi>{prepared().authorRef}</bdi> · {prepared().observedSourceVersion}</p>

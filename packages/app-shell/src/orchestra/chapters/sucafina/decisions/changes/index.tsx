@@ -379,7 +379,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                   </button>
                 </Show>
               </section>
-              <Show when={view.review && !privateState()}>
+              <Show when={privateState() ? undefined : view.review}>
                 {(review) => <SfChangeReview
                   operation={{
                     ref: (view.reviewIntent ?? change().operationRef) as SfOperationRef,
