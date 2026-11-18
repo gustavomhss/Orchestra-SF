@@ -1,0 +1,179 @@
+{
+  "schema": "sf2h.pre-r01.coverage.v1",
+  "mission": 146,
+  "epoch": "pre-r01-e1-browser146",
+  "review_type": "INDEPENDENT_PRELIMINARY_STATIC",
+  "material": {
+    "initial": "d8f14f81855858120f914af4f3934406bfdb74f1",
+    "observed_latest": "8094e599e3d18609e269548d24619a3246fbc735",
+    "observed_latest_tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+    "final_frozen_C": null
+  },
+  "norms": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ui": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "scope_reviewed": [
+    {
+      "category": "composition",
+      "sources": [
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "apps/cli/src/sucafina-product/native-ui/work.ts",
+        "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+        "apps/cli/src/sucafina-product/native-ui/router.ts",
+        "packages/schema/src/sucafina/operation-registry.ts",
+        "packages/client/src/sucafina/work.ts",
+        "packages/client/src/sucafina/transport.ts"
+      ],
+      "level": "SOURCE_LINES_INSPECTED"
+    },
+    {
+      "category": "delivered UIs",
+      "sources": [
+        "UI29 Today / PR147",
+        "UI30 Work / PR158",
+        "UI31 Search / PR147",
+        "CAP06 People / PR146",
+        "UI47 Reviews agenda / PR152"
+      ],
+      "level": "TARGETED_SOURCE_LINES_INSPECTED"
+    },
+    {
+      "category": "prior review",
+      "sources": [
+        "PR100 (R1-91)",
+        "PR97 (F92)",
+        "PR98 (R3)",
+        "PR159 Office131"
+      ],
+      "level": "FINDINGS_REVIEWED_DEDUPED_OR_CONTEXT"
+    },
+    {
+      "category": "delivered lane metadata",
+      "sources": [
+        147,
+        158,
+        162,
+        150,
+        146,
+        166,
+        168,
+        164,
+        148,
+        163,
+        153,
+        167,
+        149,
+        155,
+        157,
+        152,
+        160,
+        156
+      ],
+      "level": "PR_METADATA_ONLY_NOT_FULL_SOURCE_REVIEW"
+    },
+    {
+      "category": "composed advance",
+      "sources": [
+        "d8f->5e source/new code",
+        "5e->04bf D01/Q01/Q02/route registry",
+        "04bf->8094 Office131/Docx130"
+      ],
+      "level": "GITHUB_SHA_DIFF_AND_AFFECTED_BLOBS_RECHECKED"
+    }
+  ],
+  "checks": [
+    {
+      "id": "SOURCE_HEAD_FENCE",
+      "status": "VERIFIED",
+      "detail": "Initial prepared HEAD matched d8; ACK and findings committed using expected_sha and force=false"
+    },
+    {
+      "id": "CONCRETE_FINDINGS",
+      "status": "VERIFIED_STATIC_ONLY",
+      "detail": "6 independent native findings with SHA/path/line and owner in FINDINGS-146.json"
+    },
+    {
+      "id": "SOURCE_FIX_RECHECK",
+      "status": "VERIFIED_SOURCE_ONLY",
+      "detail": "3 earlier changed blobs found; memory purity unchanged; no runtime PASS"
+    },
+    {
+      "id": "R01-AC01",
+      "status": "NOT_RUN_FINAL",
+      "detail": "No missing proof marked PASS; preliminary only"
+    },
+    {
+      "id": "R01-AC02",
+      "status": "NOT_RUN_FINAL",
+      "detail": "R01/R02/R03 must independently inspect same frozen C, not observed"
+    },
+    {
+      "id": "R01-SCOPE",
+      "status": "PARTIAL_STATIC_NOT_FINAL",
+      "detail": "Only targeted source pairs inspected; full 15 chapters/70 surface field/action parity not proved"
+    },
+    {
+      "id": "F01_NAVIGATION_DEEPLINK_BACK_FOCUS",
+      "status": "NOT_RUN",
+      "detail": "Negative and recovery transitions require installed web+desktop"
+    },
+    {
+      "id": "A11Y",
+      "status": "NOT_RUN",
+      "detail": "Keyboard, screen reader, focus and announcements require run/artifacts"
+    },
+    {
+      "id": "REFLOW_AND_VISUAL",
+      "status": "NOT_RUN",
+      "detail": "320/768/1024/1280/1440, 200% text, 400% reflow, seven themes, visual controls"
+    },
+    {
+      "id": "AUTH_WEB_DESKTOP",
+      "status": "NOT_RUN",
+      "detail": "Host/IPC/session/owner/revocation/navigation parity not demonstrated"
+    },
+    {
+      "id": "Q01_Q02",
+      "status": "NOT_RUN",
+      "detail": "Source files exist but no run/exact-C artifact adopted"
+    },
+    {
+      "id": "COMPILER_149_PR107",
+      "status": "NOT_RUN_BY_146",
+      "detail": "Only 149 can run compiler and generate SDK"
+    },
+    {
+      "id": "CI_150_PR106",
+      "status": "NOT_RUN_BY_146",
+      "detail": "Only 150 can request/run tests via delegated dispatcher"
+    },
+    {
+      "id": "FINAL_G7_G8",
+      "status": "NOT_RUN",
+      "detail": "No frozen C, no release approval"
+    }
+  ],
+  "criteria": {
+    "planning_refs": [
+      "WP10.T03",
+      "R01-AC01",
+      "R01-AC02",
+      "R01-SCOPE"
+    ],
+    "original_canonic_criteria": "PRESERVED_NOT_MODIFIED",
+    "acceptance_pass_count": 0
+  },
+  "activity": {
+    "local_tests": 0,
+    "local_parsers": 0,
+    "local_validators": 0,
+    "local_typechecks": 0,
+    "ci_runs_initiated": 0,
+    "product_files_written": 0,
+    "test_files_written": 0,
+    "release_approval": false,
+    "goal": "paused"
+  },
+  "terminal": "PRELIMINARY_REVIEW_HANDOFF_ONLY"
+}

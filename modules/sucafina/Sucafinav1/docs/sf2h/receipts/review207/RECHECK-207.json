@@ -1,0 +1,299 @@
+{
+  "schema": "sf2h.review207.causal-recheck.v1",
+  "actor": "S1-R1",
+  "source_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "prior_146": {
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r01/preliminary146/FINDINGS-146.json",
+    "blob": "5342ec3da96c71375d59d0035779e82f11c2a970"
+  },
+  "inherited": [
+    {
+      "id": "PRE-R01-146-001",
+      "status": "SOURCE_CORRECTION_PRESENT_NOT_INSTALLED_PROVEN",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "blob": "fde98b609f88d5bdb3ca472bddc4b373092da2a6",
+          "lines": "354-379",
+          "what": "projection.work-item handler returned",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "8dcafe957590c47f342786e6fb79cd231fe69714",
+          "lines": "5-13,190-201",
+          "what": "Only chosen native factories mounted, review factory excluded",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "blob": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+          "lines": "39-50,190-265",
+          "what": "Work item source and approved publicOrigin navigation",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "200 F04 installed positive/denied/revoked/stale/cross-owner/desktop; 190 SDK check on changed C"
+    },
+    {
+      "id": "PRE-R01-146-002",
+      "status": "FAIL_OPEN_MISSING_MOUNT",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "blob": "e420a6107d9bb6d4a96bcb58ed628269e5173d03",
+          "lines": "83-105",
+          "what": "Agenda consumer invokes projection.review",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+          "blob": "920ea5f414dfc87c939cbc12cff88d28481bf95a",
+          "lines": "189-198",
+          "what": "Producer factory returns projection.review handler",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "8dcafe957590c47f342786e6fb79cd231fe69714",
+          "lines": "5-13,190-201",
+          "what": "Only chosen native factories mounted, review factory excluded",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "200 authorized/denied/revoked agenda discover and preserve on accepted C"
+    },
+    {
+      "id": "PRE-R01-146-003",
+      "status": "SOURCE_CORRECTION_PRESENT_NOT_INSTALLED_PROVEN",
+      "evidence": [
+        {
+          "path": "packages/client/src/sucafina/work.ts",
+          "blob": "c6092505e5e146775615da2d131f270d681cfc97",
+          "lines": "36-50",
+          "what": "Search fail-closed POST and V2 views fail closed",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+          "lines": "294-313",
+          "what": "Search route POST body read metadata",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "blob": "c9fc831156c94f062f0493a14458f84f61f7dff3",
+          "lines": "133-185,245-253",
+          "what": "GET mismatch rejected, POST encoded body",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+          "blob": "e89fb68192660909865bb0f8b2e6a0b27c3f77d7",
+          "lines": "107-125",
+          "what": "Search consumer sends bounded private q",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "blob": "fde98b609f88d5bdb3ca472bddc4b373092da2a6",
+          "lines": "354-379",
+          "what": "projection.work-item handler returned",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "200 real HTTP/Desktop/log capture leak-free/denied/owner swap; 190 SDK typed"
+    },
+    {
+      "id": "PRE-R01-146-004",
+      "status": "FAIL_OPEN_DISABLED_CTA",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+          "blob": "71d5028ed37864ad98cb767687e354a32730cfbd",
+          "lines": "66-74",
+          "what": "Primary open-team-structure disabled true and no-op",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "200 installed granted/denied/deep link/back/focus/400%"
+    },
+    {
+      "id": "PRE-R01-146-005",
+      "status": "SOURCE_CORRECTION_PRESENT_NOT_INSTALLED_PROVEN",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "blob": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+          "lines": "132-185,235-254,296-303",
+          "what": "Resume action wired; meetings and changes independently unavailable",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "200 F04 real resume/removed/denied/back/focus desktop/browser"
+    },
+    {
+      "id": "PRE-R01-146-006",
+      "status": "UI30_SOURCE_CORRECTED_DOCUMENT_CROSS_SURFACE_GAP",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "blob": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+          "lines": "39-50,190-265",
+          "what": "Work item source and approved publicOrigin navigation",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "blob": "304d5887db0b0db22eac81c1309274ea7f5155dd",
+          "lines": "347-355,472-478,512-518",
+          "what": "Renderer-origin comparison hides server links in desktop",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "199 D01 browser+desktop approved/foreign origin/userinfo/hash/no leak/revocation; 200 targeted U24"
+    }
+  ],
+  "added": [
+    {
+      "id": "S1-R1-207-001",
+      "status": "FAIL_SOURCE_STATIC",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "blob": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "lines": "231-249,265-269",
+          "what": "UI62 hardcoded unavailable and query hidden",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/client/src/sucafina/memory.ts",
+          "blob": "cddd7ceccc66bc5faf38d169bede03efa31440db",
+          "lines": "7-44",
+          "what": "Seven typed memory operations, none queries similarity",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/schema/src/sucafina/memory.ts",
+          "blob": "554c07bbf881b89ab9df852cdbf61322547f6382",
+          "lines": "356-495",
+          "what": "Closed operation inventory",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "After source release and integration, 200 real F04 two-owner positive/negative similarity + cutoff/dedup and keyboard/400%; independent changed-blob review"
+    },
+    {
+      "id": "S1-R1-207-002",
+      "status": "FAIL_SOURCE_STATIC",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "lines": "370-388",
+          "what": "UI57 history route unconditional unavailable",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "After accepted contract C, 200 real manifest/receipt history, owner swap, denied, return and reflow; independent causal recheck"
+    },
+    {
+      "id": "S1-R1-207-003",
+      "status": "FAIL_SOURCE_STATIC",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "blob": "443a8e2190ed5fa3bbb7a09e27f6c79af012754c",
+          "lines": "182-183,330-344",
+          "why": "Both buttons disabled; import/export route only unavailable panel",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "blob": "b853b38ebc3a0538aaba963c6422d749febde544",
+          "lines": "114-117",
+          "why": "Typed CAP08 import and exportAllMembers descriptors exist; not proof of safe preview/download",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "On newly accepted C, independent source plus 200 F04 authorized/denied/revoked/owner switch/format invalid/preview mutation/export bytes and 199 desktop path."
+    },
+    {
+      "id": "S1-R1-207-004",
+      "status": "FAIL_SOURCE_STATIC",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "blob": "7bf3ce8b5d193c3732dfd236a51a3c804a73dae9",
+          "lines": "142-156",
+          "why": "primaryAction id open-requests hard-disabled/no-op despite frozen primary intent",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "New C + 200 F04 allowed/denied/owner swap/focus/return/400%."
+    },
+    {
+      "id": "S1-R1-207-005",
+      "status": "FAIL_SOURCE_STATIC",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "blob": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+          "lines": "656-665",
+          "why": "csv secondaryAction disabled true/no-op",
+          "examined_product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "recheck": "New C + 200 real F04 allowed/denied/revoked, masked bank fields, source rows, and 199 desktop if applicable."
+    }
+  ],
+  "old_prior_PR_ids": [
+    "PR100/R1-91-001",
+    "PR100/R1-91-002",
+    "PR97/F92-EGRESS-01",
+    "PR97/F92-FIRSTSAVE-03",
+    "PR97/F92-PURE-02",
+    "PR97/F92-C10-04"
+  ],
+  "execution_proof_missing": [
+    "F04 installed manifest",
+    "authorized distinct principals",
+    "F04 real U39 U40 full CRUD and negatives",
+    "F04 U25 agenda",
+    "D01 real desktop",
+    "190 compiler on accepted C",
+    "200 product suite on accepted C",
+    "recheck after final C"
+  ],
+  "allowed_proof_requests": {
+    "to_189": "Apply approved fixes from writers, record accepted C SHA and blobs; do not self-approve",
+    "to_writers": "A07/N28 review, N14 CAP06, U26/A14 similarity, U23 history, U24/D01 source link; respect leases 193-206; N14 U47 CAP08 import/export PR146; N21 CAP24 CTA PR163; N23 CAP27 CSV PR173",
+    "to_200": "Only deduped real F04 minimal U25/U03/U39/U40/UI62 after released source, 320-1440/200/400 owner denied/revoked/unknown; U47 Talent import/export real; U10 CAP24 navigation; U14 CSV masking/denied only if real source released.",
+    "to_190": "Causal typecheck+SDK+guards only on changed source, no duplicate dispatcher",
+    "to_199": "Real installed manifest/principals/desktop proof; no mocks or secrets"
+  },
+  "result": "FIX_FIRST_PRE_FREEZE",
+  "global_release": false,
+  "final_C_accepted": false,
+  "reviewer_executed_tests": false,
+  "next_exact": "189 to publish integrated correction C and real F04 evidence, then S1-R1 independently recheck changed blobs and targeted 190/200/199 proof without reusing old C",
+  "current_author_notifications": [
+    {
+      "pr": 146,
+      "comment": 6903835140
+    },
+    {
+      "pr": 163,
+      "comment": 6903835619
+    },
+    {
+      "pr": 173,
+      "comment": 6903836076
+    },
+    {
+      "pr": 65,
+      "comment": 6903836542
+    }
+  ]
+}
