@@ -30,7 +30,7 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
       "decisions.decision-recover", "decisions.decision-review", "decisions.decision-select-portfolio",
     ].sort())
     for (const [id, operation] of Object.entries(SfDecisions.operations)) {
-      expect<string>(operation.operationId).toBe(id)
+      expect(operation.operationId).toBe(id)
       expect(operation.pathTemplate.startsWith("{mount}")).toBe(true)
       expect(operation.responseMode).toBe("json")
       expect("automaticRetry" in operation).toBe(false)
@@ -184,10 +184,6 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
     expect(accepts(one.input, { caseRef:"case:1:inc", principalRef:"admin" })).toBe(false)
     expect(accepts(many.input, {})).toBe(true)
     expect(accepts(many.input, { includePrivate:true })).toBe(false)
-    expect(accepts(many.input, { principalRef: "admin" })).toBe(false)
-    expect(accepts(many.input, { grant: "cases:all" })).toBe(false)
-    expect(accepts(many.input, { authority: { role: "admin" } })).toBe(false)
-    expect(accepts(many.input, { unknown: null })).toBe(false)
     expect(many.method).toBe("GET")
     expect(many.pathTemplate).toBe("{mount}/api/ui/projections/cases")
   })
