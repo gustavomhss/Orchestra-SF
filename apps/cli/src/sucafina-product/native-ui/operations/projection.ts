@@ -139,6 +139,7 @@ export function projectSfOperationsData(
         projected.departments = records(row.departments).map((department) => pick(department, departmentKeys))
       return projected
     })
+    : undefined
   const entry = secKpi?.find((row) => row.month === month)
   const kpis = SECURITY_KPIS.map((spec) => {
     const value = spec.key === "socClosure"
