@@ -70,6 +70,24 @@ export async function documentJourney(page: Page, info: TestInfo) {
   })
   await upload.getByRole("button", { name: "Upload document", exact: true }).click()
   const uploadResponse = await uploaded
+  if (uploadResponse.status() !== 200) {
+    const responseBody = await uploadResponse.json().catch(() => null) as { errors?: unknown } | null
+    const knownErrors = new Set([
+      "Attachment limit is not configured.",
+      "Attachment exceeds the configured limit.",
+      "The scanner did not accept this file.",
+      "The file was not accepted by the scanner.",
+      "Unsupported file.",
+    ])
+    await observation(info, "operations-document-upload-blocked", {
+      stage: "supplier-private-upload", httpStatus: uploadResponse.status(),
+      producerErrors: Array.isArray(responseBody?.errors)
+        ? responseBody.errors.filter((value): value is string => typeof value === "string" && knownErrors.has(value))
+        : [],
+      scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
+      bypassedScanner: false,
+    })
+  }
   expect(uploadResponse.status()).toBe(200)
   expect(new URL(uploadResponse.url()).searchParams.get("recordVersion")).toBe(String(beforeVersion))
   expect(await uploadResponse.json()).toMatchObject({ ok: true })

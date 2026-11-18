@@ -2,12 +2,18 @@ import { expect, test, type Locator, type Page } from "@playwright/test"
 import { asRecord } from "./journey"
 
 export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
-  await page.goto(`${origin}/sucafina/procurement?page=Requests`)
+  const entry = await page.goto(`${origin}/sucafina/procurement?page=Requests`)
+  // Regression: a fresh installation must serve a functional Requests form,
+  // not the previously observed 503 swallowed as a missing form.
+  expect(entry?.status()).toBe(200)
   const form = page.locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   const title = "CI Decisions — explicit requisition proposal"
   await form.getByLabel("Title", { exact: true }).fill(title)
-  await form.getByLabel("Type", { exact: true }).selectOption("service")
+  const type = form.locator('select[name="pr.type"]')
+  await expect(type).toHaveCount(1)
+  await expect(type.locator('option[value="service"]')).toHaveCount(1)
+  await type.selectOption("service")
   await form.getByLabel("Description", { exact: true }).fill("Human requisition for the Decisions approval and recovery journey")
   await form.getByLabel("Estimated amount", { exact: true }).fill("100")
   await form.getByLabel("Cost centre", { exact: true }).fill("Decisions verification")

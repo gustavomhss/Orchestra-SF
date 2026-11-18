@@ -121,7 +121,21 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(root.getByLabel("Remove records missing from supplied sheets", { exact: true })).not.toBeChecked()
   const admission = waiting("import-admit", "POST"), previewResponse = waiting("import-preview", "POST"), detailResponse = waiting("import-detail")
   await root.getByRole("button", { name: "Preview changes", exact: true }).click()
-  const admitted = await valueOf<{ ref: string }>(await admission)
+  const admissionTransport = await admission
+  if (admissionTransport.status() !== 200) {
+    const statusBody = await admissionTransport.json().catch(() => null) as { status?: unknown } | null
+    // Preserve the original producer's denial; attach only the public status
+    // category, never enrollment, selectors, source bytes or authority internals.
+    await observation(info, "operations-import-admission-blocked", {
+      stage: "import-admit", httpStatus: admissionTransport.status(),
+      producerStatus: typeof statusBody?.status === "string" &&
+        ["denied", "unavailable", "stale", "needs-input", "invalid", "conflict"].includes(statusBody.status)
+        ? statusBody.status : "unclassified",
+      scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
+      syntheticApprovalUsed: false,
+    })
+  }
+  const admitted = await valueOf<{ ref: string }>(admissionTransport)
   const previewTransport = await previewResponse
   expect(previewTransport.request().postDataJSON()).toEqual({ admittedFileRef: admitted.ref, format: "xlsx", options: {} })
   const preview = await valueOf<ImportManifest>(previewTransport)

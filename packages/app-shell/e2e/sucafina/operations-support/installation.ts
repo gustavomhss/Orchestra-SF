@@ -120,7 +120,11 @@ export function createOperationsInstallation(input: {
     const status = ["ok", "denied", "unavailable", "stale", "conflict", "needs-input"].includes(result.status) ? result.status : "unavailable"
     const entry = { stage, status, ...(result.reason ? { reason: diagnosticReasons.has(result.reason) ? result.reason : "withheld" } : {}) }
     admissionDiagnostics.push(entry)
-    console.info("OPERATIONS75_IMPORT_GATE " + JSON.stringify(entry))
+    // Playwright's webServer suppresses routine stdout. Keep successful probes
+    // as informational, but surface a bounded, allowlisted failed gate on
+    // stderr so an HTTP 403 can be attributed to its original producer.
+    if (status === "ok") console.info("OPERATIONS75_IMPORT_GATE " + JSON.stringify(entry))
+    else console.error("OPERATIONS75_IMPORT_GATE " + JSON.stringify(entry))
   }
   const ui: typeof authority.ui = {
     ...authority.ui,
