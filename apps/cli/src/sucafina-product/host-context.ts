@@ -1,4 +1,5 @@
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
+import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { randomUUID } from "node:crypto"
 import { createSfPersonalViews } from "../../../../modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
 import { createSfPersonalViewAuthority } from "./personal-view-authority.ts"
@@ -49,6 +50,7 @@ import { createSfAlternativeCaptures } from "./alternative-captures.ts"
 import { createSfBaselineServices } from "./baseline-services.ts"
 import { createSfMemoryServices } from "./memory-services.ts"
 import { createSfMemoryHttp } from "./memory-http.ts"
+import { createSfSimilarCases217 } from "../../../../modules/sucafina/Sucafinav1/product/memory/similarity217.ts"
 import { createSfWorkSignals, deriveSfWorkRefKey } from "./work-signals.ts"
 import { createSfWorkDestinations } from "./work-destinations.ts"
 import { createSfWorkHttp } from "./work-http.ts"
@@ -68,6 +70,7 @@ import { createSfInstalledRoutinePublication } from "./routine-installed-publica
 import { createSfRoutineInputReaders } from "./routine-inputs.ts"
 import { createSfRoutineServices } from "./routine-services.ts"
 import { createSfRoutineNativeAdapter } from "./routine-native-adapter.ts"
+import { createSfReviewsProjectionHandlers } from "./native-ui/reviews.ts"
 import { createSfRoutineNativeAdmission, type SfRoutineNativeAdmissionOrigin, type SfRoutineNativeAdmissionIntent } from "./routine-native-admission.ts"
 import { createSfRoutineNativeOwnerRegistry } from "./routine-native-registry.ts"
 import type { SfRoutineNativeHistoricalAuthority } from "./routine-native-registry.ts"
@@ -87,6 +90,8 @@ import { createSfProductContribution, createSfProductDispatch } from "./contribu
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
+import { observeSfReportHealth, observeSfReviewReadHealth } from "./native-ui/report-health.ts"
+import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
 import type { SfStoppedRun } from "./native-execution.ts"
@@ -300,7 +305,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
   residentReviewReaders.bindOutcome(memory.reviewOutcome)
-  const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
+  const similarCases = createSfSimilarCases217({ caseRecall: business.caseRecall, cases: business.cases, context: business.context, host: authority.host })
+  const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase, similarCases })
   for (const replacement of extended.replacements) {
     const index = business.descriptors.findIndex((descriptor) => descriptor.id === replacement.id)
     if (index < 0) business.descriptors.push(replacement)
@@ -926,11 +932,34 @@ export const createSfHostRuntimeWithRoutineNative = async (
   // missing operation probes remain explicitly unavailable (never catalog-ready).
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
+    operational: async (request, stamp) => {
+      const observations = await Promise.allSettled([
+        input.operational?.(request, stamp) ?? Promise.resolve([]),
+        observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
+        observeSfReviewReadHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          source: (operationId) => {
+            if (operationId === "dashboard.dashboard-review") {
+              if (services.productHttp !== productHttp) return undefined
+              return { producer: productHttp, dependencies: [authority, authority.ui, authority.state, dashboardHttp,
+                business.dashboardServices, business.dashboardServices.readReview, input.persistence, input.persistence.resolveScopedSource] }
+            }
+            if (!nativeReviewProjection || services.nativeReviewProjection !== nativeReviewProjection || !extended.reviews) return undefined
+            return { producer: nativeReviewProjection, dependencies: [authority, authority.ui, authority.state, nativeReviewProjection.handle,
+              extended.reviews, extended.reviews.reviews, extended.reviews.reviews.read, business.dashboardServices,
+              business.dashboardServices.discover, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
+              input.persistence, input.persistence.resolveScopedSource] }
+          } }, request, stamp),
+        observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
+      ])
+      return observations.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
+    },
     admit: async (request) => {
       const admitted = await authority.readContextAdmission(request)
       if (admitted.status !== "ok") return admitted
       if (!input.authMode) return { status: "unavailable", reason: "host-unavailable" } as const
-      const destinations = sfContextDestinationsFromPages(admitted.pages)
+      const actions = input.nativeActions ? await input.nativeActions(request, admitted.stamp, admitted.pages) : undefined
+      if (input.nativeActions && !Array.isArray(actions)) return { status: "unavailable", reason: "contract-mismatch" } as const
+      const destinations = sfContextDestinationsFromPages(admitted.pages, actions)
       if (!destinations) return { status: "unavailable", reason: "contract-mismatch" } as const
       return { status: "ok", stamp: admitted.stamp, authMode: input.authMode, destinations } as const
     },
@@ -950,14 +979,23 @@ export const createSfHostRuntimeWithRoutineNative = async (
     }),
     withCase: business.withCase,
   })
-  const services: SfHostServices & { productHtml: SfProductHtml; nativeUiProducts: typeof nativeUiProducts } = { ...authority, nativeUiProducts, productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
+  // Keep original A07 authority, business, Review application and scoped persistence;
+  // never manufacture a principal or dispatch a second review engine.
+  const nativeReviewProjection = extended.reviews
+    ? createSfReviewsProjectionHandlers({ origin: input.origin, mount: input.mount,
+        authority, business, reviews: extended.reviews, persistence: input.persistence })
+    : undefined
+  const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
+  const services: SfHostServices & { productHtml: SfProductHtml; nativeUiProducts: typeof nativeUiProducts } = { ...authority, nativeUiProducts,
+    ...(nativeReviewProjection ? { nativeReviewProjection } : {}),
+    productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work, workDestinations: { read: workDestinations.read },
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
     routineRuns: { discoverRuns: async (context) =>
       context.kind !== "ui" || !nativeRoutineProducer ? routineServices.routineRuns.discoverRuns(context)
         : (await reauthenticatedRoutineHistory(context, () => routineServices.routineRuns.discoverRuns(context))
           ?? { status: "denied" as const, reason: "native-routine-historical-origin-unavailable" }) },
-    productHttp: async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+    productHttp,
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }

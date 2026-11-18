@@ -36,7 +36,7 @@ test("mounted Planner producer observes real views without writing and requires 
     const before = await store.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
     const actual = await observeSfPlannerPages(application as never, original, stamp)
     const caps = ["CAP17", "CAP18", "CAP19", "CAP20", "CAP21", "CAP22", "CAP23"]
-    expect<readonly string[]>(actual.map((entry) => entry.operationId)).toEqual(caps.map((cap) => `domain.page.${cap}`))
+    expect(actual.map((entry) => entry.operationId)).toEqual(caps.map((cap) => `domain.page.${cap}`))
     const destinations = caps.map((capabilityId) => ({ capabilityId, surface: "planner", canRead: true, allowedActionIds: [] }))
     const handlers = createSfPlannerProjectionHandlers({ origin: "http://localhost", mount: "/sucafina", application,
       readContext: async () => ({ status: "ok", value: { stamp, destinations } }) } as never)

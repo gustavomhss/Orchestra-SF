@@ -21,23 +21,13 @@ const PUBLIC_HEADERS = [
   "content-type", "content-disposition", "x-sf-access-revision", "x-sf-review-binding", "x-sf-contract-revision",
 ] as const
 
-function safeSfDownloadDisposition(value: string): boolean {
-  if (/^attachment;\s*filename="[^\\/\r\n"]{1,160}"$/i.test(value)) return true
-  const encoded = /^attachment;\s*filename\*=UTF-8''([A-Za-z0-9._%-]{1,200})$/i.exec(value)
-  if (!encoded) return false
-  try {
-    const name = decodeURIComponent(encoded[1]!)
-    return name.length > 0 && name.length <= 160 && !/[\x00-\x1f\x7f/\\]/.test(name)
-  } catch { return false }
-}
-
 export function publicSfHeaders(headers: Record<string, string | string[] | undefined>): SfWireHeaders {
   const result: Record<string, string> = {}
   for (const name of PUBLIC_HEADERS) {
     const raw = headers[name]
     const value = Array.isArray(raw) ? raw[0] : raw
     if (typeof value !== "string" || !value || value.length > 2048 || /[\x00-\x1f\x7f]/.test(value)) continue
-    if (name === "content-disposition" && !safeSfDownloadDisposition(value)) continue
+    if (name === "content-disposition" && !/^attachment;\s*filename="[^\\/\r\n"]{1,160}"$/i.test(value)) continue
     result[name] = value
   }
   return result
@@ -131,17 +121,6 @@ export function requestSfHttp(deps: Readonly<{
           response.pause()
           if (failed || ended) return
           // Pause synchronously; only the current producer chunk is held until consumed.
-          // Reject oversized producer frames before copying them into IPC
-          // staging memory. The 64KiB pull and 32MiB total remain enforced
-          // independently by the desktop owner-bound broker.
-          if (chunk.byteLength > 1024 * 1024) {
-            failed = true
-            buffered = undefined
-            request.abort()
-            cleanup()
-            drain()
-            return
-          }
           buffered = new Uint8Array(chunk)
           offset = 0
           drain()
