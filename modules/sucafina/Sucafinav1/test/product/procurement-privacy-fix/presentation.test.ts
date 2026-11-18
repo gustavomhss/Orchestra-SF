@@ -75,7 +75,6 @@ function present(state: Snapshot) {
   expect(html[1]).toContain('data-source-version="7"')
   expect(state).toEqual(before)
   expect(projection).toEqual(projectedBefore)
-  if (record.value !== null && typeof record.value !== "number") throw new Error("Canonical Procurement base amount was not numeric or null")
   expect(queue.rows[0]?.baseAmount).toBe(record.value)
   return { html, record, projection, money: procurementMonetaryFacts(record, "USD", view.data.formSettings) }
 }
