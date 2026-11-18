@@ -1,6 +1,5 @@
 import { roleMap } from "../../runtime/admin.ts"
 import { object, rows } from "../../runtime/contract.ts"
-import { plannerHeadcountInputs } from "../../runtime/planner.ts"
 import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import { plannerKeys } from "../../src/nav.ts"
 import { fteDecember, variance } from "../../src/planner-accounts.ts"
@@ -14,7 +13,6 @@ import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import { projectPlanner } from "./adapter.ts"
 import { plannerMonthlyPrefix } from "./bi.ts"
 import { plannerHrMonthState } from "./headcount-months.ts"
-import { plannerActualMonth } from "./actual-presence.ts"
 import { plannerCoverageComplete } from "./coverage.ts"
 import { simulateScenario } from "./scenario-port.ts"
 import type { PlannerScenarioInputs } from "./scenario-port.ts"
@@ -44,23 +42,16 @@ export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId
   const summary = object(safe.summary)
   // The legacy policy permits domain aggregates to owners/viewers. Qualify those already
   // calculated amounts privately, retaining only aggregate state after rate redaction.
-  const qualification = { ...version, restrictedHr: false, hrMonthStates: undefined, fteInputsKnown, hc: plannerHeadcountInputs(object(raw)) }
+  const rawHc = object(object(raw).hc)
+  const qualification = { ...version, restrictedHr: false, hrMonthStates: undefined, fteInputsKnown, hc: { ...rawHc, rates: rows(rawHc.rates).map((rate) => ({ ...rate, id: String(rate.id ?? "") })) } }
   const hrMonthStates = Object.fromEntries(rows(summary.lines).filter((line) => line.synthetic === true).map((line) => [String(line.id), Array.from({ length: 12 }, (_, index) => plannerHrMonthState(qualification, line, index + 1))]))
   return { ...safe, restrictedHr: false, fteInputsKnown, hrMonthStates, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
-}
-
-/** Map the authenticated principal to the same actor used by Planner source projections. */
-export function plannerSourceActor(snapshot: Snapshot, principal: Awaited<ReturnType<DomainPortHost["authenticate"]>>, principalRef: string): Actor | undefined {
-  if (!principal || principal.id !== principalRef || principal.id.startsWith("local:")) return undefined
-  const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
-  const access = object(object(snapshot.data.access)[principal.id])
-  return { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
 }
 
 export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
-    simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource, qualify: buildPlannerFinancialProjection }, request, binding),
+    simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource }, request, binding),
     compareScenarios: (request, binding) => input.scenarios ? compareScenarios({ ...input, scenarios: input.scenarios }, request, binding) : Promise.resolve({ status: "unavailable", reason: "scenario-comparison-not-connected" }),
     evaluateSensitivity: input.sensitivity ?? (async () => ({ status: "unavailable", reason: "sensitivity-not-connected" })),
   }
@@ -79,15 +70,7 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   const end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(request.period.end)
   if (!start || !end || start[1] !== end[1] || Number(start[2]) < 1 || Number(end[2]) > 12 || Number(start[2]) > Number(end[2]) || Number(end[3]) !== new Date(Date.UTC(Number(end[1]), Number(end[2]), 0)).getUTCDate())
     return { status: "needs-input", reason: "period-must-cover-whole-months-in-one-year" }
-  const sameSource = request.baseRef === request.candidateRef
-  // A self-comparison observes one source per stage. Each later stage still reads
-  // again; neither authority nor source results are cached between observations.
-  const readPair = async <T>(read: (reference: string) => Promise<T>): Promise<[T, T]> => {
-    if (sameSource) { const value = structuredClone(await read(request.baseRef)); return [value, structuredClone(value)] }
-    const observe = async (reference: string) => structuredClone(await read(reference))
-    return Promise.all([observe(request.baseRef), observe(request.candidateRef)])
-  }
-  const source = await readPair((reference) => input.sources.resolveForecastSource(reference, binding))
+  const source = await Promise.all([input.sources.resolveForecastSource(request.baseRef, binding), input.sources.resolveForecastSource(request.candidateRef, binding)])
   const failure = source.find((result) => result.status !== "ok")
   if (failure) return failure
   if (source[0].status !== "ok" || source[1].status !== "ok") return { status: "unavailable", reason: "source-unavailable" }
@@ -95,14 +78,15 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   const evidence = selected.map((entry) => entry.evidence)
   if (evidence.some((ref, index) => ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== binding.binding.installationId || ref.projectId !== binding.binding.projectId || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || ref.target.recordId !== selected[index].versionId || !ref.target.period || ref.target.period.start > request.period.start || ref.target.period.end < request.period.end))
     return { status: "denied", reason: "source-scope-mismatch" }
-  const coverage = await readPair((reference) => input.sources.resolveForecastCoverage(reference, binding))
+  const coverage = structuredClone(await Promise.all([input.sources.resolveForecastCoverage(request.baseRef, binding), input.sources.resolveForecastCoverage(request.candidateRef, binding)]))
   const coverageFailure = coverage.find((entry) => entry.status !== "ok" && entry.status !== "unavailable" && entry.status !== "needs-input")
   if (coverageFailure && coverageFailure.status !== "ok") return coverageFailure
   const read = async () => input.host.persistence.transaction("planner", async (snapshot) => {
     const principal = await input.host.authenticate(http, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
-    const actor = plannerSourceActor(snapshot, principal, binding.binding.principalRef)
-    if (!actor) return { commit: false, value: undefined }
-    if (sameSource) { const projection = projectPlannerSource(snapshot, actor, selected[0]!.versionId); return { commit: false, value: [projection, structuredClone(projection)] } }
+    if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: undefined }
+    const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
+    const access = object(object(snapshot.data.access)[principal.id])
+    const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
     return { commit: false, value: selected.map((item) => projectPlannerSource(snapshot, actor, item.versionId)) }
   })
   const projections = await read()
@@ -110,7 +94,7 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   if (projections.some((projection, index) => !projection || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...evidence[index].target.fields].sort()) || digestSfValue({ versionId: evidence[index].target.recordId, projection }) !== evidence[index].target.projectionDigest)) return { status: "stale", reason: "source-changed" }
   if (projections.some((projection) => projection?.year !== Number(start[1]))) return { status: "needs-input", reason: "period-version-mismatch" }
   const base = buildPlannerFinancialProjection({ projection: projections[0]!, ref: evidence[0], period: request.period, binding, at: environment.at })
-  const candidate = sameSource ? structuredClone(base) : buildPlannerFinancialProjection({ projection: projections[1]!, ref: evidence[1], period: request.period, binding, at: environment.at })
+  const candidate = buildPlannerFinancialProjection({ projection: projections[1]!, ref: evidence[1], period: request.period, binding, at: environment.at })
   if ([base, candidate].some((projection) => new Set(projection.values.map((value) => value.id)).size !== projection.values.length)) return { status: "unavailable", reason: "duplicate-projection-value-id" }
   const total = (projection: DomainProjection) => projection.components.reduce((sum, item) => sum + (item.amount ?? 0), 0)
   const unknown = [...base.components, ...candidate.components].some((component) => component.amount === null) || [...base.missing, ...candidate.missing].some((entry) => entry.reason === "restricted")
@@ -126,9 +110,9 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   const refs = coverage.flatMap((entry) => entry.status === "ok" ? [entry.value.coverageRef] : [])
   const latest = await read()
   if (!(await input.host.revalidate(binding)) || !latest || latest.some((projection, index) => !projection || digestSfValue({ versionId: evidence[index].target.recordId, projection }) !== evidence[index].target.projectionDigest)) return { status: "stale", reason: "source-or-authority-changed" }
-  const refreshed = await readPair((reference) => input.sources.resolveForecastSource(reference, binding))
+  const refreshed = await Promise.all([input.sources.resolveForecastSource(request.baseRef, binding), input.sources.resolveForecastSource(request.candidateRef, binding)])
   if (!(await input.host.revalidate(binding)) || refreshed.some((entry, index) => entry.status !== "ok" || entry.value.evidence.refDigest !== evidence[index].refDigest)) return { status: "stale", reason: "source-revoked-or-replaced" }
-  const latestCoverage = await readPair((reference) => input.sources.resolveForecastCoverage(reference, binding))
+  const latestCoverage = await Promise.all([input.sources.resolveForecastCoverage(request.baseRef, binding), input.sources.resolveForecastCoverage(request.candidateRef, binding)])
   if (!(await input.host.revalidate(binding)) || latestCoverage.some((entry, index) => digestSfValue(entry) !== digestSfValue(coverage[index]))) return { status: "stale", reason: "coverage-or-authority-changed" }
   const common = { analysisBasis: "domain" as const, domainApplied: true, baseline: base, candidate, sourceRefs: evidence, gaps }
   if (complete && difference !== null) {
@@ -206,20 +190,15 @@ export function buildPlannerFinancialProjection(input: { projection: Record<stri
     const hrBudget = hrKnown ? hr.reduce((sum, line) => sum + Number((line.budget as number[])[month - 1]), 0) : null
     values.push({ id: `${monthlyPrefix}:${month}:hr-budget`, value: hrBudget, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: hrBudget === null ? "absent" : "confirmed" })
     for (const measure of ["budget", "actual", "outlook"] as const) {
-      if (measure === "actual") {
-        const actual = plannerActualMonth(summary, month, input.projection.restrictedHr === true)
-        values.push({ id: `${monthlyPrefix}:${month}:actual`, value: actual.value, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: actual.evidenceState })
-        continue
-      }
       const totals = Array.isArray(summary[measure]) ? summary[measure] : []
       const unknown = !lines.length || lines.some((line) => {
         if (line.synthetic === true) {
           const hr = plannerHrMonthState(input.projection, line, month)
-          return (measure === "budget" ? hr.budgetUsd : hr.outlookUsd) === null
+          return (measure === "budget" ? hr.budgetUsd : measure === "actual" ? hr.actualUsd : hr.outlookUsd) === null
         }
         if (Array.isArray(summary.warnings) && summary.warnings.includes(String(line.cur ?? "USD").toUpperCase())) return true
         if (measure === "outlook") return false
-        const raw = line.b
+        const raw = measure === "budget" ? line.b : line.a
         return !Array.isArray(raw) || typeof raw[month - 1] !== "number" || !Number.isFinite(raw[month - 1])
       }) || measure === "outlook" && (matching.length !== lines.length || matching.some((component) => component.amount === null))
       const value = !unknown && typeof totals[month - 1] === "number" && Number.isFinite(totals[month - 1]) ? totals[month - 1] : null
