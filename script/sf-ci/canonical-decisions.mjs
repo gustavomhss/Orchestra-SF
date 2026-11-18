@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { execFileSync } from "node:child_process"
 import { createHash } from "node:crypto"
 import { readFileSync, writeFileSync } from "node:fs"
 import path from "node:path"
@@ -258,12 +257,14 @@ function record(input, decision) {
   }
 }
 
-function requireBlobText(repo, blob) {
-  return execFileSync("git", ["cat-file", "blob", blob], { cwd: repo, maxBuffer: 1 << 30 }).toString()
+function gitText(repo, args) {
+  const result = Bun.spawnSync(["git", ...args], { cwd: repo, stdout: "pipe", stderr: "pipe" })
+  if (result.exitCode !== 0) throw new Error(`git ${args[0]} failed: ${result.stderr.toString().trim()}`)
+  return result.stdout.toString()
 }
 
-function gitText(repo, args) {
-  return execFileSync("git", args, { cwd: repo, maxBuffer: 1 << 30 }).toString()
+function requireBlobText(repo, blob) {
+  return gitText(repo, ["cat-file", "blob", blob])
 }
 
 function readLedger(repo) {
