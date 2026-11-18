@@ -1,0 +1,793 @@
+{
+  "schema": "sf-demo-flamengo-scenarios-v1",
+  "fixture": "FLA-DEMO-2026",
+  "synthetic": true,
+  "referenceDate": "2026-11-16",
+  "execution": {
+    "status": "PENDING",
+    "reason": "no credentialed installed proof executed; these are intended expectations, not results"
+  },
+  "provisioning": {
+    "base": "42d344a0efc4d85187388f149c54acac2db171da",
+    "installRequired": true,
+    "principalBindingsRequired": true,
+    "seedMethod": "authorized authenticated product HTTP/real workbench imports and native schedule UI only",
+    "directDatabaseWrites": false
+  },
+  "planner": {
+    "fiscalYear": 2026,
+    "versionName": "FLA-DEMO-FY2026",
+    "lines": [
+      {
+        "id": "FLA-PLN-FUT-PRO-OPEX",
+        "department": "DEPT-FUT-PRO",
+        "costCenter": "FLA-FUT-PRO-01",
+        "description": "FLA-DEMO Futebol Profissional — serviços",
+        "element": "services",
+        "currency": "BRL",
+        "forecastJanuary": 2140000,
+        "budgetAnnual": 24000000,
+        "forecastAnnual": 25680000
+      },
+      {
+        "id": "FLA-PLN-FUT-BASE-OPEX",
+        "department": "DEPT-FUT-BASE",
+        "costCenter": "FLA-FUT-BASE-01",
+        "description": "FLA-DEMO Categorias de Base — serviços",
+        "element": "services",
+        "currency": "BRL",
+        "forecastJanuary": 944167,
+        "budgetAnnual": 11000000,
+        "forecastAnnual": 11330000
+      },
+      {
+        "id": "FLA-PLN-MKT-OPEX",
+        "department": "DEPT-MKT",
+        "costCenter": "FLA-MKT-01",
+        "description": "FLA-DEMO Marketing — serviços",
+        "element": "services",
+        "currency": "BRL",
+        "forecastJanuary": 1353333,
+        "budgetAnnual": 14500000,
+        "forecastAnnual": 16240000
+      },
+      {
+        "id": "FLA-PLN-OPS-OPEX",
+        "department": "DEPT-OPS",
+        "costCenter": "FLA-OPS-01",
+        "description": "FLA-DEMO Operações/Estádio — serviços",
+        "element": "services",
+        "currency": "BRL",
+        "forecastJanuary": 1665000,
+        "budgetAnnual": 18500000,
+        "forecastAnnual": 19980000
+      },
+      {
+        "id": "FLA-PLN-TEC-OPEX",
+        "department": "DEPT-TEC",
+        "costCenter": "FLA-TEC-01",
+        "description": "FLA-DEMO Tecnologia — serviços",
+        "element": "services",
+        "currency": "BRL",
+        "forecastJanuary": 870833,
+        "budgetAnnual": 9500000,
+        "forecastAnnual": 10450000
+      },
+      {
+        "id": "FLA-PLN-LOG-OPEX",
+        "department": "DEPT-LOG",
+        "costCenter": "FLA-LOG-01",
+        "description": "FLA-DEMO Logística — serviços",
+        "element": "services",
+        "currency": "BRL",
+        "forecastJanuary": 617667,
+        "budgetAnnual": 6800000,
+        "forecastAnnual": 7412000
+      },
+      {
+        "id": "FLA-PLN-TEC-EUR-PENDING",
+        "department": "DEPT-TEC",
+        "costCenter": "FLA-TEC-02",
+        "description": "FLA-DEMO serviço em EUR sem taxa de conversão",
+        "element": "licenses",
+        "currency": "EUR",
+        "forecastJanuary": 8800,
+        "budgetAnnual": 105600,
+        "forecastAnnual": 105600,
+        "fxState": "unavailable"
+      }
+    ],
+    "rateCases": [
+      {
+        "currency": "BRL",
+        "usdPerUnit": 0.2,
+        "certainty": "synthetic"
+      },
+      {
+        "currency": "EUR",
+        "usdPerUnit": null,
+        "certainty": "absent"
+      }
+    ],
+    "scenarios": [
+      {
+        "id": "BASE",
+        "multiplier": 1,
+        "condition": "approved assumptions only"
+      },
+      {
+        "id": "ATTENDANCE_UP",
+        "multipliers": {
+          "DEPT-MKT": 1.13,
+          "DEPT-OPS": 1.08
+        },
+        "condition": "simulated 13% and 8% uplift"
+      },
+      {
+        "id": "FX_STRESS",
+        "currency": "EUR",
+        "usdPerUnit": null,
+        "condition": "conversion blocked until rate evidence"
+      }
+    ]
+  },
+  "procurement": {
+    "requests": [
+      {
+        "id": "PR-DRAFT",
+        "title": "[FLA-DEMO/2026] PR-DRAFT",
+        "stageTarget": "draft",
+        "requester": "Caio",
+        "category": "Logística",
+        "department": "DEPT-LOG",
+        "costCenter": "FLA-LOG-01",
+        "amount": 50000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-DRAFT",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create"
+        ],
+        "expectedFinal": "draft"
+      },
+      {
+        "id": "PR-PENDING",
+        "title": "[FLA-DEMO/2026] PR-PENDING",
+        "stageTarget": "pr_pending",
+        "requester": "Caio",
+        "category": "Material esportivo",
+        "department": "DEPT-FUT-PRO",
+        "costCenter": "FLA-FUT-PRO-01",
+        "amount": 180000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-PENDING",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create",
+          "submit_pr"
+        ],
+        "expectedFinal": "pr_pending"
+      },
+      {
+        "id": "PR-SOURCING",
+        "title": "[FLA-DEMO/2026] PR-SOURCING",
+        "stageTarget": "sourcing",
+        "requester": "Caio",
+        "category": "Material esportivo",
+        "department": "DEPT-MKT",
+        "costCenter": "FLA-MKT-01",
+        "amount": 242000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-SOURCING",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create",
+          "submit_pr",
+          "approve"
+        ],
+        "expectedFinal": "sourcing"
+      },
+      {
+        "id": "PR-SRC-PENDING",
+        "title": "[FLA-DEMO/2026] PR-SRC-PENDING",
+        "stageTarget": "src_pending",
+        "requester": "Caio",
+        "category": "Nutrição",
+        "department": "DEPT-FUT-BASE",
+        "costCenter": "FLA-FUT-BASE-01",
+        "amount": 62000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-SRC-PENDING",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create",
+          "submit_pr",
+          "approve",
+          "submit_sourcing"
+        ],
+        "expectedFinal": "src_pending"
+      },
+      {
+        "id": "PR-PO-DRAFT",
+        "title": "[FLA-DEMO/2026] PR-PO-DRAFT",
+        "stageTarget": "po_draft",
+        "requester": "Caio",
+        "category": "Logística",
+        "department": "DEPT-LOG",
+        "costCenter": "FLA-LOG-01",
+        "amount": 90000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-PO-DRAFT",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create",
+          "submit_pr",
+          "approve",
+          "submit_sourcing",
+          "approve"
+        ],
+        "expectedFinal": "po_draft"
+      },
+      {
+        "id": "PR-PO-PENDING",
+        "title": "[FLA-DEMO/2026] PR-PO-PENDING",
+        "stageTarget": "po_pending",
+        "requester": "Caio",
+        "category": "Serviços de estádio",
+        "department": "DEPT-OPS",
+        "costCenter": "FLA-OPS-01",
+        "amount": 440000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-PO-PENDING",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create",
+          "submit_pr",
+          "approve",
+          "submit_sourcing",
+          "approve",
+          "submit_po"
+        ],
+        "expectedFinal": "po_pending"
+      },
+      {
+        "id": "PR-APPROVED",
+        "title": "[FLA-DEMO/2026] PR-APPROVED",
+        "stageTarget": "po_approved",
+        "requester": "Caio",
+        "category": "Tecnologia",
+        "department": "DEPT-TEC",
+        "costCenter": "FLA-TEC-01",
+        "amount": 155000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-APPROVED",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create",
+          "submit_pr",
+          "approve",
+          "submit_sourcing",
+          "approve",
+          "submit_po",
+          "approve"
+        ],
+        "expectedFinal": "po_approved"
+      },
+      {
+        "id": "PR-REJECTED",
+        "title": "[FLA-DEMO/2026] PR-REJECTED",
+        "stageTarget": "pr_rejected",
+        "requester": "Caio",
+        "category": "Material esportivo",
+        "department": "DEPT-MKT",
+        "costCenter": "FLA-MKT-01",
+        "amount": 900000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-REJECTED",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create",
+          "submit_pr",
+          "reject"
+        ],
+        "expectedFinal": "pr_rejected"
+      },
+      {
+        "id": "PR-FX-MISSING",
+        "title": "[FLA-DEMO/2026] PR-FX-MISSING",
+        "stageTarget": "sourcing",
+        "requester": "Caio",
+        "category": "Tecnologia",
+        "department": "DEPT-TEC",
+        "costCenter": "FLA-TEC-01",
+        "amount": 83000,
+        "currency": "EUR",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Teste de cotação sem câmbio EUR; submissão deve ser recusada",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create",
+          "submit_pr",
+          "approve"
+        ],
+        "expectedFinal": "sourcing"
+      },
+      {
+        "id": "PR-REVISION",
+        "title": "[FLA-DEMO/2026] PR-REVISION",
+        "stageTarget": "draft",
+        "requester": "Caio",
+        "category": "Serviços de estádio",
+        "department": "DEPT-OPS",
+        "costCenter": "FLA-OPS-01",
+        "amount": 55000,
+        "currency": "BRL",
+        "needBy": "2026-12-20",
+        "type": "service",
+        "description": "Prestação sintética: PR-REVISION",
+        "justification": "Demonstração de fluxo auditável; sem compra real",
+        "transitionSequence": [
+          "create"
+        ],
+        "expectedFinal": "draft"
+      }
+    ],
+    "quoteSetRefs": [
+      "QUOTES-MKT",
+      "QUOTES-TECH"
+    ],
+    "approveActor": "Gabriel",
+    "buyerActor": "Pedro",
+    "requesterActor": "Caio",
+    "requestStatusAuthoritative": "module's transition machine; target state is not inserted",
+    "approvalMustBeReal": true
+  },
+  "decisions": {
+    "cases": [
+      {
+        "id": "DEC-STADIUM",
+        "objective": "[FLA-DEMO/2026] Capacidade de atendimento em partidas",
+        "horizon": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "currency": "BRL",
+        "criteria": [
+          "Custo anual conhecido",
+          "Capacidade de atendimento",
+          "Exposição à indisponibilidade"
+        ],
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Operação própria",
+            "annualCostBRL": 850000,
+            "serviceScore": 7
+          },
+          {
+            "id": "B",
+            "label": "Serviço contratado",
+            "annualCostBRL": 720000,
+            "serviceScore": 9
+          }
+        ],
+        "sensitivity": [
+          {
+            "parameter": "frequência de eventos",
+            "base": 24,
+            "stress": 30
+          },
+          {
+            "parameter": "custo/hora",
+            "base": 100,
+            "stress": 115
+          }
+        ],
+        "expected": "human review required; not an approval"
+      },
+      {
+        "id": "DEC-TECH",
+        "objective": "[FLA-DEMO/2026] Plataforma de análise esportiva",
+        "horizon": {
+          "start": "2026-01-01",
+          "end": "2027-12-31"
+        },
+        "currency": "USD",
+        "criteria": [
+          "Cobertura de dados",
+          "Custo USD conhecido",
+          "FX EUR indisponível"
+        ],
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Licença sintética",
+            "annualCostUSD": 110000
+          },
+          {
+            "id": "B",
+            "label": "Construção interna",
+            "annualCostUSD": 157000
+          }
+        ],
+        "sensitivity": [
+          {
+            "parameter": "equipe",
+            "base": 4,
+            "stress": 6
+          }
+        ],
+        "expected": "no real external supplier evidence"
+      }
+    ]
+  },
+  "reports": [
+    {
+      "id": "RPT-BOARD-2026",
+      "title": "FLA-DEMO revisão orçamentária e compras 2026",
+      "topics": [
+        "Executive Dashboard",
+        "OPEX Detail",
+        "CAPEX Projects",
+        "Projects"
+      ],
+      "assertions": [
+        "6 departments",
+        "12 cost centers",
+        "monthly forecast preservation",
+        "record/ref drilldown and version CAS",
+        "changed source remains distinguishable from preserved review"
+      ],
+      "year": 2026,
+      "status": "PENDING"
+    }
+  ],
+  "imports": [
+    {
+      "id": "IMP-PLANNER-2026",
+      "surface": "planner",
+      "format": "xlsx",
+      "target": "FLA-DEMO-FY2026",
+      "options": {
+        "newVersion": false,
+        "removeMissing": false,
+        "preview": {}
+      },
+      "expected": "one reviewed amount update, one durable receipt; no apply in default dry-run"
+    }
+  ],
+  "schedules": [
+    {
+      "id": "SCH-MON-FX",
+      "label": "FX pending weekly review",
+      "recipeRef": null,
+      "conditionRef": null,
+      "recurrence": "0 9 * * 1",
+      "timezone": "America/Sao_Paulo",
+      "status": "PENDING",
+      "reason": "native recipe and condition references must be provisioned by authorized C07/host UI, no arbitrary HTTP endpoint found"
+    },
+    {
+      "id": "SCH-MON-PROC",
+      "label": "Pending requisitions weekly review",
+      "recipeRef": null,
+      "conditionRef": null,
+      "recurrence": "0 10 * * 1",
+      "timezone": "America/Sao_Paulo",
+      "status": "PENDING",
+      "reason": "native schedule host and human authorization required"
+    }
+  ],
+  "denial": {
+    "actor": "Zico",
+    "authenticated": true,
+    "tenantGroups": [],
+    "probes": [
+      "dashboard",
+      "planner",
+      "procurement"
+    ],
+    "expectedHttpStatus": 403,
+    "forbiddenStatuses": [
+      200,
+      302
+    ],
+    "notEquivalentToUnauthenticated401": true,
+    "expectedBodyRule": "no private record leakage"
+  },
+  "matrix": [
+    {
+      "id": "DASH-OPS",
+      "journeys": [
+        "dashboard",
+        "U39",
+        "UI-REPORTS"
+      ],
+      "actor": "Daniel",
+      "fixtures": [
+        "org.departments",
+        "org.costCenters",
+        "plannerLines"
+      ],
+      "expected": "OPEX por centro de custo, janeiro e FY, fonte e drilldown; nenhuma célula missing como 0",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "DASH-CAPEX",
+      "journeys": [
+        "dashboard",
+        "U40"
+      ],
+      "actor": "Daniel",
+      "fixtures": [
+        "org.costCenters.FLA-OPS-02"
+      ],
+      "expected": "CAPEX Projects/2026 real quando produtor admitir projeto; preserve CAS/version",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PLN-BASE",
+      "journeys": [
+        "planner",
+        "AM01",
+        "AM02"
+      ],
+      "actor": "Sofie",
+      "fixtures": [
+        "plannerLines"
+      ],
+      "expected": "Budget+forecast por departamento com seleção da versão oficial e sumário conhecido",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PLN-FX",
+      "journeys": [
+        "planner",
+        "AM03"
+      ],
+      "actor": "Sofie",
+      "fixtures": [
+        "plannerLines.FLA-PLN-TEC-EUR-PENDING"
+      ],
+      "expected": "FX EUR missing = unavailable/null, não zero ou rate estimado",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-DRAFT",
+      "journeys": [
+        "procurement"
+      ],
+      "actor": "Caio",
+      "fixtures": [
+        "PR-DRAFT"
+      ],
+      "expected": "draft, possibilidade de edição e reabertura sem duplicar",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-PENDING",
+      "journeys": [
+        "procurement",
+        "AM04"
+      ],
+      "actor": "Caio",
+      "fixtures": [
+        "PR-PENDING"
+      ],
+      "expected": "pr_pending e fila de Gabriel quando rota de aprovação apontar ao principal real",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-SOURCING",
+      "journeys": [
+        "procurement",
+        "UI-OPERATIONS"
+      ],
+      "actor": "Pedro",
+      "fixtures": [
+        "PR-SOURCING",
+        "QUOTES-MKT"
+      ],
+      "expected": "sourcing, comparativo de 2 fornecedores e seleção revisada",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-SRC-PENDING",
+      "journeys": [
+        "procurement"
+      ],
+      "actor": "Pedro",
+      "fixtures": [
+        "PR-SRC-PENDING"
+      ],
+      "expected": "src_pending, FX snapshot original retido",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-PO-DRAFT",
+      "journeys": [
+        "procurement"
+      ],
+      "actor": "Pedro",
+      "fixtures": [
+        "PR-PO-DRAFT"
+      ],
+      "expected": "po_draft, origem de cotação preservada",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-PO-PENDING",
+      "journeys": [
+        "procurement"
+      ],
+      "actor": "Pedro",
+      "fixtures": [
+        "PR-PO-PENDING"
+      ],
+      "expected": "po_pending, aprovação não implícita",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-APPROVED",
+      "journeys": [
+        "procurement",
+        "AM04"
+      ],
+      "actor": "Gabriel",
+      "fixtures": [
+        "PR-APPROVED"
+      ],
+      "expected": "po_approved após aprovações explícitas; nunca issue automático",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-REJECTED",
+      "journeys": [
+        "procurement"
+      ],
+      "actor": "Gabriel",
+      "fixtures": [
+        "PR-REJECTED"
+      ],
+      "expected": "pr_rejected, razão registrada",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-FX-MISSING",
+      "journeys": [
+        "procurement",
+        "UI-OPERATIONS"
+      ],
+      "actor": "Pedro",
+      "fixtures": [
+        "PR-FX-MISSING",
+        "QUOTES-TECH"
+      ],
+      "expected": "submit_sourcing com EUR sem FX retorna 422/no_fx; nenhuma nova revisão",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "PROC-REVISION",
+      "journeys": [
+        "procurement",
+        "UI-OPERATIONS"
+      ],
+      "actor": "Caio",
+      "fixtures": [
+        "PR-REVISION"
+      ],
+      "expected": "save altera uma versão e comando com versão antiga retorna 409 sem write",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "IMPORT-PLANNER",
+      "journeys": [
+        "imports",
+        "UI-OPERATIONS",
+        "AM05"
+      ],
+      "actor": "Daniel",
+      "fixtures": [
+        "plannerLines.FLA-PLN-TEC-OPEX"
+      ],
+      "expected": "arquivo XLSX real → admit → preview sem write → Apply humano explícito → receipt persistente → retry unchanged",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "DECISIONS",
+      "journeys": [
+        "decisions",
+        "UI-DECISIONS",
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04"
+      ],
+      "actor": "Daniel",
+      "fixtures": [
+        "decisionCases"
+      ],
+      "expected": "alternativas e sensibilidade com fontes admissíveis, decisão humana e versão histórica",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "REPORT-DRILLDOWN",
+      "journeys": [
+        "reports",
+        "UI-REPORTS",
+        "AM05"
+      ],
+      "actor": "Daniel",
+      "fixtures": [
+        "report"
+      ],
+      "expected": "relatório 2026 com 6 deptos, drilldown por fonte e versão, DOCX/PPTX com conteúdo",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "SCHEDULE-DIGEST",
+      "journeys": [
+        "schedules",
+        "AM06"
+      ],
+      "actor": "Daniel",
+      "fixtures": [
+        "schedules"
+      ],
+      "expected": "schedules pelo native host; blocked/unavailable explícito quando C07/occurrence não composto",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    },
+    {
+      "id": "ZICO-DENIED",
+      "journeys": [
+        "Q01-dashboard",
+        "Q01-planner",
+        "Q01-procurement",
+        "U39",
+        "U40"
+      ],
+      "actor": "Zico",
+      "fixtures": [
+        "org.actors.Zico"
+      ],
+      "expected": "Zico autenticado real sem grupo, GET 403 em dashboard/planner/procurement, nenhum dado ou side-effect",
+      "status": "PENDING",
+      "reason": "requires installed candidate, authenticated group mapping and same-SHA run receipts"
+    }
+  ]
+}
