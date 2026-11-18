@@ -20,7 +20,7 @@ import { buildPlannerFinancialProjection, projectPlannerSource } from "../../../
 import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { createProcurementCollectionRegistry, createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { selection } from "../wp10/resident-runtime/fixture.ts"
-import inputs from "./fixtures/consumer-inputs.json" with { type: "json" }
+import inputs from "./fixtures/consumer-inputs.json"
 
 const period = { start: "2027-01-01", end: "2027-01-31" }
 const identity = { installationId: "synthetic-installation", projectId: "synthetic-project", principalRef: "synthetic-buyer", accessRevision: "synthetic-access", policyVersion: "synthetic-policy" }

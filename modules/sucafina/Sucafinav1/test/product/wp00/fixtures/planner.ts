@@ -1,5 +1,5 @@
-import corpus from "./corpus-v2.json" with { type: "json" }
-import inputs from "./consumer-inputs.json" with { type: "json" }
+import corpus from "./corpus-v2.json"
+import inputs from "./consumer-inputs.json"
 import type { Snapshot } from "../../../../runtime/contract.ts"
 
 /** Maps explicit monthly inputs to the existing Planner snapshot, without a second calculator. */

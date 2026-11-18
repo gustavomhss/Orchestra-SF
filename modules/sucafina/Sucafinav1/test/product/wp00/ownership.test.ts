@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import manifest from "../../../docs/product-campaign/wp00/ownership-v1.json" with { type: "json" }
+import manifest from "../../../docs/product-campaign/wp00/ownership-v1.json"
 import { findOwnershipConflicts, resolveOwnership } from "../../../docs/product-campaign/wp00/check-ownership.ts"
 import type { OwnershipGrant } from "../../../docs/product-campaign/wp00/check-ownership.ts"
 

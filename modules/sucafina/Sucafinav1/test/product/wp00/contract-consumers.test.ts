@@ -7,7 +7,7 @@ import { testPersistence } from "../../fixture/persistence.ts"
 import type { SfProductState, SfStateNamespace } from "../../../product/contracts/state.ts"
 import { object } from "../../../runtime/contract.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
-import freeze from "../../../product/contracts/freeze-v1.json" with { type: "json" }
+import freeze from "../../../product/contracts/freeze-v1.json"
 
 const authority = { principalRef: "synthetic-principal", policyVersion: "policy-1", accessRevision: "access-1" }
 const request = new Request("https://example.test/wp00-contract-consumer")
