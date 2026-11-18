@@ -39,7 +39,8 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
         manifestDigest: fixture.bundle.manifestDigest })
       const session = await fixture.session(admission.sessionID)
       const messages = await fixture.messages(admission.sessionID)
-      expect(session.agent).toBe(admission.profile.id)
+      if (!session) throw new Error("Native admitted session unavailable")
+      expect<string | undefined>(session.agent).toBe(admission.profile.id)
       expect(messages).toContainEqual(expect.objectContaining({ id: receipt.loadedMessageId, type: "synthetic" }))
       expect(messages.every((message) => message.type === "synthetic")).toBe(true)
     }

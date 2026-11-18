@@ -96,6 +96,7 @@ test("recorded mixed verifier rechecks Procurement after real historical Planner
     expect(allowed).toBe(false)
     expect(race.fired).toBe(true)
     expect(f.observations.refs.filter((entry) => entry.id === f.refs.procurement.refId).length).toBeGreaterThan(2)
+    if (!race.after) throw new Error("Procurement drift race omitted its durable audit observation")
     expect(await f.audit()).toEqual(race.after)
     console.info("SF_MIXED_RECORDED_PROOF", JSON.stringify({ fixture: "external-drift-during-planner", captureStatus: capture.status,
       eventFired: race.fired, allowed, observations: f.observations.refs, effectsDigest: digestSfValue(race.after), financialEffect: false }))
@@ -124,6 +125,7 @@ test("mixed fallback refuses genuine source change between independent reads and
     expect(race.fired).toBe(true)
     expect(race.after).toBeDefined()
     expect(f.observations.refs.filter((entry) => entry.id === f.refs.base.refId)).toHaveLength(2)
+    if (!race.after) throw new Error("Planner source race omitted its durable audit observation")
     expect(await f.audit()).toEqual(race.after)
     expect(f.decision).toEqual(original)
     delete f.observations.afterResolve

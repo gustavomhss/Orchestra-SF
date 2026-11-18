@@ -76,7 +76,7 @@ test("FTE unit-only series remains valid without optional currency", () => {
   ]))
   expect(result.status).toBe("ok")
   if (result.status !== "ok") return
-  expect(result.series[0]?.values).toEqual(data.values)
+  expect<readonly ProjectionValue[] | undefined>(result.series[0]?.values).toEqual(data.values)
 })
 
 test("an explicit dimension with optional currency is not rejected merely because its currency differs from its unit", () => {
