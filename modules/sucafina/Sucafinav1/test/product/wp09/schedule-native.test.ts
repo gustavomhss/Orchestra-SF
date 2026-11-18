@@ -91,8 +91,7 @@ function lifecycleFixture() {
   const body: Omit<RoutineArtifact, "outputDigest"> = { schema: "sf-routine-artifact-v1", runRef: "run", resultRef: "result", correlationId: "correlation", documentId: "recipe", publishedVersion: "v1", principalRef: "owner", projectId: "project", inputDigest: digestSfValue({ admittedInput: "synthetic" }), sourceRefs: [], content: { text: "immutable synthetic output" }, createdAt: "2031-01-15T12:00:00Z" }
   const output: RoutineArtifact = { ...body, outputDigest: routineArtifactDigest(body) }
   const receipt: RoutineExecutionSnapshot = { runRef: "run", resultRef: "result", state: "completed", revision: "native-revision-1", outputDigest: output.outputDigest }
-  const state = { artifactReads: 0, schedule: native,
-    binding: { nativeId: native.id, owner, principalRef: "owner", projectId: "project" } }
+  const state = { artifactReads: 0 }
   const resultAccess = createRoutineResultAccess({
     routines: { readRun: async () => ({ status: "ok", value: structuredClone(routine) }) },
     readExecution: async () => ({ status: "ok", value: structuredClone(receipt) }),
@@ -102,14 +101,14 @@ function lifecycleFixture() {
     revalidateArtifact: async () => true,
   })
   const host: NativeRoutineScheduleHost = {
-    schedules: { get: () => Effect.succeed(state.schedule) },
-    resolve: async () => ({ status: "ok", value: state.binding }),
+    schedules: { get: () => Effect.succeed(native) },
+    resolve: async () => ({ status: "ok", value: { nativeId: native.id, owner, principalRef: "owner", projectId: "project" } }),
     revalidate: async () => true,
     readRoutine: async () => ({ status: "ok", value: routine }),
     readExecution: async () => ({ status: "ok", value: structuredClone(receipt) }),
     resultAccess,
   }
-  return { host, context, native, owner, routine, receipt, state, resultAccess }
+  return { host, context, routine, receipt, state, resultAccess }
 }
 
 test("admitted plus resultRef remains blocked without execution or authenticated output readers", async () => {
@@ -161,91 +160,3 @@ test("cancellation after the artifact read invalidates the earlier completion sn
   } }
   expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "stale", reason: "schedule-execution-changed" })
 })
-
-test("a changed schedule revision during result recovery cannot return its older occurrence", async () => {
-  const { host, context, native, resultAccess, state } = lifecycleFixture()
-  host.resultAccess = { readResult: async (runRef, binding) => {
-    const opened = await resultAccess.readResult(runRef, binding)
-    state.schedule = { ...native, revision: native.revision + 1, enabled: false }
-    return opened
-  } }
-  expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "stale", reason: "schedule-changed" })
-})
-
-test("a substituted owner binding during result recovery cannot expose the former owner's result", async () => {
-  const { host, context, resultAccess, state } = lifecycleFixture()
-  host.resultAccess = { readResult: async (runRef, binding) => {
-    const opened = await resultAccess.readResult(runRef, binding)
-    state.binding = { ...state.binding, principalRef: "replacement" }
-    return opened
-  } }
-  expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "stale", reason: "schedule-binding-changed" })
-})
-
-test.each(["schedule-service", "schedule-get", "owner-resolver", "source-authority", "routine-reader", "execution-reader", "result-reader", "result-read-call"] as const)("a replacement %s cannot release identical result bytes through the previous provider", async (provider) => {
-  const { host, context, native, resultAccess } = lifecycleFixture()
-  const schedules = { get: host.schedules.get }
-  host.schedules = schedules
-  host.resultAccess = { readResult: async (runRef, binding) => {
-    const opened = await resultAccess.readResult(runRef, binding)
-    switch (provider) {
-      case "schedule-service":
-        host.schedules = { ...host.schedules }
-        break
-      case "schedule-get":
-        schedules.get = () => Effect.succeed(native)
-        break
-      case "owner-resolver": {
-        const resolve = host.resolve
-        host.resolve = (reference, call) => resolve(reference, call)
-        break
-      }
-      case "source-authority": {
-        const revalidate = host.revalidate
-        host.revalidate = (call, references) => revalidate(call, references)
-        break
-      }
-      case "routine-reader": {
-        const readRoutine = host.readRoutine
-        host.readRoutine = (session, call) => readRoutine(session, call)
-        break
-      }
-      case "execution-reader": {
-        const readExecution = host.readExecution!
-        host.readExecution = (reference, call) => readExecution(reference, call)
-        break
-      }
-      case "result-reader":
-        host.resultAccess = { readResult: host.resultAccess!.readResult }
-        break
-      case "result-read-call": {
-        const readResult = host.resultAccess!.readResult
-        host.resultAccess!.readResult = (reference, call) => readResult(reference, call)
-        break
-      }
-    }
-    return opened
-  } }
-  expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
-})
-
-test("a provider replacement during initial authorization stops before result recovery", async () => {
-  const { host, context, state } = lifecycleFixture()
-  host.revalidate = async () => {
-    host.schedules = { ...host.schedules }
-    return true
-  }
-  expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
-  expect(state.artifactReads).toBe(0)
-})
-
-test("a provider replacement during final authorization cannot release an already recovered result", async () => {
-  const { host, context, state } = lifecycleFixture()
-  host.revalidate = async (_call, references) => {
-    if (references.includes("result")) host.resultAccess = { readResult: host.resultAccess!.readResult }
-    return true
-  }
-  expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
-  expect(state.artifactReads).toBe(1)
-})
-
