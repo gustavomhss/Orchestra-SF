@@ -67,7 +67,6 @@ test("real composed DOCX and PPTX preserve content, source bindings, bytes and t
       expect(response.headers.get("x-content-type-options")).toBe("nosniff")
       expect(response.headers.get("cache-control")).toBe("no-store")
       const bytes = new Uint8Array(await response.arrayBuffer())
-      if (typeof state.bytes !== "string" || typeof state.digest !== "string") throw new Error("Committed Office artifact omitted encoded bytes or digest")
       expect(Buffer.from(bytes).toString("base64")).toBe(state.bytes)
       const opened = await inspectOfficeBytes(bytes, format)
       expect(opened.sha256).toBe(state.digest)
@@ -216,7 +215,6 @@ test("real C08 corrupted or tombstoned artifacts fail closed before download wit
     }
     const recovered = await f.request("review-download", { query: { artifactRef: ref } })
     expect(recovered.status).toBe(200)
-    if (typeof original.bytes !== "string") throw new Error("Original sealed Office artifact omitted encoded bytes")
     expect(Buffer.from(await recovered.arrayBuffer()).toString("base64")).toBe(original.bytes)
     console.log("SF66_CORRUPTION_RESULT " + JSON.stringify({ rejected: mutations.map((mutation) => mutation.label), denial_body: "Access denied", read_side_effects: false }))
   } finally { await f.dispose() }
