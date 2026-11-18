@@ -72,7 +72,7 @@ test("component: exact POST/UI origin wraps one original settlement with the rea
     expect(yield* f.database.db.select().from(SessionMessageTable).all().pipe(Effect.orDie)).toEqual(beforeMessages)
   })))
 
-const unavailable: ReadonlyArray<[string, ReturnType<AdmissionFixture["admission"]["readiness"]>, (f: AdmissionFixture) => void]> = [
+const unavailable: ReadonlyArray<[string, string, (f: AdmissionFixture) => void]> = [
   ["missing authenticated origin", "authenticated-native-origin-unavailable", (f) => { f.admissionState.origin = undefined }],
   ["unready authenticated origin", "authenticated-native-origin-unavailable", (f) => { f.admissionState.originReady = false }],
   ["missing publication", "publication-unavailable", (f) => { f.admissionState.publication = undefined }],
