@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h.closure213.quality-requests.v1",
+  "mission": 213,
+  "epoch": "desktop-bootstrap-e1-browser213",
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/194",
+  "status": "SELECTORS_SPECIFIED_NOT_DISPATCHED",
+  "dispatchAuthority214": {
+    "owner": "214 after transferred 200",
+    "preconditions": [
+      "211 materializes PR194 and exact preimage-checked inert desktop/package/bun.lock/electron.vite patch on sf-closure-bundle/PR191; compare final candidate C",
+      "199 source packaged-electron.spec.ts and its private host/attest-d01.ts consumed on the same candidate C (native installed host not a web surrogate)",
+      "runner provides real SHA-verified packaged executable, source build/run IDs and isolated profile under a GITHUB_ACTIONS host",
+      "original Microsoft test identity and selected producer installation (not synthetic), private SF_NATIVE_D01_PACKAGED_ATTESTATION file; code without this must still be compiled",
+      "no duplicate CI run for unchanged material; only causal change or recorded transient justifies re-dispatch"
+    ],
+    "surgical": [
+      {
+        "selector": "apps/desktop/test/sucafina-bootstrap213/enrollment-bridge.test.ts",
+        "type": "behavioral unit",
+        "execution": "authorized runner only"
+      },
+      {
+        "selector": "apps/desktop/src/main/sucafina/broker.test.ts",
+        "type": "existing broker regression",
+        "execution": "authorized runner only"
+      },
+      {
+        "selector": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts",
+        "type": "packaged Electron 199+213 driver",
+        "execution": "authorized host only; _electron.launch real binary, private manifest+attestation; Microsoft login; session partition; original ctx.context; wrong-owner denial, logout and stale binding"
+      }
+    ],
+    "expected": "run URL/ID, exact tested SHA/tree, named selectors, D01 real artifacts or explicit BLOCKED_EXTERNAL; never mock/testweb PASS",
+    "dispatched": false
+  },
+  "compiler190": {
+    "owner": "190 compiler-only",
+    "preconditions": [
+      "211 applies package.json,bun.lock,electron.vite postimages on same candidate C",
+      "ensure public client bindings import path and electron-vite externalize/bundle contract"
+    ],
+    "packages": [
+      {
+        "cwd": "apps/desktop",
+        "command": "bun typecheck"
+      }
+    ],
+    "afterCliChangeOptional": {
+      "cwd": "apps/cli",
+      "command": "bun typecheck"
+    },
+    "expected": "typecheck runner result and material SHA or compiler finding; no TS schema relaxation; do not run local",
+    "dispatched": false
+  },
+  "otherConsumers": [
+    {
+      "mission": 211,
+      "action": "CAS apply INERT-211-CROSS-LEASE.patch (package/lock/vite, D01 spec only after consuming exact 199 blob), compose PR194 into PR191; preserve existing 15 files and AM03 fix"
+    },
+    {
+      "mission": 199,
+      "action": "reuse original installed host, packaged binary provenance; consume 213 D01 handler/preload readiness helper after 211 applies inert spec edit"
+    }
+  ],
+  "reRun": false,
+  "externalIdentityAbsent": "Only installed D01 proof blocked; code/driver/requests committed.",
+  "globalRelease": false
+}
