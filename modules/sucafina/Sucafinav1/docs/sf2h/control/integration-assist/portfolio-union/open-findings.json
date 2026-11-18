@@ -1,0 +1,213 @@
+{
+  "schema": "wp13-semantic-union-open-findings-v1",
+  "original_manifest": {
+    "schema": "sf2-owner-intake-v1",
+    "target_before": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "MANDATORY_FINDINGS_OPEN_NO_GLOBAL_ACCEPTANCE",
+    "items": [
+      {
+        "id": "MEMORY-INTEGRITY",
+        "owner": "session13 / WP10 + WP14",
+        "state": "PRODUCER_FIX_NOT_CONSUMED",
+        "evidence": "WP10 final C09 handoff records stale.preflight accepting a damaged record; f511f30b... was an in-flight preflight, not a closed product fix.",
+        "next": "Consume a closed producer SHA with original failure and authority/reopen negatives; no integrator rewrite of integrity semantics."
+      },
+      {
+        "id": "FIN-IND-005",
+        "owner": "Finance performance / PR42",
+        "state": "SOURCE_FAIL_RECHECK_REQUIRED",
+        "evidence": "Closed W4 source still times out in the long journey at 180000ms; six performance files and all nine new test/helpers plus campaign test preserved.",
+        "next": "Owner completes the 15000/15001, historical read, replay/reopen journey without assertion or budget relaxation; qualify exact composed candidate."
+      },
+      {
+        "id": "WP13-SEMANTIC-UNION",
+        "owner": "WP13 / Intelligence + Finance",
+        "state": "HELD_FOR_OWNER",
+        "evidence": "PR37 W19 has divergent portfolio behavior from PR36 published W7 and later Finance read/final-fence work. Do not select by timestamp.",
+        "next": "Reconcile the held per-file alternatives against admitted PR36+PR42 closure; three exclusive verification inputs are preserved; no producer algorithm invented.",
+        "manifest": "held-intake.json"
+      },
+      {
+        "id": "C05-INSTALLED-CLOSURE",
+        "owner": "Collaboration / WP10 composition",
+        "state": "INSTALLED_PROOF_PENDING",
+        "evidence": "SF2-SEAM-001 publishes review thread context producer through HTTP; recipient/reviewAnswerSource/prepareAccess/work metadata/native C16 completion and installed-host proof remain outside its guarantee. UI47 exact receipt consumer now co-composed with PR41 producer.",
+        "next": "Owner mounts the remaining real authority callbacks and proves distinct recipient, exact source pin, revocation, replay and C06 attachment in installed host."
+      },
+      {
+        "id": "C12-RECOVERY",
+        "owner": "prepared-change/host + first-save producer",
+        "state": "OPEN_SOURCE_FINDINGS",
+        "evidence": "PR60 stage/postcondition corrections and PR46 exact retry are admitted; original I-OPS-02, first-save outcome and lost-register findings are not declared closed by composition.",
+        "next": "Reconcile producer receipts/current executor and exact uncertainty recovery; use original test oracles."
+      },
+      {
+        "id": "E2E-OPERATIONS",
+        "owner": "Operations E2E + config/installed-host owner",
+        "state": "NOMINAL_SPEC_PRESENT_NOT_RUN",
+        "evidence": "PR23 five cases have selection-only source proof; current wp04 selection starts only legacy procurement filename and fixture must mount import/documents real services.",
+        "next": "Complete owner fixture/config composition for nominal Operations; retain 5 functional cases and explicit C06 material gap."
+      },
+      {
+        "id": "E2E-DECISIONS",
+        "owner": "Decisions E2E / WP11",
+        "state": "NOMINAL_SPEC_PRESENT_INCOMPLETE",
+        "evidence": "PR40 source had 0 UI actions due profile bootstrap failure. Admitted WP12 profile/manifest both contain AlternativeDraft, so source failure is not automatically current. Positive alternative/choice/Apply/C17 journey remains incomplete.",
+        "next": "Qualify bootstrap on composed C and complete missing nominal journey with actual UI and exact result contracts."
+      },
+      {
+        "id": "E2E-REPORTS",
+        "owner": "Reports E2E / WP07 + WP10",
+        "state": "NOMINAL_SPEC_PRESENT_NOT_RUN",
+        "evidence": "PR27 original four cases were blocked on composition; current tree now includes agenda, review application and PR41 context, but mounted C05/UI, export/reopen/revocation proofs remain pending.",
+        "next": "Reconcile installed report/review flow and run exact nominal selection on C; do not substitute component proof."
+      },
+      {
+        "id": "TYPECHECK-GUARDS",
+        "owner": "S0 final gates + each owning producer",
+        "state": "NOT_RUN_ON_COMPOSED_TREE",
+        "evidence": "Source diagnostics differ by tree and cannot be summed or transferred. Deterministic sourcing missing export and its controller fixture import have been reconciled, without claiming compiler success.",
+        "next": "Run canonical generated checks, five typechecks, spawn imports, guard and E2E graph coverage in authorized hosted lane."
+      },
+      {
+        "id": "NATIVE-AM-REVIEW",
+        "owner": "S0 and existing assigned verifiers",
+        "state": "NOT_RUN_ON_COMPOSED_TREE",
+        "evidence": "Source native/component evidence is not proof for the composed candidate.",
+        "next": "AM01–AM06, 39 operations/8 packs, 18 skills/5 profiles, Atlas real scanner/restart/consumers, and three independent final reviews on same C."
+      }
+    ]
+  },
+  "latest_observed_manifest": {
+    "schema": "sf2-owner-intake-v1",
+    "target_before": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "MANDATORY_FINDINGS_OPEN_NO_GLOBAL_ACCEPTANCE",
+    "items": [
+      {
+        "id": "MEMORY-INTEGRITY",
+        "owner": "session13 / WP10 + WP14",
+        "state": "PRODUCER_FIX_NOT_CONSUMED",
+        "evidence": "Latest observed Memory attempt05 is a product implementation commit, not a terminal handoff; two product files plus dedicated tests are still in the owner's validation cycle. Keep closed WP10 54317229 in this candidate; preserve attempt05 as pending source intake.",
+        "next": "Consume a closed producer SHA with original failure and authority/reopen negatives; no integrator rewrite of integrity semantics.",
+        "latest_observed_source": "5d42e44fb623db78a3a6ef025d2317a3fb653432"
+      },
+      {
+        "id": "FIN-IND-005",
+        "owner": "Finance performance / PR42",
+        "state": "SOURCE_FAIL_RECHECK_REQUIRED",
+        "evidence": "Closed W4 source still times out in the long journey at 180000ms; six performance files and all nine new test/helpers plus campaign test preserved.",
+        "next": "Owner completes the 15000/15001, historical read, replay/reopen journey without assertion or budget relaxation; qualify exact composed candidate."
+      },
+      {
+        "id": "WP13-SEMANTIC-UNION",
+        "owner": "WP13 / Intelligence + Finance",
+        "state": "HELD_FOR_OWNER",
+        "evidence": "PR37 W19 has divergent portfolio behavior from PR36 published W7 and later Finance read/final-fence work. Do not select by timestamp.",
+        "next": "Reconcile the held per-file alternatives against admitted PR36+PR42 closure; three exclusive verification inputs are preserved; no producer algorithm invented.",
+        "manifest": "held-intake.json"
+      },
+      {
+        "id": "C05-INSTALLED-CLOSURE",
+        "owner": "Collaboration / WP10 composition",
+        "state": "INSTALLED_PROOF_PENDING",
+        "evidence": "SF2-SEAM-001 publishes review thread context producer through HTTP; recipient/reviewAnswerSource/prepareAccess/work metadata/native C16 completion and installed-host proof remain outside its guarantee. UI47 exact receipt consumer now co-composed with PR41 producer.",
+        "next": "Owner mounts the remaining real authority callbacks and proves distinct recipient, exact source pin, revocation, replay and C06 attachment in installed host."
+      },
+      {
+        "id": "C12-RECOVERY",
+        "owner": "prepared-change/host + first-save producer",
+        "state": "OPEN_SOURCE_FINDINGS",
+        "evidence": "PR60 stage/postcondition corrections and PR46 exact retry are admitted; original I-OPS-02, first-save outcome and lost-register findings are not declared closed by composition.",
+        "next": "Reconcile producer receipts/current executor and exact uncertainty recovery; use original test oracles."
+      },
+      {
+        "id": "E2E-OPERATIONS",
+        "owner": "Operations E2E + config/installed-host owner",
+        "state": "NOMINAL_SPEC_PRESENT_NOT_RUN",
+        "evidence": "PR23 five cases have selection-only source proof; current wp04 selection starts only legacy procurement filename and fixture must mount import/documents real services.",
+        "next": "Complete owner fixture/config composition for nominal Operations; retain 5 functional cases and explicit C06 material gap."
+      },
+      {
+        "id": "E2E-DECISIONS",
+        "owner": "Decisions E2E / WP11",
+        "state": "NOMINAL_SPEC_PRESENT_INCOMPLETE",
+        "evidence": "PR40 source had 0 UI actions due profile bootstrap failure. Admitted WP12 profile/manifest both contain AlternativeDraft, so source failure is not automatically current. Positive alternative/choice/Apply/C17 journey remains incomplete.",
+        "next": "Qualify bootstrap on composed C and complete missing nominal journey with actual UI and exact result contracts."
+      },
+      {
+        "id": "E2E-REPORTS",
+        "owner": "Reports E2E / WP07 + WP10",
+        "state": "NOMINAL_SPEC_PRESENT_NOT_RUN",
+        "evidence": "PR27 original four cases were blocked on composition; current tree now includes agenda, review application and PR41 context, but mounted C05/UI, export/reopen/revocation proofs remain pending.",
+        "next": "Reconcile installed report/review flow and run exact nominal selection on C; do not substitute component proof."
+      },
+      {
+        "id": "TYPECHECK-GUARDS",
+        "owner": "S0 final gates + each owning producer",
+        "state": "NOT_RUN_ON_COMPOSED_TREE",
+        "evidence": "Source diagnostics differ by tree and cannot be summed or transferred. Deterministic sourcing missing export and its controller fixture import have been reconciled, without claiming compiler success.",
+        "next": "Run canonical generated checks, five typechecks, spawn imports, guard and E2E graph coverage in authorized hosted lane."
+      },
+      {
+        "id": "NATIVE-AM-REVIEW",
+        "owner": "S0 and existing assigned verifiers",
+        "state": "NOT_RUN_ON_COMPOSED_TREE",
+        "evidence": "Source native/component evidence is not proof for the composed candidate.",
+        "next": "AM01–AM06, 39 operations/8 packs, 18 skills/5 profiles, Atlas real scanner/restart/consumers, and three independent final reviews on same C."
+      },
+      {
+        "id": "C17-BETWEEN-OBSERVATIONS",
+        "owner": "WP00/WP10 source authority",
+        "state": "SOURCE_STATIC_FINDING_RECHECK_REQUIRED",
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "selected_blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+        "source_finding": "R1-W23-C17-BETWEEN-OBSERVATIONS",
+        "next": "Reconcile Memory/current observation owner output and prove Request/header/lease identity across independent observations; do not infer closure from C09 or intraobservation negatives."
+      },
+      {
+        "id": "CURRENT-CHOICE-COHORT",
+        "owner": "Finance/WP11 and WP10 composition",
+        "state": "HELD_PUBLISHED_ALTERNATIVE",
+        "source_pr": 35,
+        "source_sha": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "next": "Reconcile the CurrentChoice cohort against admitted Finance and host contracts; do not silently substitute its inherited snapshot."
+      }
+    ],
+    "previous_manifest_commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+    "source_cutoff_utc": "2026-11-14T20:20:03Z"
+  },
+  "finance_update": {
+    "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+    "product_commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "status": "OPEN_IMPLEMENTED_NOT_CLOSED",
+    "source_handoff": "https://github.com/gustavomhss/Orchestra-SF/blob/d8d586e19c824f75a88494a9c3677faac617e81d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/HANDOFF-FINAL.md",
+    "note": "S3 ainda falha na guarda180000 antes de15000/15001, releitura posterior, replay e reabertura da jornada. S2 de43/350 é prova da fonte, não desta união.",
+    "no_repeat_without_owner_material_delta": true
+  },
+  "this_delivery": {
+    "finding": "WP13-SEMANTIC-UNION",
+    "status": "COMPLETE_PATCH_PROPOSAL_AWAITING_SESSION14_APPLICATION_AND_DISPATCH",
+    "wp13_closed": false,
+    "global_release": false
+  },
+  "additional_obligations": [
+    {
+      "id": "UNION-RUNTIME-VALIDATION",
+      "owner": "session14/dispatcher",
+      "status": "NOT_RUN",
+      "next": "Aplicar a série inteira no candidato e executar seleções discriminantes; conferir serializações históricas sem apagar condições ou reutilizar proof."
+    },
+    {
+      "id": "UNION-CANCELLATION-RULE",
+      "owner": "Planner/Contracts + WP13",
+      "status": "OWNER_PROOF_REQUIRED",
+      "next": "WP13.T03.CHK.02 requer também efeito de regra contratual existente; defer neutro preservado não encerra esse critério."
+    },
+    {
+      "id": "UNION-C17-INSTALLED",
+      "owner": "WP10/WP14 + S0",
+      "status": "NOT_RUN",
+      "next": "Continuidades C17, Request/header/lease entre observações, histórico autorizado e consumidor real após restart; não substituir por tests de componente."
+    }
+  ]
+}

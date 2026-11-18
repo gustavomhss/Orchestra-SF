@@ -1,0 +1,222 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts
+index 60693fea1a9fa238ecf57c43c73d8d113911b74a..3002c859033795cac7db65261a1ff44c44a61d43 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts
+@@ -60,9 +60,10 @@
+   const proposals = new Map([["output-1", "ab".repeat(32)]])
+   const fences = (snapshots: Record<"dashboard" | "planner" | "procurement", Snapshot>) => ({ dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) })
+   let operation = "campaign-operation-1"
++  const admittedRequest = new Request("https://example.test/campaign")
+   const campaign = createPortfolioCampaign({
+     state,
+-    host: { requestFor: () => new Request("https://example.test/campaign"), revalidate: async () => access.allowed },
++    host: { requestFor: () => admittedRequest, revalidate: async () => access.allowed },
+     cases: { read: async (request) => { const parsed = /case:([^:]+):([^:]+)/.exec(request.caseRef); const item = parsed ? cases.get(decodeURIComponent(parsed[1]!)) : undefined; const found = item && item.id !== "owner" ? candidate(item, item.id) : undefined; return access.allowed && access.authorizeCase && item && item.incarnation === decodeURIComponent(parsed![2]!) ? { status: "ok", value: { context: { installationId: "install", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access", kind: "ui" }, case: { ...item, alternatives: item.alternatives.length ? item.alternatives : found && found.result ? [{ id: item.id, version: 1, title: item.id, scenario: found.scenario, result: found.result }] : [], preparedChanges: [], receipts: [] }, events: [], evidenceRefs: [], checkedAt: "2026-11-13T00:00:00Z" } } : { status: "denied", reason: "case-access-unavailable" } } },
+     resolveCandidate: async (ref) => { const found = [left, right].map((item) => candidate(item, item.id)).find((value) => value.ref === ref); return found && cases.get(found.caseRef.split(":")[1] ? decodeURIComponent(found.caseRef.split(":")[1]!) : "")?.version === 1 ? { status: "ok", value: found } : { status: "stale", reason: "case-changed" } },
+     validateCandidate: async () => access.supported ? { status: "ok", value: true } : { status: "needs-input", reason: "unsupported-candidate-effect" },
+@@ -280,3 +281,22 @@
+     await rm(world.directory, { recursive: true, force: true })
+   }
+ })
++
++test("a saved campaign remains authenticated historical data at the same owner case version", async () => {
++  const world = await harness()
++  try {
++    const saved = await world.campaign.save(world.edit(), binding)
++    if (saved.status !== "ok") throw new Error(`Campaign unavailable: ${JSON.stringify(saved)}`)
++    const request = { ownerCase: saved.value.ownerCase, commandDigest: saved.value.commandDigest }
++    expect(await world.campaign.readHistorical(request, binding)).toEqual({ status: "ok", value: { state: "historical", campaign: saved.value } })
++    expect(await world.campaign.listHistorical(saved.value.ownerCase, binding)).toEqual({ status: "ok", value: [{ state: "historical", campaign: saved.value }] })
++    world.sources.revoked = true
++    expect((await world.campaign.readHistorical(request, binding)).status).toBe("unavailable")
++    world.sources.revoked = false
++    world.access.authorizeCase = false
++    expect((await world.campaign.readHistorical(request, binding)).status).toBe("denied")
++  } finally {
++    await world.store.dispose()
++    await rm(world.directory, { recursive: true, force: true })
++  }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
+index 9af706b6a1ab27229fb8514e117550036a13b249..8ae8e056f426e128ecec38a26d646896b7c28d81 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
+@@ -64,8 +64,12 @@
+ 
+   test("rejects a preserved result from a future case version", async () => {
+     const input = harness()
++    let bindingReads = 0
++    const readBinding = input.readHistoricalBinding
++    input.readHistoricalBinding = async (request, trusted) => { bindingReads++; return readBinding(request, trusted) }
+     input.caseFor = async () => ({ status: "ok", value: { ...originalCase, version: 2 } })
+     expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
++    expect(bindingReads).toBe(0)
+   })
+ 
+   test("rejects a candidate whose case incarnation was replaced", async () => {
+@@ -380,3 +384,48 @@
+   const binding: PortfolioBinding = { ...value, bindingDigest: bindingDigest(value) }
+   return { stored, binding }
+ }
++
++test("historical candidate refuses a real case CAS in its last callback while the authority remains live", async () => {
++  const fixture = await revisedCandidate()
++  try {
++    const world = fixture.world
++    const initial = await world.state.read(world.request, "cases", (state) => ({ decision: state.cases[world.caseRef.id], result: state.decisionResults?.[fixture.scenarioResultRef] }))
++    if (initial.status !== "ok" || !initial.value.decision || !initial.value.result) throw new Error("Historical read counterexample requires the actual persisted case and C08")
++    let validations = 0
++    let attempts = 0
++    let attemptedCommits = 0
++    let writeRejected = false
++    const host = { ...world.host, revalidate: async (context: TrustedDomainContext) => {
++      validations++
++      // The reader has completed two full provenance observations. Its final
++      // callback tries an authorized, versioned write and swallows the refusal.
++      if (validations === 4) {
++        attempts++
++        await world.state.transaction(world.request, { namespace: "cases", expectedStorageVersion: initial.storageVersion, targetRef: world.caseRef.id, targetIncarnation: world.caseRef.incarnation, idempotencyKey: "wp13-history-final-case-cas", commandDigest: digestSfValue("wp13-history-final-case-cas") }, async (state) => {
++          const decision = state.cases[world.caseRef.id]
++          if (!decision) throw new Error("Case disappeared")
++          attemptedCommits++
++          state.cases[world.caseRef.id] = { ...decision, version: decision.version + 1, participants: [] }
++          return { commit: true, value: true }
++        }).catch(() => { writeRejected = true })
++      }
++      return world.host.revalidate(context)
++    } }
++    const read = createPortfolioCandidateHistoryReader({ state: world.state, cases: world.cases, results: world.results, evidence: world.evidenceService, host })
++    const rejected = await read(fixture.expected, world.context)
++    expect(rejected.status).not.toBe("ok")
++    expect(Object.hasOwn(rejected, "value")).toBe(false)
++    expect(attempts).toBe(1)
++    expect(attemptedCommits).toBe(1)
++    expect(writeRejected).toBe(true)
++    expect(await world.host.revalidate(world.context)).toBe(true)
++    const after = await world.state.read(world.request, "cases", (state) => ({ decision: state.cases[world.caseRef.id], result: state.decisionResults?.[fixture.scenarioResultRef] }))
++    expect(after.status === "ok" && after.value).toEqual(initial.value)
++    expect(after.status === "ok" && after.storageVersion).toBe(initial.storageVersion)
++    // A fresh call executes all readers again; failed root state is never cached.
++    const normal = createPortfolioCandidateHistoryReader({ state: world.state, cases: world.cases, results: world.results, evidence: world.evidenceService, host: world.host })
++    expect((await normal(fixture.expected, world.context)).status).toBe("ok")
++  } finally {
++    await fixture.world.cleanup()
++  }
++}, 120000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts
+index f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a..dc7e73e53c3fc7c67e4340597dab6afa726b52cc 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts
+@@ -36,6 +36,7 @@
+   expect(await preparePortfolioChoice({ ...input, cases: replaced }, context)).toEqual({ status: "stale", reason: "case-changed" })
+   expect(prepared).toBe(1)
+   expect(await preparePortfolioChoice({ ...input, choiceId: "other" }, context)).toEqual({ status: "conflict", reason: "choice-does-not-match-combination" })
++  expect(prepared).toBe(1)
+   const otherCase = { read: async () => ({ status: "ok", value: { case: { id: "other-case", incarnation: "one", version: 2, choices: [{ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario }] } } }) } as unknown as DecisionCasePort
+   expect(await preparePortfolioChoice({ ...input, cases: otherCase }, context)).toEqual({ status: "stale", reason: "case-changed" })
+   const ambiguous = { read: async () => ({ status: "ok", value: { case: { id: "case", incarnation: "one", version: 2, choices: ["first", "second"].map(() => ({ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario })) } } }) } as unknown as DecisionCasePort
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts
+index 9fefc7bc347bfa123fc718fa9b0000d82dfc8a80..07f7478f2b8072d9c4a5bb1dd4a831ac537efec8 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts
+@@ -1,3 +1,4 @@
++import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
+ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+ import { tmpdir } from "node:os"
+ import { join } from "node:path"
+@@ -21,7 +22,7 @@
+ import { portfolioEvaluationDigest, preparePortfolioChoice } from "../../../product/portfolio/handoff.ts"
+ import type { PortfolioHost } from "../../../product/portfolio/port.ts"
+ 
+-test("portfolio handoff prepares two WP11 changes and resumes a partial application without repeating a receipt", async () => {
++test("portfolio handoff prepares two WP11 changes and resumes after pre-dispatch unavailability without repeating a receipt", async () => {
+   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-portfolio-handoff-"))
+   await chmod(directory, 0o700)
+   const store = await openLocalStore(directory)
+@@ -54,7 +55,8 @@
+     const state = createSfProductState({ persistence: store, createId: () => "product-state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => ({ incarnation: targetRef === decision.id ? decision.incarnation : targetRef === "forecast-a" ? "target-inc-0" : "target-inc-1" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
+     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed-case", commandDigest: "a".repeat(64), targetRef: decision.id, targetIncarnation: decision.incarnation }, async (productState) => { productState.cases[decision.id] = decision; return { commit: true, value: true } })
+     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh", accessRevision: "access", checkedAt: "2027-01-01" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
+-    const host = { requestFor: () => new Request("https://example.test"), revalidate: async () => true }
++    const admittedRequest = new Request("https://example.test")
++    const host = { requestFor: () => admittedRequest, revalidate: async () => true }
+     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "install:cases", incarnation: "install-inc" }, operationIdentity: () => "case-operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => "case-event", now: () => "2027-01-01T00:00:00Z" })
+     const domainCommands = operations.map((operation, index) => {
+       const surface = index === 0 ? "planner" as const : "procurement" as const
+@@ -135,7 +137,13 @@
+         return { status: "ok", value: receipt }
+       },
+     }
+-    const execution = createPreparedExecution({ state, host, apply, reviewDigestFor, revalidateProducer: review, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => true, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
++    const execution = createPreparedExecution({ state, host, apply, reviewDigestFor, revalidateProducer: async (request, trusted) => {
++      const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)
++      // This is a refusal before durable reservation. A failure after dispatch
++      // keeps the receipt-required contract covered by handoff-domain-integration.
++      if (change?.target.surface === "procurement" && domain.procurementFails) return { status: "unavailable", reason: "supplier-system-unavailable" }
++      return review(request, trusted)
++    }, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => true, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
+       const evidenceBase = { schema: "sf-evidence-v1" as const, refId: `receipt-ref-${receipt.id}`, installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed" as const, kind: "receipt" as const, target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
+       return { state: "applied", evidence: { ...evidenceBase, refDigest: digestSfEvidenceRef(evidenceBase) } }
+     } })
+@@ -151,6 +159,9 @@
+     if (partial.status !== "ok") return
+     expect(partial.value.case.state).toBe("partially-applied")
+     expect([...domainState.values()].map((value) => value.amount)).toEqual([40, 50])
++    const beforeDispatch = await state.read(admittedRequest, "cases", (productState) => applicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: secondChange.id, choiceId: choice.id }))
++    expect(beforeDispatch.status).toBe("ok")
++    expect(beforeDispatch.status === "ok" && beforeDispatch.value).toEqual([])
+     domain.procurementFails = false
+     expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+     const beforeResume = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts
+index d5327a70410a6c52c64b534056939cbfc9eb9483..bff4abba2f156cd2418d39f053b4d6a05bde4944 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts
+@@ -4,6 +4,7 @@
+ import { expect, test } from "bun:test"
+ import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
+ import { createPreparedExecution } from "../../../product/decisions/apply.ts"
++import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
+ import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
+ import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
+ import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
+@@ -25,7 +26,7 @@
+ import { portfolioEvaluationDigest, preparePortfolioChoice } from "../../../product/portfolio/handoff.ts"
+ import type { PortfolioHost } from "../../../product/portfolio/port.ts"
+ 
+-test("portfolio handoff records a human choice against C08, prepares two changes, and resumes application without repeating a receipt", async () => {
++test("portfolio handoff retains C08 choice and resumes after pre-dispatch producer unavailability without repeating a receipt", async () => {
+   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-portfolio-handoff-"))
+   await chmod(directory, 0o700)
+   const store = await openLocalStore(directory)
+@@ -58,7 +59,8 @@
+     const state = createSfProductState({ persistence: store, createId: () => "product-state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => targetRef === decision.id ? { incarnation: decision.incarnation } : targetRef === "forecast-a" ? { incarnation: "target-inc-0" } : targetRef === "contract-b" ? { incarnation: "target-inc-1" } : undefined, authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
+     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed-case", commandDigest: "a".repeat(64), targetRef: decision.id, targetIncarnation: decision.incarnation }, async (productState) => { productState.cases[decision.id] = decision; return { commit: true, value: true } })
+     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh", accessRevision: "access", checkedAt: "2027-01-01" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
+-    const host: DomainPortHost = { persistence: store, authenticate: async () => ({ id: "principal", roles: [{ surface: "planner", role: "finance" }, { surface: "procurement", role: "buyer" }], canWrite: true }), environment: async () => ({ at: "2027-01-01T00:00:00Z", id: () => "unused", directory: [] }), requestFor: () => new Request("https://example.test"), revalidate: async (context) => context.kind === "ui" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" }
++    const admittedRequest = new Request("https://example.test")
++    const host: DomainPortHost = { persistence: store, authenticate: async () => ({ id: "principal", roles: [{ surface: "planner", role: "finance" }, { surface: "procurement", role: "buyer" }], canWrite: true }), environment: async () => ({ at: "2027-01-01T00:00:00Z", id: () => "unused", directory: [] }), requestFor: () => admittedRequest, revalidate: async (context) => context.kind === "ui" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" }
+     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "install:cases", incarnation: "install-inc" }, operationIdentity: () => "case-operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => "case-event", now: () => "2027-01-01T00:00:00Z" })
+     const domain = { procurementFails: true, plannerCalls: 0, procurementCalls: 0, receiptSequence: 0 }
+     for (const [index, surface] of (["planner", "procurement"] as const).entries()) {
+@@ -190,6 +192,10 @@
+       const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)
+       const digest = change && reviewDigestFor(context, request, change)
+       if (!change || !digest) return { status: "unavailable", reason: "review-producer-unavailable" }
++      // This controlled producer is unavailable before dispatch. A failure after
++      // WP11's durable reservation is a different case: receipt-required, covered
++      // with the real domain rollback in handoff-domain-integration.test.ts.
++      if (change.target.surface === "procurement" && domain.procurementFails) return { status: "unavailable", reason: "review-producer-unavailable" }
+       const version = await store.transaction(change.target.surface, async (snapshot) => ({ commit: false, value: snapshot.versions.wp13Amount?.version }))
+       return version === change.expectedVersion ? { status: "ok", value: { reviewDigest: digest } } : { status: "stale", reason: "review-source-changed" }
+     }, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => confirmations.apply, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
+@@ -229,6 +235,9 @@
+     expect(partial.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "planned"])
+     expect(domain.procurementCalls).toBe(0)
+     expect(await amounts()).toEqual([40, 50])
++    const beforeDispatch = await state.read(admittedRequest, "cases", (productState) => applicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: secondChange.id, choiceId: choice.id }))
++    expect(beforeDispatch.status).toBe("ok")
++    expect(beforeDispatch.status === "ok" && beforeDispatch.value).toEqual([])
+     domain.procurementFails = false
+     expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+     const beforeResume = await cases.read({ caseRef: caseSelector }, binding)

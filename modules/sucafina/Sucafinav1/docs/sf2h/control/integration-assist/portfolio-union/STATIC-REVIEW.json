@@ -1,0 +1,292 @@
+{
+  "schema": "wp13-static-payload-review-v1",
+  "status": "STATIC_ONLY_NOT_FUNCTIONAL_PASS",
+  "product_tests_run": false,
+  "ci_dispatched": false,
+  "typecheck_run": false,
+  "guards_run": false,
+  "native_run": false,
+  "agents_spawned": false,
+  "remote_transport": "GitHub MCP only",
+  "product_branches_written": [],
+  "source_product_written": false,
+  "allowed_document_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/portfolio-union/",
+  "held_entries": 31,
+  "complete_postimages": 34,
+  "patch_files": 4,
+  "proposed_destination_files": 15,
+  "unchanged_held_files": 19,
+  "source_equal_held_files": [
+    "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts"
+  ],
+  "shared_fixture_payload_changes": [],
+  "workflow_or_oracle_or_timeout_changes": [],
+  "static_text_reconstruction": [
+    {
+      "artifact": "patches/0001-sensitivity-disclosure-and-replay.patch",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "hunks": 3,
+      "preimage_blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+      "postimage_blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0001-sensitivity-disclosure-and-replay.patch",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "hunks": 2,
+      "preimage_blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+      "postimage_blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0001-sensitivity-disclosure-and-replay.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+      "hunks": 1,
+      "preimage_blob": null,
+      "postimage_blob": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0001-sensitivity-disclosure-and-replay.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "hunks": 1,
+      "preimage_blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+      "postimage_blob": "0444570a0a961c979f75388fb0708812f98497e5",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0001-sensitivity-disclosure-and-replay.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "hunks": 1,
+      "preimage_blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+      "postimage_blob": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0001-sensitivity-disclosure-and-replay.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "hunks": 1,
+      "preimage_blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "postimage_blob": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0002-human-choice-history-and-reservations.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "hunks": 2,
+      "preimage_blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+      "postimage_blob": "3002c859033795cac7db65261a1ff44c44a61d43",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0002-human-choice-history-and-reservations.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "hunks": 2,
+      "preimage_blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+      "postimage_blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0002-human-choice-history-and-reservations.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "hunks": 1,
+      "preimage_blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+      "postimage_blob": "dc7e73e53c3fc7c67e4340597dab6afa726b52cc",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0002-human-choice-history-and-reservations.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "hunks": 5,
+      "preimage_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "postimage_blob": "07f7478f2b8072d9c4a5bb1dd4a831ac537efec8",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0002-human-choice-history-and-reservations.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+      "hunks": 5,
+      "preimage_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "postimage_blob": "bff4abba2f156cd2418d39f053b4d6a05bde4944",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0003-coverage-and-source-consumers.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "hunks": 2,
+      "preimage_blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+      "postimage_blob": "01584c151cde11035a0f5154ed1ecb77b8c0b7d8",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0003-coverage-and-source-consumers.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "hunks": 2,
+      "preimage_blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "postimage_blob": "599464bcbcfd1c885fd76098e3bbc061ce80d107",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0003-coverage-and-source-consumers.patch",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "hunks": 1,
+      "preimage_blob": null,
+      "postimage_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    },
+    {
+      "artifact": "patches/0004-portfolio-contract-notes.patch",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+      "hunks": 1,
+      "preimage_blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+      "postimage_blob": "4816c7b8d5512ca34941f3f329ac7116a0412baf",
+      "static_text_reconstruction": "MATCH",
+      "payload_executed": false
+    }
+  ],
+  "assertion_inventory": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+      "preimage": "4bdad097bb82f3dc96a74090bacc567835295680",
+      "postimage": "4816c7b8d5512ca34941f3f329ac7116a0412baf",
+      "original_assertion_lines": 0,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "preimage": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+      "postimage": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "original_assertion_lines": 0,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "preimage": "46a04597df74205add4531465f35d8a55ca1f8dd",
+      "postimage": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "original_assertion_lines": 0,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "preimage": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+      "postimage": "3002c859033795cac7db65261a1ff44c44a61d43",
+      "original_assertion_lines": 56,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "preimage": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "postimage": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "original_assertion_lines": 79,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [
+        "}, 300000)",
+        "}, 300000)",
+        "}, 120000)"
+      ],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "preimage": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "postimage": "07f7478f2b8072d9c4a5bb1dd4a831ac537efec8",
+      "original_assertion_lines": 19,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "preimage": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+      "postimage": "dc7e73e53c3fc7c67e4340597dab6afa726b52cc",
+      "original_assertion_lines": 32,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "preimage": "9af706b6a1ab27229fb8514e117550036a13b249",
+      "postimage": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+      "original_assertion_lines": 50,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "preimage": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+      "postimage": "01584c151cde11035a0f5154ed1ecb77b8c0b7d8",
+      "original_assertion_lines": 40,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "preimage": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "postimage": "599464bcbcfd1c885fd76098e3bbc061ce80d107",
+      "original_assertion_lines": 69,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "preimage": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+      "postimage": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "original_assertion_lines": 12,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "preimage": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+      "postimage": "0444570a0a961c979f75388fb0708812f98497e5",
+      "original_assertion_lines": 18,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+      "preimage": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "postimage": "bff4abba2f156cd2418d39f053b4d6a05bde4944",
+      "original_assertion_lines": 57,
+      "missing_original_assertion_lines": [],
+      "original_budget_lines": [],
+      "original_budget_lines_preserved": true
+    }
+  ],
+  "limitations": [
+    "Leitura/diff/reconstrução textual dos hunks não são execução do payload, typecheck, guard ou PASS funcional.",
+    "Três formatos históricos e a união possuem regressões propostas; todas NOT_RUN.",
+    "As fixtures usam grants/dados sintéticos declarados. Não constituem UI instalada/AM/C17.",
+    "Service recreation não substitui SQLite fechado/reaberto ou processo novo; os testes de restart existentes permanecem exigidos."
+  ]
+}
