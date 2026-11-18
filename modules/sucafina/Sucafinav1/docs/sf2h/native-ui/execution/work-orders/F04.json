@@ -1,0 +1,157 @@
+{
+  "id": "F04",
+  "title": "Harness instalado e corpus isolado",
+  "kind": "foundation",
+  "status": "PLANNED_NOT_AUTHORIZED",
+  "priority": 1,
+  "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+  "owns": [
+    "packages/app-shell/e2e/sucafina/native/fixture/**",
+    "packages/app-shell/e2e/sucafina/native/fixture.ts",
+    "packages/app-shell/test-browser/sucafina-native/fixture/**"
+  ],
+  "may_write_shared_registry": false,
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "task_refs": [
+      "WP00.T03",
+      "WP10.T01",
+      "WP10.T04"
+    ],
+    "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+  },
+  "surfaces": [],
+  "exports": [
+    "nativeInstalledFixture",
+    "nativeCorpus"
+  ],
+  "depends_authoring": [
+    {
+      "lock": "ctx",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "surface-specs",
+      "source": "surface-manifest.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "transport",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "ui-frame",
+      "source": "component-locks.json",
+      "requires": "FROZEN with digest in launch record"
+    }
+  ],
+  "depends_integration": [
+    "F01",
+    "F02"
+  ],
+  "depends_qualification": {
+    "work_orders": [
+      "F01",
+      "F02"
+    ],
+    "external": [],
+    "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+  },
+  "consumes": {
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport",
+      "ui-frame"
+    ],
+    "producer_exports": [
+      {
+        "order": "F01",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "F02",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      }
+    ],
+    "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+    "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+    "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+    "operation_refs": [],
+    "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+  },
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md",
+      "packages/app-shell/e2e/AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "component-signatures.ts",
+      "host-signatures.ts",
+      "route-signatures.ts"
+    ],
+    "local": [
+      "work-orders/F04.json"
+    ],
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport",
+      "ui-frame"
+    ],
+    "surfaces": [],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": []
+  },
+  "deliver": [
+    "Prepare installed real-domain fixture with distinct actors, server/project/install boundaries, persistent scratch roots and deterministic corpus; no global services.",
+    "Emit exact production-config registration patch to I00 and readiness probes for web/desktop.",
+    "Expose controlled response loss/delay/revocation injections around real producers; never replace financial/ACL/scanner logic with passing stubs."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "F04-AC01",
+      "expected": "Selected native specs are actually collected; real installation/mount is reachable from production shell.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "F04-AC02",
+      "expected": "Fixture preserves canonical numeric oracles, identities and budgets; every run isolates storage.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "F04-AC03",
+      "expected": "Desktop readiness is recorded separately and requires D01 before desktop pilot qualification.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "gates": {
+    "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+    "test_files": [],
+    "typecheck_packages": [
+      "packages/app-shell"
+    ],
+    "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+    "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+    "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+  },
+  "stop": [
+    "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+    "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+    "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+    "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+    "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+    "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+  ],
+  "handoff": {
+    "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+    "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+    "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "id": "U28",
+  "title": "Administração local autorizada",
+  "kind": "ui",
+  "status": "PLANNED_NOT_AUTHORIZED",
+  "priority": 6,
+  "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+  "owns": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u28.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u28.spec.ts"
+  ],
+  "may_write_shared_registry": false,
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "task_refs": [
+      "WP10.T01"
+    ],
+    "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+  },
+  "surfaces": [
+    "UI69"
+  ],
+  "exports": [
+    "SfLocalAdministrationView"
+  ],
+  "depends_authoring": [
+    {
+      "lock": "ctx",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "domain-read",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "surface-specs",
+      "source": "surface-manifest.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "transport",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "ui-change-review",
+      "source": "component-locks.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "ui-frame",
+      "source": "component-locks.json",
+      "requires": "FROZEN with digest in launch record"
+    }
+  ],
+  "depends_integration": [
+    "F01",
+    "F02",
+    "F03",
+    "A01",
+    "S03"
+  ],
+  "depends_qualification": {
+    "work_orders": [
+      "F01",
+      "F02",
+      "F03",
+      "A01",
+      "S03"
+    ],
+    "external": [
+      "Canonical producer releases and original blockers remain mandatory for qualification."
+    ],
+    "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+  },
+  "consumes": {
+    "contracts": [
+      "ctx",
+      "domain-read",
+      "surface-specs",
+      "transport",
+      "ui-change-review",
+      "ui-frame"
+    ],
+    "producer_exports": [
+      {
+        "order": "F01",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "F02",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "F03",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "A01",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "S03",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      }
+    ],
+    "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+    "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+    "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+    "operation_refs": [
+      "contract-catalog.json#/operations/projection.local-admin"
+    ],
+    "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+  },
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md",
+      "packages/app-shell/e2e/AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "component-signatures.ts",
+      "host-signatures.ts",
+      "route-signatures.ts"
+    ],
+    "local": [
+      "work-orders/U28.json"
+    ],
+    "contracts": [
+      "ctx",
+      "domain-read",
+      "surface-specs",
+      "transport",
+      "ui-change-review",
+      "ui-frame"
+    ],
+    "surfaces": [
+      "UI69"
+    ],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": [
+      "contract-catalog.json#/sources/entry"
+    ]
+  },
+  "deliver": [
+    "Implement every field/action/state/route in the assigned surface entries; field source is authoritative, never an invitation to omit less visible controls.",
+    "Emit typed page/component exports and registration fragment to I00; no direct registry/shared producer writes.",
+    "Use frozen responsive/microcopy/dirty-navigation specification; add behavior-focused installed journey cases in the owned exact spec.",
+    "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "U28-AC01",
+      "expected": "Local operator backup/notifications remain local-only; Microsoft/cloud access cannot acquire operator capability through this page.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "U28-AC02",
+      "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "U28-AC03",
+      "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "gates": {
+    "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+    "test_files": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u28.spec.ts"
+    ],
+    "typecheck_packages": [
+      "packages/app-shell"
+    ],
+    "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+    "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+    "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+  },
+  "stop": [
+    "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+    "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+    "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+    "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+    "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+    "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+  ],
+  "handoff": {
+    "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+    "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+    "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+  },
+  "entrypoints": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+      "symbol": "SfLocalAdministrationView",
+      "signature": "(props: SfSurfaceProps) => JSX.Element",
+      "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+      "route_source": "surface-manifest.json: assigned surfaces only"
+    }
+  ],
+  "i18n_exports": [
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u28.ts",
+      "en_symbol": "SF_U28_COPY",
+      "pt_br_symbol": "SF_U28_COPY_BR",
+      "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+    }
+  ]
+}
