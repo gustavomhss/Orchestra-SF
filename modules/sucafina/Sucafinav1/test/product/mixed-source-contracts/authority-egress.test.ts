@@ -43,7 +43,6 @@ for (const mutation of ["revoked", "actor", "access", "policy", "request", "head
       expect(race.fired).toBe(true)
       expect(race.after).toBeDefined()
       expect(f.observations.refs[0]).toEqual({ id: f.refs.procurement.refId, state: "fresh" })
-      if (!race.after) throw new Error("Real authority race omitted its durable audit observation")
       expect(await f.audit()).toEqual(race.after)
       expect(f.decision.choices).toEqual([])
       expect(f.decision.preparedChanges).toEqual([])
@@ -145,7 +144,6 @@ test("mixed preview refuses a real C08 membership change between its protected c
     expect(race.reads).toBeGreaterThan(0)
     expect(result?.status).not.toBe("ok")
     expect(result && "value" in result).toBe(false)
-    if (!race.after) throw new Error("C08 membership race omitted its durable audit observation")
     expect(await f.audit()).toEqual(race.after)
     console.info("SF_MIXED_AUTHORITY_PROOF", JSON.stringify({ mutation: "C08-membership", eventFired: race.fired,
       sourceFenceReads: race.reads, producerStatus: result?.status, effectsDigest: digestSfValue(race.after), financialEffect: false }))
