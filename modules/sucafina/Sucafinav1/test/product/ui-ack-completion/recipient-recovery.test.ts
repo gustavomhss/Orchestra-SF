@@ -8,7 +8,7 @@ import type { ReplyResponse } from "./proof-helpers.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 test("recipient ACK selects the committed identity among equal messages and exact retry never appends twice", async () => {
   const app = await createAckBrowserFixture(browser)

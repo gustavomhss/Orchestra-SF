@@ -12,7 +12,7 @@ import { documentHtml, pageMain } from "../../../src/screen-shell.ts"
 // catalog, complete client script and browser form semantics are real. Case data
 // and HTTP responses are explicit fixtures; no native run, financial producer,
 // contribution acceptance or AM05 outcome is claimed by this test.
-// Actions order: wp01/browser-startup.test.ts, this file, wp01/browser-lifecycle.test.ts.
+// Consumers lease their own Chromium from wp01/browser-fixture.ts, so the Bun file order does not matter.
 export async function forecastPage() {
   const root = path.resolve(import.meta.dir, "../../../product/ai")
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })

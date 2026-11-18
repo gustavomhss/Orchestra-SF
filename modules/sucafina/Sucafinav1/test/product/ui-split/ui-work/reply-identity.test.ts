@@ -6,7 +6,7 @@ import { createBrowserHostFixture } from "./browser-host-fixture.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 test("an exact C08 reply snapshot survives lost delivery and identical concurrent replies without a duplicate after retry or reload", async () => {
   const app = await createThreadDomainFixture()

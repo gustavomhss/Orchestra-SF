@@ -41,6 +41,9 @@ export async function withForecastRun(
 }
 
 async function contextFor(name: string) {
+  // The lease acquisition has its own bounded deadline; the work budget below covers
+  // only the page work, exactly as it did when a shared browser was already running.
+  const browser = await launchWp01Browser()
   const started = performance.now()
   const observed: { page?: Page } = {}
   const phase = async <T>(label: string, work: () => Promise<T>) => {
@@ -52,7 +55,8 @@ async function contextFor(name: string) {
     if (performance.now() - started >= 18_000) throw new Error(name + ": work deadline after " + label)
     return result
   }
-  const fixture = await phase("fixture", forecastPage)
+  const lease = async (error: unknown) => { try { await closeWp01Browser(browser) } finally { throw error } }
+  const fixture = await phase("fixture", forecastPage).catch(lease)
   const runRef = "ui-fixture-run"
   const scenario: Scenario = { state: "running", started: false, failReads: 0, denyReads: false, loseCancelResponse: false }
   const requests: RequestObservation[] = []
@@ -83,7 +87,6 @@ async function contextFor(name: string) {
     if (action === "output") return Response.json({ status: "ok", value: { html: "<p>Forecast result supplied by the explicit UI fixture.</p>" } })
     return new Response(null, { status: 400 })
   } })
-  const browser = await launchWp01Browser().catch(async (error) => { await server.stop(true); throw error })
   try {
     const page = await phase("page", () => browser.newPage())
     observed.page = page

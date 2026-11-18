@@ -14,7 +14,7 @@ import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 async function openDeviation(page: Page) {
   const month = page.locator('form[data-command="save-entry"][data-record="jan"]')

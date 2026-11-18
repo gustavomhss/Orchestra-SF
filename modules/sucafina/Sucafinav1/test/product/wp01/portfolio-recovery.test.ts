@@ -17,7 +17,7 @@ beforeAll(async () => {
   browser = await launchWp01Browser()
   browser.on("disconnected", () => { browserFailure ??= "Chromium disconnected" })
 }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 const actions = {
   evaluation: { mode: "decision-portfolio-evaluate", label: "Save this evaluation" },

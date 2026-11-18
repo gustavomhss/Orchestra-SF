@@ -6,7 +6,7 @@ import { available } from "../../ui-split/ui-work/domain-fixture.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
-afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 45_000)
 
 // Discriminant rerun: identical action sequence, assertions and 5000/10000/60000 ms limits.
 // New spans separate producer work, fixture response audit and browser observation.
