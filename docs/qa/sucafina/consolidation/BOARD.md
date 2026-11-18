@@ -22,6 +22,7 @@ CI in flight: none. Last evidence: run `44329483839` on `2e5839eebb`.
 - Diagnosis notes only, do not merge as product: `sf-failure-map`, `sf-reports-stall`, `sf-ui-operations`, `sf-app-browser`, `sf-cli-red`, `sf-procurement-queue`, `sf-wp09-dossier` (`a2525d5d4c`).
 - WP09 cause: the fixture writes `status: "rejected"` without `rejection`. The reader treats that as invalid and the dossier maps it to `document-changed`. Do not accept the invalid record. The fixture must write the rejection payload `rejectDocumentEvidence` already stores.
 - WP10 digest (`8da2ad349a`): neither side is a stale hash. The six diffs swap two valid planner refs (`bi-v0` / `bi-v1`). Do not overwrite expected digests. The bug is source selection order, not the hasher.
+- WP02 hot-topics cause: run `44329483839` CI-SF-7, `test/product/wp02/hot-topics.test.ts` lines 33 and 70. Expected `{ status: "ok" }`, received `action-create-identity-unavailable`. The unit hosts omit the atomic producer identity. `createHotTopicPort.create` returns that reason for every new correlation and does not read `environment.id` or `sfSources`. A fixture-only seed cannot pass. Do not invent a post-commit incarnation or weaken the assertions. The refusal stays until the unapplied `02-atomic-create-binding` seam is wired. No test or CI run.
 
 ## Not started
 
@@ -31,4 +32,4 @@ CI in flight: none. Last evidence: run `44329483839` on `2e5839eebb`.
 - Closeout `--apply` only with real `merge_sha` and owner authorization.
 - Port `b1-residual`, `b2-residual`, `decisions-journey`. Close #345, #341, #327, #307, #297.
 - Shards 1 and 3–6 of run `44329483839` are unknown. Do not invent their failures.
-- Failure-map files with no lane: `wp02/hot-topics.test.ts`, `native-ui-contract/talent-files.test.ts`, `bi-cost-waterfall/rendering.test.ts`, `review-fixes/procurement-apply/real-apply.test.ts`, `wp08/thread-period-continuity.test.ts`, `local-entry.test.ts`, plus the rest of the 67.
+- Failure-map files with no lane: `native-ui-contract/talent-files.test.ts`, `bi-cost-waterfall/rendering.test.ts`, `review-fixes/procurement-apply/real-apply.test.ts`, `wp08/thread-period-continuity.test.ts`, `local-entry.test.ts`, plus the rest of the 67.
