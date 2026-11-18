@@ -8,7 +8,6 @@ import type { SfContextHandle } from "../../context/contracts"
 import type { SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { sfFailureUiState, sfOperationReady, type SfCaseRecord } from "../cases/model"
-import { SfQuestionHumanEditor } from "./human-editor"
 
 type AnswerEnvelope = Schema.Schema.Type<(typeof SfCollaboration.operations)["collaboration.answer-read"]["output"]>
 type AnswerValue = Extract<AnswerEnvelope, { status: "ok" }>["value"]
@@ -19,7 +18,6 @@ type Preparation = Extract<PreparationEnvelope, { status: "ok" }>["value"]
 export function SfQuestionAnswer(props: Readonly<{
   owner: SfContextHandle
   question: SfCaseRecord["questions"][number]
-  caseRecord: SfCaseRecord
   onConfirmed: () => void
 }>) {
   const language = useLanguage()
@@ -188,17 +186,13 @@ export function SfQuestionAnswer(props: Readonly<{
             onClick={() => void review()}>{t("sf.ui37.answerPrepare")}</button>
         </>}
       </Show>
-      <Show when={(ui.reviewState === "ready") ? ui.prepared : undefined}>
+      <Show when={ui.prepared && ui.reviewState === "ready"}>
         {(prepared) => <section class="sf-n24-review" role="group" aria-label={t("sf.ui37.answerSelected")}>
           <p><bdi>{prepared().answer}</bdi></p>
           <p><bdi>{prepared().authorRef}</bdi> · {prepared().observedSourceVersion}</p>
           <button class="mx-btn primary" type="button"
             onClick={() => void confirm()}>{t("sf.ui37.answerConfirm")}</button>
         </section>}
-      </Show>
-      <Show when={!props.question.answerRef && props.question.state === "open"}>
-        <SfQuestionHumanEditor owner={props.owner} question={props.question}
-          record={props.caseRecord} onRecorded={props.onConfirmed} />
       </Show>
       <Show when={ui.reviewState === "outcome-unknown" || ui.reviewState === "conflict" || ui.reviewState === "stale"}>
         <SfStatePanel state={ui.reviewState} messageKey={"sf.ui37.answerUnknown" as import("../../shared/frame").SfCopyKey} />

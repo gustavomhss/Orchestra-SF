@@ -170,6 +170,29 @@ export function requestDraftActions(request: Record<string, unknown>, actor: Act
   return [...(modes.pr ? ["save-pr" as const] : []), ...(modes.source ? ["save-sourcing" as const] : []),
     ...(modes.po ? ["save-po" as const] : [])]
 }
+/** Per-record capability over the original visible source; never a browser role guess. */
+export function requestCurrentActions(snapshot: Snapshot, actor: Actor, request: Record<string, unknown>): ReadonlySet<string> {
+  const actions = new Set<string>()
+  if (!text(actor.id).trim() || !actor.canWrite || actor.roles.every((role) => role === "viewer") ||
+    !visibleRequests([{ createdBy: text(request.createdBy) }], actor).length) return actions
+  const drafts = requestDraftActions(request, actor)
+  const status = text(request.status)
+  if (!["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled"].includes(status)) return actions
+  if (drafts.length) actions.add("save")
+  if (drafts.includes("save-pr")) actions.add("submit_pr")
+  if (drafts.includes("save-sourcing")) { actions.add("submit_sourcing"); actions.add("select_quote") }
+  if (drafts.includes("save-po")) actions.add("submit_po")
+  if (status === "po_approved" && procurementCanManageSourcing(actor)) actions.add("issue")
+  if (canApproveCurrentRequest(door(request), { id: actor.id, canWrite: actor.canWrite,
+    roles: actor.roles.filter((role) => ["requester", "buyer", "approver", "admin"].includes(role)) },
+    pick(object(object(snapshot.data.store).settings), ["currency", "levels", "prApprovalMode", "blockSelfApproval", "fxRates"]))) {
+    actions.add("approve")
+    actions.add("reject")
+  }
+  if ((request.createdBy === actor.id || has(actor, "admin")) && !["cancelled", "po_issued"].includes(status)) actions.add("cancel")
+  if ((request.createdBy === actor.id || has(actor, "admin")) && status === "draft") actions.add("delete")
+  return actions
+}
 /** Coarse current request capability; command execution retains all record, CAS and stage checks. */
 export function procurementCurrentRequestActions(snapshot: Snapshot, actor: Actor): readonly string[] {
   if (!text(actor.id).trim() || !actor.canWrite || actor.roles.every((role) => role === "viewer")) return []
@@ -177,24 +200,7 @@ export function procurementCurrentRequestActions(snapshot: Snapshot, actor: Acto
   const requests = object(object(snapshot.data.store).requests)
   for (const id in requests) {
     if (!Object.hasOwn(requests, id)) continue
-    const request = object(object(requests[id]).request)
-    if (!visibleRequests([{ createdBy: text(request.createdBy) }], actor).length) continue
-    const drafts = requestDraftActions(request, actor)
-    const status = text(request.status)
-    if (!["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled"].includes(status)) continue
-    if (drafts.length) actions.add("save")
-    if (drafts.includes("save-pr")) actions.add("submit_pr")
-    if (drafts.includes("save-sourcing")) { actions.add("submit_sourcing"); actions.add("select_quote") }
-    if (drafts.includes("save-po")) actions.add("submit_po")
-    if (status === "po_approved" && procurementCanManageSourcing(actor)) actions.add("issue")
-    if (canApproveCurrentRequest(door(request), { id: actor.id, canWrite: actor.canWrite,
-      roles: actor.roles.filter((role) => ["requester", "buyer", "approver", "admin"].includes(role)) },
-      pick(object(object(snapshot.data.store).settings), ["currency", "levels", "prApprovalMode", "blockSelfApproval", "fxRates"]))) {
-      actions.add("approve")
-      actions.add("reject")
-    }
-    if ((request.createdBy === actor.id || has(actor, "admin")) && !["cancelled", "po_issued"].includes(status)) actions.add("cancel")
-    if ((request.createdBy === actor.id || has(actor, "admin")) && status === "draft") actions.add("delete")
+    for (const action of requestCurrentActions(snapshot, actor, object(object(requests[id]).request))) actions.add(action)
     if (["save", "submit_pr", "submit_sourcing", "select_quote", "submit_po", "issue", "approve", "reject", "cancel", "delete"].every((action) => actions.has(action))) break
   }
   return [...actions]
@@ -541,7 +547,12 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   if (!visible) return { ok: false, status: 404 }
   const key = `requests:${id}`
   const stale = conflict(snapshot, key, command, row?.request)
-  if (stale) return stale
+  // The conflict review carries the stored version only for an actor who may still
+  // act on this record. A visible-but-unauthorized reader still learns that the
+  // version is stale, without receiving the record body it can never write.
+  if (stale) return row && requestCurrentActions(snapshot, actor, object(row.request)).size > 0
+    ? stale
+    : { ok: false, status: 409, currentVersionCAS: stale.currentVersionCAS }
   const was = row ? structuredClone(row.request) : null
   const request = row?.request ?? {}
   const status = text(request.status)
@@ -1489,7 +1500,9 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         return [
           projected ? queueRequestLink(projected, `?page=Requests&request=${encodeURIComponent(projected.id)}&q=${encodeURIComponent(projected.id)}#${encodeURIComponent(projected.id)}`) : `<a href="#${encodeURIComponent(String(request.number ?? ""))}">${esc(String(request.number ?? ""))}</a>`,
           esc(projected ? projected.subject ?? "Unavailable" : text(object(request.pr).title)),
-          esc(projected && !projected.status ? "Unknown status" : requestStatusLabel(status)),
+          // The human-readable stage stays primary; show the persisted state code as
+          // a small audit reference so operators can verify each workflow transition.
+          `${esc(projected && !projected.status ? "Unknown status" : requestStatusLabel(status))}${status ? ` <small aria-label="Recorded workflow status">(${esc(status)})</small>` : ""}`,
           esc(requestStageGuidance(status).stage),
           esc(projected ? projected.nextStep ?? "Unavailable" : requestStageGuidance(status).next),
           esc(`Requester: ${text(request.requesterName) || text(directory.find((person) => person.id === request.createdBy)?.name) || text(request.createdBy) || "Unavailable"}; buyer: ${text(directory.find((person) => person.id === request.buyerId)?.name) || text(request.buyerId) || "Unassigned"}; current holder: ${status.endsWith("_pending") ? text(directory.find((person) => person.id === holder)?.name) || holder || "Unassigned" : "Not awaiting approval"}`),

@@ -1,11 +1,8 @@
-import { Document, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } from "docx"
-import PptxGenJS from "pptxgenjs"
 import type { ReviewOutcomeComparison } from "./outcome.ts"
 import { reviewOutcomeComparisonLines, validOutcomeComparison, reviewOutcomeLines, validReviewOutcome } from "./outcome.ts"
 import type { ObservedResultProjection } from "../contracts/decisions.ts"
 import { reviewDecisionLines, validReviewDecision } from "./decision.ts"
 import { addReportTextSlides, addReportValueSlides, fitSlideText, reviewCoverageLines, SLIDE_HEADING } from "./report-layout.ts"
-import { packPreservedDocx } from "./zip-store.ts"
 import { createHash } from "node:crypto"
 import { reviewInclusion } from "./inclusion.ts"
 import type { ReviewInclusion } from "./inclusion.ts"
@@ -20,8 +17,6 @@ import type { ArtifactResult } from "../../runtime/artifact.ts"
 
 /** The caller must obtain the review through an access-revalidating port immediately before rendering. */
 export async function renderPreservedReview(review: PreservedReview, options: { title: string; format: "pptx" | "docx"; sectionRefs: readonly string[] }): Promise<ArtifactResult> {
-  const trace = (stage: string) => { if (process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_" + stage) }
-  trace("RENDER_ENTER")
   if (new Set(options.sectionRefs).size !== options.sectionRefs.length) return { ok: false, status: 422, errors: ["Duplicate section."] }
   const sections = options.sectionRefs.map((id) => review.sections.find((section) => section.id === id))
   if (sections.some((section) => !section)) return { ok: false, status: 422, errors: ["Selected section is unavailable."] }
@@ -31,7 +26,6 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   })) return { ok: false, status: 422, errors: ["Section content is invalid."] }
   const comments = selectedReviewComments(review, options.sectionRefs, digestSfValue)
   if (!comments) return { ok: false, status: 422, errors: ["Comment association is invalid."] }
-  trace("RENDER_BEFORE_CONTENT")
   const content = sections.flatMap((section) => {
     if (!section) return []
     const projection = section.content as DomainProjection
@@ -107,10 +101,9 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   }) })
   const coverage = reviewCoverageLines(review, options.sectionRefs)
   if (coverage) content.unshift({ title: "Coverage", images: [], table: [], figureCaption: "", lines: [...coverage] })
-  trace("RENDER_CONTENT_DONE")
   const name = options.title.replace(/[^a-z0-9]+/gi, "_") || "Review"
   if (options.format === "docx") {
-    trace("RENDER_DOCX_IMPORTED")
+    const { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } = await import("docx")
     const document = new Document({
       title: options.title,
       creator: "Sucafina",
@@ -147,49 +140,18 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
           columnWidths: [4900, 2100, 2906],
           rows: [
             new TableRow({ tableHeader: true, children: ["Captured value", "Period", "Sources"].map((label) => new TableCell({ shading: { fill: "E4ECE6" }, children: [new Paragraph({ children: [new TextRun({ text: label, bold: true, size: 20 })] })] })) }),
-            ...section.table.flatMap((row, rowIndex) => {
-              const widths = [4900, 2100, 2906] as const
-              const fragments = [row.value, row.period, row.sources].map((text, column) =>
-                fitSlideText(text, { fontSize: 10, boxWidthInches: widths[column]! / 1440, marginInches: 0.1 }))
-              // A Word row split across a page does not repeat its first cell. Bound each
-              // physical row before cantSplit; never mark an arbitrarily tall row unsplittable.
-              const linesPerRow = 12
-              const rowCount = Math.ceil(Math.max(...fragments.map((cell) => cell.length)) / linesPerRow)
-              const identifier = row.value.slice(0, row.value.indexOf(": "))
-              const identifierLines = fitSlideText(identifier, { fontSize: 10, boxWidthInches: widths[0] / 1440, marginInches: 0.1 })
-              const periodLines = fragments[1]!
-              const label = identifierLines.slice(0, 2).join(" ") + (identifierLines.length > 2 ? "…" : "")
-              const periodLabel = periodLines.slice(0, 2).join(" ") + (periodLines.length > 2 ? "…" : "")
-              return Array.from({ length: rowCount }, (_, part) => new TableRow({
-                cantSplit: true,
-                children: fragments.map((cell, column) => {
-                  const lines = cell.slice(part * linesPerRow, (part + 1) * linesPerRow)
-                  const continuation = part === 0 ? undefined
-                    : column === 0 ? `Record ${rowIndex + 1} · ${label || "captured value"} (continued)`
-                    : column === 1 ? `Period: ${periodLabel} (continued)`
-                    : "Sources (continued from the same captured record)"
-                  return new TableCell({
-                    margins: { top: 100, bottom: 100, left: 100, right: 100 },
-                    children: [
-                      ...(continuation ? [new Paragraph({ children: [new TextRun({ text: continuation, bold: true, size: 18 })], widowControl: false, spacing: { after: 0, line: 240 } })] : []),
-                      ...(lines.length ? [new Paragraph({ children: lines.map((line, index) => new TextRun({ text: line, size: 20, ...(index ? { break: 1 } : {}) })), widowControl: false, spacing: { after: 0, line: 240 } })] : []),
-                    ],
-                  })
-                }),
-              }))
-            }),
+            ...section.table.map((row) => new TableRow({ children: [row.value, row.period, row.sources].map((text, column) => new TableCell({ margins: { top: 100, bottom: 100, left: 100, right: 100 }, children: [new Paragraph({ children: fitSlideText(text, { fontSize: 10, boxWidthInches: [4900, 2100, 2906][column]! / 1440, marginInches: 0.1 }).map((fragment, index) => new TextRun({ text: fragment, size: 20, ...(index ? { break: 1 } : {}) })), widowControl: false, spacing: { after: 0, line: 240 } })] })) })),
           ],
         })] : []),
       ]),
         ],
       }],
     })
-    trace("RENDER_DOCX_CONSTRUCTED")
-    const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: await packPreservedDocx(document) }
-    trace("RENDER_DOCX_PACKED")
+    const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: new Uint8Array(await Packer.toBuffer(document)) }
     sealReviewArtifact(artifact, review, options)
     return artifact
   }
+  const { default: PptxGenJS } = await import("pptxgenjs")
   const presentation = new PptxGenJS()
   presentation.layout = "LAYOUT_WIDE"
   presentation.author = "Sucafina"

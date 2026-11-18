@@ -133,7 +133,7 @@ export async function prepareWp12ScenarioCase(context: Wp12NativeMissionContext,
     const changed = alternative.result.components.filter((component) => component.evidenceState === "hypothetical")
     expect(changed).toHaveLength(1)
     expect(changed[0]?.id).toBe(operation?.targetRef)
-    expect<number | null | undefined>(changed[0]?.amount).toBe(operation?.amount)
+    expect(changed[0]?.amount).toBe(operation?.amount)
     expect(alternative.result.components.every((component) =>
       component.amount !== null && Number.isFinite(component.amount) &&
       (component.id === operation?.targetRef ? component.evidenceState === "hypothetical" : component.evidenceState === "confirmed"))).toBe(true)

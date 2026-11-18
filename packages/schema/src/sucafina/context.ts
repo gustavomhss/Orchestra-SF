@@ -304,7 +304,10 @@ export type SfResolvedRouteMap = {
 
 }
 export type SfResolvedRoute<Id extends SurfaceId = SurfaceId> = {
-  [Current in Id]: Readonly<{
+  // Build the complete discriminated map first, then select Id. A generic Id
+  // otherwise becomes a broad union in the payload while surfaceId remains
+  // uncorrelated, preventing valid routes from flowing through typed links.
+  [Current in SurfaceId]: Readonly<{
     surfaceId: Current
     ownerSelection: SfOwnerSelection
     href: SfHref

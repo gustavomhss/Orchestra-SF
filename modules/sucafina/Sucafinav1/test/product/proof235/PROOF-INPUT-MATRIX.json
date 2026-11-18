@@ -1,0 +1,711 @@
+{
+  "schema": "sf2h.proof235.original-witness-inputs.v1",
+  "mission": 235,
+  "scope": "PROOF_REQUESTS_ONLY_NON_EXECUTABLE",
+  "description": "Evidence intake and adversarial verification contract, not a .test.ts, fixture, mock, screenshot, provider or PASS result. Product/guard must not consume this document as runtime input.",
+  "candidate_C": null,
+  "accepted_C": false,
+  "source_reviews": {
+    "R1": 11,
+    "R2": 6,
+    "R3": 9
+  },
+  "original_findings": [
+    {
+      "id": "PRE-R01-146-001",
+      "review": 207,
+      "criteria": [],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [],
+      "real_behavior_required": "Original owner workDestinations.read/verify; UI30 selection, stale, denied/revoked, distinct owner, desktop, no invented link",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE-R01-146-002",
+      "review": 207,
+      "criteria": [],
+      "prepost_paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "pre": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+          "post": "438d258443e273d6dab46c4b6cfd9e291bec24c6"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "CI-UI-DECISIONS"
+      ],
+      "real_behavior_required": "Scoped original A07 projection.review discover/preserve, denial/revoke, 503 when source absent, SDK compatibility on accepted C",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE-R01-146-003",
+      "review": 207,
+      "criteria": [],
+      "prepost_paths": [
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "pre": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+          "post": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "pre": "b853b38ebc3a0538aaba963c6422d749febde544",
+          "post": "0f1959d82a2e6a5c4ed745c3ad518339456f9ff7"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [],
+      "real_behavior_required": "Original Request UTF8 body bound, never query URL/raw logs, legacy GET denied, source scope switching, SDK type parity",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE-R01-146-004",
+      "review": 207,
+      "criteria": [],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "CI-UI-OPERATIONS"
+      ],
+      "real_behavior_required": "CAP06→CAP07 genuine route, permission denial, keyboard/focus, back/referrer and 320/400% reflow",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE-R01-146-005",
+      "review": 207,
+      "criteria": [],
+      "prepost_paths": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "pre": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+          "post": "7e66c610cd4bbb8e27e4c16a239b2142d5b208ba"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "pre": "592eef8206c665a1fc908934e258b286fe85609e",
+          "post": "876f95feadd07d6628d13a6c34e454a5ce382ea4"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S227-TODAY-RESUME-BROWSER",
+        "S227-TODAY-F04"
+      ],
+      "real_behavior_required": "Original caseRef/version authorized resume; unavailable/removed/stale/revoked; browser/desktop back and focus",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE-R01-146-006",
+      "review": 207,
+      "criteria": [],
+      "prepost_paths": [
+        {
+          "path": "apps/desktop/src/main/sucafina/protocol.ts",
+          "pre": "0b2152a22811d19a3b04ab1e4ebf5218c564b2eb",
+          "post": "34b54f2c3c0cf6e3284da1f80edbf66ac45786d2"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [],
+      "real_behavior_required": "Original installed D01 same-owner safe source navigation; forbidden foreign origin/userinfo/hash; revoke/return",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "S1-R1-207-001",
+      "review": 207,
+      "criteria": [
+        "U26-AC01",
+        "U26-AC02"
+      ],
+      "prepost_paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/memory/similarity217.ts",
+          "pre": null,
+          "post": "1d3f1ecac45e03cc3b112727f2de21174142672b"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+          "pre": null,
+          "post": "71c06dd535c80865de69fd0031e95235f91c3f93"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+          "pre": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+          "post": "e39fbb08e92ab7e816cd0db3ca38bc60a8ac6e91"
+        },
+        {
+          "path": "packages/client/src/sucafina/memory.ts",
+          "pre": "cddd7ceccc66bc5faf38d169bede03efa31440db",
+          "post": "c63a98050984e937da4105b2667b670b73579d28"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S217-SIMILAR-CASES",
+        "S217-UI62-U26-F04"
+      ],
+      "real_behavior_required": "Two genuine authorized principals/cases, cutoff/dedup, no cross-owner leak, fresh F04 keyboard/400%",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "S1-R1-207-002",
+      "review": 207,
+      "criteria": [
+        "U23-AC01",
+        "U23-AC02"
+      ],
+      "prepost_paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/files.ts",
+          "pre": null,
+          "post": "a2e1041871a553498b92f159ef9b28c874a3cfb6"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/history.ts",
+          "pre": null,
+          "post": "16839289b896f4ddb2a656dc5cc13a8c8d2cb2f9"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "pre": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "post": "c503bb0904a5f989076583b30d91f9cd43d2bb4a"
+        },
+        {
+          "path": "packages/client/src/sucafina/files.ts",
+          "pre": null,
+          "post": "4f29bf65fe6f128fb3d34d24beeaddef983c1e6b"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S218-IMPORT-RECEIPTS",
+        "S218-IMPORT-HISTORY-F04",
+        "S226-FILES-CONTRACT"
+      ],
+      "real_behavior_required": "Original owner-scoped history; manifest/read real receipt, original denied/revoked/removed, owner/time period switch, no synthetic history",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "S1-R1-207-003",
+      "review": 207,
+      "criteria": [
+        "U47-AC01",
+        "U47-AC02"
+      ],
+      "prepost_paths": [
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "pre": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+          "post": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S226-FILES-CODECS",
+        "S226-FILES-CONTRACT"
+      ],
+      "real_behavior_required": "224 authoritative CAP08 bytes/preview/consent/versioned import and export; F04 allow/deny/revoke/owner-switch/bad format/bytes D01; ask 232 successor new exact selector only after published source",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "S1-R1-207-004",
+      "review": 207,
+      "criteria": [
+        "U10-AC01",
+        "U10-AC03"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "CI-UI-OPERATIONS"
+      ],
+      "real_behavior_required": "CAP24 genuine open requests route, denial/cross-owner/focus/return/400%",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "S1-R1-207-005",
+      "review": 207,
+      "criteria": [
+        "U14-AC01"
+      ],
+      "prepost_paths": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "pre": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+          "post": "e354b0f5fcfc1c8aaf1aba447dfa0a60df233c93"
+        },
+        {
+          "path": "packages/client/src/sucafina/procurement.ts",
+          "pre": "7875c98e14fcde4255bd807f094685cc0fcf60b6",
+          "post": "e3c7c28e7a3f12ecb619ba3a87d6c50aa63ff3c5"
+        },
+        {
+          "path": "packages/schema/src/sucafina/procurement.ts",
+          "pre": "1b69faa66446264d70964f0235a3e77d1979e6fb",
+          "post": "a71569ca0b3ad34c17ace04d33c855f120b7870c"
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "pre": "f32f9bd221598fa1279108d12c96fa6b75a77f7c",
+          "post": "2d119538b3aeb7a746efb2d93f5650cb2711c7d8"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S225-CSV-ADMISSION",
+        "S225-SUPPLIER-CSV-F04",
+        "S226-FILES-CODECS"
+      ],
+      "real_behavior_required": "Real allowed CSV bytes, original bank masking/row count, denied/revoked/owner swap; desktop broker if applicable",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "REV208-NEW-001",
+      "review": 208,
+      "criteria": [
+        "A08-AC01",
+        "U20-AC01",
+        "U21-AC01",
+        "WP10.QLT.10"
+      ],
+      "prepost_paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+          "pre": "2420a5147e6705a5842936ee3459bf7d787d5870",
+          "post": "b88301e2f956aefb5fff723d5a1f97af31423f4d"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S215-BI-UNITS"
+      ],
+      "real_behavior_required": "USD and FTE positives, conflicting explicit hours+USD v USD, other mismatched physical/currency, null/zero, no fake FX, correct BI charts",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "REV208-NEW-002",
+      "review": 208,
+      "criteria": [
+        "AM05",
+        "U26-AC01",
+        "WP10.T07",
+        "WP10.QLT.40"
+      ],
+      "prepost_paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "pre": "227f22ae80851185a1998bee1adf7bda73a83485",
+          "post": "b5caa2d662e12b9e74460a7c9291b61b967b32e2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "pre": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "post": "3ce00f44f2f072342b8e894bfc54b2f2a16f25c4"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S216-ATLAS-SEQUENCE",
+        "S220-AM05"
+      ],
+      "real_behavior_required": "Two persisted originals, clean restart/append, duplicate/reordered/mutated ordinal rejects without disclosure/append, scanner clean/canary/unavailable",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE147-R02-01",
+      "review": 208,
+      "criteria": [
+        "U32-AC01",
+        "U32-AC02",
+        "R02-AC01"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "CI-UI-DECISIONS"
+      ],
+      "real_behavior_required": "Same-period/currency across installation/project must deny; same-owner project positive after fresh original read",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE147-R02-02",
+      "review": 208,
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC01"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "CI-UI-DECISIONS"
+      ],
+      "real_behavior_required": "100 USD→EUR, confidence confirmed→estimated, 0→null, no silent conversion, full provenance",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE147-R02-03",
+      "review": 208,
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC02"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "CI-UI-DECISIONS"
+      ],
+      "real_behavior_required": "Equal numeric value with changed sourceRef version/incarnation/access/observedAt must show change; revocation negative",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "PRE147-R02-04",
+      "review": 208,
+      "criteria": [
+        "U23-AC01",
+        "U23-AC02",
+        "R02-AC02"
+      ],
+      "prepost_paths": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "pre": "ddd1b441f869e6824d6919827b9c53faa17f84ac",
+          "post": "c503bb0904a5f989076583b30d91f9cd43d2bb4a"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S218-IMPORT-HISTORY-F04"
+      ],
+      "real_behavior_required": "Jan→Feb clears prior target/selection, renewed discovery; deny stale/revoked target, no apply",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R148-NATIVE-01",
+      "review": 209,
+      "criteria": [
+        "WP10.INV.40",
+        "WP10.T03.CHK.40",
+        "WP10.DOD.40"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "S219-NATIVE-HUMAN-REQUEST",
+        "S222-AM02-CAUSAL"
+      ],
+      "real_behavior_required": "SessionV2 original create/mismatch/load/narrow/abort/retry/restore/revoke; persisted C08 marker no double grant/orphan",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R3-NATIVE-01",
+      "review": 209,
+      "criteria": [
+        "WP10.DOD.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "prepost_paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "pre": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+          "post": "438d258443e273d6dab46c4b6cfd9e291bec24c6"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S221-AM01-CAUSAL",
+        "S222-AM02-CAUSAL"
+      ],
+      "real_behavior_required": "All 18 original SkillLoadReceipts/session/providermodel manifest/source digest/loadedMessageId; authorized outputRef persisted and human UI consumer after restart",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R3-MCP-02",
+      "review": 209,
+      "criteria": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.T03.CHK.40"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "S222-AM02-CAUSAL"
+      ],
+      "real_behavior_required": "All 39 original initialize/listTools/callTool, 8 packs; host/provider pin, permission intersection, UI-domain receipt parity, original swap/restart/revoke",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R3-TASK-03",
+      "review": 209,
+      "criteria": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "prepost_paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "pre": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+          "post": "438d258443e273d6dab46c4b6cfd9e291bec24c6"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-routine-producer219.ts",
+          "pre": null,
+          "post": "dcd223898ca0bddb755ec2dc6b8e3fe2bd149cf4"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S219-NATIVE-HUMAN-REQUEST",
+        "S219-REAL-TASK-RELAY"
+      ],
+      "real_behavior_required": "Original human POST Request->TaskTool frame->C15 owner Permission/provider approval publisher pin->Relay child run/result->human re-read; if no public origin remain FAIL",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R3-ATLAS-04",
+      "review": 209,
+      "criteria": [
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.CMP.60",
+        "WP10.T03.CHK.40"
+      ],
+      "prepost_paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "pre": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "post": "3ce00f44f2f072342b8e894bfc54b2f2a16f25c4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "pre": "227f22ae80851185a1998bee1adf7bda73a83485",
+          "post": "b5caa2d662e12b9e74460a7c9291b61b967b32e2"
+        }
+      ],
+      "existing_dispatcher_queue_ids": [
+        "S216-ATLAS-SEQUENCE",
+        "S220-AM05"
+      ],
+      "real_behavior_required": "Real C09 source, C08 append+outbox commit and scan, actual restart + recall, two original principals and revoke/replacement before/after commit",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R3-SCANNER-05",
+      "review": 209,
+      "criteria": [
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.QLT.60",
+        "WP10.CMP.60"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "S220-AM05",
+        "CI-ATLAS-BUSINESS"
+      ],
+      "real_behavior_required": "Official nonsecret installed scanner path/version or fail-closed; AST/spawn/generated guard C checkout G7, D checkout G8 separately; clean/canary/unavailable native witness",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R3-EXPORT-06",
+      "review": 209,
+      "criteria": [
+        "WP10.DOD.10",
+        "WP10.CMP.10",
+        "WP10.SUC.10",
+        "WP10.T03.CHK.40"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "CI-UI-REPORTS"
+      ],
+      "real_behavior_required": "Original source bytes/PDF digital/DOCX/text→candidate→human confirmation→C17 refs→C11 outputRef→authorized/denied/revoked/reload final consumer; digital scan no OCR claim",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R3-CI-07",
+      "review": 209,
+      "criteria": [
+        "WP10.DOD.02",
+        "WP10.QLT.02",
+        "WP10.T03.CHK.03",
+        "WP10.T03.DOD.01"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [
+        "CI-SF",
+        "CI-CLI",
+        "CI-APP-SRC",
+        "CI-APP-BROWSER",
+        "CI-ATLAS-BUSINESS",
+        "CI-UI-OPERATIONS",
+        "CI-UI-DECISIONS",
+        "CI-UI-REPORTS"
+      ],
+      "real_behavior_required": "After formal C, same-C 8 CI and epic/e2e+AM01–AM06 native recheck with original W/S/run/job/attempt/artifacts; negative failures not relabeled",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    },
+    {
+      "id": "R3-CANDIDATE-08",
+      "review": 209,
+      "criteria": [
+        "WP10.DOD.01",
+        "WP10.DOD.02",
+        "WP10.T03.DOD.01",
+        "WP10.T03.SUC.01",
+        "WP10.T03.CMP.02"
+      ],
+      "prepost_paths": [],
+      "existing_dispatcher_queue_ids": [],
+      "real_behavior_required": "Exact accepted C+tree; independent 3 authorship-disjoint reviews on same C after repairs; D only evidence bytes, full C blob parity; G7 on C checkout and G8 on D checkout",
+      "actual_positive": "NOT_RUN",
+      "actual_negative": "NOT_RUN",
+      "source_release": "NOT_RUN",
+      "reviewer_recheck": "NOT_RUN",
+      "status": "OPEN"
+    }
+  ],
+  "am_native": {
+    "AM01": {
+      "real_required": "5 original resident profiles and all 18 skills: source bytes, SkillLoadReceipt, native SessionV2, consumer outputRef after re-read and restart",
+      "drivers": "233 S0 designated",
+      "status": "NOT_RUN"
+    },
+    "AM02": {
+      "real_required": "8 original MCP packs/39 operations, authentication/public C16 source and UI parity; actual C MCP messages and grant negatives",
+      "drivers": "233 S0 designated",
+      "status": "NOT_RUN"
+    },
+    "AM03": {
+      "real_required": "Real provider generation/stale object retry/permission cut, no manually flipped fixture as substitute",
+      "drivers": "233 S0 designated",
+      "status": "NOT_RUN"
+    },
+    "AM04": {
+      "real_required": "C12 authorized human choice, original source+CAS, before/after, same digest retry/lost reply receipt vs duplicate, denial/rollback",
+      "drivers": "234 and 230 source-authoritative",
+      "status": "NOT_RUN"
+    },
+    "AM05": {
+      "real_required": "Original C08 durable Atlas+scanner/outbox after true restart, two principals and revoke, tampered sequence fail-closed",
+      "drivers": "234 and 216/198",
+      "status": "NOT_RUN"
+    },
+    "AM06": {
+      "real_required": "Genuine Task/Relay public native origin from original human Request, live admission, children run, persisted result and product human return",
+      "drivers": "234 after 229 real source",
+      "status": "NOT_RUN"
+    }
+  },
+  "gates": {
+    "C": "NOT_ACCEPTED",
+    "G7_checkout_C": "NOT_RUN",
+    "D": "NOT_CREATED",
+    "G8_checkout_D": "NOT_RUN",
+    "three_independent_reviews": "NOT_RUN",
+    "global_release": false
+  },
+  "request_dispatcher_snapshot": {
+    "ref": "sf-ci-closure",
+    "handoff_blob": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+    "normalized_requests": 27,
+    "causal": 19,
+    "final_same_C": 8,
+    "dispatch_interface": "NOT_EXPOSED"
+  },
+  "prohibited": [
+    "No proof qualification from fixtures or catalogs alone",
+    "No actual local tests under mission235",
+    "No 235 product source changes",
+    "No self CI",
+    "No synthetic authorization or financial policy changes"
+  ]
+}

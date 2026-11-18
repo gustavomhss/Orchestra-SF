@@ -1,8 +1,8 @@
 import { correlateAm04 } from "../../../../../../script/sf2h/proofs/am04/correlate.ts"
 import { correlateAm06 } from "../integrated-proofs/am06/correlate.ts"
 import type { Am06Observation } from "../integrated-proofs/am06/correlate.ts"
-import type { RoutineResultAccess } from "../../../product/routines/result-access.ts"
-import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { RoutineResultAccess } from "../../product/routines/result-access.ts"
+import type { TrustedDomainContext } from "../../product/contracts/sf-execution.ts"
 
 /**
  * Read-only hosted/native evidence drivers for M234. No producer is emulated.

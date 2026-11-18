@@ -162,7 +162,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
       onLayoutMode={() => undefined}
       primaryAction={{
         id: "answer-question", labelKey: k("sf.ui37.primary"), tone: "primary",
-        disabled: !selectedQuestion(), busy: false,
+        disabled: !selectedQuestion()?.answerRef, busy: false,
         onInvoke: () => document.getElementById("sf-n24-answer-zone")?.focus(),
       }}
       secondaryActions={[{
@@ -248,7 +248,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                   </div>
                 </Show>
                 <Show when={ui.message}><p role="status">{t(ui.message)}</p></Show>
-                <Show when={(ui.phase === "prepared") ? ui.proposal : undefined}>
+                <Show when={ui.proposal && ui.phase === "prepared"}>
                   {(proposal) => <div class="sf-n24-review" aria-live="polite">
                     <p>{t("sf.ui37.preparationOnly")}</p>
                     <p><bdi>{proposal().question}</bdi> · {proposal().expectedCaseVersion}</p>
@@ -264,7 +264,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
             </section>
             <Show when={selectedQuestion()}>
               {(question) => <div id="sf-n24-answer-zone" tabIndex={-1}>
-                <SfQuestionAnswer owner={caseData.owner} question={question()} caseRecord={current()} onConfirmed={() => caseData.reload()} />
+                <SfQuestionAnswer owner={caseData.owner} question={question()} onConfirmed={() => caseData.reload()} />
               </div>}
             </Show>
             <SfQuestionCycles owner={caseData.owner} caseRef={caseRef()} />

@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test"
 import { createSfReviewHistory } from "../../../../../../apps/cli/src/sucafina-product/review-history.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import type { SourceRef } from "../../../product/contracts/context.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../../../product/contracts/state.ts"
@@ -16,12 +15,6 @@ import { createReviewAnswersFixture } from "../wp08/review-answers-fixture.ts"
  */
 async function createHistoryFixture() {
   const fixture = await createReviewAnswersFixture()
-  const creationTarget: ReturnType<typeof createSfProductAuthority>["creationTarget"] = {
-    ref: `sf-workspace:${encodeURIComponent(fixture.author.binding.installationId)}`,
-    incarnation: fixture.author.binding.installationId,
-  }
-  if (fixture.creationTarget.ref !== creationTarget.ref || fixture.creationTarget.incarnation !== creationTarget.incarnation)
-    throw new Error("Historical C08 fixture target is not bound to the authenticated installation")
   const source = fixture.review.sourceRefs.find((ref) => ref.incarnation === fixture.source.target.incarnation)
   if (!source || fixture.review.sourceRefs.length !== 1) throw new Error("Actual captured source is required")
   const captured = await fixture.state.read(fixture.request("person"), "reviews", (state) => Object.values(state.transactions).filter((entry) => {
@@ -54,7 +47,7 @@ async function createHistoryFixture() {
     }
     return result
   } }
-  const history = createSfReviewHistory({ authority: { host: fixture.host, state, creationTarget }, persistence, evidence: fixture.evidence })
+  const history = createSfReviewHistory({ authority: { host: fixture.host, state, creationTarget: fixture.creationTarget }, persistence, evidence: fixture.evidence })
   const sources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => {
     if (!await fixture.host.revalidate(context)) return false
     const values = await Promise.all(refs.map((ref) => history.historicalSource(ref, context)))
