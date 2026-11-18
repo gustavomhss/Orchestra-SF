@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { mkdirSync, readFileSync, readdirSync, writeFileSync, statSync, lstatSync, realpathSync } from "node:fs"
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, statSync, lstatSync, realpathSync } from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
@@ -31,22 +31,95 @@ const fail = (message) => { throw new Error("SF_CI_FAIL_CLOSED: " + message) }
 /** Manifest is authoritative; this module never infers a platform outside Linux/X64. */
 export const sha256Lines = (items) => createHash("sha256").update([...items].sort().join("\n")).digest("hex")
 
-/** Stable hash partition: every accepted file lands in exactly one part. */
-export function shardFiles(files, index, count) {
-  if (!Number.isSafeInteger(count) || count < 1 || !Number.isSafeInteger(index) || index < 1 || index > count) {
-    fail("invalid shard index/count")
+/**
+ * WP01 owns one Node-launched Chromium per Bun process. Its fixture refuses any
+ * command line that does not name browser-startup.test.ts first and
+ * browser-lifecycle.test.ts last, so every part that runs a pool consumer must
+ * carry that harness in that order. A part without consumers must not.
+ */
+const BROWSER_POOL_ENTRIES = ["wp01/browser-fixture.ts"]
+const BROWSER_STARTUP = "product/wp01/browser-startup.test.ts"
+const BROWSER_FINALIZER = "product/wp01/browser-lifecycle.test.ts"
+
+function staticImports(file) {
+  let text
+  try { text = readFileSync(file, "utf8") } catch { fail("shard input is unreadable: " + file) }
+  const found = []
+  for (const match of text.matchAll(/(?:from|import)\s*\(?\s*["'](\.[^"']+)["']/g)) {
+    const target = path.resolve(path.dirname(file), match[1])
+    const candidate = [target, target + ".ts", target + ".tsx", target + ".mts", target + ".js",
+      path.join(target, "index.ts"), path.join(target, "index.tsx")]
+      .find((entry) => existsSync(entry) && statSync(entry).isFile())
+    if (candidate) found.push(candidate)
   }
+  return found
+}
+
+function reachesBrowserPool(file, cache, visiting = new Set()) {
+  if (cache.has(file)) return cache.get(file)
+  if (visiting.has(file)) return false
+  visiting.add(file)
+  const reaches = BROWSER_POOL_ENTRIES.some((entry) => file.split(path.sep).join("/").endsWith(entry)) ||
+    staticImports(file).some((next) => reachesBrowserPool(next, cache, visiting))
+  visiting.delete(file)
+  cache.set(file, reaches)
+  return reaches
+}
+
+/** Files whose static import closure reaches the WP01 browser pool. */
+export function browserPoolConsumers(files, root = process.cwd()) {
+  const cache = new Map()
+  return new Set(files
+    .map((file) => path.resolve(root, file))
+    .filter((file) => reachesBrowserPool(file, cache)))
+}
+
+/**
+ * Stable hash partition of the manifest selection. Every accepted file lands in
+ * exactly one part; the browser lifecycle harness is the only file allowed in
+ * more than one part, and only in the parts that actually run a pool consumer.
+ */
+export function shardParts(files, count, root = process.cwd()) {
+  if (!Number.isSafeInteger(count) || count < 1) fail("invalid shard count")
   const sorted = [...files].sort()
+  const startup = sorted.find((file) => file.endsWith(BROWSER_STARTUP))
+  const finalizer = sorted.find((file) => file.endsWith(BROWSER_FINALIZER))
+  const consumers = browserPoolConsumers(sorted, root)
+  const consumerNames = new Set(sorted.filter((file) => consumers.has(path.resolve(root, file))))
+  if (consumerNames.size && (!startup || !finalizer)) {
+    fail("browser pool selection lacks its startup/lifecycle harness")
+  }
+  const movable = sorted.filter((file) => file !== startup && file !== finalizer)
   const buckets = Array.from({ length: count }, () => [])
-  for (const file of sorted) {
+  for (const file of movable) {
     buckets[Number(BigInt("0x" + digest(file).slice(0, 16)) % BigInt(count))].push(file)
   }
-  const union = buckets.flat().sort()
-  if (union.length !== sorted.length || new Set(union).size !== sorted.length ||
-      JSON.stringify(union) !== JSON.stringify(sorted)) {
+  const parts = buckets.map((bucket) => consumerNames.size && bucket.some((file) => consumerNames.has(file))
+    ? [startup, ...bucket, finalizer]
+    : bucket)
+  const consumerParts = parts.filter((part) => part.some((file) => consumerNames.has(file)))
+  const harnessParts = parts.filter((part) => startup !== undefined && finalizer !== undefined &&
+    part[0] === startup && part[part.length - 1] === finalizer)
+  const anyHarness = parts.filter((part) => part.includes(startup) || part.includes(finalizer))
+  const union = parts.flat().filter((file) => file !== startup && file !== finalizer).sort()
+  if (JSON.stringify(union) !== JSON.stringify(movable) || new Set(union).size !== movable.length) {
     fail("shard partition is not a complete disjoint cover")
   }
-  return buckets[index - 1]
+  if (consumerParts.length !== harnessParts.length || anyHarness.length !== harnessParts.length) {
+    fail("browser harness placement does not match its consumers")
+  }
+  for (const part of harnessParts) {
+    if (part.length < 3 || new Set(part).size !== part.length) fail("browser harness part is not a valid selection")
+    const same = part.slice(1, -1)
+    if (!same.some((file) => consumerNames.has(file))) fail("browser harness part has no pool consumer")
+  }
+  return parts
+}
+
+/** Stable hash partition: every accepted file lands in exactly one part. */
+export function shardFiles(files, index, count, root = process.cwd()) {
+  if (!Number.isSafeInteger(index) || index < 1 || index > count) fail("invalid shard index/count")
+  return shardParts(files, count, root)[index - 1]
 }
 function shardRequest(suiteId) {
   const count = SHARDED[suiteId]
@@ -61,9 +134,14 @@ function shardRequest(suiteId) {
 function evidenceId(suiteId, shard) {
   return shard ? `${suiteId}-shard-${shard.index}` : suiteId
 }
+function suiteRoot(manifest, suiteId, repoRoot = process.cwd()) {
+  const suite = manifest.suites.find((entry) => entry.id === suiteId)
+  if (!suite) fail("unknown suite root: " + suiteId)
+  return path.join(repoRoot, suite.directory)
+}
 function shardSelection(manifest, suiteId, shard, repoRoot = process.cwd()) {
   const full = selectSuiteFiles(manifest, suiteId, repoRoot)
-  return shard ? shardFiles(full, shard.index, shard.count) : full
+  return shard ? shardFiles(full, shard.index, shard.count, suiteRoot(manifest, suiteId, repoRoot)) : full
 }
 
 const isTestFile = (file) => /(?:\.test|\.spec)\.[cm]?[jt]sx?$/.test(file)
@@ -405,22 +483,37 @@ export function requirePrerequisites(needs) {
   return JOBS.length
 }
 
-function verifyShardedSuite({ manifest, suite, parts, meta, selectionProvider }) {
+function verifyShardedSuite({ manifest, suite, parts, meta, selectionProvider, repoRoot = process.cwd() }) {
   const count = SHARDED[suite.id]
   if (!Array.isArray(parts) || parts.length !== count) fail("missing shard parts: " + suite.id)
   const full = selectionProvider(manifest, suite.id)
   const caseKeys = []
+  let harnessKeys
   let sum = 0
   parts.forEach((part, offset) => {
     const shard = { index: offset + 1, count }
-    const selection = shardFiles(full, shard.index, shard.count)
+    const selection = shardFiles(full, shard.index, shard.count, suiteRoot(manifest, suite.id, repoRoot))
     const executed = checkReceipt(part.receipt, suite, meta, part.report, selection, { skipBaseline: true })
     if (part.receipt.shard?.index !== shard.index || part.receipt.shard?.count !== shard.count) {
       fail("shard receipt identity mismatch: " + suite.id)
     }
-    caseKeys.push(...bunCaseKeys(part.report.toString("utf8")))
+    const keys = bunCaseKeys(part.report.toString("utf8"))
+    const file = (key) => key.split("\0", 1)[0]
+    const harness = keys.filter((key) => file(key).endsWith(BROWSER_STARTUP) || file(key).endsWith(BROWSER_FINALIZER))
+    const expectsHarness = selection[0].endsWith(BROWSER_STARTUP) && selection[selection.length - 1].endsWith(BROWSER_FINALIZER)
+    if (expectsHarness !== (harness.length > 0)) fail("browser harness cases disagree with the shard selection: " + suite.id)
+    const own = keys.filter((key) => !harness.includes(key))
+    if (harness.length) {
+      const sealed = [...harness].sort()
+      if (harnessKeys && JSON.stringify(sealed) !== JSON.stringify(harnessKeys)) {
+        fail("browser harness cases differ between shard parts: " + suite.id)
+      }
+      harnessKeys = sealed
+    }
+    caseKeys.push(...own)
     sum += executed
   })
+  if (harnessKeys) caseKeys.push(...harnessKeys)
   const baseline = suite.coverageBaseline
   if (baseline?.schemaVersion !== 1 || baseline.status !== "HISTORIC_SUCCESSFUL_ARTIFACT") {
     fail("coverage baseline requires authentic successful run and independent review: " + suite.id)
@@ -438,7 +531,7 @@ function verifyShardedSuite({ manifest, suite, parts, meta, selectionProvider })
 }
 
 export function verifyAll({ manifest, receipts, reports, shards = {}, needs, sha, runId, attempt, treeSha,
-  selectionProvider = selectSuiteFiles }) {
+  selectionProvider = selectSuiteFiles, repoRoot = process.cwd() }) {
   const suites = validateManifest(manifest)
   if (!/^[a-f0-9]{40}$/.test(String(sha))) fail("invalid candidate SHA")
   if (!/^[0-9]+$/.test(String(runId)) || !/^[0-9]+$/.test(String(attempt))) fail("missing run identity")
@@ -461,7 +554,7 @@ export function verifyAll({ manifest, receipts, reports, shards = {}, needs, sha
     sum += checkReceipt(receipts[suite.id], suite, meta, reports[suite.id], selection)
   }
   for (const suite of sharded) {
-    sum += verifyShardedSuite({ manifest, suite, parts: shards[suite.id], meta, selectionProvider })
+    sum += verifyShardedSuite({ manifest, suite, parts: shards[suite.id], meta, selectionProvider, repoRoot })
   }
   return { suiteCount: suites.length, executedTests: sum, candidateSha: sha, runId: String(runId) }
 }

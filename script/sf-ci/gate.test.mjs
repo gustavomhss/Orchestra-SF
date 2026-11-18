@@ -5,7 +5,7 @@ import { createHash } from "node:crypto"
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { SHARDED, shardFiles, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
+import { SHARDED, shardFiles, shardParts, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -59,6 +59,97 @@ function playwright(suite) {
   return Buffer.from(JSON.stringify(data))
 }
 const CI_SF_FILES = Array.from({ length: 32 }, (_, index) => `test/sf-shard-${index + 1}.test.ts`)
+// The shard partition resolves relative imports on disk; the synthetic suite needs
+// real empty files under the same suite-relative shape the manifest declares.
+const FIXTURE_ROOT = mkdtempSync(path.join(tmpdir(), "sf-shard-fixture-"))
+for (const file of CI_SF_FILES) {
+  const target = path.join(FIXTURE_ROOT, "modules/sucafina", file)
+  mkdirSync(path.dirname(target), { recursive: true })
+  writeFileSync(target, "")
+}
+const FIXTURE_SUITE_ROOT = path.join(FIXTURE_ROOT, "modules/sucafina")
+function browserPoolTree() {
+  const root = mkdtempSync(path.join(tmpdir(), "sf-shard-pool-"))
+  const write = (name, body) => {
+    const file = path.join(root, name)
+    mkdirSync(path.dirname(file), { recursive: true })
+    writeFileSync(file, body)
+  }
+  write("modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts", "export {}\n")
+  write("modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts", 'import "./browser-fixture.ts"\n')
+  write("modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts", 'import "./browser-fixture.ts"\n')
+  write("modules/sucafina/Sucafinav1/test/product/wp01/consumer.test.ts", 'import "./browser-fixture.ts"\n')
+  write("modules/sucafina/Sucafinav1/test/product/indirect.test.ts", 'import "./wp01/helper.ts"\n')
+  write("modules/sucafina/Sucafinav1/test/product/wp01/helper.ts", 'export * from "./browser-fixture.ts"\n')
+  for (const name of ["one", "two", "three", "four", "five", "six", "seven"]) {
+    write(`modules/sucafina/Sucafinav1/test/plain/${name}.test.ts`, "export {}\n")
+  }
+  return root
+}
+const suiteRootFor = (root) => path.join(root, "modules/sucafina")
+const POOL_SELECTION = [
+  "Sucafinav1/test/plain/five.test.ts", "Sucafinav1/test/plain/one.test.ts",
+  "Sucafinav1/test/plain/seven.test.ts", "Sucafinav1/test/plain/six.test.ts",
+  "Sucafinav1/test/plain/three.test.ts", "Sucafinav1/test/plain/two.test.ts",
+  "Sucafinav1/test/plain/four.test.ts", "Sucafinav1/test/product/indirect.test.ts",
+  "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+  "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+  "Sucafinav1/test/product/wp01/consumer.test.ts",
+]
+const START = "Sucafinav1/test/product/wp01/browser-startup.test.ts"
+const END = "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+
+test("only the parts that lease the WP01 browser pool carry the lifecycle harness", () => {
+  const root = browserPoolTree()
+  try {
+    const suiteRoot = suiteRootFor(root)
+    const consumers = [...browserPoolConsumers(POOL_SELECTION, suiteRoot)]
+      .map((file) => path.relative(suiteRoot, file)).sort()
+    assert.deepEqual(consumers, [
+      "Sucafinav1/test/product/indirect.test.ts",
+      "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "Sucafinav1/test/product/wp01/consumer.test.ts",
+    ])
+    const parts = shardParts(POOL_SELECTION, 8, suiteRoot)
+    const movable = POOL_SELECTION.filter((file) => file !== START && file !== END)
+    assert.deepEqual(parts.flat().filter((file) => file !== START && file !== END).sort(), [...movable].sort())
+    const harnessParts = parts.filter((part) => part[0] === START && part.at(-1) === END)
+    const consumerParts = parts.filter((part) => part.some((file) =>
+      file === "Sucafinav1/test/product/indirect.test.ts" || file === "Sucafinav1/test/product/wp01/consumer.test.ts"))
+    assert.equal(harnessParts.length, consumerParts.length)
+    assert.equal(parts.filter((part) => part.includes(START) || part.includes(END)).length, harnessParts.length)
+    for (const part of harnessParts) {
+      assert.ok(part.length >= 3)
+      assert.ok(part.slice(1, -1).some((file) =>
+        file === "Sucafinav1/test/product/indirect.test.ts" || file === "Sucafinav1/test/product/wp01/consumer.test.ts"))
+    }
+    assert.equal(parts.flat().filter((file) => file === START).length, harnessParts.length)
+    assert.equal(parts.flat().filter((file) => file === END).length, harnessParts.length)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
+test("a browser consumer without the lifecycle harness fails the partition closed", () => {
+  const root = browserPoolTree()
+  try {
+    const suiteRoot = suiteRootFor(root)
+    assert.throws(() => shardParts(POOL_SELECTION.filter((file) => file !== END), 8, suiteRoot),
+      /lacks its startup\/lifecycle harness/)
+    assert.throws(() => shardParts(POOL_SELECTION.filter((file) => file !== START), 8, suiteRoot),
+      /lacks its startup\/lifecycle harness/)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
+test("a suite-relative selection resolves its imports against the suite directory", () => {
+  const root = browserPoolTree()
+  try {
+    const suiteRoot = suiteRootFor(root)
+    const parts = shardParts(POOL_SELECTION, 3, suiteRoot)
+    const harness = parts.filter((part) => part[0] === START && part.at(-1) === END)
+    assert.equal(harness.length, 1)
+    assert.ok(harness[0].length >= 3)
+    assert.deepEqual(shardParts(POOL_SELECTION, 3, suiteRoot), parts)
+    assert.deepEqual(Array.from({ length: 3 }, (_, index) => shardFiles(POOL_SELECTION, index + 1, 3, suiteRoot)), parts)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
 const bunReport = (files) => Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: files.length, product_executed: files.length, failures: 0, errors: 0, skipped: 0 },
   cases: files.map((file) => ({ name: "case " + file, classname: "", file,
@@ -103,7 +194,7 @@ function fixture() {
     if (SHARDED[suite.id]) {
       const count = SHARDED[suite.id]
       shards[suite.id] = Array.from({ length: count }, (_, offset) => {
-        const part = shardFiles(selection, offset + 1, count)
+        const part = shardFiles(selection, offset + 1, count, FIXTURE_SUITE_ROOT)
         const bytes = bunReport(part)
         return { report: bytes,
           receipt: receiptFor(suite, bytes, part, { shard: { index: offset + 1, count } }) }
@@ -116,7 +207,7 @@ function fixture() {
   }
   const needs = Object.fromEntries(["preflight","static","omni","unit","unit-sf","ui"].map((name) => [name, { result: "success" }]))
   return { manifest: structuredClone(manifest), reports, receipts, shards, needs, sha, runId, attempt, treeSha,
-    selectionProvider: (_manifest, id) => fixtureSelection(id) }
+    selectionProvider: (_manifest, id) => fixtureSelection(id), repoRoot: FIXTURE_ROOT }
 }
 test("eight normative suites and six independent AM proofs remain explicit", () => {
   assert.equal(validateManifest(manifest).length, 8)

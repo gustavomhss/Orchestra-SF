@@ -258,7 +258,7 @@ jobs:
     name: sf/test-${{ matrix.id }}
     needs: [omni]
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 28
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -354,7 +354,7 @@ jobs:
     name: sf/test-CI-SF-${{ matrix.shard }}
     needs: [omni]
     runs-on: ubuntu-24.04
-    timeout-minutes: 24
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       max-parallel: 8
