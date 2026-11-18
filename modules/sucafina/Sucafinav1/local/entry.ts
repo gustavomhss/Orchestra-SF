@@ -3,6 +3,7 @@ import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context
 import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
 import { createModule, contributions, type ModuleServices } from "../index.ts"
+import { initializeAbsentSfProductState } from "../product/host-binding/state-provider.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
@@ -122,6 +123,7 @@ export async function createConfiguredInstallation(
     }
   }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
+  if (operator) await initializeAbsentSfProductState(store, randomUUID)
   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
