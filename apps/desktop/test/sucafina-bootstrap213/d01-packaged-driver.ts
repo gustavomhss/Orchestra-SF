@@ -9,15 +9,10 @@ import type { ElectronApplication, Page } from "@playwright/test"
 export async function requireSfPackagedBrokerReadiness(app: ElectronApplication, mainWindow: Page) {
   const main = await app.evaluate(({ app, ipcMain }) => ({
     packaged: app.isPackaged,
-    // The bundled Electron typings omit ipcMain.hasHandler, which exists at runtime.
-    // Check it inline: this callback is serialized into the main process.
     channels: [
       "sf-native-register-connection", "sf-native-bind", "sf-native-invoke",
       "sf-native-abort", "sf-native-login", "sf-native-logout", "sf-native-release",
-    ].filter((channel) => {
-      const broker = ipcMain as unknown as { hasHandler?: (name: string) => boolean }
-      return typeof broker.hasHandler === "function" && broker.hasHandler(channel)
-    }),
+    ].filter((channel) => ipcMain.hasHandler(channel)),
   }))
   if (!main.packaged) throw new Error("D01_REAL_PACKAGED_ELECTRON_REQUIRED")
   if (main.channels.length !== 7) throw new Error("D01_MAIN_SF_BROKER_HANDLERS_MISSING")

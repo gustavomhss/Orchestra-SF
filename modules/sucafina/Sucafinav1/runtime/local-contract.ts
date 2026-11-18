@@ -12,6 +12,11 @@ export type LocalSecrets = {
 export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecrets; dispose: () => Promise<void> }
 export type DirectoryPerson = { id: string; name: string }
 export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number }
+/** Complete server-only directory view; group IDs are transitive memberships. */
+export type EntraGraphDirectory = Readonly<{
+  users: readonly Readonly<{ id: string; name: string; department: string; jobTitle: string; managerId: string | null; groupIds: readonly string[] }>[]
+  groups: readonly Readonly<{ id: string; name: string; team: boolean }>[]
+}>
 export type EntraClient = {
   /** Immutable issuer/application boundary; optional only for retained local test adapters. */
   readonly tenantId?: string
@@ -22,6 +27,8 @@ export type EntraClient = {
   refresh: (refreshToken: string) => Promise<EntraTokens>
   person: (accessToken: string) => Promise<DirectoryPerson>
   directory: (accessToken: string) => Promise<DirectoryPerson[]>
+  /** Reads complete Graph users, managers, groups and transitive members with a server-held delegated token. */
+  graphDirectory?: (accessToken: string) => Promise<EntraGraphDirectory>
   resolve: (accessToken: string, map: readonly RoleRow[]) => Promise<ResolvedActor>
 }
 export type EntraOptions = {
@@ -41,6 +48,8 @@ export type LocalIdentity = {
   /** Read-only credential lookup and fresh directory membership; never writes a nested SQL transaction. */
   authenticate: (request: Request, context?: { surface: Surface; roleMap: readonly RoleRow[] }) => Promise<ResolvedActor | null>
   directory: (request: Request) => Promise<DirectoryPerson[]>
+  /** Available only in a confidential Microsoft installation; never returns a bearer token. */
+  graphDirectory?: (request: Request) => Promise<EntraGraphDirectory>
   person: (request: Request) => Promise<DirectoryPerson | null>
 }
 
