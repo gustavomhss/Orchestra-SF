@@ -1,5 +1,4 @@
 import { SfMemory } from "@orchestra/schema/sucafina/memory"
-import { Option, Schema } from "effect"
 import type { SfCallOptions, SfTransport } from "./transport.ts"
 
 // Existing seven dashboard?sf=memory-* JSON handlers are invoked by F02's
@@ -37,12 +36,7 @@ export function createSfMemoryClient(transport: SfTransport) {
     "intelligence.memory-outcome": (
       input: typeof SfMemory.operations["intelligence.memory-outcome"]["input"]["Type"],
       options: SfCallOptions,
-    ) => {
-      const parsed = Schema.decodeUnknownOption(Schema.toType(SfMemory.operations["intelligence.memory-outcome"].input),
-        { onExcessProperty: "error" })(input)
-      if (Option.isNone(parsed)) return Promise.resolve({ kind: "transport-error" as const, reason: "contract-mismatch" as const })
-      return transport.execute(SfMemory.operations["intelligence.memory-outcome"], parsed.value, options)
-    },
+    ) => transport.execute(SfMemory.operations["intelligence.memory-outcome"], input, options),
 
     "intelligence.memory-condition": (
       input: typeof SfMemory.operations["intelligence.memory-condition"]["input"]["Type"],

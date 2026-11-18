@@ -426,10 +426,7 @@ export const SfIntelligenceMemoryMateriality = {
 
 export const SfIntelligenceMemoryOutcome = {
   operationId: "intelligence.memory-outcome",
-  input: Schema.Union([
-    Schema.Struct({ ...CaseQuery.fields, choiceId: NonBlank }).annotate(closed),
-    Schema.Struct({ selectionRef: Digest }).annotate(closed),
-  ]),
+  input: Schema.Struct({ ...CaseQuery.fields, choiceId: NonBlank }).annotate(closed),
   output: Schema.Union([
     Schema.Struct({
       status: Schema.Literal("comparable"),
@@ -479,7 +476,7 @@ export const SfIntelligenceMemoryCondition = {
 export const SfIntelligenceMemoryOutcomeSelection = {
   operationId: "intelligence.memory-outcome-selection",
   input: OutcomeSelection,
-  output: Schema.Union([Schema.Struct({ status: Schema.Literal("ok"), selectionRef: Digest.pipe(optional) }).annotate(closed), Failure]),
+  output: Schema.Union([OkMutation, Failure]),
 } as const
 
 // These seven literal bindings are the entire memory authorization surface.
