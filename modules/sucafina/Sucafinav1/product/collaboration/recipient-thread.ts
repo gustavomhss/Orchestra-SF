@@ -63,14 +63,16 @@ export function createRecipientThreadReader(input: {
       const records = historyRefs.filter((ref): ref is RecordEvidence => ref.kind === "record")
       const supplements = historyRefs.filter((ref) => ref.kind !== "record")
       const contextScopes = await Promise.all(records.map((ref) => input.reissue(ref, context)))
-      if (!await currentAccess() || contextScopes.some((result) => result.status === "denied")) return { status: "denied", reason: "thread-source-unavailable" }
-      const changed = contextScopes.some((result) => result.status !== "ok")
+      // A rolled observation window denies same-period reissue. A preserved historical grant restores today's source instead of treating that denial as lost access.
+      const samePeriodDenied = contextScopes.some((result) => result.status === "denied")
+      if (!await currentAccess() || samePeriodDenied && !preserved) return { status: "denied", reason: "thread-source-unavailable" }
+      const changed = samePeriodDenied || contextScopes.some((result) => result.status !== "ok")
       if (changed && !preserved) return { status: "unavailable", reason: "thread-source-unavailable" }
       // Refresh proves physical continuity for every stored basis; it never authorizes historical text by itself.
       const renew = () => Promise.all(records.map((ref) => changed && input.refresh ? input.refresh(ref, context) : input.reissue(ref, context)))
       const issued = changed ? await renew() : contextScopes
       if (!await currentAccess() || issued.some((result) => result.status === "denied")) return { status: "denied", reason: "thread-source-unavailable" }
-      if (issued.some((result) => result.status !== "ok")) return { status: "unavailable", reason: "thread-source-unavailable" }
+      if (issued.some((result) => result.status !== "ok")) return samePeriodDenied ? { status: "denied", reason: "thread-source-unavailable" } : { status: "unavailable", reason: "thread-source-unavailable" }
       const issuedByDigest = new Map(issued.flatMap((result, index) => result.status === "ok" ? [[records[index]!.refDigest, result.value] as const] : []))
       const projection = (refs: readonly BusinessEvidenceRef[]) => refs.map((ref) => ref.kind === "record" ? issuedByDigest.get(ref.refDigest)! : ref)
       const current = projection(originals)
