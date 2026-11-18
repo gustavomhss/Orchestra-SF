@@ -1,0 +1,86 @@
+{
+  "schema": "sf2h.microsoft-login.ack.v1",
+  "mission": 49,
+  "epoch": "microsoft-login-browser49",
+  "state": "ACKNOWLEDGED_SOURCE_IMPLEMENTATION_ACTIVE",
+  "recorded_at": "2026-11-14T23:21:00Z",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "authority_source": {
+    "commit": "89549a407993b78fb2f2f9892beb01a911f984d7",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/microsoft-entra-login.json",
+    "blob": "74d9605c3fec282fd453072ff08af8eb9290a603",
+    "user_instruction": "Implement mission49 and deliver draft PR to sf2-stack using GitHub MCP; no Azure provisioning."
+  },
+  "source": {
+    "branch": "microsoft-login",
+    "observed_head": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+    "tree": "e6a09da0acdf041a8b757e92e20bdca9d2b8c81c",
+    "matches_prepared_base": true,
+    "prior_mission49_code_or_ack_observed": false
+  },
+  "integration": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_head": "03ce926754d7ac0039fbb38470229f13c1623696",
+    "candidate": "C14",
+    "predecessor42_terminal": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+    "predecessor_handoff_blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08",
+    "active_authority": "S0-C-e9-browser47",
+    "authority_blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "authority_commit": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+    "decision": "47 remains sole target writer; no target or source branch import/overwrite. Later target advances will be reconciled against exact shared patch preimages."
+  },
+  "reading": {
+    "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "mission47": "cfaf9936eab091c3e43d3608986b118b59af3f90",
+    "rolling_COMMON": "ad53f26697738fc410648b198a79b6bfe6e7bac5",
+    "START": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW": "043205bee6031b4517a98591b3588fca0ab12925",
+    "planning_COMMON": "d61f32af03fe10747a50274233f953af044decf6",
+    "existing_entra": "a1c52c91905a3dc9784af2ffc350fbd51379cbf5",
+    "existing_identity": "2a143af985632cd28ade0146b8149b11bae49f17",
+    "auth_contract": "2237778e65eb987770dc1696e03fe5a25d894562",
+    "local_configuration": "9fd36deee7a2ef4b3584faa7f49b682d0304741f",
+    "interface_identity_handoff": "64bd336d692231884a3d4b779073277783aa5ded",
+    "limits": "Mission49 names no original actor pack; mission49 is the explicit narrow assignment and supersedes the original campaign exclusion of identity implementation, without authorizing provisioning."
+  },
+  "ownership": {
+    "remote_writer": "root49 on microsoft-login only",
+    "local_helpers": {
+      "entra_engine": [
+        "runtime/entra-client.ts",
+        "runtime/local-contract.ts (auth types)",
+        "test/entra-client.test.ts"
+      ],
+      "session_engine": [
+        "runtime/local-identity.ts",
+        "test/microsoft-session.test.ts",
+        "test/microsoft-login/fixtures.ts"
+      ],
+      "root49": [
+        "runtime/microsoft-*.ts",
+        "test/microsoft-configuration.test.ts",
+        "test/microsoft-composition.test.ts",
+        "docs/sf2h/receipts/microsoft-login/",
+        "docs/guides/sucafina-microsoft-login.md"
+      ]
+    },
+    "read_only_helper": "ci_route",
+    "shared_paths": "Inert complete patches/preimages/postimages only for47; no direct edits."
+  },
+  "validation": {
+    "product_tests": "NOT_RUN",
+    "local_product_execution": false,
+    "live_tenant_b2b": "NOT_RUN",
+    "plan": "One deduplicated surgical test-ci request for changed tests and direct consumers; exact W/S/workflow/request/results. Compiler45 receives scoped package typecheck and guards request, no foreign workflow ref movement."
+  },
+  "preserve": {
+    "financial_policy": true,
+    "canonical_roles": true,
+    "local_operator_loopback": true,
+    "all_prior_campaign_findings": true,
+    "GLOBAL_RELEASE": false
+  }
+}

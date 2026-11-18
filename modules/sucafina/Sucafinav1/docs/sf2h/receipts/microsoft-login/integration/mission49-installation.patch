@@ -1,0 +1,247 @@
+--- a/modules/sucafina/Sucafinav1/local/entry.ts
++++ b/modules/sucafina/Sucafinav1/local/entry.ts
+@@ -18,6 +18,8 @@
+ import { createLocalIdentity } from "../runtime/local-identity.ts"
+ import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
+ import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
++import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
++import type { EntraOptions } from "../runtime/local-contract.ts"
+ import { scanLocalFile } from "../runtime/local-scanner.ts"
+ import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
+ import { enumerateSfSources } from "../product/integration/source-inventory.ts"
+@@ -36,7 +38,19 @@
+ 
+ /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
+ export default async function installation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }) {
++  if (process.env.SUCAFINA_MICROSOFT_CONFIG !== undefined) return createMicrosoftInstallation(context, process.env.SUCAFINA_MICROSOFT_CONFIG)
+   return createLocalInstallation(context, process.env.SUCAFINA_LOCAL_CONFIG)
++}
++
++export async function createMicrosoftInstallation(
++  context: { origin: string; createHostRuntime?: CreateSfHostRuntime },
++  file: string | undefined,
++  environment: Readonly<Record<string, string | undefined>> = process.env,
++  overrides: { fetch?: EntraOptions["fetch"]; now?: () => Date } = {},
++) {
++  const microsoft = await prepareMicrosoftInstallation(context, file, environment, overrides)
++  const configured = await createConfiguredInstallation({ ...context, origin: microsoft.loaded.config.origin }, microsoft.loaded, microsoft)
++  return { ...configured, transport: microsoft.transport }
+ }
+ 
+ export async function createLocalInstallation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
+@@ -44,12 +58,21 @@
+   const loaded = await loadLocalConfiguration(file)
+   if (context.origin !== loaded.config.origin) throw new Error("Installation origin mismatch")
+   await requireLocalIsolation(loaded.directory, environment)
++  return createConfiguredInstallation(context, loaded)
++}
++
++export async function createConfiguredInstallation(
++  context: { origin: string; createHostRuntime?: CreateSfHostRuntime },
++  loaded: Awaited<ReturnType<typeof loadLocalConfiguration>>,
++  microsoft?: Awaited<ReturnType<typeof prepareMicrosoftInstallation>>,
++) {
+   const config = loaded.config
++  if (context.origin !== config.origin) throw new Error("Installation origin mismatch")
+   const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
+-  const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
++  const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
+   const now = () => new Date().toISOString()
+   const projectScope = createSfSourceScopeProjector(now)
+-  const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
++  const driver = await openLocalStore(path.join(loaded.directory, microsoft ? "business-microsoft" : operator ? "business-local" : "business"))
+   const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
+   const restoration = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID, purpose: "business-restore" })
+   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
+@@ -70,7 +93,7 @@
+     dispose: () => store.dispose(),
+   }
+   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
+-  const identity = operator
++  const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
+     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
+     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
+   const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
+@@ -91,11 +114,11 @@
+   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
+   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
+-  const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
++  const runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
+     mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+-    grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
++    grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
+       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
+-      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
++      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : []) })
+   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
+     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
+   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
+@@ -128,7 +151,7 @@
+     async handler(request: Request) {
+       const url = new URL(request.url)
+       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
+-      if (operator && request.method === "POST" && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
++      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
+       const readiness = status(request)
+       if (readiness) return readiness
+       const auth = await identity.handle(request)
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -2,15 +2,17 @@
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect } from "effect"
+-import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
++import { Effect, Layer } from "effect"
++import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ import { createSfHostRuntime } from "./host-context"
++import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
+ 
+ export type SfInstallation = {
+   mount: `/${string}`
+   handler: (request: Request) => Promise<Response | undefined>
+   dispose: () => void | Promise<void>
+   host?: ReadonlyArray<Host.Contribution>
++  transport?: MicrosoftTransport
+ }
+ 
+ /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
+@@ -19,16 +21,54 @@
+   const module = await import(pathToFileURL(await realpath(file)).href)
+   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
+   const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime })
++  return composeSfInstallation(value, origin)
++}
++
++/** The normal loader and hosted composition fixtures use the same transport and route fences. */
++export async function composeSfInstallation(value: unknown, origin: string) {
++  if (new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ORIGIN_REQUIRED")
+   if (!value || typeof value !== "object" || !("mount" in value) || typeof value.mount !== "string" || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(value.mount) || !("handler" in value) || typeof value.handler !== "function" || !("dispose" in value) || typeof value.dispose !== "function" || ("host" in value && !Array.isArray(value.host))) throw new Error("SF_INSTALLATION_FACTORY_INVALID")
+   const installation = value as SfInstallation
++  const transport = readTransport("transport" in value ? value.transport : undefined, origin)
++  const { microsoftRequest } = transport ? await import("../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts") : { microsoftRequest: undefined }
++  const requestOrigin = transport?.ingressOrigin ?? origin
++  // Effect starts its HTTP span before route middleware and includes the full query.
++  // Disable listener tracing for this explicit cloud installation, including malformed callbacks.
++  const privacy = transport ? Layer.succeed(HttpMiddleware.TracerDisabledWhen)(() => true) : Layer.empty
+   const route = Effect.gen(function* () {
+     const incoming = yield* HttpServerRequest.HttpServerRequest
+-    if (incoming.headers.host?.toLowerCase() !== new URL(origin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+-    const web = yield* HttpServerRequest.toWeb(incoming)
+-    if (new URL(web.url).origin !== origin) return HttpServerResponse.empty({ status: 403 })
+-    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(web, { signal })), catch: () => "installation-unavailable" as const })
++    if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
++    // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
++    const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
++    const web = yield* HttpServerRequest.toWeb(sanitized)
++    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
++    const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
++    if (!request) return HttpServerResponse.empty({ status: 403 })
++    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
+     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+-  }).pipe(Effect.catch(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
++  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
++  // The listener must install privacy before HttpRouter.serve, outside the request route.
+   // Effect registers a trailing wildcard at both the subtree and its base path.
+-  return { ...installation, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
++  return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+ }
++
++function readTransport(value: unknown, origin: string): MicrosoftTransport | undefined {
++  if (value === undefined) return undefined
++  if (!value || typeof value !== "object" || Object.keys(value).length !== 4 ||
++    !("kind" in value) || value.kind !== "explicit-https-proxy" ||
++    !("listenerOrigin" in value) || typeof value.listenerOrigin !== "string" ||
++    !("ingressOrigin" in value) || typeof value.ingressOrigin !== "string" ||
++    !("publicOrigin" in value) || typeof value.publicOrigin !== "string" ||
++    value.listenerOrigin !== origin || !exactOrigin(value.listenerOrigin, "http:") ||
++    !exactOrigin(value.ingressOrigin, "http:") || !exactOrigin(value.publicOrigin, "https:")) throw new Error("SF_INSTALLATION_TRANSPORT_INVALID")
++  return Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: value.listenerOrigin, ingressOrigin: value.ingressOrigin, publicOrigin: value.publicOrigin })
++}
++
++function exactOrigin(value: string, protocol: string): boolean {
++  try {
++    const url = new URL(value)
++    return url.origin === value && url.protocol === protocol
++  } catch {
++    return false
++  }
++}
+--- a/apps/cli/src/commands/handlers/serve.ts
++++ b/apps/cli/src/commands/handlers/serve.ts
+@@ -22,6 +22,9 @@
+ import { listenerHosts } from "./serve-host"
+ import { addressInUse } from "./serve-port"
+ import { ServeShutdown } from "./serve-shutdown"
++import type { loadSfInstallation } from "../../sucafina-product/installation"
++
++type LoadedSfInstallation = Awaited<ReturnType<typeof loadSfInstallation>>
+ 
+ const SHUTDOWN_GRACE_MS = 2_000
+ 
+@@ -76,6 +79,17 @@
+             process.exit()
+           }),
+         )
++        // Validate the private installation and isolation before daemon or host database effects.
++        const installationFile = input.installation && Option.isSome(input.installation) ? input.installation.value : undefined
++        const installation = installationFile
++          ? yield* Effect.tryPromise({ try: async () => {
++              const port = Option.getOrUndefined(input.port)
++              if (port === undefined) throw new Error("An explicit installation requires an explicit port")
++              const { loadSfInstallation } = await import("../../sucafina-product/installation")
++              return loadSfInstallation(installationFile, `http://${input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname}:${port}`)
++            }, catch: (error) => error instanceof Error ? error : new Error("Installation unavailable") })
++          : undefined
++        if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))
+         const daemon = yield* Daemon.Service
+         // A desktop-owned child gets a per-launch password in env and never touches the daemon's password file.
+         const password = process.env.ORCHESTRA_SERVER_PASSWORD || (yield* daemon.password())
+@@ -95,17 +109,7 @@
+           Effect.catchCause((cause) => Effect.logError("legacy session import failed", cause)),
+         )
+         const allowedHosts = listenerHosts(input.hostname, input.allowedHosts)
+-        const installationFile = input.installation && Option.isSome(input.installation) ? input.installation.value : undefined
+-        const installation = installationFile
+-          ? yield* Effect.tryPromise({ try: async () => {
+-              const port = Option.getOrUndefined(input.port)
+-              if (port === undefined) throw new Error("An explicit installation requires an explicit port")
+-              const { loadSfInstallation } = await import("../../sucafina-product/installation")
+-              return loadSfInstallation(installationFile, `http://${input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname}:${port}`)
+-            }, catch: (error) => error instanceof Error ? error : new Error("Installation unavailable") })
+-          : undefined
+-        if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))
+-        const listening = yield* listen(input.hostname, input.port, password, [...hosts(), ...(installation?.host ?? [])], root, allowedHosts, input.cors, installation?.layer)
++        const listening = yield* listen(input.hostname, input.port, password, [...hosts(), ...(installation?.host ?? [])], root, allowedHosts, input.cors, installation)
+         const address = listening.address
+         // Closing the server waits for every open connection, and the event stream never ends on its own. Scope
+         // finalizers run in reverse, so this drops the connections before the server closes.
+@@ -133,7 +137,7 @@
+   root: string | undefined,
+   allowedHosts: ReadonlyArray<string>,
+   cors?: ReadonlyArray<string>,
+-  installation?: Layer.Layer<never, unknown, HttpRouter.HttpRouter>,
++  installation?: LoadedSfInstallation,
+ ) {
+   if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors, installation)
+   const next = (port: number): ReturnType<typeof bind> =>
+@@ -151,14 +155,15 @@
+   root: string | undefined,
+   allowedHosts: ReadonlyArray<string>,
+   cors?: ReadonlyArray<string>,
+-  installation?: Layer.Layer<never, unknown, HttpRouter.HttpRouter>,
++  installation?: LoadedSfInstallation,
+ ) {
+   const server = createServer()
+   return Layer.build(
+-    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), installation ?? Layer.empty), {
++    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), installation?.layer ?? Layer.empty), {
+       disableListenLog: true,
+       disableLogger: true,
+     }).pipe(
++      Layer.provide(installation?.privacy ?? Layer.empty),
+       Layer.provideMerge(NodeHttpServer.layer(() => server, { port, host: hostname })),
+       Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
+     ),

@@ -1,0 +1,45 @@
+{
+  "schema": "sucafina.microsoft-login.target-reconciliation.v1",
+  "mission": 49,
+  "recorded_at": "2026-11-15 00:02:07 UTC",
+  "consumer": "integration47 / PR65",
+  "target_head": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+  "target_tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
+  "authority": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/AUTHORITY.json",
+    "blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "epoch": "S0-C-e9-browser47"
+  },
+  "source_baseline": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "e1392759f00d6d42477249823bbb6b3cec51601c"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "a1c52c91905a3dc9784af2ffc350fbd51379cbf5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "blob": "2a143af985632cd28ade0146b8149b11bae49f17"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "2237778e65eb987770dc1696e03fe5a25d894562"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+      "blob": "6b431573650c8336d05978abb046903333db8d56"
+    }
+  ],
+  "observation": "All seven existing auth/test/shared preimages remain identical to mission49 baseline at target C19. No target ref or shared source was changed by mission49. This observation is not a lease to overwrite later work; integrator47 rechecks before adoption."
+}

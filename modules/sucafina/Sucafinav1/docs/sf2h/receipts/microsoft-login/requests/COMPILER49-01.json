@@ -1,0 +1,75 @@
+{
+  "schema": "sucafina.microsoft-login.compiler-request.v1",
+  "mission": 49,
+  "branch": "microsoft-login",
+  "pr": 69,
+  "recorded_at": "2026-11-14 23:50:39 UTC",
+  "product_candidate": "63eb9626a437af7df11966fbbb86cbb2d4ad287d",
+  "product_tree": "796b7f1e2e757ae01c32ff464b24ac9c144ba5d8",
+  "state": "REQUESTED_NOT_RUN",
+  "owner": "mission45",
+  "consumer": "integration47 / PR65",
+  "base_dev": {
+    "ref": "origin/dev",
+    "sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+  },
+  "requests": [
+    {
+      "id": "M49-TYPECHECK-SOURCE",
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "candidate": "63eb9626a437af7df11966fbbb86cbb2d4ad287d"
+    },
+    {
+      "id": "M49-GUARDS-SOURCE",
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "candidate": "63eb9626a437af7df11966fbbb86cbb2d4ad287d"
+    },
+    {
+      "id": "M49-TYPECHECK-COMPOSED",
+      "depends_on": "integration47 applies all three exact shared postimages together with mission49 source; names exact composed candidate",
+      "commands": [
+        {
+          "cwd": "modules/sucafina",
+          "command": "bun typecheck"
+        },
+        {
+          "cwd": "apps/cli",
+          "command": "bun typecheck"
+        },
+        {
+          "cwd": ".",
+          "command": "bun run check:guards --base origin/dev"
+        }
+      ]
+    }
+  ],
+  "interface_observation": {
+    "compiler45_branch": "astra-compose",
+    "compiler45_head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "compiler45_pack_blob": "7ca93a297e5ed4d17af5ad832aac4f07154a92de",
+    "compiler45_pack_state": "PREPARED_NOT_STARTED",
+    "target_workflows": [
+      "sf2-epic.yml",
+      "test-ci.yml"
+    ],
+    "scoped_check_workflow_present": false,
+    "recipe_guards_dispatch": "existing test-ci workflow has no guards/typecheck dispatch; do not disguise compiler commands as tests or use foreign fixed refs"
+  },
+  "evidence_required": [
+    "exact W/S/tree/dev-base and workflow/runner identity",
+    "canonical command and cwd",
+    "actual exit code and categorized diagnostics",
+    "job/run/artifact URLs and sanitized digests"
+  ],
+  "execution": {
+    "local_tests": false,
+    "local_typecheck": false,
+    "local_heavy_checks": false,
+    "new_workflows": false,
+    "foreign_refs_modified": false,
+    "epic": false
+  },
+  "next": "Owner45 executes canonical commands through the supported hosted interface when available; owner47 requalifies exact composition. Independent mission49 test:ci continues; no routine waiting or acceptance waiver."
+}
