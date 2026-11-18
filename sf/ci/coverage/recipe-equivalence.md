@@ -1,0 +1,34 @@
+# A6 W1 evidence boundary (2026-11-16)
+
+Status: **NOT QUALIFIED** until fresh GitHub Actions execution on the resulting SHA, negative controls, and independent A1 review. This document is a source trace, not a PASS receipt. No Azure VM, Entra identity, F04, AM01–AM06, backup, or release approval is asserted.
+
+## B3 / CI-04 — historical recipe → SF Linux CI, provisional comparison
+
+Source on this branch: `script/sf2h/final-bundle/requests.json` (schema `sf2-final-ci-requests-v1`, `PREPARED_NOT_RUN`); authoritative historical invocation `.github/workflows/sf2-epic.yml:595-626,810-932`; replacement `.github/workflows/sf-ci.yml` and `sf/ci/suites.json`. Historical `modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json` was requested but returned **404** in the inspected branch; `requests.json` is a reproducible fallback, **not** asserted identical to the missing source. Ask A1 to locate a historical commit/ref and cold-review this reconstruction. Eight IDs are preserved but ID equality is not coverage equivalence.
+
+| Recipe | Historical effective request/execution | Current selection and important delta | Gate status |
+|---|---|---|---|
+| CI-SF | Bun full `modules/sucafina`, no args | Full directory, except `Sucafinav1/test/parity-pitr.test.ts` (local macOS Litestream), whose **Linux backup/restore** obligation remains AZ-03/A7 | `BLOCKED_BY_ENV` for release proof; positive suite not yet observed |
+| CI-CLI | `bun run test` from `apps/cli` (`script/test.ts` excludes dedicated native lanes, admits new files) | Only **12 explicit tests** in suites.json, despite 38 direct `test/*.test.ts` files admitted by the historical Linux selector from a 43-file immediate inventory (see below); substantial host/runtime exclusion risk | **B3 BLOCKER: owner A2 must restore relevant Linux coverage or prove each exclusion** |
+| CI-APP-SRC | Bun with `--conditions=solid` in app-shell (all matching unit tests) | `bun run test:unit` selects `./src` with same condition but additional `--only-failures`; identities/cases not diffed | **UNVERIFIED** actual file+case equivalence |
+| CI-APP-BROWSER | `bun run test:browser` on all `./test-browser`, happydom+Omni | Only `./test-browser/sucafina-native`, excluding F04 live `transport-integration.test.ts`; two Q01 portable tests retained separately | **UNVERIFIED** shared-Web/browser dependency exclusions, F04 `BLOCKED_BY_ENV` |
+| CI-ATLAS-BUSINESS | `bun test --timeout 30000` over whole `modules/atlas/boundary/test`, with Omni sentinel | Four explicit: business-memory-ports/catalog/surface/scanner-clock; **`test/build.test.ts` omitted**, which runs real generator 20 times and asserts both whitespace drift and missing output fail | **B3 BLOCKER: M2 generation+diff is a positive control, not proven equivalent to omitted negative controls** |
+| CI-UI-OPERATIONS | Playwright production config + `operations.spec.ts`, pre-list/selection validation and runtime evidence | Same manifest-selected spec, `--workers 1 --retries 0 --max-failures=2`; pre-list selection/identity baseline unproven | **UNVERIFIED** case completeness; product RED previously |
+| CI-UI-DECISIONS | Playwright production config + `decisions.spec.ts` | Same manifest-selected spec; case completeness and assertions still require fresh run | **UNVERIFIED**; product RED previously |
+| CI-UI-REPORTS | Playwright production config + `reports.spec.ts` | Same manifest-selected spec; historical outcome IN_PROGRESS at snapshot and cannot be inferred | **UNVERIFIED**; must re-fetch conclusion |
+
+### Exact initial CLI inventory and missing Linux test files
+
+`apps/cli/test/` GitHub contents on `sfa-ci-integration` has 43 immediate `.test.ts` files and `fixture/` directory. Historical Linux `apps/cli/script/test.ts` omits five immediate native-only files (`artifact-case-alias`, `artifact-native-lane`, `distribution-native`, `distribution-windows`, `distribution-musl`) plus nested `fixture/distribution-musl-guest`. **It does not omit** the 26 direct files listed below; the new explicit selection excludes them all. This is a static direct-folder inventory, not a runtime `bun test --list` result; nested discovery and actual case counts still require evidence.
+
+- **26 formerly admitted Linux direct files not selected:** `acp.test.ts`, `artifact-abi.test.ts`, `artifact-fs.test.ts`, `artifact-posix-race.test.ts`, `build-runtime.test.ts`, `commands-help.test.ts`, `debug-omni.test.ts`, `distribution-install-preservation.test.ts`, `distribution-install.test.ts`, `distribution-launcher.test.ts`, `distribution-npm.test.ts`, `distribution-payload-integrity.test.ts`, `distribution-payload-receipt.test.ts`, `distribution-payload.test.ts`, `distribution-process.test.ts`, `distribution-restore.test.ts`, `distribution-start-reason.test.ts`, `export-artifacts.test.ts`, `omni-preflight.test.ts`, `packaged-skills-build.test.ts`, `schema.test.ts`, `tree-sitter-bundle.test.ts`, `tui-config.test.ts`, `uninstall-distribution.test.ts`, `uninstall.test.ts`, `version-without-database.test.ts`.
+
+**High-risk unreviewed candidates for Linux host/Task/Permission/Relay/Omni:** `acp`, `artifact-abi`, `artifact-fs`, `artifact-posix-race`, `build-runtime`, `debug-omni`, `omni-preflight`, `packaged-skills-build`, `schema`, `tree-sitter-bundle`. Names alone do not establish product use or non-use. Package/distribution tests may be legitimately out of this product, but every omission needs test-by-test dependency tracing and independent approval, not a blanket waiver. For Atlas, `build.test.ts` is a verified negative generator contract (see its assertions), **not** merely a cross-OS installer.
+
+### B2 consumer and transfer to A2
+
+A6's YAML now obtains **unit working directories, browser test directory, and Playwright spec/directory from `sf/ci/suites.json` via A2's exported `validateManifest`**. CLI/Atlas file arguments and release-only omissions already come via `gate.mjs select` / `release-only`. The fixed matrix contains only the eight immutable suite IDs, not a second spec list. However A2 still owns negative tests proving that modification/removal of required files and complete case-baselines fails closed; `gate.mjs` currently validates existence/shape but not every requirement↔test mapping. **B2=INTEGRATED_CONSUMER / NOT YET HARNESS_VALIDATED** pending A2 negative controls, M4 identity receipts, and fresh Actions execution.
+
+### Stop conditions / ownership
+
+A6 owns source reconstruction and comparison; A2 alone edits `sf/ci/suites.json`, `script/sf-ci/**` and test selectors; A1 owns independent B3 review and exact source recovery; A7/A8/A9 own live Azure/identity/F04; A10 owns release evidence. Do **not** promote `sf/verify`, accept B3 or suppress Linux requirements based solely on this inventory. No path outside the A6 lease was edited.
