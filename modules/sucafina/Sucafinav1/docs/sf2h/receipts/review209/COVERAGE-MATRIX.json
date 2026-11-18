@@ -1,0 +1,1847 @@
+{
+  "schema": "sf2h.review209.v1",
+  "mission": 209,
+  "actor": "S3-R3",
+  "epoch": "cold-review-e1-browser209",
+  "review_kind": "PRE_FREEZE_DELTA_AND_UNCOVERED_CRITERIA_NOT_FINAL",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "candidate": {
+    "branch": "sf2-stack",
+    "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+    "state": "NOT_ACCEPTED_C"
+  },
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+    "blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+    "sole_integrator": "189/PR65"
+  },
+  "immutable": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "next30": "1d9d49ec26281ffd6486d722a97298596289605d",
+    "wp": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "execution": {
+    "local_tests": "NOT_RUN_BY_S3_R3",
+    "build": "NOT_RUN_BY_S3_R3",
+    "typecheck": "NOT_RUN_BY_S3_R3",
+    "own_ci": "NOT_DISPATCHED",
+    "product_writes": 0
+  },
+  "goal": "PAUSED",
+  "global_release": false,
+  "final_approve": false,
+  "verdict": "FIX_FIRST",
+  "canonical_count": {
+    "criteria_owned": 40,
+    "profiles": 5,
+    "skills": 18,
+    "mcp_packs": 8,
+    "operations": 39
+  },
+  "criteria": [
+    {
+      "criterion_id": "WP10.DOD.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.DOD.02",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.DOD.10",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.DOD.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.DOD.60",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.INV.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.INV.02",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.INV.10",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.INV.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.INV.60",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.QLT.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.QLT.02",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.QLT.10",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.QLT.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.QLT.60",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.CMP.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.CMP.02",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.CMP.10",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.CMP.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.CMP.60",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.SUC.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.SUC.02",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.SUC.10",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.SUC.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.SUC.60",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.DOD.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.DOD.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.INV.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.INV.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.QLT.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.QLT.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.CMP.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.CMP.02",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.CMP.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.SUC.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.SUC.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.CHK.01",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.CHK.02",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.CHK.03",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    },
+    {
+      "criterion_id": "WP10.T03.CHK.40",
+      "source_status": "NOT_RUN",
+      "review_status": "NOT_PROVEN",
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "reason": "PRE_FREEZE; source/integration evidence cannot close complete criterion before accepted C, AM positives, 3 independent reviewers and C/D checks"
+    }
+  ],
+  "coverage": [
+    {
+      "id": "manifest-5-profiles-18-skills-8-packs-39-operations",
+      "status": "PASS",
+      "basis": "static-structure-only",
+      "refs": [
+        "S2-CATALOG_SHIPPING"
+      ],
+      "counts": {
+        "profiles": 5,
+        "skills": 18,
+        "packs": 8,
+        "operations": 39,
+        "operation_call_routes": 39
+      }
+    },
+    {
+      "id": "skills-shipped-into-git-tree",
+      "status": "PASS",
+      "basis": "18 SKILL.md git blobs, not package-install/invocation",
+      "refs": [
+        "S2-CATALOG_SHIPPING"
+      ],
+      "tree": "13272935dd4b23f17f37326328f424dd008d1825",
+      "files": 18
+    },
+    {
+      "id": "native-session-provider-skill-load-receipt",
+      "status": "NOT_PROVEN",
+      "basis": "implementation visible, missing 18 real effective-model completed SessionV2 receipts",
+      "finding": "R3-NATIVE-01"
+    },
+    {
+      "id": "C16-private-MCP-code",
+      "status": "PASS",
+      "basis": "static in-memory SDK Client/Server + ToolRegistry and domain dispatch code, not called 39 times",
+      "refs": [
+        "S1-PRODUCT_CODE"
+      ]
+    },
+    {
+      "id": "C16-public-binding-permission-narrow-revoke-generation-restart",
+      "status": "NOT_PROVEN",
+      "basis": "static gates and fixture negatives cannot attest installed real lifecycle",
+      "finding": "R3-MCP-02"
+    },
+    {
+      "id": "MCP-39-routes-positive-parity",
+      "status": "NOT_PROVEN",
+      "basis": "one planner fixture component, no 39 W/S native positive",
+      "finding": "R3-MCP-02"
+    },
+    {
+      "id": "C07-original-human-Task-Relay-publication-run-result",
+      "status": "FAIL",
+      "basis": "default host has no native producer/origin: product runtime cannot make own admitted C07 positive; schedule unadvertised",
+      "finding": "R3-TASK-03"
+    },
+    {
+      "id": "C11-outputRef-persistence-and-real-consumer-after-restart",
+      "status": "NOT_PROVEN",
+      "basis": "C08/C11 code and reader real; positive cross-S W not evidenced",
+      "finding": "R3-NATIVE-01"
+    },
+    {
+      "id": "C14-document-digital-PDF-DOCX-text-evidence-and-UI-egress",
+      "status": "NOT_PROVEN",
+      "basis": "RAG adapter exists, missing installed confirmed and revoked proof",
+      "finding": "R3-EXPORT-06"
+    },
+    {
+      "id": "C17-Atlas-scanner-C08-append-commit-read-restart",
+      "status": "NOT_PROVEN",
+      "basis": "actual adapter code, no real hosted scanner+commit/restart",
+      "finding": "R3-ATLAS-04"
+    },
+    {
+      "id": "atlas-generated-4-artifacts",
+      "status": "PASS",
+      "basis": "static presence of business-memory-ports.js/.d.ts and native-memory.js/.d.ts, no check:generated or AST verdict",
+      "refs": [
+        "S1-PRODUCT_CODE"
+      ]
+    },
+    {
+      "id": "scanner-absent-hit-clean-timeout-and-package-guards",
+      "status": "NOT_PROVEN",
+      "basis": "component source only, 190 compiler guard run failed other SHA",
+      "finding": "R3-SCANNER-05"
+    },
+    {
+      "id": "R148-native-preparation-lifecycle-correction",
+      "status": "NOT_PROVEN",
+      "basis": "static source correction visible, real fault injection/reload/revocation not tied to accepted C",
+      "finding": "R148-NATIVE-01"
+    },
+    {
+      "id": "AM01-through-AM06",
+      "status": "NOT_PROVEN",
+      "basis": "integration intake NOT_RUN, negative correlators and fixtures not positives",
+      "finding": "R3-NATIVE-01"
+    },
+    {
+      "id": "final-eight-ci-epic-G7D-G8",
+      "status": "NOT_PROVEN",
+      "basis": "W6130 has zero check runs and Actions",
+      "finding": "R3-CI-07"
+    },
+    {
+      "id": "C-accepted-and-D-evidence-only-three-independent",
+      "status": "NOT_PROVEN",
+      "basis": "C unaccepted, D not attested, review 209 preliminary",
+      "finding": "R3-CANDIDATE-08"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "sf_maestro",
+      "source_declared": "PASS",
+      "allowed_skills": 7,
+      "allowed_ops": 27,
+      "actual_installed_inference": "NOT_PROVEN",
+      "separate_session_proof": "NOT_PROVEN",
+      "actual_consumed_output": "NOT_PROVEN"
+    },
+    {
+      "id": "sf_finance",
+      "source_declared": "PASS",
+      "allowed_skills": 5,
+      "allowed_ops": 16,
+      "actual_installed_inference": "NOT_PROVEN",
+      "separate_session_proof": "NOT_PROVEN",
+      "actual_consumed_output": "NOT_PROVEN"
+    },
+    {
+      "id": "sf_procurement",
+      "source_declared": "PASS",
+      "allowed_skills": 5,
+      "allowed_ops": 15,
+      "actual_installed_inference": "NOT_PROVEN",
+      "separate_session_proof": "NOT_PROVEN",
+      "actual_consumed_output": "NOT_PROVEN"
+    },
+    {
+      "id": "sf_portfolio",
+      "source_declared": "PASS",
+      "allowed_skills": 5,
+      "allowed_ops": 16,
+      "actual_installed_inference": "NOT_PROVEN",
+      "separate_session_proof": "NOT_PROVEN",
+      "actual_consumed_output": "NOT_PROVEN"
+    },
+    {
+      "id": "sf_reviewer",
+      "source_declared": "PASS",
+      "allowed_skills": 3,
+      "allowed_ops": 10,
+      "actual_installed_inference": "NOT_PROVEN",
+      "separate_session_proof": "NOT_PROVEN_REVIEWER_INDEPENDENCE",
+      "actual_consumed_output": "NOT_PROVEN"
+    }
+  ],
+  "skills": [
+    {
+      "skill_id": "sf-enquadrar-decisao",
+      "manifest_source_digest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4",
+      "instructions_digest": "cc342bb2b520a8ae37220bf600508d085553308ead08eb6e1b0843e52cb8f464",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-preparar-revisao-executiva",
+      "manifest_source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6",
+      "instructions_digest": "acaae8c302cfe934e9a9b1d6e31784090ac96fa48e66dc5859d4f81cbbb4e801",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-coordenar-perguntas",
+      "manifest_source_digest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33",
+      "instructions_digest": "9dd6da0563e59248ba5dca0ffd2c26437a0a6bafb5abeae5a0f77aacef82fafa",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-explicar-forecast",
+      "manifest_source_digest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+      "instructions_digest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-comparar-cenarios",
+      "manifest_source_digest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2",
+      "instructions_digest": "4a5ee94713eb474032dcc089f5cac3a073ea089479dba7ea0f90aebeb67c8ef9",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-avaliar-sensibilidade",
+      "manifest_source_digest": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5",
+      "instructions_digest": "fc415d2d3c3e7ca205e9ba92b34537f69a1a3f036ddfc0274785349d56d0e9f0",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-comparar-sourcing",
+      "manifest_source_digest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553",
+      "instructions_digest": "bd851ccc61d93d5978b7f5068f51b7f774458e70b3a6a8caee9b9076667fb050",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "manifest_source_digest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb",
+      "instructions_digest": "f170a1a4cf8fadd83716d70428425446b33b0849c9eac7af476df44c1b863fd1",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-preparar-compra",
+      "manifest_source_digest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0",
+      "instructions_digest": "6b5a139ed88269b55c86f711c922cb7ec16ddaef7d9285e0891514319e125213",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-revisar-dependencias",
+      "manifest_source_digest": "6adbeb96f182706d6125cfad31f679801a24becd9589231121ff54d62d476005",
+      "instructions_digest": "bc18710e773e2ef7902e2899886ffd4081e6553be7bc2b076204f826b74bbdf0",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-compor-portfolio",
+      "manifest_source_digest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+      "instructions_digest": "0f6f8d575fd60b062fe2b700cde10fadd9e93bcb47409a0b8b362f028629cd07",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-reavaliar-compromissos",
+      "manifest_source_digest": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6",
+      "instructions_digest": "a8f4ee47edb3c6d51ae9494ffee887af9c9d2072679f663583dbcc8ed30f6ea1",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-contestar-decisao",
+      "manifest_source_digest": "9d0a00c76ce8064f87eeb325eb0bc5c252bc9119d25e2047b78a55803b735696",
+      "instructions_digest": "ea13087b54f1c8e8d94974cba313f407c6fbb21bc825e4452aa57c7789e81def",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-revisar-evidencias",
+      "manifest_source_digest": "eda2166e5a588ba51888b1b7968544f05debb7179be8959c24cf681c4d1f0be8",
+      "instructions_digest": "8f407777a68965d86469eb1ce1554a231ac1b546af0e4d8e080734984f7f9a1d",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-extrair-evidencias",
+      "manifest_source_digest": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f",
+      "instructions_digest": "e5097d33f0505ab51088100b25bae02dc830bdcdd55eb4bf4c54acd976bf558b",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-produzir-bi-contextual",
+      "manifest_source_digest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+      "instructions_digest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-produzir-material-reuniao",
+      "manifest_source_digest": "d5389ae1fa4cebab61ddf53cc75a1d25c5a293182fff7b5d03bce5f90ac1a7bb",
+      "instructions_digest": "a18bc877c2b0abc80836667342f53833446c1328a6464edc2dcac05ed8a56879",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    },
+    {
+      "skill_id": "sf-consultar-memoria-decisoria",
+      "manifest_source_digest": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2",
+      "instructions_digest": "67d4166705d222b9d654f4e32d0b804ae0fdf7a157755545fde5ed7da92629a6",
+      "source_in_repo": "PASS",
+      "host_runtime_shipped": "NOT_PROVEN",
+      "actual_loaded_message": "NOT_PROVEN",
+      "native_execution": "NOT_PROVEN",
+      "durable_output": "NOT_PROVEN",
+      "consumer_after_reload": "NOT_PROVEN"
+    }
+  ],
+  "mcp_packs": [
+    {
+      "pack_id": "performance",
+      "declared_op_count": 4,
+      "source_manifest": "PASS",
+      "actual_native_parity": "NOT_PROVEN",
+      "operations": [
+        {
+          "id": "sf_dashboard_read",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_kpi_explain",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_bi_view",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_source_get",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        }
+      ]
+    },
+    {
+      "pack_id": "planning",
+      "declared_op_count": 5,
+      "source_manifest": "PASS",
+      "actual_native_parity": "NOT_PROVEN",
+      "operations": [
+        {
+          "id": "sf_forecast_compare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_scenario_simulate",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_scenario_compare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_sensitivity_evaluate",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_portfolio_evaluate",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        }
+      ]
+    },
+    {
+      "pack_id": "procurement",
+      "declared_op_count": 4,
+      "source_manifest": "PASS",
+      "actual_native_parity": "NOT_PROVEN",
+      "operations": [
+        {
+          "id": "sf_request_read",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_supplier_read",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_contract_read",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_sourcing_compare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        }
+      ]
+    },
+    {
+      "pack_id": "decisions",
+      "declared_op_count": 5,
+      "source_manifest": "PASS",
+      "actual_native_parity": "NOT_PROVEN",
+      "operations": [
+        {
+          "id": "sf_case_read",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_case_draft",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_alternative_draft",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_change_prepare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_receipt_get",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        }
+      ]
+    },
+    {
+      "pack_id": "collaboration",
+      "declared_op_count": 5,
+      "source_manifest": "PASS",
+      "actual_native_parity": "NOT_PROVEN",
+      "operations": [
+        {
+          "id": "sf_work_list",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_question_prepare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_answer_read",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_relation_read",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_handoff_prepare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        }
+      ]
+    },
+    {
+      "pack_id": "documents_reports",
+      "declared_op_count": 5,
+      "source_manifest": "PASS",
+      "actual_native_parity": "NOT_PROVEN",
+      "operations": [
+        {
+          "id": "sf_document_extract",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_import_preview",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_review_prepare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_report_prepare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_artifact_get",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        }
+      ]
+    },
+    {
+      "pack_id": "knowledge",
+      "declared_op_count": 5,
+      "source_manifest": "PASS",
+      "actual_native_parity": "NOT_PROVEN",
+      "operations": [
+        {
+          "id": "sf_context_get",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_knowledge_search",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_evidence_get",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_decision_recall",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_freshness_check",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        }
+      ]
+    },
+    {
+      "pack_id": "routines",
+      "declared_op_count": 6,
+      "source_manifest": "PASS",
+      "actual_native_parity": "NOT_PROVEN",
+      "operations": [
+        {
+          "id": "sf_routine_catalog",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_routine_prepare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_routine_run",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_routine_status",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_routine_result",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        },
+        {
+          "id": "sf_watch_prepare",
+          "route_declared": "PASS",
+          "handler_present_in_runtime": "STATIC_REGISTRY_ADMITTED_IF_DEPENDENCY_READY",
+          "native_call_witness": "NOT_PROVEN",
+          "ui_native_output_parity": "NOT_PROVEN"
+        }
+      ]
+    }
+  ],
+  "evidence_classes": [
+    {
+      "id": "S1-PRODUCT_CODE",
+      "classification": "STATIC_REAL_COMPONENT",
+      "status": "PASS_SOURCE_PRESENT_ONLY",
+      "refs": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+          "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "blob": "b22f8c528d394549475106736a96727be7277152",
+          "lines": "143-280",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+          "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+          "lines": "1-180",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+          "blob": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+          "lines": "1-220",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "lines": "295-463",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+          "blob": "5383051da7cda4523d81f34d93430871e564bb06",
+          "lines": "62-222",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "meaning": "Code for existing SessionV2/SkillV2/ToolRegistry/real MCP client-server and C08 SQLite Atlas adapter exists; read-only inspection proves implementation shape, not executed behavior."
+    },
+    {
+      "id": "S2-CATALOG_SHIPPING",
+      "classification": "REPOSITORY_BYTES_AND_DECLARATIONS",
+      "status": "PASS_STRUCTURAL_ONLY",
+      "refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+          "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+          "lines": "manifest: profiles,skills,packs,operation_call_routes",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+          "blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+          "lines": "1-220",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "8dcafe957590c47f342786e6fb79cd231fe69714",
+          "lines": "136-145",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+          "blob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+          "lines": "resident constraints",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "meaning": "Five profiles, 18 manifest skills, 8 packs, 39 unique routed operations and 18 SKILL.md source blobs in repository. Installed distribution bytes, runtime load and output consumption remain NOT_PROVEN."
+    },
+    {
+      "id": "S3-AM02_FIXTURE",
+      "classification": "DETERMINISTIC_FIXTURE_DOMAIN_COMPONENT",
+      "status": "NOT_NATIVE_POSITIVE",
+      "refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+          "blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+          "lines": "14-19, 62-116",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "meaning": "Planner fixture and skill-host fixture use synthetic session/run/assistant context. Domain call egress wrapper can be inspected but fixture not real provider witness."
+    },
+    {
+      "id": "S4-AM03_NEGATIVE",
+      "classification": "GENERATION_COMPONENT_NEGATIVE",
+      "status": "NOT_NATIVE_PROVIDER_RESTART",
+      "refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+          "blob": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+          "lines": "12-100",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "meaning": "manual fixture.access.generation=2 and registry.invalidateGeneration(1): negative component oracle only; no physical provider restart/generation rebind."
+    },
+    {
+      "id": "S5-AM04_NEGATIVE",
+      "classification": "NEGATIVE_CORRELATOR",
+      "status": "NOT_NATIVE_POSITIVE",
+      "refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts",
+          "blob": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08",
+          "lines": "4-12, 70-109",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "meaning": "Explicit synthetic inputs, CORRELATABLE_NOT_ATTESTED, never AM04 PASS."
+    },
+    {
+      "id": "S6-AM05_SCANNER",
+      "classification": "SCANNER_COMPONENT",
+      "status": "NOT_C08_ATLAS_RESTART_POSITIVE",
+      "refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+          "blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+          "lines": "20-91",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+          "blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+          "lines": "1-43",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "meaning": "Test source requires genuine provisioned gitleaks, but no hosted W6130 execution/run and no C08 transaction+restart positive."
+    },
+    {
+      "id": "S7-AM06_NEGATIVE",
+      "classification": "NEGATIVE_CORRELATOR_AND_REENTRY",
+      "status": "NOT_NATIVE_TASK_RELAY_POSITIVE",
+      "refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+          "blob": "0e8edac9d862cd68db387695d8aa476ad775c235",
+          "lines": "5-49",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+          "blob": "673a0f0d8c039cda65c4fd88dc13b638db4ab27a",
+          "lines": "12-96",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "meaning": "Negative correlation and synthetic recursion guard only; original Task/Relay workflow admitted by C07 unavailable in default host."
+    },
+    {
+      "id": "S8-INTEGRATOR_RECEIPT",
+      "classification": "SOURCE_INTEGRATED_NOT_TESTED",
+      "status": "NOT_RUN",
+      "refs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/BATCH-03-AM01-AM06-CONSUMPTION.json",
+          "blob": "86c001c0472fa3e5cfd6695172fc7315c9b6a89e",
+          "lines": "proof inventory and validation NOT_RUN",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/HANDOFF-190-191-AM01-AM06.json",
+          "blob": "c1c5dbeae84d47f76f9bc732fbb5128ce4389cdc",
+          "lines": "all AM proof status NOT_RUN",
+          "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+        }
+      ],
+      "meaning": "13 test/source files consumed; AM01–AM06 marked NOT_RUN; receipts/commits are not executed witnesses."
+    },
+    {
+      "id": "S9-ACTIONS_OTHER_SHA",
+      "classification": "HOSTED_SURGICAL_RUN",
+      "status": "PASS_AND_FAIL_DIFFERENT_SHA",
+      "observations": [
+        {
+          "run_id": 43775214053,
+          "job_id": 132999863918,
+          "head_sha": "12a1a84593c5b060a1168faf607e8b7abe2bfab8",
+          "purpose": "C08 lifecycle",
+          "conclusion": "success",
+          "candidate_match": false
+        },
+        {
+          "run_id": 43775606150,
+          "job_id": 133001082279,
+          "head_sha": "30fdda6d68a0f8d917ba75136b0124f8aac80966",
+          "purpose": "F04 journeys",
+          "conclusion": "success",
+          "candidate_match": false
+        },
+        {
+          "run_id": 43775802204,
+          "job_id": 133001695266,
+          "head_sha": "63dd323ae114238d817a915d3b97d6ae5f5f66e5",
+          "purpose": "AM unrun 165/169 selection",
+          "conclusion": "failure",
+          "failed_step": "Run tests",
+          "root_cause": "NOT_READ_FROM_LOG",
+          "candidate_match": false
+        },
+        {
+          "run_id": 43774116387,
+          "job_id": 132996345366,
+          "head_sha": "b935f51ca9333c77d2b13ced8e7ad743df79468d",
+          "purpose": "190 compiler guards installed-E2E",
+          "conclusion": "failure",
+          "failed_step": "Run guards and causal installed E2E compilation",
+          "root_cause": "NOT_READ_FROM_LOG",
+          "candidate_match": false
+        }
+      ],
+      "meaning": "Real Actions successes/failures for different source SHAs; no inheritance to accepted C."
+    },
+    {
+      "id": "S10-NATIVE_POSITIVE_C",
+      "classification": "NATIVE_POSITIVE",
+      "status": "NONE_VERIFIED",
+      "meaning": "No same-C source tree, model/provider, original Request, actual Session/Tool message, outputRef + observed UI consumer persisted after restart demonstrated for full AM matrix."
+    }
+  ],
+  "source_paths": {
+    "host": {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+      "lines": "107-125, 131-175, 218-246, 318-372, 813-843, 918-931",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "nativeHost": {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "blob": "b22f8c528d394549475106736a96727be7277152",
+      "lines": "143-280",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "evidence": {
+      "path": "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+      "blob": "85c745581cc327646dadbf4df344b51409c8655e",
+      "lines": "47-100, 100-147",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "nativeExec": {
+      "path": "apps/cli/src/sucafina-product/native-execution.ts",
+      "blob": "8f3fe263667915146d4010db10a0fdb2679b8846",
+      "lines": "1-230",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "skillLoader": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "blob": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+      "lines": "1-180",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "resident": {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "lines": "1-220",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "manifest": {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "lines": "manifest: profiles,skills,packs,operation_call_routes",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "local": {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "8dcafe957590c47f342786e6fb79cd231fe69714",
+      "lines": "136-145",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "registry": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469",
+      "lines": "60-190",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "mcp": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "blob": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+      "lines": "1-220",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "dispatch": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "blob": "6ba1b02eee73d44133c78599284f9772b26007b1",
+      "lines": "1-210",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "routineOrigin": {
+      "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+      "blob": "0d34ddeb14e9da525d6acc4960a54f35be18d577",
+      "lines": "17-130",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "routineAdmission": {
+      "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "blob": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+      "lines": "22-112",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "routineRuntime": {
+      "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "blob": "5383051da7cda4523d81f34d93430871e564bb06",
+      "lines": "62-222",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "routineOwner": {
+      "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "blob": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+      "lines": "32-149",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "routineInstalled": {
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "blob": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+      "lines": "20-155",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "atlas": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+      "lines": "295-463",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "scanner": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+      "lines": "1-43",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "atlasPackage": {
+      "path": "modules/atlas/boundary/package.json",
+      "blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+      "lines": "5-50",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "atlasEntry": {
+      "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+      "blob": "06f8085df12d57baf7973d0df500da3e366dc29a",
+      "lines": "1-8",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "atlasBound": {
+      "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "blob": "fb3d542eb22e9b8dc9a139ce1ff98189812d6e0d",
+      "lines": "1-45",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "documents": {
+      "path": "apps/cli/src/sucafina-product/document-services.ts",
+      "blob": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+      "lines": "17-55",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "docResolver": {
+      "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "lines": "1-72",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "docAdapter": {
+      "path": "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+      "blob": "b968936724192eaab050cf48e69dc5a634dc54d9",
+      "lines": "1-51",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "runStore": {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "lines": "60-188",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "contribReader": {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "lines": "10-60",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "analysis": {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+      "lines": "83-175",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "am01": {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+      "blob": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+      "lines": "14-140",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "am02": {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+      "blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+      "lines": "14-19, 62-116",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "am03": {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+      "blob": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+      "lines": "12-100",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "am04": {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts",
+      "blob": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08",
+      "lines": "4-12, 70-109",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "am05": {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+      "blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+      "lines": "20-91",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "am06": {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+      "blob": "0e8edac9d862cd68db387695d8aa476ad775c235",
+      "lines": "5-49",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "am06NoRecursive": {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+      "blob": "673a0f0d8c039cda65c4fd88dc13b638db4ab27a",
+      "lines": "12-96",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "integration": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/BATCH-03-AM01-AM06-CONSUMPTION.json",
+      "blob": "86c001c0472fa3e5cfd6695172fc7315c9b6a89e",
+      "lines": "proof inventory and validation NOT_RUN",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "handoffAM": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/HANDOFF-190-191-AM01-AM06.json",
+      "blob": "c1c5dbeae84d47f76f9bc732fbb5128ce4389cdc",
+      "lines": "all AM proof status NOT_RUN",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "fence": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+      "blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+      "lines": "189 integration authority",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "norm": {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+      "blob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+      "lines": "resident constraints",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "generatedPorts": {
+      "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+      "blob": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+      "lines": "generated file",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    },
+    "generatedNative": {
+      "path": "modules/atlas/boundary/src/generated/native-memory.js",
+      "blob": "820a3010be24a817edae7ff26299919d448ad4bf",
+      "lines": "generated file",
+      "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e"
+    }
+  },
+  "github_actions": [
+    {
+      "run_id": 43775214053,
+      "job_id": 132999863918,
+      "head_sha": "12a1a84593c5b060a1168faf607e8b7abe2bfab8",
+      "purpose": "C08 lifecycle",
+      "conclusion": "success",
+      "candidate_match": false
+    },
+    {
+      "run_id": 43775606150,
+      "job_id": 133001082279,
+      "head_sha": "30fdda6d68a0f8d917ba75136b0124f8aac80966",
+      "purpose": "F04 journeys",
+      "conclusion": "success",
+      "candidate_match": false
+    },
+    {
+      "run_id": 43775802204,
+      "job_id": 133001695266,
+      "head_sha": "63dd323ae114238d817a915d3b97d6ae5f5f66e5",
+      "purpose": "AM unrun 165/169 selection",
+      "conclusion": "failure",
+      "failed_step": "Run tests",
+      "root_cause": "NOT_READ_FROM_LOG",
+      "candidate_match": false
+    },
+    {
+      "run_id": 43774116387,
+      "job_id": 132996345366,
+      "head_sha": "b935f51ca9333c77d2b13ced8e7ad743df79468d",
+      "purpose": "190 compiler guards installed-E2E",
+      "conclusion": "failure",
+      "failed_step": "Run guards and causal installed E2E compilation",
+      "root_cause": "NOT_READ_FROM_LOG",
+      "candidate_match": false
+    }
+  ],
+  "candidate_checks": {
+    "commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "check_runs": 0,
+    "actions_runs": 0,
+    "combined_status": "pending"
+  },
+  "acceptance": "NO_CRITERION_MARKED_PASS_AS_A_FULL_PRE_FREEZE_ACCEPTANCE"
+}

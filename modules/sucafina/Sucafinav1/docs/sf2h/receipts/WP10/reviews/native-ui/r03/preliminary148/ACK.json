@@ -1,0 +1,43 @@
+{
+  "schema": "sf2h.preliminary-r03.ack.v1",
+  "mission": 148,
+  "order": "PRE-R03",
+  "kind": "preliminary-review-not-final",
+  "campaign": "sf2h-integral-20261112",
+  "epoch": "pre-r03-e1-browser148",
+  "branch": "sf-review-runtime",
+  "actor": {
+    "executor": "ChatGPT",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_state": "not exposed",
+    "github_authenticated_login": "gustavomhss"
+  },
+  "authority": {
+    "source_packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/148.json",
+    "packet_pin": "81fbb8364ca474db8f718faad20c9235519e98fe",
+    "packet_blob": "a41c1211101b57b3fdc0e802c18eeab272963a52",
+    "normative_pin": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "integrator": "132/PR65",
+    "compiler": "149/PR107",
+    "ci": "150/PR106",
+    "native_goal": "paused",
+    "final_r03_authorized": false
+  },
+  "observed": {
+    "head_pre_ack": "d8f14f81855858120f914af4f3934406bfdb74f1",
+    "tree_pre_ack": "c792f5d0d3be378ca86aea09bcabdd8781734d8f",
+    "head_expected": "d8f14f81855858120f914af4f3934406bfdb74f1",
+    "head_match": true,
+    "root_AGENTS_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "source_read_only": true
+  },
+  "state": "ACK_PUBLISHED_PRELIMINARY_REVIEW_IN_PROGRESS",
+  "limits": {
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "release": "NOT_APPROVED"
+  }
+}

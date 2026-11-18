@@ -1,0 +1,96 @@
+{
+  "schema": "sf2h.pre-r03.terminal-receipt.v1",
+  "mission": 148,
+  "epoch": "pre-r03-e1-browser148",
+  "status": "TERMINAL_PRELIMINARY_FINDING_PENDING",
+  "model": "GPT-6",
+  "session_id": null,
+  "github_account": "gustavomhss",
+  "head_preimage": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "tree_preimage": "c792f5d0d3be378ca86aea09bcabdd8781734d8f",
+  "ack_commit": "6126c2c40da5bf7b59dd995e33bd9015605af9d6",
+  "ack_tree": "5614de5aff245191696be778c1aceaeb94be01ba",
+  "ack_blob": "950a158959239e51560f36cd3841baf66e3d77b1",
+  "commit_parent": "6126c2c40da5bf7b59dd995e33bd9015605af9d6",
+  "files_prepost": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/ACK.json",
+      "preimage": null,
+      "postimage": "950a158959239e51560f36cd3841baf66e3d77b1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/FINDINGS.json",
+      "preimage": null,
+      "postimage": "157220ae4dd6f36608f24c8c6b3f9888000efac4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/EVIDENCE-MATRIX.json",
+      "preimage": null,
+      "postimage": "85fb5251c09063e17f6005b126d2f6bffaffb180"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/PRELIMINARY-REVIEW.md",
+      "preimage": null,
+      "postimage": "b537a3fc9d3d30c33052eb58e70611d9a63d47ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/HANDOFF-132.json",
+      "preimage": null,
+      "postimage": "a2c36e3ed3b52a8ea9389dae91248afe295a6629"
+    }
+  ],
+  "findings_new": [
+    "R148-NATIVE-01"
+  ],
+  "routed_to_owner": "https://github.com/gustavomhss/Orchestra-SF/pull/104#issuecomment-6900997417",
+  "prior_prs_deduplicated": [
+    98,
+    97,
+    100,
+    159
+  ],
+  "source_candidate_checked": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "latest_moving_integrator_observed": "8094e599e3d18609e269548d24619a3246fbc735",
+  "test_run": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "parser": "NOT_RUN",
+  "validator": "NOT_RUN",
+  "hosted_ci_by_reviewer": "NOT_RUN",
+  "qualifications": [
+    {
+      "id": "AM01",
+      "status": "PENDING"
+    },
+    {
+      "id": "AM02",
+      "status": "PENDING"
+    },
+    {
+      "id": "AM03",
+      "status": "PENDING"
+    },
+    {
+      "id": "AM04",
+      "status": "PENDING"
+    },
+    {
+      "id": "AM05",
+      "status": "PENDING"
+    },
+    {
+      "id": "AM06",
+      "status": "PENDING"
+    },
+    {
+      "id": "Office",
+      "status": "PENDING"
+    }
+  ],
+  "owner_next": "132 compares exact current code SHA and requests 95 fix; 149 compiler and 150 hosted CI; no R03 final or release approval",
+  "read_only_product": true,
+  "read_only_tests": true,
+  "merge": false,
+  "deploy": false,
+  "goal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}

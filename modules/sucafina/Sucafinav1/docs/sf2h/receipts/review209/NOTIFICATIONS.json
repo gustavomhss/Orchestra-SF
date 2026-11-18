@@ -1,0 +1,94 @@
+{
+  "schema": "sf2h.review209.notifications.v1",
+  "mission": 209,
+  "actor": "S3-R3",
+  "kind": "PRE_FREEZE_NON_FINAL",
+  "review_commit": "60e695103b46a9004628ecf41cdd18e42c16ce29",
+  "review_tree": "b4af0a706ab07db1a56c01c860f48bc63fb1d9a2",
+  "review_files": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review209/ACK.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review209/FINDINGS.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review209/COVERAGE-MATRIX.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review209/REVIEW.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review209/HANDOFF.json"
+  ],
+  "source_c_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "notifications": [
+    {
+      "pr": 65,
+      "comment_id": 6903568588,
+      "purpose": "PRELIMINARY_FINDINGS_EARLY",
+      "recipient": "189",
+      "status": "PUBLISHED_NOT_ACK",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6903568588"
+    },
+    {
+      "pr": 106,
+      "comment_id": 6903572185,
+      "purpose": "CLASSIFY_EXISTING_AM_FAILURE_NO_DUPLICATE_CI",
+      "recipient": "200",
+      "status": "PUBLISHED_NOT_DISPATCH",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/106#issuecomment-6903572185"
+    },
+    {
+      "pr": 65,
+      "comment_id": 6903738643,
+      "purpose": "FULL_FINDINGS_MATRIX_AND_HANDOFF",
+      "recipient": "189",
+      "status": "PUBLISHED_NOT_ACK",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6903738643"
+    },
+    {
+      "pr": 190,
+      "comment_id": 6903739146,
+      "purpose": "INSTALLED_PUBLIC_NATIVE_OWNER_AND_SCANNER",
+      "recipient": "199",
+      "status": "PUBLISHED_NOT_ACK",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/190#issuecomment-6903739146"
+    },
+    {
+      "pr": 182,
+      "comment_id": 6903739661,
+      "purpose": "C15_5_18_AND_C16_39_REAL_WITNESSES",
+      "recipient": "196",
+      "status": "PUBLISHED_NOT_ACK",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/182#issuecomment-6903739661"
+    },
+    {
+      "pr": 183,
+      "comment_id": 6903740213,
+      "purpose": "ATLAS_SCANNER_AND_RESTART_AM05",
+      "recipient": "198",
+      "status": "PUBLISHED_NOT_ACK",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/183#issuecomment-6903740213"
+    },
+    {
+      "pr": 184,
+      "comment_id": 6903740750,
+      "purpose": "AUTHORITY_NARROW_REVOKE_GENERATION_AM03_04",
+      "recipient": "197",
+      "status": "PUBLISHED_NOT_ACK",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/184#issuecomment-6903740750"
+    },
+    {
+      "pr": 107,
+      "comment_id": 6903741373,
+      "purpose": "G7D_G8_GENERATED_AST_AND_D_C_ENVELOPE",
+      "recipient": "190",
+      "status": "PUBLISHED_NOT_ACK",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/107#issuecomment-6903741373"
+    }
+  ],
+  "notification_count": 8,
+  "constraints": {
+    "comments_are_ack": false,
+    "comments_are_wake": false,
+    "comments_are_ci_dispatch": false,
+    "acceptance": "FIX_FIRST",
+    "global_release": false,
+    "goal": "paused",
+    "product_writes": 0,
+    "local_tests": 0
+  },
+  "next_action": "189 to publish accepted W/tree C and owner deltas; 199 identifies native producer and scanner or exact unavailable precondition; 200/190 reconcile existing runs then supply only nonduplicated exact-C proofs; S3-R3 independently rechecks changed blobs and all inherited IDs after accepted C. No final approval before complete C+3 reviewers+D envelope."
+}

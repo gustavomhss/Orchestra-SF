@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h.review209.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 209,
+  "actor_id": "S3-R3",
+  "role": "INDEPENDENT_READ_ONLY_PRODUCT",
+  "epoch": "cold-review-e1-browser209",
+  "branch": "sf-review-runtime",
+  "expected_head": "30b50af302833c69cd10c641fd34bb407f2a5aff",
+  "expected_tree": "df5f2b5281937442db72b20c3b85d424f16ec09f",
+  "observed_head": "30b50af302833c69cd10c641fd34bb407f2a5aff",
+  "observed_tree": "df5f2b5281937442db72b20c3b85d424f16ec09f",
+  "source_branch": "sf2-stack",
+  "source_observed_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "candidate_state": "PRE_FREEZE_DEVELOPMENT",
+  "review_kind": "PRE_FREEZE_REVIEW",
+  "authority": {
+    "packet_pin": "57bc98cb10a29e6428df226f496805e7f117dc5a",
+    "packet_blob": "44cc6770e3591944d9edb5b65f6744b9497ed6bb",
+    "actor_pack_pin": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "actor_pack_blob": "6c8de729cc156f6672738c2f8403472a8c478338",
+    "common_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "s0_fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+    "s0_fence_blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+    "sole_integrator": "189/PR65",
+    "compiler": "190/PR107",
+    "test_dispatcher": "200/PR106",
+    "installation": "199"
+  },
+  "executor": {
+    "model": "GPT-6",
+    "session_id": null,
+    "session_id_state": "not exposed",
+    "product_authorship": false,
+    "predecessor_lifecycle": "not asserted"
+  },
+  "scope": {
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review209/",
+    "product": "read-only",
+    "tests": "read-only",
+    "workflows": "read-only",
+    "guards": "read-only",
+    "local_checks": "NOT_RUN",
+    "ci_dispatch": "NOT_AUTHORIZED",
+    "goal": "paused",
+    "global_release": false
+  },
+  "inherited_review": {
+    "mission": 148,
+    "old_findings": [
+      "R148-NATIVE-01",
+      "R3-NATIVE-01",
+      "R3-MCP-02",
+      "R3-TASK-03",
+      "R3-ATLAS-04",
+      "R3-SCANNER-05",
+      "R3-EXPORT-06",
+      "R3-CI-07",
+      "R3-CANDIDATE-08"
+    ],
+    "old_receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/"
+  },
+  "status": "ACK_ACCEPTED_BEFORE_WRITE",
+  "decision": "NO_APPROVE_UNTIL_ACCEPTED_C_AND_SAME_C_INTEGRAL_PROOFS"
+}
