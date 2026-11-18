@@ -257,16 +257,26 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     catch { if (current(token)) fail("unavailable"); return }
     if (!current(token)) return
     if (bytes.byteLength !== file.size || bytes.byteLength === 0) { fail("invalid"); return }
-    const reply = unpack(await api["files.asset.upload"]({
+    const reply = await api["files.asset.upload"]({
       surface: state.surface === "dashboard" ? "dashboard" : "procurement",
       upload: kind, record, recordVersion: Number(rawVersion), name: file.name,
       page, mediaType: mime, bytes,
-    }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
+    }, { signal: token.signal, idempotencyKey: crypto.randomUUID() })
     if (!current(token)) return
-    if (reply.kind === "failure") { fail(reply.state, true); return }
-    // Only a producer success means the scanner, record CAS and private byte store admitted it.
-    // The browser never creates a clean-scan verdict or a document source reference.
-    if (!reply.value.ok) { fail("unavailable", true); return }
+    // Asset upload uses the legacy {ok} producer envelope, not a document PortResult.
+    // Require the producer's actual successful HTTP response; never invent a scan verdict.
+    if (reply.kind === "transport-error") {
+      fail(reply.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable", true)
+      return
+    }
+    if (reply.status === 401) { fail("session-expired", true); return }
+    if (reply.status === 403) { fail("denied", true); return }
+    if (reply.status === 404) { fail("not-found", true); return }
+    if (reply.status === 409) { fail("stale", true); return }
+    if (reply.status < 200 || reply.status >= 300 || reply.body.ok !== true) {
+      fail("unavailable", true)
+      return
+    }
     uploadFile = undefined
     mutationUnknown = false
     setState({ uploadName: "", uploadNotice: "sf.u24.uploadAccepted" })
@@ -344,15 +354,18 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
     if (!current(token)) return
     if (result.kind === "failure") { fail(result.state, true); return }
-    if (!("status" in result.value) || result.value.status !== "confirmed" || result.value.id !== candidate.id ||
-      result.value.ref.target.documentId !== candidate.ref.target.documentId) {
+    const confirmedEvidence = result.value
+    if (!("status" in confirmedEvidence) || confirmedEvidence.status !== "confirmed" ||
+      !("version" in confirmedEvidence) || confirmedEvidence.id !== candidate.id ||
+      confirmedEvidence.ref.target.documentId !== candidate.ref.target.documentId) {
       fail("outcome-unknown", true)
       return
     }
+    const confirmedVersion = confirmedEvidence.version
     const fresh = await readCandidates(state.documentRef, token)
     if (!current(token)) return
-    if (fresh?.some((entry) => entry.id === result.value.id &&
-      entry.status === "confirmed" && entry.version === result.value.version)) {
+    if (fresh?.some((entry) => entry.id === confirmedEvidence.id &&
+      entry.status === "confirmed" && entry.version === confirmedVersion)) {
       setState({ phase: "confirmed", status: "ready" })
       mutationUnknown = false
     } else fail("stale")
