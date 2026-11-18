@@ -22,6 +22,8 @@ import {
 export type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 
 export type SfCallOptions = Readonly<{ signal: AbortSignal; idempotencyKey?: string }>
+/** Browser fetch the transport actually invokes. Callers must not substitute a CORS workaround. */
+export type SfTransportFetch = typeof globalThis.fetch
 export type SfTransport = Readonly<{
   execute<Input, Output>(
     operation: SfOperation<Input, Output>,

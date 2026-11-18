@@ -74,7 +74,7 @@ export async function createExportArtifactFixture(options: { maxBytes?: number }
   }
   const note = "Café, ação e e\u0301; literal <scope> & evidence. " + "Complete source note. ".repeat(12) + "END-EXPORT-66-NOTE"
   const actor: Actor = { id: owner, roles: ["admin"], canWrite: true }
-  const environment = (id = randomUUID()) => ({ at: clock.at, id: () => id, directory: [{ id: owner, name: "Synthetic export owner" }] })
+  const environment = (id: string = randomUUID()) => ({ at: clock.at, id: () => id, directory: [{ id: owner, name: "Synthetic export owner" }] })
   await persistence.transaction("dashboard", async (snapshot) => {
     const project = DashboardPortfolio.domain.execute(snapshot, actor, { page: "All Projects", action: "save", version: 0,
       values: { name: "Export66 source project", budget: 1250, spent: 320, status: "In Progress", risk: "Low", notes: note } }, environment("export66-project"))

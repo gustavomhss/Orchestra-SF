@@ -9,6 +9,10 @@ import { ServerConnection } from "../../../../../../packages/app-shell/src/conte
 import type { SfDesktopCapability, SfDesktopInvalidation } from "@orchestra/client/sucafina/transport"
 import type { SfInstallationDescriptor, SfOwnerSelection } from "@orchestra/schema/sucafina/context"
 
+const blockedFetch = (message: string, onCall?: () => void): typeof fetch => Object.assign(async () => {
+  onCall?.()
+  throw new Error(message)
+}, { preconnect() { onCall?.(); throw new Error(message) } })
 const origin = "https://tenant.example"
 const descriptor: SfInstallationDescriptor = {
   installationId: "original-install", projectId: "original-project",
@@ -54,9 +58,7 @@ function fake(options: { deny?: boolean; mismatch?: boolean } = {}) {
   }
   const revoked: string[] = []
   const bridge = createSfDesktopOriginBridge238({
-    server, desktop: native, directory: "/real/project", fetch: async () => {
-      throw new Error("renderer must not fetch Sucafina")
-    }, onInvalidated: (reason) => { revoked.push(reason) },
+    server, desktop: native, directory: "/real/project", fetch: blockedFetch("renderer must not fetch Sucafina"), onInvalidated: (reason) => { revoked.push(reason) },
   })
   return { bridge, revoked, releases, get invalidation() { return invalidation }, get invokes() { return invokes } }
 }
@@ -112,7 +114,7 @@ test("browser denies a foreign publicOrigin before any fetch; no cross-origin CO
     const transport = createSfTransport({
       binding: descriptor, generation: 1, currentGeneration: () => 1,
       operations: SfNativeOperationBindings,
-      fetch: async () => { fetches++; throw new Error("forbidden renderer fetch") },
+      fetch: blockedFetch("forbidden renderer fetch", () => { fetches++ }),
     })
     const result = await createSfContextClient(transport)["ctx.context"]({
       installationId: descriptor.installationId, projectId: descriptor.projectId,
@@ -167,7 +169,7 @@ test("session expiry requires a fresh binding; stale transports and invalidation
   }
   const bridge = createSfDesktopOriginBridge238({
     desktop: native, server, directory: "/real/project",
-    fetch: async () => { throw new Error("unexpected renderer fetch") },
+    fetch: blockedFetch("unexpected renderer fetch"),
     onInvalidated: (reason) => { revocations.push(reason) },
   })
   const contextInput = {
@@ -223,7 +225,7 @@ test("reconnect bind completing after abort is released and cannot publish an ow
   }
   const bridge = createSfDesktopOriginBridge238({
     desktop: native, server, directory: "/real/project",
-    fetch: async () => { throw new Error("unexpected renderer fetch") },
+    fetch: blockedFetch("unexpected renderer fetch"),
     onInvalidated: () => { throw new Error("no active owner was bound") },
   })
   try {
@@ -264,7 +266,7 @@ function stagedFixture() {
     release: async (request) => { releaseRequests.push(request); if (request.kind === "binding") released.push(request.bindingHandle) },
   }
   const bridge = createSfDesktopOriginBridge238({ desktop, server, directory: "/real/project",
-    fetch: async () => { throw new Error("unexpected renderer fetch") }, onInvalidated: (reason) => revoked.push(reason) })
+    fetch: blockedFetch("unexpected renderer fetch"), onInvalidated: (reason) => revoked.push(reason) })
   return { bridge, callbacks, released, releaseRequests, revoked, delay: (value: Promise<void>) => { delay = value } }
 }
 const other = { ...selected, projectId: "other-project", installationId: "other-install" } as SfOwnerSelection
