@@ -1,11 +1,12 @@
 import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { SfHostServices } from "../contracts/host-context.ts"
 import { esc } from "../../src/screen-shell.ts"
+import { analysisHistory } from "../ui/forecast-analysis.ts"
 
 /** Only the authorized case supplies request selectors; the host prepares and revalidates their material. */
 export async function sourcingAnalysisForm(projection: AuthorizedCaseProjection, runtime: Pick<SfHostServices, "analyses" | "sourcingInputs" | "selected" | "models">) {
   if (!runtime.analyses) return "<p>Sourcing analysis is currently unavailable.</p>"
-  const history = `<section data-analysis-history data-case="${esc(JSON.stringify({ id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }))}"><h3>Analysis history</h3><p role="status">Loading analysis history…</p><div data-results></div></section>`
+  const history = analysisHistory(projection)
   if (!runtime.sourcingInputs) return `${history}<p>Sourcing analysis is currently unavailable.</p>`
   const sources = projection.evidenceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> =>
     ref.kind === "record" && ref.evidenceLevel === "observed" && ref.target.surface === "procurement" &&

@@ -49,20 +49,13 @@ export async function download(
     if (!actor.roles.includes("admin")) return { ok: false, status: 403 }
     const { Workbook } = await import("exceljs")
     const book = new Workbook()
-    const sheet = book.addWorksheet("OPEX")
-    sheet.addRow([
-      "Owner",
-      "Annual",
-      ...["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    ])
-    sheet.pageSetup.paperSize = 9
-    sheet.pageSetup.orientation = "landscape"
-    sheet.pageSetup.fitToPage = true
-    sheet.pageSetup.fitToWidth = 1
-    sheet.pageSetup.fitToHeight = 0
-    sheet.pageSetup.margins = { left: 0.25, right: 0.25, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }
-    sheet.pageSetup.printArea = `A1:${sheet.getColumn(sheet.columnCount).letter}${sheet.rowCount}`
-    sheet.pageSetup.printTitlesRow = "1:1"
+    book
+      .addWorksheet("OPEX")
+      .addRow([
+        "Owner",
+        "Annual",
+        ...["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      ])
     return {
       ok: true,
       name: "opex-template.xlsx",
@@ -209,8 +202,8 @@ export async function download(
       return number === null ? "Unavailable" : number.toLocaleString("en-US", { minimumFractionDigits: 2 })
     }
     const lineRows = lines.map((line, index) => {
-      const value = purchaseOrderMoney({ ...request, po: { ...po, lines: [line] } }, settings)
-      return `<tr><td>${index + 1}</td><td>${esc(text(line.desc ?? line.description))}</td><td>${recordedNumber(line.qty) ?? "Unavailable"}</td><td>${esc(text(line.uom ?? line.unit))}</td><td>${money(currency ? line.unitPrice : null)}</td><td>${money(currency ? value?.original : null)}</td></tr>`
+      const value = procurementMonetaryFacts({ ...request, po: { ...po, lines: [line] } }, text(settings.currency), settings)
+      return `<tr><td>${index + 1}</td><td>${esc(text(line.desc ?? line.description))}</td><td>${recordedNumber(line.qty) ?? "Unavailable"}</td><td>${esc(text(line.uom ?? line.unit))}</td><td>${money(currency ? line.unitPrice : null)}</td><td>${money(currency ? value.original : null)}</td></tr>`
     }).join("")
     const baseCurrency = recordedCurrency(settings.currency)
     const monetarySummary = `<p>Monetary state: ${esc(order?.monetaryState ?? "Unavailable")}. Current base amount: ${order?.baseAmount != null && baseCurrency ? `${money(order.baseAmount)} ${esc(baseCurrency)}` : "Unavailable"}. FX: ${recordedNumber(order?.validRate) ?? "Unavailable"} (${esc(order?.fxSource ?? "Unavailable")}). Submitted approval: ${order?.submittedAmount != null && order.submittedCurrency ? `${money(order.submittedAmount)} ${esc(order.submittedCurrency)}` : "Unavailable"}; submitted FX: ${recordedNumber(order?.submittedFxRate) ?? "Unavailable"}.</p>`
@@ -247,15 +240,11 @@ function recordedCurrency(value: unknown): string | null {
 }
 function purchaseOrderMoney(request: Record<string, unknown>, settings: Record<string, unknown>) {
   const lines = object(request.po).lines
-  const status = text(request.status)
   // PO stages retain observed approval metadata even when lines are unavailable.
   // An incidental PO in another stage must not borrow its quote or PR estimate.
-  if (!["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(status) &&
+  if (!["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(text(request.status)) &&
     (!Array.isArray(lines) || !lines.length || rows(lines).length !== lines.length)) return undefined
-  // A saved future PO is a separate estimate from the sourcing decision.
-  // This projection neither changes the request stage nor persists a new state.
-  const projection = ["sourcing", "src_pending", "src_rejected"].includes(status) ? { ...request, status: "po_draft" } : request
-  return procurementMonetaryFacts(projection, text(settings.currency), settings)
+  return procurementMonetaryFacts(request, text(settings.currency), settings)
 }
 function csv(name: string, data: Record<string, unknown>[]): ArtifactResult {
   const columns = [...new Set(data.flatMap((record) => Object.keys(record)))]

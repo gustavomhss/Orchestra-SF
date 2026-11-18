@@ -476,7 +476,7 @@ test("request ownership, self-approval flag and independent record versions are 
       },
       env,
     ),
-  ).toMatchObject({ ok: false, status: 404 })
+  ).toMatchObject({ ok: false, status: 403 })
   expect(state).toEqual(before)
   expect(
     domain.execute(state, owner, { page: "Requests", action: "submit_pr", id, version: 1, values: { pr } }, env).ok,

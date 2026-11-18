@@ -3,13 +3,12 @@ import { object } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PreparedCommand } from "../contracts/context.ts"
-import type { Actor } from "../../runtime/contract.ts"
 import type { ChoiceRecord } from "../contracts/decisions.ts"
 import type { ScenarioOperation } from "../contracts/operations.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createProcurementSourceResolver } from "./sources.ts"
-import { prepareProcurementMutation } from "./prepared.ts"
+import { procurementPreparationIssue } from "./prepared.ts"
 import { createProcurementReadonlySourceResolver } from "./scenario-producer.ts"
 import { createProcurementApprovalLifecycle } from "./decision-preparation.ts"
 import type { ProcurementApprovalPlan, ProcurementApprovalReview } from "./decision-preparation.ts"
@@ -30,29 +29,20 @@ export function createProcurementScenarioPreparation(input: { host: DomainPortHo
     const context = source.value.context
     if (evidence.target.recordType !== "procurement-request" || operation.currency !== context.currency || digestSfValue(operation.period) !== digestSfValue(context.period) || selection.choice.result.currency !== context.currency || digestSfValue(selection.choice.result.horizon) !== digestSfValue(context.period)) return { status: "needs-input", reason: "requisition-basis-mismatch" }
     if (!selection.choice.result.sourceRefs.some((ref) => ref.kind === "record" && digestSfValue(ref) === digestSfValue(evidence))) return { status: "denied", reason: "preview-source-unavailable" }
-    // The recorded human choice identifies a proposed DRAFT amount, not approval.
-    // Canonical review/prepare checks the authenticated actor, PR stage, CAS,
-    // source incarnation, policy and allowed save-estimate action.
-    const lifecycle = createProcurementApprovalLifecycle({ host: input.host })
-    const reviewed = await lifecycle.review(operation.targetRef, binding)
-    if (reviewed.status !== "ok") return reviewed
-    const selected = await lifecycle.prepare({ review: reviewed.value, action: { kind: "save-estimate", amount: operation.amount } }, binding)
-    if (selected.status !== "ok") return selected
-    const plan = selected.value
-    if (plan.requiresExplicitAction !== true || plan.approvalGranted !== false || plan.receipt !== null || plan.command.action !== "save" || plan.command.confirmed !== false) return { status: "denied", reason: "explicit-draft-review-required" }
     const environment = await input.host.environment(request)
     if (!Number.isFinite(Date.parse(environment.at))) return { status: "unavailable", reason: "observation-time-unavailable" }
-    const result = await input.host.persistence.transaction<PortResult<{ command: PreparedCommand; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; preview: ChoiceRecord["result"] }>>("procurement", async (snapshot) => {
+    const result = await input.host.persistence.transaction<PortResult<never>>("procurement", async (snapshot) => {
       const principal = await input.host.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
-      if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:") || !principal.canWrite) return { commit: false, value: { status: "denied", reason: "current-authority-unavailable" } }
-      const roles = principal.roles.filter((entry) => entry.surface === "procurement").map((entry) => entry.role)
-      const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: [], domains: [] }
-      if (!actor.canWrite) return { commit: false, value: { status: "denied", reason: "current-authority-unavailable" } }
-      const target = { surface: "procurement" as const, type: evidence.target.recordType, id: evidence.target.recordId, incarnation: evidence.target.incarnation, version: evidence.target.version, fields: evidence.target.fields, period: context.period, observedAt: environment.at }
-      // The real domain producer previews Requests.save on a cloned snapshot.
-      // It binds command+CAS+scope+digest, but neither submits nor approves the PR.
-      const prepared = prepareProcurementMutation({ snapshot, actor, environment, context: binding, target, scope: source.value.scope, evidence, command: plan.command, operationId: selection.operationId, idempotencyKey: selection.idempotencyKey })
-      return { commit: false, value: prepared ? { status: "ok", value: { command: prepared.command, targetEvidence: prepared.targetEvidence, preview: selection.choice.result } } : { status: "needs-input", reason: "draft-save-command-unavailable" } }
+      if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:") || !principal.canWrite || !principal.roles.some((role) => role.surface === "procurement" && role.role !== "viewer")) return { commit: false, value: { status: "denied", reason: "current-authority-unavailable" } }
+      const version = snapshot.versions[`requests:${evidence.target.recordId}`]?.version ?? 0
+      const command = { page: "Requests", action: "save", id: evidence.target.recordId, version, values: { pr: { estAmount: operation.amount } } }
+      const issue = procurementPreparationIssue(snapshot, command)
+      if (issue) return { commit: false, value: { status: "needs-input", reason: issue } }
+      // Canonical Approve requires a pending request and approves its submitted
+      // amount. Final approval leaves the PR edit stages; saving that approved
+      // amount again is either inadmissible or a no-op. No detached approval of
+      // this unwritten proposal exists. Preserve that policy boundary.
+      return { commit: false, value: { status: "needs-input", reason: "financial-approval-command-unavailable" } }
     }, { signal: request.signal })
     const current = await sourceReader.resolveSource(operation.targetRef, binding)
     if (current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(source.value) || !await input.host.revalidate(binding)) return { status: "stale", reason: "requisition-source-changed" }

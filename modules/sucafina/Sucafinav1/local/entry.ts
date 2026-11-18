@@ -1,23 +1,8 @@
 import path from "node:path"
-import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
-import { createModule, contributions, type ModuleServices } from "../index.ts"
-import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
-import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
-import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
-import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
-import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
-import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
-import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
-import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
-import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
-import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
-import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
-import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
-import { createSfRoutinesHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
+import { createModule } from "../index.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
-import { startAuthMaintenance } from "../runtime/auth-maintenance.ts"
 import { createEntraClient } from "../runtime/entra-client.ts"
 import { createOperatorIdentity } from "../runtime/operator-identity.ts"
 import { documentHtml, esc, pageMain } from "../src/screen-shell.ts"
@@ -33,78 +18,36 @@ import type { Surface } from "../src/identity.ts"
 import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
-import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
-import type { EntraOptions } from "../runtime/local-contract.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
-import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
-import { initializeAbsentSfProductState } from "../product/host-binding/state-provider.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { createSfWorkbenchHttp } from "../product/interface/http.ts"
 import { decorateSfProductHtml } from "../product/interface/html.ts"
-import { decorateSfDecisionControlsHtml } from "../product/integration/decision-controls-link.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
-import { getSfProductHtml } from "../product/integration/host-presentation.ts"
-import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../product/contracts/canonical.ts"
-import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
+import freeze from "../product/contracts/freeze-v1.json"
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
-import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
-
-type SfFactoryContext = { origin: string; createHostRuntime?: CreateSfHostRuntime; createCurrentChoiceFence?: typeof createCurrentChoiceFence; sourceRoot?: string }
+import type { CreateSfHostRuntime } from "../product/contracts/host-context.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
-export default async function installation(context: SfFactoryContext) {
-  if (process.env.SUCAFINA_MICROSOFT_CONFIG !== undefined) return createMicrosoftInstallation(context, process.env.SUCAFINA_MICROSOFT_CONFIG)
+export default async function installation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }) {
   return createLocalInstallation(context, process.env.SUCAFINA_LOCAL_CONFIG)
 }
 
-export async function createMicrosoftInstallation(
-  context: SfFactoryContext,
-  file: string | undefined,
-  environment: Readonly<Record<string, string | undefined>> = process.env,
-  overrides: { fetch?: EntraOptions["fetch"]; now?: () => Date } = {},
-) {
-  const microsoft = await prepareMicrosoftInstallation(context, file, environment, overrides)
-  const configured = await createConfiguredInstallation({ ...context, origin: microsoft.loaded.config.origin }, microsoft.loaded, microsoft)
-  return { ...configured, transport: microsoft.transport }
-}
-
-export async function createLocalInstallation(context: SfFactoryContext, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
+export async function createLocalInstallation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
   if (!file) throw new Error("Explicit private installation configuration required")
   const loaded = await loadLocalConfiguration(file)
   if (context.origin !== loaded.config.origin) throw new Error("Installation origin mismatch")
   await requireLocalIsolation(loaded.directory, environment)
-  return createConfiguredInstallation(context, loaded)
-}
-
-export async function createConfiguredInstallation(
-  context: SfFactoryContext,
-  loaded: Awaited<ReturnType<typeof loadLocalConfiguration>>,
-  microsoft?: Awaited<ReturnType<typeof prepareMicrosoftInstallation>>,
-) {
   const config = loaded.config
-  if (context.origin !== config.origin) throw new Error("Installation origin mismatch")
   const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
-  const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
+  const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
   const now = () => new Date().toISOString()
   const projectScope = createSfSourceScopeProjector(now)
-  const driver = await openLocalStore(path.join(loaded.directory, microsoft ? "business-microsoft" : operator ? "business-local" : "business"))
-  let runtime: SfHostRuntime | undefined
-  // The packaged host supplies its own WeakSet-registered constructor; direct source
-  // installations retain the original module implementation and its strict guard.
-  const currentChoiceFence = (context.createCurrentChoiceFence ?? createCurrentChoiceFence)({ persistence: driver,
-    host: () => {
-      const host = runtime?.services?.()?.host
-      if (!host) throw new Error("SF_CURRENT_CHOICE_HOST_UNAVAILABLE")
-      return host
-    },
-    identity: () => runtime?.identity(),
-    operationIdentity: (call) => call.kind === "ui" ? runtime?.services?.()?.ui.operationIdentity(call) : undefined,
-  })
-  const store = { ...currentChoiceFence.persistence, ...createSfSourcePersistence({ persistence: currentChoiceFence.persistence, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
+  const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
+  const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
   const restoration = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID, purpose: "business-restore" })
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
   const status = (request: Request) => {
@@ -118,19 +61,13 @@ export async function createConfiguredInstallation(
       ...(operator && services.jobs ? { maintenance: services.jobs.status().error ? "degraded" : services.jobs.status().lastSuccess ? "active" : "starting" } : {}),
     }), { headers: { "Cache-Control": "no-store", "Content-Type": "application/json" } })
   }
-  if (!client && !operator) {
-    const authMaintenance = startAuthMaintenance({ secrets: store.secrets })
-    return {
-      mount: config.mount,
-      handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
-      dispose: async () => { await authMaintenance.dispose(); await store.dispose() },
-    }
+  if (!client && !operator) return {
+    mount: config.mount,
+    handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
+    dispose: () => store.dispose(),
   }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
-  // Only the explicitly isolated, OS-owned scratch profile needs an empty native first-run state.
-  // Never materialize or migrate the corporate/Microsoft product namespace before admission.
-  if (operator) await initializeAbsentSfProductState(store, randomUUID)
-  const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
+  const identity = operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
   const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
@@ -151,137 +88,39 @@ export async function createConfiguredInstallation(
   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
-  let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
-  let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
-  let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
-  runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: context.sourceRoot ?? path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
-    mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
-    operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
-    nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
-    nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
-    isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
-    persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
-    grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
-      namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
-      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : []) })
+  const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
+    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+    grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
+      namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox"],
+      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
-  const presentationRequest = new AsyncLocalStorage<Request>()
-  const applicationServices: ModuleServices = {
+  const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
     environment: requestEnvironment,
     product: async (request, surface) => await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface) ?? await bi(request, surface),
     productView: async (request, surface, page) => {
       if (surface !== "procurement" || page !== "Requests" && page !== "My approvals") return undefined
+      // Preserve the explicitly standalone domain mode; a configured product runtime must fail closed.
       if (!runtime) return undefined
-      const view = runtime.services?.()?.productView
+      const view = runtime?.services?.()?.productView
       return view ? view(request, surface, page) : new Response("Procurement is temporarily unavailable. Refresh the page to try again.", {
         status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" },
       })
     },
-    productHtml: (html, surface, page) => {
-      const productHtml = getSfProductHtml(runtime?.services?.())
-      const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page, presentationRequest.getStore()) ?? decorateSfProductHtml(html, surface, page)
-      // Keep WP06 document/import navigation while composing WP04's fenced page projection.
-      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a><a href="?sf=current-choice">Escolha vigente</a>`), surface)
-    },
+    productHtml: decorateSfProductHtml,
     maxJsonBytes: 2 * 1024 * 1024,
     assets,
-  }
-  const business = createModule(config.mount, applicationServices)
-  // Original authorized application, original Request and same runtime/identity.
-  // This registers only the F02 closed native paths; legacy domain dispatch is
-  // untouched. A missing producer context reader remains 503, never a fake grant.
-  const nativeApplication = { ...applicationServices, domains: contributions }
-  const nativeDependenciesBase = {
-    origin: config.origin,
-    mount: config.mount,
-    application: nativeApplication,
-    runtime: () => runtime?.services?.(),
-  }
-  const nativeContext = createSfContextHandler(nativeDependenciesBase)
-  const nativeDependencies: SfNativeHostDependencies = {
-    ...nativeDependenciesBase,
-    readContext: nativeContext.readContext,
-  }
-  // Resolve the real host producer per Request; it may not yet be live at route registration.
-  const nativeReviewHandler = Object.freeze({
-    operationId: "projection.review" as const,
-    handle: async (request: Request) => {
-      const producer = runtime?.services?.()?.nativeReviewProjection
-      return producer ? producer.handle(request) : Response.json(
-        { status: "unavailable", reason: "review-producer-unavailable" },
-        { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } },
-      )
-    },
   })
-  const nativeHandlers = [
-      ...createSfDomainProjectionHandlers(nativeDependencies),
-      ...createSfPeopleProjectionHandlers(nativeDependencies),
-      ...createSfOperationsProjectionHandlers(nativeDependencies),
-      ...createSfWorkProjectionHandlers(nativeDependencies),
-      ...createSfPlannerProjectionHandlers(nativeDependencies),
-      ...createSfProcurementProjectionHandlers(nativeDependencies),
-      ...createSfDecisionsProjectionHandlers(nativeDependencies),
-      ...createSfRoutinesHandlers(nativeDependencies),
-      nativeReviewHandler,
-    ]
-  const nativeProjections = mountSfNativeProjections({
-    mount: config.mount,
-    context: nativeContext,
-    handlers: nativeHandlers,
-  })
-  const productBinding = applicationServices.product
-  nativeReadBinding = (operationId, producer) => {
-    const current = runtime?.services?.()
-    if (!current) return undefined
-    if (operationId === "projection.review")
-      return current.nativeReviewProjection === producer && nativeHandlers.includes(nativeReviewHandler) ? nativeReviewHandler : undefined
-    return current.productHttp === producer && applicationServices.product === productBinding ? productBinding : undefined
-  }
-  const actions = createSfActionSource(nativeDependencies, nativeHandlers)
-  nativeActions = actions.actions
-  // Router construction above proves these exact handlers were installed.
-  nativeOperational = async (request, stamp) => {
-    const observed = await Promise.allSettled([
-      observeSfPlannerPages(nativeApplication, request, stamp),
-      observeSfDashboardPages(nativeApplication, request, stamp),
-      observeSfDomainHealth(nativeDependencies, nativeHandlers, request, stamp),
-      observeSfHome(runtime?.services?.(), request, stamp),
-      observeSfCases(nativeDependencies, nativeHandlers, request, stamp),
-      actions.operational(request, stamp),
-    ])
-    return observed.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
-  }
-  // Started only after composition succeeds, outside request/business scopes.
-  // Auth retention runs for Microsoft too, independently of operator backup jobs.
-  const authMaintenance = startAuthMaintenance({ secrets: store.secrets })
   return {
     mount: config.mount,
     ...(runtime ? { host: runtime.contributions } : {}),
-    // Discovery uses only the already-loaded host identity and its exact private location.
-    // It never guesses a project from cwd, accepts another workspace, or grants actor authority.
-    ...(runtime ? { discovery: {
-      current: async (signal: AbortSignal) => signal.aborted ? undefined : {
-        publicOrigin: config.origin, mount: config.mount,
-        authMode: operator ? "local-operator" as const : "microsoft" as const,
-        identity: () => runtime?.identity(),
-      },
-      forAdmittedLocation: async (location: Readonly<{ directory: string; workspace?: string }>, signal: AbortSignal) => {
-        const identity = runtime?.identity()
-        if (signal.aborted || !identity || location.workspace ||
-            location.directory !== identity.location.directory) return []
-        return [{ publicOrigin: config.origin, mount: config.mount,
-          authMode: operator ? "local-operator" as const : "microsoft" as const,
-          identity: () => runtime?.identity() }]
-      },
-    } } : {}),
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
-      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
+      if (operator && request.method === "POST" && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
       const readiness = status(request)
       if (readiness) return readiness
       const auth = await identity.handle(request)
@@ -355,19 +194,13 @@ export async function createConfiguredInstallation(
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
-      // The authorized native projection seam runs after the installation's
-      // origin, identity.handle/prepare and narrowly selected surface bootstrap.
-      // Every handler receives this identical Request; no URL rewrite, body
-      // clone or parallel backend. Absence of context authority fails closed.
-      const nativeResponse = await nativeProjections(request)
-      if (nativeResponse) return nativeResponse
-      const response = await presentationRequest.run(request, () => business(request))
+      const response = await business(request)
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
       return localChrome(response)
 
     },
-    async dispose() { nativeReadBinding = undefined; await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
+    async dispose() { await jobs.dispose(); await store.dispose() },
   }
 
   function localChrome(response: Response) {

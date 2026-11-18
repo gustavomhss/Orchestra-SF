@@ -385,18 +385,13 @@ async function sourcingFixture(variant?: "missing-fx" | "missing-assessment" | "
   })
   const bindings = createProcurementUiBindings({ authority: ui, dispatch: (_operation, payload, call) => dispatch(payload, call) })
   const payload = { requestRef: issued.value, proposalRefs: variant === "single-offer" ? ["A"] : ["A", "B", "C"], criteria: [...settings.criteria, ...settings.commCriteria].map((criterion) => criterion.name) }
-  const resolveSource = createSfProcurementSourceAccess({ host, resolve: { resolve: sources.resolve }, procurement: port })
+  const resolveSource = createSfProcurementSourceAccess({ host, resolve: sources.resolve, procurement: port })
   const context = createSfBusinessContext({ revalidate: host.revalidate, resolveSource, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not requested by sourcing verification" }) })
   const state = createSfProductState({ persistence, createId: randomUUID,
     authorize: async (request) => authorized(request) ? { principalRef: "buyer", accessRevision: "1", policyVersion: "1" } : undefined,
     resolveTarget: async (request, _snapshot, _namespace, targetRef) => authorized(request) && targetRef === "cases-root" ? { incarnation: "cases-root-v1" } : undefined,
   })
-  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "cases-root", incarnation: "cases-root-v1" }, operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined, authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call), verifyScenarioOperations: async (value, context) => {
-    const request = host.requestFor(context)
-    const selectedDigest = digestSfValue(value)
-    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
-    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
-  }, evidence: context, createId: randomUUID, now: () => at })
+  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "cases-root", incarnation: "cases-root-v1" }, operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined, authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call), evidence: context, createId: randomUUID, now: () => at })
   const draft = { objective: "Compare the recorded sourcing proposals", criteria: ["Technical fit", "Commercial terms"], horizon: period, currency: "USD", sourceRefs: [evidence] }
   const caseCall = await admit("sf_case_draft", draft)
   const created = await cases.draft(draft, caseCall)

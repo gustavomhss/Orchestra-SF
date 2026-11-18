@@ -31,7 +31,6 @@ export type MatchExplanation = { candidateCaseRef: { id: string; incarnation: st
 export type CaseRecall = { matches: readonly { caseRef: { id: string; incarnation: string; version: number }; memoryRecordRef: string; explanation: MatchExplanation; evidenceRefs: readonly BusinessEvidenceRef[] }[]; limitations: readonly string[]; accessRevision: string }
 
 export type SfContributionOutputMap = {
-  AlternativeDraft: AlternativeDraft
   IntentFrame: IntentFrame
   AnalysisPlan: AnalysisPlan
   DecisionBrief: DecisionBrief

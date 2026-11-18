@@ -10,7 +10,7 @@ import { createProcurementPreparedReview } from "../../../product/procurement/pr
 import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { createScenarioFixture, scenarioAt, scenarioPeriod } from "./fixture.ts"
 
-test("a real hypothetical choice prepares a bounded draft but cannot grant approval or acquire effects by retry", async () => {
+test("a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry", async () => {
   const fixture = await createScenarioFixture()
   try {
     const scenario: ScenarioRequest = { baseRef: fixture.sourceRef, operations: [{ kind: "replace", targetRef: fixture.sourceRef, amount: 140, currency: "USD", period: scenarioPeriod }], assumptions: [{ id: "procurement-cost-inventory", value: "renewal-transition-v1", evidenceRefs: [], state: "hypothetical" }] }
@@ -29,14 +29,9 @@ test("a real hypothetical choice prepares a bounded draft but cannot grant appro
     const selection = { operation: scenario.operations[0]!, choice: selected.choice, operationId: "unapproved-change", idempotencyKey: "same-human-choice" }
     const before = await fixture.snapshot()
     const writes = fixture.writes.length
-    const planned = await prepare(selection, fixture.context)
-    if (planned.status !== "ok") throw new Error(`Canonical C12 draft preparation unavailable: ${planned.status}`)
-    expect(planned.value.command.command).toMatchObject({
-      page: "Requests", action: "save", confirmed: false, values: { pr: { estAmount: 140 } },
-    })
-    expect(planned.value.command.requiredAuthority).toContain("procurement:write")
-    expect(planned.value.targetEvidence).toEqual(fixture.evidence)
-    expect(await prepare(selection, fixture.context)).toEqual(planned)
+    const blocked = { status: "needs-input", reason: "financial-approval-command-unavailable" } as const
+    expect(await prepare(selection, fixture.context)).toEqual(blocked)
+    expect(await prepare(selection, fixture.context)).toEqual(blocked)
     expect(await fixture.snapshot()).toEqual(before)
     expect(fixture.writes).toHaveLength(writes)
     expect(await prepare({ ...selection, operation: { ...selection.operation, amount: 160 } }, fixture.context)).toEqual({ status: "denied", reason: "operation-not-in-choice" })
@@ -65,13 +60,8 @@ test("a legacy-shaped financial command cannot bypass the low-level preparation 
     const target: SourceRef = { surface: "procurement", type: source.value.evidence.target.recordType, id: fixture.requestId, incarnation: source.value.evidence.target.incarnation, version: source.value.evidence.target.version, fields: source.value.evidence.target.fields, period: scenarioPeriod, observedAt: scenarioAt }
     const numeric = { page: "Requests", action: "save", id: fixture.requestId, version: snapshot.versions[`requests:${fixture.requestId}`]!.version, values: { pr: { estAmount: 140 } } }
     const preparation = { snapshot, actor: { ...fixture.requester, assigned: [], domains: [] }, environment: await fixture.host.environment(fixture.request), context: fixture.context, target, scope: source.value.scope, evidence: source.value.evidence, operationId: "legacy-financial-operation", idempotencyKey: "legacy-financial-key" }
-    expect(procurementPreparationIssue(snapshot, numeric)).toBe("explicit-draft-command-required")
+    expect(procurementPreparationIssue(snapshot, numeric)).toBe("financial-approval-command-unavailable")
     expect(prepareProcurementMutation({ ...preparation, command: numeric })).toBeUndefined()
-    expect(procurementPreparationIssue(snapshot, { ...numeric, confirmed: true })).toBe("explicit-draft-command-required")
-    expect(prepareProcurementMutation({ ...preparation, command: { ...numeric, confirmed: true } })).toBeUndefined()
-    const explicitDraft = prepareProcurementMutation({ ...preparation, command: { ...numeric, confirmed: false } })
-    if (!explicitDraft) throw new Error("Explicit draft estimate rejected by canonical preview")
-    expect(explicitDraft.command.command).toMatchObject({ action: "save", confirmed: false, values: { pr: { estAmount: 140 } } })
     const metadata = prepareProcurementMutation({ ...preparation, command: { ...numeric, values: { pr: { title: "Reviewed metadata" } } } })
     if (!metadata) throw new Error("Metadata preparation regression")
     // This is an unapproved legacy-shaped input to the boundary, never a claim
@@ -90,8 +80,8 @@ test("a legacy-shaped financial command cannot bypass the low-level preparation 
       calls.projection += 1
       return port.read(...args)
     } } })
-    expect(await review(restored, fixture.context)).toEqual({ status: "needs-input", reason: "explicit-draft-command-required" })
-    expect(await review(restored, fixture.context)).toEqual({ status: "needs-input", reason: "explicit-draft-command-required" })
+    expect(await review(restored, fixture.context)).toEqual({ status: "needs-input", reason: "financial-approval-command-unavailable" })
+    expect(await review(restored, fixture.context)).toEqual({ status: "needs-input", reason: "financial-approval-command-unavailable" })
     expect(calls).toEqual({ issuance: 0, projection: 0 })
     expect(snapshot).toEqual(before)
     expect(await fixture.snapshot()).toEqual(before)
