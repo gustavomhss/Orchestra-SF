@@ -1,0 +1,193 @@
+{
+  "name": "import-recovery",
+  "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "target": "astra-operations",
+  "pack": "WP06",
+  "actor": "S2-C",
+  "finding": [
+    {
+      "id": "OPS-REV-04",
+      "title": "Interrupção entre blob e catálogo impede retry idêntico de admissão",
+      "severity": "P2",
+      "classification": "STATIC_DEFECT",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP06 / importação; WP10 para persistência e reconciliação",
+      "provenance": "staged-files.ts não aparece no delta enumerado da PR #34; defeito da composição entregue, sem atribuição de introdução ao delta.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+        "startLine": 59,
+        "endLine": 85,
+        "kind": "code",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/imports/staged-files.ts#L59-L85"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "apps/cli/src/sucafina-product/import-services.ts",
+          "startLine": 76,
+          "endLine": 81,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/apps/cli/src/sucafina-product/import-services.ts#L76-L81"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/imports/host.ts",
+          "startLine": 36,
+          "endLine": 58,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/imports/host.ts#L36-L58"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/imports/workbench-script.ts",
+          "startLine": 102,
+          "endLine": 102,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/imports/workbench-script.ts#L102"
+        }
+      ],
+      "preconditions": [
+        "Admissão autorizada com principal, alvo, bytes e chave idempotente estáveis; persistência durável.",
+        "Falha/crash depois do commit do blob e antes da publicação do catálogo."
+      ],
+      "scenario": [
+        "Permitir o commit do blob em staged-files.ts:70.",
+        "Interromper antes da transação de catálogo nas linhas 73–77.",
+        "Reconstruir o host com persistência reaberta e autenticação atual; repetir a mesma operação com os mesmos bytes/alvo/principal."
+      ],
+      "staticResult": [
+        "O ID deriva de principalRef+operation. Sem catálogo, a recuperação das linhas 62–69 não se aplica.",
+        "O blob já existente faz a transação da linha 70 retornar false; a linha 71 retorna file-admission-conflict antes de reconciliar identidade/bytes.",
+        "Uma exceção do catálogo também gera saved=undefined; a limpeza da linha 85 depende de saved, podendo conservar o órfão e produzir o mesmo bloqueio."
+      ],
+      "consequence": "O retry da operação interrompida não progride; requer nova intenção/chave para avançar e deixa blob órfão. A admissão falha antes do preview/Apply.",
+      "inference": null,
+      "notDemonstrated": [
+        "Mutação parcial do domínio, duplicação financeira ou quebra da atomicidade do Apply.",
+        "Execução de crash/fault injection pelos revisores."
+      ],
+      "criteria": [
+        "WP06.QLT.03"
+      ],
+      "relatedCriteria": [
+        "CAMP.CMP.02",
+        "CAMP.QLT.03"
+      ],
+      "existingEvidence": [
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+            "startLine": 49,
+            "endLine": 58,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts#L49-L58"
+          },
+          "limit": "T225/R18/F120 cobre admissão concluída, replay, bytes distintos e revogação; não interrompe entre os dois commits."
+        }
+      ],
+      "expectedCorrection": "Tornar a admissão atômica onde possível ou reconciliar um blob órfão idêntico após revalidar autoridade, alvo, formato e digest. Não apagar um blob cujo catálogo possa ter sido publicado em resultado incerto.",
+      "expectedEvidence": "Injetar interrupção exatamente entre os commits e erro/resultado incerto de catálogo; reabrir SQLite e repetir a admissão. Verificar recuperação idempotente, recusa de bytes/alvo divergentes e revogação.",
+      "normativeTexts": [
+        {
+          "id": "WP06.QLT.03",
+          "text": "Falhas de formato, autoridade e revisão têm tratamento distinto, mantêm arquivo/opções/entrada local quando apropriado e não expõem dados restritos."
+        },
+        {
+          "id": "CAMP.CMP.02",
+          "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha."
+        },
+        {
+          "id": "CAMP.QLT.03",
+          "text": "Salvar, cancelar, validar, recusar, carregar, ficar sem dados e conflitar possuem resposta compreensível. Falha ou conflito conserva a entrada local e oferece próximo passo útil."
+        }
+      ]
+    },
+    {
+      "id": "E-OPS-02",
+      "title": "Recuperação do Apply após restart não é demonstrada pelo teste de reopen citado",
+      "severity": "P2",
+      "classification": "NEEDS_EVIDENCE",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP06 + WP10",
+      "provenance": "Refinamento do E-OPS-02 já publicado na PR #49 durante esta revisão. Acrescenta vínculo T224/R18/F105, sequência exata de assertions e critério/prova esperada; não cria outro finding de recovery.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+        "startLine": 109,
+        "endLine": 118,
+        "kind": "test-source",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts#L109-L118"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "startLine": 23,
+          "endLine": 23,
+          "kind": "test-source",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts#L23"
+        }
+      ],
+      "preconditions": [
+        "O título do teste menciona atomic receipt and retry survive SQLite reopen; o corpo é a evidência avaliada."
+      ],
+      "scenario": [
+        "Ler a ordem: Apply na linha 110; retry na linha 114; dispose na linha 116; reopen na linha 117.",
+        "Verificar o único assert após reopen na linha 118: audit.length."
+      ],
+      "staticResult": [
+        "O teste exerce Apply e replay na composição original, depois a persistência da auditoria.",
+        "A instância reaberta não reconstrói os serviços/host, recupera referência/recibo ou executa Apply com nova autoridade."
+      ],
+      "consequence": "A observação não fecha recuperação autorizada após perda de resposta e reinício; o comportamento pode funcionar, mas continua sem execução suficiente nesta fronteira.",
+      "inference": null,
+      "notDemonstrated": [
+        "Falha de recuperação do produto.",
+        "Ausência de todas as outras provas possíveis do repositório: a conclusão é sobre a evidência citada e o material auditado."
+      ],
+      "criteria": [
+        "WP06.T03.DOD.02"
+      ],
+      "relatedCriteria": [
+        "C03",
+        "C04",
+        "CAMP.CMP.02"
+      ],
+      "existingEvidence": [
+        {
+          "run": 43554658437,
+          "job": 132324664659,
+          "authorTestId": "T224/R18/F105",
+          "limit": "Caso histórico encontrado nos logs oficiais; não executou retry depois de reabrir."
+        }
+      ],
+      "expectedCorrection": "Não é exigida alteração do produto sem contraprova. Completar a prova discriminante ou apresentar execução existente que cubra o caminho faltante.",
+      "expectedEvidence": "Commit de Apply com resposta perdida; encerrar composição, reabrir SQLite e serviços reais, autenticar novamente, recuperar manifesto/referência/recibo e repetir a mesma intenção; conferir recibo completo, valores, revisões e auditoria sem duplicação. Incluir revogação antes da recuperação.",
+      "normativeTexts": [
+        {
+          "id": "WP06.T03.DOD.02",
+          "text": "Os resultados positivos e negativos possuem provas locais de estados e um roteiro executável contra a composição real do WP10."
+        },
+        {
+          "id": "CAMP.CMP.02",
+          "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha."
+        }
+      ],
+      "existingFindingId": "E-OPS-02",
+      "newFinding": false
+    }
+  ],
+  "paths": [
+    "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+    "modules/sucafina/Sucafinav1/product/imports/host.ts",
+    "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/"
+  ],
+  "mission": "Resolver admissão interrompida entre blob e catálogo: retry idêntico autorizado deve recuperar; bytes/alvo distintos e revogação devem recusar. Nunca remover blob possivelmente publicado por commit incerto. Fazer também prova E-OPS-02: Apply real com resposta perdida, fechar composição/SQLite, reabrir serviços reais e autenticar novamente, recuperar referência/recibo, repetir mesma intenção sem duplicar valores/revisões/auditoria; negativo revogação antes da recuperação. Não confundir leitura audit.length após reopen com reexecução da operação. CLI import-services.ts é leitura; patch externo com preimage se indispensável.",
+  "test_prefix": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/",
+  "lease_epoch": 1,
+  "state": "PREPARED_NOT_OBSERVED_STARTED"
+}

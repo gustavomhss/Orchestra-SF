@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "id": "SF2-SEAM-002",
+  "title": "Sourcing money: atomic producer and Requests consumer intake",
+  "status": "PROPOSED/NOT_APPLIED",
+  "validation_status": "STATIC_APPLICABILITY_CONFIRMED; TYPECHECK_AND_TESTS_NOT_RUN",
+  "checked_on": {
+    "branch": "astra-wp10",
+    "commit": "f511f30b73289c2f21c843254569d31c02eb9608",
+    "tree": "ee2964cd6cc96ee2697e9d05835777870a843f65",
+    "product_subtree": "dd7128a2565cdb2f60309e35e05f2bb592dbb250",
+    "head_state": "Observed current composition; session13 Memory delta is in flight and is not accepted by this proposal"
+  },
+  "destination": {
+    "branch": "sf2-stack",
+    "authorized_writer": "session14 only",
+    "observed_head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "requires_new_target_receipt": true,
+    "rule": "This manifest is checked only on checked_on.commit. Do not use its full tree as a replacement sf2-stack snapshot. Session14 must reconcile its actual target commit, verify all preimages and required dependencies, then record new target SHA before application. A later head is NOT prequalified."
+  },
+  "origin": {
+    "branch": "astra-operations",
+    "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+    "tree": "c011ad6fe1647f9e92d68e6bd9ec723d4db26827",
+    "pr": 34,
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/HANDOFF.md",
+    "handoff_blob": "5cf17dcdf04283384efe581ecc7a029b850fa798",
+    "producer_also_published_on": {
+      "branch": "sourcing-money",
+      "commit": "e1fe9561f199dc594a5fd559d06d450253e571bc"
+    }
+  },
+  "problem": "select_quote creates a future PO while the request still belongs to sourcing. The fixed WP10 monetary producer treats incidental PO lines as current order money; Requests also bypasses the canonical monetary projection in multiple consumers. A producer-only intake leaves inconsistent list/detail values.",
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "preimage": {
+        "sha": "5ed7b1c7e8f140c2820d9e3095a7427374d10f69",
+        "mode": "100644",
+        "type": "blob"
+      },
+      "postimage": {
+        "sha": "c9a224b12c13b7cec506be90527300caa7e984fd",
+        "mode": "100644",
+        "type": "blob",
+        "source_commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "source_path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "preimage": {
+        "sha": "6cd5783d5b4f6f9c9ed3e15547d59f79ccb5ef72",
+        "mode": "100644",
+        "type": "blob"
+      },
+      "postimage": {
+        "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+        "mode": "100644",
+        "type": "blob",
+        "source_commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "source_path": "modules/sucafina/Sucafinav1/runtime/procurement.ts"
+      }
+    }
+  ],
+  "tree_elements": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9a224b12c13b7cec506be90527300caa7e984fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    }
+  ],
+  "application_unit": "ATOMIC_TWO_ENTRIES",
+  "required_existing_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+      "sha": "eb486f52910425e9ca06d1f11ce18c90528ff36c",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+      "sha": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/form.ts",
+      "sha": "5c2ceed59b5af1a0e2958e93c2267bee9e72a0dc",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "sha": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+      "sha": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/supplier.ts",
+      "sha": "dd9ac04145e11b8d614de33e5251424b3c31c922",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha": "9e9bac976b503409de65868a366f352ca1e65071",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+      "sha": "0d69e6456fe7124dfd3e788abf1b17bc6b7ad500",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-view.ts",
+      "sha": "a03998f3b87df91c6c84b198f2b51aa9c391bcd2",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+      "sha": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "sha": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET"
+    }
+  ],
+  "transitive_dependencies_to_preserve": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+      "sha": "412d55047a1b6dda686ce1054c15b20307217577",
+      "reason": "Newer target validates year with Number.isInteger; do not copy old author nav."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "sha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "reason": "Newer target has additive BI and ProjectionValue types."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "sha": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "reason": "Newer target has additive AlternativeDraft."
+    },
+    {
+      "path": "modules/sucafina/porta/act.ts",
+      "sha": "fe257cef702f6459d510d823d18377da34888dbf",
+      "reason": "Existing unchanged runtime UI dependency."
+    }
+  ],
+  "intentional_dependency_divergences": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "target_blob": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "decision": "Preserve the newer target shell. The imported esc export and ScreenActor dependency remain compatible; no older shell intake."
+    }
+  ],
+  "dependency_closure_rule": "The two postimages import only each other, the eleven pinned existing files above, and existing node:crypto. Their unchanged transitive subgraphs, package manifests and lockfiles are frozen by checked_on.tree. No new package or generated file is required. Preserving these existing dependencies is part of the proposal; copying the full Operations tree is forbidden.",
+  "behavior_preserved": [
+    "Sourcing, src_pending and src_rejected use sourcing monetary facts even when select_quote has already created future PO lines.",
+    "The helper computes sourcing baseAmount from a shallow projection with po:null; it does not mutate the stored request, lifecycle status, approvals or FX snapshots.",
+    "Requests/register and request list/detail consume the same monetary helper. PO-only text gets a separate read projection and labels including cancelled.",
+    "Submitted FX snapshots retain priority. A submitted EUR 100 at 1.08 remains USD 108 after live FX changes; a future USD 200 PO is displayed separately.",
+    "Missing amount, currency, quantity, unit price or applicable FX is rendered unavailable and is not manufactured as zero.",
+    "Commands, authorization, request identity, source versions, CAS, C16, Memory ownership and observations are unchanged.",
+    "Exports implementation and assertions are unchanged; session11 keeps that responsibility."
+  ],
+  "illustrative_recheck_case": {
+    "status": "src_pending",
+    "submitted_sourcing": {
+      "original": 100,
+      "currency": "EUR",
+      "fx": 1.08,
+      "base_currency": "USD",
+      "base_amount": 108
+    },
+    "later_live_fx": 2,
+    "future_po": {
+      "currency": "USD",
+      "amount": 200
+    },
+    "expected": "Current request = USD 108; separate future PO estimate = USD 200; never USD 200 as the sourcing request amount.",
+    "execution": "NOT_RUN"
+  },
+  "verification_inputs": {
+    "status": "NOT_IN_PRODUCT_DELTA; MUST_BE_RECONCILED_BY_INTEGRATOR",
+    "source_commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+    "source_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "sha": "f57ad2e8a745c56797bd7e1b7fe9c8fb0cda83bf",
+        "target_preimage": "ABSENT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/fixture.ts",
+        "sha": "13dc9ab57a57fbd5e1c1477cf5fc6718cd5d2cad",
+        "target_preimage": "ABSENT"
+      }
+    ],
+    "constraints": "These two verification inputs are absent from checked_on.commit, so the product manifest alone does not make this test runnable. Session14 must reconcile their fixture/import closure with the actual candidate and session11 exports before the already assigned verification lane runs them. Retain export assertions; no skipped assertions or replacement stubs.",
+    "exports_dependency": "The shared fixture imports runtime/downloads.ts and a monetary test exercises export. Recheck cannot claim success by omitting this dependency or the assertion.",
+    "historical_result": "Operations handoff records eight monetary tests passing in its own source run. That result is provenance only, not a PASS for this proposed target.",
+    "target_exports_blocker": {
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "target_blob": "3a18d541dd402fde0eb2be25de281b289189c537",
+      "finding": "The fixed target lacks the PO base currency, FX source, monetary state and submitted snapshot fields/Monetary state paragraph required by the second existing monetary-consumers test.",
+      "disposition": "BLOCKED_ON_SESSION11_EXPORTS_RECONCILIATION. Do not replace downloads with an older author snapshot or weaken the existing assertion.",
+      "implication": "The two product entries plus verification inputs are not claimed to close or pass the full test file."
+    }
+  },
+  "minimal_recheck": {
+    "owner": "session14/S0 and existing verification owners after candidate application; not dispatched here",
+    "checks": [
+      "Verify actual target commit/tree, both preimages and all required dependencies; repin and reanalyze any drift before materializing both tree entries.",
+      "After application, verify both exact postimage blobs and record the resulting candidate commit.",
+      "Run the canonical module typecheck through the already assigned verification lane.",
+      "Reconcile the existing monetary-consumers test and fixture, including exports dependencies; preserve every assertion.",
+      "Cover sourcing with incidental PO, submitted FX after live-rate changes, real zero versus absent values, invalid FX, PO comparison and cancelled status.",
+      "Check Requests list/detail/register, queue projection and current request versus separate PO presentation on the same candidate."
+    ],
+    "runtime_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "ci_dispatched": false
+  },
+  "static_applicability": {
+    "exact_preimages": 2,
+    "postimages": "Exact existing published Git blobs; full producer and consumer diff inspected",
+    "direct_existing_imports": 11,
+    "product_tree_created": false,
+    "product_applied": false
+  },
+  "scope_limit": [
+    "No Finance performance rerun or fix.",
+    "No exports fix, ACK UI, forecast, Memory integrity, E2E, native proof, CI platform or global acceptance."
+  ]
+}

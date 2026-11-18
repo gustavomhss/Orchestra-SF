@@ -1,0 +1,34 @@
+{
+  "observed_at": "2026-11-14T19:16:17Z",
+  "user_report": "Nine prior browser sessions started",
+  "prior_wave_state": "USER_REPORTED_STARTED; native/browser sessionIDs and ACKs not exposed",
+  "additional": [
+    {
+      "id": "ui-recipient-ack",
+      "branch": "ui-work",
+      "pr": 47,
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-ack-completion/"
+      ],
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "id": "procurement-exports",
+      "branch": "sourcing-money",
+      "pr": 57,
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/test/product/procurement-exports/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/"
+      ],
+      "state": "PREPARED_NOT_STARTED"
+    }
+  ],
+  "path_conflicts_with_prior_nine": 0,
+  "reason": "ACKproducer is now published+tested; exports01/02 are reproduced and proposedpatch is ready outside prior paths",
+  "no_new_branches": true,
+  "no_supervisor_spawn": true,
+  "GLOBAL_RELEASE": false
+}

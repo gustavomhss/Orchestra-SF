@@ -1,0 +1,124 @@
+{
+  "schema": "sf2h-mission28-provenance-v1",
+  "mission": 28,
+  "actor": "S2-R2",
+  "review_part": "RUN-REVIEW-INTEGRITY",
+  "status": "DOCUMENTARY_REVIEW_COMPLETE_PRODUCT_REQUEST_CHANGES",
+  "repository": "gustavomhss/Orchestra-SF",
+  "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+  "candidate_tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+  "candidate_parent": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_authority_sha": "6da04cd66eb268362ee58509271fef773ac2a62e",
+  "mission_blobs": {
+    "COMMON": "6cdf29c62aa06307aa4d5fb4137b34b1baa84dc1",
+    "review_contract_security": "ebc7206f7b690480bc8ac14ec72e5d179be0b5d5"
+  },
+  "as_of_utc": "2026-11-14 21:24:03 UTC",
+  "independence": {
+    "context": "Fresh independent mission review; no native Goal/session resumed",
+    "product_authorship": false,
+    "product_edits": false,
+    "tests_or_fixtures_authored": false,
+    "independent_auxiliaries": [
+      "contracts_c12",
+      "finance_integrity",
+      "memory_security"
+    ],
+    "auxiliaries_are_not_extra_campaign_review_signoffs": true,
+    "intersection_with_reviewed_product_authors": "none in this work",
+    "model_label_exposed_by_environment": "ChatGPT GPT-6 Astra Pro",
+    "effective_backend_model_id": null,
+    "native_session_id": null,
+    "native_worker_identity": null,
+    "browser_context": "Not used: remote task executed exclusively via GitHub MCP; no browser/product interactions."
+  },
+  "authority": {
+    "branch": "review-finance",
+    "pr": 50,
+    "base": "sf2-control",
+    "expected_head": "29356ad7a554309e9a905749dd84e3f6bd0900ea",
+    "base_tree": "5df9cc8cde09afd9caa044d8d2987ad573940733",
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/composed-wave-28/",
+    "scope": "New receipts only. Explicit user/mission28 authority supersedes historic pack branch/prefix.",
+    "predecessor": {
+      "head": "29356ad7a554309e9a905749dd84e3f6bd0900ea",
+      "handoff_blob": "258e432f36e825ad004fe2c753e6e18d60d06902",
+      "s6_handoff_blob": "d4128aa6493d705ff230400bb42cd96db3ab24ef",
+      "state": "Documentary DONE/terminal sourceS6; full handoffs read. Not inferred from silence or age."
+    },
+    "branch_reconciled": true,
+    "pr_open": true,
+    "merged": false,
+    "comments_read": "No comments returned at initial inspection",
+    "new_prefix_absent": true,
+    "writer": "Principal S2-R2 only for new receipts",
+    "product_writer": "session23 remains sole sf2-stack writer; S0 sole final dispatcher/acceptor",
+    "publication": "Single append-only commit, exact parent, expected-head CAS, no force. Readback and compare required outside self-referential receipt."
+  },
+  "instructions": {
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "modules_and_sucafina_nested_agents": "None in exact nontruncated trees at inspected target/review base",
+    "atlas_agents": "None in exact cf7fdc434560d994fbe66e821a621622d0b2c85b recursive tree1553entries,truncatedfalse",
+    "cli_agents": "No applicable CLI AGENTS; apps tree contains only unrelated desktop/web AGENTS",
+    "skill": "host-workspace-operator read in full; safe host-native file/remote inspection workflow",
+    "full_read_ledger": "read-ledger.json"
+  },
+  "operations": {
+    "remote": "GitHub MCP only",
+    "remote_shell_git": false,
+    "gh": false,
+    "curl": false,
+    "new_branch": false,
+    "new_pr": false,
+    "product_test_execution": false,
+    "typecheck_execution": false,
+    "build_execution": false,
+    "guards_execution": false,
+    "ci_dispatch": false,
+    "product_code_changes": false,
+    "workflow_changes": false,
+    "merge": false,
+    "global_release": false,
+    "messages_to_third_parties": false,
+    "local": "Scratch caches and documentary synthesis only; no product execution."
+  },
+  "later_heads": [
+    {
+      "pr": 42,
+      "head": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "status": "LATER_DELTA_NOT_REVIEWED",
+      "whole_head_qualified": false,
+      "note": "Does not change fixed target verdict."
+    },
+    {
+      "pr": 65,
+      "head": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+      "status": "LATER_DELTA_NOT_REVIEWED",
+      "whole_head_qualified": false,
+      "note": "Does not change fixed target verdict."
+    },
+    {
+      "pr": 29,
+      "head": "539a3c7f95174190f783debc74e3694d84ca8653",
+      "status": "OBSERVED_SOURCE_HEAD_NOT_WHOLE_HEAD_APPROVED",
+      "whole_head_qualified": false,
+      "note": "Exact consumed correction blobs are credited separately; source head/full tree is not an approved composed candidate."
+    },
+    {
+      "pr": 32,
+      "head": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+      "status": "OBSERVED_SOURCE_HEAD_NOT_WHOLE_HEAD_APPROVED",
+      "whole_head_qualified": false,
+      "note": "Exact consumed correction blobs are credited separately; source head/full tree is not an approved composed candidate."
+    },
+    {
+      "pr": 47,
+      "head": "86ac7fb4d5e76b0fff4470d1c21287a5d7658559",
+      "status": "OBSERVED_SOURCE_HEAD_NOT_WHOLE_HEAD_APPROVED",
+      "whole_head_qualified": false,
+      "note": "Exact consumed correction blobs are credited separately; source head/full tree is not an approved composed candidate."
+    }
+  ],
+  "review_limit": "Only fixedSHA is judged. Later material deltas require scoped independent recheck and final verdict on same accepted candidate. Documentary completion is not product DONE, GLOBAL_RELEASE, or C→D approval."
+}

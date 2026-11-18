@@ -1,0 +1,85 @@
+{
+  "wp": "WP04",
+  "state": "STOPPED_INCOMPLETE",
+  "branch": "sf2-procurement-ready",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/procurement-ready",
+  "product_head_before_handoff": "f1ce05697902e88e791a2c35920a1a592a1e6e84",
+  "product_tree_before_handoff": "bde18d557022404590cb9632b17ed8eaed6b215f",
+  "local_base": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+  "shared_origin_dev": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "tasks": {
+    "WP04.T01": "PARTIAL_NOT_VALIDATED",
+    "WP04.T02": "PARTIAL_NOT_VALIDATED",
+    "WP04.T03": "PARTIAL_NOT_VALIDATED",
+    "WP04.T04": "PARTIAL_NOT_VALIDATED",
+    "WP04.T05": "PARTIAL_NOT_VALIDATED"
+  },
+  "foreign_dependencies": {
+    "WP00_contract": "72bc1e65e0f87e8ee2b395e00d662ea207e5170a",
+    "WP10_c06_projection": "6039a4be0b",
+    "WP01_ui_shell": "pending exact committed head",
+    "WP08_confirmation_consumer": "pending integration",
+    "WP09_sourcing_dossier": "5963885fe7",
+    "WP11_decision_consumer": "ba87c66c36"
+  },
+  "foreign_copies": "Original work/procurement and teams/WP04/luna-work preserved read-only; WP01 out-of-lease patch saved outside tree at teams/WP04/luna-unleased-ui.patch, not committed. No foreign dirty files staged.",
+  "workers": [
+    {
+      "role": "Terra",
+      "model": "gpt-6.1-terra",
+      "thread": "01a1d3ab-ee20-7592-9121-530cc81c069e",
+      "state": "STOP_AFTER_HANDOFF"
+    },
+    {
+      "role": "Luna",
+      "model": "gpt-6-luna",
+      "thread": "01a1d64f-8788-7f93-a086-217f0581f718",
+      "state": "STOP_ACK_IDLE_LEASE_REVOKED"
+    },
+    {
+      "role": "G1",
+      "model": "grok-4.7-build",
+      "session": "e5dcb5b3-5a06-4fb4-8918-b8ede996d3ac",
+      "state": "TERMINAL_402_LEASE_REVOKED"
+    },
+    {
+      "role": "G2",
+      "model": "grok-4.7-build",
+      "session": "f98d9dd7-ddc8-429f-a41f-23578c1ea51a",
+      "state": "TERMINAL_402_LEASE_REVOKED"
+    }
+  ],
+  "behavior": "C02/C03 queues and sourcing/supplier projections, C12 prepared PR changes, C06 scoped confirmation with monetary inputs, source reissue/fence, UI guidance and role visibility; all remain unverified and need host composition.",
+  "validation": {
+    "hosted_tests": "NOT_RUN",
+    "local_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "pr": "NOT_READY"
+  },
+  "outstanding": [
+    "Integrate exact WP00 output schema and WP10 procurement-confirmation-v1 projection, source reference routing, C12/decision and WP09 dossier consumers.",
+    "Review and validate C06 material financial dependencies, ageDays intentionally unavailable, actor/revocation/ABA and source continuity.",
+    "Complete T02/T03/T05 and actual UI/native/MCP consumers; validate local field error and role gating edits.",
+    "Run change-scoped hosted CI under serial lease and package typecheck/guard only when user authorizes resumption.",
+    "Grok usage exhausted (HTTP 402); do not retry before user direction."
+  ],
+  "resume": "Only after explicit user resumption: inspect this handoff and exact branch HEAD, coordinate WP00/WP01/WP08/WP09/WP10/WP11 dependencies, review untested diffs, finish all five tasks, then obtain serialized hosted CI lease and one complete WP PR. Do not restart local runtime or assume external approvals.",
+  "final_local": {
+    "head": "ac794db234abb760019dd156ef9120ab2312b07e",
+    "tree": "e51d3848b411257466f9a151047bd341136b15bb",
+    "dirty": "clean"
+  },
+  "remote_snapshot": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "sf2-procurement-ready",
+    "head": "52206d08df62cbbb68c124177934293b0a81dd36",
+    "tree": "b58910227aa661220a4f33153d2600b894f2b3b7",
+    "parent": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "method": "GitHub MCP snapshot with expected-head CAS",
+    "verified_owned_blobs": 30,
+    "local_and_remote_global_trees_equal": false,
+    "local_commit_history_published_exactly": false,
+    "explanation": "Remote commit preserves all 30 WP04-owned file blobs over the specified campaign snapshot; local branch history remains in its worktree."
+  }
+}

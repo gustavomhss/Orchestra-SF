@@ -1,0 +1,29 @@
+{
+  "schema": "sf2h.ci-triage.claim.v1",
+  "mission": 15,
+  "actorPack": "S0-A",
+  "role": "delegated read-only CI/product triage",
+  "branch": "sf2-ci-triage",
+  "base": "sf2-control",
+  "expectedHead": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+  "missionCommit": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+  "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "accepted": true,
+  "leaseEpoch": 1,
+  "writePaths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/ci-triage/"
+  ],
+  "authority": "Documentary namespace only; no CI/test dispatch, rerun, cancel, local test, product change, external message, agent creation or merge.",
+  "independence": "No product authorship in this session; triage is not an independent FINAL approval.",
+  "initialStack": {
+    "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+  },
+  "reading": {
+    "AGENTS": "complete",
+    "START_WORKFLOW_COMMON": "complete",
+    "ownPack": "Full source fetched; remaining contract/resident sections still being read during this finite triage. No completion claim.",
+    "appendices": "pending"
+  },
+  "initialDelivery": "Useful first batch; analysis continues without waiting for full history."
+}

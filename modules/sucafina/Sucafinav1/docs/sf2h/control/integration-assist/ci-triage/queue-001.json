@@ -1,0 +1,377 @@
+{
+  "schema": "sf2h.ci-triage.queue.v1",
+  "batch": 1,
+  "taxonomy": [
+    "product_defect",
+    "test_oracle",
+    "fixture",
+    "readiness",
+    "typecheck",
+    "configuration",
+    "artifact",
+    "unknown"
+  ],
+  "items": [
+    {
+      "id": "TRIAGE-FIN-001",
+      "aliases": [
+        "FIN-IND-005"
+      ],
+      "classification": "product_defect",
+      "status": "OPEN",
+      "priority": "P1",
+      "normalizedSignature": "finance/confirmed-coverage/guard-180000/authority-revalidate-stale",
+      "provenance": {
+        "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+        "treeW": "2da074668b164b1aa5e051f8a70366969425906f",
+        "S": "0e68fec2e33e6c4c2103f368fed1d00dc832cb0c",
+        "treeS": "9339889db0210f25ba46ee9a3ab7553e146bef1d",
+        "requestPath": ".ci-run.json",
+        "requestBlob": "85fc069e57a87392820409f443e4f4b47c8c4564",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+            "--timeout",
+            "120000",
+            "-t",
+            "^FIN-IND-005 Finance performance"
+          ],
+          "env": {}
+        },
+        "snapshotDelta": "GitHub compare: exactly one added .ci-run.json; parent W; product/test/config/fixtures unchanged within W→S"
+      },
+      "run": 43631582858,
+      "job": 132559159277,
+      "test": "FIN-IND-005 Finance performance preserves confirmed sensitivity and preserves the 15000/15001 journey through replay and real restart",
+      "executedPhase": "Run tests reached omitted evaluation, persisted choice and confirmed training=40000; confirmed.evaluate→coverage.qualify→authority.is-still-valid→units.revalidate hit the original 180000 ms guard.",
+      "notReached": [
+        "Final threshold 15000/15001 assertions",
+        "Later history read",
+        "Replay",
+        "Real restart/reopen portion"
+      ],
+      "error": "Source-only certified analysis unavailable: {\"status\":\"stale\",\"reason\":\"coverage-authority-changed\"} at journey-phase.test.ts:49:45",
+      "evidence": [
+        {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43631582858/job/132559159277",
+          "lines": "1022–1042",
+          "observation": "deadline-exceeded at 180015 ms; revalidate false at 180017 ms; 0 pass/1 fail/18 expectations; 180025.69 ms case"
+        }
+      ],
+      "cause": "The original cooperative deadline expires during current authority revalidation. Remaining repeated read/qualification cost is unresolved; the stale result after abort is not evidence of an independent authorization breach.",
+      "confidence": {
+        "symptom": "high",
+        "rootCause": "medium; exact remaining costly operation requires discriminating measurement"
+      },
+      "owner": {
+        "originalActor": "Finance / WP11-WP13",
+        "currentWriter": "finance-resume / PR42",
+        "consumer": "session14 integrator; WP10 for shared source lifecycle"
+      },
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+        "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+      ],
+      "dependency": "Preserve S5 work-reduction and authority fences. PR59 source-lifecycle proposal is already installed in WP10 W28, not proof for this Finance tree or the composed candidate.",
+      "nextMinimalAction": "Use the S6 phase trace to isolate remaining confirmed coverage/revalidation work; change only redundant work under retained authority. Do not repeat the whole unchanged journey or increase deadlines. Reconcile installed WP10 intake before proposing the same 4→2 fix again.",
+      "suggestedRecheck": {
+        "state": "PREPARED_NOT_DISPATCHED",
+        "selection": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+            "--timeout",
+            "120000",
+            "-t",
+            "^FIN-IND-005 Finance performance"
+          ],
+          "env": {}
+        },
+        "condition": "Only after a new discriminating implementation/measurement hypothesis; retain original 180000 ms cooperative guard and all 15000/15001/history/replay/restart assertions."
+      },
+      "composedDisposition": "No PASS transferred to sf2-stack."
+    },
+    {
+      "id": "TRIAGE-ACK-001",
+      "aliases": [],
+      "classification": "fixture",
+      "status": "OPEN",
+      "priority": "P1",
+      "normalizedSignature": "ui-ack/pinned-producer-loader/relative-external-import/runtime-contract",
+      "provenance": {
+        "W": "7c9bbd966483b94d21a4c30961a8174be7ed6804",
+        "treeW": "6c55ee7399780575a61af242e79676a472d038af",
+        "S": "5ef3284a31973be8e3c14c8db23887574754a657",
+        "treeS": "00a2da15699e759733003ef9c788da43acf41c6e",
+        "requestPath": ".ci-run.json",
+        "requestBlob": "9054309f4fff75b66ae2cb6923476c8025faeb9d",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+            "./Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+            "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+            "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+            "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+            "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "snapshotDelta": "GitHub compare: exactly one added .ci-run.json; parent W; product/test/config/fixtures unchanged within W→S"
+      },
+      "run": 43632801654,
+      "job": 132562905431,
+      "test": "Eleven recipient recovery/refusal/source-replacement scenarios share one module-loader failure",
+      "executedPhase": "Browser startup passed; ordinary real C08 reply scenario passed; recipient fixture imports fail before recipient behavioral assertions.",
+      "notReached": [
+        "Recipient ACK receipt correctness in eleven cases",
+        "Recipient retry/reload and rejection assertions"
+      ],
+      "error": "Cannot find module '../../runtime/contract.ts' from '/tmp/sf-ui-ack-producer-<temp>/recipient-actions.js'",
+      "evidence": [
+        {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632801654/job/132562905431",
+          "lines": "890–937",
+          "observation": "Same missing relative runtime import in eleven cases."
+        },
+        {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7c9bbd966483b94d21a4c30961a8174be7ed6804/modules/sucafina/Sucafinav1/test/product/ui-ack-completion/producer-loader.ts",
+          "blob": "e7014d5e5a5a303e7ef599cac0304f4739628c0f",
+          "observation": "Temporary output directory plus external import mapping; published producer and dependency blob checks are already present."
+        }
+      ],
+      "cause": "Pinned real producer is compiled into a temporary path but its relative external runtime import remains unresolved. Exact resolver/build cause is a hypothesis until generated import specifiers are inspected; no product ACK regression established by these eleven errors.",
+      "confidence": {
+        "symptom": "high",
+        "rootCause": "high for fixture dependency closure; medium for the Bun resolver mechanism"
+      },
+      "owner": {
+        "originalActor": "S1-A / UI",
+        "currentWriter": "ui-work / PR47 / session10",
+        "consumer": "session14 integrator after owner validation"
+      },
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/producer-loader.ts",
+        "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/browser-fixture.ts"
+      ],
+      "dependency": "Retain recipient-actions blob 22c6309c61b27b89914086a7602bf3bea61a988b and all dependency hash checks; do not replace the actual producer with a mock.",
+      "nextMinimalAction": "Make the verified producer runtime import closure resolvable from the temporary output (inspect generated specifiers and resolver importer path); preserve exact producer bytes and dependency pins. Handle the separate static-gate failure independently.",
+      "suggestedRecheck": {
+        "state": "PREPARED_NOT_DISPATCHED",
+        "selection": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+            "./Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+            "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+            "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+            "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+            "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "condition": "Owner fixes fixture loader first; preserve browser startup before cases and lifecycle last. Existing run remains attached to old W."
+      },
+      "composedDisposition": "Recipient behavior NOT_REACHED, no UI PASS."
+    },
+    {
+      "id": "TRIAGE-EXPORT-01",
+      "aliases": [
+        "OPS-CONSUMER-EXPORT-01"
+      ],
+      "classification": "product_defect",
+      "status": "RESOLVED_IN_SOURCE_PENDING_INTEGRATION",
+      "priority": "P1_INTAKE",
+      "normalizedSignature": "procurement/downloads/future-po-uses-sourcing-frozen-fx",
+      "provenance": {
+        "W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+        "treeW": "5cb441e60a88dce057534548796dc6e7b1e40f74",
+        "S": "b7a3fe9b03fa490238fb47acdc67924f3b0e417a",
+        "treeS": "19725df24daab6ab0c96ce6835596c607b2daa6e",
+        "requestPath": ".ci-run.json",
+        "requestBlob": "ad79ccff0172e4db45196222a6bb27e9ebfb6642",
+        "request": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+            "./Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "snapshotDelta": "GitHub compare: exactly one added .ci-run.json; parent W; product/test/config/fixtures unchanged within W→S"
+      },
+      "run": 43632315600,
+      "job": 132561444043,
+      "test": "OPS-CONSUMER-EXPORT-01",
+      "executedPhase": "Production runtime/downloads.ts#download(register|po) executed; CSV/HTML bytes and semantic values asserted; current/frozen facts and persisted record checked.",
+      "notReached": [
+        "Installed browser/native journey",
+        "Proof on composed sf2-stack"
+      ],
+      "error": "Historical regression is fixed on this W; Future PO exports must use the current estimate while sourcing approval remains frozen",
+      "evidence": [
+        {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632315600/job/132561444043",
+          "lines": "812",
+          "observation": "Original named regression passed; all eleven selected tests passed, zero failure, 396 expectations, two files."
+        },
+        {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1fe9561f199dc594a5fd559d06d450253e571bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/INTAKE.json",
+          "observation": "Original failing run43628901747 and exact downloads preimage recorded by owner. Original failure remains associated with its old W."
+        }
+      ],
+      "cause": "Future PO exports must use the current estimate while sourcing approval remains frozen",
+      "confidence": {
+        "symptom": "high",
+        "sourceResolution": "high; direct real log and semantic assertions",
+        "integration": "not verified"
+      },
+      "owner": {
+        "originalActor": "Operations / WP04",
+        "currentWriter": "sourcing-money / PR57 / session11",
+        "consumer": "session14 integrator"
+      },
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "modules/sucafina/Sucafinav1/test/product/procurement-exports/"
+      ],
+      "dependency": "Selectively compose downloads with its current monetary helper and the separate Operations request.value fix; preserve sourcing proofs58+5 on their original trees.",
+      "nextMinimalAction": "Consume the already published owner fix by exact blobs/preimages; do not reopen this as an unfixed source defect. Record proof on the integrated candidate only when executed there.",
+      "suggestedRecheck": {
+        "state": "PREPARED_NOT_DISPATCHED",
+        "selection": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+            "./Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "condition": "Only for a materially different integrated closure or a required final gate; reuse run43632315600 for the source W."
+      },
+      "composedDisposition": "Resolved source evidence only; no automatic green transfer."
+    },
+    {
+      "id": "TRIAGE-EXPORT-02",
+      "aliases": [
+        "OPS-CONSUMER-EXPORT-02"
+      ],
+      "classification": "product_defect",
+      "status": "RESOLVED_IN_SOURCE_PENDING_INTEGRATION",
+      "priority": "P1_INTAKE",
+      "normalizedSignature": "procurement/downloads/po-line-total-repeats-selected-quote",
+      "provenance": {
+        "W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+        "treeW": "5cb441e60a88dce057534548796dc6e7b1e40f74",
+        "S": "b7a3fe9b03fa490238fb47acdc67924f3b0e417a",
+        "treeS": "19725df24daab6ab0c96ce6835596c607b2daa6e",
+        "requestPath": ".ci-run.json",
+        "requestBlob": "ad79ccff0172e4db45196222a6bb27e9ebfb6642",
+        "request": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+            "./Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "snapshotDelta": "GitHub compare: exactly one added .ci-run.json; parent W; product/test/config/fixtures unchanged within W→S"
+      },
+      "run": 43632315600,
+      "job": 132561444043,
+      "test": "OPS-CONSUMER-EXPORT-02",
+      "executedPhase": "Production runtime/downloads.ts#download(register|po) executed; CSV/HTML bytes and semantic values asserted; current/frozen facts and persisted record checked.",
+      "notReached": [
+        "Installed browser/native journey",
+        "Proof on composed sf2-stack"
+      ],
+      "error": "Historical regression is fixed on this W; Each future PO line must use its quantity×unit price instead of the whole selected quote",
+      "evidence": [
+        {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632315600/job/132561444043",
+          "lines": "814",
+          "observation": "Original named regression passed; all eleven selected tests passed, zero failure, 396 expectations, two files."
+        },
+        {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1fe9561f199dc594a5fd559d06d450253e571bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/INTAKE.json",
+          "observation": "Original failing run43628901747 and exact downloads preimage recorded by owner. Original failure remains associated with its old W."
+        }
+      ],
+      "cause": "Each future PO line must use its quantity×unit price instead of the whole selected quote",
+      "confidence": {
+        "symptom": "high",
+        "sourceResolution": "high; direct real log and semantic assertions",
+        "integration": "not verified"
+      },
+      "owner": {
+        "originalActor": "Operations / WP04",
+        "currentWriter": "sourcing-money / PR57 / session11",
+        "consumer": "session14 integrator"
+      },
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "modules/sucafina/Sucafinav1/test/product/procurement-exports/"
+      ],
+      "dependency": "Selectively compose downloads with its current monetary helper and the separate Operations request.value fix; preserve sourcing proofs58+5 on their original trees.",
+      "nextMinimalAction": "Consume the already published owner fix by exact blobs/preimages; do not reopen this as an unfixed source defect. Record proof on the integrated candidate only when executed there.",
+      "suggestedRecheck": {
+        "state": "PREPARED_NOT_DISPATCHED",
+        "selection": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+            "./Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "condition": "Only for a materially different integrated closure or a required final gate; reuse run43632315600 for the source W."
+      },
+      "composedDisposition": "Resolved source evidence only; no automatic green transfer."
+    }
+  ]
+}

@@ -1,0 +1,2218 @@
+{
+  "schema_version": 1,
+  "mission": 27,
+  "actor": "S1-R1",
+  "prepared_at_utc": "2026-11-14 21:31:59 UTC",
+  "verdict": "REQUEST_CHANGES",
+  "scope_completion": "COMPLETE_WITH_FINDINGS_FOR_FIXED_SHA",
+  "independence": {
+    "product_authorship": false,
+    "product_edits": false,
+    "reviewer": "/root",
+    "host_model_label": "GPT-6 Astra Pro",
+    "effective_backend_model_id": null,
+    "native_orchestra_session_id": null,
+    "identity_note": "Host label and agent paths are observable; no backend model/session identifier is invented.",
+    "auxiliary_reviewers": [
+      "/root/review_operations",
+      "/root/review_workflows",
+      "/root/review_decisions"
+    ],
+    "auxiliaries_count_as_additional_campaign_final_judges": false,
+    "new_review_context": "Independent mission27 review; predecessor reports used as claims to recheck, not adopted as final conclusions."
+  },
+  "pins": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "mission_sha": "6da04cd66eb268362ee58509271fef773ac2a62e",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "product_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "product_tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+    "product_parent": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+    "review_initial_head": "c7171a4d038cd807dd4ca5510243d3641cf74eef",
+    "review_initial_tree": "a4a18c86fc6fcd140a6e2ae364a39cc3718dd770",
+    "review_increment_head": "650d95e706fa3c6086c75236b1804b51043b1187",
+    "review_increment_tree": "ae3e265abc29e7e961dc3b93b09e13bfd8205a01",
+    "review_branch": "review-operations",
+    "review_pr": 49,
+    "review_base": "sf2-control",
+    "review_base_sha": "d3d411f7e2476a562a57aa7620823980eaf34e46"
+  },
+  "authority": {
+    "basis": "Explicit mission27 instruction authorizes successor append-only review receipts after predecessor terminal handoff; no inferred release from silence.",
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/composed-wave-27/",
+    "product_integrator": "session23 / sf2-stack / PR65",
+    "final_dispatcher_and_acceptor": "S0",
+    "remote_transport": "GitHub MCP only",
+    "tests_typechecks_guards_ci_runs_requested_or_dispatched": 0,
+    "product_or_configuration_changes": 0,
+    "merge_or_global_approval": false
+  },
+  "normative_reading": {
+    "files": [
+      {
+        "sha": "6da04cd66eb268362ee58509271fef773ac2a62e",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/COMMON.json",
+        "blob": "6cdf29c62aa06307aa4d5fb4137b34b1baa84dc1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6da04cd66eb268362ee58509271fef773ac2a62e/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/COMMON.json",
+        "reading": "FULL",
+        "readers": [
+          "/root"
+        ]
+      },
+      {
+        "sha": "6da04cd66eb268362ee58509271fef773ac2a62e",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/review-functional-composition.json",
+        "blob": "069130f04843e1f8b271c5b6bdd884086921e7ab",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6da04cd66eb268362ee58509271fef773ac2a62e/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/review-functional-composition.json",
+        "reading": "FULL",
+        "readers": [
+          "/root"
+        ]
+      },
+      {
+        "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "path": "AGENTS.md",
+        "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/AGENTS.md",
+        "reading": "FULL",
+        "readers": [
+          "/root"
+        ]
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+        "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+        "reading": "FULL",
+        "readers": [
+          "/root"
+        ]
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+        "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+        "reading": "FULL",
+        "readers": [
+          "/root"
+        ]
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+        "blob": "d61f32af03fe10747a50274233f953af044decf6",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+        "reading": "FULL",
+        "readers": [
+          "/root"
+        ]
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S1-R1.json",
+        "blob": "f164c7b081b77b47cec72085de07780a55cd2acb",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S1-R1.json",
+        "reading": "FULL",
+        "readers": [
+          "/root",
+          "/root/review_operations",
+          "/root/review_workflows",
+          "/root/review_decisions"
+        ]
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+        "reading": "FULL",
+        "readers": [
+          "/root"
+        ]
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "reading": "FULL",
+        "readers": [
+          "/root/review_workflows"
+        ]
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/execution-reconciliation.md",
+        "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/execution-reconciliation.md",
+        "reading": "FULL",
+        "readers": [
+          "/root/review_decisions"
+        ]
+      },
+      {
+        "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "path": "packages/app-shell/AGENTS.md",
+        "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/packages/app-shell/AGENTS.md",
+        "reading": "FULL",
+        "readers": [
+          "/root/review_workflows"
+        ]
+      },
+      {
+        "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "path": "packages/app-shell/e2e/AGENTS.md",
+        "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/packages/app-shell/e2e/AGENTS.md",
+        "reading": "FULL",
+        "readers": [
+          "/root/review_workflows"
+        ]
+      }
+    ],
+    "full_pack_keys": [
+      "provenance",
+      "job_id",
+      "actor",
+      "session",
+      "assignment",
+      "branch_provenance",
+      "common",
+      "write_authority",
+      "allocation",
+      "physical_slot",
+      "work_packages",
+      "contracts",
+      "incoming_outgoing_handoffs",
+      "task_output_dependencies",
+      "consumer_edges",
+      "coverage",
+      "dependency_context",
+      "proof_bindings",
+      "evidence",
+      "execution_proofs",
+      "review_assignment",
+      "review_sources_read_only",
+      "resident",
+      "reference_context_rule",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "resident_ui",
+      "mandatory_appendices",
+      "code_sources",
+      "source_receipt_index",
+      "workflow",
+      "coverage_source",
+      "numeric_oracles",
+      "selection_pointers",
+      "criterion_ids",
+      "completion",
+      "ci_plan"
+    ],
+    "full_pack_sections_by_reader": {
+      "/root": "All remaining keys, review source WPs, product acceptance and consolidation; no unassigned pack key omitted",
+      "/root/review_operations": "contracts (17), numeric_oracles (7), consumer_edges (3), proof_bindings (40); WP04/WP06 and prior findings",
+      "/root/review_workflows": "resident, resident_gate_requirements, resident_ui, code_sources, execution_proofs, evidence; resident-runtime appendix; WP07/WP08/WP09",
+      "/root/review_decisions": "ci_plan, write_authority, allocation, mandatory_appendices; execution-reconciliation appendix; WP11–WP14 and WP10.T06/T07"
+    },
+    "canonical_work_packages": [
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP01.json",
+        "blob": "37e80dfc0a67aa43986477b8b170955384a1b29c",
+        "id": "WP01",
+        "tasks": 5,
+        "criteria": 75,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP02.json",
+        "blob": "d65a7b62e14bffd149670fa65f8a982932ce4ec9",
+        "id": "WP02",
+        "tasks": 4,
+        "criteria": 78,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+        "blob": "875baa9afdc9006039b8b343fae88cc5bd7f9a9e",
+        "id": "WP03",
+        "tasks": 5,
+        "criteria": 112,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP04.json",
+        "blob": "a6d5f581be25aeeeee223a9ac0e099b4d22dcc7e",
+        "id": "WP04",
+        "tasks": 5,
+        "criteria": 111,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP05.json",
+        "blob": "24f85cc986d5f95583e8f4cb6a410eb058be2080",
+        "id": "WP05",
+        "tasks": 5,
+        "criteria": 108,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json",
+        "blob": "1aacabdc304f9e298084960a52a5fe55fd8fe98a",
+        "id": "WP06",
+        "tasks": 5,
+        "criteria": 140,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP07.json",
+        "blob": "677eb6f87ba0a4a4e89cc7bbcd001f2c150161a7",
+        "id": "WP07",
+        "tasks": 4,
+        "criteria": 86,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP08.json",
+        "blob": "42afe6b6194a9cd4de038743673923609059b6a0",
+        "id": "WP08",
+        "tasks": 6,
+        "criteria": 132,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json",
+        "blob": "77133cbba49108eca5d9a4f9b8b3cace025d18cd",
+        "id": "WP09",
+        "tasks": 7,
+        "criteria": 112,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+        "blob": "1c7fef239ba8d4e8de77b13ec4803e87d493c133",
+        "id": "WP10",
+        "tasks": 7,
+        "criteria": 171,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json",
+        "blob": "b11c665d8a0b529a3a1b2ad16012167b167a2c5c",
+        "id": "WP11",
+        "tasks": 4,
+        "criteria": 83,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json",
+        "blob": "941b5e86c6a0ff9fc5125f93f298535c7418cd34",
+        "id": "WP12",
+        "tasks": 4,
+        "criteria": 108,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json",
+        "blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+        "id": "WP13",
+        "tasks": 4,
+        "criteria": 68,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      },
+      {
+        "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.json",
+        "blob": "1662398fbd2e69f89cd3f65d6ebc0e1569c0cc8b",
+        "id": "WP14",
+        "tasks": 5,
+        "criteria": 91,
+        "reading": "ALL_TASKS_AND_AXIOMS"
+      }
+    ],
+    "counts": {
+      "work_packages": 14,
+      "tasks": 70,
+      "criterion_ids": 1475,
+      "executed_product_tests": 0,
+      "accepted_work_packages": 0
+    },
+    "ancestors": "Applicable root and app-shell/e2e AGENTS were read. Checked relevant module/CLI ancestors and subtrees for nested AGENTS. No claim of a recursive inventory of the entire repository."
+  },
+  "inspection_method": {
+    "product": "Static producer→installed binding→HTTP/UI/consumer tracing at the fixed SHA; read-only observation of existing evidence. No local or remote product execution.",
+    "positive_focus": "First-use entries, authorized completion, reload/replay, lost response and revocation; direct API/seeded fixture does not replace the required human entry.",
+    "trees": "Relevant product/runtime/src/docs/app-shell subtrees and CLI files; full untruncated product tree used for the missing decision-alternatives.ts statement.",
+    "criteria": "All 1475 IDs/texts reconciled to pack review_sources_read_only; 70 task rows with exact file/blob pins. Criterion inventory integrity is not acceptance or an assertion that every CHK was executed.",
+    "evidence_rule": "Source correction, intake equality and proved composed behavior are distinct states; neither green source nor safe refusal proves a positive installed journey."
+  },
+  "source_proofs": [
+    {
+      "id": "SRC-C12-RECOVERY",
+      "run_id": 43636531401,
+      "run_attempt": 1,
+      "job_id": 132574441676,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43636531401",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43636531401/job/132574441676",
+      "product_W": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+      "snapshot_S": "f4a1e6e2743188276f42dd68e14b7c06a23ad55c",
+      "observed_counts": {
+        "pass": 7,
+        "fail": 0,
+        "expectations": 225
+      },
+      "aggregate_interpretation": "PASS_WITH_RECORDED_SCOPE",
+      "scope": "UI/HTTP recovery; real POST, SQLite reopen and services reconstructed; shell GET fixture.",
+      "limits": [
+        "No process restart",
+        "No complete Workbench navigation",
+        "Combined target executor differs"
+      ],
+      "official_log_reader": "/root/review_operations",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-C12-RECOVERY",
+        "W": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+        "S": "f4a1e6e2743188276f42dd68e14b7c06a23ad55c",
+        "tree": "519288ec0078ff66151d3304c47ea069f0bfc04f",
+        "parents": [
+          "0b483fbf2040e0551f817ea6211d54c7cb2e2d14"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-C12-RECOVERY",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "536b11690bd71a90023a78825d114730352a024c",
+          "S_tree": "519288ec0078ff66151d3304c47ea069f0bfc04f",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "2a3fb5dd04b5e9f1f9721495096b6c46451319ff",
+              "additions": 1,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "2a3fb5dd04b5e9f1f9721495096b6c46451319ff",
+          "request": {
+            "package": "sucafina",
+            "packageSelector": "packages/sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+              "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {}
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-EXPORTS",
+      "run_id": 43632315600,
+      "run_attempt": 1,
+      "job_id": 132561444043,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632315600",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632315600/job/132561444043",
+      "product_W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+      "snapshot_S": "b7a3fe9b03fa490238fb47acdc67924f3b0e417a",
+      "observed_counts": {
+        "pass": 11,
+        "fail": 0,
+        "expectations": 396
+      },
+      "aggregate_interpretation": "PASS_WITH_RECORDED_SCOPE",
+      "scope": "Actual generators and 18 pairs / 36 files; monetary values and no record mutation.",
+      "limits": [
+        "No full browser/HTTP composition",
+        "Source typecheck separately not globally green"
+      ],
+      "official_log_reader": "/root/review_operations",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-EXPORTS",
+        "W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+        "S": "b7a3fe9b03fa490238fb47acdc67924f3b0e417a",
+        "tree": "19725df24daab6ab0c96ce6835596c607b2daa6e",
+        "parents": [
+          "e1fe9561f199dc594a5fd559d06d450253e571bc"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-EXPORTS",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "5cb441e60a88dce057534548796dc6e7b1e40f74",
+          "S_tree": "19725df24daab6ab0c96ce6835596c607b2daa6e",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "ad79ccff0172e4db45196222a6bb27e9ebfb6642",
+              "additions": 1,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "ad79ccff0172e4db45196222a6bb27e9ebfb6642",
+          "request": {
+            "package": "sucafina",
+            "packageSelector": "packages/sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+              "./Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {}
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-FORECAST-MATRIX",
+      "run_id": 43633001171,
+      "run_attempt": 1,
+      "job_id": 132563524780,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171/job/132563524780",
+      "product_W": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "snapshot_S": "a03193f99c3e28c149e1d47c5913b3a673fecc27",
+      "observed_counts": {
+        "pass": 14,
+        "fail": 1,
+        "expectations": 280
+      },
+      "aggregate_interpretation": "FAILURE_RETAINED",
+      "scope": "Real renderer/controller/Chromium and source UI terminal/cancel/retry matrix.",
+      "limits": [
+        "Fixture case/model/sources/HTTP",
+        "Shell-event revocation test failed while waiting for detached form",
+        "Not native finance or AM"
+      ],
+      "official_log_reader": "/root",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-FORECAST-MATRIX",
+        "W": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+        "S": "a03193f99c3e28c149e1d47c5913b3a673fecc27",
+        "tree": "2214579196870d4d85ce19744127d5839f5754d3",
+        "parents": [
+          "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-FORECAST-MATRIX",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "2e92d47791b1c39a7c774acc84e41d55537c8d2d",
+          "S_tree": "2214579196870d4d85ce19744127d5839f5754d3",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "b91f03e5b0842484ef8a51af1db8d445f3315d77",
+              "additions": 18,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "b91f03e5b0842484ef8a51af1db8d445f3315d77",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+              "./Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+              "./Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+              "./Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+              "./Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+              "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+            }
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-FORECAST-REVOKE",
+      "run_id": 43633471899,
+      "run_attempt": 1,
+      "job_id": 132565053859,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633471899",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633471899/job/132565053859",
+      "product_W": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "snapshot_S": "d332d30008e5bc4933d7cbd76ca08b3ca60608d3",
+      "observed_counts": {
+        "pass": 4,
+        "fail": 0,
+        "expectations": 65
+      },
+      "aggregate_interpretation": "PASS_WITH_RECORDED_SCOPE",
+      "scope": "Two focused revocation cases plus browser startup/final lifecycle.",
+      "limits": [
+        "No full repeat of previous matrix",
+        "Fixture model/HTTP boundaries",
+        "No responsive/performance/native qualification"
+      ],
+      "official_log_reader": "/root",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-FORECAST-REVOKE",
+        "W": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+        "S": "d332d30008e5bc4933d7cbd76ca08b3ca60608d3",
+        "tree": "f0c03f75267521533a47c28377b3d2a00f8df9b0",
+        "parents": [
+          "765a9a5b86c21791ed59152098971b2dfbe8398e"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-FORECAST-REVOKE",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "dad99c523acce16873331fae2df3f10b82451695",
+          "S_tree": "f0c03f75267521533a47c28377b3d2a00f8df9b0",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "b313896f95c152d1c04d482445ff63209d8aa3b1",
+              "additions": 15,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "b313896f95c152d1c04d482445ff63209d8aa3b1",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+              "./Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+              "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+            }
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-ACK-01",
+      "run_id": 43632801654,
+      "run_attempt": 1,
+      "job_id": 132562905431,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632801654",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632801654/job/132562905431",
+      "product_W": "7c9bbd966483b94d21a4c30961a8174be7ed6804",
+      "snapshot_S": "5ef3284a31973be8e3c14c8db23887574754a657",
+      "observed_counts": {
+        "pass": 3,
+        "fail": 12,
+        "expectations": 30
+      },
+      "aggregate_interpretation": "FAILURE_RETAINED",
+      "scope": "Ordinary-thread functional case passes; recipient loader and typecheck fail.",
+      "limits": [
+        "Aggregate FAIL",
+        "Only one distinct retained functional ACK case"
+      ],
+      "official_log_reader": "/root/review_workflows",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-ACK-01",
+        "W": "7c9bbd966483b94d21a4c30961a8174be7ed6804",
+        "S": "5ef3284a31973be8e3c14c8db23887574754a657",
+        "tree": "00a2da15699e759733003ef9c788da43acf41c6e",
+        "parents": [
+          "7c9bbd966483b94d21a4c30961a8174be7ed6804"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-ACK-01",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "6c55ee7399780575a61af242e79676a472d038af",
+          "S_tree": "00a2da15699e759733003ef9c788da43acf41c6e",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "9054309f4fff75b66ae2cb6923476c8025faeb9d",
+              "additions": 20,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "9054309f4fff75b66ae2cb6923476c8025faeb9d",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+              "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+              "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+            }
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-ACK-02",
+      "run_id": 43633483813,
+      "run_attempt": 1,
+      "job_id": 132565093216,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633483813",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633483813/job/132565093216",
+      "product_W": "359ab99db8aaec23e885b492876bc0a3df3d0a33",
+      "snapshot_S": "d482772e85f117e95f70dbaabed7b0518e9f5b1e",
+      "observed_counts": {
+        "pass": 11,
+        "fail": 3,
+        "expectations": 308
+      },
+      "aggregate_interpretation": "FAILURE_RETAINED",
+      "scope": "Nine recipient cases pass; two navigation cases and typecheck fail.",
+      "limits": [
+        "Aggregate FAIL",
+        "Seven distinct cases retained in final aggregate"
+      ],
+      "official_log_reader": "/root/review_workflows",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-ACK-02",
+        "W": "359ab99db8aaec23e885b492876bc0a3df3d0a33",
+        "S": "d482772e85f117e95f70dbaabed7b0518e9f5b1e",
+        "tree": "eeda391d690537249607f294afaf32b1f0556b2c",
+        "parents": [
+          "359ab99db8aaec23e885b492876bc0a3df3d0a33"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-ACK-02",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "9793849ac18d0c664fabfec49e7e3b3a9ffd0605",
+          "S_tree": "eeda391d690537249607f294afaf32b1f0556b2c",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "750d98d5cd8d19a96977687651dcfd792cff226f",
+              "additions": 18,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "750d98d5cd8d19a96977687651dcfd792cff226f",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+              "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+              "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+            }
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-ACK-03",
+      "run_id": 43634168745,
+      "run_attempt": 1,
+      "job_id": 132567207864,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43634168745",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43634168745/job/132567207864",
+      "product_W": "d8524169e0de188312f6c2d3b6877562c47e664d",
+      "snapshot_S": "a53551af20e1476173cbeed8b54ae8f61c9872fe",
+      "observed_counts": {
+        "pass": 6,
+        "fail": 1,
+        "expectations": 113
+      },
+      "aggregate_interpretation": "FAILURE_RETAINED",
+      "scope": "Four recipient cases pass including corrected navigation/reload/source replacement; typecheck fails.",
+      "limits": [
+        "Nine external typecheck diagnostics belong to source",
+        "Synthetic pagehide/pageshow is not native BFcache",
+        "No purge proof on non-mounted503"
+      ],
+      "official_log_reader": "/root/review_workflows",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-ACK-03",
+        "W": "d8524169e0de188312f6c2d3b6877562c47e664d",
+        "S": "a53551af20e1476173cbeed8b54ae8f61c9872fe",
+        "tree": "ea77baf645e92d06e4cded0123de5337506cd311",
+        "parents": [
+          "d8524169e0de188312f6c2d3b6877562c47e664d"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-ACK-03",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "3ee21c140ca1647ed36989bd2203c1134eec08d6",
+          "S_tree": "ea77baf645e92d06e4cded0123de5337506cd311",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "b34019836dc507e957dc4d62b282ec391437fe8a",
+              "additions": 17,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "b34019836dc507e957dc4d62b282ec391437fe8a",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+              "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+              "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+              "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+            }
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-ACK-GUARD",
+      "run_id": 43634976272,
+      "run_attempt": 1,
+      "job_id": 132569688237,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43634976272",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43634976272/job/132569688237",
+      "product_W": "86ac7fb4d5e76b0fff4470d1c21287a5d7658559",
+      "snapshot_S": "a0b76d6bea0aa3b6da7a467cc8c9b3f5e0c8492f",
+      "observed_counts": {
+        "pass": 1,
+        "fail": 0,
+        "expectations": 1
+      },
+      "aggregate_interpretation": "PASS_WITH_RECORDED_SCOPE",
+      "scope": "Documentary guard only.",
+      "limits": [
+        "No additional functional proof",
+        "Does not close source prior typecheck or fixed bundle"
+      ],
+      "official_log_reader": "/root/review_workflows",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-ACK-GUARD",
+        "W": "86ac7fb4d5e76b0fff4470d1c21287a5d7658559",
+        "S": "a0b76d6bea0aa3b6da7a467cc8c9b3f5e0c8492f",
+        "tree": "a0edd0da6e55f14e4c351f840fa8d9929ead4e58",
+        "parents": [
+          "86ac7fb4d5e76b0fff4470d1c21287a5d7658559"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-ACK-GUARD",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "92a5e2d1dba2335b86abefb6a7dc6e45dbee89e7",
+          "S_tree": "a0edd0da6e55f14e4c351f840fa8d9929ead4e58",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "cb5c75b7c2178a08140cdca648712a5364b32cc7",
+              "additions": 13,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "cb5c75b7c2178a08140cdca648712a5364b32cc7",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/ui-split/ui-work/guards.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+            }
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-DECISIONS-20",
+      "run_id": 43638150264,
+      "run_attempt": 1,
+      "job_id": 132579438109,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638150264",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638150264/job/132579438109",
+      "product_W": "0fb6101c2804e8d8e2fa352ca5d09b554a7fd435",
+      "snapshot_S": "11a8f1a7e9168b7c127e22c24510298f9bd2c9bb",
+      "observed_counts": {
+        "pass": 11,
+        "fail": 0,
+        "expectations": 56
+      },
+      "aggregate_interpretation": "PASS_WITH_RECORDED_SCOPE",
+      "scope": "Forms, serialization, escaping, emitted JavaScript parse and intent lifecycle; two files.",
+      "limits": [
+        "Not human evidence discovery/linking",
+        "E2E source BLOCKED_NOT_RUN",
+        "Later W2 alternatives revision not automatically covered"
+      ],
+      "official_log_reader": "/root/review_decisions",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-DECISIONS-20",
+        "W": "0fb6101c2804e8d8e2fa352ca5d09b554a7fd435",
+        "S": "11a8f1a7e9168b7c127e22c24510298f9bd2c9bb",
+        "tree": "4b3d9328a79e3c6bb7ff20b9d9b29553fe68de44",
+        "parents": [
+          "0fb6101c2804e8d8e2fa352ca5d09b554a7fd435"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-DECISIONS-20",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "fd1de72c787dd9d3d87db86110781d1f158547e5",
+          "S_tree": "4b3d9328a79e3c6bb7ff20b9d9b29553fe68de44",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "0f92f9b5f2e7cf128c7e1bf2ee09c38b4ea51cf2",
+              "additions": 1,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "0f92f9b5f2e7cf128c7e1bf2ee09c38b4ea51cf2",
+          "request": {
+            "package": "sucafina",
+            "packageSelector": "packages/sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/decisions-initial-alternatives/intention.test.ts",
+              "./Sucafinav1/test/product/decisions-initial-alternatives/forms.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {}
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-MEMORY-MI07",
+      "run_id": 43637227753,
+      "run_attempt": 1,
+      "job_id": 132576581546,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43637227753",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43637227753/job/132576581546",
+      "product_W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+      "snapshot_S": "e63511737be687a2e42f9a15706a229db42a31c1",
+      "observed_counts": {
+        "pass": 0,
+        "fail": 1,
+        "expectations": 687
+      },
+      "aggregate_interpretation": "FAILURE_RETAINED",
+      "scope": "Historical memory journey;225000ms cooperative deadline; last phase memory.fence-final-request-headers.",
+      "limits": [
+        "Corruption-preflight L580 and revocation tail L583–585 not reached",
+        "No causal attribution of timeout to new fix"
+      ],
+      "official_log_reader": "/root/review_decisions",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-MEMORY-MI07",
+        "W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+        "S": "e63511737be687a2e42f9a15706a229db42a31c1",
+        "tree": "d09d2cbe63e4168822399a59d3b85a28b00c0dce",
+        "parents": [
+          "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-MEMORY-MI07",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "0c7b73bd55ca21498477e9b32a763a87dff2bf50",
+          "S_tree": "d09d2cbe63e4168822399a59d3b85a28b00c0dce",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "6d6531c8be34410efe3366662c437556ff65b1d0",
+              "additions": 13,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "6d6531c8be34410efe3366662c437556ff65b1d0",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+            }
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    },
+    {
+      "id": "SRC-MEMORY-MI08",
+      "run_id": 43638160793,
+      "run_attempt": 1,
+      "job_id": 132579470930,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638160793",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638160793/job/132579470930",
+      "product_W": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+      "snapshot_S": "088c84fe639638b3623f2278a91b08e24e614964",
+      "observed_counts": {
+        "pass": 3,
+        "fail": 0,
+        "expectations": 51
+      },
+      "aggregate_interpretation": "PASS_WITH_RECORDED_SCOPE",
+      "scope": "producer.prepare/verifier.verify/proof.acceptsOutput: authorized positive then revocation unavailable.",
+      "limits": [
+        "nativeExecution:false",
+        "Not complete historical journey or AM05",
+        "Different W/S from MI07; no merged PASS"
+      ],
+      "official_log_reader": "/root/review_decisions",
+      "log_basis": "Existing official GitHub Actions logs inspected read-only by the named reviewer in this mission; no new execution.",
+      "git_provenance": {
+        "id": "SRC-MEMORY-MI08",
+        "W": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+        "S": "088c84fe639638b3623f2278a91b08e24e614964",
+        "tree": "0d12b520fd0adf578d8202bbb8f7223892971065",
+        "parents": [
+          "f29f9f7acdc860590581d76e1d276139da7af1e3"
+        ],
+        "expected_parent_matches": true,
+        "comparison": {
+          "id": "SRC-MEMORY-MI08",
+          "status": "ahead",
+          "ahead_by": 1,
+          "total_commits": 1,
+          "W_tree": "6f69fc8bfcfcd8ae313ef1a556a35d11ad09e556",
+          "S_tree": "0d12b520fd0adf578d8202bbb8f7223892971065",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "6e5f4480eb06a383b3426d99d3a8848a45f3da64",
+              "additions": 13,
+              "deletions": 0
+            }
+          ],
+          "only_request_delta": true
+        },
+        "exact_request_at_S": {
+          "blob": "6e5f4480eb06a383b3426d99d3a8848a45f3da64",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+            }
+          }
+        }
+      },
+      "git_provenance_verifier": "/root",
+      "source_result_transferred_to_fixed_bundle": false,
+      "environment_or_artifact_hash_recomputed": false
+    }
+  ],
+  "historical_proof_records": [
+    {
+      "id": 43624678702,
+      "scope": "I-OPS-02 / E-OPS-01",
+      "W": "8caafd2455cc149064ad0d5fdb63f48009269de7",
+      "S": "9c173f573e88bf033e9180494114d33da9a4894f",
+      "job": 132537765899,
+      "passed": 2,
+      "failed": 0,
+      "expectations": 76,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624678702",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "BUG_REPRODUCTION. 409→409→409 após reopen, um efeito/receipt. Controle API com versão corrente200; UI não recupera."
+    },
+    {
+      "id": 43625203326,
+      "scope": "D-OPS-01",
+      "W": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+      "S": "96da0ee1011e4a47086830c0a4bde00b878f54e5",
+      "job": 132539378028,
+      "passed": 8,
+      "failed": 0,
+      "expectations": 96,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625203326",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "Correção e negativos documentais; Chromium com transporte controlado, serviços/SQLite reais."
+    },
+    {
+      "id": 43626678715,
+      "scope": "OPS-REV-03",
+      "W": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+      "S": "56b5b3dcd409aa65ced84244999a01f9042570a0",
+      "job": 132543970174,
+      "passed": 4,
+      "failed": 0,
+      "filtered_out": 2,
+      "expectations": 37,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626678715",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "Orçamento/deduplicação após autorização. Dois casos usam reader sintético; filtro e2filteredout preservados."
+    },
+    {
+      "id": 43625920456,
+      "scope": "OPS-REV-01 regressões e cenário inicial",
+      "W": "aa5d8c0ee49777ea82bc707df8c976d311728292",
+      "S": "532a73aa2d7b8e7f5e57e0156b0de67f7ac1fb1c",
+      "job": 132541573935,
+      "passed": 58,
+      "failed": 0,
+      "expectations": 377,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625920456",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "58 casos no W inicial.5 deles revalidados em W final; não63 casos distintos."
+    },
+    {
+      "id": 43626658534,
+      "scope": "OPS-REV-01 fluxo real e contraprovas",
+      "W": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+      "S": "fb440a03e4d712e0d6f40f021997b31a80943a3d",
+      "job": 132543906292,
+      "passed": 5,
+      "failed": 0,
+      "expectations": 133,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626658534",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "C02/C06/comparison108 após FX2, rawLegacyValue200 nesta origem. Não confundir diagnóstico do legado com correção."
+    },
+    {
+      "id": 43626093062,
+      "scope": "OPS-REV-04 + E-OPS-02 inicial",
+      "W": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "S": "a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3",
+      "job": 132542099820,
+      "passed": 14,
+      "failed": 0,
+      "expectations": 186,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626093062",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "7 admission+4 Apply+3 regressões. W1, não inventar execução em W2."
+    },
+    {
+      "id": 43627493939,
+      "scope": "E-OPS-02 após ajuste tipado da fixture",
+      "W": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+      "S": "0a3857a4f3c9f3824c09b6aa76d155d6295e9ed9",
+      "job": 132546551148,
+      "passed": 4,
+      "failed": 0,
+      "expectations": 84,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627493939",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "4 casos reexecutados com runtime/autoridade reconstruídos depois de fechar SQLite; não kill de processo."
+    },
+    {
+      "id": 43626285237,
+      "scope": "OPS-REV-02",
+      "W": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "S": "9c45f18de1f9bd3d5647e37ef35cb3d5e2855277",
+      "job": 132542704491,
+      "passed": 10,
+      "failed": 0,
+      "expectations": 141,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626285237",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "7novos+3regressões; positivos reais HTTP/SQLite, negativos legados sintéticos; replay mesma composição."
+    },
+    {
+      "id": 43628901747,
+      "scope": "Consumidores monetários/Atlas e exportações",
+      "W": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+      "S": "80e78d97f15b468b8393c6a1676472f1979d2d33",
+      "job": 132550880255,
+      "passed": 10,
+      "failed": 2,
+      "expectations": 212,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901747",
+      "read_basis": "Prior PR49 evidence.json at c7171a4d; carried with original provenance, not counted as newly reread logs or target runs",
+      "interpretation": "8monetários+2Atlas passam;2regressões export falham. Resultado agregado FAILURE."
+    }
+  ],
+  "foreign_uid_gap": {
+    "id": "E-OPS-03",
+    "test": {
+      "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "blob": "d7a5e9517ed4b3e21354660169b03ae4a397ac60",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/test/local-store.test.ts"
+    },
+    "lines": "574–588",
+    "historic_runs": [
+      {
+        "run_id": 43554658437,
+        "job_id": 132324664659
+      },
+      {
+        "run_id": 43555674548,
+        "job_id": 132327869450
+      }
+    ],
+    "observation": "Both foreign-UID rejection cases were skipped in the cited historical evidence. Their fixture requires executor getuid()===0. No new discriminating execution identified.",
+    "scope": "Evidence gap; no bypass alleged; no execution requested."
+  },
+  "source_intake": [
+    {
+      "id": "C12_RECOVERY",
+      "source_pr": 60,
+      "source_sha": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+      "proof_ids": [
+        "SRC-C12-RECOVERY"
+      ],
+      "pins": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+        }
+      ],
+      "disposition": "FIX_PRESENT_EQUAL_SELECTED_BLOBS; combined executor differs",
+      "executor": {
+        "target": {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "blob": "6ad51e47b22eca073a0a81731575c463d98673e4",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+        },
+        "source_blob": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d"
+      },
+      "composed_behavior": "UNPROVED"
+    },
+    {
+      "id": "FORECAST_CANCEL_REVOKE",
+      "source_pr": 45,
+      "source_sha": "cbad554e1933289ac9e40e9fde887d494e5a42e6",
+      "proof_ids": [
+        "SRC-FORECAST-MATRIX",
+        "SRC-FORECAST-REVOKE"
+      ],
+      "pins": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/src/screen-shell.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+          "blob": "dad8eeb1879e6c93bc9a448c6567fc0e2ee0f747",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts"
+        }
+      ],
+      "disposition": "FIX_PRESENT_EQUAL_BLOBS",
+      "composed_behavior": "UNPROVED"
+    },
+    {
+      "id": "ACK_REPLAY_RELOAD",
+      "source_pr": 47,
+      "source_sha": "86ac7fb4d5e76b0fff4470d1c21287a5d7658559",
+      "producer_pr": 41,
+      "producer_source_sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "proof_ids": [
+        "SRC-ACK-01",
+        "SRC-ACK-02",
+        "SRC-ACK-03",
+        "SRC-ACK-GUARD"
+      ],
+      "ui_blob": "d9362a92e0bc71c8068790bf308e2a88adcb3243",
+      "producer_blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+      "disposition": "PRODUCER_AND_CONSUMER_BLOBS_PRESENT_EQUAL",
+      "functional_aggregate": "12 unique cases retained across three runs (1+7+4); not one 12/0 run; guard adds no functional case",
+      "composed_behavior": "NOT_RUN_OWNER_INTAKE",
+      "pins": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+          "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+          "blob": "d9362a92e0bc71c8068790bf308e2a88adcb3243",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+        }
+      ]
+    },
+    {
+      "id": "DECISIONS20",
+      "source_pr": 40,
+      "W": "0fb6101c2804e8d8e2fa352ca5d09b554a7fd435",
+      "W2": "69624adad312ef27f83310896e7c0b6005eec624",
+      "terminal_receipt_sha": "556079fe2fb97c824504ec60a47798c6e0553539",
+      "proof_ids": [
+        "SRC-DECISIONS-20"
+      ],
+      "disposition": "REQUIRED_UI_DELTAS_NOT_INTAKEN",
+      "finding_id": "DECISIONS20-ASSEMBLY",
+      "composed_behavior": "STATIC_FIRST_USE_BLOCKER"
+    },
+    {
+      "id": "MEMORY_MI08",
+      "source_pr": 36,
+      "W": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+      "proof_ids": [
+        "SRC-MEMORY-MI07",
+        "SRC-MEMORY-MI08"
+      ],
+      "pins": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+          "blob": "8e1b7eaab139c3303462bdb5af9b4c679e61b276",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+        }
+      ],
+      "disposition": "FOCAL_FIX_PRESENT_EQUAL_BLOBS; historical journey still not closed",
+      "composed_behavior": "UNPROVED"
+    },
+    {
+      "id": "OPERATIONS_PRIOR",
+      "recheck_ids": [
+        "D-OPS-01",
+        "I-OPS-02",
+        "OPS-REV-01",
+        "OPS-REV-02",
+        "OPS-REV-03",
+        "OPS-REV-04",
+        "E-OPS-01",
+        "E-OPS-02",
+        "E-OPS-03",
+        "OPS-CONSUMER-EXPORT-01",
+        "OPS-CONSUMER-EXPORT-02"
+      ],
+      "disposition": "See findings.json for original IDs and exact source/intake/behavior separation",
+      "composed_behavior": "No automatic target acceptance"
+    }
+  ],
+  "bundle_evidence": {
+    "receipts": [
+      {
+        "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/assembly-01.json",
+        "blob": "dfbbc986ec49f19b1a203b5b051980a9b3ed34c6",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/assembly-01.json"
+      },
+      {
+        "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-02.json",
+        "blob": "3d81ab63b65954ff2a427f86b411208149588c60",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-02.json"
+      },
+      {
+        "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-01.json",
+        "blob": "061a2fd5b932e2b2205a5db0391a025aa35695cb",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-01.json"
+      },
+      {
+        "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json",
+        "blob": "e4538142db05ea06934d2ffa76888bfadeb94fec",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json"
+      }
+    ],
+    "exact_actions_query": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs?head_sha=0ce090d7d1d4399d77b435debd59eb7cc903c202&per_page=100",
+    "exact_head_run_count": 0,
+    "query_result": {
+      "total_count": 0,
+      "workflow_runs": []
+    },
+    "query_limit": "Zero runs whose head_sha equals C is not by itself proof that no equivalent snapshot exists. Combined with integrator receipts and examined selections, no mandatory composed proof was admitted.",
+    "integrator_statement": "Tests, typechecks, guards, CI, AM and final reviews NOT_RUN; source_green_transferred=false.",
+    "required_ci": [
+      {
+        "id": "CI-SF",
+        "scope": "Suite completa do módulo Sucafina, inclusive casos novos",
+        "directory": "modules/sucafina",
+        "required": true,
+        "observed_at_fixed_candidate": "NOT_RUN",
+        "note": "Requirement identity only; no execution request created."
+      },
+      {
+        "id": "CI-CLI",
+        "scope": "Suite completa do pacote CLI cujo composition root foi alterado",
+        "directory": "apps/cli",
+        "required": true,
+        "observed_at_fixed_candidate": "NOT_RUN",
+        "note": "Requirement identity only; no execution request created."
+      },
+      {
+        "id": "CI-APP-SRC",
+        "scope": "Suíte Bun do app na árvore src, com condição solid; args vazios respeitam bunfig test.root=./src.",
+        "directory": "packages/app-shell",
+        "required": true,
+        "observed_at_fixed_candidate": "NOT_RUN",
+        "note": "Requirement identity only; no execution request created."
+      },
+      {
+        "id": "CI-APP-BROWSER",
+        "scope": "Suíte Bun da árvore test-browser do app; workflow usa condição browser, happydom e controleomni.",
+        "directory": "packages/app-shell",
+        "required": true,
+        "observed_at_fixed_candidate": "NOT_RUN",
+        "note": "Requirement identity only; no execution request created."
+      },
+      {
+        "id": "CI-ATLAS-BUSINESS",
+        "scope": "Suíte completa da boundary alterada, incluindo import/export das duas portas, preservação dos exports bound e negativos de AST no teste business-memory-ports; geração/AST/check:spawn-imports/typecheck são gates estáticos explícitos adicionais.",
+        "directory": "modules/atlas/boundary",
+        "required": true,
+        "observed_at_fixed_candidate": "NOT_RUN",
+        "note": "Requirement identity only; no execution request created."
+      },
+      {
+        "id": "CI-UI-OPERATIONS",
+        "scope": "UI real das 28 capacidades, edição, import e colaboração",
+        "directory": "packages/app-shell",
+        "required": true,
+        "observed_at_fixed_candidate": "NOT_RUN",
+        "note": "Requirement identity only; no execution request created."
+      },
+      {
+        "id": "CI-UI-DECISIONS",
+        "scope": "Caso, portfólio, memória e estados as síncronos pela UI real",
+        "directory": "packages/app-shell",
+        "required": true,
+        "observed_at_fixed_candidate": "NOT_RUN",
+        "note": "Requirement identity only; no execution request created."
+      },
+      {
+        "id": "CI-UI-REPORTS",
+        "scope": "Reunião, documentos e exportações com conteúdo completo",
+        "directory": "packages/app-shell",
+        "required": true,
+        "observed_at_fixed_candidate": "NOT_RUN",
+        "note": "Requirement identity only; no execution request created."
+      }
+    ],
+    "required_integrated_proofs": [
+      {
+        "id": "AM01",
+        "title": "Perfil e skill reais",
+        "owner_tasks": [
+          "WP12.T01",
+          "WP12.T02",
+          "WP12.T03",
+          "WP10.T06"
+        ],
+        "execution_actor": "S4",
+        "reviewer": "S3-R3",
+        "status": "NOT_RUN_AT_FIXED_CANDIDATE",
+        "normative_definition": {
+          "id": "AM01",
+          "title": "Perfil e skill reais",
+          "proof_packages": [
+            "E11",
+            "E16"
+          ],
+          "owner_tasks": [
+            "WP12.T01",
+            "WP12.T02",
+            "WP12.T03",
+            "WP10.T06"
+          ],
+          "execution_actor": "S4",
+          "reviewer": "S3-R3",
+          "cases": [
+            {
+              "id": "AM01-FINANCE",
+              "profile_id": "sf_finance",
+              "skills": [
+                "sf-explicar-forecast",
+                "sf-comparar-cenarios",
+                "sf-avaliar-sensibilidade",
+                "sf-produzir-bi-contextual"
+              ],
+              "expected_consumed_outputs": "FinancialAnalysis/ScenarioComparison/SensitivityResult e BI consumidos WP01/WP05/WP11; totais iguais a C02/C10.",
+              "actors": [
+                "S4"
+              ],
+              "first_integration_window": [
+                55,
+                75
+              ],
+              "final_candidate_window": [
+                75,
+                95
+              ],
+              "status": "NOT_RUN",
+              "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+              "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+              "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-finance.json"
+            },
+            {
+              "id": "AM01-PROCUREMENT",
+              "profile_id": "sf_procurement",
+              "skills": [
+                "sf-comparar-sourcing",
+                "sf-revisar-condicoes-contratuais",
+                "sf-preparar-compra",
+                "sf-extrair-evidencias"
+              ],
+              "expected_consumed_outputs": "CommercialComparison/CommercialGap/EvidenceCandidate/PreparedChange visíveis no caso e UI; extração confirmada preserva fonte.",
+              "actors": [
+                "S4"
+              ],
+              "first_integration_window": [
+                55,
+                75
+              ],
+              "final_candidate_window": [
+                75,
+                95
+              ],
+              "status": "NOT_RUN",
+              "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+              "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+              "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-procurement.json"
+            },
+            {
+              "id": "AM01-PORTFOLIO",
+              "profile_id": "sf_portfolio",
+              "skills": [
+                "sf-revisar-dependencias",
+                "sf-compor-portfolio",
+                "sf-reavaliar-compromissos",
+                "sf-consultar-memoria-decisoria"
+              ],
+              "expected_consumed_outputs": "DeliveryAssessment/DependencyConflict/PortfolioComparison/ReconsiderationProposal e precedente com diferenças atuais.",
+              "actors": [
+                "S4"
+              ],
+              "first_integration_window": [
+                55,
+                75
+              ],
+              "final_candidate_window": [
+                75,
+                95
+              ],
+              "status": "NOT_RUN",
+              "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+              "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+              "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-portfolio.json"
+            },
+            {
+              "id": "AM01-MAESTRO",
+              "profile_id": "sf_maestro",
+              "skills": [
+                "sf-enquadrar-decisao",
+                "sf-preparar-revisao-executiva",
+                "sf-coordenar-perguntas",
+                "sf-produzir-material-reuniao"
+              ],
+              "expected_consumed_outputs": "IntentFrame/AnalysisPlan/DecisionBrief/QuestionProposal e relatório real, fontes recuperáveis e perguntas à identidade conhecida.",
+              "actors": [
+                "S4"
+              ],
+              "first_integration_window": [
+                55,
+                75
+              ],
+              "final_candidate_window": [
+                75,
+                95
+              ],
+              "status": "NOT_RUN",
+              "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+              "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+              "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-maestro.json"
+            },
+            {
+              "id": "AM01-REVIEWER",
+              "profile_id": "sf_reviewer",
+              "skills": [
+                "sf-contestar-decisao",
+                "sf-revisar-evidencias"
+              ],
+              "expected_consumed_outputs": "CritiqueReport/ClaimIssue/UnresolvedCondition em execução distinta; resposta humana altera objeto/viabilidade em vez de só reescrever texto.",
+              "actors": [
+                "S4"
+              ],
+              "first_integration_window": [
+                55,
+                75
+              ],
+              "final_candidate_window": [
+                75,
+                95
+              ],
+              "status": "NOT_RUN",
+              "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+              "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+              "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-reviewer.json"
+            }
+          ],
+          "required_coverage": {
+            "profiles": 5,
+            "skills": 18,
+            "every_source_loaded": true,
+            "every_skill_contributed_output": true,
+            "independent_reviewer_run": true
+          },
+          "early_gate": "GNATIVE18-20 cobre umperfil/umaskill; nunca é equivalente à cobertura completa.",
+          "status": "NOT_RUN",
+          "integration_deadline": 75,
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "recheck_window": [
+            103,
+            118
+          ],
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am01.json"
+        }
+      },
+      {
+        "id": "AM02",
+        "title": "Paridade UI/agente/MCP nos oito packs",
+        "owner_tasks": [
+          "WP10.T06",
+          "WP10.T01"
+        ],
+        "execution_actor": "S0-B",
+        "reviewer": "S3-R3",
+        "status": "NOT_RUN_AT_FIXED_CANDIDATE",
+        "normative_definition": {
+          "id": "AM02",
+          "title": "Paridade UI/agente/MCP nos oito packs",
+          "proof_packages": [
+            "E01",
+            "E16"
+          ],
+          "owner_tasks": [
+            "WP10.T06",
+            "WP10.T01"
+          ],
+          "execution_actor": "S0-B",
+          "reviewer": "S3-R3",
+          "pack_matrix": [
+            {
+              "pack": "Performance",
+              "operations": [
+                "sf_dashboard_read",
+                "sf_kpi_explain",
+                "sf_bi_view",
+                "sf_source_get"
+              ],
+              "producer_tasks": [
+                "WP02.T01",
+                "WP05.T04",
+                "WP10.T07"
+              ],
+              "latest_functional_output_minute": 55,
+              "proof_by_minute": 75,
+              "owner_task": "WP10.T06",
+              "proof_executor": "S0-B",
+              "independent_reviewer": "S3-R3",
+              "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+              "status": "NOT_RUN"
+            },
+            {
+              "pack": "Planning",
+              "operations": [
+                "sf_forecast_compare",
+                "sf_scenario_simulate",
+                "sf_scenario_compare",
+                "sf_sensitivity_evaluate",
+                "sf_portfolio_evaluate"
+              ],
+              "producer_tasks": [
+                "WP03.T01",
+                "WP03.T05",
+                "WP13.T02",
+                "WP13.T03"
+              ],
+              "latest_functional_output_minute": 72,
+              "proof_by_minute": 75,
+              "owner_task": "WP10.T06",
+              "proof_executor": "S0-B",
+              "independent_reviewer": "S3-R3",
+              "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+              "status": "NOT_RUN"
+            },
+            {
+              "pack": "Procurement",
+              "operations": [
+                "sf_request_read",
+                "sf_supplier_read",
+                "sf_contract_read",
+                "sf_sourcing_compare"
+              ],
+              "producer_tasks": [
+                "WP04.T01",
+                "WP04.T03",
+                "WP04.T05"
+              ],
+              "latest_functional_output_minute": 72,
+              "proof_by_minute": 75,
+              "owner_task": "WP10.T06",
+              "proof_executor": "S0-B",
+              "independent_reviewer": "S3-R3",
+              "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+              "status": "NOT_RUN"
+            },
+            {
+              "pack": "Decisions",
+              "operations": [
+                "sf_case_read",
+                "sf_case_draft",
+                "sf_alternative_draft",
+                "sf_change_prepare",
+                "sf_receipt_get"
+              ],
+              "producer_tasks": [
+                "WP11.T01",
+                "WP11.T02",
+                "WP11.T03",
+                "WP11.T04"
+              ],
+              "latest_functional_output_minute": 72,
+              "proof_by_minute": 75,
+              "owner_task": "WP10.T06",
+              "proof_executor": "S0-B",
+              "independent_reviewer": "S3-R3",
+              "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+              "status": "NOT_RUN"
+            },
+            {
+              "pack": "Collaboration",
+              "operations": [
+                "sf_work_list",
+                "sf_question_prepare",
+                "sf_answer_read",
+                "sf_relation_read",
+                "sf_handoff_prepare"
+              ],
+              "producer_tasks": [
+                "WP08.T01",
+                "WP08.T02",
+                "WP08.T04",
+                "WP08.T05",
+                "WP08.T06"
+              ],
+              "latest_functional_output_minute": 72,
+              "proof_by_minute": 75,
+              "owner_task": "WP10.T06",
+              "proof_executor": "S0-B",
+              "independent_reviewer": "S3-R3",
+              "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+              "status": "NOT_RUN"
+            },
+            {
+              "pack": "Documents & Reports",
+              "operations": [
+                "sf_document_extract",
+                "sf_import_preview",
+                "sf_review_prepare",
+                "sf_report_prepare",
+                "sf_artifact_get"
+              ],
+              "producer_tasks": [
+                "WP06.T02",
+                "WP06.T05",
+                "WP07.T04"
+              ],
+              "latest_functional_output_minute": 72,
+              "proof_by_minute": 75,
+              "owner_task": "WP10.T06",
+              "proof_executor": "S0-B",
+              "independent_reviewer": "S3-R3",
+              "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+              "status": "NOT_RUN"
+            },
+            {
+              "pack": "Knowledge / Atlas SF",
+              "operations": [
+                "sf_context_get",
+                "sf_knowledge_search",
+                "sf_evidence_get",
+                "sf_decision_recall",
+                "sf_freshness_check"
+              ],
+              "producer_tasks": [
+                "WP10.T07",
+                "WP14.T02",
+                "WP14.T03",
+                "WP14.T04"
+              ],
+              "latest_functional_output_minute": 68,
+              "proof_by_minute": 75,
+              "owner_task": "WP10.T06",
+              "proof_executor": "S0-B",
+              "independent_reviewer": "S3-R3",
+              "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+              "status": "NOT_RUN"
+            },
+            {
+              "pack": "Routines",
+              "operations": [
+                "sf_routine_catalog",
+                "sf_routine_prepare",
+                "sf_routine_run",
+                "sf_routine_status",
+                "sf_routine_result",
+                "sf_watch_prepare"
+              ],
+              "producer_tasks": [
+                "WP09.T01",
+                "WP09.T07",
+                "WP09.T06"
+              ],
+              "latest_functional_output_minute": 72,
+              "proof_by_minute": 75,
+              "owner_task": "WP10.T06",
+              "proof_executor": "S0-B",
+              "independent_reviewer": "S3-R3",
+              "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "checks": [
+            "Usar o mesmo principal, caso, versão, porta e autorização nos caminhos UI, agente e MCP. actor/role/project forjados não alteram a concessão.",
+            "Ligar o callID da bridge à chamada do domínio, à versão e ao resultado ou recibo. Stub ou engine paralelo falham.",
+            "Listar contratos e concessões dos oito packs em T+20; exercer sua funcionalidade real até T+75. Discovery não equivale a execução.",
+            "Conferir 39 rotas positivas nomeadas por perfil/skill/operação e SkillLoadReceipt. Chamada direta do harness passa pelo wrapper C16 com binding real; nunca usar ausência de skill como autorização alternativa."
+          ],
+          "status": "NOT_RUN",
+          "integration_deadline": 75,
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "recheck_window": [
+            103,
+            118
+          ],
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am02.json",
+          "operation_routes_ref": "resident_ai.operation_call_routes",
+          "streaming_policy": "Exercer cada rota pronta com insumos reais, SkillLoadReceipt e consumidor. Fechar todas as39 rotas/packs em G4 e repetir a cobertura exigida no mesmo C final; não esperar um pack completo para descobrir sua primeira falha."
+        }
+      },
+      {
+        "id": "AM03",
+        "title": "Isolamento, revogação e conflito de provider",
+        "owner_tasks": [
+          "WP10.T06",
+          "WP10.T07"
+        ],
+        "execution_actor": "S0-B/S0-A",
+        "reviewer": "S3-R3",
+        "status": "NOT_RUN_AT_FIXED_CANDIDATE",
+        "normative_definition": {
+          "id": "AM03",
+          "title": "Isolamento, revogação e conflito de provider",
+          "proof_packages": [
+            "E11",
+            "E12",
+            "E15",
+            "E16"
+          ],
+          "owner_tasks": [
+            "WP10.T06",
+            "WP10.T07"
+          ],
+          "execution_actor": "S0-B/S0-A",
+          "reviewer": "S3-R3",
+          "checks": [
+            "Duas sessões e dois atores com o mesmo perfil e contextos distintos não cruzam dados, contagens ou cache.",
+            "case/session/installation/project/location incorretos e grant/actor/role forjados são recusados na chamada direta.",
+            "Revogação entre discovery e execution ou entre search e detail alcança memória, fonte, prompt, BI, relatório e link.",
+            "Provider sucafina-workbench homônimo, objeto ou generation substituídos e sessão reaberta após reinício não ampliam acesso. Exigir novo binding autenticado.",
+            "Operação fora das concessões do perfil é recusada mesmo sem passar por discovery."
+          ],
+          "status": "NOT_RUN",
+          "integration_deadline": 75,
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "recheck_window": [
+            103,
+            118
+          ],
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am03.json"
+        }
+      },
+      {
+        "id": "AM04",
+        "title": "Escolha, aplicação e resposta perdida",
+        "owner_tasks": [
+          "WP11.T03",
+          "WP11.T04",
+          "WP10.T01"
+        ],
+        "execution_actor": "S4-A/S0",
+        "reviewer": "S2-R2",
+        "status": "NOT_RUN_AT_FIXED_CANDIDATE",
+        "normative_definition": {
+          "id": "AM04",
+          "title": "Escolha, aplicação e resposta perdida",
+          "proof_packages": [
+            "E10",
+            "E16"
+          ],
+          "owner_tasks": [
+            "WP11.T03",
+            "WP11.T04",
+            "WP10.T01"
+          ],
+          "execution_actor": "S4-A/S0",
+          "reviewer": "S2-R2",
+          "checks": [
+            "O modelo prepara. Escolha, aplicação e aprovação usam as ações autorizadas e os comandos do domínio.",
+            "Interromper após o commit no domínio e antes do retorno ou da reconciliação no caso. O retry produz um efeito e recupera o recibo persistido atomicamente.",
+            "O mesmo idempotencyKey e digest retornam o resultado autorizado. Chave repetida com conteúdo diferente falha.",
+            "Revalidar base e autoridade em cada domínio e explicar o estado parcial. Não declarar transação global."
+          ],
+          "status": "NOT_RUN",
+          "integration_deadline": 75,
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "recheck_window": [
+            103,
+            118
+          ],
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am04.json"
+        }
+      },
+      {
+        "id": "AM05",
+        "title": "Evidência e Atlas persistente real",
+        "owner_tasks": [
+          "WP06.T05",
+          "WP14.T05",
+          "WP14.T02",
+          "WP10.T07"
+        ],
+        "execution_actor": "S0-A/S0-C",
+        "reviewer": "S3-R3",
+        "status": "NOT_RUN_AT_FIXED_CANDIDATE",
+        "normative_definition": {
+          "id": "AM05",
+          "title": "Evidência e Atlas persistente real",
+          "proof_packages": [
+            "E12",
+            "E15",
+            "E16"
+          ],
+          "owner_tasks": [
+            "WP06.T05",
+            "WP14.T05",
+            "WP14.T02",
+            "WP10.T07"
+          ],
+          "execution_actor": "S0-A/S0-C",
+          "reviewer": "S3-R3",
+          "checks": [
+            "Resolver o import @orchestra/atlas-boundary/business-memory-ports e instrumentar createMemoryEmit, createMemoryRead e DurableMemory com o digest de engine/boundary. Ler apenas o ledger SF não passa.",
+            "Resolver BusinessEvidenceRef para documento/trecho/hash, registro/encarnação/versão e cálculo/recibo. Fonte ausente ou referência invalidada devem ser reconhecidas.",
+            "Exercer append, commit, read, reinício e nova leitura. A entrada autorizada e o contexto original devem persistir. Append ainda sem commit não aparece como sucesso.",
+            "Dois atores com o mesmo perfil, owner omitido ou forjado, sessão/caso incorretos e um canary privado não ampliam o acesso.",
+            "Revalidar e invalidar após revogação ou mudança de encarnação. O precedente recuperado explica pertinência e diferenças atuais.",
+            "Registrar binary path e versão do scanner real. Exercitar clean, secret-canary, timeout e ausência. Hit ou indisponibilidade não fazem append; indisponibilidade retorna scanner-unavailable. Não aceitar scanner simulado como prova real.",
+            "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou.",
+            "Empacotamento: business-memory-ports tem factories reais e zero imports de spawning; scanner vem de native-memory já admitido. Verificar AST, a aresta external exata, quatro digests gerados, exports bound preservados e check:spawn-imports do candidato com guard/allowlist inalterados."
+          ],
+          "status": "NOT_RUN",
+          "integration_deadline": 75,
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "recheck_window": [
+            103,
+            118
+          ],
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am05.json"
+        }
+      },
+      {
+        "id": "AM06",
+        "title": "Rotina real e retorno ao produto",
+        "owner_tasks": [
+          "WP09.T01",
+          "WP09.T07",
+          "WP09.T06",
+          "WP12.T04"
+        ],
+        "execution_actor": "S3-C/S4",
+        "reviewer": "S3-R3",
+        "status": "NOT_RUN_AT_FIXED_CANDIDATE",
+        "normative_definition": {
+          "id": "AM06",
+          "title": "Rotina real e retorno ao produto",
+          "proof_packages": [
+            "E11",
+            "E13",
+            "E14",
+            "E16"
+          ],
+          "owner_tasks": [
+            "WP09.T01",
+            "WP09.T07",
+            "WP09.T06",
+            "WP12.T04"
+          ],
+          "execution_actor": "S3-C/S4",
+          "reviewer": "S3-R3",
+          "checks": [
+            "Exercer admissão/publicação pinada, Relay, perfil/skill, operação SF, run/result e UI, com IDs e versões reais.",
+            "Falha, retry e intervenção ficam visíveis. O run pode terminar com pergunta; a resposta ocorre no produto. Não inventar espera humana interna ao run.",
+            "Retomar na nova versão sem duplicar proposta ou efeito. Schedule usa recorrência, dono e timezone atuais e não aprova negócio por conta própria.",
+            "Revogação e cancelamento afetam resultado e agenda. O progresso e a proveniência de C11 chegam à mesa.",
+            "sf_maestro/sf-preparar-revisao-executiva percorre catalog/prepare com pedido humano, run só com admissão C07 atual, status/result e consumo na pauta. Em routine-result, prepare/run são recusados; nenhuma chamada recursiva é criada."
+          ],
+          "status": "NOT_RUN",
+          "integration_deadline": 75,
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "recheck_window": [
+            103,
+            118
+          ],
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am06.json"
+        }
+      }
+    ],
+    "source_failures_not_promoted": [
+      "ACK typecheck failures",
+      "Forecast MATRIX 14/1",
+      "Memory MI07 timeout",
+      "CHECK36 global failure with 13 external diagnostics"
+    ],
+    "target_pass_claimed": false
+  },
+  "bounded_conclusions": {
+    "actionable_findings": [
+      "DECISIONS20-ASSEMBLY",
+      "C05-INSTALLED-CLOSURE",
+      "C07-NATIVE-MOUNT",
+      "M27-C05-FIRST-AGENDA",
+      "M27-BI09-WATERFALL-MOUNT"
+    ],
+    "source_and_intake_rechecks": [
+      "D-OPS-01",
+      "I-OPS-02",
+      "OPS-REV-01",
+      "OPS-REV-02",
+      "OPS-REV-03",
+      "OPS-REV-04",
+      "E-OPS-01",
+      "E-OPS-02",
+      "E-OPS-03",
+      "OPS-CONSUMER-EXPORT-01",
+      "OPS-CONSUMER-EXPORT-02"
+    ],
+    "inherited_gaps": [
+      "C12-RECOVERY",
+      "MEMORY-INTEGRITY",
+      "R1-W23-C17-BETWEEN-OBSERVATIONS",
+      "WP13-SEMANTIC-UNION",
+      "FIN-IND-005",
+      "CURRENT-CHOICE-COHORT",
+      "TYPECHECK-GUARDS",
+      "NATIVE-AM-REVIEW",
+      "E2E-OPERATIONS",
+      "E2E-DECISIONS",
+      "E2E-REPORTS"
+    ],
+    "later_pr65_head_observed": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+    "later_head_status": "OUT_OF_SCOPE_NOT_REVIEWED; no claim that these findings persist or close there",
+    "final_acceptance": "NOT_GRANTED",
+    "missing_required_proof": "UNRESOLVED_NOT_APPROVAL_WITH_CAVEAT"
+  },
+  "publication_intent": {
+    "files": [
+      "REVIEW.md",
+      "findings.json",
+      "coverage.json",
+      "evidence.json",
+      "HANDOFF.md"
+    ],
+    "interim_file": "INCREMENT-01.md",
+    "all_additions_under_prefix": true,
+    "expected_parent": "650d95e706fa3c6086c75236b1804b51043b1187",
+    "strategy": "create_tree + create_commit + expected-head CAS fast-forward; read back exact content and inspect full documentation diff before reporting publication",
+    "readback_result_location": "Final PR49 publication comment; cannot embed the final commit's SHA in its own tree."
+  }
+}

@@ -1,0 +1,160 @@
+import type { Surface } from "../../src/identity.ts"
+import type { Command, Result } from "../../runtime/contract.ts"
+import type { BusinessEvidenceRef } from "./business-context.ts"
+import type { PortfolioResult, ScenarioComparison, ScenarioResult } from "./decisions.ts"
+import type { SensitivityResult } from "./outputs.ts"
+
+export type Period = { start: string; end: string }
+export type BiViewId = "BI01" | "BI02" | "BI03" | "BI04" | "BI05" | "BI06" | "BI07" | "BI08" | "BI09" | "BI10" | "BI11"
+export type BiWaterfallPlan = { segments: readonly { label: string; startValueId: string; endValueId: string; componentValueId: string }[]; finalValueId: string; reconciliation: "reconciled" | "unreconciled" | "unavailable" }
+export type BiTimelinePlan = { items: readonly { label: string; dateValueId: string; state: "planned" | "completed" | "unknown" }[] }
+export type BiPresentation = {
+  viewId: BiViewId
+  series: readonly { id: string; label: string; unit: string; role: "budget" | "actual" | "outlook" | "baseline" | "contribution" | "result" | "fte" | "cost" | "stock" | "aging" | "opened" | "closed" | "planned" | "completed" | "sensitivity" | "other"; valueIds: readonly string[]; alignmentKeys?: readonly string[] }[]
+  limitations: readonly string[]
+  waterfall?: BiWaterfallPlan
+  timeline?: BiTimelinePlan
+}
+export type SourceRef = {
+  surface: Surface
+  type: string
+  id: string
+  incarnation: string
+  version: number
+  fields: readonly string[]
+  period: Period
+  observedAt: string
+}
+export type ProductContext = {
+  installationId: string
+  projectId: string
+  principalRef: string
+  accessRevision: string
+  policyVersion: string
+  surface: Surface
+  period: Period
+  currency: string
+  sourceRefs: readonly SourceRef[]
+  capabilities: readonly string[]
+}
+export type EvidenceState = "confirmed" | "estimated" | "hypothetical" | "absent"
+export type ProjectionComponent = {
+  id: string
+  amount: number | null
+  currency: string
+  period: Period
+  sourceRefs: readonly SourceRef[]
+  evidenceState: EvidenceState
+}
+export type DomainProjection = {
+  context: ProductContext
+  version: number
+  engineVersion: string
+  /** The persisted domain result also consumed by UI, BI and C16; absence never implies complete coverage. */
+  decision?:
+    | { kind: "scenario"; scenarioResultRef: string; scenario: ScenarioResult; comparisonRef: string; comparison: ScenarioComparison; sensitivity?: SensitivityResult; sensitivityResultRef?: string }
+    | { kind: "portfolio"; portfolioResultRef: string; portfolio: PortfolioResult }
+  components: readonly ProjectionComponent[]
+  values: readonly { id: string; value: string | number | boolean | null; unit?: string; currency?: string; period: Period; granularity: "record" | "month" | "year" | "aggregate"; sourceRefs: readonly BusinessEvidenceRef[]; drilldown: BusinessEvidenceRef | null; evidenceState: EvidenceState }[]
+  missing: readonly { field: string; reason: "missing" | "unavailable" | "restricted" | "not-applicable" | "incompatible-currency" | "missing-fx" | "missing-rate" | "unconfirmed" }[]
+}
+export type PreparedCommand = {
+  id: string
+  target: SourceRef
+  command: Command
+  idempotencyKey: string
+  commandDigest: string
+  expectedVersion: number
+  requiredAuthority: readonly string[]
+  preview: DomainProjection
+}
+export type CommandReceipt = {
+  id: string
+  idempotencyKey: string
+  commandDigest: string
+  targetIncarnation: string
+  principalRef: string
+  surface: Surface
+  version: number
+  result: Result
+  at: string
+}
+export type CommandReceiptView = Omit<CommandReceipt, "result"> & { status: "applied" | "awaiting-approval" | "conflict" | "failed" | "cancelled"; resultRef?: string; errors: readonly string[] }
+export type PreparedCommandView = Omit<PreparedCommand, "command"> & { action: string; operationRef: string }
+export type ImportManifest = {
+  id: string
+  version: number
+  sourceDigest: string
+  format: string
+  context: ProductContext
+  baseIdentity: readonly SourceRef[]
+  commands: readonly PreparedCommandView[]
+  issues: readonly { row: number; field: string; reason: string }[]
+  state: "preview" | "stale" | "blocked" | "applied"
+  domainApplied: boolean
+  receipts: readonly CommandReceiptView[]
+}
+export type StoredImportManifest = Omit<ImportManifest, "commands" | "receipts"> & { commands: readonly PreparedCommand[]; receipts: readonly CommandReceipt[] }
+export type ConfirmationScope = {
+  sourceRef: Pick<SourceRef, "surface" | "type" | "id" | "incarnation">
+  fields: readonly string[]
+  period: Period
+  materialDependencies: readonly SourceRef[]
+  scopeDefinitionVersion: string
+}
+export type ConfirmationRecord = {
+  id: string
+  sourceRef: ConfirmationScope["sourceRef"]
+  observedSourceVersion: number
+  observedScopeFingerprint: string
+  scope: ConfirmationScope
+  authorId: string
+  confirmedAt: string
+  auditRef: string
+}
+export type ConfirmationCommand = {
+  scope: ConfirmationScope
+  observedSourceVersion: number
+  expectedScopeFingerprint: string
+  expectedStorageVersion: number
+  idempotencyKey: string
+}
+type ConfirmationEvaluation = {
+  confirmationId: string
+  evaluatedSourceVersion: number
+  evaluatedAt: string
+  reason: "unchanged-scope" | "material-change" | "dependency-change" | "source-removed" | "source-replaced" | "access-unavailable" | "dependency-unavailable"
+}
+export type ConfirmationValidityProjection = ConfirmationEvaluation & (
+  | { state: "valid"; scopeFingerprint: string; reason: "unchanged-scope" }
+  | { state: "stale"; scopeFingerprint?: string; reason: "material-change" | "dependency-change" | "source-removed" | "source-replaced" }
+  | { state: "unavailable"; reason: "access-unavailable" | "dependency-unavailable" }
+)
+export type PreservedReview = {
+  id: string
+  version: number
+  createdAt: string
+  sourceRefs: readonly SourceRef[]
+  sections: readonly { id: string; title: string; period: Period; content: unknown; count: number; sourceRefs: readonly SourceRef[] }[]
+  comments: readonly { id: string; version: number; content: string; authorRef: string; createdAt: string; sourceRefs: readonly SourceRef[] }[]
+  previousReviewRef?: string
+}
+export type HostBoundEntryMode = "interactive" | "routine-result"
+type RoutineResultBase = {
+  documentId: string
+  publishedVersion: string
+  principalRef: string
+  projectId: string
+  runRef?: string
+  resultRef?: string
+  authorizationId?: string
+  armRef?: string
+  childSessionId?: string
+  correlationId: string
+  sourceRefs: readonly SourceRef[]
+  pending: readonly string[]
+}
+export type RoutineResult = RoutineResultBase & (
+  | { admission: "admitted"; admissionRef: string; admissionVersion: number }
+  | { admission: "preparing" | "needs-review" | "denied" | "unavailable" | "stale"; admissionRef?: string; admissionVersion?: number }
+)

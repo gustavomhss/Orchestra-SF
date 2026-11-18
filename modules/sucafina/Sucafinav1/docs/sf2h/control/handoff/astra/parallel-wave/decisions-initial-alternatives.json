@@ -1,0 +1,63 @@
+{
+  "number": 20,
+  "id": "decisions-initial-alternatives",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "actor_pack": "execution/actors/S4-A.json",
+  "branch": "astra-wp11",
+  "pr": 40,
+  "expected_head": "8645fadbce014ce870e3485ae1de6cf7d76bf1c3",
+  "lease_epoch": "browser-decisions-continuation-20",
+  "predecessor": "Session08 terminal HANDOFF.md explicitly BLOCKED; branch head reconciled unchanged. No inference from silence. No native Goal resumption or worker launch by preparation.",
+  "mission": "Close D-INITIAL-ALTERNATIVES: real human UI attaches authorized evidence and creates first two comparable alternatives through existing decision service. Continue nominal Decisions E2E on same branch/PR. Preserve WP11 complete criteria; this assignment closes one missing slice, not all WP11.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+    "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+    "modules/sucafina/Sucafinav1/test/product/decisions-initial-alternatives/",
+    "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+    "packages/app-shell/e2e/sucafina/decisions-support/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-initial-alternatives/"
+  ],
+  "shared_seam": "Do not edit product/interface/http.ts (session19), apps/cli/src/sucafina-product/host-context.ts or business-context.ts (session13), product/ui/components.ts, or src/screen-shell.ts (session12). Deliver exact minimal assembly patch under own receipts for session14 to compose against current accepted blobs, preserving session19 changes. Missing shared seams are handoffs, not permission to overwrite.",
+  "inputs": [
+    {
+      "sha": "8645fadbce014ce870e3485ae1de6cf7d76bf1c3",
+      "source": "PR40 / terminal final-e2e/decisions/attempt-01/HANDOFF.md, criteria.json and dependency receipts"
+    },
+    {
+      "sha": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+      "source": "PR29 published WP10 composition input; inspect compatibility and latest producer head before exact intake"
+    },
+    {
+      "sha": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+      "source": "PR29 published profile+manifest fix already exists; do not reimplement or relax policy"
+    },
+    {
+      "sha": "a32285b2683b5000dafe93df99289547c7f410fb",
+      "source": "parallel-wave/c12-receipt-recovery.json and finance-journey-closure.json ownership exclusions"
+    },
+    {
+      "sha": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+      "source": "integration-wave/COMMON.md and bundle-integrator.json, sole sf2-stack writer session14"
+    }
+  ],
+  "observations": [
+    "Real run43632217395 failed bootstrap before UI: Profile policy mismatch sf_portfolio. Existing PR29 fix must be consumed; rerunning unchanged old tree is waste.",
+    "Current WP10 source inspected: decision-edit keeps existing sourceRefs, decisionDesk lists existing alternatives; portfolio promotion requires existing alternatives. No initial-alternative form found. Existing decisions/mutations.addAlternative and decision-promote HTTP route provide authorized domain operation.",
+    "Do not conflate portfolio promotion with initial alternatives, choice with financial approval, case creation response-loss test with C12 recovery, collection with actual E2E pass."
+  ],
+  "acceptance": [
+    "Evidence/source discovery through existing authorized UI/domain ports; no manually pasted internal refs or JSON, direct test POST, seed cases or mock product as proof.",
+    "Two alternatives created from real scenario/coverage inputs by explicit human action. Preserve horizon/currency/units, pending-vs-zero distinctions and current source/case authority; no new finance formula or engine.",
+    "Idempotency key/body/target/version stable for uncertain retry; no duplicate after response loss, no automatic mutation retries. CAS conflict preserves user input; access revocation removes protected data and prevents writes.",
+    "Real persisted case reopened through actual host, alternatives identifiable and consumed by current choice/portfolio paths. No declaration of positive comparison if downstream remains unavailable.",
+    "Append exact criteria bindings, product/source blobs, composed input provenance, test selection/results and unresolved consumers. Keep provider/native/AM acceptance separate."
+  ],
+  "testing": "Actions only, surgical nominal selection at closure; one request at a time through existing authorized dispatcher/request interface and deduplication. No epic/full suite, local tests, servers, broad workflow edits, configuration/fixture weakening or repeated known-failure run. If assembly not yet consumed, deliver module+minimal integration patch with checks and mark journey BLOCKED until consumer applies; no false PASS. Typecheck from appropriate package and guards per AGENTS; report inherited failures separately.",
+  "consumer": "Session14 sole sf2-stack writer integrates exact source blobs and shared-seam patch, retaining session19 Apply changes; S0 owns final acceptance/epic dispatcher.",
+  "rules": "GitHub MCP only for remote operations; no gh/push/force, dev merge, Azure/deploy, credentials, engine changes or runtime restart. Read AGENTS, pinned START/WORKFLOW/COMMON, complete S4-A and mandatory appendices; no plan edits. A changed live head requires reconciliation before commits. Return terminal handoff and no orphan authority."
+}

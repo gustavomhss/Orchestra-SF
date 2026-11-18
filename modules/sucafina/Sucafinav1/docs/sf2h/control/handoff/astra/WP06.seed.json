@@ -1,0 +1,503 @@
+{
+  "accepted_seed": {
+    "wp": "WP06",
+    "branch": "astra-wp06",
+    "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "head": "95faa3e66a5640ca37407b072c65eaf731d0ca1f",
+    "tree": "1821fb2cd1f229c7baf56483962f8abf0da353de",
+    "seed_files": 76
+  },
+  "source": {
+    "wp": "WP06",
+    "branch": "astra-wp06",
+    "pr_base": "sf2-stack",
+    "integration_base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "integration_base_tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+    "checkpoint_remote": "faf67c434f2bab4ec9640068c60a676bca73c627",
+    "checkpoint_local": "55ff4fc90b4ed899eefe206e49809d9b3ad52d85",
+    "mode": "overlay committed own source files only; no unrelated deletions, dirty foreign inputs, or whole snapshot merge",
+    "excluded_from_seed": [],
+    "write_scope": {
+      "prefixes": [
+        "modules/sucafina/Sucafinav1/product/imports/",
+        "modules/sucafina/Sucafinav1/test/product/wp06/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/",
+        "modules/sucafina/Sucafinav1/product/documents/"
+      ],
+      "exact_files": [
+        "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+        "modules/sucafina/Sucafinav1/test/parity-legacy-workbooks.test.ts",
+        "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+        "apps/cli/src/sucafina-product/document-services.ts",
+        "apps/cli/src/sucafina-product/import-services.ts",
+        "docs/guides/sucafina-documents.md",
+        "docs/sf2h/receipts/WP06/stop-handoff.json",
+        "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts"
+      ],
+      "extra_test_prefix": "packages/app-shell/e2e/sucafina/wp06/"
+    },
+    "tree_elements": [
+      {
+        "path": "apps/cli/src/sucafina-product/document-services.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1351ac57f7a71062dd5018de302b332657a2ba81"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/import-services.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4883a7947d89122a80a4a1dfc6a61d785b2c8f1e"
+      },
+      {
+        "path": "docs/guides/sucafina-documents.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1448d7742f257174ef4dcc3d65e605154f656ef2"
+      },
+      {
+        "path": "docs/sf2h/receipts/WP06/stop-handoff.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "70eac54a044d8ce3706b093de68abfbc0f63bca2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/byte-port.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c2cb5a7d8a69dfd1b861e2c39b82af9f3d33a781"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d2eb0f7c3532a56ce547429c66f5e6dd9af8e072"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/docx.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c3f0f4cfb8b9833b5b1ddef2405fa59d75db29ac"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/extract.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "883ffb39b09d5073407a37ef7814884b57be2285"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/host.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "094240128a3f4257d85f799f31b2b25e056cae69"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/index.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "33a2cc39a1f614b8df120395615cb12c6de0efde"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/limits.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "66ff2dd84410c94a83b9ac0325983c1a578327dd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/parser-worker.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "72fec6093aa9c968bf7d36d4c1c2b931140b63d8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/parser.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "39c3dec8018b58d673c2a169d21bee23a49c92ad"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/presentation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "12e17a4b8762727ddcd9756680f9d2d2a6cb6612"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b968936724192eaab050cf48e69dc5a634dc54d9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "50e20b20e927f30b5b24e0e3c622c2c8a6b19a76"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/source-fence.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c6c08b32c206fb2b77be7d9d66e7f145c75483f9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "330b2a2ece099a2e1868d1db7b405f4373533350"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/FORMATS.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fb357b792d47d9874717b953bc96dbb2f6fee22f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/apply.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "55adb72acb9f79a701cd8b75122861d302547de6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/capabilities.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "83f4347dc6047471b626c5b091c97ec859558533"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/changes.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3613a9db8947dc269331eb157c55e00584c0e945"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-atomic.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ae1953aa1416316aaae7a7257c0072be6fcc8191"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-command.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "beb4f97cbe8b195c0ec6355ac61e8ee882dfeefb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "52de6fa3c07dd536449ef8bb37cf15c931d5be5d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-provenance.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "46590b1d43e3bbb1dc00b89cfe67f535441ed215"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8051f080f3547c54291505857f29cce1eee5f154"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/detail.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7c559c6e2be647b94419430b316ef5018ca67d50"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/files.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "09e3ed2d18a14f231af2df71c3622dab5898999b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/host.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b061d24d02ebc6be8ec5db04e0f575d2afa3e5ea"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/planner-atomic.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1c0fe921f65665c0172c26a4cdbb57410d0db996"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/planner-preview.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ab27fbbc92e23e23d1eab125fea9944ced14efd6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/planner-unchanged.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ace9a8d43b881dd28f3ec6ea93f98be4ab85eeac"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/planner.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c9e08104c79d3d97fb0ba7911897e3fb65cdef8f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/source-fences.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "72555489670937db1a8af51c20d747275ea73751"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b24558f415f48921b43255169ec0cc82d7037ddb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "daafa1920d827e34b908dc34eea47a928be488c3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fbb76f54c1ebfa475189a92ecad6092e22733c81"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bb97dc7d5b1df2b6813a5279028b7a44f36dbfbe"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "74fa17f6e08efeabe08820454bfde7cc309f36ad"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4b4ef9038d78d36e24450b574e9327c93f9b2a57"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b12751ba48918108c8b3923e5b098b35215a91d4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3884ad35c7b471d2805d7444d24c4143b86ce197"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9efbce331ebab17fa27d4877420170dc3c9b0ee8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-legacy-workbooks.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2dd73f6c4667d011c76c8ff44e0e1b310a913812"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/dashboard-import.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "968ce752de32762db9a965111630276172b8100f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/candidates.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "04c91a0b8818c8d4c5fa746879f0eb64753888ed"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/docx.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c2b5977885b8a18641a1729d3646655ca095588a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/fixture.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9a86d7833a1452e3d31e95d36197efceeda0fbe6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/pdf-empty.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fb235abe9afd1c1d6c032a987741f670f4ac2f8f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/resolver.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "35685f6b185b2a097792946f8567a4eb6dc24e08"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b785f63b2f12c849262bc40ba8e0d1c46cdb01bf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/schemas.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8cc840fac6dc785de165307b84264e459663ed8c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/source-fence.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0269cb04e06f86c055a5fc56edaeb391eba9372b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/changes.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e8c82dc9924d6d55dc5a96336ccd2d236ed1167b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "27927a1ca228b4c8ce92e31f12c672597124d382"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-command.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fd98d6fd219b36107f456c2d509ac1cf7d70ebe7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-provenance.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "224bc012db4e26bc9af9967660909ea5bee336d0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-unchanged.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c6dfed1e9dab2b4e720350c72029b35151f6d698"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f735697c1f07011810eedb552957ec6a42ccb395"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/detail-coverage.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "33cda118108bf12bfc6e0099b0c4e92f0f99eab4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/detail.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b19ecd2e4e4a378b3eed2e11f87f6f6ea6a9979a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a52f968be176a250436e89eb19f61ec7728cba5c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/export-download-privacy.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7642975b6f671bbbc4f1f78373114ee4e3bf01d4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/files.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c9edbfd871ab6058c10f36281ec62fe4a6b1aeab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "34fefdfbcca6401b833fb5e75911fb29b9b18841"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-unchanged.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1498e7c870cc569a5923dcf971f932f583ecf06f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "be8d40c57c34a8210544b27b0bd10014fb2a20b5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/receipt.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9e4d3ccf5001f6436417ab0e4acd71061c874b9b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "dffce1b90ff2ca1ebca1a1c2998c82cac37f1279"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ba67bc847bb2294a53c48ec3f142f296568c20f1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a546d659af749958d214f25e50186072cc2c44ad"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance-edge.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "15b7f8bc6c44f0f087a3e6e03382387d12350ce2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9e037cf45cdfa5b87f8b905b169ca45cdd9bbad8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "572c787eba57b6b6ef5773c7e258df5318aaba05"
+      }
+    ]
+  }
+}

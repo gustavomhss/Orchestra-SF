@@ -1,0 +1,179 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "created_utc": "2026-11-13T19:45:47.846823+00:00",
+  "baseline_local_commit": "46fcf031b4f420ccf3f46cdc6ab107c9b6c3f46d",
+  "baseline_tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+  "candidate_C": "not yet frozen; workflow must be incorporated before C",
+  "target": ".github/workflows/sf2-epic.yml",
+  "guard": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "repository_id": "1455724710",
+    "event": "push",
+    "ref": "refs/heads/sf2-epic-c"
+  },
+  "workflow_sha256": "87aeb489a441ed24cd823c747748bff53053831b7307e4e94ab85ddf8e714c4c",
+  "builder_sha256": "673805c4ef71e7d8710b75dc273561ff75b1505b8b93c44fd89dcde4f508bf0e",
+  "recipes_sha256": "ac598195282a917364ffb83aaef9d8e55e9023c58f6850f2a34c214a1a9c5777",
+  "source_sha256": {
+    ".github/inherited-workflows/test.yml.disabled": "07746ae7ffb780c729f852feed68368fe55ac347ad78b23cd3adf074fd35868d",
+    ".github/workflows/test-ci.yml": "10c4bb7b3b4fc6c9201736dfa1d4d211dccf0e75de74efa38ae5299473008d26",
+    "script/test-ci-request.ts": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc",
+    "script/test-ci-location.ts": "2a441c5a25e569ba78797493b410cefd19fa5484f1dfca666a4809d2b4381512",
+    "script/test-ci-package.ts": "b7f482ae3b7a852823f3e5dbe53d19ddc5fa2e816728b942b03d5bd42342565e",
+    "script/module-registry.json": "b2e5f9332aa3b1cfdc08f30b1b6c206ef326efe07ee0b2abc18b5d993c7f332f",
+    "packages/script/src/test-plan.ts": "4b3c456b7bfdd2eef45860c4c5d4ed7ad92d2077b064d59c85f890039abaeb83",
+    "packages/app-shell/e2e/playwright.production.config.ts": "3e56c9dff35df9188bfeabe79d5a1093f64ae5c582f0132d2f3486a8ea84a7d1",
+    "modules/atlas/boundary/package.json": "b673539f03091954a08663b953408ce7e4bfe374639bddf0e100153897b8ba97",
+    "modules/atlas/boundary/script/build.ts": "1fd93797b935abaed591ad8a8cbf4bee8884f9a502f5917b80099d053d8b4644"
+  },
+  "recipes": [
+    {
+      "id": "CI-SF",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "modules/sucafina",
+      "proof": "dedicated recipe job at github.sha; validateRequest + validateSelection for Playwright; Bun nonzero and nonce-bound omni verdict required"
+    },
+    {
+      "id": "CI-CLI",
+      "request": {
+        "package": "cli",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "apps/cli",
+      "proof": "dedicated recipe job at github.sha; validateRequest + validateSelection for Playwright; Bun nonzero and nonce-bound omni verdict required"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "packages/app-shell",
+      "proof": "dedicated recipe job at github.sha; validateRequest + validateSelection for Playwright; Bun nonzero and nonce-bound omni verdict required"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "proof": "dedicated recipe job at github.sha; validateRequest + validateSelection for Playwright; Bun nonzero and nonce-bound omni verdict required"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "request": {
+        "package": "atlas-boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ]
+      },
+      "directory": "modules/atlas/boundary",
+      "proof": "dedicated recipe job at github.sha; validateRequest + validateSelection for Playwright; Bun nonzero and nonce-bound omni verdict required"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "proof": "dedicated recipe job at github.sha; validateRequest + validateSelection for Playwright; Bun nonzero and nonce-bound omni verdict required"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "proof": "dedicated recipe job at github.sha; validateRequest + validateSelection for Playwright; Bun nonzero and nonce-bound omni verdict required"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "proof": "dedicated recipe job at github.sha; validateRequest + validateSelection for Playwright; Bun nonzero and nonce-bound omni verdict required"
+    }
+  ],
+  "planned_files_current_snapshot": {
+    "packages/app-shell/e2e/sucafina/operations.spec.ts": {
+      "exists": false,
+      "sha256": null
+    },
+    "packages/app-shell/e2e/sucafina/decisions.spec.ts": {
+      "exists": false,
+      "sha256": null
+    },
+    "packages/app-shell/e2e/sucafina/reports.spec.ts": {
+      "exists": false,
+      "sha256": null
+    },
+    "modules/atlas/boundary/test/business-memory-ports.test.ts": {
+      "exists": true,
+      "sha256": "6055fac3518befc7df384956f0a3104ff04dd3919f3aad85f24e90346eda9be5"
+    }
+  },
+  "gates": [
+    "inherited cold full Linux/Windows unit",
+    "inherited default full Linux app E2E",
+    "inherited Atlas and repo gates",
+    "8 required explicit selections",
+    "Atlas check:generated then generate and clean diff",
+    "four package typechecks",
+    "check:guards --base origin/dev on C",
+    "check:spawn-imports",
+    "bundle-result requires every job success",
+    "affected packages/core bun typecheck",
+    "C guard stdout/stderr plus exit status, checkout SHA and origin/dev SHA uploaded as run artifact"
+  ],
+  "cold_policy": "No Turbo cache restore/save; --force; no previous-pass lookup or replay; unique run nonce",
+  "adaptation_notes": [
+    "All jobs guard repository name, numeric ID, exact push branch; no PR trigger, no workflow_dispatch.",
+    "Eight dedicated jobs remain separate: dedup-audit.json records non-identical selections/configuration/control scopes; validator runs against C, Playwright requires nonempty exact selection.",
+    "Retains upstream test job implementation, including omni and rollback lanes; explicitly preloads omni for app source and Atlas packages lacking preload and checks nonce verdict.",
+    "Scope artifact requests and run logs pin github.sha; separate D/G8 guard and AM01\u2013AM06 remain external final acceptance requirements.",
+    "Action settings and Azure workflows untouched. No remote changes or CI runs."
+  ],
+  "limitations": [
+    "Three mandatory production Playwright spec files absent on current draft; validators intentionally fail if still absent at C.",
+    "Static validation only; job execution, runner availability, selection counts, omni suite spawn and runtime semantics not yet demonstrated.",
+    "actionlint ignores inherited ShellCheck SC2020 informational warnings only; no CI has run.",
+    "If sf2-epic-c does not exist, create it directly at frozen C once via GitHub MCP; otherwise move it to C with expected-head CAS. Do not create an intermediate ref that can trigger a run; verify exact event SHA and one run."
+  ],
+  "updated_utc": "2026-11-13T19:52:30.674157+00:00",
+  "dedup_audit_sha256": "d506c02e968ba228bab5d797c46862d1f25ab656dd40ecaf4f37f653577b599b",
+  "static_validation": [
+    "actionlint passed; ignores inherited SC2020 informational warning",
+    "bash -n passed all 62 embedded run steps after expression substitution",
+    "node --check passed 2 module heredocs and 4 inline JS snippets",
+    "jq scope program executed with null and {} inputs and yielded candidate SHA with empty packages",
+    "audit found no $ followed by transformed quote or boolean tokens; jq $inputs.packages preserved"
+  ]
+}

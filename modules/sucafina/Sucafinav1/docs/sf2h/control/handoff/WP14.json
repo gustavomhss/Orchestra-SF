@@ -1,0 +1,71 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "wp": "WP14",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-memory-ready",
+  "pre_handoff_local_head": "39fd17df048599cccc4f1b9532eb0f6436fc11ab",
+  "pre_handoff_local_tree": "59edc4d265a631e7b5c2391b6c40eb9694e1d3eb",
+  "base": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+  "remote_snapshot_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "tasks": {
+    "T01": "partial; Planner producer and host integration pending",
+    "T02": "partial; selected candidates and route composition pending",
+    "T03": "partial; real C10 fixture, WP10 host and WP07 integration pending",
+    "T04": "partial; human grants, host wiring, C16 association and WP11 promotion pending",
+    "T05": "implemented; real scanner hosted proof and nested ancestry wiring pending"
+  },
+  "foreign_inputs": [
+    "WP03 f2c44256e7, 3bf27aa41a, 07cd1c7fec",
+    "WP07 22b5b388cc, 0f7d9340b9",
+    "WP08 c94103c83b, aa18054806",
+    "WP10 332a689daf, 40455e32b4",
+    "WP11 current-choice promotion pending"
+  ],
+  "foreign_copies": "none intentionally included; source diff limited to WP14 paths",
+  "workers": [
+    {
+      "id": "Terra S4",
+      "state": "stopping",
+      "lease": "sole Git/checkpoint"
+    },
+    {
+      "id": "/root/signal_runtime",
+      "model": "Luna",
+      "state": "interrupted",
+      "lease": "revoked"
+    },
+    {
+      "id": "G1 f391d160-1e7a-4df1-a75e-508b687e14a1",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402",
+      "lease": "revoked"
+    },
+    {
+      "id": "G2 f391d160-1e7a-4df1-a75e-508b687e14a2",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402",
+      "lease": "revoked"
+    }
+  ],
+  "behavior": "protected case recall, materiality snapshots, outcome selection, signal registry and scoped work refs; incomplete host integration; no claim of production readiness",
+  "validation": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "hosted_ci": "NOT_RUN",
+    "guards": "PASS at ece45c9b1f; 0 gates, 10 baseline dependency warnings; final head not checked"
+  },
+  "findings": [
+    "Grok provider unavailable HTTP 402",
+    "WP10 supported runtime authority and source continuity missing",
+    "WP11 exact promotion and C10 fixture missing",
+    "WP14 integration and regression checks unverified"
+  ],
+  "resume": "On explicit instruction only: inspect handoff and producer SHAs; restore authorized host integration and C10 promotion, review partial changes, obtain final scoped hosted test via S0-C and package typecheck, rerun guards, then prepare PR with dependencies. No Grok retries under current provider constraint.",
+  "local_checkpoint_head": "aa0a7eab23df39d92b664bc332b903f4ad426593",
+  "local_checkpoint_tree": "016a4c86f5d24b6d10af590a479cb227eea0e4ab",
+  "remote_checkpoint_head": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+  "remote_checkpoint_tree": "088cef30ce6aef86ae532935e78edcbe3bb46b51",
+  "remote_history": "snapshot commit over remote campaign draft; not identical to local history",
+  "dirty": "clean",
+  "helpers": "Luna interrupted; G1/G2 terminal 402; all writer leases revoked"
+}

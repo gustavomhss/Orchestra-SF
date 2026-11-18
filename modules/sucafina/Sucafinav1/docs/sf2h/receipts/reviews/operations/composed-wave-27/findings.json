@@ -1,0 +1,1160 @@
+{
+  "schema_version": 1,
+  "mission": 27,
+  "actor": "S1-R1",
+  "prepared_at_utc": "2026-11-14 21:31:59 UTC",
+  "product_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+  "product_tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+  "verdict": "REQUEST_CHANGES",
+  "status": "COMPLETE_WITH_FINDINGS_FOR_FIXED_SHA",
+  "scope": "Full S1-R1 read-only pack; WP01–WP14 / 70 tasks / 1475 criteria",
+  "severity_policy": {
+    "P1": "Blocks a required first-use or authorized completion journey in the installed composition.",
+    "P2": "Mandatory functional output absent; useful adjacent output exists.",
+    "BLOCKING_ACCEPTANCE_GATE": "Required proof or semantic intake unresolved; not an invented runtime defect."
+  },
+  "reviewer_independent": true,
+  "product_authorship": false,
+  "proof_boundary": "Static findings and existing source executions are distinguished. No new tests/CI or runtime reproduction. Mandatory missing evidence is unresolved.",
+  "actionable_findings": [
+    {
+      "id": "DECISIONS20-ASSEMBLY",
+      "origin": "EXISTING_ID_RECHECK",
+      "severity": "P1",
+      "kind": "FUNCTIONAL_INTEGRATION",
+      "status": "OPEN_IN_FIXED_BUNDLE",
+      "blocks_acceptance": true,
+      "title": "Primeira decisão não permite ligar evidências e criar as primeiras alternativas pela UI montada",
+      "trigger": "Usuário autorizado cria caso pelo Workbench genérico, sem sourceRefs/alternativas recebidas de outra origem, e tenta comparar duas alternativas.",
+      "expected": "Descobrir e ligar fontes autorizadas; confirmar cobertura C10 e criar/persistir alternativas humanas antes de comparação, escolha e retomada.",
+      "observed": "Create só recebe fontes opcionais do contexto; Edit reenvia sourceRefs inalterados. HTTP não monta formulário/inicializador de alternativas; decision-alternatives.ts ausente. Choice exige duas alternativas e não fornece a criação inicial.",
+      "observation_method": "STATIC_CALL_CHAIN_NOT_RUNTIME_REPRODUCTION",
+      "criteria": [
+        "WP11.T02.DOD.01",
+        "WP11.T02.DOD.20",
+        "WP11.CMP.01",
+        "WP11.SUC.01",
+        "WP01.T05.DOD.01"
+      ],
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+          "blob": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+          "size": 7045,
+          "lines": "7,53",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/decision-create.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+          "blob": "ebc7763548e3eaf476f36c17de72e1800f0fee2d",
+          "size": 17267,
+          "lines": "5–9,154",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+          "size": 25174,
+          "lines": "184–186",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/interface/http.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+          "blob": "78bbcfcf09ee49152745f4142f90c79bd307269d",
+          "size": 20709,
+          "lines": "7",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "blob": "596512b4e12c094fd178ea845f4b560bbf23a348",
+          "size": 35906,
+          "lines": "94,213,221",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/decisions/http.ts"
+        }
+      ],
+      "absent_path": {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+        "basis": "Untruncated recursive product tree; no entry"
+      },
+      "source_fix": {
+        "status": "PUBLISHED_NOT_INTAKEN",
+        "pr": 40,
+        "W": "0fb6101c2804e8d8e2fa352ca5d09b554a7fd435",
+        "W2": "69624adad312ef27f83310896e7c0b6005eec624",
+        "terminal_receipt": "556079fe2fb97c824504ec60a47798c6e0553539",
+        "edit_blob": "27bb8adbf3ca2fefce4bc8c756de7f12ce990baa",
+        "alternatives_blob": "a731b36427ffbdbc30d19b3b7785be16e5c9747d",
+        "inert_mount_patch_blob": "94aa40a748a709c327909d75013b68b35f083f1f"
+      },
+      "bundle_intake": "ABSENT_FOR_REQUIRED_UI_DELTAS",
+      "composed_behavior": "NOT_PROVEN; static first-use blocker",
+      "source_proof": [
+        "SRC-DECISIONS-20"
+      ],
+      "owner": {
+        "primary": "session23 / sf2-stack / PR65",
+        "source": "WP11 / astra-wp11 / PR40"
+      },
+      "correction": "Reconciliar os dois módulos e os três pontos de montagem publicados, preservando a recuperação C12 e demais scripts. Consumir o patch documental como mudança de produto do writer, não como prova de montagem.",
+      "closure_evidence": "Jornada autorizada de caso vazio → fontes/coverage → duas alternativas → comparação/choice → reload no novo consumidor. Definição de fechamento; não é solicitação de execução.",
+      "criteria_interpretation": "Critérios citados incluem obrigações relacionadas; a cadeia estática demonstra o bloqueio descrito, sem alegar execução de cada CHK.",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202"
+    },
+    {
+      "id": "C05-INSTALLED-CLOSURE",
+      "origin": "EXISTING_ID_RECHECK",
+      "related_existing": [
+        "UI-REVIEW-WORK-CONTEXT-EMISSION",
+        "IR-EXT-WORK-REVIEW-CONTEXT"
+      ],
+      "severity": "P1",
+      "kind": "FUNCTIONAL_INTEGRATION",
+      "status": "OPEN_IN_FIXED_BUNDLE",
+      "blocks_acceptance": true,
+      "title": "Host de colaboração não recebe os callbacks para perguntas/respostas presas a C05",
+      "trigger": "Usuário autorizado tenta criar/abrir pergunta ou confirmar resposta vinculada ao contexto de revisão preservada.",
+      "expected": "Consumir o pin canônico C05 sob autorização de thread, destinatário, fonte de resposta e fence atuais.",
+      "observed": "A construção instalada de createCollaborationHost omite reviewContexts, authorizeReviewThreadContext, prepareReviewThreadFence, reviewRecipientAuthority e reviewAnswerSource. reviewThreadBasis retorna false e confirmação C05 retorna review-answer-confirmation-scope-unavailable.",
+      "observation_method": "STATIC_CALL_CHAIN_NOT_RUNTIME_REPRODUCTION",
+      "criteria": [
+        "WP08.T02.CMP.02"
+      ],
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+          "size": 69619,
+          "lines": "198–213",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/business-services.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+          "blob": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+          "size": 11868,
+          "lines": "38–43,104–108",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/collaboration/authority.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+          "size": 31198,
+          "lines": "233–246",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/collaboration/host.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+          "blob": "ce0e5655f19d7d60246024af013c811bf921b042",
+          "size": 19480,
+          "lines": "73–92",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/reviews/http.ts"
+        }
+      ],
+      "source_fix": {
+        "status": "C05_PIN_PRODUCER_PRESENT; required installation callbacks missing"
+      },
+      "bundle_intake": "PARTIAL",
+      "composed_behavior": "BLOCKED_STATIC; no dynamic proof",
+      "owner": {
+        "primary": "WP10/S0 / compose-resume PR44 / integrador PR65",
+        "source": "WP08 / collab-resume PR41; WP07 / sf2-reviews PR27"
+      },
+      "correction": "Ligar as portas reais de autorização/fence/destinatário/fonte C05 à construção instalada e ao enriquecimento de Meu trabalho, sem derivar concessão do pin.",
+      "closure_evidence": "Pergunta/resposta/confirm no pin preservado com reabertura e revogação vinculados ao novo consumidor; sem execução solicitada.",
+      "limits": [
+        "Captura histórica C06 e conversa corrente têm ligação própria: não declaradas quebradas por este achado.",
+        "Hot Topic/closure usa review-handoffs próprio: WP08.T05.CHK.03 não foi declarado falho por inferência.",
+        "ACK C03 corrigido não encerra este caminho C05."
+      ],
+      "criteria_interpretation": "Critérios citados incluem obrigações relacionadas; a cadeia estática demonstra o bloqueio descrito, sem alegar execução de cada CHK.",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "scope": "Threads/perguntas com contexto C05 e confirmação/reutilização de respostas que dependem desse contexto."
+    },
+    {
+      "id": "C07-NATIVE-MOUNT",
+      "origin": "SPECIFIC_LOCATOR_OF_EXISTING_NATIVE_GAP",
+      "related_existing": [
+        "NATIVE-AM-REVIEW",
+        "WP09 native-host-deltas"
+      ],
+      "severity": "P1",
+      "kind": "FUNCTIONAL_INTEGRATION",
+      "status": "OPEN_IN_FIXED_BUNDLE",
+      "blocks_acceptance": true,
+      "title": "Rotinas publicadas não recebem adapter nativo C07 e não são anunciadas pelo host",
+      "trigger": "Ator autorizado escolhe receita, prepara execução governada/analyze-decision ou a revisão executiva AM06.",
+      "expected": "Admissão C07 real → Relay run/status/result/artefato → consumidor de produto, sem perder identidade/versionamento.",
+      "observed": "createSfRoutineServices é chamado sem native; publicação existe mas plano/admissão/execução/leitura nativos retornam unavailable. Nenhum descriptor de rotina é anunciado. ReviewApplication também não recebe routineProduct/routineResults na montagem examinada.",
+      "observation_method": "STATIC_CALL_CHAIN_NOT_RUNTIME_REPRODUCTION",
+      "criteria": [
+        "WP09.T01.CHK.02",
+        "WP09.T01.CHK.18",
+        "WP09.T01.CHK.60",
+        "WP09.T01.DOD.01",
+        "WP09.T01.DOD.18",
+        "WP09.T01.DOD.60",
+        "WP09.T01.SUC.60",
+        "WP09.T07.CHK.01",
+        "WP09.T07.DOD.01"
+      ],
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+          "size": 74216,
+          "lines": "278–283,309,551,799–803",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/host-context.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/routine-services.ts",
+          "blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+          "size": 22455,
+          "lines": "67–90,141–147,180–184,214–216,229–232,255–262",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/routine-services.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+          "blob": "de76611be141d599b9eecc96e1173559e06be26d",
+          "size": 4935,
+          "lines": "24–30",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/reviews/application.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+          "size": 8294,
+          "lines": "79–96",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/review-services.ts"
+        }
+      ],
+      "source_fix": {
+        "status": "PRODUCERS_AND_FAIL_CLOSED_PATHS_PRESENT; native installation not supplied"
+      },
+      "bundle_intake": "NATIVE_ADAPTER_AND_RESULT_CONSUMER_ABSENT",
+      "composed_behavior": "BLOCKED_STATIC; AM06 not proved",
+      "owner": {
+        "primary": "WP10/S0 / compose-resume PR44 / PR65",
+        "source": "WP09/S3-C / astra-wp09 PR30"
+      },
+      "correction": "Fornecer/montar as portas nativas pinadas C07, descriptors e leitura de resultados e ligar o consumidor de pauta, usando a autoridade e persistência do host.",
+      "closure_evidence": "Cadeia nativa autorizada completa, resultado consumido e lifecycle AM06 no candidato correspondente; sem execução/CI solicitado.",
+      "limits": [
+        "Recusas são seguras; o finding é de entrega funcional positiva, não de bypass.",
+        "Rotinas manuais/fixtures com portas injetadas não fecham esta montagem.",
+        "memory.prepareWatch devolve native-watch-admission-port-unavailable; não constitui prova de recorrência funcional."
+      ],
+      "criteria_interpretation": "Critérios citados incluem obrigações relacionadas; a cadeia estática demonstra o bloqueio descrito, sem alegar execução de cada CHK.",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202"
+    },
+    {
+      "id": "M27-C05-FIRST-AGENDA",
+      "origin": "NEW_NARROW_FINDING",
+      "severity": "P1",
+      "kind": "FUNCTIONAL_ENTRYPOINT",
+      "status": "OPEN_IN_FIXED_BUNDLE",
+      "blocks_acceptance": true,
+      "title": "Primeira pauta C05 humana multisseção bloqueada nas entradas montadas examinadas",
+      "trigger": "Entrar em Prepare review ou Revisão e ações do Dashboard e tentar incluir um segundo tópico ou uma comparação Planner/seleção Procurement antes de preservar a primeira reunião.",
+      "expected": "Selecionar referências/tópicos autorizados, ordenar/retirar, conferir prévia e preservar a pauta explícita prevista em WP07.T01.",
+      "observed": "A entrada extended injeta uma única seção Dashboard corrente; a workspace só carrega, move ou retira itens recebidos. A contrarrota dashboard-workbench envia sections:[data.agenda.section]. Essas duas entradas de primeiro uso não permitem compor a seleção multisseção/multidomínio contratada. A API aceita múltiplos itens e uma sucessora pode reconstruí-los a partir de revisão anterior.",
+      "observation_method": "STATIC_CALL_CHAIN_WITH_COUNTER_ROUTE_CHECK",
+      "criteria": [
+        "WP07.T01.CHK.01",
+        "WP07.T01.CHK.03",
+        "WP07.T01.CMP.02",
+        "WP07.T01.DOD.01",
+        "WP07.T01.SUC.01",
+        "WP07.T01.SUC.02"
+      ],
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+          "blob": "a57e9d39f81e8a064f903765e70533bdffea4ba2",
+          "size": 9732,
+          "lines": "69–75",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/extended-business-services.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "blob": "63bbe96595c04a484cdc16e01f95c42233b4025c",
+          "size": 20472,
+          "lines": "43–46,199–203",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/extended-http.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+          "blob": "9ddc9d3e95585cda5efe877ce2303ade497a0b98",
+          "size": 16076,
+          "lines": "148–179",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/extended-browser.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+          "blob": "8530268bff37cad2f9158a78f80a3dc4529d32aa",
+          "size": 21899,
+          "lines": "20,40–43,74–78,134–153,187–194",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/reviews/workspace.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+          "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+          "size": 45621,
+          "lines": "5–10,224–228,365–366",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+          "blob": "ce0e5655f19d7d60246024af013c811bf921b042",
+          "size": 19480,
+          "lines": "125–134",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/reviews/http.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+          "blob": "3de1bf6369b1ca68e09dbae5ab6ffecaa87b85dc",
+          "size": 30448,
+          "lines": "15–22,82–145",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/reviews/selection.ts"
+        }
+      ],
+      "source_fix": {
+        "status": "BACKEND_MULTI_ITEM_PRODUCER_PRESENT; UI selector missing"
+      },
+      "bundle_intake": "BACKEND_PRESENT_ENTRYPOINT_INCOMPLETE",
+      "composed_behavior": "BLOCKED_STATIC_FOR_FIRST_MULTI_TOPIC_SELECTION",
+      "owner": {
+        "primary": "WP10/S0 composição / PR44 / PR65",
+        "source": "WP07 / sf2-reviews PR27"
+      },
+      "correction": "Montar descoberta/seleção autorizada para todos os tipos de pauta existentes, com estado de seleção explícito, preservação das referências e confirmação humana. Não restringir o critério ao caso de uma página.",
+      "closure_evidence": "Primeira revisão com múltiplos tópicos/domínios/competências, reordenação/exclusão, preservação e reload; definição de fechamento, não solicitação de teste.",
+      "limits": [
+        "Backend review-agenda aceita array items e resolve Dashboard/Forecast/Procurement.",
+        "Sucessora pode reconstruir uma pauta pré-existente; não resolve primeiro uso.",
+        "Generate Report legado recebe múltiplos tópicos e gera bytes diretamente; não cria PreservedReview/C05.",
+        "Conclusão restrita às entradas instaladas examinadas; não afirma incapacidade universal do backend ou de todo sucessor."
+      ],
+      "criteria_interpretation": "Critérios citados incluem obrigações relacionadas; a cadeia estática demonstra o bloqueio descrito, sem alegar execução de cada CHK.",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202"
+    },
+    {
+      "id": "M27-BI09-WATERFALL-MOUNT",
+      "origin": "NEW_NARROW_FINDING",
+      "severity": "P2",
+      "kind": "FUNCTIONAL_PRESENTATION",
+      "status": "OPEN_IN_FIXED_BUNDLE",
+      "blocks_acceptance": true,
+      "title": "Montagem BI09 não fornece waterfall de composição de custos",
+      "trigger": "Abrir BI09 com cenário/comparação canônicos persistidos, atuais e autorizados contendo componentes de custo; também seleção equivalente de portfólio.",
+      "expected": "Waterfall derivado do produtor canônico com componentes da diferença, fontes, unidades, horizonte e cobertura, equivalente à tabela e sem zero/residual inventado.",
+      "observed": "decisionPresentation devolve series:[] e nenhuma propriedade waterfall para todas as seleções; o renderer só chama renderWaterfall se receber esse plano. O detalhe oferece tabela/períodos/sensibilidade e a vantagem alternativa é uma única barra agregada, sem composição dos componentes.",
+      "observation_method": "STATIC_PRODUCER_AND_ALL_RELEVANT_RENDERERS",
+      "criteria": [
+        "WP05.T05.DOD.01",
+        "WP05.T05.DOD.20",
+        "WP05.T05.CHK.03",
+        "WP05.T05.CHK.20",
+        "WP05.DOD.04",
+        "WP05.CMP.04"
+      ],
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+          "size": 18183,
+          "lines": "76–78,119,127,172",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/bi-services.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+          "blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+          "size": 5234,
+          "lines": "30,41–44",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/analytics/scenario.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+          "blob": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+          "size": 9134,
+          "lines": "97,105–108",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+          "blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+          "size": 27122,
+          "lines": "197–200,242",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/analytics/view.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+          "blob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+          "size": 17612,
+          "lines": "23–95,96–203",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/analytics/decision-view.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts",
+          "blob": "47b271f492292956a8d8696cc32cd999e9878661",
+          "size": 5797,
+          "lines": "12,42–58",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio-view.ts",
+          "blob": "35c94e7274127926cef17aa40664db075074d4d4",
+          "size": 8033,
+          "lines": "65–102,131",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/analytics/portfolio-view.ts"
+        }
+      ],
+      "source_fix": {
+        "status": "NO_CORRECTED_INSTALLED_PRESENTATION_IDENTIFIED_IN_REVIEW_CORPUS"
+      },
+      "bundle_intake": "REQUIRED_WATERFALL_PLAN_ABSENT",
+      "composed_behavior": "STATIC_ABSENCE; no dynamic reproduction",
+      "owner": {
+        "primary": "WP10/S0 / integrador PR65",
+        "source": "WP05/S2 / PR24; domínio canônico correspondente"
+      },
+      "correction": "Produzir e passar o plano de waterfall a partir dos resultados reais de cenário/portfólio; a UI apenas apresenta os valores/refs, sem criar segundo motor ou residual.",
+      "closure_evidence": "BI09 com componentes positivos/negativos/zero/pendentes e a mesma tabela/fontes; categoria omitida e confirmação posterior preservam histórico. Sem execução solicitada.",
+      "limits": [
+        "Não é ausência geral de BI09–BI11: existem resumo, tabela, períodos de componentes, sensibilidade e barra de vantagem agregada.",
+        "P2 reflete alternativa tabular útil; requisito obrigatório permanece não satisfeito."
+      ],
+      "criteria_interpretation": "Critérios citados incluem obrigações relacionadas; a cadeia estática demonstra o bloqueio descrito, sem alegar execução de cada CHK.",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202"
+    }
+  ],
+  "previous_operations_findings_rechecked": [
+    {
+      "id": "D-OPS-01",
+      "severity": "P2",
+      "title": "Reextração documental e schema equivalente",
+      "source_fix": "RESOLVED_WITH_EVIDENCE_IN_SOURCE",
+      "bundle_intake": "PRESENT_EQUAL_BLOBS",
+      "composed_behavior": "UNPROVED",
+      "paths": [
+        "product/documents/schemas.ts",
+        "product/documents/workbench.ts"
+      ],
+      "source_pr": 52,
+      "source_head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "source_run_ids": [
+        43625203326
+      ],
+      "observed": "Reutiliza schema equivalente; candidato pode manter o schema que já referencia; preserva CAS e intenção incerta.",
+      "owner": "WP06 / PR52; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+          "blob": "fbe4b70444d4a7341a30372c754842a5aca3ce70",
+          "size": 14162,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/documents/schemas.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+          "blob": "3d21a461c88da2372eae57d0e066ff59d9f21f55",
+          "size": 10730,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/documents/workbench.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "I-OPS-02",
+      "severity": "P2",
+      "title": "Recuperar C12 depois de commit e conflito do caso",
+      "source_fix": "CORRECTED_WITH_NEW_POSITIVE_SOURCE_EVIDENCE",
+      "bundle_intake": "UI_HTTP_HOST_EQUAL; EXECUTOR_SEMANTIC_COMBINATION",
+      "composed_behavior": "UNPROVED",
+      "paths": [
+        "product/ui/decision-apply.ts",
+        "product/procurement/decision-http.ts",
+        "product/procurement/decision-host.ts",
+        "product/decisions/apply.ts"
+      ],
+      "source_pr": 60,
+      "source_head": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+      "source_run_ids": [
+        43636531401
+      ],
+      "observed": "Recovery explícito e nova admissão recuperam receipt em origem; target apply.ts6ad51e47 integra applicationAttempt Finance e difere do2776a112 da prova de origem.",
+      "owner": "WP04/WP11/WP01 / PR60; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+          "size": 10564,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+          "size": 7858,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+          "size": 50653,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "blob": "6ad51e47b22eca073a0a81731575c463d98673e4",
+          "size": 21939,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "OPS-REV-01",
+      "severity": "P1",
+      "title": "Base monetária de sourcing antes de PO válida",
+      "source_fix": "RESOLVED_WITH_EVIDENCE_IN_SOURCE",
+      "bundle_intake": "PRESENT_EQUAL_BLOB",
+      "composed_behavior": "UNPROVED_ON_FIXED_SHA",
+      "paths": [
+        "product/procurement/monetary.ts"
+      ],
+      "source_pr": 57,
+      "source_head": "717efbbef27de70b382db2aa734605c779228947",
+      "source_run_ids": [
+        43625920456,
+        43626658534
+      ],
+      "observed": "Leitura de sourcing/src_pending/src_rejected desconsidera PO futura e preserva snapshot de FX; correção de export é distinta.",
+      "owner": "WP04 / PR57; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+          "blob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+          "size": 6142,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "OPS-REV-02",
+      "severity": "P2",
+      "title": "Preparação C12 deve refletir edição real do PR",
+      "source_fix": "RESOLVED_WITH_EVIDENCE_IN_SOURCE",
+      "bundle_intake": "PRESENT_EQUAL_BLOBS",
+      "composed_behavior": "UNPROVED",
+      "paths": [
+        "product/procurement/prepared.ts",
+        "product/procurement/scenario-preparation.ts",
+        "product/procurement/prepared-review.ts"
+      ],
+      "source_pr": 60,
+      "source_head": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "source_run_ids": [
+        43626285237
+      ],
+      "observed": "Restringe draft/pr_rejected, verifica efeito físico, no-op retorna needs-input e review exige diferença efetiva.",
+      "owner": "WP04/C12 / PR60; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+          "blob": "e613a1bf32fe1ee75574139cf699c34843cf25d1",
+          "size": 16541,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/prepared.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "blob": "bdea5d497b4e8fa7e540cfb44d427cd3696678db",
+          "size": 5171,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+          "blob": "c8d476a1be6d2b839a087b2bc248293014599791",
+          "size": 6443,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "OPS-REV-03",
+      "severity": "P2",
+      "title": "Busca documental limita depois de ACL e deduplicação",
+      "source_fix": "RESOLVED_WITH_EVIDENCE_IN_SOURCE",
+      "bundle_intake": "PRESENT_EQUAL_BLOB",
+      "composed_behavior": "UNPROVED",
+      "paths": [
+        "product/documents/capabilities.ts"
+      ],
+      "source_pr": 52,
+      "source_head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "source_run_ids": [
+        43626678715
+      ],
+      "observed": "Autoriza antes de contar documento único; duplicado não consome slot; overflow revalidado.",
+      "owner": "WP06 / PR52; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+          "blob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41",
+          "size": 25731,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "OPS-REV-04",
+      "severity": "P2",
+      "title": "Admissão do arquivo após interrupção entre blob e catálogo",
+      "source_fix": "RESOLVED_WITH_EVIDENCE_IN_SOURCE",
+      "bundle_intake": "PRESENT_EQUAL_BLOB",
+      "composed_behavior": "UNPROVED",
+      "paths": [
+        "product/imports/staged-files.ts"
+      ],
+      "source_pr": 58,
+      "source_head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "source_run_ids": [
+        43626093062
+      ],
+      "observed": "Bytes e prova de admissão no mesmo commit; retry reconcilia catálogo com identidade original. Órfãos legados sem prova continuam recusados.",
+      "owner": "WP06 / PR58; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+          "blob": "0d42f5242acd3d1c93bc110422285b96975b8ea0",
+          "size": 13746,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/imports/staged-files.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "E-OPS-01",
+      "severity": "REQUIRED_EVIDENCE",
+      "title": "Recovery C12 após reload/reconstrução",
+      "source_fix": "SOURCE_PROOF_GAP_REDUCED",
+      "bundle_intake": "RECOVERY_IMPLEMENTATION_PRESENT; COMBINED_EXECUTOR",
+      "composed_behavior": "REQUIRED_PROOF_ABSENT",
+      "paths": [
+        "product/ui/decision-apply.ts",
+        "product/procurement/decision-host.ts",
+        "product/decisions/apply.ts"
+      ],
+      "source_pr": 60,
+      "source_run_ids": [
+        43636531401
+      ],
+      "observed": "Origem comprova contexto browser novo e vazio, nova admissão, SQLite reaberto, serviços reconstruídos e mesmo receipt/efeito único. Não comprova restart físico nem entrada completa Workbench.",
+      "owner": "WP01/WP04/WP11 / PR60; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+          "size": 10564,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+          "size": 50653,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "blob": "6ad51e47b22eca073a0a81731575c463d98673e4",
+          "size": 21939,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "E-OPS-02",
+      "severity": "REQUIRED_EVIDENCE",
+      "title": "Import Apply/retry após reconstrução",
+      "source_fix": "RESOLVED_WITH_SOURCE_EVIDENCE",
+      "bundle_intake": "PRODUCER_AND_CONSUMER_PRESENT",
+      "composed_behavior": "REQUIRED_PROOF_ABSENT",
+      "paths": [
+        "product/imports/host.ts",
+        "product/imports/store.ts",
+        "product/interface/import-http.ts"
+      ],
+      "extra_paths": [
+        "apps/cli/src/sucafina-product/import-services.ts"
+      ],
+      "source_pr": 58,
+      "source_run_ids": [
+        43627493939
+      ],
+      "observed": "Prova anterior válida inclui SQLite reaberto, autoridade/serviços/runtime reconstruídos, autenticação nova e replay do mesmo receipt; não é só audit.length. Não transferida ao target.",
+      "owner": "WP06 / PR58; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/imports/host.ts",
+          "blob": "40e02a3486c1b5a192395568c3ad37bde8a2e1e5",
+          "size": 9725,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/imports/host.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/imports/store.ts",
+          "blob": "9ae8492b4618d454cf069e27d2b079028759802d",
+          "size": 16162,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/imports/store.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+          "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+          "size": 12881,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/interface/import-http.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/import-services.ts",
+          "blob": "53a1f34779598545cde83295c8ff98b861fabb72",
+          "size": 20197,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/import-services.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "E-OPS-03",
+      "severity": "REQUIRED_EVIDENCE",
+      "title": "Negativos de diretório/banco pertencentes a UID estrangeiro",
+      "source_fix": "NO_NEW_DISCRIMINATING_PROOF_IDENTIFIED",
+      "bundle_intake": "GUARDED_TESTS_PRESENT",
+      "composed_behavior": "NEEDS_RECHECK",
+      "paths": [],
+      "explicit_evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+          "blob": "d7a5e9517ed4b3e21354660169b03ae4a397ac60",
+          "lines": "574–588"
+        }
+      ],
+      "source_run_ids": [
+        43554658437,
+        43555674548
+      ],
+      "observed": "Os dois casos anteriormente skip; código ainda condicionado a UID0. Sem prova nova no corpus delimitado; não se afirma bypass.",
+      "owner": "WP10/storage",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+          "blob": "d7a5e9517ed4b3e21354660169b03ae4a397ac60",
+          "lines": "574–588"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "OPS-CONSUMER-EXPORT-01",
+      "severity": "P2",
+      "title": "PO futura no arquivo usa seu próprio valor",
+      "source_fix": "RESOLVED_WITH_NEW_SOURCE_EVIDENCE",
+      "bundle_intake": "PRESENT_EQUAL_BLOB",
+      "composed_behavior": "UNPROVED",
+      "paths": [
+        "runtime/downloads.ts"
+      ],
+      "source_pr": 57,
+      "source_head": "717efbbef27de70b382db2aa734605c779228947",
+      "source_run_ids": [
+        43632315600
+      ],
+      "observed": "Emissão da PO não reutiliza valor do sourcing; separa contexto monetário do arquivo sem mudar status persistido.",
+      "owner": "WP04 / PR57; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+          "blob": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+          "size": 14313,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/runtime/downloads.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    },
+    {
+      "id": "OPS-CONSUMER-EXPORT-02",
+      "severity": "P2",
+      "title": "Linhas exportadas usam valor individual",
+      "source_fix": "RESOLVED_WITH_NEW_SOURCE_EVIDENCE",
+      "bundle_intake": "PRESENT_EQUAL_BLOB",
+      "composed_behavior": "UNPROVED",
+      "paths": [
+        "runtime/downloads.ts"
+      ],
+      "source_pr": 57,
+      "source_head": "717efbbef27de70b382db2aa734605c779228947",
+      "source_run_ids": [
+        43632315600
+      ],
+      "observed": "Geração calcula cada linha isoladamente; não repete total geral100/100 em linhas40/60.",
+      "owner": "WP04 / PR57; WP10/PR65",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+          "blob": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+          "size": 14313,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/runtime/downloads.ts"
+        }
+      ],
+      "recheck_method": "Independent fixed-bundle source/consumer inspection; source proof provenance retained",
+      "source_green_transferred": false
+    }
+  ],
+  "inherited_evidence_and_intake_gaps": [
+    {
+      "id": "C12-RECOVERY",
+      "related": [
+        "I-OPS-02",
+        "E-OPS-01"
+      ],
+      "status": "SOURCE_CORRECTED_INTAKEN_COMPOSED_UNPROVED",
+      "owner": "PR60 / WP11 e WP10; integrador session23 / PR65",
+      "trigger": "Resposta perdida e edição concorrente, seguidas de recuperação no executor combinado do bundle.",
+      "expected": "Recuperar o mesmo recibo, preservar efeito único e revalidar fonte/autoridade atuais.",
+      "observed": "A origem tem 7 pass/0 fail. O executor do target (6ad51e47b22eca073a0a81731575c463d98673e4) difere do executor provado (2776a112cd24c1cb3bd4fe2791f7b232fb68286d).",
+      "evidence": [
+        {
+          "reference_id": "SRC-C12-RECOVERY"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/assembly-01.json",
+          "blob": "dfbbc986ec49f19b1a203b5b051980a9b3ed34c6",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/assembly-01.json"
+        }
+      ],
+      "blocks_acceptance": true,
+      "closure": "Evidência do consumidor no candidato correspondente, preservando os limites do recibo e sem transferir o resultado de origem.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "MEMORY-INTEGRITY",
+      "status": "FOCAL_FIX_INTAKEN; HISTORICAL_AND_COMPOSED_HOLD",
+      "owner": "WP10 / astra-wp10 PR36; integrador PR65",
+      "trigger": "História completa seguida de recall, verificador e consumidor após retomada.",
+      "expected": "Qualificar história inteira e caudas de corrupção e revogação no consumidor.",
+      "observed": "MI07 registra 0 pass/1 fail por deadline de 225000 ms e não chega à cauda. MI08 tem 3 pass/0 fail focais e nativeExecution:false. Os dois fixes focais estão incorporados.",
+      "evidence": [
+        {
+          "reference_id": "SRC-MEMORY-MI07"
+        },
+        {
+          "reference_id": "SRC-MEMORY-MI08"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+          "blob": "8e1b7eaab139c3303462bdb5af9b4c679e61b276",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+        }
+      ],
+      "blocks_acceptance": true,
+      "closure": "Recibo que cubra a história completa, os negativos não alcançados e o consumo obrigatório no mesmo candidato.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "R1-W23-C17-BETWEEN-OBSERVATIONS",
+      "status": "PRIOR_HOLD_NOT_CLOSED",
+      "owner": "WP10/C17 / PR36; integrador PR65",
+      "trigger": "Mudança de transporte entre duas observações do cálculo histórico.",
+      "expected": "Conservar a identidade completa de Request, headers, binding e payload entre as observações.",
+      "observed": "business-context.ts:371–383 compara Request/ref/projeções/binding, sem digest integral de headers entre chamadas; o resolvedor fixa headers dentro de cada observação. O HOLD anterior não está encerrado; nenhum bypass foi demonstrado.",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+          "blob": "dbf13c657c7d5e93837367eae7bb7b704f7577c4",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/planner-calculation-history.ts"
+        }
+      ],
+      "blocks_acceptance": true,
+      "limits": "Static unresolved invariant, not exploited leak",
+      "closure": "Reconciliação do invariante entre as duas observações e prova discriminante admitida do consumidor pertinente.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_INVARIANT_HOLD",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "WP13-SEMANTIC-UNION",
+      "status": "EXISTING_HOLD",
+      "owner": "WP13 / PR37, WP03/Finance e WP10 / PR65",
+      "trigger": "Combinações, sensibilidade, cobertura e consumo BI/Decisions.",
+      "expected": "União semântica e oráculos reconciliados no bundle.",
+      "observed": "Serviços reais e guard de read-scope estão presentes. O registro do integrador mantém união pendente. Diferenças de blobs não são, por si, um defeito.",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/held-intake.json",
+          "blob": "419737fcb728b1c7bc264afe568c83de3d464d57",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/held-intake.json"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+        }
+      ],
+      "source_pin": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "blocks_acceptance": true,
+      "closure": "Intake semântico reconciliado e evidência dos valores, condicionais e consumidores no candidato.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "FIN-IND-005",
+      "status": "OPEN_IMPLEMENTED_NOT_CLOSED_AS_REPORTED",
+      "owner": "Finance/WP03 / session18 e integrador PR65",
+      "trigger": "Jornada financeira longa no host real.",
+      "expected": "Jornada positiva completa, conclusão e consumo.",
+      "observed": "pending-owners-01 registra implementação ainda não fechada e prazo de 180000 ms excedido na origem. Não há prova do target apresentada; a falha de origem não é atribuída automaticamente ao target.",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json",
+          "blob": "e4538142db05ea06934d2ffa76888bfadeb94fec",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json"
+        }
+      ],
+      "blocks_acceptance": true,
+      "review_limit": "Registry and source receipt, not new dynamic reproduction",
+      "closure": "Recibo que feche a jornada pendente com identidade de produto e escopo de consumidores explícitos.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "CURRENT-CHOICE-COHORT",
+      "status": "EXISTING_HELD_INTAKE_NOT_REQUALIFIED",
+      "owner": "WP03/Finance / PR35 e integrador PR65",
+      "trigger": "Consumo do cohort corrente de choice após mudança ou replay.",
+      "expected": "Semântica reconciliada com Finance/Memory e consumidor.",
+      "observed": "O registro do bundle conserva a proposta held no pin ec052c2c3bef96f492512f3d5f663919580f25c8; nenhum fechamento composto foi identificado.",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json",
+          "blob": "e4538142db05ea06934d2ffa76888bfadeb94fec",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json"
+        }
+      ],
+      "blocks_acceptance": true,
+      "closure": "Decisão documentada de intake/recusa e recheck semântico da opção adotada no consumidor.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "TYPECHECK-GUARDS",
+      "status": "TARGET_NOT_RUN",
+      "owner": "S0, dispatcher/acceptor final; sem pedido de execução nesta missão",
+      "trigger": "Pretensão de aceite do candidato.",
+      "expected": "Resultados de verificação obrigatórios pertinentes ao mesmo C e suas seleções reais.",
+      "observed": "increment-02 declara typechecks, guards e CI do composto como NOT_RUN. CHECK36 global FAIL com 13 diagnósticos externos é da origem; não é PASS nem FAIL do target.",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-02.json",
+          "blob": "3d81ab63b65954ff2a427f86b411208149588c60",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-02.json"
+        }
+      ],
+      "blocks_acceptance": true,
+      "closure": "Evidência válida de todos os gates exigidos, com W/S, seleção, logs e vínculo ao candidato, apresentada pelo fluxo autorizado.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "NATIVE-AM-REVIEW",
+      "status": "TARGET_NOT_RUN_WITH_STATIC_BLOCKERS",
+      "owner": "S0 e owners WP09/WP10/WP12/WP14; revisores finais independentes",
+      "trigger": "Pretensão de aceite completo de 5 perfis, 18 skills, 8 packs, 39 operações e 6 provas integradas.",
+      "expected": "AM01–AM06, oito seleções mínimas e gates adicionais, jornadas/provas visuais e três pareceres independentes no mesmo C.",
+      "observed": "Catálogo e parte dos bindings existem. AM e reviews finais constam NOT_RUN; Relay/watch/consumidor têm bloqueios estáticos. Esta missão entrega um parecer S1-R1 delimitado com REQUEST_CHANGES.",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-02.json",
+          "blob": "3d81ab63b65954ff2a427f86b411208149588c60",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-02.json"
+        }
+      ],
+      "blocks_acceptance": true,
+      "closure": "Evidência nativa e humana completa do candidato, além dos pareceres finais independentes exigidos; auxiliares desta missão não substituem esses pareceres.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "E2E-OPERATIONS",
+      "status": "TARGET_REQUIRED_PROOF_ABSENT",
+      "owner": "WP10/composição e owners funcionais WP01–WP08",
+      "trigger": "Jornadas reais das 28 capacidades, importação, edição e colaboração.",
+      "expected": "Comportamento completo da seleção/corpus no candidato, incluindo permissões e recuperação.",
+      "observed": "Handoff de origem registra cinco testes nominais NOT_RUN; helper de enumeração não é jornada. O host do target efetivamente monta Imports/Documents/C12, portanto ausência de montagem desses serviços não foi reaberta.",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/operations/20261114-a1/HANDOFF.md",
+          "blob": "8f1c240f63cb9f9ab91bd9f3679170b882a3a491",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/operations/20261114-a1/HANDOFF.md"
+        }
+      ],
+      "blocks_acceptance": true,
+      "closure": "Evidência real das jornadas e limites de UI no candidato pertinente, sem confundir nome de teste com execução.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "E2E-DECISIONS",
+      "status": "TARGET_REQUIRED_PROOF_ABSENT",
+      "owner": "WP10/composição e WP11/WP13/WP14",
+      "trigger": "Caso vazio → alternativas → escolha/Apply → portfólio/memória/reload.",
+      "expected": "Jornada humana real com estados positivos e negativos.",
+      "observed": "Origem nominal BLOCKED_NOT_RUN. O manifest atual já contém AlternativeDraft; o bloqueio identificado é a UI inicial e sua montagem no target.",
+      "evidence": [
+        {
+          "reference_id": "DECISIONS20-ASSEMBLY"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json",
+          "blob": "e4538142db05ea06934d2ffa76888bfadeb94fec",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json"
+        }
+      ],
+      "blocks_acceptance": true,
+      "closure": "Jornada humana no candidato com os consumidores reais e recuperação, após resolver o bloqueio estático indicado.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    },
+    {
+      "id": "E2E-REPORTS",
+      "status": "TARGET_REQUIRED_PROOF_ABSENT",
+      "owner": "WP07 e WP10/composição",
+      "trigger": "Pauta → preservar → reabrir → comparar → PPTX/DOCX.",
+      "expected": "Conteúdo completo de 25 registros identificáveis e notas longas, extração/render e autorização.",
+      "observed": "Seleção nominal de origem tem quatro casos NOT_RUN. Nenhum par de artefatos compostos com extração e render foi inspecionado como prova válida nesta revisão.",
+      "evidence": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json",
+          "blob": "e4538142db05ea06934d2ffa76888bfadeb94fec",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json"
+        }
+      ],
+      "blocks_acceptance": true,
+      "closure": "Evidência de conteúdo, paginação, reabertura e ACL do material gerado pelo candidato.",
+      "severity": "BLOCKING_ACCEPTANCE_GATE",
+      "kind": "INHERITED_REQUIRED_EVIDENCE_OR_INTAKE_GAP",
+      "fixed_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "closure_is_not_an_execution_request": true
+    }
+  ],
+  "source_run_details": "evidence.json",
+  "criteria_routes_and_consumers": "coverage.json",
+  "acceptance": {
+    "full_wp": false,
+    "global_release": false,
+    "final_same_C": false,
+    "later_heads_require_recheck": true
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "observed_at": "2026-11-14T19:21:08Z",
+  "new_missions": [
+    {
+      "number": 12,
+      "id": "forecast-cancel-visibility",
+      "branch": "ui-review",
+      "pr": 45,
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/forecast-cancel-visibility/"
+      ],
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "number": 13,
+      "id": "memory-integrity-preflight",
+      "branch": "astra-wp10",
+      "pr": 29,
+      "write_paths": [
+        "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/"
+      ],
+      "state": "PREPARED_NOT_STARTED"
+    }
+  ],
+  "prior_sessions": {
+    "one_to_nine": "USER_REPORTED_STARTED",
+    "ten_eleven": "USER_REPORT_STARTING"
+  },
+  "path_overlap_with_previous_eleven": 0,
+  "source_authority": "PR29 terminal handoff published; PR45 prior handoff published; reconcile current head before execution",
+  "review_finding": {
+    "id": "CR-C03-001",
+    "review": "7124fce97198ca37a866ee2e39641c85c0694a48",
+    "disposition": "Same consumer concern as session10; read-only reviewers track different installed blob. No parallelACKimplementation assigned."
+  },
+  "active_finance_run": 43631582858,
+  "GLOBAL_RELEASE": false
+}

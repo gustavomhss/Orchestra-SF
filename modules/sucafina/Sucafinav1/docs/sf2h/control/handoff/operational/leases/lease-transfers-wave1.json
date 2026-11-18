@@ -1,0 +1,47 @@
+{
+  "at": "2026-11-13T16:50:02.736851+00:00",
+  "reason": "Imperative4seats: ONE Terra per WP; old secondary Terra lanes idle and checkpointed, source remains preserved.",
+  "transfers": [
+    {
+      "from": "S0-A e4 Terra, IDLE verified head4496c44b3e",
+      "to": "S0-B Terra WP10",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/**",
+        "modules/atlas/boundary/**",
+        "modules/atlas/packages/adapter-io/src/native-bound.ts"
+      ],
+      "source": "4496c44b3ed0c53f9b7718465fdbd947bb17228f",
+      "epoch": 5
+    },
+    {
+      "from": "S2 e4 Terra, IDLE verified head34999c32f5",
+      "to": "S2-C Terra WP06",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/documents/**",
+        "modules/sucafina/Sucafinav1/test/product/wp06/documents/**",
+        "modules/sucafina/package.json",
+        "bun.lock",
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts"
+      ],
+      "source": "34999c32f5d677a298195a5f392f1ddc69de1bb8",
+      "epoch": 5,
+      "extra": "S0 authorizes extracting SAME existing backup-import branch into executeDashboardBackupImport shared producer, reused by legacy HTTP + WP06 JSON. Preserve payload/status, migrations/version/audit/protected state semantics exactly. Do not duplicate logic or add fake target authority."
+    },
+    {
+      "from": "S0-B Terra WP10",
+      "to": "WP10-L Luna",
+      "paths": [
+        "apps/cli/test/sucafina-host-context.test.ts"
+      ],
+      "epoch": 1,
+      "condition": "Luna authors only, no tests; source input1bdf/c849. Terra never edits this path until explicit output/lease handback."
+    }
+  ],
+  "prohibition": "Grok/Luna no tests/CI; Terra tests only final fullWP. No new Goal/supervisor."
+}

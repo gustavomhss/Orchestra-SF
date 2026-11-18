@@ -1,0 +1,309 @@
+{
+  "id": "Q01",
+  "title": "Navegação, isolamento e compatibilidade",
+  "kind": "qualification",
+  "status": "PLANNED_NOT_AUTHORIZED",
+  "priority": 3,
+  "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+  "owns": [
+    "packages/app-shell/e2e/sucafina/native/navigation.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
+    "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+    "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts"
+  ],
+  "may_write_shared_registry": false,
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "task_refs": [
+      "WP01.T01",
+      "WP10.T02",
+      "WP10.T04"
+    ],
+    "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+  },
+  "surfaces": [],
+  "exports": [],
+  "depends_authoring": [
+    {
+      "lock": "ctx",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "surface-specs",
+      "source": "surface-manifest.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "transport",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    }
+  ],
+  "depends_integration": [
+    "F01",
+    "F02",
+    "D01",
+    "F04"
+  ],
+  "depends_qualification": {
+    "work_orders": [
+      "D01",
+      "F01",
+      "F02",
+      "F04",
+      "U01",
+      "U02",
+      "U03",
+      "U04",
+      "U05",
+      "U06",
+      "U07",
+      "U08",
+      "U09",
+      "U10",
+      "U11",
+      "U12",
+      "U13",
+      "U14",
+      "U15",
+      "U16",
+      "U17",
+      "U18",
+      "U19",
+      "U20",
+      "U21",
+      "U22",
+      "U23",
+      "U24",
+      "U25",
+      "U26",
+      "U27",
+      "U28",
+      "U29",
+      "U30",
+      "U31",
+      "U32",
+      "U33",
+      "U34",
+      "U35",
+      "U36",
+      "U37",
+      "U38",
+      "U39",
+      "U40",
+      "U41",
+      "U42",
+      "U43",
+      "U44",
+      "U45",
+      "U46",
+      "U47"
+    ],
+    "external": [],
+    "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+  },
+  "consumes": {
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport"
+    ],
+    "producer_exports": [
+      {
+        "order": "F01",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "F02",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "D01",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "F04",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      }
+    ],
+    "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+    "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+    "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+    "operation_refs": [],
+    "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+  },
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md",
+      "packages/app-shell/e2e/AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "host-signatures.ts",
+      "route-signatures.ts"
+    ],
+    "local": [
+      "work-orders/Q01.json"
+    ],
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport"
+    ],
+    "surfaces": [],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": []
+  },
+  "deliver": [
+    "Author exhaustive route/context/role/negative and legacy alias matrix from frozen surfaces; each case asserts real permitted state and effect.",
+    "Produce exact request fragments and expected collected case IDs for existing dispatcher; no dispatch from author lane."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "Q01-AC01",
+      "expected": "Every one of 15 chapters and every registered alias is exercised; malformed/duplicate/cross-owner params rejected.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "Q01-AC02",
+      "expected": "Two actors and contexts, late response, logout/revocation, downloads and web/desktop boundaries have positive and negative cases.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "Q01-AC03",
+      "expected": "No zero-selection success and no fake approval through seed.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "gates": {
+    "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+    "test_files": [
+      "packages/app-shell/e2e/sucafina/native/navigation.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
+      "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+      "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts"
+    ],
+    "typecheck_packages": [
+      "packages/app-shell"
+    ],
+    "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+    "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+    "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+  },
+  "stop": [
+    "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+    "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+    "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+    "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+    "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+    "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+  ],
+  "handoff": {
+    "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+    "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+    "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+  },
+  "incremental_outputs": [
+    {
+      "id": "Q01.pilot",
+      "owns": [
+        "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts"
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "D01",
+        "F04"
+      ],
+      "consumes_outputs": [
+        "U10.queue",
+        "U13.pr-approval"
+      ],
+      "scope": "Pilot only: installed web/desktop queue and persisted PR review, two real actors, unauthorized transition, owner-change/late response, response-loss lookup and no write retry. The 15-chapter matrix is written separately and qualified later.",
+      "test_files": [
+        "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "D01",
+        "F04"
+      ]
+    },
+    {
+      "id": "Q01.complete",
+      "owns": [
+        "packages/app-shell/e2e/sucafina/native/navigation.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
+        "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts"
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "D01",
+        "F04"
+      ],
+      "scope": "All 15 chapters, every registered alias, context/role and malformed input matrix plus remaining compatibility/isolation obligations; no repeat of cases already proved by the pilot on unchanged inputs.",
+      "depends_qualification": [
+        "D01",
+        "F01",
+        "F02",
+        "F04",
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08",
+        "U09",
+        "U10",
+        "U11",
+        "U12",
+        "U13",
+        "U14",
+        "U15",
+        "U16",
+        "U17",
+        "U18",
+        "U19",
+        "U20",
+        "U21",
+        "U22",
+        "U23",
+        "U24",
+        "U25",
+        "U26",
+        "U27",
+        "U28",
+        "U29",
+        "U30",
+        "U31",
+        "U32",
+        "U33",
+        "U34",
+        "U35",
+        "U36",
+        "U37",
+        "U38",
+        "U39",
+        "U40",
+        "U41",
+        "U42",
+        "U43",
+        "U44",
+        "U45",
+        "U46",
+        "U47"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "id": "review-operations-delta",
+  "branch": "review-operations",
+  "pr": 49,
+  "actor_pack": "S1-R1",
+  "kind": "independent-review",
+  "paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/recheck-wave/"
+  ],
+  "task": "Revisar friamente os deltas PR52/57/58/60 e consumidores novos da PR34. Reconciliar D-OPS-01, I-OPS-02, OPS-REV-01..04 e E-OPS-02 dos pareceres existentes. Checar causas e contraprovas no código real por blob, produto→snapshot, testes efetivamente executados e limitações de restart. Não chamar reprodução do bug de correção. Congelar cada SHA; se source avançar, registrar delta ainda não revisado. Devolver finding original→resolvido/no recheck/aberto, com causalidade, severidade e owner. Sem novas suítes ou edição de produto; sem aprovação final C.",
+  "expected_head": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+  "inputs": [
+    {
+      "pr": 61,
+      "branch": "work-reuse",
+      "sha": "854f3dd9a5257c83b703424a8fd73d831f705f46"
+    },
+    {
+      "pr": 60,
+      "branch": "procurement-apply",
+      "sha": "897484c9a472bd43d17cabe56552f2f8fa890185"
+    },
+    {
+      "pr": 59,
+      "branch": "diagnose-calculation",
+      "sha": "e80fdc933dfd25956a50c22dea76bf077e79815b"
+    },
+    {
+      "pr": 58,
+      "branch": "import-recovery",
+      "sha": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e"
+    },
+    {
+      "pr": 57,
+      "branch": "sourcing-money",
+      "sha": "2a185e05967f611d63796684379761ded991092b"
+    },
+    {
+      "pr": 56,
+      "branch": "finance-journey",
+      "sha": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7"
+    },
+    {
+      "pr": 55,
+      "branch": "diagnose-memory",
+      "sha": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8"
+    },
+    {
+      "pr": 54,
+      "branch": "work-ack",
+      "sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa"
+    },
+    {
+      "pr": 53,
+      "branch": "work-g03",
+      "sha": "031ec153bbd42119dcf8787d8ce358858680f28b"
+    },
+    {
+      "pr": 52,
+      "branch": "operations-fixes",
+      "sha": "d48065d391e1557d43b63525bdc7f55b168d5206"
+    },
+    {
+      "pr": 48,
+      "branch": "ui-source",
+      "sha": "1bf7bfff20c5f04dfc0b6faf9ab41024a2feb326"
+    },
+    {
+      "pr": 47,
+      "branch": "ui-work",
+      "sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244"
+    },
+    {
+      "pr": 46,
+      "branch": "ui-recovery",
+      "sha": "db1dd1709483478ca2c8db2f0a479b72aea59821"
+    },
+    {
+      "pr": 45,
+      "branch": "ui-review",
+      "sha": "32bae2bcc8008b2e81948e434dc1e3326dc4f947"
+    },
+    {
+      "pr": 42,
+      "branch": "finance-resume",
+      "sha": "ab38a14c09d2292553670033b8c1eaea1d26f31f"
+    },
+    {
+      "pr": 41,
+      "branch": "collab-resume",
+      "sha": "9ec98ac9cdc807d2b95040274f4312df768d932d"
+    },
+    {
+      "pr": 39,
+      "branch": "astra-wp12",
+      "sha": "ba27411a7cda9301aa162680a94153a5e643be4d"
+    },
+    {
+      "pr": 38,
+      "branch": "astra-wp14",
+      "sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633"
+    },
+    {
+      "pr": 34,
+      "branch": "astra-operations",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4"
+    },
+    {
+      "pr": 32,
+      "branch": "astra-compose",
+      "sha": "9048e0e65351a5bd80768458a79fed94a4993db7"
+    },
+    {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6"
+    },
+    {
+      "pr": 20,
+      "branch": "astra-wp00",
+      "sha": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d"
+    }
+  ],
+  "actor_identity": "S1-R1",
+  "model_requested": "Astra browser, started manually by user",
+  "model_effective": "NOT_VERIFIED",
+  "session_id": null,
+  "write_authority": "only own mission paths after current head/handoff reconciliation",
+  "lease_epoch": 1,
+  "state": "PREPARED_NOT_STARTED",
+  "consumer": "S0 integration / accepted candidate C later",
+  "do_not_repeat": [
+    "No new native supervisor",
+    "No concurrent writer replacement based on silence",
+    "No epic dispatch",
+    "No final approval of multi-head collection"
+  ]
+}

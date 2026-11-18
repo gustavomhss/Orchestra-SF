@@ -1,0 +1,71 @@
+{
+  "revision": 4,
+  "at": "2026-11-13T19:25:00.377052+00:00",
+  "campaign": "sf2h-integral-20261112",
+  "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "task_allocation": "teams/TASK-OWNERSHIP-v3.json",
+  "source_scope": "15WP/74tasks/17contracts/1610criteria",
+  "operational_rules": [
+    "Whole existing tasks to4implementers perWP; Terra consolidates at end and delivers complete green PR",
+    "Supervisor receives complete PRs only; no micro-file delegation/review or partial-source integration",
+    "Supervisor stacks ready WP PRs and runs final epic/full suite bundle, retaining mandatory original release proofs",
+    "Every failure returns to author WP team for correction until accepted",
+    "Leads coordinate producer/consumer dependencies directly; WP00 owns shared contract compatibility, scope unchanged",
+    "Oneprimary worktree/branch perWP; sole Git/index/finaltester Terra; disjoint helperwrites",
+    "Only Terra runs finalWP surgical hosted tests, no intermediateCI or local producttests",
+    "Reuse SAME live sessions/lanes; stable instruction prefix and changed task/checkpoint delta only; no repeated entirepacks",
+    "Keep access to all criteria; no fake provider caching promises, measure cache usage when exposed",
+    "Do not send root each microcommit/report; report readyPR with head/checks/evidence or real external blocker, finish independent work first",
+    "No new controller/supervisor or cancellation/budget/hostpermission bypass"
+  ],
+  "lead_threads": {
+    "WP00": "01a1d378-b21f-77f0-b324-a2e4b8ac0e47",
+    "WP01": "01a1d378-b854-7e50-b74a-6b338f265e1d",
+    "WP02": "01a1d3ab-ed3d-7bb1-b362-e5f8310a231d",
+    "WP03": "01a1d367-887f-7071-8485-d0b73d370522",
+    "WP04": "01a1d3ab-ee20-7592-9121-530cc81c069e",
+    "WP05": "01a1d3ab-efa7-7fa0-9ef6-4571f963032e",
+    "WP06": "01a1d3ab-f105-7fa3-852f-58a17257a557",
+    "WP07": "01a1d3c6-51c8-7072-a055-b0c06bdd6e28",
+    "WP08": "01a1d3c6-528d-78e2-aab8-51c7e64b6ce7",
+    "WP09": "01a1d3c6-53bb-7150-8d14-69834193425d",
+    "WP10": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
+    "WP11": "01a1d367-892e-78d0-9bdc-1ea2c53a57ed",
+    "WP12": "01a1d367-89f6-7151-aac5-8911e8159d48",
+    "WP13": "01a1d3c6-551e-7151-b436-2e8a3b7585e0",
+    "WP14": "01a1d321-c227-7c23-a31c-6d8114724ee9"
+  },
+  "handoff_to_root": {
+    "required": [
+      "WP",
+      "ready PR URL",
+      "exact head/tree",
+      "complete assigned task IDs",
+      "criteria/consumer evidence references",
+      "Terra final hosted surgical checks runs and exact SHAs",
+      "open mandatory findings=0",
+      "declared PR dependencies"
+    ],
+    "not_ready": [
+      "patch text",
+      "OUTPUT_READY",
+      "draft source heads",
+      "catalog entries with missing consumers"
+    ]
+  },
+  "integration_checkpoint": {
+    "remote_draft": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "local_draft": "46fcf031b4f420ccf3f46cdc6ab107c9b6c3f46d",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+    "status": "preserve existing work; suspend microdreno until readyWP PRs"
+  },
+  "phase_clarification": {
+    "at": "2026-11-13T19:54:58.239269+00:00",
+    "source": "Pinned workflow READY_FOR_INTEGRATION differs from DONE; user requires PRs then final epic",
+    "FINAL_WP_GATE_READY": "All required product implementation and relevant consumers available; Terra may request final surgical hosted validation before a green PR exists. Do not require green to obtain CI lease.",
+    "READY_FOR_BUNDLE": "Complete product implementation, own mandatory findings closed and final WP scoped hosted proof, PR/dependency/criterion mappings delivered; final integrated campaign proofs may be explicitly pending.",
+    "DONE": "Only after applicable criteria and final candidate proof are satisfied. Never count READY_FOR_BUNDLE as delivered GLOBAL_RELEASE.",
+    "no_circular_gate": "WP10.T04/T05 campaign execution/receipts require the final bundle; their code/harness/config/operational inputs must be delivered first. Do not require final epic/AM/C/D receipts as prerequisites to constructing that same bundle.",
+    "not_a_waiver": "Missing product code, broken consumers or missing supported runtime authority are implementation gaps, not deferred final evidence."
+  }
+}

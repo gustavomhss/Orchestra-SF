@@ -1,0 +1,42 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "state": "PREPARED_NEW_MANUAL_SESSION_NOT_STARTED",
+  "branch": "astra-operations",
+  "pr": 34,
+  "expected_head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "actor": "S2-A/WP04 consumer closure",
+  "epoch": 1,
+  "inputs": {
+    "sourcing": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+    "operations": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+    "financial_diagnostic": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7"
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/operations-consumers/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/"
+  ],
+  "verbatim_intake_only": [
+    "modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+  ],
+  "tasks": [
+    "Legacy domain.view request.value must reconcile sourcing snapshot with C02/C06 when a future PO exists; cover unmounted Requests table and separate PO difference presentation and export consumers, preserve snapshots/policy.",
+    "Fix actual Atlas test caller in this branch missing procurementEvidenceWrites without fabricating capability or weakening checks. The independent astra-wp14 branch has a different file: do not fix the wrong copy."
+  ],
+  "constraints": [
+    "Read final handoff PR34 and current heads before taking writing authority; no replacement based on silence.",
+    "No new branch/PR; no whole snapshot or sf2-control merge; intake only exact monetary blob already reviewed from sourcing-money, without changing its producer independently.",
+    "Do not edit documents/schemas/workbench/capabilities or ui/decision-apply assigned operations-fixes; do not edit new WP10 or Finance producers.",
+    "Do not rerun completed 58+5 sourcing or 14 import or10 prepared tests without affected input; new surgical consumer selection and canonical typechecks/guards only via authorized interface.",
+    "User manual browser startup, not claimed launched; no second supervisor/native restart."
+  ],
+  "new_finance_delivery": {
+    "pr": 56,
+    "head": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+    "finding": "FIN-IND-005 OPEN; coverage-preview.ts candidate patch; finance-resume existing proposed continuation owns intake. No duplicate Finance session."
+  },
+  "GLOBAL_RELEASE": false
+}

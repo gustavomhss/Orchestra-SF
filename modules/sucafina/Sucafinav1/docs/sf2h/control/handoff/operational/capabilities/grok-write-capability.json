@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-13T20:22:50.885066+00:00",
+  "model_requested": "grok-4.7",
+  "model_confirmed": "grok-4.7-build",
+  "probe": "explicit tool write, file read back by root absent",
+  "result": "DIRECT_SCOPED_WRITE_VERIFIED",
+  "proof_files": [
+    "capabilities/grok-scoped-write-result.json",
+    "capabilities/grok-scoped-write-proof.txt",
+    "capabilities/grok-scoped-glob-result.json",
+    "capabilities/grok-scoped-write-nested/proof.txt"
+  ],
+  "requested_path": "capabilities/grok-scoped-write-proof.txt",
+  "reason": "Earlier missing permission allow rule, not model inability. Documented --allow Write(exact-authorized-path) works with acceptEdits and no-plan.",
+  "no_bypass": true,
+  "continuation": "Use real direct writes in owned task scopes, keep same sessions, no bypass flags",
+  "session_id": "0f726c7b-8348-4e51-9bdb-2f4b69033f69",
+  "previous_result": "BLOCKED_BY_HOST_APPROVAL",
+  "directory_glob_verified": true,
+  "verified_allow_examples": [
+    "Write(/ABS/authorized-file.txt)",
+    "Write(/ABS/owned-subtree/**)"
+  ],
+  "permission_mode": "acceptEdits",
+  "plan_mode": false
+}

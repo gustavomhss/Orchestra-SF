@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-13T19:54:58.248101+00:00",
+  "status": "PREPARED_STATICALLY_VALIDATED_NOT_EXECUTED",
+  "workflow_sha256": "87aeb489a441ed24cd823c747748bff53053831b7307e4e94ab85ddf8e714c4c",
+  "manifest_sha256": "38d6dd42c3dbc321f1c7a45b28a73398173cfc130d7174204c6b02a76c4136d3",
+  "author": "S0-C e4 /root/pr_integrator",
+  "reviewer": "S0 root",
+  "returned_findings": [
+    "Invalid jq from broad inputs.packages substitution",
+    "Missing Core typecheck",
+    "Unrequested Windows E2E duplication"
+  ],
+  "author_corrections_reported": [
+    "jq null/empty input validation",
+    "Core typecheck added",
+    "G7 stdout/stderr/exit/candidate/checkout/base SHA artifacts",
+    "Default Linux E2E restored",
+    "62 Bash steps and six Node snippet syntax checked; actionlint static pass"
+  ],
+  "root_inspection": [
+    "Workflow digest matches manifest",
+    "Corrupted jq source absent in revised bytes"
+  ],
+  "dedup_audit_sha256": "d506c02e968ba228bab5d797c46862d1f25ab656dd40ecaf4f37f653577b599b",
+  "remaining": [
+    "Cold integrated execution after ready WP PRs",
+    "Three required production Playwright specs absent in old stack draft; ownership transferred to WP10 team e15",
+    "Actual AM01-AM06 and reviews/C/D/G7/G8 full release proof"
+  ],
+  "ci_dispatched": false,
+  "GLOBAL_RELEASE": false
+}

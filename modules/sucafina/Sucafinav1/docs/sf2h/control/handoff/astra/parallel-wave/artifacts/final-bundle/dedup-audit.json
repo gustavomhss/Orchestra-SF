@@ -1,0 +1,66 @@
+{
+  "status": "STATIC_AUDIT_NOT_RUN",
+  "candidate": "draft at source audit; revalidate against frozen C",
+  "policy": "Only dedupe with same selected tests, runner/configuration, fixture identity and no weaker omni proof; retain mandatory lanes until proven.",
+  "findings": [
+    {
+      "ids": [
+        "CI-SF"
+      ],
+      "result": "retain",
+      "reason": "modules/sucafina/package.json has no test script; Turbo test lane cannot prove this direct Bun suite."
+    },
+    {
+      "ids": [
+        "CI-CLI"
+      ],
+      "result": "retain",
+      "reason": "Turbo CLI test runs apps/cli/script/test.ts, timeout 30000 and excludes native/distribution paths; CI-CLI request is direct Bun with no exclusions or timeout argument, so selections differ."
+    },
+    {
+      "ids": [
+        "CI-APP-SRC"
+      ],
+      "result": "retain",
+      "reason": "Turbo package uses test:unit with explicit ./src, --only-failures and happydom; exact test-ci request uses bunfig root src and adds nonce-bound omni preload. Runtime/preload identity and evidence are not the same."
+    },
+    {
+      "ids": [
+        "CI-APP-BROWSER"
+      ],
+      "result": "retain",
+      "reason": "Turbo test:browser preloads omni with default suite scope; exact test-ci directory-filter request derives declared scope through omniControlScope. Selection may overlap but evidence scope differs; never weaken suite lane."
+    },
+    {
+      "ids": [
+        "CI-ATLAS-BUSINESS"
+      ],
+      "result": "retain",
+      "reason": "Both use timeout 30000 but the exact-recipe job explicitly adds nonce-bound omni preload because boundary bunfig omits it; upstream Turbo package test does not supply that preload. Runtime and evidence identity differ."
+    },
+    {
+      "ids": [
+        "CI-UI-OPERATIONS",
+        "CI-UI-DECISIONS",
+        "CI-UI-REPORTS"
+      ],
+      "result": "retain",
+      "reason": "Upstream e2e uses default playwright.config.ts dev server; recipes require e2e/playwright.production.config.ts build/serve and exact nonempty named-spec selection. Different server/configuration and three specs absent in current draft."
+    }
+  ],
+  "conclusion": "No exact equivalence established; no suite or mandatory request removed. This explicitly records overlap and limits rather than treating an old or differently configured run as proof. Re-evaluate identity/dedup at C if team supplies evidence.",
+  "sources": [
+    "packages/script/src/test-plan.ts",
+    "apps/cli/script/test.ts",
+    "apps/cli/package.json",
+    "modules/sucafina/package.json",
+    "modules/atlas/boundary/package.json",
+    "modules/atlas/boundary/bunfig.toml",
+    "packages/app-shell/package.json",
+    "packages/app-shell/bunfig.toml",
+    "packages/app-shell/playwright.config.ts",
+    "packages/app-shell/e2e/playwright.production.config.ts",
+    "script/test-ci-request.ts",
+    "script/test-omni-control.ts"
+  ]
+}

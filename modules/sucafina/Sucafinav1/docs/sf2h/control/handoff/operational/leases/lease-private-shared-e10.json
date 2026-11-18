@@ -1,0 +1,19 @@
+{
+  "event_id": "wp10-private-shared-e10",
+  "source_actor": "S0",
+  "target_actor": "S0-B",
+  "lease_epoch": 10,
+  "source_sha": "afefb00d3d2226f8173b7f746b501dda91c553cf",
+  "paths": [
+    "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+    "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+    "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+  ],
+  "boundaries": [
+    "private integration APIs only; 17 canonical contracts untouched",
+    "no financial role/grant widening or new C16 ops",
+    "lead review before acceptance",
+    "root no parallel edits; writer publishes source+blob manifest deltas"
+  ],
+  "at": "2026-11-13T18:31:50.522651+00:00"
+}

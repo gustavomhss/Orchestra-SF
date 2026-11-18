@@ -1,0 +1,1015 @@
+{
+  "schema": "orchestra-sf-independent-operations-evidence-v1",
+  "date": "2026-11-14",
+  "reviewedSha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "reviewedTree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e",
+  "reviewedPr": "https://github.com/gustavomhss/Orchestra-SF/pull/34",
+  "method": "GitHub MCP: objetos Git, arquivos no SHA fixado, diffs enumerados, Actions API/jobs/logs; inspeção estática independente. Sem shell, testes locais, CI novo ou dispatch.",
+  "productPins": {
+    "W1": {
+      "sha": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+      "tree": "e7c36171c132009e34d4f870e5d300bab4a1c82a"
+    },
+    "W2": {
+      "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+      "tree": "d780548f6058e08e555e0565f013b3b0054973da"
+    },
+    "W3": {
+      "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "tree": "a3ebf675545fadcd3124b387b15f396550652df8"
+    },
+    "W4": {
+      "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605"
+    },
+    "W5": {
+      "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
+    },
+    "D1": {
+      "sha": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+      "tree": "6264ac2e186a1455dbd9ad5fce16b3c1030769be"
+    },
+    "D2": {
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e"
+    },
+    "PR23_PRODUCT": {
+      "sha": "dae18b4f43f0daecf46264e876810025684a919d",
+      "tree": "ceb9615bb5bbd5f829d2e9569a2797e3124236a5"
+    },
+    "PR23_HEAD": {
+      "sha": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "tree": "e7d11d7fff0f35d180083ba2497b5b750eeb206d"
+    },
+    "PR26_W20": {
+      "sha": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "tree": "72e5df050703e89599bffc5697381d7f26d958fe"
+    }
+  },
+  "pinVerification": {
+    "currentPrHeadEqualsFixedSha": true,
+    "prBase": "sf2-stack",
+    "prBaseSha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "changedFilesInventoried": 402,
+    "allChangedFilesReadLineByLine": false,
+    "W5toD2": {
+      "ahead": 2,
+      "behind": 0,
+      "totalCommits": 2,
+      "files": 65,
+      "allAdded": true,
+      "onlyMarkdownOrJson": true,
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/"
+      ],
+      "existingProductFilesChanged": false,
+      "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/c4a2f4ebeb88f5915e51569b921be06b3c37ddad...ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "parents": [
+        "W5",
+        "D1",
+        "D2"
+      ],
+      "independentlyVerified": true,
+      "notGlobalCDQualification": true
+    }
+  },
+  "norm": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "packSha": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "wpBlobs": {
+      "WP04": "a6d5f581be25aeeeee223a9ac0e099b4d22dcc7e",
+      "WP06": "1aacabdc304f9e298084960a52a5fe55fd8fe98a"
+    },
+    "campaignSha256": {
+      "value": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "provenance": "Consta dos packs fixados; não recalculado independentemente nesta revisão."
+    },
+    "mandatoryAppendices": {
+      "WP04": [
+        "specs/product-acceptance.md",
+        "specs/resident-runtime.md"
+      ],
+      "WP06": [
+        "specs/product-acceptance.md",
+        "specs/resident-runtime.md",
+        "specs/atlas-packaging.md"
+      ]
+    },
+    "allMandatoryAppendicesRead": true,
+    "structuralCriterionComparison": [
+      {
+        "wp": "WP04",
+        "canonical": 111,
+        "receipt": 111,
+        "uniqueCanonical": 111,
+        "uniqueReceipt": 111,
+        "textMismatch": [],
+        "extra": [],
+        "scopes": {
+          "WP04": 20,
+          "WP04.T01": 20,
+          "WP04.T02": 14,
+          "WP04.T03": 21,
+          "WP04.T04": 15,
+          "WP04.T05": 21
+        }
+      },
+      {
+        "wp": "WP06",
+        "canonical": 140,
+        "receipt": 140,
+        "uniqueCanonical": 140,
+        "uniqueReceipt": 140,
+        "textMismatch": [],
+        "extra": [],
+        "scopes": {
+          "WP06": 27,
+          "WP06.T01": 16,
+          "WP06.T02": 28,
+          "WP06.T03": 24,
+          "WP06.T04": 18,
+          "WP06.T05": 27
+        }
+      }
+    ]
+  },
+  "ci": {
+    "auditedExistingRuns": 23,
+    "mainRuns": [
+      {
+        "run": 43578845234,
+        "job": 132399004959,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578845234",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578845234/job/132399004959",
+        "productKey": "W1",
+        "productSha": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+        "snapshotSha": "acd7f87c28c70a68bd75ab65bac6c05477f470fe",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/acd7f87c28c70a68bd75ab65bac6c05477f470fe/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "failure",
+        "selection": "Bun: 43 arquivos explícitos",
+        "selectionObserved": "43/43; nenhum ausente/extra",
+        "observed": {
+          "pass": 100,
+          "fail": 1,
+          "skip": 0,
+          "assertions": 2052
+        },
+        "limits": "Timeout de native import; não um agregado verde.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        },
+        "authoritativeRequest": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/wp04/capabilities.test.ts",
+            "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+            "Sucafinav1/test/product/wp04/confirmation.test.ts",
+            "Sucafinav1/test/product/wp04/contracts.test.ts",
+            "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+            "Sucafinav1/test/product/wp04/reissue.test.ts",
+            "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+            "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+            "Sucafinav1/test/product/wp04/queue-view.test.ts",
+            "Sucafinav1/test/product/wp01/personal-views.test.ts",
+            "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+            "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+            "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+            "Sucafinav1/test/product/wp07/review-port.test.ts",
+            "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+            "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+            "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+            "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+            "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+            "Sucafinav1/test/product/wp12/author-reader.test.ts",
+            "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+            "Sucafinav1/test/product/wp03/port.test.ts",
+            "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+            "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+            "Sucafinav1/test/product/wp03/persistence.test.ts",
+            "Sucafinav1/test/product/wp13/handoff.test.ts",
+            "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+            "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+            "Sucafinav1/test/product/wp04/host-integration.test.ts",
+            "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+            "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+            "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+            "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+            "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+            "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+            "Sucafinav1/test/product/wp06/import-runtime.test.ts",
+            "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+            "Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+            "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+            "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+            "Sucafinav1/test/product/wp06/native/documents.test.ts",
+            "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+            "Sucafinav1/test/product/wp06/imports/analysis-options.test.ts"
+          ],
+          "env": {}
+        }
+      },
+      {
+        "run": 43580401528,
+        "job": 132403694001,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580401528",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580401528/job/132403694001",
+        "productKey": "W2",
+        "productSha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+        "snapshotSha": "26726f85ce39819fcfa376daf1e6ebea203188b2",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/26726f85ce39819fcfa376daf1e6ebea203188b2/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "Playwright: procurement.spec.ts, imports.spec.ts, documents.spec.ts",
+        "selectionObserved": "3/3; 8 Procurement + 14 Imports + 8 Documents",
+        "observed": {
+          "pass": 30,
+          "fail": 0,
+          "workers": 1,
+          "retries": 0,
+          "repeatEach": 1
+        },
+        "limits": "HTTP de fixture; qualifica renderer/interação declarada.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43580976466,
+        "job": 132405428532,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580976466",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580976466/job/132405428532",
+        "productKey": "W3",
+        "productSha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "snapshotSha": "c2ad4cb308ffa6e4b8d1a0cf5ed031bf1a304a01",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c2ad4cb308ffa6e4b8d1a0cf5ed031bf1a304a01/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "Bun: wp06/native/import-analysis.test.ts",
+        "selectionObserved": "1/1; nenhum ausente/extra",
+        "observed": {
+          "pass": 2,
+          "fail": 0,
+          "assertions": 123
+        },
+        "limits": "Ingresso de provider gravado; timeout mantido. Não inferência externa/GNATIVE.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43582205250,
+        "job": 132409129729,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582205250",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582205250/job/132409129729",
+        "productKey": "W4",
+        "productSha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "snapshotSha": "6108eafea9a35ba15968271f0aed76b1498d5ac4",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/6108eafea9a35ba15968271f0aed76b1498d5ac4/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "failure",
+        "selection": "Bun: 24 arquivos explícitos",
+        "selectionObserved": "24/24; nenhum ausente/extra",
+        "observed": {
+          "pass": 114,
+          "fail": 3,
+          "assertions": 1445
+        },
+        "limits": "Falhas CAS H02/H03/H05; esses cenários reobservados positivos em W5.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        },
+        "authoritativeRequest": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/parity-planner.test.ts",
+            "Sucafinav1/test/planner-runtime.test.ts",
+            "Sucafinav1/test/product/wp02/confirmation.test.ts",
+            "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+            "Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+            "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+            "Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+            "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+            "Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+            "Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+            "Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+            "Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+            "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+            "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+            "Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+            "Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+            "Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+            "Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+            "Sucafinav1/test/product/wp04/host-integration.test.ts",
+            "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+            "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+            "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+            "Sucafinav1/test/product/wp11/case-port.test.ts",
+            "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts"
+          ],
+          "env": {}
+        }
+      },
+      {
+        "run": 43582881446,
+        "job": 132411172044,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582881446",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582881446/job/132411172044",
+        "productKey": "W4",
+        "productSha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "snapshotSha": "5a6d4ee27f2279b8d5e6e1c19c392d8b92a8f6d7",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5a6d4ee27f2279b8d5e6e1c19c392d8b92a8f6d7/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "Playwright: wp06/documents.spec.ts",
+        "selectionObserved": "1/1",
+        "observed": {
+          "pass": 8,
+          "fail": 0,
+          "workers": 1,
+          "retries": 0,
+          "repeatEach": 1
+        },
+        "limits": "HTTP de fixture; não qualifica sozinho parser/SQLite/ACL/BCS.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43584394810,
+        "job": 132415678483,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584394810",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584394810/job/132415678483",
+        "productKey": "W5",
+        "productSha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+        "snapshotSha": "70bfcae5a16f8a007ee95402976cd1534d4a2ca3",
+        "envelopePath": ".astra-operations-check.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/70bfcae5a16f8a007ee95402976cd1534d4a2ca3/.astra-operations-check.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "failure",
+        "selection": "Typecheck Sucafina; typecheck CLI; guards",
+        "selectionObserved": null,
+        "observed": {
+          "sucafinaTypecheck": "failure",
+          "cliTypecheck": "success",
+          "guards": "success",
+          "guardRules": 78,
+          "guardPaths": 772,
+          "guardGates": 0,
+          "guardWarnings": 11,
+          "guardErrors": 0
+        },
+        "limits": "TS2741 source-access-atlas.test.ts:167:41, procurementEvidenceWrites ausente.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": false,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43584405211,
+        "job": 132415709827,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584405211",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584405211/job/132415709827",
+        "productKey": "W5",
+        "productSha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+        "snapshotSha": "9e1d872f453c218909d328b480ffaf8bed6f0c82",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/9e1d872f453c218909d328b480ffaf8bed6f0c82/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "failure",
+        "selection": "Bun: wp01/browser-startup.test.ts; wp04/host-integration.test.ts; wp01/browser-lifecycle.test.ts",
+        "selectionObserved": "3/3; nenhum ausente/extra",
+        "observed": {
+          "pass": 8,
+          "fail": 3,
+          "assertions": 190,
+          "omni": "pass",
+          "driverSpawns": 1,
+          "delegations": 0
+        },
+        "limits": "H01–H08 passam; startup/H09/lifecycle falham. H09 não chega à fixture/HTTP. H06 não é restart físico.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43586114915,
+        "job": 132420828324,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586114915",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586114915/job/132420828324",
+        "productKey": "D1",
+        "productSha": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+        "snapshotSha": "09bd92ba86dca618c398c893303f29d0902dc98e",
+        "envelopePath": ".astra-operations-check.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/09bd92ba86dca618c398c893303f29d0902dc98e/.astra-operations-check.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "failure",
+        "selection": "Guards",
+        "selectionObserved": null,
+        "observed": {
+          "sucafinaTypecheck": "skipped",
+          "cliTypecheck": "skipped",
+          "guardRules": 78,
+          "guardPaths": 847,
+          "guardGates": 12,
+          "guardWarnings": 11,
+          "guardErrors": 0
+        },
+        "limits": "12 raw.log recusados por agent-scratch; removidos em D2.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": false,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43586639212,
+        "job": 132422467329,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586639212",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586639212/job/132422467329",
+        "productKey": "D2",
+        "productSha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "snapshotSha": "5f5eeacabc5af2f7ceda1c27cbae9f17d8df9f8b",
+        "envelopePath": ".astra-operations-check.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5f5eeacabc5af2f7ceda1c27cbae9f17d8df9f8b/.astra-operations-check.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "Guards; typecheckSha=W5",
+        "selectionObserved": null,
+        "observed": {
+          "sucafinaTypecheck": "skipped",
+          "cliTypecheck": "skipped",
+          "guardRules": 78,
+          "guardPaths": 837,
+          "guardGates": 0,
+          "guardWarnings": 11,
+          "guardErrors": 0
+        },
+        "limits": "Green de guards não substitui typecheck W5; ambos typechecks skipped por mode guards.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": false,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43534137756,
+        "job": 132258880150,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534137756",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534137756/job/132258880150",
+        "productKey": "PR23_PRODUCT",
+        "productSha": "dae18b4f43f0daecf46264e876810025684a919d",
+        "snapshotSha": "846cc5aa5c4e1413e741d4de06bd0f53238f34ed",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/846cc5aa5c4e1413e741d4de06bd0f53238f34ed/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "Bun: 53 arquivos explícitos",
+        "selectionObserved": "53/53; nenhum ausente/extra",
+        "observed": {
+          "pass": 257,
+          "fail": 0,
+          "assertions": 2763
+        },
+        "limits": "Observação histórica de componente; não reatribuída a W5.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43534795463,
+        "job": 132261059694,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/job/132261059694",
+        "productKey": "PR23_PRODUCT",
+        "productSha": "dae18b4f43f0daecf46264e876810025684a919d",
+        "snapshotSha": "23f527266a8bf0da2c015624d40db417e2d9bb80",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/23f527266a8bf0da2c015624d40db417e2d9bb80/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "Playwright: procurement.spec.ts; sourcing-controller.spec.ts",
+        "selectionObserved": "2/2",
+        "observed": {
+          "pass": 10,
+          "fail": 0,
+          "workers": 1,
+          "retries": 0,
+          "repeatEach": 1
+        },
+        "limits": "Observação histórica.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43557187051,
+        "job": 132332582167,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43557187051",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43557187051/job/132332582167",
+        "productKey": "PR26_W20",
+        "productSha": "e7fd8ff797441681f360e7775155a8cc2830280c",
+        "snapshotSha": "2fa1f2cf08fd575e162c252c87a07e9aed104822",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2fa1f2cf08fd575e162c252c87a07e9aed104822/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "Bun: wp06/import-runtime.test.ts; wp06/imports/dashboard-runtime.test.ts; wp06/native/import-analysis.test.ts",
+        "selectionObserved": "3/3; nenhum ausente/extra",
+        "observed": {
+          "pass": 6,
+          "fail": 0,
+          "assertions": 224
+        },
+        "limits": "U20 confirmado success; consumidores reais do componente.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43556886355,
+        "job": 132331664143,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43556886355",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43556886355/job/132331664143",
+        "productKey": "PR26_W20",
+        "productSha": "e7fd8ff797441681f360e7775155a8cc2830280c",
+        "snapshotSha": "449cfa1132f520dba09cb3a076ce5bbdd3d20294",
+        "envelopePath": ".astra-wp06-check.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/449cfa1132f520dba09cb3a076ce5bbdd3d20294/.astra-wp06-check.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "WP06 scoped-checks",
+        "selectionObserved": null,
+        "observed": {
+          "guards": "success",
+          "guardRules": 78,
+          "guardPaths": 620,
+          "guardGates": 0,
+          "guardWarnings": 11,
+          "guardErrors": 0
+        },
+        "limits": "C20 histórico.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": false,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      },
+      {
+        "run": 43556882437,
+        "job": 132331649577,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43556882437",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43556882437/job/132331649577",
+        "productKey": "PR26_W20",
+        "productSha": "e7fd8ff797441681f360e7775155a8cc2830280c",
+        "snapshotSha": "16533e5f9beb40ee3e4b70d61cf8fa758b46d670",
+        "envelopePath": ".ci-run.json",
+        "envelopeUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/16533e5f9beb40ee3e4b70d61cf8fa758b46d670/.ci-run.json",
+        "attempt": 1,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "selection": "Playwright: wp06/imports.spec.ts; wp06/documents.spec.ts",
+        "selectionObserved": "2/2",
+        "observed": {
+          "pass": 22,
+          "fail": 0,
+          "workers": 1,
+          "retries": 0,
+          "repeatEach": 1
+        },
+        "limits": "B20 histórico; interfaces com HTTP de fixture.",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": true,
+          "aheadBy": 1
+        }
+      }
+    ],
+    "historicalRuns": [
+      {
+        "key": "N16",
+        "run": 43552127199,
+        "job": 132316739313,
+        "snapshotSha": "46a287c25ed11aeea64bc95c7addf6ed33a11f9d",
+        "declaredProductSha": "60f303736bc01617d4ebbbd5ad9f4631ffa81736",
+        "observed": {
+          "pass": 6,
+          "fail": 0,
+          "assertions": 372,
+          "files": 3
+        },
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43552127199",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43552127199/job/132316739313",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": false
+        },
+        "limit": "Produto/parent do recibo não foi verificado por git commit/compare independente nesta auditoria; não marcar a aresta como comprovada."
+      },
+      {
+        "key": "R18",
+        "run": 43554658437,
+        "job": 132324664659,
+        "snapshotSha": "af826c317bf6e6a4bd7eb1db7e4b1c8619deedc7",
+        "declaredProductSha": "14cb7e829ed391a64d907a165fc328c5ed94f0f4",
+        "observed": {
+          "pass": 295,
+          "skip": 2,
+          "fail": 0,
+          "assertions": 3747,
+          "files": 78,
+          "omni": "pass",
+          "spawns": 4,
+          "delegations": 0
+        },
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43554658437",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43554658437/job/132324664659",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": false
+        },
+        "limit": "Produto/parent do recibo não foi verificado por git commit/compare independente nesta auditoria; não marcar a aresta como comprovada."
+      },
+      {
+        "key": "R19",
+        "run": 43555674548,
+        "job": 132327869450,
+        "snapshotSha": "98f8ce97edb049a91b22a877894a28399c7316f6",
+        "declaredProductSha": "357177bff8d9ed8c82f3ff47988a2336dd73f882",
+        "observed": {
+          "pass": 36,
+          "skip": 2,
+          "fail": 0,
+          "assertions": 484,
+          "files": 1
+        },
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43555674548",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43555674548/job/132327869450",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "selectionAgainstObservedFiles": true,
+          "gitSoleParentAndOnlyEnvelopeDiff": false
+        },
+        "limit": "Produto/parent do recibo não foi verificado por git commit/compare independente nesta auditoria; não marcar a aresta como comprovada."
+      }
+    ],
+    "additionalRuns": [
+      {
+        "run": 43534115446,
+        "job": 132258805309,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534115446",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534115446/job/132258805309",
+        "productSha": "dae18b4f43f0daecf46264e876810025684a919d",
+        "conclusion": "success",
+        "observed": "WP04 typecheck/guards;614paths/0gates/11warnings",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "productCheckoutInLog": true,
+          "gitCompare": false
+        }
+      },
+      {
+        "run": 43536188749,
+        "job": 132265645030,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536188749",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536188749/job/132265645030",
+        "productSha": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+        "conclusion": "success",
+        "observed": "WP04 typecheck/guards;645paths/0gates/11warnings",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "productCheckoutInLog": true,
+          "gitCompare": false
+        }
+      },
+      {
+        "run": 43578238861,
+        "job": 132397139678,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578238861",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578238861/job/132397139678",
+        "productSha": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+        "conclusion": "failure",
+        "observed": "Sucafina falha Atlas; CLI/guards success",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "productCheckoutInLog": true,
+          "gitCompare": false
+        }
+      },
+      {
+        "run": 43580277793,
+        "job": 132403312862,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580277793",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580277793/job/132403312862",
+        "productSha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+        "conclusion": "failure",
+        "observed": "Sucafina/CLI falham narrowing TrustedDomainContext→TrustedUiContext, case-port fixture sem reviewDigestFor/revalidateProducer, Atlas; guards success",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "productCheckoutInLog": true,
+          "gitCompare": false
+        }
+      },
+      {
+        "run": 43580747934,
+        "job": 132404768523,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580747934",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580747934/job/132404768523",
+        "productSha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "conclusion": "failure",
+        "observed": "Sucafina falha somente Atlas; CLI/guards success",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "productCheckoutInLog": true,
+          "gitCompare": false
+        }
+      },
+      {
+        "run": 43582192808,
+        "job": 132409093299,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582192808",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582192808/job/132409093299",
+        "productSha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "conclusion": "failure",
+        "observed": "Sucafina falha somente Atlas; CLI/guards success",
+        "independentChecks": {
+          "officialRunAndJobLogs": true,
+          "productCheckoutInLog": true,
+          "gitCompare": false
+        }
+      }
+    ],
+    "totalsMustNotBeSummedAcrossRuns": true,
+    "historicalCaseReconciliation": {
+      "rows": 303,
+      "matchedToOfficialLogs": 303,
+      "unmatched": 0,
+      "identity": [
+        "path",
+        "status",
+        "case name"
+      ],
+      "pass": 301,
+      "skip": 2,
+      "originCounts": {
+        "N16": 4,
+        "R18": 255,
+        "R19": 38,
+        "U20": 6
+      },
+      "oneAggregateRun": false,
+      "promotedToW5Acceptance": false,
+      "skippedCases": [
+        "rejects foreign UID directory (requires root fixture privileges)",
+        "rejects foreign UID database (requires root fixture privileges)"
+      ]
+    },
+    "closureLedger": {
+      "files": 81,
+      "authorReuseQualifiedComponentObservationsAtW5": 80,
+      "ownerConsumerProofStillRequired": 1,
+      "independentObservation": "Existência/resultados históricos confrontados aos logs; análise transitiva de reuso do autor não é nova prova CI ou aceite independente."
+    },
+    "artifactDigests": {
+      "independentlyDownloadedOrRehashed": false,
+      "policy": "Nenhum hash de ZIP/artifact é apresentado como recalculado; metadados do Actions não substituem bytes."
+    }
+  },
+  "browserAcquisition": {
+    "run": 43584405211,
+    "job": 132415709827,
+    "driverStep": "chromium-launch",
+    "cancelAfterApproxMs": 10000,
+    "error": "Browser driver launch exceeded 9667 ms",
+    "H09Error": "WP01 browser pool is unavailable after an earlier failure",
+    "H09FailureAfterMs": 6.34,
+    "fixtureOrHttpJourneyReached": false,
+    "physicalCloseProved": false,
+    "rootCause": "NEEDS_EVIDENCE",
+    "installChromiumStep": "Skipped neste runner Bun; não atribuído como causa do stall"
+  },
+  "executionLimits": [
+    "Nenhum cenário novo dos findings foi executado pelos revisores; resultados foram derivados de código e comparados a provas já existentes.",
+    "Playwright imports e documents interceptam HTTP; prova da UI não substitui parsing real, atomicidade, ACL, SQLite ou BCS.",
+    "Native fixture usa wp06-recorded-ingress/deterministic-public-events; não comprova inferência externa, scanner instalado ou GNATIVE.",
+    "H06 cobre perda de resposta e limpeza de cache, sem reinício físico. E-OPS-02 limita a prova específica de imports após reopen.",
+    "Histórico parcial, cláusulas temporais/leases, medições humanas, AM01–AM06 e gates finais do candidato integrado permanecem pendentes conforme seu escopo.",
+    "Nenhum teste/typecheck/guard foi executado nesta revisão, por instrução expressa do usuário; não foram criados envelopes de CI.",
+    "A revisão de 402 paths foi inventário e leitura seletiva de diffs/caminhos críticos; não revisão exaustiva linha a linha de cada arquivo."
+  ],
+  "documentControl": {
+    "branch": "review-operations",
+    "base": "sf2-control",
+    "expectedParent": "6830fa159d30b60d001f91a47326ae88c6255282",
+    "writePrefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/",
+    "productChangeAuthorized": false,
+    "initialControlBase": "d3d411f7e2476a562a57aa7620823980eaf34e46",
+    "existingPr": 49
+  },
+  "authorReceiptSources": {
+    "historicalCaseTable": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-81.normalized.json",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-81.normalized.json",
+      "role": "author-ledger, compared with independent official Actions observations; not accepted by assertion"
+    },
+    "historicalRunLedger": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/runs-reconciled-v3.json",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/runs-reconciled-v3.json",
+      "role": "author-ledger, compared with independent official Actions observations; not accepted by assertion"
+    },
+    "W5PublicationClosure": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-W5-publication-closure.json",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-W5-publication-closure.json",
+      "role": "author-ledger, compared with independent official Actions observations; not accepted by assertion"
+    },
+    "W4W5ScopeAnalysis": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-W4-W5.json",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-W4-W5.json",
+      "role": "author-ledger, compared with independent official Actions observations; not accepted by assertion"
+    },
+    "selection43Request": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-request.json",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-request.json",
+      "role": "author-ledger, compared with independent official Actions observations; not accepted by assertion"
+    },
+    "selection43Result": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-final.json",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-final.json",
+      "role": "author-ledger, compared with independent official Actions observations; not accepted by assertion"
+    },
+    "selection43ActualFiles": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-actual-files.json",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-actual-files.json",
+      "role": "author-ledger, compared with independent official Actions observations; not accepted by assertion"
+    },
+    "selection24Run": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun24-43582205250.json",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun24-43582205250.json",
+      "role": "author-ledger, compared with independent official Actions observations; not accepted by assertion"
+    }
+  },
+  "readingScope": {
+    "normative": {
+      "AGENTS": "AGENTS.md no pin de produto e na branch documental; ausência de instrução adicional nas subárvores consultadas",
+      "wp": "WP04/WP06 integrais, dez tasks e todos os 251 checks/axiomas; contratos pertinentes; packs/handoffs fixados",
+      "common": "execution/COMMON.md; START.md; WORKFLOW.md; anexos obrigatórios preservados",
+      "specAcceptance": "Leitura não equivale a execução de gates de empacotamento, residentes ou candidato integrado"
+    },
+    "WP04": [
+      "monetary / procurement-screen / porta act / runtime de comandos reais",
+      "C02 port e comparação; confirmação e dependências C06",
+      "source resolver/projection, identidade/incarnação, reissue/fences",
+      "preparação C12, review, host, Apply/recibo, UI e parsers HTTP",
+      "filas, papéis, holders, edição guiada, fornecedores e preservação de política nos trechos pertinentes",
+      "testes financeiros, prepared-production, confirmação/revogação e host integration"
+    ],
+    "WP06": [
+      "parse/export/manifesto, preview e adapters de domínio; cenário e opções",
+      "staging, Apply/coordenador, recibos e adapters atômicos Planner/Dashboard",
+      "state provider, persistência protegida e SQLite; recovery/retry",
+      "byte-port, schemas, índices, extração e confirmação documentais",
+      "search, RAG adapter, seleção autorizada de Request-document e dossiê",
+      "serviços reais CLI/imports/documents/dossier, UI e testes correspondentes"
+    ],
+    "depthLimit": "Inventário completo de 402 paths e leitura dirigida de diffs/consumidores críticos; não se reivindica leitura linha a linha de todos os arquivos, todo runtime ou toda suite."
+  },
+  "knownGaps": [
+    {
+      "id": "OPS03",
+      "kind": "KNOWN_INTEGRATION_GAP",
+      "owner": "Compose/Finance e consumidores genéricos",
+      "diagnosis": "product/decisions/http.ts:168 só admite caseRef/changeId/choiceId; product/ui/decision-apply.ts:66 envia também reviewDigest. O parser genérico recusa a quarta chave; o parser Procurement:68 admite as quatro. H02–H08 não qualificam Dashboard/Planner. Binding posterior relatado fora do pin não foi integrado ou aceito aqui.",
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+        "line": 168
+      },
+      "newFinding": false
+    },
+    {
+      "id": "OPS-CONSUMER-02",
+      "kind": "KNOWN_OBSERVED_TYPECHECK_FAILURE",
+      "owner": "Compose/Atlas",
+      "diagnosis": "Único TS2741 Sucafina no W5: source-access-atlas.test.ts:167:41 sem procurementEvidenceWrites. Guard D2 deixou typechecks skipped. A futura composição precisa preservar os dois cenários e usar a mesma capacidade da autoridade; esta revisão não editou nem orientou diretamente o autor.",
+      "run": 43584394810,
+      "newFinding": false
+    },
+    {
+      "id": "OPS-NATIVE-UI-ACQUISITION",
+      "kind": "KNOWN_NEEDS_EVIDENCE",
+      "owner": "Interface/runtime nativo",
+      "diagnosis": "Driver alcança chromium-launch e é cancelado após ~10s; H09 falha por pool indisponível antes da jornada HTTP; 1 spawn Omni não comprova aquisição/fechamento físico. Causa raiz desconhecida.",
+      "run": 43584405211,
+      "newFinding": false
+    },
+    {
+      "id": "IR-EXT-C12-RELOAD / IR-EXT-FIRST-SAVE-LOOKUP / SHARED-APPLY-LOOKUP",
+      "kind": "KNOWN_RECOVERY_WORK",
+      "owner": "Interface/composição",
+      "diagnosis": "H06 exercita limpeza de cache; intenção de UI em decision-apply.ts permanece em closure. Não foi transformado em finding novo porque o handoff ui-recovery já delimita recuperação/lookup. Nenhuma conclusão de restart foi adicionada.",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d3d411f7e2476a562a57aa7620823980eaf34e46/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/ui-split/ui-recovery.md",
+      "newFinding": false
+    },
+    {
+      "id": "NATIVE_HUMAN_AM_GLOBAL",
+      "kind": "KNOWN_NEEDS_EVIDENCE",
+      "owner": "Owners de provas e integração final",
+      "diagnosis": "WP04 dez nativos e quatro humanos; WP06 sete históricos e duas cláusulas AM explícitas, mais obrigações AM03/AM05 documentais e gates globais. Contagens positivas de componentes não removem essas obrigações.",
+      "newFinding": false
+    }
+  ],
+  "concurrentReviewReconciliation": {
+    "observedHead": "6830fa159d30b60d001f91a47326ae88c6255282",
+    "tree": "d065cc48aa320e60fc6d073e0b997c3729abec1b",
+    "prUrl": "https://github.com/gustavomhss/Orchestra-SF/pull/49",
+    "observedFiles": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/REVIEW.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/EVIDENCE.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/HANDOFF.md"
+    ],
+    "filesPreservedUnchanged": true,
+    "newFilesInSeparateSubdirectory": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/20261114-ba8a09e/",
+    "existingGapRefined": "E-OPS-02",
+    "notIndependentVerificationOfPriorReview": "A análise anterior foi lida para reconciliação; seus outros findings e sete hashes de logs não foram convertidos em novas verificações desta contribuição."
+  }
+}

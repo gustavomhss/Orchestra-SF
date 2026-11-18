@@ -1,0 +1,35 @@
+{
+  "id": "forecast-cancel-visibility",
+  "number": 12,
+  "branch": "ui-review",
+  "pr": 45,
+  "actor_pack": "S1-A",
+  "expected_head": "32bae2bcc8008b2e81948e434dc1e3326dc4f947",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+    "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+    "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/forecast-cancel-visibility/"
+  ],
+  "input": {
+    "wp10": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+    "U30": {
+      "run": 43629303473,
+      "job": 132552127580,
+      "result": "3pass/1fail; ready output rendered but cancel.isVisible true"
+    }
+  },
+  "task": "Resolver WP10-U30-CANCEL-VISIBILITY com causa demonstrada e mudança mínima. Capturar atributo hidden, estado de run, computedStyle/display e prontidão no instante relevante. button,.button display:inline-flex no shell é hipótese, não causa já executada; não remover assertion, usar estilo na fixture ou aumentar deadline. Se confirmado, corrigir CSS/controller real de forma consistente e preservando botões ativos. Provar cancel oculto antes da execução e após ready/failure/cancel/revogação, visível somente em estados ativos; retry-status segue estado correto. Percorrer click positivo e Enter negativo409, payload prepare completo, ordem start/read/output, keys, moedaEUR preservada, reabilitação dos controles e ausência de pageErrors, além das assertionsU30 anteriormente NOT_REACHED. Verificar efeito de hidden em outro controle legítimo se alteração global; sem redesign. Usar renderer/controller/shell reais; fronteiraHTTPfixture declarada não prova modelo/Finance/native.",
+  "limits": "Comparar fonte atual da branch com WP10/WP12 e portar só delta necessário, preservando review-context e mudanças próprias. Não substituir arquivo inteiro cegamente. Não tocar work-collaboration.ts da sessão10, runtime/downloads.ts da11, hosts, APIs, sharedfixtures, configs ou specs E2E das sessões7–9. Criar cópia própria das provas/fixtures reutilizadas se necessário. Somente CI cirúrgico no fechamento, sem locais/epic/fullsuite.",
+  "common_ref": "c708ec0609dbfc95b259707d8c38481617f74f11:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "state": "PREPARED_NOT_STARTED",
+  "lease_epoch": 1,
+  "session_id": null,
+  "model_effective": "NOT_VERIFIED",
+  "consumer": "S0 integration/reviewers/final candidate later",
+  "rules": "Leia AGENTS/COMMON/seu pack completo. Somente GitHubMCP remoto,CAS,nãoforce/gh/remoteGit/login/merge/deploy/restart/engines. Testes sóActions cirúrgicos com W/S/requests/seleção/config/dedupe/Omni e checks reais, nunca local/epic/fullsuite. Preservar handoff/headtrabalhoalheio; nãocontarproposta comoimplementação ou fixturecomonativo. Entregar mesmaPR e recibosappendonly, prossiga decisõesrotineiras autonomamente."
+}

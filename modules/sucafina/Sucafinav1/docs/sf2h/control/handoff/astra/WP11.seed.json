@@ -1,0 +1,441 @@
+{
+  "accepted_seed": {
+    "wp": "WP11",
+    "branch": "astra-wp11",
+    "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "head": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+    "tree": "a4745675a30a2cff3577b02eea6ab14bfb9ae58a",
+    "seed_files": 68
+  },
+  "source": {
+    "wp": "WP11",
+    "branch": "astra-wp11",
+    "pr_base": "sf2-stack",
+    "integration_base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "integration_base_tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+    "checkpoint_remote": "ba2822bb06a8ad741ecbcf0d47654d1a86a3a95b",
+    "checkpoint_local": "31333bb433acda015e8b7ccbefc5f97ac2f303b7",
+    "mode": "committed owned-file overlay; preserve current baseline for untouched root manifests and foreign sources; no dirty inputs or whole snapshot merge",
+    "excluded_from_seed": [],
+    "write_scope": {
+      "prefixes": [
+        "modules/sucafina/Sucafinav1/product/decisions/",
+        "modules/sucafina/Sucafinav1/test/product/wp11/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/"
+      ],
+      "exact_files": [],
+      "extra_test_prefix": "packages/app-shell/e2e/sucafina/wp11/",
+      "operational_exclusions": []
+    },
+    "tree_elements": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-proposal-verifier.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "10fbcf27d8e9e5d93978ed0009f46223872d3dad"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1d3229d717ac490a2727cc30df65cedd77d52a57"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ddea3e6920ccbde0cece863342c35681e0d3e29a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "242aa118be96ccf1a2d1a49e5e00a9d79d8e39a0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/answer-effect.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f2b66e74423a50e41014874897865875211422ff"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/assumption-divergence.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e327b19db768b129fa543db3202416c5ef559fb1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6ce45e74568c0b8ab35fa6b39083bb556bdfe08c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-fence.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "06e8b9938ce6a09b54556aacce5894c528cd5935"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ed4eef2c58eb7654ba13157740e5aeb7b8986249"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "22cc1a0b08a5952a886fe159590ca0c40eb5f63e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d7f4199cc20f8e02290107bc64034d3956b42692"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-verifier.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "65bbcfea33e99170b0bd074e2df37893dcee9f77"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/choice-catalog.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c5266d4c91ac06e083df196baff60c1cc86651b5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/choice-result-lookup.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5a7ed750d7949a78a9e3161c539d4e4d6801086b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/choice.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ac65bdd3445113f00b643b72dfaa2a8840826a99"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8d86bc416c711169fdc678635cc5eed12481fdea"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "74cd720489adde4b8a341c3d4c378194f58afa16"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d654b13aafcf1e0b29d410e916c1a09b4fa19963"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "25e6056021a20cbdd1a3608fda515d77e052327f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-catalog.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "429cb3b578b4b294fb550e332da6786bc30d0867"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ce0ba8a3031dcbd62cc38e6dff146c73908de561"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-interval-store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "38fe7b91cfbad1d0f986c2252e68fed32446a2fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-interval.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0747e3b98971a2e32fac9e3f892cc7d74f056e16"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "dbd02e2d4d15ca2b866179759d38a0066e6550dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c357c6c66aac544394ab355306e1f6f7195395f7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d19f735539df9b9b4fa637367f58fa0c0b674562"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "94cdbd50b560b8741ac5c64f1ca0f807c0952860"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fafd1c99e96b0d5bac5d9a596b29252829870e62"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ff67ec4d58788c3c2e4c1a88d016620940660d9c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b1fca9569190eb42880387bd12c49dd769304522"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/human-grants.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "853f9d95c361ae9caa2c5e2c0d40a4d5395ca12f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "24051e0a30b53e09b387ac575a658f30e098cf0a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c9b380d4f9e3f0b35eae027374d57bf4c9b65c3e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2a8111a810d878a4cf6133c3842c5320fb1f5b9e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6834ac4460c8f98fa3b6c2db0743e0d1e39769c5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "64deee2c7570d718686eb2181ff197f4347e6764"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-change.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fc9dc0b25e1a1d646318bc0df3e0d41f95b9562e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ae7a4476d686638512f3fc8bcf342a746259cacc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/producer-fences.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "51294d025ab67e48ae32a9b060da1012b8b3e95a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/product.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "476a08b14df449f3f32ee65a18e90d3b6427cc3d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "75237c53bf97c33d8a192cb6166284576817f4ca"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "304eb80e72a002078e3f6ea8c5cfac507ffdd494"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/receipts.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5649d5292247053e99b429d41dcd4ecbe2d8c3dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0d2977360afb7b9af6d39b19eff6e9198c7c1c55"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/review-admission.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "528cef5d39e13b2c2ad7db23e239d77e81566879"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "40c78dee5908cd8af58cc3d58435f3cfb4542045"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "848fe10663e14ba04ae09c36e1a34bca0c3744c6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2a7f54d2fc9f2181ea08be022df2cabb9ea3c43b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7678e7737a9a0079f8ede1ccce34bd1605e81def"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d610bc3d89e74aad11ac4b040b1f70415146a976"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-management.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3ac68df95f0f0e670263f34d9b0832a32c3fe55c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "481c41b0c6422839967fd62f01db02ec87fb5b73"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4e01acf909609e40bf9fc5e64c633ea8189c6e8b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ee19e33048f68984fe6e0fbdc215412a37cbcfa8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "26ab8393f653e60fd6903c8aa3c1079051e49f97"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b7b8b59ca121e03aea5ae7e9f0b43bd46390b6a7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "091a675a5bbde0b3f2a0153971df09100253674a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/http.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "91d05c40c2adf95a9109304ab44435af967fdbbc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bd5ca7d9c9451ef677ad8656d4504d5409eb67ce"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3d1380e7aaacd894d082fdeb06cfaaa51bf92dbb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9d1765b3c14410d81d3817384898cc5d39aa917d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/result-store.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "897c29bf0ac5809776b1b02e779ab735d34a2224"
+      }
+    ]
+  }
+}

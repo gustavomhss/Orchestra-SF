@@ -1,0 +1,80 @@
+{
+  "wp": "WP02",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-dashboard-ready",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/dashboard-ready",
+  "source_checkpoint_head": "28335ecd153481ad4f2efade7f457dd1dc3f1d68",
+  "source_checkpoint_tree": "48c6e9d87a01673f4259c205d1cd982caa3c5f3f",
+  "note": "The final handoff commit is a child of source_checkpoint_head; read git HEAD/tree for its identity. No full task or PR is declared ready.",
+  "inputs": {
+    "campaign_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "source_base": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+    "wp00_comparison": "618001b81f",
+    "wp00_proposals": "631a55c0b3",
+    "wp06_backup": "4c6479294c",
+    "wp10_record_evidence": "6589bbf737",
+    "wp11_draft_store": "9e60bb2f06",
+    "wp11_review_digest": "9f99162391",
+    "foreign_copies": "Prior campaign base includes foreign work; old auxiliary worktrees are read-only and preserved. Host conflict patch stored outside tree at teams/WP02/dashboard-preview-conflict.patch; host owner must review."
+  },
+  "tasks": {
+    "WP02.T01": "PARTIAL: authorized source/16-page tests, C02 comparison, signal evidence, agenda producer; cross-WP composition and final proof outstanding",
+    "WP02.T02": "PARTIAL: contextual editors, conflict redaction, backup callback; WP06/WP10 integration and final proof outstanding",
+    "WP02.T03": "PARTIAL: executive period and filtered project navigation, BI milestone status; full integrated proof outstanding",
+    "WP02.T04": "PARTIAL: Hot Topics canonical port, C08 draft preview/external proof, receipt version; C12/host integration and proof outstanding"
+  },
+  "workers": [
+    {
+      "id": "Terra",
+      "model": "session inherited",
+      "status": "stopping after handoff",
+      "leases": "revoked at stop"
+    },
+    {
+      "id": "WP02-L",
+      "model": "gpt-6-luna",
+      "status": "interrupted by lead",
+      "leases": "revoked"
+    },
+    {
+      "id": "G1",
+      "model": "grok-4.7-build",
+      "session": "145764f5-8e82-4e69-ba56-0ac260f1cf02",
+      "status": "terminal exit 0; provider unavailable",
+      "leases": "revoked"
+    },
+    {
+      "id": "G2",
+      "model": "grok-4.7-build",
+      "session": "521e653d-d9bd-4641-aeef-11a3daa412ba",
+      "status": "terminal exit 0; provider unavailable",
+      "leases": "revoked"
+    }
+  ],
+  "validation": {
+    "tests": "NOT_RUN",
+    "hosted_ci": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "check_guards": "NOT_RUN",
+    "diff_check": "passed before stop; source checkpoint is unverified"
+  },
+  "open_findings": [
+    "Historical reissue proof in confirmation.ts and historical-reissue.test.ts are interrupted and NOT reviewed or executed; no bind/reopen receipt API implemented. Review authority, actor scopes, changed-day and physical identity before consuming.",
+    "C12 draft mutation/receipt/review host integration is incomplete.",
+    "WP07 agenda covers supported record topics but executive/it-performance and some operations subselections explicitly unavailable; protected historical receipt association is not implemented.",
+    "WP10 must integrate recordEvidence, agenda selector, conflict response and WP11 C08/C12 consumer.",
+    "No scoped hosted checks, guardrails, independent integrated review, PR or final stack proof.",
+    "Grok provider unavailable (HTTP 402): do not resume without owner instruction."
+  ],
+  "resume": "On explicit owner resume: inspect status and commit history, preserve all branches; read this receipt and teams/TEAM-WORKFLOW-v2.json; restore same WP ownership/leases; review unverified historical reissue before any integration; coordinate WP00/WP06/WP07/WP08/WP10/WP11 directly; finish all task criteria and consumers, run mandated guard plus final scoped hosted CI under serial lease, then prepare WP PR. Do not resume automatically.",
+  "local_head": "1967291d91768aa6b07925e795904afec6100470",
+  "local_tree": "56466c6bf866e0283408286a86aea8541841a7f8",
+  "remote_branch": "sf2-dashboard-ready",
+  "remote_head": "00f321006299e229e7c4931724897a7209caa4ba",
+  "remote_tree": "56466c6bf866e0283408286a86aea8541841a7f8",
+  "remote_parent": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "remote_publication": "GitHub MCP snapshot, compare-and-swap from parent; remote commit identity differs from local but tree exactly matches.",
+  "dirty": "clean",
+  "helper_ack": "Luna interrupted; Grok jobs terminal exit 0; all leases revoked"
+}

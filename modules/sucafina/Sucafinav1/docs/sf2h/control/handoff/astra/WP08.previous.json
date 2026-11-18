@@ -1,0 +1,119 @@
+{
+  "wp": "WP08",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-collab-ready",
+  "pre_handoff_local_head": "29637057d66c8040a57fac7cb74692a79f4a066b",
+  "pre_handoff_local_tree": "f2e46027e22d1c4ce8e102f7cdf23863587fcf91",
+  "tree_note": "Final checkpoint commit/tree necessarily differ from pre-handoff values because this file is part of the tree. Resolve branch HEAD at resume.",
+  "source_plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "tasks": {
+    "WP08.T01": "PARTIAL",
+    "WP08.T02": "PARTIAL",
+    "WP08.T03": "PARTIAL",
+    "WP08.T04": "PARTIAL",
+    "WP08.T05": "PARTIAL",
+    "WP08.T06": "PARTIAL"
+  },
+  "workers": [
+    {
+      "seat": "Terra",
+      "model": "gpt-6.1-terra",
+      "state": "STOPPING_AFTER_CHECKPOINT",
+      "lease": "revoked after checkpoint"
+    },
+    {
+      "seat": "Luna",
+      "model": "gpt-6-luna",
+      "id": "/root/wp08_luna",
+      "state": "TERMINAL",
+      "lease": "revoked"
+    },
+    {
+      "seat": "G1",
+      "model": "grok-4.7-build",
+      "session": "3df55e87-116f-4270-b424-51784d31ea0a",
+      "state": "TERMINAL_WRITE_BLOCKED",
+      "lease": "revoked"
+    },
+    {
+      "seat": "G2",
+      "model": "grok-4.7-build",
+      "session": "6d90fc78-910f-4815-bc52-8754fa1511da",
+      "state": "TERMINAL_HTTP_402",
+      "lease": "revoked"
+    }
+  ],
+  "behavior": "Collaboration ports, private HTTP, authorized work/case selection, material confirmations and signal seam, contextual threads with historical revisions, answer reuse, canonical handoff update are checkpointed. Dispatch answer-reuse projection is a partial unintegrated edit: host does not pass answerReuse into createCollaborationDispatch. No readiness claim.",
+  "dependencies": [
+    "WP10 host composition + product HTTP, read and human grants, C08 WeakSet guards and source routing",
+    "WP01 complete cycle/reply/reuse UI consumer",
+    "WP02 Dashboard observer b2bfba6ef5",
+    "WP03 Planner observer 12208cd030",
+    "WP04 Procurement observer c2753d29fa + projection seam",
+    "WP11 private decision question actions 1a713f8e1f",
+    "WP14 work signals 6fde921f4a and host case selection binding",
+    "Producer-owned recipient source ACL proof at assignment remains unresolved"
+  ],
+  "foreign_readonly_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "sha256": "1e05d63be02ff9e68a794fba11c5f4128625eff119a3c2323cc889e1ca2e631e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha256": "c4983220de94b2c5827915c1ae5e64bd048b46f49db812b440e7200bc055983e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sha256": "4bf78ba13cc1533a93408b97125e66b21bbadf26b286176252ab9fd8930f0289"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "sha256": "0e79d2e1ff308072100c60b2a32dd448948b069c39678b9879a7a60b04712940"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "sha256": "9866b20ba0de863d48d9febcfbc84c1174e714269391026d4ccd23c7d06af037"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "sha256": "bee3428396d9da0e0e5c9e7f8bad5dd96d999cb2baf1a0a861a1260c68a43f78"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "sha256": "016ccdca0bc1d5174a89d417dca714635ba1bbe953eacafc3f08263ef99da70a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "sha256": "a42bcd8569082bcc4ce9221a1e58171a3d93faf45646abddbc437375094b6b91"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "sha256": "14aaa99f89764b3b8da8c717e720f828d14783fb8ccef113311a3898952adf27"
+    }
+  ],
+  "untracked_quarantine": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/WP08/quarantine",
+  "validation": {
+    "hosted_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guardrail": "NOT_RUN",
+    "ci": "NOT_RUN"
+  },
+  "resume": "After explicit user instruction, inspect branch HEAD and foreign readonly digests, restore admitted source dependencies, wire dispatch answerReuse, complete host/UI/producers and ACL, review all six task criteria, then request serial lease and run scoped hosted tests plus required typecheck and check:guards; no local bun tests.",
+  "local_checkpoint_sha": "7e9560e63cd7ad2ecc27a2546ad8d097ebbadb05",
+  "local_checkpoint_tree": "390fd64f76f7c291a28dd779f32ebc6350534306",
+  "remote_branch": "sf2-collab-ready",
+  "remote_checkpoint_sha": "13285296acd05f777e31fc7867da1e3055e1e4af",
+  "remote_checkpoint_tree": "390fd64f76f7c291a28dd779f32ebc6350534306",
+  "remote_commit_note": "MCP reconstructed exact local committed tree as a single checkpoint commit on remote base 9e4f3d; local commit history is distinct and preserved locally.",
+  "workers_stopped": true,
+  "all_leases": "REVOKED"
+}

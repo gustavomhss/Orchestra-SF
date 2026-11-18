@@ -1,0 +1,43 @@
+{
+  "id": "portfolio-semantic-union",
+  "number": 21,
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor_pack": "execution/actors/S4-C.json",
+  "tasks": [
+    "WP13.T01",
+    "WP13.T02",
+    "WP13.T03",
+    "WP13.T04"
+  ],
+  "branch": "sf2-portfolio-union",
+  "base": "sf2-control",
+  "authority": "Documentation and complete patch payloads only. No product write authority. Single sf2-stack writer remains session14. Finance session18 retains its source paths.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/portfolio-union/"
+  ],
+  "inputs": {
+    "target": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+    "held_original": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+    "intelligence": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+    "finance_observed": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "pending": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/pending-owners.json",
+    "held": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/held-intake.json",
+    "ownership_missions_commit": "a32285b2683b5000dafe93df99289547c7f410fb"
+  },
+  "mission": "Resolve WP13-SEMANTIC-UNION with complete minimal unified patches, exact preimage/postimage blobs, complete postimages and regression-test payloads, ready for session14. Reconcile every held file, preserving validated Finance current-authority fences, cost coverage, C10/C13 provenance, human choice, reservation/replay/reopen and C17 continuity. Do not merely list differences or select newest timestamp. Do not blindly replace admitted files with PR37.",
+  "execution": [
+    "Read pinned COMMON, full S4-C pack and mandatory appendices; preserve complete criteria scope.",
+    "Traverse held-intake and compare every alternative with admitted target and Finance source. For each file, provide justified KEEP_CURRENT, TAKE_SOURCE or SEMANTIC_PATCH and consumer/criterion map. Already equivalent behavior needs explicit equivalence evidence, not unnecessary rewriting.",
+    "Implement complete patch payloads and regression test payloads in own documentation namespace. Include dependent signatures/imports and semantic interactions; do not remove final authority checks, callbacks, original test assertions or timeouts.",
+    "Finance source is live. Pin observed source for proposal and declare overlapping files requires refreshed preimages before application. Do not edit Finance branch or sf2-stack. If a remaining semantic gap is covered by live Finance scope, provide concrete supplemental patch/conflict note rather than a second writer.",
+    "Commit outputs using GitHub MCP to one new short branch sf2-portfolio-union and one PR against sf2-control. Do not merge control branch into product. Existing product branches remain unchanged."
+  ],
+  "tests": "No test/CI dispatch, local tests, typecheck or guard execution in this proposal lane; central dispatcher validates actual applied tree. Provide surgical selection and test payloads. Static verification is NOT functional PASS. No workflows/config edits or final epic.",
+  "handoff": "Terminal HANDOFF.md, per-file disposition manifest with every held entry, patches and complete postimages, tests, criteria/consumer mapping, target/source tree/blob pins, mandatory open findings and exact integration order. READY_TO_APPLY only for complete patches with verified preimages; no WP13 DONE or global acceptance.",
+  "limits": "Remote GitHub MCP only; no gh/git push/force, dev merges, Azure/deploy/credentials, engine changes, runtime restart, agents or third-party messages. No native Goal resume/new controller. Prepared manual browser mission only."
+}

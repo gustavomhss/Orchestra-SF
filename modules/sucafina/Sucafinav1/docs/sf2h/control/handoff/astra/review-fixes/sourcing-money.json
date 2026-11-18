@@ -1,0 +1,216 @@
+{
+  "name": "sourcing-money",
+  "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "target": "astra-operations",
+  "pack": "WP04",
+  "actor": "S2-A",
+  "finding": [
+    {
+      "id": "OPS-REV-01",
+      "title": "Proposta de PO mascara o snapshot da aprovação de sourcing",
+      "severity": "P1",
+      "classification": "STATIC_DEFECT",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP04 / Operações; WP10 para composição e consumidores",
+      "provenance": "monetary.ts é novo na PR #34; defeito demonstrado na composição do helper com o produtor real no SHA fixado.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "startLine": 18,
+        "endLine": 42,
+        "kind": "code",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/monetary.ts#L18-L42"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+          "startLine": 104,
+          "endLine": 128,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/src/procurement-screen.ts#L104-L128"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/porta/act.ts",
+          "startLine": 300,
+          "endLine": 318,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/porta/act.ts#L300-L318"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/porta/act.ts",
+          "startLine": 348,
+          "endLine": 361,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/porta/act.ts#L348-L361"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "startLine": 638,
+          "endLine": 647,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/runtime/procurement.ts#L638-L647"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+          "startLine": 101,
+          "endLine": 145,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/port.ts#L101-L145"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+          "startLine": 263,
+          "endLine": 278,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/port.ts#L263-L278"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+          "startLine": 25,
+          "endLine": 36,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts#L25-L36"
+        }
+      ],
+      "preconditions": [
+        "Pedido levado legalmente a sourcing; buyer autorizado; campos e proposta válidos; etapa de aprovação pendente.",
+        "Moeda base USD; proposta EUR 100, qty=1, unitPrice=100; FX EUR=1.08."
+      ],
+      "scenario": [
+        "Executar select_quote e submit_sourcing pelos comandos reais.",
+        "Observar src_pending, sourcing.approval.amount=108, fxSnapshot EUR=1.08 e approvalBaseCurrency=USD. O mesmo fluxo já criou po.lines, fxRate=null e approval=null.",
+        "Alterar legitimamente a taxa configurada EUR para 2, sem modificar o pedido ou snapshot submetido.",
+        "Ler C02 e os campos de confirmação C06; comparar com compareSourcing."
+      ],
+      "staticResult": [
+        "monetary.ts escolhe order=true só porque existem po.lines; a PO ainda não submetida determina frozen=false.",
+        "requestValue usa primeiro po.lines e FX atual: baseAmount=200 USD, fxSource=current e submittedAmount=null; monetaryState permanece pending-approval e moneyEvidence=confirmed.",
+        "A comparação de sourcing continua em 108 USD pelo snapshot; o snapshot persistido de aprovação não foi alterado."
+      ],
+      "consequence": "Valores incompatíveis entre detalhe/C02/C06 e comparação para a mesma decisão pendente. A dependência incorreta de FX corrente pode invalidar uma confirmação sem mudança da base submetida.",
+      "inference": "A recobrança/reconfirmação por consumidores C06 é consequência possível do fingerprint errado; não foi executada pela revisão.",
+      "notDemonstrated": [
+        "Alteração de alçadas, scoring, valor de aprovação persistido ou pagamento real.",
+        "Execução discriminante pelos revisores."
+      ],
+      "criteria": [
+        "WP04.T03.CHK.03",
+        "WP04.T03.DOD.02",
+        "WP04.T03.SUC.02"
+      ],
+      "relatedCriteria": [
+        "WP04.INV.02",
+        "WP04.CMP.02",
+        "WP04.T03.CMP.01",
+        "WP04.T04.QLT.02",
+        "CAMP.INV.01",
+        "CAMP.INV.03",
+        "CAMP.QLT.04",
+        "CAMP.QLT.20",
+        "C02",
+        "C06"
+      ],
+      "existingEvidence": [
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+            "startLine": 19,
+            "endLine": 23,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts#L19-L23"
+          },
+          "limit": "Sourcing congelado montado sem a PO que select_quote cria."
+        },
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+            "startLine": 72,
+            "endLine": 78,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts#L72-L78"
+          },
+          "limit": "Também monta sourcing sem PO."
+        },
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+            "startLine": 79,
+            "endLine": 89,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts#L79-L89"
+          },
+          "limit": "H01 injeta sourcing, sem percorrer select_quote → submit_sourcing."
+        }
+      ],
+      "expectedCorrection": "Escolher a base monetária pela etapa efetivamente em decisão, separando a proposta futura de PO da aprovação de sourcing. Preservar alçadas, scoring e snapshots existentes.",
+      "expectedEvidence": "Percorrer os comandos reais que criam a PO; mudar FX após submit_sourcing; verificar C02, resumo, C06 e comparação com o mesmo registro e snapshot. Incluir FX ausente e moeda base alterada sem preencher ausência com zero.",
+      "normativeTexts": [
+        {
+          "id": "WP04.T03.CHK.03",
+          "text": "Mudar a taxa configurada depois da submissão: a decisão pendente preserva o valor/câmbio congelado; remover FX de uma comparação sem snapshot produz indisponibilidade/pendência, nunca total zero."
+        },
+        {
+          "id": "WP04.T03.DOD.02",
+          "text": "Moeda, taxa/snapshot e estado monetário ficam definidos para cada valor exibido."
+        },
+        {
+          "id": "WP04.T03.SUC.02",
+          "text": "O mesmo valor de domínio aparece coerentemente no detalhe, resumo e C02 entregue a consumidores."
+        },
+        {
+          "id": "WP04.INV.02",
+          "text": "Histórico, identificadores já emitidos, versões esperadas e snapshots de aprovação/câmbio são preservados; po_issued continua significando emissão interna."
+        },
+        {
+          "id": "WP04.CMP.02",
+          "text": "A cobertura monetária inclui moeda base, moeda estrangeira, FX ausente, mudança de taxa após submissão, proposta incompleta e divergência entre total informado e quantidade vezes preço."
+        },
+        {
+          "id": "WP04.T03.CMP.01",
+          "text": "Cobrir moedas diferentes, snapshot, FX ausente, empate, proposta não conforme, menos propostas e notas incompletas."
+        },
+        {
+          "id": "WP04.T04.QLT.02",
+          "text": "Resumo curto e drilldown detalhado apresentam os mesmos valores, contexto e limitações."
+        },
+        {
+          "id": "CAMP.INV.01",
+          "text": "Domínios continuam como fontes de verdade. UI, BI, relatórios, importação e IA consomem os mesmos contratos; não mantêm cálculos financeiros ou estados de compra paralelos."
+        },
+        {
+          "id": "CAMP.INV.03",
+          "text": "Ausência, zero observado, valor herdado, estimativa, valor aprovado e emissão interna mantêm significados distintos; período, versão e moeda não mudam silenciosamente."
+        },
+        {
+          "id": "CAMP.QLT.04",
+          "text": "Número relevante informa unidade, referência temporal, origem e limitações. Comparações reconciliam e distinguem descrição de hipótese; narrativa gerada não inventa causalidade."
+        },
+        {
+          "id": "CAMP.QLT.20",
+          "text": "Estado de confirmação e condição financeira são explícitos em UI, rotina, BI, crítica e portfólio, sem inventar permissão, regra fiscal ou valor para preencher ausência."
+        }
+      ]
+    }
+  ],
+  "paths": [
+    "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+    "modules/sucafina/Sucafinav1/test/product/review-fixes/sourcing-money/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/sourcing-money/"
+  ],
+  "mission": "Corrigir a seleção da base monetária C02/C06 conforme a etapa realmente em aprovação. PO futura gerada por select_quote não mascara sourcing submetido. Percorrer select_quote→submit_sourcing reais; EUR100×1.08=USD108 continua108 após FX=2. Cobrir FX ausente, moeda base alterada, PO efetivamente submetida e detalhe/resumo/C06/compareSourcing coerentes. Não alterar alçadas, snapshots persistidos ou scoring.",
+  "test_prefix": "modules/sucafina/Sucafinav1/test/product/review-fixes/sourcing-money/",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/sourcing-money/",
+  "lease_epoch": 1,
+  "state": "PREPARED_NOT_OBSERVED_STARTED"
+}

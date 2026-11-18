@@ -1,0 +1,40 @@
+{
+  "number": 19,
+  "id": "c12-receipt-recovery",
+  "branch": "procurement-apply",
+  "pr": 60,
+  "expected_head": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+  "actor_pack": "S4-A",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+    "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+    "modules/sucafina/Sucafinav1/product/interface/http.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+    "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/"
+  ],
+  "inputs": {
+    "previous": "PR60@8e23e592602fb9f2fae9ce8f824322a073073e23",
+    "source": "operations-fixes@d48065d391e1557d43b63525bdc7f55b168d5206",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/c12-owner-handoff.md",
+    "patches": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/c12-receipt-recovery.NOT_APPLIED.patch",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/c12-current-executor.NOT_APPLIED.patch"
+    ],
+    "proof": "run43624678702:2pass/76assertions reproduces stuck409→409→409; not positiveclosure"
+  },
+  "mission": "Implementar recuperaçãoC12 completa para I-OPS-02. Após Apply realmente commitar efeito/recibo, editar caso legitimamente e perderresposta. UIdeve recuperar o mesmo recibo sob autoridade atual semnovoefeito, mantendoediçãoconcorrente, intenção/digest/principal/target/incarnation ecaso corretos. Criar rota/modo private receipt-only seapropriado: ausência dorecibo encerraantes de review/dispatch/mutação. Não relaxar CASdoApplynormal nemautorizaraplicação nova como recuperação. Não existe aplicação financeira automática por escolha. Preservar OPS-REV-02 corrigido e distinçãonoop/ignorado/applied. Usar variantedopatch correspondente ao executoratual; compararpreimage eportardelta, não colarhunkantigo.",
+  "proof": "Percorrer produtor/review/UI/HTTP/C08/SQLitereais: commit+respostaperdida, edição legítima caso, retry/reload, reconstrução deserviços/fechamentoereaberturaSQLite e nova admissão recuperamreciboigual semduplicarvalores/versões/auditoria. Casoversãoantiga pode apenas reconciliarreciboe não redispatch. Negativos:nenhumrecibo, alteração digest/payload/principal/target/incarnation, revogação duranteúltimaleitura, resultadoparcialdeoutrodomínio e cachelimpo. Persistir correlação necessária: sessionStorage na mesmaaba não prova recuperação em novasessão; recuperar por identidade canônica autorizada quandoafinalprovaexigir. Nãofabricarreceipt, manter testeque reproduz bug separado da prova positiva.",
+  "limits": "SomenteprivateHTTP SF; nenhuma40ªoperaçãoMCP,publicProtocol/ServerAPI ou novoauth. Interface/http.ts econtracts/host-context.ts apenas wiringaditivode recover necessário, mantendo17contratos. Sem source Finance18, CLIhost/BCS/Memory13, ACKUI10, exports11, shell/forecast12, sharedfixture ouE2Especs dasoutraslanes. Produto novo sónessabranch, integraçãoem sf2-stack é14; helpers14–17 sópropõem/adotamdeltas. Não editarbranchoperations-fixes antiga. MesmaPR60; terminar código+provas, nãosó patchesnãoaplicados.",
+  "state": "PREPARED_NOT_STARTED",
+  "lease_epoch": 1,
+  "session_id": null,
+  "model_effective": "NOT_VERIFIED",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "common_ref": "c708ec0609dbfc95b259707d8c38481617f74f11:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+  "rules": "SessãoAstra manual nova, mesma branch/PR. LerAGENTS/COMMON/actorpackcompleto+anexos, handoffterminal, head eautoridadeantesdeeditar. Preservartrabalho/source/provas. RemotoGitHubMCP/CASonly; semgh/gitpushfetchremoto/force/login/deploy/engines/restart. Testesproduto sóActionscirúrgicosnocheckpointfinal,requestcanônico/dedupeWárvoreseleçãoconfigfixtures; reanexarruns.Nenhumlocaltest/epic/fullsuite. Bun typecheck package+guards canônicos, semignorarachados. RegistreW/S/árvore/run/jobs/resultados/limites; recebidosNOTRUNnãoPASS. MesmaPR,handoffdurável,semGLOBAL_RELEASE."
+}

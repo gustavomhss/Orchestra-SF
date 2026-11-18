@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "mission": "composed-bundle-verification",
+  "session_number": 17,
+  "actor_pack": "S3-R3",
+  "campaign": "sf2h-integral-20261112",
+  "instruction_sha": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "accepted_at": "2026-11-14 19:43:54 UTC",
+  "lease_epoch": 1,
+  "branch": "sf2-bundle-review",
+  "target": "sf2-control",
+  "expected_head": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+  "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/bundle-review/20261114-557adbd6/",
+  "accepted_stack_head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "accepted_stack_tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+  "independence": {
+    "product_authorship": false,
+    "role": "fresh independent composition/preservation/provenance auditor",
+    "functional_review_replacement": false
+  },
+  "runtime": {
+    "agent_path": "/root",
+    "session_id": null,
+    "effective_model": "GPT-6 Astra Pro (host declaration)",
+    "new_agents_spawned": 0
+  },
+  "authority": {
+    "product_read_only": true,
+    "product_tests": false,
+    "ci_dispatch": false,
+    "ci_rerun": false,
+    "merge": false,
+    "external_messages": false,
+    "global_release": false
+  },
+  "instructions_read": {
+    "AGENTS_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "common_blob": "4106a5f0dbd5ee5bbff999b9f7ca1d6ff970f922",
+    "mission_blob": "9c7991550e7b66c1ca6c01678adc36d95845ea60",
+    "actor_pack_blob": "6c8de729cc156f6672738c2f8403472a8c478338",
+    "actor_pack_characters": 484403,
+    "actor_pack_sections": [
+      "provenance",
+      "job_id",
+      "actor",
+      "session",
+      "assignment",
+      "branch_provenance",
+      "common",
+      "write_authority",
+      "allocation",
+      "physical_slot",
+      "work_packages",
+      "contracts",
+      "incoming_outgoing_handoffs",
+      "task_output_dependencies",
+      "consumer_edges",
+      "coverage",
+      "dependency_context",
+      "proof_bindings",
+      "evidence",
+      "execution_proofs",
+      "review_assignment",
+      "review_sources_read_only",
+      "resident",
+      "reference_context_rule",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "resident_ui",
+      "mandatory_appendices",
+      "code_sources",
+      "source_receipt_index",
+      "workflow",
+      "coverage_source",
+      "numeric_oracles",
+      "selection_pointers",
+      "criterion_ids",
+      "completion",
+      "ci_plan",
+      "resident_packaging"
+    ],
+    "mandatory_appendices": [
+      {
+        "path": "specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "scope": "composition and dependencies portions"
+      },
+      {
+        "path": "specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "scope": "composition and dependencies portions"
+      },
+      {
+        "path": "specs/atlas-packaging.md",
+        "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+        "scope": "composition and dependencies portions"
+      },
+      {
+        "path": "specs/execution-reconciliation.md",
+        "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1",
+        "scope": "composition and dependencies portions"
+      }
+    ]
+  },
+  "next": "Complete blob inventory, explicit dispositions and consumer chains; inspect any materially new published sf2-stack tree, without empty polling."
+}

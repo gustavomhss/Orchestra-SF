@@ -1,0 +1,38 @@
+{
+  "id": "memory-integrity-preflight",
+  "number": 13,
+  "branch": "astra-wp10",
+  "pr": 29,
+  "actor_pack": "S0-B",
+  "expected_head": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+  "write_paths": [
+    "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/"
+  ],
+  "input": {
+    "wp10": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+    "failure": {
+      "run": 43624030665,
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "line": 580,
+      "observed": "Atlas recall rejects corrupted persisted projection, then staleAccess.preflight returns ok instead of denied"
+    },
+    "diagnostic": "diagnose-memory@0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8"
+  },
+  "task": "Corrigir o defeito concreto de integridade MemoryA27, sem refazer diagnóstico de timeout nem iniciar melhoriaX29. A corrupção modifica a projeção persistida de atlas.originals[original.refDigest] sem recalcular digest; recall real retornaunavailable, mas o stale preflight aceita. Investigar reader de captura/continuidade realmente instalado e autoridade que o wrapper valida; conferir invariantes do registro/headers/projeção/digest e fonte original. Rejeitar a captura corrompida na fronteira real, mantendo positivos autorizados de alteração material/sourcehistorical e metadata-only stale.preserve. Não trocar todos retornos por denied ou tratar fingerprintantigo como grant. Provar captura íntegra, corrupção semdigestnovo, owner/fonte/substituição/incarnação, alteração duranteawait, revogação apósúltimaleitura, Requestretido e replay. Alcançar os três negativos de revogação nãoexecutados emA27. Não mascarar a falha com reset/regravação da captura. Testecomponente novo deve atravessar Atlas/C08/SQLite/BCS e wrapperreais, não callback permissivo. Depois de causa e delta, recheckselecionadohistoricalMemory original com assertions/budgets240000/225000preservados se necessário; nenhuma repetiçãoA27inalterada. SeguirprovasC09jáaprovadas preservadas e noCIduplicado.",
+  "limits": "Continuação após handoffterminal, mesmaPR29, sem reiniciarGoal/supervisor; conferir head e revogação/autoridade antes deassumir. host-context.ts somente wiring da validaçãoMemory; business-context.ts somente integridade do reader necessário ao preflight. Sem edição dos produtores Finance ativos, source-lifecycle/planner-sources otimizaçãoX, forecastshell/controller sessão12, UI ACK10, exports11, workflows/specsE2E/nativeharness das9. FindingsC17entreobservações e ACKporTexto são distintos: não encerrá-los por este teste. Nenhuma edição de engines, regrasGuard ou assertions estrangeiras.",
+  "common_ref": "c708ec0609dbfc95b259707d8c38481617f74f11:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "state": "PREPARED_NOT_STARTED",
+  "lease_epoch": 1,
+  "session_id": null,
+  "model_effective": "NOT_VERIFIED",
+  "consumer": "S0 integration/reviewers/final candidate later",
+  "rules": "Leia AGENTS/COMMON/seu pack completo. Somente GitHubMCP remoto,CAS,nãoforce/gh/remoteGit/login/merge/deploy/restart/engines. Testes sóActions cirúrgicos com W/S/requests/seleção/config/dedupe/Omni e checks reais, nunca local/epic/fullsuite. Preservar handoff/headtrabalhoalheio; nãocontarproposta comoimplementação ou fixturecomonativo. Entregar mesmaPR e recibosappendonly, prossiga decisõesrotineiras autonomamente."
+}

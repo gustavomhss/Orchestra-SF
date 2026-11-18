@@ -1,0 +1,80 @@
+{
+  "wp": "WP05",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-bi-ready",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/analytics-ready",
+  "pre_handoff_head": "df4d1a0bcee7a08ffb18b75ae7d35ff65293a09f",
+  "pre_handoff_tree": "c5540fbe0a8373830f70cc14e04505fe8732a11a",
+  "baseline": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+  "remote_common_ancestor": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "inputs": {
+    "task_ownership": "teams/WP05/task-ownership-v3.json",
+    "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "foreign_committed_base": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+    "old_dirty_worktree": "preserved, not staged or copied",
+    "upstream_dependencies": [
+      "WP00 shared contracts and DashboardReadRequest fields",
+      "WP02 4cc4003775 or later",
+      "WP03 Planner projections",
+      "WP10 artifact store db01f3e0a1 and actual host bindings",
+      "WP11 70def76ba9 and coverage interval proof",
+      "WP13 daf9d31a72 or later"
+    ]
+  },
+  "tasks": {
+    "WP05.T01": "partial; real Planner trajectory and waterfall adapters, host integration pending",
+    "WP05.T02": "partial; contributions and aligned capacity adapters, host integration pending",
+    "WP05.T03": "partial; procurement stock and aging producer integration, exact host drilldown pending",
+    "WP05.T04": "partial; Dashboard tickets and milestones, UI/native/MCP parity pending",
+    "WP05.T05": "partial; persisted scenario sensitivity and review adapters, complete coverage certificate and host integration pending"
+  },
+  "workers": [
+    {
+      "id": "Terra",
+      "model": "gpt-6.1-terra",
+      "state": "stopped",
+      "lease": "revoked"
+    },
+    {
+      "id": "/root/wp05_luna",
+      "model": "gpt-6-luna",
+      "state": "interrupted",
+      "lease": "revoked"
+    },
+    {
+      "id": "48fe7e51-031b-4fcd-a66d-80bc88fc68c4",
+      "model": "grok-4.7-build",
+      "state": "terminated HTTP 402",
+      "lease": "revoked"
+    },
+    {
+      "id": "5d8e87f4-ec39-49f3-b082-9778b0e1475e",
+      "model": "grok-4.7-build",
+      "state": "terminated HTTP 402",
+      "lease": "revoked"
+    }
+  ],
+  "validation": {
+    "hosted_scoped_ci": "NOT_RUN",
+    "local_product_tests": "NOT_RUN",
+    "package_typecheck": "NOT_RUN",
+    "guardrail": "NOT_RUN",
+    "diff_check": "passed before stop"
+  },
+  "findings": [
+    "WP00 artifact dashboardSelection must preserve required DashboardReadRequest fields",
+    "WP10 store callbacks, artifact choice provider, exact C17 drilldown, UI/native/MCP parity remain unwired",
+    "WP11 universal coverage proof and real 55000 engine threshold not established",
+    "sensitivity fixture uses controlled auth/fence callbacks; host fence proof remains open",
+    "several tests require upstream producer and shared contract stack before typecheck or CI",
+    "Grok provider exhausted; no retry"
+  ],
+  "resume": "Only after explicit user resume: reestablish ownership and CI lease, integrate required producer/shared contract changes, wire host and consumers, prove coverage and real sensitivity, audit all five tasks, run scoped hosted tests and package typecheck under lease and guardrail, then deliver one green WP PR. Do not declare complete based on this checkpoint.",
+  "created_at": "2026-11-13T20:30:36.910202+00:00",
+  "local_checkpoint_head": "b87bf48555e308ec57ee30ad88d0f8e79c3d221a",
+  "local_checkpoint_tree": "9d33558c26c54a0be957ec1a091daf86e25e7f4e",
+  "remote_checkpoint_head": "d2838004907291d5243a21ea6a7093e36fc5a30a",
+  "remote_checkpoint_tree": "9d33558c26c54a0be957ec1a091daf86e25e7f4e",
+  "remote_history_note": "GitHub snapshot commit has identical tree but different parent/history; local commits remain in local worktree."
+}

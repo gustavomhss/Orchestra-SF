@@ -1,0 +1,408 @@
+{
+  "schema_version": 1,
+  "id": "SF2-SEAM-001",
+  "title": "C05 review-thread context: complete producer-to-HTTP intake",
+  "status": "PROPOSED/NOT_APPLIED",
+  "validation_status": "STATIC_APPLICABILITY_CONFIRMED; TYPECHECK_AND_TESTS_NOT_RUN",
+  "checked_on": {
+    "branch": "astra-wp10",
+    "commit": "f511f30b73289c2f21c843254569d31c02eb9608",
+    "tree": "ee2964cd6cc96ee2697e9d05835777870a843f65",
+    "product_subtree": "dd7128a2565cdb2f60309e35e05f2bb592dbb250",
+    "head_state": "Observed current composition; session13 Memory delta is in flight and is not accepted by this proposal"
+  },
+  "destination": {
+    "branch": "sf2-stack",
+    "authorized_writer": "session14 only",
+    "observed_head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "requires_new_target_receipt": true,
+    "rule": "This manifest is checked only on checked_on.commit. Do not use its full tree as a replacement sf2-stack snapshot. Session14 must reconcile its actual target commit, verify all preimages and required dependencies, then record new target SHA before application. A later head is NOT prequalified."
+  },
+  "origin": {
+    "branch": "collab-resume",
+    "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+    "pr": 41,
+    "tree": "6a52cb85d78260d5420acac3a4db35ce23873e83",
+    "product_ownership": "WP07/C05 through Collaboration; no source author branch writes",
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/HANDOFF.md",
+    "handoff_blob": "e73fed58ebf09d7dc5e4112be3a872a02977d058"
+  },
+  "problem": "The fixed WP10 tree lacks reviews/thread-context.ts and the service/application/HTTP wiring already published by Collaboration. Adding only the missing file does not expose the real authenticated endpoint. Copying the whole Collaboration tree would regress newer host, UI and Memory work.",
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+      "preimage": {
+        "sha": null,
+        "type": "absent",
+        "mode": null
+      },
+      "postimage": {
+        "sha": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+        "type": "blob",
+        "mode": "100644",
+        "source_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "source_path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+      "preimage": {
+        "sha": "23fa5ed9a68afd137b018ad788a11594118d37f0",
+        "type": "blob",
+        "mode": "100644"
+      },
+      "postimage": {
+        "sha": "f37a2c540b009a8c5bed90365c267b95303e646b",
+        "type": "blob",
+        "mode": "100644",
+        "source_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "source_path": "modules/sucafina/Sucafinav1/product/reviews/services.ts"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+      "preimage": {
+        "sha": "db311ddf0db9178aba66a0df98950697fccec62c",
+        "type": "blob",
+        "mode": "100644"
+      },
+      "postimage": {
+        "sha": "de76611be141d599b9eecc96e1173559e06be26d",
+        "type": "blob",
+        "mode": "100644",
+        "source_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "source_path": "modules/sucafina/Sucafinav1/product/reviews/application.ts"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "preimage": {
+        "sha": "d3db3bb516d245b502a4e57df63dfd9869237881",
+        "type": "blob",
+        "mode": "100644"
+      },
+      "postimage": {
+        "sha": "ce0e5655f19d7d60246024af013c811bf921b042",
+        "type": "blob",
+        "mode": "100644",
+        "source_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "source_path": "modules/sucafina/Sucafinav1/product/reviews/http.ts"
+      }
+    }
+  ],
+  "tree_elements": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20d98a976372338a22c947ee6bfcb9641c0429c5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f37a2c540b009a8c5bed90365c267b95303e646b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de76611be141d599b9eecc96e1173559e06be26d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce0e5655f19d7d60246024af013c811bf921b042"
+    }
+  ],
+  "required_existing_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "102c849084980ae52223809d33bdeea36a58536b",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "beba733084e87da8664b0f4067b52d4b29795c5c",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reports/storage.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf91209e680a94dc0414251e1ab00c227a577d8a",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4ea6ec8cfd1c1a9dbe0be0a92e236df94b1d11f",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62db836fd93e349f19d007e1933396420a3540ff",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6ba1b02eee73d44133c78599284f9772b26007b1",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92e74e4f231e02a4d357232da08cb21e1bedc158",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3e206ea6ab413330328c3372f816182b564affa",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/composition.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e55a1ebbddb54d9a300948ba7c954da7412f627c",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/contribution.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78a2d943c4711cb63f3104f82a62ac96b5b9e92b",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/human.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3877edbe3f3b1e4ae50f52a40ebcc9dab68d0b21",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/routine-reader.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38ba6de728b76cfa0347a04bdd4f9f597470385b",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-access.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d00f632224d36a7e073f1dd66d50c885a1ad872",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/current-thread.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c256db9ccc3cca1a34515ab8d1355d77a82839a",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reports/download.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01a345d1c60fd00499aff1d689b77c9e6e82cfb1",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3de1bf6369b1ca68e09dbae5ab6ffecaa87b85dc",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0745ad913c6c1e93e83794ed1b4de6082868519",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/routine-selection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e6f46000cdf54507830b020e517649faa2689b7",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET"
+    }
+  ],
+  "dependency_closure_rule": "All imports from the four postimages resolve to these 27 existing target files or another file in this atomic four-entry proposal. Their unchanged transitive subgraphs, package manifests and lockfiles are frozen by checked_on.tree. No new package, generated file, native service or permissive substitute is introduced. Do not copy dependency files from the older author tree.",
+  "intentional_dependency_divergences": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+      "target_blob": "92e74e4f231e02a4d357232da08cb21e1bedc158",
+      "origin_blob": "caf603047af112cf4e11130601fb5e171403d8ab",
+      "decision": "Preserve target. Origin only adds ReviewActionContext/listByAction; this intake uses existing API and does not call the added method."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts",
+      "target_blob": "e0745ad913c6c1e93e83794ed1b4de6082868519",
+      "origin_blob": "930e7a5febbc981ba1881fc67e9ab065691e3eb8",
+      "decision": "Preserve target. The import is type-only. The five basis fields are identical; the optional reviewContext field is inspected using in plus a strict unknown validator in the added producer. No old/new Collaboration runtime is substituted."
+    }
+  ],
+  "installed_consumer_chain": [
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "sha": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "role": "createReviewApplication"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "sha": "a57e9d39f81e8a064f903765e70533bdffea4ba2",
+      "role": "inject real reviews application"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "sha": "63bbe96595c04a484cdc16e01f95c42233b4025c",
+      "role": "dispatch reviews.http before GET-only allowlist"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/composition.ts",
+      "sha": "e55a1ebbddb54d9a300948ba7c954da7412f627c",
+      "role": "spread complete services; retain threadContext"
+    }
+  ],
+  "behavior_preserved": [
+    "Existing review reads, artifacts, report preparation, download routes, CAS and mutations remain unchanged.",
+    "Pin is bound to exact review id/version/digest and unique section; evidence identities, source incarnation/version/period and scope remain mandatory.",
+    "Producer identity and method references are pinned; authorization is repeated after awaits and two independent immutable C05 reads are compared.",
+    "HTTP requires same-origin POST, bounded JSON payload, real sf_review_prepare UI admission, input digest, exact Request identity and finish in finally.",
+    "Producer absence returns unavailable; no authorization is made optional.",
+    "C16 grant intersection, Memory owner and C11 observations are unchanged."
+  ],
+  "scope_limit": [
+    "This emits an authorized C05 pin and completes its existing HTTP assembly only.",
+    "It does not mount recipient-authority/reviewAnswerSource, C05 attachment/reply/reuse, prepareAccess, My work metadata or native C16 sf_answer_read with a review pin.",
+    "No claim that adding four entries closes the full C05 journey, ACK UI, Memory integrity, forecast or global acceptance."
+  ],
+  "minimal_recheck": {
+    "owner": "session14/S0 after applying to a new pinned candidate; not dispatched here",
+    "checks": [
+      "Canonical package bun typecheck in modules/sucafina, plus CLI typecheck for the actual composed caller.",
+      "Existing published C05 context tests: correct review/section yields exact pin; wrong source, scope, period, incarnation, version or digest is denied.",
+      "Revoke or swap producer/method after awaits: deny; wrong origin/method/oversized payload: reject; admitted request is always finished.",
+      "Retain existing review-read/report/download consumer checks affected by HTTP assembly."
+    ],
+    "runtime_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN"
+  },
+  "static_applicability": {
+    "checked_files": 4,
+    "exact_preimages": 4,
+    "all_existing_imports": 27,
+    "target_tree_listing_complete": true,
+    "new_blob_content": "Exact published source blob; no reconstruction",
+    "product_tree_created": false,
+    "product_applied": false
+  }
+}
