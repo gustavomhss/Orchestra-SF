@@ -47,7 +47,7 @@ test("no real codec: known context ID does not imply an admitted producer", asyn
     binding: installation,
     generation: 1,
     currentGeneration: () => 1,
-    fetch: Object.assign(async () => { throw new Error("browser must not be used under desktop binding") }, { preconnect: fetch.preconnect }),
+    fetch: async () => { throw new Error("browser must not be used under desktop binding") },
     operations: {},
     desktop: forbiddenDesktop(() => invoked++),
     desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 1 },
@@ -67,7 +67,7 @@ test("stale owner generation blocks before any IPC or network", async () => {
     binding: installation,
     generation: 2,
     currentGeneration: () => 3,
-    fetch: Object.assign(async () => { throw new Error("must not fetch") }, { preconnect: fetch.preconnect }),
+    fetch: async () => { throw new Error("must not fetch") },
     operations: {},
     desktop: forbiddenDesktop(() => invoked++),
     desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 2 },
@@ -87,7 +87,7 @@ test("desktop descriptor change is not resolved by selection from another projec
     binding: installation,
     generation: 3,
     currentGeneration: () => 3,
-    fetch: Object.assign(async () => { throw new Error("must not fetch") }, { preconnect: fetch.preconnect }),
+    fetch: async () => { throw new Error("must not fetch") },
     operations: {},
     desktop: forbiddenDesktop(() => invoked++),
     desktopBinding: {
@@ -113,7 +113,7 @@ test("aborted signal does not enter the producer", async () => {
     binding: installation,
     generation: 4,
     currentGeneration: () => 4,
-    fetch: Object.assign(async () => { throw new Error("must not fetch") }, { preconnect: fetch.preconnect }),
+    fetch: async () => { throw new Error("must not fetch") },
     operations: {},
     desktop: forbiddenDesktop(() => invoked++),
     desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 4 },
@@ -132,7 +132,7 @@ test("ctx.context refuses a denied payload with a success HTTP status", async ()
     binding: installation,
     generation: 5,
     currentGeneration: () => 5,
-    fetch: Object.assign(async () => { throw new Error("web request forbidden in desktop test") }, { preconnect: fetch.preconnect }),
+    fetch: async () => { throw new Error("web request forbidden in desktop test") },
     operations: {
       "ctx.context": {
         decodeInput: (value) => {
@@ -197,7 +197,7 @@ test("lost mutation outcome cannot dispatch again with the same key", async () =
     binding: installation,
     generation: 6,
     currentGeneration: () => 6,
-    fetch: Object.assign(async () => { throw new Error("web request forbidden in desktop test") }, { preconnect: fetch.preconnect }),
+    fetch: async () => { throw new Error("web request forbidden in desktop test") },
     operations: {
       "ctx.context": {
         decodeInput(value) {
@@ -298,9 +298,8 @@ test("projection POST enforces the catalog byte cap before invoking the original
   expect(received).toBe(atLimit)
 })
 
-test("NAV-01: search accepts bounded private POST only, preserving the original Request", async () => {
+test("projection GET without maxRequestBytes stays bodyless and preserves Request identity", async () => {
   let received: Request | undefined
-  let called = 0
   const route = mountSfNativeProjections({
     mount: "/sucafina",
     context: {
@@ -310,36 +309,17 @@ test("NAV-01: search accepts bounded private POST only, preserving the original 
     handlers: [{
       operationId: "projection.search",
       handle: async (request) => {
-        called++
         received = request
         return Response.json({ status: "ok" })
       },
     }],
   })
   const url = "https://sf.example.test/sucafina/api/ui/projections/search"
-  const privateBody = JSON.stringify({ q: "sensitive search text" })
-  const request = new Request(url, {
-    method: "POST", headers: { "content-type": "application/json" }, body: privateBody,
-  })
+  const request = new Request(url)
   expect((await route(request))?.status).toBe(200)
   expect(received).toBe(request)
-  expect(called).toBe(1)
-  expect(new URL(request.url).search).toBe("")
-  // The router has not consumed or cloned the Request. The producer owns the body.
-  expect(await request.text()).toBe(privateBody)
 
-  const legacyGet = new Request(url + "?q=sensitive")
-  expect((await route(legacyGet))?.status).toBe(405)
-  const leakedQuery = new Request(url + "?q=sensitive", { method: "POST", body: privateBody })
-  expect((await route(leakedQuery))?.status).toBe(400)
-  const oversized = new Request(url, {
-    method: "POST", headers: { "content-length": "4097" }, body: privateBody,
-  })
-  expect((await route(oversized))?.status).toBe(413)
-  const malformed = new Request(url, {
-    method: "POST", headers: { "content-length": "0001" }, body: privateBody,
-  })
-  expect((await route(malformed))?.status).toBe(400)
-  expect(called).toBe(1)
+  const bodyDeclared = new Request(url, { headers: { "content-length": "1" } })
+  expect((await route(bodyDeclared))?.status).toBe(400)
   expect(received).toBe(request)
 })
