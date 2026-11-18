@@ -13,7 +13,7 @@ Base `close-final-candidate` is `a63c4c7335`. Bundles already merged:
 
 Promotion PR #237 (`close-final-candidate` → `go-live-close`) was CLEAN after those merges. Do not promote without an owner GO and a green `sf/verify`.
 
-Active fix branch: `sf-red-clusters` @ `41975be6aa` (ancestor of base `a63c4c7335`, no rebase needed). Worktree: `/tmp/w-base` (deps installed; `bun run typecheck` from `modules/sucafina` works there). Do not use the owner's checkout at `/Users/gustavoschneiter/Documents/HuGR/Orchestra-SF` (dirty, other branch).
+Active fix branch: `sf-red-clusters` @ `a26a35f135` (descendant of base `a63c4c7335`, no rebase needed). Worktree: `/tmp/w-base`. Lane ownership: `docs/qa/sucafina/consolidation/lane-ownership.md`. Do not use the owner checkout.
 
 ## What is already on `sf-red-clusters`
 
@@ -32,7 +32,7 @@ Local typecheck after that commit was aborted before the recount. Last known rem
 - `CI-SF` is 8 shards. Bun does not honor argv order (verified: `bun test a b c` ran `b c a`, sequential not concurrent). The WP01 pool fixture requires `browser-startup.test.ts` first and `browser-lifecycle.test.ts` last in `/proc/self/cmdline`. Those 40 files are `harnessOwnedFiles` and must stay excluded until an integrator-owned lane exists.
 - Base run `44182616679` executed only 289 of 918 files, had 43 `(fail)` lines, and the job still reported success. That is why `sf/verify` was red. `coverageBaseline.status` is still `PENDING_REAL_COMPLETE_RUN`.
 - Full inventory on head `33bc9a0cc3` (pre-merge) showed shard failures 58/80/27. Do not treat those counts as current; the merged tree is different.
-- Run `44329483839` on `sf-red-clusters` @ `2e5839eebb` was in progress when this checkpoint was written (static failed on the type errors above; shards were running). It does not include `41975be6aa`.
+- Run `44329483839` on `2e5839eebb` completed failure. It does not include `30b8a619e0`, `41975be6aa`, or `a26a35f135`. Failed jobs: static `134889959050`, procurement-queue `134890490309`, APP-BROWSER `134890490385`, UI-OPERATIONS `134890490464`, UI-REPORTS `134890490475`, UI-DECISIONS `134890490492`, CLI `134890490527`, SF-2 `134890490763`, SF-7 `134890490891`, SF-8 `134890490924`, verify `134911301816`. Shards 1 and 3–6 were cancelled. Shard failure artifacts exist only for 2, 7 and 8.
 - `test:ci` from a dirty or unpushed tree refuses when more than 400 files differ. Push first.
 
 ## Preserved agent work (do not drop)
