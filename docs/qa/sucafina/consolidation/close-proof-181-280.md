@@ -13,7 +13,7 @@ Not used: three-dot diff, tip-to-tip `git diff --quiet`, a bundle commit that me
 ## Result
 
 - Closed by this pass: 7 (#191, #208, #225, #226, #232, #236, #276)
-- Reopened by this pass: 0
+- Reopened by this pass: 14 (#244, #245, #246, #247, #248, #249, #250, #251, #252, #253, #257, #268, #274, #280)
 - Left open (unique work): 71
 - Already closed and matching, left closed: 4 (#233, #240, #255, #256)
 - Merged, untouched: 17
@@ -34,6 +34,8 @@ Merged untouched: #238 EMPTY, #241 EMPTY, #243 MATCH, #261 UNIQUE, #262 MATCH, #
 - Spot checks: #191 merge-base equals its head and the file list is empty. #240 `packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts` is `ed2ea1dcf1716dddbd71e358001be22291cca564` on both sides. #229 `apps/cli/src/sucafina-product/native-ui/live-context.ts` is `c0f11d5ee6aeda3b5ac708df5c8d4436e602f830` on the PR head and `573f1af22df6bba4408d4727e8a8dba9ad5db059` on the candidate.
 
 After the closes, a fresh state read matched this proof: no open match/empty PR, no closed unique PR, #237 open. Refs were refetched first and no head SHA had moved. Candidate SHA was unchanged.
+
+A concurrent bundle closer shut unique PRs after the first state read. Those heads still differed, so they were reopened with no comment and no branch delete. A second state read then matched this proof.
 
 ## Per PR
 
@@ -102,20 +104,20 @@ After the closes, a fresh state read matched this proof: no open match/empty PR,
 | 241 | MERGED | MERGED | EMPTY | MERGED_UNTOUCHED | 0 | 0 | `3a99b06c585f8963af754b977f1b9f710d3ddba9` | `3a99b06c585f8963af754b977f1b9f710d3ddba9` |
 | 242 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 16 | 5 | `2f94d74d50dceee8a3c0562feac27a7335171ae8` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
 | 243 | MERGED | MERGED | MATCH | MERGED_UNTOUCHED | 1 | 0 | `2e1cee39a133400c41bfe3426f9a3927885cbff4` | `1cb77b8deb144e01a655c36987922338b1474003` |
-| 244 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 5 | 5 | `bd902fe45aab81fb61f58f5eb79f80c833f4954e` | `1cb77b8deb144e01a655c36987922338b1474003` |
-| 245 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 4 | 4 | `59012d8dc7a5a7efce5e0b24ef4b610101014e65` | `1cb77b8deb144e01a655c36987922338b1474003` |
-| 246 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 26 | 10 | `d93b695b04876b4194dfa267ca3b795d87f2737d` | `1cb77b8deb144e01a655c36987922338b1474003` |
-| 247 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 25 | 12 | `a8634972abb4e042fc4cf401c2c6c966f2f56cb7` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
-| 248 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 44 | 29 | `7c68373566bb659f1cd025fb6429820c234d8be7` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
-| 249 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 35 | 20 | `23792c2d1e2baf55e3ec17723147e27d0d6af840` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
-| 250 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 26 | 11 | `28ac635a371e91504bc2eec9d193e6c1225a1eb8` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
-| 251 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 25 | 10 | `7aafa32d6673d13f456a4a9caffd307614129dea` | `1cb77b8deb144e01a655c36987922338b1474003` |
-| 252 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 35 | 18 | `e8f6fc475514488cf7aa40df350fc46674263935` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
-| 253 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 22 | 7 | `831e0ea2862fd2ce111f1fbe4304d05077d213df` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
+| 244 | OPEN | OPEN | UNIQUE | REOPENED | 5 | 5 | `bd902fe45aab81fb61f58f5eb79f80c833f4954e` | `1cb77b8deb144e01a655c36987922338b1474003` |
+| 245 | OPEN | OPEN | UNIQUE | REOPENED | 4 | 4 | `59012d8dc7a5a7efce5e0b24ef4b610101014e65` | `1cb77b8deb144e01a655c36987922338b1474003` |
+| 246 | OPEN | OPEN | UNIQUE | REOPENED | 26 | 10 | `d93b695b04876b4194dfa267ca3b795d87f2737d` | `1cb77b8deb144e01a655c36987922338b1474003` |
+| 247 | OPEN | OPEN | UNIQUE | REOPENED | 25 | 12 | `a8634972abb4e042fc4cf401c2c6c966f2f56cb7` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
+| 248 | OPEN | OPEN | UNIQUE | REOPENED | 44 | 29 | `7c68373566bb659f1cd025fb6429820c234d8be7` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
+| 249 | OPEN | OPEN | UNIQUE | REOPENED | 35 | 20 | `23792c2d1e2baf55e3ec17723147e27d0d6af840` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
+| 250 | OPEN | OPEN | UNIQUE | REOPENED | 26 | 11 | `28ac635a371e91504bc2eec9d193e6c1225a1eb8` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
+| 251 | OPEN | OPEN | UNIQUE | REOPENED | 25 | 10 | `7aafa32d6673d13f456a4a9caffd307614129dea` | `1cb77b8deb144e01a655c36987922338b1474003` |
+| 252 | OPEN | OPEN | UNIQUE | REOPENED | 35 | 18 | `e8f6fc475514488cf7aa40df350fc46674263935` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
+| 253 | OPEN | OPEN | UNIQUE | REOPENED | 22 | 7 | `831e0ea2862fd2ce111f1fbe4304d05077d213df` | `ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f` |
 | 254 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 5 | 3 | `b67cb17eef6962e4007dab7a0cde27672367f92b` | `1cb77b8deb144e01a655c36987922338b1474003` |
 | 255 | CLOSED | CLOSED | MATCH | LEFT_CLOSED | 1 | 0 | `0b53c61dda85401f9245ed9528e3d9669f6e69f1` | `1cb77b8deb144e01a655c36987922338b1474003` |
 | 256 | CLOSED | CLOSED | MATCH | LEFT_CLOSED | 1 | 0 | `22002409d2b2fce52427c6b7a53fd7b733b40f96` | `1cb77b8deb144e01a655c36987922338b1474003` |
-| 257 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 16 | 7 | `591424661cf43baedf798b470a112d32b9b0c514` | `1cb77b8deb144e01a655c36987922338b1474003` |
+| 257 | OPEN | OPEN | UNIQUE | REOPENED | 16 | 7 | `591424661cf43baedf798b470a112d32b9b0c514` | `1cb77b8deb144e01a655c36987922338b1474003` |
 | 258 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 14 | 9 | `cfb01f61e8c48c5779288b0b4b24220cc28662ab` | `1cb77b8deb144e01a655c36987922338b1474003` |
 | 259 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 1 | 1 | `a5ab1f4b7bd5e2729c572fc5ae23ebf68debcffe` | `42d344a0efc4d85187388f149c54acac2db171da` |
 | 260 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 65 | 39 | `aec42536013f06d518e0cf5053982e319a41199a` | `1cb77b8deb144e01a655c36987922338b1474003` |
@@ -126,19 +128,19 @@ After the closes, a fresh state read matched this proof: no open match/empty PR,
 | 265 | MERGED | MERGED | UNIQUE | MERGED_UNTOUCHED | 15 | 8 | `8903d27f5d6a546f20f16ab651a4d4241d29bc2e` | `1cb77b8deb144e01a655c36987922338b1474003` |
 | 266 | MERGED | MERGED | UNIQUE | MERGED_UNTOUCHED | 25 | 10 | `c49089244ea6c0e5c9d79ec0caa076127cedcaad` | `1cb77b8deb144e01a655c36987922338b1474003` |
 | 267 | MERGED | MERGED | UNIQUE | MERGED_UNTOUCHED | 16 | 7 | `591424661cf43baedf798b470a112d32b9b0c514` | `1cb77b8deb144e01a655c36987922338b1474003` |
-| 268 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 8 | 8 | `9802e2779dc2190203f672e60a3ed9d58d5d4438` | `42d344a0efc4d85187388f149c54acac2db171da` |
+| 268 | OPEN | OPEN | UNIQUE | REOPENED | 8 | 8 | `9802e2779dc2190203f672e60a3ed9d58d5d4438` | `42d344a0efc4d85187388f149c54acac2db171da` |
 | 269 | MERGED | MERGED | UNIQUE | MERGED_UNTOUCHED | 12 | 9 | `88ef34d600932c155b7770977b71e9e5d173dcb8` | `42d344a0efc4d85187388f149c54acac2db171da` |
 | 270 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 14 | 13 | `78e35990f84335e5ddb6fcd40e785a4925141373` | `42d344a0efc4d85187388f149c54acac2db171da` |
 | 271 | MERGED | MERGED | EMPTY | MERGED_UNTOUCHED | 0 | 0 | `c91e888609bf5658deb7f4368e9ee17db9f6b08e` | `c91e888609bf5658deb7f4368e9ee17db9f6b08e` |
 | 272 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 14 | 13 | `78e35990f84335e5ddb6fcd40e785a4925141373` | `42d344a0efc4d85187388f149c54acac2db171da` |
 | 273 | MERGED | MERGED | UNIQUE | MERGED_UNTOUCHED | 2 | 1 | `9e26dd225d626742d31948b3db3e1a58a5bd452e` | `c91e888609bf5658deb7f4368e9ee17db9f6b08e` |
-| 274 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 1 | 1 | `47b555b2cc20d48b468e765e90431e04fa1c464a` | `c91e888609bf5658deb7f4368e9ee17db9f6b08e` |
+| 274 | OPEN | OPEN | UNIQUE | REOPENED | 1 | 1 | `47b555b2cc20d48b468e765e90431e04fa1c464a` | `c91e888609bf5658deb7f4368e9ee17db9f6b08e` |
 | 275 | MERGED | MERGED | MATCH | MERGED_UNTOUCHED | 1 | 0 | `05046277256939a7ba0323568a34652ae0ee54b2` | `88e37c1f82823d8482051ef279cff433b6f18691` |
 | 276 | OPEN | CLOSED | MATCH | CLOSED_BY_US | 1 | 0 | `a6c4a6eb040fad48d2338264442acbde290a33d2` | `a1e774ec9e1fc28c81e0b42a1889c0425060aed9` |
 | 277 | MERGED | MERGED | EMPTY | MERGED_UNTOUCHED | 0 | 0 | `a1e774ec9e1fc28c81e0b42a1889c0425060aed9` | `a1e774ec9e1fc28c81e0b42a1889c0425060aed9` |
 | 278 | MERGED | MERGED | MATCH | MERGED_UNTOUCHED | 1 | 0 | `6323f58c3b044d50fecd7ab79c51bf35b23259bf` | `a1e774ec9e1fc28c81e0b42a1889c0425060aed9` |
 | 279 | MERGED | MERGED | UNIQUE | MERGED_UNTOUCHED | 39 | 3 | `c64919de72d3ed81fb49491aacb9051a6d1af20c` | `d624e44db8e2f8f15825566277ced51cfac8b0c7` |
-| 280 | OPEN | OPEN | UNIQUE | LEFT_OPEN | 10 | 9 | `f212c3d0ac6107e38f129d331b36fb674b39f303` | `a1e774ec9e1fc28c81e0b42a1889c0425060aed9` |
+| 280 | OPEN | OPEN | UNIQUE | REOPENED | 10 | 9 | `f212c3d0ac6107e38f129d331b36fb674b39f303` | `a1e774ec9e1fc28c81e0b42a1889c0425060aed9` |
 
 ## Match evidence
 
