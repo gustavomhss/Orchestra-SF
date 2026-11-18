@@ -123,7 +123,7 @@ export function requestValue(request: RequestView, rates: Rates): number | null 
   if (selected) {
     if (typeof selected.total !== "number" || !Number.isFinite(selected.total)) return null
     if (typeof selected.currency !== "string" || !/^[A-Z]{3}$/.test(selected.currency)) return null
-    if (frozen && request.sourcing?.approvalBaseCurrency !== rates.currency) return null
+    if ((request.sourcing?.approval != null || request.sourcing?.approvalBaseCurrency != null || request.status === "src_pending") && request.sourcing?.approvalBaseCurrency !== rates.currency) return null
     if (frozen && request.sourcing?.fxSnapshot == null && selected.currency !== rates.currency) return null
     const base = toBase(selected.total, selected.currency, rates, request.sourcing?.fxSnapshot)
     return base
