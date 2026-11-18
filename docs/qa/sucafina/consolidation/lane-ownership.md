@@ -2,6 +2,15 @@
 
 One writer per branch. Do not edit another lane's files. Integrate only into `sf-red-clusters` after the lane's own gate is green.
 
+## Tests and CI
+
+Do not repeat a run that already exists.
+
+- Forbidden for every lane, including the parent: `bun test`, Playwright, e2e, `bun run test:ci`, `gh workflow run`, and any local browser or shard run.
+- The only completed evidence for the current red lanes is run `44329483839` on `2e5839eebb`. Read that job log or its artifact. Do not dispatch another `sf-ci` or `test:ci` to re-see it.
+- `bun run typecheck` is allowed only on `sf-typecheck`, and only inside `modules/sucafina`.
+- A lane that cannot prove a fix without a new test run writes the cause and the proposed patch, then stops. The parent runs one CI after the lanes land.
+
 Base for every new lane: `origin/sf-red-clusters` @ `a26a35f135` or later. Do not use the owner checkout.
 
 ## Running
