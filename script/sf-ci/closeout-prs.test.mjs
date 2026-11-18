@@ -15,14 +15,20 @@ const REAL_TEMPLATES = resolve(fileURLToPath(new URL(
 
 function record(overrides = {}) {
   return {
+    schema_version: 'orchestra-sf-consolidation-ledger-v1',
     record_id: 'PR-71:example/file.ts',
+    observed_at: '2026-11-17T21:10:00-03:00',
+    base_observed: 'd'.repeat(40),
     source_pr: 71,
     source_head: HEAD,
+    source_branch: 'example-source-71',
+    source_base: 'close-final-candidate',
     source_state: 'OPEN',
     scope: { path: 'example/file.ts' },
     bundle: 'B2',
     disposition: 'ABSORBED_BLOB',
     status: 'CLOSE_READY',
+    owner: 'business-product',
     close_ready: true,
     canonical_pr: null,
     evidence: [{ type: 'BLOB_MATCH', ref: 'base', detail: 'Identical file blob at pinned base' }],
@@ -134,6 +140,41 @@ test('count mismatch reports error before any comment or close', async t => {
   const report = JSON.parse(await readFile(args.report, 'utf8'));
   assert.equal(report.outcomes[0].status, 'NOT_APPLIED_COUNT_MISMATCH');
   assert.equal(mutating(calls), false);
+});
+
+test('missing required ledger fields fail closed before any gh operation', async t => {
+  for (const [mutated, field] of [
+    [{ status: undefined }, 'status'],
+    [{ scope: undefined }, 'scope'],
+    [{ source_branch: undefined }, 'source_branch'],
+    [{ evidence: [] }, 'evidence'],
+    [{ schema_version: 'unknown' }, 'schema_version'],
+  ]) {
+    const { args, output } = await fixture(t, [record(mutated)]);
+    const { gh, calls } = fakeGh();
+    await assert.rejects(
+      executeCloseout(args, { gh, output }),
+      error => error.code === 'INVALID_LEDGER_RECORD',
+      'must reject invalid ' + field,
+    );
+    assert.equal(calls.length, 0);
+  }
+});
+
+test('conflicting snapshot base or branch blocks entire PR, even with matching head', async t => {
+  for (const changed of [
+    { base_observed: OTHER },
+    { source_branch: 'unexpected-branch' },
+  ]) {
+    const { args, output } = await fixture(t, [
+      record(),
+      record({ record_id: 'PR-71:other.ts', scope: { path: 'other.ts' }, ...changed }),
+    ]);
+    const { gh, calls } = fakeGh();
+    const report = await executeCloseout(args, { gh, output });
+    assert.equal(outcome(report).status, 'INCONSISTENT_SNAPSHOT');
+    assert.equal(mutating(calls), false);
+  }
 });
 
 test('unknown disposition is reported as UNKNOWN_DISPOSITION and never actioned', async t => {

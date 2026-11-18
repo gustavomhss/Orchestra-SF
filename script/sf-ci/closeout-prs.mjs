@@ -23,6 +23,16 @@ const PRIORITY = [
   'ABSORBED_PATCH', 'ABSORBED_BLOB', 'ABSORBED_ANCESTOR',
 ];
 const SHA = /^[0-9a-f]{40}$/i;
+const BUNDLES = new Set(['A', 'B0', 'B1', 'B2', 'B3', 'FINAL', 'NONE', 'OWNER_DECISION']);
+const STATUSES = new Set([
+  'SNAPSHOTTED', 'CLASSIFIED', 'PORTED', 'CI_PENDING', 'CI_GREEN',
+  'MERGED', 'CLOSE_READY', 'CLOSED', 'BLOCKED',
+]);
+const EVIDENCE_TYPES = new Set([
+  'ANCESTRY', 'EMPTY_DIFF', 'BLOB_MATCH', 'DELETION_MATCH',
+  'PATCH_ID', 'HUNK_MATCH', 'HEAD_MATCH', 'SEMANTIC_REVIEW',
+  'OWNER_DECISION', 'CI_RUN', 'FILE_LIST', 'OTHER',
+]);
 const EXPLICIT_PROOF = {
   ABSORBED_BLOB: ['BLOB_MATCH', 'DELETION_MATCH'],
   ABSORBED_PATCH: ['PATCH_ID', 'EMPTY_DIFF', 'HUNK_MATCH'],
@@ -72,16 +82,35 @@ function readLedger(raw) {
   for (const [index, line] of raw.split(/\r?\n/).entries()) {
     if (!line.trim()) continue;
     const rec = parseJson(line, 'ledger line ' + (index + 1));
-    if (!rec || !integer(rec.source_pr) || !SHA.test(rec.source_head || '')
-      || typeof rec.disposition !== 'string'
-      || typeof rec.close_ready !== 'boolean'
-      || !Array.isArray(rec.evidence)) {
+    const valid = rec && rec.schema_version === 'orchestra-sf-consolidation-ledger-v1'
+      && integer(rec.source_pr) && SHA.test(rec.source_head || '')
+      && typeof rec.record_id === 'string'
+      && rec.record_id.startsWith('PR-' + rec.source_pr + ':')
+      && typeof rec.observed_at === 'string'
+      && Number.isFinite(Date.parse(rec.observed_at))
+      && typeof rec.source_branch === 'string' && rec.source_branch.trim()
+      && typeof rec.source_base === 'string' && rec.source_base.trim()
+      && typeof rec.scope?.path === 'string' && rec.scope.path.trim()
+      && BUNDLES.has(rec.bundle)
+      && STATUSES.has(rec.status)
+      && typeof rec.owner === 'string' && rec.owner.trim()
+      && typeof rec.disposition === 'string'
+      && typeof rec.close_ready === 'boolean'
+      && (rec.owner_decision_required === undefined
+        || typeof rec.owner_decision_required === 'boolean')
+      && (rec.source_state === undefined
+        || ['OPEN', 'CLOSED', 'MERGED', 'ABSENT'].includes(rec.source_state))
+      && (rec.base_observed === undefined || rec.base_observed === null
+        || SHA.test(rec.base_observed))
+      && Array.isArray(rec.evidence) && rec.evidence.length > 0
+      && rec.evidence.every(e => EVIDENCE_TYPES.has(e?.type)
+        && typeof e.detail === 'string' && e.detail.trim()
+        && (e.ref === undefined || e.ref === null || typeof e.ref === 'string'));
+    if (!valid) {
       failure('INVALID_LEDGER_RECORD', 'Invalid ledger record at line ' + (index + 1));
     }
-    if (rec.record_id !== undefined) {
-      if (seenIds.has(rec.record_id)) failure('DUPLICATE_RECORD_ID', rec.record_id);
-      seenIds.add(rec.record_id);
-    }
+    if (seenIds.has(rec.record_id)) failure('DUPLICATE_RECORD_ID', rec.record_id);
+    seenIds.add(rec.record_id);
     records.push(rec);
   }
   if (!records.length) failure('EMPTY_LEDGER', 'No ledger records found');
@@ -188,7 +217,9 @@ function classify(pr, records, heads, mapping, commentsDir) {
   const disposition = kinds.length === 1 ? kinds[0]
     : PRIORITY.find(k => kinds.includes(k)) || kinds[0];
   const current = heads.get(pr) || null;
-  const observed = [...new Set(records.map(r => r.source_head))];
+  const observed = [...new Set(records.map(r => r.source_head.toLowerCase()))];
+  const branches = new Set(records.map(r => r.source_branch));
+  const bases = new Set(records.map(r => r.base_observed).filter(Boolean));
   const evidence = describeEvidence(records);
   const item = {
     pr, disposition, evidence, source_head: observed[0], live_head: current,
@@ -198,7 +229,9 @@ function classify(pr, records, heads, mapping, commentsDir) {
   const reject = (status) => { item.status = status; return item; };
   if (known) return reject('UNKNOWN_DISPOSITION');
   if (kinds.some(k => BLOCKED.has(k))) return reject('BLOCKED_DISPOSITION');
-  if (observed.length !== 1) return reject('INCONSISTENT_SNAPSHOT');
+  if (observed.length !== 1 || branches.size !== 1 || bases.size > 1) {
+    return reject('INCONSISTENT_SNAPSHOT');
+  }
   if (records.some(r => r.source_state && r.source_state !== 'OPEN')) return reject('SOURCE_STATE_MISMATCH');
   if (!current) return reject('NOT_OPEN');
   if (current.toLowerCase() !== observed[0].toLowerCase()) return reject('STALE_SNAPSHOT');
