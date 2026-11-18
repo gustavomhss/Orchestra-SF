@@ -61,7 +61,7 @@ async function persistedFixture(app: LiveFixture) {
   const confirmed = await app.apply({ manifestId: preview.value.id, version: preview.value.version })
   if (confirmed.status !== "ok") throw new Error("REAL_IMPORT_APPLY_REQUIRED: " + confirmed.reason)
   const api = liveClient(app)
-  const first = await api["files.import-reference"]({ surface: "planner", importPreviewRef: preview.value.id }, { signal: new AbortController().signal })
+  const first = await api["files.import-reference"]({ surface: "planner", importPreviewRef: preview.value.id }, {})
   if (first.kind !== "response" || first.body.status !== "ok") throw new Error("REAL_PERSISTED_RECEIPT_REQUIRED")
   const owner: SfImportHistoryOwner = {
     installationId: first.body.value.manifest.context.installationId,
