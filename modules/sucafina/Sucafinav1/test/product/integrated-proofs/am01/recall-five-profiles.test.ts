@@ -2,7 +2,6 @@ import { expect, test } from "bun:test"
 import { compareObservedNativeWithUi, observeNativeC16 } from "../am02/observe-native-c16.ts"
 import { expectSpawn } from "../../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
-import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
 import { decodeSfSkillInput } from "../../../../product/contracts/schema-admission.ts"
 import { object } from "../../../../runtime/contract.ts"
 import { executeWp12NativeMission, observeWp12UnavailableMission,
@@ -131,7 +130,7 @@ test("AM01 shared recall runs under all five real profiles and reopens five sepa
     })
     await open("reopened", async (context) => {
       const checked = await context.ui("sf_case_read", { caseRef: first.scenario.caseRef },
-        (call) => context.business.cases.read({ caseRef: encodeCaseRef(first.scenario.caseRef) }, call))
+        (call) => context.business.cases.read({ caseRef: first.scenario.caseRef }, call))
       expect(checked.status).toBe("ok")
       if (checked.status !== "ok") throw new Error("Case was not readable on a fresh product host")
       expect(digestSfValue(checked.value.case)).toBe(digestSfValue(first.scenario.case))
