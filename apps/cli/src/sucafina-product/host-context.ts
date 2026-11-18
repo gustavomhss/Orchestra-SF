@@ -1,3 +1,4 @@
+export { createCurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { randomUUID } from "node:crypto"
