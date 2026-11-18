@@ -58,7 +58,7 @@ function playwright(suite) {
   }
   return Buffer.from(JSON.stringify(data))
 }
-const CI_SF_FILES = Array.from({ length: 32 }, (_, index) => `test/sf-shard-${index + 1}.test.ts`)
+const CI_SF_FILES = Array.from({ length: 8 }, (_, index) => `test/sf-shard-${index + 1}.test.ts`)
 const bunReport = (files) => Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: files.length, product_executed: files.length, failures: 0, errors: 0, skipped: 0 },
   cases: files.map((file) => ({ name: "case " + file, classname: "", file,
@@ -160,7 +160,7 @@ test("CI workflow has one automatic trigger and preserves exhaustive green cover
   assert.ok(ciSf, "CI-SF shard job must exist")
   assert.match(ciSf, /bun test --timeout 30000\s*\\\s*--reporter=junit/)
   assert.match(ciSf, /"\$\{files\[@\]\}"/)
-  assert.match(ciSf, /SF_SHARD_COUNT: "8"/)
+  assert.match(ciSf, /SF_SHARD_COUNT: "4"/)
   assert.doesNotMatch(ciSf, /--bail(?:=|\s|$)|--only-failures|--pass-with-no-tests/)
   // The unrelated app-browser fail-fast policy remains unchanged.
   assert.match(workflow, /CI-APP-BROWSER\)[\s\S]*?--bail=5/)
@@ -247,7 +247,7 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
   const failCases = [
     ["missing Bun selector", good.replace(selector, "echo omitted-bun-selector")],
     ["CI-SF early bail hides late consent tests", good.replace('bun test --timeout 30000 "${files[@]}"', 'bun test --timeout 30000 --bail=5 "${files[@]}"')],
-    ["CI-SF shard count drift", good.replace('SF_SHARD_COUNT: "8"', 'SF_SHARD_COUNT: "7"')],
+    ["CI-SF shard count drift", good.replace('SF_SHARD_COUNT: "4"', 'SF_SHARD_COUNT: "3"')],
     ["missing UI selector", good.slice(0, good.lastIndexOf(selector)) + good.slice(good.lastIndexOf(selector)).replace(selector, "echo omitted-ui-selector")],
     ["missing CI-APP-BROWSER matrix ID", good.replace(", CI-APP-BROWSER", "")],
     ["missing CI-UI-DECISIONS manifest suite", good.replace("          - id: CI-UI-DECISIONS\n", "")],
