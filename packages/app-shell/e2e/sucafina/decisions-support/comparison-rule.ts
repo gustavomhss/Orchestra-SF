@@ -23,9 +23,9 @@ export async function registerKnownIncreaseRule(page: Page, observations: Record
     const evidence = form.locator("[data-numeric-evidence]")
     await expect(evidence).toBeEnabled()
     await expect(evidence.getByRole("option")).not.toHaveCount(0)
-    const digests = await evidence.getByRole("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value))
+    const digests = await evidence.getByRole("option").evaluateAll((options) => options.map((option) => option.getAttribute("value") ?? ""))
     expect(new Set(digests).size).toBe(digests.length)
-    const selectedIds = [await form.getByLabel("Baseline", { exact: true }).inputValue(), await form.getByLabel("Alternative", { exact: true }).inputValue()]
+    const selectedIds = [await form.locator('select[name="baseline"]').inputValue(), await form.locator('select[name="alternative"]').inputValue()]
     const comparedAlternatives = (asRecord(selected.decision).alternatives as unknown[]).map(asRecord).filter((alternative) => selectedIds.includes(String(alternative.id)))
     expect(comparedAlternatives).toHaveLength(2)
     const comparedRefs = comparedAlternatives.flatMap((alternative) => asRecord(alternative.result).sourceRefs as unknown[]).map(asRecord)
