@@ -78,11 +78,16 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
   const { t } = useSfPresentation()
   const navigate = useNavigate()
   const session = createPeopleSession<TalentData>("CAP08", () => props.route.href,
-    (transport, signal) => createSfPeopleClient(transport)["domain.page.CAP08"]({
-      ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
-      ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }),
-      ...(props.route.query.status === undefined ? {} : { memberStatus: props.route.query.status }),
-    }, { signal }))
+    (transport, signal) => {
+      const status = props.route.query.status
+      const memberStatus = status === "" || status === "Active" || status === "On Leave" || status === "Terminated"
+        ? status : undefined
+      return createSfPeopleClient(transport)["domain.page.CAP08"]({
+        ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
+        ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }),
+        ...(memberStatus === undefined ? {} : { memberStatus }),
+      }, { signal })
+    })
   const [local, setLocal] = createStore<{
     filter: string
     selection: TalentSelection | undefined

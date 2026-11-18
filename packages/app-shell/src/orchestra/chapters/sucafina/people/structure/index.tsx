@@ -57,9 +57,13 @@ const memberFields = (leaders: StructureData["leaders"]): readonly PeopleField[]
 ]
 const toValues = (value: object, fields: readonly PeopleField[]): PeopleFormValues => {
   const source = value as Record<string, unknown>
-  return Object.fromEntries(fields.filter((item) => Object.hasOwn(source, item.name)).map((item) =>
-    [item.name, typeof source[item.name] === "number" ? String(source[item.name]) :
-      typeof source[item.name] === "string" ? source[item.name] : ""]))
+  const entries = fields.flatMap((item): ReadonlyArray<readonly [string, string]> => {
+    if (!Object.hasOwn(source, item.name)) return []
+    const field = source[item.name]
+    const text = typeof field === "number" ? String(field) : typeof field === "string" ? field : ""
+    return [[item.name, text]]
+  })
+  return Object.fromEntries(entries)
 }
 
 export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Element {
@@ -153,14 +157,17 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
     if (choice.kind === "new-member" || choice.kind === "new-leader")
       return { kind: "confirmed-without-projection" } // POST never returns new id
     if (choice.kind === "member") {
-      const updated = refreshed.data.members.find((person) => person.id === choice.id)
+      const memberId = choice.id
+      const updated = refreshed.data.members.find((person) => person.id === memberId)
       return updated ? { kind: "projected", value: toValues(updated, memberFields(refreshed.data.leaders)),
-        version: refreshed.versions["members:" + choice.id] ?? 0 } :
+        version: refreshed.versions["members:" + memberId] ?? 0 } :
         { kind: "confirmed-without-projection" }
     }
-    const updated = refreshed.data.leaders.find((person) => person.id === choice.id)
+    if (choice.kind !== "leader") return { kind: "confirmed-without-projection" }
+    const leaderId = choice.id
+    const updated = refreshed.data.leaders.find((person) => person.id === leaderId)
     return updated ? { kind: "projected", value: toValues(updated, leaderFields),
-      version: refreshed.versions["leaders:" + choice.id] ?? 0 } :
+      version: refreshed.versions["leaders:" + leaderId] ?? 0 } :
       { kind: "confirmed-without-projection" }
   }
 
@@ -241,6 +248,13 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
       action: { id: "saveMember", operationId: "domain.command.CAP07.saveMember" as const, labelKey: key("sf.u03.saveMember") },
     }
   })
+  const detailRow = () => {
+    const current = selected()
+    if (!current || current.edit) return undefined
+    if (current.kind === "leader") return leader(current.id)
+    if (current.kind === "member") return member(current.id)
+    return undefined
+  }
   const stateMessage = () => session.ui() === "denied" ? sfCommonKey("sf.common.noAccess") :
     session.ui() === "session-expired" ? sfCommonKey("sf.common.loginAgain") :
     session.ui() === "unavailable" ? sfCommonKey("sf.common.unavailable") :
@@ -373,8 +387,7 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
               <Show when={selected() && !selected()!.edit}>
                 <section class="sf-people-section sf-people-detail" data-sf-selection="details">
                   <h2>{t(key("sf.u03.details"))}</h2>
-                  <Show when={selected()?.kind === "leader" ? leader((selected() as Extract<Selection,{kind:"leader"}>).id) :
-                    selected()?.kind === "member" ? member((selected() as Extract<Selection,{kind:"member"}>).id) : undefined}
+                  <Show when={detailRow()}
                     fallback={<SfStatePanel state="not-found" messageKey={sfCommonKey("sf.common.removed")} />}>
                     {(row) => <dl>
                       <For each={Object.entries(row()).filter(([field]) =>
