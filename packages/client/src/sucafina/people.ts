@@ -15,7 +15,7 @@ export function createSfPeopleClient(transport: SfTransport) {
   const execute = <Input, Output>(operation: SfOperation<Input, Output>, input: Input, options: SfCallOptions) => {
     // F02 is the authenticated IO boundary. Validate unknown keys *before*
     // F02's normal decode can strip excess properties from a typed input.
-    const validated = Schema.decodeUnknownOption(Schema.toType(operation.input), { onExcessProperty: "error" })(input)
+    const validated = Schema.decodeUnknownOption(operation.input, { onExcessProperty: "error" })(input)
     if (Option.isNone(validated)) {
       return Promise.resolve({ kind: "transport-error", reason: "contract-mismatch" } as const)
     }
