@@ -16,7 +16,6 @@ test("installed BI10 uses the canonical period producer over the same persisted 
     const decision = temporal.projection.decision
     if (decision?.kind !== "scenario") throw new Error("BI10 lost its persisted scenario")
     expect(fixture.baseline.caseRef.version).toBeLessThan(fixture.candidate.caseRef.version)
-    if (cost.projection.decision?.kind !== "scenario") throw new Error("Installed BI09 cost presentation lost the persisted scenario")
     expect(decision).toEqual(cost.projection.decision)
     expect(decision.scenarioResultRef).toBe(fixture.candidate.resultRef)
     expect(decision.comparisonRef).toBe(fixture.comparisonRef)

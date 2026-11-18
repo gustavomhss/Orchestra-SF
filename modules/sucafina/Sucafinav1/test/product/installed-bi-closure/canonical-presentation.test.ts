@@ -37,7 +37,6 @@ test("focused BI10 dispatch reconciles canonical period and cost plans on its pe
       ...(temporal.projection.comparison ? { comparison: temporal.projection.comparison } : {}) }, pair, "BI10"), "Canonical period presentation")
     const cost = ok(plannerScenarioBiPresentation({ ...pair.candidate.projection, decision,
       ...(temporal.projection.comparison ? { comparison: temporal.projection.comparison } : {}) }, pair, "BI09"), "Canonical cost presentation for the same pair")
-    if (cost.projection.decision?.kind !== "scenario") throw new Error("Canonical cost presentation lost the persisted scenario")
     expect(decision).toEqual(cost.projection.decision)
     expect(temporal.projection.components).toEqual(cost.projection.components)
     expect(temporal.projection.version).toBe(cost.projection.version)

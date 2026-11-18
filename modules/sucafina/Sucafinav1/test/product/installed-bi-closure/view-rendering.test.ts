@@ -18,9 +18,7 @@ const november: Period = { start: "2027-11-01", end: "2027-11-30" }
 const originA = "a".repeat(64), originB = "b".repeat(64)
 type Payload = { request: BiViewRequest; projection: DomainProjection; presentation: BiPresentation }
 type BrowserState = { payload: Payload; changes: Period[]; opened: BiSelection[] }
-declare global {
-  interface Window { syntheticBiRenderer: BrowserState }
-}
+type RendererWindow = Window & { syntheticBiRenderer: BrowserState }
 
 function syntheticPayload(): Payload {
   const reference = (id: string, refDigest: string): BusinessEvidenceRef => ({
@@ -86,7 +84,7 @@ async function render(page: Page, moduleUrl: string, payload: Payload, period?: 
     }
     freeze(payload)
     const state: BrowserState = { payload, changes: [], opened: [] }
-    ;window.syntheticBiRenderer = state
+    ;(window as RendererWindow).syntheticBiRenderer = state
     const node = renderer.renderBiView(payload.request, payload.projection, (selection) => state.opened.push(selection), payload.presentation,
       undefined, undefined, { period, onPeriodChange: (next) => state.changes.push(next) })
     node.id = "synthetic-bi-renderer"
@@ -129,8 +127,8 @@ test("C02 renderer BI10 crops observed dates, retains unknown dates and never pr
       await expect(dataRow(page, "synthetic:whole-period-value").locator("td").nth(1)).toHaveText("200")
       await expect(dataRow(page, "synthetic:explicit-zero").locator("td").nth(1)).toHaveText("0")
       await expect(page.getByRole("status")).toContainText("permanecem integrais na tabela, sem repartição estimada")
-      expect(await page.evaluate(() => window.syntheticBiRenderer.changes)).toEqual([horizon, november])
-      expect(await page.evaluate(() => window.syntheticBiRenderer.payload)).toEqual(payload)
+      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([horizon, november])
+      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.payload)).toEqual(payload)
     })
     expect(errors).toEqual([])
   } finally { await deadline.close() }
@@ -146,9 +144,9 @@ test("C02 renderer restores only a valid visual crop and reports its changes wit
       await expect(page.getByLabel("Início do período", { exact: true })).toHaveValue(november.start)
       await expect(page.getByLabel("Fim do período", { exact: true })).toHaveValue(november.end)
       await expect(page.getByLabel("Arrastar início do período", { exact: true })).toHaveAttribute("aria-valuetext", november.start)
-      expect(await page.evaluate(() => window.syntheticBiRenderer.changes)).toEqual([november])
+      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([november])
       await dataRow(page, "synthetic:inside-date").getByRole("button", { name: "Abrir origem", exact: true }).click()
-      const state = await page.evaluate(() => window.syntheticBiRenderer)
+      const state = await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer)
       expect(state.opened).toHaveLength(1)
       expect(state.opened[0]).toMatchObject({ valueId: "synthetic:inside-date", visualPeriod: november, context: { period: horizon } })
       expect(state.payload).toEqual(payload)
@@ -156,7 +154,7 @@ test("C02 renderer restores only a valid visual crop and reports its changes wit
       await page.getByLabel("Início do período", { exact: true }).fill("2028-01-01")
       await page.getByRole("button", { name: "Aplicar filtro", exact: true }).click()
       await expect(page.getByRole("status")).toContainText("Escolha um período válido dentro da seleção autorizada")
-      expect(await page.evaluate(() => window.syntheticBiRenderer.changes)).toEqual([november])
+      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([november])
       await expect(dataRow(page, "synthetic:inside-date")).toHaveCount(1)
       for (const invalid of [
         { start: "2026-12-31", end: "2027-11-30" },
@@ -166,9 +164,9 @@ test("C02 renderer restores only a valid visual crop and reports its changes wit
         await render(page, moduleUrl, payload, invalid)
         await expect(page.getByLabel("Início do período", { exact: true })).toHaveValue(horizon.start)
         await expect(page.getByLabel("Fim do período", { exact: true })).toHaveValue(horizon.end)
-        expect(await page.evaluate(() => window.syntheticBiRenderer.changes)).toEqual([horizon])
+        expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([horizon])
       }
-      expect(await page.evaluate(() => window.syntheticBiRenderer.payload)).toEqual(payload)
+      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.payload)).toEqual(payload)
     })
     expect(errors).toEqual([])
   } finally { await deadline.close() }
@@ -188,7 +186,7 @@ test("C02 renderer restores the exact origin before the first value control and 
       expect(await focus(page, moduleUrl, { valueId, originDigest: originB })).toBe(true)
       await expect(second).toBeFocused()
       await page.keyboard.press("Enter")
-      const opened = await page.evaluate(() => window.syntheticBiRenderer.opened)
+      const opened = await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.opened)
       expect(opened).toHaveLength(1)
       expect(opened[0]?.reference?.refDigest).toBe(originB)
       // A fresh render can omit an origin; a retained selector cannot invent it.
