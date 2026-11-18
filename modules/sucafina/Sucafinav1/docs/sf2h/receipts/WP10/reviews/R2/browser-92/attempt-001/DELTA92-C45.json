@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h.review.integrity.append-only-delta.v1",
+  "mission": 92,
+  "reviewer": "S2-R2",
+  "state": "PRELIMINARY_C45_DELTA_RECHECK",
+  "base_review": {
+    "label": "C44",
+    "sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "tree": "4d4b149917a2c74cfeb73e45774fe098666c208d"
+  },
+  "new_candidate": {
+    "label": "C45",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+    "parent": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "explicit_final_C": false,
+    "manifest_status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN"
+  },
+  "compare": {
+    "status": "ahead",
+    "ahead_by": 1,
+    "changed_product_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "pre": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+        "post": "a0deff8a3b272019f472aa2f93499d1940a78370",
+        "observed": "Fresh authenticate and actor identity comparison at 785–791; digest of public surface/source versions computed before and after; byte delivery at 806."
+      }
+    ],
+    "new_test_files": [
+      "test/product/export-egress-privacy/egress-boundary.test.ts",
+      "test/product/export-egress-privacy/evidence.ts",
+      "test/product/export-egress-privacy/legacy-egress.test.ts"
+    ],
+    "additional_changes": "Archival/integration receipts only; exact compare eec...5585 has one product file modified + 3 new tests + 17 evidence/receipt files."
+  },
+  "f92_egress_status": {
+    "on_C44": "OPEN_STATIC",
+    "on_C45": "SOURCE_CORRECTION_COMPOSED_NOT_INDEPENDENTLY_VERIFIED_ON_C45",
+    "proof_required": [
+      "Exact C45 or explicitly frozen later C integrated egress race tests",
+      "Recheck 403 revoked, 409 source mismatch, private-only drift, HEAD and cancellation",
+      "Confirm request principal/roleMap revalidated and no bytes after revocation",
+      "Check authoritative proof W/S/run/jobs/omni artifacts against exact C45 tree"
+    ],
+    "no_final_fix_claim": true
+  },
+  "other_findings": {
+    "C10": "SOURCE_BLOB_PRESENT_MISSING_FINAL_PROOF",
+    "WP14": "UNRESOLVED",
+    "first_save": "UNRESOLVED",
+    "M31": "MISSING_COMPOSED_PROOF",
+    "auth": "MISSING_PROOF",
+    "Atlas": "MISSING_PROOF",
+    "HTTP": "MISSING_PROOF"
+  },
+  "source_witness": {
+    "run_id": 43675046935,
+    "run_head_sha": "a99e224afdd5f830268a81d1087b6a1f43e83bec",
+    "source_claim": "50PASS on W86/S source, not C45; source manifest read",
+    "verified_against_runs_api": false,
+    "do_not_promote_to_C45": true
+  },
+  "recheck_restriction": "This is a static, additive delta to preliminary C44 report; any later material C requires new delta. No tests/CI executed, no product edits.",
+  "GLOBAL_RELEASE": false
+}

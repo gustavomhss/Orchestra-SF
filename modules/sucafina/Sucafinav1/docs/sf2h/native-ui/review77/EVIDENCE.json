@@ -1,0 +1,428 @@
+{
+  "schema": "sf2h.native-review77.evidence.v1",
+  "recorded_at": "2026-11-15 03:30:39 UTC",
+  "verdict": "FIX-FIRST",
+  "branch": "native-plan-review",
+  "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/review77/",
+  "source_identity": {
+    "mission_sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "mission_blob": "a29d0303f9f20fcfd071d2573c16c392d58f09dd",
+    "plan_sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+    "plan_tree": "4c43679faf6e9af502d1d75870ff004a152ec260",
+    "branch_parent": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "branch_parent_tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "ack_commit": "3e0e191314c58823a9c2546c9a886897c1ff3f85",
+    "ack_tree": "00436662c2adae4fbaa02c7327170cf639142587",
+    "ack_blob": "6a07ed30d7ffdacebdd8bb9aa46fccc5996c72c2"
+  },
+  "canonical": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "declared_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "digest_limit": "SHA256 above is the canonical plan-declared digest; this review retrieved the exact Git blob and compared JSON IDs/pointers, not a new independently computed SHA256.",
+    "retrieval": "GitHub fetch_blob; content length 1481994 characters; JSON parsed completely",
+    "reconciliation": {
+      "canonicalCount": 1610,
+      "canonicalUnique": 1610,
+      "indexCount": 1610,
+      "indexUnique": 1610,
+      "missing": [],
+      "extra": [],
+      "pointerMismatch": [],
+      "wp": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "journeys": 13
+    },
+    "T0": "2026-11-13T04:01:10Z",
+    "no_criterion_status_promoted": true
+  },
+  "plan_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/ACCEPTANCE.md",
+      "blob": "0afb763cbbf05a2127cd284997763c7df4570b4f",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/ACCEPTANCE.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md",
+      "blob": "77ac3b34dbc9bbcf2cf7a9186f701356a2b7d9c6",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/DELIVERY-PLAN.md",
+      "blob": "e61449a3a47384f735f094d8f5e6b63fef3ab7db",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/DELIVERY-PLAN.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/MIGRATION-AND-HANDOFFS.md",
+      "blob": "46af94c879b47c3b0cd750f31e93236bfdcce975",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/MIGRATION-AND-HANDOFFS.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/NATIVE-ARCHITECTURE.md",
+      "blob": "d1c51db12cc8ba6eac1a9d9bd3ef6ba64aa74be4",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/NATIVE-ARCHITECTURE.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/PLANNING-BRIEF.md",
+      "blob": "4417f036ca47a3f5d9c3dfe79157e776b087cc20",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/PLANNING-BRIEF.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/README.md",
+      "blob": "c55fd17bab59c44e9a11eaebf8d892cee9952357",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/README.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/RESEARCH.md",
+      "blob": "7285b17bb38a60661ecffbac3e791f5be999bd0c",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/RESEARCH.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/SCREEN-INVENTORY.md",
+      "blob": "09cf5439d9b8e342e8da811435b5993f4eacfc74",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/SCREEN-INVENTORY.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/SOURCE-BASELINE.json",
+      "blob": "9f766b89b341851ab0693dde515f60554d025125",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/SOURCE-BASELINE.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/TRACEABILITY.md",
+      "blob": "002db61355732cb1265e1642ec971f9cf2c70b2c",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/TRACEABILITY.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-BOARDS.pdf",
+      "blob": "cfa4d3fd7980668589028cbface83746080f12d2",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-BOARDS.pdf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md",
+      "blob": "2571b4e3c7f5f93bb78009ccf4ba2f06fd64c306",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/criteria-trace.json",
+      "blob": "1dba83d77882073af587c031d63299ed472905e8",
+      "status": "READ_AS_PINNED_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/criteria-trace.json"
+    }
+  ],
+  "mandatory_reading": {
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "app_shell_agents": "packages/app-shell/AGENTS.md",
+    "canonical_files": [
+      "START.md",
+      "WORKFLOW.md",
+      "execution/COMMON.md",
+      "execution/actors/S1-R1.json",
+      "specs/product-acceptance.md",
+      "specs/resident-runtime.md",
+      "specs/execution-reconciliation.md"
+    ],
+    "annex_limit": "Relevant assigned-output/dependency portions, as required by actor pack; not a claim of every byte in all actor packs.",
+    "criterion_ids": [
+      "WP10.CMP.01",
+      "WP10.CMP.02",
+      "WP10.CMP.10",
+      "WP10.CMP.40",
+      "WP10.CMP.60",
+      "WP10.DOD.01",
+      "WP10.DOD.02",
+      "WP10.DOD.10",
+      "WP10.DOD.40",
+      "WP10.DOD.60",
+      "WP10.INV.01",
+      "WP10.INV.02",
+      "WP10.INV.10",
+      "WP10.INV.40",
+      "WP10.INV.60",
+      "WP10.QLT.01",
+      "WP10.QLT.02",
+      "WP10.QLT.10",
+      "WP10.QLT.40",
+      "WP10.QLT.60",
+      "WP10.SUC.01",
+      "WP10.SUC.02",
+      "WP10.SUC.10",
+      "WP10.SUC.40",
+      "WP10.SUC.60",
+      "WP10.T03.CHK.01",
+      "WP10.T03.CHK.02",
+      "WP10.T03.CHK.03",
+      "WP10.T03.CHK.40",
+      "WP10.T03.CMP.01",
+      "WP10.T03.CMP.02",
+      "WP10.T03.CMP.40",
+      "WP10.T03.DOD.01",
+      "WP10.T03.DOD.40",
+      "WP10.T03.INV.01",
+      "WP10.T03.INV.40",
+      "WP10.T03.QLT.01",
+      "WP10.T03.QLT.40",
+      "WP10.T03.SUC.01",
+      "WP10.T03.SUC.40"
+    ],
+    "canonical_supplement": "Full campaign JSON and independent WP00–WP14/COMMON set comparison; no author transcript read."
+  },
+  "code_review": {
+    "baseline": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "references": "Immutable code paths and line ranges for each mandatory finding are in FINDINGS.json. Supporting provider/theme/i18n/client/CLI seams are described in DISPATCH and CONTRACT-FREEZE.",
+    "mechanisms": [
+      "layout-route/chapter-route/sidebar/navigation commands/ConnectionGate",
+      "MxPage/kit/sidebar dimensions/mobile drawer/theme/language/plural",
+      "ServerConnection/SfInstallation/runtime.identity/global HttpApi composition",
+      "local identity/bootstrap/cookie/safeReturn/prepare and native dispatch",
+      "human authority/views/analysis Request identity and method gates",
+      "Procurement queue preparation/current/finish/WeakSet, domain.view, CAS/title save/result redaction",
+      "personal views validation and monthly TSV/partial-row behavior"
+    ]
+  },
+  "boards": {
+    "blob": "cfa4d3fd7980668589028cbface83746080f12d2",
+    "pages": 17,
+    "method": "PDF decoded/rendered/read locally; all17 pages inspected in contact sheets and extracted text; coordinator also inspected pages4 and16 enlarged.",
+    "implementation_screenshot": false,
+    "visual_acceptance": false
+  },
+  "drift": {
+    "from": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "to": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "commits": 4,
+    "files": 206,
+    "authority": "ACK71_ACCEPTED_BOUNDED_SUCCESSION; S0-C-e13-browser71",
+    "receipts": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/ACK71.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C29-runtime59.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C30-operations63.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C31-native64.json"
+    ],
+    "material_paths": [
+      "apps/cli/src/sucafina-product/host-context.ts",
+      "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+      "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "script/sf2h/operations-scanner/README.md",
+      "script/sf2h/operations-scanner/cleanup.sh",
+      "script/sf2h/operations-scanner/select.mjs",
+      "script/sf2h/operations-scanner/service.mjs",
+      "script/sf2h/operations-scanner/setup.sh",
+      "script/sf2h/operations-scanner/tools.lock.json"
+    ],
+    "inspection": "Read candidate semantics/holds/dependency closure and exact host-context hunks; shell/schema/protocol/client, local-entry/identity/bootstrap, personal-views, planner-monthly and procurement/application finding paths unchanged by listed delta. Runtime contract adds optional readonly root; no public auth API. Not a complete requalification of all C31 product code.",
+    "current_status": "MATERIAL_COMPOSED_NATIVE_ACTIVATION_HELD",
+    "future_rule": "Checkpoint/delta before delegation; no snapshot copying over C31 or later."
+  },
+  "review_team": {
+    "coordinator": "/root",
+    "read_only_fronts": [
+      "/root/native_architecture",
+      "/root/ux_scope",
+      "/root/api_isolation"
+    ],
+    "slots": 4,
+    "scope": "Independent review of plan; not the three canonical FINAL implementation reviews.",
+    "model_declared": "GPT-6 Astra Pro",
+    "provider_model_receipt": null,
+    "actual_session_id": null
+  },
+  "execution": {
+    "product_tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "product_servers": 0,
+    "code_generation": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "workflows_changed": 0,
+    "producer_writes": 0,
+    "original_plan_writes": 0,
+    "merges": 0,
+    "deploy": 0,
+    "Azure": 0,
+    "third_party_messages": 0,
+    "W": null,
+    "S": null,
+    "run": null,
+    "job": null,
+    "result": "NOT_RUN"
+  },
+  "document_inspection": {
+    "actions": [
+      "GitHub read-only source/review fetches",
+      "PDF extraction/raster inspection",
+      "In-memory canonical ID/pointer reconciliation",
+      "Documentation construction and publication readback"
+    ],
+    "not_product_evidence": true
+  },
+  "publication": {
+    "mechanism": "GitHub MCP GitData; parent-SHA compare-and-swap; skip CI; no force or git push",
+    "target": "one draft PR native-plan-review -> sf2-stack",
+    "self_identity": "Containing commit/tree are recorded externally in PR body after publication; no fabricated self SHA.",
+    "patch": "Complete Git diff of branch parent to published commit, linked in PR; every new payload is confined to review77.",
+    "preimages": "New review artifacts absent at parent; ACK already exists and remains byte-for-byte unchanged.",
+    "consumer_ACK": "Requested from71; S0 owns adoption/implementation authorization and final acceptance."
+  },
+  "GLOBAL_RELEASE": false,
+  "final_document_review": {
+    "fronts": [
+      "architecture",
+      "API/isolation",
+      "UX/scope"
+    ],
+    "required_corrections_adopted": [
+      "real mobile-navigation path",
+      "codegen aggregate distinct from runtime native namespace",
+      "principalRef required in ready",
+      "server-side owner expectation inside same write transaction",
+      "UI32 hold restricted to relevant task, not pilot foundation"
+    ],
+    "product_tests": 0,
+    "scope": "Second reading of review artifacts only; no product qualification"
+  },
+  "late_observation": {
+    "at": "2026-11-15 03:41:19 UTC",
+    "plan_head": "de7da0689f1a2aba2ebe190f83d807ca949e2c5a",
+    "plan_tree": "b2a73040db1843514017892874d1abe380ceef1e",
+    "plan_changed_files": 115,
+    "plan_triage": [
+      {
+        "id": "R77-F01",
+        "status": "PARTIAL",
+        "evidence": "NATIVE-ARCHITECTURE.md:24–28; execution/route-signatures.ts:307–323",
+        "note": "Owner atômico/deep link foram reforçados. Os arquivos da triagem não demonstram wiring completo de layout-route, navigation-commands, histórico e ConnectionGate; outras ordens não avaliadas podem conter detalhes."
+      },
+      {
+        "id": "R77-F02",
+        "status": "PARTIAL",
+        "evidence": "execution/CONTRACTS.md:19–53,201–219; API-AND-ISOLATION.md:13–25; execution/host-signatures.ts:194–195",
+        "note": "Discovery, registry e montagem agora definidos. A descoberta exige Location.directory já resolvida e context recebe input vazio; o caminho IDs A sem directoryA frente a seleção B e expectativa de tuple no servidor não ficaram fechados nos arquivos lidos."
+      },
+      {
+        "id": "R77-F03",
+        "status": "PARTIAL",
+        "evidence": "execution/CONTRACTS.md:45–47,121–127",
+        "note": "Bootstrap ausente/vazio definido. Retorno agora propõe ampliar safeReturn para auth/native-return: solução diferente, exige revisão/ACK próprio de72; não se transfere o parecer do bridge opaco desta revisão."
+      },
+      {
+        "id": "R77-F04",
+        "status": "PARTIAL_METHODS_RESULTS_ADDRESSED",
+        "evidence": "API-AND-ISOLATION.md:7–9,37–41; execution/CONTRACTS.md:75–95,153–163",
+        "note": "Métodos/payloads canônicos, não HTML/Request sintética e diferença entre idempotência/receipt estão tratados. Falta fence explícito da expectativa de owner no POST legado nos trechos lidos. Catálogo305operações e piloto A03 não auditados integralmente."
+      },
+      {
+        "id": "R77-F05",
+        "status": "DOCUMENTARILY_ADDRESSED_NOT_RUNTIME_VERIFIED",
+        "evidence": "execution/COMPONENT-CONTRACTS.md:89–104; execution/component-signatures.ts:309–342",
+        "note": "Store acima da boundary, conservação no mesmo owner, guarda antes de perda, quarentena/reauth, revogação e503 agora fechados documentalmente. Não manter a afirmação de ausência desse contrato no head novo."
+      },
+      {
+        "id": "R77-F06",
+        "status": "PARTIAL_STILL_OPEN",
+        "evidence": "execution/SURFACE-SPECS.md:23; execution/surface-manifest.json:5175–5204; execution/contract-catalog.json:7924–7958; execution/CONTRACTS.md:61",
+        "note": "Entrada preferida/fallback foi descrita; views.save continua input exato do produtor legado sem variante nativa/migração. SfPersonalView permanece incompatível com sf-work."
+      },
+      {
+        "id": "R77-F07",
+        "status": "NOT_ADDRESSED",
+        "evidence": "execution/SURFACE-SPECS.md:179; execution/COMPONENT-CONTRACTS.md:43–45; execution/component-signatures.ts:243–258",
+        "note": "Continua contrato por célula e texto excluindo paste em massa. O produtor já suporta TSV/intervalo e WP03.T02.SUC.03 o exige; não é feature nova opcional."
+      },
+      {
+        "id": "R77-F08",
+        "status": "NOT_ADDRESSED",
+        "evidence": "ACCEPTANCE.md:122",
+        "note": "Mantém tripla arquitetura/autorização, paridade/números, UX/a11y; terceiro escopo canônico IA/Relay/integração não está designado nessa regra."
+      }
+    ],
+    "plan_limit": "Not a full review or approval of the later115-document package,305-operation catalog or replacementPDF. Author reviews/transcripts not read.",
+    "stack_head": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "stack_tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "stack_delta_base": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "stack_delta_files": 280,
+    "stack_delta_commits": 4,
+    "stack_delta_material_paths": [
+      "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "modules/sucafina/Sucafinav1/product/reports/storage.ts",
+      "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+      "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/evidence.ts",
+      "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/legacy-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts"
+    ],
+    "candidate_receipts": [
+      "C32-mixed61.json",
+      "C33-c12-65.json",
+      "C34-exports66.json",
+      "C35-workbench68.json"
+    ],
+    "scope": "Candidate semantics/holds and material path impact review, not complete product review or qualification."
+  }
+}

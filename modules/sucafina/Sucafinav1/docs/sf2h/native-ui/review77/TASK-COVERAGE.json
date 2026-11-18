@@ -1,0 +1,2681 @@
+{
+  "schema": "sf2h.native-review77.task-coverage.v1",
+  "canonical_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+  "reviewed_index_blob": "1dba83d77882073af587c031d63299ed472905e8",
+  "method": "Exact set and canonicalPointer comparison of all id+text objects in campaign.axioms and work_packages; manual mechanism review by family. Counts are not acceptance.",
+  "reconciliation": {
+    "canonicalCount": 1610,
+    "canonicalUnique": 1610,
+    "indexCount": 1610,
+    "indexUnique": 1610,
+    "missing": [],
+    "extra": [],
+    "pointerMismatch": [],
+    "wp": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "journeys": 13
+  },
+  "rows": [
+    {
+      "task": "WP00.T01",
+      "title": "Fixar baseline funcional e decisões de escopo",
+      "canonicalPointer": "/work_packages/0/tasks/0",
+      "canonical_local_criterion_count": 7,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N0",
+        "N10"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R01"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI04",
+        "NUI13",
+        "NUI16"
+      ],
+      "review_findings": [],
+      "first_wave": "77A/E: baseline documental e paridade futura; task integral não encerrada",
+      "dependency_holds": [
+        "Qualificação Native e executor45"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP00.T02",
+      "title": "Definir contratos de consumo e vocabulário",
+      "canonicalPointer": "/work_packages/0/tasks/1",
+      "canonical_local_criterion_count": 23,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N0",
+        "N1"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R01",
+        "RA01",
+        "RA02",
+        "RA03",
+        "RA04",
+        "RA05",
+        "RA06"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI03",
+        "NUI04",
+        "NUI11",
+        "NUI16"
+      ],
+      "review_findings": [],
+      "first_wave": "77A/B: freeze piloto somente",
+      "dependency_holds": [
+        "Qualificação Native e executor45"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP00.T03",
+      "title": "Preparar cenários sintéticos e resultados esperados",
+      "canonicalPointer": "/work_packages/0/tasks/2",
+      "canonical_local_criterion_count": 9,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N10"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R01"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI04",
+        "NUI05",
+        "NUI06",
+        "NUI07",
+        "NUI08",
+        "NUI09"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Qualificação Native e executor45"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP00.T04",
+      "title": "Qualificar serviços nativos de IA Relay e execução de provas",
+      "canonicalPointer": "/work_packages/0/tasks/3",
+      "canonical_local_criterion_count": 26,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N9",
+        "N10"
+      ],
+      "chapters": [
+        "sf-routines",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "R01",
+        "IA17",
+        "RA01",
+        "RA02",
+        "RA03",
+        "RA04",
+        "RA05"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI03",
+        "NUI11",
+        "NUI16"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Qualificação Native e executor45"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP01.T01",
+      "title": "Reorganizar shell e navegação contextual",
+      "canonicalPointer": "/work_packages/1/tasks/0",
+      "canonical_local_criterion_count": 8,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N0",
+        "N2"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R02"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI01",
+        "NUI13"
+      ],
+      "review_findings": [
+        "R77-F01",
+        "R77-F02",
+        "R77-F03"
+      ],
+      "first_wave": "77A: navegação e owner",
+      "dependency_holds": [],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": [
+        "72/73/74 releases and consumer ACK for native auth/owner fence/HTTP composition, per DISPATCH; no UI32 or M31 dependency added to title pilot"
+      ]
+    },
+    {
+      "task": "WP01.T02",
+      "title": "Construir os padrões de revisar, editar e decidir",
+      "canonicalPointer": "/work_packages/1/tasks/1",
+      "canonical_local_criterion_count": 8,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N2"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R03"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI02",
+        "NUI14"
+      ],
+      "review_findings": [
+        "R77-F05"
+      ],
+      "first_wave": "77C: cinco composições somente",
+      "dependency_holds": [],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP01.T03",
+      "title": "Tornar edição, falhas e conflitos compreensíveis",
+      "canonicalPointer": "/work_packages/1/tasks/2",
+      "canonical_local_criterion_count": 8,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N2"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R04"
+      ],
+      "journeys": [
+        "J01"
+      ],
+      "acceptance_groups": [
+        "NUI15",
+        "NUI03"
+      ],
+      "review_findings": [
+        "R77-F05"
+      ],
+      "first_wave": "77A/B/C/D: edição pendente e estados no piloto",
+      "dependency_holds": [],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": [
+        "72/73/74 releases and consumer ACK for native auth/owner fence/HTTP composition, per DISPATCH; no UI32 or M31 dependency added to title pilot"
+      ]
+    },
+    {
+      "task": "WP01.T04",
+      "title": "Oferecer busca, visões salvas e entrada por responsabilidade",
+      "canonicalPointer": "/work_packages/1/tasks/3",
+      "canonical_local_criterion_count": 9,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N3"
+      ],
+      "chapters": [
+        "sf-home",
+        "sf-work"
+      ],
+      "requirements": [
+        "R05"
+      ],
+      "journeys": [
+        "J01"
+      ],
+      "acceptance_groups": [
+        "NUI10",
+        "NUI13",
+        "NUI03"
+      ],
+      "review_findings": [
+        "R77-F06"
+      ],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Views nativas dependem de contrato versionado; R77-F06"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP01.T05",
+      "title": "Entregar Hoje e mesa de decisão com IA",
+      "canonicalPointer": "/work_packages/1/tasks/4",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N3",
+        "N6"
+      ],
+      "chapters": [
+        "sf-home",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA01",
+        "IA09",
+        "IA13",
+        "IA14"
+      ],
+      "journeys": [
+        "J09",
+        "J10",
+        "J11",
+        "J12"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI11",
+        "NUI10"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP02.T01",
+      "title": "Publicar as projeções autorizadas das 16 capacidades",
+      "canonicalPointer": "/work_packages/2/tasks/0",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N3",
+        "N5"
+      ],
+      "chapters": [
+        "sf-dashboard",
+        "sf-people",
+        "sf-operations",
+        "sf-portfolio",
+        "sf-procurement"
+      ],
+      "requirements": [
+        "R06",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [],
+      "acceptance_groups": [
+        "NUI04",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Todos comandos/ACLs dos produtores; correções de fontes aplicáveis"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP02.T02",
+      "title": "Entregar manutenção contextual com prévia e conflito legível",
+      "canonicalPointer": "/work_packages/2/tasks/1",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N3",
+        "N5"
+      ],
+      "chapters": [
+        "sf-dashboard",
+        "sf-people",
+        "sf-operations",
+        "sf-portfolio",
+        "sf-procurement"
+      ],
+      "requirements": [
+        "R04",
+        "R07",
+        "R22",
+        "IA13"
+      ],
+      "journeys": [
+        "J01",
+        "J03"
+      ],
+      "acceptance_groups": [
+        "NUI04",
+        "NUI15"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Todos comandos/ACLs dos produtores; correções de fontes aplicáveis"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP02.T03",
+      "title": "Entregar as vistas de revisão do Dashboard",
+      "canonicalPointer": "/work_packages/2/tasks/2",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N3",
+        "N8"
+      ],
+      "chapters": [
+        "sf-dashboard",
+        "sf-portfolio",
+        "sf-reviews"
+      ],
+      "requirements": [
+        "R06",
+        "R08"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "acceptance_groups": [
+        "NUI04",
+        "NUI09"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Todos comandos/ACLs dos produtores; correções de fontes aplicáveis"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP02.T04",
+      "title": "Publicar a porta canônica de Hot Topics",
+      "canonicalPointer": "/work_packages/2/tasks/3",
+      "canonical_local_criterion_count": 13,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N3",
+        "N9"
+      ],
+      "chapters": [
+        "sf-dashboard",
+        "sf-work"
+      ],
+      "requirements": [
+        "R09"
+      ],
+      "journeys": [
+        "J06"
+      ],
+      "acceptance_groups": [
+        "NUI10",
+        "NUI04"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Todos comandos/ACLs dos produtores; correções de fontes aplicáveis"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP03.T01",
+      "title": "Publicar projeções e adapter financeiro puros",
+      "canonicalPointer": "/work_packages/3/tasks/0",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N4"
+      ],
+      "chapters": [
+        "sf-planner",
+        "sf-dashboard",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "R10",
+        "R22",
+        "IA03",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J02",
+        "J03"
+      ],
+      "acceptance_groups": [
+        "NUI05",
+        "NUI04"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "R77-F07 range; Finance/HR/locks e baseline numérica"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP03.T02",
+      "title": "Entregar edição mensal e linhas OPEX/CAPEX previsíveis",
+      "canonicalPointer": "/work_packages/3/tasks/1",
+      "canonical_local_criterion_count": 17,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N2",
+        "N4"
+      ],
+      "chapters": [
+        "sf-planner"
+      ],
+      "requirements": [
+        "R04",
+        "R11"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "acceptance_groups": [
+        "NUI05",
+        "NUI14",
+        "NUI15"
+      ],
+      "review_findings": [
+        "R77-F07"
+      ],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "R77-F07 range; Finance/HR/locks e baseline numérica"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP03.T03",
+      "title": "Entregar planejamento de pessoas e premissas de HR",
+      "canonicalPointer": "/work_packages/3/tasks/2",
+      "canonical_local_criterion_count": 16,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N4"
+      ],
+      "chapters": [
+        "sf-planner",
+        "sf-people"
+      ],
+      "requirements": [
+        "R12"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "acceptance_groups": [
+        "NUI05",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "R77-F07 range; Finance/HR/locks e baseline numérica"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP03.T04",
+      "title": "Entregar FX e cadastros com escopo explícito",
+      "canonicalPointer": "/work_packages/3/tasks/3",
+      "canonical_local_criterion_count": 16,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N4"
+      ],
+      "chapters": [
+        "sf-planner"
+      ],
+      "requirements": [
+        "R13"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "acceptance_groups": [
+        "NUI05",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "R77-F07 range; Finance/HR/locks e baseline numérica"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP03.T05",
+      "title": "Entregar Overview e comparação explicável entre versões",
+      "canonicalPointer": "/work_packages/3/tasks/4",
+      "canonical_local_criterion_count": 22,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N4",
+        "N6"
+      ],
+      "chapters": [
+        "sf-planner",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "R14",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "acceptance_groups": [
+        "NUI05",
+        "NUI07"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "R77-F07 range; Finance/HR/locks e baseline numérica"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP04.T01",
+      "title": "Filas e projeções de Procurement com próxima ação verificável",
+      "canonicalPointer": "/work_packages/4/tasks/0",
+      "canonical_local_criterion_count": 20,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N5"
+      ],
+      "chapters": [
+        "sf-procurement",
+        "sf-work"
+      ],
+      "requirements": [
+        "R15",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "acceptance_groups": [
+        "NUI06",
+        "NUI10"
+      ],
+      "review_findings": [
+        "R77-F04"
+      ],
+      "first_wave": "77B/D: fila Requests, não todas as filas",
+      "dependency_holds": [
+        "73 privacidade/money; M31/MI07; aprovações completas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": [
+        "72/73/74 releases and consumer ACK for native auth/owner fence/HTTP composition, per DISPATCH; no UI32 or M31 dependency added to title pilot"
+      ]
+    },
+    {
+      "task": "WP04.T02",
+      "title": "Pedido guiado e preenchimento reaproveitado com origem",
+      "canonicalPointer": "/work_packages/4/tasks/1",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N5",
+        "N7"
+      ],
+      "chapters": [
+        "sf-procurement"
+      ],
+      "requirements": [
+        "R16",
+        "IA13"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "acceptance_groups": [
+        "NUI06",
+        "NUI08"
+      ],
+      "review_findings": [
+        "R77-F04"
+      ],
+      "first_wave": "77D: edição de título existente, não pedido completo",
+      "dependency_holds": [
+        "73 privacidade/money; M31/MI07; aprovações completas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": [
+        "72/73/74 releases and consumer ACK for native auth/owner fence/HTTP composition, per DISPATCH; no UI32 or M31 dependency added to title pilot"
+      ]
+    },
+    {
+      "task": "WP04.T03",
+      "title": "Comparação honesta e valores financeiros consistentes",
+      "canonicalPointer": "/work_packages/4/tasks/2",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N5",
+        "N9"
+      ],
+      "chapters": [
+        "sf-procurement"
+      ],
+      "requirements": [
+        "R17",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "acceptance_groups": [
+        "NUI06",
+        "NUI05",
+        "NUI12"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "73 privacidade/money; M31/MI07; aprovações completas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP04.T04",
+      "title": "Resumo por tipo de aprovação e decisão sobre a versão correta",
+      "canonicalPointer": "/work_packages/4/tasks/3",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N5"
+      ],
+      "chapters": [
+        "sf-procurement"
+      ],
+      "requirements": [
+        "R04",
+        "R18"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "acceptance_groups": [
+        "NUI06",
+        "NUI15"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "73 privacidade/money; M31/MI07; aprovações completas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP04.T05",
+      "title": "Fornecedores e preservação completa do processo de compras",
+      "canonicalPointer": "/work_packages/4/tasks/4",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N5"
+      ],
+      "chapters": [
+        "sf-procurement"
+      ],
+      "requirements": [
+        "R19",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "acceptance_groups": [
+        "NUI06",
+        "NUI04",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "73 privacidade/money; M31/MI07; aprovações completas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP05.T01",
+      "title": "Trajetória financeira e waterfall de cenários",
+      "canonicalPointer": "/work_packages/5/tasks/0",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N4"
+      ],
+      "chapters": [
+        "sf-bi",
+        "sf-planner",
+        "sf-dashboard"
+      ],
+      "requirements": [
+        "R20"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI05"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "DTOs/produtores de onze BI; ausência/ACL; sem cálculos duplicados"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP05.T02",
+      "title": "Contribuições divergentes e FTE/custo alinhados",
+      "canonicalPointer": "/work_packages/5/tasks/1",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N3",
+        "N4"
+      ],
+      "chapters": [
+        "sf-bi",
+        "sf-people",
+        "sf-planner"
+      ],
+      "requirements": [
+        "R20"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "DTOs/produtores de onze BI; ausência/ACL; sem cálculos duplicados"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP05.T03",
+      "title": "Estoque por etapa e aging de Procurement",
+      "canonicalPointer": "/work_packages/5/tasks/2",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N5"
+      ],
+      "chapters": [
+        "sf-bi",
+        "sf-procurement"
+      ],
+      "requirements": [
+        "R20"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI06"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "DTOs/produtores de onze BI; ausência/ACL; sem cálculos duplicados"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP05.T04",
+      "title": "Tickets, agenda de marcos e catálogo consumível de BI",
+      "canonicalPointer": "/work_packages/5/tasks/3",
+      "canonical_local_criterion_count": 22,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N3"
+      ],
+      "chapters": [
+        "sf-bi",
+        "sf-operations",
+        "sf-portfolio"
+      ],
+      "requirements": [
+        "R20",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI04"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "DTOs/produtores de onze BI; ausência/ACL; sem cálculos duplicados"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP05.T05",
+      "title": "Entregar BI de consequência e sensibilidade",
+      "canonicalPointer": "/work_packages/5/tasks/4",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N6"
+      ],
+      "chapters": [
+        "sf-bi",
+        "sf-decisions",
+        "sf-portfolio"
+      ],
+      "requirements": [
+        "IA15"
+      ],
+      "journeys": [
+        "J10"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI07"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "DTOs/produtores de onze BI; ausência/ACL; sem cálculos duplicados"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP06.T01",
+      "title": "Preservar formatos e normalização dos arquivos originais",
+      "canonicalPointer": "/work_packages/6/tasks/0",
+      "canonical_local_criterion_count": 16,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N7"
+      ],
+      "chapters": [
+        "sf-imports"
+      ],
+      "requirements": [
+        "R21"
+      ],
+      "journeys": [
+        "J03"
+      ],
+      "acceptance_groups": [
+        "NUI08",
+        "NUI04"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "75/45 scanner real; cinco jornadas Operations; PDF/DOCX/texto"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP06.T02",
+      "title": "Construir prévia do impacto e manifesto de mudanças",
+      "canonicalPointer": "/work_packages/6/tasks/1",
+      "canonical_local_criterion_count": 28,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N7",
+        "N2"
+      ],
+      "chapters": [
+        "sf-imports"
+      ],
+      "requirements": [
+        "R22",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J03"
+      ],
+      "acceptance_groups": [
+        "NUI08",
+        "NUI15"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "75/45 scanner real; cinco jornadas Operations; PDF/DOCX/texto"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP06.T03",
+      "title": "Entregar Apply explícito, reprévia e recibo fiel",
+      "canonicalPointer": "/work_packages/6/tasks/2",
+      "canonical_local_criterion_count": 24,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N7",
+        "N1"
+      ],
+      "chapters": [
+        "sf-imports"
+      ],
+      "requirements": [
+        "R23"
+      ],
+      "journeys": [
+        "J03"
+      ],
+      "acceptance_groups": [
+        "NUI08",
+        "NUI15",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "75/45 scanner real; cinco jornadas Operations; PDF/DOCX/texto"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP06.T04",
+      "title": "Qualificar roundtrip e entregar as fronteiras de importação",
+      "canonicalPointer": "/work_packages/6/tasks/3",
+      "canonical_local_criterion_count": 18,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N7",
+        "N10"
+      ],
+      "chapters": [
+        "sf-imports"
+      ],
+      "requirements": [
+        "R24"
+      ],
+      "journeys": [
+        "J03"
+      ],
+      "acceptance_groups": [
+        "NUI08",
+        "NUI13"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "75/45 scanner real; cinco jornadas Operations; PDF/DOCX/texto"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP06.T05",
+      "title": "Extrair evidências de documentos com confirmação",
+      "canonicalPointer": "/work_packages/6/tasks/4",
+      "canonical_local_criterion_count": 27,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N7",
+        "N6"
+      ],
+      "chapters": [
+        "sf-documents",
+        "sf-decisions",
+        "sf-procurement"
+      ],
+      "requirements": [
+        "IA11",
+        "RA03",
+        "RA04",
+        "RA05"
+      ],
+      "journeys": [
+        "J11"
+      ],
+      "acceptance_groups": [
+        "NUI08",
+        "NUI07",
+        "NUI11"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "75/45 scanner real; cinco jornadas Operations; PDF/DOCX/texto"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP07.T01",
+      "title": "Entregar a seleção autorizada da pauta",
+      "canonicalPointer": "/work_packages/7/tasks/0",
+      "canonical_local_criterion_count": 13,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N8",
+        "N3"
+      ],
+      "chapters": [
+        "sf-reviews"
+      ],
+      "requirements": [
+        "R25"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "acceptance_groups": [
+        "NUI09",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Reports C28 composto; quatro jornadas/86critérios; Agenda/POST não resolvidos pela migração"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP07.T02",
+      "title": "Preservar e apresentar uma revisão estável",
+      "canonicalPointer": "/work_packages/7/tasks/1",
+      "canonical_local_criterion_count": 22,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N8",
+        "N6"
+      ],
+      "chapters": [
+        "sf-reviews",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "R26",
+        "IA16",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "acceptance_groups": [
+        "NUI09",
+        "NUI07",
+        "NUI15"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Reports C28 composto; quatro jornadas/86critérios; Agenda/POST não resolvidos pela migração"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP07.T03",
+      "title": "Comparar revisões com contexto compatível",
+      "canonicalPointer": "/work_packages/7/tasks/2",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N8",
+        "N9"
+      ],
+      "chapters": [
+        "sf-reviews",
+        "sf-memory"
+      ],
+      "requirements": [
+        "R27"
+      ],
+      "journeys": [
+        "J05",
+        "J12"
+      ],
+      "acceptance_groups": [
+        "NUI09",
+        "NUI12"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Reports C28 composto; quatro jornadas/86critérios; Agenda/POST não resolvidos pela migração"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP07.T04",
+      "title": "Exportar o material completo e paginado",
+      "canonicalPointer": "/work_packages/7/tasks/3",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N8",
+        "N7"
+      ],
+      "chapters": [
+        "sf-reviews"
+      ],
+      "requirements": [
+        "R28",
+        "IA16",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "acceptance_groups": [
+        "NUI09",
+        "NUI08"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Reports C28 composto; quatro jornadas/86critérios; Agenda/POST não resolvidos pela migração"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP08.T01",
+      "title": "Implementar relações explícitas entre referências",
+      "canonicalPointer": "/work_packages/8/tasks/0",
+      "canonical_local_criterion_count": 19,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9"
+      ],
+      "chapters": [
+        "sf-decisions",
+        "sf-work",
+        "sf-procurement",
+        "sf-planner"
+      ],
+      "requirements": [
+        "R29",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J06"
+      ],
+      "acceptance_groups": [
+        "NUI10",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C06 fingerprint/observedSourceVersion/storageVersion; fontes e direct-call ACL"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP08.T02",
+      "title": "Entregar comentários e pedidos contextuais de esclarecimento",
+      "canonicalPointer": "/work_packages/8/tasks/1",
+      "canonical_local_criterion_count": 19,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N8"
+      ],
+      "chapters": [
+        "sf-work",
+        "sf-decisions",
+        "sf-reviews"
+      ],
+      "requirements": [
+        "R30",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J01",
+        "J06"
+      ],
+      "acceptance_groups": [
+        "NUI10",
+        "NUI15"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C06 fingerprint/observedSourceVersion/storageVersion; fontes e direct-call ACL"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP08.T03",
+      "title": "Confirmar sem alteração no escopo material revisado",
+      "canonicalPointer": "/work_packages/8/tasks/2",
+      "canonical_local_criterion_count": 16,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N3"
+      ],
+      "chapters": [
+        "sf-work",
+        "sf-dashboard"
+      ],
+      "requirements": [
+        "R31"
+      ],
+      "journeys": [
+        "J01"
+      ],
+      "acceptance_groups": [
+        "NUI10",
+        "NUI12"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C06 fingerprint/observedSourceVersion/storageVersion; fontes e direct-call ACL"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP08.T04",
+      "title": "Projetar Meu trabalho a partir das fontes canônicas",
+      "canonicalPointer": "/work_packages/8/tasks/3",
+      "canonical_local_criterion_count": 22,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N3",
+        "N9"
+      ],
+      "chapters": [
+        "sf-work",
+        "sf-home"
+      ],
+      "requirements": [
+        "R32",
+        "IA14",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J01",
+        "J06"
+      ],
+      "acceptance_groups": [
+        "NUI10",
+        "NUI04"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C06 fingerprint/observedSourceVersion/storageVersion; fontes e direct-call ACL"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP08.T05",
+      "title": "Encaminhar contexto para a ação Hot Topic existente",
+      "canonicalPointer": "/work_packages/8/tasks/4",
+      "canonical_local_criterion_count": 19,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N3"
+      ],
+      "chapters": [
+        "sf-dashboard",
+        "sf-work",
+        "sf-reviews"
+      ],
+      "requirements": [
+        "R33",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J06"
+      ],
+      "acceptance_groups": [
+        "NUI10",
+        "NUI15"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C06 fingerprint/observedSourceVersion/storageVersion; fontes e direct-call ACL"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP08.T06",
+      "title": "Inicializar ciclos e direcionar perguntas decisivas",
+      "canonicalPointer": "/work_packages/8/tasks/5",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N6"
+      ],
+      "chapters": [
+        "sf-decisions",
+        "sf-work"
+      ],
+      "requirements": [
+        "IA05",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J09"
+      ],
+      "acceptance_groups": [
+        "NUI10",
+        "NUI07"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C06 fingerprint/observedSourceVersion/storageVersion; fontes e direct-call ACL"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP09.T01",
+      "title": "Conectar o ciclo de rotina à admissão e aos resultados",
+      "canonicalPointer": "/work_packages/9/tasks/0",
+      "canonical_local_criterion_count": 22,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N9"
+      ],
+      "chapters": [
+        "sf-routines"
+      ],
+      "requirements": [
+        "R34",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J07"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C31 native activation HELD; CAP64-ORIGIN/POLICY/HUMAN/TASK-RELAY/RELOAD/READINESS/SCHEDULE"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP09.T07",
+      "title": "Executar análise e reavaliação de decisão por Relay",
+      "canonicalPointer": "/work_packages/9/tasks/1",
+      "canonical_local_criterion_count": 8,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N6"
+      ],
+      "chapters": [
+        "sf-routines",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA17"
+      ],
+      "journeys": [
+        "J13"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI07"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C31 native activation HELD; CAP64-ORIGIN/POLICY/HUMAN/TASK-RELAY/RELOAD/READINESS/SCHEDULE"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP09.T02",
+      "title": "Preparar revisão com checagem de cobertura",
+      "canonicalPointer": "/work_packages/9/tasks/2",
+      "canonical_local_criterion_count": 11,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N8"
+      ],
+      "chapters": [
+        "sf-routines",
+        "sf-reviews"
+      ],
+      "requirements": [
+        "R35"
+      ],
+      "journeys": [
+        "J07"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI09",
+        "NUI10"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C31 native activation HELD; CAP64-ORIGIN/POLICY/HUMAN/TASK-RELAY/RELOAD/READINESS/SCHEDULE"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP09.T03",
+      "title": "Preparar revisão de forecast e explicar diferenças",
+      "canonicalPointer": "/work_packages/9/tasks/3",
+      "canonical_local_criterion_count": 11,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N4"
+      ],
+      "chapters": [
+        "sf-routines",
+        "sf-planner"
+      ],
+      "requirements": [
+        "R36"
+      ],
+      "journeys": [
+        "J07"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI05"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C31 native activation HELD; CAP64-ORIGIN/POLICY/HUMAN/TASK-RELAY/RELOAD/READINESS/SCHEDULE"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP09.T04",
+      "title": "Preparar dossiê de sourcing",
+      "canonicalPointer": "/work_packages/9/tasks/4",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N5",
+        "N7"
+      ],
+      "chapters": [
+        "sf-routines",
+        "sf-procurement",
+        "sf-documents"
+      ],
+      "requirements": [
+        "R37"
+      ],
+      "journeys": [
+        "J07"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI06",
+        "NUI08"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C31 native activation HELD; CAP64-ORIGIN/POLICY/HUMAN/TASK-RELAY/RELOAD/READINESS/SCHEDULE"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP09.T05",
+      "title": "Consolidar encaminhamentos em ações propostas",
+      "canonicalPointer": "/work_packages/9/tasks/5",
+      "canonical_local_criterion_count": 8,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N3"
+      ],
+      "chapters": [
+        "sf-routines",
+        "sf-dashboard",
+        "sf-work"
+      ],
+      "requirements": [
+        "R38"
+      ],
+      "journeys": [
+        "J07"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI10"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C31 native activation HELD; CAP64-ORIGIN/POLICY/HUMAN/TASK-RELAY/RELOAD/READINESS/SCHEDULE"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP09.T06",
+      "title": "Adicionar recorrência e resumos internos sem ruído",
+      "canonicalPointer": "/work_packages/9/tasks/6",
+      "canonical_local_criterion_count": 16,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9"
+      ],
+      "chapters": [
+        "sf-routines"
+      ],
+      "requirements": [
+        "R39",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J07",
+        "J13"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI15"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "C31 native activation HELD; CAP64-ORIGIN/POLICY/HUMAN/TASK-RELAY/RELOAD/READINESS/SCHEDULE"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP10.T01",
+      "title": "Compor host e módulo continuamente desde o início",
+      "canonicalPointer": "/work_packages/10/tasks/0",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N0",
+        "N1"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R40",
+        "IA07",
+        "IA17",
+        "IA18",
+        "RA04",
+        "RA05"
+      ],
+      "journeys": [
+        "J08",
+        "J13"
+      ],
+      "acceptance_groups": [
+        "NUI03",
+        "NUI04",
+        "NUI16"
+      ],
+      "review_findings": [
+        "R77-F02",
+        "R77-F03"
+      ],
+      "first_wave": "77A/B: composição limitada",
+      "dependency_holds": [
+        "45 geração/typecheck/guards; oito seleções/AM01–06/três FINAL/C-G7/D-G8"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": [
+        "72/73/74 releases and consumer ACK for native auth/owner fence/HTTP composition, per DISPATCH; no UI32 or M31 dependency added to title pilot"
+      ]
+    },
+    {
+      "task": "WP10.T02",
+      "title": "Executar jornadas reais e verificar experiência",
+      "canonicalPointer": "/work_packages/10/tasks/1",
+      "canonical_local_criterion_count": 17,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N10"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R41",
+        "RA01",
+        "RA02",
+        "RA03",
+        "RA04",
+        "RA05",
+        "RA06"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI01",
+        "NUI02",
+        "NUI04",
+        "NUI14",
+        "NUI16"
+      ],
+      "review_findings": [],
+      "first_wave": "77E: roteiro piloto futuro",
+      "dependency_holds": [
+        "45 geração/typecheck/guards; oito seleções/AM01–06/três FINAL/C-G7/D-G8"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP10.T03",
+      "title": "Executar três revisões independentes e fechar correções",
+      "canonicalPointer": "/work_packages/10/tasks/2",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N0",
+        "N10"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R41"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI16"
+      ],
+      "review_findings": [
+        "R77-F08"
+      ],
+      "first_wave": "Missão77 revisa plano; não executa três FINAL",
+      "dependency_holds": [
+        "45 geração/typecheck/guards; oito seleções/AM01–06/três FINAL/C-G7/D-G8"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP10.T04",
+      "title": "Concluir verificação cumulativa no candidato de produto C",
+      "canonicalPointer": "/work_packages/10/tasks/3",
+      "canonical_local_criterion_count": 22,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N0",
+        "N10"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R41",
+        "RA05"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI16"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "45 geração/typecheck/guards; oito seleções/AM01–06/três FINAL/C-G7/D-G8"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP10.T05",
+      "title": "Fechar a campanha e entregar o produto revisável",
+      "canonicalPointer": "/work_packages/10/tasks/4",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N0",
+        "N10"
+      ],
+      "chapters": [
+        "all"
+      ],
+      "requirements": [
+        "R41",
+        "RA01",
+        "RA02",
+        "RA03",
+        "RA04",
+        "RA05",
+        "RA06"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "acceptance_groups": [
+        "NUI16"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "45 geração/typecheck/guards; oito seleções/AM01–06/três FINAL/C-G7/D-G8"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP10.T06",
+      "title": "Registrar equipe residente e executar MCP com contexto confiável",
+      "canonicalPointer": "/work_packages/10/tasks/5",
+      "canonical_local_criterion_count": 27,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N9"
+      ],
+      "chapters": [
+        "sf-routines",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "RA01",
+        "RA02",
+        "RA03",
+        "RA04",
+        "RA06"
+      ],
+      "journeys": [
+        "J09",
+        "J10",
+        "J11",
+        "J12",
+        "J13"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI03"
+      ],
+      "review_findings": [
+        "R77-F02",
+        "R77-F04"
+      ],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "45 geração/typecheck/guards; oito seleções/AM01–06/três FINAL/C-G7/D-G8"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP10.T07",
+      "title": "Compor BusinessContextService e memória Atlas transacional",
+      "canonicalPointer": "/work_packages/10/tasks/6",
+      "canonical_local_criterion_count": 30,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N9",
+        "N7"
+      ],
+      "chapters": [
+        "sf-memory",
+        "sf-documents",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "RA05",
+        "RA04"
+      ],
+      "journeys": [
+        "J09",
+        "J10",
+        "J11",
+        "J12",
+        "J13"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI11",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "45 geração/typecheck/guards; oito seleções/AM01–06/três FINAL/C-G7/D-G8"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP11.T01",
+      "title": "Implementar caso durável e versionado",
+      "canonicalPointer": "/work_packages/11/tasks/0",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6"
+      ],
+      "chapters": [
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA06",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J06",
+        "J08",
+        "J09"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Release52; C12/65; M31/MI07 e recuperação parcial"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP11.T02",
+      "title": "Estruturar alternativas e premissas comparáveis",
+      "canonicalPointer": "/work_packages/11/tasks/1",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6",
+        "N4"
+      ],
+      "chapters": [
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA03",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J09",
+        "J11"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI05"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Release52; C12/65; M31/MI07 e recuperação parcial"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP11.T03",
+      "title": "Registrar escolha humana e preparar mudanças",
+      "canonicalPointer": "/work_packages/11/tasks/2",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6",
+        "N5"
+      ],
+      "chapters": [
+        "sf-decisions",
+        "sf-procurement"
+      ],
+      "requirements": [
+        "IA06",
+        "IA07",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J04",
+        "J05",
+        "J06",
+        "J09"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI06"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Release52; C12/65; M31/MI07 e recuperação parcial"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP11.T04",
+      "title": "Reconciliar recibos e retomar execução parcial",
+      "canonicalPointer": "/work_packages/11/tasks/3",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6",
+        "N1"
+      ],
+      "chapters": [
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA07",
+        "IA18",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J03",
+        "J04",
+        "J06",
+        "J09"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI15",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Release52; C12/65; M31/MI07 e recuperação parcial"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP12.T01",
+      "title": "Expor ferramentas e provider de IA com escopo",
+      "canonicalPointer": "/work_packages/12/tasks/0",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N1",
+        "N9",
+        "N6"
+      ],
+      "chapters": [
+        "sf-routines",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA17",
+        "RA01",
+        "RA02",
+        "RA04"
+      ],
+      "journeys": [
+        "J07",
+        "J08",
+        "J13"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI03"
+      ],
+      "review_findings": [
+        "R77-F04"
+      ],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Admissão original e POST; provider/modelo/run reais; 18skills consumidas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP12.T02",
+      "title": "Interpretar intenção e descobrir contradições",
+      "canonicalPointer": "/work_packages/12/tasks/1",
+      "canonical_local_criterion_count": 28,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6",
+        "N7"
+      ],
+      "chapters": [
+        "sf-decisions",
+        "sf-documents"
+      ],
+      "requirements": [
+        "IA01",
+        "IA02",
+        "IA03",
+        "IA05",
+        "IA11",
+        "RA01",
+        "RA02",
+        "RA06"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J06",
+        "J09",
+        "J11"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI08",
+        "NUI11"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Admissão original e POST; provider/modelo/run reais; 18skills consumidas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP12.T03",
+      "title": "Criticar e validar resultados estruturados",
+      "canonicalPointer": "/work_packages/12/tasks/2",
+      "canonical_local_criterion_count": 21,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6",
+        "N9"
+      ],
+      "chapters": [
+        "sf-decisions",
+        "sf-work"
+      ],
+      "requirements": [
+        "IA04",
+        "IA05",
+        "RA01",
+        "RA02",
+        "RA04",
+        "RA06"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J06"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI11"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Admissão original e POST; provider/modelo/run reais; 18skills consumidas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP12.T04",
+      "title": "Controlar análise assíncrona e retorno de Relay",
+      "canonicalPointer": "/work_packages/12/tasks/3",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6",
+        "N9"
+      ],
+      "chapters": [
+        "sf-decisions",
+        "sf-routines"
+      ],
+      "requirements": [
+        "IA09",
+        "IA18",
+        "RA02",
+        "RA04"
+      ],
+      "journeys": [
+        "J07",
+        "J08",
+        "J13"
+      ],
+      "acceptance_groups": [
+        "NUI11",
+        "NUI15",
+        "NUI03"
+      ],
+      "review_findings": [
+        "R77-F04"
+      ],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Admissão original e POST; provider/modelo/run reais; 18skills consumidas"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP13.T01",
+      "title": "Definir campanha e candidatos de portfólio",
+      "canonicalPointer": "/work_packages/13/tasks/0",
+      "canonical_local_criterion_count": 8,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6"
+      ],
+      "chapters": [
+        "sf-portfolio"
+      ],
+      "requirements": [
+        "IA10"
+      ],
+      "journeys": [
+        "J02",
+        "J08",
+        "J10"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "P03 FAIL/HELD; nenhuma repetição inalterada/timeout ampliado"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP13.T02",
+      "title": "Avaliar combinações e restrições",
+      "canonicalPointer": "/work_packages/13/tasks/1",
+      "canonical_local_criterion_count": 20,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6",
+        "N4"
+      ],
+      "chapters": [
+        "sf-portfolio",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA10",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J02",
+        "J10"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI05"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "P03 FAIL/HELD; nenhuma repetição inalterada/timeout ampliado"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP13.T03",
+      "title": "Calcular sensibilidade e limites da escolha",
+      "canonicalPointer": "/work_packages/13/tasks/2",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6",
+        "N9"
+      ],
+      "chapters": [
+        "sf-portfolio",
+        "sf-bi"
+      ],
+      "requirements": [
+        "IA10",
+        "RA03",
+        "RA04"
+      ],
+      "journeys": [
+        "J02",
+        "J10"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI12"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "P03 FAIL/HELD; nenhuma repetição inalterada/timeout ampliado"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP13.T04",
+      "title": "Encaminhar cenário escolhido sem duplicar execução",
+      "canonicalPointer": "/work_packages/13/tasks/3",
+      "canonical_local_criterion_count": 8,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N6"
+      ],
+      "chapters": [
+        "sf-portfolio",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA10"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J06",
+        "J10"
+      ],
+      "acceptance_groups": [
+        "NUI07",
+        "NUI15"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "P03 FAIL/HELD; nenhuma repetição inalterada/timeout ampliado"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP14.T01",
+      "title": "Classificar mudanças materiais por escopo",
+      "canonicalPointer": "/work_packages/14/tasks/0",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N6"
+      ],
+      "chapters": [
+        "sf-memory",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA08"
+      ],
+      "journeys": [
+        "J02",
+        "J06",
+        "J09",
+        "J12"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI07"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Atlas/scanner/persistência/ACL; classificação C17 e todas as skills pertinentes"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP14.T02",
+      "title": "Recuperar casos semelhantes sob autorização",
+      "canonicalPointer": "/work_packages/14/tasks/1",
+      "canonical_local_criterion_count": 15,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9"
+      ],
+      "chapters": [
+        "sf-memory",
+        "sf-home"
+      ],
+      "requirements": [
+        "IA12",
+        "RA05"
+      ],
+      "journeys": [
+        "J06",
+        "J08",
+        "J12"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Atlas/scanner/persistência/ACL; classificação C17 e todas as skills pertinentes"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP14.T03",
+      "title": "Comparar previsto e observado sem atribuição falsa",
+      "canonicalPointer": "/work_packages/14/tasks/2",
+      "canonical_local_criterion_count": 8,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N8"
+      ],
+      "chapters": [
+        "sf-memory",
+        "sf-reviews"
+      ],
+      "requirements": [
+        "IA12"
+      ],
+      "journeys": [
+        "J05",
+        "J08",
+        "J12"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI09"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Atlas/scanner/persistência/ACL; classificação C17 e todas as skills pertinentes"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP14.T04",
+      "title": "Deduplicar sinais e qualificar invalidação",
+      "canonicalPointer": "/work_packages/14/tasks/3",
+      "canonical_local_criterion_count": 14,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N1"
+      ],
+      "chapters": [
+        "sf-memory",
+        "sf-decisions"
+      ],
+      "requirements": [
+        "IA08",
+        "IA18",
+        "RA05"
+      ],
+      "journeys": [
+        "J01",
+        "J06",
+        "J07",
+        "J12"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI15",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Atlas/scanner/persistência/ACL; classificação C17 e todas as skills pertinentes"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    },
+    {
+      "task": "WP14.T05",
+      "title": "Traduzir projeções de negócio para templates Atlas admitidos",
+      "canonicalPointer": "/work_packages/14/tasks/4",
+      "canonical_local_criterion_count": 17,
+      "inherited_criteria": "All campaign axioms and applicable WP axioms remain mandatory.",
+      "native_slices": [
+        "N9",
+        "N1"
+      ],
+      "chapters": [
+        "sf-memory"
+      ],
+      "requirements": [
+        "RA05"
+      ],
+      "journeys": [
+        "J09",
+        "J10",
+        "J11",
+        "J12",
+        "J13"
+      ],
+      "acceptance_groups": [
+        "NUI12",
+        "NUI11",
+        "NUI03"
+      ],
+      "review_findings": [],
+      "first_wave": "Fora do piloto; escopo integral preservado para pacote posterior.",
+      "dependency_holds": [
+        "Atlas/scanner/persistência/ACL; classificação C17 e todas as skills pertinentes"
+      ],
+      "review_disposition": "RETAINED_WITH_FUTURE_BEHAVIOR_PROOF",
+      "product_status": "NOT_RUN_BY_MISSION77",
+      "first_wave_integration_holds": []
+    }
+  ],
+  "dependency_rule": "dependency_holds apply to the full task scope; only explicit first_wave_integration_holds block the bounded pilot. Independent authoring still needs S0 authorization."
+}

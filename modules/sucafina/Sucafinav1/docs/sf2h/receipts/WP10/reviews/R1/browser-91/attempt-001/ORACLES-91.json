@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.s1-r1.expected-oracles-not-executed.v1",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "baseline_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "status": "EXPECTED_ONLY_NO_RESULT_INFERRED",
+  "fx01": {
+    "budget": 600000,
+    "closedActual": 400000,
+    "openForecast": 190000,
+    "licenseBaseline": 72000,
+    "initialOutlook": 590000,
+    "license84000": {
+      "outlook": 602000,
+      "delta": 12000,
+      "margin": -2000
+    },
+    "license78000": {
+      "outlook": 596000,
+      "delta": 6000,
+      "margin": 4000
+    },
+    "currency": "USD"
+  },
+  "fx02": {
+    "request": 32000,
+    "quoteA": 32400,
+    "quoteBEur": 28000,
+    "submittedFx": 1.08,
+    "quoteBUsd": 30240,
+    "quoteC": 29000,
+    "quoteCEligibility": "denied",
+    "AminusB": 2160,
+    "AminusBPercentOfB": 7.142857142857142,
+    "AminusPR": 400,
+    "AminusPRPercent": 1.25,
+    "weightedA": 87.93333333333334,
+    "weightedB": 85,
+    "source": "submitted FX retained"
+  },
+  "aiRenewal": {
+    "knownSubtotalNoTraining": 210000,
+    "knownDifference": 30000,
+    "comparisonNoTraining": "conditioned",
+    "confirmedTraining": 40000,
+    "newTotal": 250000,
+    "newDifference": -10000,
+    "newImplantationCeiling": 15000,
+    "historicalChoice": {
+      "originalKnownSubtotal": 210000,
+      "coverage": "pending",
+      "versionsPreserved": true
+    },
+    "absenceNullZeroNotApplicableDifferent": true
+  },
+  "checks": "Real domain -> UI + BI + critique + portfolio + stored historical choice, same case, source/period/currency/revision; no mutation of input or invented confirmation."
+}

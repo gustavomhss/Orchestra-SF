@@ -1,0 +1,780 @@
+{
+  "schema": "sf2h.cold-auth-review.findings.v1",
+  "mission": 70,
+  "review_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "review_tree": "12594fd5a48f934847db717dd872d51776484296",
+  "opinion": "FIX-FIRST",
+  "evidence_policy": "Static causal findings are not executed repros. Existing CI is identified separately in EVIDENCE70.json. Absence of proof is not approval.",
+  "findings": [
+    {
+      "id": "M70-AUTH-01",
+      "title": "Estado de autenticação pode crescer sem retenção/capacidade limitada",
+      "severity": "P2 / MEDIUM",
+      "mandatory": true,
+      "status": "CONFIRMED_BY_SOURCE_NOT_EXECUTED",
+      "criteria": [
+        "mission70.acceptance[0] (session/storage)",
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40"
+      ],
+      "reviewer": "/root + /root/identity_review",
+      "authorship": {
+        "reviewers_authored_product_in_this_session": false,
+        "source_provenance": "Microsoft49; current C27 local-store integration. Full historical model/session identities are not independently established; no FINAL independence gate is claimed."
+      },
+      "preconditions": [
+        "Instalação Microsoft ativa e ingresso alcançável com Host/origem configurados.",
+        "Para challenges: discovery/authorization disponível; nenhum login concluído é necessário.",
+        "Para logout: prefixo público de cookie conhecido e handle de 64 hex; Origin correta não autentica um cliente HTTP."
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+          "lines": {
+            "start": 62,
+            "end": 78
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-identity.ts#L62-L78",
+          "why": "retire cria marcador durável e entrada no Map para qualquer handle sintaticamente aceito; só limpa expirados do Map ao executar novo retire."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+          "lines": {
+            "start": 119,
+            "end": 142
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-identity.ts#L119-L142",
+          "why": "logout sem sessão válida chama retire; GET login cria challenge novo sem retirar o anterior."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+          "lines": {
+            "start": 94,
+            "end": 109
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-identity.ts#L94-L109",
+          "why": "expiração impede uso da sessão, mas não elimina o payload."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+          "lines": {
+            "start": 366,
+            "end": 388
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-store.ts#L366-L388",
+          "why": "put UPSERT; get filtra expires_at; take/remove apagam exclusivamente uma chave."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "lines": {
+            "start": 162,
+            "end": 173
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts#L162-L173",
+          "why": "rotas de autenticação são atendidas antes da autenticação de negócio."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "lines": {
+            "start": 123,
+            "end": 123
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts#L123-L123",
+          "why": "agendamento de jobs habilitado pelo perfil operator; busca limitada não encontrou retenção de autenticação nesses jobs."
+        }
+      ],
+      "causal_sequence": [
+        "GET /auth/login gera state único e persiste challenge criptografado. Abandonar o callback conserva a linha depois do expires_at.",
+        "Uma sessão legítima que vence sem logout também deixa seu payload criptografado na tabela; o filtro de expiração recusa autenticação e não realiza exclusão.",
+        "POST /auth/logout com um handle nunca emitido, porém sintaticamente válido, cria revoked-session/revoked-login e entrada retiring antes de tentar remover a chave original inexistente.",
+        "Cada handle diferente cria uma linha adicional. Os marcadores têm validade de 8h/8h10m. As entradas do Map permanecem até um novo retire remover as expiradas; cada retire percorre suas entradas. Não existe quota demonstrada nesse caminho.",
+        "Busca textual integral nos 36 arquivos runtime e 12 local fixados encontrou usos da tabela apenas em local-store.ts e exclusões por chave, sem sweep por expiração."
+      ],
+      "impact": "Crescimento persistente da tabela, retenção desnecessária de ciphertext de autenticação e consumo de memória/CPU/SQLite. Indisponibilidade é impacto potencial, não medido.",
+      "excluded_claims": [
+        "Não demonstra plaintext de tokens.",
+        "Não demonstra sessão expirada aceita.",
+        "Não demonstra bypass OIDC nem CSRF de navegador.",
+        "Não afirma ausência de rate limit/GC administrados fora do conjunto inspecionado."
+      ],
+      "reproduction": {
+        "executed": false,
+        "method": "sequência causal de fonte; proposta para fixture isolada do writer",
+        "steps": [
+          "Medir contagem da tabela sem imprimir payloads; iniciar N logins sem callbacks; avançar além do TTL e executar a manutenção normal.",
+          "Em outro caso, concluir uma sessão e deixá-la vencer sem logout; observar retenção e recusa da sessão separadamente.",
+          "Enviar um número pequeno e controlado de logouts com handles distintos nunca emitidos, origem correta e sem sessão legítima; observar linhas e Map.",
+          "Após correção, verificar expurgo limitado e ausência de novos marcadores para handles nunca emitidos; não executar carga destrutiva."
+        ]
+      },
+      "correction": {
+        "artifact": "REMEDIATION70.md#auth-01",
+        "required": [
+          "Registrar duravelmente emissão/consumo/revogação e correlação de callback em andamento.",
+          "Não persistir revogação para handle nunca emitido; preservar cancelamento de challenge já consumido por callback pendente.",
+          "Implementar expurgo por lotes fora de leituras/transações de negócio e capacidade compartilhada de emissão.",
+          "Reter fences até nenhum callback/sessão derivada admissível poder sobreviver; preservar criptografia e idempotência."
+        ]
+      },
+      "owner": "60 encaminha para owner ativo de autenticação49/sucessor e runtime/local-store59; 70 não materializa produto. Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60.",
+      "recheck": {
+        "required": true,
+        "executor": "writer e lane Actions autorizada, coordenada por60/45",
+        "independent_reviewer": "Revisor independente designado, sem autoria da correção",
+        "cases": [
+          "logout durante redemption e antes/depois do write de sessão",
+          "refresh/Graph concorrente com logout",
+          "duas instâncias e restart",
+          "callback duplicado e GC concorrente",
+          "expiração sem retornar a endpoint",
+          "handles nunca emitidos e limite de emissão"
+        ]
+      },
+      "disposition": "FIX_FIRST; não reclassificar como opcional para encerrar."
+    },
+    {
+      "id": "M70-ISO-01",
+      "title": "Status HTTP distingue requisição Procurement oculta de ID inexistente",
+      "severity": "P2 / MEDIUM",
+      "mandatory": true,
+      "status": "CONFIRMED_BY_SOURCE_NOT_EXECUTED",
+      "criteria": [
+        "CAMP.INV.04",
+        "CAMP.CMP.02",
+        "CAMP.CMP.03",
+        "C03",
+        "C08",
+        "WP10.T03.QLT.40"
+      ],
+      "reviewer": "/root + /root/isolation_review; contraleitura /root/identity_review",
+      "authorship": {
+        "reviewers_authored_product_in_this_session": false,
+        "source_provenance": "Domínio Procurement e Application canônicos integrados; proprietário exato da correção deve ser designado por60."
+      },
+      "preconditions": [
+        "Ator A autenticado, canWrite, nome próprio no diretório e somente papel requester em Procurement.",
+        "Requisição de B possui createdBy diferente de A; A não tem buyer/approver/supplier admin/admin/viewer.",
+        "ID candidato conhecido ou fornecido ao cenário; não se afirma enumeração prática de UUIDs.",
+        "Request POST válido e mesma origem."
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+          "blob": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+          "lines": {
+            "start": 3,
+            "end": 8
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/src/requests.ts#L3-L8",
+          "why": "requester-only vê apenas createdBy próprio."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+          "blob": "412d55047a1b6dda686ce1054c15b20307217577",
+          "lines": {
+            "start": 129,
+            "end": 145
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/src/nav.ts#L129-L145",
+          "why": "requester pode acessar a página Requests."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 84,
+            "end": 128
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L84-L128",
+          "why": "autenticação/role/canWrite/diretório precedem execute, sem ACL desse ID."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 456,
+            "end": 507
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L456-L507",
+          "why": "schema aceita action save, id string, versão inteira não negativa e values vazio."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "lines": {
+            "start": 473,
+            "end": 487
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/procurement.ts#L473-L487",
+          "why": "ausência 404; invisível e versão divergente 409; versão coincidente chega à negativa save 403."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "lines": {
+            "start": 100,
+            "end": 102
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/contract.ts#L100-L102",
+          "why": "conflito compara versão antes da negativa de edição."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 347,
+            "end": 350
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L347-L350",
+          "why": "status do domínio vira status HTTP e result.ok=false impede commit."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 510,
+            "end": 521
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L510-L521",
+          "why": "safeFailure redige campos, mas conserva status."
+        }
+      ],
+      "causal_sequence": [
+        "Enviar save para ID inexistente retorna404 na linha475.",
+        "Enviar o mesmo comando para ID invisível existente retorna409 se a versão diverge; o payload privado é removido nessa branch.",
+        "Se a versão coincide, requester A não satisfaz prEdit/sourceEdit/poEdit e save retorna403 na linha487.",
+        "A camada HTTP preserva404/409/403. Logo a existência é distinguível sem acertar a versão; tentativas também distinguem acerto de versão."
+      ],
+      "impact": "Divulgação de existência de registro fora do escopo e observação de igualdade de versão por status. Não há leitura de campos privados nem alteração demonstradas.",
+      "excluded_claims": [
+        "Não demonstra obtenção do autor, conteúdo ou enumeração de IDs desconhecidos.",
+        "Não demonstra commit: todos os ramos usados retornam ok:false.",
+        "Não é bypass financeiro/aprovação."
+      ],
+      "reproduction": {
+        "executed": false,
+        "endpoint": "POST <mount>/procurement",
+        "headers": {
+          "Content-Type": "application/json",
+          "Origin": "<origem pública configurada>",
+          "Cookie": "<sessão válida de A; não incluir valor em receipt>"
+        },
+        "body": {
+          "page": "Requests",
+          "action": "save",
+          "id": "<candidate-id>",
+          "version": 0,
+          "values": {}
+        },
+        "expected_from_source": [
+          {
+            "target": "ID ausente",
+            "status": 404
+          },
+          {
+            "target": "PR invisível de B com versão positiva",
+            "status": 409
+          },
+          {
+            "target": "mesma PR invisível com versão corrente enviada",
+            "status": 403
+          }
+        ]
+      },
+      "correction": {
+        "artifact": "REMEDIATION70.md#iso-01",
+        "required": [
+          "Para ações sobre registro existente, decidir visibilidade antes de expor existência/CAS/versão.",
+          "Usar a mesma resposta pública para registro inexistente e inacessível, sem stored/by/currentVersionCAS privados.",
+          "Preservar CAS409 para atores autorizados, criação e regras atuais de transição/holder/alçada."
+        ]
+      },
+      "owner": "60 encaminha ao owner canônico Procurement e coordena Application somente se necessário. Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60.",
+      "recheck": {
+        "required": true,
+        "executor": "writer/lane autorizada",
+        "independent_reviewer": "Revisor independente designado, sem autoria da correção",
+        "cases": [
+          "A requester-only vs B creator",
+          "ID ausente e invisível produzem status/corpo equivalentes",
+          "save/approve/reject e versão igual/divergente",
+          "A com acesso legítimo conserva conflito409 e CAS",
+          "nenhuma escrita/audit/effect em negativas"
+        ]
+      },
+      "disposition": "FIX_FIRST; privacidade de status faz parte da resposta."
+    },
+    {
+      "id": "M70-HTTP-01",
+      "title": "Body sem Content-Length perde o limite incremental na ponte Node → Web",
+      "severity": "P2 / MEDIUM",
+      "mandatory": true,
+      "status": "CONFIRMED_BY_SOURCE_NOT_EXECUTED",
+      "criteria": [
+        "mission70.acceptance[1] (Node/Effect body seam)",
+        "C08",
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40"
+      ],
+      "reviewer": "/root + /root/http_review; contraleitura /root/identity_review",
+      "authorship": {
+        "reviewers_authored_product_in_this_session": false,
+        "source_provenance": "Microsoft49/55 instalação; host C27 e Effect4.0.0-beta.83. Proposta52 não integrada."
+      },
+      "preconditions": [
+        "Instalação SF e runtime Workbench disponíveis.",
+        "Ingresso aceita body sem Content-Length, Host e Origin configurados, Content-Type application/json.",
+        "Sem limite externo independente mais restritivo demonstrado; o ambiente implantado não foi inspecionado."
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "packages/server/src/body-limit.ts",
+          "blob": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+          "lines": {
+            "start": 25,
+            "end": 43
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/server/src/body-limit.ts#L25-L43",
+          "why": "Content-Length é verificado; MaxBodySize é fornecido, sem contador próprio do middleware."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "lines": {
+            "start": 38,
+            "end": 49
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/installation.ts#L38-L49",
+          "why": "HttpServerRequest.toWeb recebe o request Node sanitizado."
+        },
+        {
+          "repository": "Effect-TS/effect",
+          "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+          "path": "packages/effect/src/unstable/http/HttpServerRequest.ts",
+          "blob": "83e6c3e6f9d0f12ce2eb4ccec969459f9f99c7a4",
+          "lines": {
+            "start": 1032,
+            "end": 1059
+          },
+          "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/effect/src/unstable/http/HttpServerRequest.ts#L1032-L1059",
+          "why": "toWeb usa self.stream no caminho Node; Web Request prévia é caminho diferente."
+        },
+        {
+          "repository": "Effect-TS/effect",
+          "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+          "path": "packages/platform-node/src/NodeHttpIncomingMessage.ts",
+          "blob": "2461e86c785d6f7435c8e4cc533f450329d9cc44",
+          "lines": {
+            "start": 117,
+            "end": 139
+          },
+          "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/platform-node/src/NodeHttpIncomingMessage.ts#L117-L139",
+          "why": "stream chama fromReadable sem MaxBodySize; arrayBuffer consulta esse limite."
+        },
+        {
+          "repository": "Effect-TS/effect",
+          "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+          "path": "packages/platform-node-shared/src/NodeStream.ts",
+          "blob": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+          "lines": {
+            "start": 361,
+            "end": 393
+          },
+          "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/platform-node-shared/src/NodeStream.ts#L361-L393",
+          "why": "pull não conta o total; cleanup do readable existe."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "lines": {
+            "start": 90,
+            "end": 103
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/interface/http.ts#L90-L103",
+          "why": "request.text precede verificação de65536 bytes e ui.admit."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 60,
+            "end": 86
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L60-L86",
+          "why": "product handler é chamado antes do parser base limitado e da autenticação da página."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "lines": {
+            "start": 128,
+            "end": 141
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts#L128-L141",
+          "why": "Workbench recebe serviços do host e compõe fallback product."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "lines": {
+            "start": 233,
+            "end": 239
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts#L233-L239",
+          "why": "ausência de pessoa só redireciona GET; POST segue ao handler."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+          "lines": {
+            "start": 800,
+            "end": 803
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/host-context.ts#L800-L803",
+          "why": "identidade de host instalado habilita runtime, não sessão Microsoft do caller."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+          "lines": {
+            "start": 836,
+            "end": 852
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/host-context.ts#L836-L852",
+          "why": "cadeia productHttp antecede fallback; services disponíveis por identidade do host."
+        }
+      ],
+      "causal_sequence": [
+        "Sem Content-Length, a rejeição por tamanho declarado não ocorre.",
+        "toWeb converte self.stream em ReadableStream; o getter Node utilizado não aplica MaxBodySize.",
+        "Com runtime disponível, sf=workbench-command passa fences públicos de origem/Host e roteamento.",
+        "request.text acumula o body antes deEOF; só então verifica65536 bytes e posteriormente admite o usuário.",
+        "Parser limitado da aplicação base não cobre o caso, porque product já recebeu o request antes dele."
+      ],
+      "impact": "Ausência de cutoff incremental permite consumo de memória proporcional ao corpo antes da autenticação/admissão. Indisponibilidade é potencial e depende da exposição; nenhum OOM foi provocado ou observado.",
+      "excluded_claims": [
+        "Não demonstra leitura privada ou mutação sem autorização.",
+        "Não afirma ausência de timeouts, falta absoluta de cleanup ou inexistência de proxy limit.",
+        "Não é finding de duplex ausente: duplex half já existe.",
+        "Não atribui comportamento executado de chunked aos testes GET."
+      ],
+      "reproduction": {
+        "executed": false,
+        "endpoint": "POST <mount>/dashboard?sf=workbench-command",
+        "method": "listener Node real em fixture isolada",
+        "steps": [
+          "Disponibilizar runtime; usar Host/Origin públicos corretos, application/json, sem cookie e sem Content-Length.",
+          "Transmitir mais de65536 bytes em quantidade controlada, mantendo EOF pendente por intervalo limitado.",
+          "Depois da correção, observar corte/413 ao ultrapassar teto, antes deEOF, com cleanup e sem chegar ao consumidor protegido. Não gerar carga destrutiva."
+        ]
+      },
+      "correction": {
+        "artifact": "REMEDIATION70.md#http-01",
+        "required": [
+          "Limite incremental na rota antes de text/buffer e limite efetivo na ponte Node→Web.",
+          "Propagar cutoff/413 sem expor causa privada; cancelar e liberar reader preservando abort/disconnect.",
+          "Reconciliar16MiB global com limites próprios, incluindo contrato25MiB; preservar uploads binários válidos.",
+          "Integrar qualquer solução52 somente com release, mapa novo e fixture coerentes, seguida de prova no candidato composto."
+        ]
+      },
+      "owner": "60 coordena owner ativo do transporte Microsoft49/52 e host; sem mudança de engine por70. Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60.",
+      "recheck": {
+        "required": true,
+        "executor": "writer e Actions autorizada",
+        "independent_reviewer": "Revisor independente designado, sem autoria da correção",
+        "cases": [
+          "POST JSON válido e inválido no listener Node",
+          "sem Content-Length/chunked excedendo limite",
+          "Content-Length excessivo",
+          "binário autorizado dentro do limite de negócio",
+          "abort/disconnect antes/depois de leitura",
+          "origem/Host/forwarded/privacy negativas"
+        ]
+      },
+      "disposition": "FIX_FIRST; prova fonte já exige correção, e G02 exige qualificação composta."
+    }
+  ],
+  "gates": [
+    {
+      "id": "M70-G01",
+      "title": "Microsoft/B2B e ingresso HTTPS reais sem prova admitida",
+      "status": "NOT_PROVEN",
+      "mandatory": true,
+      "defect_claim": false,
+      "criteria": [
+        "mission70.acceptance[1]",
+        "CAMP.CMP.03"
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+          "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+          "lines": {
+            "start": 19,
+            "end": 27
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts#L19-L27",
+          "why": "fixture não usa rede; gera par RSA local."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+          "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+          "lines": {
+            "start": 55,
+            "end": 67
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts#L55-L67",
+          "why": "tokens/claims sintéticos."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+          "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+          "lines": {
+            "start": 94,
+            "end": 108
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts#L94-L108",
+          "why": "Graph sintético."
+        }
+      ],
+      "required": "Owner autorizado deve fornecer recibo expurgado com candidato exato, tenant/app configurados, membro/convidado B2B, consentimento, papéis e remoção real de acesso, refresh/logout/restart, HTTPS/origem/proxy privado e redaction dos logs externos. Esta missão não inicia login/Azure/credenciais.",
+      "owner": "60/S0 coordenam owner Microsoft e frente de implantação já existente",
+      "does_not_close": [
+        "falha/sucesso real de Entra",
+        "tenant B2B",
+        "privacidade do proxy",
+        "aceite final"
+      ],
+      "authority_note": "Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60."
+    },
+    {
+      "id": "M70-G02",
+      "title": "Source CI49 não qualifica C27 nem POST Node com corpo",
+      "status": "NOT_PROVEN",
+      "mandatory": true,
+      "defect_claim": false,
+      "criteria": [
+        "C08",
+        "WP10.QLT.40",
+        "WP10.T03.CHK.03",
+        "mission70.acceptance[1]"
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+          "blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+          "lines": {
+            "start": 53,
+            "end": 105
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-node.test.ts#L53-L105",
+          "why": "listener Node real; helper sem method/body efetua GET."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+          "blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+          "lines": {
+            "start": 39,
+            "end": 43
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts#L39-L43",
+          "why": "composição usa toWebHandler."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+          "blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+          "lines": {
+            "start": 91,
+            "end": 104
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts#L91-L104",
+          "why": "POST Web Request não exercita IncomingMessage."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+          "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+          "lines": {
+            "start": 12,
+            "end": 29
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts#L12-L29",
+          "why": "fixture exige mapa canônico mas leitura de código não equivale a execução."
+        }
+      ],
+      "required": "Após correções e integração autorizada, W/S/run/job/logs no candidato composto com POST válido/negativo, chunked, limite, binário e aborto. Reexecutar apenas discriminantes afetados no lane existente; missão70 despacha zero testes.",
+      "owner": "60 coordena qualificador;45 conserva compiler/check workflow",
+      "authority_note": "Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60."
+    },
+    {
+      "id": "M70-G03",
+      "title": "Admission53 não está ligada à transação HTTP canônica",
+      "status": "HOLD_INERT_NOT_INSTALLED",
+      "mandatory": true,
+      "defect_claim": false,
+      "criteria": [
+        "C01",
+        "C03",
+        "C08",
+        "C12",
+        "CAMP.INV.02"
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+          "blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+          "lines": {
+            "start": 67,
+            "end": 70
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts#L67-L70",
+          "why": "contrato current síncrono depois de fresh auth e antes de um execute."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 28,
+            "end": 43
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L28-L43",
+          "why": "API instalada não expõe hook de admission53."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 304,
+            "end": 306
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L304-L306",
+          "why": "Application chama execute canônico diretamente."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/index.ts",
+          "blob": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+          "lines": {
+            "start": 12,
+            "end": 32
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/index.ts#L12-L32",
+          "why": "registro liga ProcurementModule canônico."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+          "lines": {
+            "start": 651,
+            "end": 660
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/business-services.ts#L651-L660",
+          "why": "composição usa preparação, não lifecycle/admission53."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+          "blob": "7239db74d724e95f007f9815f5e88b5199dd62df",
+          "lines": {
+            "start": 126,
+            "end": 144
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts#L126-L144",
+          "why": "harness de teste envolve execute e chama current; não é instalação."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+          "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+          "lines": {
+            "start": 19,
+            "end": 33
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/procurement-scenario-services.ts#L19-L33",
+          "why": "substituição financeira permanece explicitamente blocked."
+        }
+      ],
+      "required": "60/owner autorizado devem instalar hook de admissão vinculado ao Request/contexto/command exatos, dentro da transação após fresh auth, imediatamente antes de um único execute. Qualificar no produto composto. Preservar edição direta autorizada, CAS, holders e alçadas. M31/MI07 original permanece aberto; draft-save→submit→approve de valor congelado não fecha substituição ainda não gravada seguida de Apply.",
+      "owner": "60 + owner Procurement53/Decisions designado; S0 decide aceite",
+      "does_not_claim": "Ausência de ligação não demonstra bypass financeiro; o cenário está bloqueado.",
+      "authority_note": "Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60."
+    }
+  ],
+  "GLOBAL_RELEASE": false,
+  "publication_authority_note": "Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60.",
+  "completed_at": "2026-11-15 02:34:10 UTC"
+}

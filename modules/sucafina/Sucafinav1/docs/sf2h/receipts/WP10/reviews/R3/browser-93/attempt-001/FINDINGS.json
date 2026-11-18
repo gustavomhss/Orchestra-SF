@@ -1,0 +1,163 @@
+{
+  "schema": "sf2h.r3.findings.v1",
+  "campaign": "sf2h-integral-20261112",
+  "role": "S3-R3",
+  "status": "PRELIMINARY_FIX_FIRST",
+  "sourceSha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "sourceTree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+  "findings": [
+    {
+      "id": "R3-NATIVE-01",
+      "severity": "BLOCKER",
+      "status": "OPEN_MISSING_INSTALLED_PROOF",
+      "scope": [
+        "AM01",
+        "WP10.T03",
+        "WP12"
+      ],
+      "owner": "90 (runtime), 71 (compose), S0",
+      "facts": "C44 source contains five profiles, eighteen skill directories and digest-checked SessionV2.skill loader. Separate owner68 source W proves 25 load receipts across 18 skills, five profiles; no 18-entry execution→schema-valid output→persisted consumer-after-reload matrix on frozen C, or shipping from packaged runtime.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/ai/resident.ts",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/apps/cli/src/sucafina-product/native-host.ts#L143-L168",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edb91ea6466683437f13bfb983d473303e12cdd4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runtime-qualification.json"
+      ],
+      "action": "For each of 18 skill IDs: capture shipped path+bytes/hash, source capability, SessionV2 load message, actual model/provider result, schema-valid persisted output, read and authorized UI/consumer action after reload. Keep synthetic fixture identities labeled."
+    },
+    {
+      "id": "R3-MCP-02",
+      "severity": "BLOCKER",
+      "status": "OPEN_MISSING_23_POSITIVE_CALLS",
+      "scope": [
+        "AM02",
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "owner": "68 (MCP owner, PR81), 71, S0",
+      "facts": "Manifest 8 packs/39 operations and 39 bindings. Owner68 matrix: 9 real-domain MCP SDK positives (4 public ToolRegistry settle), 4 additional UI real positives, 3 synthetic-projection only, 23 without credited positive selected call; two scenario calls only literal skill receipts. Component paths are not native C execution.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edb91ea6466683437f13bfb983d473303e12cdd4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runtime-qualification.json"
+      ],
+      "action": "Complete all 39 real handler/export/schema/owner positive+negative, public MCP native tool execution, authorized UI/direct parity and actual consumers. Preserve per-operation IDs/hashes, denial/revocation; do not credit binding-only."
+    },
+    {
+      "id": "R3-TASK-03",
+      "severity": "BLOCKER",
+      "status": "OPEN_NATIVE_CHAIN_NOT_PROVEN",
+      "scope": [
+        "AM03",
+        "AM04",
+        "AM06",
+        "WP09",
+        "WP11",
+        "WP12"
+      ],
+      "owner": "90 (runtime origin/Task), 71, 45 checks, S0",
+      "facts": "Mission64 PR80 explicitly declares 158 PASS are component cases with synthetic grants/witnesses and nonexecuting Task; provider/Task/Relay/Schedule/reload HOLD. Native90 new branch has source for bounded original Request admission but is not composed into C44 at observed snapshot.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/apps/cli/src/sucafina-product/native-execution.ts",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/74667973b737bb9dd1ee448d54ef32365fe0734e/apps/cli/src/sucafina-product/routine-native-origin.ts",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/80"
+      ],
+      "action": "Integrate mission90 under 71 ownership and capture original authenticated HTTP Request→native provider/Task actually executed→Relay→immutable artifact+digest→durable publication→fresh-authority consumer after restart; test revoke/parallel principals, cancel, lease expiry, idempotency, Schedule admission."
+    },
+    {
+      "id": "R3-ATLAS-04",
+      "severity": "BLOCKER",
+      "status": "OPEN_AM05_COMPOSED_PROOF",
+      "scope": [
+        "AM05",
+        "WP06",
+        "WP10",
+        "WP14"
+      ],
+      "owner": "69 Atlas owner (PR79), 71, S0",
+      "facts": "C44 source uses Atlas boundary native-memory and business-memory-ports; scanner probe uses a pinned gitleaks binary. PR79 F1 demonstrates limited SQLite child-process restart/read with deny cases; F2 had 8PASS while C12 fixture gates remained blocked. Neither result is a frozen-C native MemoryEmit→scanner→DurableMemory→restart→recall→UI precedent consumer AM05.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/79"
+      ],
+      "action": "Prove canonical generated bundles/AST guard, real scanner and fail-closed branches, MemoryEmit+append+commit+separate-process restart/recall and cross-principal revocation on same frozen C with authorized consumer; isolate gitleaks Atlas from ClamD Operations."
+    },
+    {
+      "id": "R3-SCANNER-05",
+      "severity": "CONTEXT",
+      "status": "SCOPED_REAL_PROOF_NOT_FINAL",
+      "scope": [
+        "WP06",
+        "AM05"
+      ],
+      "owner": "75/71 (Operations), 45 (CI)",
+      "facts": "Actions43672349552 source W75 R3: 7 PASS real ClamD clean/EICAR/size-error/down/malformed and private paths. Actions43675784039 snapshot 901dc9 child of C40 eb58cd: 5 original Operations PASS, artifact14146162056 sha256:11fd4542d0a29a1841a0a640b7100cf04a340b0948db60a13139c262898a8d21. Neither has product SHA C44; do not reattribute.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672349552",
+        "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675784039",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/4789c5c004e1a99c3def8e9d900979cbd94af77a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-installed-finish/ci/R4-result.json"
+      ],
+      "action": "Keep R3/R4 scoped PASS by source sha; S0/45 establish whether material deltas after C40 require fresh selected proof on frozen C, without unnecessary identical rerun."
+    },
+    {
+      "id": "R3-EXPORT-06",
+      "severity": "BLOCKER",
+      "status": "OPEN_VISUAL_AND_CONTRADICTORY_AVAILABILITY",
+      "scope": [
+        "WP06",
+        "WP10.T03",
+        "88"
+      ],
+      "owner": "88 (PR93), 71, 86 functional egress",
+      "facts": "Three historic Actions runs have 0 artifacts each, but mission66 commit097e05e stores 14 actual file blobs in Git: R1=10, R2=2, R3=2, with per-file SHA256/manifest. The STATUS-83 claim 'historicalOriginalsAvailable=false' is materially incomplete. No complete rendered gallery, pre/post independent digest check, CSV/JSON/HTML inspection evidenced in PR93; egress is separate.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/artifacts/R1/index.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/artifacts/R2/index.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/artifacts/R3/index.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/a1be5ae4e7e934ca1c47674ee0b166cc560e2b31/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-visual-proof/STATUS-83.json"
+      ],
+      "action": "Reader88: source the 14 original Git blobs, independently compare index SHA256 against bytes, preserve originals, render/inspect all 14 including tab/page/slide, CSV/HTML/JSON, publish gallery. A new generation must be separately labeled. Egress owner86 separately proves 403/409 on composed candidate."
+    },
+    {
+      "id": "R3-CI-07",
+      "severity": "BLOCKER",
+      "status": "OPEN_EIGHT_SELECTIONS_AND_COMPILERS",
+      "scope": [
+        "CI-SF",
+        "CI-CLI",
+        "CI-APP-SRC",
+        "CI-APP-BROWSER",
+        "CI-ATLAS-BUSINESS",
+        "E2E-OPERATIONS",
+        "E2E-DECISIONS",
+        "E2E-REPORTS",
+        "G7"
+      ],
+      "owner": "45 (PR32), 71, S0",
+      "facts": "At C44, final epic YAML and request validator exist; 3 nominal Playwright specs exist; tsconfig.sf-e2e.json explicitly includes them. Tooling handoff records 8 request static validation and 47 declared compiler roots; compiler, 5 package typechecks, effective E2E program, final epic/selection executions are NOT_RUN there. REST Actions head_sha=eecbdacb returned 0. No eight same-product-C success ledger or artifact proof.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/.github/workflows/sf2-epic.yml",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/packages/app-shell/tsconfig.sf-e2e.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/HANDOFF-FINAL.md"
+      ],
+      "action": "After S0 freeze C, 45 deduplicates exact 8 requests and epic with source C and allowable S child, verify exact selection, 5 package typechecks, E2E effective showConfig/listFiles, Playwright 5+4+4, Atlas generator/check, Omni, spawn guard, test/CI logs, job artifacts. Do not relabel green on other SHA."
+    },
+    {
+      "id": "R3-CANDIDATE-08",
+      "severity": "BLOCKER",
+      "status": "OPEN_FREEZE_C_AND_D_GATES",
+      "scope": [
+        "C",
+        "D",
+        "G7",
+        "G8",
+        "GLOBAL_RELEASE"
+      ],
+      "owner": "71 (sole integrator), 45, S0",
+      "facts": "Observed sf2-stack=C44 eecbdacb at review T0; 90's branch advanced separately. No explicit accepted frozen C, no completed AM01-AM06 integrated-proof receipts under WP10 at source C, no D evidence envelope or separate origin/dev guard receipts C/G7 and D/G8. PR65 remains draft and no GLOBAL_RELEASE authorization.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/65",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/.github/workflows/sf2-epic.yml"
+      ],
+      "action": "S0/71 explicitly freeze and publish new C+tree+selection envelopes, compose owner releases, re-review deltas. 45 run G7 at C with origin/dev, then D evidence-only with hashes/provenance and G8 at D. Three independent FINAL opinions after fixes. Never mark release from review receipt."
+    }
+  ]
+}
