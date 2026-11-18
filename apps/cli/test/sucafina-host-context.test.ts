@@ -110,44 +110,43 @@ test("the actual server root registers resident agents and skills and releases t
     expect(runtime.identity()).toBeUndefined()
     expect(runtime.services?.()).toBeUndefined()
   } finally { await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
-}, 60_000)
-
-test("a real fence from a second bundled module fails the CLI's exact anti-forgery guard", async () => {
-  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-fence-identity-"))
-  const driver = await openLocalStore(path.join(directory, "business"))
-  try {
-    // Match the real packaging boundary: a separately bundled copy carries
-    // another module-private WeakSet, even if it wraps the same real driver.
-    const built = await Bun.build({
-      entrypoints: [path.resolve(import.meta.dir, "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts")],
-      target: "bun", format: "esm", splitting: false, minify: true,
-    })
-    expect(built.success).toBe(true)
-    expect(built.outputs).toHaveLength(1)
-    const otherModule = path.join(directory, "foreign-current-choice.mjs")
-    await Bun.write(otherModule, await built.outputs[0]!.arrayBuffer())
-    const foreign = await import(pathToFileURL(otherModule).href)
-    const deps = {
-      persistence: driver,
-      host: () => { throw new Error("SF_CURRENT_CHOICE_HOST_UNAVAILABLE") },
-      identity: () => undefined,
-      operationIdentity: () => undefined,
+  {
+    const fenceDirectory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-fence-identity-"))
+    const fenceDriver = await openLocalStore(path.join(fenceDirectory, "business"))
+    try {
+      // Match the real packaging boundary: a separately bundled copy carries
+      // another module-private WeakSet, even if it wraps the same real driver.
+      const built = await Bun.build({
+        entrypoints: [path.resolve(import.meta.dir, "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts")],
+        target: "bun", format: "esm", splitting: false, minify: true,
+      })
+      expect(built.success).toBe(true)
+      expect(built.outputs).toHaveLength(1)
+      const otherModule = path.join(fenceDirectory, "foreign-current-choice.mjs")
+      await Bun.write(otherModule, await built.outputs[0]!.arrayBuffer())
+      const foreign = await import(pathToFileURL(otherModule).href)
+      const deps = {
+        persistence: fenceDriver,
+        host: () => { throw new Error("SF_CURRENT_CHOICE_HOST_UNAVAILABLE") },
+        identity: () => undefined,
+        operationIdentity: () => undefined,
+      }
+      const foreignFence = foreign.createCurrentChoiceFence(deps) as ReturnType<typeof createCurrentChoiceFence>
+      expect(foreign.isCurrentChoiceFence(foreignFence)).toBe(true)
+      expect(isCurrentChoiceFence(foreignFence)).toBe(false)
+      // Deliberately unreachable collaborators: the real service must reject
+      // the valid-but-foreign fence *before* touching authority or business.
+      expect(() => createSfCurrentChoiceServices({
+        authority: undefined as never, business: undefined as never,
+        fence: foreignFence, proposalCoverageWrites: new WeakSet(),
+      })).toThrow("SF_CURRENT_CHOICE_REAL_FENCE_REQUIRED")
+      const owned = createCurrentChoiceFence(deps)
+      expect(isCurrentChoiceFence(owned)).toBe(true)
+      expect(isCurrentChoiceFence({ ...owned })).toBe(false)
+      expect(foreign.isCurrentChoiceFence(owned)).toBe(false)
+    } finally {
+      await fenceDriver.dispose()
+      await rm(fenceDirectory, { recursive: true, force: true })
     }
-    const foreignFence = foreign.createCurrentChoiceFence(deps) as ReturnType<typeof createCurrentChoiceFence>
-    expect(foreign.isCurrentChoiceFence(foreignFence)).toBe(true)
-    expect(isCurrentChoiceFence(foreignFence)).toBe(false)
-    // Deliberately unreachable collaborators: the real service must reject
-    // the valid-but-foreign fence *before* touching authority or business.
-    expect(() => createSfCurrentChoiceServices({
-      authority: undefined as never, business: undefined as never,
-      fence: foreignFence, proposalCoverageWrites: new WeakSet(),
-    })).toThrow("SF_CURRENT_CHOICE_REAL_FENCE_REQUIRED")
-    const owned = createCurrentChoiceFence(deps)
-    expect(isCurrentChoiceFence(owned)).toBe(true)
-    expect(isCurrentChoiceFence({ ...owned })).toBe(false)
-    expect(foreign.isCurrentChoiceFence(owned)).toBe(false)
-  } finally {
-    await driver.dispose()
-    await rm(directory, { recursive: true, force: true })
   }
-}, 30_000)
+}, 60_000)
