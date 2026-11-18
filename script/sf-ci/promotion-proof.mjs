@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // WP10: topology proof only. Never approves release, changes PR #237, or pushes.
 import { spawnSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { mkdtempSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -46,21 +47,25 @@ function mergeTree(goSha, headSha) {
     if (!SHA.test(treeSha || '')) fail('MERGE_TREE_INVALID', 'git merge-tree returned no valid tree SHA');
     return { method: 'git merge-tree --write-tree', treeSha };
   }
-  // Older Git releases lack --write-tree. A temporary detached worktree performs
-  // a strictly fast-forward merge, without creating a merge commit or touching a branch.
+  // Older Git releases lack --write-tree. Use a private, named temporary branch
+  // in a separate worktree: no detached HEAD, protected ref updates or merge commits.
   if (!/unknown option|unrecognized option|usage:\s*git merge-tree/i.test(attempt.stderr || '')) {
     fail('MERGE_TREE_CONFLICT', (attempt.stderr || attempt.stdout).trim());
   }
   const dir = mkdtempSync(join(tmpdir(), 'sf-promotion-proof-'));
+  const branch = 'promotion-proof-temp-' + randomUUID();
   let added = false;
   try {
-    git('worktree', 'add', '--detach', dir, goSha);
+    git('worktree', 'add', '-b', branch, dir, goSha);
     added = true;
     command('git', ['merge', '--ff-only', headSha], dir);
-    return { method: 'temporary detached worktree: git merge --ff-only',
+    return { method: 'temporary named worktree: git merge --ff-only',
       treeSha: command('git', ['rev-parse', 'HEAD^{tree}'], dir).stdout.trim() };
   } finally {
-    if (added) command('git', ['worktree', 'remove', '--force', dir], ROOT);
+    if (added) {
+      command('git', ['worktree', 'remove', '--force', dir], ROOT);
+      command('git', ['branch', '--delete', branch], ROOT);
+    }
     rmSync(dir, { recursive: true, force: true });
   }
 }
@@ -202,7 +207,7 @@ function checkPinned(stored, live) {
     fail('PROOF_MODE_MISMATCH', 'Stored proof mode differs from this run: use --github for remote proof or no flag for local merge-tree');
   }
   if (live.proofStatus === 'TOPOLOGY_VERIFIED_ONLY' &&
-      (!['git merge-tree --write-tree', 'temporary detached worktree: git merge --ff-only'].includes(stored?.localMerge?.method) ||
+      (!['git merge-tree --write-tree', 'temporary named worktree: git merge --ff-only'].includes(stored?.localMerge?.method) ||
         stored?.localMerge?.treeSha !== live.localMerge.treeSha)) {
     fail('LOCAL_PROOF_MISSING', 'Stored proof has not been reproduced by local Git; rerun without --check');
   }
