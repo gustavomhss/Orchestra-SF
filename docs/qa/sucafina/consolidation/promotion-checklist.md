@@ -18,19 +18,19 @@ The SHA values above expire when either branch moves. `refs/pull/237/merge` is s
 
 ## Reproduce and check the promotion proof
 
-The published JSON was verified **remotely** by querying the GitHub API using GitHub MCP (the synthetic merge ref is a real GitHub-generated merge commit, not a locally generated commit). Reproduce GitHub-only verification with `gh` credentials; **no local Git or product test invocation** is required for this mode:
+The verifier now uses Orchestra `AppProcess` / `ChildProcessSpawner` (not direct `node:child_process`); run it with **Bun** from the repository root. No spawn allow-list changes are permitted. The published JSON was verified **remotely** by querying the GitHub API using GitHub MCP (the synthetic merge ref is a real GitHub-generated merge commit, not a locally generated commit). Reproduce GitHub-only verification with `gh` credentials; **no local Git or product test invocation** is required for this mode:
 
 ```bash
-node script/sf-ci/promotion-proof.mjs --github
-node script/sf-ci/promotion-proof.mjs --github --check
+bun script/sf-ci/promotion-proof.mjs --github
+bun script/sf-ci/promotion-proof.mjs --github --check
 cat docs/qa/sucafina/consolidation/promotion-proof.json
 ```
 
 For the **separate local merge-tree proof** required by the original WP10 scope, use an isolated worktree on `promotion-readiness` (no branch checkout on any protected branch):
 
 ```bash
-node script/sf-ci/promotion-proof.mjs
-node script/sf-ci/promotion-proof.mjs --check
+bun script/sf-ci/promotion-proof.mjs
+bun script/sf-ci/promotion-proof.mjs --check
 ```
 
 The local mode fetches refs and invokes `git merge-tree --write-tree` (or a private temporary named-branch worktree with `git merge --ff-only` on older Git). The GitHub-only mode uses the GitHub compare API, Git commit/tree objects, and `refs/pull/237/merge` parentage to independently verify the **remote topology**, while persisting `localMerge.method=NOT_RUN`. Mode-specific `--check` rejects absent/wrong-mode/stale evidence and refuses a non-draft PR or drifted base/head/merge ref. These commands do not qualify product behavior or authorize release.
@@ -41,7 +41,7 @@ Each row requires a real artifact or the **exact** command below, associated wit
 
 | # | Required proof | Exact evidence artifact / retrieval command | State |
 | ---: | --- | --- | --- |
-| 01 | Fast-forward, locally built merge tree and pinned refs | `docs/qa/sucafina/consolidation/promotion-proof.json`; `node script/sf-ci/promotion-proof.mjs --github --check` (remote only); `node script/sf-ci/promotion-proof.mjs --check` (local, after local generation) | **PARTIAL: remote VERIFIED, local NOT_RUN** |
+| 01 | Fast-forward, locally built merge tree and pinned refs | `docs/qa/sucafina/consolidation/promotion-proof.json`; `bun script/sf-ci/promotion-proof.mjs --github --check` (remote only); `bun script/sf-ci/promotion-proof.mjs --check` (local, after local generation) | **PARTIAL: remote VERIFIED, local NOT_RUN** |
 | 02 | Full green baseline **and** full green PR merge-ref CI; no cancelled/skipped/unknown lanes | `gh run view "$BASELINE_RUN_ID" --repo gustavomhss/Orchestra-SF --json headSha,conclusion,jobs`; `gh run view "$MERGE_RUN_ID" --repo gustavomhss/Orchestra-SF --json headSha,conclusion,jobs`; require respective heads `ec3df1315cfd3e3077c09f7bc1f42a608448b1c0` and `7ce5a6215818896c57a9ec7e70d41c4386dfbc85` (repin when moved) | **BLOCKED: latest observed `sf-ci` run `44182616679` failed; merge-ref CI not established** |
 | 03 | Linux package plus SHA-256 of **every** distributed binary; tied to the merge SHA | `gh run download "$MERGE_RUN_ID" --repo gustavomhss/Orchestra-SF -n "sf-omni-linux-7ce5a6215818896c57a9ec7e70d41c4386dfbc85" -D /tmp/sf-237/package`; `find /tmp/sf-237/package -type f -print0 \| sort -z \| xargs -0 sha256sum > /tmp/sf-237/package-files.sha256` (Linux runner); archive/upload immutable `package-files.sha256` with run ID | **NOT_VERIFIED** |
 | 04 | Package extraction / factory acceptance on the **same** package digest | `gh run view "$MERGE_RUN_ID" --repo gustavomhss/Orchestra-SF --json jobs`; installed extraction log artifact **to be attached** as `promotion-evidence/package-extraction.json` with SHA-256 from row 03 | **NOT_VERIFIED** |
