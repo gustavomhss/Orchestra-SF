@@ -15,7 +15,6 @@ export type SfCaseControls = Readonly<{
     horizon: Readonly<{ start: string; end: string }>
     currency: string
     scenarios: readonly Readonly<{ ref: string; title: string; alternativeId: string; parameters: readonly Readonly<{ ref: string; label: string }>[] }>[]
-    alternatives: readonly Readonly<{ id: string; title: string; version: number }>[]
     rules: readonly Readonly<{ id: string; expectedVersion?: number }>[]
     priorities: readonly Readonly<{ id: string; description: string }>[]
     unitSelection: null | Readonly<{ scenarioRef: string; baselineRef: string; parameterRef: string }>
