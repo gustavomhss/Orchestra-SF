@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.preliminary-r02.ack.v1",
+  "mission": 147,
+  "review": "PRE-R02",
+  "state": "ACK_ACTIVE_PRELIMINARY_ONLY",
+  "actual_actor": "ChatGPT, new review conversation",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_reason": "Not exposed by active session",
+  "campaign": "sf2h-integral-20261112",
+  "epoch": "pre-r02-e1-browser147",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-review-integrity",
+  "base_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "base_tree": "c792f5d0d3be378ca86aea09bcabdd8781734d8f",
+  "source_packet": {
+    "commit": "81fbb8364ca474db8f718faad20c9235519e98fe",
+    "blob": "86a6337ebb97a770488a6eb5ac845c3203a9c53a"
+  },
+  "agencies": {
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "fence_132_blob": "a9e06598c464998c1e47b2747cc1cd378d02df73",
+    "advance_index_blob": "c58ad59e43dbbd1a30ad208a5b1410bd4a381469",
+    "sole_integrator": "132/PR65",
+    "compiler": "149/PR107",
+    "surgical_ci": "150/PR106",
+    "native_goal": "PAUSED"
+  },
+  "candidate": {
+    "material_sha": "d8f14f81855858120f914af4f3934406bfdb74f1",
+    "accepted": false,
+    "final_C": false,
+    "known_sf2_stack_live_head_at_ack": "eedb7f463d35192a9c31076f50a25b4e5deb24f1"
+  },
+  "review_boundary": {
+    "product_tests": "READ_ONLY",
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r02/preliminary147/",
+    "release_approval": false,
+    "waiver": false,
+    "checks": "NOT_RUN"
+  },
+  "independence": "No product/test authorship in this review session",
+  "baseline_overlap": "PR100/PR97/PR98 acknowledged for dedup",
+  "next": "Inspect real current cut code and delivered PR deltas, publish causal findings and send exact recheck requests to owners and 132"
+}
