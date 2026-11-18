@@ -2,7 +2,6 @@ import { biViews } from "../../../../modules/sucafina/Sucafinav1/product/analyti
 import { renderBiView, restoreBiFocus } from "../../../../modules/sucafina/Sucafinav1/product/analytics/view.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
-import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { SfBiOptions } from "./extended-bi-options.ts"
 import { renderSfBiNavigationDetail, sfBiSourceNavigationKey } from "./extended-bi-navigation-view.ts"
 import type { SfBiNavigation, SfBiNavigationDetail, SfBiNavigationKind } from "./extended-bi-navigation-view.ts"
@@ -18,9 +17,6 @@ if (root) {
   const initialChoice = restored ? remembered("selection") ?? "" : initial.searchParams.get("selectionRef") ?? (initial.searchParams.has("baseRef") && initial.searchParams.has("candidateRef") ? "planner" : undefined)
   let restoreChoice: { selection: string | undefined; baseline: string; candidate: string } | undefined = { selection: initialChoice, baseline: remembered("baseline") ?? (restored ? "" : initial.searchParams.get("baseRef") ?? ""), candidate: remembered("candidate") ?? (restored ? "" : initial.searchParams.get("candidateRef") ?? "") }
   let returnFocus = remembered("focus"), restoreData = restored?.ready === true
-  let returnOrigin = /^[a-f0-9]{64}$/.test(remembered("originDigest") ?? "") ? remembered("originDigest") : undefined
-  const savedPeriod = { start: remembered("visualStart") ?? "", end: remembered("visualEnd") ?? "" }
-  let visualPeriod = isSfPeriod(savedPeriod) ? savedPeriod : undefined
   const form = document.createElement("form"), view = document.createElement("select")
   view.setAttribute("aria-label", "Visualização")
   for (const entry of biViews) { const option = document.createElement("option"); option.value = entry.id; option.textContent = `${entry.id} · ${entry.question}`; view.append(option) }
@@ -62,13 +58,11 @@ if (root) {
       regionOffsets: [...section.querySelectorAll<HTMLElement>('[role="region"]')].map((region) => region.scrollLeft) }
   }
   const forgetDetail = () => { selectedDetail = undefined; detailPosition = undefined }
-  const restoreFocus = () => returnFocus ? restoreBiFocus(content, { valueId: returnFocus, ...(returnOrigin ? { originDigest: returnOrigin } : {}) }) : false
   const remember = () => {
     const state = history.state && typeof history.state === "object" ? history.state : {}
     history.replaceState({ ...state, sfExtendedBi: { path: location.pathname, viewId: view.value, start: start.value, end: end.value,
       selection: selection.value, baseline: baseline.value, candidate: candidate.value, currency: currency.value,
-      ...(returnFocus ? { focus: returnFocus, ...(returnOrigin ? { originDigest: returnOrigin } : {}) } : {}),
-      ...(visualPeriod ? { visualStart: visualPeriod.start, visualEnd: visualPeriod.end } : {}), ready: displayed } }, "")
+      ...(returnFocus ? { focus: returnFocus } : {}), ready: displayed } }, "")
   }
   const forget = () => {
     const state = history.state && typeof history.state === "object" ? { ...history.state } : {}
@@ -116,7 +110,7 @@ if (root) {
     selection.replaceChildren(option("", "Escolha os dados autorizados")); baseline.replaceChildren(option("", "Escolha a versão base")); candidate.replaceChildren(option("", "Escolha a versão candidata"))
     links.replaceChildren(); content.replaceChildren(); choiceState()
     forgetDetail()
-    if (!preserveNavigation) { displayed = false; returnFocus = undefined; returnOrigin = undefined; visualPeriod = undefined; restoreChoice = undefined; restoreData = false; forget() }
+    if (!preserveNavigation) { displayed = false; returnFocus = undefined; restoreChoice = undefined; restoreData = false; forget() }
     status.textContent = "O acesso mudou. Abra novamente os dados autorizados."
   }
   const readJson = (url: URL, parent: AbortController) => boundedRead(parent, async (signal) => {
@@ -158,10 +152,7 @@ if (root) {
       else if (previous === "planner" && data.versions.some((entry) => entry.ref === held?.baseline) && data.versions.some((entry) => entry.ref === held?.candidate)) { selection.value = "planner"; baseline.value = held!.baseline; candidate.value = held!.candidate }
       else if (previous === undefined && ["BI01", "BI07", "BI08"].includes(view.value) && data.choices.length === 1) selection.value = data.choices[0]!.selectionRef
       status.textContent = ["Escolha os dados e atualize a visualização.", ...data.limitations].join(" ")
-      if (previous && !selection.value) {
-        forgetDetail(); displayed = false; returnFocus = undefined; returnOrigin = undefined; visualPeriod = undefined; restoreData = false
-        status.textContent = "A seleção deixou de pertencer às escolhas autorizadas. Escolha os dados atuais para continuar."
-      }
+      if (selectedDetail && !selection.value) { forgetDetail(); status.textContent = "O detalhe deixou de pertencer às escolhas autorizadas. Escolha os dados atuais para continuar." }
       accessChanged = false
       choiceState()
       remember()
@@ -196,17 +187,16 @@ if (root) {
       const openDecision = async (kind: SfBiNavigationKind, key: string, focus: string, restoring = false) => {
         if (attempt !== generation || active.signal.aborted) return
         navigationRead?.abort(); const currentNavigation = ++navigationAttempt
-        content.querySelector("[data-sf-bi-detail]")?.remove()
-        content.querySelector("[data-sf-bi-source-links]")?.remove()
-        const position = restoring ? detailPosition : undefined
         const entries = Array.isArray(navigation?.entries) ? navigation.entries.filter((entry) => entry?.kind === kind && entry.key === key && /^[a-f0-9]{64}$/.test(entry.token)) : []
-        if (!navigation || !/^[a-f0-9]{64}$/.test(navigation.snapshot) || entries.length !== 1) { forgetDetail(); status.textContent = "O detalhe deixou de pertencer à análise atual. Escolha um destino autorizado para continuar."; if (returnFocus) restoreFocus(); return }
+        if (!navigation || !/^[a-f0-9]{64}$/.test(navigation.snapshot) || entries.length !== 1) { forgetDetail(); status.textContent = "O detalhe deixou de pertencer à análise atual. Escolha um destino autorizado para continuar."; if (returnFocus) restoreBiFocus(content, returnFocus); return }
+        const position = restoring ? detailPosition : undefined
         forgetDetail()
         navigationRead = new AbortController()
         const currentRead = navigationRead
         const cancel = () => currentRead.abort(active.signal.reason)
         active.signal.addEventListener("abort", cancel, { once: true })
-        returnFocus = focus; returnOrigin = undefined; remember()
+        returnFocus = focus; remember()
+        content.querySelector("[data-sf-bi-detail]")?.remove()
         status.textContent = "Abrindo o detalhe autorizado desta análise…"
         try {
           const endpoint = new URL(location.href)
@@ -224,7 +214,7 @@ if (root) {
             forgetDetail()
             opened.section.remove()
             status.textContent = "Análise atual preservada."
-            if (returnFocus) restoreFocus()
+            if (returnFocus) restoreBiFocus(content, returnFocus)
           })
           selectedDetail = { kind, key, focus, selectionRef: request.value.selectionRef, viewId: request.value.viewId, start: request.value.period.start, end: request.value.period.end }
           content.prepend(opened.section)
@@ -245,32 +235,24 @@ if (root) {
         if (attempt !== generation || active.signal.aborted) return
         forgetDetail()
         navigationRead?.abort(); const currentNavigation = ++navigationAttempt
-        content.querySelector("[data-sf-bi-detail]")?.remove()
-        content.querySelector("[data-sf-bi-source-links]")?.remove()
-        if (!selected.reference) { status.textContent = "Escolha uma origem explícita deste valor."; restoreFocus(); return }
+        if (!selected.reference) { status.textContent = "Escolha uma origem explícita deste valor."; return }
         navigationRead = new AbortController(); const currentRead = navigationRead
         const cancel = () => currentRead.abort(active.signal.reason)
         active.signal.addEventListener("abort", cancel, { once: true })
-        returnFocus = selected.valueId; returnOrigin = selected.reference.refDigest
-        if (selected.visualPeriod) visualPeriod = { ...selected.visualPeriod }
-        remember()
+        returnFocus = selected.valueId; remember()
+        content.querySelector("[data-sf-bi-detail]")?.remove()
         try {
-        status.textContent = "Abrindo a origem autorizada deste valor…"
         const source = new URL(location.href)
         source.search = new URLSearchParams({ sf: "bi-source", selectionRef: selected.selectionRef, viewId: request.value.viewId, start: request.value.period.start, end: request.value.period.end, valueId: selected.valueId, referenceDigest: selected.reference.refDigest }).toString()
         const found = await readJson(source, currentRead)
         if (!found) return
         const opened = found.response, value = found.body
         if (attempt !== generation || active.signal.aborted || currentRead.signal.aborted || currentNavigation !== navigationAttempt) return
-        if (!opened.ok || !Array.isArray(value?.links) || !value.links.length) { status.textContent = "A origem não está disponível para esta seleção. Recarregue as escolhas e confira seu acesso."; restoreFocus(); return }
-        const sources = document.createElement("nav"); sources.setAttribute("aria-label", "Origens autorizadas do valor"); sources.setAttribute("data-sf-bi-source-links", "")
+        if (!opened.ok || !Array.isArray(value?.links) || !value.links.length) { status.textContent = "A origem não está disponível para esta seleção. Recarregue as escolhas e confira seu acesso."; return }
+        const sources = document.createElement("nav"); sources.setAttribute("aria-label", "Origens autorizadas do valor")
         for (const link of value.links) { const destination = typeof link.url === "string" ? safeDestination(link.url) : undefined; if (!destination) continue; const anchor = document.createElement("a"); anchor.href = destination.toString(); anchor.textContent = link.label; sources.append(anchor, document.createTextNode(" ")) }
-        const firstSource = sources.querySelector<HTMLAnchorElement>("a")
-        if (!firstSource) { status.textContent = "A origem não tem um destino autorizado disponível."; restoreFocus(); return }
         content.append(sources)
-        firstSource.focus()
-        status.textContent = "Origens autorizadas. Escolha a fonte para abrir o registro."
-        } catch { if (attempt === generation && !active.signal.aborted && !currentRead.signal.aborted && currentNavigation === navigationAttempt) { status.textContent = "A origem não está disponível. Recarregue as escolhas autorizadas."; restoreFocus() } }
+        } catch { if (attempt === generation && !active.signal.aborted && !currentRead.signal.aborted && currentNavigation === navigationAttempt) status.textContent = "A origem não está disponível. Recarregue as escolhas autorizadas." }
         finally { active.signal.removeEventListener("abort", cancel) }
       }, body.presentation as BiPresentation, {
         openSource: (source) => { void openDecision("source", sfBiSourceNavigationKey(source), source.id) },
@@ -279,14 +261,14 @@ if (root) {
         openQuestion: (reference) => { void openDecision("question", reference, reference) },
         openResult: (reference) => { void openDecision("result", reference, reference) },
         openCase: (reference) => { void openDecision("case", reference, reference) },
-      }, undefined, { period: visualPeriod, onPeriodChange: (period) => { visualPeriod = { ...period }; remember() } })
+      })
       content.replaceChildren(chart); status.textContent = "Dados atualizados."; accessChanged = false
       displayed = true; remember()
       if (heldDetail) {
         if (heldDetail.selectionRef === request.value.selectionRef && heldDetail.viewId === request.value.viewId && heldDetail.start === request.value.period.start && heldDetail.end === request.value.period.end)
           await openDecision(heldDetail.kind, heldDetail.key, heldDetail.focus, true)
-        else { forgetDetail(); status.textContent = "A seleção mudou durante a atualização. Escolha um detalhe da análise atual."; if (returnFocus) restoreFocus() }
-      } else if (returnFocus) restoreFocus()
+        else { forgetDetail(); status.textContent = "A seleção mudou durante a atualização. Escolha um detalhe da análise atual."; if (returnFocus) restoreBiFocus(content, returnFocus) }
+      } else if (returnFocus) restoreBiFocus(content, returnFocus)
     } catch (error) { if (attempt === generation) status.textContent = `Seleção indisponível: ${error instanceof Error ? error.message : "erro de leitura"}. Recarregue as escolhas; nenhum resultado alternativo foi selecionado.` }
     finally { if (attempt === generation) choiceState(); scheduleRefresh() }
   }
@@ -294,13 +276,13 @@ if (root) {
     forgetDetail()
     generation++; optionsGeneration++; controller?.abort(); optionsController?.abort(); content.replaceChildren()
     status.textContent = "Atualize a visualização para a seleção atual."
-    displayed = false; returnFocus = undefined; returnOrigin = undefined; visualPeriod = undefined; restoreChoice = undefined; restoreData = false; remember()
+    displayed = false; returnFocus = undefined; restoreChoice = undefined; restoreData = false; remember()
     choiceState(); scheduleRefresh()
   }
   selection.addEventListener("change", selectionChanged); baseline.addEventListener("change", selectionChanged); candidate.addEventListener("change", selectionChanged); currency.addEventListener("input", selectionChanged)
-  const filtersChanged = () => { forgetDetail(); displayed = false; returnFocus = undefined; returnOrigin = undefined; visualPeriod = undefined; restoreChoice = undefined; restoreData = false; void loadOptions() }
+  const filtersChanged = () => { forgetDetail(); displayed = false; returnFocus = undefined; restoreChoice = undefined; restoreData = false; void loadOptions() }
   view.addEventListener("change", filtersChanged); start.addEventListener("change", filtersChanged); end.addEventListener("change", filtersChanged)
-  reload.addEventListener("click", () => { void refreshAuthorized() }); form.addEventListener("submit", (event) => { event.preventDefault(); void load() })
+  reload.addEventListener("click", () => { void loadOptions() }); form.addEventListener("submit", (event) => { event.preventDefault(); void load() })
   let checkingAccess = false
   const refreshAuthorized = async () => {
     if (stopped || checkingAccess) return
