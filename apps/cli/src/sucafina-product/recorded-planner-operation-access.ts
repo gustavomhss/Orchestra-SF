@@ -1,4 +1,3 @@
-import { authorizeSfCompositeProcurementOperations } from "./scenario-operation-access.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, Period, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -33,10 +32,8 @@ export function createSfRecordedPlannerOperationAccess(input: {
       const item = structuredClone(selected)
       const request = input.host.requestFor(call)
       const binding = digestSfValue([call.kind, call.binding])
-      const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
       const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request &&
-        binding === digestSfValue([call.kind, call.binding]) && !frame.cycle &&
-        requestDigest === digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+        binding === digestSfValue([call.kind, call.binding]) && !frame.cycle
       if (!currentAuthority() || !await input.host.revalidate(call) || !request ||
         ![...decision.alternatives, ...decision.choices].some((entry) => same(entry.scenario, item.scenario) && same(entry.result, item.result))) return false
       const parsed = decodeSfOperationInput("sf_scenario_simulate", item.scenario)
@@ -65,21 +62,8 @@ export function createSfRecordedPlannerOperationAccess(input: {
       }
       const base = select(item.scenario.baseRef)
       if (!base || !coversMonths(base.target.period!, item.result.horizon)) return false
-      const external = item.scenario.operations.some((operation) => operation.targetRef.startsWith("sf-procurement:"))
-      const observeExternal = async () => {
-        const observations: string[] = []
-        const authorized = await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: async (ref, context) => {
-          const resolution = structuredClone(await input.resolveEvidence(ref, context))
-          const projection = resolution.authorizedProjection
-          if (ref.kind === "record" && projection && "components" in projection) observations.push(digestSfValue(stableObservation({ ref, resolution, projection })))
-          return resolution
-        } }, decision, item, call)
-        return authorized ? observations.toSorted() : undefined
-      }
-      const externalBefore = external ? await observeExternal() : []
-      if (!externalBefore) return false
-      const operations = item.scenario.operations.filter((operation) => !operation.replacementRef?.startsWith("hot-topic-draft:") && !operation.targetRef.startsWith("sf-procurement:"))
-      if (!operations.length && !external) return false
+      const operations = item.scenario.operations.filter((operation) => !operation.replacementRef?.startsWith("hot-topic-draft:"))
+      if (!operations.length) return false
       const replacements = operations.map((operation) => operation.replacementRef ? amountSelector(operation.replacementRef) : undefined)
       if (operations.some((operation, index) => operation.replacementRef && (!replacements[index] || !select(replacements[index]!.source)))) return false
       const read = async () => {
@@ -117,8 +101,7 @@ export function createSfRecordedPlannerOperationAccess(input: {
         }
       }
       const second = await read()
-      if (!second || !same(first.map(stableObservation), second.map(stableObservation)) ||
-        external && !same(externalBefore, await observeExternal()) || !await readStored() ||
+      if (!second || !same(first.map(stableObservation), second.map(stableObservation)) || !await readStored() ||
         !await input.host.revalidate(call) || !currentAuthority() || !same(incoming, decision) || !same(selected, item)) return false
       return true
     } catch { return false }

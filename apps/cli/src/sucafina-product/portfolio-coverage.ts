@@ -1,4 +1,3 @@
-import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { randomUUID } from "node:crypto"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
@@ -79,8 +78,8 @@ export function createSfPortfolioCoverage(input: {
       !same({ id: current.value.id, incarnation: current.value.incarnation, version: current.value.version }, selection.caseRef) || preferences.status !== "ok" || !preferences.value) return undefined
     return digestSfValue({ case: current.value, preferences: preferences.value })
   }
-  const refsFor = (scenario: ScenarioResult, basis: CoverageClassification["basis"], entries: readonly CostCoverageEntry[]) =>
-    [...basis.sourceRefs, ...scenario.sourceRefs, ...entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
+  const refsFor = (scenario: ScenarioResult, classification: CoverageClassification, entries: readonly CostCoverageEntry[]) =>
+    [...classification.basis.sourceRefs, ...scenario.sourceRefs, ...entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
       .filter((ref, index, refs) => refs.findIndex((other) => same(other, ref)) === index)
   const fresh = async (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext) => {
     const values = await business.context.context({ refs }, call)
@@ -96,26 +95,14 @@ export function createSfPortfolioCoverage(input: {
     const before = await readState(held.value, call)
     const sources = await business.readSourceFences(call)
     const coverage = await business.plannerSources.resolveForecastCoverage(held.value.coverageRef, call)
-    if (!before || !sources || coverage.status !== "ok" || !same(coverage.value.assessment, baseline)) return unavailable()
-    let classification: CoverageClassification | undefined
-    if (business.procurementScenarios.producer.supports(held.value.scenario)) {
-      const current = await business.procurementScenarios.producer.preview(held.value.scenario, call)
-      if (current.status !== "ok" || !same(current.value.basis, coverage.value.basis) || !same(current.value.assessment, baseline) || baseline.entries.some((entry) => entry.status !== "pending")) return unavailable()
-      const result = current.value.scenario
-      const attributed: ScenarioResult = result.comparisonStatus === "complete"
-        ? { ...result, costCoverage: { ...result.costCoverage, alternativeId: scenario.costCoverage.alternativeId, alternativeVersion: scenario.costCoverage.alternativeVersion } }
-        : { ...result, costCoverage: { ...result.costCoverage, alternativeId: scenario.costCoverage.alternativeId, alternativeVersion: scenario.costCoverage.alternativeVersion } }
-      if (plannerScenarioDigest(attributed) !== plannerScenarioDigest(scenario)) return unavailable()
-    } else {
-      const current = await business.baselineCoverage.readClassification(held.value.scenario.baseRef, call)
-      if (current.status !== "ok" || !same(coverage.value.basis, current.value.basis) || current.value.source.refId !== held.value.scenario.baseRef ||
-        baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
-          !current.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
-      classification = current.value
-    }
+    const classification = await business.baselineCoverage.readClassification(held.value.scenario.baseRef, call)
+    if (!before || !sources || coverage.status !== "ok" || classification.status !== "ok" || !same(coverage.value.assessment, baseline) ||
+      !same(coverage.value.basis, classification.value.basis) || classification.value.source.refId !== held.value.scenario.baseRef ||
+      baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
+        !classification.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
     const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)
-    if (classification) for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification)
-    const refs = refsFor(scenario, coverage.value.basis, entries)
+    for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification.value)
+    const refs = refsFor(scenario, classification.value, entries)
     // A no-op keeps the baseline producer's exact assessment bytes, including
     // its source-first evidence order. Prove the complete one-to-one set
     // before asking the actual readers for those same references in that order.

@@ -17,7 +17,6 @@ import { createSfReviewHistory } from "./review-history.ts"
 import { createSfReviewHandoffs } from "./review-handoffs.ts"
 import { createSfReviewPortfolioHistory } from "./review-portfolio-history.ts"
 import { protectSfReviewReads } from "./review-read-integrity.ts"
-import type { createSfReviewAgendaServices } from "./review-agenda-services.ts"
 
 type ApplicationInput = Parameters<typeof createReviewApplication>[0]
 export type SfReviewReaders = {
@@ -37,16 +36,13 @@ export function createSfReviewServices(input: {
   persistence: SfScopedSourcePort
   origin: string
   readers?: SfReviewReaders
-  agenda?: Pick<ReturnType<typeof createSfReviewAgendaServices>, "procurement" | "resolveEvidence">
   maxBytes?: number
 }) {
   const { authority, business } = input
   const host = authority.host
   const history = business.collaboration.threadHistory
   if (!history) return { application: undefined, unavailable: ["review-thread-history-unavailable"] }
-  const evidence = input.agenda ? { ...business.context, resolve: async (ref: Parameters<typeof business.context.resolve>[0], call: TrustedDomainContext) =>
-    await input.agenda!.resolveEvidence(ref, call) ?? business.context.resolve(ref, call) } : business.context
-  const historical = createSfReviewHistory({ authority, persistence: input.persistence, evidence, authorizeCase: business.authorizeCase })
+  const historical = createSfReviewHistory({ authority, persistence: input.persistence, evidence: business.context, authorizeCase: business.authorizeCase })
   const currentSource = historical.currentSource
   const sources = async (call: TrustedDomainContext, refs: readonly SourceRef[]) => {
     if (!await host.revalidate(call)) return false
@@ -84,7 +80,7 @@ export function createSfReviewServices(input: {
     creationTarget: authority.creationTarget, operationIdentity: business.operationIdentity, requiredAuthority: ["reviews:read"],
     maxBytes: input.maxBytes ?? 8 * 1024 * 1024, now: () => new Date().toISOString(), origin: input.origin, ui: authority.ui,
     humanAuthority: authority.human, maxBodyBytes: 256 * 1024,
-    ports: { planner: input.portfolio.planner, procurement: input.agenda?.procurement ?? business.procurement,
+    ports: { planner: input.portfolio.planner, procurement: business.procurement,
       selectDashboardAgenda: createDashboardAgendaSelector({ host, dashboard: business.dashboard, sources: business.dashboardSources, recordEvidence: business.dashboardRecords }),
       readBiPresentation: input.bi.readForReview, captureBiReviewChart,
     },
