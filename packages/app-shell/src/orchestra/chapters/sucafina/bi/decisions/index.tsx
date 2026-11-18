@@ -244,27 +244,25 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
             <section class="sf-u22-detail" aria-label={t("sf.u22.chart.sensitivity")}>
               <h3>{t("sf.u22.chart.sensitivity")}</h3>
               <Show when={scenario()?.sensitivity}>
-                {() => {
-                  const current = decision()
-                  if (!current || current.kind !== "scenario" || !current.sensitivity) return null
-                  const sensitivity = current.sensitivity
+                {(sensitivity) => {
+                  const current = sensitivity()
                   return <>
                     <dl>
-                      <dt>{t("sf.u22.chart.comparison")}</dt><dd>{sensitivity.comparisonStatus}</dd>
+                      <dt>{t("sf.u22.chart.comparison")}</dt><dd>{current.comparisonStatus}</dd>
                       <dt>{t("sf.u22.chart.threshold")}</dt>
-                      <dd>{sensitivity.threshold === null ? t("sf.u22.chart.missing") : String(sensitivity.threshold)}</dd>
+                      <dd>{current.threshold === null ? t("sf.u22.chart.missing") : String(current.threshold)}</dd>
                       <dt>{t("sf.u22.chart.thresholdEvidence")}</dt>
-                      <dd>{thresholdEvidence(sensitivity.thresholdEvidence)}</dd>
+                      <dd>{thresholdEvidence(current.thresholdEvidence)}</dd>
                     </dl>
                     <div class="sf-u22-table-scroll">
                       <table>
                         <caption>{t("sf.u22.bi11.question")}</caption>
                         <thead><tr>
-                          <th scope="col">{t("sf.u22.chart.parameter")} ({sensitivity.parameterUnit ?? sensitivity.unit})</th>
-                          <th scope="col">{t("sf.u22.chart.result")} ({sensitivity.resultUnit ?? sensitivity.unit})</th>
+                          <th scope="col">{t("sf.u22.chart.parameter")} ({current.parameterUnit ?? current.unit})</th>
+                          <th scope="col">{t("sf.u22.chart.result")} ({current.resultUnit ?? current.unit})</th>
                           <th scope="col">{t("sf.u22.chart.source")}</th>
                         </tr></thead>
-                        <tbody><For each={sensitivity.evaluated}>
+                        <tbody><For each={current.evaluated}>
                           {(point) => {
                             const targetToken = tokenForResult(point.resultRef)
                             return <tr>
@@ -280,9 +278,9 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
                         </For></tbody>
                       </table>
                     </div>
-                    <Show when={sensitivity.unresolvedConditions.length}>
+                    <Show when={current.unresolvedConditions.length}>
                       <h4>{t("sf.u22.chart.conditions")}</h4>
-                      <ul><For each={sensitivity.unresolvedConditions}>
+                      <ul><For each={current.unresolvedConditions}>
                         {(item) => <li>{item.category}: {item.reason}</li>}
                       </For></ul>
                     </Show>
