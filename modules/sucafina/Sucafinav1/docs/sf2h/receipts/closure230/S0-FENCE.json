@@ -1,0 +1,51 @@
+{
+  "schema": "sf2h.closure-mission.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "id": 230,
+  "branch": "sf-c12-review",
+  "base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+  "title": "Revisão independente e correção completa da recuperação C12",
+  "epoch": "c12-review-e1-browser230",
+  "paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure230/**"
+  ],
+  "role": "read-only review of product; full inert fixes",
+  "inputs": {
+    "repair220": "f4fc2af5809f8af6c2dc5b8ddcb176ee3409f002",
+    "composition228": "33474b2158a4703f256191f61f1a16ac85c26004"
+  },
+  "tasks": [
+    "Review all three C12 recovery changes and fixture changes against original C12 contract, AM04/AM05 and existing financial approval policy. Distinguish repairing original capture/receipt causality from changing authority or policy.",
+    "Trace exact original prepare -> review -> capture -> memory consumption, idempotence and denied/revoked/stale behavior using real implementations. A fixture fix cannot replace an absent production capture.",
+    "Deliver ACCEPT_UNCHANGED_POLICY or FIX_FIRST with exact evidence, pre/post blobs and full inert corrective patch plus surgical tests if needed. Do not require new human financial approval merely because earlier receipt labels say HUMAN_POLICY_REVIEW_REQUIRED; require approval only if actual scope changes an existing policy.",
+    "Explicitly separate source review from final independent release approval. No product writing and no tests/CI."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "authority": {
+    "composition_writer": 211,
+    "detached_reconciler": 228,
+    "source_only_or_receipts": true,
+    "product_ref_update": false,
+    "CI_successor": false
+  },
+  "must_read": [
+    "Applicable AGENTS",
+    "Pinned plan START, WORKFLOW, execution/COMMON and full actor pack pertinent to assigned criteria",
+    "Own entire mission packet and every assigned source handoff and normative criterion"
+  ],
+  "rules": [
+    "Fresh browser session; no recycling or steering old chats",
+    "Only assigned write paths; existing source changes only complete inert patches in receipts",
+    "GitHub MCP only remote; expected-head CAS force:false; no gh/push/dev merge",
+    "No local tests/typecheck/build/validators; only232 may dispatch authorized productCI after exclusive predecessor reconciliation",
+    "No Azure/deploy/new login/secrets/financial policy change/engine change/restart",
+    "No new supervisor/Goal/watchdog; user controls preserved",
+    "Record exact commit/blob pre/post, consumed version, real checks and NOT_RUN, remaining gaps and release; source ready does not mean DONE"
+  ]
+}

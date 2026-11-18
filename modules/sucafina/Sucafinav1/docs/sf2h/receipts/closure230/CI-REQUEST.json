@@ -1,0 +1,147 @@
+{
+  "schema": "sf2h.closure230.ci-request.v1",
+  "mission": 230,
+  "consumer": 232,
+  "mode": "REQUEST_ONLY_NO_DISPATCH",
+  "requested_against": "211-authorized composed product commit C, not sf-c12-review receipt-only commit",
+  "prerequisites": [
+    "211 retains exclusive bundle authority until actual explicit 211 release/handoff is observed",
+    "211 reconciles expected_pre_blob for all 3 production and 3 mandatory regression files, plus applicable 220 fixtures/schema",
+    "Owner produces exact composed product tree C and passes current HEAD/S0-FENCE; no detached 228 inference",
+    "232 is the only dispatcher; deduplicate by exact workflow/tree/inputs/test selection"
+  ],
+  "workflow": ".github/workflows/test-ci.yml",
+  "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+  "ci_request_validator": "script/test-ci-request.ts",
+  "runner": "bun",
+  "os": "linux",
+  "groups": [
+    {
+      "id": "finance-draft-and-permission",
+      "paths": [
+        "test/product/procurement-decision-producer/financial-policy.test.ts",
+        "test/product/procurement-decision-producer/preparation.test.ts",
+        "test/product/procurement-approval-closure/scenario-composition.test.ts",
+        "test/product/procurement-approval-closure/lifecycle.test.ts"
+      ],
+      "oracle": "draft save allowed only with explicit confirmed:false/current creator or admin, no PR approval, stale and non-holder denied",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+          "Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+          "Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts"
+        ]
+      },
+      "checks": "NOT_RUN",
+      "dispatcher": "232"
+    },
+    {
+      "id": "C12-browser-transport-recovery",
+      "paths": [
+        "test/product/c12-receipt-recovery/recovery-http.test.ts",
+        "test/product/c12-receipt-recovery/normal-retry.test.ts",
+        "test/product/c12-receipt-recovery/recovery-ui.test.ts"
+      ],
+      "oracle": "real HTTP prepare+review+Apply, recovered receipt on lost response, no redispatch, denied/revoked/mismatched key",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+          "Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts"
+        ]
+      },
+      "checks": "NOT_RUN",
+      "dispatcher": "232"
+    },
+    {
+      "id": "AM04-receipt-and-C08",
+      "paths": [
+        "test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+        "test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+        "test/product/integrated-proofs/am04/correlation-gate.test.ts"
+      ],
+      "oracle": "same SQLite domain receipt and mutation commit, key/digest, durable reopen and source CAS",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts"
+        ]
+      },
+      "checks": "NOT_RUN",
+      "dispatcher": "232"
+    },
+    {
+      "id": "AM05-Atlas-original",
+      "paths": [
+        "test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+        "test/product/integrated-proofs/am05/c08-rollback.test.ts",
+        "test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+        "test/product/wp10/memory-integrity/identity.test.ts",
+        "test/product/wp10/memory-integrity/revocation-tail.test.ts"
+      ],
+      "oracle": "genuine C08/C09 + Atlas scanner publication and original source; revoked/foreign owner denied and rollback not leaked",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+          "Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+          "Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts"
+        ]
+      },
+      "checks": "NOT_RUN",
+      "dispatcher": "232"
+    },
+    {
+      "id": "native-UI-B9-projection",
+      "paths": [
+        "test/native-ui-contract/decisions.test.ts"
+      ],
+      "oracle": "empty cases accepted; unknown/grant key rejected",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/native-ui-contract/decisions.test.ts"
+        ]
+      },
+      "checks": "NOT_RUN",
+      "dispatcher": "232"
+    }
+  ],
+  "extra_observation": [
+    "Log first failing true assertion and original HTTP body/status, no forced 200 in fixture",
+    "Record positive original procurement Requests.save and one SQLite receipt+domain mutation at same commit; case reconciliation and lost response separate",
+    "Inspect auth/role/holder/denied/revoked and stale tests, not just fixture success",
+    "Record actual Gitleaks/Atlas scanner provenance for AM05 and memory gates",
+    "No positive enterprise real-world authority claim from fixture-local alice/bob grants or synthetic actors"
+  ],
+  "historical_failed_jobs": "repair220 B9/B11/B18 remain historical negatives; no new results",
+  "status": "NOT_RUN",
+  "dispatch_requested": false
+}
