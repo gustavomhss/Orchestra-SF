@@ -210,11 +210,12 @@ function initial() {
 }
 function load(snapshot: Snapshot): Store {
   const stored = object(snapshot.data.store)
+  const settings = snapshot.data.store === undefined ? initial() : object(stored.settings)
   return structuredClone({
-    settings: object(stored.settings),
+    settings,
     form: {
-      currency: text(object(stored.settings).currency),
-      ...object(stored.settings),
+      currency: text(settings.currency),
+      ...settings,
     },
     issued: { pr: [], po: [], ...object(stored.issued) },
     sup: Array.isArray(stored.sup) ? stored.sup.filter((code): code is string => typeof code === "string") : [],
