@@ -32,15 +32,12 @@ export function createMicrosoftIdentity(options: IdentityOptions & { tenantId: s
     throw new Error("Explicit HTTPS origin required")
   if (!uuid.test(options.tenantId) || !uuid.test(options.clientId) || options.client.tenantId !== options.tenantId || options.client.clientId !== options.clientId || options.client.profile !== "web-confidential")
     throw new Error("Fixed Microsoft tenant and confidential client required")
-  if (!options.secrets.authentication) throw new Error("Durable authentication lifecycle required")
   return createIdentity(options, ["microsoft", options.tenantId, options.clientId])
 }
 
 /** Cookies contain opaque handles; credentials and PKCE material stay encrypted in the private store. */
 function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentity {
-  const options = Object.freeze({ ...input, client: Object.freeze({ ...input.client }), secrets: Object.freeze({ ...input.secrets,
-    ...(input.secrets.authentication ? { authentication: Object.freeze({ ...input.secrets.authentication }) } : {}),
-  }) })
+  const options = Object.freeze({ ...input, client: Object.freeze({ ...input.client }), secrets: Object.freeze({ ...input.secrets }) })
   const origin = new URL(options.origin)
   if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(options.mount) || options.key.byteLength !== 32)
     throw new Error("Invalid identity configuration")
@@ -59,25 +56,10 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     return url.origin === options.origin && (url.pathname === options.mount || url.pathname.startsWith(`${options.mount}/`))
   }
   const revoked = async (kind: string, id: string) => {
-    // The final synchronous lookup sees committed revocation even if an earlier
-    // credential read was admitted before another instance completed logout.
-    if (options.secrets.authentication) {
-      const auth = options.secrets.authentication
-      const storageKey = slot(kind, id)
-      if (auth.inspect(storageKey, now())?.state === "revoked") return true
-      const legacy = await options.secrets.get(slot(`revoked-${kind}`, id), now())
-      return Boolean(legacy) || auth.inspect(storageKey, now())?.state === "revoked"
-    }
     const storageKey = slot(`revoked-${kind}`, id)
     return (retiring.get(storageKey) ?? 0) > now() || Boolean(await options.secrets.get(storageKey, now())) || (retiring.get(storageKey) ?? 0) > now()
   }
   const retire = async (kind: string, id: string) => {
-    if (options.secrets.authentication) {
-      // revoke inspects issuance and installs its immediate fence synchronously;
-      // an unknown cookie neither allocates a fence nor acquires a write slot.
-      await options.secrets.authentication.revoke(slot(kind, id), now())
-      return
-    }
     const storageKey = slot(`revoked-${kind}`, id)
     retiring.forEach((expires, key) => { if (expires <= now()) retiring.delete(key) })
     // Fence pending work immediately, including reads inside an older business transaction.
@@ -139,8 +121,8 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         if (request.headers.get("origin") !== options.origin || request.headers.get("sec-fetch-site") === "cross-site") return error(403)
         const id = handle(request, "session")
         const login = handle(request, "login")
-        const retired = await Promise.all([...(login ? [retire("login", login)] : []), ...(id ? [retire("session", id)] : [])]).then(() => true, () => false)
-        if (!retired) return error(503)
+        if (login) await retire("login", login)
+        if (id) await retire("session", id)
         const responseHeaders = headers()
         responseHeaders.append("set-cookie", cookie("session", "", 0))
         responseHeaders.append("set-cookie", cookie("login", "", 0))
@@ -151,12 +133,9 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         const state = randomBytes(32).toString("hex")
         const verifier = randomBytes(32).toString("base64url")
         const login: Login = { nonce: randomBytes(32).toString("hex"), verifier, returnTo: safeReturn(url.searchParams.get("returnTo"), options.mount), expiresAt: now() + loginSeconds * 1000 }
-        const admitted = options.secrets.authentication
-          ? await options.secrets.authentication.issue({ key: slot("login", state), value: seal(slot("login", state), login), expiresAt: login.expiresAt, at: now() }).catch(() => false)
-          : await options.secrets.put(slot("login", state), seal(slot("login", state), login), login.expiresAt).then(() => true)
-        if (!admitted) return error(503)
         const destination = await options.client.authorization({ state, nonce: login.nonce, challenge: createHash("sha256").update(verifier).digest("base64url"), redirectUri: `${options.origin}${options.mount}/auth/callback` }).catch(() => undefined)
-        if (!destination || login.expiresAt <= now()) { await retire("login", state); return error(503) }
+        if (!destination || login.expiresAt <= now()) return error(503)
+        await options.secrets.put(slot("login", state), seal(slot("login", state), login), login.expiresAt)
         const responseHeaders = headers()
         responseHeaders.set("location", destination)
         responseHeaders.append("set-cookie", cookie("login", state, loginSeconds))
@@ -179,10 +158,7 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       const id = randomBytes(32).toString("hex")
       const createdAt = now()
       const value: Session = { ...result, createdAt, login: state, expiresAt: createdAt + sessionSeconds * 1000 }
-      const admitted = options.secrets.authentication
-        ? await options.secrets.authentication.issue({ key: slot("session", id), value: seal(slot("session", id), value), expiresAt: value.expiresAt, at: createdAt, parent: storageKey }).catch(() => false)
-        : await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt).then(() => true)
-      if (!admitted) return new Response("Authentication unavailable", { status: 403, headers: responseHeaders })
+      await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt)
       // A logout may finish while code redemption or persistence is pending.
       if (await revoked("login", state) || value.expiresAt <= now() || login.expiresAt <= now()) {
         await retire("session", id)
@@ -197,9 +173,6 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       if (!current || current.value.tokens.expiresAt > now() + 60000) return
       const pending = refreshing.get(current.handle)
       if (pending) return pending
-      // A stalled provider may outlive expiry and collection of its session.
-      // Keep those in-flight promises bounded without evicting live work.
-      if (options.secrets.authentication && refreshing.size >= options.secrets.authentication.limits.maxRecords) return
       const work = (async () => {
         if (!current.value.tokens.refreshToken) return
         const refreshed = await options.client.refresh(current.value.tokens.refreshToken).catch(() => undefined)
@@ -208,7 +181,7 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         if (!validPerson(person) || person.id !== current.value.person.id) return
         if (!await session(request)) return
         const value: Session = { ...current.value, person, tokens: { ...refreshed, refreshToken: refreshed.refreshToken ?? current.value.tokens.refreshToken, idToken: refreshed.idToken ?? current.value.tokens.idToken } }
-        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt, now())
+        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt)
         // Keep the durable marker authoritative even when logout wins between the check and put.
         if (!await session(request)) await options.secrets.remove(slot("session", current.handle))
       })().finally(() => refreshing.delete(current.handle))

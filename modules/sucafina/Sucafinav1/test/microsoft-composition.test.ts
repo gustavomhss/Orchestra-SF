@@ -94,7 +94,7 @@ test("real mounted transport rejects wrong host, missing Origin and replay; logo
   expect((await f.request(signed.callback, { headers: { cookie: signed.loginCookie } })).status).toBe(403)
   expect((await f.request("/sucafina/status", { headers: { host: "evil.example", "x-forwarded-host": new URL(ingressOrigin).host } })).status).toBe(403)
   expect((await f.request("/sucafina/status", { headers: { forwarded: "proto=https;host=evil.example", "x-forwarded-proto": "https", "x-forwarded-host": "evil.example" } })).status).toBe(200)
-  for (const headers of [new Headers({ cookie: signed.cookie }), new Headers({ cookie: signed.cookie, origin: "https://evil.example" }), new Headers({ cookie: signed.cookie, origin: publicOrigin, "sec-fetch-site": "cross-site" })]) {
+  for (const headers of [{ cookie: signed.cookie }, { cookie: signed.cookie, origin: "https://evil.example" }, { cookie: signed.cookie, origin: publicOrigin, "sec-fetch-site": "cross-site" }]) {
     expect((await f.request("/sucafina/auth/logout", { method: "POST", headers })).status).toBe(403)
     expect((await f.request("/sucafina/dashboard", { method: "POST", headers })).status).toBe(403)
   }
