@@ -131,6 +131,10 @@ export const SfProcurementRequest = Schema.Struct({
   sourcing: Schema.optional(Schema.NullOr(Sourcing)),
   po: Schema.optional(Schema.NullOr(PurchaseOrder)),
   history: Schema.optional(Schema.Array(HistoryEntry)),
+  attachments: Schema.optional(Schema.Array(Schema.Struct({
+    id: Schema.String, name: Schema.String, key: Schema.String, type: Schema.String,
+    bytes: NonNegativeInteger, size: NonNegativeInteger,
+  }).annotate({ parseOptions: { onExcessProperty: "error" } }))),
   value: Schema.optional(Amount),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const BankField = Schema.String
