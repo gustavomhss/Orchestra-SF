@@ -4,18 +4,15 @@ import { LLMClient, LLMEvent, type LLMRequest } from "@orchestra/llm"
 import { AgentV2 } from "@orchestra/core/agent"
 import { CapabilityInvocation } from "@orchestra/core/capability/invocation"
 import { Config } from "@orchestra/core/config"
-import { makeLocationNode } from "@orchestra/core/effect/app-node"
 import { Database } from "@orchestra/core/database/database"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNodePlatform } from "@orchestra/core/effect/app-node-platform"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { EventV2 } from "@orchestra/core/event"
-import { FSUtil } from "@orchestra/core/fs-util"
 import { Global } from "@orchestra/core/global"
 import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { PermissionV2 } from "@orchestra/core/permission"
-import { AppProcess } from "@orchestra/core/process"
 import { Relay } from "@orchestra/core/relay"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
@@ -43,6 +40,7 @@ import { createSfRoutineNativeOwnerRegistry } from "../../../../../../apps/cli/s
 import type { createSfExecutionBindingRegistry } from "../../../product/host-binding/execution-context.ts"
 import { SF_ROUTINE_PHASE_SCOPE } from "../../../../../../apps/cli/src/sucafina-product/routine-native-phase-scope.ts"
 import type { SfRoutineNativeRuntimeResources } from "../../../../../../apps/cli/src/sucafina-product/routine-native-runtime.ts"
+import { WriteRootsV2 } from "../../../../../../modules/maestro/coordination/src/v2/governance/write-roots.ts"
 
 /** COMPONENT ONLY: real public Session/runner/coordinator/Task/Scope/skill loader and source adapters; deterministic
  * in-process LLM stream. UI identity and installation predicates are fixtures. Non-Task Maestro registrations below
@@ -120,22 +118,26 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
           LLMEvent.stepFinish({ index: 0, reason: "stop" }), LLMEvent.finish({ reason: "stop" })])
       }) }
     )
-    const safety = makeLocationNode({ service: ToolSafety.Service, deps: [FSUtil.node, AppProcess.node, Global.node, Location.node], layer: Layer.effect(ToolSafety.Service, Effect.gen(function* () {
-      const original = yield* ToolSafety.make, location = yield* Location.Service
-      return ToolSafety.Service.of({ ...original, run: (invocation, effect, observe, outcome) => {
-        const inspect = Effect.gen(function* () {
-          if (invocation.tool === "task") {
-            const frame = yield* CapabilityInvocation.require({ sessionID: SessionSchema.ID.make(invocation.sessionID), agent: AgentV2.ID.make(invocation.agent ?? "missing"),
-              assistantMessageID: SessionMessage.ID.make(invocation.assistantMessageID ?? "missing"), toolCallID: invocation.callID },
-            { projectID: location.project.id, location: Location.Ref.make({ directory: location.directory, workspaceID: location.workspaceID }) })
-              .pipe(Effect.mapError(() => new ToolSafety.Denied({ reason: "fixture-core-frame-missing" })))
-            trace.issuers.push(frame.issuer)
-          }
-          return yield* effect
-        })
-        return prepared.bridge.withInvocation(invocation, original.run(invocation, inspect, observe, outcome))
-      } })
-    })) })
+    const safety: typeof WriteRootsV2.safetyNode = {
+      ...WriteRootsV2.safetyNode,
+      implementation: Layer.effect(ToolSafety.Service, Effect.gen(function* () {
+        const original = yield* ToolSafety.Service
+        const location = yield* Location.Service
+        return ToolSafety.Service.of({ ...original, run: (invocation, effect, observe, outcome) => {
+          const inspect = Effect.gen(function* () {
+            if (invocation.tool === "task") {
+              const frame = yield* CapabilityInvocation.require({ sessionID: SessionSchema.ID.make(invocation.sessionID), agent: AgentV2.ID.make(invocation.agent ?? "missing"),
+                assistantMessageID: SessionMessage.ID.make(invocation.assistantMessageID ?? "missing"), toolCallID: invocation.callID },
+              { projectID: location.project.id, location: Location.Ref.make({ directory: location.directory, workspaceID: location.workspaceID }) })
+                .pipe(Effect.mapError(() => new ToolSafety.Denied({ reason: "fixture-core-frame-missing" })))
+              trace.issuers.push(frame.issuer)
+            }
+            return yield* effect
+          })
+          return prepared.bridge.withInvocation(invocation, original.run(invocation, inspect, observe, outcome))
+        } })
+      })).pipe(Layer.provide(WriteRootsV2.safetyNode.implementation!)),
+    }
     const governance = { ...TaskGovernance.node, implementation: Layer.succeed(TaskGovernance.Service, {
       ...TaskGovernance.allowAll, beforeTurn: prepared.bridge.beforeTurn,
       admit: (request) => TaskGovernance.allowAll.admit(request).pipe(Effect.flatMap((admitted) => prepared.bridge.admitted(request, admitted))),
