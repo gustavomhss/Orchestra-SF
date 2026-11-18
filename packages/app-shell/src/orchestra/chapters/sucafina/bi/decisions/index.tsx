@@ -244,7 +244,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
             <section class="sf-u22-detail" aria-label={t("sf.u22.chart.sensitivity")}>
               <h3>{t("sf.u22.chart.sensitivity")}</h3>
               <Show when={scenario()?.sensitivity}>
-                {(_) => {
+                {() => {
                   const current = decision()
                   if (!current || current.kind !== "scenario" || !current.sensitivity) return null
                   const sensitivity = current.sensitivity
