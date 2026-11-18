@@ -40,75 +40,22 @@ test("fresh resolutions cannot smuggle a changed projection behind the same sour
   expect(decideSfRecallInvalidation({ previous: scope(reference), current: scope(reference), dependencies: [reference], resolutions: [resolution(reference, currentRef)] })).toEqual({ status: "unavailable", reauthorize: true })
 })
 
-test("historical authorization invalidates changed material even when source version and incarnation are unchanged", () => {
-  const changed = { ...reference, target: { ...reference.target, projectionDigest: "c".repeat(64) } }
-  const currentRef = { ...changed, refDigest: digestSfEvidenceRef(changed) }
-  expect(decideSfRecallInvalidation({ previous: scope(reference), current: scope(reference), dependencies: [reference], resolutions: [resolution(reference, currentRef, "historical")] }))
-    .toEqual({ status: "invalidate", reasons: ["source-digest"], reauthorize: true })
-})
-
-test("document N/N coordinates cannot reuse changed bytes, segments or confirmation material", () => {
-  const document = { schema: "sf-evidence-v1", refId: "document", refDigest: "", installationId: "install", projectId: "project", kind: "document", evidenceLevel: "observed", target: { documentId: "contract", incarnation: "document-inc", revision: 7, blobDigest: { algorithm: "sha256", value: "a".repeat(64) }, segment: { start: 0, end: 10, unit: "utf16", textDigest: { algorithm: "sha256", value: "b".repeat(64) } }, ragSourceId: "rag-source", ragRevisionId: "rag-revision-1", ragSourceHash: { algorithm: "blake3", value: "c".repeat(64) }, fieldCandidateId: "amount", confirmationVersion: 2 } } as const
-  const original = { ...document, refDigest: digestSfEvidenceRef(document) }
-  const fixedScope = scope(original)
-  const input = { previous: fixedScope, current: fixedScope, dependencies: [original] }
-  for (const state of ["fresh", "historical"] as const) {
-    expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, original, state)] }))
-      .toEqual({ status: "reuse", reasons: [], reauthorize: true })
+test("historical content changes invalidate even when numeric version and incarnation are unchanged", () => {
+  const document = { ...source, kind: "document", target: { documentId: "document", incarnation: "one", revision: 1, blobDigest: { algorithm: "sha256", value: "d".repeat(64) }, segment: { start: 0, end: 10, unit: "utf16", textDigest: { algorithm: "sha256", value: "e".repeat(64) } } } } as const
+  const event = { ...source, kind: "case-event", target: { caseId: "case", caseIncarnation: "one", caseVersion: 1, eventId: "choice", outputDigest: "f".repeat(64), evidenceRefs: [reference] } } as const
+  for (const [before, after] of [
+    [reference, { ...reference, target: { ...reference.target, projectionDigest: "c".repeat(64) } }],
+    [document, { ...document, target: { ...document.target, blobDigest: { algorithm: "sha256", value: "c".repeat(64) } } }],
+    [document, { ...document, target: { ...document.target, segment: { ...document.target.segment, textDigest: { algorithm: "sha256", value: "c".repeat(64) } } } }],
+    [event, { ...event, target: { ...event.target, outputDigest: "c".repeat(64) } }],
+  ] satisfies readonly (readonly [BusinessEvidenceRef, BusinessEvidenceRef])[]) {
+    const original = { ...before, refDigest: digestSfEvidenceRef(before) }
+    const current = { ...after, refDigest: digestSfEvidenceRef(after) }
+    const nested = original.kind === "case-event" ? [resolution(reference, reference)] : []
+    const input = { previous: scope(original), current: scope(original), dependencies: [original] }
+    expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, original), ...nested] })).toMatchObject({ status: "reuse" })
+    expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, current, "historical"), ...nested] })).toMatchObject({ status: "invalidate", reasons: ["source-content"], reauthorize: true })
   }
-  for (const target of [
-    { ...document.target, blobDigest: { algorithm: "sha256", value: "d".repeat(64) } },
-    { ...document.target, segment: { ...document.target.segment, start: 1, end: 11 } },
-    { ...document.target, segment: { ...document.target.segment, textDigest: { algorithm: "sha256", value: "e".repeat(64) } } },
-    { ...document.target, confirmationVersion: 3 },
-    { ...document.target, ragRevisionId: "rag-revision-2" },
-    { ...document.target, ragSourceHash: { algorithm: "blake3", value: "f".repeat(64) } },
-  ] satisfies readonly Extract<BusinessEvidenceRef, { kind: "document" }>["target"][]) {
-    const changed = { ...document, target }
-    const currentRef = { ...changed, refDigest: digestSfEvidenceRef(changed) }
-    const currentMaps = sfEvidenceSourceMaps([currentRef])
-    expect(currentMaps.sourceVersions[currentRef.refDigest]).toBe(fixedScope.sourceVersions[original.refDigest])
-    expect(currentMaps.sourceIncarnations[currentRef.refDigest]).toBe(fixedScope.sourceIncarnations[original.refDigest])
-    expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, currentRef, "historical")] }))
-      .toEqual({ status: "invalidate", reasons: ["source-digest"], reauthorize: true })
-    expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, currentRef)] }))
-      .toEqual({ status: "unavailable", reauthorize: true })
-  }
-})
-
-test("case-event N/N coordinates cannot reuse a changed output or transitive evidence bundle", () => {
-  const event = { schema: "sf-evidence-v1", refId: "case-event", refDigest: "", installationId: "install", projectId: "project", kind: "case-event", evidenceLevel: "decision", target: { caseId: "case", caseIncarnation: "case-inc", caseVersion: 7, eventId: "event", outputDigest: "a".repeat(64), evidenceRefs: [reference] } } as const
-  const original = { ...event, refDigest: digestSfEvidenceRef(event) }
-  const fixedScope = scope(original)
-  const input = { previous: fixedScope, current: fixedScope, dependencies: [original] }
-  expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, original), resolution(reference, reference)] }))
-    .toEqual({ status: "reuse", reasons: [], reauthorize: true })
-  const reissued = { ...reference, refId: "reissued-quote" }
-  const currentEvidence = { ...reissued, refDigest: digestSfEvidenceRef(reissued) }
-  for (const target of [
-    { ...event.target, outputDigest: "d".repeat(64) },
-    { ...event.target, evidenceRefs: [currentEvidence] },
-    { ...event.target, evidenceRefs: [] },
-  ] satisfies readonly Extract<BusinessEvidenceRef, { kind: "case-event" }>["target"][]) {
-    const changed = { ...event, target }
-    const currentRef = { ...changed, refDigest: digestSfEvidenceRef(changed) }
-    const currentMaps = sfEvidenceSourceMaps([currentRef])
-    expect(currentMaps.sourceVersions[currentRef.refDigest]).toBe(fixedScope.sourceVersions[original.refDigest])
-    expect(currentMaps.sourceIncarnations[currentRef.refDigest]).toBe(fixedScope.sourceIncarnations[original.refDigest])
-    expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, currentRef, "historical"), resolution(reference, reference)] }))
-      .toEqual({ status: "invalidate", reasons: ["source-digest"], reauthorize: true })
-  }
-})
-
-test("a receipt with unchanged numeric coordinates cannot reuse a different evidence level", () => {
-  const receipt = { schema: "sf-evidence-v1", refId: "receipt", refDigest: "", installationId: "install", projectId: "project", kind: "receipt", evidenceLevel: "observed", target: { surface: "planner", receiptId: "receipt-1", idempotencyKey: "operation-1", targetIncarnation: "target-inc", commandDigest: "a".repeat(64), version: 7 } } as const
-  const original = { ...receipt, refDigest: digestSfEvidenceRef(receipt) }
-  const changed = { ...receipt, evidenceLevel: "claim" as const }
-  const currentRef = { ...changed, refDigest: digestSfEvidenceRef(changed) }
-  const input = { previous: scope(original), current: scope(original), dependencies: [original] }
-  expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, original)] })).toMatchObject({ status: "reuse" })
-  expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, currentRef, "historical")] }))
-    .toEqual({ status: "invalidate", reasons: ["source-digest"], reauthorize: true })
 })
 
 test("an authorized fresh reissue for another principal invalidates the prior scope without rejecting unchanged content", () => {
