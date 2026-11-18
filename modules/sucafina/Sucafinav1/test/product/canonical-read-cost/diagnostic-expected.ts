@@ -5,7 +5,7 @@
 export const diagnosticExpected = {
   label: "improved",
   producers: {
-    "product/host-binding/state-provider.ts": "c37501db964c254e99d4a204418c498204ef9e42ec9e37c4e19808eb82bd46cd",
+    "product/host-binding/state-provider.ts": "ba10043704bbb1a25eb0f4a8edddcdca814ec7610157bc7c4d9d88d2970467f5",
     "product/decisions/result-store.ts": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de",
     "product/decisions/criterion-comparison.ts": "0faeabe7da29ded1a5f1297fa4ad9d86190f63042a10622900c9b40cd035b4ef",
   },
