@@ -16,7 +16,6 @@ export function createSfAnalysisHost(input: {
   analysis: SfAnalysisHost["analysis"]
   routines: SfAnalysisHost["routines"]
   withRunContext: SfAnalysisHost["withRunContext"]
-  withLifecycleContext?: SfAnalysisHost["withLifecycleContext"]
   /** Resolve exactly one bridge-captured call; never accept provenance from the model. */
   alternativeForOutput?: (runRef: string, resultDigest: string, context: TrustedDomainContext) => Promise<PortResult<AlternativeCapabilityProvenance>>
   verify: (context: TrustedDomainContext, record: SfNativeRunRecord, request: Parameters<SfAnalysisHost["revalidate"]>[1]) => Promise<PortResult<true>>
@@ -27,7 +26,6 @@ export function createSfAnalysisHost(input: {
     routines: input.routines,
     readRun: input.store.readLifecycle,
     withRunContext: input.withRunContext,
-    withLifecycleContext: input.withLifecycleContext ?? input.withRunContext,
     revalidate: async (context, request) => {
       const loaded = await input.store.read(request.runRef, context)
       if (loaded.status !== "ok") return loaded
@@ -37,21 +35,21 @@ export function createSfAnalysisHost(input: {
       return input.verify(context, run, request)
     },
     fail: async (runRef, reason, context) => {
-      const run = await input.store.readLifecycle(runRef, context)
+      const run = await input.store.read(runRef, context)
       if (run.status !== "ok") return run
       const saved = await input.store.transition(runRef, run.value.version, "failed", reason, context)
       if (saved.status !== "ok") return saved
       return { status: "ok", value: true }
     },
     settle: async (runRef, state, reason, context) => {
-      const run = await input.store.readLifecycle(runRef, context)
+      const run = await input.store.read(runRef, context)
       if (run.status !== "ok") return run
       const saved = await input.store.transition(runRef, run.value.version, state, reason, context)
       if (saved.status !== "ok") return saved
       return { status: "ok", value: true }
     },
-    markStale: async (runRef, reason, context, observation) => {
-      const saved = await input.store.markStale(runRef, reason, context, observation)
+    markStale: async (runRef, reason, context) => {
+      const saved = await input.store.markStale(runRef, reason, context)
       if (saved.status !== "ok") return saved
       return { status: "ok", value: true }
     },

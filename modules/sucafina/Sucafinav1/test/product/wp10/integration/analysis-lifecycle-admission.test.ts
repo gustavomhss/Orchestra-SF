@@ -84,7 +84,7 @@ test("Analysis lifecycle admission keeps strict fresh projection and refuses fre
     if (admitted.status !== "ok") throw new Error(admitted.reason)
     try {
       const mutable = { ...selected }
-      expect((await business.withCase(admitted.value, mutable, { allowHistoricalRetry: true }, async () => {
+      expect((await business.withAnalysisCase(admitted.value, mutable, async () => {
         mutable.version = 2
         expect((await business.selectedCase(admitted.value)).status).toBe("unavailable")
         return { status: "ok", value: "must-not-escape" }

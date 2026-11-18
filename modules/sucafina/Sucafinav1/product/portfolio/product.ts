@@ -1,6 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService } from "../contracts/business-context.ts"
-import type { DecisionCasePort, DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
+import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
 import type { createDecisionPortfolioSelection } from "../decisions/portfolio-selection.ts"
@@ -12,14 +12,11 @@ import { decisionCoverageRef } from "../decisions/coverage-access.ts"
 import { createPlannerSensitivityUnits } from "../planner/sensitivity-units.ts"
 import { createPlannerResultPersistence } from "../planner/persistence.ts"
 import { comparePlannerPreview } from "../planner/preview-comparison.ts"
-import type { PlannerScenarioHost } from "../planner/scenario-comparison-port.ts"
+import type { createPlannerProduct } from "../planner/product.ts"
 import { createPortfolioAnalysis } from "./analysis.ts"
 import { createProductionPortfolio } from "./production.ts"
 import { createPlannerSensitivity } from "./planner-sensitivity.ts"
 import { createPortfolioSelectionResolver } from "./selection.ts"
-import { createPortfolioCoveragePreview } from "./coverage-preview.ts"
-import { createPortfolioReconciliation } from "./reconciliation.ts"
-import type { PortfolioReconciliationHost, PortfolioReconciliationRequest } from "./reconciliation.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 
@@ -28,8 +25,7 @@ export function createPortfolioProduct(input: {
   host: DomainPortHost
   cases: DecisionCasePort
   evidence: BusinessContextService
-  // Portfolio consumes the public ports; optional producer projection capabilities are not used here.
-  planner: { planner: PlannerPort; sources: PlannerSourceHost; scenarios: PlannerScenarioHost }
+  planner: Pick<ReturnType<typeof createPlannerProduct>, "planner" | "sources"> & { scenarios: NonNullable<ReturnType<typeof createPlannerProduct>["scenarios"]> }
   results: ReturnType<typeof createSfDecisionResultStore>
   rules: ReturnType<typeof createCriterionRuleRegistry>
   selection: ReturnType<typeof createDecisionPortfolioSelection>
@@ -41,13 +37,10 @@ export function createPortfolioProduct(input: {
   caseFor: (context: TrustedDomainContext) => Promise<PortResult<CaseRef>>
   idempotencyKey: (requestDigest: string, context: TrustedDomainContext) => Promise<string | undefined>
   exactThreshold?: Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]
-  resolveCoverageAuthority?: Parameters<typeof createPortfolioCoveragePreview>[0]["resolveAuthority"]
-  reconciliation?: PortfolioReconciliationHost
 }) {
   const units = createPlannerSensitivityUnits({ host: input.host, cases: input.cases, scenarios: input.planner.scenarios, store: input.results, evidence: input.evidence, rules: input.rules })
   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host: input.host, sources: input.planner.sources, scenarios: input.planner.scenarios, planner: input.planner.planner }, request, context)
-  const coveragePreview = input.resolveCoverageAuthority ? createPortfolioCoveragePreview({ units, preview, resolveAuthority: input.resolveCoverageAuthority }) : undefined
-  const sensitivity = createPlannerSensitivity({ results: input.results, resolve: units.resolve, revalidate: units.revalidate, preview, coveragePreview, exactThreshold: input.exactThreshold, idempotencyKey: input.idempotencyKey })
+  const sensitivity = createPlannerSensitivity({ results: input.results, resolve: units.resolve, revalidate: units.revalidate, preview, exactThreshold: input.exactThreshold, idempotencyKey: input.idempotencyKey })
   const analysis = createPortfolioAnalysis({ planner: input.planner.planner, results: input.results, bindings: input.comparisonBindings, persist: createPlannerResultPersistence({ store: input.results, scenarios: input.planner.scenarios, comparisonBindings: input.comparisonBindings, replay: input.planner.planner, resolveCase: input.caseFor }), select: createPortfolioSelectionResolver({ selection: input.selection, results: input.results, caseFor: input.caseFor }), idempotencyKey: input.idempotencyKey })
   const contribution = createProductionPortfolio({ cases: input.cases, planner: input.planner.planner, sources: input.planner.sources, evidence: input.evidence, revalidate: input.host.revalidate, analysis, sensitivity, candidateCoverageRefFor: async (candidate) => {
     const ref = parseCaseRef(candidate.caseRef)
@@ -57,19 +50,6 @@ export function createPortfolioProduct(input: {
   const authorized = async (caseRef: CaseRef, context: TrustedDomainContext) => {
     const current = await input.caseFor(context)
     return current.status === "ok" && digestSfValue(current.value) === digestSfValue(caseRef) && await input.host.revalidate(context)
-  }
-  const reconcile = input.reconciliation ? createPortfolioReconciliation({ ...input.reconciliation, cases: input.cases, evidence: input.evidence, host: input.host, caseFor: input.caseFor }) : undefined
-  const reconcileHttp = async (incoming: PortfolioReconciliationRequest, context: TrustedDomainContext) => {
-    try {
-      const authorityDigest = digestSfValue({ kind: context.kind, binding: context.binding })
-      const authorityUnchanged = () => digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest
-      const request = structuredClone(incoming)
-      if (!await authorized(request.caseRef, context) || !authorityUnchanged()) return { status: "denied", reason: "portfolio-case-unavailable" } as const
-      if (!reconcile) return { status: "unavailable", reason: "portfolio-reconciliation-producer-unavailable" } as const
-      const result = await reconcile(request, context)
-      if (!authorityUnchanged()) return { status: "denied", reason: "portfolio-case-unavailable" } as const
-      return result
-    } catch { return { status: "unavailable", reason: "portfolio-reconciliation-unavailable" } as const }
   }
   const catalog = async (refs: readonly CaseRef[], context: TrustedDomainContext) => {
     if (!refs.length || new Set(refs.map((ref) => encodeCaseRef(ref))).size !== refs.length) return { status: "needs-input", reason: "invalid-portfolio-cases" } as const
@@ -88,7 +68,6 @@ export function createPortfolioProduct(input: {
     contribution,
     sensitivity: contribution.port.sensitivity,
     issueSensitivityUnits: units.issue,
-    reconciliation: reconcile,
     http: {
       list: async (caseRef: CaseRef, context: TrustedDomainContext) => await authorized(caseRef, context) ? input.portfolioBindings.list({ caseRef }, context) : { status: "denied" as const, reason: "portfolio-case-unavailable" },
       catalog,
@@ -112,7 +91,6 @@ export function createPortfolioProduct(input: {
       },
       promote: async (request: Parameters<typeof contribution.promoteAlternative>[0], context: TrustedDomainContext) => await authorized(request.caseRef, context) ? contribution.promoteAlternative(request, context) : { status: "denied" as const, reason: "portfolio-case-unavailable" },
       prepare: async (request: Parameters<typeof contribution.prepareChoice>[0], context: TrustedDomainContext) => await authorized(request.caseRef, context) ? contribution.prepareChoice(request, context) : { status: "denied" as const, reason: "portfolio-case-unavailable" },
-      reconcile: reconcileHttp,
     },
   }
 }

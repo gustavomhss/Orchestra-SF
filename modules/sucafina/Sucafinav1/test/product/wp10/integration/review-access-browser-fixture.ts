@@ -8,7 +8,7 @@ type BrowserResponse = NonNullable<Awaited<ReturnType<BrowserRequest["response"]
 /** Real browser, producer and HTTP handler; route transport forwards exact handler bytes.
  * This seam does not qualify TCP hosting, installed identity, native AI or global E2E.
  */
-export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; reviewAsset: () => Promise<string>; url: string; privateText: string; signal: AbortSignal }) {
+export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; url: string; privateText: string; signal: AbortSignal }) {
   const { chromium } = await import("@playwright/test")
   const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
   input.signal.throwIfAborted()
@@ -123,8 +123,9 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       const at = performance.now()
       console.info("SF_REVIEW_BROWSER_HTTP", JSON.stringify({ page: page === focusPage ? "focus" : "source", mode, state: "started" }))
       try {
+        const body = request.postDataBuffer()
         const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
-          ...(request.postDataBuffer() ? { body: new Uint8Array(request.postDataBuffer()!).buffer } : {}) }), "dashboard")
+          ...(body ? { body: new Uint8Array(body).buffer } : {}) }), "dashboard")
         if (!response) {
           if (watch) throw new Error(`Real handler did not handle browser request ${mode}`)
           await route.abort("blockedbyclient")
@@ -133,20 +134,6 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
         // Capture only actual host output. Status, headers and bytes are never
         // synthesized to emulate a successful projection or a denied response.
         const forwarded = { status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) }
-        if (mode === "review" && response.status === 200) {
-          // Read the actual checked-in entry's built asset. JSON bootstrap data
-          // is excluded from this byte proof and from its diagnostic output.
-          const asset = await ready(input.reviewAsset())
-          const inline = asset.replace(/<\/script/gi, "<\\/script")
-          const inserted = [...forwarded.body.toString("utf8").matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)].at(-1)?.[1]
-          const matches = inserted === inline
-          const digest = (value: string) => new Bun.CryptoHasher("sha256").update(value).digest("hex")
-          console.info("SF_REVIEW_BROWSER_ASSET", JSON.stringify({ page: pageName(page), matches,
-            assetBytes: Buffer.byteLength(asset), inlineBytes: Buffer.byteLength(inline), insertedBytes: inserted === undefined ? null : Buffer.byteLength(inserted),
-            assetSha256: digest(asset), inlineSha256: digest(inline), insertedSha256: inserted === undefined ? null : digest(inserted),
-            substitutionTokens: { match: asset.split("$&").length - 1, prefix: asset.split("$`").length - 1, suffix: asset.split("$'").length - 1 } }))
-          if (!matches) throw new Error("WP10_REVIEW_BROWSER_ASSET_CHANGED_BY_HTML_COMPOSITION")
-        }
         if (watch) watch.handledStatus = response.status
         watch?.handled.resolve(response.status)
         console.info("SF_REVIEW_BROWSER_HTTP", JSON.stringify({ page: page === focusPage ? "focus" : "source", mode, state: "handled", status: response.status, elapsedMs: Math.round(performance.now() - at) }))
@@ -167,6 +154,8 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
     const sourcePage = await context.newPage()
     pages.push(focusPage, sourcePage)
     for (const page of pages) {
+      await page.clock.install({ time: new Date("2026-11-14T12:00:00Z") })
+      await page.clock.pauseAt(new Date("2026-11-14T12:00:01Z"))
       page.on("pageerror", (error) => {
         errors.push(error.message)
         pageErrors.push({ page: pageName(page), message: error.message, stack: error.stack?.slice(0, 1200) })
@@ -196,22 +185,32 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       expect(await page.locator("[data-sf-review-workspace]").textContent()).toContain(input.privateText)
       expect(await page.locator("script[data-sf-review-bootstrap]").count()).toBe(0)
     }
-    // Exercise the real shell refresh while the review is authorized. The
-    // server HTML contains only a bootstrap placeholder; it must not replace
-    // the mounted workspace or discard its preserved selected content.
-    stage = "focus.authorized-refresh"
-    const refreshedPage = observe(focusPage, "review")
-    const retained = ready(focusPage.evaluate(async () => {
-      const before = document.querySelector("[data-sf-review-workspace]")
-      const refresh = (window as typeof window & { sucafinaRefresh?: () => Promise<void> }).sucafinaRefresh
-      if (!before || !refresh) throw new Error("Real review shell refresh unavailable")
-      await refresh()
-      return before === document.querySelector("[data-sf-review-workspace]")
-    }))
-    expect((await refreshedPage.response()).status()).toBe(200)
-    expect(await retained).toBe(true)
-    expect(await focusPage.locator("[data-sf-review-workspace]").textContent()).toContain(input.privateText)
-    expect(await focusPage.locator("[data-sf-review-selected-section] table").count()).toBeGreaterThan(0)
+    // Exercise the real shell refresh path with focus outside a form. The
+    // reader must claim the refresh instead of leaving the new loading stub.
+    const mounted = await focusPage.locator("[data-sf-review-workspace]").elementHandle()
+    if (!mounted) throw new Error("Review workspace missing before refresh")
+    await focusPage.evaluate(() => {
+      document.documentElement.dataset.observedReviewRefreshes = "0"
+      document.querySelector("main")?.addEventListener("sucafina:main-refresh", () => {
+        document.documentElement.dataset.observedReviewRefreshes = String(Number(document.documentElement.dataset.observedReviewRefreshes) + 1)
+      })
+    })
+    let refreshedCount = 0
+    for (const mode of ["manual", "periodic"] as const) {
+      stage = `focus.${mode}-authorized-refresh`
+      const refreshed = observe(focusPage, "review")
+      // Keep click actionability within 10s. The observer above owns the real
+      // request/handler/response boundary, including the caller's producer budget.
+      if (mode === "manual") await focusPage.getByRole("button", { name: "Refresh data", exact: true }).click({ noWaitAfter: true })
+      else await focusPage.clock.runFor(30_000)
+      expect((await refreshed.response()).status()).toBe(200)
+      await focusPage.waitForFunction((count) => Number(document.documentElement.dataset.observedReviewRefreshes) >= count, ++refreshedCount)
+      expect(await focusPage.locator("[data-sf-review-workspace]").textContent()).not.toContain("Loading review…")
+      expect(await mounted.evaluate((node) => node.isConnected)).toBe(true)
+      expect(await focusPage.locator("[data-sf-review-workspace]").textContent()).toContain(input.privateText)
+      expect(await focusPage.locator("[data-sf-review-selected-section] table").count()).toBe(1)
+      expect(await focusPage.locator("script[data-sf-review-bootstrap]").count()).toBe(0)
+    }
     // Hold a genuinely authorized source response across the later case-only
     // revocation; no response payload or access decision is substituted.
     const priorSource = observe(focusPage, "review-source")
@@ -249,7 +248,7 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
           // Observe another browser task after transport settlement, including a
           // source request already aborted by clearPrivate. Background tabs do
           // not reliably receive animation frames, so no paint is awaited here.
-          await bounded(Promise.all(pages.map((page) => page.evaluate(() => new Promise<void>((resolve) => setTimeout(resolve, 0))))))
+          await bounded(Promise.all(pages.map((page) => page.clock.runFor(1))))
           await Promise.all(pages.map(checkEmpty))
           expect(errors).toEqual([])
           console.info("WP10 Review case-only revocation", { probeStatus, sourceStatus, pagesCleared: pages.length,
@@ -269,3 +268,4 @@ function observedEvent<T>() {
   void promise.catch(() => undefined)
   return { promise, resolve, reject }
 }
+

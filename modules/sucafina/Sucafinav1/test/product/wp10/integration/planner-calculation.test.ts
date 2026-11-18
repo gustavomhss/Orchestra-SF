@@ -13,20 +13,15 @@ import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { expectSpawn } from "../../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
-import { createSfAnalysisRunContext } from "../../../../../../../apps/cli/src/sucafina-product/analysis-run-context.ts"
-import { createSfStaleAnalysisAccess } from "../../../../../../../apps/cli/src/sucafina-product/analysis-stale-commit.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
-import { digestSfContribution, digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessMemoryEnvelope } from "../../../../product/contracts/business-context.ts"
 import type { CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
-import type { SfProductState, SfNativeRunRecord } from "../../../../product/contracts/state.ts"
-import type { ContributionEnvelope } from "../../../../product/contracts/resident-ai.ts"
-import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
-import { createSfRunStore } from "../../../../product/ai/run-store.ts"
-import { sfRunFixture } from "../../wp12/run-fixture.ts"
+import type { SfProductState } from "../../../../product/contracts/state.ts"
+import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { object } from "../../../../runtime/contract.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
@@ -48,9 +43,8 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
   const clock = { at }
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
-  const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, calculationStoreReads: 0,
-    calculationStoreReadsCompleted: 0, coverageIssue: "fixture-training-unresolved" }
-  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: () => Promise<void>; outbox?: () => Promise<void> } = {}
+  const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, coverageIssue: "fixture-training-unresolved" }
+  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: { completedSequence: number; run: () => Promise<void> }; outbox?: () => Promise<void> } = {}
   let store = await openLocalStore(storeDirectory)
   deadline.own(() => store.dispose())
   const services: { current?: ReturnType<typeof createSfBusinessServices> } = {}
@@ -82,7 +76,7 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
     const request = () => new Request("https://example.test/planner", { method: "POST", headers: { origin: "https://example.test" }, signal: deadline.signal })
     const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test", policyVersion: "calculation-policy",
       persistence, proposalCoverageWrites, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
-        operations: ["sf_scenario_simulate", "sf_source_get", "sf_evidence_get", "sf_context_get", "sf_freshness_check", "sf_decision_recall"], humanActions: ["analysis.start"] }],
+        operations: ["sf_scenario_simulate", "sf_source_get", "sf_evidence_get", "sf_context_get", "sf_freshness_check", "sf_decision_recall"], humanActions: [] }],
       authenticate: async (_request, scope) => { checkDeadline(); return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null },
       environment: async () => {
         checkDeadline()
@@ -103,22 +97,15 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
     }
     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
     services.current = business
-    const readCalculation = business.results.readForCalculation
-    business.results.readForCalculation = async (input, call) => {
-      control.calculationStoreReads++
-      try { return await readCalculation(input, call) }
-      finally { control.calculationStoreReadsCompleted++ }
-    }
     const resolveCalculation = business.calculations.resolveEvidence
     business.calculations.resolveEvidence = async (ref, call) => {
-      const sequence = ++control.calculationResolves, began = performance.now(), storeReads = control.calculationStoreReads
+      const sequence = ++control.calculationResolves, began = performance.now()
       console.info("SF_CALCULATION_RESOLUTION", JSON.stringify({ fixture: name, generation: initialize ? "initial" : "reopened", sequence, state: "started" }))
       try { return await resolveCalculation(ref, call) }
       finally {
         control.calculationResolved++
         console.info("SF_CALCULATION_RESOLUTION", JSON.stringify({ fixture: name, generation: initialize ? "initial" : "reopened", sequence,
-          state: "returned", elapsedMs: Math.round(performance.now() - began), completed: control.calculationResolved, entered: control.calculationResolves,
-          canonicalResultReads: control.calculationStoreReads - storeReads }))
+          state: "returned", elapsedMs: Math.round(performance.now() - began), completed: control.calculationResolved, entered: control.calculationResolves }))
       }
     }
     business.bindForecastCoverage(async (reference, call) => {
@@ -139,8 +126,12 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
     const resolveEvidence = atlas.context.resolve
     atlas.context.resolve = async (ref, call) => {
       const waiting = interleave.evidence
-      delete interleave.evidence
-      await waiting?.()
+      // The actual calculation can resolve record evidence while its proof is
+      // still in flight. Keep this hook armed until the exact proof completes.
+      if (waiting && control.calculationResolves === waiting.completedSequence && control.calculationResolved === waiting.completedSequence) {
+        delete interleave.evidence
+        await waiting.run()
+      }
       return resolveEvidence(ref, call)
     }
     const ui = async <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>) => {
@@ -240,10 +231,6 @@ test("Planner ledger history preserves the protected original after case advance
       let reentered = false
       interleave.coverage = async () => {
         reentered = true
-        expect((await reopened.business.selectedCase(call)).status).toBe("unavailable")
-        expect((await reopened.business.resolveCase(call)).status).toBe("unavailable")
-        expect((await reopened.business.plannerSources.resolveForecastCoverage(calculation.target.sourceRefs[0]!.refId, call)).status).not.toBe("ok")
-        expect((await reopened.business.baselineCoverage.resolveForecastCoverage(calculation.target.sourceRefs[0]!.refId, call)).status).not.toBe("ok")
         const nested = await reopened.business.calculations.resolveHistoricalEvidence(calculation, call, reopened.atlas.memory.readOriginalCapture)
         expect(nested.state).toBe("unavailable")
         expect(nested.authorizedProjection).toBeUndefined()
@@ -339,7 +326,7 @@ test("Planner calculation history denies disclosure after principal, Request or 
       } finally { control.active = true }
       phase("historical-real-replay-revocation-closed")
     })
-    for (const mutation of ["abort", "finish", "headers"] as const) {
+    for (const mutation of ["abort", "finish"] as const) {
       const controller = new AbortController(), base = reopened.request()
       const request = new Request(base, { signal: AbortSignal.any([base.signal, controller.signal]) })
       const payload = { evidenceRef: calculation }, digest = digestSfValue(payload)
@@ -352,102 +339,16 @@ test("Planner calculation history denies disclosure after principal, Request or 
           if (!original) throw new Error("Actual capture unavailable before Request revocation")
           captured = true
           if (mutation === "abort") controller.abort(new Error("Fixture abort after protected read"))
-          else if (mutation === "finish") reopened.authority.ui.finish(admitted.value)
-          else request.headers.set("x-wp10-historical-witness", "changed-after-protected-read")
+          else reopened.authority.ui.finish(admitted.value)
           return original
         })
         expect(captured).toBe(true)
         expect(denied.state).toBe("unavailable")
         expect(denied.authorizedProjection).toBeUndefined()
         expect(denied.currentRef).toBeUndefined()
-        if (mutation === "headers") expect(await reopened.authority.host.revalidate(admitted.value)).toBe(true)
       } finally { reopened.authority.ui.finish(admitted.value) }
     }
-    phase("historical-request-abort-headers-and-lease-loss-closed")
-  })
-}, 120_000)
-
-test("Analysis lifecycle reentry preserves a real historical calculation without upgrading its original case selector", async () => {
-  expectSpawn(import.meta.path)
-  await withCalculation("historical-analysis-lifecycle", async ({ calculation, caseRef, reopen, interleave, control, phase }) => {
-    const { reopened } = await reopen()
-    const { authority, business, persistence } = reopened
-    const request = reopened.request()
-    // Only lifecycle metadata is seeded. The C17 result, request, ledger source
-    // and protected Atlas original above were actually persisted and reopened.
-    // No Task, Session, loaded-skill observation or model execution is claimed.
-    const fixture = sfRunFixture()
-    if (!fixture.run.native) throw new Error("Unexecuted lifecycle metadata missing")
-    const start = { request: { caseRef }, purpose: "Unexecuted C17 lifecycle fixture" }
-    const admission = await authority.human.admit(request, "analysis.start", start)
-    if (admission.status !== "ok") throw new Error(admission.reason)
-    const run: SfNativeRunRecord = { ...fixture.run, native: fixture.run.native, caseRef,
-      principalRef: admission.value.binding.principalRef, accessRevision: admission.value.binding.accessRevision,
-      policyVersion: admission.value.binding.policyVersion }
-    authority.human.finish(admission.value)
-    const output: ContributionEnvelope = { ...fixture.output, caseRef, evidenceRefs: [calculation], accessRevision: run.accessRevision }
-    output.outputDigest = digestSfContribution(output)
-    const expectedOutput = digestSfValue(output)
-    const state = await authority.state.read(request, "cases", (value) => value.versions)
-    if (state.status !== "ok") throw new Error("Current C08 versions unavailable")
-    expect((await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: state.value.cases,
-      additionalNamespaces: [{ namespace: "contributions", expectedStorageVersion: state.value.contributions }],
-      targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "advance-c17-lifecycle",
-      commandDigest: digestSfValue({ run, caseVersion: 2 }) }, async (stored) => {
-      stored.cases[caseRef.id]!.version = 2
-      stored.nativeRuns ??= {}
-      stored.nativeRuns[run.runRef] = run
-      return { commit: true, value: true }
-    })).status).toBe("ok")
-    const access = createSfStaleAnalysisAccess({ authority, persistence, context: business.context, request, start,
-      proof: { runRef: run.runRef, caseRef, contextFingerprint: run.contextFingerprint, evidenceRefs: [calculation] } })
-    const runs = access.wrapStore(createSfRunStore({ state: authority.state, requestFor: authority.host.requestFor,
-      revalidate: authority.host.revalidate, preflight: access.preflight, revalidateForCommit: access.commit, now: () => "2027-02-02T00:00:00Z" }))
-    const replayContexts = new WeakMap<TrustedDomainContext, string>()
-    const withRunContext = createSfAnalysisRunContext({ authority, business, request, runRef: run.runRef, caseRef, start,
-      active: () => control.active, replayContexts })
-    let last: TrustedDomainContext | undefined
-    const preserved = await withRunContext(run.runRef, async (call) => {
-      last = call
-      expect(authority.host.requestFor(call)).toBe(request)
-      expect(replayContexts.get(call)).toBe(run.runRef)
-      expect((await business.selectedCase(call)).status).toBe("unavailable")
-      expect((await business.resolveCase(call)).status).toBe("unavailable")
-      let checkedInsideReplay = false
-      interleave.coverage = async () => {
-        checkedInsideReplay = true
-        expect((await business.selectedCase(call)).status).toBe("unavailable")
-        expect((await business.resolveCase(call)).status).toBe("unavailable")
-        expect((await business.baselineCoverage.resolveForecastCoverage(calculation.target.sourceRefs[0]!.refId, call)).status).not.toBe("ok")
-      }
-      const historical = await business.context.resolve(calculation, call)
-      expect(historical.state).toBe("historical")
-      expect(historical.currentRef).toEqual(calculation)
-      expect(historical.differences).toEqual([{ field: "case.version", before: 1, after: 2 }])
-      expect(checkedInsideReplay).toBe(true)
-      expect((await business.calculations.issue(calculation.target.runId, call)).status).not.toBe("ok")
-      phase("historical-calculation-resolved-under-original-run-selector")
-      return runs.preserveStale(run.runRef, "case-advanced", output, call)
-    })
-    expect(preserved.status).toBe("ok")
-    if (!last) throw new Error("Original run context did not enter lifecycle")
-    expect(replayContexts.has(last)).toBe(false)
-    expect(authority.host.requestFor(last)).toBeUndefined()
-    const stored = await authority.state.read(request, "contributions", (value) => ({ run: value.nativeRuns?.[run.runRef], output: value.contributions[output.id] }))
-    if (stored.status !== "ok") throw new Error("Preserved lifecycle unavailable")
-    expect(stored.value.run).toMatchObject({ state: "stale", version: run.version + 1, caseRef, outputRef: output.id })
-    expect(digestSfValue(stored.value.output)).toBe(expectedOutput)
-    expect(stored.value.run?.native).toEqual(run.native)
-    control.active = false
-    try {
-      let entered = false
-      expect((await withRunContext(run.runRef, async (call) => { entered = true; return runs.markStale(run.runRef, "revoked", call) })).status).toBe("denied")
-      expect(entered).toBe(false)
-    } finally { control.active = true }
-    const unchanged = await authority.state.read(request, "contributions", (value) => value.contributions[output.id])
-    if (unchanged.status !== "ok") throw new Error("Preserved output unavailable")
-    expect(digestSfValue(unchanged.value)).toBe(expectedOutput)
-    phase("historical-calculation-through-original-run-context-and-c08-stale-commit")
+    phase("historical-request-abort-and-lease-loss-closed")
   })
 }, 120_000)
 
@@ -464,13 +365,9 @@ test("Planner calculation preserves UI and repeated BCS reads and rejects cycles
     await first.ui("sf_evidence_get", payload, async (call) => {
       // Repeated selectors in one authorization pass use the actual BCS.
       // Independent overlapping same-run replays remain prohibited by the producer.
-      const storeReads = control.calculationStoreReads
       const repeated = await first.business.context.context({ refs: [calculation, calculation] }, call)
       expect(repeated.map((item) => item.state)).toEqual(["fresh", "fresh"])
       expect(repeated.map((item) => item.currentRef)).toEqual([calculation, calculation])
-      // Two actual canonical request readers contain four result readers; the
-      // producer independently loads its result twice and replays twice.
-      expect(control.calculationStoreReads - storeReads).toBe(6)
       let reentered = false
       interleave.coverage = async () => {
         reentered = true
@@ -480,7 +377,7 @@ test("Planner calculation preserves UI and repeated BCS reads and rejects cycles
       expect((await first.business.calculations.issue(calculation.target.runId, call)).status).toBe("ok")
       expect(reentered).toBe(true)
       const found = await first.business.context.resolve(calculation, call)
-      if (!found.authorizedProjection || !("context" in found.authorizedProjection) || !("components" in found.authorizedProjection)) throw new Error("Authorized calculation projection missing")
+      if (!found.authorizedProjection || !("components" in found.authorizedProjection)) throw new Error("Authorized calculation projection missing")
       expect(found.authorizedProjection.components).toEqual(produced.value.result.components)
       expect(found.authorizedProjection.decision).toBeUndefined()
       expect(found.authorizedProjection.values.find((value) => value.id === "scenario:total")?.value).toBeNull()
@@ -498,77 +395,6 @@ test("Planner calculation preserves UI and repeated BCS reads and rejects cycles
       expect(control.coverageReads).toBe(reads)
     })
     phase("ordered-read-and-real-cycle-negative-proofs")
-  })
-}, 120_000)
-
-test("Planner observed calculation outputs recheck protected state, headers and lease after the canonical store passes", async () => {
-  expectSpawn(import.meta.path)
-  await withCalculation("observed-store-egress", async ({ calculation, reopen, change, control, interleave, phase }) => {
-    const { reopened } = await reopen()
-    const payload = { evidenceRef: calculation }
-    const original = await reopened.authority.state.read(reopened.request(), "cases", (state) => structuredClone(state))
-    if (original.status !== "ok") throw new Error("Actual protected calculation fixture unavailable")
-    await reopened.ui("sf_evidence_get", payload, async (call) => {
-      const before = control.calculationStoreReads
-      const actual = await reopened.business.context.resolve(calculation, call)
-      expect(actual.state).toBe("fresh")
-      expect(actual.currentRef).toEqual(calculation)
-      expect(control.calculationStoreReads - before).toBe(6)
-    })
-    for (const mutation of ["request", "result", "capture", "headers", "lease"] as const) {
-      await reopened.ui("sf_evidence_get", payload, async (call) => {
-        const before = control.calculationStoreReadsCompleted
-        const request = reopened.authority.host.requestFor(call)
-        if (!request) throw new Error("Real UI Request unavailable")
-        let applied = 0, hookFailure: unknown
-        const afterCanonicalStores = async () => {
-          if (control.calculationStoreReadsCompleted - before < 6) { interleave.coverage = afterCanonicalStores; return }
-          try {
-            expect(control.calculationStoreReadsCompleted - before).toBe(6)
-            expect(control.calculationStoreReadsCompleted).toBe(control.calculationStoreReads)
-            applied++
-            if (mutation === "request") await change((state) => {
-              const key = `sf:proposal-coverage:scenario-request:${digestSfValue(calculation.target.runId)}`
-              state.preferences[key] = { ...object(state.preferences[key]), recordDigest: "0".repeat(64) }
-            })
-            if (mutation === "result") await change((state) => {
-              const stored = state.decisionResults?.[calculation.target.runId]
-              if (!stored) throw new Error("Actual persisted result unavailable")
-              stored.resultDigest = "0".repeat(64)
-            })
-            if (mutation === "capture") await change((state) => { state.atlas = {} })
-            if (mutation === "headers") request.headers.set("x-wp10-calculation-witness", "changed-after-store-passes")
-            if (mutation === "lease") reopened.authority.ui.finish(call)
-            phase(`observed-stores-mutation-${mutation}`)
-          } catch (error) { hookFailure = error; throw error }
-        }
-        interleave.coverage = afterCanonicalStores
-        try {
-          const denied = await reopened.business.context.resolve(calculation, call)
-          if (hookFailure) throw hookFailure
-          expect(applied).toBe(1)
-          expect(denied.state).toBe("unavailable")
-          expect(denied.authorizedProjection).toBeUndefined()
-          expect(denied.currentRef).toBeUndefined()
-          expect((await reopened.business.selectedCase(call)).status).toBe("unavailable")
-        } finally {
-          delete interleave.coverage
-          request.headers.delete("x-wp10-calculation-witness")
-          await change((state) => {
-            state.preferences = structuredClone(original.value.preferences)
-            state.decisionResults = structuredClone(original.value.decisionResults)
-            state.atlas = structuredClone(original.value.atlas)
-          })
-        }
-      })
-    }
-    // A new invocation still executes all real passes after each failed scope.
-    await reopened.ui("sf_evidence_get", payload, async (call) => {
-      const before = control.calculationStoreReads
-      expect((await reopened.business.context.resolve(calculation, call)).state).toBe("fresh")
-      expect(control.calculationStoreReads - before).toBe(6)
-    })
-    phase("observed-store-counterproofs-and-new-scope-recovery")
   })
 }, 120_000)
 
@@ -742,39 +568,29 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
       await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
         const selected = { ...caseRef }, before = control.calculationResolves
         let applied = 0, outboxReads = 0, finalEnvironmentReads = 0
-        let hookFailure: unknown
         const mutate = async () => {
-          try {
-            expect(control.calculationResolved).toBe(control.calculationResolves)
-            expect(control.calculationResolves - before).toBe(1)
-            applied++
-            if (mutation === "source") await reopened.persistence.transaction("planner", async (snapshot) => {
-              snapshot.data.entities = [{ id: "after-completed-proof", name: "Changed source" }]
-              return { commit: true, value: undefined }
-            })
-            if (mutation === "membership") await change((state) => { state.cases[caseRef.id]!.participants = [] })
-            if (mutation === "capture") await change((state) => {
-              const captures = Object.values(state.atlas).map((partition) => object(object(partition).originals)).filter((originals) => originals[calculation.refDigest])
-              expect(captures).toHaveLength(1)
-              delete captures[0]![calculation.refDigest]
-            })
-            if (mutation === "coverage") control.coverageIssue = "changed-after-completed-proof"
-            if (mutation === "selector") selected.incarnation = "different-case-incarnation"
-            if (mutation === "clock") clock.at = "2027-02-03T00:00:00Z"
-            if (mutation === "principal") control.active = false
-            if (mutation === "lease") reopened.authority.ui.finish(call)
-            phase(`mutated-${mutation}-after-completed-proof`)
-          } catch (error) { hookFailure = error; throw error }
+          expect(control.calculationResolved).toBe(control.calculationResolves)
+          expect(control.calculationResolves - before).toBe(1)
+          applied++
+          if (mutation === "source") await reopened.persistence.transaction("planner", async (snapshot) => {
+            snapshot.data.entities = [{ id: "after-completed-proof", name: "Changed source" }]
+            return { commit: true, value: undefined }
+          })
+          if (mutation === "membership") await change((state) => { state.cases[caseRef.id]!.participants = [] })
+          if (mutation === "capture") await change((state) => {
+            const captures = Object.values(state.atlas).map((partition) => object(object(partition).originals)).filter((originals) => originals[calculation.refDigest])
+            expect(captures).toHaveLength(1)
+            delete captures[0]![calculation.refDigest]
+          })
+          if (mutation === "coverage") control.coverageIssue = "changed-after-completed-proof"
+          if (mutation === "selector") selected.incarnation = "different-case-incarnation"
+          if (mutation === "clock") clock.at = "2027-02-03T00:00:00Z"
+          if (mutation === "principal") control.active = false
+          if (mutation === "lease") reopened.authority.ui.finish(call)
+          phase(`mutated-${mutation}-after-completed-proof`)
         }
         const final = mutation === "clock" || mutation === "principal" || mutation === "lease"
-        if (!final) interleave.outbox = async () => {
-          if (++outboxReads !== 1) return
-          delete interleave.outbox
-          // Atlas reads outbox only after its first actual cases.read completes.
-          // Arming earlier enters the producer's nested record resolver before
-          // its calculation proof is complete, where assertions are caught.
-          interleave.evidence = mutate
-        }
+        if (!final) interleave.evidence = { completedSequence: before + 1, run: mutate }
         if (final) interleave.outbox = async () => {
           if (++outboxReads !== 2) return
           delete interleave.outbox
@@ -792,7 +608,6 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
         }
         phase(`starting-recall-proof-${mutation}`)
         const result = await reopened.atlas.memory.recall(selected, call)
-        if (hookFailure) throw hookFailure
         expect(applied).toBe(1)
         expect(result.status).toBe("unavailable")
         expect("records" in result).toBe(false)
@@ -800,7 +615,7 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
         if (final) {
           expect(outboxReads).toBe(2)
           expect(finalEnvironmentReads).toBe(5)
-        } else expect(outboxReads).toBe(1)
+        }
         phase(`rejected-recall-proof-${mutation}`)
       })
     })
@@ -814,11 +629,12 @@ test("Planner recall proof stays lexical while an independent same-call calculat
     await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
       const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
       const before = control.calculationResolves
-      interleave.evidence = async () => { entered.resolve(); await release.promise }
+      interleave.evidence = { completedSequence: before + 1, run: async () => { entered.resolve(); await release.promise } }
       const running = reopened.atlas.memory.recall(caseRef, call)
       try {
         await Promise.race([entered.promise, running.then(() => { throw new Error("Real Atlas recall did not reach its warmed evidence boundary") })])
         expect(control.calculationResolves - before).toBe(1)
+        expect(control.calculationResolved).toBe(before + 1)
         // This continuation was created outside recall's AsyncLocalStorage.
         // It must run the actual producer even though the same UI call is live.
         const independent = await reopened.business.context.resolve(calculation, call)

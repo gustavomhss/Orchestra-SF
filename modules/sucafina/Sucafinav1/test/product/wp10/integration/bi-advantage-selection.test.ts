@@ -104,7 +104,12 @@ test("BI refuses lease loss after its first and last real authorization awaits a
       const replacement = fixture.fixture.host.requestFor(fixture.context)
       const read = createSfAuthorizedScenarioBiProjection({ results: fixture.results, readProjection: fixture.readProjection,
         host: { requestFor: (call) => calls.replaced ? replacement : fixture.fixture.host.requestFor(call),
-          revalidate: async (call) => { const allowed = await fixture.fixture.host.revalidate(call); after?.(++calls.count, call, calls); return allowed } } })
+          revalidate: async (call) => {
+            const allowed = await fixture.fixture.host.revalidate(call)
+            calls.count++
+            after?.(calls.count, call, calls)
+            return allowed
+          } } })
       return { read, calls }
     }
     const baseline = observe(), baselineCall = await fixture.admit()

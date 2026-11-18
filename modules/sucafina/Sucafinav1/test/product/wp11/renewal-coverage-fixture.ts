@@ -6,7 +6,7 @@ import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
 import { classifyCoverage, supportsCoverageClassification } from "../../../product/decisions/coverage-classification.ts"
 import { wp05Horizon, type createWp05SensitivityFixture } from "../wp05/engine-fixture.ts"
 
-type Fixture = Pick<Awaited<ReturnType<typeof createWp05SensitivityFixture>>, "sourceRefs" | "scenario" | "planner" | "context" | "evidence" | "caseRef" | "basis" | "sources">
+type Fixture = Awaited<ReturnType<typeof createWp05SensitivityFixture>>
 
 /** Synthetic source declarations classify real Planner components; they supply no computed financial values. */
 export async function renewalCoverage(fixture: Fixture, training: "bundled" | "omitted" | "confirmed" | "zero" | "null") {

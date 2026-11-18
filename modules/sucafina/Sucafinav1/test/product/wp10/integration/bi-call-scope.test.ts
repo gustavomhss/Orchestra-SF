@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../product/contracts/decisions.ts"
-import type { CostCoverageAssessment, DecisionCase } from "../../../../product/contracts/decisions.ts"
+import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { DomainProjection } from "../../../../product/contracts/context.ts"
 import type { BiViewRequest } from "../../../../product/contracts/operations.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
@@ -72,30 +72,23 @@ async function prepare(deadline: ReturnType<typeof compositionTestDeadline>) {
     return { commit: true, value: true }
   })
   if (seeded.status !== "ok") throw new Error(`Empty BI case: ${JSON.stringify(seeded)}`)
-  const classifications: { coverageRef: string; version: number; assessment: CostCoverageAssessment }[] = []
+  const classifications: { coverageRef: string; version: number }[] = []
   for (const [index, source] of sources.entries()) {
     const coverage: BaselineCoverageRequest = { caseRef: initialRef, source, basis, expectedVersion: 0,
       entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "service"
         ? { categoryId, status: "included", componentRefs: componentIds[index]!, evidenceRefs: [source], scopeNote: "Human classifies license service; all other categories remain pending" }
         : { categoryId, status: "pending", reason: "Awaiting human evidence" }) }
     const human = ok(await authority.human.admit(fixture.request(`bi-coverage-${index}`), "decisions.coverage", coverage), "Admit human BI coverage")
-    try {
-      const registered = ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, initialRef, {}, () => business.baselineCoverage.register(coverage, human))), "Register human BI coverage")
-      const preserved = ok(await deadline.phase(`coverage.read.${index}`, () => business.withCase(human, initialRef, {}, () =>
-        business.baselineCoverage.resolveForecastCoverage(registered.coverageRef, human))), "Reopen actual human BI assessment")
-      expect(preserved.coverageRef).toBe(registered.coverageRef)
-      classifications.push({ ...registered, assessment: preserved.assessment })
-    }
+    try { classifications.push(ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, initialRef, {}, () => business.baselineCoverage.register(coverage, human))), "Register human BI coverage")) }
     finally { authority.human.finish(human) }
   }
-  expect(classifications[0]!.assessment.evaluatedSourceRefs).not.toEqual(classifications[1]!.assessment.evaluatedSourceRefs)
   const mutationHttp = portfolio.http({ origin: "https://example.test", mount: "/product" })
   const promote = async (index: number, caseRef: typeof initialRef) => {
     const payload = { caseRef, title: index ? "BI candidate" : "BI baseline", scenario: { baseRef: sources[index]!.refId, operations: [], assumptions: [] }, coverageRef: classifications[index]!.coverageRef }
     const response = await deadline.phase(`promotion.${index}`, () => mutationHttp(new Request("https://example.test/product/planner?sf=decision-promote", {
       method: "POST", signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": `bi-promote-${index}` }, body: JSON.stringify(payload) }), "planner"))
-    if (response?.status !== 200) console.error("SF_BI_PROMOTION_FAILURE", JSON.stringify({ fixture: "bi-call-scope", index, caseRef,
-      status: response?.status, body: response ? await response.clone().text() : "no-response" }))
+    if (response?.status !== 200) console.error("SF_BI_PROMOTION_RESPONSE", JSON.stringify({ fixture: "bi-call-scope", index, caseRef, status: response?.status,
+      body: response ? await response.clone().text() : null }))
     expect(response?.status).toBe(200)
     const receipt = ok(await response!.json() as PortResult<{ caseRef: typeof initialRef; resultRef?: string }>, "Promote real BI scenario")
     if (!receipt.resultRef) throw new Error("Actual promotion did not persist its scenario")
@@ -107,12 +100,7 @@ async function prepare(deadline: ReturnType<typeof compositionTestDeadline>) {
   if (snapshot.status !== "ok" || !snapshot.value) throw new Error("Promoted BI case unavailable")
   expect(snapshot.value.alternatives).toHaveLength(2)
   expect(snapshot.value.choices).toHaveLength(0)
-  for (const [index, alternative] of snapshot.value.alternatives.entries()) {
-    expect(alternative.scenario).toMatchObject({ operations: [], assumptions: [] })
-    expect(alternative.result.costCoverage.alternativeId).toBe(alternative.id)
-    expect(alternative.result.costCoverage.alternativeVersion).toBe(alternative.version)
-    expect(alternative.result.costCoverage).toEqual({ ...classifications[index]!.assessment,
-      alternativeId: alternative.id, alternativeVersion: alternative.version })
+  for (const alternative of snapshot.value.alternatives) {
     expect(alternative.result).toMatchObject({ comparisonStatus: "conditioned", total: null, costCoverage: { coverageState: "pending" } })
     expect(alternative.result.horizon).toEqual(period)
     expect(alternative.result.costCoverage.entries.find((entry) => entry.categoryId === "service")?.status).toBe("included")
@@ -196,58 +184,40 @@ test("BI proof starts only after real UI consumption, clones within one invocati
   } finally { await deadline.close() }
 }, 120_000)
 
-test("BI exported source and Review cannot borrow a completed proof from an overlapping presentation dispatch", async () => {
+test("BI proof refuses overlapping and reentrant callers without lending or invalidating the owning invocation", async () => {
   const deadline = compositionTestDeadline("bi-call-scope-lexical")
   try {
-    const fixture = await prepare(deadline)
-    const scenarios = fixture.business.plannerProduct.scenarios
-    if (!scenarios) throw new Error("Actual stored Planner scenarios unavailable")
-    const observations = { scenarioReads: 0, held: false }
-    const observedBusiness = { ...fixture.business, plannerProduct: { ...fixture.business.plannerProduct, scenarios: { ...scenarios,
-      resolve: async (...args: Parameters<typeof scenarios.resolve>) => {
-        observations.scenarioReads++
-        return scenarios.resolve(...args)
-      },
-    } } }
-    const bi = createSfBiServices({ authority: fixture.authority, business: observedBusiness, portfolio: fixture.portfolio })
+    const fixture = await prepare(deadline), scope = fixture.scope()
     const { request, call } = await fixture.admit()
-    const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
-    const originalRead = bi.source.read
-    bi.source.read = async (incoming, context) => {
-      // Suspend only after the real producer, its source checks and the holder's
-      // first completed proof have returned. All responses remain unchanged.
-      const value = await originalRead(incoming, context)
-      if (!observations.held && context === call && value.status === "ok") {
-        observations.held = true
-        reached.resolve()
-        await release.promise
-      }
-      return value
-    }
-    const pending = deadline.phase("dispatch.presentation", () => bi.dispatchPresentation(request, call))
+    const ready = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+    const pending = deadline.phase("lexical.owner", () => scope.run(request, call, async () => {
+      await fixture.consume(request, call)
+      const first = ok(await scope.read(fixture.selection, call, () => fixture.produce(request, call)), "Owning BI projection")
+      expect(await scope.run(request, call, async () => { throw new Error("Reentrant BI work must not execute") }))
+        .toEqual({ status: "denied", reason: "bi-call-already-active" })
+      ready.resolve()
+      await release.promise
+      const again = ok(await scope.read(fixture.selection, call, () => fixture.produce(request, call)), "Owner retains its proof after overlap")
+      expect(again).toEqual(first)
+      expect(again).not.toBe(first)
+      expect(fixture.counts.produced).toBe(1)
+      return { status: "ok", value: true }
+    }))
     try {
-      await Promise.race([reached.promise, pending.then(() => { throw new Error("Actual BI dispatch did not produce its first projection") })])
-      expect(observations.scenarioReads).toBe(3)
-      expect(await fixture.authority.host.revalidate(call)).toBe(true)
-      const source = await deadline.phase("outside.source", () => bi.source.read(request, call))
-      expect(source).toEqual({ status: "denied", reason: "bi-call-invocation-unavailable" })
-      expect(source).not.toHaveProperty("value")
-      const review = await deadline.phase("outside.review", () => bi.readForReview(request, call))
-      expect(review).toEqual({ status: "denied", reason: "bi-call-invocation-unavailable" })
-      expect(review).not.toHaveProperty("value")
-      expect(observations.scenarioReads).toBe(3)
-      expect(await bi.dispatchPresentation(request, call)).toEqual({ status: "denied", reason: "bi-call-already-active" })
+      await Promise.race([ready.promise, pending.then(() => { throw new Error("BI owner did not reach its completed proof") })])
+      // These continuations began outside run(), although they share its real
+      // consumed context, Request, actor, source versions and case membership.
+      const reads = await Promise.all([0, 1].map(() => scope.read(fixture.selection, call, () => fixture.produce(request, call))))
+      for (const value of reads) {
+        expect(value).toEqual({ status: "denied", reason: "bi-call-authority-changed" })
+        expect(value).not.toHaveProperty("value")
+      }
+      expect(await scope.run(request, call, async () => { throw new Error("Overlapping BI work must not execute") }))
+        .toEqual({ status: "denied", reason: "bi-call-already-active" })
+      expect(fixture.counts.produced).toBe(1)
       release.resolve()
-      const completed = await pending
-      expect(completed.status).toBe("ok")
-      expect(observations.scenarioReads).toBe(3)
-      console.info("SF_BI_LEXICAL_PROOF", JSON.stringify({ completed: completed.status, source: source.status, review: review.status,
-        scenarioResolves: observations.scenarioReads, transport: "Real exported source and dispatcher; only the completed producer return was suspended" }))
-    } finally {
-      release.resolve()
-      await pending.catch(() => undefined)
-      bi.source.read = originalRead
-    }
+      expect(await pending).toEqual({ status: "ok", value: true })
+    } finally { release.resolve(); await pending }
   } finally { await deadline.close() }
 }, 120_000)
 

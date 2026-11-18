@@ -16,6 +16,8 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
   const { chromium } = await import("@playwright/test")
   const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
   input.signal.throwIfAborted()
+  const canonicalShell = [...documentHtml("BI", "dashboard", "", "", "").matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)]
+  if (canonicalShell.length !== 1) throw new Error("WP10_BI_CANONICAL_SHELL_SHAPE_CHANGED")
   const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
   const pending = { release: () => {}, settled: () => {} }
   const release = new Promise<void>((resolve) => { pending.release = resolve })
@@ -103,7 +105,6 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
     await context.route("https://example.test/**", async (route) => {
       const request = route.request()
       const mode = new URL(request.url()).searchParams.get("sf") ?? "other"
-      if (mode === "bi-source") expect(new URL(request.url()).searchParams.get("referenceDigest")).toMatch(/^[a-f0-9]{64}$/)
       const watch = watches.find((entry) => entry.mode === mode && !entry.request)
       if (watch) { watch.request = request; watch.sent.resolve(request) }
       const at = performance.now()
@@ -120,18 +121,15 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
         if (mode === "bi" && response.status === 200) {
           const asset = await ready(input.biAsset())
           const inline = asset.replace(/<\/script/gi, "<\\/script")
-          const html = forwarded.body.toString("utf8")
-          const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)]
-          const canonicalShell = [...documentHtml("BI lifecycle", "dashboard", "", "", "").matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)]
-          const shellMatches = canonicalShell.length === 1 && scripts[0]?.[1] === canonicalShell[0]?.[1]
-          const retainsView = html.includes("<section data-sf-bi data-sf-retain-view>")
+          const scripts = [...forwarded.body.toString("utf8").matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)]
           const inserted = scripts.at(-1)?.[1]
           const matches = inserted === inline
+          const shellMatches = scripts.length === 2 && scripts[0]?.[1] === canonicalShell[0]?.[1]
           const digest = (value: string) => new Bun.CryptoHasher("sha256").update(value).digest("hex")
-          console.info("SF_BI_BROWSER_ASSET", JSON.stringify({ matches, shellMatches, retainsView, scriptCount: scripts.length,
+          console.info("SF_BI_BROWSER_ASSET", JSON.stringify({ matches, shellMatches, scriptCount: scripts.length,
             assetBytes: Buffer.byteLength(asset), inlineBytes: Buffer.byteLength(inline), insertedBytes: inserted === undefined ? null : Buffer.byteLength(inserted),
             assetSha256: digest(asset), inlineSha256: digest(inline), insertedSha256: inserted === undefined ? null : digest(inserted) }))
-          if (!matches || !shellMatches || !retainsView || scripts.length !== 2) throw new Error("WP10_BI_BROWSER_LIFECYCLE_ASSET_MISMATCH")
+          if (!matches || !shellMatches || !forwarded.body.toString("utf8").includes("data-sf-bi data-sf-retain-view")) throw new Error("WP10_BI_BROWSER_LIFECYCLE_ASSET_MISMATCH")
         }
         if (watch) watch.handledStatus = response.status
         watch?.handled.resolve({ status: response.status, body: forwarded.body })

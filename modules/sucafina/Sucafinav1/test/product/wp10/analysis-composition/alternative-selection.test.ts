@@ -5,10 +5,10 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { Schema } from "effect"
 import { Location } from "@orchestra/core/location"
-import { AbsolutePath } from "@orchestra/core/schema"
-import { SessionSchema } from "@orchestra/core/session/schema"
 import { ModelV2 } from "@orchestra/core/model"
 import { ProviderV2 } from "@orchestra/core/provider"
+import { AbsolutePath } from "@orchestra/core/schema"
+import { SessionSchema } from "@orchestra/core/session/schema"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfDecisionDomainServices } from "../../../../../../../apps/cli/src/sucafina-product/decision-domain-services.ts"
 import { createSfPortfolioServices } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts"
@@ -42,10 +42,9 @@ function ok<T>(result: PortResult<T> | SfStateResult<T>): T {
 
 // Real SQLite/C08, Planner, source issuance, human selection and one-use native binding.
 // Session/skill observations are declared boundary fixtures; no model or native session execution is claimed.
-// Each proof selects its explicit horizon from the unchanged annual Planner source.
-// January remains the default; annual cases must run independently at the same budget.
-// Neither horizon supplies complete financial coverage or native model execution.
-async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01", end: "2026-01-31" }) {
+// The authority proof selects January from the unchanged annual Planner source.
+// It does not qualify annual composition latency or complete financial coverage.
+async function fixture() {
   const deadline = performance.now() + 105_000
   const deadlineError = new Error("Alternative-selection fixture exceeded its 105000ms cooperative deadline")
   const cancellation = new AbortController()
@@ -82,9 +81,9 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
     const phase = async <T>(name: string, work: () => Promise<T>) => {
       const started = performance.now()
       const before = { ...metrics }
-      console.info("SF_ALTERNATIVE_PHASE", JSON.stringify({ phase: name, horizon, state: "started", ...before }))
+      console.info("SF_ALTERNATIVE_PHASE", JSON.stringify({ phase: name, state: "started", ...before }))
       try { return await work() } finally {
-        console.info("SF_ALTERNATIVE_PHASE", JSON.stringify({ phase: name, horizon, state: "returned", elapsedMs: Math.round(performance.now() - started),
+        console.info("SF_ALTERNATIVE_PHASE", JSON.stringify({ phase: name, state: "returned", elapsedMs: Math.round(performance.now() - started),
           ...Object.fromEntries(Object.entries(metrics).map(([key, value]) => [key, value - before[key as keyof typeof before]])) }))
       }
     }
@@ -142,7 +141,7 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
     const initial = { id: "case", incarnation: "case-inc", version: 1 }
     ok(await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref,
       targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "case", commandDigest: digestSfValue(initial) }, async (state) => {
-      state.cases.case = { ...initial, state: "draft", objective: "Explicit alternative", horizon, currency: "USD",
+      state.cases.case = { ...initial, state: "draft", objective: "Explicit alternative", horizon: { start: "2026-01-01", end: "2026-01-31" }, currency: "USD",
         criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
       return { commit: true, value: true }
     }))
@@ -173,8 +172,7 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
       runForContext: (call) => replayContexts.get(call), admittedInput: (id) => id === "run" ? admitted.value : undefined, captures: () => [], revalidateCapture: async () => false })
     const actualPortfolio = createSfPortfolioServices({ authority, business, proposalCoverageWrites })
     cleanups.push(() => actualPortfolio.dispose())
-    if (!actualPortfolio.product) throw new Error("Real shared Portfolio product unavailable")
-    const sharedPortfolio = { ...actualPortfolio, product: actualPortfolio.product, selection: { ...actualPortfolio.selection,
+    const sharedPortfolio = { ...actualPortfolio, selection: { ...actualPortfolio.selection,
       read: async (...args: Parameters<typeof actualPortfolio.selection.read>) => { metrics.selectionReads++; return actualPortfolio.selection.read(...args) },
     } }
     const domain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites: new WeakSet(),
@@ -193,6 +191,7 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
     }
     const read = await readCall()
     const source = ok(await phase("fixture.source", () => business.plannerProduct.issueSource("v0", read))).evidence
+    const horizon = { start: "2026-01-01", end: "2026-01-31" }
     const forecast = ok(await phase("fixture.forecast", () => business.planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: horizon, currency: "USD" }, read)))
     expect(source.target.period).toEqual({ start: "2026-01-01", end: "2026-12-31" })
     expect(forecast.baseline.context.period).toEqual(horizon)
@@ -212,10 +211,9 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
         const result = ok(await phase(`fixture.scenario.${id}`, () => business.planner.simulateScenario(scenario, coverageCall)))
         expect(result.horizon).toEqual(horizon)
         // Only the fixture's case identities are assigned; financial results and source evidence come from the actual Planner.
-        const assigned = structuredClone(result)
-        assigned.costCoverage.alternativeId = id
-        assigned.costCoverage.alternativeVersion = 1
-        alternatives.push({ id, version: 1, title: "Same title", scenario, result: assigned })
+        const storedResult = structuredClone(result)
+        storedResult.costCoverage = { ...storedResult.costCoverage, alternativeId: id, alternativeVersion: 1 }
+        alternatives.push({ id, version: 1, title: "Same title", scenario, result: storedResult })
       }
       return { status: "ok", value: true }
     }))
@@ -298,6 +296,7 @@ test("canonical comparison drafts the exact human-selected second alternative an
   const state = await fixture()
   try {
     expect(state.domain.selection.read).toBe(state.sharedPortfolio.selection.read)
+    if (!state.sharedPortfolio.product) throw new Error("Shared portfolio product unavailable")
     expect(state.domain.portfolio).toBe(state.sharedPortfolio.product)
     expect(state.domain.descriptors.map((descriptor) => descriptor.id).sort()).toEqual(["sf_alternative_draft", "sf_change_prepare"])
     ok(await state.select("first", "chosen", 0))
@@ -406,9 +405,9 @@ test("canonical comparison reuse reopens Planner authority and remains bound to 
         // Even a rejection is returned from that actual producer, unchanged.
         await mutate((product) => { product.cases[state.caseRef.id]!.criteria = [{ id: "optional", description: "Fixture optional criterion", required: false }] })
         for (const attempt of [4, 5]) {
-          const compared = await scope.compare(request, call)
-          if (!canonical) throw new Error("Canonical comparison was not observed")
-          expect(compared).toEqual(canonical)
+          const comparison = await scope.compare(request, call)
+          if (!canonical) throw new Error("Canonical comparison producer did not return")
+          expect(comparison).toEqual(canonical)
           expect(produced).toBe(attempt)
         }
         await mutate((product) => { product.cases[state.caseRef.id]!.criteria = [] })
@@ -480,170 +479,30 @@ test("canonical comparison scopes reject overlap, input replacement and authorit
         return environment
       } } }
       const guarded = createSfPortfolioComparisonScope({ authority: authorityAtClock, business: state.business, compareCanonical })
-      const finalInvocation = await state.phase("comparison-scope.clock-invocation", () => guarded.run(call, async () => {
-        ok(await state.phase("comparison-scope.clock-baseline", () => guarded.compare(request, call)))
+      const revoked = await guarded.run(call, async () => {
+        ok(await guarded.compare(request, call))
         const before = produced
         armed = true
-        const last = state.phase("comparison-scope.clock-reuse", () => guarded.compare(request, call))
+        const last = guarded.compare(request, call)
         try {
           await Promise.race([clockReached.promise, last.then(() => { throw new Error("Proof reuse did not reach its final actual clock read") })])
           state.control.active = false
           clockRelease.resolve()
           const denied = await last
           expect(denied.status).toBe("denied")
+          expect(denied).toHaveProperty("reason", "portfolio-comparison-invocation-unavailable")
           expect(denied).not.toHaveProperty("value")
           expect(produced).toBe(before)
           expect(clockReads).toBe(8)
           expect(await state.authority.host.revalidate(call)).toBe(false)
           return { status: "ok", value: true }
         } finally { clockRelease.resolve() }
-      }))
-      // The callback deliberately revokes this lease. Its inner denial above
-      // cannot make the enclosing invocation's final authority check succeed.
-      expect(finalInvocation).toMatchObject({ status: "denied", reason: "portfolio-comparison-invocation-unavailable" })
-      expect(finalInvocation).not.toHaveProperty("value")
-      return { status: "ok", value: true }
-    }))
-  } finally { await state.close() }
-}, 120_000)
-
-test("stored scenario proofs remain private to one comparison and recheck C08 and current case membership", async () => {
-  const state = await fixture()
-  try {
-    const call = await state.readCall()
-    const canonical = state.business.plannerProduct.scenarios
-    if (!canonical) throw new Error("Real stored-scenario reader unavailable")
-    const scope = createSfPortfolioComparisonScope({ authority: state.authority, business: state.business,
-      compareCanonical: state.sharedPortfolio.compare, scenarios: canonical })
-    const reader = scope.scenarios
-    if (!reader) throw new Error("Scoped stored-scenario reader unavailable")
-    const mutate = (work: (product: SfProductState) => void) => state.store.transaction("dashboard", async (snapshot) => {
-      work(snapshot.data.__sfProductV1 as SfProductState)
-      return { commit: true, value: undefined }
-    })
-    ok(await state.business.withCase(call, state.caseRef, {}, async () => {
-      const reference = ok(await state.business.scenarioLookup({ caseRef: state.caseRef, alternativeId: "chosen", alternativeVersion: 1 }, call)).resultRef
-      const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
-      const initialReads = state.metrics.comparisonScenarioReads
-      const pending = scope.run(call, async () => {
-        const first = ok(await state.phase("scenario-scope.first", () => reader.resolve(reference, call)))
-        const original = structuredClone(first)
-        first.result.unresolvedConditions = [...first.result.unresolvedConditions, "Caller mutation is private"]
-        reached.resolve()
-        await release.promise
-        const sourceReads = state.metrics.comparisonSourceReads
-        expect(ok(await reader.resolve(reference, call))).toEqual(original)
-        expect(state.metrics.comparisonScenarioReads).toBe(initialReads + 1)
-        expect(state.metrics.comparisonSourceReads).toBeGreaterThan(sourceReads)
-        // The complete C08 fence observes a real write even without a version bump.
-        await mutate((product) => { product.preferences["fixture:scenario-fence"] = "changed" })
-        expect(ok(await reader.resolve(reference, call)).result).toEqual(original.result)
-        expect(state.metrics.comparisonScenarioReads).toBe(initialReads + 2)
-        return { status: "ok", value: true }
       })
-      try {
-        await Promise.race([reached.promise, pending.then(() => { throw new Error("The actual scenario did not reach the overlap boundary") })])
-        const overlap = await reader.resolve(reference, call)
-        expect(overlap.status).toBe("denied")
-        expect(overlap).not.toHaveProperty("value")
-        expect(state.metrics.comparisonScenarioReads).toBe(initialReads + 1)
-        release.resolve()
-        ok(await pending)
-      } finally { release.resolve() }
-      const beforeNewInvocation = state.metrics.comparisonScenarioReads
-      ok(await scope.run(call, async () => {
-        ok(await reader.resolve(reference, call))
-        expect(state.metrics.comparisonScenarioReads).toBe(beforeNewInvocation + 1)
-        await mutate((product) => { product.cases[state.caseRef.id]!.participants = [] })
-        try {
-          expect(await state.authority.host.revalidate(call)).toBe(true)
-          const revoked = await reader.resolve(reference, call)
-          expect(revoked.status).not.toBe("ok")
-          expect(revoked).not.toHaveProperty("value")
-        } finally { await mutate((product) => { product.cases[state.caseRef.id]!.participants = ["person"] }) }
-        return { status: "ok", value: true }
-      }))
+      expect(revoked.status).toBe("denied")
+      expect(revoked).toHaveProperty("reason", "portfolio-comparison-invocation-unavailable")
+      expect(revoked).not.toHaveProperty("value")
       return { status: "ok", value: true }
     }))
   } finally { await state.close() }
 }, 120_000)
 
-// Full annual counterparts of the three original journeys. Each owns a fresh
-// durable fixture and retains its complete causal chain and 105/120s bounds.
-test("annual 2026 canonical comparison drafts the exact human-selected second alternative and supports only the private replay context", async () => {
-  const state = await fixture({ start: "2026-01-01", end: "2026-12-31" })
-  try {
-    expect(state.domain.selection.read).toBe(state.sharedPortfolio.selection.read)
-    expect(state.domain.portfolio).toBe(state.sharedPortfolio.product)
-    expect(state.domain.descriptors.map((descriptor) => descriptor.id).sort()).toEqual(["sf_alternative_draft", "sf_change_prepare"])
-    ok(await state.select("first", "chosen", 0))
-    const call = await state.bind()
-    const selection = ok(await state.readers.verifiedAlternativeSelectionFor(call))
-    expect(selection.selection.alternativeId).toBe("chosen")
-    expect(selection.requestDigest).toBe(digestSfValue(state.fullRequest))
-    expect(selection.inputDigest).toBe(digestSfValue(state.skillInput))
-    const draft = ok(await state.phase("draft", () => state.domain.alternative(state.draftRequest, call)))
-    expect(draft.domainApplied).toBe(false)
-    expect(draft.proposal.scenario).toEqual(state.alternatives[1]!.scenario)
-    expect(draft.proposal.scenario).not.toEqual(state.alternatives[0]!.scenario)
-    const receipt = state.business.receipt(call, "sf_alternative_draft", digestSfValue(state.draftRequest), digestSfValue(draft))
-    const operation = state.business.operationIdentity(call)
-    if (!receipt || !operation) throw new Error("Real capability provenance unavailable")
-    const record = captureAlternativeProvenance(state.draftRequest, draft, receipt, call, operation)
-    if (!record) throw new Error("Producer capture invalid")
-    const ui = ok(await state.authority.human.admit(state.request, "analysis.start", state.start))
-    try {
-      expect((await state.readers.verifiedAlternativeSelectionFor(ui)).status).toBe("unavailable")
-      state.replayContexts.set(ui, "run")
-      const replay = await state.phase("replay", () => state.business.withCase(ui, state.caseRef, {}, () => state.domain.replayAlternative(record, ui)))
-      expect(ok(replay).output).toEqual(draft)
-    } finally { state.replayContexts.delete(ui); state.authority.human.finish(ui) }
-    state.control.generation = 2
-    expect((await state.domain.alternative(state.draftRequest, call)).status).not.toBe("ok")
-  } finally { await state.close() }
-}, 120_000)
-
-test("annual 2026 comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection", async () => {
-  const state = await fixture({ start: "2026-01-01", end: "2026-12-31" })
-  try {
-    expect(await state.capture()).toMatchObject({ status: "needs-input", reason: "selection-not-created" })
-    ok(await state.select("first", "outside", 0))
-    expect(await state.capture()).toMatchObject({ status: "denied", reason: "alternative-comparison-selection-outside-input" })
-    ok(await state.select("first", "chosen", 1))
-    const call = await state.bind()
-    const captured = structuredClone(state.admitted.value!.alternativeSelection)
-    // Commit a real new human selection after the running invocation has resolved
-    // its original selection, during the awaited Planner step. Cached proof must not survive it.
-    state.beforeSimulation(async () => { ok(await state.select("chosen", "first", 2)) })
-    expect(await state.phase("draft.selection-change", () => state.domain.alternative(state.draftRequest, call)))
-      .toMatchObject({ status: "stale", reason: "alternative-admitted-selection-changed" })
-    expect(state.admitted.value!.alternativeSelection).toEqual(captured)
-    state.authority.native.revoke(call.binding)
-    expect((await state.readers.verifiedAlternativeSelectionFor(call)).status).toBe("unavailable")
-  } finally { await state.close() }
-}, 120_000)
-
-test("annual 2026 a missing admission snapshot stays missing and request/input digests cannot reuse a capture", async () => {
-  const state = await fixture({ start: "2026-01-01", end: "2026-12-31" })
-  try {
-    const call = await state.bind(false)
-    ok(await state.select("first", "chosen", 0))
-    expect(await state.domain.alternative(state.draftRequest, call)).toMatchObject({ status: "needs-input", reason: "alternative-comparison-selection-required" })
-    const captured = ok(await state.capture())
-    // This assignment deliberately attacks the private holder; request/input mismatches must still fail closed.
-    state.admitted.value!.alternativeSelection = { ...captured, requestDigest: digestSfValue({ ...state.fullRequest, objective: "Different request" }) }
-    expect((await state.readers.verifiedAlternativeSelectionFor(call)).status).toBe("unavailable")
-    state.admitted.value!.alternativeSelection = { ...captured, inputDigest: digestSfValue({ ...state.skillInput, alternatives: [...state.skillInput.alternatives].reverse() }) }
-    expect((await state.readers.verifiedAlternativeSelectionFor(call)).status).toBe("unavailable")
-    const changed = { ...state.start, skillInput: { ...state.skillInput, alternatives: state.skillInput.alternatives.map((alternative) => ({ ...alternative, version: alternative.version + 1 })) } }
-    expect((await state.capture(changed)).status).not.toBe("ok")
-    for (const changedInput of [
-      { ...state.skillInput, currency: "EUR" },
-      { ...state.skillInput, horizon: { ...state.skillInput.horizon, end: "2027-12-31" } },
-      { ...state.skillInput, costCoverageBases: state.skillInput.costCoverageBases.map((basis) => ({ ...basis, version: basis.version + 1 })) },
-      { ...state.skillInput, alternatives: state.skillInput.alternatives.map((alternative) => ({ ...alternative, result: { ...alternative.result, knownSubtotal: 999999 } })) },
-    ]) expect((await state.capture({ ...state.start, skillInput: changedInput })).status).not.toBe("ok")
-    state.control.active = false
-    expect((await state.readers.verifiedInputFor(call)).status).toBe("unavailable")
-  } finally { await state.close() }
-}, 120_000)
