@@ -33,7 +33,7 @@ node script/sf-ci/promotion-proof.mjs
 node script/sf-ci/promotion-proof.mjs --check
 ```
 
-The local mode fetches refs and invokes `git merge-tree --write-tree` (or a detached temporary fast-forward worktree on older Git). The GitHub-only mode uses the GitHub compare API, Git commit/tree objects, and `refs/pull/237/merge` parentage to independently verify the **remote topology**, while persisting `localMerge.method=NOT_RUN`. Mode-specific `--check` rejects absent/wrong-mode/stale evidence and refuses a non-draft PR or drifted base/head/merge ref. These commands do not qualify product behavior or authorize release.
+The local mode fetches refs and invokes `git merge-tree --write-tree` (or a private temporary named-branch worktree with `git merge --ff-only` on older Git). The GitHub-only mode uses the GitHub compare API, Git commit/tree objects, and `refs/pull/237/merge` parentage to independently verify the **remote topology**, while persisting `localMerge.method=NOT_RUN`. Mode-specific `--check` rejects absent/wrong-mode/stale evidence and refuses a non-draft PR or drifted base/head/merge ref. These commands do not qualify product behavior or authorize release.
 
 ## 12/12 qualification proof table
 
