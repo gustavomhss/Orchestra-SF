@@ -1,18 +1,15 @@
 import { Context, Effect, Layer, Option } from "effect"
-import path from "node:path"
 import { AgentV2 } from "@orchestra/core/agent"
 import { Config } from "@orchestra/core/config"
 import { Database } from "@orchestra/core/database/database"
 import { makeGlobalNode, makeLocationNode } from "@orchestra/core/effect/app-node"
 import { EventV2 } from "@orchestra/core/event"
-import { Global } from "@orchestra/core/global"
 import type { Host } from "@orchestra/core/host"
 import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { PermissionV2 } from "@orchestra/core/permission"
 import { Relay } from "@orchestra/core/relay"
 import { SessionExecution } from "@orchestra/core/session/execution"
-import { SessionV2 } from "@orchestra/core/session"
 import { SessionStore } from "@orchestra/core/session/store"
 import { ToolSafety } from "@orchestra/core/tool-safety"
 import { TaskTool } from "@orchestra/core/tool/task"
@@ -41,9 +38,6 @@ export type SfRoutineNativeRuntimeResources = {
   readonly relay: Relay.Interface
   readonly location: Location.Interface
   readonly execution: SessionExecution.Interface
-  /** Existing exported application API; absent in recording-only/synthetic graphs. Never build a second Session node. */
-  readonly sessions?: SessionV2.Interface
-  readonly originDirectory?: string
   readonly events: EventV2.Interface
   readonly config: Config.Interface
   readonly records: ReturnType<typeof createSfRoutineNativeRecords>
@@ -126,8 +120,6 @@ export function createSfRoutineNativeRuntime(input: {
       relay: capture.relay,
       location: capture.location,
       execution: capture.execution,
-      sessions: capture.sessions,
-      originDirectory: capture.originDirectory,
       events: capture.events,
       config: capture.config,
       records,
@@ -147,7 +139,7 @@ export function createSfRoutineNativeRuntime(input: {
   const node = makeLocationNode({
     name: "sucafina/routine-native-runtime",
     deps: [Database.node, SessionStore.node, AgentV2.node, PermissionV2.node, TaskGovernance.node, ToolSafety.node, ToolRegistry.node,
-      Relay.node, Location.node, EventV2.node, Config.node, TaskTool.node, Global.node, existingExecution, existingLocations, existingSessions],
+      Relay.node, Location.node, EventV2.node, Config.node, TaskTool.node, existingExecution, existingLocations],
     layer: Layer.effectDiscard(Effect.gen(function* () {
       const database = yield* Database.Service
       const store = yield* SessionStore.Service
@@ -161,13 +153,9 @@ export function createSfRoutineNativeRuntime(input: {
       const events = yield* EventV2.Service
       const config = yield* Config.Service
       const execution = yield* SessionExecution.Service
-      const sessions = yield* ExistingSessions
-      const global = yield* Global.Service
       const locations = yield* LocationServiceMap.Service
       const capture: NativeCapture = {
         database, store, agents, permission, governance, safety, registry, relay, location, events, config, execution, locations,
-        sessions: Option.getOrUndefined(sessions),
-        originDirectory: path.join(global.data, "sucafina", "native-origins"),
         taskRegistration: registry.currentRegistrationIdentity(TaskTool.name),
         governanceInstallation: input.governance.installation(governance),
         views: new WeakMap(), active: true, release: undefined,
@@ -233,6 +221,4 @@ function captureExisting<I, A extends object>(service: Context.Key<I, A>) {
 
 const existingExecution = captureExisting(SessionExecution.Service)
 const existingLocations = captureExisting(LocationServiceMap.Service)
-class ExistingSessions extends Context.Service<ExistingSessions, Option.Option<SessionV2.Interface>>()("sucafina/routine-native-runtime/existing-session") {}
-const existingSessions = makeGlobalNode({ service: ExistingSessions,
-  layer: Layer.effect(ExistingSessions, Effect.serviceOption(SessionV2.Service)), deps: [] })
+

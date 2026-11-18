@@ -353,15 +353,7 @@ export function createSfRoutineNativeRecords(input: SfRoutineNativeRecordsInput)
     const found = await terminal(entry.sessionID)
     return found?.resultRef === resultRef ? found : undefined
   }
-  const isCurrentApproval = async (admission: NativeAdmission) => {
-    if (!admission.presentation || admission.approval?.outcome !== "APPROVED") return false
-    const latest = await Effect.runPromise(db.select().from(EventV2.EventTable).where(and(
-      eq(EventV2.EventTable.aggregate_id, admission.parent.id),
-      eq(EventV2.EventTable.type, versioned(MaestroEvent.Approval.Presented.type, 1)),
-    )).orderBy(desc(EventV2.EventTable.seq)).limit(1).get().pipe(Effect.orDie))
-    return !!latest && decode(MaestroEvent.Approval.Presented.data, latest.data).id === admission.presentation.id
-  }
-  return { readPlan, listPlans, isLatestPlan, readBoundPlan, readAdmission, listAdmissions, readRun, terminal, terminalForResult, isCurrentApproval }
+  return { readPlan, listPlans, isLatestPlan, readBoundPlan, readAdmission, listAdmissions, readRun, terminal, terminalForResult }
 }
 
 function decode<A>(schema: Schema.Decoder<A>, value: unknown): A {
