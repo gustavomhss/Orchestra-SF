@@ -94,9 +94,9 @@ export function plannerScenarioBiPresentation(projection: DomainProjection, pair
     }
   }
   return { status: "ok", value: { projection: { ...candidate, values }, presentation: { viewId, series: [
-    { id: "period-before", label: "Custo por período na base", role: "baseline", unit: projection.context.currency, valueIds: beforeIds },
-    { id: "period-after", label: "Custo por período no candidato", role: "result", unit: projection.context.currency, valueIds: afterIds },
-    { id: "period-difference", label: "Diferença calculada por componente e período", role: "contribution", unit: projection.context.currency, valueIds: differenceIds },
+    { id: "period-before", label: "Custo por período na base", role: "baseline", unit: "money", valueIds: beforeIds },
+    { id: "period-after", label: "Custo por período no candidato", role: "result", unit: "money", valueIds: afterIds },
+    { id: "period-difference", label: "Diferença calculada por componente e período", role: "contribution", unit: "money", valueIds: differenceIds },
   ], limitations: [...limitations, "A linha mostra limites dos períodos explícitos dos componentes calculados. Vencimentos, pagamentos, juros e efeitos contratuais exigem suas próprias fontes e regras; adiar um valor não elimina a obrigação."], timeline: { items } } } }
 }
 
