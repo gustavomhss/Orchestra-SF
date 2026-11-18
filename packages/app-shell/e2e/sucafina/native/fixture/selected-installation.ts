@@ -12,7 +12,7 @@ import { observeNativeBinding, requirePrivateNativeRoot } from "./readiness.ts"
 import type { NativeActor, NativeManifest } from "./readiness.ts"
 
 export type NativeInstalledSuite = "U15" | "U39" | "U40"
-export type NativeInstalledCase = "list" | "editable" | "denied" | "stale" | "lost" | "entry"
+export type NativeInstalledCase = "list" | "editable" | "denied" | "stale" | "lost" | "entry" | "empty" | "source" | "readonly" | "revoked" | "late"
 type RecordValue = Record<string, unknown>
 
 const specs = {
@@ -216,7 +216,7 @@ export async function registerNativeSelectedInstallation(input: Readonly<{
   suite: NativeInstalledSuite
   selections: readonly NativeSelectionInput[]
   /** Genuine CAP14 stale conflict editor already signed into *another* context. */
-  staleEditor?: Readonly<{ actor: "holder" | "dashboardAdmin"; page: Page }>
+  staleEditor?: Readonly<{ actor: NativeActor; page: Page }>
 }>): Promise<Readonly<{ suite: NativeInstalledSuite; file: string; selectionCount: number; proofClass: string }>> {
   if (process.env.GITHUB_ACTIONS !== "true" ||
       process.env.SF_NATIVE_CANDIDATE_SHA !== input.manifest.candidateSha)
