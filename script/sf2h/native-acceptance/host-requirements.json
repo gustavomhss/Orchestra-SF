@@ -1,0 +1,868 @@
+{
+  "schema_version": 1,
+  "scope": "native-proof-preparation; requirements and requests only, not runtime evidence",
+  "pins": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "mission_sha": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "wp00_head": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+    "wp10_input_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+    "wp10_observed_head": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "wp14_input_sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633"
+  },
+  "final_gate": {
+    "required": "S0 accepted product candidate C and explicit authorization for final proof phase",
+    "observed": "NOT_ACCEPTED",
+    "effect": "This preparation does not dispatch AM final or epic."
+  },
+  "requirements": [
+    {
+      "id": "shared.host-placement",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "owner_tasks": [
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "operation": "Discover the installed Orchestra root, Location and candidate without admitting a run",
+      "resource": "Existing authenticated Orchestra host exposing its current installationId, hostId, projectId, Location.Ref and runtime build SHA; actual authenticated analysis HTTP origin/mount/surface and canonical domain UI mounts supplied by the same installed root",
+      "required_evidence": [
+        "actual origin and SF mount",
+        "runtime_build_sha equals supplied candidate C",
+        "installation/project/location identities returned by that root",
+        "current provider object/generation identification",
+        "reachable choices/prepare/start/read/output wrapper identity for the selected product surface; no guessed localhost endpoint"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "No Orchestra native host API is exposed to this preparation session. Desktop Commander lists the user's Mac offline; this is not evidence that a runtime is running elsewhere.",
+      "source_refs": [
+        "host-context.ts",
+        "native-host.ts",
+        "wp12-analysis-http"
+      ],
+      "next_action": "Host owner supplies a reachable existing installation and a read-only readiness observation; do not create credentials, guess localhost, restart desktop/server or infer model availability. This is placement/discovery only; provider identity observation does not establish the isolated provider-change controls required by shared.authority."
+    },
+    {
+      "id": "shared.authority",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "owner_tasks": [
+        "WP10.T01",
+        "WP10.T06",
+        "WP10.T07",
+        "WP11.T01"
+      ],
+      "operation": "Admit current authenticated human/UI and native contexts using the root's private registries; resolve current case/source selectors through existing preparation/domain ports, invoke the actual registered C16 wrapper with session-issued Tool.Context, and observe owner-supported authority/lease/provider lifecycle changes in an isolated proof scope",
+      "resource": "Actual Request/session authority and C08/C16 registry for selected cases; two independently authorized actors for isolation; actual SfAnalysisInputPort.prepare and canonical operation-input selectors; installed Tool.dynamic executor with its live Tool.Context and C16 grant/lease registry; owner-controlled isolated permission/grant revocation and existing provider collision/replacement/generation controls",
+      "required_evidence": [
+        "principalRef/accessRevision/policyVersion",
+        "case id/incarnation/version",
+        "lease lifetime and providerGeneration",
+        "real callID joined to domain port/receipt",
+        "two sessions with same profile and distinct accessible contexts",
+        "authorized C09 case id/incarnation/version and producer-supplied source/selection refs for each requested skill and canonical operation, with closed-schema validation",
+        "actual registered Tool.dynamic.execute(payload, session-issued Tool.Context) handle; matching loaded skill/profile/run/session receipt; no reconstructed binding or lease",
+        "distinct actual principal/session/access scopes, including two simultaneous sf_finance sessions; current authority and grant before/after observations",
+        "controlled missing-SkillLoadReceipt, revoked native grant, revoked current permission, wrong case/session/installation/project/location/profile and forged actor/role/grant argument denials through the actual wrapper",
+        "controlled lease reuse/expiry and old-generation client rejection with no effect or restricted egress",
+        "real provider object identity/generation before and after an owner-controlled isolated transition; homonymous sucafina-workbench or sanitized collision returns provider-conflict and is never connected as a replacement",
+        "revocation barrier between discovery and execution and between execution and return; reopened process/session needs a newly authenticated binding and old binding remains invalid",
+        "operation-specific owner joins the exact canonical_operation.producer_task or skill owner_tasks in request-inputs.json; case/source custodians do not stand in for every domain producer"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "No authenticated Orchestra principal or private registry lease is available here. JSON, casts and fixture memberships cannot supply it.",
+      "source_refs": [
+        "host-context.ts",
+        "contribution.ts",
+        "native-host.ts",
+        "verified-call.ts",
+        "wp12-analysis-http",
+        "wp12-import-analysis-choices"
+      ],
+      "next_action": "Use host-issued contexts only. For denied probes submit untrusted arguments through the real wrapper; never construct a TrustedExecutionBinding or synthetic grants in this harness. WP10.T01/WP10.T06 owns root admission, C16 leases and isolated provider lifecycle; WP10.T07 and WP11.T01 supplies actual source/case access, while each frozen canonical producer supplies its own selected business input. An AVAILABLE principal alone cannot clear wrapper execution, controlled revocation or provider-transition capability. Keep those suboperations NEEDS_HOST until their exact handles are observed; do not create a fake provider or mutate an active host/configuration."
+    },
+    {
+      "id": "shared.model",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM06"
+      ],
+      "owner_tasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "operation": "Resolve the selected model from Catalog and exercise SessionV2 through installed SfNativeHostApi; resolve the genuine selected resident descriptors required by all 18 skill requests and the 39 named profile/skill/operation routes",
+      "resource": "Existing provider/model available in the real Location, current C15 budget reservation and distributed skill source capability; existing product offers or installed SfHostServices.selected registry with actual profile/skill versions, manifest/source digests and allowed scope; no descriptor or scope widened by the preparation",
+      "required_evidence": [
+        "effective providerID/model id/variant returned by Catalog and session",
+        "native_session_id/run_id",
+        "actual source_path/version/digest from SkillLoadReceipt",
+        "budget reservation/token-count receipt",
+        "author and independent reviewer run identities",
+        "actual selected profileId/profileVersion/skillId/skillVersion/manifestDigest/sourceDigest/outputSchemaVersion and operation ceiling for each of the eighteen skill requests",
+        "selected descriptors also match every explicitly named profile/skill pair in the 39 operation routes; this is not an invented full profile-by-skill cross product",
+        "coverage of all five profiles and eighteen skill sources: public choices at the observed WP12 pin offers only sf_maestro/sf-enquadrar-decisao and sf_finance/sf-explicar-forecast; the remaining selections require genuine product offers or installed selected-registry observations",
+        "requestedOperationScope remains inside the intersection of selected profile, loaded skill and current case/principal grant; a loaded source or available model does not clear a missing selection",
+        "independent reviewer load/run/nativeSession is joined to a real sf_reviewer execution and the target persisted output digest, without shared analysis history"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "No provider credentials, available-model list or current C15 reservation has been observed. Repository declarations are not model access.",
+      "source_refs": [
+        "native-host.ts",
+        "contribution.ts",
+        "wp12-import-analysis-choices",
+        "wp12-analysis-http",
+        "wp12-native-mission-harness"
+      ],
+      "next_action": "Owner exposes existing authorized model selection and onReady SfNativeHostApi. Preserve c15-context-budget-gate-unavailable/resident-source-or-model-unavailable when absent. WP12.T01/WP12.T02 supplies the actual selected descriptors and source/version mapping, with WP10.T06 retaining runtime authority. Preserve unavailable for every unoffered pair; catalog rows and synthetic withWp12NativeMissionHost selections do not satisfy this resource."
+    },
+    {
+      "id": "shared.observer",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "owner_tasks": [
+        "WP10.T01",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T03",
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP05.T05",
+        "WP06.T03",
+        "WP06.T05",
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "operation": "Capture and join authenticated runtime observations without changing authority; observe the actual direct native executor and private MCP bridge lifecycle and join each canonical result to its real UI/internal consumer after reload",
+      "resource": "Existing onSkillLoaded/onVerifiedCall callbacks, native collect(binding), canonical run/output readers and real UI consumer after reload; the owner-installed private createSfBusinessMcpBridge call/observer capability, genuine direct-wrapper and UI action handles, and the exact consumer_task handles named by each skill and operation request",
+      "required_evidence": [
+        "SkillLoadReceipt",
+        "C16 receipt and operation/domain callID/result digest",
+        "ordered actual SessionV2 transcript",
+        "persisted outputRef/schemaVersion",
+        "consumer action and reload observation",
+        "negative outcome with no restricted egress",
+        "private bridge instance/call handle exercising initialize/listTools/callTool/dispatch/revalidate/cleanup with the actual session-issued Tool.Context; callbacks alone do not establish an executable bridge",
+        "direct-native and MCP calls have distinct live call leases, actual canonical handler identity and matching authorized principal, case/base versions, input digest and canonical result/ref/receipt",
+        "every UI-exposed operation is mapped to its actual action and compared with direct native/MCP; every other route identifies its actual internal consumer; at least one actual UI action for each of the eight packs",
+        "each of the eighteen skill outputs is schema-valid, committed and opened/used after reload by every frozen consumer_tasks entry; aggregate observer availability cannot clear a missing consumer handle",
+        "each of the 39 route results reaches its exact frozen consumer_tasks and records consumerTask/consumerRef/observedAction/evidence",
+        "negative wrapper/bridge outcome and canonical effect/egress observations are captured directly; absent onVerifiedCall is not evidence of denial",
+        "load-before-prompt, actual provider/model/tool trace, persisted typed envelope and output digest bind to the same run/session/profile/skill and candidate C"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "Hooks exist in code but no installed observer or live binding is exposed. onVerifiedCall observes successful verified calls only; absence of a callback is not a denied-call proof.",
+      "source_refs": [
+        "native-host.ts",
+        "verified-call.ts",
+        "contribution.ts"
+      ],
+      "next_action": "Bind observation only through the owner composition capability and collect failures at their actual wrapper/result. Do not accept self-reported pass flags, screenshot alone or transcript from another SHA. WP10.T06 owns direct-wrapper/private-bridge correlation and WP12.T01/WP12.T03 owns native load/output observation. For each UI/domain consumer, use the exact consumer_tasks in the corresponding request, not the aggregate list as an interchangeable owner set. A success callback, rendered HTML or a consumer name alone is insufficient."
+    },
+    {
+      "id": "am04.human-choice-apply",
+      "proofs": [
+        "AM04"
+      ],
+      "owner_tasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "operation": "Prepare with model; choose, review and Apply through admitted human actions",
+      "resource": "Existing decision HTTP mount and PreparedApplyPort for each actual target domain",
+      "required_evidence": [
+        "human choice reason and alternative/version/basis",
+        "prepared change and target incarnation/expectedVersion",
+        "actual reviewDigest returned by decision-review",
+        "canonical CommandReceipt plus domain-state effect",
+        "original ChoiceRecord preserved",
+        "human authority revalidated per domain"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "APIs exist, but no authorized case, choice, target data or authenticated human session is available in this session.",
+      "source_refs": [
+        "http.ts",
+        "prepared-apply.ts",
+        "apply.ts",
+        "decision-change-services.ts"
+      ],
+      "next_action": "Use real selected case inputs and existing human UI/HTTP. Native contexts must remain denied for executePrepared; never derive authority from a model-provided actor/role."
+    },
+    {
+      "id": "am04.commit-loss-barrier",
+      "proofs": [
+        "AM04"
+      ],
+      "owner_tasks": [
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "operation": "Lose the result after the domain transaction commits and before case reconciliation",
+      "resource": "Owner-supported one-attempt fault barrier at PreparedApplyPort.executePrepared return / createPreparedExecution reconciliation boundary",
+      "required_evidence": [
+        "barrier trace before and after domain commit",
+        "persisted domain receipt before case update",
+        "lost response observation",
+        "retry request retaining same idempotencyKey and commandDigest",
+        "exactly one domain effect and one canonical receipt",
+        "case reconciliation after recovery"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "No public native fault barrier is exposed in the inspected code or this session. Browser response loss after the complete handler does not prove the earlier commit-to-reconciliation interval.",
+      "source_refs": [
+        "prepared-apply.ts",
+        "apply.ts"
+      ],
+      "next_action": "WP11.T04/WP10.T01 must expose or supply an already supported controlled observation at this boundary; preparation keeps this request blocked rather than editing active hosts or substituting a fixture."
+    },
+    {
+      "id": "am04.replay-revocation-partial",
+      "proofs": [
+        "AM04"
+      ],
+      "owner_tasks": [
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "operation": "Replay a committed command; reject changed content or revoked authority and display partial domain state",
+      "resource": "Existing canonical receipt lookup plus owner-approved source/version/access changes on the selected test case",
+      "required_evidence": [
+        "same key and digest recover same receipt/effect",
+        "same key changed digest conflicts",
+        "stale target version does not apply",
+        "revoked reader cannot recover restricted receipt",
+        "one domain committed while another blocked yields explicit partial state",
+        "reload preserves choice and known receipt"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "No mutable authorized domain/case scope or permission-revocation operation is exposed here.",
+      "source_refs": [
+        "prepared-apply.ts",
+        "apply.ts",
+        "business-context.ts"
+      ],
+      "next_action": "Provide isolated authorized business corpus and actual owner-supported revocation/change operations. Never mutate role maps, mint principals or assert a global transaction."
+    },
+    {
+      "id": "am05.atlas-source-context",
+      "proofs": [
+        "AM05"
+      ],
+      "owner_tasks": [
+        "WP06.T05",
+        "WP14.T02",
+        "WP14.T05",
+        "WP10.T07"
+      ],
+      "operation": "Resolve original evidence and emit/recall via real Atlas boundary and protected C08 state",
+      "resource": "Installed BusinessContextService/createSfAtlasMemory, genuine committed case/outbox event and admitted document/record/calculation/receipt sources",
+      "required_evidence": [
+        "resolved module path and engine/boundary digests",
+        "BusinessEvidenceRef document/incarnation/revision/span/blob and text digests",
+        "record incarnation/version/fields/period",
+        "calculation engine/input/result digest and canonical receipt",
+        "createMemoryEmit/createMemoryRead/DurableMemory observed calls",
+        "missing/invalidated source refused"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "Code is reusable but neither a current business evidence scope nor real installed Atlas instrumentation is exposed.",
+      "source_refs": [
+        "atlas-memory.ts",
+        "atlas-store.ts",
+        "business-context.ts",
+        "business-memory-entry.ts"
+      ],
+      "next_action": "Use original owner APIs and private outbox generated by real case actions. Reading only the SF ledger, a copied memory entry or a serialized call context cannot prove AM05."
+    },
+    {
+      "id": "am05.scanner",
+      "proofs": [
+        "AM05"
+      ],
+      "owner_tasks": [
+        "WP10.T07"
+      ],
+      "operation": "Probe and run the installed native-memory scanner through trusted host configuration",
+      "resource": "Actual qualified gitleaks/trufflehog binary with absolute path, canonical ScannerBinarySpec, version and digest",
+      "required_evidence": [
+        "binary absolute path/version/SHA256",
+        "clean verdict and committed append",
+        "synthetic secret-canary hit with no append",
+        "real process timeout with scanner-unavailable and no append",
+        "absent executable with scanner-unavailable and no append",
+        "unchanged host-selected command/spec authority"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "The host scanner has not been discovered or qualified. Existing component tests install a real scanner in CI but do not establish this host's capability.",
+      "source_refs": [
+        "atlas-scanner.ts",
+        "atlas-memory.ts"
+      ],
+      "next_action": "Host owner provides existing qualified scanner and controlled absence/timeout scenarios. Never accept always-clean callbacks, a Bun executable standing in for scanner, or model-selected command/path/timeout."
+    },
+    {
+      "id": "am05.durability-restart",
+      "proofs": [
+        "AM05"
+      ],
+      "owner_tasks": [
+        "WP10.T07",
+        "WP14.T02"
+      ],
+      "operation": "Append, await commit, reopen in a new process and recall with newly authenticated binding",
+      "resource": "Owner-managed isolated proof process and protected store using the installed candidate C",
+      "required_evidence": [
+        "append trace distinct from async commit",
+        "committedRevision/eventId/recordDigest",
+        "same event recovered as already-committed",
+        "parent and reader OS process IDs differ",
+        "old process disposal/new process start trace",
+        "new authenticated binding and same persisted source context",
+        "consumer opens prior case and current differences"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "No owner-managed restart scope or installed store is available. WP14's existing child reader uses explicit synthetic identities and emits nativeSessionWitness:false.",
+      "source_refs": [
+        "atlas-memory.ts",
+        "atlas-store.ts",
+        "atlas-restart-reader.ts",
+        "source-access-atlas.test.ts"
+      ],
+      "next_action": "Reuse its process/receipt assertion pattern only; execute through an owner-managed isolated proof instance with real reauthentication. Do not restart the user's desktop/server or reuse a serialized old binding."
+    },
+    {
+      "id": "am05.commit-failure-loss",
+      "proofs": [
+        "AM05"
+      ],
+      "owner_tasks": [
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "operation": "Observe failed commit and lost committed response, then retry through original outbox",
+      "resource": "Owner-supported transaction fault/response-loss observation with actual C08 persistence; the Atlas-specific scope of idempotency-and-loss-controls, including a supported commit/cancellation boundary and the original source event/digest",
+      "required_evidence": [
+        "commit=false or failure leaves no new durable event",
+        "lost committed response preserves log/envelope/outbox consistency",
+        "same source event/digest recovers durable receipt",
+        "changed event digest conflicts",
+        "no success on synchronous append alone",
+        "owner-supported Atlas transaction failure/cancellation and response-loss handles are distinct from the AM04 PreparedApply boundary and must be observed independently"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "No supported native transaction fault barrier is exposed in this session.",
+      "source_refs": [
+        "atlas-memory.ts",
+        "atlas-store.ts",
+        "atlas-recovery.test.ts"
+      ],
+      "next_action": "Owner supplies an existing controlled fault mechanism; harness may validate receipts but must not replace persistence with callbacks or call a staged append durable. The shared request resource idempotency-and-loss-controls must explicitly bind this Atlas scope as well as the AM04 command scope; an Apply loss observation cannot clear Atlas commit-failure readiness."
+    },
+    {
+      "id": "am05.isolation-revocation",
+      "proofs": [
+        "AM03",
+        "AM05"
+      ],
+      "owner_tasks": [
+        "WP10.T06",
+        "WP10.T07",
+        "WP14.T02"
+      ],
+      "operation": "Exercise same-profile actors, wrong owner/session/case and source revocation/incarnation replacement",
+      "resource": "Two real independently authorized sessions plus one scoped private canary and owner-approved permission/source changes",
+      "required_evidence": [
+        "no cross-actor content/title/count/cache leak",
+        "owner omitted/forged fails",
+        "session/case mismatch fails",
+        "revocation removes prompt/BI/report/link/recall payloads",
+        "replacement does not regain validity by textual ID",
+        "restored access re-resolves current source",
+        "precedent explanation compares actual current differences"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "Fixture actors in WP14 are insufficient; no real two-actor scope/revocation capability is exposed.",
+      "source_refs": [
+        "atlas-memory.ts",
+        "business-context.ts",
+        "source-access-atlas.test.ts"
+      ],
+      "next_action": "Provide existing authorized actors and a private proof corpus; invoke the real wrapper and current source revalidation. Do not synthesize enterprise identities."
+    },
+    {
+      "id": "am05.packaging",
+      "proofs": [
+        "AM05"
+      ],
+      "owner_tasks": [
+        "WP10.T07"
+      ],
+      "operation": "Check actual Atlas business/native exports, AST external edge, generated artifacts and spawn guard on C",
+      "resource": "Canonical boundary builder/check:generated, business-memory-ports tests and root check:spawn-imports",
+      "required_evidence": [
+        "exact external memory-emit.ts -> ./scanner.js -> @orchestra/atlas-boundary/native-memory edge",
+        "zero spawn imports/computed imports/eval/scanner bodies in business bundle",
+        "bound native exports retained; no raw factories in native entry",
+        "SHA256 of all four generated JS/d.ts artifacts",
+        "guard and allowlist byte identity",
+        "real commands/run/job/results pinned to C"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "Packaging sources and four blob identities exist; no current accepted-C packaging gate has run for this preparation.",
+      "source_refs": [
+        "business-memory-entry.ts",
+        "business-memory-ports.test.ts"
+      ],
+      "next_action": "Reuse existing boundary tests/build checks in canonical CI when C is accepted. Do not edit generated artifacts, widen spawn allowlist or relabel a component green as native acceptance."
+    },
+    {
+      "id": "am05.documents-artifacts",
+      "proofs": [
+        "AM05"
+      ],
+      "owner_tasks": [
+        "WP06.T05",
+        "WP07.T04",
+        "WP10.T07"
+      ],
+      "operation": "Open and re-open admitted document evidence and generated material using current authorization",
+      "resource": "Original WP06 document store/resolver and actual WP07 artifacts, returned as opaque authorized refs; the document/artifact-specific selection and post-reload consumer handles supplied through current-case-and-source-selection and real-consumer-after-reload",
+      "required_evidence": [
+        "PDF digital/DOCX/text extraction from admitted bytes",
+        "candidate versus human confirmation states",
+        "same evidenceRef revision/span/digests consumed",
+        "no-text/invalid/removed source remains explicit",
+        "artifact bytes/hash/format inspected after reload",
+        "revoked artifact/link cannot reveal source",
+        "WP06.T05 supplies the actual admitted document/resolver and WP07.T04 supplies the actual artifact/download consumer; Atlas/scanner availability alone does not establish either handle"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "No admitted document bytes or authenticated artifact store has been exposed here.",
+      "source_refs": [
+        "business-context.ts"
+      ],
+      "next_action": "Owner selects existing authorized corpus and files; preserve source hashes and object identities. A local generated fixture file alone does not satisfy native artifact consumption. AM05 evidence/document/artifact hooks must reference the existing case/source and consumer resources. Keep missing digital/DOCX/text bytes, source revision/span/hash, confirmation action or artifact download separate and explicit."
+    },
+    {
+      "id": "am06.native-admission",
+      "proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "owner_tasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP10.T01",
+        "WP12.T04"
+      ],
+      "operation": "Resolve a published plan, prepare governed Task admission, start and read actual Relay execution",
+      "resource": "Installed SfRoutineNativePort implementing resolvePlan/resolveRecipe/prepare/readAdmission/start/readRun/listRunRefs/readExecution/readArtifact against real native storage",
+      "required_evidence": [
+        "current publication documentId/publishedVersion",
+        "planRevisionId/writeScope/workflowParameters/inputDigest",
+        "admissionRef/version/authorizationId/armRef/correlationId",
+        "actual Relay runRef and terminal execution revision",
+        "child Session/profile/skill/load receipt",
+        "artifact outputDigest and current sourceRefs"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "CODE_GAP_CONFIRMED: host-context.ts constructs createSfRoutineServices without native at both pinned WP10 and observed current HEAD; comment states no routine descriptors advertised. Installed publication is read-only and cannot provide admission/execution.",
+      "source_refs": [
+        "routine-services.ts",
+        "routine-installed-publication.ts",
+        "host-context.ts",
+        "routine-services.test.ts"
+      ],
+      "next_action": "WP10.T01/WP09.T07 installs the real governed native port in its own namespace, then S0 composes its SHA into C. Do not implement a fake SfRoutineNativePort or treat SessionV2.resume/external self-reported run JSON as Task admission."
+    },
+    {
+      "id": "am06.return-retry",
+      "proofs": [
+        "AM06"
+      ],
+      "owner_tasks": [
+        "WP09.T07",
+        "WP12.T04",
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05"
+      ],
+      "operation": "Read actual run/result, consume the canonical artifact in product and resume after input/failure",
+      "resource": "Same SfRoutineNativePort plus createRoutineResultAccess and existing product agenda/work consumers",
+      "required_evidence": [
+        "C11 queued/running/needs-input/ready/stale/cancelled/failed observations as applicable",
+        "actual run terminal state joined to artifact outputDigest",
+        "question ends run and response occurs in product",
+        "new version/ref after human answer",
+        "retry/reload preserves correlation and no duplicate proposal/effect",
+        "openResult/agenda consume same resultRef"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "Blocked by missing installed native C07 adapter and live product consumer.",
+      "source_refs": [
+        "routine-services.ts",
+        "routine-publication.ts",
+        "routine-services.test.ts"
+      ],
+      "next_action": "Retain deterministic product facts when synthesis fails; observe new admitted run after human input. Never invent an in-run human wait or count a resultRef without terminal verification as completion."
+    },
+    {
+      "id": "am06.recursion-schedule",
+      "proofs": [
+        "AM06"
+      ],
+      "owner_tasks": [
+        "WP09.T06",
+        "WP09.T07",
+        "WP12.T04"
+      ],
+      "operation": "Deny recursive prepare/run in routine-result mode; exercise actual recurrence, cancellation and revocation",
+      "resource": "Host-bound entryMode and installed native Schedule adapter with current owner/timezone/recurrence; the explicit Schedule lifecycle scope of actual-relay-run-and-result: existing schedule identity, owner, timezone, recurrence, current admission and cancellation/revocation handles",
+      "required_evidence": [
+        "interactive catalog/prepare and run only with current C07 admission",
+        "routine-result prepare/run denied with no new run",
+        "schedule id/owner/timezone/recurrence from current native service",
+        "cancellation/revocation prevents further unauthorized result and schedule effects",
+        "retry/reload dedupe",
+        "no business approval from recurrence",
+        "WP09.T06-owned native Schedule handle and recurrence/fire/cancel observations are separately present; Relay run/result or routine-result denial alone cannot clear Schedule readiness"
+      ],
+      "observed_status": "NEEDS_HOST",
+      "observed_reason": "C07 is not installed; no Schedule execution or cancellation/revocation resource is exposed by this preparation session.",
+      "source_refs": [
+        "routine-services.ts",
+        "host-context.ts"
+      ],
+      "next_action": "WP09.T06/WP09.T07 exposes existing supported native lifecycle; host sets entryMode, never model arguments. Preserve actual limitations and do not change Maestro/Relay/Schedule engines. Retain WP09.T06 as the Schedule owner when binding actual-relay-run-and-result, alongside WP09.T07/WP12.T04 for execution and returned contributions. Do not infer a Schedule service or permission from a Relay run."
+    }
+  ],
+  "native_request_plans": {
+    "AM04": {
+      "owner_tasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T04"
+      ],
+      "transport": "Existing authenticated human decision HTTP mount discovered from host, not hardcoded",
+      "requests": [
+        {
+          "id": "choose",
+          "method": "POST",
+          "query": {
+            "sf": "decision-choose"
+          },
+          "body_fields": [
+            "caseRef",
+            "alternativeId",
+            "alternativeVersion",
+            "comparison",
+            "criteria",
+            "reason"
+          ],
+          "authority": "current human UI admission"
+        },
+        {
+          "id": "prepare",
+          "method": "POST",
+          "query": {
+            "sf": "decision-prepare-changes"
+          },
+          "body_fields": [
+            "caseRef",
+            "choiceId",
+            "operations"
+          ],
+          "authority": "current human UI admission; model proposal alone is not a choice"
+        },
+        {
+          "id": "review",
+          "method": "POST",
+          "query": {
+            "sf": "decision-review"
+          },
+          "body_fields": [
+            "caseRef",
+            "choiceId",
+            "changeId"
+          ],
+          "result_requirement": "capture actual reviewDigest and full target/base state"
+        },
+        {
+          "id": "apply",
+          "method": "POST",
+          "query": {
+            "sf": "decision-apply"
+          },
+          "body_fields": [
+            "caseRef",
+            "changeId",
+            "choiceId",
+            "reviewDigest"
+          ],
+          "result_requirement": "HTTP receiptId/surface/version must join canonical CommandReceipt/domain state"
+        },
+        {
+          "id": "loss-retry",
+          "requires": "am04.commit-loss-barrier",
+          "action": "Commit domain; lose response before case reconciliation; replay same prepared action after reauthorization; reopen case/receipt/domain",
+          "expected": "one effect; same canonical receipt; truthful partial/reconciled case"
+        },
+        {
+          "id": "changed-digest",
+          "requires": "am04.replay-revocation-partial",
+          "action": "Attempt same idempotency key with different command content through owner-supported admitted test action",
+          "expected": "conflict; no extra effect"
+        },
+        {
+          "id": "stale-revoked-partial",
+          "requires": "am04.replay-revocation-partial",
+          "action": "Revalidate each domain after target/source change and revoked authority, including one applied domain and one blocked domain",
+          "expected": "stale/denied/partial; choice preserved"
+        }
+      ],
+      "headers": [
+        "content-type: application/json",
+        "same-origin request from actual authorized host session"
+      ],
+      "must_not_supply": [
+        "actor",
+        "role",
+        "principal",
+        "grants",
+        "fabricated reviewDigest"
+      ],
+      "loss_boundary": "after the domain's durable receipt transaction; before createPreparedExecution case reconciliation; HTTP response loss after reconciliation is a distinct weaker scenario"
+    },
+    "AM05": {
+      "owner_tasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ],
+      "requests": [
+        {
+          "id": "resolve",
+          "operation": "BusinessContextService.resolve(ref, trustedCall)",
+          "input": "real admitted BusinessEvidenceRef for document/record/calculation/receipt",
+          "expected": "authorized projection with canonical hashes; missing/invalidated references explicit"
+        },
+        {
+          "id": "emit",
+          "operation": "createSfAtlasMemory(...).emitFromLedger(sourceEventRef, trustedCall)",
+          "input": "real persisted case event and outbox reference",
+          "expected": "actual createMemoryEmit -> DurableMemory.append -> awaited SF commit; MemoryWriteReceipt"
+        },
+        {
+          "id": "read",
+          "operation": "createSfAtlasMemory(...).recall(caseRef, trustedCall)",
+          "expected": "createMemoryRead.recall invoked with authorized owner/kind; no raw cross-owner store"
+        },
+        {
+          "id": "scanner-clean",
+          "requires": "am05.scanner",
+          "expected": "real clean; committed"
+        },
+        {
+          "id": "scanner-canary",
+          "requires": "am05.scanner",
+          "expected": "real hit; refused; no appended record"
+        },
+        {
+          "id": "scanner-timeout",
+          "requires": "am05.scanner",
+          "expected": "real timeout/could-not-run; scanner-unavailable; no appended record"
+        },
+        {
+          "id": "scanner-absent",
+          "requires": "am05.scanner",
+          "expected": "absent binary; scanner-unavailable; no appended record"
+        },
+        {
+          "id": "commit-failure",
+          "requires": "am05.commit-failure-loss",
+          "expected": "no durable append after failed or cancelled outer transaction"
+        },
+        {
+          "id": "commit-response-loss",
+          "requires": "am05.commit-failure-loss",
+          "expected": "retry returns already-committed with same eventId/recordDigest, no duplicate"
+        },
+        {
+          "id": "restart",
+          "requires": "am05.durability-restart",
+          "expected": "different OS process, new authenticated binding, same committed original context and current authorization"
+        },
+        {
+          "id": "isolated-revoked-replaced",
+          "requires": "am05.isolation-revocation",
+          "expected": "wrong owner/session/case and private canary cannot leak; revocation/replacement reevaluated"
+        },
+        {
+          "id": "consumer",
+          "requires": "am05.documents-artifacts",
+          "expected": "open actual prior case/document/artifact and explain current differences after reload"
+        },
+        {
+          "id": "packaging",
+          "requires": "am05.packaging",
+          "expected": "canonical AST/export/external/four digest/spawn-guard evidence on same C"
+        }
+      ],
+      "memory_receipt_fields": [
+        "status",
+        "sourceEventId",
+        "eventId",
+        "recordDigest",
+        "committedRevision",
+        "scanner.name",
+        "scanner.version",
+        "scanner.status",
+        "reason"
+      ],
+      "envelope_fields": [
+        "schemaVersion",
+        "eventId",
+        "owner",
+        "kind",
+        "caseRef",
+        "sourceEventId",
+        "evidenceRefs",
+        "dependencies",
+        "sourceVersions",
+        "sourceIncarnations",
+        "projectionDigest",
+        "writerPrincipalRef",
+        "accessRevision",
+        "scannerReceipt",
+        "createdAt"
+      ],
+      "native_authority_rule": "WP14 restart fixture remains component-only and nativeSessionWitness:false; do not invoke its synthetic identity setup as native proof"
+    },
+    "AM06": {
+      "owner_tasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T07"
+      ],
+      "requests": [
+        {
+          "id": "catalog",
+          "operation": "sf_routine_catalog",
+          "expected": "actual published recipe and matched plan under sf_maestro/sf-preparar-revisao-executiva"
+        },
+        {
+          "id": "prepare",
+          "operation": "sf_routine_prepare",
+          "expected": "current human intent; proposal/admission request, not approval"
+        },
+        {
+          "id": "unadmitted",
+          "operation": "sf_routine_run",
+          "expected": "needs-input/denied without current admitted C07 record; no run"
+        },
+        {
+          "id": "run",
+          "operation": "sf_routine_run",
+          "input_fields": [
+            "admissionRef",
+            "expectedAdmissionVersion",
+            "caseRef"
+          ],
+          "expected": "real governed Task -> Relay run, pinned publication and current principal"
+        },
+        {
+          "id": "status",
+          "operation": "sf_routine_status",
+          "expected": "native run identity and execution revision; stale/revoked entry denied"
+        },
+        {
+          "id": "result",
+          "operation": "sf_routine_result",
+          "expected": "terminal receipt and actual artifact digest agree"
+        },
+        {
+          "id": "consume",
+          "operation": "createSfRoutineServices(...).openResult(runRef, context)",
+          "expected": "same persisted result used by agenda/product after reload"
+        },
+        {
+          "id": "failure-retry-human",
+          "requires": "am06.return-retry",
+          "expected": "failure visible; run may finish with question; product answer causes new versioned admitted run without duplicates"
+        },
+        {
+          "id": "routine-result-denial",
+          "requires": "am06.recursion-schedule",
+          "expected": "host-bound routine-result denies prepare/run; no recursive native call"
+        },
+        {
+          "id": "schedule-revoke-cancel",
+          "requires": "am06.recursion-schedule",
+          "expected": "current owner/timezone/recurrence, actual cancellation/revocation and dedupe; no implicit approval"
+        }
+      ],
+      "installation_requirement": "All six Routines operations remain obligations, but none may be advertised ready while native C07 adapter is absent."
+    }
+  },
+  "safety_boundary": [
+    "All input references and credentials remain on the actual authorized host; requests contain references, not secrets.",
+    "No runtime/host/engine edits from this namespace.",
+    "Do not turn fixture-only regression outcomes into native proof.",
+    "Missing operation/resource remains NEEDS_HOST; do all independent preparation work.",
+    "All receipt fields from pinned-am-proofs/S0-B remain mandatory; these plans are additive and never waive original checks."
+  ]
+}

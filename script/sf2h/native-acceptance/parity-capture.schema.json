@@ -1,0 +1,708 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Operation parity capture shape — preparation, no example execution values",
+  "description": "One operationParity entry. This documents metadata required by operationParity; it is not a native receipt, fixture, authority source or acceptance decision. Preserve original receipts and immutable evidence. Extension fields are not treated as authority.",
+  "type": "object",
+  "required": [
+    "operationId",
+    "packId",
+    "testedCommit",
+    "native",
+    "mcp",
+    "uiExposure",
+    "notGranted",
+    "consumers"
+  ],
+  "properties": {
+    "operationId": {
+      "type": "string",
+      "pattern": "\\S",
+      "description": "Must match one pinned operation_call_routes.operation_id."
+    },
+    "packId": {
+      "type": "string",
+      "pattern": "\\S",
+      "description": "Must equal that route's pack_id."
+    },
+    "testedCommit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$",
+      "description": "Must equal the prepared plan's one candidateC."
+    },
+    "native": {
+      "$ref": "#/$defs/nativeResult"
+    },
+    "mcp": {
+      "$ref": "#/$defs/mcpResult"
+    },
+    "ui": {
+      "$ref": "#/$defs/uiResult"
+    },
+    "uiExposure": {
+      "enum": [
+        "exposed",
+        "internal-only"
+      ]
+    },
+    "internalConsumerRef": {
+      "type": "string",
+      "pattern": "\\S",
+      "description": "Required for internal-only."
+    },
+    "currentC07Admission": {
+      "const": true,
+      "description": "Required only when the pinned route requires_current_c07_admission."
+    },
+    "notGranted": {
+      "$ref": "#/$defs/notGranted"
+    },
+    "consumers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/consumer"
+      },
+      "description": "ConsumerTask values must equal the pinned route.consumer_tasks exactly, without duplicates."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "uiExposure": {
+            "const": "exposed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "ui"
+        ]
+      },
+      "else": {
+        "required": [
+          "internalConsumerRef"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": true,
+  "x-fieldSources": {
+    "result.receipt": "The original unaltered BoundCapabilityReceipt delivered by the real product; archive evidenceRefs must identify its captured bytes.",
+    "result.handlerIdentity": "result.receipt.handlerExport, exact equality.",
+    "result.principalRef": "result.receipt.principalRef, exact equality.",
+    "result.accessRevision": "result.receipt.accessRevision, exact equality.",
+    "result.inputDigest": "result.receipt.inputDigest. Never replace with a harness-specific digest.",
+    "result.resultDigest": "result.receipt.resultDigest from a successful C16 dispatch.",
+    "result.callId": "result.receipt.callId, exact equality.",
+    "native-or-mcp.runId": "receipt.runId and skillLoadReceipt.runId must agree.",
+    "native-or-mcp.nativeSessionId": "receipt.nativeSessionId and skillLoadReceipt.nativeSessionId must agree.",
+    "result.contextObservation.caseRef": "Real native binding caseId/caseIncarnation/caseVersion, or the actual authorized UI selection. Record the observation's independent evidence; never insert it into the capability receipt.",
+    "result.contextObservation.baseVersionRef": "Existing actual version/reference selected by the product. No synthesized base digest.",
+    "result.contextObservation.sourceRef": "Identity/reference of the real authoritative base source, common across paths; evidenceRefs identify path-specific observation files.",
+    "ui.uiAction": "Actual observed product UI entrypoint/action with immutable evidence. Direct UI authority admission alone is insufficient."
+  },
+  "x-crossPathInvariants": [
+    "Normalized handlerIdentity, principalRef, accessRevision, inputDigest and resultDigest equal direct-native values in all compared paths.",
+    "Optional outputRef has identical absence or identical present value in all compared paths.",
+    "contextObservation.caseRef, baseVersionRef and sourceRef equal direct-native values in all compared paths.",
+    "Native and MCP callIds differ; each uses a separate private call lease.",
+    "Native and MCP raw receipt.providerGeneration agree.",
+    "Native/MCP load receipt skillId/profileId match the pinned positive route.",
+    "UI raw receipt.requestId equals its raw receipt.callId.",
+    "No baseDigest or top-level caseRef is required in normalized results or raw receipts.",
+    "Shape completeness is CAPTURE_COMPLETE_PENDING_INDEPENDENT_REVIEW at most; nativeAccepted remains false."
+  ],
+  "$defs": {
+    "evidenceRef": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": true
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/evidenceRef"
+      }
+    },
+    "caseRef": {
+      "type": "object",
+      "required": [
+        "id",
+        "incarnation",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "incarnation": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "contextObservation": {
+      "type": "object",
+      "required": [
+        "caseRef",
+        "baseVersionRef",
+        "sourceRef",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "caseRef": {
+          "$ref": "#/$defs/caseRef"
+        },
+        "baseVersionRef": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "sourceRef": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      },
+      "additionalProperties": true
+    },
+    "nativeReceipt": {
+      "type": "object",
+      "required": [
+        "operation",
+        "handlerExport",
+        "inputDigest",
+        "resultDigest",
+        "principalRef",
+        "callId",
+        "accessRevision",
+        "at",
+        "kind",
+        "runId",
+        "nativeSessionId",
+        "providerGeneration"
+      ],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "handlerExport": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "inputDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "resultDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "principalRef": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "callId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "accessRevision": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "at": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Original host receipt timestamp; Date.parse must succeed."
+        },
+        "kind": {
+          "const": "native"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "nativeSessionId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "providerGeneration": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "uiReceipt": {
+      "type": "object",
+      "required": [
+        "operation",
+        "handlerExport",
+        "inputDigest",
+        "resultDigest",
+        "principalRef",
+        "callId",
+        "accessRevision",
+        "at",
+        "kind",
+        "requestId"
+      ],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "handlerExport": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "inputDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "resultDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "principalRef": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "callId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "accessRevision": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "at": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Original host receipt timestamp; Date.parse must succeed."
+        },
+        "kind": {
+          "const": "ui"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "\\S"
+        }
+      },
+      "additionalProperties": true
+    },
+    "skillLoadReceipt": {
+      "type": "object",
+      "required": [
+        "runId",
+        "nativeSessionId",
+        "profileId",
+        "profileVersion",
+        "profileDigest",
+        "skillId",
+        "skillVersion",
+        "sourceDigest",
+        "instructionsDigest",
+        "loadedMessageId",
+        "loadedAt",
+        "manifestDigest"
+      ],
+      "properties": {
+        "runId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "nativeSessionId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "profileId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "profileVersion": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "profileDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "skillId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "skillVersion": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "sourceDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "instructionsDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "loadedMessageId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "loadedAt": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Original skill-load timestamp; Date.parse must succeed."
+        },
+        "manifestDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": true
+    },
+    "nativeResult": {
+      "type": "object",
+      "required": [
+        "status",
+        "kind",
+        "handlerIdentity",
+        "principalRef",
+        "accessRevision",
+        "inputDigest",
+        "resultDigest",
+        "callId",
+        "contextObservation",
+        "evidenceRefs",
+        "receipt",
+        "c16Wrapper",
+        "runId",
+        "nativeSessionId",
+        "skillLoadReceipt"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "kind": {
+          "const": "native"
+        },
+        "handlerIdentity": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "principalRef": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "accessRevision": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "inputDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "resultDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "callId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "outputRef": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Optional actual CapabilityResult.outputRef; absent when the real handler produces no output artifact."
+        },
+        "contextObservation": {
+          "$ref": "#/$defs/contextObservation"
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "receipt": {
+          "$ref": "#/$defs/nativeReceipt"
+        },
+        "c16Wrapper": {
+          "const": true
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "nativeSessionId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "skillLoadReceipt": {
+          "$ref": "#/$defs/skillLoadReceipt"
+        }
+      },
+      "additionalProperties": true
+    },
+    "mcpResult": {
+      "type": "object",
+      "required": [
+        "status",
+        "kind",
+        "handlerIdentity",
+        "principalRef",
+        "accessRevision",
+        "inputDigest",
+        "resultDigest",
+        "callId",
+        "contextObservation",
+        "evidenceRefs",
+        "receipt",
+        "c16Wrapper",
+        "runId",
+        "nativeSessionId",
+        "skillLoadReceipt",
+        "privateBridge",
+        "initializeObserved",
+        "listToolsObserved",
+        "callToolObserved"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "kind": {
+          "const": "native"
+        },
+        "handlerIdentity": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "principalRef": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "accessRevision": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "inputDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "resultDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "callId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "outputRef": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Optional actual CapabilityResult.outputRef; absent when the real handler produces no output artifact."
+        },
+        "contextObservation": {
+          "$ref": "#/$defs/contextObservation"
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "receipt": {
+          "$ref": "#/$defs/nativeReceipt"
+        },
+        "c16Wrapper": {
+          "const": true
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "nativeSessionId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "skillLoadReceipt": {
+          "$ref": "#/$defs/skillLoadReceipt"
+        },
+        "privateBridge": {
+          "const": true
+        },
+        "initializeObserved": {
+          "const": true
+        },
+        "listToolsObserved": {
+          "const": true
+        },
+        "callToolObserved": {
+          "const": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "uiAction": {
+      "type": "object",
+      "required": [
+        "entrypoint",
+        "observedAction",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "entrypoint": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "observedAction": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      },
+      "additionalProperties": true
+    },
+    "uiResult": {
+      "type": "object",
+      "required": [
+        "status",
+        "kind",
+        "handlerIdentity",
+        "principalRef",
+        "accessRevision",
+        "inputDigest",
+        "resultDigest",
+        "callId",
+        "contextObservation",
+        "evidenceRefs",
+        "receipt",
+        "uiAction"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "kind": {
+          "const": "ui"
+        },
+        "handlerIdentity": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "principalRef": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "accessRevision": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "inputDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "resultDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "callId": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "outputRef": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Optional actual CapabilityResult.outputRef; absent when the real handler produces no output artifact."
+        },
+        "contextObservation": {
+          "$ref": "#/$defs/contextObservation"
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "receipt": {
+          "$ref": "#/$defs/uiReceipt"
+        },
+        "uiAction": {
+          "$ref": "#/$defs/uiAction"
+        }
+      },
+      "additionalProperties": true
+    },
+    "notGranted": {
+      "type": "object",
+      "required": [
+        "status",
+        "effects",
+        "restrictedDataExposed",
+        "directCall",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "status": {
+          "const": "denied"
+        },
+        "effects": {
+          "const": 0
+        },
+        "restrictedDataExposed": {
+          "const": false
+        },
+        "directCall": {
+          "const": true
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      },
+      "additionalProperties": true
+    },
+    "consumer": {
+      "type": "object",
+      "required": [
+        "consumerTask",
+        "consumerRef",
+        "observedAction",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "consumerTask": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "consumerRef": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "observedAction": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
