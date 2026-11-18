@@ -43,11 +43,7 @@ import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { createSfWorkbenchHttp } from "../product/interface/http.ts"
-import { decorateSfProductHtml } from "../product/interface/html.ts"
-import { decorateSfDecisionControlsHtml } from "../product/integration/decision-controls-link.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
-import { getSfProductHtml } from "../product/integration/host-presentation.ts"
-import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
@@ -167,7 +163,6 @@ export async function createConfiguredInstallation(
   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
-  const presentationRequest = new AsyncLocalStorage<Request>()
   const applicationServices: ModuleServices = {
     persistence: store,
     authenticate: identity.authenticate,
@@ -180,12 +175,6 @@ export async function createConfiguredInstallation(
       return view ? view(request, surface, page) : new Response("Procurement is temporarily unavailable. Refresh the page to try again.", {
         status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" },
       })
-    },
-    productHtml: (html, surface, page) => {
-      const productHtml = getSfProductHtml(runtime?.services?.())
-      const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page, presentationRequest.getStore()) ?? decorateSfProductHtml(html, surface, page)
-      // Keep WP06 document/import navigation while composing WP04's fenced page projection.
-      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a><a href="?sf=current-choice">Escolha vigente</a>`), surface)
     },
     maxJsonBytes: 2 * 1024 * 1024,
     assets,
@@ -361,10 +350,9 @@ export async function createConfiguredInstallation(
       // clone or parallel backend. Absence of context authority fails closed.
       const nativeResponse = await nativeProjections(request)
       if (nativeResponse) return nativeResponse
-      const response = await presentationRequest.run(request, () => business(request))
+      const response = await business(request)
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
-      if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
-      return localChrome(response)
+      return response
 
     },
     async dispose() { nativeReadBinding = undefined; await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },

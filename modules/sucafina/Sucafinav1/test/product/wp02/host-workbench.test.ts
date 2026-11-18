@@ -17,7 +17,6 @@ import { createSfProductAuthority } from "../../../product/integration/product-a
 import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
 import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
 import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -71,7 +70,7 @@ async function fixture() {
   })
   const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
   const http = createSfDashboardHttp({ origin, mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
-  const module = createModule("/sucafina", { persistence, authenticate, environment, product: http, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  const module = createModule("/sucafina", { persistence, authenticate, environment, product: http, maxJsonBytes: 100000 })
   routing.handle = async (request) => {
     const mode = new URL(request.url).searchParams.get("sf"), started = performance.now()
     const observation: (typeof httpTrace)[number] | undefined = mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft" ? { mode, method: request.method, state: "received" } : undefined

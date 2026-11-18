@@ -1,9 +1,8 @@
-import { configure, controls, roleMap } from "./admin.ts"
+import { configure, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
 import { visibleRequests } from "../src/requests.ts"
-import { documentHtml, links, pageMain } from "../src/screen-shell.ts"
 import type { Actor, Command, Domain, Environment, Persistence, Result, Snapshot } from "./contract.ts"
 import { object, rows, text } from "./contract.ts"
 import { download } from "./downloads.ts"
@@ -11,10 +10,10 @@ import type { WorkbookLimits } from "./workbooks.ts"
 import { executeDashboardBackupImport } from "./dashboard-backup.ts"
 import { assetLink, captureRecordAssets, deleteRecordAssets, downloadAsset, uploadAsset } from "./assets.ts"
 import type { AssetKind, AssetPersistence, AssetServices, BlobTransaction } from "./assets.ts"
-import { esc } from "../src/screen-shell.ts"
 import type { RenderContext } from "./ui.ts"
 import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
 import { publicSfData } from "../product/integration/public-state.ts"
+import { readProcurementQueueView } from "../product/procurement/queue-view.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -40,8 +39,6 @@ export type Application = {
   product?: (request: Request, surface: Surface) => Promise<Response | undefined>
   // Prepare outside the page lock; fence the retained projection against the authenticated snapshot inside it.
   productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
-  // Runs within the authorized page transaction; the decorator must be synchronous and pure.
-  productHtml?: (html: string, surface: Surface, page: string) => string
 }
 
 /** Mount this in the installation's existing fetch composition. It starts no listener and selects no database. */
@@ -58,6 +55,10 @@ export function createApplication(mount: string, application: Application) {
     if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement") return reply("Not found", 404)
     if (!["GET", "HEAD", "POST"].includes(request.method))
       return reply("Method not allowed", 405, { Allow: "GET, HEAD, POST" })
+    // Old document pages are no longer a product interface. API/export/asset dispatch stays below.
+    const decommissioned = () => reply(request.method === "HEAD" ? null : "legacy console decommissioned — use /", 404, {
+      "Content-Type": "text/plain; charset=utf-8",
+    })
     const origin = request.headers.get("origin")
     if (
       request.method === "POST" &&
@@ -65,9 +66,20 @@ export function createApplication(mount: string, application: Application) {
     )
       return reply("Access denied", 403)
     const uploading = request.method === "POST" && url.searchParams.has("upload")
+    // The authorized C02 JSON projection is a data contract, not a second HTML
+    // console. It retains the same source selection, snapshot and revocation fence.
+    const queueProjection = surface === "procurement" && ["GET", "HEAD"].includes(request.method) &&
+      url.searchParams.get("projection") === "c02" &&
+      ["Requests", "My approvals"].includes(url.searchParams.get("page") ?? "")
+    if (queueProjection && (url.searchParams.getAll("projection").length !== 1 || url.searchParams.getAll("page").length !== 1))
+      return reply("Invalid projection selection", 400)
     // Product operations own fresh authentication and transactions; never nest them in the page lock.
     const product = await application.product?.(request, surface)
-    if (product) return product
+    if (product) {
+      // Product JSON and native operations keep their existing authorization and behavior.
+      if (request.method !== "POST" && product.headers.get("content-type")?.toLowerCase().includes("text/html")) return decommissioned()
+      return product
+    }
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
     if (parsed instanceof Response) return parsed
@@ -78,6 +90,9 @@ export function createApplication(mount: string, application: Application) {
         : application.persistence.transaction(surface, work, { signal: request.signal })
     if (request.method !== "POST" && url.searchParams.has("download"))
       return serveDownload(request, surface, application, transaction, environment)
+    // Native projections were dispatched by the installation; retain authorized asset GETs.
+    if (request.method !== "POST" && !queueProjection && !url.searchParams.has("asset") && !url.searchParams.has("asset-link"))
+      return decommissioned()
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
     if (preparedUpload instanceof Response) return preparedUpload
     const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
@@ -356,99 +371,15 @@ export function createApplication(mount: string, application: Application) {
           value: json(response, result.ok ? 200 : result.status),
         }
       }
-      const year = yearParam(url.searchParams.get("year"))
-      const own = yearParam(
-        url.searchParams.get(
-          page === "Executive Dashboard" ? "execYear" : page === "IT Operations" ? "opsYear" : "secYear",
-        ) ?? url.searchParams.get("own"),
-      )
-      if (year === null || own === null) return { commit: false, value: reply("Invalid year", 400) }
-      const now = new Date(environment.at)
-      const sidebar = year ?? 2026
-      const monthParam =
-        url.searchParams.get(
-          page === "IT Operations"
-            ? "operationsMonth"
-            : page === "IT Security KPIs"
-              ? "securityMonth"
-              : "executiveMonth",
-        ) ?? url.searchParams.get("month")
-      if (monthParam && !/^([1-9]|1[0-2])$/.test(monthParam))
-        return { commit: false, value: reply("Invalid month", 400) }
-      const selected =
-        surface === "dashboard" && ["Executive Dashboard", "IT Operations", "IT Security KPIs"].includes(page)
-          ? (own ?? Math.min(2027, Math.max(2024, now.getFullYear())))
-          : sidebar
-      const auditBefore = snapshot.audit.length
-      if (productView && !await productView.current(snapshot, actor))
-        return { commit: false, value: reply("The current queue is unavailable. Refresh the page to read the current authorized records.", 503) }
-      const view = contribution.domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
-      const filters = Object.fromEntries(
-        [
-          "version",
-          "owner",
-          "class",
-          "q",
-          "mode",
-          "filter",
-          "status",
-          "risk",
-          "priority",
-          "topicStatus",
-          "memberStatus",
-          "projectStatus",
-          "projectRisk",
-          "stakeholderPriority",
-          "opsMonth",
-          "tab",
-          "request",
-          "supplier",
-        ]
-          .filter((key) => url.searchParams.has(key))
-          .map((key) => [key, url.searchParams.get(key)]),
-      )
-      const content = contribution.render(
-        page,
-        { ...publicSfData(view.data), ...filters, sidebarYear: sidebar, ...productView?.data },
-        {
-          actor,
-          year: selected,
-          month: monthParam ? Number(monthParam) : now.getMonth() + 1,
-          at: environment.at,
-          versions: view.versions,
-        },
-      )
-      if (content === undefined)
-        return {
-          commit: false,
-          value: reply("Page implementation unavailable", 503),
-        }
-      const nav = allowed.map((key, index) => ({ key, index }))
-      const html = documentHtml(
-        surface === "dashboard" ? "CIO Dashboard" : surface === "planner" ? "IT Budget Planner" : "IT Procurement",
-        surface,
-        links(nav),
-        pageMain(
-          { drawn: true, key: page, index: allowed.indexOf(page) },
-          content +
-            controls(snapshot, surface, page, actor, environment) +
-            privateFileControls(surface, page, actor, snapshot, environment, application.assets?.services) +
-            auditControls(actor, snapshot, url.searchParams),
-        ),
-        fileControls(surface, page, actor, snapshot.versions.dataset?.version ?? 0, allowed, sidebar),
-        surface === "dashboard"
-          ? `<label>FY<select data-year="sidebar" data-query="year">${[2024, 2025, 2026, 2027].map((year) => `<option value="${year}"${year === sidebar ? " selected" : ""}>${year}</option>`).join("")}</select></label>`
-          : "",
-      )
-      const toolsHtml = application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a><!--local-tools-->`) : html
-      const finalHtml = application.productHtml?.(toolsHtml, surface, page) ?? toolsHtml
-      return {
-        commit: snapshot.audit.length !== auditBefore,
-        value: reply(request.method === "HEAD" ? null : finalHtml, 200, {
-          "Content-Type": "text/html; charset=utf-8",
-          "Content-Security-Policy": htmlPolicy(finalHtml),
-        }),
+      if (queueProjection) {
+        // Never serialize a prepared projection until the very same authorized
+        // producer selection has been rechecked under the current data lock.
+        const queue = readProcurementQueueView(productView?.data.procurementQueueView)
+        if (!queue || !productView || !await productView.current(snapshot, actor))
+          return { commit: false, value: json({ status: "unavailable", reason: "procurement-queue-unavailable" }, 503) }
+        return { commit: false, value: json({ status: "ok", value: queue }, 200) }
       }
+      return { commit: false, value: decommissioned() }
     }).finally(() => productView?.finish())
     return request.method === "HEAD"
       ? new Response(null, {
@@ -535,10 +466,6 @@ function redact(value: unknown, privateKeys: string[]): unknown {
       .map(([key, entry]) => [key, redact(entry, privateKeys)]),
   )
 }
-function yearParam(value: string | null): number | null | undefined {
-  if (!value) return undefined
-  return /^202[4-7]$/.test(value) ? Number(value) : null
-}
 function json(value: unknown, status: number) {
   return reply(JSON.stringify(value), status, {
     "Content-Type": "application/json; charset=utf-8",
@@ -559,30 +486,6 @@ function reply(body: string | null, status: number, headers: Record<string, stri
 export function htmlPolicy(html: string) {
   const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)].filter((match) => !/(?:^|\s)src\s*=/i.test(match[1]!)).map((match) => `'sha256-${createHash("sha256").update(match[2]!).digest("base64")}'`)
   return `default-src 'self'; script-src ${scripts.length ? [...new Set(scripts)].join(" ") : "'none'"}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'`
-}
-function fileControls(
-  surface: Surface,
-  page: string,
-  actor: Actor,
-  version: number,
-  allowed: string[],
-  sidebarYear: number,
-) {
-  if (surface === "planner")
-    return '<aside data-slot="excel"><h2>Excel</h2><a href="?download=xlsx">Export Excel</a></aside>'
-  if (surface === "procurement")
-    return page === "Suppliers"
-      ? '<a href="?download=suppliers">Export suppliers CSV</a>'
-      : '<a href="?download=register">Export register CSV</a>'
-  return `<aside data-slot="footer"><details class="editor-panel"><summary>Reports and backup</summary><form method="get" class="report-form"><input type="hidden" name="page" value="${esc(page)}"><label>Format<select name="download"><option value="pptx">PowerPoint</option><option value="docx">Word</option></select></label><label>Year<select name="year">${[2024, 2025, 2026, 2027].map((year) => `<option${year === sidebarYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label>Title<input name="title"></label><fieldset><legend>Topics</legend>${allowed
-    .filter((key) => key !== "Talent Review" || actor.roles.includes("admin"))
-    .map(
-      (key) =>
-        `<label><input type="checkbox" name="topic" value="${esc(key)}"${key === "Executive Dashboard" ? " checked" : ""}>${esc(key)}</label>`,
-    )
-    .join(
-      "",
-    )}</fieldset><button>Generate Report</button></form>${actor.roles.includes("admin") ? `<a href="?download=json">Export JSON</a><form data-command="backup-import" data-page="${esc(page)}" data-record="" data-version="${version}"><label>Import JSON<input type="file" name="data" accept="application/json,.json" required></label><button${actor.canWrite ? "" : " disabled"}>Import JSON</button></form>` : ""}</details></aside>`
 }
 async function readBytes(request: Request, maximum: number): Promise<Uint8Array | Response> {
   const reader = request.body?.getReader()
@@ -613,90 +516,6 @@ function safeObject(value: unknown): boolean {
   return Object.entries(value).every(
     ([key, entry]) => !["__proto__", "prototype", "constructor"].includes(key) && safeObject(entry),
   )
-}
-
-function privateFileControls(
-  surface: Surface,
-  page: string,
-  actor: Actor,
-  snapshot: import("./contract.ts").Snapshot,
-  environment: Environment,
-  services?: AssetServices,
-) {
-  if (!services) return ""
-  const visible: string[] = []
-  for (const asset of rows(snapshot.data.assets)) {
-    const link = assetLink(snapshot, actor, environment, services, text(asset.id))
-    if (link.ok && "query" in link)
-      visible.push(
-        `<li><a href="${esc(`?${link.query}&page=${encodeURIComponent(page)}`)}">${esc(text(asset.name))}</a></li>`,
-      )
-  }
-  const store = object(snapshot.data.store)
-  const requestRecords = Object.values(object(store.requests)).map((row) => object(object(row).request))
-  const uploads =
-    surface === "dashboard" && page === "Vendor Contracts"
-      ? rows(snapshot.data.contracts).map((record) => ({
-          id: String(record.id),
-          name: text(record.vendor),
-          kind: "contract",
-          versionKey: `contracts:${String(record.id)}`,
-          allowed:
-            actor.roles.includes("admin") ||
-            (actor.roles.includes("contributor") && actor.assigned?.includes("contracts") === true),
-        }))
-      : surface === "procurement" && page === "Suppliers"
-        ? rows(store.suppliers).map((record) => ({
-            id: String(record.id),
-            name: text(record.legalName),
-            kind: "supplier",
-            versionKey: `suppliers:${String(record.id)}`,
-            allowed: actor.roles.some((role) => ["admin", "supplier admin"].includes(role)),
-          }))
-        : surface === "procurement" && page === "Requests"
-          ? requestRecords
-              .filter(
-                (record) =>
-                  ["sourcing", "src_rejected", "po_approved", "po_issued"].includes(text(record.status)) &&
-                  actor.roles.includes("buyer"),
-              )
-              .map((record) => ({
-                id: text(record.number),
-                name: text(object(record.pr).title) || text(record.number),
-                kind: ["sourcing", "src_rejected"].includes(text(record.status)) ? "quote" : "signed-po",
-                versionKey: `requests:${text(record.number)}`,
-                allowed: true,
-              }))
-          : []
-  if (!visible.length && !uploads.some((upload) => upload.allowed && actor.canWrite)) return ""
-  return `<section><h2>Documents</h2><ul>${visible.join("")}</ul>${uploads
-    .filter((upload) => upload.allowed && actor.canWrite)
-    .map(
-      (upload) =>
-        `<form data-private-upload="${esc(upload.kind)}" data-page="${esc(page)}" data-record="${esc(upload.id)}" data-version="${snapshot.versions[upload.versionKey]?.version ?? 0}"><label>${esc(upload.name)}<input type="file" name="file" required></label><button type="submit">Upload document</button></form>`,
-    )
-    .join("")}</section>`
-}
-function auditControls(actor: Actor, snapshot: import("./contract.ts").Snapshot, query: URLSearchParams) {
-  if (!actor.roles.includes("admin") || !snapshot.audit.length) return ""
-  const offset = Math.max(0, Number(query.get("auditOffset")) || 0)
-  const entries = snapshot.audit.toReversed().slice(offset, offset + 50)
-  const next = new URLSearchParams(query)
-  next.set("auditOffset", String(offset + 50))
-  return `<details><summary>Audit history</summary><table><thead><tr><th>When</th><th>Who</th><th>Record</th><th>Before</th><th>After</th></tr></thead><tbody>${entries.map((entry) => `<tr><td>${esc(entry.at)}</td><td>${esc(entry.name || entry.who)}</td><td>${esc(entry.record)}</td><td>${auditValue(entry.was)}</td><td>${auditValue(entry.became)}</td></tr>`).join("")}</tbody></table>${offset + 50 < snapshot.audit.length ? `<a href="?${esc(next.toString())}">Older entries</a>` : ""}</details>`
-}
-function auditValue(value: unknown): string {
-  if (value === null || value === undefined) return "—"
-  if (Array.isArray(value))
-    return `<details><summary>${value.length} records</summary>${value.map(auditValue).join("")}</details>`
-  if (typeof value === "object")
-    return `<dl>${Object.entries(publicSfData(object(value)))
-      .map(
-        ([key, entry]) =>
-          `<dt>${esc(key)}</dt><dd>${["iban", "account", "swift"].includes(key.toLowerCase()) ? "Protected" : auditValue(entry)}</dd>`,
-      )
-      .join("")}</dl>`
-  return esc(String(value))
 }
 
 type TransactionRunner = <T>(

@@ -12,7 +12,6 @@ import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createSfPersonalViews } from "../../../product/interface/personal-views.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { createModule } from "../../../index.ts"
@@ -72,7 +71,7 @@ async function withViews(check: (fixture: Fixture) => Promise<void>) {
     authorizeView: createSfPersonalViewAuthority({ authority }) })
   const services = { ...authority, personalViews } as SfHostServices
   const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-  const app = createModule("/sucafina", { persistence: store, authenticate, environment, product, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  const app = createModule("/sucafina", { persistence: store, authenticate, environment, product, maxJsonBytes: 100000 })
   routing.handle = async (request) => {
     // Reserve before an await: two concurrent reads must not both claim the gate.
     const candidate = hold.nextList && request.method === "POST" && new URL(request.url).searchParams.get("sf") === "workbench-views"

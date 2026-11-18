@@ -16,7 +16,6 @@ import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { PLANNER_TABS } from "../../../src/nav.ts"
 import { createModule } from "../../../index.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 
 test("personal views isolate authenticated principals and reconcile exact retries", async () => {
   expectSpawn(import.meta.path)
@@ -39,7 +38,7 @@ test("personal views isolate authenticated principals and reconcile exact retrie
     authorizeView: async (view, context) => view.surface === "planner" && PLANNER_TABS.some((page) => page === view.page) && await authority.host.revalidate(context) })
   const services = { ...authority, personalViews } as SfHostServices
   const app = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-  const module = createModule("/sucafina", { persistence: store, authenticate, environment, product: app, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  const module = createModule("/sucafina", { persistence: store, authenticate, environment, product: app, maxJsonBytes: 100000 })
   serverState.handle = async (request) => await first.handle(request) ?? await module(request)
   let browserDriver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
   try {

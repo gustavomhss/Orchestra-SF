@@ -11,7 +11,6 @@ import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createPlannerMonthlyHost } from "../../../product/planner/monthly-host.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 
@@ -31,7 +30,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
   const plannerMonthly: NonNullable<SfHostServices["plannerMonthly"]> = { preview: (context, value) => monthly.preview(value, context), apply: (context, value) => monthly.apply(value, context) }
   const services = { ...authority, plannerMonthly } as SfHostServices
   const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-  const app = createModule("/sucafina", { persistence: store, authenticate: identity.authenticate, environment, product, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  const app = createModule("/sucafina", { persistence: store, authenticate: identity.authenticate, environment, product, maxJsonBytes: 100000 })
   serverState.handle = async (request) => await identity.handle(request) ?? await app(request)
   try {
     await store.transaction("planner", async (snapshot) => {

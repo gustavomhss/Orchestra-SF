@@ -20,7 +20,6 @@ import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/c
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
 async function within<T>(operation: Promise<T>, step: string): Promise<T> {
@@ -67,7 +66,7 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       validateOutput: (_descriptor, result) => result.status !== "ok" || (operation === "sf_case_read" ? decodeSfOperationOutput("sf_case_read", result.result).ok : operation === "sf_case_draft" && decodeSfOperationOutput("sf_case_draft", result.result).ok) })
     const services = { ...authority, dispatch } as SfHostServices
     const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-    const app = createModule("/sucafina", { persistence, authenticate: identity.authenticate, environment, product, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+    const app = createModule("/sucafina", { persistence, authenticate: identity.authenticate, environment, product, maxJsonBytes: 100000 })
     routed.handle = async (request) => await identity.handle(request) ?? await app(request)
     phase = "enroll actual operator"
     const authenticated = await within(identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await within(identity.enroll(), phase)}`)), phase)

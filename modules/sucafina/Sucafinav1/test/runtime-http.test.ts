@@ -123,24 +123,24 @@ test("HTTP write checks current identity, rejects spoofed actors and cross-origi
   expect(app.state).toEqual(before)
 })
 
-test("HTTP request boundaries retain host routes and apply HTML cache/CSP policy", async () => {
+test("HTTP request boundaries retain host routes and retire console HTML GET/HEAD", async () => {
   const app = fixture()
   expect(await app.handler(new Request("https://installation.example/api/session"))).toBeUndefined()
   const response = await app.handler(new Request("https://installation.example/sucafina/dashboard?page=IT%20Risks"))
-  expect(response?.status).toBe(200)
+  expect(response?.status).toBe(404)
   expect(response?.headers.get("cache-control")).toBe("no-store")
-  expect(response?.headers.get("content-security-policy")).toContain("script-src 'sha256-")
-  const html = await response?.text()
-  expect(html).toContain('data-command="save"')
-  expect(html).not.toContain("JSON editor")
+  expect(response?.headers.get("content-type")).toContain("text/plain")
+  expect(await response?.text()).toBe("legacy console decommissioned — use /")
   const head = await app.handler(
     new Request("https://installation.example/sucafina/dashboard?page=IT%20Risks", { method: "HEAD" }),
   )
+  expect(head?.status).toBe(404)
   expect(await head?.text()).toBe("")
+  for (const surface of ["planner", "procurement"])
+    expect((await app.handler(new Request(`https://installation.example/sucafina/${surface}`)))?.status).toBe(404)
   app.identity.principal = null
-  expect(
-    (await app.handler(new Request("https://installation.example/sucafina/dashboard?page=IT%20Risks")))?.status,
-  ).toBe(401)
+  // Export is still an authorized data operation, not an HTML route.
+  expect((await app.handler(new Request("https://installation.example/sucafina/dashboard?download=json")))?.status).toBe(401)
 })
 
 test("Chrome submits a real form and preserves unsaved edits after blur until reload", async () => {
