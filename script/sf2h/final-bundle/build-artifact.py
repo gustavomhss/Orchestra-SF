@@ -15,13 +15,39 @@ w = options.repo_root.resolve()
 target = options.output or w / '.github/workflows/sf2-epic.yml'
 sources = {
     '.github/inherited-workflows/test.yml.disabled': '07746ae7ffb780c729f852feed68368fe55ac347ad78b23cd3adf074fd35868d',
-    '.github/workflows/test-ci.yml': '10c4bb7b3b4fc6c9201736dfa1d4d211dccf0e75de74efa38ae5299473008d26',
+    '.github/workflows/test-ci.yml': '3185885e123f9bb13c16c670e4df2fcffab38290',  # reviewed SF66 Git blob
 }
 for source, expected in sources.items():
-    if hashlib.sha256((w / source).read_bytes()).hexdigest() != expected:
+    data = (w / source).read_bytes()
+    # Exact Git blob pin for the reviewed SF66 reader additions, SHA256 pin for inherited test.yml.
+    actual = (hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if source == '.github/workflows/test-ci.yml'
+              else hashlib.sha256(data).hexdigest())
+    if actual != expected:
         raise SystemExit(f'SOURCE_DRIFT: reconcile {source} before rebuilding the final bundle')
 u = (w / '.github/inherited-workflows/test.yml.disabled').read_text(encoding='utf-8')
 c = (w / '.github/workflows/test-ci.yml').read_text(encoding='utf-8')
+sf66_start = '      - name: Install SF66 export readers\n'
+sf66_end = '      - name: Upload Lean dashboard previews (extension)\n'
+if c.count(sf66_start) != 1 or c.count(sf66_end) != 1:
+    raise SystemExit('SF66_SOURCE_DRIFT: missing or duplicated reader section')
+sf66_section = c[c.index(sf66_start):c.index(sf66_end, c.index(sf66_start))]
+sf66_markers = [
+    'id: sf66_readers',
+    "steps.sf66_readers.outcome == 'success'",
+    'SF66_PRODUCT_STEP_OUTCOME: ${{ steps.sf66_product_run.outcome }}',
+    'python3 script/sf2h/export-visual/reader.py',
+    'name: sf66-exports-${{ github.sha }}-${{ matrix.host }}-${{ github.run_attempt }}',
+    'path: ${{ runner.temp }}/sf66-export-artifacts/',
+    'if-no-files-found: error',
+]
+for marker in sf66_markers:
+    if sf66_section.count(marker) != 1:
+        raise SystemExit(f'SF66_SEMANTIC_DRIFT: missing or duplicated {marker}')
+if c.count('id: sf66_product_run') != 1 or c.count('sf66_exports=${sf66Exports}') != 1:
+    raise SystemExit('SF66_SEMANTIC_DRIFT: producer step or validated request condition changed')
+if sf66_section.count("steps.request.outputs.sf66_exports == 'true'") != 3 or sf66_section.count("runner.os == 'Linux'") != 3:
+    raise SystemExit('SF66_SEMANTIC_DRIFT: all three Linux reader/render/upload guards required')
 recipes = json.loads((Path(__file__).resolve().parent / 'requests.json').read_text(encoding='utf-8'))
 required = ['CI-SF', 'CI-CLI', 'CI-APP-SRC', 'CI-APP-BROWSER', 'CI-ATLAS-BUSINESS',
             'CI-UI-OPERATIONS', 'CI-UI-DECISIONS', 'CI-UI-REPORTS']
@@ -66,6 +92,12 @@ insert="""      - name: Materialize validated recipe request
 t=t.replace(needle,insert+needle,1)
 t=t.replace('name: playwright-${{ matrix.host }}-${{ github.run_attempt }}','name: recipe-${{ matrix.id }}-playwright-${{ github.run_attempt }}')
 t=t.replace('name: lean-visual-${{ runner.os }}','name: recipe-${{ matrix.id }}-lean-${{ runner.os }}')
+# SF66's optional reader/render/upload is part of the validated request, not another product run.
+sf66_name = 'name: sf66-exports-${{ github.sha }}-${{ matrix.host }}-${{ github.run_attempt }}'
+sf66_recipe_name = 'name: recipe-${{ matrix.id }}-sf66-exports-${{ github.sha }}-${{ matrix.host }}-${{ github.run_attempt }}'
+if t.count(sf66_name) != 1:
+    raise SystemExit('SF66_OUTPUT_DRIFT: expected one source artifact upload')
+t = t.replace(sf66_name, sf66_recipe_name)
 # Bind the per-recipe worktree request to C; this is not a separate snapshot commit.
 t=t.replace('      - name: Read request\n        id: request\n', '      - name: Read request\n        id: request\n        env:\n          RECIPE_ID: ${{ matrix.id }}\n', 1)
 t=t.replace("          import { appendFileSync", "          import { createHash } from 'node:crypto'\n          import { appendFileSync", 1)
@@ -97,7 +129,7 @@ t=t.replace('GITHUB_ACTIONS=false bun test "${args[@]}"', 'if [ "$DIRECTORY" = "
 t=t.replace('GITHUB_ACTIONS=false bun test ', 'GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" ')
 # Capture and enforce the repository's nonce-bound omni verdict for every Bun recipe.
 run_start = t.index("        run: |\n", t.index("      - name: Run tests\n")) + len("        run: |\n")
-run_end = t.index("\n      - name: Upload Lean", run_start)
+run_end = t.index("\n      - name: Install SF66 export readers", run_start)
 body = t[run_start:run_end]
 
 t = t[:run_start] + "          set -o pipefail\n          {\n" + body + r'''
@@ -119,6 +151,12 @@ t += """      - name: Upload recipe request and log
           if-no-files-found: error
           retention-days: 7
 """
+actual_sf66 = t[t.index(sf66_start):t.index(sf66_end, t.index(sf66_start))]
+expected_sf66 = sf66_section.replace(sf66_name, sf66_recipe_name)
+if actual_sf66 != expected_sf66:
+    raise SystemExit('SF66_OUTPUT_DRIFT: epic changed the exact reader/render/upload contract')
+if t.count('id: sf66_product_run') != 1 or t.count('sf66_exports=${sf66Exports}') != 1:
+    raise SystemExit('SF66_OUTPUT_DRIFT: epic must preserve producer outcome and request guard')
 # Execute mandatory explicit static gates independently on exactly the same checkout.
 static=f'''  sf-static:
     if: {guard}
