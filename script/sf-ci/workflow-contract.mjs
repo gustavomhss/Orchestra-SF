@@ -1,4 +1,4 @@
-import { validateManifest } from "./gate.mjs"
+import { SHARDED, validateManifest } from "./gate.mjs"
 
 // A2 -> A6 (sf-ci.yml owns only the wiring, not the selection policy):
 // * sf/ci/suites.json schemaVersion=1; suites: [{ id, kind, directory,
@@ -125,9 +125,11 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
   const suites = validateManifest(manifest)
   const unitSuites = suites.filter((suite) => suite.kind === "bun")
   const uiSuites = suites.filter((suite) => suite.kind === "playwright")
+  const shardedSuites = unitSuites.filter((suite) => SHARDED[suite.id])
+  const singleSuites = unitSuites.filter((suite) => !SHARDED[suite.id])
   const unit = jobBlock(workflow, "unit")
   const ui = jobBlock(workflow, "ui")
-  for (const [job, name, expected] of [[unit, "unit", unitSuites], [ui, "ui", uiSuites]]) {
+  for (const [job, name, expected] of [[unit, "unit", singleSuites], [ui, "ui", uiSuites]]) {
     requireContract(/^      SF_SUITE_ID:\s*\$\{\{\s*matrix\.id\s*\}\}\s*$/m.test(job), `${name}: SF_SUITE_ID not bound to matrix.id`)
     assertExactIds(jobMatrixIds(job, name), expected.map((suite) => suite.id), name)
   }
@@ -138,18 +140,14 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
   const selectedUi = assertSelectionDataflow(uiScripts[0], "ui", "ui")
   const { arms, casePos } = caseArms(selectedUnit.source)
   requireContract(selectedUnit.guardPos < casePos, "unit: selector/guard must apply before every case")
-  assertExactIds([...arms.keys()].filter((id) => id !== "*"), unitSuites.map((suite) => suite.id), "unit arms")
+  assertExactIds([...arms.keys()].filter((id) => id !== "*"), singleSuites.map((suite) => suite.id), "unit arms")
   requireContract(/^.*\bexit [1-9][0-9]*\b/m.test(arms.get("*") || ""), "unit: unknown suite must fail")
-  for (const suite of unitSuites) {
+  for (const suite of singleSuites) {
     const body = arms.get(suite.id)
     const flat = body.replace(/\\\n\s*/g, " ")
     const commands = flat.split("\n").filter((line) => /\bbun test\b/.test(line))
     requireContract(commands.length === 1 && /"\$\{files\[@\]\}"/.test(commands[0]),
       `${suite.id}: Bun must consume all files from selector as argv, exactly once`)
-    if (suite.id === "CI-SF") {
-      requireContract(!/(?:^|\s)--bail(?:=|\s|$)/.test(commands[0]),
-        "CI-SF: --bail would hide late cases in the mandatory full manifest inventory")
-    }
     if (suite.id === "CI-APP-BROWSER") {
       requireContract(/(?:^|\s)--bail=5(?:\s|$)/.test(commands[0]), "CI-APP-BROWSER: --bail=5 lost")
     }
@@ -161,8 +159,31 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
     }
     assertNoHardcodes(body, suite.id)
   }
-  requireContract((selectedUnit.source.match(/\bbun test\b/g) || []).length === unitSuites.length, "unit: unexpected Bun invocation outside suite branches")
+  requireContract((selectedUnit.source.match(/\bbun test\b/g) || []).length === singleSuites.length, "unit: unexpected Bun invocation outside suite branches")
   assertNoHardcodes(selectedUnit.source, "unit")
+  for (const suite of shardedSuites) {
+    const job = jobBlock(workflow, "unit-sf")
+    const count = SHARDED[suite.id]
+    requireContract(new RegExp(`^      SF_SUITE_ID:\\s*${suite.id}\\s*$`, "m").test(job),
+      "unit-sf: SF_SUITE_ID not bound to the sharded suite")
+    requireContract(/^      SF_SHARD_INDEX:\s*\$\{\{\s*matrix\.shard\s*\}\}\s*$/m.test(job),
+      "unit-sf: shard index not bound to matrix.shard")
+    requireContract(new RegExp(`^      SF_SHARD_COUNT:\\s*"${count}"\\s*$`, "m").test(job),
+      "unit-sf: shard count differs from the gate partition")
+    const shards = job.match(/^        shard:\s*\[([^\]\n]*)\]\s*$/m)
+    requireContract(shards !== null, "unit-sf: missing shard matrix")
+    assertExactIds(shards[1].split(",").map((item) => item.trim()),
+      Array.from({ length: count }, (_, offset) => String(offset + 1)), "unit-sf shards")
+    const scripts = runScripts(job)
+    requireContract(scripts.length === 1, "unit-sf: one auditable execution script required")
+    const selected = assertSelectionDataflow(scripts[0], "bun", "unit-sf")
+    const commands = selected.source.replace(/\\\n\s*/g, " ").split("\n").filter((line) => /\bbun test\b/.test(line))
+    requireContract(commands.length === 1 && /"\$\{files\[@\]\}"/.test(commands[0]),
+      "unit-sf: Bun must consume the shard selection as argv, exactly once")
+    requireContract(!/(?:^|\s)--bail(?:=|\s|$)/.test(commands[0]),
+      "unit-sf: --bail would hide late shard cases")
+    assertNoHardcodes(selected.source, "unit-sf")
+  }
   requireContract(!/^\s*SF_SPEC:\s*/m.test(ui) && !/^\s*spec:\s*/m.test(ui), "ui: matrix.spec overrides manifest")
   requireContract(!/\bSF_SPEC\b/.test(selectedUi.source), "ui: spec supplied outside selector")
   requireContract(uiSuites.every((suite) => !ui.includes(suite.specFile)), "ui: literal spec list bypasses selector")

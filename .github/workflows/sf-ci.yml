@@ -258,12 +258,12 @@ jobs:
     name: sf/test-${{ matrix.id }}
     needs: [omni]
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 28
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 4
       matrix:
-        id: [CI-SF, CI-CLI, CI-APP-SRC, CI-APP-BROWSER, CI-ATLAS-BUSINESS]
+        id: [CI-CLI, CI-APP-SRC, CI-APP-BROWSER, CI-ATLAS-BUSINESS]
     env:
       SF_SUITE_ID: ${{ matrix.id }}
       ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
@@ -310,14 +310,6 @@ jobs:
           set +e
           {
             case "$SF_SUITE_ID" in
-              CI-SF)
-                # Full case/file inventory, including late Microsoft OIDC consent checks.
-                # No bail: report every failing case without weakening its expectation.
-                # Run serially: Omni's suite-scoped positive control must span every selected file.
-                # Bun --parallel isolates file-level afterAll and falsely fails this required guard.
-                bun test --timeout 30000 \
-                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
-                ;;
               CI-CLI)
                 bun test --timeout 30000 --reporter=junit \
                   "--reporter-outfile=$evidence/report.xml" "${files[@]}"
@@ -355,6 +347,79 @@ jobs:
           path: |
             sf-ci-evidence/${{ matrix.id }}/summary.json
             sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+  unit-sf:
+    name: sf/test-CI-SF-${{ matrix.shard }}
+    needs: [omni]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    env:
+      SF_SUITE_ID: CI-SF
+      SF_SHARD_INDEX: ${{ matrix.shard }}
+      SF_SHARD_COUNT: "8"
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+        with:
+          artifact: sf-omni-linux-${{ github.sha }}
+      - name: Execute exact manifest-selected Bun files
+        shell: bash
+        env:
+          GITHUB_ACTIONS: "false"
+        run: |
+          set -euo pipefail
+          root="$GITHUB_WORKSPACE"
+          evidence="$root/sf-ci-evidence/$SF_SUITE_ID-shard-$SF_SHARD_INDEX"
+          mkdir -p "$evidence"
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+
+          node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
+          mapfile -t files < "$evidence/selection.txt"
+          test "${#files[@]}" -gt 0 || exit 2
+
+          suite_dir="$(node --input-type=module -e '
+            import { readFileSync } from "node:fs"
+            import { validateManifest } from "./script/sf-ci/gate.mjs"
+            const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))
+            const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID && entry.kind === "bun")
+            if (!suite) throw new Error("SF_CI_UNKNOWN_BUN_SUITE")
+            process.stdout.write(suite.directory)
+          ')"
+          test -f "$root/$suite_dir/package.json"
+          cd "$root/$suite_dir"
+          set +e
+          {
+            bun test --timeout 30000 \
+              --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]}"
+          } 2>&1 | tee "$evidence/run.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          test "$status" -eq 0
+          cd "$root"
+          python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
+          SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Publish only valid summary and receipt for a clean run
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-evidence-CI-SF-shard-${{ matrix.shard }}
+          path: |
+            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/summary.json
+            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/receipt.json
           if-no-files-found: error
           retention-days: 7
 
@@ -455,7 +520,7 @@ jobs:
   verify:
     name: sf/verify
     if: always()
-    needs: [preflight, static, omni, unit, ui]
+    needs: [preflight, static, omni, unit, unit-sf, ui]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
