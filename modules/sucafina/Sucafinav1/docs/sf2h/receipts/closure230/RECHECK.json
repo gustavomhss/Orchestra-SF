@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.closure230.recheck.v1",
+  "mission": 230,
+  "gate": "FIX_FIRST",
+  "source_rechecks": {
+    "branch_initial": "96a398b80c61b9acb53b1ff479d51b4e19bcfd7c",
+    "branch_after_ack": "8a1fc781d5a93fcdc924d1d3849b21997843f933",
+    "source_base": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "s0_fence_blob": "de29a3374ddd432f4396211ea39f172543d1c461",
+    "source_preimages_checked": 10,
+    "source_preimage_match": 10,
+    "postimages_existing_220_checked": 7,
+    "independent_test_corrective_blobs": 3,
+    "all_postimages_genuine_git_blobs": true
+  },
+  "status": "SOURCE_STATIC_RECHECK_COMPLETE",
+  "checks": {
+    "github_head_and_fence": "READ_VERIFIED",
+    "original_plan_and_S2_R2": "READ",
+    "all_three_product_blobs": "READ_FULL_PRE_AND_POST",
+    "fixture_blobs": "READ_PRE_AND_POST",
+    "original_source_preimages": "MATCHED_BASE_998f0afd",
+    "review_path_trace": "READ_STATIC",
+    "new_regression_code_execution": "NOT_RUN",
+    "unit_tests": "NOT_RUN",
+    "build": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "global_release": "NOT_AUTHORIZED"
+  },
+  "open_gates": [
+    "owner 211 production incorporation and exclusive lease",
+    "regression oracles REG-01/02/03 applied only by actual owner",
+    "CI 232 on composed C",
+    "AM04, AM05 and memory actual outputs new CI",
+    "three independent campaign final reviews and GLOBAL_RELEASE"
+  ],
+  "authority_transferred": false,
+  "no_product_write": true
+}

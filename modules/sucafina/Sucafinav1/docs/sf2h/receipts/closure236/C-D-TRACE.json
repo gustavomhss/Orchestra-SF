@@ -1,0 +1,286 @@
+{
+  "schema": "sf2h.release-proof236.traceability.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 236,
+  "branch": "sf-release-proof",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "approved_ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "GLOBAL_RELEASE": false,
+  "pins": {
+    "207": {
+      "commit": "67f1963e42769dfb94ba1080ca0b5b883b54eb58",
+      "handoff_blob": "b426dce8ab053da0dcf9eee82648925434fe7081",
+      "verdict": "PRE_FREEZE_FIX_FIRST"
+    },
+    "208": {
+      "commit": "b3e674c66e9c7e0a3f6ade6353905539a8e326fd",
+      "handoff_blob": "ea2c0ca048d8d0ca8710a00e1313de357b77a804",
+      "verdict": "PRE_FREEZE_FIX_FIRST"
+    },
+    "209": {
+      "commit": "84c9eb170b826c4c595120e62b78efe31f904d0d",
+      "handoff_blob": "173acf91b427341c616c6ffda39e42377cebf8c5",
+      "verdict": "PRE_FREEZE_FIX_FIRST"
+    },
+    "210": {
+      "commit": "cca757a0e125de371cb677342802509fb769bbd2",
+      "handoff_blob": "14986fe8ead6e778e712fbad056d05d92498d1ea",
+      "index_blob": "0a623f990bd5974e3c7217f2f50977ecdb54fd6e",
+      "consumers_blob": "22871e18c2c291ed725abd59808489e704e8966a",
+      "prepost_blob": "5645027f4104a38f0de3cd98b67dcc91b377bb2a"
+    },
+    "229": {
+      "commit": "1e17d546ca5a4116693da449f5d2ecfb4c5cb18d",
+      "ack_blob": "47c633468ca38f388880163b9d51c5d210db4626",
+      "terminal_handoff": "NOT_OBSERVED"
+    },
+    "230": {
+      "commit": "b8d0e46d6fcca835f345bd5e0d5f719d8047c757",
+      "handoff_blob": "fa233a19e8aa52eb3dff77bf0a780872646bef1f",
+      "decision": "FIX_FIRST",
+      "inert_patches": 10
+    },
+    "231": {
+      "commit": "732e2d2045815d22960f9c5a7eb3cf8172b472ef",
+      "fence_blob": "c70c099ea29e0651085fb439a37d82b445c9d982",
+      "terminal_handoff": "NOT_OBSERVED"
+    },
+    "232": {
+      "commit": "ad330d3ce08649671aae5c7e6aa3b3f40e446c72",
+      "handoff_blob": "57b66b43bcd1eff480fe2986da2f36c7580216db",
+      "queue_blob": "c2180b83566acbd773903357a2bff59d73225052",
+      "request_manifest_blob": "f5c93194b81ac6cd594a7a08d0a4062b89b889fe",
+      "status": "RELEASED_NO_ACTIVE_DISPATCH"
+    },
+    "base_product": {
+      "commit": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+      "tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580"
+    },
+    "detached_228": {
+      "commit": "33474b2158a4703f256191f61f1a16ac85c26004",
+      "tree": "fd325cef6e5a3069090b1b1fe0d7a3eb75ee19c1",
+      "status": "INERT_NOT_CONSUMED"
+    }
+  },
+  "states": {
+    "accepted_C": null,
+    "material_W": null,
+    "accepted_D": null,
+    "G7": "NOT_RUN",
+    "G8": "NOT_RUN",
+    "release": "BLOCKED_CONTINUING_LATE"
+  },
+  "target_criteria": [
+    {
+      "id": "CAMP.DOD.03",
+      "state": "NOT_RUN",
+      "requires": "three independent final judgments no open mandatory findings, C same all checks, D envelope/guard"
+    },
+    {
+      "id": "CAMP.DOD.04",
+      "state": "NOT_RUN",
+      "requires": "same C full repo parity and normative guide, D evidence only"
+    },
+    {
+      "id": "WP10.T04.CHK.01",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T04.CHK.02",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T04.CHK.03",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T04.CHK.10",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T04.CHK.11",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T04.CHK.40",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T04.CHK.41",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T05.CHK.01",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T05.CHK.02",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T05.CHK.03",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T05.CHK.10",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T05.DOD.01",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T05.INV.01",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T05.CMP.01",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T05.SUC.10",
+      "state": "NOT_RUN"
+    }
+  ],
+  "full_canonicity": "Use immutable campaign/coverage/proof-map and closure211 ORIGINAL-1610-CRITERIA-LEDGER on source C; no criterion is removed or marked PASS in 236",
+  "handoff_conditions": [
+    {
+      "gate": "C_FREEZE",
+      "owner": "211/S0",
+      "status": "BLOCKED",
+      "reason": "998f base has not consumed 228 70 inert changes (28 add+42 modify; 8 conflicts) and producer repairs; 232 observed 15 sampled producers not in product",
+      "consumer": "190/CI/235"
+    },
+    {
+      "gate": "PENDING_SOURCE_TASKS",
+      "owner": "224/229/230/231",
+      "status": "BLOCKED",
+      "reason": "224 Talent owned externally; 229 only ACK; 230 FIX_FIRST with 10 inert patches; 231 only fence; 236 does not duplicate",
+      "consumer": "211"
+    },
+    {
+      "gate": "INSTALLATION_AND_AUTH",
+      "owner": "199/213",
+      "status": "NOT_RUN",
+      "reason": "F04/D01 actual installed host/identity provider and Task/Relay authentic proof missing",
+      "consumer": "AM01-06/reviewers"
+    },
+    {
+      "gate": "CI_CAUSAL",
+      "owner": "authorized sole CI dispatcher",
+      "status": "NOT_RUN",
+      "reason": "232 handed off 19 causal requests but cannot dispatch new official CI",
+      "consumer": "211+190"
+    },
+    {
+      "gate": "CI_FINAL_EIGHT",
+      "owner": "authorized sole CI dispatcher",
+      "status": "NOT_RUN",
+      "reason": "8 exact same-C requests and epic/E2E + required additive lanes, no C accepted",
+      "consumer": "G7"
+    },
+    {
+      "gate": "AM01",
+      "owner": "199+AM01 native proof owners",
+      "status": "NOT_RUN",
+      "reason": "5 profiles/18 skills genuine model output, typed consumer after reload",
+      "consumer": "G7"
+    },
+    {
+      "gate": "AM02",
+      "owner": "MCP/199",
+      "status": "NOT_RUN",
+      "reason": "8 packs/39 registered operations authenticated, same domain, live positives and negatives",
+      "consumer": "G7"
+    },
+    {
+      "gate": "AM03",
+      "owner": "original provider/installed domain",
+      "status": "NOT_RUN",
+      "reason": "real UI/host, authorizations, documents/roundtrips and consumers; 233 ownership",
+      "consumer": "G7"
+    },
+    {
+      "gate": "AM04",
+      "owner": "native original/request C08-C12 proof",
+      "status": "NOT_RUN",
+      "reason": "original-domain atomic receipt, lost reply/CAS/deny; 234 and 230 inputs",
+      "consumer": "G7"
+    },
+    {
+      "gate": "AM05",
+      "owner": "Atlas/199+234",
+      "status": "NOT_RUN",
+      "reason": "real persistence scanner, restart/reload/ACL, deny and rollback; no adapter/cat substitute",
+      "consumer": "G7"
+    },
+    {
+      "gate": "AM06",
+      "owner": "Relay/Task/199+234",
+      "status": "NOT_RUN",
+      "reason": "authorized Task/Relay native admission, model/skill/MCP/output consuming after reload, 229 producer",
+      "consumer": "G7"
+    },
+    {
+      "gate": "R1_FINAL",
+      "owner": "235/new independent R1",
+      "status": "NOT_RUN",
+      "reason": "207 only pre-freeze FIX_FIRST on 6130; review accepted C fresh",
+      "consumer": "G7"
+    },
+    {
+      "gate": "R2_FINAL",
+      "owner": "235/new independent R2",
+      "status": "NOT_RUN",
+      "reason": "208 only pre-freeze FIX_FIRST on 6130; reconcile BI/Atlas/NAV+210",
+      "consumer": "G7"
+    },
+    {
+      "gate": "R3_FINAL",
+      "owner": "235/new independent R3",
+      "status": "NOT_RUN",
+      "reason": "209 only pre-freeze FIX_FIRST on 6130; AM and retention, transport, host",
+      "consumer": "G7"
+    },
+    {
+      "gate": "GUARD_G7",
+      "owner": "190/WP10.T04",
+      "status": "NOT_RUN",
+      "reason": "execute guard in real accepted C checkout only",
+      "consumer": "S0 WP10.T05"
+    },
+    {
+      "gate": "D_ENVELOPE",
+      "owner": "S0/WP10.T05",
+      "status": "NOT_RUN",
+      "reason": "after G7 preallocate finite exact paths, compose D from C with only admissible evidence and full tree diff",
+      "consumer": "G8"
+    },
+    {
+      "gate": "GUARD_G8",
+      "owner": "S0/190",
+      "status": "NOT_RUN",
+      "reason": "execute guard in real D checkout, not reuse G7",
+      "consumer": "release"
+    }
+  ],
+  "historical_runs": {
+    "from_232": 15,
+    "completed": 15,
+    "success": 7,
+    "failure": 8,
+    "active": 0,
+    "queued": 0,
+    "new_by_236": 0,
+    "not_relabelled_as_C": true
+  },
+  "release_recipient": "S0 / WP10.T05 for D evidence consumption; 190 for guard; authorized dispatcher for CI; reviewer235 for independent rechecks",
+  "GOAL": "PAUSED"
+}

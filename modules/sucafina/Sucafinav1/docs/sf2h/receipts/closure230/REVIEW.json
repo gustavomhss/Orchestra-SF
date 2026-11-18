@@ -1,0 +1,99 @@
+{
+  "schema": "sf2h.closure230.independent-source-review.v1",
+  "mission": 230,
+  "epoch": "c12-review-e1-browser230",
+  "verdict": "FIX_FIRST",
+  "verdict_scope": "SOURCE_REVIEW_ONLY",
+  "financial_policy": "UNCHANGED_BY_SRC_01_02_03",
+  "needs_new_financial_human_approval": false,
+  "justification": "The proposal only prepares and applies an already-authorized draft Requests.save after explicit C12 human choice/review. It does not submit_pr, create or approve a financial step, modify policy thresholds or assign a holder. However three preexisting tests contain contradictory negative oracles, requiring REG-01..03 before an owner composition and CI can be assessed.",
+  "findings": [
+    {
+      "id": "R230-C12-001",
+      "severity": "BLOCKER_TO_EXISTING_C12",
+      "source": "scenario-preparation.ts / prepared.ts / prepared-review.ts",
+      "evidence": "base 998f0afd rejects C12 estimate with financial-approval-command-unavailable, blocking prepareDomainCommands -> captureSource and HTTP preparation; previous B11 and B18 failures are historical, not rerun",
+      "resolution": "SRC-01+SRC-02+SRC-03 implement exact existing save-estimate draft policy, real host/actor/source/CAS/preview and versioned human review; no submit_pr or approve",
+      "status": "FULL_INERT_PATCH_PROVIDED_NOT_APPLIED"
+    },
+    {
+      "id": "R230-C12-002",
+      "severity": "BLOCKER_TO_CORRECT_CI_ORACLE",
+      "source": "procurement-decision-producer/financial-policy.test.ts",
+      "evidence": "original line 18 asserts financial-approval-command-unavailable for changed estAmount without confirmed; new canonical rule explicitly requires confirmed:false and emits explicit-draft-command-required for legacy",
+      "resolution": "REG-01 updates old assertion and asserts approved draft intent vs true/absent confirmation, without bypassing PR stage or holder",
+      "status": "FULL_INERT_PATCH_PROVIDED_NOT_APPLIED"
+    },
+    {
+      "id": "R230-C12-003",
+      "severity": "BLOCKER_TO_CORRECT_CI_ORACLE",
+      "source": "procurement-decision-producer/preparation.test.ts",
+      "evidence": "original lines 32-34 assert all canonical draft preparations are blocked; lines 63,83-84 demand deprecated reason for non-explicit legacy commands",
+      "resolution": "REG-02 asserts bounded prepared Requests.save, unchanged state/retries and real source, rejects forged or implicit confirmation, retains stale/other-principal denial",
+      "status": "FULL_INERT_PATCH_PROVIDED_NOT_APPLIED"
+    },
+    {
+      "id": "R230-C12-004",
+      "severity": "BLOCKER_TO_CORRECT_CI_ORACLE",
+      "source": "procurement-approval-closure/scenario-composition.test.ts",
+      "evidence": "original line 79 expects C12 to deny even the already canonical chosen draft amount; post SRC-01 intentionally accepts only an explicit draft save",
+      "resolution": "REG-03 asserts C12 command action save/confirmed:false/current version/evidence/conditioned preview; independent submit and approver checks retained",
+      "status": "FULL_INERT_PATCH_PROVIDED_NOT_APPLIED"
+    },
+    {
+      "id": "R230-C12-005",
+      "severity": "OBSERVABILITY",
+      "source": "C12 and WP10 fixture.ts",
+      "evidence": "old fixture obscures real HTTP body/C12 failure reason; a fixture-only success would not create a production capture",
+      "resolution": "FIX-01 and FIX-02 are diagnostic-only; production capture is SRC-01+SRC-02+SRC-03 plus existing real preferences and Atlas publishing implementation",
+      "status": "FULL_INERT_PATCH_PROVIDED_NOT_APPLIED"
+    },
+    {
+      "id": "R230-C12-006",
+      "severity": "CROSS_CONTRACT",
+      "source": "packages/schema/src/sucafina/decisions.ts and native-ui-contract/decisions.test.ts",
+      "evidence": "repair220 B9 found invalid acceptance of unknown cases projection; independent of financial decision and bundled in closure228",
+      "resolution": "SCHEMA-01+SCHEMA-02 preserve closed empty cases projection, reject foreign keys; do not use them as C12 proof",
+      "status": "FULL_INERT_PATCH_PROVIDED_NOT_APPLIED"
+    }
+  ],
+  "guardrails": {
+    "authorized_draft": "createProcurementApprovalLifecycle.review/prepare(save-estimate) checks principal, current source, stage draft/pr_rejected and creator/admin",
+    "domain_authority": "runtime/procurement.ts execute enforces canWrite, requester/creator/admin, version CAS and stage; submit_pr and approve remain different actions",
+    "actual_approval": "procurement-screen.ts approvalDecision plus pending holder and blockSelfApproval; not used by C12 draft save",
+    "human_C12": "decision-host.ts prepare-changes and decisions.apply separate human admissions and 5min review digest",
+    "backend_cas": "prepared.ts selected target version and physical source; prepared-apply.ts receipt-domain atomic transaction",
+    "ux_contract": "cbac654784714f68779ae1434d30e6ea8970c4d1 preserved"
+  },
+  "evidence": {
+    "C12": "pinned plan contracts.json C12, C03, C09, C08; WP11.T03.INV.01; WP11.T04.DOD.02 and INV.01",
+    "original_policy": "product/procurement/decision-preparation.ts blob b75e0923535f4b91b71a2f2d79eef9cefde45db4; runtime/procurement.ts blob a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "source_product": "SRC-01/02/03 exact pre/post from INERT-PATCH.json",
+    "regression": "REG-01/02/03 exact original tests and complete postimages",
+    "historic_failures": "repair220 B11 and B18 only; NOT rerun"
+  },
+  "policy_change_outside_product": "None identified. If the owner proposes approval of pr_pending, bypasses self-approval, reassigns holder, changes thresholds or authorizes post-approval save, exclude that change and request the distinct genuine policy authority.",
+  "not_final_release_review": true,
+  "final_campaign_reviews": "NOT_SUBSTITUTED",
+  "all_counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "validation": {
+    "github_head_and_fence": "READ_VERIFIED",
+    "original_plan_and_S2_R2": "READ",
+    "all_three_product_blobs": "READ_FULL_PRE_AND_POST",
+    "fixture_blobs": "READ_PRE_AND_POST",
+    "original_source_preimages": "MATCHED_BASE_998f0afd",
+    "review_path_trace": "READ_STATIC",
+    "new_regression_code_execution": "NOT_RUN",
+    "unit_tests": "NOT_RUN",
+    "build": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "global_release": "NOT_AUTHORIZED"
+  }
+}

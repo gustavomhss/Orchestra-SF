@@ -1,0 +1,124 @@
+{
+  "schema": "sf2h.release-proof236.C-D-envelope.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 236,
+  "branch": "sf-release-proof",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "approved_ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "GLOBAL_RELEASE": false,
+  "source": "execution/COMMON.md@dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "owner": "WP10.T05/S0 after accepted C and G7",
+  "product_candidate_C": {
+    "sha": null,
+    "tree": null,
+    "accepted": false,
+    "last_observed_product_head": "998f0afd6047409956418f40c570dc9c48dc6c8f",
+    "last_observed_product_tree": "f64ef87e81f0afff5f8c967b554ea341b2c7f580",
+    "reason": "998f is the development base, not formally accepted C"
+  },
+  "delivery_D": {
+    "sha": null,
+    "tree": null,
+    "state": "NOT_CREATED",
+    "expected_parent": null
+  },
+  "admissible_D": {
+    "only_added_new_files": true,
+    "allowed_prefixes": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/"
+    ],
+    "control_receipts": "ONLY_FINITE_FULL_PATHS_PREALLOCATED_BY_S0_ON_sf2-control_FOR_SAME_C_INSTANCE_BEFORE_D",
+    "control_path_template": "modules/sucafina/Sucafinav1/docs/sf2h/control/delivery/<execution_instance>/attempt-<positive_integer>.json",
+    "allocation_record_commit": null,
+    "extensions": [
+      ".json",
+      ".md",
+      ".txt"
+    ],
+    "mode": "100644",
+    "utf8_only": true,
+    "content": "evidence/receipts/reviews only; never executable; never secrets",
+    "preserve_all_C_files_and_blobs": true,
+    "no_rename_delete_modify_mode_or_replace": true,
+    "no_new_build_test_generation_registry_runtime_import_glob_input": true,
+    "no_symlink_submodule_executable_traversal": true,
+    "exclude_from_D": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure236/**",
+      "modules/sucafina/Sucafinav1/test/product/proof236/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-ci-preparation/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/**"
+    ],
+    "old_receipts_immutable": true,
+    "full_git_C_to_D_diff_without_truncation_required": true,
+    "all_original_C_blobs_unchanged_required": true,
+    "dependencies_unknown_fail_closed": true,
+    "old_logs_retained": true,
+    "self_reference": "Internal D receipt may refer to C, but must never contain its own future D SHA, its own blob hash or D guard results; publication of D SHA and G8 receipt is external by S0 after guard.",
+    "append_only_retries": "one new previously allocated file per attempt, never update old receipt"
+  },
+  "required_fields_in_D_internal_receipt": [
+    "campaign_id",
+    "product_candidate_sha",
+    "product_tree_hash",
+    "evidence_index_with_paths_and_hashes",
+    "ci_run_and_request_refs",
+    "integrated_proof_refs",
+    "independent_review_refs",
+    "envelope_policy_version",
+    "observed_limits",
+    "execution_instance",
+    "delivery_attempt",
+    "allocation_record_commit",
+    "previous_attempt_refs"
+  ],
+  "gate_C_G7": {
+    "checkout": "EXACT_ACCEPTED_C",
+    "command": "bun run check:guards --base origin/dev",
+    "cwd": "REPO_ROOT_AT_C",
+    "owner": "190/WP10.T04",
+    "status": "NOT_RUN",
+    "must_precede_D": true
+  },
+  "gate_D_G8": {
+    "checkout": "EXACT_VERIFIED_EVIDENCE_ONLY_D",
+    "command": "bun run check:guards --base origin/dev",
+    "cwd": "REPO_ROOT_AT_D",
+    "owner": "S0/WP10.T05 with 190 guard owner",
+    "status": "NOT_RUN",
+    "preconditions": [
+      "G7_PASS_ON_ACCEPTED_C",
+      "D_DESCENDS_FROM_C",
+      "FULL_ENVELOPE_PASS",
+      "CONTROL_ALLOCATION_FROZEN"
+    ],
+    "after_D_creation": true
+  },
+  "refusal_rules": [
+    "Guard of 998f or any historical W cannot count for accepted C unless identical SHA and actual guard log.",
+    "Guard on C cannot count for D; run separately on each checkout.",
+    "No green from an unrelated snapshot, mock, no-op, zero selections or screenshot.",
+    "Any material change creates a new C and invalidates affected old proof.",
+    "Do not merge sf2-control or the preparation receipts branch directly into D."
+  ]
+}

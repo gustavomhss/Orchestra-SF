@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h.product-ci232.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 232,
+  "epoch": "product-ci-e9-browser232",
+  "status": "ACCEPTED_EXCLUSIVE_PRODUCT_CI_SUCCESSOR_RECEIPTS_ONLY",
+  "T0": "2026-11-13T04:01:10Z",
+  "campaign_state": "CONTINUING_LATE",
+  "branch": "sf-ci-closure",
+  "pre_ack_commit": "840effa220ad1f5ba80d1914865febc7fc4cffe4",
+  "pre_ack_tree": "48afa1542bb6ca6801da3f51660d295d44168a81",
+  "s0_fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure232/S0-FENCE.json",
+    "blob": "ae3d8c46360c2641f51ba162446a7c877aa1d91b"
+  },
+  "packet232_blob": "a31a540c28d2cba19b485fabf0977e45ca885229",
+  "parent": "783becc0c5df4c2f1667a51d287710131a92b655",
+  "readset223": {
+    "handoff": "3ada568447d73d4798c00d7840510002a2606d36",
+    "queue": "5777371dace866bf589c37543f38bc5698ad9768",
+    "runs": "48aabd02fa43bff1473bf3106e567311453ed3a6",
+    "findings": "769abf84c1d8dd6a36c99923fe7d2c9107b40df8",
+    "input": "452f21c6a78c858935cf876f5592bb9e29b99bc1",
+    "packet223": "8422717e47f9d78ed5d751d8263ec878d4021b6e"
+  },
+  "historic_runs": {
+    "verified_via_github_actions_get_run": 15,
+    "completed": 15,
+    "success": 7,
+    "failure": 8,
+    "active": 0,
+    "queued": 0,
+    "new_dispatches": 0
+  },
+  "scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "acceptance_criteria": 1610,
+    "approved_ux_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "identity": {
+    "model": "GPT-6",
+    "session_id": null,
+    "session_id_exposed": false,
+    "github_user": "gustavomhss"
+  },
+  "capabilities": {
+    "initial_test_ci_dispatch": "UNAVAILABLE_GITHUB_MCP",
+    "rerun_existing_jobs": "AVAILABLE_BUT_NOT_AUTHORIZED_FOR_UNCHANGED_FAILS",
+    "local_test_build_typecheck": "NOT_RUN"
+  },
+  "authority": {
+    "exclusive_product_ci_successor": true,
+    "composition": 211,
+    "reconciliation": 228,
+    "compiler": 190,
+    "final_guard_C_G7": 190,
+    "final_guard_D_G8": "SEPARATE",
+    "native_goal": "PAUSED",
+    "GLOBAL_RELEASE": false
+  },
+  "writes": "closure232 receipts only",
+  "force": false
+}
