@@ -70,3 +70,25 @@ at base semantics or are superseded by a canonical owner.
 - One writer per bundle; merges serial under the base lease.
 - Never change an assertion to match behavior.
 - Host-local artifacts (for example `.husky/_`) never enter a campaign branch.
+
+## Consolidated status (2026-11-18)
+
+Bundles merged into `close-final-candidate`: #337 -> `3ba969783a`, #342 -> `f30e1356a3`,
+#343 -> `66ef77dcde`, #344 -> `a63c4c7335` (current base).
+
+CI facts established after the merge:
+- `CI-SF` runs as eight shards. The WP01 ordered browser pool cannot run inside a Bun
+  multi-file process (Bun schedules files itself), so its 40 pool-owned files are
+  declared as `harnessOwnedFiles`, excluded, and both directions are proven.
+- A red shard now uploads its own `run.log` and `report.xml` for attribution.
+- The base tree is red independently of the campaign: the historical single job ran
+  only 289 of 918 files and finished with 43 failing tests while reporting success,
+  which is why `sf/verify` was always red.
+
+Open work is tracked in the branch `sf-red-clusters`:
+- native phase fixture lost `@orchestra/ToolSafety` (location graph + replacement),
+- private browser enrollment aborts immediately (diagnostic message now preserved),
+- Decisions lane control lookup by label raced the selected option (name-based locators
+  adopted from #307; the same PR's assertion deletions were not adopted),
+- reports artifact `put` stalls after the second review read (traced behind
+  `SF_REPORTS_TRACE`).
