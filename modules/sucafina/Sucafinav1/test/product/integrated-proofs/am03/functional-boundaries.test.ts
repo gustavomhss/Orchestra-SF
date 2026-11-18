@@ -3,12 +3,12 @@ import { AgentV2 } from "@orchestra/core/agent"
 import { SessionMessage } from "@orchestra/core/session/message"
 import type { ToolRegistry } from "@orchestra/core/tool/registry"
 import { Effect } from "effect"
-import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
-import { createPlannerCapabilities } from "../../../product/planner/capabilities.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { loadSfSkill } from "../../../../product/host-binding/skill-loader.ts"
+import { createPlannerCapabilities } from "../../../../product/planner/capabilities.ts"
 import { plannerFixture, plannerPeriod } from "../../wp03/planner-fixture.ts"
 import { withSkillHost } from "../../workbench-mcp-closure/skill-host-fixture.ts"
-import type { SfVerifiedCallObserver } from "../../../product/host-binding/verified-call.ts"
+import type { SfVerifiedCallObserver } from "../../../../product/host-binding/verified-call.ts"
 
 // This executes the actual public Host.Contribution, SessionV2 skill loading,
 // ToolRegistry, MCP bridge, Planner producer and SQLite persistence. The Planner

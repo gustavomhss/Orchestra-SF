@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import { rm } from "node:fs/promises"
 import { createC12Fixture, prepareC12Change, readReviewDigest } from "../c12-receipt-recovery/fixture.ts"
 import { observeC12 } from "../c12-receipt-recovery/consumer.ts"
-import { object, rows } from "../../runtime/contract.ts"
+import { object, rows } from "../../../runtime/contract.ts"
 
 /**
  * Original Procurement Requests.save, C08 transactionAll and C12 HTTP actions.

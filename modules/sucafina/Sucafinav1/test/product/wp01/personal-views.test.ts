@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -17,6 +19,7 @@ import { createModule } from "../../../index.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 
 test("personal views isolate authenticated principals and reconcile exact retries", async () => {
+  expectSpawn(import.meta.path)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-personal-views-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -32,12 +35,13 @@ test("personal views isolate authenticated principals and reconcile exact retrie
     grants: [1, 2].map((uid) => ({ principalRef: `macos:${installationId}:${uid}`, namespaces: ["preferences" as const], operations: [], humanActions: ["views.read" as const, "views.save" as const, "views.remove" as const] })), createId: randomUUID, now: Date.now,
     commandIdentity: async (request, operation) => request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
-  const personalViews = createSfPersonalViews({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget, operationIdentity: authority.ui.operationIdentity, humanAuthorize: authority.human.authorize,
+  const personalViews = createSfPersonalViews({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget, operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined, humanAuthorize: authority.human.authorize,
     authorizeView: async (view, context) => view.surface === "planner" && PLANNER_TABS.some((page) => page === view.page) && await authority.host.revalidate(context) })
   const services = { ...authority, personalViews } as SfHostServices
   const app = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
   const module = createModule("/sucafina", { persistence: store, authenticate, environment, product: app, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   serverState.handle = async (request) => await first.handle(request) ?? await module(request)
+  let browserDriver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
   try {
     const cookie = async (identity: typeof first) => (await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)))!.headers.get("set-cookie")!.split(";")[0]!
     const firstCookie = await cookie(first)
@@ -72,22 +76,24 @@ test("personal views isolate authenticated principals and reconcile exact retrie
       snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
       return { commit: true, value: undefined }
     })
-    const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    browserDriver = await launchBrowserDriver("personal-views")
+    const browser = browserDriver.browser
     try {
       const tab = await browser.newPage()
       await tab.goto(`${origin}/sucafina/auth/local?code=${await first.enroll()}`)
       await tab.goto(`${origin}/sucafina/planner?page=OPEX`)
-      await tab.getByRole("button", { name: "Filtered plan" }).click()
+      await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
       await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id)
       expect(new URL(tab.url()).searchParams.get("year")).toBe("2027")
       expect(new URL(tab.url()).searchParams.get("mode")).toBe("forecast")
       expect(new URL(tab.url()).searchParams.get("q")).toBe("renewal")
       await tab.locator('html[data-sf-density="compact"]').waitFor()
       await tab.evaluate(async () => { await (window as unknown as { sucafinaRefresh: () => Promise<void> }).sucafinaRefresh() })
-      await tab.getByRole("button", { name: "Filtered plan" }).waitFor()
-      await tab.getByRole("button", { name: "Filtered plan" }).click()
+      await tab.getByRole("button", { name: "Filtered plan", exact: true }).waitFor()
+      await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
       await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id && url.searchParams.get("q") === "renewal")
-    } finally { await browser.close() }
+    } finally { await browserDriver.close() }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+  if (!browserDriver) throw new Error("Personal views browser driver was not created")
+  browserDriver.report()
 })

@@ -28,7 +28,7 @@ test("public SF host loads 18 distributed skills for all 25 authorized profile b
       for (const skill of host.bundle.skills.filter((skill) => !selected.skills.some((allowed) => allowed.id === skill.id)))
         expect(PermissionV2.evaluate("skill", skill.id, agent.permissions).effect).toBe("deny")
       const created = yield* host.session.create({ location: host.location, agent: agent.id })
-      expect(created.agent).toBe(selected.profile.id)
+      expect(created.agent).toBe(AgentV2.ID.make(selected.profile.id))
       for (const skill of selected.skills) {
         expect(PermissionV2.evaluate("skill", skill.id, agent.permissions).effect).toBe("allow")
         const before = yield* host.session.messages({ sessionID: created.id })

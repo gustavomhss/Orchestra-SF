@@ -96,7 +96,7 @@ test("AM05 Atlas physical ordinals survive reopens and reject duplicate, reorder
       const original = await readJournal(owner)
       expect(original).toHaveLength(2)
       expect(original.map(([, event]) => event.seq)).toEqual([1, 2])
-      expect(original.map(([id]) => id)).toEqual([firstReceipt.eventId, secondReceipt.eventId])
+      expect<readonly string[]>(original.map(([id]) => id)).toEqual([firstReceipt.eventId, secondReceipt.eventId])
       expect(createSfAtlasDurableMemory({ events: original }).read()).toMatchObject({ rejected: 0 })
       return { first, firstReceipt, second, secondReceipt, owner }
     }
@@ -111,7 +111,10 @@ test("AM05 Atlas physical ordinals survive reopens and reject duplicate, reorder
     expect([...recovered.log.values()].map((event) => event.seq)).toEqual([1, 2])
     const authorized = await f.call("sf_case_read", { caseRef: encodeCaseRef(clean.second.caseRef) }, (context) =>
       f.runtime.current.business.context.recall({ caseRefs: [clean.second.caseRef], query: "recorded" }, context))
-    expect(authorized.map((record) => record.envelope.eventId)).toEqual([clean.firstReceipt.eventId, clean.secondReceipt.eventId])
+    const firstEventId = clean.firstReceipt.eventId
+    const secondEventId = clean.secondReceipt.eventId
+    if (!firstEventId || !secondEventId) throw new Error("AM05_COMMITTED_EVENT_IDS_MISSING_AFTER_REOPEN")
+    expect<readonly string[]>(authorized.map((record) => record.envelope.eventId)).toEqual([firstEventId, secondEventId])
 
     // The protected single-event retry is a sparse *projection* of a valid
     // two-event journal. Its necessary consumer projection change is supplied
