@@ -39,7 +39,6 @@ async function readGroups(f: DocumentFixture, second: SecondCase, call: RecallCa
   expect(another.status).toBe("ok")
   if (another.status !== "ok") throw new Error("Second actual raw recall unavailable")
   expect(another.records).toHaveLength(1)
-  if (typeof second.receipt.recordDigest !== "string") throw new Error("Second committed Atlas receipt omitted its digest")
   expect(another.records[0]?.recordDigest).toBe(second.receipt.recordDigest)
   return [first, another.records]
 }
@@ -56,21 +55,16 @@ test("M69 complete public recall preserves two real cases, authenticated empty s
     await f.ui("sf_decision_recall", selection, async (call) => {
       const publicRecords = await f.atlas.context.recall(selection, call)
       expect(publicRecords).toHaveLength(2)
-      const firstEventId = f.receipt.eventId
-      const secondEventId = second.receipt.eventId
-      const secondDigest = second.receipt.recordDigest
-      if (typeof firstEventId !== "string" || typeof secondEventId !== "string" || typeof secondDigest !== "string")
-        throw new Error("Committed Atlas receipts omitted original identities or digest")
       expect(new Set(publicRecords.map((record) => record.envelope.eventId)))
-        .toEqual(new Set([firstEventId, secondEventId]))
+        .toEqual(new Set([f.receipt.eventId, second.receipt.eventId]))
       requireOriginalRecord(f, publicRecords.filter((record) => record.envelope.eventId === f.receipt.eventId))
       const secondRecord = publicRecords.find((record) => record.envelope.eventId === second.receipt.eventId)
       if (!secondRecord) throw new Error("Public multi-case recall dropped the second actual record")
       expect(secondRecord.envelope.caseRef).toMatchObject(second.caseRef)
       expect(secondRecord.envelope.sourceEventId).toBe(second.eventRef.target.eventId)
-      expect(secondRecord.envelope.scannerReceipt.digest).toBe(secondDigest)
+      expect(secondRecord.envelope.scannerReceipt.digest).toBe(second.receipt.recordDigest)
       expect(digestSfValue({ kind: secondRecord.envelope.kind, owner: secondRecord.envelope.owner, entry: secondRecord.entry }))
-        .toBe(secondDigest)
+        .toBe(second.receipt.recordDigest)
       const groups = await readGroups(f, second, call)
       expect(await revalidateSfAtlasRecall(groups, call)).toBe(true)
       expect(await revalidateSfAtlasRecall(groups, call)).toBe(false)

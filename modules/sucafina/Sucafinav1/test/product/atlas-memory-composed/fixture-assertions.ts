@@ -11,14 +11,11 @@ export function requireOriginalRecord(fixture: DocumentFixture, records: readonl
   expect(records).toHaveLength(1)
   const record = records[0]
   if (!record) throw new Error("Real Atlas recall did not retain its committed record")
-  const publishedDigest = fixture.receipt.recordDigest
-  const publishedEventId = fixture.receipt.eventId
-  if (typeof publishedDigest !== "string" || typeof publishedEventId !== "string") throw new Error("Committed Atlas receipt omitted its digest or event identity")
-  expect(digestSfValue({ kind: record.envelope.kind, owner: record.envelope.owner, entry: record.entry })).toBe(publishedDigest)
-  if ("recordDigest" in record) expect(record.recordDigest).toBe(publishedDigest)
-  expect(record.envelope.eventId).toBe(publishedEventId)
+  expect(digestSfValue({ kind: record.envelope.kind, owner: record.envelope.owner, entry: record.entry })).toBe(fixture.receipt.recordDigest)
+  if ("recordDigest" in record) expect(record.recordDigest).toBe(fixture.receipt.recordDigest)
+  expect(record.envelope.eventId).toBe(fixture.receipt.eventId)
   expect(record.envelope.sourceEventId).toBe(fixture.eventRef.target.eventId)
-  expect(record.envelope.scannerReceipt.digest).toBe(publishedDigest)
+  expect(record.envelope.scannerReceipt.digest).toBe(fixture.receipt.recordDigest)
   expect(record.envelope.dependencies).toEqual(fixture.sources.map((source) => source.ref))
 }
 
@@ -27,7 +24,6 @@ export async function readOriginalRaw(fixture: DocumentFixture, call: TrustedDom
   expect(read.status).toBe("ok")
   if (read.status !== "ok") throw new Error("Intact raw recall unavailable")
   requireOriginalRecord(fixture, read.records)
-  if (typeof fixture.receipt.recordDigest !== "string") throw new Error("Committed Atlas receipt omitted its record digest")
   expect(read.records[0]?.recordDigest).toBe(fixture.receipt.recordDigest)
   return read.records
 }
