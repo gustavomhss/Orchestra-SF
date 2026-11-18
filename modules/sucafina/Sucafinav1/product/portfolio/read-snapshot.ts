@@ -1,5 +1,4 @@
 import { AsyncLocalStorage } from "node:async_hooks"
-import type { TransactionOptions } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -19,7 +18,6 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
     const persistence = host.persistence
     const transaction = persistence.transaction
     const currentSnapshots = persistence.currentSnapshots
-    const readSnapshotRoot = persistence.readSnapshotRoot
     const requestFor = host.requestFor
     const revalidate = host.revalidate
     const request = requestFor.call(host, context)
@@ -33,7 +31,7 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
     }
     const source = fingerprint()
     const unchanged = () => !request.signal.aborted && host.persistence === persistence && host.requestFor === requestFor && host.revalidate === revalidate &&
-      persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots && persistence.readSnapshotRoot === readSnapshotRoot && requestFor.call(host, context) === request && fingerprint() === source &&
+      persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots && requestFor.call(host, context) === request && fingerprint() === source &&
       digestSfValue({ kind: context.kind, binding: context.binding }) === authority && digestSfValue(incoming) === payload
     const inherited = reads.getStore()
     if (currentSnapshots.call(persistence)) {
@@ -46,9 +44,7 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
     let invocations = 0
     let accepted = false
     try {
-      // Keep canonical Dashboard admission inside the optional root. Calling
-      // work directly would bypass SourcePersistence and CurrentChoice guards.
-      const run = () => persistence.transaction<{ valid: true; value: T } | { valid: false }>("dashboard", async () => reads.run(scope, async () => {
+      const result = await persistence.transaction<{ valid: true; value: T } | { valid: false }>("dashboard", async () => reads.run(scope, async () => {
         invocations++
         if (invocations !== 1 || !currentSnapshots.call(persistence) || !unchanged()) return { commit: false, value: { valid: false as const } }
         const value = await work()
@@ -56,8 +52,6 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
         accepted = unchanged() && (rejected || await revalidate.call(host, context)) && unchanged() && !!currentSnapshots.call(persistence)
         return { commit: false, value: accepted ? { valid: true as const, value } : { valid: false as const } }
       }), { signal: request.signal })
-      const root: ((work: typeof run, options?: TransactionOptions) => ReturnType<typeof run>) | undefined = readSnapshotRoot
-      const result = root ? await root.call(persistence, run, { signal: request.signal }) : await run()
       // No external awaited callback may follow this point. LocalStore already
       // rejected poisoned/unjoined reads before returning this captured value.
       return accepted && invocations === 1 && unchanged() && result.valid ? result.value : refused

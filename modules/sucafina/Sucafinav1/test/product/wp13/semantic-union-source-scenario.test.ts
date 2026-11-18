@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { createPortfolioPerformanceTrace } from "../portfolio-p03-performance/trace.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
@@ -30,23 +31,39 @@ import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
 
 const policyCriteria = ["renewal-difference", "renewal-ceiling-240000"] as const
 
+type CriterionEvaluationTiming = { calls: number; completed: number; totalElapsedMs: number; maximumElapsedMs: number }
+
 test("semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed", async () => {
+  const startedAt = Date.now()
+  const trace = createPortfolioPerformanceTrace()
+  const criterionTiming: CriterionEvaluationTiming = { calls: 0, completed: 0, totalElapsedMs: 0, maximumElapsedMs: 0 }
+  const logPhase = (phase: string, status?: string) => console.info("[wp13-semantic-phase]", JSON.stringify({ phase, status, elapsedMs: Date.now() - startedAt, criterionEvaluations: { ...criterionTiming }, boundaries: trace.snapshot() }))
   const history = await createRenewalChoiceHistory()
+  const snapshots = history.fixture.store.currentSnapshots?.bind(history.fixture.store)
+  if (snapshots) history.fixture.store.currentSnapshots = () => trace.sync("storage.currentSnapshots", snapshots)
+  const transaction = history.fixture.store.transaction.bind(history.fixture.store)
+  history.fixture.store.transaction = (surface, work, options) => trace.measure(`storage.transaction.${surface}`, () => transaction(surface, work, options))
   try {
-    const before = await composePortfolio(history, history.before)
+    logPhase("compose-before:start")
+    const before = await composePortfolio(history, history.before, criterionTiming, 0, trace)
+    logPhase("compose-before:complete")
     expect(history.before.baselineScenario.operations).toEqual([])
     expect(history.before.baselineResult.id.startsWith("source-scenario:")).toBe(true)
     expect(history.before.baselineResult).toMatchObject({ total: 240000, comparisonStatus: "complete" })
     expect(before.ceilingRule).toMatchObject({ metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0, unit: "USD", sensitivity: { baselineRef: history.before.baselineRef } })
     expect(history.before.rule).toMatchObject({ metricRef: "planner:known-subtotal-difference", operator: "lte", value: -20000, unit: "USD", sensitivity: { baselineRef: history.before.baselineRef } })
+    logPhase("baseline:start")
     const baseline = await before.product.port.evaluate({ ...before.request, candidateRefs: [before.baselineCandidateRef], constraints: [] }, history.fixture.context)
+    logPhase("baseline:complete", baseline.status)
     if (baseline.status !== "ok") throw new Error(`Source-only baseline portfolio: ${JSON.stringify(baseline)}`)
     expect(baseline.value.combinations).toHaveLength(1)
     expect(baseline.value.combinations[0]!.components).toEqual(history.before.baselineResult.components)
     expect(baseline.value.combinations[0]!.restrictions).toContain("analysis-unavailable")
     expect(baseline.value.combinations[0]!.eligibility).toBe("conditioned")
 
+    logPhase("omitted:start")
     const omitted = await before.persistent.evaluateAndStore(before.request, history.before.caseRef, history.fixture.context)
+    logPhase("omitted:complete", omitted.status)
     if (omitted.status !== "ok") throw new Error(`Omitted-training portfolio: ${JSON.stringify(omitted)}`)
     const original = omitted.value.portfolio.combinations[0]!
     expect(omitted.value.portfolio.combinations).toHaveLength(1)
@@ -65,7 +82,9 @@ test("semantic union: portfolio replays the USD 240000 ceiling and USD 20000 adv
     if (originalStored.status !== "ok" || !originalStored.value) throw new Error("Original portfolio C08 unavailable")
     const originalDigest = digestSfValue(originalStored.value)
 
+    logPhase("choose:start")
     const chosen = await before.choose()
+    logPhase("choose:complete")
     const choiceDigest = digestSfValue(chosen.choice)
     expect(chosen.choice.result).toMatchObject({ knownSubtotal: 210000, total: null, comparisonStatus: "conditioned" })
     expect(chosen.choice.criteria).toEqual(policyCriteria)
@@ -74,14 +93,20 @@ test("semantic union: portfolio replays the USD 240000 ceiling and USD 20000 adv
     expect((await history.readCase()).preparedChanges).toEqual([])
     expect((await history.readCase()).receipts).toEqual([])
 
+    logPhase("resolve-training:start")
     const phase = await history.resolveTraining()
+    logPhase("resolve-training:complete")
     expect(phase.caseRef.id).toBe(history.before.caseRef.id)
     expect(phase.caseRef.incarnation).toBe(history.before.caseRef.incarnation)
     expect(phase.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
     expect(phase.scenario).toMatchObject({ operations: [], assumptions: [] })
     expect(phase.selectedResult.id.startsWith("source-scenario:")).toBe(true)
-    const after = await composePortfolio(history, phase, before.ceilingRule.version)
+    logPhase("compose-after:start")
+    const after = await composePortfolio(history, phase, criterionTiming, before.ceilingRule.version, trace)
+    logPhase("compose-after:complete")
+    logPhase("confirmed:start")
     const confirmed = await after.persistent.evaluateAndStore(after.request, phase.caseRef, history.fixture.context)
+    logPhase("confirmed:complete", confirmed.status)
     if (confirmed.status !== "ok") throw new Error(`Confirmed-training source portfolio: ${JSON.stringify(confirmed)}`)
     const current = confirmed.value.portfolio.combinations[0]!
     expect(current).toMatchObject({ eligibility: "ineligible", comparisonStatus: "complete", analysis: { scenario: { knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { coverageState: "complete", derivedMissingCategoryIds: [] } }, comparison: { knownDifference: 10000, completeDifference: 10000, comparisonStatus: "complete" } } })
@@ -144,10 +169,13 @@ test("semantic union: portfolio replays the USD 240000 ceiling and USD 20000 adv
     expect((await after.persistent.read(confirmed.value.portfolioResultRef, history.fixture.context)).status).not.toBe("ok")
     expect(revokedBaselineReads).toBeGreaterThan(readsAfterRule)
     expect((await after.coverageFor(phase.baselineScenario.baseRef, history.fixture.context)).status).not.toBe("ok")
-  } finally { await history.cleanup() }
+  } finally {
+    logPhase("finally")
+    await history.cleanup()
+  }
 }, 180000)
 
-async function composePortfolio(history: Awaited<ReturnType<typeof createRenewalChoiceHistory>>, phase: Awaited<ReturnType<typeof createRenewalChoiceHistory>>["before"], expectedCeilingRuleVersion = 0) {
+async function composePortfolio(history: Awaited<ReturnType<typeof createRenewalChoiceHistory>>, phase: Awaited<ReturnType<typeof createRenewalChoiceHistory>>["before"], criterionTiming: CriterionEvaluationTiming, expectedCeilingRuleVersion: number, trace: ReturnType<typeof createPortfolioPerformanceTrace>) {
   const host = history.fixture.host
   const context = history.fixture.context
   const writes = new WeakSet<object>()
@@ -239,7 +267,25 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
   // Grants are synthetic fixture authority. Both explicit human rules use the canonical Planner
   // difference metric; <= 0 is equivalent to the ceiling only for the pinned complete 240000 baseline.
   const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
-  const rules = createCriterionRuleRegistry({ state, host, authorizeCase, authorizeRule: async (request, trusted) => trusted.kind === "ui" && request.criterionId === criterion.id && request.metricRef === "planner:known-subtotal-difference" && request.operator === "lte" && request.value === 0 && request.unit === "USD" && request.sensitivity?.baselineRef === phase.baselineRef && await host.revalidate(trusted), verifyEvidence: (rule, trusted) => evidenceCurrent(rule.evidenceRefs, trusted), verifySnapshot, readMetric: (request, trusted) => { if (!metrics.read) throw new Error("Canonical criterion metric not composed"); return metrics.read(request, trusted) }, verifyMetric: (metric, trusted) => evidenceCurrent(metric.evidenceRefs, trusted), operationIdentity: () => `source-ceiling-rule-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
+  const canonicalRules = createCriterionRuleRegistry({ state, host, authorizeCase, authorizeRule: async (request, trusted) => trusted.kind === "ui" && request.criterionId === criterion.id && request.metricRef === "planner:known-subtotal-difference" && request.operator === "lte" && request.value === 0 && request.unit === "USD" && request.sensitivity?.baselineRef === phase.baselineRef && await host.revalidate(trusted), verifyEvidence: (rule, trusted) => evidenceCurrent(rule.evidenceRefs, trusted), verifySnapshot, readMetric: (request, trusted) => { if (!metrics.read) throw new Error("Canonical criterion metric not composed"); return metrics.read(request, trusted) }, verifyMetric: (metric, trusted) => evidenceCurrent(metric.evidenceRefs, trusted), operationIdentity: () => `source-ceiling-rule-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
+  // Binding validation also evaluates rules outside the Planner comparison's read scope.
+  // Keep each complete canonical readonly evaluation in one fresh root, joining an
+  // existing root only through the same authority-preserving snapshot helper.
+  const rules: typeof canonicalRules = {
+    ...canonicalRules,
+    evaluate: async (request, trusted) => {
+      const startedAt = Date.now()
+      criterionTiming.calls += 1
+      try {
+        return await trace.measure("rules.evaluate", () => readPortfolioSnapshot(host, trusted, request, () => canonicalRules.evaluate(request, trusted), { status: "unavailable", reason: "source-criterion-snapshot-unavailable" }))
+      } finally {
+        const elapsedMs = Date.now() - startedAt
+        criterionTiming.completed += 1
+        criterionTiming.totalElapsedMs += elapsedMs
+        criterionTiming.maximumElapsedMs = Math.max(criterionTiming.maximumElapsedMs, elapsedMs)
+      }
+    },
+  }
   metrics.read = createPlannerCriterionMetric({ host, rules, units: phase.issuer, preview: (request, trusted) => comparePlannerPreview({ host, sources, scenarios, planner: previewPlanner }, request, trusted) })
   if (!phase.rule.sensitivity) throw new Error("Canonical rule units unavailable")
   const registered = await rules.register({ caseRef: phase.caseRef, criterionId: criterion.id, metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0, unit: "USD", period: phase.selectedResult.horizon, evidenceRefs: phase.rule.sensitivity.sourceRefs, sensitivity: phase.rule.sensitivity, expectedRuleVersion: expectedCeilingRuleVersion }, context)
@@ -269,13 +315,18 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
   // outside and must obtain their own later CAS. No proof survives this call.
   const planner: typeof canonicalPlanner = {
     ...canonicalPlanner,
-    compareScenarios: (request, trusted) => readPortfolioSnapshot(host, trusted, request, () => canonicalPlanner.compareScenarios(request, trusted), { status: "unavailable", reason: "source-comparison-snapshot-unavailable" }),
+    compareScenarios: (request, trusted) => trace.measure("planner.compareScenarios", () => readPortfolioSnapshot(host, trusted, request, () => canonicalPlanner.compareScenarios(request, trusted), { status: "unavailable", reason: "source-comparison-snapshot-unavailable" })),
     simulateScenario: (request, trusted) => readPortfolioSnapshot(host, trusted, request, () => canonicalPlanner.simulateScenario(request, trusted), { status: "unavailable", reason: "source-simulation-snapshot-unavailable" }),
   }
-  const comparisonBindings = createCriterionComparisonBindings({ state, host, rules, results: phase.results, authorizeCase, verifyBinding: async (binding, result, trusted) => {
+  const canonicalBindings = createCriterionComparisonBindings({ state, host, rules, results: phase.results, authorizeCase, verifyBinding: (binding, result, trusted) => trace.measure("comparison.verifyBinding", async () => {
     const compared = await planner.compareScenarios(binding.request, trusted)
     return result.kind === "comparison" && compared.status === "ok" && digestSfValue(compared.value) === result.resultDigest
-  }, verifySnapshot, operationIdentity: () => `source-comparison-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
+  }), verifySnapshot, operationIdentity: () => `source-comparison-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
+  const comparisonBindings: typeof canonicalBindings = {
+    proofs: (...args) => trace.measure("comparison.proofs", () => canonicalBindings.proofs(...args)),
+    bind: (...args) => trace.measure("comparison.bind", () => canonicalBindings.bind(...args), true),
+    read: (...args) => trace.measure("comparison.read", () => canonicalBindings.read(...args), true),
+  }
   const comparisonRequest = { caseRef: phase.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: policyCriteria }
   const readBaselineHistory = () => state.read(history.fixture.request, "cases", (value) => Object.values(value.decisionResults ?? {})
     .filter((record) => record.kind === "scenario" && digestSfValue(record.caseRef) === digestSfValue(phase.caseRef) &&
@@ -356,7 +407,16 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
     if (retained.status !== "ok") throw new Error("Baseline C08 history unavailable after selection")
     expect(retained.value).toEqual(baselineHistory.value)
   }
-  const analysis = createPortfolioAnalysis({ planner, results: phase.results, bindings: comparisonBindings, persist: createPlannerResultPersistence({ store: phase.results, scenarios, comparisonBindings, replay: planner, resolveCase: caseFor }), select: createPortfolioSelectionResolver({ selection, results: phase.results, caseFor }), idempotencyKey: async (digest) => `source-analysis-${phase.caseRef.version}:${digest}` })
+  const persist = createPlannerResultPersistence({ store: phase.results, scenarios, comparisonBindings, replay: planner, resolveCase: caseFor })
+  const select = createPortfolioSelectionResolver({ selection, results: phase.results, caseFor })
+  const canonicalAnalysis = createPortfolioAnalysis({ planner, results: phase.results, bindings: comparisonBindings,
+    persist: (...args) => trace.measure("analysis.persist", () => persist(...args), true),
+    select: (...args) => trace.measure("analysis.select", () => select(...args), true),
+    idempotencyKey: async (digest) => `source-analysis-${phase.caseRef.version}:${digest}` })
+  const analysis: typeof canonicalAnalysis = {
+    evaluate: (...args) => trace.measure("analysis.evaluate", () => canonicalAnalysis.evaluate(...args), true),
+    revalidate: (...args) => trace.measure("analysis.revalidate", () => canonicalAnalysis.revalidate(...args), true),
+  }
   const resolveCandidate = createDecisionCandidateResolver(phase.cases)
   const bindings = createPortfolioResultBindings({ state, host, results: phase.results, selection, resolveCandidate, authorizeCase, verifyBinding: async (_binding, result, trusted) => result.kind === "portfolio" && (await Promise.all(result.result.combinations.map((combination) => combination.analysis ? analysis.revalidate(combination.analysis, trusted) : Promise.resolve(false)))).every(Boolean), verifySnapshot, operationIdentity: () => `source-portfolio-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
   const product = createProductionPortfolio({ cases: phase.cases, planner, sources, evidence: phase.evidence, revalidate: host.revalidate, analysis, candidateCoverageRefFor: async (candidate) => {
