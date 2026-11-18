@@ -34,8 +34,8 @@ const expected = [
   "domain.command.CAP12.delete-campaign",
 ] as const
 
-function valid<A>(schema: Schema.Schema<A>, value: unknown): boolean {
-  return Option.isSome(Schema.decodeUnknownOption(schema as Schema.Decoder<A, never>)(value, { onExcessProperty: "error" }))
+function valid<S extends Schema.Top>(schema: S, value: unknown): boolean {
+  return Option.isSome(Schema.decodeUnknownOption(schema)(value, { onExcessProperty: "error" }))
 }
 const stamp = {
   installationId: "test-installation", projectId: "test-project",
@@ -45,7 +45,7 @@ const stamp = {
 
 describe("A11 operation fidelity", () => {
   test("exactly the sixteen IDs, two source pages, fourteen closed actions", () => {
-    expect<readonly string[]>(Object.keys(SfOperations.operations)).toEqual(expected)
+    expect(Object.keys(SfOperations.operations)).toEqual(expected)
     expect(SF_OPERATIONS_PAGES).toEqual({
       CAP11: "IT Operations", CAP12: "IT Security KPIs",
     })
