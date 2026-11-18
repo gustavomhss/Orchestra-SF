@@ -21,6 +21,7 @@ CI in flight: none. Last evidence: run `44329483839` on `2e5839eebb`.
 - `sf-ms-receipt` `79350b37ff`: restores the Microsoft login receipt tree. Real files. Review before merge; it includes patch sidecars, not only the missing JSON.
 - Diagnosis notes only, do not merge as product: `sf-failure-map`, `sf-reports-stall`, `sf-ui-operations`, `sf-app-browser`, `sf-cli-red`, `sf-procurement-queue`, `sf-wp09-dossier` (`a2525d5d4c`).
 - WP09 cause: the fixture writes `status: "rejected"` without `rejection`. The reader treats that as invalid and the dossier maps it to `document-changed`. Do not accept the invalid record. The fixture must write the rejection payload `rejectDocumentEvidence` already stores.
+- WP10 digest (`8da2ad349a`): neither side is a stale hash. The six diffs swap two valid planner refs (`bi-v0` / `bi-v1`). Do not overwrite expected digests. The bug is source selection order, not the hasher.
 
 ## Not started
 
