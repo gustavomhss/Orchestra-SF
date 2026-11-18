@@ -1,0 +1,25 @@
+{
+  "_readme": "TEMPLATE ONLY. Copy to a private 0700 directory on Azure Linux, chmod 0600, then replace all placeholders. Never commit the completed copy.",
+  "origin": "https://<PUBLIC_FQDN>",
+  "mount": "/sucafina",
+  "tenantId": "<RESOURCE_TENANT_GUID>",
+  "clientId": "<APP_CLIENT_ID_GUID>",
+  "installationId": "<INSTALLED_INSTALLATION_ID>",
+  "projectId": "<INSTALLED_PROJECT_ID>",
+  "hostId": "<INSTALLED_HOST_ID>",
+  "candidateSha": "<FROZEN_CANDIDATE_COMMIT_SHA40>",
+  "artifactSha256": "<INSTALLED_BINARY_SHA256_HEX64>",
+  "runId": 0,
+  "runAttempt": 0,
+  "actorCookies": {
+    "requester": "/ABSOLUTE/PRIVATE/PATH/requester.cookie",
+    "holder": "/ABSOLUTE/PRIVATE/PATH/holder.cookie",
+    "denied": "/ABSOLUTE/PRIVATE/PATH/denied.cookie"
+  },
+  "isolated": {
+    "approvedForNegativeWrites": false,
+    "requestId": "<APPROVED_NONPRODUCTION_EXISTING_REQUEST_ID>",
+    "cas409BodyFile": "/ABSOLUTE/PRIVATE/PATH/cas409-body.json",
+    "validation422BodyFile": "/ABSOLUTE/PRIVATE/PATH/validation422-body.json"
+  }
+}
