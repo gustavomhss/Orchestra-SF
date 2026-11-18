@@ -49,5 +49,6 @@ export function contributionBody(output: ContributionEnvelope): string {
     case "MeetingMaterialProposal": return list(output.payload.coverage.map((item) => `${item.sectionRef}: ${item.includedCount}/${item.totalCount}`)) + list(output.payload.gaps.map((item) => item.reason))
     case "CaseRecall": return list(output.payload.matches.map((item) => `${item.caseRef.id}: ${item.explanation.matchedCriteria.join(", ")}; ${item.explanation.currentDifferences.join(", ")}`)) + list(output.payload.limitations)
     case "MatchExplanation": return list(output.payload.matchedCriteria) + list(output.payload.currentDifferences) + list(output.payload.limitations)
+    default: return ""
   }
 }

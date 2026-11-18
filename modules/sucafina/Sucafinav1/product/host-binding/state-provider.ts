@@ -60,7 +60,7 @@ type SfDecisionReadValue = {
 }
 export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext): (state: Readonly<SfProductState>, authority: SfStateAuthority) => SfDecisionReadValue | undefined
 export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId: string): (state: Readonly<SfProductState>, authority: SfStateAuthority) => { stored: SfDecisionReadValue["stored"] | undefined; current: SfDecisionReadValue["current"] } | undefined
-export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId?: string) {
+export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId?: string): (state: Readonly<SfProductState>, authority: SfStateAuthority) => SfDecisionReadValue | { stored: SfDecisionReadValue["stored"] | undefined; current: SfDecisionReadValue["current"] } | undefined {
   const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
     if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
     const stored = state.decisionResults?.[resultRef]

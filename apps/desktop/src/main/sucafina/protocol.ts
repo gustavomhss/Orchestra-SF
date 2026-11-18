@@ -127,7 +127,7 @@ export function planSfOperation(input: Readonly<{
       if (upload.bytes.byteLength > limit) return { status: "invalid-response" }
       if (operationId === "files.import-admit") {
         const ext = upload.fileName.split(".").pop()?.toLowerCase()
-        const formFields = { ...value, surface: source?.surface }
+        const formFields: Record<string, unknown> = { ...(value as Record<string, unknown>), surface: source?.surface }
         if (!ext || !["xlsx", "xls", "json"].includes(ext) || upload.bytes.byteLength > 16 * 1024 * 1024
           || typeof formFields.surface !== "string" || !SURFACES.has(formFields.surface)
           || typeof formFields.selectionRef !== "string" || !("options" in formFields))

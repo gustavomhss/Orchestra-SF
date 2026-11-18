@@ -104,7 +104,7 @@ export function text(value: unknown): string {
 export function finite(value: unknown, fallback = 0): number {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback
 }
-export function conflict(snapshot: Snapshot, key: string, command: Command, stored: unknown): Result | undefined {
+export function conflict(snapshot: Snapshot, key: string, command: Command, stored: unknown): Extract<Result, { ok: false }> | undefined {
   const current = snapshot.versions[key]
   if ((current?.version ?? 0) !== command.version) return { ok: false, status: 409, stored, by: current?.by, currentVersionCAS: current?.version ?? 0 }
 }

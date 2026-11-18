@@ -264,14 +264,14 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             } finally {
               maestroPending.delete(value.request)
             }
-          }),
+          }).pipe(Effect.provideService(SessionStore.Service, store)),
           bindMaestro: (sessionID, value) => Effect.gen(function* () {
             if (value.action !== "routines.run" || !input.maestro || nativeMaestro.has(sessionID) ||
               !(yield* maestroAuthorize(value))) return { status: "denied", reason: "native-maestro-rebind-unavailable" } as const
             const bound = yield* createMaestroBinding(sessionID, value)
             return bound ? { status: "ok", value: true } as const :
               { status: "denied", reason: "native-maestro-origin-or-c15-unavailable" } as const
-          }),
+          }).pipe(Effect.provideService(SessionStore.Service, store)),
           resumeMaestro: (sessionID, prompt) => Effect.gen(function* () {
             if (!prompt.trim() || prompt.length > 100_000 || !(yield* maestroCurrent(sessionID)))
               return { status: "denied", reason: "native-maestro-human-continuation-unavailable" } as const
@@ -293,8 +293,8 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             return resumed._tag === "Success" && (yield* maestroCurrent(sessionID))
               ? { status: "ok", value: true } as const :
                 { status: "unavailable", reason: "native-maestro-provider-unavailable" } as const
-          }),
-          currentMaestro: maestroCurrent,
+          }).pipe(Effect.provideService(SessionStore.Service, store)),
+          currentMaestro: (sessionID) => maestroCurrent(sessionID).pipe(Effect.provideService(SessionStore.Service, store)),
           releaseMaestro: (sessionID) => Effect.gen(function* () {
             nativeMaestro.get(sessionID)?.close()
             yield* Effect.exit(session.interrupt(sessionID))
@@ -377,6 +377,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
                 acquired.sessionVerified = true
                 if (acquired.closed || args.request.signal.aborted || !lifetime.open)
                   return { status: "denied", reason: "native-preparation-aborted" } as const
+                if (!placed.success.sourceCapability) return { status: "denied", reason: "native-source-capability-unavailable" } as const
                 const loaded = yield* Effect.result(loadSfSkill({ session, skills: placed.success.skills, sourceCapability: placed.success.sourceCapability,
                   selected, sessionID, profile: selected.profile, skill: selectedSkill, runId: args.runId, manifestDigest: selected.manifestDigest }))
                 if (loaded._tag === "Failure") {
