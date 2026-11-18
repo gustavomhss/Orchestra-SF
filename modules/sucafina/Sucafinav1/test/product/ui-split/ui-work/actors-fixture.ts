@@ -128,12 +128,7 @@ export async function createThreadActorsFixture(origin: string) {
     },
   }
   const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
-  const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (value, context) => {
-    const request = host.requestFor(context)
-    const selectedDigest = digestSfValue(value)
-    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
-    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
-  }, evidence, createId: randomUUID, now: () => at })
+  const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
   const compose = () => createCollaborationHost({ host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
     workSignals: async (_selection, period, context) => {
       const issued = await createDashboardSourceIssuer({ host, scopedSources: base.persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, context)
