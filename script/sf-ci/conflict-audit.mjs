@@ -5,10 +5,15 @@
  *
  * Usage:
  *   node script/sf-ci/conflict-audit.mjs [--ledger FILE] [--output FILE]
- *   node script/sf-ci/conflict-audit.mjs --check [--choices FILE]
+ *   node script/sf-ci/conflict-audit.mjs --check --choices FILE
+ *
+ * The canonical 37,603-record Phase A ledger is required by default. For a
+ * fixture use --expected-records N explicitly. Do not use the example ledger
+ * as the campaign inventory. Output never contains timestamps or guesses.
  *
  * --choices is an owner-supplied JSON object mapping conflicted paths to PR
  * numbers, e.g. {"src/example.ts": 71}. It is never inferred from the port.
+ * --check fails closed on a ported conflict without an explicit choice.
  */
 import { createHash } from "node:crypto"
 import { existsSync, readFileSync, mkdirSync, writeFileSync, renameSync, unlinkSync } from "node:fs"
@@ -17,6 +22,9 @@ import { spawnSync } from "node:child_process"
 
 const DEFAULT_LEDGER = "docs/qa/sucafina/consolidation/ledger.jsonl"
 const LOCAL_LEDGER = "/tmp/phase-a/consolidation-ledger.jsonl"
+const LEDGER_REF = "refs/remotes/origin/consolidation-ledger"
+const FROZEN_LEDGER_BLOB = "796737d9d58f87364feab6d583a1b4ff5708d81a"
+const FROZEN_LEDGER_SHA256 = "5cbc3cb03cf8008270d5533a3d9d789bc0908376b438cae56131c7733f83f4d8"
 const DEFAULT_OUTPUT = "docs/qa/sucafina/consolidation/conflict-matrix.json"
 const DEFAULT_BASE = "refs/remotes/origin/close-final-candidate"
 const DEFAULT_INTEGRATION = "refs/remotes/origin/consolidate/90-integration"
@@ -49,8 +57,11 @@ function refSha(ref) {
   return r.status === 0 ? r.stdout.toString("utf8").trim() : null
 }
 function ensureRef(ref, remoteBranch) {
-  if (refSha(ref)) return
-  git(["fetch", "--no-tags", "origin", `+refs/heads/${remoteBranch}:${ref}`])
+  // Default moving refs must be refreshed, not silently taken from an old
+  // checkout. Explicit immutable SHA arguments already pin their own object.
+  if (ref === `refs/remotes/origin/${remoteBranch}`) {
+    git(["fetch", "--no-tags", "origin", `+refs/heads/${remoteBranch}:${ref}`])
+  }
   if (!refSha(ref)) fail("MISSING_REF", ref)
 }
 function ensurePrHead(pr, expected) {
@@ -58,24 +69,49 @@ function ensurePrHead(pr, expected) {
   if (!refSha(ref)) git(["fetch", "--no-tags", "origin", `+refs/pull/${pr}/head:${ref}`])
   const actual = refSha(ref)
   if (!actual) fail("MISSING_PR_HEAD", `#${pr}`)
-  if (actual !== expected) fail("STALE_SNAPSHOT", `#${pr}: ledger=${expected} ref=${actual}`)
+  if (actual !== expected) {
+    // Preserve the frozen source rather than silently using a moved PR head.
+    // The immutable commit is an audit input, not an owner-approved replay.
+    if (!refSha(expected)) git(["fetch", "--no-tags", "origin", expected])
+    if (!refSha(expected)) fail("MISSING_SNAPSHOT_HEAD", `#${pr}: ${expected}`)
+    console.error(`SNAPSHOT_HEAD_MOVED: #${pr}: live=${actual} frozen=${expected}`)
+    return expected
+  }
   return ref
 }
-function readLedger(filename) {
-  if (!existsSync(filename)) fail("MISSING_LEDGER", `neither ${filename} nor a selected accessible snapshot was found`)
-  const raw = readFileSync(filename)
+function readLedger(filename, expectedRecords) {
+  let raw
+  if (existsSync(filename)) raw = readFileSync(filename)
+  else if (filename === DEFAULT_LEDGER) {
+    // WP5's authoritative 46 MB ledger lives on its own branch. A read-only
+    // fetch avoids copying it into WP9's two-file-only commit scope.
+    git(["fetch", "--no-tags", "origin", `+refs/heads/consolidation-ledger:${LEDGER_REF}`])
+    const oid = gitText(["rev-parse", "--verify", `${LEDGER_REF}:${DEFAULT_LEDGER}`])
+    if (oid !== FROZEN_LEDGER_BLOB) fail("LEDGER_SNAPSHOT_DRIFT", `expected ${FROZEN_LEDGER_BLOB}, found ${oid}`)
+    raw = git(["show", `${LEDGER_REF}:${DEFAULT_LEDGER}`]).stdout
+  } else fail("MISSING_LEDGER", `required snapshot is missing: ${filename}`)
+  if (filename === DEFAULT_LEDGER) {
+    const sha = createHash("sha256").update(raw).digest("hex")
+    if (sha !== FROZEN_LEDGER_SHA256) fail("LEDGER_SNAPSHOT_DRIFT", `SHA-256 expected ${FROZEN_LEDGER_SHA256}, found ${sha}`)
+  }
   const grouped = new Map()
-  let replayCount = 0
-  for (const [i, line] of raw.toString("utf8").split(/\r?\n/).entries()) {
-    if (!line.trim()) continue
+  let replayCount = 0, records = 0, unassignedReplayRecords = 0
+  const sourceHeads = new Map()
+  const lines = raw.toString("utf8").split(/\r?\n/)
+  if (lines.at(-1) === "") lines.pop()
+  for (const [i, line] of lines.entries()) {
+    if (!line.trim()) fail("EMPTY_LEDGER_LINE", `${filename}:${i + 1}`)
+    records++
     let record
     try { record = JSON.parse(line) } catch { fail("INVALID_LEDGER_JSON", `${filename}:${i + 1}`) }
     if (record?.disposition !== "REPLAY") continue
+    if (record.scope?.path === "__all__") fail("INVALID_REPLAY_RECORD", `aggregate REPLAY record: ${filename}:${i + 1}`)
     if (record.source_state !== "OPEN") {
       if (record.source_state == null) fail("MISSING_SOURCE_STATE", `${filename}:${i + 1}`)
       continue
     }
     replayCount++
+    if (record.bundle === "NONE") unassignedReplayRecords++
     const p = assertPath(record.scope?.path)
     const pr = record.source_pr
     const head = record.source_head
@@ -84,6 +120,11 @@ function readLedger(filename) {
         typeof bundle !== "string" || !bundle) {
       fail("INVALID_REPLAY_RECORD", `${filename}:${i + 1}`)
     }
+    const priorHead = sourceHeads.get(pr)
+    if (priorHead && priorHead !== head.toLowerCase()) {
+      fail("INCONSISTENT_HEAD", `PR #${pr} has multiple snapshots in ledger`)
+    }
+    sourceHeads.set(pr, head.toLowerCase())
     let group = grouped.get(p)
     if (!group) { group = { bundle, sources: new Map() }; grouped.set(p, group) }
     if (group.bundle !== bundle) fail("NEEDS-INPUT", `path ${p} has bundles ${group.bundle} and ${bundle}`)
@@ -91,8 +132,11 @@ function readLedger(filename) {
     if (old && old !== head.toLowerCase()) fail("INCONSISTENT_HEAD", `${p} #${pr}`)
     group.sources.set(pr, head.toLowerCase())
   }
+  if (records !== expectedRecords) {
+    fail("LEDGER_RECORD_COUNT_MISMATCH", `${filename}: expected ${expectedRecords}, found ${records}`)
+  }
   if (replayCount === 0) fail("EMPTY_REPLAY_INVENTORY", filename)
-  return { raw, grouped }
+  return { raw, grouped, records, replayCount, openReplayPrs: sourceHeads.size, unassignedReplayRecords }
 }
 function chunks(items, size) {
   const result = []
@@ -102,7 +146,8 @@ function chunks(items, size) {
 function blobsForHead(head, paths) {
   const blobs = new Map()
   for (const batch of chunks(paths.sort(), 100)) {
-    const output = git(["ls-tree", "-r", "-z", head, "--", ...batch]).stdout
+    // Match exact bytes, never Git's glob/pathspec-magic interpretation.
+    const output = git(["ls-tree", "-r", "-z", head, "--", ...batch.map((p) => `:(literal)${p}`)]).stdout
     for (const item of output.toString("utf8").split("\0")) {
       if (!item) continue
       const m = item.match(/^[0-7]{6} (blob|commit) ([a-f0-9]{40})\t(.*)$/)
@@ -153,9 +198,16 @@ function inventory(ledger) {
     req.paths.add(p)
   }
   if (gitText(["rev-parse", "--is-shallow-repository"]) !== "false") {
-    fail("SHALLOW_HISTORY", "one-ahead requires complete ancestry history")
+    git(["fetch", "--unshallow", "--no-tags", "origin"])
+    if (gitText(["rev-parse", "--is-shallow-repository"]) !== "false") {
+      fail("SHALLOW_HISTORY", "one-ahead requires complete ancestry history")
+    }
   }
   const byPr = new Map()
+  const missingPrs = [...requests.keys()].filter((pr) => !refSha(`refs/prhead/${pr}`))
+  for (const batch of chunks(missingPrs.sort((a, b) => a - b), 32)) {
+    git(["fetch", "--no-tags", "origin", ...batch.map((pr) => `+refs/pull/${pr}/head:refs/prhead/${pr}`)])
+  }
   for (const [pr, req] of [...requests].sort((a, b) => a[0] - b[0])) {
     const ref = ensurePrHead(pr, req.head)
     byPr.set(pr, blobsForHead(ref, [...req.paths]))
@@ -170,14 +222,19 @@ function inventory(ledger) {
   const conflicted = paths.filter((row) => row.kind !== "same-blob")
   const byBundle = {}
   for (const row of conflicted) byBundle[row.bundle] = (byBundle[row.bundle] ?? 0) + 1
-  const top20 = conflicted.slice().sort((a, b) => b.sources.length - a.sources.length ||
+  const top20 = paths.slice().sort((a, b) => b.sources.length - a.sources.length ||
     (a.path < b.path ? -1 : a.path > b.path ? 1 : 0)).slice(0, 20)
     .map((row) => ({ path: row.path, bundle: row.bundle, sourceCount: row.sources.length, kind: row.kind }))
   return {
     schemaVersion: 1,
     ledgerSha256: createHash("sha256").update(ledger.raw).digest("hex"),
     paths,
-    summary: { totalOverlappingPaths: paths.length, totalConflictedPaths: conflicted.length,
+    summary: { ledgerRecords: ledger.records, replayRecordsFromOpenPrs: ledger.replayCount,
+      openReplayPrs: ledger.openReplayPrs,
+      unassignedReplayRecords: ledger.unassignedReplayRecords,
+      unassignedOverlappingPaths: paths.filter((row) => row.bundle === "NONE").length,
+      unassignedConflictedPaths: conflicted.filter((row) => row.bundle === "NONE").length,
+      totalOverlappingPaths: paths.length, totalConflictedPaths: conflicted.length,
       byBundle, top20BySourceCount: top20 },
   }
 }
@@ -209,10 +266,15 @@ function auditPort(matrix, args) {
   const selections = selectedPrs(args.choices, matrix.paths)
   const ported = new Set()
   for (const batch of chunks(conflicted.map((x) => x.path), 100)) {
+    // A net diff can be empty if a path was ported and then reverted. Walk
+    // actual commit changes (including merge parents); do not miss the port.
     if (!batch.length) continue
-    const names = git(["diff", "--no-renames", "--name-only", "-z", bases[0], integration, "--", ...batch])
-      .stdout.toString("utf8").split("\0").filter(Boolean)
-    names.forEach((name) => ported.add(name))
+    const names = git(["log", "--full-history", "-m", "--no-renames", "--format=", "--name-only", "-z",
+      `${bases[0]}..${integration}`, "--", ...batch.map((p) => `:(literal)${p}`)])
+      .stdout.toString("utf8").split("\0")
+      .map((name) => name.replace(/^\n+|\n+$/g, "")).filter(Boolean)
+    const allowed = new Set(batch)
+    for (const name of names) if (allowed.has(name)) ported.add(name)
   }
   const portBlobs = blobsForHead(integration, [...ported])
   const failures = []
@@ -230,22 +292,27 @@ function auditPort(matrix, args) {
     }
   }
   if (failures.length) fail("PORT_CHECK_FAILED", failures.join("\n"))
-  return { checkedPortedConflicts: [...ported].length }
+  return { checkedPortedConflicts: ported.size }
 }
 function options(argv) {
   const result = { ledger: existsSync(DEFAULT_LEDGER) ? DEFAULT_LEDGER :
     existsSync(LOCAL_LEDGER) ? LOCAL_LEDGER : DEFAULT_LEDGER,
     output: DEFAULT_OUTPUT, check: false, choices: null,
+    expectedRecords: 37603,
     base: DEFAULT_BASE, integration: DEFAULT_INTEGRATION }
   for (let i = 0; i < argv.length; i++) {
     const key = argv[i]
     if (key === "--check") result.check = true
-    else if (["--ledger", "--output", "--choices", "--base", "--integration"].includes(key)) {
+    else if (["--ledger", "--output", "--choices", "--base", "--integration", "--expected-records"].includes(key)) {
       const value = argv[++i]
       if (!value || value.startsWith("--")) fail("ARGUMENT_ERROR", `missing value for ${key}`)
-      result[key.slice(2)] = value
+      if (key === "--expected-records") {
+        const number = Number(value)
+        if (!Number.isSafeInteger(number) || number <= 0) fail("ARGUMENT_ERROR", "expected-records must be a positive integer")
+        result.expectedRecords = number
+      } else result[key.slice(2)] = value
     } else if (key === "--help") {
-      process.stdout.write("Usage: node script/sf-ci/conflict-audit.mjs [--ledger FILE] [--output FILE] [--check] [--choices FILE] [--base REF] [--integration REF]\n")
+      process.stdout.write("Usage: node script/sf-ci/conflict-audit.mjs [--ledger FILE] [--output FILE] [--check] [--choices FILE] [--expected-records N] [--base REF] [--integration REF]\n")
       process.exit(0)
     } else fail("ARGUMENT_ERROR", `unknown option: ${key}`)
   }
@@ -253,7 +320,7 @@ function options(argv) {
 }
 function main() {
   const args = options(process.argv.slice(2))
-  const matrix = inventory(readLedger(args.ledger))
+  const matrix = inventory(readLedger(args.ledger, args.expectedRecords))
   const json = stableJson(matrix)
   if (args.check) {
     if (!existsSync(args.output) || readFileSync(args.output, "utf8") !== json) {
