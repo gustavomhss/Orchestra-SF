@@ -4,15 +4,18 @@ import { LLMClient, LLMEvent, type LLMRequest } from "@orchestra/llm"
 import { AgentV2 } from "@orchestra/core/agent"
 import { CapabilityInvocation } from "@orchestra/core/capability/invocation"
 import { Config } from "@orchestra/core/config"
+import { makeLocationNode } from "@orchestra/core/effect/app-node"
 import { Database } from "@orchestra/core/database/database"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNodePlatform } from "@orchestra/core/effect/app-node-platform"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { EventV2 } from "@orchestra/core/event"
+import { FSUtil } from "@orchestra/core/fs-util"
 import { Global } from "@orchestra/core/global"
 import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { PermissionV2 } from "@orchestra/core/permission"
+import { AppProcess } from "@orchestra/core/process"
 import { Relay } from "@orchestra/core/relay"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
@@ -117,8 +120,8 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
           LLMEvent.stepFinish({ index: 0, reason: "stop" }), LLMEvent.finish({ reason: "stop" })])
       }) }
     )
-    const safety = { ...ToolSafety.node, dependencies: [...ToolSafety.node.dependencies, Location.node], implementation: Layer.effect(ToolSafety.Service, Effect.gen(function* () {
-      const original = yield* ToolSafety.Service, location = yield* Location.Service
+    const safety = makeLocationNode({ service: ToolSafety.Service, deps: [FSUtil.node, AppProcess.node, Global.node, Location.node], layer: Layer.effect(ToolSafety.Service, Effect.gen(function* () {
+      const original = yield* ToolSafety.make, location = yield* Location.Service
       return ToolSafety.Service.of({ ...original, run: (invocation, effect, observe, outcome) => {
         const inspect = Effect.gen(function* () {
           if (invocation.tool === "task") {
@@ -132,14 +135,13 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
         })
         return prepared.bridge.withInvocation(invocation, original.run(invocation, inspect, observe, outcome))
       } })
-    })).pipe(Layer.provide([ToolSafety.node.implementation!])) }
+    })) }) }
     const governance = { ...TaskGovernance.node, implementation: Layer.succeed(TaskGovernance.Service, {
       ...TaskGovernance.allowAll, beforeTurn: prepared.bridge.beforeTurn,
       admit: (request) => TaskGovernance.allowAll.admit(request).pipe(Effect.flatMap((admitted) => prepared.bridge.admitted(request, admitted))),
     }) }
     const application = AppNodeBuilder.build(LayerNode.group([
       Database.node, EventV2.node, SessionStore.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node,
-      ToolSafety.node,
     ]), [[SessionExecution.node, SessionExecutionLocal.node], [ToolSafety.node, safety], [TaskGovernance.node, governance],
       ...(prepared.bridge.contribution.replacements ?? []),
       [LayerNodePlatform.llmClient, Layer.succeed(LLMClient.Service, client)], [Snapshot.node, Snapshot.noopLayer],
