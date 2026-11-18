@@ -146,7 +146,7 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
       ...(prepared.bridge.contribution.replacements ?? []),
       [LayerNodePlatform.llmClient, Layer.succeed(LLMClient.Service, client)], [Snapshot.node, Snapshot.noopLayer],
       [Global.node, Global.layerWith({ home: temporary.path, config: path.join(temporary.path, ".global"), data: path.join(temporary.path, ".data") })]],
-    prepared.bridge.contribution.locationNodes)
+    [...(prepared.bridge.contribution.locationNodes ?? []), ToolSafety.node])
     return yield* Effect.gen(function* () { const f = yield* setup(directory, prepared); return yield* use({ ...f, trace }) }).pipe(Effect.provide(application))
   })))
 }
