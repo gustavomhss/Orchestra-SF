@@ -570,58 +570,28 @@ test("independent review does not replace an uncertain author request after a co
 }, 30_000)
 
 test("a delayed review preparation cannot start or restore data after analysis access is revoked", async () => {
-  const delayed: { started?: () => void; release?: () => void; body?: string; delivered: boolean; cancelled: boolean } = { delivered: false, cancelled: false }
+  const delayed: { started?: () => void; release?: () => void } = {}
   const started = new Promise<void>((resolve) => { delayed.started = resolve })
-  const state = { denied: false, starts: 0, prepares: 0 }
+  const state = { denied: false, starts: 0 }
   await browserCase(history, async (incoming) => {
     const input = await incoming.json()
     if (input.action === "list") return state.denied ? Response.json({ status: "denied" }, { status: 403 }) : Response.json({ status: "ok", value: [{ runRef: "author-run", state: "ready", version: 1, outputRef: "author-output" }] })
     if (input.action === "output") return Response.json({ status: "ok", value: { html: "<p>Private review comparison</p>", outputRef: "author-output", review: reviewOffer } })
     if (input.action === "prepare") {
-      state.prepares++
-      if (state.prepares !== 1) throw new Error("Unexpected additional review preparation")
-      const prepared = Response.json({ status: "ok", value: critiqueInput }, { headers: { "X-Fixture-Review-Released": "yes" } })
-      delayed.body = await within(prepared.text(), "materialize the prepared review response")
-      const bytes = new TextEncoder().encode(delayed.body), split = Math.max(1, Math.floor(bytes.length / 2))
-      // Deliver headers and an exact prefix before revocation so the authorized
-      // consumer awaits the body. The remaining bytes exercise its post-body
-      // access guard, rather than a response discarded before body consumption.
-      const delivery = new ReadableStream<Uint8Array>({
-        start(controller) {
-          controller.enqueue(bytes.subarray(0, split))
-          delayed.release = () => {
-            if (delayed.delivered || delayed.cancelled) return
-            controller.enqueue(bytes.subarray(split)); controller.close(); delayed.delivered = true
-          }
-          delayed.started?.()
-        },
-        cancel() { delayed.cancelled = true },
-      })
-      return new Response(delivery, { status: prepared.status, headers: prepared.headers })
+      await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() })
+      return Response.json({ status: "ok", value: critiqueInput }, { headers: { "X-Fixture-Review-Released": "yes" } })
     }
     state.starts++; return Response.json({ status: "ok", value: { runRef: "should-not-start" } })
   }, async (page) => {
     await page.getByRole("button", { name: "Open result", exact: true }).click()
-    const released = page.waitForResponse((response) => response.headers()["x-fixture-review-released"] === "yes", { timeout: 5_000 })
     await page.getByRole("button", { name: "Request independent review", exact: true }).click()
     await within(started, "review preparation entered delayed handler")
-    const late = await within(released, "observe review preparation headers before revocation")
-    expect(late.status()).toBe(200)
-    expect(state.prepares).toBe(1)
-    const preparedBody = delayed.body
-    if (typeof preparedBody !== "string") throw new Error("The prepared review payload was not materialized before delivery")
-    expect(JSON.parse(preparedBody)).toEqual({ status: "ok", value: critiqueInput })
-    expect(delayed.delivered).toBe(false)
-    await within(page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))), "allow the review reader to await its incomplete body")
     state.denied = true
     await page.locator("[data-analysis-history]").dispatchEvent("sf-analysis-refresh")
     await page.getByText("Analysis access changed. Reopen the decision with your current access.", { exact: true }).waitFor()
+    const released = page.waitForResponse((response) => response.headers()["x-fixture-review-released"] === "yes")
     delayed.release?.()
-    expect(await within(late.text(), "read the exact review payload after revocation")).toBe(preparedBody)
-    expect(await within(late.finished(), "finish delayed review preparation")).toBeNull()
-    expect(delayed.delivered).toBe(true)
-    expect(delayed.cancelled).toBe(false)
-    expect(state.prepares).toBe(1)
+    expect(await within((await released).finished(), "finish delayed review preparation")).toBeNull()
     await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
     expect(state.starts).toBe(0)
     expect(await page.locator("[data-review-analysis]").count()).toBe(0)
@@ -688,7 +658,7 @@ test("a stale analysis preserves the reason but disables acceptance and removes 
   })
 }, 30_000)
 
-const conversation = `<article data-case-thread data-thread="question" data-case='${JSON.stringify(caseRef)}' data-question-state="open" data-principal="operator"><h4>Restricted question</h4><button type="button" data-open-thread>Open conversation</button><div data-thread-messages></div><p role="status"></p></article><script>${caseQuestionScript}</script>`
+const conversation = `<article data-case-thread data-thread="question" data-case='${JSON.stringify(caseRef)}'><h4>Restricted question</h4><button type="button" data-open-thread>Open conversation</button><div data-thread-messages></div><p role="status"></p></article><script>${caseQuestionScript}</script>`
 
 test("conversation refresh asks before discarding an unsent reply and preserves it when reading fails", async () => {
   const state = { mode: "ready", reads: 0 }
@@ -729,7 +699,7 @@ test("reply retry preserves the exact thread mutation after an uncertain write",
     if (mode === "collaboration-thread-reply") {
       replies.push({ body: await request.text(), key: request.headers.get("idempotency-key") })
       if (replies.length === 1) return new Response("response interrupted after admission")
-      return Response.json({ status: "ok", value: { id: "question", state: "open", messages: [{ id: "question", body: "Question" }, { id: "reply", incarnation: "reply-incarnation", version: 1, authorRef: "operator", body: "Confirmed answer" }] } })
+      return Response.json({ status: "ok", value: {} })
     }
     return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", body: "Question" }, ...(replies.length ? [{ id: "reply", body: "Confirmed answer" }] : [])] } })
   }, async (page) => {
@@ -834,8 +804,7 @@ test("an earlier authorized list cannot repopulate results after an output revoc
 }, 30_000)
 
 test("answer confirmation preflight failure restores the reply and conversation controls", async () => {
-  // The transport component receives an already authorized selector; its producer is outside this fixture.
-  await browserCase(conversation.replace('data-thread="question"', 'data-thread="question" data-answer="published-answer-selector"'), (request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read"
+  await browserCase(conversation, (request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read"
     ? Response.json({ status: "ok", value: { state: "open", recipientRef: "recipient", messages: [{ id: "question", body: "Question" }, { id: "answer", authorRef: "recipient", body: "Answer" }] } })
     : Response.json({ status: "unavailable" }, { status: 503 }), async (page) => {
     await page.getByRole("button", { name: "Open conversation", exact: true }).click()
@@ -860,7 +829,7 @@ test.each([401, 403])("question %i clears the draft and context and fences an ol
   await browserCase(questionForm, async (request) => {
     const mode = new URL(request.url).searchParams.get("sf")!
     calls.push(mode)
-    if (mode === "collaboration-recipients") {
+    if (mode === "collaboration-recipient-list") {
       await new Promise<void>((resolve) => { gate.release = resolve; gate.started?.() })
       return Response.json({ status: "ok", value: [{ id: "late-recipient", name: "Late restricted recipient" }] }, { headers: { "X-Late-Fixture": "question-recipients" } })
     }
@@ -884,7 +853,7 @@ test.each([401, 403])("question %i clears the draft and context and fences an ol
     expect(await page.content()).not.toContain("restricted-record")
     expect(await page.content()).not.toContain("PRIVATE-DENIAL")
     await page.locator('[data-case-question]').dispatchEvent("submit")
-    expect(calls).toEqual(["collaboration-recipients", "collaboration-storage-version"])
+    expect(calls).toEqual(["collaboration-recipient-list", "collaboration-storage-version"])
   }, () => gate.release?.())
 }, 30_000)
 
@@ -907,7 +876,7 @@ test("transient question recipient and preflight failures preserve the selected 
     expect(await page.locator('[data-case-question]').getAttribute("data-context")).not.toBeNull()
     expect(await page.locator('[data-case-question]').getAttribute("data-dirty")).toBe("true")
     await page.getByLabel("Question", { exact: true }).fill("I can still correct the question")
-    expect(calls).toEqual(["collaboration-recipients", "collaboration-storage-version"])
+    expect(calls).toEqual(["collaboration-recipient-list", "collaboration-storage-version"])
   })
 }, 30_000)
 

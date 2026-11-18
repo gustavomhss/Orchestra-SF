@@ -7,7 +7,7 @@ import { isSfPeriod } from "../contracts/validation.ts"
 import { createDashboardRecordSourceIssuer } from "../integration/dashboard-sources.ts"
 import { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
 import { sfViewSelectionKeys } from "./personal-views.ts"
-import { decisionCreateFromContext, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../ui/decision-create.ts"
+import { decisionCreateFromContext, decisionCreateScript } from "../ui/decision-create.ts"
 import { documentHtml, esc, pageMain } from "../../src/screen-shell.ts"
 import { htmlPolicy } from "../../runtime/application.ts"
 
@@ -72,6 +72,6 @@ export async function handleContextualDecision(request: Request, input: { origin
     if (!projection || projection.status !== "ok") return render(`<h2>Source unavailable</h2><p>The contract changed while its evidence was read. Return to the contract and try again.</p>${back}`, 409)
     const vendor = projection.value.values.find((value) => value.id === `contracts:${encodeURIComponent(recordId)}:vendor`)?.value
     const label = typeof vendor === "string" && vendor.trim() ? vendor : "Selected contract"
-    return render(`<section data-decision-context><h2>Create a decision from ${esc(label)}</h2><p>Contract evidence for ${esc(period.start)} – ${esc(period.end)} will be revalidated when you create the decision. Enter the decision currency explicitly.</p>${back}${scopeDecisionCreateForm(decisionCreateFromContext({ sourceRefs: [issued.value], period, returnTo }), decisionCreationScope(admitted.value.binding))}</section>`, 200, admitted.value.binding.accessRevision)
+    return render(`<section data-decision-context><h2>Create a decision from ${esc(label)}</h2><p>Contract evidence for ${esc(period.start)} – ${esc(period.end)} will be revalidated when you create the decision. Enter the decision currency explicitly.</p>${back}${decisionCreateFromContext({ sourceRefs: [issued.value], period, returnTo })}</section>`, 200, admitted.value.binding.accessRevision)
   } finally { runtime.ui.finish(admitted.value) }
 }

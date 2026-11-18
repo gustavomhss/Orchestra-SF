@@ -1,16 +1,13 @@
 import type { Browser } from "@playwright/test"
 import { stat } from "node:fs/promises"
 import { resolve } from "node:path"
-import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 
-// One Node-owned Chromium for the entire sequential Bun selection. The published
-// WP02 driver owns the extra-stdio descriptors and connects through its Unix pipe.
-// Startup is a named test so Omni attributes that real spawn to its own body.
-// Never launch a replacement: each consumer receives an exclusive lease with
-// fresh contexts. browser-startup.test.ts is first; browser-lifecycle.test.ts last.
+// One Chromium for the entire sequential Bun selection. Bun 1.3.14 can finalize
+// an old Chromium extra-stdio handle after its fd has been reused (#47956).
+// Never launch a replacement: every caller receives an exclusive lease, with
+// fresh contexts, and browser-lifecycle.test.ts must be the final selected file.
 const pool: {
   browser?: Browser
-  driver?: Awaited<ReturnType<typeof launchBrowserDriver>>
   pid?: number
   lease?: number
   launches: number
@@ -19,24 +16,14 @@ const pool: {
   releasing: boolean
   sealed: boolean
   closing: boolean
-  starting: boolean
   disconnected: boolean
   disconnection?: Promise<void>
-  driverClosed: boolean
   processExited: boolean
-  verified: boolean
   failed: boolean
   failure?: unknown
   shutdown?: Promise<void>
 } = { launches: 0, acquisitions: 0, releases: 0, releasing: false, sealed: false,
-  closing: false, starting: false, disconnected: false, driverClosed: false,
-  processExited: false, verified: false, failed: false }
-
-// W15's outer 15s deadline cancelled the driver before its independently started
-// Chromium timeout. One 30s deadline now covers preparation, launch, connect and
-// PID acquisition; the Node process receives that same absolute deadline.
-// There is still one launch, with cancellation and observed physical teardown.
-const startupTimeoutMs = 30_000
+  closing: false, disconnected: false, processExited: false, failed: false }
 
 async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
@@ -51,13 +38,13 @@ function poison(error: unknown) {
   if (!pool.failed) { pool.failed = true; pool.failure = error }
 }
 
-async function requireLifecycleSelection() {
+async function requireFinalizerSelection() {
   // Autodiscovery and selection/order-changing flags cannot guarantee cleanup.
-  // The integrator names every file, startup first and finalizer last; this guard
-  // runs before the driver is started or Chromium is created.
+  // The integrator must name every file and put the finalizer last; this guard
+  // runs before Playwright is loaded or Chromium is created.
   // Bun test exposes only the current entry and passthrough in process.argv.
   // This Linux lane reads its actual OS command line, never a stale request file.
-  const invalid = () => new Error("WP01 browser tests require the Linux lane with explicit test files, browser-startup.test.ts first and browser-lifecycle.test.ts last. Use the named Actions selection; only --timeout is supported. Other platforms, autodiscovery, filters, isolation, sharding and parallel/reordered execution need an integrator-owned lifecycle.")
+  const invalid = () => new Error("WP01 browser tests require the Linux lane with explicit test files and browser-lifecycle.test.ts last. Use the named Actions selection; only --timeout is supported. Other platforms, autodiscovery, filters, isolation, sharding and parallel/reordered execution need an integrator-owned lifecycle.")
   if (process.platform !== "linux") throw invalid()
   const command = (await bounded(Bun.file("/proc/self/cmdline").text(), "read actual Linux test selection", 5_000)).split("\0")
   if (command.at(-1) === "") command.pop()
@@ -76,12 +63,11 @@ async function requireLifecycleSelection() {
     if (arg.startsWith("-") || !arg.endsWith(".test.ts") || /[*?\[\]{}]/.test(arg)) throw invalid()
     files.push(resolve(arg))
   }
-  const startup = resolve(import.meta.dir, "browser-startup.test.ts")
   const finalizer = resolve(import.meta.dir, "browser-lifecycle.test.ts")
-  if (files.length < 3 || files[0] !== startup || files.at(-1) !== finalizer || new Set(files).size !== files.length) throw invalid()
+  if (files.length < 2 || files.at(-1) !== finalizer || new Set(files).size !== files.length) throw invalid()
   const entries = await bounded(Promise.allSettled(files.map((file) => stat(file))), "verify named test files", 5_000)
   if (entries.some((entry) => entry.status !== "fulfilled" || !entry.value.isFile())) throw invalid()
-  console.info("WP01 browser explicit selection admitted", { executable, command: command[1], files, startup, finalizer })
+  console.info("WP01 browser explicit selection admitted", { executable, command: command[1], files, finalizer })
 }
 
 function processExists(pid: number): boolean {
@@ -104,15 +90,13 @@ async function observeProcessExit(pid: number) {
 function shutdownBrowser(): Promise<void> {
   if (pool.shutdown) return pool.shutdown
   const browser = pool.browser
-  const driver = pool.driver
-  if (!browser || !driver) return Promise.reject(new Error("WP01 browser driver was never acquired in this shared module"))
+  if (!browser) return Promise.reject(new Error("WP01 browser was never acquired in this shared module"))
   pool.closing = true
   pool.shutdown = (async () => {
     const failures: unknown[] = []
     console.info("WP01 browser final close starting", { pid: pool.pid, connected: browser.isConnected() })
     try {
-      await bounded(Promise.all([driver.close(), pool.disconnection]), "final driver close and disconnected event")
-      pool.driverClosed = true
+      await bounded(Promise.all([browser.close(), pool.disconnection]), "final close and disconnected event")
     } catch (error) { failures.push(error) }
     try {
       if (pool.pid === undefined) throw new Error("WP01 browser PID was not obtained through CDP")
@@ -120,99 +104,68 @@ function shutdownBrowser(): Promise<void> {
     } catch (error) { failures.push(error) }
     if (!pool.disconnected || browser.isConnected()) failures.push(new Error("WP01 browser disconnected event was not confirmed"))
     console.info("WP01 browser final close observed", { pid: pool.pid, disconnected: pool.disconnected,
-      connected: browser.isConnected(), driverClosed: pool.driverClosed, processExited: pool.processExited })
+      connected: browser.isConnected(), processExited: pool.processExited })
     if (failures.length) throw new AggregateError(failures, "WP01 browser final process cleanup failed")
   })()
   return pool.shutdown
 }
 
 async function startBrowser(): Promise<Browser> {
-  const deadline = performance.now() + startupTimeoutMs
-  const deadlineEpochMs = Date.now() + startupTimeoutMs
-  const remaining = () => {
-    const value = Math.ceil(deadline - performance.now())
-    if (value <= 0) throw new Error("WP01 browser acquisition deadline expired")
-    return value
-  }
-  const startup = new AbortController()
-  const timer = setTimeout(() => startup.abort(new Error("WP01 browser timed out: single Node-owned Chromium launch and PID acquisition")), startupTimeoutMs)
+  const deadline = performance.now() + 10_000
+  const remaining = () => Math.max(1, Math.ceil(deadline - performance.now()))
   try {
-    await requireLifecycleSelection()
-    if (startup.signal.aborted) throw startup.signal.reason
-    if (pool.failed || pool.sealed) throw new Error("WP01 browser startup is no longer admitted")
-    console.info("WP01 browser launch phase", { phase: "published Node browser driver through AppProcess", startupTimeoutMs })
-    // The deadline cancels and awaits the driver's owned AppProcess scope.
-    // Racing this await alone would abandon an in-flight driver outside pool.
-    const driver = await launchBrowserDriver("wp01-shared-pool", { signal: startup.signal, timeoutMs: remaining(), deadlineEpochMs })
-    const browser = driver.browser
-    pool.driver = driver
-    pool.browser = browser
-    pool.launches++
-    pool.disconnection = new Promise<void>((resolve) => {
-      browser.once("disconnected", () => {
-        pool.disconnected = true
-        if (!pool.closing) poison(new Error("WP01 shared browser disconnected before its finalizer"))
-        console.info("WP01 browser disconnected", { pid: pool.pid, expected: pool.closing })
-        resolve()
+    return await bounded((async () => {
+      await requireFinalizerSelection()
+      console.info("WP01 browser launch phase", { phase: "load public Playwright API" })
+      const { chromium } = await import("@playwright/test")
+      if (pool.failed || pool.sealed) throw new Error("WP01 browser startup is no longer admitted")
+      console.info("WP01 browser launch phase", { phase: "chromium.launch" })
+      const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: remaining() })
+      pool.browser = browser
+      pool.launches++
+      pool.disconnection = new Promise<void>((resolve) => {
+        browser.once("disconnected", () => {
+          pool.disconnected = true
+          if (!pool.closing) poison(new Error("WP01 shared browser disconnected before its finalizer"))
+          console.info("WP01 browser disconnected", { pid: pool.pid, expected: pool.closing })
+          resolve()
+        })
       })
-    })
-    if (pool.failed || pool.sealed || startup.signal.aborted) {
-      await shutdownBrowser()
-      throw new Error("WP01 browser launch completed after its acquisition deadline")
-    }
-    console.info("WP01 browser launch phase", { phase: "read actual browser PID through CDP" })
-    const sessionTimeout = remaining()
-    const session = await bounded(browser.newBrowserCDPSession(), "open browser CDP session", sessionTimeout)
-    const failures: unknown[] = []
-    try {
-      const informationTimeout = remaining()
-      const result = await bounded(session.send("SystemInfo.getProcessInfo"), "read browser process information", informationTimeout)
-      const processes = result.processInfo.filter((entry) => entry.type === "browser")
-      const pid = processes[0]?.id
-      if (processes.length !== 1 || typeof pid !== "number" || !Number.isSafeInteger(pid) || pid <= 0 || pid === process.pid)
-        throw new Error("CDP did not identify exactly one distinct browser process")
-      pool.pid = pid
-      if (!processExists(pid)) throw new Error("The CDP browser PID is absent before cleanup")
-    } catch (error) { failures.push(error) }
-    try {
-      const detachTimeout = remaining()
-      await bounded(session.detach(), "detach browser PID session", detachTimeout)
-    }
-    catch (error) { failures.push(error) }
-    if (failures.length === 1) throw failures[0]
-    if (failures.length > 1) throw new AggregateError(failures, "WP01 browser PID acquisition and CDP cleanup failed")
-    if (pool.failed || pool.sealed || startup.signal.aborted) {
-      await shutdownBrowser()
-      throw new Error("WP01 browser PID acquisition completed after its deadline")
-    }
-    console.info("WP01 browser launch complete", { pid: pool.pid, launches: pool.launches })
-    return browser
+      if (pool.failed || pool.sealed) {
+        await shutdownBrowser()
+        throw new Error("WP01 browser launch completed after its acquisition deadline")
+      }
+      console.info("WP01 browser launch phase", { phase: "read actual browser PID through CDP" })
+      const session = await bounded(browser.newBrowserCDPSession(), "open browser CDP session", remaining())
+      const failures: unknown[] = []
+      try {
+        const result = await bounded(session.send("SystemInfo.getProcessInfo"), "read browser process information", remaining())
+        const processes = result.processInfo.filter((entry) => entry.type === "browser")
+        const pid = processes[0]?.id
+        if (processes.length !== 1 || typeof pid !== "number" || !Number.isSafeInteger(pid) || pid <= 0 || pid === process.pid)
+          throw new Error("CDP did not identify exactly one distinct browser process")
+        pool.pid = pid
+        if (!processExists(pid)) throw new Error("The CDP browser PID is absent before cleanup")
+      } catch (error) { failures.push(error) }
+      try { await bounded(session.detach(), "detach browser PID session", remaining()) }
+      catch (error) { failures.push(error) }
+      if (failures.length === 1) throw failures[0]
+      if (failures.length > 1) throw new AggregateError(failures, "WP01 browser PID acquisition and CDP cleanup failed")
+      if (pool.failed || pool.sealed) {
+        await shutdownBrowser()
+        throw new Error("WP01 browser PID acquisition completed after its deadline")
+      }
+      console.info("WP01 browser launch complete", { pid: pool.pid, launches: pool.launches })
+      return browser
+    })(), "single Chromium launch and PID acquisition")
   } catch (error) {
     poison(error)
-    console.error("WP01 browser acquisition failure observed", { pid: pool.pid, launches: pool.launches,
-      reason: error instanceof Error ? error.message : String(error) })
     if (pool.browser) {
       try { await shutdownBrowser() }
       catch (cleanupError) { throw new AggregateError([error, cleanupError], "WP01 browser acquisition and cleanup failed") }
     }
     throw error
-  } finally { clearTimeout(timer) }
-}
-
-/** The first named test owns the only Omni spawn. The driver keeps its published
- * AppProcess scope open until final close; a completed startup test does not close it. */
-export async function startWp01BrowserPool() {
-  if (pool.sealed || pool.failed || pool.starting || pool.browser || pool.launches !== 0)
-    throw new Error("WP01 browser startup must run exactly once before every lease")
-  pool.starting = true
-  try {
-    const browser = await startBrowser()
-    if (!browser.isConnected() || browser.contexts().length !== 0 || pool.lease !== undefined)
-      throw new Error("WP01 browser startup did not produce a connected, empty pool")
-    return { launches: pool.launches, pid: pool.pid, connected: browser.isConnected(),
-      activeLease: pool.lease !== undefined, contexts: browser.contexts().length }
-  } catch (error) { poison(error); throw error }
-  finally { pool.starting = false }
+  }
 }
 
 /** A lease is reserved before any await. No concurrent caller or replacement
@@ -228,8 +181,7 @@ export async function launchWp01Browser(): Promise<Browser> {
   const lease = pool.acquisitions + 1
   pool.lease = lease
   try {
-    const browser = pool.browser
-    if (!browser || pool.starting) throw new Error("WP01 browser-startup.test.ts must complete before any browser lease")
+    const browser = pool.browser ?? await startBrowser()
     if (pool.failed || !browser.isConnected() || browser.contexts().length !== 0)
       throw new Error("WP01 browser cannot admit a lease without a connected, empty context set")
     pool.acquisitions++
@@ -287,16 +239,8 @@ export async function finishWp01BrowserLifecycle() {
   if (pool.acquisitions === 0 || pool.acquisitions !== pool.releases) failures.push(new Error("WP01 browser acquisition/release counts do not match"))
   try { await shutdownBrowser() } catch (error) { failures.push(error) }
   const evidence = { launches: pool.launches, acquisitions: pool.acquisitions, releases: pool.releases,
-    pid: pool.pid, activeLease, contexts, disconnected: pool.disconnected, driverClosed: pool.driverClosed,
-    processExited: pool.processExited }
+    pid: pool.pid, activeLease, contexts, disconnected: pool.disconnected, processExited: pool.processExited }
   console.info("WP01 browser lifecycle final evidence", evidence)
   if (failures.length) throw new AggregateError(failures, "WP01 browser lifecycle verification failed")
-  pool.verified = true
   return evidence
-}
-
-/** Emit the published driver proof only after the finalizer's assertions pass. */
-export function reportWp01BrowserLifecycle() {
-  if (!pool.verified || !pool.driverClosed || !pool.driver) throw new Error("WP01 browser proof requires successful finalization")
-  pool.driver.report()
 }
