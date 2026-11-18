@@ -31,7 +31,16 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   const owner = line.locator('select[name="owner"]')
   await expect(owner).toHaveCount(1)
   await expect(owner.locator(`option[value="${actorId}"]`)).toHaveCount(1)
-  await owner.selectOption(actorId)
+  observations.push({ stage: "trace-owner-before", url: receiptUrl(page.url()), ownerCount: await page.locator('select[name="owner"]').count(),
+    options: await owner.locator("option").evaluateAll((nodes) => nodes.map((node) => ({ value: (node as HTMLOptionElement).value, label: node.textContent ?? null, disabled: (node as HTMLOptionElement).disabled }))) })
+  try {
+    await owner.selectOption(actorId)
+  } catch (error) {
+    observations.push({ stage: "trace-owner-stall", url: receiptUrl(page.url()), actorId, ownerHtml: await owner.evaluate((node) => node.outerHTML).catch(() => null),
+      formHtml: await line.evaluate((node) => node.outerHTML).catch(() => null),
+      ownerValues: await page.locator('select[name="owner"]').evaluateAll((nodes) => nodes.map((node) => (node as HTMLSelectElement).value)) })
+    throw error
+  }
   const element = line.locator('select[name="el"]')
   await expect(element).toHaveCount(1)
   await element.selectOption("licenses")
@@ -84,6 +93,10 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
   await row.getByRole("button", { name: "Manage", exact: true }).click()
   await expect(manager.getByLabel("Annual budget", { exact: true })).toHaveValue(String(annualBudget))
   observations.push({ stage: "planner-source-revised-through-ui", versionId, previousAnnualInput: 2400, annualInput: annualBudget, currency: "USD" })
+}
+
+function receiptUrl(value: string) {
+  return value.replace(/([?&]code=)[^&\s]*/gi, "$1redacted")
 }
 
 async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
