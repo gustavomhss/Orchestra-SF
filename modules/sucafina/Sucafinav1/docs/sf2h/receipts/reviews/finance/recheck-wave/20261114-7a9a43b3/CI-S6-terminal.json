@@ -1,0 +1,279 @@
+{
+  "schema": "sf2h.finance-independent-review.ci-terminal-supplement.v1",
+  "finding": "FIN-IND-005",
+  "disposition": "OPEN",
+  "classification": "NEEDS_EVIDENCE",
+  "priority": "P1",
+  "supplement_cutoff_utc": "2026-11-14T19:29:41Z",
+  "supplement_to_commit": "628f1f26b0fcd679d09c47b976b81d9b1ee92ba0",
+  "original_evidence_cutoff_utc": "2026-11-14T19:25:12Z",
+  "original_receipts_preserved": true,
+  "supersedes_only": "The S6 in_progress/PENDING_NO_TERMINAL_CLAIM state in the six receipts at the original evidence cutoff. All five finding IDs, their OPEN dispositions at W, and the coverage proposal disposition are preserved.",
+  "independence": {
+    "product_authorship": false,
+    "product_read_only": true,
+    "new_test_runs": 0,
+    "new_ci_dispatches": 0,
+    "review_method": "Existing GitHub job log, run/job metadata, pinned test source, request blob and W-to-S compare read by root; independent terminal-log corroboration by finance_evidence."
+  },
+  "pin": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "finance-resume",
+    "pr": 42,
+    "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "Wtree": "2da074668b164b1aa5e051f8a70366969425906f",
+    "S": "0e68fec2e33e6c4c2103f368fed1d00dc832cb0c",
+    "Stree": "9339889db0210f25ba46ee9a3ab7553e146bef1d",
+    "request_blob": "85fc069e57a87392820409f443e4f4b47c8c4564",
+    "snapshot_validation": {
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "merge_base": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "only_changed_path": ".ci-run.json",
+      "change": "added"
+    },
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^FIN-IND-005 Finance performance"
+      ],
+      "env": {}
+    },
+    "request_identical_to": "S3"
+  },
+  "terminal": {
+    "run": 43631582858,
+    "job": 132559159277,
+    "attempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T19:20:42Z",
+    "run_updated_at": "2026-11-14T19:25:24Z",
+    "test_failure_at": "2026-11-14T19:25:12.9277987Z",
+    "pass": 0,
+    "fail": 1,
+    "expects": 18,
+    "files": 1,
+    "tests": 1,
+    "bun_duration_seconds": 180.22,
+    "test_duration_ms": 180025.69,
+    "omni": "not applicable",
+    "cleanup": {
+      "job": 132560430979,
+      "conclusion": "success",
+      "meaning": "Snapshot-branch cleanup only; not product qualification."
+    },
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43631582858",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43631582858/job/132559159277"
+  },
+  "observed_checkpoints": [
+    {
+      "elapsedMs": 48027,
+      "event": "checkpoint",
+      "label": "omitted.assertions-complete",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 3
+      },
+      "knownSubtotal": 210000,
+      "threshold": 55000.000000000015,
+      "comparisonStatus": "conditioned"
+    },
+    {
+      "elapsedMs": 59514,
+      "event": "checkpoint",
+      "label": "choice.persisted",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 4
+      },
+      "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+    },
+    {
+      "elapsedMs": 112263,
+      "event": "checkpoint",
+      "label": "confirmed.assertions-complete",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 6
+      },
+      "total": 250000,
+      "advantage": -10000,
+      "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+    }
+  ],
+  "observed_completed_phases": [
+    {
+      "elapsedMs": 12522,
+      "event": "complete",
+      "id": 1,
+      "label": "fixture.create",
+      "durationMs": 12521
+    },
+    {
+      "elapsedMs": 48027,
+      "event": "complete",
+      "id": 2,
+      "label": "omitted.evaluate",
+      "durationMs": 35505,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 59513,
+      "event": "complete",
+      "id": 39,
+      "label": "choice.record",
+      "durationMs": 11486
+    },
+    {
+      "elapsedMs": 112263,
+      "event": "complete",
+      "id": 40,
+      "label": "training.confirm",
+      "durationMs": 52749
+    },
+    {
+      "elapsedMs": 154241,
+      "event": "complete",
+      "id": 46,
+      "label": "confirmed.coverage.issue",
+      "durationMs": 33094,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 180017,
+      "event": "complete",
+      "id": 70,
+      "label": "confirmed.coverage.qualify",
+      "durationMs": 21630,
+      "status": "stale"
+    },
+    {
+      "elapsedMs": 180017,
+      "event": "complete",
+      "id": 41,
+      "label": "confirmed.evaluate",
+      "durationMs": 67753,
+      "status": "stale"
+    }
+  ],
+  "terminal_chain": [
+    {
+      "timestamp": "2026-11-14T19:25:12.9201613Z",
+      "operation": "fixture deadline guard",
+      "elapsed_ms": 180015,
+      "budget_ms": 180000,
+      "status": "deadline-exceeded",
+      "phase_marker": "prepare:transition-confirmed:complete",
+      "marker_limit": "The last fixture transition marker is not the operation active at the deadline."
+    },
+    {
+      "timestamp": "2026-11-14T19:25:12.9206362Z",
+      "operation": "confirmed.units.revalidate",
+      "elapsed_ms": 180017,
+      "result": false
+    },
+    {
+      "timestamp": "2026-11-14T19:25:12.9208531Z",
+      "operation": "confirmed.authority.is-still-valid",
+      "elapsed_ms": 180017,
+      "result": false
+    },
+    {
+      "timestamp": "2026-11-14T19:25:12.9210606Z",
+      "operation": "confirmed.coverage.qualify",
+      "elapsed_ms": 180017,
+      "duration_ms": 21630,
+      "status": "stale"
+    },
+    {
+      "timestamp": "2026-11-14T19:25:12.9213194Z",
+      "operation": "confirmed.evaluate",
+      "elapsed_ms": 180017,
+      "duration_ms": 67753,
+      "status": "stale"
+    },
+    {
+      "timestamp": "2026-11-14T19:25:12.9275247Z",
+      "operation": "test assertion precondition at journey-phase.test.ts:49",
+      "error": "Source-only certified analysis unavailable: {\"status\":\"stale\",\"reason\":\"coverage-authority-changed\"}"
+    }
+  ],
+  "qualification_counts": {
+    "confirmed_coverage_issue_calls": 1,
+    "confirmed_coverage_issue_ok": 1,
+    "confirmed_coverage_qualify_calls": 1,
+    "confirmed_coverage_qualify_ok": 0,
+    "confirmed_coverage_qualify_stale": 1,
+    "confirmed_sample_write_calls_observed": 0,
+    "confirmed_exact_solver_calls_observed": 0
+  },
+  "reached_evidence": [
+    "baselineResult.knownSubtotal=240000 is known COST in the controlled fixture, not proved revenue.",
+    "Omitted training: known cost subtotal 210000, total null, pending coverage; conditioned exact known-components threshold about 55000.",
+    "Choice recorded at same case id/incarnation, version 4, retaining alternative/basis versions and pending condition.",
+    "Training amount 40000 confirmed; same case/incarnation advances to version 6, knownSubtotal/total 250000, complete coverage, advantage -10000 and failed renewal criterion.",
+    "confirmed.coverage.issue returned ok, then the first confirmed coverage qualification returned stale after the fixture deadline."
+  ],
+  "not_reached": [
+    "confirmed threshold 15000 and exact evidence assertions",
+    "adjacent witnesses 15000 and 15001",
+    "historical reread proving original choice digest unchanged",
+    "authorized choice replay and single recorded event",
+    "real store/UI close and reopen with collaborator read",
+    "outsider and revoked read refusals after reopen"
+  ],
+  "source_test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+    "ref": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "blob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+    "last_completed_checkpoint_line": 44,
+    "failed_precondition_line": 49,
+    "unreached_lines": "50-94",
+    "test_timeout_ms": 300000,
+    "fixture_guard_ms": 180000
+  },
+  "trace_semantics": [
+    "Trace completed/failed counts describe whether the measured promise returned or threw; completed=1 and failed=0 do not imply a semantic ok. Qualify/evaluate returned stale.",
+    "The repeated originalChoice digest in confirmed.assertions-complete is the saved in-memory digest, not a later historical read.",
+    "The final error is thrown by the test after the stale result; it is not a raw WP11 fixture deadline exception propagated to the test.",
+    "This result does not establish actual business revocation, an incorrect formula, or an isolated performance regression.",
+    "S3 on 95f47448 reached two confirmed sample writes and the exact solver. Do not attribute that progress to S6 or use either phase to erase the other pinned observation.",
+    "S5 remains a successful narrower run, 36 pass / 0 fail / 297 expects; it does not contain this long journey or the NOT_APPLIED PR56 proposal."
+  ],
+  "proposal_status": "PROPOSAL_REQUIRES_CHANGES_OR_EQUIVALENCE_PROOF / NEEDS_RECHECK; NOT_APPLIED at W; S6 does not test the proposal.",
+  "current_heads_observed": {
+    "observed_at": "2026-11-14T19:29:41Z",
+    "pr42": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "pr56": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+    "review_pr50_before_supplement": "628f1f26b0fcd679d09c47b976b81d9b1ee92ba0",
+    "later_product_changes": "PENDING_DELTA_NOT_INCLUDED"
+  },
+  "next_owners": [
+    {
+      "owner": "Finance/WP13 + WP11",
+      "action": "Use the completed S6 and existing trace to isolate residual cost. Produce a material delta or discriminating hypothesis before another owner-directed run; retain assertions, guard semantics and required historical/replay/reopen evidence."
+    },
+    {
+      "owner": "WP13 with WP10/S0",
+      "action": "Resolve original authority predicate equivalence and early-fallback/mutation/cleanup/revocation counterproofs before adopting the PR56 proposal."
+    },
+    {
+      "owner": "WP10/S0 and S0",
+      "action": "Consume compatible producer/consumer fixes and authenticate installed Portfolio composition; freeze candidate C for all final independent reviews."
+    }
+  ],
+  "final_candidate_approval": false
+}

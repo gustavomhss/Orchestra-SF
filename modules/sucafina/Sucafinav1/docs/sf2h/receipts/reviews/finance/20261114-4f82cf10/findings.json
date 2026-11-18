@@ -1,0 +1,384 @@
+{
+  "schema": "sf-finance-independent-findings-v1",
+  "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+  "normative_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "global_acceptance": false,
+  "classifications": {
+    "BUG": "Defeito concreto demonstrado por código e/ou evidência executada; o campo observation distingue efeito inferido de runtime observado.",
+    "INFERENCE": "Hipótese dependente de premissas ainda não demonstradas. Nenhuma hipótese desse tipo foi promovida a finding autônomo nesta revisão.",
+    "NEEDS_EVIDENCE": "Critério sem prova suficiente. Falha/timeout não é convertido em erro numérico nem em aceite."
+  },
+  "findings": [
+    {
+      "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "status": "OPEN",
+      "implementation_by_reviewer": false,
+      "id": "FIN-IND-001",
+      "classification": "BUG",
+      "severity": "P1",
+      "title": "Composição C09 omite verifyScenarioOperations e recusa a leitura de caso válido",
+      "owner": "WP10 / composição CLI; WP11 fornece a porta; S0 integra",
+      "locations": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "start_line": 102,
+          "end_line": 120,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/apps/cli/src/sucafina-product/business-services.ts#L102-L120"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "start_line": 14,
+          "end_line": 21,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/decisions/case-port.ts#L14-L21"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "start_line": 76,
+          "end_line": 105,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/decisions/case-port.ts#L76-L105"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "start_line": 243,
+          "end_line": 261,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/apps/cli/src/sucafina-product/business-services.ts#L243-L261"
+        }
+      ],
+      "input_scenario": "Caso persistido válido, ator participante autorizado e Request vigente, sem alternativas nem referências externas pendentes. A composição real instancia a porta exatamente como no pin.",
+      "observation": {
+        "basis": "STATIC_DETERMINISTIC_RUNTIME_INFERRED",
+        "observed": "O caller omite o callback obrigatório. O check exato registra TS2741 no caller. A porta chama input.verifyScenarioOperations nas linhas 85–86 dentro do try.",
+        "inferred": "Se carregada apesar do typecheck, a chamada a undefined lança; o catch converte em unavailable/case-state-unavailable. Nenhuma execução nova foi realizada.",
+        "not_claimed": "Não atribuímos nova regressão financeira nem observação de runtime instalado."
+      },
+      "expected": "A composição fornece o verificador do produtor e permite retomar o caso com autorização, operações e versão atuais; fonte inválida continua recusada.",
+      "criteria": [
+        "WP11.T01.CHK.01",
+        "WP11.T01.CHK.18",
+        "WP11.T01.DOD.01",
+        "C09",
+        "CAMP.CMP.04"
+      ],
+      "consequence": "resolveCase/withCase dependem da mesma porta: o caso autorizado fica indisponível e a preparação de forecast não alcança o produtor.",
+      "evidence_run_ids": [
+        43620788510
+      ],
+      "known_issue_relation": {
+        "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/external-typecheck-R2.json",
+        "prior": "Diagnóstico externo de campo obrigatório ausente já registrado.",
+        "added_information": "Cenário mínimo discriminante, caller→callee→catch e consumidores atingidos demonstram indisponibilidade funcional, além da lista de TS."
+      },
+      "required_recheck": "No novo SHA explicitamente indicado, provar leitura real de caso pela composição CLI e preparo de forecast, com positivos autorizados e negativos de operação/fonte/revogação. Revisão atual não implementa nem executa esse recheck."
+    },
+    {
+      "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "status": "OPEN",
+      "implementation_by_reviewer": false,
+      "id": "FIN-IND-002",
+      "classification": "BUG",
+      "severity": "P1",
+      "title": "Resolver case-event C17 é montado com assinatura antiga e retorna unavailable",
+      "owner": "WP10.T07 / createSfAtlasBusiness; integração WP11–WP14; S0",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "start_line": 170,
+          "end_line": 173,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts#L170-L173"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "start_line": 201,
+          "end_line": 218,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts#L201-L218"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+          "start_line": 174,
+          "end_line": 202,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts#L174-L202"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "start_line": 187,
+          "end_line": 190,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/apps/cli/src/sucafina-product/business-services.ts#L187-L190"
+        }
+      ],
+      "input_scenario": "BusinessEvidenceRef case-event válido, installation/project/digest corretos, Request vigente e evento presente no ledger canônico C09. A porta cases do factory superior pode estar funcional.",
+      "observation": {
+        "basis": "STATIC_DETERMINISTIC_RUNTIME_INFERRED",
+        "observed": "createSfAtlasBusiness fornece host/state/authorizeCase/authorizeEvidence; o factory atual exige host/cases. O check exato registra TS2353 no argumento state.",
+        "inferred": "No ramo válido, input.cases.read encontra cases ausente e o catch termina em state:unavailable. A mesma instância é instalada no router e na prova de continuidade.",
+        "not_claimed": "Não afirmamos que toda modalidade de emitFromLedger falhe por este ponto; o writer tem sua própria leitura de cases. Nenhum runtime foi executado."
+      },
+      "expected": "Resolver o evento oficial por DecisionCasePort, com autorização atual, identidade, versão, digest e dependências; ledger oficial e Atlas derivado preservam sua relação.",
+      "criteria": [
+        "C17",
+        "C09",
+        "CAMP.INV.04",
+        "CAMP.INV.06",
+        "CAMP.CMP.04"
+      ],
+      "normative_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+          "start_line": 632,
+          "end_line": 642,
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json#L632-L642"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+          "start_line": 816,
+          "end_line": 816,
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json#L816"
+        }
+      ],
+      "consequence": "Contexto/recall que exige resolução ou continuidade desse evento legítimo fica indisponível na composição. É independente de FIN-IND-001.",
+      "evidence_run_ids": [
+        43620788510
+      ],
+      "known_issue_relation": {
+        "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/external-typecheck-R2.json",
+        "prior": "Incompatibilidade de argumento state já registrada em diagnósticos externos.",
+        "added_information": "Ligação exata com o resolver instalado e seu resultado unavailable; o green de calculation-persistence não atravessa esse caminho."
+      },
+      "required_recheck": "Em SHA posterior específico, evento aceito C09→resolver real→contexto/continuidade C17, com avanço de caso, fonte alterada, revogação e replay. Não usar BCS substituído para fechar a composição."
+    },
+    {
+      "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "status": "OPEN",
+      "implementation_by_reviewer": false,
+      "id": "FIN-IND-003",
+      "classification": "BUG",
+      "severity": "P1",
+      "title": "Provider C08 permite gravar campanha sem o grant privado exigido pelo consumidor",
+      "owner": "WP10.T01 / provider C08 e S0; WP13 é consumidor afetado",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "start_line": 81,
+          "end_line": 95,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts#L81-L95"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+          "start_line": 273,
+          "end_line": 298,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/portfolio/campaign.ts#L273-L298"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+          "start_line": 41,
+          "end_line": 78,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts#L41-L78"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+          "start_line": 172,
+          "end_line": 176,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts#L172-L176"
+        }
+      ],
+      "input_scenario": "createPortfolioCampaign + createSfProductState + openLocalStore reais. omitWriteAuthority:true retira proposalCoverageWrites do provider, preservando autorização ordinária de preferences e a coleção privada do consumidor.",
+      "observation": {
+        "basis": "OBSERVED_PRIOR_SNAPSHOT_WITH_IDENTICAL_RELEVANT_BLOBS_AND_STATIC_CAUSE",
+        "observed": "Run 43619812123, job 132522704978: teste campaign metadata needs the host's private writer grant esperava unavailable/campaign-locked-proof-unavailable; recebeu ok com campanha v1. save passa por commit e readOriginal. A assertion posterior de campaign-not-created não foi alcançada.",
+        "inferred": "O provider filtra somente sf:proposal-coverage: e sf:criterion-rule:, enquanto o consumidor escreve sf:portfolio:campaign:. Assim a ausência do grant não bloqueia essas alterações.",
+        "not_claimed": "Não afirmamos exploração pela instalação completa nem autenticação empresarial qualificada; autorização, casos e fontes do harness são controlados. Não atribuímos o run inteiro de R4 ao pin."
+      },
+      "expected": "Sem a capability privada reconhecida pelo provider, a gravação canônica da campanha deve ser recusada e a campanha deve permanecer inexistente.",
+      "criteria": [
+        "C08",
+        "CAMP.INV.02",
+        "WP13.INV.10",
+        "WP13.T01.DOD.01"
+      ],
+      "consequence": "Autorização ordinária de preferences basta para persistir metadados canônicos de campanha; a proteção privada anunciada pelo consumidor não é aplicada pelo provider às chaves escritas.",
+      "evidence_run_ids": [
+        43619812123
+      ],
+      "identical_blobs_in_snapshot_and_pin": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "blob": "b7988a2963a2797a96ea19ab2b3a481564548213"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+          "blob": "475e7532bbef2ede5fc91d1c7092e4b000e1fbde"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+          "blob": "4c304ac6e0357ec9d2731955c9acfae6580a6bbc"
+        }
+      ],
+      "known_issue_relation": {
+        "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume-20261114/campaign-delta-R3.json",
+        "prior": "Delta de provider private writer grant/sourceFence/checkNamespaces não consumido já declarado.",
+        "added_information": "Contraprova executada aceita e persiste, em vez de falhar fechada; filtro exato de prefixos explica o resultado, com três blobs inalterados até o pin."
+      },
+      "required_recheck": "Em SHA posterior específico, provar recusa sem grant, positivo somente com a capability correta, persistência/reabertura e composição real; preservar os negativos existentes. Revisão não prescreve nem aplica patch."
+    },
+    {
+      "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "status": "OPEN",
+      "implementation_by_reviewer": false,
+      "id": "FIN-IND-004",
+      "classification": "BUG",
+      "severity": "P2",
+      "title": "Formulário Workbench interrompe Start analysis antes de chamar o produtor financeiro",
+      "owner": "WP01 / S1-A; WP10 comprova a composição",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+          "start_line": 20,
+          "end_line": 20,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts#L20"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+          "start_line": 80,
+          "end_line": 80,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts#L80"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+          "start_line": 103,
+          "end_line": 112,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts#L103-L112"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "start_line": 160,
+          "end_line": 164,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/product/interface/http.ts#L160-L164"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "start_line": 570,
+          "end_line": 570,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/apps/cli/src/sucafina-product/host-context.ts#L570"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "start_line": 243,
+          "end_line": 261,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/apps/cli/src/sucafina-product/business-services.ts#L243-L261"
+        }
+      ],
+      "input_scenario": "Página de caso autorizado que satisfaz as pré-condições do formulário: runtime.analyses e forecastInputs, skill sf-explicar-forecast, modelo e duas referências Planner distintas. Submissão válida por botão ou teclado.",
+      "observation": {
+        "basis": "STATIC_DETERMINISTIC_RUNTIME_INFERRED",
+        "observed": "Markup: <button>Start analysis</button> sem atributo type; cancel é type=button. Script procura button[type=submit]. Listener cancela envio e usa button.disabled antes do try.",
+        "inferred": "O seletor por atributo não corresponde ao tipo implícito. button é null e a atribuição lança TypeError antes de POST workbench-forecast/workbench-analysis, sem entrar no tratamento do try.",
+        "not_claimed": "Não executamos navegador. Este ponto é independente, mas na composição atual a indisponibilidade de caso de FIN-IND-001 pode impedir chegar às suas pré-condições. Endpoints diretos e cálculo não são declarados defeituosos por este finding."
+      },
+      "expected": "A ação válida inicia o preparo autorizado e a execução assíncrona da análise financeira, permitindo consumo persistido posterior.",
+      "criteria": [
+        "WP01.T05.DOD.01",
+        "WP01.T05.DOD.30",
+        "WP01.T05.CHK.30",
+        "WP05.T01",
+        "CAMP.DOD.02",
+        "CAMP.CMP.04"
+      ],
+      "normative_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP01.md",
+          "start_line": 310,
+          "end_line": 368,
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP01.md#L310-L368"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+          "start_line": 62,
+          "end_line": 62,
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md#L62"
+        }
+      ],
+      "consequence": "A entrada real da análise financeira fica inutilizável pelo formulário, embora o produtor forecastInputs esteja publicado.",
+      "test_gap": "test/product/wp01/workbench-analysis.test.ts:56–74 faz POST direto, ramo start opcional e caso inexistente; não executa o submit/DOM. Testes browser lidos de outros fluxos não cobrem esta ação.",
+      "known_issue_relation": {
+        "prior": "Defeito herdado: forecast-analysis.ts é idêntico em ec052c2c3bef96f492512f3d5f663919580f25c8 e no pin.",
+        "added_information": "Causa funcional concreta na entrada real; não repete a lacuna genérica de prova UI/BI nem atribui introdução aos deltas resume."
+      },
+      "required_recheck": "No SHA corrigido pelo owner, observar a submissão no Workbench real até preparo/run e resultado consumível, além de caso inválido e falha apresentada. Não substituir pelo POST direto."
+    },
+    {
+      "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "status": "OPEN",
+      "implementation_by_reviewer": false,
+      "id": "FIN-IND-005",
+      "classification": "NEEDS_EVIDENCE",
+      "severity": "P1",
+      "title": "Jornada do mesmo caso/escolha até a fronteira 15000/15001 não concluiu a prova",
+      "owner": "WP13 + WP11; WP03 fornece prova canônica; WP10/S0 compõem e qualificam",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "start_line": 124,
+          "end_line": 188,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts#L124-L188"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "start_line": 169,
+          "end_line": 186,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts#L169-L186"
+        }
+      ],
+      "input_scenario": "AI-RENEWAL-OMITTED-CATEGORY: renovação USD240000, custo conhecido USD210000 e mínimo USD20000; escolher com treinamento omitido, confirmar training=40000 no mesmo caso e preservar a escolha histórica enquanto a análise atual passa a total250000, diferença−10000 e teto 15000.",
+      "observation": {
+        "basis": "OBSERVED_FAILED_SELECTED_RUN_WITH_RELEVANT_CODE_UNCHANGED",
+        "observed": "Run 43620619049, snapshot c7a0956f850525a03ccd28b26cb8d90808f4d83f, parent R4: 0 pass / 1 fail / 10 expects. A execução não conclui createRenewalChoiceHistory; o último checkpoint observado é transition-confirmed:complete. O erro WP11_FIXTURE_DEADLINE_EXCEEDED registra 180000 ms antes das assertions de teto15000 e preservação da escolha. R4→pin altera somente dois outros arquivos de teste e dois recibos.",
+        "inferred": "A seleção não fornece a evidência requerida para essa jornada no pin. A invariância dos arquivos relevantes conserva a lacuna, sem afirmar nova execução no pin.",
+        "not_claimed": "Timeout não demonstra fórmula errada, nem permite concluir que a jornada sempre falhará. Greens de handoff/BI e solver isolado não fecham o critério integrado."
+      },
+      "expected": "Evidência concluída liga o mesmo caso, encarnação e escolha às versões antigas/novas: omissão permanece pending; confirmação gera250000/−10000;15000 atende mínimo20000 e15001 falha, com histórico e reavaliação atuais preservados.",
+      "criteria": [
+        "WP11.T02.CHK.21",
+        "WP11.T03.CHK.20",
+        "WP13.T02.CHK.20",
+        "WP13.T03.CHK.20",
+        "C10",
+        "CAMP.QLT.06",
+        "CAMP.CMP.04"
+      ],
+      "consequence": "Não é possível qualificar a decisão financeira integrada ou sua retomada apenas com os verdes parciais disponíveis.",
+      "evidence_run_ids": [
+        43620619049,
+        43619812123,
+        43615428441
+      ],
+      "known_issue_relation": {
+        "prior": "Timeouts e limitações de jornada já existiam; não são recontados como novos BUGs.",
+        "added_information": "Seleção exata pós-reconciliação R4, fase precisa do deadline, parent/tree e diferença até o pin conferidos independentemente; as assertions finais não foram alcançadas."
+      },
+      "required_recheck": "Recheck dirigido em novo SHA declarado deve demonstrar a jornada completa e, separadamente, persistência/reabertura real e replay autorizado. Não qualificar aumento de timeout, skip ou reconstrução de serviços no mesmo store como equivalentes."
+    }
+  ]
+}
