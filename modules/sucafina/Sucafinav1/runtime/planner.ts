@@ -674,7 +674,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       "month",
       "value",
     ],
-    projects: ["name", "desc", "owner", "code"],
+    projects: ["name", "desc", "owner", "code", "approvalState", "investmentStart", "investmentEnd"],
     positions: [
       "name",
       "title",
@@ -689,7 +689,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       "rateOverride",
     ],
     rates: ["name", "locs", "annual", "cur"],
-    fx: ["cur", "rate"],
+    fx: ["cur", "rate", "sourceRef", "provider", "observedAt"],
   }
   if (
     Object.keys(values).some(
@@ -910,6 +910,37 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     }
     if (records.some((row) => row.id !== id && normName(text(row.code)) === normName(text(next.code))))
       return invalid("Duplicate project code")
+    const approvalStates = ["draft", "pending", "approved", "rejected"]
+    if (values.approvalState !== undefined && !approvalStates.includes(text(values.approvalState)))
+      return invalid("Invalid CAPEX approval state")
+    if (values.approvalState !== undefined && !actor.roles.includes("admin")) return reject
+    if (
+      (values.investmentStart !== undefined && typeof values.investmentStart !== "string") ||
+      (values.investmentEnd !== undefined && typeof values.investmentEnd !== "string")
+    )
+      return invalid("Invalid CAPEX investment window")
+    // Preserve older project records byte-for-byte when these optional fields were not edited.
+    if (values.approvalState !== undefined || stored?.approvalState !== undefined) {
+      if (!approvalStates.includes(text(next.approvalState))) return invalid("Invalid CAPEX approval state")
+      next.approvalState = text(next.approvalState)
+    }
+    if (
+      values.investmentStart !== undefined ||
+      values.investmentEnd !== undefined ||
+      stored?.investmentStart !== undefined ||
+      stored?.investmentEnd !== undefined
+    ) {
+      const investmentStart = text(next.investmentStart).trim()
+      const investmentEnd = text(next.investmentEnd).trim()
+      const monthPattern = /^\d{4}-(?:0[1-9]|1[0-2])$/
+      if (
+        (investmentStart || investmentEnd) &&
+        (!monthPattern.test(investmentStart) || !monthPattern.test(investmentEnd) || investmentStart > investmentEnd)
+      )
+        return invalid("CAPEX investment window requires an ordered start and end month")
+      next.investmentStart = investmentStart
+      next.investmentEnd = investmentEnd
+    }
     const match = text(next.code).match(/^CPX-\d{4}-(\d+)$/i)
     if (match) snapshot.sequences.cpx = Math.max(finite(snapshot.sequences.cpx), Number(match[1]))
   }
@@ -949,6 +980,39 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     if (next.rate !== null && (!Number.isFinite(next.rate) || Number(next.rate) <= 0))
       return invalid("Rate must be positive")
     if (next.rate !== null) next.rate = Math.round(Number(next.rate) * 1e6) / 1e6
+    const provenanceFields = ["sourceRef", "provider", "observedAt"]
+    if (provenanceFields.some((field) => values[field] !== undefined && typeof values[field] !== "string"))
+      return invalid("Invalid FX provenance field")
+    const provenanceSupplied = provenanceFields.some((field) => !!text(values[field]).trim())
+    const previouslyAttributed = provenanceFields.some((field) => !!text(stored?.[field]).trim())
+    if (
+      values.rate !== undefined &&
+      previouslyAttributed &&
+      next.rate !== stored?.rate &&
+      (!provenanceSupplied || text(next.observedAt) === text(stored?.observedAt))
+    )
+      return invalid("Changing an attributed FX rate requires a new observation")
+    if (provenanceSupplied || previouslyAttributed) {
+      const sourceRef = text(next.sourceRef).trim()
+      const provider = text(next.provider).trim()
+      const observedAt = text(next.observedAt).trim()
+      const timestamp = Date.parse(observedAt)
+      if (
+        !sourceRef ||
+        !provider ||
+        !observedAt ||
+        sourceRef.length > 256 ||
+        provider.length > 128 ||
+        !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(observedAt) ||
+        !Number.isFinite(timestamp) ||
+        !Number.isFinite(Date.parse(environment.at)) ||
+        timestamp > Date.parse(environment.at)
+      )
+        return invalid("FX provenance requires source, provider and a past observedAt timestamp")
+      next.sourceRef = sourceRef
+      next.provider = provider
+      next.observedAt = observedAt
+    }
   }
   if (
     ((collection === "lines" && !synthetic) || collection === "rates") &&
@@ -1681,7 +1745,11 @@ function executeLists(
     if (
       versions.some((version) =>
         [...version.lines, ...Object.values(version.hc.hrAF).map(object)].some((line) => line[field] === id),
-      )
+      ) ||
+      (collection === "entities" &&
+        rows(snapshot.data.allocations).some((allocation) =>
+          rows(allocation.splits).some((split) => idOf(split.entityRef) === id),
+        ))
     )
       return invalid("Record is in use")
     snapshot.data[collection] = records.filter((row) => row.id !== id)
@@ -1691,13 +1759,53 @@ function executeLists(
   const name = text(values.name).trim() || text(stored?.name)
   if (!name || records.some((row) => row.id !== id && normName(text(row.name)) === normName(name)))
     return invalid("Empty or duplicate name")
-  const next = {
+  const next: Row = {
     ...stored,
     id,
     name,
     ...(collection === "entities"
       ? { code: text(values.code ?? stored?.code) }
       : { desc: text(values.desc ?? stored?.desc) }),
+  }
+  if (collection === "entities" && (values.splits !== undefined || values.contractRef !== undefined))
+    return invalid("Allocation fields cannot be saved on an entity")
+  if (collection === "allocations") {
+    if (values.contractRef !== undefined) {
+      if (typeof values.contractRef !== "string" || values.contractRef.length > 256)
+        return invalid("Invalid allocation contract reference")
+      next.contractRef = values.contractRef.trim()
+    }
+    if (values.splits !== undefined) {
+      if (!Array.isArray(values.splits)) return invalid("Allocation splits must be an array")
+      const splits: { entityRef: string; percent: number }[] = []
+      const entities = new Set(rows(snapshot.data.entities).map((entity) => idOf(entity.id)))
+      const seen = new Set<string>()
+      let basisPoints = 0
+      for (const incoming of values.splits) {
+        if (!incoming || typeof incoming !== "object" || Array.isArray(incoming))
+          return invalid("Invalid allocation split")
+        const split = object(incoming)
+        const entityRef = idOf(split.entityRef)
+        const percent = split.percent
+        if (
+          !entities.has(entityRef) ||
+          seen.has(entityRef) ||
+          typeof percent !== "number" ||
+          !Number.isFinite(percent) ||
+          percent <= 0 ||
+          percent > 100
+        )
+          return invalid("Allocation split requires a unique known entity and a positive percentage")
+        const units = Math.round(percent * 100)
+        if (Math.abs(percent * 100 - units) > 1e-8)
+          return invalid("Allocation split supports at most two decimal places")
+        seen.add(entityRef)
+        basisPoints += units
+        splits.push({ entityRef, percent: units / 100 })
+      }
+      if (splits.length > 0 && basisPoints !== 10000) return invalid("Allocation splits must sum to exactly 100%")
+      next.splits = splits
+    }
   }
   snapshot.data[collection] = [...records.filter((row) => row.id !== id), next]
   write(key, stored, next)
