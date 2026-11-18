@@ -30,6 +30,30 @@ import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
+import { confirmSfOwnerExit } from "./native-chapter-entry"
+
+/** The shell asks the live F01 owner, never a second source of draft authority. */
+let liveExitGuard237: (() => Promise<boolean>) | undefined
+let exitInFlight237: Promise<boolean> | undefined
+
+export function bindSfOwnerShellExit237(guard: () => Promise<boolean>): () => void {
+  if (liveExitGuard237 && liveExitGuard237 !== guard) throw new Error("SF_F01_MULTIPLE_EXIT_OWNERS")
+  liveExitGuard237 = guard
+  return () => {
+    if (liveExitGuard237 === guard) liveExitGuard237 = undefined
+  }
+}
+
+export function requestSfOwnerShellExit237(): Promise<boolean> {
+  if (!liveExitGuard237) return Promise.resolve(true)
+  if (exitInFlight237) return exitInFlight237
+  const request = liveExitGuard237()
+  const settled = request.finally(() => {
+    if (exitInFlight237 === settled) exitInFlight237 = undefined
+  })
+  exitInFlight237 = settled
+  return settled
+}
 
 export type SfOwnerRuntime231Props = Readonly<{
   server: ServerConnection.Any
@@ -179,6 +203,27 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   let mounted: SfContextHandle | undefined
   let ownerEpoch = 0
   let disposed = false
+  let lastEditorFocus: HTMLElement | undefined
+  const releaseExit = bindSfOwnerShellExit237(() => confirmSfOwnerExit({
+    handle: () => mounted,
+    disposed: () => disposed,
+    confirmDiscard: async () => {
+      if (typeof window === "undefined") return false
+      const message = window.navigator.language.toLowerCase().startsWith("pt")
+        ? "Descartar alterações não salvas antes de sair?"
+        : "Discard unsaved changes before leaving?"
+      return window.confirm(message)
+    },
+    restoreFocus: () => { if (lastEditorFocus?.isConnected) lastEditorFocus.focus() },
+    onDiscarded: () => setView({ status: "resolving", route: undefined }),
+    onBlocked: () => { console.error("Sucafina draft discard was refused") },
+  }))
+  const unload = (event: BeforeUnloadEvent) => {
+    if (!mounted?.hasDirtyDrafts()) return
+    event.preventDefault()
+    event.returnValue = ""
+  }
+  if (typeof window !== "undefined") window.addEventListener("beforeunload", unload)
   const currentHref = () => location.pathname + location.search
   const selection = () => discovery.status === "ready" ? discovery.selection : undefined
   const sameServer = (value: SfOwnerSelection) =>
@@ -413,10 +458,17 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     disposed = true
     ownerEpoch += 1
     navigation.dispose()
+    releaseExit()
+    if (typeof window !== "undefined") window.removeEventListener("beforeunload", unload)
   })
 
   return (
-    <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231">
+    <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
+      onFocusIn={(event) => {
+        if (event.target instanceof HTMLElement &&
+          event.target.matches("input, textarea, select, [contenteditable='true']"))
+          lastEditorFocus = event.target
+      }}>
       <Show when={selection()} fallback={
         <p role="status" data-sf-f01={discovery.status}>
           {discovery.status === "ambiguous" ? "Sucafina installation selection required"
