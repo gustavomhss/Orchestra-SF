@@ -423,6 +423,17 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      - name: Publish the shard run log on failure
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-shard-failure-CI-SF-${{ matrix.shard }}
+          path: |
+            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/run.log
+            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/report.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
   ui:
     name: sf/test-${{ matrix.id }}
     needs: [omni]
