@@ -10,16 +10,16 @@
 import { Effect, Schema } from "effect"
 import { optional } from "../schema"
 
-// Effect Struct normally discards excess object keys. Parse a temporary raw
-// record first so the closed-key check sees every key *before* projection.
-// In Effect 4 beta.83, StructWithRest cannot combine generic Struct fields
-// with Record(String, Unknown): ValidateRecords requires disjoint key sets.
-// The record is internal; the decoded public type is the original Struct.
+// Effect Struct normally discards excess object keys. Preserve source keys
+// in a temporary record, reject any outside the fixed field set *before*
+// projecting to the public shape, and apply this to every nested struct.
+// The unknown-valued rest is internal only: it cannot pass the closed-key
+// check or escape through the resulting typed codec.
 const closedStruct = <const Fields extends Schema.Struct.Fields>(fields: Fields) => {
   const shape = Schema.Struct(fields)
   const allowed = new Set(Object.keys(fields))
-  const raw = Schema.Record(Schema.String, Schema.Unknown)
-  return raw.check(Schema.makeFilter<typeof raw.Type>(
+  const withExtras = Schema.StructWithRest(shape, [Schema.Record(Schema.String, Schema.Unknown)])
+  return withExtras.check(Schema.makeFilter<typeof withExtras.Type>(
     (value) => Object.keys(value).every((key) => allowed.has(key)),
     { expected: "an object containing only declared fields" },
   )).pipe(Schema.decodeTo(shape))
