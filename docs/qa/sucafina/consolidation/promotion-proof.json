@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": {
+    "number": 237,
+    "state": "open",
+    "isDraft": true,
+    "baseRefName": "go-live-close",
+    "headRefName": "close-final-candidate"
+  },
+  "refs": {
+    "goLiveClose": {
+      "sha": "104f844380e4b86da1ac2283f645602a45d4a43a",
+      "treeSha": "206b3f648c0e84b7eb535df6e9520d8a85eddb55"
+    },
+    "closeFinalCandidate": {
+      "sha": "ec3df1315cfd3e3077c09f7bc1f42a608448b1c0",
+      "treeSha": "f9a188631f006e88b6ff956bd111d8ab5c3df117"
+    },
+    "githubMergeRef": {
+      "ref": "refs/pull/237/merge",
+      "sha": "7ce5a6215818896c57a9ec7e70d41c4386dfbc85",
+      "treeSha": "f9a188631f006e88b6ff956bd111d8ab5c3df117",
+      "parents": [
+        "104f844380e4b86da1ac2283f645602a45d4a43a",
+        "ec3df1315cfd3e3077c09f7bc1f42a608448b1c0"
+      ]
+    }
+  },
+  "aheadBehind": {
+    "goLiveAhead": 0,
+    "goLiveBehind": 143
+  },
+  "localMerge": {
+    "method": "NOT_RUN",
+    "treeSha": null
+  },
+  "checks": {
+    "goLiveIsAncestor": true,
+    "localTreeMatchesCandidate": false,
+    "githubMergeTreeMatchesCandidate": true,
+    "githubMergeParentsMatch": true
+  },
+  "proofStatus": "PENDING_LOCAL_MERGE_TREE",
+  "releaseGates": "NOT_EVALUATED",
+  "observedAtUtc": null,
+  "observationDate": "2026-11-17",
+  "source": "GITHUB_API_ONLY"
+}
