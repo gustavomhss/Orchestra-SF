@@ -245,7 +245,6 @@ export const SfOperationIds = [
   "files.document-sources",
   "files.export.json",
   "files.export.members",
-  "files.export.po",
   "files.export.review",
   "files.export.register",
   "files.export.suppliers",

@@ -10,10 +10,10 @@ import {
 // Structural source-compatibility tests only. No fake principal, success grant,
 // provider, Request, live file or claimed server acceptance is generated here.
 describe("226 A06/F02 source-locked file transport", () => {
-  test("28 source schemas each have exactly one frozen route and codec", () => {
+  test("27 source schemas each have exactly one frozen route and codec", () => {
     const ids = Object.keys(SfFiles.operations)
-    expect(ids.length).toBe(28)
-    expect(new Set(ids).size).toBe(28)
+    expect(ids.length).toBe(27)
+    expect(new Set(ids).size).toBe(27)
     for (const id of ids) {
       expect(SfOperationRegistry[id as keyof typeof SfOperationRegistry]).toBeDefined()
       expect(SfFilesOperationBindings[id as keyof typeof SfFilesOperationBindings]).toBeDefined()
@@ -24,7 +24,7 @@ describe("226 A06/F02 source-locked file transport", () => {
     const ids = Object.keys(SfFiles.operations).filter((id) =>
       sfIsByteOperation(id as keyof typeof SfFiles.operations))
     expect(ids.sort()).toEqual([
-      "files.asset.download", "files.export.json", "files.export.members", "files.export.po", "files.export.register", "files.export.review",
+      "files.asset.download", "files.export.json", "files.export.members", "files.export.register", "files.export.review",
       "files.export.suppliers", "files.export.xlsx",
     ])
     for (const id of ids) {
@@ -69,22 +69,6 @@ describe("226 A06/F02 source-locked file transport", () => {
     const ref = "report:" + "a".repeat(64)
     expect(sfFilesSourceQuery("files.export.review", { surface: "dashboard", artifactRef: ref })).toEqual({ artifactRef: ref })
     expect(sfFilesSourceQuery("files.export.review", { surface: "planner", artifactRef: ref })).toBeUndefined()
-    // WS-7: PO exports require exactly one validated selection from CAP25;
-    // no route path, URL, cross-surface alias, or empty/encoded reference passes.
-    expect(sfFilesSourceQuery("files.export.po", { surface: "procurement", request: "PR-42" }))
-      .toEqual({ request: "PR-42" })
-    for (const input of [
-      { surface: "dashboard", request: "PR-42" }, { surface: "procurement", request: "" },
-      { surface: "procurement", request: "a/b" }, { surface: "procurement", request: "a%2Fb" },
-      { surface: "procurement", request: "PR-42", url: "https://evil.invalid" },
-    ]) {
-      expect(sfFilesSourceQuery("files.export.po", input)).toBeUndefined()
-      expect(SfFilesOperationBindings["files.export.po"]!.decodeInput(input))
-        .toEqual({ status: "invalid" })
-    }
-    expect(SfFilesOperationBindings["files.export.po"]!.decodeInput({
-      surface: "procurement", request: "PR-42",
-    }).status).toBe("ok")
     expect(SfFilesOperationBindings["files.export.review"]!.decodeInput({ surface: "dashboard", artifactRef: ref, url: "https://evil.invalid" })).toEqual({ status: "invalid" })
     expect(SfFilesOperationBindings["files.export.review"]!.decodeInput({ surface: "dashboard", artifactRef: "report:xyz" })).toEqual({ status: "invalid" })
   })
@@ -121,10 +105,6 @@ describe("226 A06/F02 source-locked file transport", () => {
       expect(sfAllowedByteMime("files.export.review", type)).toBe(false)
     expect(sfAllowedByteMime("files.export.suppliers", "text/csv; charset=utf-8")).toBe(true)
     expect(sfAllowedByteMime("files.asset.download", "application/pdf")).toBe(true)
-    // Only source-authenticated per-PO exports may return inert downloadable HTML.
-    expect(sfAllowedByteMime("files.export.po", "text/html; charset=utf-8")).toBe(true)
-    expect(sfAllowedByteMime("files.export.po", "application/javascript")).toBe(false)
-    expect(sfAllowedByteMime("files.export.po", "application/json")).toBe(false)
     expect(sfAllowedByteMime("files.export.json", "text/html")).toBe(false)
     expect(sfAllowedByteMime("files.asset.download", "text/html")).toBe(false)
     expect(sfAllowedByteMime("files.asset.download", "application/javascript")).toBe(false)

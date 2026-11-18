@@ -71,7 +71,6 @@ export function createSfFilesHostBindings(input: SfFilesHostSources) {
     "files.asset.download": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.asset.upload": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.export.xlsx": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
-    "files.export.po": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.export.suppliers": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.export.register": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
     "files.export.json": (request: Request, surface: SfFilesSurface) => through(input.application, request, surface),
