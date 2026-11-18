@@ -12,7 +12,7 @@ import { observeNativeBinding, requirePrivateNativeRoot } from "./readiness.ts"
 import type { NativeActor, NativeManifest } from "./readiness.ts"
 
 export type NativeInstalledSuite = "U15" | "U39" | "U40"
-export type NativeInstalledCase = "list" | "editable" | "denied" | "stale" | "lost" | "entry" | "source" | "revoked" | "late"
+export type NativeInstalledCase = "list" | "editable" | "denied" | "stale" | "lost" | "entry" | "empty" | "source" | "readonly" | "revoked" | "late"
 type RecordValue = Record<string, unknown>
 
 const specs = {
