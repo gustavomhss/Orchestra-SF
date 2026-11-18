@@ -1,0 +1,85 @@
+{
+  "schema": "sf2h-independent-visual-findings-v1",
+  "mission": 112,
+  "items": [
+    {
+      "id": "VIS112-001",
+      "severity": "MEDIUM",
+      "type": "visual-presentation",
+      "source": "C51 hosted rendered DOCX98",
+      "affected_cases": [
+        "composed-docx",
+        "after-drift-docx"
+      ],
+      "affected_pages": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "example": "At p2->p3, license:1:currency-declared: USD appears at bottom of p2; p3 begins with a blank Captured value cell and tail of period/source. No continuation marker.",
+      "observed": "Each p3–p15 begins with an unlabeled carried-over row in both outputs; header repeats but originating key is absent on continuation page.",
+      "expected": "Pagination should preserve an unambiguous data-row identity across page boundaries, either by keeping rows together or explicit continuation labeling.",
+      "impact": "Reader must look back to previous page to identify which field period/source belong to; data seems preserved; not observed as clipping or numeric loss.",
+      "reproduction": {
+        "run": 43682455278,
+        "artifact": 14148499941,
+        "pdfs": [
+          "file-0001",
+          "file-0003"
+        ],
+        "first_pair": [
+          2,
+          3
+        ],
+        "all_continuation_pages": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "code_investigation": {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+        "line": 143,
+        "observation": "TableRow constructed without no-split policy",
+        "ooxml": "169 rows / 2 tables / no w:cantSplit in either DOCX"
+      },
+      "owners": [
+        "98 / PR101 (DOCX source author)",
+        "106 / PR65 (integrator)"
+      ],
+      "required_action": "Owner decides row-continuation policy and creates new hosted DOCX+PDF+PNG with a new source SHA, while preserving content, provenance and tests. Reviewer112 rechecks diff; no self-authored code.",
+      "classification": "Title fix VIS88-001 passes independently; this secondary table-pagination finding prevents unconditional broad visual PASS."
+    }
+  ],
+  "holds": [
+    {
+      "id": "XLSX102",
+      "reason": "No new 107 XLSX print-layout outputs observed; historic 88/C51 samples cannot establish 102 fix",
+      "required": "new render per worksheet and normal/empty/wide/long scenarios; inspect actual PDFs/PNGs"
+    },
+    {
+      "id": "FINAL",
+      "reason": "Product candidate not frozen; 3 independent FINAL reviews and delta recheck owned by S0"
+    }
+  ]
+}
