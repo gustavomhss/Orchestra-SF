@@ -160,3 +160,29 @@ staging parameter is never acceptable.
 4. Qualify exact frozen C, complete AM01–AM06 and independent reviews.
 5. Only then propose a separately approved branch-protection migration,
    retire the old Epic and integrate/qualify Azure application activation.
+
+## A10 W1 — release-evidence contract (2026-11-16; no deployment)
+
+The release has three **independent** proof gates: `CI_HARNESS_VALIDATED` (coverage, negative controls, binding, equivalence), `PRODUCT_CI_GREEN` (all 12 expected jobs and eight receipts + `sf/verify=success` on an exact candidate) and `AZURE_RELEASE_QUALIFIED` (actual Linux VM app, Entra/OIDC, origin/authorization, persistence/restore, F04/U39-U40/AM01–AM06, immutable artifact, smoke/rollback and three independent reviews **on the same C**). No PR green proves an installed product, and no historical run carries forward to a new SHA (M1).
+
+A10 W1 deliverables: [evidence form](../../validation/final-bundle/evidence-template.md), [installed acceptance checklist](../../validation/final-bundle/installed-proof-checklist.md), [checked historical CI digest](../../validation/final-bundle/ci-round-10-13-digest.md) and [unsigned release attestation / owner-only ruleset migration plan](./RELEASE-ATTESTATION.md). The historical run 43956369500 ultimately concluded `cancelled` (Reports `cancelled`, `sf/verify=failure`), not a passed CI. These files are preparation and actual-source triage, **not** W3 freeze, W5 release integration, or owner approval. Branch protection read returned 403: preserve Epic/required checks; changing them and enabling the protected Azure environment require explicit owner action. The existing release workflow stays intentionally failing and `release-target.activation.status` stays `BLOCKED` until proofs exist.
+
+ 
+## A10 W2 — owner-only promotion package (PREPARED, NOT PROMOTED)
+
+The executable conditional command sequence is in [RELEASE-ATTESTATION.md](./RELEASE-ATTESTATION.md#pacote-de-promoção--owner-only--execução-condicional-2026-11-16), sections P0–P6: snapshot admin-protected branch/rulesets; freeze exact C and run **the real checkout**, 12 CI jobs and eight receipts; staging and protected environment, immutable digest and Entra/F04/AM/backup/restore; **add** sf/verify as required before any legacy check removal; preserve old checks and enforcement for the negative PR; remove only owner-attested Epic contexts; separate retirement PR; restore code/data/policies under explicit approval if a gate fails. Full [unsigned attestation](../../validation/final-bundle/evidence-template.md#7-atestação-operacional-assinável--modelo-para-o-c-final-não-preenchido) and [owner blockers](../../validation/final-bundle/installed-proof-checklist.md#a10w2--handoff-objetivo-ao-owner-para-promoção-documental-ainda-blocked).
+
+**No default variables or credentials are invented:** a successful API PATCH alone is not policy acceptance, a green PR is not a run on frozen C, and Azure Foundation/Caddy 503 is not deployed product. This runbook has a deliberate STOP until the owner supplies administrative protection export, true target/contexts, three independent reviewers, Azure+Entra identities via private channel, production environment approval and real native proof receipts. The current sf-release.yml sentinel and sf/release-target.json BLOCKED state **must remain** until a complete reviewed implementation and requalification of the final C (any workflow change refreezes C).
+
+
+## Owner scope change — Admin Supremo / Graph now mandatory (2026-11-16)
+
+**Owner decision is a release requirement, NOT a feature acceptance.** The new ADMIN-SURFACE presents read-only Microsoft Graph organisation chart, teams and profiles and lets an authorized supreme admin change *in-product* roles for Dashboard, Planner and Procurement. The role changes may **never mutate Microsoft Entra, Graph or Teams**. DEMO-FLAMENGO owns synthetic org fixtures and scenarios; they do not establish Graph consent or live identities.
+
+**AZ-02 now includes permission provenance:** the app registration is required to request **four delegated Graph scopes** — User.Read, User.Read.All, GroupMember.Read.All, Directory.Read.All — with owner-stated AllPrincipals consent. A8 must document **requested vs actually consented vs issued in token vs used by Graph endpoint**, plus failure without consent. This document does **not** say grants or usage have been observed.
+
+**Supreme-only UI and API:** only actual members of group **fla-supreme-admin** (immutable group ID **a739232b-d5cb-4f41-873b-4c9d2340831e**) may see the admin surface or invoke its policy-write endpoints. Nonmembers, unauthenticated, revoked and wrong-tenant actors are denied at the server and UI; roles per screen must be enforced by product routes with CAS/audit and persistence. Review read-only Graph allowlists and sanitized Graph/Teams audit trail, with negative mutating-request tests. Synthetic demo actors (including Zico with no group) support demonstrations but do not replace real Entra proof.
+
+**Release effect:** ADM-01..06 are additional mandatory tests to integrate into frozen C and its real CI/release evidence. A2/A6 confirm new test inclusion and no empty selection; A8/ADMIN-SURFACE prove real tenant Graph and access, DEMO-FLAMENGO proves isolated demo flows; A10 collects attestations only. Until all cases have evidence and independent reviews, **AZURE_RELEASE_QUALIFIED=BLOCKED / GO_LIVE=BLOCKED** even if the historic 12 CI jobs succeeded. See [release gate P7](./RELEASE-ATTESTATION.md), [attestation/matrix](../../validation/final-bundle/evidence-template.md) and [installed checklist](../../validation/final-bundle/installed-proof-checklist.md).
+
+No change to branch rulesets, required checks, protected paths, release-workflow sentinel or blocked release target was made by A10.

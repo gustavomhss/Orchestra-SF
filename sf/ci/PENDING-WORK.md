@@ -10,6 +10,8 @@ Este documento é o **backlog operacional das pendências**. Não é uma declara
 
 ## 1. Decisão de produto congelada — não reabrir o escopo
 
+**Exceção expressa do proprietário em 2026-11-16:** ADMIN-SURFACE e DEMO-FLAMENGO entram como feature nova obrigatória no go-live. Este é um delta de escopo autorizado que não elimina contratos, leases, guardrails ou gates anteriores. Nenhum aceite de implementação/prova é inferido desta decisão.
+
 O Orchestra-SF é um **web app + host/runtime nativo Linux x86_64 em VM Azure**. Não é a distribuição canônica cross-platform do Orchestra. **Windows, macOS, installers desktop, matrizes ABI multi-OS, MUSL/Windows guest e publicadores canônicos** estão fora do gate obrigatório SF, mas isso **não** autoriza suprimir regras de autorização, Task/Permission/Relay, Omni Linux, host real, segurança de fonte, proveniência, CAS, drafts, revogação, provas financeiras ou jornadas aprovadas.
 
 As **oito famílias** do aceite CI continuam: `CI-SF`, `CI-CLI`, `CI-APP-SRC`, `CI-APP-BROWSER`, `CI-ATLAS-BUSINESS`, `CI-UI-OPERATIONS`, `CI-UI-DECISIONS`, `CI-UI-REPORTS`. Suas seleções/obrigações estão em [`suites.json`](./suites.json). As provas independentes `AM01`–`AM06` **não foram substituídas** pelo CI de PR.
@@ -124,3 +126,38 @@ No PR #242: workflow `sf-ci.yml` Linux-only; runner `test-ci` Linux-x64; um trig
 - O PR #242 permanece **DRAFT, NÃO MERGEADO**; o Epic legado segue intacto. A ferramenta de leitura de branch protection retornou `403 Resource not accessible by integration`: a alteração de required checks precisa ser verificada por pessoa com permissão e **não foi executada**.
 
 **Status final deste documento:** backlog capturado e tarefas separadas. CI framework em validação; suíte do produto RED; Azure release BLOCKED. A linha de chegada é fechada e verificável — nenhum desses estados é automaticamente homologado por esta documentação.
+
+## 10. Apêndice A10/W1 — release/evidências verificadas em 2026-11-16 (sem freeze nem promoção)
+
+Os três documentos **novos** em `validation/final-bundle/` são [modelo de evidência](../../validation/final-bundle/evidence-template.md), [checklist de prova instalada](../../validation/final-bundle/installed-proof-checklist.md) e [digest histórico consultado na API](../../validation/final-bundle/ci-round-10-13-digest.md); o desenho de ato final do dono está em [RELEASE-ATTESTATION.md](./RELEASE-ATTESTATION.md). Eles registram apenas dados públicos/metadata observados; não existem recibos Azure ou F04 inventados.
+
+**Atualização posterior ao snapshot do §3:** o run [43956369500](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43956369500) terminou `status=completed, conclusion=cancelled`; `sf/test-CI-UI-REPORTS` terminou `conclusion=cancelled` (job [133612712038](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43956369500/job/133612712038)), e `sf/verify` terminou `failure` (job [133620509546](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43956369500/job/133620509546)). O estado `IN_PROGRESS` na fotografia antiga é preservado como histórico da coleta, não conclusão final. Run [43951326271](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43951326271) também concluiu `failure`; nenhum dos dois qualifica C.
+
+**M1:** `sf/verify` não constitui instalação do produto: `CI_HARNESS_VALIDATED=PARTIAL`, `PRODUCT_CI_GREEN=NO`, `AZURE_RELEASE_QUALIFIED=BLOCKED`. **CI-13:** proteção do branch consultada via integração retornou **403**; listagem de rulesets `[]` não prova ausência de política, depende de export do proprietário. **CI-14/AZ-08:** sequência sem janela desprotegida planejada, `NOT_AUTHORIZED/NOT_EXECUTED`; Epic e required checks permanecem intactos. **CI-15/AZ-06:** C/tree/receipts/revisores não existem como atestado, `NOT_RUN`; `sf-release.yml` e `sf/release-target.json` mantêm o bloqueio até VM, Entra, F04, AM01–06 e rollback reais. Esta edição documental exige CI novo do PR `sfa-release`, que **não** equivale a release qualificado.
+
+ 
+## 11. A10 W2 — pronto para decisão, NÃO pronto para deploy (2026-11-16)
+
+- **Entregue como documentação executável:** [sf/ci/RELEASE-ATTESTATION.md](./RELEASE-ATTESTATION.md#pacote-de-promoção--owner-only--execução-condicional-2026-11-16) contém sequência owner-only P0–P6 (baseline 403, freeze SHA C + tag, dispatch/12 jobs/8 receipts, gate Azure real, required checks em duas fases, API branch protection/rulesets, rollback de política/código/dados). [Template de atestação](../../validation/final-bundle/evidence-template.md#7-atestação-operacional-assinável--modelo-para-o-c-final-não-preenchido) e [checklist owner](../../validation/final-bundle/installed-proof-checklist.md#a10w2--handoff-objetivo-ao-owner-para-promoção-documental-ainda-blocked) contêm campos/assinaturas NOT_OBSERVED e responsáveis.
+- **CI-13:** GET de proteção close-final-candidate **reproduziu 403 via MCP** em 2026-11-16; rulesets [] na credencial não prova ausência de regras. Export admin do dono ainda **BLOCKED_BY_OWNER**.
+- **CI-14/AZ-08:** migração required sf/verify, alteração rulesets, Epic retirement, deploy e approvals **NOT_AUTHORIZED / NOT_EXECUTED**, fora do lease de execução A10. O dono executará **após** C green + Azure qualificado + reviews; rollback preserva enforcement sem janela desprotegida. Nenhum path protegido alterado.
+- **CI-15/AZ-06/AZ-07:** C, SHA do artefato, recibos Azure/F04/AM/restart/restore, três cold reviews, environment protegido e aprovação final continuam **NOT_OBSERVED/BLOCKED**. sf-release.yml com sentinel RED e sf/release-target.json.activation.status=BLOCKED são deliberadamente preservados. Toda alteração futura em workflow versionado invalida C antigo e exige refreeze/CI/Azure proofs.
+- **Owner-request explícito:** export settings+checks exatos/App IDs; 3 revisores independentes; autorização de merge/release/rollback; subscription/RG/VM/DNS/TLS/disco/vault+RPO/RTO; Azure OIDC/Key Vault; Entra tenant/app/grupos/atores e credenciais **somente via canal privado**; artifact C e slot anterior; F04/AM/8 recipes reais. Sem insumos, GO_LIVE=BLOCKED.
+
+
+## 12. OWNER-CHANGE Admin Supremo / Microsoft Graph / DEMO-FLAMENGO — gate P0 de release (2026-11-16)
+
+**Decisão do owner, NOT_RUN / BLOCKED:** o novo Admin Supremo mostra organograma, times e perfis de Microsoft Graph **somente leitura**, e permite à autoridade suprema configurar os papéis **Dashboard, Planner e Procurement**. Papéis são policy local do Orchestra-SF, nunca escrita Entra ou Teams. Autor do recurso: **ADMIN-SURFACE**; da org sintética: **DEMO-FLAMENGO**; A8 valida AZ-02 no tenant real; A1/A2/A6 validam lease, revisão e inclusão no CI; A10 mantém o gate e attestation.
+
+| Gate novo | DoD e evidência positiva + negativa (mesmo C) | Estado |
+|---|---|---|
+| ADM-01 / AZ-02 consent e uso Graph | Quatro scopes delegated: **User.Read, User.Read.All, GroupMember.Read.All, Directory.Read.All**. Consent grant **AllPrincipals**, separando requested, granted, token issued e endpoints efetivamente usados; invalid/missing scope nega | **NOT_RUN / BLOCKED_BY_OWNER** |
+| ADM-02 Graph leitura real | Organograma/times/perfis do tenant real por chamadas permitidas/paginadas; sem Graph indisponível virar fixture no release | **NOT_RUN / BLOCKED_BY_ENV** |
+| ADM-03 supreme-only | Somente membro real de **fla-supreme-admin = a739232b-d5cb-4f41-873b-4c9d2340831e** vê UI e acessa endpoints server-side; não membro, guest, token stale/revogado, tenant diferente e acesso direto negados | **NOT_RUN / BLOCKED_BY_ENV** |
+| ADM-04 role por tela | Apenas supremo altera roles de dashboard/planner/procurement na policy do produto, CAS, audit, persistence, revogação e enforcement backend de cada tela | **NOT_RUN / BLOCKED_BY_ENV** |
+| ADM-05 zero writes Entra/Teams | Sem mutações Graph/Teams: allowlist read-only, contraprova de chamadas mutáveis bloqueadas + auditoria Microsoft sanitizada/network trace e revisão do código | **NOT_RUN / BLOCKED_BY_ENV** |
+| ADM-06 DEMO-FLAMENGO | Org sintética, hierarquia/cenários e user journeys por produtor autorizado, permitidos/negados incluindo Zico sem grupo, sem tocar Entra/Teams; não substitui ADM-01..05 no tenant | **NOT_RUN / BLOCKED_BY_SOURCE** |
+
+**Bloqueio de congelamento/promoção:** branches ADMIN-SURFACE e DEMO-FLAMENGO devem ter PRs e revisões aceitos, ser integrados ao candidato e incluídos em testes do CI (negativas de omissão A2/A6), **novo C/tree e CI full**. Somente depois os testes de ADM-01..05 em Entra real, ADM-06 isolado e três revisores podem alimentar a attestation. Não afirmar que os 12 jobs antigos testaram a tela nova; se ela exige nova lane/manifesto, isso pertence aos donos do CI. Toda mudança de fonte depois do freeze invalida os receipts.
+
+**Links internos:** [runbook P7](./RELEASE-ATTESTATION.md), [matriz ADM-01..06 e template](../../validation/final-bundle/evidence-template.md), [checklist Azure/admin](../../validation/final-bundle/installed-proof-checklist.md). **GO_LIVE=BLOCKED; AZURE_RELEASE_QUALIFIED=BLOCKED; scopes concedidos/uso real NÃO OBSERVADOS.**
