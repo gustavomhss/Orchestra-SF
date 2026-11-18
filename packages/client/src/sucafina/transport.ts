@@ -541,3 +541,6 @@ async function readJsonBounded(response: Response): Promise<unknown | undefined>
   } catch { return undefined }
   finally { reader.releaseLock() }
 }
+
+// Reuse the public, already-exported transport entry for desktop protocol and broker.
+export { sfAllowedByteMime, sfFilesSourceQuery, sfIsByteOperation, sfIsUploadOperation, SF_FILE_BYTE_LIMIT } from "./transport/files"
