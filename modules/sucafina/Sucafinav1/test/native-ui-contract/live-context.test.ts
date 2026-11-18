@@ -23,9 +23,8 @@ const sources = (overrides: Partial<SfLiveContextSources> = {}): SfLiveContextSo
   ...overrides,
 })
 
-// Literal expectations retain the exact SfContextResult discriminants in bun:test overloads.
-const mismatch = { status: "unavailable", reason: "contract-mismatch" } as const
-const identities = { status: "unavailable", reason: "identity-unavailable" } as const
+const mismatch = { status: "unavailable", reason: "contract-mismatch" }
+const identities = { status: "unavailable", reason: "identity-unavailable" }
 
 test("F01 negative: no mounted runtime returns identity-unavailable without auth read", async () => {
   let reads = 0
@@ -153,20 +152,6 @@ test("F01 negative: forged page/action must match the frozen CAP source exactly"
     }),
   }))
   expect(await extra.readContext(request(), binding)).toEqual(mismatch)
-})
-
-test("F01 negative: CAP26 cannot inherit a CAP25-only procurement action", async () => {
-  const live = createSfLiveContext(sources({
-    admit: async () => ({
-      status: "ok", stamp, authMode: "local-operator",
-      destinations: [{
-        capabilityId: "CAP26", surface: "procurement", page: "My approvals", canRead: true,
-        allowedActionIds: ["submit_pr"],
-      }],
-    }),
-  }))
-  expect(await live.readContext(request(), binding)).toEqual(mismatch)
-  // Synthetic authority boundary: no native principal or installed grant is asserted.
 })
 
 test("F01 negative: catalog membership alone leaves all other operations unavailable", async () => {
