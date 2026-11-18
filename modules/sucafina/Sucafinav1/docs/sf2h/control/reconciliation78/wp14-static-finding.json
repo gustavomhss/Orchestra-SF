@@ -1,0 +1,229 @@
+{
+  "schema": "sf2h-mission78-static-cold-check-v1",
+  "mission": "78",
+  "finding_id": "WP14-PURE-LAYER-IO",
+  "finding_origin": {
+    "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+    "id": "WP14-PURE-LAYER-IO"
+  },
+  "candidate_ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "scope": "Read-only inspection of exactly two product files; no execution or product write.",
+  "status": "CONFIRMED_STATIC_INVARIANT_FAILURE",
+  "source_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "git_blob_sha": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "observed_exports": [
+        "createSfSignalRegistry"
+      ],
+      "io_sites": [
+        {
+          "line": 43,
+          "operation": "read",
+          "excerpt": "        const before = await input.state.read(request, \"preferences\", () => null)"
+        },
+        {
+          "line": 54,
+          "operation": "preferences access/mutation",
+          "excerpt": "          state.preferences[key] = record"
+        },
+        {
+          "line": 58,
+          "operation": "transaction",
+          "excerpt": "        const saved = await input.state.transaction(request, { namespace: \"preferences\", domainSurface: selection.source.surface, expectedStorageVersion: before.storageVersion, targetRef: encodeCaseRef(selection.caseRef), targetIncarnation: selection.caseRef.incarnation, idempotencyKey: `signal-cond …"
+        },
+        {
+          "line": 79,
+          "operation": "read",
+          "excerpt": "        const before = await input.state.read(request, \"preferences\", (state) => state.preferences[`${SF_SIGNAL_REGISTRY_PREFIX}${previous.id}`])"
+        },
+        {
+          "line": 84,
+          "operation": "preferences access/mutation",
+          "excerpt": "          if (!unchanged() || authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion || digestSfValue(state.preferences[key]) !== previousDigest || !actual || actual.incarnation !== se …"
+        },
+        {
+          "line": 85,
+          "operation": "preferences access/mutation",
+          "excerpt": "          state.preferences[key] = structuredClone({ ...previous, selection, revision: previous.revision + 1 })"
+        },
+        {
+          "line": 89,
+          "operation": "transaction",
+          "excerpt": "        const saved = await input.state.transaction(request, { namespace: \"preferences\", domainSurface: selection.source.surface, expectedStorageVersion: before.storageVersion, targetRef: encodeCaseRef(selection.caseRef), targetIncarnation: selection.caseRef.incarnation, idempotencyKey: `signal-revi …"
+        },
+        {
+          "line": 109,
+          "operation": "read",
+          "excerpt": "        const read = () => input.state.read(request, \"preferences\", (state, authority) => {"
+        },
+        {
+          "line": 153,
+          "operation": "read",
+          "excerpt": "        const before = await input.state.read(request, \"preferences\", (value) => value.preferences[`${SF_SIGNAL_REGISTRY_PREFIX}${requested.id}`])"
+        },
+        {
+          "line": 164,
+          "operation": "preferences access/mutation",
+          "excerpt": "          if (!unchanged() || authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion || digestSfValue(product.preferences[key]) !== recordDigest || !actual || actual.incarnation !== re …"
+        },
+        {
+          "line": 165,
+          "operation": "preferences access/mutation",
+          "excerpt": "          product.preferences[key] = structuredClone({ ...requested, revision: requested.revision + 1, signalState: state })"
+        },
+        {
+          "line": 169,
+          "operation": "transaction",
+          "excerpt": "        const saved = await input.state.transaction(request, { namespace: \"preferences\", domainSurface: requested.selection.source.surface, expectedStorageVersion: before.storageVersion, targetRef: encodeCaseRef(requested.selection.caseRef), targetIncarnation: requested.selection.caseRef.incarnation …"
+        }
+      ],
+      "sha256": "c2678a5235e6c550e12ecb4ac2a38f87af328d145b28c7483204d0e7b4e1340b",
+      "bytes": 23875,
+      "git_blob_verified": true,
+      "read_in_full": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "git_blob_sha": "790e7c98820df61306ad67bd5897b1301118d335",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "observed_exports": [
+        "createSfOutcomeSelectionRegistry"
+      ],
+      "io_sites": [
+        {
+          "line": 39,
+          "operation": "read",
+          "excerpt": "        const before = await input.state.read(request, \"preferences\", () => null)"
+        },
+        {
+          "line": 46,
+          "operation": "preferences access/mutation",
+          "excerpt": "          state.preferences[key(selection, call)] = record"
+        },
+        {
+          "line": 50,
+          "operation": "transaction",
+          "excerpt": "        const saved = await input.state.transaction(request, { namespace: \"preferences\", domainSurface: selection.evidenceRefs[0]!.kind === \"record\" ? selection.evidenceRefs[0]!.target.surface : undefined, expectedStorageVersion: before.storageVersion, targetRef: encodeCaseRef(selection.caseRef), ta …"
+        },
+        {
+          "line": 64,
+          "operation": "read",
+          "excerpt": "        const read = () => input.state.read(request, \"preferences\", (state, authority) => authority.principalRef === call.binding.principalRef && authority.accessRevision === call.binding.accessRevision && authority.policyVersion === call.binding.policyVersion ? state.preferences[key({ caseRef: want …"
+        }
+      ],
+      "sha256": "90744777637dc32595b280e8c34e52f27a770c979f5f6e40d8442c256daf1a9c",
+      "bytes": 10547,
+      "git_blob_verified": true,
+      "read_in_full": true
+    }
+  ],
+  "canonical_requirements": [
+    {
+      "id": "WP14.INV.01",
+      "text": "WP14 não altera estado de domínio, persiste, renderiza ou agenda.",
+      "plan_ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "pointer": "/work_packages/14/axioms/invariants/0"
+    },
+    {
+      "id": "WP14.INV.40",
+      "text": "WP14 continua sem persistência, UI ou scheduler; autoria exclusiva continua durante transferência e correções.",
+      "plan_ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "pointer": "/work_packages/14/axioms/invariants/4"
+    },
+    {
+      "id": "WP14.T04.INV.10",
+      "text": "Plano puro não faz persistência/scheduler e não confunde stale com autorizado.",
+      "plan_ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "pointer": "/work_packages/14/tasks/3/axioms/invariants/1"
+    }
+  ],
+  "reasoning": "Both implementations under product/decision-memory accept SfProductStatePort and call its read and transaction methods. signal-registry register/revise/reconcile mutate preferences; outcome-selection register mutates preferences. These observed I/O effects contradict the explicit WP14 no-persistence invariants. The host-adapter comment does not establish an ownership transfer or relocate the files into the authorized concrete I/O boundary.",
+  "criterion_mapping": [
+    {
+      "id": "WP14.INV.01",
+      "candidate_observation": "STATIC_FAIL",
+      "evidence_files": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts"
+      ]
+    },
+    {
+      "id": "WP14.INV.40",
+      "candidate_observation": "STATIC_FAIL",
+      "evidence_files": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts"
+      ]
+    },
+    {
+      "id": "WP14.T04.INV.10",
+      "candidate_observation": "STATIC_FAIL",
+      "evidence_files": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts"
+      ],
+      "scope_note": "signal-registry holds and persists signal/dedupe state in the WP14 namespace; this mapping does not attribute the unrelated pure Atlas mapping function to the same failure."
+    }
+  ],
+  "ownership": {
+    "canonical_logical_owners": [
+      "WP14",
+      "WP10.T01"
+    ],
+    "canonical_write_boundary": "WP14 transformations remain pure; concrete persistence belongs to the WP10 authorized host.",
+    "historical_planned_transfer": "WP14 S4 to S0-C at T+43 requires explicit closed predecessor lease and accepted SHA.",
+    "current_operational_owner": "UNKNOWN",
+    "current_lease": "UNKNOWN_NOT_ESTABLISHED_BY_THIS_CHECK",
+    "assignment_authority": "S0/71 must reconcile explicit current handoff/lease before any product correction; no writer is presumed dead or displaced."
+  },
+  "next_action": {
+    "action": "Transfer concrete C08 I/O through an explicit authorized host-owner handoff, retain pure transformations in WP14, and qualify existing callers on the resulting candidate.",
+    "inputs": [
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+          "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts"
+        ]
+      },
+      {
+        "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "criteria_ids": [
+          "WP14.INV.01",
+          "WP14.INV.40",
+          "WP14.T04.INV.10"
+        ]
+      }
+    ],
+    "dependencies": [
+      "S0/71 current path lease and source preimage confirmation",
+      "Current WP14 and WP10 owners' explicit handoff",
+      "Affected callers and candidate qualification by authorized owners"
+    ],
+    "independent_work": "Documentary preparation and exact preimage review are available; product editing is blocked for Mission78 and until the authorized owners confirm the lease."
+  },
+  "limits": [
+    "Static architectural and scope finding only; no runtime, access, durability or behavioral PASS is claimed.",
+    "No tests, CI dispatch, typecheck, guard, build or product command was run.",
+    "No source product file, branch or lease was modified.",
+    "Historical ledger statuses remain preserved separately; this observation is a delta for this pinned candidate."
+  ],
+  "captured_at": "2026-11-15T03:11:54.236Z",
+  "current_candidate": {
+    "name": "C31",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "observed_at_utc": "2026-11-15T03:17:23Z",
+    "qualification": "HOLD_NOT_RUN",
+    "cutoff_rule": "Bounded immutable snapshot. Later branch movement requires a new delta; no live-head guarantee."
+  },
+  "current_candidate_transfer": {
+    "state": "SAME_TWO_PRODUCT_BLOBS",
+    "evidence": "target-refresh.json",
+    "rule": "Full faa30-to-C31 diff contains no change to either file. Static counterexample carries through; no runtime proof transferred."
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "sf2h.reconciliation78.manifest.v1",
+  "mission": 78,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "branch": "scope-delta-audit",
+  "documentary_parent": "3d89304856ec2347818159dd1ed5a61dc87bf6bb",
+  "assigned_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "control_sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+  "candidate_cutoff": {
+    "name": "C31",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "observed_at_utc": "2026-11-15T03:17:23Z",
+    "qualification": "HOLD_NOT_RUN",
+    "cutoff_rule": "Bounded immutable snapshot. Later branch movement requires a new delta; no live-head guarantee."
+  },
+  "canonical_counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "campaign_criteria": 50,
+    "wp_criteria": 1560,
+    "axioms": 1230,
+    "checks": 380
+  },
+  "current_counts": {
+    "explicit_released_units_recovered": 6,
+    "released_bundle_paths_unique": 54,
+    "consumed_units": 3,
+    "consumed_paths": 25,
+    "remaining_unconsumed_units": 3,
+    "remaining_unconsumed_paths": 29,
+    "additional_assembly64_path": 1,
+    "reports48_postimages_retained": 45,
+    "full_criteria_closed": 0
+  },
+  "finite_action_count": 25,
+  "machine_entrypoints": [
+    "ledger/index.json",
+    "ledger/tasks.json",
+    "criterion-events.json",
+    "next-actions.json",
+    "source-deltas.json",
+    "target-refresh.json",
+    "authority-observations.json",
+    "inherited-reconciliation.json",
+    "verification.json"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/"
+  ],
+  "session_id": null,
+  "model_effective": null,
+  "provider_identity_limit": "No provider/session receipt exposed; no fabricated identity. Actor role is documentary S0-A mission78 only.",
+  "acceptance": {
+    "documentary_scope": "Prepared for durable publication and S0/71 review",
+    "product": "NOT_GRANTED",
+    "GLOBAL_RELEASE": false
+  },
+  "input_hashes": {
+    "mission78-canonical/baseline-compact.json": {
+      "sha256": "14b517915459ea0c4791f9658e8fa2d50c861d46a9e76db22a8371d979705905",
+      "bytes": 1148381
+    },
+    "audit78-release-recovery.json": {
+      "sha256": "e6819cac040a4031cf1883b23a453814473a20155477388d468ce9e33ddc207f",
+      "bytes": 118428
+    },
+    "audit78-release-criteria.json": {
+      "sha256": "8c4d4bbfbccad2202ec29e328eafe47fecea09f8b705dbc8ecceac1513ea5fb1",
+      "bytes": 139886
+    },
+    "audit78-authority-queue.json": {
+      "sha256": "9a72fbbb810c4cbd5833bf1fd9ce72a74508cb39823169ab26f8096ea6bba3ca",
+      "bytes": 167290
+    },
+    "audit78-target-refresh.json": {
+      "sha256": "3236e3bf67cd54305663a64e4b5cb6b619574516859545eab336919892591790",
+      "bytes": 73089
+    },
+    "mission78-canonical/wp14-cold-check.json": {
+      "sha256": "b4610c3221a18c488e2539dba7bc00720e15e30022c8f0d64cc5dfdee08d291d",
+      "bytes": 11136
+    }
+  }
+}

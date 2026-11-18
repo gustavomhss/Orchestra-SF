@@ -1,0 +1,387 @@
+{
+  "schema": "sf2h-m78-canonical-verification-v1",
+  "result": "MATCH",
+  "meaning": "Static byte/identity/accounting reconciliation only; no product execution, CI, tests or semantic promotion.",
+  "canonical_counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "campaign_criteria": 50,
+    "wp_criteria": 1560,
+    "axioms": 1230,
+    "checks": 380
+  },
+  "by_wp": [
+    {
+      "wp": "WP00",
+      "tasks": 4,
+      "criteria": 85,
+      "own_wp_criteria": 20
+    },
+    {
+      "wp": "WP01",
+      "tasks": 5,
+      "criteria": 75,
+      "own_wp_criteria": 21
+    },
+    {
+      "wp": "WP02",
+      "tasks": 4,
+      "criteria": 78,
+      "own_wp_criteria": 15
+    },
+    {
+      "wp": "WP03",
+      "tasks": 5,
+      "criteria": 112,
+      "own_wp_criteria": 20
+    },
+    {
+      "wp": "WP04",
+      "tasks": 5,
+      "criteria": 111,
+      "own_wp_criteria": 20
+    },
+    {
+      "wp": "WP05",
+      "tasks": 5,
+      "criteria": 108,
+      "own_wp_criteria": 27
+    },
+    {
+      "wp": "WP06",
+      "tasks": 5,
+      "criteria": 140,
+      "own_wp_criteria": 27
+    },
+    {
+      "wp": "WP07",
+      "tasks": 4,
+      "criteria": 86,
+      "own_wp_criteria": 16
+    },
+    {
+      "wp": "WP08",
+      "tasks": 6,
+      "criteria": 132,
+      "own_wp_criteria": 23
+    },
+    {
+      "wp": "WP09",
+      "tasks": 7,
+      "criteria": 112,
+      "own_wp_criteria": 22
+    },
+    {
+      "wp": "WP10",
+      "tasks": 7,
+      "criteria": 171,
+      "own_wp_criteria": 25
+    },
+    {
+      "wp": "WP11",
+      "tasks": 4,
+      "criteria": 83,
+      "own_wp_criteria": 18
+    },
+    {
+      "wp": "WP12",
+      "tasks": 4,
+      "criteria": 108,
+      "own_wp_criteria": 23
+    },
+    {
+      "wp": "WP13",
+      "tasks": 4,
+      "criteria": 68,
+      "own_wp_criteria": 17
+    },
+    {
+      "wp": "WP14",
+      "tasks": 5,
+      "criteria": 91,
+      "own_wp_criteria": 23
+    }
+  ],
+  "baseline_assessment_counts": {
+    "implemented": {
+      "UNKNOWN": 750,
+      "PARTIAL": 833,
+      "YES": 23,
+      "NO": 4
+    },
+    "integrated": {
+      "UNKNOWN": 1154,
+      "PARTIAL": 445,
+      "YES": 6,
+      "NO": 5
+    },
+    "proven": {
+      "UNKNOWN": 1050,
+      "PARTIAL": 549,
+      "YES": 6,
+      "NO": 5
+    },
+    "accepted": {
+      "NOT_ACCEPTED": 1610
+    }
+  },
+  "checks": [
+    {
+      "name": "campaign_sha256",
+      "pass": true,
+      "actual": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "expected": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+    },
+    {
+      "name": "campaign_git_blob_sha",
+      "pass": true,
+      "actual": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+      "expected": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3"
+    },
+    {
+      "name": "baseline_blob_CAMP",
+      "pass": true,
+      "actual": "e6407b15614f7559de560f9b6f3a0a0d08622091",
+      "expected": "e6407b15614f7559de560f9b6f3a0a0d08622091"
+    },
+    {
+      "name": "baseline_blob_WP00",
+      "pass": true,
+      "actual": "7126ddf7b4939df076248284c683dfe5fb376e4e",
+      "expected": "7126ddf7b4939df076248284c683dfe5fb376e4e"
+    },
+    {
+      "name": "baseline_blob_WP01",
+      "pass": true,
+      "actual": "00fb45cfbafd6a3e23b6a9c1bd0571459583f0c2",
+      "expected": "00fb45cfbafd6a3e23b6a9c1bd0571459583f0c2"
+    },
+    {
+      "name": "baseline_blob_WP02",
+      "pass": true,
+      "actual": "22f63159c2f8ca5ef0f5bc5f1a67f5de096850d8",
+      "expected": "22f63159c2f8ca5ef0f5bc5f1a67f5de096850d8"
+    },
+    {
+      "name": "baseline_blob_WP03",
+      "pass": true,
+      "actual": "555e9a5ed5d742f43a6c7c5d7e080073125ca82b",
+      "expected": "555e9a5ed5d742f43a6c7c5d7e080073125ca82b"
+    },
+    {
+      "name": "baseline_blob_WP04",
+      "pass": true,
+      "actual": "9c9aad085752a4658fd3a7a1185936aa778b4cbc",
+      "expected": "9c9aad085752a4658fd3a7a1185936aa778b4cbc"
+    },
+    {
+      "name": "baseline_blob_WP05",
+      "pass": true,
+      "actual": "6d30648e529f982337357fab2190a89545dd9237",
+      "expected": "6d30648e529f982337357fab2190a89545dd9237"
+    },
+    {
+      "name": "baseline_blob_WP06",
+      "pass": true,
+      "actual": "c1047a42b0b4a94d0cad5135d7ca6f6c51676414",
+      "expected": "c1047a42b0b4a94d0cad5135d7ca6f6c51676414"
+    },
+    {
+      "name": "baseline_blob_WP07",
+      "pass": true,
+      "actual": "5e1311efe59b039c167b05b43f8ab40327f850c9",
+      "expected": "5e1311efe59b039c167b05b43f8ab40327f850c9"
+    },
+    {
+      "name": "baseline_blob_WP08",
+      "pass": true,
+      "actual": "9a1f6a335722024cd7ec9cb13533951eba5cc35a",
+      "expected": "9a1f6a335722024cd7ec9cb13533951eba5cc35a"
+    },
+    {
+      "name": "baseline_blob_WP09",
+      "pass": true,
+      "actual": "cf287eabffc91b6fe96ca9a1057fe446ac79e37a",
+      "expected": "cf287eabffc91b6fe96ca9a1057fe446ac79e37a"
+    },
+    {
+      "name": "baseline_blob_WP10",
+      "pass": true,
+      "actual": "8d347f57fe19b9dd9d40d349eeead729c5eb756f",
+      "expected": "8d347f57fe19b9dd9d40d349eeead729c5eb756f"
+    },
+    {
+      "name": "baseline_blob_WP11",
+      "pass": true,
+      "actual": "df00795397ffc33fc5ca26b906f7ba1fdef318d9",
+      "expected": "df00795397ffc33fc5ca26b906f7ba1fdef318d9"
+    },
+    {
+      "name": "baseline_blob_WP12",
+      "pass": true,
+      "actual": "219dde201c2220ecc8f4cb2172fd34716e229f9b",
+      "expected": "219dde201c2220ecc8f4cb2172fd34716e229f9b"
+    },
+    {
+      "name": "baseline_blob_WP13",
+      "pass": true,
+      "actual": "f4a65b6f5e65c2b38850f296724e466dcfa2688e",
+      "expected": "f4a65b6f5e65c2b38850f296724e466dcfa2688e"
+    },
+    {
+      "name": "baseline_blob_WP14",
+      "pass": true,
+      "actual": "f400f8b240cbe30866af5dddb29592027a180263",
+      "expected": "f400f8b240cbe30866af5dddb29592027a180263"
+    },
+    {
+      "name": "wp_count",
+      "pass": true,
+      "actual": 15,
+      "expected": 15
+    },
+    {
+      "name": "task_count",
+      "pass": true,
+      "actual": 74,
+      "expected": 74
+    },
+    {
+      "name": "criterion_count",
+      "pass": true,
+      "actual": 1610,
+      "expected": 1610
+    },
+    {
+      "name": "canonical_criterion_unique",
+      "pass": true,
+      "actual": 1610,
+      "expected": 1610
+    },
+    {
+      "name": "baseline_criterion_unique",
+      "pass": true,
+      "actual": 1610,
+      "expected": 1610
+    },
+    {
+      "name": "criterion_id_set",
+      "pass": true,
+      "actual": {
+        "count": 1610,
+        "sha256": "7d437645955c41b15e6fde6fe445dba64ca666f6b122d19db05962ebd98bae2b"
+      },
+      "expected": {
+        "count": 1610,
+        "sha256": "7d437645955c41b15e6fde6fe445dba64ca666f6b122d19db05962ebd98bae2b"
+      }
+    },
+    {
+      "name": "canonical_vs_baseline_mismatches",
+      "pass": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "name": "task_unique",
+      "pass": true,
+      "actual": 74,
+      "expected": 74
+    },
+    {
+      "name": "task_canonical_mismatches",
+      "pass": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "name": "baseline_counts",
+      "pass": true,
+      "actual": {
+        "implemented": {
+          "UNKNOWN": 750,
+          "PARTIAL": 833,
+          "YES": 23,
+          "NO": 4
+        },
+        "integrated": {
+          "UNKNOWN": 1154,
+          "PARTIAL": 445,
+          "YES": 6,
+          "NO": 5
+        },
+        "proven": {
+          "UNKNOWN": 1050,
+          "PARTIAL": 549,
+          "YES": 6,
+          "NO": 5
+        },
+        "accepted": {
+          "NOT_ACCEPTED": 1610
+        }
+      },
+      "expected": {
+        "implemented": {
+          "UNKNOWN": 750,
+          "PARTIAL": 833,
+          "YES": 23,
+          "NO": 4
+        },
+        "integrated": {
+          "UNKNOWN": 1154,
+          "PARTIAL": 445,
+          "YES": 6,
+          "NO": 5
+        },
+        "proven": {
+          "UNKNOWN": 1050,
+          "PARTIAL": 549,
+          "YES": 6,
+          "NO": 5
+        },
+        "accepted": {
+          "NOT_ACCEPTED": 1610
+        }
+      }
+    },
+    {
+      "name": "contracts",
+      "pass": true,
+      "actual": 17,
+      "expected": 17
+    },
+    {
+      "name": "own_task_criterion_references_unique",
+      "pass": true,
+      "actual": 1243,
+      "expected": 1243
+    },
+    {
+      "name": "own_task_criteria_match",
+      "pass": true,
+      "actual": {
+        "count": 1243,
+        "sha256": "95f127697c55d3e529e49f797e9f07d14ae9a825601c6d6fef492a22a4d1378e"
+      },
+      "expected": {
+        "count": 1243,
+        "sha256": "95f127697c55d3e529e49f797e9f07d14ae9a825601c6d6fef492a22a4d1378e"
+      }
+    }
+  ],
+  "errors": [],
+  "baseline_ledger_sha256": "b0a48521c09e37276020ba7298bfb8084c68069c50652e518d6930567ab73478",
+  "campaign": {
+    "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "git_blob_sha": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "size_bytes": 1503706
+  },
+  "criterion_order_sha256": "1e0c8bce359876c9fbd38ff550217921a2cadc566989b40acd383b0e8f860653",
+  "criterion_sorted_set_sha256": "7d437645955c41b15e6fde6fe445dba64ca666f6b122d19db05962ebd98bae2b",
+  "task_sorted_set_sha256": "66c5ad99a86e27c4fcd61ce3c6a9fb395df6aa406ef2141b2f0875d110a2a317",
+  "canonical_contracts_sha256": "e9ff1e927e5850da5af156419c6f9a1fcbdc4cec3287fe6a5a5f0b9534d10f44"
+}

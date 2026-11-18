@@ -1,0 +1,300 @@
+{
+  "schema": "sf2h-mission78-reading-receipt-v1",
+  "mission": "78",
+  "reader": "canonical_ledger subagent",
+  "scope": "Canonical denominator, original ledger preservation, S0-A full actor pack and mandatory appendices; one targeted WP14 cold-check.",
+  "captured_at": "2026-11-15T03:11:54.233Z",
+  "documents": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob_sha": "522782bb7e113124a937d7ef17313032be9d6850",
+      "sha256": "2fe153c2360feec3e937ecdc2a8a9460032303d5c0fad2d61ae97853f6e4aa49",
+      "bytes": 1737,
+      "git_blob_verified": true,
+      "read_in_full": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob_sha": "043205bee6031b4517a98591b3588fca0ab12925",
+      "sha256": "67304dc752489fb63b8999cc1e87b79dde2367c33b04374fea20eefbe8f5a8d9",
+      "bytes": 13978,
+      "git_blob_verified": true,
+      "read_in_full": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob_sha": "d61f32af03fe10747a50274233f953af044decf6",
+      "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e",
+      "bytes": 45079,
+      "git_blob_verified": true,
+      "read_in_full": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-A.json",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob_sha": "6ff8de164c225698f97a1457817a4b31b1af5eec",
+      "sha256": "9eba95a91797a0c57934ee5be337dca38d278cc48296014fb9454f17cd4f2f37",
+      "bytes": 399011,
+      "git_blob_verified": true,
+      "read_in_full": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob_sha": "ded082688fce327def0b48968fa3b89a5831029c",
+      "sha256": "a41222e3bed4a8a8134a7fd814c73a99f607457a7df1e38b74566a4d2589eee2",
+      "bytes": 14228,
+      "git_blob_verified": true,
+      "read_in_full": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob_sha": "033737b1051b23443e633df7874c550629bf55a1",
+      "sha256": "024795abe175e756f93f1904eba23884bf4d9ad2416c6185b3eea2e6b13ca420",
+      "bytes": 41803,
+      "git_blob_verified": true,
+      "read_in_full": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob_sha": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+      "sha256": "3118d3eb6be64c0df096d4850d3432a78d5d16067fba2f526a41ee618407b7f0",
+      "bytes": 12101,
+      "git_blob_verified": true,
+      "read_in_full": true
+    },
+    {
+      "path": "AGENTS.md",
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "git_blob_sha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "bytes": 16583,
+      "git_blob_verified": true,
+      "read_in_full": true
+    }
+  ],
+  "actor_pack": {
+    "actor": "S0-A",
+    "all_sections_read": [
+      "provenance",
+      "job_id",
+      "actor",
+      "session",
+      "assignment",
+      "branch_provenance",
+      "common",
+      "write_authority",
+      "allocation",
+      "physical_slot",
+      "work_packages",
+      "contracts",
+      "incoming_outgoing_handoffs",
+      "task_output_dependencies",
+      "consumer_edges",
+      "coverage",
+      "dependency_context",
+      "proof_bindings",
+      "evidence",
+      "execution_proofs",
+      "review_assignment",
+      "review_sources_read_only",
+      "resident",
+      "reference_context_rule",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "resident_ui",
+      "mandatory_appendices",
+      "code_sources",
+      "source_receipt_index",
+      "workflow",
+      "coverage_source",
+      "numeric_oracles",
+      "selection_pointers",
+      "criterion_ids",
+      "completion",
+      "resident_packaging"
+    ],
+    "section_count": 37,
+    "criterion_ids": [
+      "WP00.CMP.01",
+      "WP00.CMP.02",
+      "WP00.CMP.10",
+      "WP00.CMP.40",
+      "WP00.DOD.01",
+      "WP00.DOD.02",
+      "WP00.DOD.10",
+      "WP00.DOD.40",
+      "WP00.INV.01",
+      "WP00.INV.02",
+      "WP00.INV.10",
+      "WP00.INV.40",
+      "WP00.QLT.01",
+      "WP00.QLT.02",
+      "WP00.QLT.10",
+      "WP00.QLT.40",
+      "WP00.SUC.01",
+      "WP00.SUC.02",
+      "WP00.SUC.10",
+      "WP00.SUC.40",
+      "WP00.T03.CHK.01",
+      "WP00.T03.CHK.02",
+      "WP00.T03.CHK.03",
+      "WP00.T03.CMP.01",
+      "WP00.T03.DOD.01",
+      "WP00.T03.INV.01",
+      "WP00.T03.QLT.01",
+      "WP00.T03.QLT.02",
+      "WP00.T03.SUC.01",
+      "WP10.CMP.01",
+      "WP10.CMP.02",
+      "WP10.CMP.10",
+      "WP10.CMP.40",
+      "WP10.CMP.60",
+      "WP10.DOD.01",
+      "WP10.DOD.02",
+      "WP10.DOD.10",
+      "WP10.DOD.40",
+      "WP10.DOD.60",
+      "WP10.INV.01",
+      "WP10.INV.02",
+      "WP10.INV.10",
+      "WP10.INV.40",
+      "WP10.INV.60",
+      "WP10.QLT.01",
+      "WP10.QLT.02",
+      "WP10.QLT.10",
+      "WP10.QLT.40",
+      "WP10.QLT.60",
+      "WP10.SUC.01",
+      "WP10.SUC.02",
+      "WP10.SUC.10",
+      "WP10.SUC.40",
+      "WP10.SUC.60",
+      "WP10.T07.CHK.01",
+      "WP10.T07.CHK.02",
+      "WP10.T07.CHK.03",
+      "WP10.T07.CHK.04",
+      "WP10.T07.CHK.05",
+      "WP10.T07.CHK.06",
+      "WP10.T07.CHK.07",
+      "WP10.T07.CHK.08",
+      "WP10.T07.CHK.09",
+      "WP10.T07.CHK.10",
+      "WP10.T07.CHK.40",
+      "WP10.T07.CHK.41",
+      "WP10.T07.CHK.60",
+      "WP10.T07.CHK.61",
+      "WP10.T07.CHK.62",
+      "WP10.T07.CMP.01",
+      "WP10.T07.CMP.40",
+      "WP10.T07.CMP.60",
+      "WP10.T07.DOD.01",
+      "WP10.T07.DOD.40",
+      "WP10.T07.DOD.60",
+      "WP10.T07.INV.01",
+      "WP10.T07.INV.40",
+      "WP10.T07.INV.60",
+      "WP10.T07.QLT.01",
+      "WP10.T07.QLT.40",
+      "WP10.T07.QLT.60",
+      "WP10.T07.SUC.01",
+      "WP10.T07.SUC.40",
+      "WP10.T07.SUC.60"
+    ],
+    "criterion_count": 84,
+    "reading_method": "Full actor JSON semantically inspected in bounded sections; every truncated block reopened through its exact subkey. All three mandatory appendices read in full. Canonical campaign parsed from verified exact bytes for all criteria and mappings.",
+    "no_claim": "This reading receipt grants no product write, lease transfer, product acceptance or runtime proof."
+  },
+  "applicable_invariants": [
+    "Mission78 remains product-read-only and writes only its own documentary namespace; no tests or CI dispatch.",
+    "Canonical campaign denominator remains 15 WPs, 74 tasks and 1610 unique criteria; campaign and WP criteria are not falsely assigned to a task.",
+    "S0-A selected 7 skills and 29 call routes do not replace the total 5 profiles, 18 skills, 8 packs, 39 operations and AM01-AM06.",
+    "Approved planning, ACK, commit, intake and READY_FOR_INTEGRATION never establish DONE.",
+    "Source proof, integration and qualification of the frozen C remain distinct; C tests cannot be relabelled as D tests.",
+    "WP14 is pure; concrete store I/O belongs to the authorized WP10 host boundary.",
+    "C17 requires the real memory emit, commit, restart, recall and consumer path, with scanner clean/hit/unavailable preserved.",
+    "Unknown consumption and unknown current leases remain unknown; silence does not demonstrate a dead writer.",
+    "A final accepted C requires mandatory CI selections, AM01-AM06, three fresh independent reviews and C/G7; the later D needs its own envelope and guard/G8."
+  ],
+  "explicit_non_execution": [
+    "No product tests",
+    "No CI dispatch",
+    "No build",
+    "No typecheck",
+    "No guard execution",
+    "No product writes",
+    "No remote mutation"
+  ],
+  "static_document_checks": [
+    "JSON parsing",
+    "Exact ID and task mapping census",
+    "Git blob SHA1 verification",
+    "SHA256 calculation",
+    "Historical ledger status preservation comparison"
+  ],
+  "audit78_root_sources": {
+    "mission": {
+      "ref": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/scope-delta-reconciliation.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1f01a01f51521ae39b7a4e730acefde3b9999891/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/scope-delta-reconciliation.json"
+    },
+    "baseline_ledger": {
+      "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/files-manifest.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/files-manifest.json"
+    },
+    "integration60": [
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json"
+      },
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/HANDOFF.md",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/HANDOFF.md"
+      },
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/source-census-final.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/source-census-final.json"
+      },
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/pending-owners-final.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/pending-owners-final.json"
+      },
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json"
+      },
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/consumer-acks-final.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/consumer-acks-final.json"
+      },
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/finding-routing-final.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/finding-routing-final.json"
+      },
+      {
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/candidates-final.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/candidates-final.json"
+      }
+    ],
+    "source_and_authority_reads": [
+      "source-deltas.json",
+      "authority-observations.json",
+      "target-refresh.json"
+    ],
+    "limits": "Read-only MCP and local static parsing/hash. No source test, runtime, CI, typecheck, guard, build or preflight executed by78."
+  }
+}
