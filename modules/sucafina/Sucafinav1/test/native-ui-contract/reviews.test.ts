@@ -11,27 +11,27 @@ import { Option, Schema } from "effect"
 import {
   SfDashboardDashboardAgenda, SfDashboardDashboardCapture,
   SfDashboardDashboardReview, SfDashboardDashboardReviewPreserve,
-  SfProjectionReview, SfReviewsExportDocx, SfReviewsExportPptx, SfReviewsReportPrepare,
+  SfProjectionReview, SfReviewsExportDocx, SfReviewsExportPptx,
   SfReviewsReviewSource, SfReviewsReviewUpdate, SfReviews,
 } from "../../../../../packages/schema/src/sucafina/reviews.ts"
 import { createSfReviewsClient } from "../../../../../packages/client/src/sucafina/reviews.ts"
 import type { SfOperation, SfTransportResult } from "../../../../../packages/schema/src/sucafina/common.ts"
 import type { SfCallOptions, SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
 
-const accepts = <A>(schema: Schema.Schema<A>, value: unknown) =>
-  Option.isSome(Schema.decodeUnknownOption(schema as Schema.Decoder<A, never>)(value))
+const accepts = <S extends Schema.Top>(schema: S, value: unknown) =>
+  Option.isSome(Schema.decodeUnknownOption(schema)(value))
 const section = {
   id: "line-one", title: "Current agenda", selectionRef: "scoped-selection",
   topic: "budget", period: { start: "2026-01-01", end: "2026-12-31" },
 }
 
 describe("A07 closed schema / source equivalence", () => {
-  test("frozen operations and the source-backed prepare extension, no generic dispatcher", () => {
+  test("exactly ten frozen operations, no generic dispatcher", () => {
     expect(Object.keys(SfReviews).sort()).toEqual([
       "dashboard.dashboard-agenda", "dashboard.dashboard-capture",
       "dashboard.dashboard-history", "dashboard.dashboard-review",
       "dashboard.dashboard-review-preserve", "projection.review",
-      "reviews.export.docx", "reviews.export.pptx", "reviews.report.prepare", "reviews.review-source",
+      "reviews.export.docx", "reviews.export.pptx", "reviews.review-source",
       "reviews.review-update",
     ].sort())
   })
@@ -109,16 +109,6 @@ describe("A07 closed schema / source equivalence", () => {
     expect(accepts(SfReviewsExportDocx.output, "<html>review workspace</html>")).toBe(false)
     expect(accepts(SfReviewsExportPptx.output, { receipt: "invented" })).toBe(false)
   })
-
-  test("report prepare uses the closed source request and preserves failures", () => {
-    const input = { reviewRef: "review:1", sectionRefs: ["section-id"], format: "docx" }
-    expect(accepts(SfReviewsReportPrepare.input, input)).toBe(true)
-    expect(accepts(SfReviewsReportPrepare.input, { ...input, title: "invented" })).toBe(false)
-    expect(accepts(SfReviewsReportPrepare.input, { ...input, format: "html" })).toBe(false)
-    expect(accepts(SfReviewsReportPrepare.output, { status: "stale", reason: "review-changed",
-      receipt: { kind: "unbound", operation: "sf_report_prepare", code: "unavailable", at: "now" } })).toBe(true)
-    expect(accepts(SfReviewsReportPrepare.output, { status: "ok", result: {}, outputRef: "https://example.test" })).toBe(false)
-  })
 })
 
 describe("A07 fail-closed client (no fake authorization)", () => {
@@ -172,16 +162,5 @@ describe("A07 fail-closed client (no fake authorization)", () => {
     expect(await client["reviews.export.pptx"](request, read))
       .toEqual({ kind: "transport-error", reason: "contract-unavailable" })
     expect(calls).toBe(0)
-  })
-
-  test("report prepare requires a unique section selection and explicit intent", async () => {
-    calls = 0
-    const input = { reviewRef: "review:1", sectionRefs: ["section-id"], format: "docx" as const }
-    expect(await client["reviews.report.prepare"](input, read)).toEqual({ kind: "transport-error", reason: "contract-mismatch" })
-    expect(await client["reviews.report.prepare"]({ ...input, sectionRefs: ["section-id", "section-id"] }, mutate))
-      .toEqual({ kind: "transport-error", reason: "contract-mismatch" })
-    expect(calls).toBe(0)
-    await client["reviews.report.prepare"](input, mutate)
-    expect(calls).toBe(1)
   })
 })
