@@ -3,7 +3,7 @@ import type { DomainProjection, PreservedReview } from "../contracts/context.ts"
 import type { ObservedResultProjection } from "../contracts/decisions.ts"
 import type { ReviewOutcomeComparison } from "./outcome.ts"
 import { validOutcomeComparison, validReviewOutcome } from "./outcome.ts"
-import { selectedReviewComments } from "./comment-selection.ts"
+import { matchesSelectedSources } from "./references.ts"
 
 type Value = DomainProjection["values"][number]
 type ProjectionContent = DomainProjection & { reviewOutcome?: ObservedResultProjection; reviewOutcomeComparison?: ReviewOutcomeComparison }
@@ -20,7 +20,6 @@ type Pair = { changes: Change[]; omissions: Omission[]; limitations: string[] }
 
 /** Prefer stable row IDs, then an unambiguous canonical record/field identity. Never pair by a display name. */
 export function compareReviews(previous: PreservedReview | null, current: PreservedReview) {
-  if (!selectedReviewComments(current, current.sections.map((section) => section.id)) || previous && !selectedReviewComments(previous, previous.sections.map((section) => section.id))) return unavailable("Comment association is unavailable.")
   if (!previous) return current.previousReviewRef ? unavailable("The preserved previous reference is not available for comparison.") : firstReview(current)
   if (current.previousReviewRef && current.previousReviewRef !== previous.id) return unavailable("The preserved previous reference does not match the review supplied for comparison.")
   const left = index(previous)
@@ -198,7 +197,8 @@ function nonFinite(value: Value["value"]) {
 }
 
 function commentsOf(review: PreservedReview) {
-  const matched = (selectedReviewComments(review, review.sections.map((section) => section.id)) ?? []).map((comment) => ({
+  const selected = review.sections.flatMap((section) => section.sourceRefs)
+  const matched = review.comments.filter((comment) => matchesSelectedSources(comment.sourceRefs, selected)).map((comment) => ({
     reviewId: review.id, id: comment.id, version: comment.version, authorRef: comment.authorRef, createdAt: comment.createdAt, content: comment.content,
   }))
   return { matched, unmatched: review.comments.length - matched.length }
@@ -217,4 +217,3 @@ function factsOf(review: PreservedReview) {
     limitations: [...unmatched, ...(invalidComparisons ? ["An outcome comparison failed validation and was not shown."] : []), ...(invalidOutcomes ? ["An outcome failed validation and was not shown."] : [])],
   }
 }
-

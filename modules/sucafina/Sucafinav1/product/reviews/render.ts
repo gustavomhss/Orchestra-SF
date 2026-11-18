@@ -8,7 +8,7 @@ import { reviewInclusion } from "./inclusion.ts"
 import type { ReviewInclusion } from "./inclusion.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { Artifact } from "../../runtime/artifact.ts"
-import { selectedReviewComments } from "./comment-selection.ts"
+import { matchesSelectedSources } from "./references.ts"
 import { renderReviewBars, renderReviewChart, renderReviewTimeline, renderReviewWaterfall, renderReviewSensitivity } from "./chart.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ReviewChart } from "./port.ts"
@@ -24,8 +24,6 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     const projection = section?.content as DomainProjection | undefined
     return !section || !projection || !Array.isArray(projection.values) || !Number.isSafeInteger(section.count) || section.count < 0 || !Array.isArray(projection.missing) || !projection.context || !Array.isArray(projection.context.sourceRefs) || projection.values.some((value: DomainProjection["values"][number]) => !value || typeof value.id !== "string" || !value.period || !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))))
   })) return { ok: false, status: 422, errors: ["Section content is invalid."] }
-  const comments = selectedReviewComments(review, options.sectionRefs, digestSfValue)
-  if (!comments) return { ok: false, status: 422, errors: ["Comment association is invalid."] }
   const content = sections.flatMap((section) => {
     if (!section) return []
     const projection = section.content as DomainProjection
@@ -95,6 +93,8 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
       ],
     }]
   })
+  const selectedRefs = sections.flatMap((section) => section?.sourceRefs ?? [])
+  const comments = review.comments.filter((comment) => matchesSelectedSources(comment.sourceRefs, selectedRefs))
   if (review.comments.length > comments.length) content.push({ title: "Comment coverage", images: [], table: [], figureCaption: "", lines: ["Some preserved comments do not match the selected section sources and are omitted."] })
   if (comments.length) content.push({ title: "Preserved comments", images: [], table: [], figureCaption: "", lines: comments.map((comment) => {
     return `${comment.id} v${comment.version} · ${comment.authorRef} · ${comment.createdAt}: ${comment.content}`
@@ -103,7 +103,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   if (coverage) content.unshift({ title: "Coverage", images: [], table: [], figureCaption: "", lines: [...coverage] })
   const name = options.title.replace(/[^a-z0-9]+/gi, "_") || "Review"
   if (options.format === "docx") {
-    const { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } = await import("docx")
+    const { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType } = await import("docx")
     const document = new Document({
       title: options.title,
       creator: "Sucafina",
@@ -117,14 +117,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
         properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1000, right: 1000, bottom: 1000, left: 1000 } } },
         footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun("Preserved review · Page "), new TextRun({ children: [PageNumber.CURRENT] }), new TextRun(" of "), new TextRun({ children: [PageNumber.TOTAL_PAGES] })] })] }) },
         children: [
-      new Paragraph({
-        text: options.title,
-        heading: HeadingLevel.TITLE,
-        // The built-in 28pt Title must not inherit the 14pt body line box:
-        // atLeast expands for wrapped opaque IDs and Unicode/fallback glyphs.
-        spacing: { before: 0, after: 240, line: 760, lineRule: LineRuleType.AT_LEAST },
-        widowControl: true,
-      }),
+      new Paragraph({ text: options.title, heading: HeadingLevel.TITLE }),
       new Paragraph(`Review ${review.id} v${review.version} · ${review.createdAt}`),
       new Paragraph("This material contains the selected preserved sections in order. Human agenda notes and comments are identified separately from captured values. Each section keeps its own period and coverage."),
       ...content.flatMap((section) => [
@@ -207,4 +200,3 @@ export function readReviewArtifactSeal(artifact: Artifact, review: PreservedRevi
 export function readReviewArtifactRenderDigest(artifact: Artifact, review: PreservedReview, sectionRefs: readonly string[]) {
   return readReviewArtifactSeal(artifact, review, sectionRefs) ? seals.get(artifact)?.renderDigest : undefined
 }
-

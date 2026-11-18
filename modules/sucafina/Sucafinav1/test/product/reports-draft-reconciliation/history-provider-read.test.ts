@@ -24,7 +24,7 @@ async function createHistoryFixture() {
   if (captured.status !== "ok") throw new Error("Actual durable C05 receipt unavailable")
   expect(captured.value).toHaveLength(1)
   const io = { armed: false, captures: 0 }
-  const state: typeof fixture.state = { ...fixture.state, read: async (request, namespace, inspect) => {
+  const state: SfProductStatePort = { ...fixture.state, read: async (request, namespace, inspect) => {
     const result = await fixture.state.read(request, namespace, inspect)
     if (io.armed && namespace === "reviews" && ++io.captures === 2) {
       io.armed = false

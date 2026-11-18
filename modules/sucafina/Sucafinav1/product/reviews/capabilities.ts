@@ -12,7 +12,7 @@ import type { PortResult } from "../contracts/ports.ts"
 import type { Artifact } from "../../runtime/artifact.ts"
 import { renderPreservedReview } from "./render.ts"
 import { renderReviewBars, renderReviewChart, renderReviewTimeline, renderReviewWaterfall, renderReviewSensitivity } from "./chart.ts"
-import { selectedReviewComments } from "./comment-selection.ts"
+import { matchesSelectedSources } from "./references.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { reviewChartEvidence } from "./port.ts"
@@ -52,20 +52,15 @@ export async function prepareReview(value: unknown, context: TrustedDomainContex
 }
 
 export async function prepareReport(value: unknown, context: TrustedDomainContext, host: ReviewCapabilityHost): Promise<CapabilityResult> {
-  const trace = (stage: string) => { if (process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_" + stage) }
-  trace("REPORT_ENTER")
   const parsed = decodeSfOperationInput("sf_report_prepare", value)
   if (!parsed.ok || (parsed.value.format !== "pptx" && parsed.value.format !== "docx")) return reject("sf_report_prepare", "invalid-input", "needs-input")
   const digest = digestSfValue(parsed.value)
   if (!host.authority.receiptFor(context, "sf_report_prepare", digest) || !(await host.authority.revalidateDomainContext(context))) return reject("sf_report_prepare", "invalid-binding", "denied")
   const review = await host.reviews.read(parsed.value.reviewRef, context)
-  trace("REPORT_READ1_DONE")
   if (review.status !== "ok") return reject("sf_report_prepare", review.reason, review.status === "conflict" ? "stale" : review.status)
   const artifact = await renderPreservedReview(review.value, { title: `Review ${review.value.id}`, format: parsed.value.format, sectionRefs: parsed.value.sectionRefs })
-  trace("REPORT_RENDER_DONE")
   if (!artifact.ok) return reject("sf_report_prepare", "report-unavailable", "unavailable")
   const fresh = await host.reviews.read(parsed.value.reviewRef, context)
-  trace("REPORT_READ2_DONE")
   if (fresh.status !== "ok") return reject("sf_report_prepare", "access-unavailable", "denied")
   if (digestSfValue(fresh.value) !== digestSfValue(review.value)) return reject("sf_report_prepare", "review-changed", "stale")
   const selected = parsed.value.sectionRefs.map((id) => review.value.sections.find((section) => section.id === id)!)
@@ -74,11 +69,9 @@ export async function prepareReport(value: unknown, context: TrustedDomainContex
     return [...projection.values.flatMap((entry) => entry.sourceRefs), ...reviewChartEvidence(projection.reviewChart), ...reviewDecisionEvidence(projection.decision), ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome?.sourceRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.baselineRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.sourceRefs ?? [])]
   })
   const stored = await host.artifacts.put({ reviewRef: parsed.value.reviewRef, sectionRefs: parsed.value.sectionRefs, artifact, format: parsed.value.format, evidenceRefs, recordCount: selected.reduce((total, section) => total + section.count, 0) }, context)
-  trace("REPORT_STORED_DONE")
   if (stored.status !== "ok") return reject("sf_report_prepare", stored.reason, stored.status === "conflict" ? "stale" : stored.status)
-  const includedComments = selectedReviewComments(review.value, parsed.value.sectionRefs, digestSfValue)
-  if (!includedComments) return reject("sf_report_prepare", "comment-association-invalid", "unavailable")
-  const omittedComments = includedComments.length !== review.value.comments.length
+  const selectedRefs = selected.flatMap((section) => section.sourceRefs)
+  const omittedComments = review.value.comments.some((comment) => !matchesSelectedSources(comment.sourceRefs, selectedRefs))
   const output = {
     reviewSelectionRef: parsed.value.reviewRef, orderedResultRefs: [stored.value.artifactRef],
     coverage: selected.map((section) => ({ sectionRef: section.id, includedCount: section.count, totalCount: section.count })),
@@ -130,4 +123,3 @@ export function createReviewCapabilities(host: ReviewCapabilityHost): readonly C
 function reject(operation: string, reason: string, status: "needs-input" | "stale" | "denied" | "unavailable" | "provider-conflict" | "failed"): CapabilityResult {
   return { status, reason, receipt: { kind: "unbound", operation, code: status === "needs-input" ? "invalid-input" : status === "denied" ? "invalid-binding" : "unavailable", at: new Date().toISOString() } }
 }
-
