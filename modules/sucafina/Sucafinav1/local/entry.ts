@@ -83,7 +83,13 @@ export async function createConfiguredInstallation(
 ) {
   const config = loaded.config
   if (context.origin !== config.origin) throw new Error("Installation origin mismatch")
-  const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
+  // The enrolled name is part of the private installation record; the serving
+  // process must not re-derive it from its own environment (Bun's
+  // os.userInfo().username comes from the environment and degrades to
+  // "unknown"), because the sealed credential is bound to this exact person.
+  const operator = config.authentication === "local-operator" && config.localOperator
+    ? { ...config.localOperator, name: config.localOperator.name ?? userInfo().username }
+    : undefined
   const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
   const now = () => new Date().toISOString()
   const projectScope = createSfSourceScopeProjector(now)

@@ -20,6 +20,8 @@ test("actual enrollment helper publishes only a private replacement-navigation a
   const loaded = await loadLocalConfiguration(f.file)
   expect(loaded.config.authentication).toBe("local-operator")
   expect(loaded.config.localOperator?.uid).toBe(userInfo().uid)
+  // The recorded name makes the operator independent of the serving process environment.
+  expect(loaded.config.localOperator?.name).toBe(userInfo().username)
   expect((await stat(result.artifact)).mode & 0o777).toBe(0o600)
   expect((await stat(f.file)).mode & 0o777).toBe(0o600)
   const html = await Bun.file(result.artifact).text()

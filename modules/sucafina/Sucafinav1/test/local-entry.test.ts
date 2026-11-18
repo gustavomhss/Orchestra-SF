@@ -65,15 +65,15 @@ test("origin mismatch and nonisolated host paths fail before any host DB can be 
 })
 
 
-async function localAccess() {
+async function localAccess(name = userInfo().username) {
   const f = await setup()
   const config = await Bun.file(f.file).json()
   config.authentication = "local-operator"
-  config.localOperator = { installationId: "12ec06d9-4201-4370-a3e9-e9a72f213dc9", uid: userInfo().uid }
+  config.localOperator = { installationId: "12ec06d9-4201-4370-a3e9-e9a72f213dc9", uid: userInfo().uid, name }
   await Bun.write(f.file, JSON.stringify(config))
   const loaded = await loadLocalConfiguration(f.file)
   const store = await openLocalStore(path.join(f.root, "business-local"))
-  const operator = { ...config.localOperator, name: userInfo().username }
+  const operator = { ...config.localOperator, name }
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: loaded.keys.session })
   const code = await identity.enroll()
   return { ...f, store, code, operator }
@@ -100,6 +100,27 @@ test("explicit local operator enrollment enters Orchestra and HTML console faces
     }
     const status = await installation.handler(new Request(`${origin}/sucafina/status`))
     expect(await status!.json()).toMatchObject({ login: "local-operator" })
+  } finally { await installation.dispose(); await f.store.dispose() }
+})
+
+// The packaged install starts its own process, and Bun's os.userInfo().username
+// comes from that process environment: a stripped environment (as in a launchd
+// or CI child) reports "unknown". The enrolled person must therefore come from
+// the private installation record, not from the serving process.
+test("enrolled operator authenticates when the serving process cannot resolve the OS account name", async () => {
+  const name = `recorded-owner-${userInfo().uid}`
+  expect(name).not.toBe(userInfo().username)
+  const f = await localAccess(name)
+  const installation = await createLocalInstallation({ origin }, f.file, f.environment)
+  try {
+    const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
+    expect(enrolled?.status).toBe(303)
+    const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
+    const dashboard = await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }))
+    expect(dashboard?.status).toBe(200)
+    const html = await dashboard!.text()
+    expect(html).toContain("Homologação local")
+    expect(html).toContain(name)
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 

@@ -42,6 +42,8 @@ import { createSfBusinessServices } from "./business-services.ts"
 import { createSfExtendedBusinessServices } from "./extended-business-services.ts"
 import { createSfDecisionDomainServices } from "./decision-domain-services.ts"
 import { createSfCurrentChoiceServices } from "./current-choice-services.ts"
+// Same host-module graph as the strict WeakSet verifier; no registry bypass.
+export { createCurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { createSfCurrentChoiceHttp } from "./current-choice-http.ts"
 import { createSfCreationRecoveryHttp } from "./creation-recovery-http.ts"
 import { createSfDecisionDomainHttp } from "./decision-domain-http.ts"
