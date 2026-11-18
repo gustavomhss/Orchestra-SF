@@ -19,8 +19,8 @@ describe("A05 portfolio/sensitivity source-locked contracts", () => {
     expect(Object.keys(SfPortfolio).sort()).toEqual(Object.keys(sfPortfolioNativeOperations).sort())
     expect(Object.keys(SfPortfolio)).toHaveLength(10)
     for (const [id, operation] of Object.entries(SfPortfolio)) {
-      expect<string>(operation.operationId).toBe(id)
-      expect<string>(sfPortfolioNativeOperations[id as keyof typeof sfPortfolioNativeOperations]).toBe(id.slice("portfolio.".length))
+      expect(operation.operationId).toBe(id)
+      expect(sfPortfolioNativeOperations[id as keyof typeof sfPortfolioNativeOperations]).toBe(id.slice("portfolio.".length))
     }
     expect(Object.hasOwn(SfPortfolio, "portfolio.decision-approve")).toBe(false)
   })
@@ -43,7 +43,7 @@ describe("A05 portfolio/sensitivity source-locked contracts", () => {
       caseRef, request, selectedCandidateRefs: ["case-p:alt-1"],
       combinationId: digest, expectedEvaluationDigest: digest, choiceId: "choice-1",
     }
-    expect<object>(Schema.decodeUnknownSync(schema)(valid)).toEqual(valid)
+    expect(Schema.decodeUnknownSync(schema)(valid)).toEqual(valid)
     for (const bad of [
       { ...valid, combinationId: "not-sha256" },
       { ...valid, expectedEvaluationDigest: digest.toUpperCase() },
@@ -57,7 +57,7 @@ describe("A05 portfolio/sensitivity source-locked contracts", () => {
   test("all canonical refusal statuses stay distinct and require a reason", () => {
     const result = SfPortfolio["portfolio.decision-portfolio-evaluate"].output
     for (const status of ["needs-input", "stale", "denied", "unavailable", "conflict", "provider-conflict", "failed"]) {
-      expect<object>(Schema.decodeUnknownSync(result)({ status, reason: "source-refused" }))
+      expect(Schema.decodeUnknownSync(result)({ status, reason: "source-refused" }))
         .toEqual({ status, reason: "source-refused" })
     }
     for (const invalid of [
@@ -71,7 +71,7 @@ describe("A05 portfolio/sensitivity source-locked contracts", () => {
   test("all ten operation boundaries reject injected unknown input fields by default", () => {
     const evaluate = SfPortfolio["portfolio.decision-portfolio-evaluate"].input
     const valid = { caseRef, request }
-    expect<object>(Schema.decodeUnknownSync(evaluate)(valid)).toEqual(valid)
+    expect(Schema.decodeUnknownSync(evaluate)(valid)).toEqual(valid)
     for (const bad of [
       { ...valid, principalRef: "forged-actor" },
       { ...valid, caseRef: { ...caseRef, authorization: "forged" } },
@@ -81,20 +81,20 @@ describe("A05 portfolio/sensitivity source-locked contracts", () => {
 
     const units = SfPortfolio["portfolio.decision-sensitivity-units"].input
     const correct = { caseRef, scenarioRef: "scenario-1", baselineRef: "baseline-1", parameterRef: "parameter-1" }
-    expect<object>(Schema.decodeUnknownSync(units)(correct)).toEqual(correct)
+    expect(Schema.decodeUnknownSync(units)(correct)).toEqual(correct)
     expect(() => Schema.decodeUnknownSync(units)({ ...correct, expectedPrincipal: "forged" })).toThrow()
   })
 
   test("result envelopes remain closed without conflating source refusals or dropping fields", () => {
     const results = SfPortfolio["portfolio.decision-portfolio-results"].output
     const ok = { status: "ok", value: [{ resultRef: "result-1", createdAt: "2026-11-15" }] }
-    expect<object>(Schema.decodeUnknownSync(results)(ok)).toEqual(ok)
+    expect(Schema.decodeUnknownSync(results)(ok)).toEqual(ok)
     expect(() => Schema.decodeUnknownSync(results)({
       status: "ok", value: [{ ...ok.value[0], privateAuthority: "forged" }],
     })).toThrow()
     for (const status of ["needs-input", "stale", "denied", "unavailable", "conflict", "provider-conflict", "failed"]) {
       const refusal = { status, reason: "original reason with source evidence" }
-      expect<object>(Schema.decodeUnknownSync(results)(refusal)).toEqual(refusal)
+      expect(Schema.decodeUnknownSync(results)(refusal)).toEqual(refusal)
       expect(() => Schema.decodeUnknownSync(results)({ ...refusal, approval: "injected" })).toThrow()
     }
   })
