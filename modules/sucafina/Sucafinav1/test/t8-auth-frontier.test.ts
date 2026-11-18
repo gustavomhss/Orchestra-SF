@@ -119,7 +119,7 @@ test("T8: a missing installed F01 owner remains 503, not a synthetic identity or
 })
 
 test("T8: changing the current installation during authority read discards its stale answer", async () => {
-  let current = binding
+  let current: Readonly<{ installationId: string; projectId: string; hostId: string }> = binding
   const entered = Promise.withResolvers<void>()
   const release = Promise.withResolvers<void>()
   const request = new Request(contextUrl)
