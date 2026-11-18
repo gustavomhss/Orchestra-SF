@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Phase A inventory validator. Deliberately dependency-free and fail-closed.
 import { createReadStream, readFileSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { createInterface } from "node:readline";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +10,9 @@ import { isDeepStrictEqual } from "node:util";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const schemaPath = join(root, "docs/qa/sucafina/consolidation/ledger.schema.json");
 const ledgerPath = join(root, "docs/qa/sucafina/consolidation/ledger.jsonl");
+const summaryPath = join(root, "docs/qa/sucafina/consolidation/ledger-summary.json");
+const ownershipPath = join(root, "docs/qa/sucafina/consolidation/ownership-map.json");
+const FROZEN_LEDGER_SHA256 = "5cbc3cb03cf8008270d5533a3d9d789bc0908376b438cae56131c7733f83f4d8";
 const EXPECTED_LINES = 37603;
 const REPLAY_BUNDLES = new Set(["B0", "B1", "B2", "B3", "FINAL"]);
 const DISPOSITIONS = new Set([
@@ -24,6 +28,15 @@ const SCHEMA_KEYWORDS = new Set([
   "uniqueItems", "allOf", "if", "then", "else", "not",
 ]);
 const patterns = new Map();
+const REQUIRED_EVIDENCE_TYPES = new Map([
+  ["ABSORBED_ANCESTOR", new Set(["ANCESTRY"])],
+  ["ABSORBED_BLOB", new Set(["BLOB_MATCH", "DELETION_MATCH"])],
+  ["ABSORBED_PATCH", new Set(["PATCH_ID", "EMPTY_DIFF"])],
+  ["DUPLICATE_HEAD", new Set(["HEAD_MATCH"])],
+  ["DOCS_ONLY", new Set(["FILE_LIST"])],
+  ["PROMOTION_ONLY", new Set(["OTHER"])],
+  ["REPLAY", new Set(["FILE_LIST"])],
+]);
 
 function schemaCheck(rule, at = "$") {
   if (!rule || Array.isArray(rule) || typeof rule !== "object") {
@@ -188,6 +201,14 @@ async function main() {
   const bundles = new Map();
   const replayBundles = new Map();
   const absorbedPatchPaths = new Set();
+  const sourceBases = new Set();
+  const observedTimes = new Set();
+  const ownershipRecords = [];
+  const dispositionBundles = new Map();
+  const replayPrs = new Set();
+  const invalidReplayPaths = new Set();
+  const invalidReplayPrefixes = new Map();
+  let sentinels = 0;
   let lineNo = 0;
   let readyCount = 0;
 
@@ -218,8 +239,19 @@ async function main() {
         record.evidence.some((entry) => !entry || typeof entry.detail !== "string" || !entry.detail.trim())) {
       fail(lineNo, "MISSING_EVIDENCE", "nonempty evidence details required");
     }
+    const requiredTypes = REQUIRED_EVIDENCE_TYPES.get(record.disposition);
+    if (requiredTypes && Array.isArray(record.evidence) &&
+        !record.evidence.some((entry) => entry && requiredTypes.has(entry.type))) {
+      fail(lineNo, "INCOHERENT_EVIDENCE", String(record.disposition));
+    }
     if (record.disposition === "REPLAY" && !REPLAY_BUNDLES.has(record.bundle)) {
       fail(lineNo, "INVALID_REPLAY_BUNDLE", String(record.bundle));
+      const path = record.scope?.path;
+      if (typeof path === "string") {
+        invalidReplayPaths.add(path);
+        increment(invalidReplayPrefixes, path.startsWith("modules/sucafina/Sucafinav1/docs/")
+          ? "modules/sucafina/Sucafinav1/docs/" : "other");
+      }
     }
     if (record.close_ready === true &&
         (!/^[0-9a-f]{40}$/i.test(record.merged_sha ?? "") ||
@@ -234,24 +266,49 @@ async function main() {
     } else {
       recordIds.add(record.record_id);
     }
-    if (Number.isSafeInteger(record.source_pr) &&
-        typeof record.record_id === "string" &&
-        !record.record_id.startsWith("PR-" + record.source_pr + ":")) {
-      fail(lineNo, "RECORD_PR_MISMATCH", record.record_id);
+    if (Number.isSafeInteger(record.source_pr) && typeof record.record_id === "string" &&
+        record.scope && typeof record.scope.path === "string") {
+      const pathId = "PR-" + record.source_pr + ":" + record.scope.path;
+      if (record.scope.hunk_id == null && record.record_id !== pathId) {
+        fail(lineNo, "RECORD_ID_PATH_MISMATCH", record.record_id);
+      } else if (record.scope.hunk_id != null &&
+                 record.record_id !== pathId + ":" + record.scope.hunk_id) {
+        fail(lineNo, "RECORD_ID_HUNK_MISMATCH", record.record_id);
+      }
     }
     if (violations.length > 0) continue;
 
     const prior = sources.get(record.source_pr);
-    if (prior && prior.head !== record.source_head) {
-      fail(lineNo, "SOURCE_HEAD_DRIFT", "PR " + record.source_pr + " has multiple head SHAs");
+    const currentSource = {
+      head: record.source_head,
+      branch: record.source_branch,
+      base: record.source_base,
+      state: record.source_state ?? null,
+      observed_at: record.observed_at,
+      base_observed: record.base_observed ?? null,
+    };
+    if (prior && !isDeepStrictEqual(prior, currentSource)) {
+      fail(lineNo, "SOURCE_SNAPSHOT_INCONSISTENT", "PR " + record.source_pr);
     } else {
-      sources.set(record.source_pr, {
-        head: record.source_head,
-        state: record.source_state ?? prior?.state ?? null,
-      });
+      sources.set(record.source_pr, currentSource);
     }
     if (!heads.has(record.source_head)) heads.set(record.source_head, new Set());
     heads.get(record.source_head).add(record.source_pr);
+    sourceBases.add(record.base_observed);
+    observedTimes.add(record.observed_at);
+    if (record.scope.path !== ".") {
+      ownershipRecords.push({
+        path: record.scope.path, bundle: record.bundle,
+        owner: record.owner, protected_path: record.protected_path === true,
+      });
+    } else {
+      sentinels++;
+    }
+    if (!dispositionBundles.has(record.disposition)) {
+      dispositionBundles.set(record.disposition, new Map());
+    }
+    increment(dispositionBundles.get(record.disposition), record.bundle);
+    if (record.disposition === "REPLAY") replayPrs.add(record.source_pr);
     increment(dispositions, record.disposition);
     increment(bundles, record.bundle);
     if (record.disposition === "REPLAY") increment(replayBundles, record.bundle);
@@ -275,9 +332,101 @@ async function main() {
     process.exitCode = 1;
     return;
   }
-  const duplicateHeadGroups = [...heads.values()].filter((prs) => prs.size > 1).length;
+  if (sourceBases.size !== 1 || observedTimes.size !== 1) {
+    console.error("SNAPSHOT_INCONSISTENT: source baseline/time varies by record");
+    process.exitCode = 1;
+    return;
+  }
+
+  const summary = JSON.parse(readFileSync(summaryPath, "utf8"));
+  const ownership = JSON.parse(readFileSync(ownershipPath, "utf8"));
+  const digest = createHash("sha256").update(readFileSync(ledgerPath)).digest("hex");
+  if (digest !== FROZEN_LEDGER_SHA256 ||
+      summary.source?.ledger_sha256 !== digest) {
+    throw new Error("LEDGER_HASH_MISMATCH: original frozen snapshot changed");
+  }
+  const duplicateGroups = [...heads.entries()]
+    .filter(([, prs]) => prs.size > 1)
+    .map(([head_sha, prs]) => ({ head_sha, source_prs: [...prs].sort((a, b) => a - b) }))
+    .sort((a, b) => a.head_sha.localeCompare(b.head_sha));
+  const duplicateHeadGroups = duplicateGroups.length;
   const openPrs = [...sources.values()].filter((source) => source.state === "OPEN").length;
   const stateUnknownPrs = [...sources.values()].filter((source) => source.state === null).length;
+  const replayByBundleWithZero = Object.fromEntries(
+    ["B0", "B1", "B2", "B3", "FINAL", "NONE"].map((k) => [k, replayBundles.get(k) ?? 0]),
+  );
+  const countsByDispositionBundle = Object.fromEntries(
+    [...dispositionBundles.entries()].sort(([a], [b]) => a.localeCompare(b))
+      .map(([disposition, counts]) => [disposition, sortedCounts(counts)]),
+  );
+  const checks = {
+    "summary_schema_version": [summary.schema_version, "orchestra-sf-phase-a-summary-v1"],
+    "classifier_sha256": [ownership.source_classifier?.sha256, summary.source?.builder_sha256],
+    "ownership_sentinels": [ownership.verification?.sentinel_path_records_exempt, sentinels],
+    "source_prs_with_replay": [summary.counts?.source_prs_with_replay, replayPrs.size],
+    "records_by_disposition_and_bundle": [
+      summary.counts?.records_by_disposition_and_bundle, countsByDispositionBundle,
+    ],
+    "invalid_replay_bundle_records": [
+      summary.counts?.invalid_replay_bundle_records, invalidReplayPrefixes.size
+        ? [...invalidReplayPrefixes.values()].reduce((a, b) => a + b, 0) : 0,
+    ],
+    "invalid_replay_bundle_unique_paths": [
+      summary.counts?.invalid_replay_bundle_unique_paths, invalidReplayPaths.size,
+    ],
+    "invalid_replay_bundle_records_by_prefix": [
+      summary.counts?.invalid_replay_bundle_records_by_prefix, sortedCounts(invalidReplayPrefixes),
+    ],
+    "total_records": [summary.counts?.total_records, lineNo],
+    "source_prs_total": [summary.counts?.source_prs_total, sources.size],
+    "open_prs_in_frozen_snapshot": [summary.counts?.open_prs_in_frozen_snapshot, openPrs],
+    "close_ready_records": [summary.counts?.close_ready_records, readyCount],
+    "duplicate_head_groups": [summary.counts?.duplicate_head_groups, duplicateHeadGroups],
+    "patch_absorbed_records": [summary.counts?.patch_absorbed_records, dispositions.get("ABSORBED_PATCH") ?? 0],
+    "patch_absorbed_unique_paths": [summary.counts?.patch_absorbed_unique_paths, absorbedPatchPaths.size],
+    "records_by_disposition": [summary.counts?.records_by_disposition, sortedCounts(dispositions)],
+    "records_by_bundle": [summary.counts?.records_by_bundle, sortedCounts(bundles)],
+    "replay_by_bundle": [summary.counts?.replay_by_bundle, replayByBundleWithZero],
+    "duplicate_head_group_details": [summary.duplicate_head_groups, duplicateGroups],
+    "patch_absorbed_paths": [summary.patch_absorbed_paths, [...absorbedPatchPaths].sort()],
+    "observed_at": [summary.source?.observed_at, [...observedTimes][0]],
+    "base_sha": [summary.source?.base_sha, [...sourceBases][0]],
+  };
+  const summaryErrors = Object.entries(checks).filter(([, [actual, expected]]) =>
+    !isDeepStrictEqual(actual, expected)).map(([k]) => k);
+  if (summaryErrors.length) {
+    throw new Error("SUMMARY_DRIFT: " + summaryErrors.join(", "));
+  }
+
+  function mapPath(path) {
+    for (const rule of ownership.rules ?? []) {
+      const matches = rule.match?.prefixes?.some((prefix) => path.startsWith(prefix));
+      const contains = rule.match?.operator === "prefix_or_contains" &&
+        rule.match?.contains?.some((pattern) => path.includes(pattern));
+      if (matches || contains) {
+        return { bundle: rule.bundle, owner: rule.owner,
+          protected_path: rule.protected_path };
+      }
+    }
+    return { bundle: ownership.fallback?.bundle, owner: ownership.fallback?.owner,
+      protected_path: ownership.fallback?.protected_path };
+  }
+  if (ownership.matching !== "first-match-wins; case-sensitive literal prefixes and contains" ||
+      !Array.isArray(ownership.rules) || ownership.rules.length !== 5 ||
+      ownership.rules.some((rule, i) => rule.priority !== i + 1) ||
+      ownership.verification?.ownership_mismatches !== 0 ||
+      ownership.verification?.records_examined !== lineNo) {
+    throw new Error("OWNERSHIP_MAP_INVALID: missing or inconsistent classifier contract");
+  }
+  for (const record of ownershipRecords) {
+    const expected = mapPath(record.path);
+    if (!isDeepStrictEqual(expected, {
+      bundle: record.bundle, owner: record.owner,
+      protected_path: record.protected_path,
+    })) {
+      throw new Error("OWNERSHIP_MISMATCH: " + record.path);
+    }
+  }
   console.log("VALID_LEDGER " + JSON.stringify({
     records: lineNo,
     unique_record_ids: recordIds.size,
