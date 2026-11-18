@@ -1,0 +1,268 @@
+{
+  "id": "I00",
+  "title": "Integração e registro exclusivo",
+  "kind": "integration",
+  "status": "PLANNED_NOT_AUTHORIZED",
+  "priority": 0,
+  "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+  "owns": [
+    "packages/app-shell/src/orchestra/navigation.ts",
+    "packages/app-shell/src/orchestra/chapter-route.tsx",
+    "packages/app-shell/src/orchestra/sidebar.tsx",
+    "packages/app-shell/src/app.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/entrypoints/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/route-manifest.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/index.ts",
+    "packages/app-shell/src/i18n/orchestra.ts",
+    "packages/schema/src/sucafina/index.ts",
+    "packages/schema/src/sucafina.ts",
+    "packages/client/src/sucafina/index.ts",
+    "packages/client/src/sucafina.ts",
+    "apps/cli/src/sucafina-product/native-ui/index.ts",
+    "apps/cli/src/sucafina-product/installation.ts",
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "modules/sucafina/Sucafinav1/local/entry.ts",
+    "modules/sucafina/Sucafinav1/runtime/application.ts",
+    "packages/app-shell/e2e/playwright.production.config.ts",
+    "apps/desktop/src/main/ipc.ts",
+    "apps/desktop/src/preload/index.ts",
+    "apps/desktop/src/preload/types.ts",
+    "apps/desktop/src/renderer/index.tsx",
+    "packages/app-shell/src/context/platform.tsx",
+    "packages/protocol/src/api.ts",
+    "packages/server/src/handlers.ts",
+    "packages/server/src/routes.ts",
+    "apps/cli/src/commands/handlers/serve.ts",
+    "apps/desktop/src/main/index.ts",
+    "apps/desktop/src/main/owned-serve.ts",
+    "apps/desktop/src/main/dock-channel.ts",
+    "packages/client/src/generated/**",
+    "packages/client/src/generated-effect/**",
+    "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+    "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+    "packages/schema/package.json",
+    "packages/client/package.json",
+    "packages/app-shell/src/context/server.tsx",
+    "packages/schema/src/sucafina/operation-registry.ts",
+    "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+    "packages/app-shell/src/context/layout-route.ts",
+    "packages/app-shell/src/context/language.tsx",
+    "packages/app-shell/src/orchestra/shell/navigation-commands.tsx",
+    "packages/app-shell/src/orchestra/compact-navigation.ts",
+    "packages/app-shell/src/orchestra/shell/mobile-navigation.tsx"
+  ],
+  "may_write_shared_registry": true,
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "task_refs": [
+      "WP00.T01",
+      "WP00.T02",
+      "WP10.T01",
+      "WP10.T04",
+      "WP10.T05"
+    ],
+    "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+  },
+  "surfaces": [],
+  "exports": [
+    "native chapter registration fragments",
+    "launch-record",
+    "candidate receipt"
+  ],
+  "depends_authoring": [
+    {
+      "lock": "ctx",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "surface-specs",
+      "source": "surface-manifest.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "transport",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    }
+  ],
+  "depends_integration": [],
+  "depends_qualification": {
+    "work_orders": [],
+    "external": [],
+    "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+  },
+  "consumes": {
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport"
+    ],
+    "producer_exports": [],
+    "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+    "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+    "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+    "operation_refs": [],
+    "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+  },
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md",
+      "packages/schema/AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "host-signatures.ts",
+      "route-signatures.ts"
+    ],
+    "local": [
+      "work-orders/I00.json"
+    ],
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport"
+    ],
+    "surfaces": [],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": []
+  },
+  "deliver": [
+    "Emit immutable launch record with observed material SHA, authorized current stack writer, finite lane/lease allocation, source family pins and lock digests.",
+    "Apply only registration/composition glue from frozen fragments; 15 chapter entrypoints, route aliases and locale exports have one owner.",
+    "Consume leaf outputs incrementally using exact manifests, one candidate writer and existing validation dispatcher; never merge a source branch wholesale.",
+    "Publish native pilot cohort and per-chapter rollout manifests; preservation of legacy URLs/storage does not create a second business store.",
+    "Integrate the one metadata-only discovery endpoint in existing HttpApi and standard generated client exactly once; never add a dedicated generation target.",
+    "Merge new leaf dictionaries into existing packages/app-shell/src/i18n/orchestra.ts, preserving current ORCHESTRA_COPY/ORCHESTRA_COPY_BR composition; do not invent orchestra-chapters/index.ts.",
+    "Compose nativeUiProducts references in the exact owned host-context files and schedules.read in sfHumanReadActions per CONTRACTS §5.4; preserve explicit grant admission and leave canonical BusinessPorts/engines untouched.",
+    "Apply only the explicit package_exports entries; preserve all existing exports. No broad wildcard, dependency or lockfile change. Schema/Client callers import their public leaves through these entries.",
+    "Compose the approved connection registration hook in packages/app-shell/src/context/server.tsx with D01 registerConnection per host-signatures; bind never silently registers renderer-provided URLs.",
+    "Assemble metadata once from all catalog IDs, separately from the candidate-admitted codec map. Pilot registers only ctx plus A03 and dedicated auth/SDK operations; no runtime import of unintegrated families. Final readiness requires every catalog operation binding via its proper JSON/bytes/auth/SDK mode. A11 operations.ts remains the Operations family leaf.",
+    "Only after current producer writer release and S0/71 ACK: apply additive schemaVersion:2 native-view + landing CAS extension to existing personal-views.ts; legacy v1 bytes/response shape unchanged, no second persistence. A12/U43 consumers remain blocked until proof. Auth return-intents and nativeCommandPrecondition similarly require 72/73/74 release.",
+    "Compose every shell ingress through requestNativeTransition: layout-route, keyboard menu, sidebar, compact/mobile navigation, ConnectionGate and language plural; no second owner store or Chat fallback."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "I00-AC01",
+      "expected": "Every imported entrypoint/export resolves to the exact admitted leaf output.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "I00-AC02",
+      "expected": "All changed paths are in the finite shared allowlist; foreign-owner changes require explicit release.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "I00-AC03",
+      "expected": "No material change is relabelled evidence-only; final C and D use canonical envelope.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "I00-AC04",
+      "expected": "Every frozen Schema/Client public leaf import resolves through the exact same-C package export map; the authorized compiler gate verifies the composed packages after real dependencies exist. No source-path/private import bypass.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "I00-AC05",
+      "expected": "Pilot metadata has the full catalog key set while codec imports are only admitted ctx/A03 leaves; F02 and D01 compile without the other 14 adapter implementations. Missing binding yields typed contract-unavailable before any network/dispatch. Final C resolves every catalog operation through its designated mode; no silent missing codec, fake handler or duplicate JSON auth wrapper.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "gates": {
+    "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+    "test_files": [],
+    "typecheck_packages": [
+      "apps/cli",
+      "apps/desktop",
+      "packages/app-shell",
+      "packages/client",
+      "packages/protocol",
+      "packages/schema",
+      "packages/server"
+    ],
+    "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+    "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+    "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+  },
+  "stop": [
+    "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+    "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+    "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+    "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+    "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+    "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+  ],
+  "handoff": {
+    "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+    "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+    "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+  },
+  "write_modes": [
+    {
+      "patterns": [
+        "packages/client/src/generated/**",
+        "packages/client/src/generated-effect/**"
+      ],
+      "only": "canonical packages/client bun run generate, once after integration, by current authorized generator/compiler custodian",
+      "manual_edit_forbidden": true
+    }
+  ],
+  "package_exports": {
+    "packages/schema/package.json": {
+      "./sucafina/context": "./src/sucafina/context.ts",
+      "./sucafina/common": "./src/sucafina/common.ts",
+      "./sucafina/domain": "./src/sucafina/domain.ts",
+      "./sucafina/planner": "./src/sucafina/planner.ts",
+      "./sucafina/procurement": "./src/sucafina/procurement.ts",
+      "./sucafina/decisions": "./src/sucafina/decisions.ts",
+      "./sucafina/portfolio": "./src/sucafina/portfolio.ts",
+      "./sucafina/files": "./src/sucafina/files.ts",
+      "./sucafina/reviews": "./src/sucafina/reviews.ts",
+      "./sucafina/bi": "./src/sucafina/bi.ts",
+      "./sucafina/routines": "./src/sucafina/routines.ts",
+      "./sucafina/people": "./src/sucafina/people.ts",
+      "./sucafina/operations": "./src/sucafina/operations.ts",
+      "./sucafina/work": "./src/sucafina/work.ts",
+      "./sucafina/collaboration": "./src/sucafina/collaboration.ts",
+      "./sucafina/memory": "./src/sucafina/memory.ts",
+      "./sucafina/analyses": "./src/sucafina/analyses.ts",
+      "./sucafina/operation-registry": "./src/sucafina/operation-registry.ts",
+      "./sucafina/bindings": "./src/sucafina/index.ts"
+    },
+    "packages/client/package.json": {
+      "./sucafina/context": "./src/sucafina/context.ts",
+      "./sucafina/transport": "./src/sucafina/transport.ts",
+      "./sucafina/domain": "./src/sucafina/domain.ts",
+      "./sucafina/planner": "./src/sucafina/planner.ts",
+      "./sucafina/procurement": "./src/sucafina/procurement.ts",
+      "./sucafina/decisions": "./src/sucafina/decisions.ts",
+      "./sucafina/portfolio": "./src/sucafina/portfolio.ts",
+      "./sucafina/files": "./src/sucafina/files.ts",
+      "./sucafina/reviews": "./src/sucafina/reviews.ts",
+      "./sucafina/bi": "./src/sucafina/bi.ts",
+      "./sucafina/routines": "./src/sucafina/routines.ts",
+      "./sucafina/people": "./src/sucafina/people.ts",
+      "./sucafina/operations": "./src/sucafina/operations.ts",
+      "./sucafina/work": "./src/sucafina/work.ts",
+      "./sucafina/collaboration": "./src/sucafina/collaboration.ts",
+      "./sucafina/memory": "./src/sucafina/memory.ts",
+      "./sucafina/analyses": "./src/sucafina/analyses.ts"
+    }
+  },
+  "entrypoints": [
+    {
+      "path": "packages/schema/src/sucafina/operation-registry.ts",
+      "symbol": "SfOperationRegistry",
+      "signature": "CONTRACTS §6.1–6.2 and host-signatures; complete closed metadata only, zero family imports."
+    },
+    {
+      "path": "packages/schema/src/sucafina/index.ts",
+      "symbol": "SfNativeOperationBindings",
+      "signature": "Readonly candidate-admitted codec bindings per host-signatures; only actual included schemas, injected into transport/broker. Missing binding returns contract-unavailable before network, no fallback."
+    }
+  ]
+}

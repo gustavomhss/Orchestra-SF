@@ -1,0 +1,159 @@
+{
+  "schema": "sf2h.next30.packet.v1",
+  "slot": "N04",
+  "role": "new-implementer",
+  "lane": "adapter",
+  "title": "Bindings finos: Pessoas e Talent",
+  "execution_state": "PREPARED_NOT_STARTED",
+  "authorization": false,
+  "actor": null,
+  "lease": null,
+  "branch_hint": "sf-ux-n04",
+  "source": {
+    "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "work_order_blobs": {
+      "A10": "79ff46b34b69110c35b2d5fe66149456218a468d"
+    },
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "live_material": "REPIN_BY_114_AT_LAUNCH"
+  },
+  "scope": [
+    {
+      "order": "A10",
+      "output": "complete",
+      "title": "Bindings finos: Pessoas e Talent",
+      "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A10.json",
+      "surfaces": [],
+      "operation_refs": [
+        "contract-catalog.json#/operations/domain.command.CAP02.delete",
+        "contract-catalog.json#/operations/domain.command.CAP02.save",
+        "contract-catalog.json#/operations/domain.command.CAP07.deleteLeader",
+        "contract-catalog.json#/operations/domain.command.CAP07.deleteMember",
+        "contract-catalog.json#/operations/domain.command.CAP07.saveCio",
+        "contract-catalog.json#/operations/domain.command.CAP07.saveLeader",
+        "contract-catalog.json#/operations/domain.command.CAP07.saveMember",
+        "contract-catalog.json#/operations/domain.command.CAP08.delete",
+        "contract-catalog.json#/operations/domain.command.CAP08.exportAllMembers",
+        "contract-catalog.json#/operations/domain.command.CAP08.import",
+        "contract-catalog.json#/operations/domain.command.CAP08.save",
+        "contract-catalog.json#/operations/domain.page.CAP02",
+        "contract-catalog.json#/operations/domain.page.CAP06",
+        "contract-catalog.json#/operations/domain.page.CAP07",
+        "contract-catalog.json#/operations/domain.page.CAP08"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/people.ts",
+          "symbol": "SfPeople",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/people.ts",
+          "symbol": "createSfPeopleClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/people.ts",
+          "symbol": "createSfPeopleProjectionHandlers",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A10-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A10-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A10-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A10.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/renderer-CAP02",
+          "contract-catalog.json#/sources/renderer-CAP06",
+          "contract-catalog.json#/sources/renderer-CAP07",
+          "contract-catalog.json#/sources/renderer-CAP08"
+        ]
+      },
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      }
+    }
+  ],
+  "write_paths": [
+    "packages/schema/src/sucafina/people.ts",
+    "packages/client/src/sucafina/people.ts",
+    "apps/cli/src/sucafina-product/native-ui/people.ts",
+    "packages/schema/src/sucafina/people/**",
+    "packages/client/src/sucafina/people/**",
+    "apps/cli/src/sucafina-product/native-ui/people/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts"
+  ],
+  "protected_paths": [
+    "any path owned by active other writer",
+    "shared registries/composition/global i18n/generated/producer code under 114"
+  ],
+  "test_files": [
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts"
+  ],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N04/",
+  "handoff_to": "114 only",
+  "compiler": "119 only",
+  "tests": "120 via GitHub Actions only",
+  "note": "Thin adapter only: schema/client/host to existing authorized producer. No recreated backend, business logic, mock-success or client Core/Server import. Read COMMON.md."
+}

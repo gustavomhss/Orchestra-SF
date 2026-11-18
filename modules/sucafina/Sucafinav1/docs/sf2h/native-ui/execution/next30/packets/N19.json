@@ -1,0 +1,363 @@
+{
+  "schema": "sf2h.next30.packet.v1",
+  "slot": "N19",
+  "role": "new-implementer",
+  "lane": "native-ui",
+  "title": "Planner OPEX, CAPEX e headcount",
+  "execution_state": "PREPARED_NOT_STARTED",
+  "authorization": false,
+  "actor": null,
+  "lease": null,
+  "branch_hint": "sf-ux-n19",
+  "source": {
+    "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "work_order_blobs": {
+      "U07": "84f4958bb2e73515278b5bb8923511aa5b4cfe89",
+      "U08": "439654be5b5e842f04935af63c979e941a19a25c"
+    },
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "live_material": "REPIN_BY_114_AT_LAUNCH"
+  },
+  "scope": [
+    {
+      "order": "U07",
+      "output": "complete",
+      "title": "Planner OPEX e CAPEX mensal",
+      "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U07.json",
+      "surfaces": [
+        "CAP18",
+        "CAP19"
+      ],
+      "operation_refs": [
+        "contract-catalog.json#/operations/domain.command.CAP18.delete",
+        "contract-catalog.json#/operations/domain.command.CAP18.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP18.reset",
+        "contract-catalog.json#/operations/domain.command.CAP18.save",
+        "contract-catalog.json#/operations/domain.command.CAP18.spread",
+        "contract-catalog.json#/operations/domain.command.CAP19.delete",
+        "contract-catalog.json#/operations/domain.command.CAP19.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP19.reset",
+        "contract-catalog.json#/operations/domain.command.CAP19.save",
+        "contract-catalog.json#/operations/domain.command.CAP19.spread",
+        "contract-catalog.json#/operations/domain.page.CAP18",
+        "contract-catalog.json#/operations/domain.page.CAP19",
+        "contract-catalog.json#/operations/planner.monthly.apply",
+        "contract-catalog.json#/operations/planner.monthly.preview"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/index.tsx",
+          "symbol": "SfPlannerOpexView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/capex/index.tsx",
+          "symbol": "SfPlannerCapexView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "i18n_exports": [
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u07.ts",
+          "en_symbol": "SF_U07_COPY",
+          "pt_br_symbol": "SF_U07_COPY_BR",
+          "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+        }
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U07-AC01",
+          "expected": "Annual/monthly edit, spread/reset, preview and save use producer commands; 12-month grid retains blank/zero/inherited/locked semantics.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U07-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U07-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U07-TSV",
+          "expected": "Rows and 12 months support selection, paste, source preview, partial apply, denied/locked and conflict with unmodified original text; no silent truncation nor financial arithmetic.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U07.json"
+        ],
+        "contracts": [
+          "ctx",
+          "planner",
+          "surface-specs",
+          "ui-change-review",
+          "ui-frame",
+          "ui-grid"
+        ],
+        "surfaces": [
+          "CAP18",
+          "CAP19"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/planner",
+          "contract-catalog.json#/sources/renderer-CAP18",
+          "contract-catalog.json#/sources/renderer-CAP19"
+        ]
+      },
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "planner",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-grid",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A02",
+        "S02",
+        "S03"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02",
+          "F03",
+          "A02",
+          "S02",
+          "S03"
+        ],
+        "external": [
+          "Canonical producer releases and original blockers remain mandatory for qualification."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      }
+    },
+    {
+      "order": "U08",
+      "output": "complete",
+      "title": "Planner headcount e HR",
+      "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U08.json",
+      "surfaces": [
+        "CAP20"
+      ],
+      "operation_refs": [
+        "contract-catalog.json#/operations/domain.command.CAP20.delete",
+        "contract-catalog.json#/operations/domain.command.CAP20.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP20.save",
+        "contract-catalog.json#/operations/domain.command.CAP20.sync",
+        "contract-catalog.json#/operations/domain.page.CAP20",
+        "contract-catalog.json#/operations/planner.monthly.apply",
+        "contract-catalog.json#/operations/planner.monthly.preview"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "symbol": "SfPlannerHeadcountView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "i18n_exports": [
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u08.ts",
+          "en_symbol": "SF_U08_COPY",
+          "pt_br_symbol": "SF_U08_COPY_BR",
+          "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+        }
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U08-AC01",
+          "expected": "Roster sync previews source impact; FTE/rates/salary and authorized months preserve HR ACL and calculations.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U08-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U08-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U08.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "planner",
+          "surface-specs",
+          "ui-bi",
+          "ui-change-review",
+          "ui-frame",
+          "ui-grid"
+        ],
+        "surfaces": [
+          "CAP20"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/planner",
+          "contract-catalog.json#/sources/renderer-CAP20"
+        ]
+      },
+      "depends_authoring": [
+        {
+          "lock": "bi",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "planner",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-bi",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-grid",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A02",
+        "S02",
+        "S03",
+        "U20"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02",
+          "F03",
+          "A02",
+          "S02",
+          "S03",
+          "U20"
+        ],
+        "external": [
+          "Canonical producer releases and original blockers remain mandatory for qualification."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      }
+    }
+  ],
+  "write_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/planner/capex/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u07.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u07.spec.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u08.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u08.spec.ts"
+  ],
+  "protected_paths": [
+    "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+    "any active writer's paths W01–W19 or outside this packet"
+  ],
+  "test_files": [
+    "packages/app-shell/e2e/sucafina/native/journeys/u07.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u08.spec.ts"
+  ],
+  "critical_invariants": "MonthlyGrid S02 e adapter A02 preservados; TSV retangular e preview/apply, month index convertido uma vez, partial conflicts, zero/null, CAS por linha.",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N19/",
+  "handoff_to": "114 only",
+  "compiler": "119 only",
+  "tests": "120 via GitHub Actions only",
+  "notes": "Implement actual Solid native Orchestra UI using current components/providers and existing mock reference. Each source order's full acceptance remains mandatory. Read next30/COMMON.md and full individual work orders."
+}
