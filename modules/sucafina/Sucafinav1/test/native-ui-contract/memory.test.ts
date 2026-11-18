@@ -3,7 +3,6 @@ import { Schema } from "effect"
 import {
   SfMemory,
   SfIntelligenceMemoryCatalog,
-  SfIntelligenceMemorySimilarCases,
   SfIntelligenceMemoryCondition,
   SfIntelligenceMemoryConditions,
   SfIntelligenceMemoryMateriality,
@@ -12,19 +11,17 @@ import {
   SfIntelligenceMemorySignals,
 } from "../../../../../packages/schema/src/sucafina/memory.ts"
 
-// These codecs are pure: the union type widens the requirements channel, so the
-// single cast restores the never-requirement decoder they actually are.
-const decode = <A>(schema: Schema.Schema<A>, value: unknown): A =>
-  Schema.decodeUnknownSync(schema as Schema.Decoder<A, never>)(value)
+const decode = <S extends Schema.Top>(schema: S, value: unknown) =>
+  Schema.decodeUnknownSync(schema)(value)
 
 const query = { caseId: "case-1", incarnation: "inc-1", version: 3 }
-const period = { start: "2026-01-01", end: "2026-12-31" } as const
+const period = { start: "2026-01-01", end: "2026-12-31" }
 const digest = "a".repeat(64)
 const source = {
   surface: "planner", type: "planner-version", id: "version-1",
   incarnation: "inc-1", version: 2, fields: ["amount"], period,
   observedAt: "2026-11-15T00:00:00.000Z",
-} as const
+}
 const evidence = {
   schema: "sf-evidence-v1", kind: "record", refId: "evidence-1",
   installationId: "installation-1", projectId: "project-1",
@@ -34,25 +31,24 @@ const evidence = {
     incarnation: "inc-1", version: 2, fields: ["amount"], period,
     projectionDigest: digest,
   },
-} as const
+}
 const condition = {
   caseRef: { id: "case-1", incarnation: "inc-1", version: 3 },
   choiceId: "choice-1", scenarioRefs: ["base-1", "alternative-1"],
   source, evidence, fields: ["amount"], period,
   criterionId: "criterion-1", recipientRef: "principal-1",
   destination: "decision-review", label: "Review cost",
-} as const
+}
 const outcome = {
   caseRef: condition.caseRef, choiceId: "choice-1",
   criterionRef: "criterion-1", valueId: "cost-total", period,
   evidenceRefs: [evidence],
-} as const
+}
 
 describe("A14: closed memory operation catalog", () => {
-  test("the exact eight registered memory operation IDs and their schema exports stay stable", () => {
+  test("the exact seven operation IDs and their schema exports stay stable", () => {
     expect(Object.keys(SfMemory.operations)).toEqual([
       "intelligence.memory-catalog",
-      "intelligence.memory-similar-cases",
       "intelligence.memory-conditions",
       "intelligence.memory-signals",
       "intelligence.memory-materiality",
@@ -61,12 +57,6 @@ describe("A14: closed memory operation catalog", () => {
       "intelligence.memory-outcome-selection",
     ])
     expect(SfMemory.operations["intelligence.memory-catalog"]).toBe(SfIntelligenceMemoryCatalog)
-    expect(SfMemory.operations["intelligence.memory-similar-cases"]).toBe(SfIntelligenceMemorySimilarCases)
-    // The new read-only operation is neither a grant nor an unvalidated write.
-    const similar = { ...query, query: "supplier", period, includeHistorical: false,
-      candidates: [{ id: query.caseId, incarnation: query.incarnation, version: query.version }] }
-    expect(decode(SfIntelligenceMemorySimilarCases.input, similar)).toBeDefined()
-    expect(() => decode(SfIntelligenceMemorySimilarCases.input, { ...similar, actor: "admin" })).toThrow()
     expect(SfMemory.operations["intelligence.memory-conditions"]).toBe(SfIntelligenceMemoryConditions)
     expect(SfMemory.operations["intelligence.memory-signals"]).toBe(SfIntelligenceMemorySignals)
     expect(SfMemory.operations["intelligence.memory-materiality"]).toBe(SfIntelligenceMemoryMateriality)
@@ -119,7 +109,7 @@ describe("A14: closed memory operation catalog", () => {
     const one = { status: "ok", value: [
       { conditionId: "condition-1", revision: 2, choiceId: "choice-1",
         criterionId: "criterion-1", label: "Review", period },
-    ] } as const
+    ] }
     expect(decode(SfIntelligenceMemoryConditions.output, one)).toEqual(one)
     expect(decode(SfIntelligenceMemorySignals.output, { status: "unavailable" })).toEqual({ status: "unavailable" })
     expect(decode(SfIntelligenceMemorySignals.output, { status: "denied", reason: "memory-authority-unavailable" })).toEqual({
@@ -144,7 +134,7 @@ describe("A14: closed memory operation catalog", () => {
       cutoff: "2026-11-15T00:00:00.000Z",
       sourceRefs: [evidence], baselineRefs: [evidence], limitations: [],
       observation: { caseRef: condition.caseRef, expected: 0, observed: 0, cutoff: "2026-11-15T00:00:00.000Z", currency: "BRL", sourceRefs: [evidence], limitations: [] },
-    } as const
+    }
     expect(decode(SfIntelligenceMemoryOutcome.output, comparison)).toEqual(comparison)
     expect(decode(SfIntelligenceMemoryOutcome.output, { status: "unavailable" })).toEqual({ status: "unavailable" })
     expect(() => decode(SfIntelligenceMemoryOutcome.output, {
