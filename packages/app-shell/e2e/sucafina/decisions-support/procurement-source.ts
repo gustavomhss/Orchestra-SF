@@ -7,7 +7,9 @@ export async function createRequisition(page: Page, origin: string, observations
   await expect(form).toHaveCount(1)
   const title = "CI Decisions — explicit requisition proposal"
   await form.getByLabel("Title", { exact: true }).fill(title)
-  await form.getByLabel("Type", { exact: true }).selectOption("service")
+  const typeSelect = form.getByLabel("Type", { exact: true })
+  console.log("TRACE type disabled", await typeSelect.isDisabled(), JSON.stringify(await typeSelect.locator("option").evaluateAll((nodes) => nodes.map((node) => ({ value: (node as HTMLOptionElement).value, label: node.textContent })))))
+  await typeSelect.selectOption("service", { timeout: 8000 })
   await form.getByLabel("Description", { exact: true }).fill("Human requisition for the Decisions approval and recovery journey")
   await form.getByLabel("Estimated amount", { exact: true }).fill("100")
   await form.getByLabel("Cost centre", { exact: true }).fill("Decisions verification")
