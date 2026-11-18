@@ -10,8 +10,6 @@ import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase, sfFailureUiState, sfOperationReady } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
-import { SfAlternativeAuthoring } from "./authoring"
-import { SfEligibilityRegistration } from "./eligibility"
 import "../cases/n24.css"
 
 type ChoiceEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.choice.read"]["output"]>
@@ -20,13 +18,13 @@ type ReviewEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["decisi
 type ReviewValue = Extract<ReviewEnvelope, { status: "ok" }>["value"]
 const k = (value: string) => value as SfCopyKey
 
-/** UI35: source-backed comparison and independently authorized, CAS-bound human authorship. */
+/** UI35: strictly source-backed comparison. Never changes recorded choices. */
 export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const language = useLanguage()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const valid = () => props.surfaceId === "UI35"
   const route = () => valid() ? props.route as SfSurfaceProps<"UI35">["route"] : undefined
-  const sourceRef = () => { const value = route()?.params.caseRef; return value === undefined ? "" : String(value) }
+  const sourceRef = () => valid() ? String(props.route.params.caseRef) : ""
   const caseData = useSfCase(sourceRef)
   const [ui, setUi] = createStore<{
     selection: readonly string[]
@@ -153,7 +151,9 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
             onRetryRead={() => caseData.reload()} />
         }>
           {(record) => <>
-            <SfAlternativeAuthoring owner={caseData.owner} record={record()} onReload={() => caseData.reload()} />
+            <Show when={route()?.kind === "new"}>
+              <p role="status" class="sf-n24-status">{t("sf.ui35.newUnavailable")}</p>
+            </Show>
             <Show when={record().alternatives.length} fallback={<SfStatePanel state="empty" messageKey={k("sf.ui35.noItems")} />}>
               <div class="sf-n24-compare">
                 <For each={displayed()}>
@@ -209,9 +209,6 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                 <p role="status">{t("sf.ui35.incompatible")}</p>
               </Show>
             </Show>
-            <SfEligibilityRegistration owner={caseData.owner} record={record()}
-              selection={ui.selection} sameBasis={sameBasis()}
-              onReload={() => { caseData.reload(); setUi("readSequence", (value) => value + 1) }} />
             <section class="mx-card sf-n24-section" aria-label={t("sf.ui35.choice")}>
               <h2>{t("sf.ui35.choice")}</h2>
               <Show when={ui.choicesState === "ready" && ui.choices?.selected} fallback={
