@@ -17,7 +17,6 @@ import { createSfSourceScopeProjector } from "../../../product/integration/sourc
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createSfAtlasScanner } from "../../../product/host-binding/atlas-scanner.ts"
 import { createSfImportHttp } from "../../../product/interface/import-http.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { createSfDocumentTargetAuthority } from "../../../../../../apps/cli/src/sucafina-product/document-authority.ts"
 import { createSfImportServices } from "../../../../../../apps/cli/src/sucafina-product/import-services.ts"
 import { prepareAtlasScanner, syntheticScannerControl } from "./atlas-consumer-fixture.ts"
@@ -81,7 +80,7 @@ test("Dashboard app delegates reviewed JSON import and authorized report downloa
     const service = createSfImportServices({ runtime, authority })
     if (!service) throw new Error("The real import composition is unavailable")
     const product = createSfImportHttp({ origin, mount, runtime: () => ({ ui: authority.ui, human: authority.human, service }) })
-    const module = createModule(mount, { persistence, authenticate, environment, assets, maxJsonBytes: 100000, product, productHtml: decorateSfProductHtml })
+    const module = createModule(mount, { persistence, authenticate, environment, assets, maxJsonBytes: 100000, product })
     const send = async (query: string | URLSearchParams, init: RequestInit = {}, authenticated = true) => {
       const headers = new Headers(init.headers)
       if (authenticated) headers.set("cookie", cookie)

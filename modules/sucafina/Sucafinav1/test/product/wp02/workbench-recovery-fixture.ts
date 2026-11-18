@@ -12,7 +12,6 @@ import { enumerateSfSources } from "../../../product/integration/source-inventor
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -68,7 +67,7 @@ export async function createRecoveryFixture() {
     manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
   const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
   const http = createSfDashboardHttp({ origin, mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
-  const module = createModule("/sucafina", { persistence, authenticate, environment, product: http, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  const module = createModule("/sucafina", { persistence, authenticate, environment, product: http, maxJsonBytes: 100000 })
   routing.handle = async (request) => {
     const mode = new URL(request.url).searchParams.get("sf"), started = performance.now()
     const observation: (typeof httpTrace)[number] | undefined = mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft" ? { mode, method: request.method, state: "received" } : undefined
