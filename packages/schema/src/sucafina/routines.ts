@@ -88,31 +88,11 @@ const ScheduleDetailResult = Schema.Union([
   PortFailure,
 ])
 
-/** Genuine native execution receipt. Only an authorized C08 reader may mark output verified. */
-export const SfRoutineExecutionProof = Schema.Struct({
-  execution: optional(Schema.Struct({
-    runRef: Ref,
-    resultRef: optional(Schema.String),
-    state: Schema.Literals(["requested", "admission-pending", "preparing", "completed", "failed", "cancelled"]),
-    revision: Ref,
-    outputDigest: optional(Schema.String),
-  })),
-  verifier: Schema.Literals(["verified", "pending", "failed", "cancelled", "unavailable"]),
-  output: optional(Schema.Struct({
-    runRef: Ref, resultRef: Ref, outputDigest: Ref,
-    createdAt: Schema.String, content: Schema.Json,
-  })),
-  reason: optional(Schema.String),
-})
-
 /** The only new GET projection A09 owns; producer is sf_routine_status. */
 export const SfProjectionRoutine = {
   operationId: "projection.routine",
   input: Schema.Struct({ runRef: Ref }),
-  output: Schema.Union([
-    Schema.Struct({ status: Schema.Literal("ok"), value: SfRoutineResult, proof: optional(SfRoutineExecutionProof) }),
-    PortFailure,
-  ]),
+  output: portResult(SfRoutineResult),
 } as const
 
 /** Original BusinessPorts.routines signatures, wrapped in a current case fence. */
