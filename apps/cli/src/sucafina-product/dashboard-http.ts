@@ -7,11 +7,11 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 import type { SfHumanAction } from "../../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { createSfDashboardServices, DashboardAgendaRequest, DashboardReviewRequest } from "./dashboard-services.ts"
-import type { createSfDashboardDecisions, DashboardPrepareRequest, DashboardDraftReadRequest } from "./dashboard-decisions.ts"
+import type { createSfDashboardDecisions, DashboardPrepareRequest } from "./dashboard-decisions.ts"
 
 type Runtime = { authority: ReturnType<typeof createSfProductAuthority>; dashboard: ReturnType<typeof createSfDashboardServices>; decisions: ReturnType<typeof createSfDashboardDecisions> }
 const modes = ["dashboard-workbench", "dashboard-agenda", "dashboard-review-preserve", "dashboard-review", "dashboard-capture", "dashboard-history", "dashboard-hot-topic-source",
-  "dashboard-draft-read", "dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
+  "dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
 
 /** Same-origin host routes. Browser payloads contain selections and human intent, never private commands. */
 export function createSfDashboardHttp(input: { origin: string; mount: string; runtime: () => Runtime | undefined }) {
@@ -39,23 +39,13 @@ export function createSfDashboardHttp(input: { origin: string; mount: string; ru
       ["dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome"].includes(mode!) ? "decisions.edit" : mode === "dashboard-hot-topic-prepare" ? "decisions.prepare-changes" : mode === "dashboard-hot-topic-apply" ? "decisions.apply" : undefined
     const digest = digestSfValue(payload)
     const admitted = action ? await runtime.authority.human.admit(request, action, payload) : await runtime.authority.ui.admit(request, "sf_dashboard_read", digest)
-    if (admitted.status !== "ok") {
-      if (action) return reply({ status: admitted.status }, admitted.status === "denied" ? 403 : 503)
-      // UI admission deliberately hides resolution errors behind a denied result.
-      // A data-free C08 read distinguishes an actual missing read grant/session
-      // from interrupted authority resolution. The probe never admits this call.
-      const current = await runtime.authority.state.read(request, "cases", () => null).catch(() => undefined)
-      const revoked = !request.signal.aborted && current?.status === "denied" && current.reason === "product-access-unavailable"
-      return reply({ status: revoked ? "denied" : "unavailable" }, revoked ? 403 : 503)
-    }
+    if (admitted.status !== "ok") return reply({ status: admitted.status },
+      mode === "dashboard-hot-topic-draft-outcome" && admitted.status !== "denied" ? 503 : 403)
     try {
-      if (!action && !await runtime.authority.ui.validate(admitted.value, "sf_dashboard_read", digest)) return reply({ status: "unavailable" }, 503)
+      if (!action && !await runtime.authority.ui.validate(admitted.value, "sf_dashboard_read", digest)) return reply({ status: "denied" }, 403)
       const result = await dispatch(runtime, mode!, payload, admitted.value)
       if (!result) return reply({ status: "invalid" }, 400)
-      // An unavailable/changed read contains no private projection to release.
-      // A lost context is not affirmative evidence that the local form was revoked.
-      if (mode !== "dashboard-draft-read" && !await runtime.authority.host.revalidate(admitted.value))
-        return reply({ status: action ? "denied" : "unavailable" }, action ? 403 : 503)
+      if (!await runtime.authority.host.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
       return reply(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
     } catch { return reply({ status: "unavailable", reason: "dashboard-operation-unavailable" }, 503) }
     finally { runtime.authority.ui.finish(admitted.value) }
@@ -87,7 +77,6 @@ async function dispatch(runtime: Runtime, mode: string, value: unknown, context:
   if (mode === "dashboard-hot-topic-draft" && isDraft(value)) return runtime.decisions.drafts.register(value, context)
   if (mode === "dashboard-hot-topic-draft-outcome" && keys(payload, ["caseRef"]) && isCaseRef(payload.caseRef))
     return runtime.decisions.drafts.lookupFirstSave({ caseRef: payload.caseRef }, context)
-  if (mode === "dashboard-draft-read" && isDraftRead(value)) return runtime.decisions.revalidateDraftRead(value, context)
   if (mode === "dashboard-hot-topic-drafts" && keys(payload, ["caseRef"]) && isCaseRef(payload.caseRef)) return runtime.decisions.drafts.list({ caseRef: payload.caseRef }, context)
   if (mode === "dashboard-hot-topic-operation" && keys(payload, ["caseRef", "draftRef", "operation"]) && isCaseRef(payload.caseRef) && text(payload.draftRef)) {
     const operation = object(payload.operation)
@@ -129,14 +118,6 @@ function isDraft(value: unknown): value is HotTopicDraftRequest {
     keys(fields, ["action", "owner", "due", "priority", "notes"]) && text(fields.action) && text(fields.owner) && text(fields.due) && ["critical", "high", "normal"].includes(String(fields.priority)) && typeof fields.notes === "string" && fields.notes.length <= 16_384 &&
     Array.isArray(request.sourceRefs) && request.sourceRefs.length > 0 && request.sourceRefs.length <= 100 && request.sourceRefs.every((ref) => object(ref).kind === "record" && text(object(ref).refId)) &&
     typeof request.expectedVersion === "number" && Number.isSafeInteger(request.expectedVersion) && request.expectedVersion >= 0 && (request.draftRef === undefined || text(request.draftRef))
-}
-function isDraftRead(value: unknown): value is DashboardDraftReadRequest {
-  const request = object(value), evidence = object(request.targetEvidence), target = object(evidence.target)
-  return keys(request, ["caseRef", "targetEvidence"], ["draftRef"]) && isCaseRef(request.caseRef) && (request.draftRef === undefined || text(request.draftRef)) &&
-    keys(evidence, ["schema", "kind", "refId", "refDigest", "installationId", "projectId", "evidenceLevel", "target"]) && evidence.schema === "sf-evidence-v1" && evidence.kind === "record" && evidence.evidenceLevel === "observed" &&
-    text(evidence.refId) && text(evidence.refDigest) && text(evidence.installationId) && text(evidence.projectId) &&
-    keys(target, ["surface", "recordType", "recordId", "incarnation", "version", "fields", "period", "projectionDigest"]) && target.surface === "dashboard" && target.recordType === "hotTopics" &&
-    text(target.recordId) && text(target.incarnation) && typeof target.version === "number" && Number.isSafeInteger(target.version) && target.version > 0 && strings(target.fields) && isSfPeriod(target.period) && text(target.projectionDigest)
 }
 async function boundedJson(request: Request): Promise<unknown> {
   if (!request.body) return undefined

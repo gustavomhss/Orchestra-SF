@@ -24,7 +24,6 @@ import { createDashboardPreparedMutation } from "../../../../modules/sucafina/Su
 import { createDashboardPreparedReview } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/prepared-review.ts"
 import type { DashboardMutationScope } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/mutation-scope.ts"
 import type { createDashboardConfirmationIssuer } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts"
-import type { createDashboardConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts"
 import type { createDashboardRecordEvidenceHost } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { projectSfSourceScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
@@ -35,7 +34,6 @@ import { createSfPreparedApplicationEgress } from "./prepared-application-egress
 
 type CaseRef = { id: string; incarnation: string; version: number }
 export type DashboardPrepareRequest = { caseRef: CaseRef; choiceId: string; draftRef: string }
-export type DashboardDraftReadRequest = { caseRef: CaseRef; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; draftRef?: string }
 export type DashboardPreparedBinding = {
   schema: "sf-dashboard-prepared-binding-v1"
   caseRef: CaseRef
@@ -62,7 +60,6 @@ export function createSfDashboardDecisions(input: {
   cases: DecisionCasePort
   records: ReturnType<typeof createDashboardRecordEvidenceHost>
   issue: ReturnType<typeof createDashboardConfirmationIssuer>
-  preparePrivateDraftRead?: ReturnType<typeof createDashboardConfirmationObserver>["preparePrivateDraftRead"]
   proposalCoverageWrites: WeakSet<object>
   dashboardHostWrites: WeakSet<object>
 }) {
@@ -113,100 +110,6 @@ export function createSfDashboardDecisions(input: {
     },
     operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined,
     proposalCoverageWrites: input.proposalCoverageWrites, createId: randomUUID, now: () => new Date().toISOString() })
-  // A changed write scope must not erase an authorized private form. This read
-  // proves its original owner and physical source, without replacing its write
-  // binding or treating a bounded discovery list as an authorization decision.
-  const revalidateDraftRead = async (selection: DashboardDraftReadRequest, context: TrustedDomainContext) => {
-    const denied = { status: "denied" as const, reason: "private-draft-access-unavailable" }
-    const unavailable = { status: "unavailable" as const, reason: "private-draft-check-unavailable" }
-    const stale = { status: "stale" as const, reason: "private-draft-changed-during-read" }
-    const source = host.requestFor(context)
-    if (!source || source.signal.aborted || !await host.revalidate(context)) return unavailable
-    if (!host.persistence.transactionAll || !input.preparePrivateDraftRead) return unavailable
-    const request = structuredClone(selection)
-    const selected = await input.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, context)
-    if (selected.status !== "ok") return selected.status === "denied" && (["invalid-authority", "product-authority-changed"].includes(selected.reason) || !await host.revalidate(context)) ? unavailable : selected
-    const current = await state.read(source, "cases", (stored, authority) => sameAuthority(authority, context) ? { case: stored.cases[request.caseRef.id] } : undefined)
-    if (current.status !== "ok") return current.status === "denied" && current.reason === "product-access-unavailable" ? denied : unavailable
-    if (!current.value) return unavailable
-    const decision = current.value.case
-    if (!decision || decision.incarnation !== request.caseRef.incarnation || !decision.participants.includes(context.binding.principalRef)) return denied
-    if (decision.version !== selected.value.case.version) return stale
-    const caseDigest = digestSfValue(decision)
-    const privateRecords = new Map<string, string>()
-    let activeDraft: HotTopicDraft | undefined
-    if (request.draftRef) {
-      const historicalKey = `sf:proposal-coverage:hot-topic:history:${digestSfValue(request.draftRef)}`
-      const stored = await state.read(source, "preferences", (value, authority) => {
-        if (!sameAuthority(authority, context)) return undefined
-        const historical = object(value.preferences[historicalKey])
-        const activeKey = typeof historical.id === "string" ? `sf:proposal-coverage:hot-topic:active:${digestSfValue(historical.id)}` : ""
-        return { historical, activeKey, active: object(value.preferences[activeKey]) }
-      })
-      if (stored.status !== "ok") return stored.status === "denied" && stored.reason === "product-access-unavailable" ? denied : unavailable
-      if (!stored.value) return unavailable
-      const { historical, active, activeKey } = stored.value
-      const owned = (value: Record<string, unknown>): value is HotTopicDraft => value.schema === "sf-hot-topic-draft-v1" && value.principalRef === context.binding.principalRef &&
-        typeof value.id === "string" && !!value.id && typeof value.incarnation === "string" && !!value.incarnation && typeof value.draftRef === "string" &&
-        typeof value.version === "number" && Number.isSafeInteger(value.version) && value.version >= 1 && Array.isArray(value.sourceRefs) &&
-        ["action", "owner", "due", "notes"].every((field) => typeof object(value.fields)[field] === "string") && ["critical", "high", "normal"].includes(String(object(value.fields).priority)) &&
-        object(value.caseRef).id === request.caseRef.id && object(value.caseRef).incarnation === request.caseRef.incarnation &&
-        value.recordDigest === digestSfValue(Object.fromEntries(Object.entries(value).filter(([name]) => name !== "recordDigest")))
-      if (!owned(historical) || !owned(active) || historical.draftRef !== request.draftRef || historical.id !== active.id || historical.incarnation !== active.incarnation ||
-        digestSfValue(historical.targetEvidence) !== digestSfValue(request.targetEvidence)) return denied
-      // Draft-only extra sources are not implicitly covered by the target. Only
-      // exact refs reauthorized by the canonical case read may accompany it.
-      const covered = (value: Record<string, unknown>) => Array.isArray(value.sourceRefs) && value.sourceRefs.length > 0 && value.sourceRefs.every((ref) =>
-        digestSfValue(ref) === digestSfValue(value.targetEvidence) || selected.value.evidenceRefs.some((allowed) => digestSfValue(allowed) === digestSfValue(ref)))
-      if (!covered(historical) || !covered(active)) return unavailable
-      const activeTarget = object(object(active.targetEvidence).target)
-      if (activeTarget.surface !== "dashboard" || activeTarget.recordType !== "hotTopics" || activeTarget.recordId !== request.targetEvidence.target.recordId ||
-        !Number.isSafeInteger(active.version) || Number(active.version) < Number(historical.version) || typeof active.draftRef !== "string" || !active.fields ||
-        active.caseScopeDigest !== digestSfValue({ id: decision.id, incarnation: decision.incarnation, horizon: decision.horizon, currency: decision.currency, criteria: decision.criteria })) return unavailable
-      activeDraft = active
-      privateRecords.set(historicalKey, digestSfValue(historical))
-      privateRecords.set(activeKey, digestSfValue(active))
-    }
-    const proof = await input.preparePrivateDraftRead(request.targetEvidence, context)
-    if (proof.status !== "ok") return proof
-    const activeProof = activeDraft ? await input.preparePrivateDraftRead(activeDraft.targetEvidence, context) : proof
-    if (activeProof.status !== "ok") return activeProof
-    if (digestSfValue(activeProof.value.evidence) !== digestSfValue(proof.value.evidence)) return stale
-    const field = (name: string) => proof.value.projection.values.find((value) => value.id === `hotTopics:${encodeURIComponent(request.targetEvidence.target.recordId)}:${name}`)?.value
-    const action = field("action"), owner = field("owner"), due = field("due"), priority = field("priority"), notes = field("notes")
-    const target = proof.value.projection.context.sourceRefs[0]
-    if (!target || typeof action !== "string" || typeof owner !== "string" || typeof due !== "string" || typeof notes !== "string" ||
-      (priority !== "critical" && priority !== "high" && priority !== "normal")) return unavailable
-    const actions = await input.authority.humanActions(source)
-    // Cases can include independently protected sources. Re-read those producers
-    // between complete C08/source snapshots, outside the lock: their reads may
-    // issue scoped evidence and must never become a nested writer.
-    const captured = await host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }), { signal: source.signal })
-    const again = await input.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, context)
-    if (again.status !== "ok") return again.status === "denied" && (["invalid-authority", "product-authority-changed"].includes(again.reason) || !await host.revalidate(context)) ? unavailable : again
-    if (digestSfValue(again.value.case) !== digestSfValue(selected.value.case) || digestSfValue(again.value.evidenceRefs) !== digestSfValue(selected.value.evidenceRefs)) return stale
-    const stable = await host.persistence.transactionAll(async (snapshots) => {
-      const product = object(snapshots.dashboard.data.__sfProductV1)
-      const actual = object(object(product.cases)[request.caseRef.id])
-      const preferences = object(product.preferences)
-      return { commit: false, value: digestSfValue(snapshots) === captured && digestSfValue(actual) === caseDigest && Array.isArray(actual.participants) && actual.participants.includes(context.binding.principalRef) &&
-        [...privateRecords].every(([key, digest]) => digestSfValue(preferences[key]) === digest) && await proof.value.fence() && await activeProof.value.fence() }
-    }, { signal: source.signal }).catch(() => undefined)
-    // Both source fences revalidate authority while the C08 lock is held. Do not
-    // open another asynchronous gap between that final observation and release.
-    if (source.signal.aborted || host.requestFor(context) !== source) return unavailable
-    if (stable === undefined) return unavailable
-    if (!stable) return stale
-    return { status: "ok" as const, value: {
-      caseRef: { id: decision.id, incarnation: decision.incarnation, version: decision.version }, label: decision.objective,
-      originalSource: { refId: request.targetEvidence.refId, refDigest: request.targetEvidence.refDigest }, currentSource: proof.value.evidence,
-      permissions: { draft: actions.includes("decisions.edit"), prepare: actions.includes("decisions.prepare-changes"), apply: actions.includes("decisions.apply"),
-        capture: actions.includes("reviews.preserve"), preserve: actions.includes("reviews.preserve") },
-      source: { label: action, sourceRef: proof.value.evidence.refId, draft: { target, targetEvidence: proof.value.evidence, fields: { action, owner, due, priority, notes } } },
-      ...(activeDraft ? { draft: { id: activeDraft.id, incarnation: activeDraft.incarnation, draftRef: activeDraft.draftRef, version: activeDraft.version,
-        caseRef: activeDraft.caseRef, fields: activeDraft.fields, target: activeDraft.target, targetEvidence: activeDraft.targetEvidence, sourceRefs: activeDraft.sourceRefs } } : {}),
-    } }
-  }
   const load = async (ref: CaseRef, context: TrustedDomainContext) => {
     const request = host.requestFor(context)
     if (!request || !await host.revalidate(context)) return undefined
@@ -298,7 +201,6 @@ export function createSfDashboardDecisions(input: {
       return { state: receipt.result.ok ? "applied" : receipt.result.status === 409 ? "conflict" : "failed", evidence: { ...initial, refDigest: digestSfEvidenceRef(initial) } }
     } })
   return {
-    revalidateDraftRead,
     resolveEvidence: evidence.resolveEvidence,
     proveContinuity: evidence.proveContinuity,
     discover: async (context: TrustedDomainContext) => {
