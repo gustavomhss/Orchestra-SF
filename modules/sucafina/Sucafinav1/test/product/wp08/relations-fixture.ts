@@ -46,23 +46,19 @@ function businessSnapshot(snapshot: Snapshot) {
 }
 
 /** Real SQLite, source producers and human admission; authentication is an explicit test fixture. */
-export async function createRelationsFixture(options: { threadHistoryWrites?: WeakSet<object>; clock?: { at: string } } = {}) {
+export async function createRelationsFixture() {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-relations-sources-"))
   await chmod(directory, 0o700)
-  const resources = { store: await openLocalStore(directory) }
-  const store = resources.store
-  if (!store.transactionAll) throw new Error("SQLite fixture requires transactionAll")
-  const clock = options.clock ?? { at: "2026-11-13T00:00:00Z" }
+  const store = await openLocalStore(directory)
+  const transactionAll = store.transactionAll
+  if (!transactionAll) throw new Error("SQLite fixture requires transactionAll")
+  const at = "2026-11-13T00:00:00Z"
   const period = { start: "2026-01-01", end: "2026-12-31" }
   const gate = { active: true, dashboard: true, procurement: true, planner: true }
   const person = { id: "person", name: "Person" }
-  const environment = (id: string = randomUUID()) => ({ at: clock.at, id: () => id, directory: [person] })
+  const environment = (id: string = randomUUID()) => ({ at, id: () => id, directory: [person] })
   const actor = { id: person.id, roles: ["admin", "buyer"], canWrite: true }
-  const persistence = createSfSourcePersistence({ persistence: {
-    transaction: (surface, work, options) => resources.store.transaction(surface, work, options),
-    transactionAll: (work, options) => resources.store.transactionAll!(work, options),
-    currentSnapshots: () => resources.store.currentSnapshots?.(),
-  }, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at) })
+  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
   for (const surface of ["dashboard", "planner", "procurement"] as const) {
     await persistence.initializeSources(surface)
     await persistence.transaction(surface, async (snapshot) => {
@@ -82,12 +78,12 @@ export async function createRelationsFixture(options: { threadHistoryWrites?: We
   const secondSupplier = await mutate("procurement", ProcurementModule.domain, { page: "Suppliers", action: "create", version: 0, values: { legalName: "Same Vendor", taxId: "B", categories: ["IT"] } }, "supplier-B")
   await mutate("planner", PlannerModule.domain, { page: "Versions", action: "save", version: 0, values: {} }, "planner-version")
   const request = () => new Request("https://example.test/product", { method: "POST", headers: { origin: "https://example.test", actor: person.id } })
-  const ui = createSfUiAuthority({ authorize: async (candidate) => gate.active && candidate.headers.get("actor") === person.id ? { installationId: "installation", projectId: "project", principalRef: person.id, accessRevision: "access", policyVersion: "policy" } : undefined, commandIdentity: async () => randomUUID(), createId: randomUUID, now: () => Date.parse(clock.at), privateCommands: collaborationHumanActions.map((action) => `sf-human:${action}`) })
+  const ui = createSfUiAuthority({ authorize: async (candidate) => gate.active && candidate.headers.get("actor") === person.id ? { installationId: "installation", projectId: "project", principalRef: person.id, accessRevision: "access", policyVersion: "policy" } : undefined, commandIdentity: async () => randomUUID(), createId: randomUUID, now: () => Date.parse(at), privateCommands: collaborationHumanActions.map((action) => `sf-human:${action}`) })
   const human = createCollaborationHumanAuthority({ origin: "https://example.test", ui })
   const host: DomainPortHost = {
     persistence,
     authenticate: async (candidate, options) => gate.active && candidate.headers.get("actor") === person.id && options && gate[options.surface] ? resolve(person.id, [...options.roleMap], (group) => ["admins", "buyers"].includes(group)) : null,
-    environment: async () => ({ at: clock.at, id: randomUUID, directory: [person] }),
+    environment: async () => ({ at, id: randomUUID, directory: [person] }),
     requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined,
     revalidate: async (context) => context.kind === "ui" && await ui.revalidate(context),
   }
@@ -101,22 +97,16 @@ export async function createRelationsFixture(options: { threadHistoryWrites?: We
   const evidence = createSfBusinessContext({ revalidate: host.revalidate, resolveSource: async (ref, context) => {
     const result = ref.kind !== "record" ? undefined : ref.target.surface === "dashboard" ? await records.resolve(ref.refId, context) : ref.target.surface === "procurement" ? await suppliers.resolve(ref.refId, context) : undefined
     const current = result?.status === "ok" ? "evidence" in result.value ? result.value.evidence : result.value : undefined
-    return { state: current && digestSfValue(current) === digestSfValue(ref) ? "fresh" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: clock.at }
+    return { state: current && digestSfValue(current) === digestSfValue(ref) ? "fresh" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
   }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
-  const creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string }> = {
-    ref: `sf-workspace:${encodeURIComponent(read.binding.installationId)}`,
-    incarnation: read.binding.installationId,
-  }
-  const state = createSfProductState({ threadHistoryWrites: options.threadHistoryWrites, persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => gate.active && candidate.headers.get("actor") === person.id ? { principalRef: person.id, accessRevision: "access", policyVersion: "policy" } : undefined })
+  const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
+  const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => gate.active && candidate.headers.get("actor") === person.id ? { principalRef: person.id, accessRevision: "access", policyVersion: "policy" } : undefined })
   const authority = createCollaborationAuthority({ host, evidence })
   const mutationFence = createCollaborationMutationFence(host)
-  const relations = createRelationPort({ state, host, human, mutationFence, creationTarget, handoffPermit: Symbol("fixture"), authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, createId: randomUUID, now: () => clock.at })
-  const threads = createThreadPort({ state, host, human, mutationFence, creationTarget, authorize: authority.authorizeThread, checkRecipientAtCommit: authority.checkRecipientAtCommit, createId: randomUUID, now: () => clock.at })
-  return { clock, store, persistence, period, person, gate, request, read, admit, records, suppliers, state, relations, threads, mutate, secondSupplier, host, human, evidence, creationTarget, authority, mutationFence, ui,
-    snapshots: () => resources.store.transactionAll!(async (snapshots) => ({ commit: false, value: { dashboard: businessSnapshot(snapshots.dashboard), planner: businessSnapshot(snapshots.planner), procurement: businessSnapshot(snapshots.procurement) } })),
-    reopen: async () => { const previous = resources.store; await previous.dispose(); resources.store = await openLocalStore(directory); return previous },
-    dispose: async () => { await resources.store.dispose(); await rm(directory, { recursive: true, force: true }) },
+  const relations = createRelationPort({ state, host, human, mutationFence, creationTarget, handoffPermit: Symbol("fixture"), authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, createId: randomUUID, now: () => at })
+  const threads = createThreadPort({ state, host, human, mutationFence, creationTarget, authorize: authority.authorizeThread, checkRecipientAtCommit: authority.checkRecipientAtCommit, createId: randomUUID, now: () => at })
+  return { store, persistence, period, person, gate, request, read, admit, records, suppliers, state, relations, threads, mutate, secondSupplier, host, human, evidence, creationTarget, authority, mutationFence, ui,
+    snapshots: () => transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: businessSnapshot(snapshots.dashboard), planner: businessSnapshot(snapshots.planner), procurement: businessSnapshot(snapshots.procurement) } })),
+    dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
   }
 }
-
-

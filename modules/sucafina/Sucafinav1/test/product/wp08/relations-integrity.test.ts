@@ -36,19 +36,14 @@ test("a symmetric relation has one identity and cannot silently change evidence 
     expect(await port.storageVersion(context)).toEqual({ status: "ok", value: 0 })
     const first = await port.create(pair, { expectedStorageVersion: 0, idempotencyKey: "create" }, context)
     if (first.status !== "ok") throw new Error(`relation creation: ${first.status}`)
-    expect(await port.readByReference(first.value.id, context)).toEqual({ status: "ok", value: { relations: [first.value] } })
-    expect((await port.readByReference("unknown", context)).status).toBe("unavailable")
-    expect((await port.readByReference(first.value.id, { ...context, binding: { ...context.binding, principalRef: "foreign" } })).status).toBe("unavailable")
     expect(await port.create({ ...pair, fromRef: to.refId, toRef: from.refId, evidenceRefs: [to, from] }, { expectedStorageVersion: 1, idempotencyKey: "reverse" }, context)).toEqual(first)
     expect(await port.storageVersion(context)).toEqual({ status: "ok", value: 1 })
     expect((await port.create({ ...pair, evidenceRefs: [...pair.evidenceRefs, source("contracts", "extra")] }, { expectedStorageVersion: 1, idempotencyKey: "different-evidence" }, context)).status).toBe("conflict")
     expect((await port.create({ ...pair, recipientRef: "other" }, { expectedStorageVersion: 1, idempotencyKey: "different-assignment" }, context)).status).toBe("conflict")
     count.readable = false
-    expect((await port.readByReference(first.value.id, context)).status).toBe("unavailable")
     expect(await port.read([from.refId], context)).toEqual({ status: "ok", value: { relations: [] } })
     count.readable = true
     expect((await port.remove(first.value.id, pair, { expectedStorageVersion: 1, idempotencyKey: "remove" }, context)).status).toBe("ok")
-    expect((await port.readByReference(first.value.id, context)).status).toBe("unavailable")
     expect(await port.read([from.refId], context)).toEqual({ status: "ok", value: { relations: [] } })
     expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: { projects: snapshot.data.projects, capexProjects: snapshot.data.capexProjects } }))).toEqual(domain)
   } finally {

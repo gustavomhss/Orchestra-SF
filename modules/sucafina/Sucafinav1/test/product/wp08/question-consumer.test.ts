@@ -41,12 +41,7 @@ async function fixture(narrowCase = false) {
       if (!await f.ui.validate(context, operation, digestSfValue(payload))) throw new Error(`read admission failed: ${operation}`)
       return context
     }
-    const cases = createDecisionCasePort({ host: f.host, state, creationTarget: f.creationTarget, operationIdentity: (context) => context.kind === "ui" ? f.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await f.host.revalidate(context), verifyScenarioOperations: async (value, context) => {
-    const request = f.host.requestFor(context)
-    const selectedDigest = digestSfValue(value)
-    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
-    return await f.host.revalidate(context) && f.host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
-  }, evidence: f.evidence, createId: randomUUID, now })
+    const cases = createDecisionCasePort({ host: f.host, state, creationTarget: f.creationTarget, operationIdentity: (context) => context.kind === "ui" ? f.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await f.host.revalidate(context), evidence: f.evidence, createId: randomUUID, now })
     const draft = { objective: "Review delivery in the selected cycle", horizon, currency: "USD", criteria: ["Delivery is understood"], sourceRefs: [source] }
     const decision = available(await cases.draft(draft, await readContext("sf_case_draft", draft)))
     const caseRef = encodeCaseRef(decision)

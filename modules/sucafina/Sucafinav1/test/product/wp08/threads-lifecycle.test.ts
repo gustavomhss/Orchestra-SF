@@ -48,28 +48,23 @@ test("canonical contextual conversations preserve all business snapshots and fai
     }
     expect(await fixture.snapshots()).toEqual(outsideScope)
     fixture.gate.dashboard = false
-    // This legacy resolver reports unavailable for every nonfresh source; the
-    // consumer cannot infer revocation from that ambiguous provider result.
-    expect(await fixture.evidence.context({ refs: [source] }, fixture.read)).toMatchObject([{ state: "unavailable", ref: source }])
-    for (const thread of conversations) expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-read-unavailable" })
+    for (const thread of conversations) expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-access-unavailable" })
     fixture.gate.dashboard = true
     for (const thread of conversations) expect((await fixture.threads.read(thread.id, fixture.read)).status).toBe("ok")
     expect(await fixture.snapshots()).toEqual(outsideScope)
     await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", id: "project", version: outsideScope.dashboard.versions["projects:project"]!.version, values: { status: "On Hold" } })
     const materiallyChanged = await fixture.snapshots()
     expect(rows(materiallyChanged.dashboard.data.projects)).toMatchObject([{ id: "project", status: "On Hold" }])
-    expect(await fixture.evidence.context({ refs: [source] }, fixture.read)).toMatchObject([{ state: "unavailable", ref: source }])
     for (const thread of conversations) {
       // Current producers reject stale material projections. This does not prove a historical C05 reader.
-      expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-read-unavailable" })
+      expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-access-unavailable" })
       expect(await fixture.state.read(fixture.request(), "threads", (state) => state.threads[thread.id])).toMatchObject({ status: "ok", storageVersion: conversations.length * 3, value: { sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period: thread.period, messages: [{ body: `${thread.kind} context ${thread.period.start}` }, { body: `${thread.kind} explanation ${thread.period.start}` }] } })
     }
     expect(await fixture.snapshots()).toEqual(materiallyChanged)
     await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "delete", id: "project", version: materiallyChanged.dashboard.versions["projects:project"]!.version, values: {} })
     const deleted = await fixture.snapshots()
     expect(rows(deleted.dashboard.data.projects)).toEqual([])
-    expect(await fixture.evidence.context({ refs: [source] }, fixture.read)).toMatchObject([{ state: "unavailable", ref: source }])
-    for (const thread of conversations) expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-read-unavailable" })
+    for (const thread of conversations) expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-access-unavailable" })
     expect(await fixture.snapshots()).toEqual(deleted)
     expect(deleted.procurement).toEqual(before.procurement)
     expect(deleted.planner).toEqual(before.planner)

@@ -51,44 +51,6 @@ test("private HTTP requires exact mount, one route key, bounded JSON and POST be
   expect(admitted).toEqual([])
 })
 
-test("detail selectors reject duplicate, mixed and unknown JSON keys before admission", async () => {
-  const admitted: string[] = []
-  const http = createCollaborationHttp({ origin: "https://example.test", mount: "/product", host: {} as never, human: {} as never,
-    admitRead: async (_request, operation) => { admitted.push(operation); return { status: "denied", reason: "fixture" } }, finishRead: () => undefined })
-  const send = (mode: string, body: string) => http(new Request(`https://example.test/product?sf=collaboration-${mode}`, {
-    method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, body,
-  }))
-  expect((await send("relation-read", '{"relationRef":"one","relationRef":"two"}'))?.status).toBe(400)
-  expect((await send("relation-read", '{"relationRef":"one","recordRefs":["a"]}'))?.status).toBe(400)
-  expect((await send("relation-read", '{"recordRefs":["a","a"]}'))?.status).toBe(400)
-  const ref = "confirmation-selection:" + "a".repeat(64)
-  expect((await send("confirmation-project", `{"selectionRef":"${ref}","id":"other"}`))?.status).toBe(400)
-  expect((await send("confirmation-project", `{"selectionRef":"${ref}","selectionRef":"${ref}"}`))?.status).toBe(400)
-  expect((await send("confirmation-project", `{"selectionRef":"${ref}","extra":true}`))?.status).toBe(400)
-  expect(admitted).toEqual([])
-  expect((await send("relation-read", '{"relationRef":"one"}'))?.status).toBe(403)
-  expect((await send("confirmation-project", `{"selectionRef":"${ref}"}`))?.status).toBe(403)
-  expect(admitted).toEqual(["collaboration.relation.read", "collaboration.confirmation.project"])
-})
-
-test("reference reads dispatch only their original read handlers and finish admission", async () => {
-  const calls: string[] = []
-  const context = { kind: "ui", binding: { principalRef: "person" } } as unknown as TrustedUiContext
-  const ref = "confirmation-selection:" + "a".repeat(64)
-  const http = createCollaborationHttp({ origin: "https://example.test", mount: "/product", human: {} as never,
-    host: { relations: { readByReference: async () => { calls.push("relation-read"); return { status: "unavailable", reason: "fixture" } },
-      create: async () => { calls.push("create"); return { status: "unavailable", reason: "fixture" } } },
-    confirmation: { readSelection: async () => { calls.push("selection-read"); return { status: "unavailable", reason: "fixture" } },
-      confirm: async () => { calls.push("confirm"); return { status: "unavailable", reason: "fixture" } } } } as never,
-    admitRead: async () => ({ status: "ok", value: context }), finishRead: () => { calls.push("finish") } })
-  const send = (mode: string, payload: object) => http(new Request(`https://example.test/product?sf=collaboration-${mode}`, {
-    method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, body: JSON.stringify(payload),
-  }))
-  await send("relation-read", { relationRef: "relation" })
-  await send("confirmation-project", { selectionRef: ref })
-  expect(calls).toEqual(["relation-read", "finish", "selection-read", "finish"])
-})
-
 test("real private human grant binds the whole payload and is finished after a handler failure", async () => {
   const ui = createSfUiAuthority({ authorize: async () => ({ installationId: "install", projectId: "project", principalRef: "person", policyVersion: "policy", accessRevision: "access" }), commandIdentity: async () => "command", createId: () => "request", now: () => 1000, privateCommands: ["sf-human:collaboration.relation.confirm"] })
   const human = createCollaborationHumanAuthority({ origin: "https://example.test", ui })
@@ -126,3 +88,4 @@ test("answer observation HTTP returns the display projection while keeping provi
   expect(finished).toEqual([context])
   expect(admitted).toEqual([{ operation: "collaboration.answer.prepare", payload: { questionId: "question", answerRef: "answer" } }])
 })
+

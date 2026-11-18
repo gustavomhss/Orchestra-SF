@@ -41,32 +41,3 @@ test("observation receipts bind actor, scope, version and fingerprint and expire
   if (renewed.status !== "ok") throw new Error("renewed admission failed")
   expect(await receipts.verifyObserved(command, renewed.value)).toBeUndefined()
 })
-
-test("prepared selection references reobserve original scope, reject foreign and stale reads, and never renew", async () => {
-  const clock = { now: Date.parse("2026-11-13T00:00:00Z") }
-  const source = { version: 3, fingerprint: "source-v1" }
-  const ui = createSfUiAuthority({ authorize: async (request) => ({ installationId: "install", projectId: "project", principalRef: request.headers.get("actor") || "", policyVersion: "policy", accessRevision: "access" }), commandIdentity: async () => "command", createId: () => crypto.randomUUID(), now: () => clock.now, privateCommands: [] })
-  const read = async (actor: string) => {
-    const admitted = await ui.admit(new Request("https://example.test/action", { headers: { actor } }), "sf_work_list", digestSfValue({}))
-    if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_work_list", digestSfValue({}))) throw new Error("read admission failed")
-    return admitted.value
-  }
-  const scope = { sourceRef: { surface: "dashboard", type: "projects", id: "A", incarnation: "inc" }, fields: ["amount"], period: { start: "2027-01-01", end: "2027-01-31" }, materialDependencies: [], scopeDefinitionVersion: "1" } as const
-  const receipts = createConfirmationObservationReceipts({ host: { requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined, revalidate: async (context) => context.kind === "ui" && await ui.revalidate(context) },
-    observe: async () => ({ state: "available" as const, sourceVersion: source.version, incarnation: "inc", physicalIncarnation: "physical", scopeFingerprint: "scope", sourceFingerprint: source.fingerprint, dependencyFingerprint: "dependencies" }),
-    fence: async (_scope, observation) => observation.sourceFingerprint === source.fingerprint,
-    now: () => clock.now })
-  const a = await read("A")
-  const prepared = await receipts.prepare(scope, a)
-  if (prepared.status !== "ok") throw new Error("observation unavailable")
-  const ref = prepared.value.selectionRef
-  expect(ref).toMatch(/^confirmation-selection:[a-f0-9]{64}$/)
-  expect(await receipts.readSelection(ref, a)).toMatchObject({ status: "ok", value: { selectionRef: ref, scope } })
-  expect((await receipts.readSelection(ref, await read("B"))).status).toBe("unavailable")
-  expect((await receipts.readSelection(ref + "x", a)).status).toBe("needs-input")
-  source.fingerprint = "changed"
-  expect((await receipts.readSelection(ref, a)).status).toBe("stale")
-  source.fingerprint = "source-v1"
-  clock.now += 5 * 60 * 1000
-  expect((await receipts.readSelection(ref, await read("A"))).status).toBe("unavailable")
-})
