@@ -310,7 +310,12 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const authenticatedDashboard = await fetch("http://localhost:4110/sucafina/dashboard", {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
-    expect(authenticatedDashboard.status).toBe(200)
+    // The compiled/extracted distribution must NOT resurrect the retired HTML
+    // console. Authentication still works: the authenticated C08 command and
+    // read below independently prove the real installed product's JSON paths.
+    expect(authenticatedDashboard.status).toBe(404)
+    expect(authenticatedDashboard.headers.get("content-type")).toContain("text/plain")
+    expect(await authenticatedDashboard.text()).toBe("legacy console decommissioned — use /")
     // A virgin installation has no C08 decision state. Author the first case
     // using the compiled installation's real authenticated human command,
     // never by writing raw SQLite, bypassing authorization, or forging a fence.
