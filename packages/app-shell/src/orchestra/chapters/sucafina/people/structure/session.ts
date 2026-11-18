@@ -126,20 +126,12 @@ export function createPeopleSession<Data>(
       clear(readAvailability?.state === "denied" ? "denied" : "unavailable", generation)
       return
     }
-    // Owner stamp captured at reload start; the answer is only valid while the
-    // owner, generation and status still match this identity.
-    const readyState = context.state()
-    if (readyState.status !== "ready") return
-    const ownerKey = readyState.ownerKey
     // Drop all previous private content even while a same-owner read is pending.
     clear("loading", generation)
-    const stillCurrent = () => {
-      const state = context.state()
-      return !controller.signal.aborted && serial === id &&
-        context.generation() === generation &&
-        state.status === "ready" &&
-        state.ownerKey === ownerKey
-    }
+    const stillCurrent = () => !controller.signal.aborted && serial === id &&
+      context.generation() === generation &&
+      context.state().status === "ready" &&
+      context.state().ownerKey === state.ownerKey
     try {
       const result = await read(active.transport, controller.signal)
       if (!stillCurrent()) return
