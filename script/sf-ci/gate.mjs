@@ -43,33 +43,47 @@ function staticImports(file) {
   let text
   try { text = readFileSync(file, "utf8") } catch { fail("shard input is unreadable: " + file) }
   const found = []
-  for (const match of text.matchAll(/(?:from|import)\s*\(?\s*["'](\.[^"']+)["']/g)) {
-    const target = path.resolve(path.dirname(file), match[1])
-    const candidate = [target, target + ".ts", target + ".tsx", target + ".mts", target + ".js",
-      path.join(target, "index.ts"), path.join(target, "index.tsx")]
-      .find((entry) => existsSync(entry) && statSync(entry).isFile())
+  for (const match of text.matchAll(/(?:from|import|require)\s*\(?\s*["'](\.[^"']+)["']/g)) {
+    const specifier = match[1]
+    const target = path.resolve(path.dirname(file), specifier)
+    const candidates = [target, target + ".ts", target + ".tsx", target + ".mts", target + ".js",
+      path.join(target, "index.ts"), path.join(target, "index.tsx"), path.join(target, "index.js")]
+    if (/\.js$/.test(target)) candidates.push(target.replace(/\.js$/, ".ts"), target.replace(/\.js$/, ".tsx"))
+    const candidate = candidates.find((entry) => existsSync(entry) && statSync(entry).isFile())
     if (candidate) found.push(candidate)
   }
   return found
 }
 
-function reachesBrowserPool(file, cache, visiting = new Set()) {
-  if (cache.has(file)) return cache.get(file)
-  if (visiting.has(file)) return false
-  visiting.add(file)
-  const reaches = file.split(path.sep).join("/").endsWith(BROWSER_POOL_ENTRY) ||
-    staticImports(file).some((next) => reachesBrowserPool(next, cache, visiting))
-  visiting.delete(file)
-  cache.set(file, reaches)
-  return reaches
+/** Whole static graph reachable from the selection; missing/cycle edges never decide alone. */
+function staticGraph(files, root) {
+  const graph = new Map()
+  const queue = files.map((file) => path.resolve(root, file))
+  while (queue.length) {
+    const file = queue.pop()
+    if (graph.has(file)) continue
+    const imports = staticImports(file)
+    graph.set(file, imports)
+    for (const next of imports) if (!graph.has(next)) queue.push(next)
+  }
+  return graph
 }
 
 /** Files whose static import closure occupies the WP01 ordered browser pool. */
 export function browserPoolConsumers(files, root = process.cwd()) {
-  const cache = new Map()
-  return new Set(files
-    .map((file) => path.resolve(root, file))
-    .filter((file) => reachesBrowserPool(file, cache)))
+  const graph = staticGraph(files, root)
+  const reaching = new Set([...graph.keys()].filter((file) => file.split(path.sep).join("/").endsWith(BROWSER_POOL_ENTRY)))
+  let changed = reaching.size > 0
+  while (changed) {
+    changed = false
+    for (const [file, imports] of graph) {
+      if (reaching.has(file)) continue
+      if (!imports.some((next) => reaching.has(next))) continue
+      reaching.add(file)
+      changed = true
+    }
+  }
+  return new Set(files.map((file) => path.resolve(root, file)).filter((file) => reaching.has(file)))
 }
 
 /** A suite that drops the ordered-pool files must prove none of the rest needs them. */
@@ -205,6 +219,11 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
     if (!isTestFile(name) || !files.includes(name)) fail("harness-owned file is outside admitted selection: " + name)
   }
   files = files.filter((name) => !harnessOwned.includes(name))
+  for (const name of harnessOwned) {
+    if (browserPoolConsumers([name], root).size === 0) {
+      fail("harness-owned file does not reach the ordered pool: " + name)
+    }
+  }
   assertNoOrderedPoolConsumers(files, root)
   const excluded = selection.releaseOnlyFiles || []
   if (!Array.isArray(excluded) || new Set(excluded).size !== excluded.length) fail("invalid release-only inventory")

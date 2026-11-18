@@ -2,7 +2,7 @@ import { test } from "node:test"
 import { assertWorkflowManifestSelection } from "./workflow-contract.mjs"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
+import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
@@ -67,7 +67,6 @@ for (const file of CI_SF_FILES) {
   mkdirSync(path.dirname(target), { recursive: true })
   writeFileSync(target, "")
 }
-const FIXTURE_SUITE_ROOT = path.join(FIXTURE_ROOT, "modules/sucafina")
 function poolTree(entry) {
   const root = mkdtempSync(path.join(tmpdir(), "sf-pool-exclusion-"))
   const write = (name, body) => {
@@ -103,13 +102,32 @@ test("every harness-owned file must exist inside the admitted selection", () => 
     }
   } finally { rmSync(root, { recursive: true, force: true }) }
 })
-test("the live manifest excludes exactly the ordered browser pool inventory", () => {
-  const live = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+test("the live manifest excludes exactly the static ordered-pool closure", () => {
+  const root = path.resolve(new URL("../..", import.meta.url).pathname)
+  const live = JSON.parse(readFileSync(path.join(root, "sf/ci/suites.json"), "utf8"))
   const selection = live.suites.find((suite) => suite.id === "CI-SF").selection
   assert.equal(selection.harnessOwnedFiles.length, 44)
   assert.equal(new Set(selection.harnessOwnedFiles).size, 44)
-  const selected = selectSuiteFiles(live, "CI-SF", path.resolve(new URL("../..", import.meta.url).pathname))
+  const suiteRoot = path.join(root, "modules/sucafina")
+  const discovered = readdirSync(path.join(suiteRoot, "Sucafinav1"), { recursive: true })
+    .map((entry) => String(entry))
+    .filter((entry) => /\.test\.ts$/.test(entry))
+    .map((entry) => path.join("Sucafinav1", entry))
+  const closure = [...browserPoolConsumers(discovered, suiteRoot)]
+    .map((file) => path.relative(suiteRoot, file)).sort()
+  assert.deepEqual([...selection.harnessOwnedFiles].sort(), closure)
+  const selected = selectSuiteFiles(live, "CI-SF", root)
   for (const file of selection.harnessOwnedFiles) assert.equal(selected.includes(file), false)
+})
+test("a harness-owned entry that never reaches the pool fails closed", () => {
+  const root = poolTree("Sucafinav1/test/plain.test.ts")
+  try {
+    const invalid = structuredClone(manifest)
+    const selection = invalid.suites.find((suite) => suite.id === "CI-SF").selection
+    selection.harnessOwnedFiles = ["Sucafinav1/test/plain.test.ts"]
+    selection.releaseOnlyFiles = []
+    assert.throws(() => selectSuiteFiles(invalid, "CI-SF", root), /does not reach the ordered pool/)
+  } finally { rmSync(root, { recursive: true, force: true }) }
 })
 const bunReport = (files) => Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: files.length, product_executed: files.length, failures: 0, errors: 0, skipped: 0 },
@@ -155,7 +173,7 @@ function fixture() {
     if (SHARDED[suite.id]) {
       const count = SHARDED[suite.id]
       shards[suite.id] = Array.from({ length: count }, (_, offset) => {
-        const part = shardFiles(selection, offset + 1, count, FIXTURE_SUITE_ROOT)
+        const part = shardFiles(selection, offset + 1, count)
         const bytes = bunReport(part)
         return { report: bytes,
           receipt: receiptFor(suite, bytes, part, { shard: { index: offset + 1, count } }) }
