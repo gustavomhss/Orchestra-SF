@@ -129,7 +129,7 @@ export async function createMixedPlannerFixture(deadline: ReturnType<typeof comp
         eventRef, writerPrincipalRef: "person", accessRevision: call.binding.accessRevision, createdAt: clock.at, attempts: 0, state: "pending" }
       return { commit: true, value: true }
     })
-    if (saved.status !== "ok") throw new Error(`Real C08 fixture persistence failed: ${"reason" in saved ? saved.reason : saved.status}`)
+    if (saved.status !== "ok") throw new Error(`Real C08 fixture persistence failed: ${saved.reason}`)
   }
   business.bindForecastCoverage(async (reference, context) => {
     const source = await business.plannerSources.resolveForecastSource(reference, context)

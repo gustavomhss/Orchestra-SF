@@ -21,17 +21,16 @@ async function webExchange(f: Awaited<ReturnType<typeof microsoftFixture>>, clie
   return { location, ...await client.exchange({ code, verifier, redirectUri, nonce: "synthetic-web-nonce" }) }
 }
 
-test("confidential web flow requests exact consented Graph membership scopes and sends secret only to token POST", async () => {
+test("confidential web flow uses minimum scopes and sends the private credential only to token POST", async () => {
   const f = await microsoftFixture()
   const observed: { method: string; secret: boolean; authorization: boolean }[] = []
   f.hooks.before = async (request) => {
-    if (request.url !== f.metadata.token_endpoint) return undefined
+    if (request.url !== f.metadata.token_endpoint) return
     observed.push({ method: request.method, secret: new URLSearchParams(await request.clone().text()).get("client_secret") === syntheticSecret, authorization: request.headers.has("authorization") })
-    return undefined
   }
   const result = await webExchange(f)
   const url = new URL(result.location)
-  expect(url.searchParams.get("scope")?.split(" ")).toEqual(["openid", "profile", "offline_access", "User.Read", "User.Read.All", "GroupMember.Read.All", "Directory.Read.All"])
+  expect(url.searchParams.get("scope")?.split(" ")).toEqual(["openid", "profile", "offline_access", "User.Read"])
   expect(url.searchParams.has("client_secret")).toBe(false)
   expect(result.person.id).toBe(oid)
   const refreshed = await f.client.refresh(result.tokens.refreshToken!)
@@ -73,10 +72,9 @@ test("role mapping cannot change privilege while a directory resolution is pendi
   const entered = Promise.withResolvers<void>()
   const release = Promise.withResolvers<void>()
   f.hooks.before = async (request) => {
-    if (new URL(request.url).pathname !== "/v1.0/me/checkMemberGroups") return undefined
+    if (new URL(request.url).pathname !== "/v1.0/me/checkMemberGroups") return
     entered.resolve()
     await release.promise
-    return undefined
   }
   const map = [row(`group:${group}`)]
   const pending = f.client.resolve(result.tokens.accessToken, map)

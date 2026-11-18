@@ -79,7 +79,7 @@ async function withFenceHost<A>(name: string, use: (fixture: FenceFixture) => Ef
     expect(messages[0]).toMatchObject({ id: receipt.loadedMessageId, type: "synthetic" })
     expect(receipt).toMatchObject({ nativeSessionId: created.id, profileId: selected.profile.id,
       sourceDigest: skill.sourceDigest, instructionsDigest: skill.instructionsDigest, manifestDigest: host.bundle.manifestDigest })
-    expect((yield* host.session.context(created.id)).map<string>((message) => message.id)).toContain(receipt.loadedMessageId)
+    expect((yield* host.session.context(created.id)).map((message) => message.id)).toContain(receipt.loadedMessageId)
     const admission: SfNativeAdmission = { request, selected, sessionID: created.id, runId,
       caseRef: { id: `component-case-${name}`, version: 1, incarnation: `component-incarnation-${name}` },
       profile: selected.profile, manifestDigest: selected.manifestDigest, skillReceipts: [receipt], entryMode: "routine-result" }

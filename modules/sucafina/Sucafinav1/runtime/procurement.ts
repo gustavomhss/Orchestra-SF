@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto"
-import { canApproveCurrentRequest } from "../../porta/act.ts"
 import {
   createRequest,
   submitPR,
@@ -137,86 +136,16 @@ function pick(value: unknown, keys: readonly string[]) {
 function has(actor: Actor, ...roles: string[]) {
   return roles.some((role) => actor.roles.includes(role))
 }
-export function procurementCanCreateRequest(actor: Actor) {
-  return !!text(actor.id).trim() && actor.canWrite && has(actor, "requester", "admin")
-}
-export function procurementCanManageSourcing(actor: Actor) {
-  return !!text(actor.id).trim() && actor.canWrite && has(actor, "buyer", "admin")
-}
-export function procurementCanManageSettings(actor: Actor) {
-  return !!text(actor.id).trim() && actor.canWrite && has(actor, "admin")
-}
-export function procurementSupplierRoleAllows(actor: Actor, action: string) {
-  if (!text(actor.id).trim() || !actor.canWrite) return false
-  const bankAdmin = has(actor, "admin", "supplier admin")
-  const buyer = has(actor, "buyer")
-  if (!bankAdmin && !buyer) return false
-  if (["activate", "block", "inactivate", "change-bank"].includes(action) && !bankAdmin) return false
-  return action !== "create" || buyer
-}
-function requestEditModes(actor: Actor, request: Record<string, unknown>) {
-  const status = text(request.status)
-  return {
-    pr: ["draft", "pr_rejected"].includes(status) && (request.createdBy === actor.id || has(actor, "admin")),
-    source: ["sourcing", "src_rejected"].includes(status) && procurementCanManageSourcing(actor),
-    po: ["po_draft", "po_rejected"].includes(status) && procurementCanManageSourcing(actor),
-  }
-}
-/** Per-record draft capability from the original visible source, never a browser role guess. */
-export function requestDraftActions(request: Record<string, unknown>, actor: Actor): readonly ("save-pr" | "save-sourcing" | "save-po")[] {
-  if (!text(actor.id).trim() || !actor.canWrite || actor.roles.every((role) => role === "viewer") ||
-    !visibleRequests([{ createdBy: text(request.createdBy) }], actor).length) return []
-  const modes = requestEditModes(actor, request)
-  return [...(modes.pr ? ["save-pr" as const] : []), ...(modes.source ? ["save-sourcing" as const] : []),
-    ...(modes.po ? ["save-po" as const] : [])]
-}
-/** Coarse current request capability; command execution retains all record, CAS and stage checks. */
-export function procurementCurrentRequestActions(snapshot: Snapshot, actor: Actor): readonly string[] {
-  if (!text(actor.id).trim() || !actor.canWrite || actor.roles.every((role) => role === "viewer")) return []
-  const actions = new Set<string>()
-  const requests = object(object(snapshot.data.store).requests)
-  for (const id in requests) {
-    if (!Object.hasOwn(requests, id)) continue
-    const request = object(object(requests[id]).request)
-    if (!visibleRequests([{ createdBy: text(request.createdBy) }], actor).length) continue
-    const drafts = requestDraftActions(request, actor)
-    const status = text(request.status)
-    if (!["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled"].includes(status)) continue
-    if (drafts.length) actions.add("save")
-    if (drafts.includes("save-pr")) actions.add("submit_pr")
-    if (drafts.includes("save-sourcing")) { actions.add("submit_sourcing"); actions.add("select_quote") }
-    if (drafts.includes("save-po")) actions.add("submit_po")
-    if (status === "po_approved" && procurementCanManageSourcing(actor)) actions.add("issue")
-    if (canApproveCurrentRequest(door(request), { id: actor.id, canWrite: actor.canWrite,
-      roles: actor.roles.filter((role) => ["requester", "buyer", "approver", "admin"].includes(role)) },
-      pick(object(object(snapshot.data.store).settings), ["currency", "levels", "prApprovalMode", "blockSelfApproval", "fxRates"]))) {
-      actions.add("approve")
-      actions.add("reject")
-    }
-    if ((request.createdBy === actor.id || has(actor, "admin")) && !["cancelled", "po_issued"].includes(status)) actions.add("cancel")
-    if ((request.createdBy === actor.id || has(actor, "admin")) && status === "draft") actions.add("delete")
-    if (["save", "submit_pr", "submit_sourcing", "select_quote", "submit_po", "issue", "approve", "reject", "cancel", "delete"].every((action) => actions.has(action))) break
-  }
-  return [...actions]
-}
 function initial() {
   return initialProcurementSettings()
 }
 function load(snapshot: Snapshot): Store {
   const stored = object(snapshot.data.store)
-  // Only a never-initialized store may read reset defaults. Persisted stores
-  // with missing or malformed Settings must keep their unavailable context;
-  // repairing those at read time would hide a real dependency failure.
-  const settings = Object.hasOwn(stored, "settings")
-    ? object(stored.settings)
-    : !Object.hasOwn(snapshot.data, "store")
-      ? initial()
-      : {}
   return structuredClone({
-    settings,
+    settings: object(stored.settings),
     form: {
-      ...settings,
-      currency: text(settings.currency),
+      currency: text(object(stored.settings).currency),
+      ...object(stored.settings),
     },
     issued: { pr: [], po: [], ...object(stored.issued) },
     sup: Array.isArray(stored.sup) ? stored.sup.filter((code): code is string => typeof code === "string") : [],
@@ -553,15 +482,14 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   const was = row ? structuredClone(row.request) : null
   const request = row?.request ?? {}
   const status = text(request.status)
-  const drafts = requestDraftActions(request, actor)
-  const prEdit = drafts.includes("save-pr")
-  const sourceEdit = drafts.includes("save-sourcing")
-  const poEdit = drafts.includes("save-po")
+  const prEdit = ["draft", "pr_rejected"].includes(status) && (request.createdBy === actor.id || has(actor, "admin"))
+  const sourceEdit = ["sourcing", "src_rejected"].includes(status) && has(actor, "buyer", "admin")
+  const poEdit = ["po_draft", "po_rejected"].includes(status) && has(actor, "buyer", "admin")
   if (command.action === "save" && !prEdit && !sourceEdit && !poEdit) return { ok: false, status: 403 }
-  if (command.action === "create" && !procurementCanCreateRequest(actor)) return { ok: false, status: 403 }
+  if (command.action === "create" && !has(actor, "requester", "admin")) return { ok: false, status: 403 }
   if (
     ["submit_sourcing", "select_quote", "submit_po", "issue"].includes(command.action) &&
-    !procurementCanManageSourcing(actor)
+    !has(actor, "buyer", "admin")
   )
     return { ok: false, status: 403 }
   if (sourceEdit && ["save", "submit_sourcing"].includes(command.action) || poEdit && ["save", "submit_po"].includes(command.action)) {
@@ -749,7 +677,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   }
 }
 function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Command, environment: Environment): Result {
-  if (!procurementCanManageSettings(actor)) return { ok: false, status: 403 }
+  if (!has(actor, "admin")) return { ok: false, status: 403 }
   if (!["save", "reset"].includes(command.action)) return { ok: false, status: 400 }
   const stale = conflict(snapshot, "settings", command, store.settings)
   if (stale) return stale
@@ -822,7 +750,11 @@ function supplier(snapshot: Snapshot, store: Store, actor: Actor, command: Comma
   if (!["create", "save", "activate", "block", "inactivate", "delete", "change-bank"].includes(command.action))
     return { ok: false, status: 400 }
   const bankAdmin = has(actor, "admin", "supplier admin")
-  if (!procurementSupplierRoleAllows(actor, command.action)) return { ok: false, status: 403 }
+  const buyer = has(actor, "buyer")
+  if (!bankAdmin && !buyer) return { ok: false, status: 403 }
+  if (["activate", "block", "inactivate", "change-bank"].includes(command.action) && !bankAdmin)
+    return { ok: false, status: 403 }
+  if (command.action === "create" && !buyer) return { ok: false, status: 403 }
   const id = command.action === "create" ? environment.id() : (command.id ?? "")
   const stored = store.suppliers.find((item) => item.id === id) as (BankSupplier & Record<string, unknown>) | undefined
   if (command.action !== "create" && !stored) return { ok: false, status: 404 }

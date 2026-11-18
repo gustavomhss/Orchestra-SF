@@ -30,7 +30,7 @@ const residentRoot = path.resolve(import.meta.dir, "../../../product/ai")
 test("all 39 canonical routes fit the actual byte-verified profile and skill ceilings", async () => {
   const bundle = await createResidentAiBundle({ root: residentRoot, manifestPath: path.join(residentRoot, "manifests/resident.json") })
   expect(resident.packs.map((pack) => ({ id: pack.id, operations: pack.operations.map((operation) => operation.id) })))
-    .toEqual(Object.entries(packs).map(([id, operations]) => ({ id, operations: [...operations] })))
+    .toEqual(Object.entries(packs).map(([id, operations]) => ({ id, operations })))
   expect(operations).toHaveLength(39)
   expect(new Set(operations).size).toBe(39)
   expect(Object.keys(sfOperationInputSchemas).sort()).toEqual([...operations].sort())
@@ -114,10 +114,10 @@ test("real domain composition exposes canonical descriptors and keeps missing na
       expect(descriptor.inputSchema).toEqual(sfOperationInputSchemas[id])
       expect(descriptor.outputSchema).toEqual(sfOperationOutputSchemas[id])
       expect(descriptor.pack).toBe(operation.pack)
-      expect(operation.mode).toBe(descriptor.mode)
+      expect(descriptor.mode).toBe(operation.mode)
       expect(descriptor.handlerExport).toBe(operation.handlerExport)
       expect(descriptor.producerTask).toBe(operation.producerTask)
-      expect([...operation.profiles].sort()).toEqual([...descriptor.grantProfiles].sort())
+      expect([...descriptor.grantProfiles].sort()).toEqual([...operation.profiles].sort())
       expect(descriptor.handler).toBeFunction()
       expect(operation.officialDomainMutation).toBe("none")
     }
@@ -126,7 +126,7 @@ test("real domain composition exposes canonical descriptors and keeps missing na
       revalidateSources: async () => { throw new Error("Missing native owner cannot revalidate routine sources") },
     })
     expect(routine.descriptors).toEqual([])
-    expect(operations.filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation))).toEqual([...packs.routines])
+    expect(operations.filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation))).toEqual(packs.routines)
     expect(createSfDocumentServices({ runtime: { ...runtime, assets: undefined }, authority: fixture.authority })).toBeUndefined()
     expect(createSfImportServices({ runtime: { ...runtime, assets: undefined }, authority: fixture.authority })).toBeUndefined()
   } finally {
