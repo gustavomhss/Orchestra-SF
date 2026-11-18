@@ -45,22 +45,6 @@ test("manifest cannot add a skill grant even with unchanged source bytes", async
   }
 })
 
-test("an unknown input schema is rejected", async () => {
-  const { mkdtemp, cp, writeFile, rm } = await import("node:fs/promises")
-  const { tmpdir } = await import("node:os")
-  const directory = await mkdtemp(path.join(tmpdir(), "sf-resident-"))
-  try {
-    await cp(root, directory, { recursive: true })
-    const file = path.join(directory, "manifests/native-probe.json")
-    const manifest = await Bun.file(file).json()
-    manifest.skills[0].inputSchemaRef = "UnknownSkillInput"
-    await writeFile(file, JSON.stringify(manifest))
-    await expect(createResidentAiBundle({ root: directory, manifestPath: file })).rejects.toThrow("Skill policy mismatch")
-  } finally {
-    await rm(directory, { recursive: true, force: true })
-  }
-})
-
 test("a valid digest does not permit manifest or source paths outside the distributed root", async () => {
   const { mkdtemp, cp, rename, symlink, rm } = await import("node:fs/promises")
   const { tmpdir } = await import("node:os")
@@ -101,6 +85,22 @@ test("duplicate, unknown and incomplete resident catalogs fail before registrati
       await writeFile(file, JSON.stringify(sample.manifest))
       await expect(createResidentAiBundle({ root: directory, manifestPath: file })).rejects.toThrow(sample.reason)
     }
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("an unknown input schema is rejected", async () => {
+  const { mkdtemp, cp, writeFile, rm } = await import("node:fs/promises")
+  const { tmpdir } = await import("node:os")
+  const directory = await mkdtemp(path.join(tmpdir(), "sf-resident-"))
+  try {
+    await cp(root, directory, { recursive: true })
+    const file = path.join(directory, "manifests/native-probe.json")
+    const manifest = await Bun.file(file).json()
+    manifest.skills[0].inputSchemaRef = "UnknownSkillInput"
+    await writeFile(file, JSON.stringify(manifest))
+    await expect(createResidentAiBundle({ root: directory, manifestPath: file })).rejects.toThrow("Skill policy mismatch")
   } finally {
     await rm(directory, { recursive: true, force: true })
   }
