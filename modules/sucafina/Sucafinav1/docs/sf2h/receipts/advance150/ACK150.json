@@ -1,0 +1,63 @@
+{
+  "schema": "sf2h.product-ci150.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 150,
+  "actor": {
+    "effective_model": "GPT-6",
+    "github_actor": "gustavomhss",
+    "runtime_session_id": null,
+    "runtime_session_id_reason": "Not exposed by ChatGPT/GitHub MCP; no fabricated Astra/browser session identifier"
+  },
+  "authority": {
+    "epoch": "product-ci-e3-browser150",
+    "predecessor_mission": 129,
+    "predecessor_epoch": "product-ci-e2-browser129",
+    "predecessor_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "runtime_termination_verified": false,
+    "integrator": 132,
+    "compiler": 149,
+    "ci_dispatcher": 150,
+    "source_fence_blob": "21d60b8466fe6c3df49c0ecf3a4da3cf01e8ceb4"
+  },
+  "preflight": {
+    "branch": "sf-ci-validation",
+    "pr": 106,
+    "prepared_head": "98b99eaa35f676570f1ae234ed30e6aea9246aeb",
+    "prepared_tree": "3c966949df02fce95bc00f2fb5798ae89b970bf7",
+    "packet_ref": "81fbb8364ca474db8f718faad20c9235519e98fe",
+    "packet_blob": "98d83504f659be636b831089acb0e559adf2d677",
+    "predecessor_handoff_blob": "bce50dc094c8456806127e9d5ba998c876461175",
+    "predecessor_requests_blob": "40da80815094f08c4e56ab3a7d4c54259060679d",
+    "predecessor_runs_blob": "602e0b9751d6df9fb03a427377d065735d0e775f",
+    "predecessor_findings_blob": "a073d13be1be187f8e76e221ab87e1f0dd4a0bc5",
+    "composed_head_observed": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+    "composed_head_tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7"
+  },
+  "actions_reconciliation": {
+    "observed_queued": 0,
+    "observed_in_progress": 0,
+    "observed_waiting": 0,
+    "observed_pending": 0,
+    "previous_run_ids": [
+      43737725978,
+      43737735283,
+      43738115971,
+      43738222564,
+      43738654236,
+      43738907064
+    ],
+    "recent_last_run": 43738907064,
+    "status": "NO_ACTIVE_ACTIONS_OBSERVED; historic completed outcomes preserved; recheck before any dispatch"
+  },
+  "prohibitions": {
+    "local_tests": false,
+    "local_typecheck": false,
+    "product_edits": false,
+    "workflow_edits": false,
+    "epic": false,
+    "full8": false,
+    "global_release": false,
+    "native_goal": "paused"
+  },
+  "state": "ACK_PUBLISHED; RECONCILIATION_COMPLETE_PRE_DISPATCH; CURRENT_CANDIDATE_NOT_YET_ACCEPTED"
+}

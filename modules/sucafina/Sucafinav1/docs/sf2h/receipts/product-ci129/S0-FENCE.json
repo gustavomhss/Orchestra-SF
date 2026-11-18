@@ -1,0 +1,21 @@
+{
+  "schema": "sf2h.validation-lane-fence.v1",
+  "campaign": "sf2h-integral-20261112",
+  "authority": "S0: user requires fresh sessions only and authorizes additional useful work",
+  "mission": 129,
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "previous_mission": 120,
+  "previous_epoch": "product-ci-browser120",
+  "previous_authority": "REVOKED_FOR_FRESH_SUCCESSOR",
+  "next_epoch": "product-ci-e2-browser129",
+  "previous_head": "bbccc6163439e5e95abfb4d7cc5fd7881a214ca2",
+  "readback_running_actions": 0,
+  "readback_queued_actions": 0,
+  "formerly_in_progress_run43726371640": "completed/failure",
+  "runtime_termination_claimed": false,
+  "note": "Runtime session IDs not exposed; do not infer death. Explicit S0 authority revocation + branch CAS/epoch fence; not credential revocation or process kill. If old actor resumes it must cease writes/dispatch. Successor re-reconciles runs before any effect.",
+  "integrator": 125,
+  "native_goal": "paused",
+  "global_release": false
+}

@@ -1,0 +1,111 @@
+{
+  "schema": "sf2h.product-ci191.v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 191,
+  "epoch": "product-ci-e5-browser191",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "github_actor": "gustavomhss",
+  "effective_model": "GPT-6",
+  "requested_model": "Astra",
+  "native_session_id": null,
+  "native_session_id_exposed": false,
+  "sole_product_ci": true,
+  "native_goal": "PAUSED",
+  "global_release": false,
+  "product_current": {
+    "head": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "tree": "61b5cfc0df910105a67a344706795b4c3b7d30b7",
+    "message": "test(sf2h): consume released U15/U39/U40 installed journeys 185-186 [skip ci]",
+    "complete_final_candidate": false
+  },
+  "pending": [
+    {
+      "priority": 1,
+      "area": "A04 decisions",
+      "state": "WAIT_AUTHOR_173_OR_OWNER_AND_189_CONSUMPTION",
+      "unchanged_input_not_retested": true,
+      "exact": [
+        "Sucafinav1/test/native-ui-contract/decisions.test.ts"
+      ],
+      "condition": "new test decoder postblob, actual latest C/tree after CAS, no fake Effect API"
+    },
+    {
+      "priority": 2,
+      "area": "A01 A11",
+      "state": "WAIT_189_CONSUME_PROJECTION_DEPS",
+      "exact": [
+        "Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "Sucafinav1/test/native-ui-contract/operations.test.ts"
+      ],
+      "condition": "domain/projection.ts and operations/projection.ts real source postimages incorporated; new W and transitive imports verified"
+    },
+    {
+      "priority": 3,
+      "area": "S05 owner newline only",
+      "state": "WAIT_184_FIX_AND_189_CONSUMPTION",
+      "exact": [
+        "./test-browser/sucafina-native/s05.test.ts"
+      ],
+      "package": "app",
+      "directory": "packages/app-shell",
+      "condition": "184 after 189 consumer fixed test owner-binding DOM LF normalization with raw input CRLF preserved onPost; new source/test postblobs, new W/tree; prior F03/S01/S02 PASS on Wca31 and must not duplicate unchanged",
+      "already_green_on_previous_W": [
+        "page-frame",
+        "s01",
+        "s02"
+      ],
+      "historical_wrongpath": "INVALID"
+    },
+    {
+      "priority": 3.5,
+      "area": "post182-184 browser provenance",
+      "state": "EXECUTED_PARTIAL_FAIL",
+      "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "tree": "7b4dc2d6f2d2dc28bf4f2cd9b54ffd2d5440bc8a",
+      "run": 43773852118,
+      "S": "8f131b06a94f1f2a265ba5e519e3166b114d1689",
+      "selected_files": 4,
+      "pass": 7,
+      "fail": 1,
+      "expects": 44,
+      "comments": {
+        "author184": 6903059035,
+        "integrator189": 6903059523
+      }
+    },
+    {
+      "priority": 4,
+      "area": "AM01–AM06 POSITIVE",
+      "state": "NOT_RUN",
+      "condition": "real installed native provider model/profile skills 5/18 actual calls, private MCP operations, Atlas scanner real binary/digest/process restart and Relay end-to-end on same candidate, proof correlated to authenticated actors",
+      "warning": "B4 negative tests green cannot be promoted to AM positive"
+    },
+    {
+      "priority": 5,
+      "area": "U15 U39 U40",
+      "state": "NOT_RUN",
+      "condition": "185/186 no-skips consumed; 187 installed F04 manifest, real authenticated actors and URLs, same candidate/host with actual test collection and artifacts"
+    },
+    {
+      "priority": 6,
+      "area": "C08 bounded native lifecycle",
+      "state": "NEW_CHANGED_INPUT_NOT_RUN",
+      "source_product_head": "b36de3e0b3aee61c0de25ef3cc5440a48e3c307d",
+      "test_path": "Sucafinav1/test/product/native-host-provider/lifecycle.test.ts",
+      "test_blob": "89f6bbe2fa429be861eab0bb27777ae947f533c2",
+      "condition": "if 189 current candidate retains new code; this is a component fault-injection test, never installed native positive"
+    },
+    {
+      "priority": 7,
+      "area": "FULL EPIC AND 8 FINAL SELECTORS",
+      "state": "NOT_RUN",
+      "condition": "one coherent accepted C with all WPs/74 tasks/1610 criteria real consumers, 190 compiler/SDK, AM01–06, 3 independent FINAL reviews, C/G7 guards, valid D+separate D/G8, proven remote SHA no orphan writers"
+    }
+  ],
+  "current_inflight": [],
+  "current_queued": [],
+  "if_late_predecessor": "reconcile epoch/fence/actions; no silence-based death claim, no force",
+  "scope": "Only existing test:ci snapshots, exact selectors, no new CI/controller or parallel dispatcher"
+}

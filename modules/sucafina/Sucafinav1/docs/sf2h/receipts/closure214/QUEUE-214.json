@@ -1,0 +1,535 @@
+{
+  "schema": "sf2h.product-ci214.queue.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 214,
+  "epoch": "product-ci-e7-browser214",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "role": "SOLE_PRODUCT_CI_DISPATCHER",
+  "history": {
+    "restored": "200/HANDOFF QUEUE RUNS FINDINGS + 8 historical run IDs",
+    "queue200_blob": "bae56cb80ac60db3699596140e40214543252481",
+    "runs200_blob": "9146d5a4624d1ecf4b1303ee667fafcaea1824c8",
+    "findings200_blob": "bf3c5e8f4e46e4d018ff795e7fbaff4367f13bd9",
+    "no_other_dispatcher_claimed": true
+  },
+  "reconciliation": {
+    "runs_completed": 15,
+    "in_flight": [],
+    "queued_by_214": [],
+    "successful": 7,
+    "failed": 8,
+    "tests_passed": 134,
+    "tests_failed": 12,
+    "zero_selection_attempt": 43781292706,
+    "corrected_by": 43781695995,
+    "actions_artifacts": [],
+    "accepted_same_C": false,
+    "latest_material_W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+    "latest_docs_only_W": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab"
+  },
+  "producer_readset": [
+    {
+      "id": 193,
+      "branch": "sf-ux-w16",
+      "consumer": "211",
+      "status": "SOURCE_CONSUMED_BUT_DECISIONS_EXTRA_FIELD_FAILS_B9",
+      "observed_branch_head": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 194,
+      "branch": "sf-ux-n22",
+      "consumer": "211",
+      "status": "U15_EXECUTOR_PREVIOUSLY_FIXED_PER_CONTRACT; INSTALLED_F04_NOT_RUN",
+      "observed_branch_head": "72c5d2afcbdc202605614a18c5ba472aafc34574",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 195,
+      "branch": "sf-ux-n13",
+      "consumer": "211/206",
+      "status": "U39_U40_NEED_REAL_INSTALLED_HOST",
+      "observed_branch_head": "6b747c45b0f26ea2e9b8d726a34347cc6b42a4a4",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 196,
+      "branch": "sf-proof-profiles",
+      "consumer": "211",
+      "status": "AM01_FIVE_PROFILE_SOURCE_COMPOSED; AM02_C16_B16_DENIED_AUTHORITY",
+      "observed_branch_head": "2c0416ca80c2367843be7b39dbc4a7fb677a2185",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 197,
+      "branch": "sf-proof-authority",
+      "consumer": "211",
+      "status": "AM03_IMPORT_FIX_B18_PASS; AM04_B18_HTTP_400",
+      "observed_branch_head": "3ec7a4ca7db735c08f1f63e164734a0bda245ac7",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 198,
+      "branch": "sf-proof-persistence",
+      "consumer": "211",
+      "status": "AM05_B11_C12_SOURCE_CAPTURE_UNAVAILABLE; AM06_NEGATIVE_PASS_ONLY",
+      "observed_branch_head": "34a00f196de20de359b53f51fbe9007442f8cea4",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 199,
+      "branch": "sf-installed-host",
+      "consumer": "211",
+      "status": "INSTALLED_SOURCE_FIXTURE_COMPOSED; ACTUAL_AUTHENTICATED_BROWSER_AND_PACKAGED_D01_UNAVAILABLE",
+      "observed_branch_head": "9b512eeffa9c437967b03d5af6dab11a1718f48b",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 201,
+      "branch": "sf-work-types",
+      "consumer": "211",
+      "status": "WORK_COMPONENT_CHECKS_B9_PASS; COMPILER190_OWNED",
+      "observed_branch_head": "cb7a19356da4e9ba33c902264a1b4aa25639d976",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 202,
+      "branch": "sf-context-types",
+      "consumer": "211",
+      "status": "F01_B12_PASS_NEGATIVE",
+      "observed_branch_head": "1f9220cd68f84237f4c2dc6d3f28b858f5de2bda",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 203,
+      "branch": "sf-transport-types",
+      "consumer": "211",
+      "status": "B12_F02_PASS; B14_LITERAL_MIME_FAIL_COMPOSER_CONSUMED_B21_6_PASS",
+      "observed_branch_head": "df9fdd3afa36ccc2f686d165104546819eb96dfc",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 204,
+      "branch": "sf-fixture-types",
+      "consumer": "211",
+      "status": "B13_BI_PEOPLE_PASS",
+      "observed_branch_head": "e6e8ecdc63ea7cc8070c15aec16c001c4b657a13",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 205,
+      "branch": "sf-thread-newlines",
+      "consumer": "211",
+      "status": "B15_ZERO_SELECTION_REPAIRED_B15R_5_PASS",
+      "observed_branch_head": "c8af58da3cb7c8734c2d2f126e63fd1ddabd0440",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 206,
+      "branch": "sf-ux-n13",
+      "consumer": "211",
+      "status": "U39_U40_SOURCE_COMPOSED_NOT_INSTALLED_POSITIVE",
+      "observed_branch_head": "6b747c45b0f26ea2e9b8d726a34347cc6b42a4a4",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 207,
+      "branch": "sf-review-functional",
+      "consumer": "211",
+      "status": "PRELIMINARY_FIX_FIRST_5_NEW_6_INHERITED; CAP06_CAP24_CTA_B20_COMPONENT_PASS_ONLY",
+      "observed_branch_head": "67f1963e42769dfb94ba1080ca0b5b883b54eb58",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 208,
+      "branch": "sf-review-integrity",
+      "consumer": "211",
+      "status": "PRELIMINARY_FIX_FIRST; BI_UNIT_ATLAS_SEQUENCE_2_FIXES_B13_PASS",
+      "observed_branch_head": "b3e674c66e9c7e0a3f6ade6353905539a8e326fd",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 209,
+      "branch": "sf-review-runtime",
+      "consumer": "211",
+      "status": "PRELIMINARY_FIX_FIRST; NATIVE_RUNNER_AND_G7_G8_UNPROVEN",
+      "observed_branch_head": "84c9eb170b826c4c595120e62b78efe31f904d0d",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 210,
+      "branch": "sf-guard-archive",
+      "consumer": "189/190/208",
+      "status": "55_HISTORICAL_BLOBS_VERIFIED_ZERO_DELETED; 69_STATIC_REFERENCES_DYNAMIC_NOT_PROVEN; 1_UNRECONCILED_PREBLOB; NO_GUARD_PASS",
+      "observed_branch_head": "cca757a0e125de371cb677342802509fb769bbd2",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 211,
+      "branch": "sf-closure-bundle",
+      "consumer": "S0",
+      "status": "PR191_COMPOSER_PROPOSAL_ONLY; latest e9d6 original 1610 criteria ledger is documentary, not accepted C",
+      "observed_branch_head": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 212,
+      "branch": "sf-hypothetical-fix",
+      "consumer": "211",
+      "status": "AM01_CAUSAL_PATCH_COMPOSED; NEW_B19_BASELINE_COVERAGE_CASE_NOT_SELECTED",
+      "observed_branch_head": "e8dfeb4cb4e122318b6289fbeb8fe4da9ef53f64",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 213,
+      "branch": "sf-desktop-bootstrap",
+      "consumer": "211",
+      "status": "211_CONSUMED_DESKTOP213_MAIN_CODE_AND_ALL_4_INERT_POSTBLOBS; B22_4_UNIT_PASS_NOT_D01",
+      "observed_branch_head": "6f65ea078a3c596fca02961a68d98d36778bd54f",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    },
+    {
+      "id": 214,
+      "branch": "sf-ci-validation",
+      "consumer": "S0/211/190/207-209",
+      "status": "SOLE_CI_DISPATCHER_15_RUNS_7_SUCCESS_8_FAILURE; 134_PASS_12_FAIL; EVIDENCE_COMMITTED",
+      "observed_branch_head": "a649c8f42f144048d217a0100619998c85aed141",
+      "observed_head_kind": "VERIFIED_GITHUB_BRANCH_TIP"
+    }
+  ],
+  "ready_new_unique_work": [],
+  "blocked_queue": [
+    {
+      "id": "214-NEXT-001",
+      "kind": "SOURCE_REPAIR",
+      "owner": "193/211 fresh",
+      "state": "BLOCKED_CAUSAL",
+      "input": "Closed-schema projection.cases handling includePrivate true; B9 run43780028332; source schema blob6c1d974...",
+      "next": "Complete corrective postimage + preblob; 211 consumes, 214 tests exact changed W; don't weaken assertion"
+    },
+    {
+      "id": "214-NEXT-002",
+      "kind": "SOURCE_REPAIR",
+      "owner": "197/211 fresh",
+      "state": "BLOCKED_CAUSAL",
+      "input": "AM04 B18 run43781497192 job133019486672; decision-review HTTP400 instead of 200 in both tests after import fix",
+      "next": "Causal review request/authority fix with complete code postimage in correct owner lease"
+    },
+    {
+      "id": "214-NEXT-003",
+      "kind": "SOURCE_REPAIR",
+      "owner": "212/196/211 fresh",
+      "state": "BLOCKED_CAUSAL",
+      "input": "AM01 B19 run43781520064 job133019558133 baseline-coverage-case-not-selected after 212 noncommitting preview fix",
+      "next": "Prove valid persisted case/coverage admission and C09/C10 readback; no negative as positive"
+    },
+    {
+      "id": "214-NEXT-004",
+      "kind": "SOURCE_REPAIR",
+      "owner": "198/197/211 fresh",
+      "state": "BLOCKED_CAUSAL",
+      "input": "AM05 B11 run43780062327 Real C12 original capture unavailable in 2 tests",
+      "next": "Repair genuine C12 original capture/authority/transaction precondition; rerun only material recheck"
+    },
+    {
+      "id": "214-NEXT-007",
+      "kind": "INSTALLED_REAL_PROOF",
+      "owner": "199/S0 authorized host then 214",
+      "state": "BLOCKED_EXACT_EXTERNAL_RESOURCES",
+      "inputs": [
+        "accepted exact SF_NATIVE_CANDIDATE_SHA",
+        "private 0700 runner root and 0600 SF_NATIVE_INSTALLED_MANIFEST",
+        "private 0600 SF_NATIVE_BROWSER_ENDPOINT_FILE for pre-existing loopback CDP with independent Microsoft requester/holder/denied contexts",
+        "private 0600 SF_NATIVE_D01_PACKAGED_ATTESTATION for existing packaged Electron path/sha256 and actual main broker",
+        "main-owned approved Orchestra connection serverKey/projectId/transportIdentity and separate Microsoft principals",
+        "authentic F01 route resolver and CAP14/CAP04/CAP05 original page IDs/versions/encoded selectors"
+      ],
+      "next": "Run original installed U15/U39/U40/D01 and AM01–AM06 with real data/actors; missing identities block dependent proof, not code, no secrets committed"
+    },
+    {
+      "id": "214-NEXT-008",
+      "kind": "S0_FINAL_C",
+      "owner": "S0/211/189",
+      "state": "BLOCKED_NOT_ACCEPTED",
+      "input": {
+        "composer_head": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab",
+        "stack_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+        "formal_acceptance": false
+      },
+      "next": "Accept one coherent immutable C with exact source pre/post receipts, no stale source import and full UX scope"
+    },
+    {
+      "id": "214-NEXT-009",
+      "kind": "FINAL_SAME_C_PRODUCT_CI",
+      "owner": 214,
+      "state": "NOT_RUN_PENDING_ACCEPTED_C",
+      "selectors": [
+        {
+          "id": "CI-SF",
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [],
+          "status": "NOT_RUN",
+          "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+        },
+        {
+          "id": "CI-CLI",
+          "package": "cli",
+          "directory": "apps/cli",
+          "runner": "bun",
+          "args": [],
+          "status": "NOT_RUN",
+          "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+        },
+        {
+          "id": "CI-APP-SRC",
+          "package": "app",
+          "directory": "packages/app-shell",
+          "runner": "bun",
+          "args": [],
+          "status": "NOT_RUN",
+          "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+        },
+        {
+          "id": "CI-APP-BROWSER",
+          "package": "app",
+          "directory": "packages/app-shell",
+          "runner": "bun",
+          "args": [
+            "test-browser"
+          ],
+          "status": "NOT_RUN",
+          "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+        },
+        {
+          "id": "CI-ATLAS-BUSINESS",
+          "package": "atlas-boundary",
+          "directory": "modules/atlas/boundary",
+          "runner": "bun",
+          "args": [
+            "--timeout",
+            "30000"
+          ],
+          "status": "NOT_RUN",
+          "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+        },
+        {
+          "id": "CI-UI-OPERATIONS",
+          "package": "app",
+          "directory": "packages/app-shell",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/operations.spec.ts"
+          ],
+          "status": "NOT_RUN",
+          "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+        },
+        {
+          "id": "CI-UI-DECISIONS",
+          "package": "app",
+          "directory": "packages/app-shell",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/decisions.spec.ts"
+          ],
+          "status": "NOT_RUN",
+          "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+        },
+        {
+          "id": "CI-UI-REPORTS",
+          "package": "app",
+          "directory": "packages/app-shell",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/reports.spec.ts"
+          ],
+          "status": "NOT_RUN",
+          "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+        }
+      ],
+      "other": [
+        "epic/e2e",
+        "mandatory suites from epic",
+        "installed witnesses AM01–AM06"
+      ],
+      "next": "Run each lane on identical accepted C via sole .github/workflows/test-ci.yml, no modified validator/workflow/oracle/fixture, one fullsuite per epic, causal rerun only"
+    },
+    {
+      "id": "214-NEXT-010",
+      "kind": "COMPILER_GUARD",
+      "owner": 190,
+      "state": "NOT_RUN",
+      "inputs": [
+        "accepted C exact SHA/tree",
+        "G7 guard on same C",
+        "compiler/typecheck official existing workflow"
+      ],
+      "next": "190 (not 214) provides separate C/G7 receipt"
+    },
+    {
+      "id": "214-NEXT-011",
+      "kind": "EVIDENCE_D_G8",
+      "owner": "S0/190/208",
+      "state": "NOT_RUN",
+      "inputs": [
+        "valid append-only D distinct from C",
+        "G8 guard after authoritative D",
+        "archive210 consumer read-equivalence and original receipts preserved"
+      ],
+      "next": "Verify remote evidence and D/G8 separately with accurate provenance; no SHA self-receipt"
+    },
+    {
+      "id": "214-NEXT-012",
+      "kind": "REVIEWS_REMOTE",
+      "owner": "207/208/209 fresh",
+      "state": "NOT_RUN_FINAL",
+      "inputs": [
+        "independent functional/UX reviewer R1",
+        "integrity/security reviewer R2",
+        "runtime/evidence reviewer R3",
+        "final C, valid D, evidence artifacts and actual AM positive"
+      ],
+      "next": "Bind FINAL signed verdicts and remoteproof to same C/D; preliminary FIX_FIRST cannot approve"
+    }
+  ],
+  "final_C_minimum_8": [
+    {
+      "id": "CI-SF",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [],
+      "status": "NOT_RUN",
+      "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+    },
+    {
+      "id": "CI-CLI",
+      "package": "cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [],
+      "status": "NOT_RUN",
+      "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "bun",
+      "args": [],
+      "status": "NOT_RUN",
+      "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "bun",
+      "args": [
+        "test-browser"
+      ],
+      "status": "NOT_RUN",
+      "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "package": "atlas-boundary",
+      "directory": "modules/atlas/boundary",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000"
+      ],
+      "status": "NOT_RUN",
+      "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/operations.spec.ts"
+      ],
+      "status": "NOT_RUN",
+      "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/decisions.spec.ts"
+      ],
+      "status": "NOT_RUN",
+      "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/reports.spec.ts"
+      ],
+      "status": "NOT_RUN",
+      "blocker": "S0 has not accepted immutable coherent C; installed source/browser resources and required positive proofs unavailable; no fake provider/fixture"
+    }
+  ],
+  "epic_and_e2e": "NOT_RUN_ON_ACCEPTED_C",
+  "separate_guards": {
+    "C_G7": "NOT_RUN_OWNER_190",
+    "D_G8": "NOT_RUN_NO_VALID_D"
+  },
+  "source_read_only_scope": "15_WP_74_TASKS_17_CONTRACTS_1610_CRITERIA_70_SURFACES_165_ROUTES",
+  "terminal_policy": "NO_REPEAT_UNCHANGED_FAILING_SELECTION; consume new contracted commits and run only independently ready material inputs; all other gates remain FAIL/BLOCKED/NOT_RUN",
+  "native_goal": "PAUSED",
+  "GLOBAL_RELEASE": false,
+  "completed_consumer_actions": [
+    {
+      "id": "214-NEXT-005",
+      "kind": "F02 MIME literal closed assertion",
+      "producer_postblob": "fef5c0a8702ffde3921a7cd65829cfba9259716d",
+      "composer_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure211/INTAKE-213-214-MIME.json",
+      "verified_on_W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+      "validation": {
+        "run_id": 43783167215,
+        "pass": 6,
+        "fail": 0
+      },
+      "state": "COMPLETE_COMPONENT_ONLY"
+    },
+    {
+      "id": "214-NEXT-006",
+      "kind": "213 source bootstrap and four inert payloads",
+      "composer_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure211/INTAKE-213-214-MIME.json",
+      "verified_on_W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+      "validation": {
+        "run_id": 43783196912,
+        "pass": 4,
+        "fail": 0
+      },
+      "state": "COMPOSED_AND_UNIT_VALIDATED; INSTALLED_D01_SEPARATELY_BLOCKED"
+    }
+  ],
+  "current_candidate_no_repeat_reason": "Latest composer e9d6 adds only a documentary 1610 criteria ledger after source W e648 (which passed B21/B22). All independently available changed source selections finished; repeating unchanged failures is prohibited. Material owner patch, accepted C or real installed host is required to unlock further validation.",
+  "last_ownership_ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/ACK-214.json",
+  "totals": {
+    "runs": 15,
+    "passed": 134,
+    "failed": 12,
+    "successful_workflows": 7,
+    "failed_workflows": 8,
+    "zero_selection_workflows": 1,
+    "artifacts": 0
+  }
+}

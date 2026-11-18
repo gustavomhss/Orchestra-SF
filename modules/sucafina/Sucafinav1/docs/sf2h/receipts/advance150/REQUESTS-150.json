@@ -1,0 +1,57 @@
+{
+  "mission": 150,
+  "epoch": "product-ci-e3-browser150",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "integrator": 132,
+  "compiler": 149,
+  "ci": 150,
+  "global_release": false,
+  "goal": "paused",
+  "schema": "sf2h.product-ci150.requests.v1",
+  "predecessor": {
+    "requests_blob": "40da80815094f08c4e56ab3a7d4c54259060679d",
+    "runs_blob": "602e0b9751d6df9fb03a427377d065735d0e775f",
+    "findings_blob": "a073d13be1be187f8e76e221ab87e1f0dd4a0bc5",
+    "inherited_120_count": 12,
+    "inherited_129_count": 6
+  },
+  "material": {
+    "W": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+    "tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7",
+    "accepted": false
+  },
+  "snapshot": {
+    "S": "b9e68821206cdd9510b1faa5d07f98140b1df581",
+    "tree": "564b86d3d2a9a3dd9f9a907e0a128863dbcd7929",
+    "parent": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+    "branch": "ci-run-linux-sf150-a07a15-1",
+    "request_blob": "c0a5671b4040222ecd20b49300d8a4b6c061b69d",
+    "only_diff": [
+      ".ci-run.json"
+    ],
+    "validated": "GitHub MCP compare ahead1/files1",
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "os": "ubuntu-24.04",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/native-ui-contract/reviews.test.ts",
+      "Sucafinav1/test/native-ui-contract/bi.test.ts",
+      "Sucafinav1/test/native-ui-contract/routines.test.ts",
+      "Sucafinav1/test/native-ui-contract/people.test.ts",
+      "Sucafinav1/test/native-ui-contract/work.test.ts",
+      "Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+      "Sucafinav1/test/native-ui-contract/memory.test.ts",
+      "Sucafinav1/test/native-ui-contract/analyses.test.ts"
+    ],
+    "env": {},
+    "dedup": "W/tree+ordered args+workflow/runtime+fixtures+code/test blobs"
+  },
+  "run": 43758731378
+}

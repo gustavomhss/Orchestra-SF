@@ -1,0 +1,111 @@
+{
+  "schema": "sf2h.product-ci191.v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 191,
+  "epoch": "product-ci-e5-browser191",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "github_actor": "gustavomhss",
+  "effective_model": "GPT-6",
+  "requested_model": "Astra",
+  "native_session_id": null,
+  "native_session_id_exposed": false,
+  "sole_product_ci": true,
+  "native_goal": "PAUSED",
+  "global_release": false,
+  "findings": [
+    {
+      "key": "F191-DECISIONS-API",
+      "state": "OPEN_AUTHOR_FIX_REQUIRED",
+      "run": 43772149086,
+      "job": 132990216337,
+      "W": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "blob": "6183175ebce968280b61668085d27771697a4b64",
+      "line": 15,
+      "error": "TypeError: Schema.decodeUnknownEither is not a function",
+      "impact": "8 FAIL; remaining 3 PASS; 173 original source import now fixed",
+      "owner_pr": 135,
+      "integrator_pr": 65,
+      "owner_comment": 6902821249,
+      "integrator_comment": 6902821704,
+      "required": "author provides precise Effect4 installed decoder helper preserving strict excess keys and all assertions; 189 consumes CAS; 191 changed-W targeted retest"
+    },
+    {
+      "key": "F191-DOMAIN-PROJECTION",
+      "state": "OPEN_CONSUMER_DEPENDENCY",
+      "run": 43772487366,
+      "job": 132991271823,
+      "W": "e344a6685e7244ea65b20031ae6f917bcec819be",
+      "missing": "apps/cli/src/sucafina-product/native-ui/domain/projection.ts",
+      "source_author_branch": "sf-ux-w14",
+      "source_blob": "eae532dae73f282d9cefd66228da15fc26b63040",
+      "owner_pr": 133,
+      "integrator_pr": 65,
+      "owner_comment": 6902873290,
+      "integrator_comment": 6902872825,
+      "assertions": "NOT_RUN_IMPORT_FAILURE"
+    },
+    {
+      "key": "F191-OPERATIONS-PROJECTION",
+      "state": "OPEN_CONSUMER_DEPENDENCY",
+      "run": 43772487366,
+      "job": 132991271823,
+      "W": "e344a6685e7244ea65b20031ae6f917bcec819be",
+      "missing": "apps/cli/src/sucafina-product/native-ui/operations/projection.ts",
+      "source_author_branch": "sf-ux-a11",
+      "source_blob": "02b5f163387aaee657336f5544003ab123af5dd4",
+      "owner_pr": 143,
+      "integrator_pr": 65,
+      "owner_comment": 6902873747,
+      "integrator_comment": 6902872825,
+      "assertions": "NOT_RUN_IMPORT_FAILURE"
+    },
+    {
+      "key": "F191-S05-OWNER-NEWLINE",
+      "state": "OPEN_AUTHOR_FIX_REQUIRED",
+      "run": 43773852118,
+      "job": 132995508966,
+      "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "test_blob": "5d02157e04299a299cd3c4fada3dd19913a59598",
+      "line": 170,
+      "source": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "source_blob": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "source_line": "259-265",
+      "cause": "new owner: raw supplied draft contains CRLF; DOM textarea expected normalized LF; assertion fails, Bun diff visually identical; exact hidden character not independently byte-confirmed",
+      "impact": "One S05 fail; 4 S05 pass, F03/S01/S02 pass on Wca31; test actually selected, not skip",
+      "owner_pr": 119,
+      "integrator_pr": 65,
+      "owner_comment": 6903059035,
+      "integrator_comment": 6903059523,
+      "required": "184 source owner fixes DOM value normalization after owner switch while preserving byte-exact raw onPost payload, CAS and privacy; 189 CAS consumes, then 191 reruns only changed S05 exact ./ selector"
+    }
+  ],
+  "passed_scoped": {
+    "B2": {
+      "planner": 11,
+      "portfolio": 9,
+      "memory": 7,
+      "people": 11,
+      "routines": 10
+    },
+    "B3": {
+      "A12": 15,
+      "F01_negative": 16
+    },
+    "B4": {
+      "AM03_negative": 2,
+      "AM04_negative": 13,
+      "AM06_negative": 5
+    },
+    "B5": {
+      "F03": 1,
+      "S01": 1,
+      "S02": 1,
+      "S05": 4
+    }
+  },
+  "caveat": "No positive native install/profile/skill/provider/Relay/scanner/Atlas/restart/authorization proof from green source or correlator tests Browser positive here is component DOM only; no installed F04 actor proof."
+}

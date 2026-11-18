@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h.ci214.inert-causal-patches.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 214,
+  "epoch": "product-ci-e7-browser214",
+  "product_W": "569b3213525aa6eb23741cb1034bd0f054ccd381",
+  "product_tree": "2656f665eaac92ea9214d685decb36f5479ed2fb",
+  "status": "COMPLETE_INERT_SOURCE_PAYLOADS_NO_CODE_BRANCH_MUTATION",
+  "no_tests_after_patches": true,
+  "consumer": {
+    "composer": 211,
+    "branch": "sf-closure-bundle",
+    "pr": 191
+  },
+  "rule": "Compare live source preblob to source_preblob; apply archived full bytes via consumer-owned CAS only when authority valid. If drift, reconcile; do not blind-apply or claim PASS.",
+  "patches": [
+    {
+      "source": "apps/cli/src/sucafina-product/native-ui/operations/projection.ts",
+      "source_preblob": "02b5f163387aaee657336f5544003ab123af5dd4",
+      "source_postblob": "bdde554d78b3c2e9c880499d879388a65147b3f0",
+      "archived_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/inert/apps-cli-operations-projection.ts.txt",
+      "verified_edit_count": 1,
+      "change": "remove_unmatched_ternary_tail",
+      "owner": "176 / 211",
+      "failed_run": 43780028332,
+      "validation_after_patch": "NOT_RUN"
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+      "source_preblob": "530b1d6618218f11cefa699e3e6def1bd8f96270",
+      "source_postblob": "bb4cdec036331bc180db16795c7dcae215cfbe98",
+      "archived_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/inert/am03-functional-boundaries.test.ts.txt",
+      "verified_edit_count": 4,
+      "change": "am03_correct_relative_product_imports",
+      "owner": "197 / 211",
+      "failed_run": 43780060382,
+      "validation_after_patch": "NOT_RUN"
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+      "source_preblob": "1fbabb2be4bd2540f1f280cf432630e6dd3f486d",
+      "source_postblob": "aa144a649d9f3378f9b0861941b3c7f4379fc472",
+      "archived_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/inert/am04-domain-recovery-functional.test.ts.txt",
+      "verified_edit_count": 1,
+      "change": "am04_recovery_correct_runtime_import",
+      "owner": "197 / 211",
+      "failed_run": 43780062327,
+      "validation_after_patch": "NOT_RUN"
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+      "source_preblob": "4a7100ca6d4a3c109924674fc6d6ae8c4e79aee0",
+      "source_postblob": "20be7565a7d63a1f042a718dbc1c5787340b62e1",
+      "archived_full_content_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/inert/am04-receipt-key-collision.test.ts.txt",
+      "verified_edit_count": 3,
+      "change": "am04_key_correct_runtime_product_imports",
+      "owner": "197 / 211",
+      "failed_run": 43780062327,
+      "validation_after_patch": "NOT_RUN"
+    }
+  ],
+  "unresolved_not_inert_fixed": [
+    "Decisions projection.cases schema extra includePrivate accepted (193/schema owner; no weakening oracle)",
+    "AM05 C12 original capture unavailable before Atlas test bodies (198/producer investigation)"
+  ],
+  "GLOBAL_RELEASE": false
+}

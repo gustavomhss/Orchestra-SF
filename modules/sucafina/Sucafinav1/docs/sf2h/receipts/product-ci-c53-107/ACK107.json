@@ -1,0 +1,95 @@
+{
+  "schema": "sf2h.product-ci107.ack.v1",
+  "mission": 107,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": {
+    "model_effective": "GPT-6",
+    "user_label": "Astra",
+    "github_actor": "gustavomhss",
+    "runtime_session_id": null,
+    "session_id_note": "not independently exposed; not invented"
+  },
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "lease_epoch": "product-ci-browser107",
+  "admission": {
+    "basis": "Direct current S0/user assignment of mission107 and named phaseC53 continuation; not silence-based replacement",
+    "prior_authority": 101,
+    "prior_phase": "C51",
+    "prior_record": "ACK101/RUNS/CHECKPOINT-101 @ 4c46f8561a8a4ed7d1c98432dd0e2f395935b963",
+    "prior_phase_status": "SIX_TERMINAL; FINAL checkpoint/PR106",
+    "prior_session_runtime_status": "not externally observable via GitHub; no evidence of live concurrent C53 dispatcher",
+    "concurrent_dispatch_rule": "Exactly one product dispatcher; if evidence of 101 active emerges, cease dispatch and reattach/read-only",
+    "observed_github_actions": {
+      "recent_runs_examined": 100,
+      "matching_C53_runs": 0,
+      "in_progress": 0,
+      "pending": 0,
+      "queued": 0,
+      "requested": 0,
+      "observed_ci_run_branches": 0
+    },
+    "state": "ADMITTED_BY_DIRECT_S0_USER107; PRE_DISPATCH_C53"
+  },
+  "source": {
+    "C": "C53",
+    "W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "material": true,
+    "integrator": "106",
+    "sf2_stack_documentary_head": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "producer_releases": [
+      "103",
+      "104"
+    ],
+    "source_test_changes": [
+      "native-consumer-repair/observe.test.ts",
+      "native-consumer-repair/deadline.test.ts",
+      "first-save-http-repair/outcome-key-admission.test.ts"
+    ]
+  },
+  "snapshots": {
+    "previous_C51_six_runs": [
+      43682386656,
+      43682448571,
+      43682451927,
+      43682453714,
+      43682455278,
+      43682450677
+    ],
+    "ci107_C53_snapshots": [],
+    "ci107_C53_runs": []
+  },
+  "planned_selections": [
+    {
+      "name": "NATIVE103_C53",
+      "files": 7,
+      "originals": 5,
+      "new": 2
+    },
+    {
+      "name": "FIRST_SAVE104_C53",
+      "files": 4,
+      "originals": 3,
+      "new": 1
+    }
+  ],
+  "constraints": [
+    "GitHub MCP only; existing test:ci/request and .ci-run.json",
+    "No product/tests/fixtures/workflow changes",
+    "One dispatcher/dedup by candidate tree+ordered args+runtime+OS+config+fixtures",
+    "No local testing",
+    "108 compiler/guards only",
+    "No P03 repeat without causal patch99",
+    "Later 102/95/96 only after 106 composition",
+    "No full epic/eight final/AM/GLOBAL_RELEASE"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/product-ci-c53-107/",
+    "new ci-run-* snapshots change .ci-run.json only"
+  ],
+  "checkpoint": "ACK_READY; no C53 tests yet at publication",
+  "GLOBAL_RELEASE": false
+}

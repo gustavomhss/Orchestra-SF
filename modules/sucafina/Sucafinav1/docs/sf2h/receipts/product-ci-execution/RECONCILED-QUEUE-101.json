@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.product-ci101.queue.v1",
+  "adopted_and_run": [
+    94,
+    87,
+    97,
+    98,
+    90
+  ],
+  "dedup_key": [
+    "W tree",
+    "exact selected files ordered",
+    "runner",
+    "OS/runtime",
+    "config/env",
+    "fixture blobs",
+    "workflow blob"
+  ],
+  "future": [
+    {
+      "mission": 95,
+      "state": "WAIT_INTEGRATED_PRODUCER_AND_EXPLICIT_SUCCESSOR_C",
+      "required": "native native-host-provider ready owner / C15 real; keep separate from synthetics"
+    },
+    {
+      "mission": 96,
+      "state": "WAIT_OWNER52_HOST_PATCH_RECONCILIATION",
+      "required": "no overwrite C49 host-origin; actual C08 creation reload UI tests"
+    },
+    {
+      "mission": 99,
+      "state": "WAIT_CAUSAL_PATCH_ORIGINAL_P03_PASS",
+      "required": "do NOT rerun original without source changes; historical 43681302722 FAIL and R2 43681797855 partial PASS"
+    },
+    {
+      "mission": 102,
+      "state": "WAIT_ACTUAL_REQUEST_SOURCE_CONSUMER",
+      "required": "verify W and dependency, no inferred ownership"
+    }
+  ],
+  "pending_retest": [
+    {
+      "mission": 87,
+      "cause": "HTTP 503 instead of 403 without key",
+      "need": "new W/tree owned patch after 100 successor adopted"
+    },
+    {
+      "mission": 90,
+      "cause": "native origin module unresolved named export",
+      "need": "source fix plus synthetic tests; separate real-native provider"
+    }
+  ],
+  "release_lane": {
+    "mission100": "EXPLICIT_TERMINAL_LEASE_ENDED",
+    "successor": "S0 MUST APPOINT",
+    "accepted": "no",
+    "GLOBAL_RELEASE": false
+  },
+  "no_additional_dispatch": true
+}

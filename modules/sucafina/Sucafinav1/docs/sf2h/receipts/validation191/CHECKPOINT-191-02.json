@@ -1,0 +1,129 @@
+{
+  "schema": "sf2h.product-ci191.checkpoint.v1",
+  "mission": 191,
+  "epoch": "product-ci-e5-browser191",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "model": "GPT-6",
+  "session_id": null,
+  "goal": "PAUSED",
+  "global_release": false,
+  "previous_checkpoint": "CHECKPOINT-191-01.json",
+  "product_latest_observed": {
+    "W": "25038d3d83a3ffc58b1011c54770c1a985ffff32",
+    "tree": "d56bee616c8d29ba16d5334ebf5e730697900e1e",
+    "message": "docs(sf2h): receipt released AM01-AM06 code without native PASS [skip ci]"
+  },
+  "B2_native_corrected": {
+    "W": "e344a6685e7244ea65b20031ae6f917bcec819be",
+    "Wtree": "c8b7a4c189dbf924aeba244cb24a7becd3819d2a",
+    "S": "35040a8df4cfc2b84cd993824a76a24cb508c8d7",
+    "Stree": "60ff36b0d7d7311328c8898553bbe8ef016e9034",
+    "request_blob": "35060d648dc90c9979195d0c021e8bf2c0e6450d",
+    "run": 43772487366,
+    "job": 132991271823,
+    "attempt": 1,
+    "status": "COMPLETED_FAILURE",
+    "selected_files": 7,
+    "selected_tests": 50,
+    "passed": 48,
+    "failed": 2,
+    "expects": 442,
+    "artifacts": [],
+    "scope_passed": {
+      "planner": 11,
+      "portfolio": 9,
+      "memory": 7,
+      "people": 11,
+      "routines": 10
+    },
+    "blocked": [
+      {
+        "suite": "domain.test.ts",
+        "cause": "Cannot find server-only native-ui/domain/projection.ts",
+        "status": "IMPORT_FAIL_ASSERTIONS_NOT_RUN",
+        "expected_source_blob": "eae532dae73f282d9cefd66228da15fc26b63040",
+        "owner_pr": 133
+      },
+      {
+        "suite": "operations.test.ts",
+        "cause": "Cannot find server-only native-ui/operations/projection.ts",
+        "status": "IMPORT_FAIL_ASSERTIONS_NOT_RUN",
+        "expected_source_blob": "02b5f163387aaee657336f5544003ab123af5dd4",
+        "owner_pr": 143
+      }
+    ],
+    "escalation": {
+      "integrator": 6902872825,
+      "domain_author": 6902873290,
+      "operations_author": 6902873747
+    },
+    "next": "189 CAS consumes missing validated dependency code on new W/tree, 191 rerun only domain/operations file selectors"
+  },
+  "B3_F01_A12": {
+    "W": "77e58de895b5157b2a32e3427483bd12f40a7525",
+    "Wtree": "28feb531911172b68a5615e81510a00fda9cb1b8",
+    "S": "a1ad84778f695114456be677c400a2f5d0b6d373",
+    "Stree": "f3b2f11f467bf4aad3633669f2cddb83fad2e5a4",
+    "request_blob": "1a3bef36acb13d0a13600018fb119b684d141916",
+    "run": 43772869717,
+    "job": 132992451021,
+    "attempt": 1,
+    "conclusion": "success",
+    "selected_files": [
+      "Sucafinav1/test/native-ui-contract/work.test.ts",
+      "Sucafinav1/test/native-ui-contract/live-context.test.ts"
+    ],
+    "selected_cases": 31,
+    "pass": 31,
+    "fail": 0,
+    "expects": 139,
+    "artifacts": [],
+    "scope": "A12 15 strict contract and F01 16 negative fail-closed cases",
+    "limitation": "source and guard tests PASS only; no positive installed/native/identity, no Omni spawn qualification"
+  },
+  "B4_AM_NEGATIVE": {
+    "W": "25038d3d83a3ffc58b1011c54770c1a985ffff32",
+    "Wtree": "d56bee616c8d29ba16d5334ebf5e730697900e1e",
+    "S": "09dd88e3cec54f2a3746686c5510856071ddaf64",
+    "Stree": "bb92db98941ba5e54c0d224fb9b4c209c04a6c78",
+    "request_blob": "290d6518c03c8a1860b7278d979178f7b546cbc5",
+    "run": 43773234546,
+    "attempt": 1,
+    "status": "in_progress",
+    "conclusion": null,
+    "selection": [
+      "am03/correlation.test.ts",
+      "am04/correlation-gate.test.ts",
+      "am06/correlate.test.ts",
+      "am06/reentry-fence.test.ts"
+    ],
+    "classification": "NEGATIVE_COMPONENT_ONLY_NOT_NATIVE_POSITIVE",
+    "product_AM01_AM06_positive": "NOT_RUN",
+    "no_fake_native": "explicit correlation gate tests reject missing/constructed evidence"
+  },
+  "not_dispatched": [
+    {
+      "area": "F03 S01 S05",
+      "reason": "189 has not consumed 182/183/184 source+test postimages; do not duplicate 164 known failures",
+      "need": "compare postblobs and real platform fixture first; exact browser prefix ./test-browser/sucafina-native/"
+    },
+    {
+      "area": "AM01-AM06 positive",
+      "status": "NOT_RUN",
+      "reason": "no evidence of installed real runtime provider/session identities/18 skills/scanner/restart/MCP/Relay native execution",
+      "note": "proof test files now integrated; this does not prove native outcome"
+    },
+    {
+      "area": "U15 U39 U40",
+      "status": "NOT_RUN",
+      "reason": "real F04 private installed manifest/authorized actors/chapter URLs unavailable"
+    },
+    {
+      "area": "FULL_EPIC_FINAL8",
+      "status": "NOT_RUN",
+      "reason": "integrated product not coherent; pending 190 compiler, separate guard D/G8 and three FINAL reviews"
+    }
+  ],
+  "protocol": "GitHub MCP remote snapshots .ci-run.json only, CAS force=false, single 191 dispatcher, no local tests/parser/typecheck/build, native Goal paused"
+}
