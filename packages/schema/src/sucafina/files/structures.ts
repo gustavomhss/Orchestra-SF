@@ -53,7 +53,6 @@ export const SfDocumentEvidence = Schema.Struct({
   value: Schema.Union([Schema.String, Schema.Finite, Schema.Boolean, Schema.Null]),
   unit: Schema.String.pipe(optional),
   status: Schema.Literals(["extracted", "confirmed", "rejected", "stale"]),
-  rejection: Schema.Struct({ reason: Schema.String, page: PositiveInt }).pipe(optional),
   ref: SfDocumentRef,
 }).annotate({ identifier: "SfFiles.DocumentEvidence" })
 export interface SfDocumentEvidence extends Schema.Schema.Type<typeof SfDocumentEvidence> {}
