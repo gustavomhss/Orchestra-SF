@@ -28,7 +28,8 @@ Each lane reads its own job log from run `44329483839` (head `2e5839eebb`, older
 | Branch | Job | Owns |
 | --- | --- | --- |
 | `sf-reports-stall` | `134890490475` `sf/test-CI-UI-REPORTS` | `product/reports/**`, `product/reviews/capabilities.ts`, `runtime/artifact.ts` |
-| `sf-ui-operations` | `134890490464` `sf/test-CI-UI-OPERATIONS` | Only the operations spec the log names |
+| `sf-effect4-imports` | parent, proven by jobs `134890490464` and `134890490385` | `portfolio/projects/producer.ts` and `portfolio/scenarios/producer.ts` only. Already pushed at `8b481e98e2`. Do not re-edit. |
+| `sf-ui-operations` | `134890490464` `sf/test-CI-UI-OPERATIONS` | Diagnosis only. Cause was the Effect 4 import, now owned above. |
 | `sf-app-browser` | `134890490385` `sf/test-CI-APP-BROWSER` | `test/fixture/local-browser.ts` and the app-browser spec the log names |
 | `sf-cli-red` | `134890490527` `sf/test-CI-CLI` | Only the CLI spec the log names |
 | `sf-procurement-queue` | `134890490309` `sf/procurement-queue-integration` | The integration spec the log names. Not `runtime/procurement.ts` |
