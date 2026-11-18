@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
-import type { AssetPersistence, BlobTransaction } from "../../../../runtime/assets.ts"
+import type { AssetPersistence } from "../../../../runtime/assets.ts"
 import type { Snapshot, TransactionOptions } from "../../../../runtime/contract.ts"
 import type { Surface } from "../../../../src/identity.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
@@ -132,7 +132,7 @@ function observeSource(fixture: Fixture, call: TrustedDomainContext, mode: "fall
     const started = performance.now()
     let entered = false
     try {
-      return await fixture.store.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      return await fixture.store.transaction(surface, async (snapshot, blobs) => {
         const callbackStart = performance.now()
         entered = true
         // Includes queue/admission/open/BEGIN/decode; not an exclusive lock timer.
