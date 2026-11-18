@@ -80,6 +80,18 @@ const sameStamp = (
   a.hostId === b.hostId && a.principalRef === b.principalRef &&
   a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
 
+const sameServerKey = (selected: string, connected: string) => selected === connected
+
+function isSfServerKey(value: string): value is SfServerKey {
+  return value.length > 0
+}
+
+function readCaseRef(value: SfDraftRevalidationInput["read"]["input"]): string | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value) || !("caseRef" in value)) return
+  const caseRef = value.caseRef
+  return typeof caseRef === "string" ? caseRef : undefined
+}
+
 function explicitSelection(query: string): { kind: "none" } | { kind: "invalid" } |
   { kind: "selected"; selection: SfOwnerSelection } {
   if (!query || query === "?") return { kind: "none" }
@@ -134,7 +146,7 @@ export function createSfInstalledOwnerSource231(
   return Object.freeze({
     transportIdentity: key,
     listByIds: (selection: SfOwnerSelection, signal: AbortSignal) => {
-      if (selection.serverKey !== key || !selection.projectId || !selection.installationId)
+      if (!sameServerKey(selection.serverKey, key) || !selection.projectId || !selection.installationId)
         return Promise.resolve(undefined)
       return discover(new URLSearchParams({
         select: "ids", projectId: selection.projectId, installationId: selection.installationId,
@@ -227,7 +239,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const currentHref = () => location.pathname + location.search
   const selection = () => discovery.status === "ready" ? discovery.selection : undefined
   const sameServer = (value: SfOwnerSelection) =>
-    value.serverKey === ServerConnection.key(props.server)
+    sameServerKey(value.serverKey, ServerConnection.key(props.server))
   const newTransport = (binding: SfInstallationDescriptor, generation: number,
     currentGeneration: () => number): SfTransport => createSfTransport({
     binding, generation, currentGeneration, fetch: fetcher, operations: SfNativeOperationBindings,
@@ -273,10 +285,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       // The original case selector is opaque, NOT equal to projection.case.id.
       // Confirm it matches the registered revalidation input, then require the
       // original producer's independently stamped case read and intact version.
-      const originalInput = input.read.input
-      if (!originalInput || typeof originalInput !== "object" ||
-        Array.isArray(originalInput) ||
-        originalInput.caseRef !== input.identity.recordRef ||
+      if (readCaseRef(input.read.input) !== input.identity.recordRef ||
         !sameStamp(result.body.context, fresh.stamp) ||
         projection.context.installationId !== fresh.stamp.installationId ||
         projection.context.projectId !== fresh.stamp.projectId ||
@@ -399,7 +408,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       return
     }
     if (parsed.kind === "selected") {
-      if (parsed.selection.serverKey !== actualServerKey) {
+      if (!sameServerKey(parsed.selection.serverKey, actualServerKey)) {
         setDiscovery({ status: "denied", selection: undefined })
         setView({ status: "denied", route: undefined })
         return
@@ -422,8 +431,12 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         setDiscovery({ status: "ambiguous", selection: undefined })
       } else {
         const only = found.installations[0]!
+        if (!isSfServerKey(actualServerKey)) {
+          setDiscovery({ status: "unavailable", selection: undefined })
+          return
+        }
         setDiscovery({ status: "ready", selection: {
-          serverKey: actualServerKey as SfServerKey,
+          serverKey: actualServerKey,
           projectId: only.projectId as SfRef,
           installationId: only.installationId as SfRef,
         } })
