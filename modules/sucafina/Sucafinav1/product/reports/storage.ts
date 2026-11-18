@@ -74,14 +74,18 @@ export function createReviewArtifactStorage(input: {
   }
   return {
     async put(entry: ArtifactInput, context: TrustedDomainContext): Promise<PortResult<{ artifactRef: string }>> {
+      const trace = (stage: string) => { if (process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_PUT_" + stage) }
+      trace("ENTER")
       const request = input.host.requestFor(context)
       const operation = input.operationIdentity(context, entry)
       if (!request || !operation || !await input.host.revalidate(context)) return { status: "denied", reason: "artifact-unavailable" }
       if (!Number.isSafeInteger(input.maxBytes) || input.maxBytes <= 0 || !(entry.artifact.bytes instanceof Uint8Array) || entry.artifact.bytes.length > input.maxBytes || !entry.artifact.bytes.length || !validReportArtifactMetadata(entry.artifact, entry.format) || !Number.isSafeInteger(entry.recordCount) || entry.recordCount < 0 || new Set(entry.sectionRefs).size !== entry.sectionRefs.length) return { status: "needs-input", reason: "invalid-artifact" }
       const review = await input.reviews.read(entry.reviewRef, context)
+      trace("REVIEW_DONE")
       if (review.status !== "ok") return { status: "denied", reason: "artifact-unavailable" }
       const inclusion = readReviewArtifactSeal(entry.artifact, review.value, entry.sectionRefs)
       const renderDigest = readReviewArtifactRenderDigest(entry.artifact, review.value, entry.sectionRefs)
+      trace("PROOF_DONE")
       if (!inclusion || !renderDigest) return { status: "denied", reason: "artifact-render-proof-unavailable" }
       const selected = entry.sectionRefs.map((id) => review.value.sections.find((section) => section.id === id))
       if (selected.some((section) => !section) || selected.reduce((total, section) => total + (section?.count ?? 0), 0) !== entry.recordCount) return { status: "denied", reason: "artifact-coverage-mismatch" }
@@ -90,19 +94,25 @@ export function createReviewArtifactStorage(input: {
         return [...projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence(projection.reviewChart), ...reviewDecisionEvidence(projection.decision), ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome?.sourceRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.baselineRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.sourceRefs ?? [])]
       })
       if (digestSfValue(evidence) !== digestSfValue(entry.evidenceRefs)) return { status: "denied", reason: "artifact-evidence-mismatch" }
+      trace("EVIDENCE_DONE")
       // Detach the sealed bytes and metadata before the asynchronous ZIP inspection.
       const artifact = { name: entry.artifact.name, type: entry.artifact.type, bytes: new Uint8Array(entry.artifact.bytes) }
       const digest = createHash("sha256").update(artifact.bytes).digest("hex")
       const stored: StoredReport = { kind: "sf-review-artifact-v1", reviewRef: entry.reviewRef, reviewDigest: digestSfValue(review.value), renderDigest, inclusion, sectionRefs: [...entry.sectionRefs], principalRef: context.binding.principalRef, installationId: context.binding.installationId, projectId: context.binding.projectId, policyVersion: context.binding.policyVersion, format: entry.format, name: artifact.name, mediaType: artifact.type, recordCount: entry.recordCount, evidenceRefs: structuredClone(entry.evidenceRefs), digest, bytes: Buffer.from(artifact.bytes).toString("base64") }
-      if (!await validateReportArtifact(artifact, stored.format, input.maxBytes)) return { status: "needs-input", reason: "invalid-artifact" }
+      trace("VALIDATE_ENTER")
+      const valid = await validateReportArtifact(artifact, stored.format, input.maxBytes)
+      trace("VALIDATE_DONE")
+      if (!valid) return { status: "needs-input", reason: "invalid-artifact" }
       const ref = `report:${digestSfValue({ installation: context.binding.installationId, project: context.binding.projectId, principal: context.binding.principalRef, operation })}`
       // ZIP container timestamps can change on an exact retry. The command identifies the
       // preserved content; the first committed bytes remain the immutable downloadable file.
       const commandDigest = digestSfValue(reportIntent(stored))
+      trace("BEFORE_READ_ENTER")
       const before = await input.state.read(request, "documents", (state, authority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return undefined
         return state.documents[ref]
       })
+      trace("BEFORE_READ_DONE")
       if (before.status !== "ok" && !(before.status === "unavailable" && before.reason === "product-state-uninitialized")) return { status: "unavailable", reason: "artifact-storage-unavailable" }
       if (!await input.host.revalidate(context)) return { status: "denied", reason: "artifact-unavailable" }
       if (before.status === "ok" && before.value) {
@@ -111,11 +121,13 @@ export function createReviewArtifactStorage(input: {
         if (digestSfValue(reportIntent(existing.value.stored)) !== commandDigest) return { status: "conflict", reason: "artifact-operation-reused" }
         return { status: "ok", value: { artifactRef: ref } }
       }
+      trace("TX_ENTER")
       const saved = await input.state.transaction(request, { namespace: "documents", expectedStorageVersion: before.status === "ok" ? before.storageVersion : 0, targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation, idempotencyKey: operation, commandDigest }, async (state, authority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || state.documents[ref]) return { commit: false, value: false }
         state.documents[ref] = stored
         return { commit: true, value: true }
       })
+      trace("TX_DONE")
       if (saved.status === "unavailable" || saved.status === "denied") return saved
       if (saved.status !== "ok" || !saved.value) {
         const existing = await load(ref, context)
