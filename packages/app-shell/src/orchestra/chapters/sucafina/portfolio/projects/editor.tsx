@@ -150,7 +150,14 @@ export function SfProjectEditor(props: Readonly<{
   )
 }
 
-export type SfMilestoneDraft = Readonly<{ milestoneId: string; name: string; date: string; status: SfProjectMilestone["status"]; notes: string }>
+type MilestoneDraft = {
+  milestoneId: string
+  name: string
+  date: string
+  status: SfProjectMilestone["status"]
+  notes: string
+}
+export type SfMilestoneDraft = Readonly<MilestoneDraft>
 export function SfMilestoneEditor(props: Readonly<{
   projectId: string
   source: SfProjectMilestone | null
@@ -161,7 +168,7 @@ export function SfMilestoneEditor(props: Readonly<{
 }>): JSX.Element {
   const language = useLanguage()
   const t = (key: CopyKey) => language.t(key as Parameters<typeof language.t>[0])
-  const [draft, setDraft] = createStore<SfMilestoneDraft>({
+  const [draft, setDraft] = createStore<MilestoneDraft>({
     milestoneId: props.source?.id ?? "", name: props.source?.name ?? "",
     date: props.source?.date ?? "", status: props.source?.status ?? "upcoming",
     notes: props.source?.notes ?? "",

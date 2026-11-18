@@ -147,7 +147,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
       editScopeKey: ("CAP10:All Projects:" + key) as SfEditScopeKey,
       identity, baseVersion: version, base: record ? value : null, value,
       revalidation: {
-        operationId: "domain.page.CAP10", input: { year: route.query.year },
+        operationId: "domain.page.CAP10", input: route.query.year === undefined ? {} : { year: route.query.year },
         fieldPaths: ["data.projects", "versions"],
         actionIds: ["save", "delete", "save-milestone", "delete-milestone"],
       },
