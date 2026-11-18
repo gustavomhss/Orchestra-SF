@@ -12,19 +12,17 @@ import { createServer } from "node:http"
 import { writeSync } from "node:fs"
 import path from "node:path"
 import { WebUi } from "@orchestra/server/web-ui"
-import { createRoutes } from "@orchestra/server/routes"
+import { createRoutes, type Options } from "@orchestra/server/routes"
 import { AppDockSocket } from "@orchestra/app-dock/socket-transport"
 import { Commands } from "../commands"
 import { ProductHost } from "../../host"
+import { NativeStartup } from "../../native-startup"
 import { ChildProcessSpawner } from "effect/unstable/process/ChildProcessSpawner"
 import { Runtime } from "../../framework/runtime"
 import { Daemon } from "../../services/daemon"
 import { listenerHosts } from "./serve-host"
 import { addressInUse } from "./serve-port"
 import { ServeShutdown } from "./serve-shutdown"
-import type { loadSfInstallation } from "../../sucafina-product/installation"
-
-type LoadedSfInstallation = Awaited<ReturnType<typeof loadSfInstallation>>
 
 const SHUTDOWN_GRACE_MS = 2_000
 
@@ -36,7 +34,6 @@ export type ServeInput = {
   readonly hostname: string
   readonly port: Option.Option<number>
   readonly register: boolean
-  readonly installation?: Option.Option<string>
   readonly cors?: ReadonlyArray<string>
   readonly allowedHosts?: ReadonlyArray<string>
   /** Runs once the server answers, with the address it bound. */
@@ -55,6 +52,11 @@ export function webRoot() {
 export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput) {
     return yield* Effect.scoped(
       Effect.gen(function* () {
+        const admission = yield* Effect.tryPromise(() => NativeStartup.admit())
+        if (admission && (
+          input.hostname !== "localhost" || Option.isNone(input.port) || input.port.value !== 4111 ||
+          input.register !== false || (input.cors?.length ?? 0) > 0 || (input.allowedHosts?.length ?? 0) > 0
+        )) return yield* Effect.fail(new Error("Native installation requires explicit localhost:4111 without registration or extra origins"))
         // The runtime interrupts on SIGTERM and SIGINT and runs the finalizers; this bounds a finalizer that hangs,
         // as the desktop kills its child a few seconds after SIGTERM. SIGHUP and, on Windows, SIGBREAK are not
         // interrupted by the runtime, so the wait at the end of this scope ends on them as well.
@@ -79,17 +81,15 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
             process.exit()
           }),
         )
-        // Validate the private installation and isolation before daemon or host database effects.
-        const installationFile = input.installation && Option.isSome(input.installation) ? input.installation.value : undefined
-        const installation = installationFile
-          ? yield* Effect.tryPromise({ try: async () => {
-              const port = Option.getOrUndefined(input.port)
-              if (port === undefined) throw new Error("An explicit installation requires an explicit port")
-              const { loadSfInstallation } = await import("../../sucafina-product/installation")
-              return loadSfInstallation(installationFile, `http://${input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname}:${port}`)
-            }, catch: (error) => error instanceof Error ? error : new Error("Installation unavailable") })
+        const installation = admission
+          ? yield* Effect.acquireRelease(
+              Effect.tryPromise(async () => {
+                const { createNativeInstallation } = await import("@orchestra/sucafina/native-installation")
+                return createNativeInstallation({ configuration: admission.configuration, origin: admission.origin, environment: process.env })
+              }),
+              (value) => Effect.promise(() => value.dispose()),
+            )
           : undefined
-        if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))
         const daemon = yield* Daemon.Service
         // A desktop-owned child gets a per-launch password in env and never touches the daemon's password file.
         const password = process.env.ORCHESTRA_SERVER_PASSWORD || (yield* daemon.password())
@@ -97,7 +97,7 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
         // The server authenticates from the value passed to createRoutes, never from env.
         delete process.env.ORCHESTRA_SERVER_PASSWORD
         delete process.env.ORCHESTRA_SERVER_USERNAME
-        const root = yield* Effect.promise(() => webRoot())
+        const root = admission ? admission.webRoot : yield* Effect.promise(() => webRoot())
         // Legacy transcripts on this database are copied to V2 before the server answers: a Session is eligible only
         // while it has no V2 message, so a prompt reaching an old Session first would skip its history forever.
         yield* Effect.gen(function* () {
@@ -109,13 +109,17 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
           Effect.catchCause((cause) => Effect.logError("legacy session import failed", cause)),
         )
         const allowedHosts = listenerHosts(input.hostname, input.allowedHosts)
-        const listening = yield* listen(input.hostname, input.port, password, [...hosts(), ...(installation?.host ?? [])], root, allowedHosts, input.cors, installation)
+        const listening = yield* listen(input.hostname, input.port, password, hosts(), root, allowedHosts, input.cors, installation)
         const address = listening.address
         // Closing the server waits for every open connection, and the event stream never ends on its own. Scope
         // finalizers run in reverse, so this drops the connections before the server closes.
         yield* Effect.addFinalizer(() => Effect.sync(() => listening.server.closeAllConnections?.()))
         if (input.register) yield* daemon.register(address)
         console.log(`server listening on ${HttpServer.formatAddress(address)}`)
+        if (installation) {
+          const enrollment = yield* Effect.tryPromise(() => installation.enroll())
+          console.log(JSON.stringify({ event: "native-installation-ready", artifact: enrollment.artifact }))
+        }
         if (input.onListening) yield* input.onListening(address, root)
         return yield* ServeShutdown.untilSignal(process, process.platform, (signal) => {
           if (shutdown.signal) return
@@ -137,11 +141,11 @@ function listen(
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
   cors?: ReadonlyArray<string>,
-  installation?: LoadedSfInstallation,
+  nativeInstallation?: Options["nativeInstallation"],
 ) {
-  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors, installation)
+  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors, nativeInstallation)
   const next = (port: number): ReturnType<typeof bind> =>
-    bind(hostname, port, password, host, root, allowedHosts, cors).pipe(
+    bind(hostname, port, password, host, root, allowedHosts, cors, nativeInstallation).pipe(
       Effect.catch((error) => (port === 65_535 || !addressInUse(error) ? Effect.fail(error) : next(port + 1))),
     )
   return next(4096)
@@ -155,15 +159,14 @@ function bind(
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
   cors?: ReadonlyArray<string>,
-  installation?: LoadedSfInstallation,
+  nativeInstallation?: Options["nativeInstallation"],
 ) {
   const server = createServer()
   return Layer.build(
-    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts, sucafinaInstallations: installation?.discovery }), installation?.layer ?? Layer.empty), {
+    HttpRouter.serve(createRoutes({ password, host, webRoot: root, cors, allowedHosts, nativeInstallation }), {
       disableListenLog: true,
       disableLogger: true,
     }).pipe(
-      Layer.provide(installation?.privacy ?? Layer.empty),
       Layer.provideMerge(NodeHttpServer.layer(() => server, { port, host: hostname })),
       Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
     ),

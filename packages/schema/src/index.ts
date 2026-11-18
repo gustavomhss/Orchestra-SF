@@ -37,3 +37,5 @@ export { Workspace } from "./workspace"
 export { Prompt, Source, FileAttachment, AgentAttachment } from "./prompt"
 export { PromptInput } from "./prompt-input"
 export * from "./schema"
+
+export { Sucafina } from "./sucafina"

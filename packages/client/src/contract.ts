@@ -50,6 +50,7 @@ export const groupNames = {
   "server.project": "projects",
   "server.lean": "lean",
   "server.ragStudio": "ragStudio",
+  "server.sucafina": "sucafina",
   "server.atlas": "atlas",
   "server.config": "config",
   "server.trust": "server.trust",

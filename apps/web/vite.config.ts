@@ -35,9 +35,22 @@ const shellFixtures: Plugin = {
   },
 }
 
+const nativeManifest: Plugin = {
+  name: "orchestra-web:native-manifest",
+  apply: "build",
+  generateBundle() {
+    if (process.env.VITE_ORCHESTRA_SF_NATIVE !== "1") return
+    this.emitFile({
+      type: "asset",
+      fileName: "native-manifest.json",
+      source: JSON.stringify({ product: "Orchestra-SF", native: true, version: 1 }),
+    })
+  },
+}
+
 export default defineConfig({
   publicDir: fileURLToPath(new URL("../../packages/app-shell/public", import.meta.url)),
-  plugins: [desktopPlugin, shellFixtures, sentry] as any,
+  plugins: [desktopPlugin, shellFixtures, sentry, nativeManifest],
   server: {
     host: "0.0.0.0",
     allowedHosts: true,

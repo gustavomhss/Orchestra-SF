@@ -1,21 +1,32 @@
-import { SfInstallationQuery, SfInstallationList } from "@orchestra/schema/sucafina/context"
-import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/unstable/httpapi"
-import { InvalidRequestError } from "../errors"
-import { locationQueryOpenApi } from "./location"
+import { Sucafina } from "@orchestra/schema/sucafina"
+import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiGroup } from "effect/unstable/httpapi"
+import { ForbiddenError, InvalidRequestError, ServiceUnavailableError, UnauthorizedError } from "../errors"
 
-/** Discovery only. No Sucafina admission is granted by an Orchestra endpoint. */
+const params = Schema.Struct({ surface: Sucafina.Surface })
+const errors = [
+  InvalidRequestError,
+  UnauthorizedError,
+  ForbiddenError,
+  Sucafina.ConflictError,
+  Sucafina.ValidationError,
+  ServiceUnavailableError,
+] as const
+
 export const SucafinaGroup = HttpApiGroup.make("server.sucafina")
-  .add(
-    HttpApiEndpoint.get("sucafina.installations", "/api/sucafina/installations", {
-      query: SfInstallationQuery,
-      success: SfInstallationList,
-      error: InvalidRequestError,
-    })
-      .annotateMerge(locationQueryOpenApi)
-      .annotateMerge(OpenApi.annotations({
-        identifier: "v2.sucafina.installations",
-        summary: "Discover the selected Sucafina installation",
-        description: "Strict IDs or admitted Location selector, never directory fallback.",
-      })),
-  )
-  .annotateMerge(OpenApi.annotations({ title: "sucafina", description: "Selected installation discovery." }))
+  .add(HttpApiEndpoint.get("sucafina.status", "/api/sucafina/status", {
+    success: Sucafina.Status,
+    error: ServiceUnavailableError,
+  }))
+  .add(HttpApiEndpoint.get("sucafina.state", "/api/sucafina/:surface/state", {
+    params,
+    query: Sucafina.PageQuery,
+    success: Sucafina.PageState,
+    error: errors,
+  }))
+  .add(HttpApiEndpoint.post("sucafina.command", "/api/sucafina/:surface/commands", {
+    params,
+    payload: Sucafina.Command,
+    success: Sucafina.CommandResult,
+    error: errors,
+  }))

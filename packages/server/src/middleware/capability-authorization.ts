@@ -8,6 +8,7 @@ import { Cause, Context, Effect, Encoding, Layer, Redacted, Result } from "effec
 import { HttpServerRequest } from "effect/unstable/http"
 import { ServerAuth } from "../auth"
 import { ServerOperator } from "../operator"
+import { NativeInstallation } from "../native-installation"
 
 /** The authority this request authenticated as; content tickets bind to it so a ticket never widens access. */
 export const RequestAuthority = Context.Reference<CapabilityOperatorContract.Authority | undefined>(
@@ -19,6 +20,7 @@ export const capabilityAuthorizationLayer = Layer.effect(
   Effect.gen(function* () {
     const config = yield* ServerAuth.Config
     const operator = yield* ServerOperator.Service
+    const native = yield* NativeInstallation.Service
 
     return CapabilityAuthorization.of((effect) =>
       Effect.gen(function* () {
@@ -26,15 +28,17 @@ export const capabilityAuthorizationLayer = Layer.effect(
         const authority = yield* Effect.gen(function* () {
           if (ServerAuth.required(config)) {
             const credential = decodeBasic(request.headers.authorization ?? "")
-            if (!credential || !ServerAuth.authorized(credential, config)) {
-              return yield* new UnauthorizedError({ message: "Authentication required" })
-            }
-            return operator.configured
+            if (credential && ServerAuth.authorized(credential, config)) return operator.configured
+            const web = yield* HttpServerRequest.toWeb(request).pipe(Effect.option)
+            if (web._tag === "Some" && (yield* Effect.promise(() => NativeInstallation.verifyBridge(native, web.value)))) return operator.configured
+            return yield* new UnauthorizedError({ message: "Authentication required" })
           }
 
           const bearer = /^Bearer ([A-Za-z0-9_-]{43})(?![\s\S])/.exec(request.headers.authorization ?? "")
-          if (!bearer) return yield* new UnauthorizedError({ message: "Authentication required" })
-          return yield* operator.authenticate(bearer[1])
+          if (bearer) return yield* operator.authenticate(bearer[1])
+          const web = yield* HttpServerRequest.toWeb(request).pipe(Effect.option)
+          if (web._tag === "Some" && (yield* Effect.promise(() => NativeInstallation.verifyBridge(native, web.value)))) return operator.configured
+          return yield* new UnauthorizedError({ message: "Authentication required" })
         })
 
         const idempotencyKey = request.headers["idempotency-key"]

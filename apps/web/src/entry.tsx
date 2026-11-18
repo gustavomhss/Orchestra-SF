@@ -3,10 +3,11 @@
 import * as Sentry from "@sentry/solid"
 import { render } from "solid-js/web"
 import { AppBaseProviders, AppInterface, type Platform, PlatformProvider, ServerConnection } from "@orchestra/app"
-import { loadInitialLocale, createBrowserDraftStore, en, zh, authFromToken, checkServerHealth } from "@orchestra/app/web"
-import pkg from "../package.json" with { type: "json" }
+import { loadInitialLocale, createBrowserDraftStore, en, zh, authFromToken } from "@orchestra/app/web"
+import pkg from "../package.json"
 
 const DEFAULT_SERVER_URL_KEY = "orchestra.settings.dat:defaultServerUrl"
+const native = import.meta.env.VITE_ORCHESTRA_SF_NATIVE === "1"
 
 const getLocale = () => {
   if (typeof navigator !== "object") return "en" as const
@@ -46,8 +47,11 @@ const setStorage = (key: string, value: string | null) => {
   }
 }
 
-const readDefaultServerUrl = () => getStorage(DEFAULT_SERVER_URL_KEY)
-const writeDefaultServerUrl = (url: string | null) => setStorage(DEFAULT_SERVER_URL_KEY, url)
+const readDefaultServerUrl = () => native ? location.origin : getStorage(DEFAULT_SERVER_URL_KEY)
+const writeDefaultServerUrl = (url: string | null) => {
+  if (native) return
+  setStorage(DEFAULT_SERVER_URL_KEY, url)
+}
 
 const notify: Platform["notify"] = async (title, description, onClick) => {
   if (!("Notification" in window)) return
@@ -64,8 +68,7 @@ const notify: Platform["notify"] = async (title, description, onClick) => {
 
   const notification = new Notification(title, {
     body: description ?? "",
-    // Do not leak HuGR into notifications for the Sucafina distribution.
-    icon: document.documentElement.dataset.orchestraBrand === "sucafina" ? "/brand/sucafina/mark-primary.svg" : "/orchestra/hugr-symbol-primary.svg",
+    icon: "/orchestra/hugr-symbol-primary.svg",
   })
 
   notification.onclick = () => {
@@ -92,6 +95,7 @@ if (!(root instanceof HTMLElement) && import.meta.env.DEV) {
 }
 
 const getCurrentUrl = () => {
+  if (native) return location.origin
   if (import.meta.env.DEV || import.meta.env.VITE_ORCHESTRA_SERVER_HOST || import.meta.env.VITE_ORCHESTRA_SERVER_PORT)
     return `http://${import.meta.env.VITE_ORCHESTRA_SERVER_HOST ?? "localhost"}:${import.meta.env.VITE_ORCHESTRA_SERVER_PORT ?? "4096"}`
   return location.origin
@@ -124,6 +128,13 @@ const platform: Platform = {
   setDefaultServer: writeDefaultServerUrl,
 }
 
+if (native) {
+  clearAuthToken()
+  // The setup gate precedes SharedProviders, which normally admits these palette tokens.
+  document.documentElement.setAttribute("data-new-layout", "")
+  document.body.setAttribute("data-new-layout", "")
+}
+
 if (import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -145,6 +156,32 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 
 if (root instanceof HTMLElement) {
   void loadInitialLocale().then(async (locale) => {
+    if (native) {
+      const { NativeAccessGate } = await import("@orchestra/app/sucafina/native-access")
+      render(
+        () => (
+          <PlatformProvider value={platform}>
+            <AppBaseProviders locale={locale}>
+              <NativeAccessGate origin={location.origin}>
+                {(verified) => {
+                  const server: ServerConnection.Http = { type: "http", http: { url: verified.origin } }
+                  return (
+                    <AppInterface
+                      defaultServer={ServerConnection.key(server)}
+                      canonicalLocalServer={ServerConnection.key(server)}
+                      servers={[server]}
+                      pinnedServer={server}
+                    />
+                  )
+                }}
+              </NativeAccessGate>
+            </AppBaseProviders>
+          </PlatformProvider>
+        ),
+        root,
+      )
+      return
+    }
     const auth = authFromToken(new URLSearchParams(location.search).get("auth_token"))
     clearAuthToken()
     const server: ServerConnection.Http = {
@@ -155,20 +192,14 @@ if (root instanceof HTMLElement) {
         ...auth,
       },
     }
-    // Same-origin HTML is not proof of an Orchestra server. Use the existing typed health protocol
-    // before admitting the canonical local connection; no localStorage seed or implicit remote trust.
-    const health = server.http.url === location.origin
-      ? await checkServerHealth(server.http, globalThis.fetch, { timeoutMs: 4_000, retryCount: 0 })
-      : undefined
-    const canonical = health?.healthy === true && !!health.version ? server : undefined
     render(
       () => (
         <PlatformProvider value={platform}>
           <AppBaseProviders locale={locale}>
             <AppInterface
               defaultServer={ServerConnection.Key.make(getDefaultUrl())}
-              canonicalLocalServer={canonical ? ServerConnection.key(canonical) : undefined}
-              servers={canonical ? [canonical] : undefined}
+              canonicalLocalServer={ServerConnection.key(server)}
+              servers={[server]}
             />
           </AppBaseProviders>
         </PlatformProvider>

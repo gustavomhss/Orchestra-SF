@@ -19,7 +19,6 @@ import type { Definition } from "@orchestra/schema/event"
 import { AgentGroup } from "./groups/agent"
 import { HealthGroup } from "./groups/health"
 import { InstallationGroup } from "./groups/installation"
-import { SucafinaGroup } from "./groups/sucafina"
 import { PtyGroup } from "./groups/pty"
 import { makeQuestionGroup } from "./groups/question"
 import { ReferenceGroup } from "./groups/reference"
@@ -30,6 +29,7 @@ import { CredentialGroup } from "./groups/credential"
 import { ProjectCopyGroup } from "./groups/project-copy"
 import { ProjectGroup } from "./groups/project"
 import { LeanGroup } from "./groups/lean"
+import { SucafinaGroup } from "./groups/sucafina"
 import { RagStudioGroup } from "./groups/rag-studio"
 import { AtlasGroup } from "./groups/atlas"
 import { ConfigGroup } from "./groups/config"
@@ -121,7 +121,6 @@ const makeApiFromGroup = <
     .add(ActionsTransferGroup.middleware(locationMiddleware))
     .add(RelayRunGroup.middleware(locationMiddleware))
     .add(InstallationGroup)
-    .add(SucafinaGroup)
     .add(GuardrailGroup.middleware(locationMiddleware))
     .add(MeetingGroup.middleware(locationMiddleware))
     // Last-applied middleware runs first: authenticate before caller-selected Location construction.
@@ -131,6 +130,7 @@ const makeApiFromGroup = <
     .add(makeCapabilitySchedulesGroup(locationMiddleware))
     .add(CapabilityContentGroup)
     .add(InboxGroup.middleware(inboxLocationMiddleware))
+    .add(SucafinaGroup)
     .annotateMerge(
       OpenApi.annotations({
         title: "orchestra HttpApi",

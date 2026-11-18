@@ -450,8 +450,6 @@ import type {
   RelayRunsLedgerOutput,
   InstallationUpgradeInput,
   InstallationUpgradeOutput,
-  ServerSucafinaInstallationsInput,
-  ServerSucafinaInstallationsOutput,
   GuardrailRulesInput,
   GuardrailRulesOutput,
   GuardrailRunInput,
@@ -600,6 +598,11 @@ import type {
   ServerInboxSlackSyncOutput,
   ServerInboxDoorInput,
   ServerInboxDoorOutput,
+  SucafinaStatusOutput,
+  SucafinaStateInput,
+  SucafinaStateOutput,
+  SucafinaCommandInput,
+  SucafinaCommandOutput,
 } from "./types"
 import { ClientError } from "./client-error"
 import { makeResearch } from "./research"
@@ -3693,25 +3696,6 @@ export function make(options: ClientOptions) {
           requestOptions,
         ),
     },
-    "server.sucafina": {
-      installations: (input: ServerSucafinaInstallationsInput, requestOptions?: RequestOptions) =>
-        request<ServerSucafinaInstallationsOutput>(
-          {
-            method: "GET",
-            path: `/api/sucafina/installations`,
-            query: {
-              select: input["select"],
-              installationId: input["installationId"],
-              projectId: input["projectId"],
-              location: input["location"],
-            },
-            successStatus: 200,
-            declaredStatuses: [400, 401],
-            empty: false,
-          },
-          requestOptions,
-        ),
-    },
     guardrail: {
       rules: (input?: GuardrailRulesInput, requestOptions?: RequestOptions) =>
         request<GuardrailRulesOutput>(
@@ -4714,6 +4698,79 @@ export function make(options: ClientOptions) {
             body: { number: input["number"], from: input["from"] },
             successStatus: 200,
             declaredStatuses: [400, 401],
+            empty: false,
+          },
+          requestOptions,
+        ),
+    },
+    sucafina: {
+      status: (requestOptions?: RequestOptions) =>
+        request<SucafinaStatusOutput>(
+          {
+            method: "GET",
+            path: `/api/sucafina/status`,
+            successStatus: 200,
+            declaredStatuses: [503, 401, 400],
+            empty: false,
+          },
+          requestOptions,
+        ),
+      state: (input: SucafinaStateInput, requestOptions?: RequestOptions) =>
+        request<SucafinaStateOutput>(
+          {
+            method: "GET",
+            path: `/api/sucafina/${encodeURIComponent(input.surface)}/state`,
+            query: {
+              page: input["page"],
+              year: input["year"],
+              own: input["own"],
+              month: input["month"],
+              version: input["version"],
+              owner: input["owner"],
+              class: input["class"],
+              q: input["q"],
+              filter: input["filter"],
+              status: input["status"],
+              priority: input["priority"],
+              request: input["request"],
+              supplier: input["supplier"],
+              mode: input["mode"],
+              risk: input["risk"],
+              topicStatus: input["topicStatus"],
+              memberStatus: input["memberStatus"],
+              projectStatus: input["projectStatus"],
+              projectRisk: input["projectRisk"],
+              stakeholderPriority: input["stakeholderPriority"],
+              opsMonth: input["opsMonth"],
+              tab: input["tab"],
+              execYear: input["execYear"],
+              opsYear: input["opsYear"],
+              secYear: input["secYear"],
+              executiveMonth: input["executiveMonth"],
+              operationsMonth: input["operationsMonth"],
+              securityMonth: input["securityMonth"],
+            },
+            successStatus: 200,
+            declaredStatuses: [400, 401, 403, 409, 422, 503],
+            empty: false,
+          },
+          requestOptions,
+        ),
+      command: (input: SucafinaCommandInput, requestOptions?: RequestOptions) =>
+        request<SucafinaCommandOutput>(
+          {
+            method: "POST",
+            path: `/api/sucafina/${encodeURIComponent(input.surface)}/commands`,
+            body: {
+              page: input["page"],
+              action: input["action"],
+              id: input["id"],
+              version: input["version"],
+              values: input["values"],
+              confirmed: input["confirmed"],
+            },
+            successStatus: 200,
+            declaredStatuses: [400, 401, 403, 409, 422, 503],
             empty: false,
           },
           requestOptions,

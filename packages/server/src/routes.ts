@@ -36,7 +36,6 @@ import { BodyLimit } from "./body-limit"
 import { corsLayer } from "./cors"
 import { hostPolicyLayer } from "./host-policy"
 import { handlers } from "./handlers"
-import { SfInstallationSource, type SfTrustedInstallationSource } from "./sucafina-installations"
 import { authorizationLayer } from "./middleware/authorization"
 import { schemaErrorLayer } from "./middleware/schema-error"
 import { PtyEnvironment } from "@orchestra/core/host/pty-environment"
@@ -50,6 +49,7 @@ import { ServerContentTicket } from "./capability-content-ticket"
 import { ServerCapabilityVerification } from "./capability-verification"
 import type { CapabilityOperatorContract } from "@orchestra/core/capability/operator/contract"
 import type { CapabilityConnectionSetupContract } from "@orchestra/core/capability/connection/setup-contract"
+import { NativeInstallation } from "./native-installation"
 
 const applicationServices = LayerNode.group([
   Database.node,
@@ -92,12 +92,11 @@ export interface Options {
   readonly cors?: ReadonlyArray<string>
   /** Allowed HTTP hostnames; omitted leaves host admission to the embedding application. */
   readonly allowedHosts?: ReadonlyArray<string>
-  /** Live metadata from the selected approved server; never user-controlled. */
-  readonly sucafinaInstallations?: SfTrustedInstallationSource
   /** Replaces the capability operator; tests and sdk-next embed their own. */
   readonly operator?: CapabilityOperatorContract.Interface
   /** Replaces the capability setup verifier; tests avoid vendor calls with it. */
   readonly verifier?: CapabilityConnectionSetupContract.Verifier
+  readonly nativeInstallation?: NativeInstallation.Interface
 }
 
 export function createRoutes(options: Options = {}) {
@@ -109,7 +108,7 @@ export function createRoutes(options: Options = {}) {
   )
 }
 
-export function createEmbeddedRoutes(options: Pick<Options, "host" | "operator" | "verifier" | "allowedHosts" | "sucafinaInstallations"> = {}) {
+export function createEmbeddedRoutes(options: Pick<Options, "host" | "operator" | "verifier" | "allowedHosts"> = {}) {
   return makeRoutes(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.none() }), options)
 }
 
@@ -130,16 +129,13 @@ function makeRoutes<AuthError, AuthServices>(
 
   const api = HttpApiBuilder.layer(Api, { openapiPath: "/openapi.json" }).pipe(
     Layer.provide(handlers),
-    Layer.provide(Layer.succeed(SfInstallationSource, options.sucafinaInstallations ?? {
-      current: async () => undefined,
-      forAdmittedLocation: async () => [],
-    })),
     Layer.provide(merged.references),
     Layer.provide(sessionLocationLayer),
     Layer.provide(inboxLocationLayer),
     Layer.provide(locationLayer),
     Layer.provide(authorizationLayer),
     Layer.provide(capabilityAuthorizationLayer),
+    Layer.provide(options.nativeInstallation ? NativeInstallation.layer(options.nativeInstallation) : Layer.empty),
     Layer.provide(schemaErrorLayer),
     Layer.provide(auth),
     Layer.provide(options.operator ? Layer.succeed(ServerOperator.Service, options.operator) : ServerOperator.layer),
@@ -151,6 +147,7 @@ function makeRoutes<AuthError, AuthServices>(
     Layer.provide(BodyLimit.layer),
   )
   return Layer.merge(api, options.webRoot ? WebUi.layer(options.webRoot) : Layer.empty).pipe(
+    Layer.provide(options.nativeInstallation ? NativeInstallation.middleware(options.nativeInstallation) : Layer.empty),
     Layer.provide(hostPolicyLayer(options.allowedHosts)),
   )
 }

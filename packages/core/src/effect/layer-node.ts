@@ -161,6 +161,9 @@ function isNode(input: Layer.Any | AnyNode): input is AnyNode {
 
 // Tree -----------------------------------------------------------------------
 
+// Dependency rewrites clone nodes but retain their original implementation identity for hoist conflict checks.
+const rewriteOrigins = new WeakMap<AnyNode, AnyNode>()
+
 type Visit<Result> = (node: AnyNode, context: VisitContext<Result>) => Result
 
 type VisitContext<Result> = {
@@ -226,12 +229,11 @@ export function hoist<A, E, T extends Tag, const Items extends Replacements = re
         return { ...node, dependencies: node.dependencies.map(context.visit) }
       }
       if (node.tag === tag) {
-        const normalized = rewriteReplacementDependencies(node, replacementMap)
         const existing = hoisted.get(node.name)
-        if (existing && !sameImplementation(existing, normalized)) {
+        if (existing && (rewriteOrigins.get(existing) ?? existing) !== (rewriteOrigins.get(node) ?? node)) {
           throw new Error(`Tag ${tag} has conflicting implementations for ${node.name}`)
         }
-        if (!existing) hoisted.set(node.name, normalized)
+        if (!existing) hoisted.set(node.name, rewriteReplacementDependencies(node, replacementMap))
         return group([])
       }
       if (node.kind === "unbound") {
@@ -246,24 +248,6 @@ export function hoist<A, E, T extends Tag, const Items extends Replacements = re
     node: node as Node<A, E>,
     hoisted: group(Array.from(hoisted.values())) as Node<unknown, E>,
   }
-}
-
-/** Replacement normalization may clone a shared definition without changing its implementation. */
-function sameImplementation(left: AnyNode, right: AnyNode, known = new WeakMap<AnyNode, WeakSet<AnyNode>>(), visiting = new WeakMap<AnyNode, WeakSet<AnyNode>>()): boolean {
-  if (left === right || known.get(left)?.has(right)) return true
-  if (left.kind !== right.kind || left.name !== right.name || left.service !== right.service ||
-    left.implementation !== right.implementation || left.tag !== right.tag || left.dependencies.length !== right.dependencies.length) return false
-  const pending = visiting.get(left) ?? new WeakSet<AnyNode>()
-  if (pending.has(right)) throw new Error(`Cycle detected while comparing layer definitions: ${left.name}`)
-  pending.add(right)
-  visiting.set(left, pending)
-  const equal = left.dependencies.every((dependency, index) => sameImplementation(dependency, right.dependencies[index]!, known, visiting))
-  pending.delete(right)
-  if (!equal) return false
-  const matches = known.get(left) ?? new WeakSet<AnyNode>()
-  matches.add(right)
-  known.set(left, matches)
-  return true
 }
 
 export function compile<A, E, const Items extends Replacements = readonly []>(
@@ -328,6 +312,7 @@ function rewriteReplacementDependencies(root: AnyNode, replacements: ReadonlyMap
       const result = dependencies.every((dependency, index) => dependency === target.dependencies[index])
         ? target
         : { ...target, dependencies }
+      if (result !== target) rewriteOrigins.set(result, rewriteOrigins.get(target) ?? target)
       cache.set(target, result)
       return result
     } finally {

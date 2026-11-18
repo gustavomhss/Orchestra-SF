@@ -79,6 +79,12 @@ export const Flag = {
   ORCHESTRA_MODELS_URL: process.env["ORCHESTRA_MODELS_URL"],
   ORCHESTRA_MODELS_PATH: process.env["ORCHESTRA_MODELS_PATH"],
   ORCHESTRA_DB: process.env["ORCHESTRA_DB"],
+  get ORCHESTRA_SF_INSTALLATION() {
+    return process.env["ORCHESTRA_SF_INSTALLATION"]
+  },
+  get ORCHESTRA_WEB_UI_DIR() {
+    return process.env["ORCHESTRA_WEB_UI_DIR"]
+  },
 
   // Evaluated at access time (not module load) because tests, the CLI, and
   // external tooling set these env vars at runtime.

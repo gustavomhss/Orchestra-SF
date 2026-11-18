@@ -13,6 +13,7 @@ import { HttpApi, HttpApiBuilder, HttpApiEndpoint, HttpApiGroup, HttpApiMiddlewa
 import { ServerAuth } from "../src/auth"
 import { capabilityAuthorizationLayer } from "../src/middleware/capability-authorization"
 import { ServerOperator } from "../src/operator"
+import { NativeInstallation } from "../src/native-installation"
 
 export const placement = {
   projectID: Project.ID.make("operator-http-project"),
@@ -48,6 +49,8 @@ export function make(options?: {
   password?: Option.Option<string>
   scope?: CapabilityOperatorContract.GrantScope
   now?: () => number
+  nativeInstallation?: NativeInstallation.Interface
+  origin?: string
   onBinding?: (binding: CapabilityOperatorContract.Binding, operator: CapabilityOperatorContract.Interface) =>
     Effect.Effect<void, Capability.Failure | InvalidRequestError>
 }) {
@@ -67,6 +70,7 @@ export function make(options?: {
     const services = Layer.mergeAll(
       ServerAuth.Config.configLayer({ username: "operator-basic", password: options?.password ?? Option.none() }),
       Layer.succeed(ServerOperator.Service, operator),
+      options?.nativeInstallation ? NativeInstallation.layer(options.nativeInstallation) : Layer.empty,
     )
     const handlers = HttpApiBuilder.group(Api, "fixture", (handlers) =>
       Effect.gen(function* () {
@@ -102,9 +106,9 @@ export function make(options?: {
     return {
       operator, domain, causes,
       closeAuthority: Scope.close(authorityScope, Exit.void),
-      health: Effect.promise(() => web.handler(new Request("http://localhost/health"))),
+      health: Effect.promise(() => web.handler(new Request(new URL("/health", options?.origin ?? "http://localhost")))),
       request: (input?: { headers?: HeadersInit; query?: string; payload?: unknown; context?: Context.Context<never> }) =>
-        Effect.promise(() => web.handler(new Request("http://localhost/guarded" + (input?.query ?? ""), {
+        Effect.promise(() => web.handler(new Request(new URL("/guarded" + (input?.query ?? ""), options?.origin ?? "http://localhost"), {
           method: "POST",
           headers: new Headers({ "content-type": "application/json", ...Object.fromEntries(new Headers(input?.headers)) }),
           body: JSON.stringify(input?.payload ?? {}),
