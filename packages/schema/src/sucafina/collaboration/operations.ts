@@ -3,7 +3,7 @@ import { sfPortResult, SfCaseIdentity, SfEvidenceRef, SfNonEmpty, SfNonNegative,
 import {
   SfAnswerConfirmMutation, SfAnswerConfirmation, SfAnswerPrepareValue, SfAnswerReadValue,
   SfConfirmedRelations, SfConfirmationPrepareValue, SfConfirmationProjection, SfConfirmationRecord,
-  SfConfirmationScope, SfPreparedConfirmationSelection, SfConsumedQuestion, SfCycle, SfHandoffResult, SfHandoffValues, SfHotTopicIntent,
+  SfConfirmationScope, SfConsumedQuestion, SfCycle, SfHandoffResult, SfHandoffValues, SfHotTopicIntent,
   SfMutation, SfQuestionConsumption, SfQuestionContribution, SfRecipientList, SfRelation, SfRelationPair,
   SfSelection, SfSelectionDraft, SfSelectionList, SfThread, SfThreadActionResult, SfThreadDraft,
   SfThreadEditResult, SfThreadHistory, SfThreadReadResult, SfWorkPresentation,
@@ -81,10 +81,7 @@ export const SfCollaborationRelationRemove = {
 
 export const SfCollaborationRelationRead = {
   operationId: "collaboration.relation-read",
-  input: Schema.Union([
-    Schema.Struct({ recordRefs: Schema.Array(SfNonEmpty).check(Schema.isMinLength(1)) }).annotate({ parseOptions: { onExcessProperty: "error" } }),
-    Schema.Struct({ relationRef: SfNonEmpty }).annotate({ parseOptions: { onExcessProperty: "error" } }),
-  ]),
+  input: Schema.Struct({ recordRefs: Schema.Array(SfNonEmpty).check(Schema.isMinLength(1)) }).annotate({ parseOptions: { onExcessProperty: "error" } }),
   output: sfPortResult(SfConfirmedRelations),
 } as const
 
@@ -120,11 +117,8 @@ export const SfCollaborationConfirmationConfirm = {
 
 export const SfCollaborationConfirmationProject = {
   operationId: "collaboration.confirmation-project",
-  input: Schema.Union([
-    Schema.Struct({ id: SfNonEmpty }).annotate({ parseOptions: { onExcessProperty: "error" } }),
-    Schema.Struct({ selectionRef: Schema.String.check(Schema.isPattern(/^confirmation-selection:[a-f0-9]{64}$/)) }).annotate({ parseOptions: { onExcessProperty: "error" } }),
-  ]),
-  output: sfPortResult(Schema.Union([SfPreparedConfirmationSelection, SfConfirmationProjection])),
+  input: Schema.Struct({ id: SfNonEmpty }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: sfPortResult(SfConfirmationProjection),
 } as const
 
 export const SfCollaborationAnswerPrepare = {

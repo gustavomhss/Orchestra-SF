@@ -1,5 +1,4 @@
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
-import { Option, Schema } from "effect"
 import type { SfCallOptions, SfTransport } from "./transport"
 
 /** A13 typed, explicit client. All 29 calls delegate to F02, which owns the
@@ -28,12 +27,8 @@ export function createSfCollaborationClient(transport: SfTransport) {
       transport.execute(SfCollaboration.operations["collaboration.relation-create"], input, options),
     "collaboration.relation-remove": (input: typeof SfCollaboration.operations["collaboration.relation-remove"]["input"]["Type"], options: SfCallOptions) =>
       transport.execute(SfCollaboration.operations["collaboration.relation-remove"], input, options),
-    "collaboration.relation-read": (input: typeof SfCollaboration.operations["collaboration.relation-read"]["input"]["Type"], options: SfCallOptions) => {
-      const parsed = Schema.decodeUnknownOption(Schema.toType(SfCollaboration.operations["collaboration.relation-read"].input), { onExcessProperty: "error" })(input)
-      if (Option.isNone(parsed) || "recordRefs" in parsed.value && new Set(parsed.value.recordRefs).size !== parsed.value.recordRefs.length)
-        return Promise.resolve({ kind: "transport-error" as const, reason: "contract-mismatch" as const })
-      return transport.execute(SfCollaboration.operations["collaboration.relation-read"], parsed.value, options)
-    },
+    "collaboration.relation-read": (input: typeof SfCollaboration.operations["collaboration.relation-read"]["input"]["Type"], options: SfCallOptions) =>
+      transport.execute(SfCollaboration.operations["collaboration.relation-read"], input, options),
     "collaboration.handoff-create": (input: typeof SfCollaboration.operations["collaboration.handoff-create"]["input"]["Type"], options: SfCallOptions) =>
       transport.execute(SfCollaboration.operations["collaboration.handoff-create"], input, options),
     "collaboration.handoff-link": (input: typeof SfCollaboration.operations["collaboration.handoff-link"]["input"]["Type"], options: SfCallOptions) =>
@@ -44,11 +39,8 @@ export function createSfCollaborationClient(transport: SfTransport) {
       transport.execute(SfCollaboration.operations["collaboration.confirmation-prepare"], input, options),
     "collaboration.confirmation-confirm": (input: typeof SfCollaboration.operations["collaboration.confirmation-confirm"]["input"]["Type"], options: SfCallOptions) =>
       transport.execute(SfCollaboration.operations["collaboration.confirmation-confirm"], input, options),
-    "collaboration.confirmation-project": (input: typeof SfCollaboration.operations["collaboration.confirmation-project"]["input"]["Type"], options: SfCallOptions) => {
-      const parsed = Schema.decodeUnknownOption(Schema.toType(SfCollaboration.operations["collaboration.confirmation-project"].input), { onExcessProperty: "error" })(input)
-      if (Option.isNone(parsed)) return Promise.resolve({ kind: "transport-error" as const, reason: "contract-mismatch" as const })
-      return transport.execute(SfCollaboration.operations["collaboration.confirmation-project"], parsed.value, options)
-    },
+    "collaboration.confirmation-project": (input: typeof SfCollaboration.operations["collaboration.confirmation-project"]["input"]["Type"], options: SfCallOptions) =>
+      transport.execute(SfCollaboration.operations["collaboration.confirmation-project"], input, options),
     "collaboration.answer-prepare": (input: typeof SfCollaboration.operations["collaboration.answer-prepare"]["input"]["Type"], options: SfCallOptions) =>
       transport.execute(SfCollaboration.operations["collaboration.answer-prepare"], input, options),
     "collaboration.answer-prepare-message": (input: typeof SfCollaboration.operations["collaboration.answer-prepare-message"]["input"]["Type"], options: SfCallOptions) =>
