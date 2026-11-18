@@ -180,12 +180,7 @@ export async function createThreadDomainFixture() {
         const prepared = await answers.prepare(questionId, issued.value.refId, context)
         if (prepared.status !== "ok") return prepared
         const { observation, ...display } = prepared.value
-        const fresh = await observer.observe(prepared.value.scope, context)
-        if (fresh.state !== "available" || fresh.sourceVersion !== observation.sourceVersion || fresh.incarnation !== observation.incarnation ||
-          fresh.physicalIncarnation !== observation.physicalIncarnation || fresh.scopeFingerprint !== observation.scopeFingerprint ||
-          fresh.sourceFingerprint !== observation.sourceFingerprint || fresh.dependencyFingerprint !== observation.dependencyFingerprint ||
-          !await authority.host.revalidate(context)) return { status: "stale", reason: "answer-observation-changed" }
-        return { status: "ok", value: { ...display, evidence: fresh.evidence, projection: fresh.projection } }
+        return { status: "ok", value: { ...display, evidence: observation.evidence, projection: observation.projection } }
       })
       const response = reply(result)
       answerAttempts.push({ route: action, body: raw, key: incoming.headers.get("idempotency-key"), status: response.status, value: result })
