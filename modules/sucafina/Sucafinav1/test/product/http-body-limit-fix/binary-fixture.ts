@@ -6,8 +6,6 @@ import { createModule } from "../../../index.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { rows } from "../../../runtime/contract.ts"
-import type { Snapshot } from "../../../runtime/contract.ts"
-import type { BlobTransaction } from "../../../runtime/assets.ts"
 
 /** A valid 256x128 24-bit BMP, larger than the Workbench budget and containing arbitrary binary octets. */
 export function binaryUploadBytes() {
@@ -64,7 +62,7 @@ export async function binaryFixture(origin: string) {
       origin, cookie, handler, scans, accepted, acceptedDigest,
       uploadPath: (version = 3) => `/sucafina/dashboard?${new URLSearchParams({ page: "Vendor Contracts", upload: "contract", record: "binary-c1", recordVersion: String(version), name: "binary.bmp" })}`,
       async state() {
-        return store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => ({ commit: false, value: {
+        return store.transaction("dashboard", async (snapshot, blobs) => ({ commit: false, value: {
           snapshot: structuredClone(snapshot),
           files: await Promise.all(rows(snapshot.data.assets).map(async (asset) => ({ key: asset.key, bytes: typeof asset.key === "string" ? await blobs.get(asset.key) : undefined }))),
         } }))

@@ -52,7 +52,7 @@ test("Workbench cuts off oversized multibyte streams without Content-Length or w
     expect(payload.length).toBeLessThan(65536)
     const bytes = new TextEncoder().encode(payload)
     expect(bytes.byteLength).toBeGreaterThan(65536)
-    for (const headers of [new Headers(), new Headers({ "content-length": "65536" })]) {
+    for (const headers of [{}, { "content-length": "65536" }]) {
       const input = streamedBody(bytes)
       const request = f.request(input.stream, { headers })
       const response = await f.product(request, "dashboard")
