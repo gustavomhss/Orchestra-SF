@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.review.integrity.evidence.v1",
+  "source_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+  "review_basis": "remote GitHub MCP blob read, PR diff, Actions read-only; exact source filenames/blobs/lines captured in FINDINGS92.json",
+  "on_candidate_ci": {
+    "query": "GET /actions/runs?head_sha=eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "total_count": 0,
+    "note": "Zero runs with head_sha exactly C44; does not exclude C-descendant S snapshots, which dispatcher45 must discover and dedupe."
+  },
+  "witnesses": [
+    {
+      "kind": "C10 positive focused",
+      "run_id": 43675129605,
+      "head_sha": "da3097fc435b232ab3dcf77c036f3d3dfb5e0142",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675129605"
+    },
+    {
+      "kind": "C10 deliberately failing counterfactual",
+      "run_id": 43676126745,
+      "head_sha": "1b0359f078951b819622d0438394ac63ef43e010",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43676126745",
+      "exclusion": "do_not_integrate"
+    }
+  ],
+  "witness_limit": "Neither run HEAD equals frozen C44; R3 is not release proof; artifacts and job/selection still need independent binding",
+  "prohibited_inferences": [
+    "author reviews alone prove integration",
+    "source PR alone proves integrated fix",
+    "test source proves test executed",
+    "R3 small selection proves required eight selections",
+    "counterfactual failure is release regression"
+  ],
+  "comments": [
+    {
+      "pr": 86,
+      "id": 6889361413
+    },
+    {
+      "pr": 92,
+      "id": 6889361757
+    },
+    {
+      "pr": 90,
+      "id": 6889362045
+    },
+    {
+      "pr": 65,
+      "id": 6889362463
+    }
+  ]
+}
