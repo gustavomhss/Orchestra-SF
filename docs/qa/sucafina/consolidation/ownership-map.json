@@ -1,0 +1,106 @@
+{
+  "fallback": {
+    "bundle": "B1",
+    "owner": "platform-runtime",
+    "protected_path": false
+  },
+  "known_issue": {
+    "description": "Rule 2 returns NONE/inventory on any nested '/docs/' path; the builder nevertheless emits REPLAY for non-root documentation paths it does not mark DOCS_ONLY.",
+    "replay_none_records": 9800,
+    "requires_owner_decision": true
+  },
+  "matching": "first-match-wins; case-sensitive literal prefixes and contains",
+  "rules": [
+    {
+      "bundle": "FINAL",
+      "match": {
+        "operator": "prefix_any",
+        "prefixes": [
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/",
+          "docs/qa/sucafina/uat-cio/research/"
+        ]
+      },
+      "owner": "promotion",
+      "priority": 1,
+      "protected_path": true
+    },
+    {
+      "bundle": "NONE",
+      "match": {
+        "contains": [
+          "/docs/"
+        ],
+        "operator": "prefix_or_contains",
+        "prefixes": [
+          "docs/",
+          ".orchestra/"
+        ]
+      },
+      "owner": "inventory",
+      "priority": 2,
+      "protected_path": false
+    },
+    {
+      "bundle": "B1",
+      "match": {
+        "operator": "prefix_any",
+        "prefixes": [
+          "apps/cli/",
+          "apps/desktop/",
+          "packages/core/",
+          "packages/server/",
+          "packages/client/",
+          "packages/protocol/",
+          "packages/schema/",
+          "packages/plugin/",
+          "packages/tui/",
+          "script/",
+          ".github/",
+          "native/",
+          "modules/engine-adapters/",
+          "modules/relay/"
+        ]
+      },
+      "owner": "platform-runtime",
+      "priority": 3,
+      "protected_path": false
+    },
+    {
+      "bundle": "B2",
+      "match": {
+        "operator": "prefix_any",
+        "prefixes": [
+          "modules/sucafina/",
+          "modules/atlas/",
+          "packages/app-shell/src/orchestra/chapters/"
+        ]
+      },
+      "owner": "business-product",
+      "priority": 4,
+      "protected_path": false
+    },
+    {
+      "bundle": "B3",
+      "match": {
+        "operator": "prefix_any",
+        "prefixes": [
+          "packages/app-shell/"
+        ]
+      },
+      "owner": "native-shell",
+      "priority": 5,
+      "protected_path": false
+    }
+  ],
+  "schema_version": "orchestra-sf-phase-a-ownership-map-v1",
+  "source_classifier": {
+    "file": "/tmp/phase-a/build_ledger.py",
+    "function": "bundle_for_path",
+    "sha256": "288c6348d8e2f81414939141b9a5796387913a48f2a911a3c051156be1fb0e07"
+  },
+  "verification": {
+    "ownership_mismatches": 0,
+    "records_examined": 37603,
+    "sentinel_path_records_exempt": 4
+  }
+}
