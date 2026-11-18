@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h.guard188.validation-request.v1",
+  "epoch": "closure-e1-browser188",
+  "origin": "guard reviewer188 independent",
+  "source_before": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "source_W": "690a34cdd81c12d7311f3717c19679b950276161",
+  "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "integrator": {
+    "mission": 189,
+    "epoch": "S0-C-e21-browser189",
+    "observed_fence_commit": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "observed_fence_blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+    "pr": 65
+  },
+  "compiler": {
+    "mission": 190,
+    "predecessor_terminal": 163,
+    "previous_pr": 107
+  },
+  "product_ci": {
+    "mission": 191,
+    "predecessor_terminal": 164,
+    "previous_pr": 106
+  },
+  "requests": [
+    {
+      "target": 189,
+      "kind": "REVIEW_AND_INTAKE",
+      "scope": "Catalog 55 historical preserved logs; no proposed deletes; owner decision for false positives; do not approve or waive source guard without genuine fix"
+    },
+    {
+      "target": 187,
+      "kind": "SOURCE_OWNER_DECISION",
+      "scope": "F04 scratch.ts is live code: consider semantic rename and all direct imports; do not delete or fake auth"
+    },
+    {
+      "target": 185,
+      "kind": "SOURCE_OWNER_FIX",
+      "scope": "six U15 skip gates; preserve all six journeys and require real F04 preconditions or explicit error"
+    },
+    {
+      "target": 186,
+      "kind": "SOURCE_OWNER_FIX",
+      "scope": "four U39/U40 skip gates; preserve read/draft/zero/absence/responsiveness, fail missing real auth"
+    },
+    {
+      "target": 190,
+      "via": 189,
+      "kind": "COMPILER_GUARDS_VALIDATION",
+      "scope": "After 189 accepts changed exact C/W/fixtures, new scoped request bound to commit/tree, no same-fingerprint rerun"
+    },
+    {
+      "target": 191,
+      "via": 189,
+      "kind": "PRODUCT_INSTALLED_VALIDATION",
+      "scope": "After coherent candidate and true F04 readiness, single authorized workflow selection; missing fixture/mock/skip never positive"
+    }
+  ],
+  "dispatches": [],
+  "requested_runs": [],
+  "execution": "NOT_RUN",
+  "proof_status": "HISTORICAL_163_GUARD_FAIL_NOT_CURRENT_PASS",
+  "integrator_does_not_receive_chat_wake_from_comment": true,
+  "goal": "paused",
+  "global_release": false
+}

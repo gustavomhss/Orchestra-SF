@@ -1,0 +1,48 @@
+{
+  "schema": "sf2h.native-ui.artifact-ready.e2.v1",
+  "mission": "UX20-W01-R2",
+  "order": "D01",
+  "branch": "sf-ux-w01",
+  "epoch": "ux-native-w01-e2",
+  "product_commit": "c3b87e397b17787d069ac6abd3be1ce0e4736efd",
+  "state": "ARTIFACT_READY_PARTIAL_BLOCKED",
+  "integrated": false,
+  "qualified": false,
+  "global_release": false,
+  "exports": [
+    "createSfDesktopBroker",
+    "createSfDesktopPreloadCapability",
+    "createSfDesktopCapability",
+    "attachSfNativeEnrollment"
+  ],
+  "acceptance": {
+    "D01-AC01": "NOT_RUN_BLOCKED_INTEGRATION",
+    "D01-AC02": "NOT_RUN",
+    "D01-AC03": "NOT_RUN",
+    "D01-77-LOGIN": "NOT_RUN_BLOCKED_CONTRACT"
+  },
+  "gates": {
+    "ci_120": "NOT_RUN",
+    "compiler_119": "NOT_RUN",
+    "local_tests": false,
+    "guards": "NOT_RUN"
+  },
+  "blockers": [
+    "I00 integration/registry missing",
+    "Return-intents private payload/reply codec not frozen",
+    "F01 live stamp and identity integration missing",
+    "Microsoft/desktop/download/upload hosted qualification missing"
+  ],
+  "shared_paths_edited": false,
+  "force": false,
+  "merge": false,
+  "deploy": false,
+  "goal_reactivated": false,
+  "terminal_lease": true,
+  "files": [
+    "SOURCE-MANIFEST-e2.json",
+    "HANDOFF-e2.md",
+    "SHARED-FRAGMENTS-e2.md",
+    "ACK-W01-e2.json"
+  ]
+}

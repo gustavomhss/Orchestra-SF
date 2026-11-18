@@ -1,0 +1,23 @@
+{
+  "schema": "sf2h.archive210.inert-reader-install.v1",
+  "mission": 210,
+  "owner_integration": 189,
+  "target": "script/sf2h/archive-evidence-reader.mjs",
+  "target_precondition": {
+    "state": "ABSENT",
+    "source_branch_head": "92032f8b3cf594d00ab656a498923561247a8fb5",
+    "source_tree": "481bf4a695d908201369d4e3289b86572c5f43db"
+  },
+  "postcondition": {
+    "state": "FILE_EQUALS_READER_210_MJS",
+    "file_provenance": "archive210/READER-210.mjs",
+    "behavior": "read-only Git SHA validator and GitHubMCP provider interface; scans repo, never deletes and never retrieves remotely itself"
+  },
+  "install_method": "APPLY_INERT_PATCH_ONLY_BY_INTEGRATOR_189_AFTER_PREIMAGE_CHECK_AND_CAS",
+  "requires_authorized_compiler_guard": 190,
+  "requires_independent_evidence_review": 208,
+  "not_a_migration_of_legacy_immutable_receipts": true,
+  "not_a_guard_pass": true,
+  "side_effects_executed": "NONE",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "sf2h.native-ui.w01.preflight.v1",
+  "seat": "W01",
+  "order": "D01",
+  "state": "OUTPUT_ADMISSION_REQUIRED_BEFORE_PRODUCT_WRITES",
+  "receipt_commit": "c076637814d738c1bb7df444364bd1376685280f",
+  "reviewed_base": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "canon": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "owner": "114/S0-C-e17-browser114",
+  "admission": {
+    "requested_pr": 65,
+    "comment_id": 6896719110,
+    "explicit_grant_observed": false,
+    "lease_epoch": "ux-native-w01-e1",
+    "lease_active": false,
+    "source": "S0 cohort launch record: output D01 NOT_LAUNCHED_NO_GO, 19 prepared, ACKs initially 0; no 114 admission readback"
+  },
+  "code_presence_on_base": {
+    "apps/desktop/src/main/sucafina/index.ts": "ABSENT_FRESH_LEAF",
+    "apps/desktop/src/preload/sucafina.ts": "ABSENT_FRESH_LEAF",
+    "apps/desktop/src/renderer/sucafina.ts": "ABSENT_FRESH_LEAF",
+    "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts": "ABSENT_FRESH_LEAF",
+    "packages/schema/src/sucafina/common.ts": "ABSENT_F02",
+    "packages/schema/src/sucafina/operation-registry.ts": "ABSENT_I00",
+    "packages/client/src/sucafina/transport.ts": "ABSENT_F02",
+    "apps/cli/src/sucafina-product/native-ui/router.ts": "ABSENT_F02",
+    "packages/server/src/sucafina-installations.ts": "ABSENT_F01",
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx": "ABSENT_F01"
+  },
+  "source_review": {
+    "entry": {
+      "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "historical": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "impact": "C58 createConfiguredInstallation still creates canonical Microsoft/operator identities, calls identity.handle then identity.prepare, validates configured origin, and does not expose enrollNativeLocal yet; I00 must add private export before W01 CLI service can be wired"
+    },
+    "identity": {
+      "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+      "historical": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "impact": "Canonical auth lifecycle remains original handle/prepare/authenticate; C58 includes durable login/session revocation and context checks. Do not mint users, forge roles, change safeReturn, or import private OAuth cookies."
+    },
+    "operator": {
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "impact": "Original createOperatorIdentity.enroll() creates 64-hex single-use 10-minute code; GET /auth/local consumes once and creates partition-scoped HttpOnly cookie"
+    },
+    "local_enroll": {
+      "blob": "6c1728044af046bf2472144f4d8ecfef58ce982c",
+      "impact": "Unmanaged profile open-local.html is owner-only 0600 and exact literal JSON location.replace; parse as data only, never execute HTML"
+    },
+    "owned_serve": {
+      "blob": "08a84d3b8b6021f6590eb33e5ece22bc3d76d518",
+      "impact": "Existing main-owned serve selects ephemeral loopback port/basic; I00 owns private --installation --port startup, launchId and Dock reply wiring"
+    },
+    "dock_channel": {
+      "blob": "15287ec0eabd38b1ea411fe344fd2d38b98b921c",
+      "impact": "Existing authenticated per-child loopback WebSocket, rejects Origin; reuse, no new socket"
+    },
+    "dock_transport": {
+      "blob": "bdb749fdb2707e486b57e85d5921faa1c122ac20",
+      "impact": "AppDockSocket.fromEnv() returns message post/on transport with pre-open queue; CLI enrollment attaches to this only"
+    },
+    "downloads": {
+      "blob": "cd869d37c96453d7692c83be51386bd559314449",
+      "impact": "Existing response-download opaque chooser handle/chunk sequencing; 64KiB chunk in preload; no renderer-chosen path"
+    },
+    "renderer_origin": {
+      "blob": "5ce9ea6fdc76273d55c3696a00349b7956cea1c3",
+      "impact": "Injected isRendererUrl must check oc://renderer or allowed unpackaged dev origin; additionally main registered window/mainFrame identity mandatory"
+    }
+  },
+  "contract_anchors": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+  },
+  "implementation_constraints": [
+    "Register only main-approved origin+project+Location/credentials generation; ownedServe exception only on exact main-private match",
+    "No renderer controlled URL/method/path/headers/cookies/credentials; Schema typed registry + per-operation F02 codecs required",
+    "Bind through canonical global connection discovery ctx.installations and validate descriptor installation/project/publicOrigin; select=ids does not require Location.directory",
+    "IPC mainFrame sender+window+origin+generation fences; max32 active per owner; requestId UUID, bounded streaming, abort response retirement",
+    "Use Electron net.request with private nonpersistent Session partition; no defaultSession/AppDock jar",
+    "Dedicated sandbox auth window without preload; exact Microsoft identity allowlist and one-use dashboard native-return marker owned I00",
+    "Local enrollment via original authenticated AppDockSocket and original producer's single-use code, never over HTTP bridge/renderer/logs",
+    "Logout invalidates generation before remote POST and purges own Session even on remote failure",
+    "Reuse response-download chooser/64KiB chunks and file picker grants, no arbitrary renderer paths",
+    "Main native COPY-02 only five strings, en/pt-BR, localized default/cancel button=0"
+  ],
+  "required_shared_owner_composition": [
+    "apps/desktop/src/main/index.ts (instantiation/lifecycle/ownedServe+Dock binding)",
+    "apps/desktop/src/main/ipc.ts (broker IPC registration only, not second dispatcher)",
+    "apps/desktop/src/preload/index.ts and types.ts (optional window.api.sucafina)",
+    "apps/desktop/src/renderer/index.tsx and packages/app-shell/src/context/platform.tsx (optional Platform.sucafina)",
+    "modules/sucafina/Sucafinav1/local/entry.ts (private enrollNativeLocal factory-only export)",
+    "apps/desktop/src/main/owned-serve.ts + dock-channel.ts (private configured port/launchId/reply)",
+    "packages/schema/src/sucafina/operation-registry.ts and F02 Schema bindings, not hand-edited generated code",
+    "I00 auth return-intents same-origin marker and authenticated context integration"
+  ],
+  "acceptance": [
+    {
+      "id": "D01-AC01",
+      "state": "NOT_RUN",
+      "reason": "native installed broker with F01/F02/I00 pending"
+    },
+    {
+      "id": "D01-AC02",
+      "state": "NOT_RUN",
+      "reason": "negative ownership/sender/catalog injection tests must run hosted Actions120"
+    },
+    {
+      "id": "D01-AC03",
+      "state": "NOT_RUN",
+      "reason": "logout/egress tests must run hosted Actions120"
+    },
+    {
+      "id": "D01-77-LOGIN",
+      "state": "NOT_RUN",
+      "reason": "Microsoft tenant/B2B and one-time return-intent installed identity required"
+    }
+  ],
+  "current_product_changes": 0,
+  "tests": "NOT_RUN",
+  "parser": "NOT_RUN",
+  "compiler": "NOT_RUN",
+  "pr": "NOT_CREATED_PENDING_OWNER_ADMISSION_AND_BASE_ADOPTION",
+  "global_release": false
+}

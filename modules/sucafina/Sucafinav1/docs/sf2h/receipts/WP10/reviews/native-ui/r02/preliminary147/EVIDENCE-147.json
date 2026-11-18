@@ -1,0 +1,168 @@
+{
+  "schema": "sf2h.pre-r02.evidence.v1",
+  "mission": 147,
+  "epoch": "pre-r02-e1-browser147",
+  "material": {
+    "commit": "d8f14f81855858120f914af4f3934406bfdb74f1",
+    "tree": "c792f5d0d3be378ca86aea09bcabdd8781734d8f",
+    "accepted_final_c": false
+  },
+  "latest_integrator_recheck": {
+    "branch": "sf2-stack",
+    "head": "8094e599e3d18609e269548d24619a3246fbc735",
+    "paths_unchanged": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+        "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+        "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b"
+      }
+    ],
+    "recheck_result": "SAME_BLOBS_OPEN_STATIC_ONLY",
+    "hosted_execution": "NOT_RUN"
+  },
+  "source_refs": {
+    "package_147": {
+      "commit": "81fbb8364ca474db8f718faad20c9235519e98fe",
+      "blob": "86a6337ebb97a770488a6eb5ac845c3203a9c53a"
+    },
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "fence_132": "a9e06598c464998c1e47b2747cc1cd378d02df73",
+    "ack_132": "6c5401ca0721f8c90329658db73cfe544edfe45d",
+    "normative_source": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "native_work_orders": {
+      "R02": "b7f11260ff5b4271b6c8e273b50021f9964a76ac",
+      "U32": "1c9d45535cd13709c4af6e322565bf630c5afad6",
+      "U23": "29d36b6262f3c174106970fa7dd2c7cbf780791f",
+      "U20": "f71f4e32423deb11b85058785220416bd514a074",
+      "U11": "43d6a1a62e1b45dccdfd1dc2f848cb8931df89f",
+      "A07": "0b9fa87792ad8039ca2878421eeeb8dedfc0f232"
+    },
+    "native_manifest": "3d444da59c661faa17d23798f8a212a71d3d8f6d",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route_signatures": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "common_planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "wp10_previous": "22281097328a26be9d0dc17b98d4b19e08cd8eaf",
+    "wp10_pack": "f154f186468357e91da3a56de572a7d8d4afce93",
+    "product_acceptance": "ded082688fce327def0b48968fa3b89a5831029c",
+    "resident_runtime": "033737b1051b23443e633df7874c550629bf55a1"
+  },
+  "authored_receipt_ack": {
+    "commit": "a18df9c92b749e819fab68192be4a46b5c179150",
+    "blob": "c6f18f61e3eaa313a4592cf730a21119c7493e38",
+    "state": "ACK_REAL"
+  },
+  "source_checked": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+      "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+      "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+      "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b"
+    },
+    {
+      "path": "packages/schema/src/sucafina/reviews.ts",
+      "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/model.ts",
+      "blob": "d805257d9e5eadc66508f5da8706c15c624ed0bd"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/visual.tsx",
+      "blob": "68bd605bff1751e27d1b148959ca71bbd32a9f00"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+      "blob": "7084c442f96e3b7d0f91b66027118df6eb003ebc"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+      "blob": "5bb03cc5b0386f6ff587c7f8e2c1643bc16f8ca7"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+      "blob": "21d33438f49c68126bd22da223ecaa737a5b1cbc"
+    }
+  ],
+  "matrix": [
+    {
+      "id": "U32-AC01",
+      "status": "OPEN_STATIC_FINDINGS",
+      "finding": [
+        "PRE147-R02-01",
+        "PRE147-R02-02",
+        "PRE147-R02-03"
+      ]
+    },
+    {
+      "id": "U32-AC02",
+      "status": "MISSING_HOSTED_PROOF"
+    },
+    {
+      "id": "U23-AC01",
+      "status": "OPEN_STATIC_FINDING",
+      "finding": [
+        "PRE147-R02-04"
+      ]
+    },
+    {
+      "id": "U23-AC02",
+      "status": "MISSING_HOSTED_PROOF"
+    },
+    {
+      "id": "U20-AC01",
+      "status": "MISSING_HOSTED_PROOF"
+    },
+    {
+      "id": "A07-AC01",
+      "status": "OPEN_STATIC_PROVENANCE_FINDINGS"
+    },
+    {
+      "id": "R02-AC01",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "R02-AC02",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "C_FINAL_D_FINAL_G7_G8",
+      "status": "NOT_VERIFIED"
+    }
+  ],
+  "checks": {
+    "local_tests": "NOT_RUN",
+    "parser": "NOT_RUN",
+    "validation": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "hosted_ci_by_147": "NOT_RUN",
+    "compiler_149": "NOT_VERIFIED",
+    "ci_150": "NOT_VERIFIED",
+    "release": false,
+    "waiver": false
+  },
+  "dedup_sources": {
+    "pr100": "https://github.com/gustavomhss/Orchestra-SF/pull/100",
+    "pr97": "https://github.com/gustavomhss/Orchestra-SF/pull/97",
+    "pr98": "https://github.com/gustavomhss/Orchestra-SF/pull/98"
+  },
+  "owners": {
+    "integrator": 132,
+    "compiler": 149,
+    "ci": 150,
+    "reviewer": 147
+  }
+}

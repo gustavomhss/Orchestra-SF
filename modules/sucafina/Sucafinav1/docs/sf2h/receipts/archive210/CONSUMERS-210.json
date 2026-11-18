@@ -1,0 +1,1844 @@
+{
+  "schema": "sf2h.evidence.archive210.consumer-catalog.v1",
+  "mission": 210,
+  "actor_id": "EVIDENCE-ARCHIVE",
+  "source_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+  "reference_scan": {
+    "mode": "GITHUB_MCP_FETCH_BLOB_ONLY_MATCH_PATH_OR_BASENAME_OR_SHA",
+    "scanned_near_parent_files": 142,
+    "scanned_ancestor_metadata_files": 221,
+    "known_metadata_document_consumer_files": 9,
+    "script_sf2h_files_sampled": 16,
+    "full_repo_search_completed": false,
+    "summary": "Static lexical matches are references/candidates, not proof of runtime dependency nor of absence of other readers. Scanner configs may match only basenames."
+  },
+  "known_receipts_immutable": true,
+  "unknown_readers_require_full_tree_authorized_scan": true,
+  "discrepancy": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+    "expected_package_blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d",
+    "actual_live_blob": "c0e1c3baff457e94f18e7d7a7d8c2179e541209d",
+    "action": "DO_NOT_REWRITE_CONSUMER_OR_ASSUME_PREIMAGE_MATCH"
+  },
+  "consumer_references": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+      "blob_sha_at_package": "b782ed8a26f5571ea86750696a924145d3cc1997",
+      "blob_sha_at_ack": "b782ed8a26f5571ea86750696a924145d3cc1997",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-01",
+        "AS-02",
+        "AS-03",
+        "AS-04",
+        "AS-05",
+        "AS-06",
+        "AS-07",
+        "AS-08"
+      ],
+      "preimage_matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+      "blob_sha_at_package": "5c433bfdf789bb74ff989f77ec7042d3cc376a23",
+      "blob_sha_at_ack": "5c433bfdf789bb74ff989f77ec7042d3cc376a23",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-01",
+        "AS-02",
+        "AS-03",
+        "AS-04",
+        "AS-05",
+        "AS-06",
+        "AS-07",
+        "AS-08"
+      ],
+      "preimage_matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+      "blob_sha_at_package": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a",
+      "blob_sha_at_ack": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-09",
+        "AS-10",
+        "AS-11",
+        "AS-12",
+        "AS-13",
+        "AS-14",
+        "AS-15",
+        "AS-16",
+        "AS-17",
+        "AS-18",
+        "AS-19",
+        "AS-20",
+        "AS-21",
+        "AS-22",
+        "AS-23",
+        "AS-24",
+        "AS-25",
+        "AS-26",
+        "AS-27",
+        "AS-28",
+        "AS-29",
+        "AS-30",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42",
+        "AS-43",
+        "AS-44",
+        "AS-45",
+        "AS-46",
+        "AS-47",
+        "AS-48",
+        "AS-49",
+        "AS-50",
+        "AS-51",
+        "AS-52"
+      ],
+      "preimage_matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+      "blob_sha_at_package": "875119e34afac6e3851d90cf65d7363b75ad7547",
+      "blob_sha_at_ack": "875119e34afac6e3851d90cf65d7363b75ad7547",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-09",
+        "AS-10",
+        "AS-11",
+        "AS-12",
+        "AS-13",
+        "AS-14",
+        "AS-15",
+        "AS-16",
+        "AS-17",
+        "AS-18",
+        "AS-19",
+        "AS-20",
+        "AS-21",
+        "AS-22",
+        "AS-23",
+        "AS-24",
+        "AS-25",
+        "AS-26",
+        "AS-27",
+        "AS-28",
+        "AS-29",
+        "AS-30",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42",
+        "AS-43",
+        "AS-44",
+        "AS-45",
+        "AS-46",
+        "AS-47",
+        "AS-48",
+        "AS-49",
+        "AS-50",
+        "AS-51",
+        "AS-52"
+      ],
+      "preimage_matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+      "blob_sha_at_package": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd",
+      "blob_sha_at_ack": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-19",
+        "AS-20",
+        "AS-21",
+        "AS-22",
+        "AS-28",
+        "AS-29",
+        "AS-30",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42"
+      ],
+      "preimage_matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+      "blob_sha_at_package": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc",
+      "blob_sha_at_ack": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-19",
+        "AS-20",
+        "AS-21",
+        "AS-22",
+        "AS-28",
+        "AS-29",
+        "AS-30",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42"
+      ],
+      "preimage_matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+      "blob_sha_at_package": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05",
+      "blob_sha_at_ack": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-53",
+        "AS-54",
+        "AS-55"
+      ],
+      "preimage_matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+      "blob_sha_at_package": "c0e1c3baff457e94f18e7d7a8c2179e541209d",
+      "blob_sha_at_ack": "c0e1c3baff457e94f18e7d7a7d8c2179e541209d",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-53",
+        "AS-54",
+        "AS-55"
+      ],
+      "preimage_matches": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+      "blob_sha_at_package": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08",
+      "blob_sha_at_ack": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08",
+      "signal": "ORIGINAL_SOURCE_DOCUMENTARY_OR_INDIRECT_CONSUMER",
+      "observed_log_ids": [
+        "AS-53",
+        "AS-54",
+        "AS-55"
+      ],
+      "preimage_matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json",
+      "blob_sha_at_archived_head": "c08295278a138470d160e9cba29025e73bfd0aed",
+      "observed_log_ids": [
+        "AS-01",
+        "AS-02",
+        "AS-03",
+        "AS-04",
+        "AS-05",
+        "AS-06",
+        "AS-07",
+        "AS-08"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CRITERIA-MAPPING.json",
+      "blob_sha_at_archived_head": "039591932bb7a0f7848412f1872c4fe9c9c72a6b",
+      "observed_log_ids": [
+        "AS-07"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CRITERIA.json",
+      "blob_sha_at_archived_head": "60bc81121e0dfc122bb8c7c540476860765a0d8b",
+      "observed_log_ids": [
+        "AS-07"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/DISCOVERY-AFTER-CAPTURE-LIMIT.json",
+      "blob_sha_at_archived_head": "4fbab76a57e885e441e25796366337c36d9fec6b",
+      "observed_log_ids": [
+        "AS-07"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/complete-material-C45.patch",
+      "blob_sha_at_archived_head": "88d5bc3b0e0f1ec5e75c67c9990ebcda4fc128ac",
+      "observed_log_ids": [
+        "AS-28",
+        "AS-29",
+        "AS-30",
+        "AS-35",
+        "AS-36",
+        "AS-41",
+        "AS-42"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/cost80-terminal-addendum.json",
+      "blob_sha_at_archived_head": "cd50c101aaf6c19ae3a38cd1353352e3e819473b",
+      "observed_log_ids": [
+        "AS-19"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+      "blob_sha_at_archived_head": "33a15aaf96fd5dc4f8cb31ffc17ee6a14ce8e275",
+      "observed_log_ids": [
+        "AS-11",
+        "AS-12",
+        "AS-13",
+        "AS-21",
+        "AS-24",
+        "AS-49",
+        "AS-50",
+        "AS-51",
+        "AS-52"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+      "blob_sha_at_archived_head": "8ebc7c2a6f52d3954a18cdd493ff68a0ab087356",
+      "observed_log_ids": [
+        "AS-28",
+        "AS-29",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+      "blob_sha_at_archived_head": "c9f4ae6ca7a3c8b1934420a2449ed39e7eec5430",
+      "observed_log_ids": [
+        "AS-11",
+        "AS-12",
+        "AS-13",
+        "AS-21",
+        "AS-24",
+        "AS-49",
+        "AS-50",
+        "AS-51",
+        "AS-52"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+      "blob_sha_at_archived_head": "3e97b6dc2ab2effb8f0ee7ebaf88603f66c99c41",
+      "observed_log_ids": [
+        "AS-19",
+        "AS-28",
+        "AS-29",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/BUNDLE72-MANIFEST.json",
+      "blob_sha_at_archived_head": "5a4753c97d1282d6ea5d1d785aec4b67de8c32b0",
+      "observed_log_ids": [
+        "AS-09",
+        "AS-10"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/CI72.json",
+      "blob_sha_at_archived_head": "46e3e60437193f81ec72dc0a6e91b2c75681f770",
+      "observed_log_ids": [
+        "AS-09",
+        "AS-10"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/publication-manifest.json",
+      "blob_sha_at_archived_head": "d413ad4de60c4c9d19eff7b34df6492f803c69a6",
+      "observed_log_ids": [
+        "AS-11",
+        "AS-12",
+        "AS-13"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/result.json",
+      "blob_sha_at_archived_head": "948b221dc6235be1510fec2a44f0fd4efd190a77",
+      "observed_log_ids": [
+        "AS-11",
+        "AS-12",
+        "AS-13"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/result.json",
+      "blob_sha_at_archived_head": "8cb8f49b09ca50306d4bff9d09577431f8c4233b",
+      "observed_log_ids": [
+        "AS-11",
+        "AS-12",
+        "AS-13"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/result.json",
+      "blob_sha_at_archived_head": "b6f90dd09e2d7d8be1790d914a86c60607cf987f",
+      "observed_log_ids": [
+        "AS-11",
+        "AS-12",
+        "AS-13"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/QUALIFICATION.json",
+      "blob_sha_at_archived_head": "74ced8ae2760831d18c47592cb2ff185bc1be08f",
+      "observed_log_ids": [
+        "AS-21",
+        "AS-24"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/QUALIFICATION.json",
+      "blob_sha_at_archived_head": "39ff185ddcb76395a4793e791eec6062594a00bc",
+      "observed_log_ids": [
+        "AS-21",
+        "AS-24"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4.json",
+      "blob_sha_at_archived_head": "f16fb2f184db003f62ebc25ca1e534c0998db2d3",
+      "observed_log_ids": [
+        "AS-19"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1.json",
+      "blob_sha_at_archived_head": "a28f2272635882b6eeb94645c1d141216a3ef0b6",
+      "observed_log_ids": [
+        "AS-20",
+        "AS-23"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2.json",
+      "blob_sha_at_archived_head": "e6621f1ce011127a1bc4623d15cc5cd549660f5e",
+      "observed_log_ids": [
+        "AS-21",
+        "AS-24"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3.json",
+      "blob_sha_at_archived_head": "f5c2a2328cb935cac173444ea5d25f77d508fe9c",
+      "observed_log_ids": [
+        "AS-22",
+        "AS-25"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-result.json",
+      "blob_sha_at_archived_head": "30c30e6a1d6bc713477716d499e5137aa73210ff",
+      "observed_log_ids": [
+        "AS-20",
+        "AS-23"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-result.json",
+      "blob_sha_at_archived_head": "801ba1f8ade68a4eebb646cf8bcb7781a22cee23",
+      "observed_log_ids": [
+        "AS-21",
+        "AS-24"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-result.json",
+      "blob_sha_at_archived_head": "0c362462e77843393f9472f8d81adf34123671c5",
+      "observed_log_ids": [
+        "AS-22",
+        "AS-25"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/PACK-VERIFICATION.json",
+      "blob_sha_at_archived_head": "3b76e9ffcd18542e767db71b00d2a37a670e434e",
+      "observed_log_ids": [
+        "AS-26",
+        "AS-27"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/CI-RECEIPT.json",
+      "blob_sha_at_archived_head": "e8f263f5a8119bdd2a90f6065be6531b7a438da7",
+      "observed_log_ids": [
+        "AS-26",
+        "AS-27"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/evidence-hashes.json",
+      "blob_sha_at_archived_head": "d52ade3f65da96a33a66b0cdf3f46f5e9c929708",
+      "observed_log_ids": [
+        "AS-26",
+        "AS-27"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/clamd-error.conf.txt",
+      "blob_sha_at_archived_head": "6402c0a924a804efc6aa09e40b542d855d754250",
+      "observed_log_ids": [
+        "AS-32",
+        "AS-38"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/clamd-main.conf.txt",
+      "blob_sha_at_archived_head": "80ed58159c1259fc15df101ff226badd5c1bedce",
+      "observed_log_ids": [
+        "AS-34",
+        "AS-40"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.conf.txt",
+      "blob_sha_at_archived_head": "9aa7e385aad4ca4207861a9995b6e54bf23f201a",
+      "observed_log_ids": [
+        "AS-29",
+        "AS-36",
+        "AS-42"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.conf.txt",
+      "blob_sha_at_archived_head": "308056b3fbd1318f43f5692488c774ecbf12d8d3",
+      "observed_log_ids": [
+        "AS-32",
+        "AS-38"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.conf.txt",
+      "blob_sha_at_archived_head": "905c61ae3d713d59db8ddf33ba2b9988e3510996",
+      "observed_log_ids": [
+        "AS-34",
+        "AS-40"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.conf.txt",
+      "blob_sha_at_archived_head": "86749946d9a34ef3d572a29d8384d6190b618fd8",
+      "observed_log_ids": [
+        "AS-29",
+        "AS-36",
+        "AS-42"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.conf.txt",
+      "blob_sha_at_archived_head": "fafeb69c447b77e50b53ef9d213e1aaef05f33df",
+      "observed_log_ids": [
+        "AS-32",
+        "AS-38"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.conf.txt",
+      "blob_sha_at_archived_head": "b91037a36b74c5228dc53bef3f8f32556076d029",
+      "observed_log_ids": [
+        "AS-34",
+        "AS-40"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.conf.txt",
+      "blob_sha_at_archived_head": "ba1c9e919ec0a7cf18f4e79b934f1eb3d07eebcd",
+      "observed_log_ids": [
+        "AS-29",
+        "AS-36",
+        "AS-42"
+      ],
+      "signal": "BASENAME_COLLISION_REQUIRES_SEMANTIC_REVIEW",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2-result.json",
+      "blob_sha_at_archived_head": "463d9d47e07142657694b5a04741d9b321b2362b",
+      "observed_log_ids": [
+        "AS-28",
+        "AS-29",
+        "AS-35",
+        "AS-36",
+        "AS-41",
+        "AS-42"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+      "blob_sha_at_archived_head": "577de3063f6be4101ecfa9aa650b7a9a5307e5c9",
+      "observed_log_ids": [
+        "AS-28",
+        "AS-29",
+        "AS-30",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+      "blob_sha_at_archived_head": "b1cc8f3c5d61419ccc7c9d68ce83e1313040d261",
+      "observed_log_ids": [
+        "AS-28",
+        "AS-29",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+      "blob_sha_at_archived_head": "d3ffa536a808c64ca04bad591af05941a8b7acd7",
+      "observed_log_ids": [
+        "AS-28",
+        "AS-29",
+        "AS-30",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json",
+      "blob_sha_at_archived_head": "6baf824654bfe7876e65d3cc028a6092b4cf0748",
+      "observed_log_ids": [
+        "AS-28",
+        "AS-29",
+        "AS-31",
+        "AS-32",
+        "AS-33",
+        "AS-34",
+        "AS-35",
+        "AS-36",
+        "AS-37",
+        "AS-38",
+        "AS-39",
+        "AS-40",
+        "AS-41",
+        "AS-42"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/document-read.json",
+      "blob_sha_at_archived_head": "efab34e1a10b9eedd682cf8feedb222c163beea7",
+      "observed_log_ids": [
+        "AS-28",
+        "AS-35",
+        "AS-41"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/FINAL-MANIFEST.json",
+      "blob_sha_at_archived_head": "829e8d183be5dfa98149ba3ca1e0d4f3c58ac923",
+      "observed_log_ids": [
+        "AS-43",
+        "AS-44",
+        "AS-45"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/LEDGER-FINAL.json",
+      "blob_sha_at_archived_head": "6d0e8dc1da54f122ff1c95908a9664851e05ab0f",
+      "observed_log_ids": [
+        "AS-43",
+        "AS-44",
+        "AS-45"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-result.json",
+      "blob_sha_at_archived_head": "9f2cd2250bd27fe36501c23c9152e6f65247ee98",
+      "observed_log_ids": [
+        "AS-43"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-result.json",
+      "blob_sha_at_archived_head": "3ec3bbe1882fafb19cb7240e22a1425744ae8fc2",
+      "observed_log_ids": [
+        "AS-44"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-result.json",
+      "blob_sha_at_archived_head": "71df6b782788a327c8368fa160f92040c96b18e6",
+      "observed_log_ids": [
+        "AS-45"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/CRITERIA.json",
+      "blob_sha_at_archived_head": "a14510f6d59cc0794c7343a8b02a706afd5426bc",
+      "observed_log_ids": [
+        "AS-49",
+        "AS-50",
+        "AS-51",
+        "AS-52"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/EVIDENCE-INDEX.json",
+      "blob_sha_at_archived_head": "c9fb5cdc28976a2f0215c91d240185a81c05eb66",
+      "observed_log_ids": [
+        "AS-46",
+        "AS-47",
+        "AS-48",
+        "AS-49",
+        "AS-50",
+        "AS-51",
+        "AS-52"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/proposal.json",
+      "blob_sha_at_archived_head": "2922fdd423ffb9f1a6b445842c9f01203cd4f48a",
+      "observed_log_ids": [
+        "AS-46",
+        "AS-48"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/proposal.json",
+      "blob_sha_at_archived_head": "42362861f5c3776f10b30b5e7f44c669bfec0b3e",
+      "observed_log_ids": [
+        "AS-47"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/proposal.json",
+      "blob_sha_at_archived_head": "d438e0c3fa20983852d31a5a0a00ba52501c6dc6",
+      "observed_log_ids": [
+        "AS-46",
+        "AS-48",
+        "AS-51"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.json",
+      "blob_sha_at_archived_head": "53fb70bbf97184b8054a7a6ec4eb54e301504327",
+      "observed_log_ids": [
+        "AS-49"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.json",
+      "blob_sha_at_archived_head": "88296ab2d940b7c823a3d85f077439d863dace64",
+      "observed_log_ids": [
+        "AS-50"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.json",
+      "blob_sha_at_archived_head": "c0872d926e70379cdef1be20449df91f1ba299d9",
+      "observed_log_ids": [
+        "AS-51"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.json",
+      "blob_sha_at_archived_head": "44447684cec42038dab7d2f79ffc545c8b01b59f",
+      "observed_log_ids": [
+        "AS-52"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-intake.json",
+      "blob_sha_at_archived_head": "5269406f2596413023a88ddad379efa7cec7d7eb",
+      "observed_log_ids": [
+        "AS-53",
+        "AS-54",
+        "AS-55"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/DELIVERY.json",
+      "blob_sha_at_archived_head": "a345b2e7b0ae234b10a2eeaa7972092a4595e765",
+      "observed_log_ids": [
+        "AS-53",
+        "AS-54",
+        "AS-55"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/HANDOFF.md",
+      "blob_sha_at_archived_head": "b9f8f74f56b131a527b8115d1bca075485c5190c",
+      "observed_log_ids": [
+        "AS-54"
+      ],
+      "signal": "LITERAL_LEXICAL_REFERENCE",
+      "source": "GITHUB_MCP_BLOB_STATIC_READ_AT_ACK_210"
+    }
+  ],
+  "per_log": [
+    {
+      "id": "AS-01",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-02",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-03",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-04",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-05",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-06",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-07",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CRITERIA-MAPPING.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CRITERIA.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/DISCOVERY-AFTER-CAPTURE-LIMIT.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-08",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/CI-RESULTS.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-09",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/BUNDLE72-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/CI72.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-10",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/BUNDLE72-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/CI72.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-11",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/publication-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-12",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/publication-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-13",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/publication-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-14",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-15",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-16",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-17",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-18",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-19",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/cost80-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-20",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-21",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/QUALIFICATION.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/QUALIFICATION.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-22",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-23",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-24",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/QUALIFICATION.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/QUALIFICATION.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-25",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-26",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/PACK-VERIFICATION.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/CI-RECEIPT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/evidence-hashes.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-27",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/PACK-VERIFICATION.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/CI-RECEIPT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/evidence-hashes.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-28",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/complete-material-C45.patch",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/document-read.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-29",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/complete-material-C45.patch",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-30",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/complete-material-C45.patch",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-31",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-32",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/clamd-error.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-33",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-34",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/clamd-main.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-35",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/complete-material-C45.patch",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/document-read.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-36",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/complete-material-C45.patch",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-37",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-38",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/clamd-error.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-39",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-40",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/clamd-main.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-41",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/complete-material-C45.patch",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/document-read.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-42",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/complete-material-C45.patch",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/operations75-terminal-addendum.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/terminal-delivery-manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.conf.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3-result.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/DELIVERY-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/EXECUTION-LEDGER.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/artifact-index.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-43",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/FINAL-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/LEDGER-FINAL.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-44",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/FINAL-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/LEDGER-FINAL.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-45",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/FINAL-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/LEDGER-FINAL.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-result.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-46",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/EVIDENCE-INDEX.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/proposal.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/proposal.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-47",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/EVIDENCE-INDEX.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/proposal.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-48",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/EVIDENCE-INDEX.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/proposal.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/proposal.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-49",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/CRITERIA.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/EVIDENCE-INDEX.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-50",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/CRITERIA.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/EVIDENCE-INDEX.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-51",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/CRITERIA.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/EVIDENCE-INDEX.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/proposal.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-52",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/CRITERIA.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/EVIDENCE-INDEX.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-53",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-intake.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/DELIVERY.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-54",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-intake.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/DELIVERY.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/HANDOFF.md"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    },
+    {
+      "id": "AS-55",
+      "known_pinned_consumers": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md"
+      ],
+      "additional_lexical_references": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-intake.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/DELIVERY.json"
+      ],
+      "requires_equivalence_for_all_consumers": true,
+      "ready_for_deletion": false
+    }
+  ],
+  "release_cleared": false,
+  "delete_authorized": 0,
+  "reader_migration_complete": false,
+  "GLOBAL_RELEASE": false
+}

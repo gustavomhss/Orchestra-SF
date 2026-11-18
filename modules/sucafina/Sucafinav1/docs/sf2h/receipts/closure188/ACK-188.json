@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.guard188.ack.v1",
+  "mission": 188,
+  "epoch": "closure-e1-browser188",
+  "campaign": "sf2h-integral-20261112",
+  "branch": "sf-guard-evidence",
+  "pr": "CREATION_REQUESTED_DRAFT",
+  "expected_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "expected_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+  "model_effective": "GPT-6",
+  "native_session_id": null,
+  "session_id_observation": "NOT_EXPOSED",
+  "method": "GitHub MCP read and CAS artifact receipt only; independent classification; no local tests/parsers/validators/builds",
+  "source_pins": {
+    "packet_commit": "8100bdc01566bf88532f2b497690cec3c84b551c",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "guard_rule_blobs": {
+      "agent-scratch": "71ce321c30465faaf957a08256bd6b7d007d4173",
+      "js-test-skipped": "c8ffa3738f820eaa006f6c4d7640d1942e418e60"
+    },
+    "original_guard_receipt_blob": "458d7963505c3a12e94fd84e7b66ea4865364f91",
+    "artifact": 14182790522,
+    "artifact_sha256": "1ab7ff0768b359e8c91d3f6e66d1f444681e221473a86013ea61d0d7373245ab"
+  },
+  "ownership": {
+    "integrator_current": 189,
+    "integrator_fence_sha": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "integrator_fence_blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+    "compiler_successor": 190,
+    "product_ci_successor": 191,
+    "terminal_handoffs": [
+      163,
+      164
+    ],
+    "skips": [
+      185,
+      186
+    ],
+    "harness": 187
+  },
+  "results": {
+    "gates_reviewed": 66,
+    "logs_reviewed": 55,
+    "helper_reviewed": 1,
+    "skips_routed": 10,
+    "log_disposable_proven": 0,
+    "patch_entries": 0,
+    "guard_after_188": "NOT_RUN",
+    "guard_original": "FAIL",
+    "candidate_same_W_qualified": false
+  },
+  "write_scope": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure188/**"
+  ],
+  "negative_controls": {
+    "product_changed": false,
+    "test_or_rule_changed": false,
+    "ignore_added": false,
+    "approval_label_applied": false,
+    "guard_waived": false,
+    "CI_dispatched": false,
+    "goal_changed": false,
+    "deploy": false,
+    "merge": false
+  },
+  "status": "INDEPENDENT_REVIEW_COMPLETE_PROPOSAL_ONLY_NO_RELEASE"
+}

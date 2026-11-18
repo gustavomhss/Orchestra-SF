@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h.review208.checkpoint.v1",
+  "mission": 208,
+  "branch": "sf-review-integrity",
+  "source_commit": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "actor": "S2-R2",
+  "epoch": "cold-review-e1-browser208",
+  "model": "GPT-6",
+  "session_id": null,
+  "review_completed_for_available_pre_freeze_static_scope": true,
+  "final_review_started": false,
+  "C_accepted": false,
+  "verdict": "FIX_FIRST",
+  "global_release": false,
+  "next_action": "189/PR65: route 208 NEW-001 to BI semantic writer and NEW-002 to WP10.T07 Atlas writer, apply owner patches with CAS/preimage to sf2-stack; consume 203 NAV router patch. Then 190 compiler only if changed and 200 sole CI dispatcher deduplicates targeted exact tests on same accepted C; 199 supplies approved installed identity/fixture and packaged desktop proof. A different independent review session rechecks causal changed blobs and all outstanding 40 canonical criteria on accepted C. No release without integral proofs.",
+  "external_minimal_nonsecret_input": "Accepted candidate C HEAD/tree + code blobs and owner patch IDs, CI test selection/run/artifact identifiers, F04 readiness/anonymous per-role capability proof and approved fixture manifest reference (no credentials, tokens or tenant secret).",
+  "must_not": [
+    "Run own tests or CI",
+    "Mutate product/workflows/guards",
+    "Use Azure",
+    "Assume global transaction",
+    "Infer successful absence of evidence",
+    "Reissue failed unchanged CI selector",
+    "Mark APPROVE without complete proofs"
+  ],
+  "notifications": [
+    {
+      "target": "189/PR65",
+      "comment_id": 6903575603,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "A08/BI source PR142",
+      "comment_id": 6903760752,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "N26 BI consumer PR155",
+      "comment_id": 6903761393,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "Atlas original memory PR79",
+      "comment_id": 6903761912,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "AM05 proof author198 PR183",
+      "comment_id": 6903762423,
+      "status": "PUBLISHED"
+    },
+    {
+      "target": "200/PR106 sole CI dispatcher",
+      "comment_id": 6903762951,
+      "status": "PUBLISHED_CONDITIONAL_NO_DISPATCH"
+    }
+  ],
+  "latest_complete_receipt_commit": "e18ff0c3fbfeb3f79205a60c28822b83f9c08954",
+  "checkpoint_finalized": true,
+  "remote_commit_verification": {
+    "source_branch_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "review_branch_head_before_checkpoint": "e18ff0c3fbfeb3f79205a60c28822b83f9c08954",
+    "receipt_files_present": 7,
+    "product_files_modified": 0
+  }
+}
