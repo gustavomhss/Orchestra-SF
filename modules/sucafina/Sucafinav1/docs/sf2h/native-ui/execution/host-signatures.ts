@@ -86,12 +86,21 @@ export type SfTransport = Readonly<{
 export type SfInstallationDescriptor = Readonly<{
   installationId: string
   projectId: string
+  hostId: string // current loaded installation/runtime, not a grant
   publicOrigin: string
   mount: string
   contractRevision: "sf-native-ui/1"
   authMode: "microsoft" | "local-operator"
 }>
 export type SfInstallationList = Readonly<{ installations: readonly SfInstallationDescriptor[] }>
+// A deep link uses ids and never requires Location.directory from another selection.
+// serverKey resolves the approved connection outside HTTP query, not an SF grant.
+export type SfInstallationSelector =
+  | Readonly<{ select: "ids"; installationId: string; projectId: string }>
+  | Readonly<{ select: "location"; location: Readonly<{ directory: string; workspace?: string }> }>
+export type SfExpectedContextBinding = Readonly<{ installationId: string; projectId: string; hostId: string }>
+export type SfNativeOwnerExpectation = SfExpectedContextBinding & Readonly<{ principalRef: string }>
+// X-SF-Native-Owner only carries an expectation; verify real actor+tuple inside producer transaction.
 export type SfContextStamp = Readonly<{
   installationId: string; projectId: string; hostId: string; principalRef: string
   policyVersion: string; accessRevision: string
@@ -159,7 +168,7 @@ export type SfDraftRevalidation =
   | Readonly<{ status: "unavailable" }>
 export type SfContextDependencies = Readonly<{
   listInstallations(selection: SfOwnerSelection, signal: AbortSignal): Promise<SfInstallationList>
-  loadContext(binding: SfInstallationDescriptor, signal: AbortSignal): Promise<SfContextResult>
+  loadContext(binding: SfInstallationDescriptor, signal: AbortSignal): Promise<SfContextResult> // sends exactly SfExpectedContextBinding query, verifies returned stamp/hostId
   createTransport(binding: SfInstallationDescriptor, generation: number): SfTransport
   resolveTransportIdentity(selection: SfOwnerSelection): string
   createDraft<Value>(input: SfDraftInput<Value>): SfDraftController<Value>
@@ -212,7 +221,7 @@ export declare function createSfAuthActions(options: Readonly<{
 export type SfConnectionCandidate = Readonly<{
   serverKey: string; projectId: string
   baseUrl: string // exact canonical origin; no path/query/fragment/userinfo
-  location: Readonly<{ directory: string; workspace?: string }> // selected SDK Location only
+  location?: Readonly<{ directory: string; workspace?: string }> // required only for select=location; select=ids uses trusted connection/installation identity
   credentials: Readonly<{ kind: "none" }> | Readonly<{ kind: "basic"; username: string; password: string }>
 }>
 export type SfRegisterConnectionResult =

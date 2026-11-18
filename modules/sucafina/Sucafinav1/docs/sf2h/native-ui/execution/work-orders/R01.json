@@ -1,6 +1,6 @@
 {
   "id": "R01",
-  "title": "FINAL independente: arquitetura e autorização",
+  "title": "FINAL independente: produto, UX nativa, a11y e arquitetura",
   "kind": "independent-review",
   "status": "PLANNED_NOT_AUTHORIZED",
   "priority": 9,
@@ -168,7 +168,8 @@
   },
   "deliver": [
     "Review the same frozen final material C with all required proofs available; reviewer has no implementation authorship.",
-    "Publish concrete findings immediately with path/line/causal sequence and owner; author corrects and reviewer rechecks affected findings."
+    "Publish concrete findings immediately with path/line/causal sequence and owner; author corrects and reviewer rechecks affected findings.",
+    "Trace every mandatory original reviewer scope and affected work-package criteria into exact C/tree, source SHA, access identity, observed controls and evidence; a reviewer with implementation authorship is replaced. Finding must include line/causal path and owner for correction."
   ],
   "acceptance_cases": [
     {
@@ -179,6 +180,11 @@
     {
       "id": "R01-AC02",
       "expected": "All three independent opinions identify exact same final C, authorship exclusions and evidence scope.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "R01-SCOPE",
+      "expected": "All 15 native chapters, 70 surface routes, flows, web+desktop, renderer/main binding, shell/owner, accessibility, responsiveness, i18n, navigation, visual fidelity and architecture/app UX invariants; independent of implementation authorship. No scope can be silently delegated away; same candidate C and all mandatory gates.",
       "status": "PLANNED_NOT_RUN"
     }
   ],
@@ -202,5 +208,11 @@
     "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
     "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
     "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
-  }
+  },
+  "reviewScope": "All 15 native chapters, 70 surface routes, flows, web+desktop, renderer/main binding, shell/owner, accessibility, responsiveness, i18n, navigation, visual fidelity and architecture/app UX invariants; independent of implementation authorship.",
+  "reviewRequiredChecks": [
+    "15 chapters/70 surfaces and full 28 CAP + 42 supplemental field/action/state parity",
+    "Keyboard, 320/768/1024/1280/1440, 200% text, 400% reflow, theme/locale/visual and no screenshots-only PASS",
+    "Owner/deeplink, shell events, desktop auth/IPC, draft, errors and real navigation transitions"
+  ]
 }

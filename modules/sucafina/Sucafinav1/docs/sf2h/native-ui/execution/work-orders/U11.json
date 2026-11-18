@@ -196,7 +196,8 @@
     "Implement every field/action/state/route in the assigned surface entries; field source is authoritative, never an invitation to omit less visible controls.",
     "Emit typed page/component exports and registration fragment to I00; no direct registry/shared producer writes.",
     "Use frozen responsive/microcopy/dirty-navigation specification; add behavior-focused installed journey cases in the owned exact spec.",
-    "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write."
+    "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write.",
+    "P0 U11.title-save provides its own title component and a regression section in U11 spec, consumes current authorized producer and returns patch/registration to I00; full U11 remains separate."
   ],
   "acceptance_cases": [
     {
@@ -212,6 +213,11 @@
     {
       "id": "U11-AC03",
       "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "U11-AC04",
+      "expected": "P0 saves ONLY pr.title for real existing draft/rejected PR using versions['requests:'+id].version from authorized server. Header X-SF-Native-Owner checked inside transaction; wrong principal/host/version produces 0 commits; second actor denied; unknown response never retried or sold as approval/receipt C12.",
       "status": "PLANNED_NOT_RUN"
     }
   ],
@@ -255,6 +261,57 @@
       "en_symbol": "SF_U11_COPY",
       "pt_br_symbol": "SF_U11_COPY_BR",
       "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+    }
+  ],
+  "incremental_outputs": [
+    {
+      "id": "U11.title-save",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03"
+      ],
+      "scope": "P0 only: real authorized Requests read/detail and editing existing draft PR pr.title via original save/CAS. No submit/approve; no need for attachments/S04, sourcing/PO or entire request editor.",
+      "consumes_outputs": [
+        "U10.queue"
+      ],
+      "test_files": [
+        "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/index.tsx",
+          "symbol": "SfRequestTitleEdit",
+          "signature": "(props: SfSurfaceProps) => JSX.Element; mounted by I00 in Requests detail, not new route"
+        }
+      ]
+    },
+    {
+      "id": "U11.complete",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/**"
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03",
+        "S04"
+      ],
+      "consumes_outputs": [
+        "U11.title-save"
+      ],
+      "scope": "Remaining full Requests, PR/PO/attachments/delete/cancel/issue; title save retained, and full order accepted only when all fields/commands/criteria pass."
     }
   ]
 }

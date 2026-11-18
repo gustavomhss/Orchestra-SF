@@ -605,16 +605,60 @@
       "S03",
       "A03"
     ],
-    "scope": "Real producer setup persists/submits PR; UI authorized queue → current-holder review/approve exact persisted snapshot; second denied actor, owner change and response-loss lookup; web AND desktop. Full create/sourcing/PO remain separately required.",
+    "scope": "P0 producer-backed title save with actual CAS/owner fence on persisted PR draft and no synthetic C12 receipt; P1 real submitted PR approval under current holder, denied second actor, owner change and response-loss verification on web AND desktop. P0 never substitutes P1/M31/MI07. Full create/sourcing/PO remain separately required.",
     "does_not_gate": "Independent authoring against frozen interfaces.",
     "gates": "First live binding/rollout only; cannot close M31/MI07, original complete journey or campaign.",
     "incremental_outputs": [
       "U10.queue",
+      "U11.title-save",
       "U13.pr-approval",
       "Q01.pilot",
       "Q02.pilot"
     ],
-    "output_readiness": "Partial output dependencies replace only that output readiness; full-order qualification and all canonical final obligations remain. Q01/Q02 complete proof waits for every actual UI it covers."
+    "output_readiness": "Partial output dependencies replace only that output readiness; full-order qualification and all canonical final obligations remain. Q01/Q02 complete proof waits for every actual UI it covers. The P0 title-save incremental output has no full U11/S04 dependency; final U11 still requires all its sources.",
+    "phases": [
+      {
+        "id": "P0",
+        "output": "U11.title-save",
+        "entry": [
+          "F01",
+          "F02",
+          "D01",
+          "F03",
+          "F04",
+          "S01",
+          "S03",
+          "A03",
+          "U10.queue"
+        ],
+        "operation": "domain.command.CAP25.save",
+        "allowedScope": "existing PR draft/pr_rejected; save values.pr.title only",
+        "oracle": "real version CAS and 0 commits on owner mismatch; no receipt C12; response loss remains uncertain",
+        "qualification": "installed web+desktop with actual actors and bound current candidate C"
+      },
+      {
+        "id": "P1",
+        "output": "U13.pr-approval",
+        "after": [
+          "P0"
+        ],
+        "entry": [
+          "F01",
+          "F02",
+          "D01",
+          "F03",
+          "F04",
+          "S01",
+          "S03",
+          "A03",
+          "U10.queue"
+        ],
+        "operation": "domain.command.CAP26.approve",
+        "allowedScope": "persisted submitted PR under authorized current holder; approval is different from title save",
+        "oracle": "read authorized submitted snapshot holder/version/amount; deny wrong actor; M31/MI07 retained",
+        "qualification": "installed web+desktop original business gate; P0 PASS is insufficient"
+      }
+    ]
   },
   "canonical_reuse": {
     "dependency_semantics": "/execution/dependency_meaning",

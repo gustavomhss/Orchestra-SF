@@ -119,7 +119,7 @@ Cada seleção precisa registrar C/tree, S/parent, request normalizado/hash, wor
 
 As [filas históricas finais57](https://github.com/gustavomhss/Orchestra-SF/blob/d6d9816bb09f7595330862616305e0791e23e61e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/gate-queue-final.json) e seus 15 comandos do responsável 45 registram a baseline anterior; os requisitos de gate são retidos e I00 confirma custódia/requests vigentes antes da execução, sem assumir autoridade por esse registro. Geração de client e de paletas, typechecks do grafo/app/E2E, Atlas generated, spawn-imports, guards e preflights são gates separados; confirmar executor autorizado em vez de chamar um suite full para imitar compiler-only.
 
-Três revisões FINAL independentes examinam o mesmo candidato corrigido: arquitetura/autorização, paridade/números e UX/acessibilidade. Nenhuma revisão desta proposta vale como FINAL de implementação.
+Três revisões FINAL **independentes** examinam exatamente o mesmo candidato C corrigido, com os escopos canônicos preservados e não sobrepostos por autoaprovação: **R01** cobre funcionalidade do produto, UX, navegação nativa/web/desktop, acessibilidade, layout e arquitetura de shell/broker; **R02** cobre paridade financeira/números, C03/C06/C12, permissionamento, privacidade, atomicidade, persistência, identidade, receipts e exportações; **R03** cobre runtime IA real, perfis/skills, os oito packs MCP/39 operações, Atlas/scanner, Relay/Schedule, integração, documentos/WP14 e shipping/infra pertinente. Os três revisam critérios herdados/consumidores dos WPs atribuídos com evidência do mesmo C; o revisor que implementou qualquer arquivo do escopo é substituído, não autocertificado. Review de plano ou triagem parcial **não** vale FINAL de produto.
 
 C/G7 exige o conjunto cumulativo e nenhum obrigatório aberto. D/G8 só arquiva evidência admitida com envelope/ancestralidade/diffs/hashes/guard próprios; não transfere execução de C a D. Somente S0/autoridade final pode declarar aceite conforme canônico.
 
@@ -127,7 +127,7 @@ C/G7 exige o conjunto cumulativo e nenhum obrigatório aberto. D/G8 só arquiva 
 
 A revisão desta PR exige resolver as 70 superfícies e suas ações/rotas até owner e ficha, validar todos os IDs/dependências/allowlists e conferir os contratos compartilhados. O relatório documental e os pareceres cruzados identificam a baseline corrigida, limites e findings. A integridade dos 1.610 pointers continua exigida; contagem não é prova funcional.
 
-Esta PR pode ser aprovada como plano com testes **NOT_RUN** porque não implementa produto. Sua aprovação não é aprovação funcional/visual da futura aplicação.
+Esta PR pode ser aprovada como plano com testes **NOT_RUN** porque não implementa produto. Primeiro piloto tem duas provas distintas: P0 título de draft PR salvo por CAS no produtor (sem chamar isso de aprovação ou fingir receipt C12) e P1 aprovação real por holder admitido, com segundo ator negado, contexto trocado e resultado incerto. P0 não quita P1/M31/MI07. Sua aprovação não é aprovação funcional/visual da futura aplicação.
 
 
 ## 8. Complementos do cold review

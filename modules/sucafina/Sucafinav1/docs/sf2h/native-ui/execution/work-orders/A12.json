@@ -120,7 +120,8 @@
   "deliver": [
     "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
     "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
-    "Publish operation/field/source equivalence and current-access/redaction negative cases."
+    "Publish operation/field/source equivalence and current-access/redaction negative cases.",
+    "Implement v2 opt-in codec of existing workbench-views list/open/save/remove only after product/interface/personal-views.ts producer release; preserve exact v1 shapes and current principal/installation/project persistence; landing CAS is distinct from view CAS. If unsupported, contract-unavailable before network."
   ],
   "acceptance_cases": [
     {
@@ -136,6 +137,11 @@
     {
       "id": "A12-AC03",
       "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A12-V2",
+      "expected": "Real product-backed schemaVersion 2 union + legacy unchanged, lazy migration and state persistence tested under two owners, CAS conflict and revocation; no alternative store.",
       "status": "PLANNED_NOT_RUN"
     }
   ],

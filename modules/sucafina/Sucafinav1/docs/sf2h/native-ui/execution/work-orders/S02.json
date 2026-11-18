@@ -86,7 +86,8 @@
   "deliver": [
     "Implement only the frozen public component contract; consumers receive export/props/slots manifest.",
     "Publish accessibility/state examples and exact consumer registration fragment.",
-    "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write."
+    "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write.",
+    "Expose SfGridRange/SfPasteState and onPasteTsv/onApplyPastedRows with preview of producer MonthlyDrafts; selection Ctrl/Cmd+V, invalid/locked partial results, row CAS, raw TSV retention and 0-based→1-based month mapping exactly once. No client finance engine."
   ],
   "acceptance_cases": [
     {
@@ -97,6 +98,11 @@
     {
       "id": "S02-AC02",
       "expected": "No consumer copies private source or implements a parallel component.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "S02-AC03",
+      "expected": "TSV 2x3 including trailing blanks, invalid numeric/locked/overflow, selection keyboard, source preview, partial apply and retry only failed row show exact original text and per-row version. Mobile multiline path equivalent.",
       "status": "PLANNED_NOT_RUN"
     }
   ],

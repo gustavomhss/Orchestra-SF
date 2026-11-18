@@ -12,7 +12,7 @@ Uma lane de autoria recebe um subtree/allowlist fechado por vez, em branch isola
 
 ## 2. Preflight único e fonte de verdade
 
-I00 reconcilia a autoridade vigente antes da primeira escrita, conservando uma única custódia de stack e o dispatcher já existente. Lê o HEAD de planejamento, o candidato material e as releases/consumer ACKs; nunca infere encerramento por silêncio.
+I00 reconcilia uma única autoridade de stack antes de escrever; S0-control@8819df61 preparou missão105 (não ativa sem ACK/lease), produto CI101 e compiler/typecheck/guards45, sem segundo controller. Lê o HEAD de planejamento, o candidato material e as releases/consumer ACKs; nunca infere encerramento por silêncio.
 
 I00 publica um `launch-record` imutável com: commit/tree material; commit de planejamento; ator/branch/lease exatos por ordem; allowlist efetiva; SHA/blob de cada família de fonte consumida; digests de contratos, componentes, superfície e microcopy; atores/runners realmente disponíveis; dispatcher e fila em curso; bloqueios externos já conhecidos. Um launch-record identifica fatos e leases, não modifica critérios.
 
@@ -50,7 +50,7 @@ I00 calcula todos os outputs READY e escolhe até a capacidade de autoria realme
 
 Uma lane usa um writer por arquivo. O validador compara paths normalizados, exatos e prefixos pais/filhos, incluindo testes, CSS e locales. Papéis lógicos não concedem escrita: a lease efetiva lista ator, ordem, allowlist e fronteira temporal/terminal. Um timeout de coordenação não expira uma lease automaticamente.
 
-O pool de CI é separado do pool de autoria. Ter dez autores não significa dez runners. Há um único dispatcher canônico; workers entregam requests propostos e observações, não disparam suites.
+O pool de CI é separado do pool de autoria. Ter dez autores não significa dez runners. CI de produto só pela101 usando a interface canônica test:ci/dedup, compiler/typecheck/guards só pela45. Workers entregam requests propostos e observações, não disparam suites.
 
 I00 só escreve os registries/entrypoints enumerados e aplica patches compartilhados liberados pelo dono vigente. Os workers entregam fragmentos de registro e patches exatos com pre/postimage. O integrador não redesenha UI, inventa contratos ou reescreve a implementação para fazê-la encaixar.
 
@@ -66,11 +66,11 @@ Desktop é parte do alvo: D01 usa o broker fechado pelo contrato, Session isolad
 
 ## 7. Piloto pequeno e completo
 
-O piloto usa a fila autorizada e uma PR persistida/submetida pelo produtor real, revisão de etapa/holder/versão/valor e aprovação pela UI no papel admitido. Inclui um segundo ator negado, troca de contexto e perda de resposta com consulta do recibo original. Web e desktop têm provas próprias.
+O piloto é deliberadamente bifásico: **P0** usa U11.title-save para ler/editar/salvar título `pr.title` de PR draft real, CAS `versions["requests:"+id]` e fence de owner dentro da transação, sem receipt C12 inventado; **P1** usa a fila autorizada e uma PR realmente persistida/submetida, revisão de holder/etapa/versão/valor e aprovação pela U13.pr-approval no papel admitido. P0 não é aprovação nem libera P1. Nenhuma fase reenviará mutação após resposta perdida. Inclui um segundo ator negado, troca de contexto e perda de resposta com consulta do recibo original. Web e desktop têm provas próprias.
 
 O setup pode criar a PR por portas reais no corpus isolado; não pode fabricar snapshot aprovado ou recibo. A jornada completa de criação, sourcing, PO, imports e anexos continua nas ordens e critérios canônicos e não é fechada pelo piloto.
 
-U10 entrega `queue` antes do overview BI; U13 entrega aprovação PR antes dos demais resumos. Esses incrementos não exigem U21/BI ou importações para provar uma aprovação persistida. O piloto consome F01/F02/D01/F03/F04/S01/S03/A03 e os incrementos U10.queue/U13.pr-approval, com Q01/Q02 pertinentes. Não usar o piloto para declarar M31/MI07 resolvido.
+U11 entrega `title-save` antes de editor completo PR/PO, U10 entrega `queue` antes do overview BI; U13 entrega aprovação PR antes dos demais resumos. Esses incrementos não exigem U21/BI ou importações para provar uma aprovação persistida. O piloto consome F01/F02/D01/F03/F04/S01/S03/A03 e os incrementos U11.title-save/U10.queue/U13.pr-approval, com Q01.pilot/Q02.pilot pertinentes; P0 é smoke transacional, P1 valida aprovação de negócio e exige M31/MI07 quando aplicáveis. Não usar o piloto para declarar M31/MI07 resolvido.
 
 ## 8. Qualificação sem repetição
 
@@ -106,7 +106,7 @@ O autor encerra após entregar o trabalho independente e transferir a lease conf
 
 ## 11. Três FINAL e encerramento
 
-R01/R02/R03 são atores novos sem autoria no código examinado; revisam o mesmo C corrigido. Encontrou defeito: publica imediatamente, writer corrige a sua fronteira, reviewer confirma fechamento. Tornar-se autor invalida sua independência naquela revisão.
+R01 revisa funcionalidade/UX/native/a11y/arquitetura do shell; R02 revisa números/semântica financeira, ACL, privacidade, persistência e atomicidade; R03 revisa IA/MCP/Atlas/scanner/Relay/Schedule/documentos/WP14/runtime e integração. R01/R02/R03 são atores novos sem autoria no código examinado; revisam o mesmo C corrigido. Encontrou defeito: publica imediatamente, writer corrige a sua fronteira, reviewer confirma fechamento. Tornar-se autor invalida sua independência naquela revisão.
 
 Uma revisão deste planejamento não substitui FINAL de produto. S0/autoridade final conserva os gates de C/G7 e D/G8. D recebe apenas evidência append-only permitida; sem conteúdo normativo ou alteração de produto para conservar C antigo.
 

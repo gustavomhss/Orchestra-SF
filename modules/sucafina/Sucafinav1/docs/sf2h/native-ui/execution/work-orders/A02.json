@@ -160,7 +160,8 @@
   "deliver": [
     "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
     "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
-    "Publish operation/field/source equivalence and current-access/redaction negative cases."
+    "Publish operation/field/source equivalence and current-access/redaction negative cases.",
+    "Adapter uses existing planner.monthly.preview/apply, monthly-edit.ts and monthly-host.ts for selected range TSV; map UI month index 0..11 to MonthDraft.month 1..12 exactly once, validate per-row CAS and preserve rejected text/partial outcomes. No custom formula/FX/number engine."
   ],
   "acceptance_cases": [
     {
@@ -176,6 +177,11 @@
     {
       "id": "A02-AC03",
       "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A02-TSV",
+      "expected": "Real host preview/apply per-row CAS, invalid/locked/revision conflict/partial committed rows; no duplicated parser or replay.",
       "status": "PLANNED_NOT_RUN"
     }
   ],

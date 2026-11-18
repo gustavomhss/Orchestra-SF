@@ -109,7 +109,8 @@
     "Reuse existing HTTP JSON paths/methods/admission and original Request; add native context/read projections only where contract permits.",
     "Preserve operation key/payload digest and uncertain-result lookup; zero automatic mutation retry.",
     "Route before business() fallback at the frozen installation point; no second Protocol/codegen target; the single metadata discovery endpoint uses the existing generated pipeline owned by I00.",
-    "Receive options.operations by injection. Never import all Axx schema/client implementations into F02 or require the final registry to author/integrate the pilot. Unknown catalog ID is invalid; known but unintegrated binding is contract-unavailable before network."
+    "Receive options.operations by injection. Never import all Axx schema/client implementations into F02 or require the final registry to author/integrate the pilot. Unknown catalog ID is invalid; known but unintegrated binding is contract-unavailable before network.",
+    "Implement ctx.installations discriminated selectors and ctx.context host expectation as catalog; native legacy mutation wrapper sends typed X-SF-Native-Owner (not grant), fails closed before network with invalid owner; auth return-intents uses original safeReturn dashboard marker and bounded private state owned by I00."
   ],
   "acceptance_cases": [
     {
@@ -125,6 +126,11 @@
     {
       "id": "F02-AC03",
       "expected": "Web transport and desktop broker share operation contract without raw URL/header/cookie authority from UI.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "F02-77-FENCE",
+      "expected": "Prepared Request identity preserved, installed nativeCommandPrecondition denies stale owner in same transaction; view/monthly own hosts revalidate; missing hook rejects native writes; Microsoft return single-use/expiry/restart succeeds without safeReturn expansion.",
       "status": "PLANNED_NOT_RUN"
     }
   ],

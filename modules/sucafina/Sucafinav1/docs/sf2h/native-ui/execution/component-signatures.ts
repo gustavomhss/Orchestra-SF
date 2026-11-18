@@ -240,6 +240,22 @@ export type SfGridNavigation = Readonly<{
   key: "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight" | "Home" | "End" | "Control+Home" | "Control+End" | "PageUp" | "PageDown"
   visibleRowCount: number
 }>
+// S02 — producer-backed TSV range/paste; month coordinates here are zero-based
+// but MonthlyDraft.cells.month in monthly-edit.ts is 1..12. A02 maps +1 once.
+export type SfGridRange = Readonly<{ anchor: SfCellCoordinate; extent: SfCellCoordinate }>
+export type SfPasteMeasure = "budget" | "actual" | "forecast"
+export type SfPasteCell = Readonly<{ coordinate: SfCellCoordinate; rawText: string; issue?: SfMessage }>
+export type SfPasteRow = Readonly<{
+  rowRef: SfRef; revision: number; cells: readonly SfPasteCell[]
+  result: "ready" | "invalid" | "locked" | "applied" | "conflict" | "failed"
+  issues: readonly SfMessage[]
+}>
+export type SfPasteState =
+  | Readonly<{ phase: "idle" }>
+  | Readonly<{ phase: "preparing"; originalTsv: string; range: SfGridRange }>
+  | Readonly<{ phase: "review" | "applying" | "partial" | "conflict" | "failed"; originalTsv: string; range: SfGridRange; rows: readonly SfPasteRow[] }>
+  | Readonly<{ phase: "complete"; appliedRowRefs: readonly SfRef[] }>
+export type SfPasteRequest = Readonly<{ range: SfGridRange; originalTsv: string }>
 export type SfMonthlyGridProps<Row> = Readonly<{
   rows: readonly Readonly<Row>[]
   months: readonly SfMonth[] // exactly 0..11, once each; January label is index 0
@@ -248,6 +264,13 @@ export type SfMonthlyGridProps<Row> = Readonly<{
   cells: readonly SfGridCell[] // at most one per coordinate
   draftCells: readonly SfDraftCell[]
   activeCell: SfCellCoordinate | null
+  selectedRange: SfGridRange | null
+  paste: SfPasteState
+  onSelectRange: (range: SfGridRange | null) => void
+  onPasteTsv: (request: SfPasteRequest) => void
+  onApplyPastedRows: (rows: readonly SfPasteRow[]) => void
+  onRetryFailedPasteRows: (rows: readonly SfPasteRow[]) => void
+  onCancelPaste: () => void
   onNavigate: (event: SfGridNavigation) => void
   onEdit: (event: Readonly<{ coordinate: SfCellCoordinate; text: string }>) => void
   onCommitCell: (event: Readonly<{ coordinate: SfCellCoordinate; text: string; exit: "Enter" | "Tab" | "Shift+Tab" }>) => void
