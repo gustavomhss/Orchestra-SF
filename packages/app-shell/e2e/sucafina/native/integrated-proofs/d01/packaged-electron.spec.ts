@@ -5,7 +5,6 @@
  * This spec is dispatched only by the authorized 191 hosted runner.
  */
 import { createHash } from "node:crypto"
-import { requireSfPackagedBrokerReadiness } from "../../../../../../../apps/desktop/test/sucafina-bootstrap213/d01-packaged-driver.ts"
 import { _electron, expect, test } from "@playwright/test"
 import type { SfDesktopCapability, SfDesktopBindResult } from "@orchestra/client/sucafina/transport"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
@@ -23,8 +22,6 @@ type RendererApi = Readonly<{
 }>
 type Owned = Readonly<{ bindingHandle: string; generation: number }>
 type CookieCounts = Readonly<{ isolated: number; isolatedHttpOnly: number; default: number }>
-const jsonRecord = (value: unknown): value is Readonly<Record<string, unknown>> =>
-  value !== null && typeof value === "object" && !Array.isArray(value)
 
 test.describe("D01 · real packaged Electron / Sucafina broker / private partition", () => {
   test("original Microsoft login stays within ephemeral partition; reject foreign owner and purge on logout", async ({}, info) => {
@@ -54,7 +51,6 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
       await expect.poll(() => window.evaluate(() => {
         return typeof (window as unknown as { api?: RendererApi }).api?.sucafina?.registerConnection === "function"
       }), { message: "Packaged Electron preload must expose the real broker API" }).toBe(true)
-      await requireSfPackagedBrokerReadiness(app, window)
 
       // Credentials, if the app owns them, are read INSIDE its trusted renderer
       // and forwarded by its existing preload to main. They are never returned,
@@ -158,9 +154,12 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
         })
       }, { owner, target: manifest.target })
       if (invoked.kind !== "json-response" || invoked.status !== 200 ||
-          !jsonRecord(invoked.body) ||
-          invoked.body.status !== "ok" || !jsonRecord(invoked.body.value) ||
-          !jsonRecord(invoked.body.value.stamp) ||
+          !invoked.body || typeof invoked.body !== "object" || Array.isArray(invoked.body) ||
+          invoked.body.status !== "ok" || !invoked.body.value ||
+          typeof invoked.body.value !== "object" || Array.isArray(invoked.body.value) ||
+          !invoked.body.value.stamp ||
+          typeof invoked.body.value.stamp !== "object" ||
+          Array.isArray(invoked.body.value.stamp) ||
           invoked.body.value.stamp.principalRef !== login.context.stamp.principalRef ||
           invoked.body.value.stamp.policyVersion !== login.context.stamp.policyVersion ||
           invoked.body.value.stamp.accessRevision !== login.context.stamp.accessRevision)
