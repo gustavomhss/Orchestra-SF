@@ -38,6 +38,7 @@ test.each(["text", "docx"] as const)("%s candidates commit together and confirma
       return operation
     },
     confirmDocument: async (evidence: { status: string; id: string }) => evidence.status === "extracted" && evidence.id === admittedEvidence,
+    rejectDocument: async () => false,
     createId: () => "unused",
     now: () => "2026-01-01T00:00:00Z",
   }
@@ -106,7 +107,7 @@ test("an admitted document can be indexed and searched without a field candidate
     const index = result.status === "ok" ? result.value as import("../../../../product/documents/index.ts").StoredDocumentIndex | undefined : undefined
     return index ? { status: "ok", snapshot: index.snapshot } : { status: "unavailable", accessRevision: call.binding.accessRevision }
   }, documents, parser)
-  const input = { state, documents, parser, host, reader, verifyFieldSchema: () => false, resolveFieldSchema: async () => ({ status: "unavailable" as const, reason: "not-needed" }), operationIdentity: () => "index", confirmDocument: async () => false, createId: () => "unused", now: () => "2026-01-01T00:00:00Z" }
+  const input = { state, documents, parser, host, reader, verifyFieldSchema: () => false, resolveFieldSchema: async () => ({ status: "unavailable" as const, reason: "not-needed" }), operationIdentity: () => "index", confirmDocument: async () => false, rejectDocument: async () => false, createId: () => "unused", now: () => "2026-01-01T00:00:00Z" }
   const found = await searchDocumentEvidence({ query: "price", documentRefs: ["doc"], limit: 5 }, context, input)
   expect(found.status).toBe("ok")
   if (found.status !== "ok") return
