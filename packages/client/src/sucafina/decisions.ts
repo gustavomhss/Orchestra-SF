@@ -4,7 +4,7 @@
  * explicit one-shot Idempotency-Key. This client never retries a lost reply.
  */
 import type { Schema } from "effect"
-import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
+import { SfDecisions } from "../../../schema/src/sucafina/decisions.ts"
 import type { SfCallOptions, SfTransport } from "./transport.ts"
 
 /**
