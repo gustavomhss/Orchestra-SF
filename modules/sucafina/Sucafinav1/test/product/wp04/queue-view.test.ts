@@ -22,18 +22,20 @@ import { procurementApprovalGroups, readProcurementQueueView } from "../../../pr
 const states = ["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled", "imported-unknown"]
 const at = "2026-11-13T00:00:00Z"
 
-test("first visit to Procurement Requests on an empty installation renders a real empty queue, never 503", async () => {
+test("first authorized C02 JSON projection is empty and cannot resurrect the retired HTML console", async () => {
   const fixture = await pageFixture(true)
   try {
     const before = await fixture.material()
     expect(before.store).toBeUndefined()
     const dashboard = await fixture.get("requester", undefined)
-    expect(dashboard.response.status).toBe(200)
+    expect(dashboard.response.status).toBe(404)
+    expect(dashboard.body).toBe("legacy console decommissioned — use /")
 
     const first = await fixture.get("requester", "Requests")
     expect(first.response.status).toBe(200)
-    expect(first.response.headers.get("content-type")).toContain("text/html")
-    expect(first.html).not.toContain("procurement-queue-unavailable")
+    expect(first.response.headers.get("content-type")).toContain("application/json")
+    expect(JSON.parse(first.body)).toMatchObject({ status: "ok", value: { rows: [], stock: { values: [] } } })
+    expect(first.body).not.toContain("procurement-queue-unavailable")
     const queue = readProcurementQueueView(fixture.prepared.at(-1)?.data.procurementQueueView)
     if (!queue) throw new Error("The first visit did not prepare the production C02 queue")
     expect(queue.rows).toEqual([])
@@ -67,14 +69,14 @@ test("persisted incomplete Procurement stores fail closed instead of silently re
       const result = await fixture.get("requester", "Requests")
       expect(result.response.status).toBe(503)
       expect(result.response.headers.get("content-type")).toContain("application/json")
-      expect(JSON.parse(result.html)).toEqual({ status: "unavailable", reason: "procurement-queue-unavailable" })
+      expect(JSON.parse(result.body)).toEqual({ status: "unavailable", reason: "procurement-queue-unavailable" })
       expect(fixture.prepared).toEqual([])
       expect(await fixture.material()).toEqual(before)
     } finally { await fixture.dispose() }
   }
 })
 
-test("authorized Requests and My approvals render the actual C02 queue across baseline states", async () => {
+test("authorized Requests and My approvals expose the actual source-fenced C02 JSON queue across baseline states", async () => {
   const fixture = await pageFixture()
   try {
     const work = await fixture.workSelection({ start: "2027-01-01", end: "2027-12-31" })
@@ -84,26 +86,31 @@ test("authorized Requests and My approvals render the actual C02 queue across ba
     const before = await fixture.material()
     const requested = await fixture.get("requester", "Requests", "filter=All")
     expect(requested.response.status).toBe(200)
+    const published = JSON.parse(requested.body)
+    expect(published.status).toBe("ok")
     const queue = readProcurementQueueView(fixture.prepared.at(-1)?.data.procurementQueueView)
     if (!queue) throw new Error("The application did not consume the production C02 page hook")
     expect(queue.rows).toHaveLength(states.length)
     expect(queue.rows.map((row) => row.status)).toEqual(states.map((state) => state === "imported-unknown" ? null : state))
+    expect(published.value.rows).toHaveLength(states.length)
     for (const row of queue.rows) {
-      expect(requested.html).toContain(`data-source-ref="${row.evidence.refId}"`)
-      expect(requested.html).toContain(`data-source-digest="${row.evidence.refDigest}"`)
-      expect(requested.html).toContain(`data-source-version="${row.version}"`)
-      expect(requested.html).toContain(row.subject!)
+      const publishedRow = published.value.rows.find((entry: { id: string }) => entry.id === row.id)
+      expect(publishedRow).toMatchObject({ id: row.id, evidence: {
+        refId: row.evidence.refId, refDigest: row.evidence.refDigest,
+      }, version: row.version, subject: row.subject, status: row.status, baseAmount: row.baseAmount })
       const baseAmount = row.projection.values.find((value) => value.id === "baseAmount")?.value
       if (baseAmount !== null && (typeof baseAmount !== "number" || !Number.isFinite(baseAmount))) throw new Error("C02 must expose a finite base amount or explicit null")
       expect(row.baseAmount).toBe(baseAmount)
     }
-    expect(requested.html).not.toContain("Foreign hidden request")
-    expect(requested.html).toContain("Unknown status")
+    expect(published.value.rows.some((entry: { id: string }) => entry.id === "PR-foreign")).toBe(false)
+    expect(published.value.rows.find((entry: { id: string }) => entry.id === "PR-imported-unknown").status).toBeNull()
     expect(fixture.finished).toBe(1)
     expect((await work.resolvePageSource(queue.rows[0]!.evidence.refId)).status).toBe("unavailable")
 
     const approvals = await fixture.get("buyer", "My approvals")
     expect(approvals.response.status).toBe(200)
+    const approved = JSON.parse(approvals.body)
+    expect(approved.status).toBe("ok")
     const buyer = readProcurementQueueView(fixture.prepared.at(-1)?.data.procurementQueueView)
     if (!buyer) throw new Error("The approval page did not receive C02")
     expect(buyer.rows).toHaveLength(states.length + 1)
@@ -113,23 +120,26 @@ test("authorized Requests and My approvals render the actual C02 queue across ba
     expect(grouped.unassigned.map((row) => row.id)).toEqual(["PR-po_pending"])
     expect(grouped.unassigned[0]!.stageEnteredAt).toBeNull()
     expect(grouped.unassigned[0]!.ageDays).toBeNull()
-    for (const row of [...grouped.waitingForYou, ...grouped.waitingForOthers, ...grouped.unassigned]) expect(approvals.html).toContain(`data-source-ref="${row.evidence.refId}"`)
-    expect(approvals.html).toContain("Waiting for you")
-    expect(approvals.html).toContain("Waiting for others")
-    expect(approvals.html).toContain("Unassigned")
-    expect(approvals.html).toContain("Unavailable")
+    expect(approved.value.rows).toHaveLength(states.length + 1)
+    for (const row of [...grouped.waitingForYou, ...grouped.waitingForOthers, ...grouped.unassigned]) {
+      expect(approved.value.rows).toContainEqual(expect.objectContaining({
+        id: row.id, evidence: expect.objectContaining({ refId: row.evidence.refId, refDigest: row.evidence.refDigest }),
+      }))
+    }
+    expect(new Set([...grouped.waitingForYou, ...grouped.waitingForOthers, ...grouped.unassigned].map((row) => row.id)).size)
+      .toBe(grouped.waitingForYou.length + grouped.waitingForOthers.length + grouped.unassigned.length)
 
     const detail = await fixture.get("requester", "Requests", "filter=Closed&request=PR-po_issued")
     expect(detail.response.status).toBe(200)
-    expect(detail.html).toContain('id="PR-po_issued" open')
-    expect(detail.html).not.toContain("Foreign hidden request")
+    expect(JSON.parse(detail.body).value.rows).toContainEqual(expect.objectContaining({ id: "PR-po_issued", status: "po_issued" }))
+    expect(JSON.parse(detail.body).value.rows.some((entry: { id: string }) => entry.id === "PR-foreign")).toBe(false)
     const foreign = await fixture.get("requester", "Requests", "filter=All&request=PR-foreign")
     expect(foreign.response.status).toBe(200)
-    expect(foreign.html).not.toContain("Foreign hidden request")
+    expect(JSON.parse(foreign.body).value.rows.some((entry: { id: string }) => entry.id === "PR-foreign")).toBe(false)
     expect(await fixture.material()).toEqual(before)
     expect(await work.read()).toEqual(workBefore)
     expect(fixture.finished).toBe(4)
-    expect((await fixture.get("reader-without-product-grant", undefined)).response.status).toBe(200)
+    expect((await fixture.get("reader-without-product-grant", undefined)).response.status).toBe(404)
     expect(fixture.finished).toBe(4)
   } finally { await fixture.dispose() }
 })
@@ -146,7 +156,7 @@ test("the page fence refuses material changes and revocation between C02 prepara
     })
     const stale = await fixture.get("requester", "Requests", "filter=All")
     expect(stale.response.status).toBe(503)
-    expect(stale.html).not.toContain("Recorded draft")
+    expect(stale.body).not.toContain("Recorded draft")
     expect(fixture.finished).toBe(1)
     const fresh = await fixture.get("requester", "Requests", "filter=All")
     expect(fresh.response.status).toBe(200)
@@ -156,11 +166,11 @@ test("the page fence refuses material changes and revocation between C02 prepara
     fixture.interleave(async () => { fixture.revoke("requester") })
     const revoked = await fixture.get("requester", "Requests", "filter=All")
     expect(revoked.response.status).toBe(401)
-    expect(revoked.html).not.toContain("Recorded draft")
+    expect(revoked.body).not.toContain("Recorded draft")
     expect(fixture.finished).toBe(3)
     const repeat = await fixture.get("requester", "Requests", "filter=All")
     expect(repeat.response.status).toBe(403)
-    expect(repeat.html).not.toContain("Recorded draft")
+    expect(repeat.body).not.toContain("Recorded draft")
     expect(fixture.finished).toBe(3)
   } finally { await fixture.dispose() }
 })
@@ -228,9 +238,11 @@ async function pageFixture(fresh = false) {
     revoke: (id: string) => revoked.add(id),
     interleave: (run: () => Promise<void>) => { metrics.interleave = run },
     get: async (principal: string, page: string | undefined, query = "") => {
-      const response = await fetch(new Request(`${origin}/sf/procurement?${page ? `page=${encodeURIComponent(page)}&` : ""}${query}`, { headers: { "x-fixture-principal": principal } }))
+      const params = new URLSearchParams(query)
+      if (page) { params.set("page", page); params.set("projection", "c02") }
+      const response = await fetch(new Request(`${origin}/sf/procurement?${params.toString()}`, { headers: { "x-fixture-principal": principal } }))
       if (!response) throw new Error("Actual application did not handle its Procurement route")
-      return { response, html: await response.text() }
+      return { response, body: await response.text() }
     },
     material: () => persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone({ store: snapshot.data.store, versions: snapshot.versions, audit: snapshot.audit, notices: snapshot.notices }) })),
     dispose: async () => { for (const context of workContexts) authority.ui.finish(context); business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) },
