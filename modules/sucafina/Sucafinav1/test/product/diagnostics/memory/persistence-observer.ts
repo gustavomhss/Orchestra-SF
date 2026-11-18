@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks"
-import type { AssetPersistence, BlobTransaction } from "../../../../runtime/assets.ts"
+import type { AssetPersistence } from "../../../../runtime/assets.ts"
 import type { LocalStore } from "../../../../runtime/local-contract.ts"
-import type { Persistence, Snapshot } from "../../../../runtime/contract.ts"
+import type { Persistence } from "../../../../runtime/contract.ts"
 
 export type MemoryPersistenceCounters = {
   persistenceCalls: number
@@ -82,7 +82,7 @@ export function observeMemoryPersistence(source: LocalStore, counters: MemoryPer
     } catch (error) { settle(true); throw error }
   }
   const transaction: AssetPersistence["transaction"] = (surface, work, options) =>
-    observe((inside) => source.transaction(surface, (snapshot: Snapshot, blobs: BlobTransaction) => inside(() => work(snapshot, blobs)), options), options?.signal)
+    observe((inside) => source.transaction(surface, (snapshot, blobs) => inside(() => work(snapshot, blobs)), options), options?.signal)
   const transactionAll = source.transactionAll
   const all: Persistence["transactionAll"] = transactionAll ? (work, options) =>
     observe((inside) => transactionAll((snapshots) => inside(() => work(snapshots)), options), options?.signal) : undefined
