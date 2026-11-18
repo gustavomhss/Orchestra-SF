@@ -145,7 +145,7 @@ export function SfAssumptionDivergence(props: {
             <p><bdi>{ui.text}</bdi></p>
           </div>}
         </Show>
-        <Show when={ui.receipt && ui.phase === "committed"}>
+        <Show when={ui.phase === "committed" ? ui.receipt : undefined}>
           {(receipt) => <div class="sf-n24-review" role="status">
             <p>Clarificação persistida: thread <bdi>{receipt().threadId}</bdi></p>
             <p>Mensagem <bdi>{receipt().messageId}</bdi> · source <bdi>{receipt().sourceId}</bdi> · tentativa <bdi>{receipt().correlation}</bdi></p>
