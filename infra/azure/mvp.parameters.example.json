@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "REQUIRES_INPUT_REGION"
+    },
+    "vmSize": {
+      "value": "REQUIRES_INPUT_ALLOWED_SKU"
+    },
+    "imageVersion": {
+      "value": "REQUIRES_INPUT_EXACT_IMAGE_VERSION"
+    },
+    "adminSshPublicKey": {
+      "value": "REQUIRES_INPUT_SSH_PUBLIC_KEY_ONLY"
+    },
+    "adminUsername": {
+      "value": "sfadmin"
+    },
+    "dataDiskSizeGiB": {
+      "value": 64
+    }
+  }
+}

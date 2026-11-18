@@ -30,7 +30,6 @@ export function createSfDesktopPreloadCapability(
   }
   return Object.freeze({
     registerConnection: (candidate: SfConnectionCandidate) => ipc.invoke("sf-native-register-connection", candidate),
-    discoverLocation: (probe) => ipc.invoke("sf-native-discover-location", probe),
     async bind(selection: { serverKey: string; projectId: string; installationId: string }, onInvalidated: (event: SfDesktopInvalidation) => void) {
       const result = await ipc.invoke("sf-native-bind", selection)
       if (result?.status === "ok" && typeof result.bindingHandle === "string" && Number.isSafeInteger(result.generation))

@@ -225,7 +225,7 @@ function createPortfolioCostProjection(input: {
         return { status: "ok", value: {
           projection: { ...source, decision: { kind: "scenario", scenarioResultRef: selected.sourceScenarioRef, scenario: analysis.scenario,
             comparisonRef: analysis.comparisonRef, comparison: analysis.comparison } },
-          presentation: { viewId: request.viewId, series: [], limitations: [] },
+          presentation: { viewId: request.viewId === "BI09" ? "BI09" : "BI10", series: [], limitations: [] },
         } }
       },
     } })

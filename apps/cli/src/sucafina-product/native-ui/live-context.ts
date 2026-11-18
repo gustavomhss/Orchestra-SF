@@ -8,6 +8,7 @@
  * This module is inert until 162 installs it in the original host's services.
  */
 import { Schema } from "effect"
+import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import {
   SfContext as SfContextSchema,
   SfOperationAvailability as SfOperationAvailabilitySchema,
@@ -59,6 +60,8 @@ const RESOURCES = [{"family":"ctx","resource":"context","operations":["ctx.conte
 const PAGES = [{"id":"CAP01","surface":"dashboard","page":"Executive Dashboard","actions":["save-users","save-benchmark"]},{"id":"CAP02","surface":"dashboard","page":"Hot Topics & Actions","actions":["save","delete"]},{"id":"CAP03","surface":"dashboard","page":"Budget Overview","actions":["save-month","save-revenue"]},{"id":"CAP04","surface":"dashboard","page":"OPEX Detail","actions":["save","delete","save-entry","save-deviation","annual-entry","year-amount","import"]},{"id":"CAP05","surface":"dashboard","page":"CAPEX Projects","actions":["save","delete","save-entry","save-deviation","annual-entry","year-amount"]},{"id":"CAP06","surface":"dashboard","page":"Headcount Overview","actions":[]},{"id":"CAP07","surface":"dashboard","page":"Team Structure","actions":["saveCio","saveLeader","deleteLeader","saveMember","deleteMember"]},{"id":"CAP08","surface":"dashboard","page":"Talent Review","actions":["save","delete","import","exportAllMembers"]},{"id":"CAP09","surface":"dashboard","page":"Portfolio Dashboard","actions":[]},{"id":"CAP10","surface":"dashboard","page":"All Projects","actions":["save","delete","import","save-milestone","delete-milestone"]},{"id":"CAP11","surface":"dashboard","page":"IT Operations","actions":["save-categories","save-items","save-tickets","save-sla","save-heatmap","import-month"]},{"id":"CAP12","surface":"dashboard","page":"IT Security KPIs","actions":["save-kpi","delete-kpi","save-action","delete-action","save-incident","delete-incident","save-campaign","delete-campaign"]},{"id":"CAP13","surface":"dashboard","page":"IT Risks","actions":["save","delete"]},{"id":"CAP14","surface":"dashboard","page":"Vendor Contracts","actions":["save","delete"]},{"id":"CAP15","surface":"dashboard","page":"Stakeholder Management","actions":["save","delete"]},{"id":"CAP16","surface":"dashboard","page":"IT Performance Contract","actions":["save","save-item","delete-item","save-sub","delete-sub"]},{"id":"CAP17","surface":"planner","page":"Overview","actions":["import-workbook"]},{"id":"CAP18","surface":"planner","page":"OPEX","actions":["save","delete","spread","reset","import-workbook"]},{"id":"CAP19","surface":"planner","page":"CAPEX","actions":["save","delete","spread","reset","import-workbook"]},{"id":"CAP20","surface":"planner","page":"Headcount","actions":["save","delete","sync","import-workbook"]},{"id":"CAP21","surface":"planner","page":"Entities & allocations","actions":["save","delete","common","import-workbook"]},{"id":"CAP22","surface":"planner","page":"FX rates","actions":["save","delete","import-workbook"]},{"id":"CAP23","surface":"planner","page":"Versions","actions":["save","copy","official","lock","unlock","delete","import-workbook"]},{"id":"CAP24","surface":"procurement","page":"Dashboard","actions":[]},{"id":"CAP25","surface":"procurement","page":"Requests","actions":["create","save","submit_pr","submit_sourcing","select_quote","submit_po","approve","reject","issue","cancel","delete"]},{"id":"CAP26","surface":"procurement","page":"My approvals","actions":["approve","reject"]},{"id":"CAP27","surface":"procurement","page":"Suppliers","actions":["create","save","activate","block","inactivate","delete","change-bank"]},{"id":"CAP28","surface":"procurement","page":"Settings","actions":["save","reset"]}] as const
 
 const OPERATIONS: ReadonlySet<string> = new Set(RESOURCES.flatMap((item) => item.operations))
+/** An installed observation can be published only after the corresponding resource is indexed. */
+export function sfHasOperationalResource(id: string) { return OPERATIONS.has(id) }
 const page = new Map<string, (typeof PAGES)[number]>(PAGES.map((entry) => [entry.id, entry] as const))
 
 const mismatch = (): SfContextResult => ({ status: "unavailable", reason: "contract-mismatch" })
@@ -72,13 +75,27 @@ const sameStamp = (a: SfContextStamp, b: SfContextStamp) =>
   a.principalRef === b.principalRef && a.policyVersion === b.policyVersion &&
   a.accessRevision === b.accessRevision
 
-function originalRequest(request: Request, expected: Binding, origin: string, mount: string): boolean {
-  if (request.method !== "GET" || request.signal.aborted) return false
+function originalRequest(request: Request, expected: Binding, origin: string, mount: string, internal: boolean): boolean {
+  if (request.signal.aborted) return false
   const url = new URL(request.url)
-  if (url.origin !== origin || url.pathname !== mount + "/api/ui/context" ||
+  if (url.origin !== origin || url.username || url.password || url.hash ||
     request.headers.get("sec-fetch-site") === "cross-site" ||
     (request.headers.has("origin") && request.headers.get("origin") !== origin) ||
     /%(?![\da-fA-F]{2})/.test(url.search)) return false
+  if (internal) {
+    if (request.method !== "GET" && request.method !== "POST") return false
+    // Only exact static native routes can request internal admission. Each
+    // handler remains responsible for its own selector and body validation.
+    return url.search.length <= 4096 &&
+      [...url.searchParams.keys()].every((key) => url.searchParams.getAll(key).length === 1) &&
+      Object.values(SfOperationRegistry).some((operation) => {
+        const path = operation.pathTemplate.replaceAll("{mount}", mount)
+        return !path.includes("{") && path !== mount + "/api/ui/context" &&
+          path.startsWith(mount + "/api/ui/") && path === url.pathname &&
+          operation.method === request.method
+      })
+  }
+  if (request.method !== "GET" || url.pathname !== mount + "/api/ui/context") return false
   const entries = [...url.searchParams.entries()]
   if (entries.length !== 3 || new Set(entries.map(([key]) => key)).size !== 3 ||
     entries.some(([key, value]) => !["installationId", "projectId", "hostId"].includes(key) || !value))
@@ -113,19 +130,33 @@ export type SfLiveAdmittedPage = Readonly<{
   surface: "dashboard" | "planner" | "procurement"
   page: string
 }>
+export type SfLivePageActions = SfLiveAdmittedPage & Readonly<{ allowedActionIds: readonly string[] }>
 export function sfContextDestinationsFromPages(
   pages: readonly SfLiveAdmittedPage[],
+  observedActions?: readonly SfLivePageActions[],
 ): SfContext["destinations"] | undefined {
   if (!Array.isArray(pages) || pages.length > PAGES.length) return undefined
+  if (observedActions !== undefined && (!Array.isArray(observedActions) || observedActions.length !== pages.length)) return undefined
+  const actions = new Map<string, readonly string[]>()
+  for (const item of observedActions ?? []) {
+    if (!item || !Array.isArray(item.allowedActionIds)) return undefined
+    const source = PAGES.find((entry) => entry.surface === item.surface && entry.page === item.page)
+    if (!source || actions.has(source.id) || !pages.some((page) => page.surface === item.surface && page.page === item.page) ||
+      new Set(item.allowedActionIds).size !== item.allowedActionIds.length ||
+      item.allowedActionIds.some((id) => !source.actions.some((allowed) => allowed === id))) return undefined
+    actions.set(source.id, item.allowedActionIds)
+  }
   const result: Destination[] = []
   const seen = new Set<string>()
   for (const item of pages) {
+    if (!item || typeof item !== "object") return undefined
     const source = PAGES.find((entry) => entry.surface === item.surface && entry.page === item.page)
     if (!source || seen.has(source.id)) return undefined
     seen.add(source.id)
-    // Access to a page is not authorization to execute a domain command.
+    // Never read action claims from the admitted page object itself.
+    if (observedActions !== undefined && !actions.has(source.id)) return undefined
     result.push({ capabilityId: source.id, surface: source.surface, page: source.page,
-      canRead: true, allowedActionIds: [] })
+      canRead: true, allowedActionIds: actions.get(source.id) ?? [] })
   }
   return approvedDestinations(result)
 }
@@ -190,14 +221,15 @@ function equalDestinations(a: readonly Destination[], b: readonly Destination[])
 export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
   currentBinding: SfLiveContextSources["currentBinding"]
   readContext: (request: Request, expected: Binding) => Promise<SfContextResult>
+  readRequestContext: (request: Request, expected: Binding) => Promise<SfContextResult>
 }> {
   if (!URL.canParse(source.origin) || new URL(source.origin).origin !== source.origin ||
     !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(source.mount))
     throw new Error("SF_LIVE_CONTEXT_CONFIG_INVALID")
 
   const currentBinding = source.currentBinding
-  const readContext = async (request: Request, expected: Binding): Promise<SfContextResult> => {
-    if (!originalRequest(request, expected, source.origin, source.mount)) return mismatch()
+  const read = async (request: Request, expected: Binding, internal: boolean): Promise<SfContextResult> => {
+    if (!originalRequest(request, expected, source.origin, source.mount, internal)) return mismatch()
     const firstBinding = currentBinding()
     if (!firstBinding) return { status: "unavailable", reason: "identity-unavailable" }
     if (!sameBinding(firstBinding, expected)) return mismatch()
@@ -259,5 +291,8 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     if (!Schema.is(SfContextSchema)(value)) return mismatch()
     return { status: "ok", value }
   }
-  return Object.freeze({ currentBinding, readContext })
+  return Object.freeze({ currentBinding,
+    readContext: (request: Request, expected: Binding) => read(request, expected, false),
+    readRequestContext: (request: Request, expected: Binding) => read(request, expected, true),
+  })
 }
