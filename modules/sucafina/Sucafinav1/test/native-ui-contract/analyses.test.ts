@@ -29,7 +29,7 @@ describe("A15 / native analysis wire contracts", () => {
       context: { filters: { years: [2025, 2026] } },
     }
     const input = { input: { request, selection } }
-    expect<object>(Schema.decodeUnknownSync(SfIntelligenceAnalysisPrepareInput)(
+    expect(Schema.decodeUnknownSync(SfIntelligenceAnalysisPrepareInput)(
       input, { onExcessProperty: "error" },
     )).toEqual(input)
 
@@ -55,14 +55,14 @@ describe("A15 / native analysis wire contracts", () => {
       "projection.residents",
     ])
     for (const [operationId, operation] of Object.entries(SfAnalyses.operations)) {
-      expect<string>(operation.operationId).toBe(operationId)
+      expect(operation.operationId).toBe(operationId)
     }
   })
 
   test("retains zero versions, false cancellation, and absent optional outputRef", () => {
     const list = { status: "ok", value: [{ runRef: "r1", state: "queued", version: 0 }] }
-    expect<object>(Schema.decodeUnknownSync(SfIntelligenceAnalysisList)(list)).toEqual(list)
-    expect<object>(Schema.decodeUnknownSync(SfIntelligenceAnalysisCancel)({
+    expect(Schema.decodeUnknownSync(SfIntelligenceAnalysisList)(list)).toEqual(list)
+    expect(Schema.decodeUnknownSync(SfIntelligenceAnalysisCancel)({
       status: "ok", value: { cancelled: false },
     })).toEqual({ status: "ok", value: { cancelled: false } })
   })
@@ -82,7 +82,7 @@ describe("A15 / native analysis wire contracts", () => {
         model: { providerID: "provider", id: "model" },
       },
     }
-    expect<object>(Schema.decodeUnknownSync(SfIntelligenceAnalysisStartInput)(base, {
+    expect(Schema.decodeUnknownSync(SfIntelligenceAnalysisStartInput)(base, {
       onExcessProperty: "error",
     })).toEqual(base)
     expect(() => Schema.decodeUnknownSync(SfIntelligenceAnalysisStartInput)({
@@ -109,7 +109,7 @@ describe("A15 / native analysis wire contracts", () => {
         }],
       },
     }
-    expect<object>(Schema.decodeUnknownSync(SfProjectionResidents)(
+    expect(Schema.decodeUnknownSync(SfProjectionResidents)(
       publicValue, { onExcessProperty: "error" },
     )).toEqual(publicValue)
 
