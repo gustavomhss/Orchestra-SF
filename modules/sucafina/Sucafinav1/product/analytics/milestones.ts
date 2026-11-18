@@ -2,7 +2,6 @@ import type { DomainProjection } from "../contracts/context.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { BiSelection } from "./catalog.ts"
 import { timelineGeometry } from "./geometry.ts"
-import { appendBiSourceButtons, biSourceChoices, createBiSourceChooser } from "./source-navigation.ts"
 
 export type TimelinePlan = { items: readonly { label: string; dateValueId: string; state: "planned" | "completed" | "unknown" }[] }
 
@@ -39,8 +38,6 @@ export function renderTimeline(projection: DomainProjection, selectionRef: strin
     section.append(status)
     return section
   }
-  const chooseSource = createBiSourceChooser(section, open)
-  const selection = (valueId: string): BiSelection => ({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId, reference: null })
   const chart = document.createElementNS("http://www.w3.org/2000/svg", "svg")
   chart.setAttribute("viewBox", `-5 -5 610 ${Math.max(30, data.items.length * 24 + 10)}`)
   chart.setAttribute("width", "100%")
@@ -51,13 +48,12 @@ export function renderTimeline(projection: DomainProjection, selectionRef: strin
     if (mark.x1 === null) return
     const item = data.items[index]
     const group = document.createElementNS(chart.namespaceURI, "g")
-    const origins = item ? biSourceChoices(item.source, selection(item.dateValueId)) : []
-    if (item && origins.length) {
+    if (item?.source.drilldown) {
       group.setAttribute("tabindex", "0")
       group.setAttribute("data-bi-focus", item.dateValueId)
       group.setAttribute("role", "button")
-      group.setAttribute("aria-label", `${item.label}: ${item.state}; ${item.date}; ${origins.length === 1 ? "abrir origem" : "escolher origem"}`)
-      const select = () => chooseSource(item.label, origins, group)
+      group.setAttribute("aria-label", `${item.label}: ${item.state}; ${item.date}; abrir origem`)
+      const select = () => open({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: item.dateValueId, reference: item.source.drilldown })
       group.addEventListener("click", select)
       group.addEventListener("keydown", (event) => {
         if (event instanceof KeyboardEvent && (event.key === "Enter" || event.key === " ")) {
@@ -85,8 +81,14 @@ export function renderTimeline(projection: DomainProjection, selectionRef: strin
   for (const item of data.items) {
     const row = document.createElement("li")
     row.append(document.createTextNode(`${item.label}: ${item.state}; ${item.date ?? "data indisponível"} `))
-    const origins = biSourceChoices(item.source, selection(item.dateValueId))
-    if (origins.length) appendBiSourceButtons(row, origins, open, `Abrir ${item.label}`)
+    if (item.source.drilldown) {
+      const button = document.createElement("button")
+      button.type = "button"
+      button.setAttribute("data-bi-focus", item.dateValueId)
+      button.textContent = `Abrir ${item.label}`
+      button.addEventListener("click", () => open({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: item.dateValueId, reference: item.source.drilldown }))
+      row.append(button)
+    }
     if (item.date === null) undated.append(row)
     if (item.date !== null) list.append(row)
   }

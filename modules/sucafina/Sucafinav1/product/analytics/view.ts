@@ -26,16 +26,8 @@ export type BiDecisionNavigation = {
   openCase?: (reference: string) => void
 }
 
-/** Display choices never change the producer's authorized period or values. */
-export type BiVisualState = {
-  period?: BiViewRequest["period"]
-  onPeriodChange?: (period: BiViewRequest["period"]) => void
-}
-
-export type BiFocusTarget = { valueId: string; originDigest?: string }
-
 /** The projection must be freshly authorized by its producer before rendering. */
-export function renderBiView(request: BiViewRequest, projection: DomainProjection, open: (selection: BiSelection) => void, presentation?: BiPresentation, navigation?: BiDecisionNavigation, filters?: BiFilterControls, visualState?: BiVisualState) {
+export function renderBiView(request: BiViewRequest, projection: DomainProjection, open: (selection: BiSelection) => void, presentation?: BiPresentation, navigation?: BiDecisionNavigation, filters?: BiFilterControls) {
   const section = document.createElement("section")
   section.style.minWidth = "0"
   section.style.overflowWrap = "anywhere"
@@ -130,15 +122,13 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
   controls.append(legend)
   const start = document.createElement("input")
   start.type = "date"
-  const crop = visualState?.period && isSfPeriod(visualState.period) && visualState.period.start >= data.context.period.start && visualState.period.end <= data.context.period.end
-    ? visualState.period : data.context.period
-  start.value = crop.start
+  start.value = data.context.period.start
   start.min = data.context.period.start
   start.max = data.context.period.end
   start.setAttribute("aria-label", "Início do período")
   const end = document.createElement("input")
   end.type = "date"
-  end.value = crop.end
+  end.value = data.context.period.end
   end.min = data.context.period.start
   end.max = data.context.period.end
   end.setAttribute("aria-label", "Fim do período")
@@ -205,31 +195,28 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
       return
     }
     const period = { start: start.value, end: end.value }
-    visualState?.onPeriodChange?.({ ...period })
     const openSelected = (selection: BiSelection) => open({ ...selection, visualPeriod: period })
     status.textContent = ""
     chart.replaceChildren()
     body.replaceChildren()
     const chooseSource = createBiSourceChooser(chart, openSelected)
-    const timeline = semantic?.status === "ok" && (request.viewId === "BI08" || request.viewId === "BI10") ? presentation?.timeline : undefined
-    const timelineIds = new Set(timeline?.items.map((item) => item.dateValueId))
+    const undatedIds = new Set((request.viewId === "BI08" || request.viewId === "BI10") && semantic?.status === "ok" ? presentation?.timeline?.items.flatMap((item) => {
+      const row = data.rows.find((value) => value.id === item.dateValueId)
+      return row && (typeof row.value !== "string" || !isSfPeriod({ start: row.value, end: row.value })) ? [row.id] : []
+    }) : [])
     const selectedIdsInPeriod = new Set(brushPeriod(data.rows, period.start, period.end).map((row) => row.id))
-    // A milestone is selected by its observed date, not by the broader financial
-    // component interval. Unknown dates remain visible without inventing a date.
-    const selected = data.rows.filter((row) => timelineIds.has(row.id)
-      ? row.evidenceState === "absent" || typeof row.value !== "string" || !isSfPeriod({ start: row.value, end: row.value }) || (row.value >= period.start && row.value <= period.end)
-      : selectedIdsInPeriod.has(row.id))
+    const selected = data.rows.filter((row) => selectedIdsInPeriod.has(row.id) || undatedIds.has(row.id))
     if (!selected.length) status.textContent = "Nenhum dado disponível neste período."
     const waterfall = semantic?.status === "ok" && (request.viewId === "BI02" || request.viewId === "BI09") ? presentation?.waterfall : undefined
     if (waterfall) {
       const ids = new Set(selected.map((row) => row.id))
       chart.append(renderWaterfall({ ...projection, values: projection.values.filter((value) => ids.has(value.id)) }, request.selectionRef, waterfall, openSelected))
     }
+    const timeline = semantic?.status === "ok" && (request.viewId === "BI08" || request.viewId === "BI10") ? presentation?.timeline : undefined
     if (timeline) {
-      const ids = new Set(selected.map((row) => row.id))
+      const timelineIds = new Set(timeline.items.map((item) => item.dateValueId))
+      const ids = new Set([...selected.map((row) => row.id), ...projection.values.filter((value) => timelineIds.has(value.id) && (value.evidenceState === "absent" || typeof value.value !== "string" || !isSfPeriod({ start: value.value, end: value.value }))).map((value) => value.id)])
       chart.append(renderTimeline({ ...projection, values: projection.values.filter((value) => ids.has(value.id)) }, request.selectionRef, { ...timeline, items: timeline.items.filter((item) => ids.has(item.dateValueId)) }, openSelected, period))
-      if (selected.some((row) => !timelineIds.has(row.id) && (row.period.start < period.start || row.period.end > period.end)))
-        status.textContent = "Os valores de períodos parcialmente selecionados permanecem integrais na tabela, sem repartição estimada."
     }
     const groups: { unit: string; seriesId: string; role: string; scaleKey: string; currency?: string; rows: typeof selected }[] = []
     const selectedById = new Map(selected.map((row) => [row.id, row] as const))
@@ -447,13 +434,10 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
 }
 
 /** The host calls this after returning from a detail screen. */
-export function restoreBiFocus(container: HTMLElement, selection: BiSelection | BiFocusTarget | string) {
+export function restoreBiFocus(container: HTMLElement, selection: BiSelection | string) {
   const valueId = typeof selection === "string" ? selection : selection.valueId
-  const origin = typeof selection === "string" ? undefined : "reference" in selection ? selection.reference?.refDigest : selection.originDigest
-  const values = Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId)
   const candidates = [
-    ...(origin ? values.filter((element) => element.getAttribute("data-bi-origin") === origin) : []),
-    ...values,
+    ...Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId),
     ...Array.from(container.querySelectorAll("[data-bi-focus-fallback]")),
   ]
   for (const target of candidates) {

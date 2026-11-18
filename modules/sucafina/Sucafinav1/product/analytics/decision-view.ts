@@ -15,11 +15,8 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
   section.append(heading)
   const summary = document.createElement("p")
   const qualifier = data.status === "complete" ? "Completa" : `Condicionada ou indisponível (${data.status})`
-  summary.textContent = `${qualifier} · ${data.currency} · ${data.horizon.start} – ${data.horizon.end} · subtotal conhecido: ${data.knownSubtotal ?? "indisponível"} · total: ${data.total ?? "indisponível"} · diferença conhecida (alternativa − referência): ${data.difference ?? "indisponível"}`
-  const orientation = document.createElement("p")
-  orientation.textContent = `Comparação de custos: alternativa ${comparison.alternativeResultRef} menos referência ${comparison.baselineResultRef}. Diferença negativa indica custo conhecido menor da alternativa; positiva indica custo conhecido maior. A cobertura determina se a comparação é completa.`
+  summary.textContent = `${qualifier} · ${data.currency} · ${data.horizon.start} – ${data.horizon.end} · subtotal conhecido: ${data.knownSubtotal ?? "indisponível"} · total: ${data.total ?? "indisponível"} · diferença conhecida: ${data.difference ?? "indisponível"}`
   section.append(summary)
-  section.append(orientation)
   const timelineHeading = document.createElement("h3")
   timelineHeading.textContent = "Períodos dos componentes"
   section.append(timelineHeading)
@@ -40,17 +37,6 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
         group.setAttribute("role", "button")
         group.setAttribute("data-bi-focus", source.id)
         group.setAttribute("aria-label", `${component.id}: ${component.period.start} – ${component.period.end}; abrir origem ${source.id}`)
-        // A horizontal SVG line has zero geometric height even when its stroke is
-        // painted. Keep a positive hit area so the whole group is pointer-accessible.
-        const hit = document.createElementNS(chart.namespaceURI, "rect")
-        const hitWidth = Math.max(20, mark.x2 - mark.x1)
-        hit.setAttribute("x", String(Math.max(0, Math.min(mark.x1, 600 - hitWidth))))
-        hit.setAttribute("y", String(index * 24))
-        hit.setAttribute("width", String(hitWidth))
-        hit.setAttribute("height", "20")
-        hit.setAttribute("fill", "transparent")
-        hit.setAttribute("pointer-events", "all")
-        group.append(hit)
         group.addEventListener("click", () => openSource(source))
         group.addEventListener("keydown", (event) => {
           if (event instanceof KeyboardEvent && (event.key === "Enter" || event.key === " ")) {
