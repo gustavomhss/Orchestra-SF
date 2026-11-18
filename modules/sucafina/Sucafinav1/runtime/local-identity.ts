@@ -51,13 +51,25 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
   const refreshing = new Map<string, Promise<void>>()
   const retiring = new Map<string, number>()
   const slot = (kind: string, handle: string) => `${namespace}:${kind}:${createHash("sha256").update(handle).digest("hex")}`
+  // Managed keys are not created by put. A Microsoft login that only puts a challenge
+  // still returns 303, then the callback and the record cap both observe nothing.
+  if (binding[0] === "microsoft" && !options.secrets.authentication) throw new Error("Authentication maintenance capability required")
+  const admit = async (key: string, value: Uint8Array, expiresAt: number, at: number, parent?: string) => {
+    const auth = options.secrets.authentication
+    if (!auth) {
+      await options.secrets.put(key, value, expiresAt, at)
+      return true
+    }
+    return auth.issue({ key, value, expiresAt, at, ...(parent ? { parent } : {}) })
+  }
   const trusted = (request: Request) => {
     const url = new URL(request.url)
     return url.origin === options.origin && (url.pathname === options.mount || url.pathname.startsWith(`${options.mount}/`))
   }
   const revoked = async (kind: string, id: string) => {
     const storageKey = slot(`revoked-${kind}`, id)
-    return (retiring.get(storageKey) ?? 0) > now() || Boolean(await options.secrets.get(storageKey, now())) || (retiring.get(storageKey) ?? 0) > now()
+    const fenced = () => (retiring.get(storageKey) ?? 0) > now() || options.secrets.authentication?.inspect(slot(kind, id), now())?.state === "revoked"
+    return fenced() || Boolean(await options.secrets.get(storageKey, now())) || fenced()
   }
   const retire = async (kind: string, id: string) => {
     const storageKey = slot(`revoked-${kind}`, id)
@@ -67,8 +79,13 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     // A cancelled login also covers its remaining challenge lifetime before any late session write.
     const expiresAt = now() + (28800 + (kind === "login" ? 600 : 0)) * 1000
     retiring.set(storageKey, expiresAt)
-    await options.secrets.put(storageKey, new Uint8Array([1]), expiresAt)
-    await options.secrets.remove(slot(kind, id))
+    const auth = options.secrets.authentication
+    if (!auth) {
+      await options.secrets.put(storageKey, new Uint8Array([1]), expiresAt)
+      await options.secrets.remove(slot(kind, id))
+      return
+    }
+    await auth.revoke(slot(kind, id), now())
   }
   const cookie = (kind: string, value: string, seconds: number) => `${cookiePrefix}_${kind}=${value}; Path=${options.mount}; HttpOnly; SameSite=Lax; Max-Age=${seconds}${origin.protocol === "https:" ? "; Secure" : ""}`
   const handle = (request: Request, kind: string) => {
@@ -121,8 +138,12 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         if (request.headers.get("origin") !== options.origin || request.headers.get("sec-fetch-site") === "cross-site") return error(403)
         const id = handle(request, "session")
         const login = handle(request, "login")
-        if (login) await retire("login", login)
-        if (id) await retire("session", id)
+        try {
+          if (login) await retire("login", login)
+          if (id) await retire("session", id)
+        } catch {
+          return error(503)
+        }
         const responseHeaders = headers()
         responseHeaders.append("set-cookie", cookie("session", "", 0))
         responseHeaders.append("set-cookie", cookie("login", "", 0))
@@ -134,8 +155,9 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         const verifier = randomBytes(32).toString("base64url")
         const login: Login = { nonce: randomBytes(32).toString("hex"), verifier, returnTo: safeReturn(url.searchParams.get("returnTo"), options.mount), expiresAt: now() + loginSeconds * 1000 }
         const destination = await options.client.authorization({ state, nonce: login.nonce, challenge: createHash("sha256").update(verifier).digest("base64url"), redirectUri: `${options.origin}${options.mount}/auth/callback` }).catch(() => undefined)
-        if (!destination || login.expiresAt <= now()) return error(503)
-        await options.secrets.put(slot("login", state), seal(slot("login", state), login), login.expiresAt)
+        const at = now()
+        const storageKey = slot("login", state)
+        if (!destination || login.expiresAt <= at || !await admit(storageKey, seal(storageKey, login), login.expiresAt, at)) return error(503)
         const responseHeaders = headers()
         responseHeaders.set("location", destination)
         responseHeaders.append("set-cookie", cookie("login", state, loginSeconds))
@@ -158,10 +180,12 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       const id = randomBytes(32).toString("hex")
       const createdAt = now()
       const value: Session = { ...result, createdAt, login: state, expiresAt: createdAt + sessionSeconds * 1000 }
-      await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt)
+      const sessionKey = slot("session", id)
+      const admitted = await admit(sessionKey, seal(sessionKey, value), value.expiresAt, createdAt, storageKey)
       // A logout may finish while code redemption or persistence is pending.
-      if (await revoked("login", state) || value.expiresAt <= now() || login.expiresAt <= now()) {
-        await retire("session", id)
+      // A missed cap leaves the consumed challenge pending and mints no session.
+      if (!admitted || await revoked("login", state) || value.expiresAt <= now() || login.expiresAt <= now()) {
+        if (admitted) await retire("session", id)
         return new Response("Authentication unavailable", { status: 403, headers: responseHeaders })
       }
       responseHeaders.append("set-cookie", cookie("session", id, sessionSeconds))
