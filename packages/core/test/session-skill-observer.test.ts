@@ -14,11 +14,8 @@ import { Harness, sessionID } from "./session-runner-harness"
 
 let started: Deferred.Deferred<void> | undefined
 let attempts = 0
-// This harness is the only registered host for its Location, so it stands in for the
-// selectable engine id the agent schema accepts; it refuses load observation.
-const engineID = "claude-code" as const
 const host: ExecutionHost.Interface = {
-  id: engineID,
+  id: "refusing-host",
   stateKey: "refusing",
   observeSkillLoad: () => Effect.sync(() => { attempts++ }).pipe(Effect.andThen(Effect.die("observer refused"))),
   observedSkillLoad: () => Effect.succeed(undefined),
@@ -46,7 +43,7 @@ it.live("SessionV2.skill succeeds and resumes after delivery even if the host re
   started = resumed
   const agents = yield* AgentV2.Service
   yield* agents.transform((draft) => draft.update(AgentV2.defaultID, (agent) => {
-    agent.engine = engineID
+    agent.engine = host.id
     agent.mode = "primary"
   }))
   const skills = yield* SkillV2.Service

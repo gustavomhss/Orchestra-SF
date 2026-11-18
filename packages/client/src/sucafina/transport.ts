@@ -22,7 +22,6 @@ import {
 export type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 
 export type SfCallOptions = Readonly<{ signal: AbortSignal; idempotencyKey?: string }>
-export type SfTransportFetch = (...args: Parameters<typeof globalThis.fetch>) => ReturnType<typeof globalThis.fetch>
 export type SfTransport = Readonly<{
   execute<Input, Output>(
     operation: SfOperation<Input, Output>,
@@ -113,7 +112,7 @@ export type SfDesktopCapability = Readonly<{
 // Browser-safe, per-transport ephemeral authority; never placed in URL/storage.
 type SfInternal = Readonly<{
   binding: SfInstallationDescriptor
-  fetch: SfTransportFetch
+  fetch: typeof globalThis.fetch
   current: () => boolean
   clear: () => void
 }>
@@ -135,7 +134,7 @@ export function createSfTransport(options: Readonly<{
   binding: SfInstallationDescriptor
   generation: number
   currentGeneration: () => number
-  fetch: SfTransportFetch
+  fetch: typeof globalThis.fetch
   operations: SfOperationBindings
   desktop?: SfDesktopCapability
   desktopBinding?: SfDesktopBinding
@@ -230,9 +229,7 @@ export function createSfTransport(options: Readonly<{
       if (metadata.method === "GET" && call.idempotencyKey !== undefined) return failure("contract-mismatch")
       const bodyValue = metadata.method === "POST"
         ? operation.operationId === "files.document-confirm" && asJsonObject(wireInput)
-          ? asJsonObject(wireInput)?.action === undefined
-            ? asJsonObject(wireInput)?.evidence
-            : operationBody(metadata, wireInput)
+          ? asJsonObject(wireInput)?.evidence
           : operationBody(metadata, wireInput)
         : undefined
       if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")
@@ -281,8 +278,7 @@ export function createSfTransport(options: Readonly<{
       }
 
       const headers: Record<string, string> = {
-        Accept: operation.operationId === "files.export.po" ? "text/html"
-          : operation.operationId === "files.export.xlsx" || operation.operationId === "files.export.members"
+        Accept: operation.operationId === "files.export.xlsx" || operation.operationId === "files.export.members"
           ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           : operation.operationId === "files.export.json" ? "application/json"
           : operation.operationId === "files.export.suppliers" || operation.operationId === "files.export.register"
@@ -488,9 +484,9 @@ export function createSfTransport(options: Readonly<{
         total += chunk.byteLength
         return true
       }
-      const status = (code: number): Exclude<SfSupplierCsvExportResult["status"], "ok"> =>
-        code === 401 ? "unauthenticated" : code === 403 ? "denied" :
-        code === 409 ? "stale" : "unavailable"
+      const failure = (code: number): SfSupplierCsvExportResult =>
+        code === 401 ? { status: "unauthenticated" } : code === 403 ? { status: "denied" } :
+        code === 409 ? { status: "stale" } : { status: "unavailable" }
       try {
         if (options.desktop && options.desktopBinding) {
           const binding = options.desktopBinding
@@ -504,7 +500,7 @@ export function createSfTransport(options: Readonly<{
               input: parsed.value,
             })
             if (!isOwned()) return { status: "aborted" }
-            if ("status" in first && first.status !== 200) return { status: status(first.status) }
+            if ("status" in first && first.status !== 200) return failure(first.status)
             if (first.kind === "transport-error") return { status: "unavailable" }
             if (first.kind !== "byte-response" || first.status !== 200 ||
                 !validSupplierCsvHeaders(first.headers["content-type"], first.headers["content-disposition"]))
@@ -539,7 +535,7 @@ export function createSfTransport(options: Readonly<{
             headers: { Accept: "text/csv" },
           })
           if (!isOwned()) return { status: "aborted" }
-          if (response.status !== 200) return { status: status(response.status) }
+          if (response.status !== 200) return failure(response.status)
           if (!validSupplierCsvHeaders(
             response.headers.get("content-type"), response.headers.get("content-disposition"),
           )) return { status: "invalid" }
@@ -688,7 +684,7 @@ function operationUrl(
     }
     const special = operationId.startsWith("files.") && source
       ? sfFilesSourceQuery(operationId, source) : undefined
-    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload","files.export.review","files.export.po",
+    if (["files.import-targets","files.asset.link","files.asset.download","files.asset.upload","files.export.review",
       "files.document-open","files.document-scenario-targets"].includes(operationId) && !special)
       return undefined
     if (special) {
@@ -742,7 +738,7 @@ function validInstallation(value: SfInstallationDescriptor): boolean {
     if (url.origin !== value.publicOrigin || url.username || url.password) return false
     return value.authMode === "microsoft" && url.protocol === "https:" ||
       value.authMode === "local-operator" && url.protocol === "http:" &&
-      (url.hostname === "localhost" || url.hostname === "127.0.0.1" || url.hostname === "[::1]")
+      (url.hostname === "127.0.0.1" || url.hostname === "[::1]")
   } catch { return false }
 }
 
@@ -896,7 +892,7 @@ async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
  * Server producers separately reauthenticate record/export access at egress.
  */
 async function refreshSfFileAuthority(options: Readonly<{
-  binding: SfInstallationDescriptor; fetch: SfTransportFetch;
+  binding: SfInstallationDescriptor; fetch: typeof globalThis.fetch;
   operations: SfOperationBindings;
 }>, expected: SfContextStamp, operationId: SfOperationId): Promise<boolean> {
   const meta = cataloguedRoute("ctx.context")

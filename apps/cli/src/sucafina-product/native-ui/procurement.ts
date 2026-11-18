@@ -29,7 +29,7 @@ const selectors: Readonly<Record<Capability, readonly string[]>> = {
 }
 const requestKeys = [
   "number", "status", "createdBy", "buyerId", "requesterName",
-  "pr", "prApproval", "prApprovalBaseCurrency", "sourcing", "po", "history", "value", "attachments",
+  "pr", "prApproval", "prApprovalBaseCurrency", "sourcing", "po", "history", "value",
 ] as const
 const requisitionKeys = [
   "title", "type", "description", "estAmount", "costCenter", "needBy", "justification",
@@ -145,11 +145,7 @@ function selectRequest(source: Record<string, unknown>, detail: boolean, actor: 
     if (Object.hasOwn(source, "po")) minimal.po = pick(source.po, ["expenseType"])
     return { ...minimal, allowedDraftActions: requestDraftActions(source, actor) }
   }
-  const request = pick(source, requestKeys.filter((key) => !["pr", "sourcing", "po", "history", "attachments"].includes(key)))
-  if (Object.hasOwn(source, "attachments")) {
-    // Source view is already actor-filtered; project only public, linkable receipt fields.
-    request.attachments = rows(source.attachments).map((row) => pick(row, ["id", "name", "type", "bytes"]))
-  }
+  const request = pick(source, requestKeys.filter((key) => !["pr", "sourcing", "po", "history"].includes(key)))
   if (Object.hasOwn(source, "pr"))
     request.pr = source.pr === null ? null : pick(source.pr, requisitionKeys)
   if (Object.hasOwn(source, "sourcing"))
