@@ -2,7 +2,6 @@ import { expect } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import type { CostCoverageBasis, CostCoverageEntry } from "../../../product/contracts/decisions.ts"
-import type { ScenarioOperation } from "../../../product/contracts/operations.ts"
 import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
@@ -85,21 +84,7 @@ export async function prepareWp12ScenarioCase(context: Wp12NativeMissionContext,
     if (coverageResponse.status !== 200 || coverage.status !== "ok" || typeof coverageValue.coverageRef !== "string")
       throw new Error(`Real scenario coverage registration failed: ${String(coverage.reason)}`)
     expect(coverageValue.version).toBe(1)
-    // Empty operations/assumptions select the canonical observation path, where
-    // a fully covered source legitimately returns total=knownSubtotal. For an
-    // AM01 hypothetical preview, replace an already-confirmed Planner cell
-    // with its own OBSERVED value. The domain applies it to a copied snapshot;
-    // neither a new cost, an LLM inference nor an official change is supplied.
-    const candidates = projection.value.components.filter((component) =>
-      component.id.startsWith("wp12-cost-service:") && component.period.start === WP12_SCENARIO_PERIOD.start)
-    const observed = candidates[0]
-    if (candidates.length !== 1 || !observed || observed.amount === null || !Number.isFinite(observed.amount) ||
-      observed.currency !== "USD" || observed.evidenceState !== "confirmed" || !observed.sourceRefs.length)
-      throw new Error(`The ${source.key} alternative lacks a unique confirmed January service component`)
-    const operation: ScenarioOperation = { kind: "replace", targetRef: observed.id, amount: observed.amount,
-      currency: observed.currency, period: observed.period }
-    const promotion = { caseRef, title: source.title, scenario: { baseRef: source.evidence.refId,
-      operations: [operation], assumptions: [] }, coverageRef: coverageValue.coverageRef }
+    const promotion = { caseRef, title: source.title, scenario: { baseRef: source.evidence.refId, operations: [], assumptions: [] }, coverageRef: coverageValue.coverageRef }
     const promotionResponse = await productHttp(context.request(promotion, "/sucafina/planner?sf=decision-promote"), "planner")
     if (!promotionResponse) throw new Error("The real alternative promotion route is missing")
     const result = object(await promotionResponse.json())
@@ -120,23 +105,9 @@ export async function prepareWp12ScenarioCase(context: Wp12NativeMissionContext,
     return matches[0]!
   }
   const baseline = get("baseline"), pending = get("pending"), complete = get("complete")
-  // The committed case must contain the preview-producing operation, not an
-  // observational no-op request. The identity replacement changes no amount
-  // but makes exactly one service cell hypothetical, leaving observed training
-  // (including confirmed zero) untouched.
+  // Coverage describes the observed category inventory. A simulated result is
+  // still a hypothetical preview, even when every category has actual evidence.
   for (const alternative of [baseline, pending, complete]) {
-    const operation = alternative.scenario.operations[0]
-    expect(alternative.scenario.operations).toHaveLength(1)
-    expect(alternative.scenario.assumptions).toEqual([])
-    expect(operation?.kind).toBe("replace")
-    expect(operation?.targetRef).toMatch(/^wp12-cost-service:1$/)
-    const changed = alternative.result.components.filter((component) => component.evidenceState === "hypothetical")
-    expect(changed).toHaveLength(1)
-    expect(changed[0]?.id).toBe(operation?.targetRef)
-    expect(changed[0]?.amount).toBe(operation?.amount)
-    expect(alternative.result.components.every((component) =>
-      component.amount !== null && Number.isFinite(component.amount) &&
-      (component.id === operation?.targetRef ? component.evidenceState === "hypothetical" : component.evidenceState === "confirmed"))).toBe(true)
     expect(alternative.result.total).toBeNull()
     expect(alternative.result.comparisonStatus).toBe("conditioned")
     expect(alternative.result.unresolvedConditions).toContain("scenario-is-hypothetical")
@@ -150,12 +121,12 @@ export async function prepareWp12ScenarioCase(context: Wp12NativeMissionContext,
     expect(alternative.result.costCoverage.entries.map((entry) => entry.categoryId).toSorted()).toEqual([...RENEWAL_TRANSITION_CATEGORIES].sort())
     expect(alternative.result.costCoverage.entries.every((entry) => entry.status === "included")).toBe(true)
     expect(alternative.result.components).toHaveLength(RENEWAL_TRANSITION_CATEGORIES.length * 12)
-    expect(alternative.result.components.every((component) => component.amount !== null && Number.isFinite(component.amount))).toBe(true)
+    expect(alternative.result.components.every((component) => component.amount !== null && component.evidenceState === "confirmed")).toBe(true)
   }
   expect(baseline.result.knownSubtotal).toBe(240_000)
   const zeroTraining = baseline.result.components.filter((component) => component.id.startsWith("wp12-cost-training:"))
   expect(zeroTraining).toHaveLength(12)
-  expect(zeroTraining.every((component) => component.amount === 0 && component.evidenceState === "confirmed")).toBe(true)
+  expect(zeroTraining.every((component) => component.amount === 0)).toBe(true)
   expect(pending.result.knownSubtotal).toBe(210_000)
   expect(pending.result.costCoverage.coverageState).toBe("pending")
   expect(pending.result.components.filter((component) => component.id.startsWith("wp12-cost-training:"))).toHaveLength(0)
@@ -164,15 +135,14 @@ export async function prepareWp12ScenarioCase(context: Wp12NativeMissionContext,
   expect(complete.result.knownSubtotal).toBe(250_000)
   const observedTraining = complete.result.components.filter((component) => component.id.startsWith("wp12-cost-training:"))
   expect(observedTraining).toHaveLength(12)
-  expect(observedTraining.filter((component) => component.amount === 40_000 && component.evidenceState === "confirmed")).toHaveLength(1)
-  expect(observedTraining.filter((component) => component.amount === 0 && component.evidenceState === "confirmed")).toHaveLength(11)
+  expect(observedTraining.filter((component) => component.amount === 40_000)).toHaveLength(1)
+  expect(observedTraining.filter((component) => component.amount === 0)).toHaveLength(11)
   expect(await context.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.versions) }))).toBe(before)
   console.log("SF_WP12_NATIVE_SCENARIO_PREPARATION:" + JSON.stringify({ scope: "real-category-coverage-and-hypothetical-c09-promotions", githubSha: process.env.GITHUB_SHA ?? null,
     caseRef, basisId: basis.id, routes: ["baseline-coverage", "decision-promote"], results: promoted,
     alternatives: [baseline, pending, complete].map((item) => ({ id: item.id, version: item.version, knownSubtotal: item.result.knownSubtotal,
       total: item.result.total, comparisonStatus: item.result.comparisonStatus, coverageState: item.result.costCoverage.coverageState,
-      derivedMissingCategoryIds: item.result.costCoverage.derivedMissingCategoryIds, restrictions: item.result.restrictions,
-      scenarioOperations: item.scenario.operations, hypotheticalComponentIds: item.result.components.filter((component) => component.evidenceState === "hypothetical").map((component) => component.id) })),
+      derivedMissingCategoryIds: item.result.costCoverage.derivedMissingCategoryIds, restrictions: item.result.restrictions })),
     inferenceExecuted: false, plannerSourcesUnchanged: true, hypotheticalResultsRemainConditional: true, gnativeAccepted: false }))
   const resultRef = (key: typeof alternatives[number]["key"]) => {
     const receipt = promoted.find((item) => item.key === key)
