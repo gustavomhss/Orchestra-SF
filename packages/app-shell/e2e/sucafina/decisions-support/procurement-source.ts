@@ -6,6 +6,8 @@ export async function createRequisition(page: Page, origin: string, observations
   // Regression: a fresh installation must serve a functional Requests form,
   // not the previously observed 503 swallowed as a missing form.
   expect(entry?.status()).toBe(200)
+  await expect(page.locator("body"), "The real Procurement surface must own the form").toHaveAttribute("data-surface", "procurement")
+  await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
   const form = page.locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   const title = "CI Decisions — explicit requisition proposal"

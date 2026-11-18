@@ -4,6 +4,12 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Retained edits are no longer discarded when a session expires or a source is temporarily unavailable. The edit stays hidden and is revalidated at its original producer when access returns; a real access revocation still erases it.
+- Purchase requests gain their own title editor, with the record, version and permission rechecked at the current source.
+- Preserved reviews export as real DOCX and PPTX files, with the generated artifact downloaded and the same operation retried when its response is lost.
+- Dashboard, Planner, Portfolio, Operations, People and Procurement edit families revalidate drafts at the original producer with current fields, action and version.
+- Native routine sessions require human approval and a core Task, without replacing the execution engine or granting permission by approximation.
+
 - Asking in Rag Studio no longer treats a failed source read as not recorded. That failure is shown.
 - Opening a folder in another app no longer treats a failed install check as not installed. That failure is shown.
 - Opening Rag Studio no longer treats a failed pipeline read as embedding off, or as the default pipeline. That failure is shown.
