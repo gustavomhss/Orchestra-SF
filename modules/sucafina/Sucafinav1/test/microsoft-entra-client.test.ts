@@ -25,8 +25,9 @@ test("confidential web flow uses minimum scopes and sends the private credential
   const f = await microsoftFixture()
   const observed: { method: string; secret: boolean; authorization: boolean }[] = []
   f.hooks.before = async (request) => {
-    if (request.url !== f.metadata.token_endpoint) return
+    if (request.url !== f.metadata.token_endpoint) return undefined
     observed.push({ method: request.method, secret: new URLSearchParams(await request.clone().text()).get("client_secret") === syntheticSecret, authorization: request.headers.has("authorization") })
+    return undefined
   }
   const result = await webExchange(f)
   const url = new URL(result.location)
@@ -72,9 +73,10 @@ test("role mapping cannot change privilege while a directory resolution is pendi
   const entered = Promise.withResolvers<void>()
   const release = Promise.withResolvers<void>()
   f.hooks.before = async (request) => {
-    if (new URL(request.url).pathname !== "/v1.0/me/checkMemberGroups") return
+    if (new URL(request.url).pathname !== "/v1.0/me/checkMemberGroups") return undefined
     entered.resolve()
     await release.promise
+    return undefined
   }
   const map = [row(`group:${group}`)]
   const pending = f.client.resolve(result.tokens.accessToken, map)
