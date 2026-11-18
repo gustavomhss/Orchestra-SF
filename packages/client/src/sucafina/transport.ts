@@ -484,9 +484,9 @@ export function createSfTransport(options: Readonly<{
         total += chunk.byteLength
         return true
       }
-      const status = (code: number): SfSupplierCsvExportResult["status"] =>
-        code === 401 ? "unauthenticated" : code === 403 ? "denied" :
-        code === 409 ? "stale" : "unavailable"
+      const failure = (code: number): SfSupplierCsvExportResult =>
+        code === 401 ? { status: "unauthenticated" } : code === 403 ? { status: "denied" } :
+        code === 409 ? { status: "stale" } : { status: "unavailable" }
       try {
         if (options.desktop && options.desktopBinding) {
           const binding = options.desktopBinding
@@ -500,7 +500,7 @@ export function createSfTransport(options: Readonly<{
               input: parsed.value,
             })
             if (!isOwned()) return { status: "aborted" }
-            if ("status" in first && first.status !== 200) return { status: status(first.status) }
+            if ("status" in first && first.status !== 200) return failure(first.status)
             if (first.kind === "transport-error") return { status: "unavailable" }
             if (first.kind !== "byte-response" || first.status !== 200 ||
                 !validSupplierCsvHeaders(first.headers["content-type"], first.headers["content-disposition"]))
@@ -535,7 +535,7 @@ export function createSfTransport(options: Readonly<{
             headers: { Accept: "text/csv" },
           })
           if (!isOwned()) return { status: "aborted" }
-          if (response.status !== 200) return { status: status(response.status) }
+          if (response.status !== 200) return failure(response.status)
           if (!validSupplierCsvHeaders(
             response.headers.get("content-type"), response.headers.get("content-disposition"),
           )) return { status: "invalid" }

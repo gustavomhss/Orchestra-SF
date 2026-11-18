@@ -113,7 +113,7 @@ export function planSfOperation(input: Readonly<{
     const fixed = meta.fixedBodyDiscriminator ?? {}
     if (original && Object.entries(fixed).some(([key, value]) => key in original && original[key] !== value))
       return { status: "invalid-response" }
-    const value = { ...(original ?? {}), ...fixed }
+    const value: Record<string, unknown> = { ...(original ?? {}), ...fixed }
     const upload = input.request.upload
     if (upload) {
       if (operationId !== "files.import-admit" && operationId !== "files.asset.upload")
