@@ -106,7 +106,7 @@ test("AM01 source observation differs from the persisted, un-applied hypothetica
         const altered = alternative.result.components.filter((component) => component.evidenceState === "hypothetical")
         expect(altered).toHaveLength(1)
         expect(altered[0]?.id).toBe(operation.targetRef)
-        expect<number | null | undefined>(altered[0]?.amount).toBe(operation.amount)
+        expect(altered[0]?.amount).toBe(operation.amount)
         expect(alternative.result.knownSubtotal).toBe(variant.subtotal)
         expect(alternative.result.total).toBeNull()
         expect(alternative.result.comparisonStatus).toBe("conditioned")
@@ -165,11 +165,11 @@ test("AM01 source observation differs from the persisted, un-applied hypothetica
       const result = await context.ui("sf_case_read", { caseRef: encodeCaseRef(initial.caseRef) }, (call) =>
         context.business.withCase(call, initial.caseRef, {}, () =>
           context.business.results.read({ kind: "scenario", resultRef: initial.resultRefs.complete }, call)))
-      if (result.status !== "ok" || result.value.kind !== "scenario")
+      if (result.status !== "ok" || result.value.status !== "ok" || result.value.value.kind !== "scenario")
         throw new Error("The persisted complete-preview resultRef was not readable under current case authority")
-      expect(result.value.resultDigest).toBe(initial.resultDigests.complete)
-      expect(result.value.result.total).toBeNull()
-      expect(result.value.result.unresolvedConditions).toContain("scenario-is-hypothetical")
+      expect(result.value.value.resultDigest).toBe(initial.resultDigests.complete)
+      expect(result.value.value.result.total).toBeNull()
+      expect(result.value.value.result.unresolvedConditions).toContain("scenario-is-hypothetical")
       expect(await context.persistence.transaction("planner", async (snapshot) => ({
         commit: false, value: digestSfValue(snapshot.data.versions),
       }))).toBe(initial.plannerSourceDigest)
