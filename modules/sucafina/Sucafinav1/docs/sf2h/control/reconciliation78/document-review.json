@@ -1,0 +1,926 @@
+{
+  "schema": "sf2h.reconciliation78.document-review.v1",
+  "scope": "STATIC_DOCUMENTARY_REVIEW_ONLY_NOT_PRODUCT_FINAL",
+  "open_material_findings": 0,
+  "resolution": "Canonical accounting, queue authority boundaries and current source-to-target integration reviewed; identified documentary issues corrected and read back. Product FINAL reviews remain OPEN.",
+  "reports": [
+    {
+      "review": "document",
+      "sha256": "c8fa778e84dc8bc3883eab95fbeb12d3631470ed907cc561ac4436dfe4ac4f75",
+      "report": {
+        "schema": "sf2h.mission78.documentary-cold-review.v1",
+        "reviewer": "/root/canonical_ledger",
+        "scope": "Static reading/parsing of generated documentary artifacts only; no product tests, CI, builds, guards, edits to reviewed artifacts or remote writes.",
+        "reviewed_root": "/workspace/scratch/57aa8ffcb601/mission78-deliverable/modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/",
+        "current_candidate": {
+          "name": "C31",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae"
+        },
+        "disposition": "ALL_THREE_REPORTED_DOCUMENT_FINDINGS_RESOLVED",
+        "material_errors": [
+          {
+            "id": "DOC78-C31-EXPORT66-DEPENDENCY-COUNT",
+            "severity": "MATERIAL",
+            "file": "next-actions.json",
+            "pointer": "/actions[id=INTAKE-66]/dependencies/1",
+            "observed": "Reconcile4 C28 changed dependencies without reverting Reports48",
+            "conflicting_evidence": {
+              "file": "target-refresh.json",
+              "pointer": "/export66_dependency_refresh",
+              "count": 30,
+              "initial_different": 4,
+              "current_different": 7,
+              "current_identical": 23,
+              "new_runtime59_drifts": 3,
+              "new_paths": [
+                "modules/sucafina/Sucafinav1/runtime/contract.ts",
+                "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+                "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+              ]
+            },
+            "impact": "A reviewer following the finite C31 intake action is directed to reconcile only the four historical C28 differences and can miss three actual C29/runtime59 dependency differences. The detailed target refresh already has the complete seven.",
+            "correction": "Update the current INTAKE-66 dependency to seven C31 differences (four inherited C28 plus three new C29/runtime59), link target-refresh.json/export66_dependency_refresh, and preserve the source66 dependency files as read-only provenance.",
+            "status": "RESOLVED_STATIC_READBACK",
+            "resolution": {
+              "state": "RESOLVED_STATIC_READBACK",
+              "evidence": [
+                "71 reconciles actual current target preimages and authority",
+                "Preserve all7 current dependency drifts:4 Reports48/C28 plus3 C29 runtime59 (contract.ts,local-store.ts,source-lifecycle.ts);23/30 identical atC31",
+                "Complete owned10path unit; never transplant stale source dependencies"
+              ]
+            },
+            "resolved_at_utc": "2026-11-15T03:28:02.362822+00:00"
+          },
+          {
+            "id": "DOC78-FINAL-GATES-STALE-CANDIDATE-BINDING",
+            "severity": "MATERIAL",
+            "file": "next-actions.json",
+            "pointers": [
+              "/global_gate_contract/S0_functional_eight_selections/candidate",
+              "/global_gate_contract/S0_functional_eight_selections/candidate_binding"
+            ],
+            "observed": {
+              "symbol": "C28",
+              "W": "d088708276b48f896ad4e0ecd2a95cb73dc413b1"
+            },
+            "conflicting_evidence": {
+              "file": "next-actions.json",
+              "pointer": "/candidate",
+              "name": "C31",
+              "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+            },
+            "impact": "The current finite action document exposes two unqualified machine-readable candidate bindings under the final-gate contract: the root binds C31 but the gate block binds C28. Consumers may route qualification to the superseded candidate or mistake the historical gate source for a current binding.",
+            "correction": "Retain the C28 gate-source envelope under an explicitly historical/source binding field. Separately state that the observed target is C31 HOLD_NOT_RUN and the execution binding must be established on the final material candidate frozen by S0/71. Do not relabel old runs as C31 and do not change the eight recipes.",
+            "status": "RESOLVED_STATIC_READBACK",
+            "resolution": {
+              "state": "RESOLVED_STATIC_READBACK",
+              "historical_source_binding": {
+                "source": {
+                  "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+                  "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json",
+                  "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json"
+                },
+                "candidate": {
+                  "symbol": "C28",
+                  "W": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+                  "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+                  "parent": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+                },
+                "candidate_binding": {
+                  "symbol": "C28",
+                  "W": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+                  "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+                  "parent": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+                  "qualification": "HOLD_NOT_RUN",
+                  "source_snapshot_S": "NOT_CREATED_BY60",
+                  "required_executor_record": "Exact checkout/candidate tree/request/selection/runtime/config/tooling/fixture/run/attempt/job/artifact identities; source results never reattributed toC28",
+                  "rule": "C28 is complete released Reports48 material prepared for validation. Candidate construction does not close qualification or permit unchanged failing journeys."
+                },
+                "meaning": "Historical C28 envelope preserved only; not executable qualification authorization on the current or final candidate."
+              },
+              "audited_candidate": {
+                "name": "C31",
+                "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+                "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+                "observed_at_utc": "2026-11-15T03:17:23Z",
+                "qualification": "HOLD_NOT_RUN",
+                "cutoff_rule": "Bounded immutable snapshot. Later branch movement requires a new delta; no live-head guarantee."
+              },
+              "final_execution_binding": {
+                "state": "UNBOUND_NOT_RUN",
+                "owner": "S0",
+                "requires": "Freeze exact final composed material C and bind every required recipe/suite/AM/review to its actual W/S/tree/request/config/runtime/run/job; never reuse historicalC28 or sourcePASS as finalC evidence."
+              },
+              "unqualified_old_candidate_keys_present": false
+            },
+            "resolved_at_utc": "2026-11-15T03:28:02.362822+00:00"
+          },
+          {
+            "id": "DOC78-NONCANONICAL-CRITERION-REFERENCES",
+            "severity": "MATERIAL",
+            "file": "next-actions.json",
+            "occurrences": [
+              {
+                "action_id": "M78-Q72",
+                "field": "criterion_ids",
+                "value": "mission70.acceptance[0] (session/storage)"
+              },
+              {
+                "action_id": "M78-Q73",
+                "field": "criterion_ids",
+                "value": "C03"
+              },
+              {
+                "action_id": "M78-Q73",
+                "field": "criterion_ids",
+                "value": "C08"
+              },
+              {
+                "action_id": "M78-Q74",
+                "field": "criterion_ids",
+                "value": "mission70.acceptance[1] (Node/Effect body seam)"
+              },
+              {
+                "action_id": "M78-Q74",
+                "field": "criterion_ids",
+                "value": "C08"
+              }
+            ],
+            "impact": "These five values do not resolve in the 1610-entry criterion ledger. Three are contract references and two are mission-local acceptance references. Their placement in criterion_ids breaks the canonical reference namespace even though they do not change the actual census.",
+            "correction": "Move C03/C08 to contract_ids and mission70.acceptance references to a typed mission_acceptance_refs field with the existing immutable source. Leave only actual canonical criterion IDs in criterion_ids; preserve all references without inventing new criteria.",
+            "status": "RESOLVED_STATIC_READBACK",
+            "resolution": {
+              "state": "RESOLVED_STATIC_READBACK",
+              "actions": [
+                {
+                  "id": "M78-Q72",
+                  "criterion_ids": [
+                    "WP10.T03.QLT.01",
+                    "WP10.T03.QLT.40"
+                  ],
+                  "contract_ids": [],
+                  "mission_acceptance_refs": [
+                    "mission70.acceptance[0] (session/storage)"
+                  ]
+                },
+                {
+                  "id": "M78-Q73",
+                  "criterion_ids": [
+                    "CAMP.INV.04",
+                    "CAMP.CMP.02",
+                    "CAMP.CMP.03",
+                    "WP10.T03.QLT.40"
+                  ],
+                  "contract_ids": [
+                    "C03",
+                    "C08"
+                  ],
+                  "mission_acceptance_refs": []
+                },
+                {
+                  "id": "M78-Q74",
+                  "criterion_ids": [
+                    "WP10.T03.QLT.01",
+                    "WP10.T03.QLT.40"
+                  ],
+                  "contract_ids": [
+                    "C08"
+                  ],
+                  "mission_acceptance_refs": [
+                    "mission70.acceptance[1] (Node/Effect body seam)"
+                  ]
+                }
+              ],
+              "noncanonical_criterion_ids": []
+            },
+            "resolved_at_utc": "2026-11-15T03:28:02.362822+00:00"
+          }
+        ],
+        "census_and_preservation_context": {
+          "canonical_criteria_rows": 1610,
+          "unique_criterion_ids": 1610,
+          "canonical_tasks_rows": 74,
+          "unique_task_ids": 74,
+          "work_packages": 15,
+          "baseline_criterion_field_differences": 0,
+          "baseline_task_field_differences": 0,
+          "four_axes_present_on_all_criteria": true,
+          "candidate_qualifications": {
+            "NOT_ESTABLISHED": 1607,
+            "STATIC_FAIL": 3
+          },
+          "accepted_criteria": 0,
+          "events": 675,
+          "unique_event_ids": 675,
+          "unique_canonical_ids_with_event": 585,
+          "event_criterion_references_missing": 0,
+          "event_bidirectional_link_errors": 0,
+          "finite_actions": 25,
+          "historical_pools": 22,
+          "task_pool_assignments": 74,
+          "unique_tasks_assigned_to_pools": 74,
+          "missing_tasks_in_pools": 0,
+          "task_queue_rows": 74,
+          "source_or_scope_or_intake_promotions_found": 0,
+          "counter_note": "The earlier 1610 delta-reference counter was already corrected to585 during this review; it is not an open finding."
+        },
+        "correction_authority": "Parent/root may correct generated documentary files. Reviewer did not modify them.",
+        "limitations": [
+          "Review binds to the generated local documentary snapshot, not to a future remote PR commit.",
+          "This is not an independent final product review and does not qualify C31.",
+          "Remote source outcomes were reviewed through the pinned documentary inputs already captured by the Mission78 source auditors; no new product execution occurred."
+        ],
+        "reviewed_at_utc": "2026-11-15T03:24:54.534080+00:00",
+        "reviewed_document_sha256": {
+          "AUTHORITY-FINAL.json": "ec929fdb056e5301903c481347420c2d2c3de1b9f1a3ddbee6f7edb49d84b555",
+          "authority-observations.json": "7f0b03e78fce3bb76b62cab831219d1ead0849ccd6bade02b810b22c899dbc71",
+          "canonical-verification.json": "70c12ea2160cec5be21345708ff5fff3421b2059f3e4015cc9b90bc3dde9f441",
+          "criterion-events.json": "b128fbe9be33a1f57e5534e091450aa76eaae286f827081fc31613802c41dc82",
+          "inherited-reconciliation.json": "7f804ef82407d35d152e6b776eeaf4bb3a2d6b5696c7bccc034543d875973377",
+          "ledger/criteria/CAMP.json": "947a6e7f9dd93db1ead58211cf5eba09ff9dfa486ba01d143710131f42320ec8",
+          "ledger/criteria/WP00.json": "75f566099c1630e4e30b6a6f187729128d46a9bd7a970ec56c5e91bae62be089",
+          "ledger/criteria/WP01.json": "10725201f8cd10ebf782a0be83b8cc67e20e96cde8246acbcab01d1486c815e8",
+          "ledger/criteria/WP02.json": "d0ee3f7e901f5521f2f5cb99b553828de5cdd91cc483fbaad97f657ad6fd7534",
+          "ledger/criteria/WP03.json": "e02382170a0b5f0bcee167b994042c841a0924882803cbaacec5a417572943de",
+          "ledger/criteria/WP04.json": "e2e564fc14d6dc2f469bd139a47456258a2558af5e40be9c40a45b800f77f6f2",
+          "ledger/criteria/WP05.json": "bba34e26a1a376c234124daf7642731d822b3519af7d949340e3a3b4f4457e24",
+          "ledger/criteria/WP06.json": "575c1390ba03a2b397484c77ec55bf9988729fe3a4adb1024ff022f35b490cb3",
+          "ledger/criteria/WP07.json": "1546fa29d27e9ab2457261c0e9be60150f8512ecfe42c3655f9e311b19944d03",
+          "ledger/criteria/WP08.json": "25df5eeadc63abee6d7e95106b5f7125f72554c044cb88380c2041805406773d",
+          "ledger/criteria/WP09.json": "bcaa6359083fe4e43ca1408943f6d15488468618960ad0e78abef025741313f0",
+          "ledger/criteria/WP10.json": "bbdd847fd84e8c29c243ac499435488de6f9260681002ed4a253792dde90f73e",
+          "ledger/criteria/WP11.json": "2f0ea03e96bd722652028c9eeda29a60bbb7be4cbbd2b0201b60d652f0d69903",
+          "ledger/criteria/WP12.json": "85acbd7c4ec6c4f45c1a145c327a6f47239fd5741d6f33e5ea7e20dc267ee0ab",
+          "ledger/criteria/WP13.json": "b8090acc84344c3be6da4a1e85554575b852c302608e38c5e4938e77e315f239",
+          "ledger/criteria/WP14.json": "2b1cbf9967f170401af9d301df50906a89ab1be9343cb4aef7f8266174206978",
+          "ledger/index.json": "39001b1e5196fcd53c5a1a1abb8665977ae47293ea1e3e43e1b224d6ea8dcc52",
+          "ledger/tasks.json": "c4a3ef62c8df25e277ea42590ec6c2e3f380073222a0302aee243fbd0b2e8d3e",
+          "manifest.json": "d6389e9629ccedbed21f059cd3c5781fdf30c259bd0f2cd8a805fab539bf42f3",
+          "next-actions.json": "6f2c7ed1225c54e93ae286dd62d50aa8b8e195e56a698db74e4415fd083f0a33",
+          "reading-receipt.json": "e37cc3cc5215dedfbd782367dcb00d01171a1fcfe620a15c591432f9cae83e8b",
+          "source-deltas.json": "51369bc0f5981566e8dd4c8b24af5e1693ab195f9544b3318a44001fa68e4bd9",
+          "target-refresh.json": "33af67124d75ac0364a02b7e7d1d77497c7e6f9a57fd7a59704874792520d366",
+          "verification.json": "36074ee6099f067ffb04fda0fb7dadac23f75a3b5aa86a640ced383995a384e6",
+          "wp14-static-finding.json": "407710263608fb24b7c1ac12e5f9a5fd8785c384b7d7a1d24219b0283cb58841"
+        },
+        "initial_disposition": "FIX_MATERIAL_DOCUMENT_INCONSISTENCIES_BEFORE_PUBLICATION",
+        "open_material_errors": 0,
+        "resolved_material_errors": 3,
+        "resolution_readback": {
+          "at_utc": "2026-11-15T03:28:02.362822+00:00",
+          "scope": "Only the three previously reported fields in next-actions.json. No broader audit or product qualification.",
+          "file": "/workspace/scratch/57aa8ffcb601/mission78-deliverable/modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/next-actions.json",
+          "sha256": "4fa44488cf81c5a67d8289245115a15c9337bf678196be3c2567d7a306b17d07",
+          "other_reviewed_document_hashes": "Earlier snapshot hashes preserved; not re-audited in this limited resolution pass.",
+          "execution": "Static JSON parsing and field readback only. No tests, CI, product writes or changes to reviewed artifacts."
+        }
+      }
+    },
+    {
+      "review": "queue",
+      "sha256": "ff23266e682ea2058549e24110366f497c81876c4be337ce402c48a08ed78e7c",
+      "report": {
+        "schema": "sf2h.m78.static-queue-review.v1",
+        "reviewer": "/root/authority_queue",
+        "recorded_at_utc": "2026-11-15T03:24:23Z",
+        "verdict": "ALL_FOUR_MATERIAL_FINDINGS_RESOLVED_STATIC_READBACK",
+        "review_scope": "Static local read of next-actions.json and source-deltas.json; no remote reads, no product tests, no edits to reviewed files.",
+        "exclusions": [
+          "Parent is already normalizing parenthetical path scope notes; not reported.",
+          "Known criterion counter585 correction; not reported."
+        ],
+        "input_snapshots": [
+          {
+            "path": "/workspace/scratch/57aa8ffcb601/mission78-deliverable/modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/next-actions.json",
+            "sha256": "6f2c7ed1225c54e93ae286dd62d50aa8b8e195e56a698db74e4415fd083f0a33",
+            "bytes": 101017
+          },
+          {
+            "path": "/workspace/scratch/57aa8ffcb601/mission78-deliverable/modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/source-deltas.json",
+            "sha256": "51369bc0f5981566e8dd4c8b24af5e1693ab195f9544b3318a44001fa68e4bd9",
+            "bytes": 97995
+          }
+        ],
+        "candidate": "C31/7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "findings": [
+          {
+            "id": "QR78-01",
+            "priority": "P2",
+            "material": true,
+            "title": "Export66 legacy action misses73's assigned application.ts scope",
+            "locations": [
+              {
+                "file": "next-actions.json",
+                "pointer": "/actions/5",
+                "action": "EXPORT66-LEGACY-EGRESS"
+              },
+              {
+                "file": "next-actions.json",
+                "pointer": "/actions/15",
+                "action": "M78-Q73"
+              }
+            ],
+            "evidence": {
+              "shared_path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+              "export_owner": "S0/71 assign runtime/application.ts writer",
+              "export_dependencies": [
+                "Coordinate current HTTP/auth owners without taking72/74 paths"
+              ],
+              "assigned73_path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+              "assigned73_scope": "public visibility/error boundary"
+            },
+            "impact": "Queue correctly blocks export until owner assignment but hides the existing73 same-file assignment. Assigning a new application.ts writer from this row would conflict with73. A generic72/74 coordination note does not resolve that collision.",
+            "correction": "Explicitly depend on M78-Q73 reconciliation and owner/lease check. Keep export fix as a proposal until73 and71 agree the bounded writer/serial composition, or route the application.ts delta through73 under an explicit scope extension. Do not transfer authority from PREPARED/unknown ACK.",
+            "acceptance": "The row names73 and states one writer on application.ts plus exact combined preimages/order; no independent export application.ts writer implied.",
+            "resolution": "RESOLVED_STATIC_READBACK",
+            "resolution_snapshot": "2f8e1573393776e38a7b28896d1e1a27ac483b5c8b47123900930f17b8cfe0ac"
+          },
+          {
+            "id": "QR78-02",
+            "priority": "P2",
+            "material": true,
+            "title": "Q52 broad paths conflate consumer ownership with65/76 shared producer paths",
+            "locations": [
+              {
+                "file": "next-actions.json",
+                "pointer": "/actions/21",
+                "action": "M78-Q52"
+              },
+              {
+                "file": "next-actions.json",
+                "pointer": "/actions/17",
+                "action": "M78-Q76"
+              },
+              {
+                "file": "next-actions.json",
+                "pointer": "/actions/1",
+                "action": "INTAKE-65"
+              },
+              {
+                "file": "source-deltas.json",
+                "pointer": "/events/7/initial_integration"
+              }
+            ],
+            "evidence": {
+              "q52_owner": "52 existing owner",
+              "q52_independence": "Work remains with assigned source owner. No liveness conclusion from missing release;78 creates no competing lane.",
+              "overlapping76": [
+                "modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+              ],
+              "overlapping65": [
+                "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+                "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts"
+              ],
+              "source_delta52": "21 own/shared proposed paths plus9 readonly59 dependencies remain isolated qualification candidate; source branch snapshot not a released unit"
+            },
+            "impact": "A reader could interpret all15 canonical paths under Q52 as52's retained write lease, although result-store.ts has activeACK76 and prepared-apply/receipt-review have a pending released65 unit. This obscures actual independence and can produce a competing or reverting writer.",
+            "correction": "Use the pinned PRODUCT-MANIFEST52 to distinguish owned paths, shared proposals and read-only inputs. Add explicit dependencies on INTAKE-65 and M78-Q76 for these overlapping files; preserve52's UI/installed-journey ownership without advertising a blanket WP11 producer lease. This is a routing correction, not a request to stop52.",
+            "acceptance": "No path appears as an independent52 write when assigned76 or handed off65. Source consumer work can continue; shared material composition is explicitly serialized by71.",
+            "resolution": "RESOLVED_STATIC_READBACK",
+            "resolution_snapshot": "2f8e1573393776e38a7b28896d1e1a27ac483b5c8b47123900930f17b8cfe0ac"
+          },
+          {
+            "id": "QR78-03",
+            "priority": "P2",
+            "material": true,
+            "title": "Final-gate envelope remains operationally bound toC28 inside aC31 queue",
+            "locations": [
+              {
+                "file": "next-actions.json",
+                "pointer": "/candidate"
+              },
+              {
+                "file": "next-actions.json",
+                "pointer": "/global_gate_contract/S0_functional_eight_selections/candidate"
+              },
+              {
+                "file": "next-actions.json",
+                "pointer": "/global_gate_contract/S0_functional_eight_selections/candidate_binding"
+              }
+            ],
+            "evidence": {
+              "queue_candidate": "C31/7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+              "embedded_candidate": "C28/d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+              "embedded_rule": "C28 is complete released Reports48 material prepared for validation.",
+              "state": "NOT_RUN_REQUIRED_ON_SAME_FINAL_ACCEPTED_MATERIAL_CANDIDATE"
+            },
+            "impact": "The eight recipe definitions should be inherited unchanged, but their embedded candidate_binding is an old execution envelope. A future executor can follow this concrete C28 binding instead of the final corrected candidate, or incorrectly read C28 as current candidate.",
+            "correction": "Keep immutable recipes; move C28 candidate/binding into explicitly historical inherited evidence, with its source pointer. Give the operational gate a candidate_to_be_frozen after corrections and clarify C31 is merely this audit snapshot. Do not reattribute historical execution envelopes or manufacture a future S.",
+            "acceptance": "One clear operational binding target for the final gates; old C28 fields cannot be mistaken for a runnable current instruction.",
+            "resolution": "RESOLVED_STATIC_READBACK",
+            "resolution_snapshot": "2f8e1573393776e38a7b28896d1e1a27ac483b5c8b47123900930f17b8cfe0ac"
+          },
+          {
+            "id": "QR78-04",
+            "priority": "P2",
+            "material": true,
+            "title": "Q67 omits the owned installed-spec path needed for its next action",
+            "locations": [
+              {
+                "file": "next-actions.json",
+                "pointer": "/actions/10/paths",
+                "action": "M78-Q67"
+              },
+              {
+                "file": "/workspace/scratch/57aa8ffcb601/audit78-authority-queue.json",
+                "pointer": "/sources/0/manifest_files"
+              }
+            ],
+            "evidence": {
+              "missing_owned_paths": [
+                "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+                "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+                "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts"
+              ],
+              "manifest": "8ed803706d5585dba1724f3df7b3f920a45e78ec:modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/manifest.json",
+              "classification_in_manifest": "area=source",
+              "action_title": "Concluir journeys67 e publicar pacote terminal preservando falhas anteriores"
+            },
+            "impact": "The action is specifically to finish installed journeys, but its listed paths only include domain source/unit tests/receipts. The installed specs are owned source, whereas the five other shared paths remain proposals; leaving them out reduces the queue's practical completeness.",
+            "correction": "Add the exact three owned installed files or their exact owned prefix packages/app-shell/e2e/sucafina/dashboard-installed/. Keep the five external consumer paths as proposals dependent on71.",
+            "acceptance": "Q67 lists the files required to finish its installed proof while continuing to distinguish owned source and shared proposals.",
+            "resolution": "RESOLVED_STATIC_READBACK",
+            "resolution_snapshot": "4fa44488cf81c5a67d8289245115a15c9337bf678196be3c2567d7a306b17d07"
+          }
+        ],
+        "additional_coordination_note": {
+          "priority": "P3",
+          "title": "Make existing shared-path dependencies explicit rather than treating all25 rows as independent",
+          "intersections": [
+            {
+              "actions": [
+                "C12-MINIMAL-FIRST-SAVE",
+                "M78-Q67"
+              ],
+              "paths": [
+                "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+                "apps/cli/src/sucafina-product/dashboard-http.ts"
+              ],
+              "rule": "Both contain proposals on the same shared consumers;71 must reconcile terminal67 unit with first-save proposal before composition."
+            },
+            {
+              "actions": [
+                "M78-Q75",
+                "EXPORT66-VISUAL-READER",
+                "M78-CHECKS45"
+              ],
+              "paths": [
+                ".github/workflows/test-ci.yml"
+              ],
+              "rule": "75's bounded authorized extension and any future renderer extension share workflow45; preserve explicit one-writer/interface coordination."
+            }
+          ],
+          "impact": "Current UNKNOWN/OWNER_REQUIRED statuses prevent immediate unauthorized dispatch; these are explicit dependency improvements, not evidence of an active collision."
+        },
+        "positive_checks": [
+          {
+            "check": "25 finite action rows",
+            "result": "OBSERVED"
+          },
+          {
+            "check": "59/63/64 current integration",
+            "result": "All three source-deltas mark CONSUMED_EXACT_POSTIMAGES atC31; no INTAKE59/63/64 remain. Consumption does not grant candidate qualification."
+          },
+          {
+            "check": "73 numeric vs75 shell",
+            "result": "Correctly separated:73 runtime/procurement.ts numeric+privacy;75 screen-shell accessible error and scanner/workflow. No duplicate numeric implementation row."
+          },
+          {
+            "check": "72/73/74/77 authority",
+            "result": "PREPARED_NO_ACK_OBSERVED retained.75 ACK_NOT_AUDITED also preserved."
+          },
+          {
+            "check": "67/68/69 and52/62 ownership",
+            "result": "No missing-release/dead-writer inference. Owners remain retained; source and candidate proof kept distinct."
+          },
+          {
+            "check": "native64/C12/MI07/current candidate",
+            "result": "Missing authentic origin, source prerequisites and exact candidate qualification remain open."
+          },
+          {
+            "check": "Unknown path owner",
+            "result": "UNKNOWN/BLOCKED statuses are preserved; review-ready patches do not become new implementation leases."
+          }
+        ],
+        "execution": {
+          "remote_reads": 0,
+          "remote_mutations": 0,
+          "product_tests": 0,
+          "reviewed_file_edits": 0,
+          "own_review_file_written": true
+        },
+        "followup": {
+          "observed_at_utc": "2026-11-15T03:25:30Z",
+          "method": "Static local re-read only of three corrected rows and gate binding; no expanded audit.",
+          "next_actions_sha256": "2f8e1573393776e38a7b28896d1e1a27ac483b5c8b47123900930f17b8cfe0ac",
+          "bytes": 105471,
+          "evidence": {
+            "QR78_01": "Resolved: explicit73 runtime/application.ts handoff and71-only target composition; no independent writer lane.",
+            "QR78_02": "Resolved: exact9 owned52 paths separated from12 shared proposals and9 read-only59 dependencies;65/76/74/64 explicitly preserved.",
+            "QR78_03": "Resolved: old candidate/binding under historical_source_binding with non-executable meaning; final_execution_binding UNBOUND_NOT_RUN, ownerS0.",
+            "QR78_04": "Resolved by final isolated follow-up: all three exact owned installed-spec/support paths are present in Q67."
+          },
+          "limits": "Resolution is documentary. No candidate/source proof status was promoted."
+        },
+        "final_resolution": {
+          "observed_at_utc": "2026-11-15T03:27:49Z",
+          "method": "Checked only Q67 paths, as requested. Earlier three resolutions preserved; no expanded audit.",
+          "next_actions_sha256": "4fa44488cf81c5a67d8289245115a15c9337bf678196be3c2567d7a306b17d07",
+          "bytes": 105934,
+          "verified_action": "M78-Q67",
+          "owned_installed_paths": [
+            "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+            "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+            "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts"
+          ],
+          "material_findings_resolved": 4,
+          "material_findings_open": 0,
+          "qualification": "Static documentary review only; no candidate validation or test acceptance implied."
+        }
+      }
+    },
+    {
+      "review": "release",
+      "sha256": "c387f85b669618beb07c52570628a197b237fe8d8b9c9771f75508215552dcae",
+      "report": {
+        "schema": "sf2h.audit78.release-review.v1",
+        "reviewed_at_utc": "2026-11-15T03:23:40Z",
+        "reviewer": "/root/release_recovery",
+        "status": "PASS_LOCAL_CONSISTENCY_AND_PINNED_DELTA_CARRY_FORWARD",
+        "scope": "Requested local documentary review only. No remote calls, no new branch observations, no product execution. Only this review JSON written.",
+        "target": {
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae"
+        },
+        "input_files": [
+          {
+            "path": "/workspace/scratch/57aa8ffcb601/mission78-deliverable/modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/source-deltas.json",
+            "sha256": "51369bc0f5981566e8dd4c8b24af5e1693ab195f9544b3318a44001fa68e4bd9",
+            "bytes": 97995
+          },
+          {
+            "path": "/workspace/scratch/57aa8ffcb601/mission78-deliverable/modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/wp14-static-finding.json",
+            "sha256": "407710263608fb24b7c1ac12e5f9a5fd8785c384b7d7a1d24219b0283cb58841",
+            "bytes": 11755
+          },
+          {
+            "path": "/workspace/scratch/57aa8ffcb601/mission78-deliverable/modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/inherited-reconciliation.json",
+            "sha256": "7f804ef82407d35d152e6b776eeaf4bb3a2d6b5696c7bccc034543d875973377",
+            "bytes": 181224
+          },
+          {
+            "path": "/workspace/scratch/57aa8ffcb601/mission78-deliverable/modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/target-refresh.json",
+            "sha256": "33af67124d75ac0364a02b7e7d1d77497c7e6f9a57fd7a59704874792520d366",
+            "bytes": 73088
+          },
+          {
+            "path": "/workspace/scratch/57aa8ffcb601/audit78-target-refresh.json",
+            "sha256": "3236e3bf67cd54305663a64e4b5cb6b619574516859545eab336919892591790",
+            "bytes": 73089
+          }
+        ],
+        "target_refresh_copy_semantically_identical": true,
+        "evidence": {
+          "cached_compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/faa30fddb7e7b61696b66fd069f51cf18c51125f...7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "compare_file_count": 206,
+          "individual_commits": [
+            {
+              "sha": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+              "file_count": 3
+            },
+            {
+              "sha": "342f04688aa173914f36a81e80e6781242616e82",
+              "file_count": 64
+            },
+            {
+              "sha": "947a4add941893c8247b95a5ce6386468313838b",
+              "file_count": 76
+            },
+            {
+              "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+              "file_count": 63
+            }
+          ],
+          "individual_commit_union": 206,
+          "complete_compare_equals_individual_union": true,
+          "counts_result": "206 = 3 + 64 + 76 + 63, all paths unique across this chain"
+        },
+        "wp14_carry_forward": {
+          "files": [
+            {
+              "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+              "initial_ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "initial_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+              "in_compare": false,
+              "in_commit_union": false,
+              "C31_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+              "status": "CONFIRMED_UNCHANGED_BY_PINNED_COMPLETE_DELTA",
+              "proof_scope": "Carry-forward of initial recorded blob only; no new runtime claim"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+              "initial_ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "initial_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+              "in_compare": false,
+              "in_commit_union": false,
+              "C31_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+              "status": "CONFIRMED_UNCHANGED_BY_PINNED_COMPLETE_DELTA",
+              "proof_scope": "Carry-forward of initial recorded blob only; no new runtime claim"
+            }
+          ],
+          "count": 2,
+          "result": "BOTH_PATHS_ABSENT_FROM_COMPLETE_DELTA; SAME_RECORDED_BLOBS_AT_C31",
+          "finding_status_retained": "CONFIRMED_STATIC_INVARIANT_FAILURE",
+          "qualification_limit": "Full faa30-to-C31 diff contains no change to either file. Static counterexample carries through; no runtime proof transferred."
+        },
+        "old_orphan_carry_forward": {
+          "source_file": "inherited-reconciliation.json",
+          "files": [
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+              "blob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+              "blob": "fbe4b70444d4a7341a30372c754842a5aca3ce70",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "fbe4b70444d4a7341a30372c754842a5aca3ce70",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+              "blob": "3d21a461c88da2372eae57d0e066ff59d9f21f55",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "3d21a461c88da2372eae57d0e066ff59d9f21f55",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+              "blob": "0d42f5242acd3d1c93bc110422285b96975b8ea0",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "0d42f5242acd3d1c93bc110422285b96975b8ea0",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+              "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+              "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+              "blob": "012175e4acc2be40547089b43f248144beb6c712",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "012175e4acc2be40547089b43f248144beb6c712",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+              "blob": "cd9a67887f41986243809672572c972440c832ec",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "cd9a67887f41986243809672572c972440c832ec",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+              "blob": "d9362a92e0bc71c8068790bf308e2a88adcb3243",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "d9362a92e0bc71c8068790bf308e2a88adcb3243",
+              "state": "UNCHANGED_THROUGH_C31"
+            },
+            {
+              "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+              "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+              "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+              "compare_changed": false,
+              "chain_changed": false,
+              "C31_blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+              "state": "UNCHANGED_THROUGH_C31"
+            }
+          ],
+          "count": 10,
+          "unique_count": 10,
+          "result": "ALL_TEN_PATHS_ABSENT_FROM_COMPLETE_DELTA; SAME_RECORDED_BLOBS_AT_C31",
+          "qualification_limit": "Exact blobs at faa30; unchanged paths throughC31 according to full target delta. Runtime full-output acceptance remains unknown."
+        },
+        "source_manifest_checks": [
+          {
+            "mission": 59,
+            "paths": 9,
+            "initial_manifest_mismatches": 0,
+            "current_integration_matches": true,
+            "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+            "full_criteria_closed": 0
+          },
+          {
+            "mission": 61,
+            "paths": 9,
+            "initial_manifest_mismatches": 0,
+            "current_integration_matches": true,
+            "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+            "full_criteria_closed": 0
+          },
+          {
+            "mission": 63,
+            "paths": 11,
+            "initial_manifest_mismatches": 0,
+            "current_integration_matches": true,
+            "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+            "full_criteria_closed": 0
+          },
+          {
+            "mission": 64,
+            "paths": 5,
+            "initial_manifest_mismatches": 0,
+            "current_integration_matches": true,
+            "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+            "full_criteria_closed": 0
+          },
+          {
+            "mission": 65,
+            "paths": 10,
+            "initial_manifest_mismatches": 0,
+            "current_integration_matches": true,
+            "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+            "full_criteria_closed": 0
+          },
+          {
+            "mission": 66,
+            "paths": 10,
+            "initial_manifest_mismatches": 0,
+            "current_integration_matches": true,
+            "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+            "full_criteria_closed": 0
+          }
+        ],
+        "counts": {
+          "source_deltas_C31": {
+            "explicit_released_units_recovered": 6,
+            "released_bundle_paths_unique": 54,
+            "consumed_units": 3,
+            "consumed_paths": 25,
+            "remaining_unconsumed_units": 3,
+            "remaining_unconsumed_paths": 29,
+            "additional_assembly64_path": 1,
+            "reports48_postimages_retained": 45,
+            "full_criteria_closed": 0
+          },
+          "independently_recomputed_from54_rows": {
+            "total_paths": 54,
+            "unique_paths": 54,
+            "consumed_paths": 25,
+            "not_consumed_paths": 29,
+            "consumed_units": 3,
+            "not_consumed_units": 3,
+            "extra_host": 1
+          },
+          "result": "MATCH"
+        },
+        "dependencies66": {
+          "documented_current": {
+            "count": 30,
+            "identical": 23,
+            "different": 7,
+            "required_rule": "Preserve four C28 Reports drifts and three C29 runtime/source-lifecycle changes; do not transplant source dependencies.",
+            "evidence": "target-refresh.json"
+          },
+          "recomputed": {
+            "total": 30,
+            "identical": 23,
+            "different": 7
+          },
+          "result": "MATCH_23_IDENTICAL_7_DIFFERENT",
+          "historical_scope": "The original dependencies.checks still describe C28=26/4; current_dependency_comparison describes C31=23/7, explicitly linked to target-refresh.json."
+        },
+        "no_qualification_from_intake": {
+          "events": [
+            {
+              "mission": 59,
+              "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+              "current_integration": "CONSUMED_EXACT_POSTIMAGES",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            },
+            {
+              "mission": 61,
+              "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+              "current_integration": "NOT_CONSUMED_EXACT_PREIMAGES_OR_ABSENCE",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            },
+            {
+              "mission": 63,
+              "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+              "current_integration": "CONSUMED_EXACT_POSTIMAGES",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            },
+            {
+              "mission": 64,
+              "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+              "current_integration": "CONSUMED_EXACT_POSTIMAGES",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            },
+            {
+              "mission": 65,
+              "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+              "current_integration": "NOT_CONSUMED_EXACT_PREIMAGES_OR_ABSENCE",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            },
+            {
+              "mission": 66,
+              "candidate_qualification": "NOT_RUN_NO_SOURCE_PASS_TRANSFER",
+              "current_integration": "NOT_CONSUMED_EXACT_PREIMAGES_OR_ABSENCE",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            },
+            {
+              "mission": 48,
+              "candidate_qualification": "HOLD_NOT_RUN",
+              "current_integration": "CONSUMED_EXACT_POSTIMAGES",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            },
+            {
+              "mission": 52,
+              "candidate_qualification": "NO_C28_PASS_TRANSFER",
+              "current_integration": "NO_TERMINAL_RELEASE_AT_PIN",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            },
+            {
+              "mission": 62,
+              "candidate_qualification": "NOT_PROVEN",
+              "current_integration": "NO_TERMINAL_RELEASE_AT_PIN",
+              "integration_qualification": "NOT_GRANTED",
+              "full_criteria_closed": 0
+            }
+          ],
+          "all_full_criteria_closed_zero": true,
+          "all_integration_qualifications_not_granted": true,
+          "C31_global_release": false,
+          "result": "NO_TASK_OR_CRITERION_ACCEPTANCE_FROM_SOURCE_RELEASE_INTAKE_ACK_OR_COMMIT"
+        },
+        "observations": [
+          {
+            "severity": "NOTE",
+            "field": "source-deltas.json/counts",
+            "note": "Top-level six-unconsumed count is retained historical C28 state, explicitly delimited by initial_target and snapshot_rule; current figures are counts_at_C31=3 units/29paths. Keep these scopes distinct."
+          },
+          {
+            "severity": "NOTE",
+            "field": "wp14-static-finding.json/source_files and inherited-reconciliation.json/static_old_orphan_postimages",
+            "note": "This review confirms carry-forward through the complete cached delta. Initial blob identities and original static reading are supplied by the existing audit records; no new source or runtime proof is asserted."
+          }
+        ],
+        "blocking_findings": [],
+        "UNKNOWN_carry_forward_paths": [],
+        "writes": [
+          "/workspace/scratch/57aa8ffcb601/audit78-release-review.json"
+        ]
+      }
+    }
+  ]
+}

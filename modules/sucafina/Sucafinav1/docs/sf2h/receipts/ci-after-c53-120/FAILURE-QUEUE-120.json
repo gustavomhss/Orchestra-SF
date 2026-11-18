@@ -1,0 +1,270 @@
+{
+  "schema": "sf2h.product-ci120.failures.v1",
+  "pr": 106,
+  "mission": 120,
+  "failures": [
+    {
+      "id": "CI120-C54-WP01-ORDER",
+      "severity": "BLOCKER_BROWSER_96_111",
+      "W": "3f4643d993c71b0edd197e8c3a1090bfd5ba533a",
+      "S": "9055563c33dd2ad77cdb685d8a03cb3f956838ed",
+      "run": 43724652351,
+      "job": 132843876161,
+      "attempt": 1,
+      "status": "OPEN",
+      "cause": "WP01 lifecycle finalized/sealed shared browser pool before 96/111 tests despite requested ordering; Bun test ordering not guaranteed",
+      "failure_suites": [
+        "wp01/browser-lifecycle.test.ts",
+        "creation-reload-fix/creation-browser.test.ts",
+        "creation-recovery-link/recovery-browser.test.ts"
+      ],
+      "pass": 1,
+      "fail": 3,
+      "oracles_unmodified": true,
+      "owner_comments": [
+        {
+          "pr": 103,
+          "id": 6896160594
+        },
+        {
+          "pr": 109,
+          "id": 6896161040
+        },
+        {
+          "pr": 65,
+          "id": 6896162024
+        }
+      ],
+      "next": "Owner96/111 + WP01 fixture/lifecycle owner coordinate CI runnable selection; no blind retry on identical W selection"
+    },
+    {
+      "id": "CI120-W102-READER-PARTIAL",
+      "severity": "SELECTION_NOT_PRODUCT",
+      "W": "104bf61f67da9740024f38427c1580ba29f36e99",
+      "S": "0aa67f82447876054c2a755762a8d654c5704e1b",
+      "run": 43724656327,
+      "job": 132843888810,
+      "attempt": 1,
+      "status": "CLOSED_BY_EXPANDED_SOURCE_SELECTION",
+      "functional_pass": 3,
+      "reader_fail": "5 mandatory source case IDs absent due single file request",
+      "fixed_by_run": 43725105940,
+      "artifact": 14165118618,
+      "owner_comments": [
+        {
+          "pr": 105,
+          "id": 6896161540
+        },
+        {
+          "pr": 65,
+          "id": 6896162024
+        }
+      ]
+    },
+    {
+      "id": "CI120-W102-RENDER-FOUR-SCENARIOS",
+      "severity": "UNPROVEN_VISUAL",
+      "W": "104bf61f67da9740024f38427c1580ba29f36e99",
+      "source_layout_run": 43724653941,
+      "reader_run": 43725105940,
+      "status": "OPEN",
+      "cause": "Existing reader trigger matches only export-artifact-closure/*test.ts; print-layout fixture scenario tests do not activate PDF renderer. Existing reader renders normal XLSX only, no page-to-sheet matching.",
+      "owner_comments": [
+        {
+          "pr": 105,
+          "id": 6896255330
+        },
+        {
+          "pr": 65,
+          "id": 6896254828
+        }
+      ],
+      "next": "Owner102 + independent91/93 agree hosted reader coverage for all nine originals normal,empty,wide,long; do not claim visual PASS"
+    },
+    {
+      "id": "CI120-C58-118-A-SOURCE-OBSERVATION",
+      "severity": "FUNCTIONAL_CONTRACT",
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "S": "61fbb9d2cd3695542ca19b524c780bcbcef35d67",
+      "run": 43726458847,
+      "job": 132849340798,
+      "attempt": 1,
+      "status": "OPEN",
+      "file": "Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts",
+      "line": 86,
+      "expected": "denied.counts.revalidate=1",
+      "actual": "denied.counts.revalidate=0",
+      "positive": "denied status, no value, sourceTransactions=0, authenticate=0",
+      "preserve_oracle": true,
+      "owner_comments": [
+        {
+          "pr": 114,
+          "id": 6896409903
+        },
+        {
+          "pr": 65,
+          "id": 6896410410
+        }
+      ],
+      "note": "Supersedes accidental 11-file selection run43726373599 which reproduced this failure but omitted 2 root-level Microsoft specs; 13-file corrected request has 83 pass,1 fail.",
+      "GLOBAL_RELEASE": false
+    },
+    {
+      "id": "CI120-C58-118-B-WP00-FIXTURE-GAP",
+      "severity": "BLOCKER_SOURCE_ORACLE",
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "S": "d7b081b1bec37b7d80e080ef85030aaed59e0703",
+      "run": 43726376680,
+      "job": 132849088063,
+      "status": "OPEN",
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "line": 60,
+      "expected": "All journeys have nonempty fixtureBindings and executionStatus NOT_RUN",
+      "actual": "At least one journey lacks fields; source corpus missing per 118/BATCH-B2",
+      "next": "Original oracle owner to fix source truth; never fabricate or remove check",
+      "owner_comments": [
+        {
+          "pr": 114,
+          "id": 6896437618
+        },
+        {
+          "pr": 65,
+          "id": 6896438090
+        }
+      ],
+      "GLOBAL_RELEASE": false
+    },
+    {
+      "id": "CI120-C58-118-B-WP08-TIMEOUT",
+      "severity": "TIMEOUT_NEEDS_CAUSAL_ANALYSIS",
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "run": 43726376680,
+      "job": 132849088063,
+      "status": "OPEN",
+      "file": "Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "expected": "Complete within 5000ms",
+      "actual": "Timeout after 11767ms wall; reported 5000ms",
+      "next": "Investigate fixture and runtime contention; do not blind timeout tweak",
+      "owner_comments": [
+        {
+          "pr": 114,
+          "id": 6896437618
+        },
+        {
+          "pr": 65,
+          "id": 6896438090
+        }
+      ],
+      "GLOBAL_RELEASE": false
+    },
+    {
+      "id": "CI120-C58-118-B-WP08-UNAVAILABLE",
+      "severity": "FUNCTIONAL_CONTRACT",
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "run": 43726376680,
+      "job": 132849088063,
+      "status": "OPEN",
+      "file": "Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+      "line": 105,
+      "expected": "ok",
+      "actual": "unavailable",
+      "owner_comments": [
+        {
+          "pr": 114,
+          "id": 6896437618
+        },
+        {
+          "pr": 65,
+          "id": 6896438090
+        }
+      ],
+      "GLOBAL_RELEASE": false
+    },
+    {
+      "id": "CI120-C58-118-B-WP01-STARTUP",
+      "severity": "SELECTOR_DEPENDENCY",
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "run": 43726376680,
+      "job": 132849088063,
+      "status": "OPEN",
+      "file": "Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "line": 32,
+      "expected": "Bun WP01 shared Chromium initialized",
+      "actual": "WP01 browser-startup.test.ts must complete before any browser lease",
+      "note": "Related C54 browser ordering problem; do not retest unchanged selection",
+      "owner_comments": [
+        {
+          "pr": 114,
+          "id": 6896437618
+        },
+        {
+          "pr": 65,
+          "id": 6896438090
+        }
+      ],
+      "GLOBAL_RELEASE": false
+    },
+    {
+      "id": "CI120-C58-118-B-WP10-ANALYSIS-AUTHORITY",
+      "severity": "HIGH_AUTHORITY_ORACLE",
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "run": 43726376680,
+      "job": 132849088063,
+      "status": "OPEN",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "lines": [
+        67,
+        122,
+        187
+      ],
+      "expected": [
+        "unavailable after case version rollback",
+        "denied on revoked membership during egress",
+        "fired=true for snapshot mutation path"
+      ],
+      "actual": [
+        "ok",
+        "ok",
+        "fired=false"
+      ],
+      "next": "RCA of actual authority/fixture behavior; no weakening or fake grants",
+      "owner_comments": [
+        {
+          "pr": 114,
+          "id": 6896437618
+        },
+        {
+          "pr": 65,
+          "id": 6896438090
+        }
+      ],
+      "GLOBAL_RELEASE": false
+    },
+    {
+      "id": "CI120-C58-118-B-WP06-PREVIEW",
+      "severity": "FUNCTIONAL_CONTRACT",
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "run": 43726376680,
+      "job": 132849088063,
+      "status": "OPEN",
+      "file": "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 326,
+      "expected": "persisted preview link",
+      "actual": "Persisted contribution has no preview link",
+      "performance": "~72s pipeline",
+      "owner_comments": [
+        {
+          "pr": 114,
+          "id": 6896437618
+        },
+        {
+          "pr": 65,
+          "id": 6896438090
+        }
+      ],
+      "GLOBAL_RELEASE": false
+    }
+  ],
+  "no_workflow_or_product_edits": true,
+  "global_release": false
+}

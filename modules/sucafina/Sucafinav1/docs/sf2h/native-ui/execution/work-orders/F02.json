@@ -1,0 +1,192 @@
+{
+  "id": "F02",
+  "title": "Transporte autenticado e router de projeções",
+  "kind": "foundation",
+  "status": "PLANNED_NOT_AUTHORIZED",
+  "priority": 1,
+  "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+  "owns": [
+    "packages/client/src/sucafina/transport.ts",
+    "packages/client/src/sucafina/transport/**",
+    "packages/schema/src/sucafina/common.ts",
+    "apps/cli/src/sucafina-product/native-ui/router.ts",
+    "apps/cli/src/sucafina-product/native-ui/transport/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts"
+  ],
+  "may_write_shared_registry": false,
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "task_refs": [
+      "WP00.T02",
+      "WP10.T01",
+      "WP11.T04"
+    ],
+    "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+  },
+  "surfaces": [],
+  "exports": [
+    "createSfTransport",
+    "mountSfNativeProjections",
+    "SfNativeHostDependencies",
+    "SfTransport",
+    "createSfAuthActions"
+  ],
+  "depends_authoring": [
+    {
+      "lock": "ctx",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "domain-read",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "transport",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    }
+  ],
+  "depends_integration": [
+    "F01"
+  ],
+  "depends_qualification": {
+    "work_orders": [
+      "F01"
+    ],
+    "external": [],
+    "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+  },
+  "consumes": {
+    "contracts": [
+      "ctx",
+      "domain-read",
+      "transport"
+    ],
+    "producer_exports": [
+      {
+        "order": "F01",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      }
+    ],
+    "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+    "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+    "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+    "operation_refs": [
+      "contract-catalog.json#/operations/ctx.login",
+      "contract-catalog.json#/operations/ctx.logout"
+    ],
+    "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+  },
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md",
+      "packages/schema/AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "host-signatures.ts",
+      "route-signatures.ts"
+    ],
+    "local": [
+      "work-orders/F02.json"
+    ],
+    "contracts": [
+      "ctx",
+      "domain-read",
+      "transport"
+    ],
+    "surfaces": [],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": [
+      "contract-catalog.json#/sources/identity"
+    ]
+  },
+  "deliver": [
+    "Reuse existing HTTP JSON paths/methods/admission and original Request; add native context/read projections only where contract permits.",
+    "Preserve operation key/payload digest and uncertain-result lookup; zero automatic mutation retry.",
+    "Route before business() fallback at the frozen installation point; no second Protocol/codegen target; the single metadata discovery endpoint uses the existing generated pipeline owned by I00.",
+    "Receive options.operations by injection. Never import all Axx schema/client implementations into F02 or require the final registry to author/integrate the pilot. Unknown catalog ID is invalid; known but unintegrated binding is contract-unavailable before network.",
+    "Implement ctx.installations discriminated selectors and ctx.context host expectation as catalog; native legacy mutation wrapper sends typed X-SF-Native-Owner (not grant), fails closed before network with invalid owner; auth return-intents uses original safeReturn dashboard marker and bounded private state owned by I00."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "F02-AC01",
+      "expected": "POSTs under authority carry validated Idempotency-Key per producer; pending key remains unchanged after response loss.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "F02-AC02",
+      "expected": "Unavailable, denied, stale and uncertain are distinct typed results.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "F02-AC03",
+      "expected": "Web transport and desktop broker share operation contract without raw URL/header/cookie authority from UI.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "F02-77-FENCE",
+      "expected": "Prepared Request identity preserved, installed nativeCommandPrecondition denies stale owner in same transaction; view/monthly own hosts revalidate; missing hook rejects native writes; Microsoft return single-use/expiry/restart succeeds without safeReturn expansion.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "gates": {
+    "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+    "test_files": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts"
+    ],
+    "typecheck_packages": [
+      "apps/cli",
+      "packages/client",
+      "packages/schema"
+    ],
+    "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+    "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+    "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+  },
+  "stop": [
+    "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+    "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+    "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+    "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+    "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+    "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+  ],
+  "handoff": {
+    "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+    "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+    "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+  },
+  "integration_group": "foundation-context-transport",
+  "entrypoints": [
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "symbol": "createSfTransport",
+      "signature": "CONTRACTS.md §6.1 exact public signature"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "symbol": "mountSfNativeProjections",
+      "signature": "CONTRACTS.md §6.1 exact public signature"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "symbol": "SfNativeHostDependencies",
+      "signature": "CONTRACTS.md §6.1 server-only readonly type; never exported to Schema/Client"
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "symbol": "SfTransport",
+      "signature": "host-signatures.ts; Client transport interface, Schema/common owns only the pure DTO/result/operation shapes."
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "symbol": "createSfAuthActions",
+      "signature": "CONTRACTS.md §6.1 exact auth/navigation signature; no generic JSON login handler."
+    }
+  ]
+}

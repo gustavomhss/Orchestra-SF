@@ -1,0 +1,2623 @@
+{
+  "schema": "sf2h.reconciliation78.finite-next-actions.v1",
+  "candidate": {
+    "name": "C31",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "observed_at_utc": "2026-11-15T03:17:23Z",
+    "qualification": "HOLD_NOT_RUN",
+    "cutoff_rule": "Bounded immutable snapshot. Later branch movement requires a new delta; no live-head guarantee."
+  },
+  "purpose": "Known finite deltas and evidence obligations over the existing plan. No new allocation or implicit lease; no live-worker inference.",
+  "action_count": 25,
+  "actions": [
+    {
+      "id": "INTAKE-61",
+      "owner": 71,
+      "paths": [
+        "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+        "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+        "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts"
+      ],
+      "action": "Review complete atomic released unit, preserve independent current dependencies, compose selective delta and emit candidate/consumer receipt; validation remains a distinct obligation",
+      "source_acceptance_is_not_candidate_acceptance": true,
+      "status": "READY_FOR_71_REVIEW_NOT_APPLIED_AT_C31",
+      "dependencies": [
+        "71 reconciles own ACK/target authority and actual current preimages"
+      ],
+      "task_ids": [
+        "WP10.T02",
+        "WP10.T04",
+        "WP14.T01",
+        "WP14.T02",
+        "WP14.T04"
+      ],
+      "independence": "Review inputs independently; sf2-stack mutations serialize under71. Recheck actual target preimages before composition.",
+      "completion_evidence": "Exact selective intake receipt and path postimages in a new material candidate; separate candidate qualification remains open.",
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/SOURCE-RELEASE.json",
+          "ref": "600602f18e4ad95bd66e4d41f5a51211d19f92aa",
+          "blob": "cc247a332e0ff10ba3885cc5cff44660b2359196",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/600602f18e4ad95bd66e4d41f5a51211d19f92aa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/SOURCE-RELEASE.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/source-release/FILES.json",
+          "ref": "600602f18e4ad95bd66e4d41f5a51211d19f92aa",
+          "blob": "8ace4d82397492c548b27e8db060c1c3056739ff",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/600602f18e4ad95bd66e4d41f5a51211d19f92aa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/source-release/FILES.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/source-release/complete.patch",
+          "ref": "600602f18e4ad95bd66e4d41f5a51211d19f92aa",
+          "blob": "b983c7c4c371e55f41ea6a86faabe6bbd6d7b26d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/600602f18e4ad95bd66e4d41f5a51211d19f92aa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/source-release/complete.patch"
+        }
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "INTAKE-65",
+      "owner": 71,
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+        "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/ACK65.json"
+      ],
+      "action": "Review complete atomic released unit, preserve independent current dependencies, compose selective delta and emit candidate/consumer receipt; validation remains a distinct obligation",
+      "source_acceptance_is_not_candidate_acceptance": true,
+      "status": "READY_FOR_71_REVIEW_NOT_APPLIED_AT_C31",
+      "dependencies": [
+        "71 reconciles own ACK/target authority and actual current preimages"
+      ],
+      "task_ids": [
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04"
+      ],
+      "independence": "Review inputs independently; sf2-stack mutations serialize under71. Recheck actual target preimages before composition.",
+      "completion_evidence": "Exact selective intake receipt and path postimages in a new material candidate; separate candidate qualification remains open.",
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/CONSUMER-ACK-REQUEST.json",
+          "ref": "165da54e7320605092eede58a7dfc1ff706b13c1",
+          "blob": "c39e31306ba717dbdf01815475d0a07c4c86c917",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/165da54e7320605092eede58a7dfc1ff706b13c1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/CONSUMER-ACK-REQUEST.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/patches/owned/branch-W2-manifest.json",
+          "ref": "165da54e7320605092eede58a7dfc1ff706b13c1",
+          "blob": "027c287f3e7011517d2fa8c1d56cf5b0334c22f6",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/165da54e7320605092eede58a7dfc1ff706b13c1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/patches/owned/branch-W2-manifest.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/patches/owned/branch-W2-complete.patch",
+          "ref": "165da54e7320605092eede58a7dfc1ff706b13c1",
+          "blob": "e263f77eb903f2228879ad03930ffc0e84e9129b",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/165da54e7320605092eede58a7dfc1ff706b13c1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/patches/owned/branch-W2-complete.patch"
+        }
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "INTAKE-66",
+      "owner": 71,
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+        "modules/sucafina/Sucafinav1/product/reports/storage.ts",
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/evidence.ts",
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/legacy-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts"
+      ],
+      "action": "Review complete atomic released unit, preserve independent current dependencies, compose selective delta and emit candidate/consumer receipt; validation remains a distinct obligation",
+      "source_acceptance_is_not_candidate_acceptance": true,
+      "status": "READY_FOR_71_REVIEW_NOT_APPLIED_AT_C31",
+      "dependencies": [
+        "71 reconciles actual current target preimages and authority",
+        "Preserve all7 current dependency drifts:4 Reports48/C28 plus3 C29 runtime59 (contract.ts,local-store.ts,source-lifecycle.ts);23/30 identical atC31",
+        "Complete owned10path unit; never transplant stale source dependencies"
+      ],
+      "task_ids": [
+        "WP04.T05",
+        "WP06.T01",
+        "WP06.T04",
+        "WP07.T04"
+      ],
+      "independence": "Review inputs independently; sf2-stack mutations serialize under71. Recheck actual target preimages before composition.",
+      "completion_evidence": "Exact selective intake receipt and path postimages in a new material candidate; separate candidate qualification remains open.",
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/HANDOFF66.json",
+          "ref": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+          "blob": "5a4dc2b2fa531a162ea0bfb81908b57375dd5422",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/HANDOFF66.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/SOURCE-MANIFEST.json",
+          "ref": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+          "blob": "d0d8b5a1f2b3a30507e4a4ec0846d416e0640f17",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/SOURCE-MANIFEST.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/source.patch",
+          "ref": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+          "blob": "848db3f1622e5e87b1b0b4657db6518073aec0e0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/source.patch"
+        },
+        "target-refresh.json#/export66_dependency_refresh"
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q75",
+      "owner": 75,
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/external/ci/MANIFEST.json",
+          "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+          "blob": "9264d266df9ebcdf537e96d51b1d8002c31a5957",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f0682b3ca9a792dcef2166a867aa06974e242874/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/external/ci/MANIFEST.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/external/procurement-ui/MANIFEST.json",
+          "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+          "blob": "7a9f98bdac58c74d0740d2899a0fd065e5063486",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f0682b3ca9a792dcef2166a867aa06974e242874/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/external/procurement-ui/MANIFEST.json"
+        }
+      ],
+      "paths": [
+        ".github/workflows/test-ci.yml",
+        "script/sf2h/operations-scanner/",
+        "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts"
+      ],
+      "dependencies": [
+        "existing workflow owner45 interface and authorized75 scoped ephemeral extension",
+        "clean/EICAR/down readiness signatures; no synthetic always-clean scanner"
+      ],
+      "action": "75 reconciles explicit succession63, implements accessible error presentation and the authorized ephemeral real-ClamD extension;73 alone consumes numeric procurement runtime proposal. Preserve original5 Operations journeys.",
+      "status": "PREPARED_MISSION_INPUTS_READY_ACK_NOT_AUDITED",
+      "independence": "Assigned shell/scanner paths distinct from73 procurement runtime. Shared CI extension requires45 interface and exact authorized scope.",
+      "task_ids": [
+        "WP03.T01",
+        "WP03.T02",
+        "WP03.T03",
+        "WP03.T04",
+        "WP03.T05",
+        "WP04.T03",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T05",
+        "WP09.T06",
+        "WP09.T07"
+      ],
+      "completion_evidence": "75 reconciles explicit succession63, implements accessible error presentation and the authorized ephemeral real-ClamD extension;73 alone consumes numeric procurement runtime proposal. Preserve original5 Operations journeys.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "C12-MINIMAL-FIRST-SAVE",
+      "owner": "S0/71 assign shared producer;52 owns UI consumer",
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/external/first-save/manifest.json",
+          "ref": "165da54e7320605092eede58a7dfc1ff706b13c1",
+          "blob": "c2c00845e3dad82cdb4e8d475c8952cf9a92795e",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/165da54e7320605092eede58a7dfc1ff706b13c1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/external/first-save/manifest.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/external/first-save/README.md",
+          "ref": "165da54e7320605092eede58a7dfc1ff706b13c1",
+          "blob": "712eca21449194977f179d64121283af6ca5b7f8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/165da54e7320605092eede58a7dfc1ff706b13c1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/external/first-save/README.md"
+        }
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "apps/cli/src/sucafina-product/dashboard-http.ts"
+      ],
+      "dependencies": [
+        "Explicit shared-path authority before source edit",
+        "UI52 explicit action keeps only caseRef/key across reload",
+        "65 tests with retained body are not this proof"
+      ],
+      "action": "Review three-path lookupFirstSave proposal, then implement and qualify minimal original correlation without redispatch; coordinate52 only after published producer.",
+      "status": "COMPLETE_INERT_PATCH_OWNER_REQUIRED",
+      "task_ids": [
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP02.T03"
+      ],
+      "independence": "Owner-specific action; product mutation requires the stated authority and dependencies. Unknown owner remains a blocker, not a free lane.",
+      "completion_evidence": "Review three-path lookupFirstSave proposal, then implement and qualify minimal original correlation without redispatch; coordinate52 only after published producer.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "EXPORT66-LEGACY-EGRESS",
+      "owner": "S0 confirms bounded egress handoff with current73 runtime/application.ts owner;71 alone composes target",
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/external/runtime-application/manifest.json",
+          "ref": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+          "blob": "32ec3b9236dabfa21b48b847f42992808c5fb352",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/external/runtime-application/manifest.json"
+        }
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/application.ts"
+      ],
+      "dependencies": [
+        "73 already has scoped runtime/application.ts authority: explicit73 handoff/reconciled patch before any new writer",
+        "71 reconciles public visibility/error changes from73 with export66 egress proposal on exact same preimage",
+        "72 auth and74 HTTP transport remain independently owned; no takeover",
+        "Preserve original403 and source-change409 controls; proposal itself has not run"
+      ],
+      "action": "Reconcile and review exported-byte reauthorization patch; validate unchanged reproduction in authorized Actions after code change; do not relabel as installedC28 exploit.",
+      "status": "COMPLETE_INERT_PATCH_AND_REPRODUCTION_READY_OWNER_REQUIRED",
+      "task_ids": [
+        "WP07.T04",
+        "WP10.T03"
+      ],
+      "independence": "Read-only patch review available; product edit is not an independent lane because runtime/application.ts is already assigned to73.",
+      "completion_evidence": "Reconcile and review exported-byte reauthorization patch; validate unchanged reproduction in authorized Actions after code change; do not relabel as installedC28 exploit.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "NATIVE64-AUTHENTICATED-ORIGIN",
+      "owner": "S0 designates native composition/C15 authority owner",
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-admission-closure/contracts/capability-contract.json",
+          "ref": "4d0421669054a131de0df0c95994b45229ab354e",
+          "blob": "637f6c6426b6c9b2103458ad4968c7c7d32b0cca",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4d0421669054a131de0df0c95994b45229ab354e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-admission-closure/contracts/capability-contract.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-admission-closure/assembly/manifest.json",
+          "ref": "4d0421669054a131de0df0c95994b45229ab354e",
+          "blob": "63519e9ca9f75702774e1d66ee5fa7465c8a0d7e",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4d0421669054a131de0df0c95994b45229ab354e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-admission-closure/assembly/manifest.json"
+        }
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/native-host.ts",
+        "apps/cli/src/sucafina-product/token-gate.ts",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
+      ],
+      "dependencies": [
+        "CAP64-ORIGIN",
+        "CAP64-POLICY-C15",
+        "CAP64-HUMAN",
+        "CAP64-TASK-RELAY",
+        "CAP64-RELOAD",
+        "CAP64-LIFECYCLE",
+        "CAP64-READINESS"
+      ],
+      "action": "Implement authentic source and native lifecycle through public APIs; host hook alone and component158PASS are insufficient.",
+      "status": "CONCRETE_CONTRACT_READY_IMPLEMENTATION_BLOCKED_ON_AUTHORITY",
+      "task_ids": [
+        "WP00.T04",
+        "WP10.T06"
+      ],
+      "independence": "Owner-specific action; product mutation requires the stated authority and dependencies. Unknown owner remains a blocker, not a free lane.",
+      "completion_evidence": "Implement authentic source and native lifecycle through public APIs; host hook alone and component158PASS are insufficient.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M31-FINANCIAL-CONTRACT",
+      "owner": "S0/WP00 semantic authority, then authorized Procurement producer",
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/CRITERIA.json",
+          "ref": "600602f18e4ad95bd66e4d41f5a51211d19f92aa",
+          "blob": "c2c1e84e9ae523c4ecb7e0969e238a05d5be3483",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/600602f18e4ad95bd66e4d41f5a51211d19f92aa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/CRITERIA.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/criteria.json",
+          "ref": "165da54e7320605092eede58a7dfc1ff706b13c1",
+          "blob": "2eef50bb2b87d1004001e55cd370957ddaba11b3",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/165da54e7320605092eede58a7dfc1ff706b13c1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/criteria.json"
+        }
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "apps/cli/src/sucafina-product/procurement-composite-planner.ts"
+      ],
+      "dependencies": [
+        "Explicit meaning/authority of approval of unwritten replacement and legal prepared command"
+      ],
+      "action": "Resolve original financial contract prerequisite; then genuine C08 capture/C17/MI07 and13 failed inherited scenarios can proceed. Do not fabricate approval or archived records.",
+      "status": "BLOCKED_CONTRACT_DECISION",
+      "task_ids": [
+        "WP00.T01",
+        "WP00.T02",
+        "WP04.T05",
+        "WP11.T01",
+        "WP11.T02",
+        "WP14.T02"
+      ],
+      "independence": "Owner-specific action; product mutation requires the stated authority and dependencies. Unknown owner remains a blocker, not a free lane.",
+      "completion_evidence": "Resolve original financial contract prerequisite; then genuine C08 capture/C17/MI07 and13 failed inherited scenarios can proceed. Do not fabricate approval or archived records.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "REPORTS48-POST-CAUSE",
+      "owner": "S0/71 assign server/bridge and Reports continuation",
+      "inputs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/HANDOFF-FINAL.md",
+          "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+          "blob": "562d7c7ebaf95b43c61449e60dedfd1808403031",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/HANDOFF-FINAL.md"
+        }
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/",
+        "packages/app-shell/e2e/sucafina/reports-support/"
+      ],
+      "dependencies": [
+        "Explicit authority replacing ended48",
+        "Current C28 Reports45 overlays preserved",
+        "Causal transport/producer evidence before unchanged retry"
+      ],
+      "action": "Resolve first POST review-agenda cause and separate hot-topic identity/Agenda39 classification findings, then preserve all4 original journeys.",
+      "status": "REMAINING_WORK_OWNER_REQUIRED",
+      "task_ids": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T03",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02"
+      ],
+      "independence": "Owner-specific action; product mutation requires the stated authority and dependencies. Unknown owner remains a blocker, not a free lane.",
+      "completion_evidence": "Resolve first POST review-agenda cause and separate hot-topic identity/Agenda39 classification findings, then preserve all4 original journeys.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "EXPORT66-VISUAL-READER",
+      "owner": "S0/71 assign authorized workflow/reader;45 compiler separate",
+      "inputs": [
+        {
+          "ref": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/owner-proposals/OWNER-REQUEST.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/owner-proposals/OWNER-REQUEST.json"
+        }
+      ],
+      "paths": [
+        ".github/workflows/test-ci.yml"
+      ],
+      "dependencies": [
+        "Authorized exact renderer input and reader/Office runtime",
+        "No change to exported bytes"
+      ],
+      "action": "Render original14 generated files and inspect font/pagination/clipping; separate from functional source tests and Reports native journeys.",
+      "status": "PREPARED_PROPOSAL_OWNER_REQUIRED",
+      "task_ids": [
+        "WP07.T04"
+      ],
+      "independence": "Owner-specific action; product mutation requires the stated authority and dependencies. Unknown owner remains a blocker, not a free lane.",
+      "completion_evidence": "Render original14 generated files and inspect font/pagination/clipping; separate from functional source tests and Reports native journeys.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q67",
+      "title": "Concluir journeys67 e publicar pacote terminal preservando falhas anteriores",
+      "owner": "67 existing owner",
+      "status": "IN_PROGRESS_OWNER_RETAINED",
+      "inputs": [
+        "PR82@8ed803",
+        "67-domain-03 PASS26/0",
+        "67-installed-04 in-flight"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+        "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/",
+        "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+        "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+        "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts"
+      ],
+      "dependencies": [
+        "Installed proof terminal result",
+        "Any causal correction has exact own/external diff"
+      ],
+      "completion_evidence": "Terminal source release with hashes, full patch+5shared paths, evidence W/S/run/job and criterion boundaries;71 only then composes.",
+      "task_ids": [
+        "WP02.T01",
+        "WP02.T02",
+        "WP02.T03",
+        "WP02.T04"
+      ],
+      "independence": "Existing owner can complete own lane now; shared5 only as proposals.",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "shared_proposal_rule": "Five shared paths stay proposals on isolated sourceW; current67 lease does not grant their target mutation. Full16file manifest preserved in authority-observations.json.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q68",
+      "title": "Fechar matriz real de oito packs/39 operações e diagnosticar falhas de consumers",
+      "owner": "68 existing owner",
+      "status": "IN_PROGRESS_OWNER_RETAINED",
+      "inputs": [
+        "PR81@d5a297",
+        "R1 41/8;R2 7/0;R3 11/13;R4 3/0",
+        "Real test-source boundaries"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/"
+      ],
+      "dependencies": [
+        "Own bridge/loader authority",
+        "External case-state/preview causes routed to existing owners"
+      ],
+      "completion_evidence": "Matrix separates executed behavior/binding/synthetic provider, preserves13R3 and remainingR1 failure, source terminal release and full dependency closure.",
+      "task_ids": [
+        "WP10.T06"
+      ],
+      "independence": "Own bridge/loader corrections may proceed; no takeover61/64/69.",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q69",
+      "title": "Concluir F2 e publicar terminal69 com C12/MI07 preservados",
+      "owner": "69 existing owner",
+      "status": "IN_PROGRESS_OWNER_RETAINED",
+      "inputs": [
+        "PR79@2443a019",
+        "F2 Wc3c99/S86c84 run43670181263",
+        {
+          "commit": "2443a01973a5dcbdb3fdee59d868385f5ff54a85",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-memory-composed/SOURCE-MANIFEST.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2443a01973a5dcbdb3fdee59d868385f5ff54a85/modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-memory-composed/SOURCE-MANIFEST.json"
+        }
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-memory-composed/"
+      ],
+      "dependencies": [
+        "Actual F2 outcome",
+        "C12 financial capture prerequisite for original13/MI07"
+      ],
+      "completion_evidence": "Full source terminal package; classify original monolithic deadline still failed; no sourcegreen transfer through C28 authority change.",
+      "task_ids": [
+        "WP00.T03",
+        "WP10.T07"
+      ],
+      "independence": "Own lane can finish now; unchanged C12/MI07 retry blocked.",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q69E",
+      "title": "Decidir e encaminhar série HELD69 e seam final de egress",
+      "owner": "S0/71 coordination;69 Atlas;68 bridge; other actual writers require explicit assignment",
+      "status": "REVIEW_READY_IMPLEMENTATION_BLOCKED",
+      "inputs": [
+        "69 R2-preimages.json",
+        "69 R2-boundaries.md",
+        "SourceW d962",
+        "Target99d404 exact blobs"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+      ],
+      "dependencies": [
+        "Owner/grant for capabilities/case-recall/dispatch",
+        "69 canonical rank completion/release",
+        "68 current bridge postimage",
+        "Patch02 depends on01"
+      ],
+      "completion_evidence": "Owner ACK plus exact reconciled pre/post images, applied composition and discriminants at same material candidate. No patch exists for dispatcher/bridge yet.",
+      "task_ids": [
+        "WP00.T03",
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "independence": "Read-only boundary review can proceed; implementation shares active ownership and is not an independent writer lane.",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q72",
+      "title": "Reconciliar ACK e corrigir M70-AUTH-01",
+      "owner": "72 Microsoft identity/runtime corrective owner",
+      "status": "PREPARED_NO_ACK_OBSERVED",
+      "inputs": [
+        "cold-auth-review PR83 M70-AUTH-01 FINDINGS70.json/REMEDIATION70.md",
+        "runtime-read-scope PR72 mission59terminal;preserveitsreadonlyrootwhen71composes"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/"
+      ],
+      "dependencies": [
+        "Independent source finding M70-AUTH-01",
+        "59 terminal read-root overlay at composition"
+      ],
+      "completion_evidence": "Bounded retention/correlation with challenge/callback/refresh/logout race evidence; unknown handle must not allocate tombstone; preserve59 read root.",
+      "assignment": {
+        "commit": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/auth-retention-fix.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1f01a01f51521ae39b7a4e730acefde3b9999891/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/auth-retention-fix.json"
+      },
+      "criterion_ids": [
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40"
+      ],
+      "independence": "Distinct bounded auth files; preserve shared-entry scope at71 composition",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "task_ids": [
+        "WP10.T03"
+      ],
+      "contract_ids": [],
+      "mission_acceptance_refs": [
+        "mission70.acceptance[0] (session/storage)"
+      ],
+      "path_scope_notes": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+          "scope": "(auth secrets maintenance contract only)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "scope": "(auth lifecycle maintenance only)"
+        }
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q73",
+      "title": "Reconciliar ACK e corrigir M70-ISO-01",
+      "owner": "73 Procurement visibility/error boundary owner",
+      "status": "PREPARED_NO_ACK_OBSERVED",
+      "inputs": [
+        "cold-auth-review PR83 M70-ISO-01",
+        "Operations63 external/procurement-ui/MANIFEST.json",
+        "existingRequests/save/submit/approve/rejectcanonicalpolicy"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/"
+      ],
+      "dependencies": [
+        "Independent source finding M70-ISO-01",
+        "63 numeric/FX delivery;75 forwards to73 exclusive runtime owner"
+      ],
+      "completion_evidence": "Missing/invisible public status/body equivalence with legitimate409/CAS/holder policy preserved; numeric formatting and accessible FX routed from63/75.",
+      "assignment": {
+        "commit": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/procurement-privacy-fix.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1f01a01f51521ae39b7a4e730acefde3b9999891/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/procurement-privacy-fix.json"
+      },
+      "criterion_ids": [
+        "CAMP.INV.04",
+        "CAMP.CMP.02",
+        "CAMP.CMP.03",
+        "WP10.T03.QLT.40"
+      ],
+      "independence": "Runtime privacy owner exclusive; no concurrent75 write to procurement.ts",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "additional_input": {
+        "id": "OPS63-SHARED-PRESENTATION",
+        "owner": "73 runtime/procurement.ts;75 src/screen-shell.ts",
+        "state": "EXISTING_MISSIONS_AUTHORIZED_INPUT_READY",
+        "inputs": [
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/external/procurement-ui/MANIFEST.json",
+            "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+            "blob": "7a9f98bdac58c74d0740d2899a0fd065e5063486",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f0682b3ca9a792dcef2166a867aa06974e242874/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/external/procurement-ui/MANIFEST.json"
+          }
+        ],
+        "paths": [
+          "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "modules/sucafina/Sucafinav1/src/screen-shell.ts"
+        ],
+        "dependencies": [
+          "73 privacy fix must be preserved in combined numeric patch",
+          "75 owns the same branch successor; no reactivation63"
+        ],
+        "action": "Consume the precise respective inert patch after own preimage reconciliation; prove original OP-PROC-02/03 once causal changes land."
+      },
+      "action": "Execute assigned privacy scope and reconcile the63 numeric/FX proposal on the same owned runtime/procurement.ts preimage;75 owns accessible error presentation.",
+      "task_ids": [
+        "WP04.T01",
+        "WP04.T02",
+        "WP04.T03",
+        "WP04.T04",
+        "WP04.T05",
+        "WP10.T03"
+      ],
+      "contract_ids": [
+        "C03",
+        "C08"
+      ],
+      "mission_acceptance_refs": [],
+      "path_scope_notes": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "scope": "(visibility-before-public-response and numeric presentation only; nofinancialpolicy/stage changes)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "scope": "(public visibility/error boundary only)"
+        }
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q74",
+      "title": "Reconciliar ACK e corrigir M70-HTTP-01",
+      "owner": "74 Node/Effect and Workbench transport corrective owner",
+      "status": "PREPARED_NO_ACK_OBSERVED",
+      "inputs": [
+        "cold-auth-review PR83 M70-HTTP-01",
+        "currentMicrosoft49Node/Effectcompositionmap",
+        "Decisions52transportproposalsreadonly"
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/installation.ts",
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+        "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/"
+      ],
+      "dependencies": [
+        "Independent source finding M70-HTTP-01",
+        "Microsoft49 canonical map;52 transport proposals remain read-only"
+      ],
+      "completion_evidence": "Incremental byte cutoff before full buffering on real Node/Effect chunked stream; multibyte/truncated/binary/abort/request-identity map and single body consumption.",
+      "assignment": {
+        "commit": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/http-body-limit-fix.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1f01a01f51521ae39b7a4e730acefde3b9999891/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/http-body-limit-fix.json"
+      },
+      "criterion_ids": [
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40"
+      ],
+      "independence": "Distinct installation/http/newhelper; no writes to72entry/73application/52Decisions",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "task_ids": [
+        "WP10.T03"
+      ],
+      "contract_ids": [
+        "C08"
+      ],
+      "mission_acceptance_refs": [
+        "mission70.acceptance[1] (Node/Effect body seam)"
+      ],
+      "path_scope_notes": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+          "scope": "(newboundedexistingtransporthelper)"
+        }
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q76",
+      "title": "Medir custo produtor C08/Planner e corrigir multiplicidade causal",
+      "owner": "76 current ACK owner",
+      "status": "ACK_IN_PROGRESS",
+      "inputs": [
+        "ACK76@08a22a",
+        "C28 P03 timeout/original72assertions",
+        "Optional59 overlay26f7af7efcc143d558df51eeb35e4a7011f456fe exact manifest"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/"
+      ],
+      "dependencies": [
+        "Exact call/cost measurement",
+        "Preserve runtime59 readonly access and producer61",
+        "No change to original assertions or180000ms"
+      ],
+      "completion_evidence": "Source correction plus bounded discriminants; only after qualified material change request original P03. No current PASS.",
+      "criterion_ids": [
+        "CAMP.INV.01",
+        "CAMP.INV.02",
+        "CAMP.INV.03",
+        "CAMP.INV.04",
+        "CAMP.INV.06",
+        "CAMP.INV.07",
+        "CAMP.INV.20",
+        "CAMP.QLT.05",
+        "CAMP.QLT.06",
+        "CAMP.CMP.02",
+        "sf2h-integral-20261112.INV.08",
+        "sf2h-integral-20261112.INV.09",
+        "sf2h-integral-20261112.INV.10",
+        "sf2h-integral-20261112.INV.11",
+        "WP10.T01.CHK.04",
+        "WP10.T01.CHK.10",
+        "WP10.T01.CHK.11",
+        "WP10.T01.CHK.12",
+        "WP10.T01.INV.10",
+        "WP11.T01.CHK.01",
+        "WP11.T01.CHK.02",
+        "WP11.T01.CHK.03",
+        "WP11.T01.CHK.18",
+        "WP11.T02.CHK.01",
+        "WP11.T02.CHK.02",
+        "WP11.T02.CHK.03",
+        "WP11.T02.CHK.20",
+        "WP11.T02.CHK.21",
+        "WP11.T02.CHK.18",
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.20",
+        "WP13.T02.CHK.01",
+        "WP13.T02.CHK.02",
+        "WP13.T02.CHK.03",
+        "WP13.T02.CHK.20",
+        "WP13.T02.CHK.18",
+        "WP13.T03.CHK.01",
+        "WP13.T03.CHK.02",
+        "WP13.T03.CHK.03",
+        "WP13.T03.CHK.20",
+        "WP13.T03.CHK.18",
+        "WP13.T04.CHK.02",
+        "WP13.T04.CHK.03",
+        "WP10.T04.INV.10",
+        "WP10.T04.INV.40",
+        "WP10.T04.QLT.01",
+        "WP10.T04.QLT.40",
+        "WP10.T04.CHK.01",
+        "WP10.T04.CHK.02",
+        "WP10.T04.CHK.03"
+      ],
+      "task_ids": [
+        "WP10.T01",
+        "WP10.T04",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "independence": "Assigned producer files distinct from72/73/74; no Runtime72/Portfolio54/Executor65/Atlas69 edits.",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "contract_ids": [],
+      "mission_acceptance_refs": [],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q77",
+      "title": "Revisar friamente plano nativo PR76 e emitir parecer",
+      "owner": "77 independent reviewer",
+      "status": "PREPARED_NO_ACK_OBSERVED",
+      "inputs": [
+        "sf-sidebar-plan PR76 commit2f143330a0a44d34eb764ebfb851804c504edb6d",
+        "currentOrchestrachapter/sidebar/app/UIproviders",
+        "canonical15WP74tasks1610criteria"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/review77/"
+      ],
+      "dependencies": [
+        "Pin plan2f143330",
+        "Read actual chapters/sidebar/providers/theme/i18n/server/project auth"
+      ],
+      "completion_evidence": "APPROVE or FIX-FIRST with dispatch-ready initial slices and exact task/criterion trace; own review docs only.",
+      "independence": "Documentary read-only review can start after ACK; no native product implementation authorization.",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "task_ids": [],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q70R",
+      "title": "Rechecar três findings obrigatórios nos SHAs corrigidos",
+      "owner": "S0 assigns independent reviewer;71 supplies composed candidate",
+      "status": "BLOCKED_ON_72_73_74_DELIVERIES",
+      "inputs": [
+        {
+          "commit": "9c6946c31887ca1899a99ce120921c8bf937e721",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/FINDINGS70.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9c6946c31887ca1899a99ce120921c8bf937e721/modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/FINDINGS70.json"
+        },
+        "Exact72/73/74 releases and71 candidate"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/"
+      ],
+      "dependencies": [
+        "72/73/74 qualified corrections",
+        "71 exact material composition",
+        "Independent reviewer assignment"
+      ],
+      "completion_evidence": "Three findings disposition with evidence on candidate; retain G01/G02/G03 unless separately proved. This review does not replace3FINAL.",
+      "independence": "Review preparation now; acceptance review requires actual corrected candidate.",
+      "source_observation": {
+        "branch_census": "2026-11-15T03:05:27Z",
+        "proof_snapshot_interval": "2026-11-15T03:05:27Z/2026-11-15T03:08:39Z",
+        "assembled_at": "2026-11-15 03:16:42 UTC",
+        "bounded": true,
+        "freshness": "No terminal outcome is inferred after the stated snapshot. Parent may add a later explicit delta.",
+        "parent_later_target_notice": {
+          "source": "Parent message, separately verified by parent/release_recovery; not independently read by this child",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+          "candidate": "C31",
+          "instruction": "Rebase candidate/integration conclusions to parent C31 delta. Preserve this child snapshot as historical; source and proof identities remain bounded."
+        }
+      },
+      "task_ids": [
+        "WP10.T03",
+        "WP10.T04"
+      ],
+      "path_scope_notes": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/",
+          "scope": "(historical readonly)"
+        }
+      ],
+      "unresolved_path_or_interface": [
+        "Future assigned independent review namespace"
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-WP14-PURE-IO",
+      "title": "Separar persistência concreta e transformações puras de WP14",
+      "owner": "S0/71 confirms current WP14 and WP10 path leases; operational writer UNKNOWN",
+      "status": "BLOCKED_ON_EXPLICIT_OWNER_HANDOFF",
+      "inputs": [
+        {
+          "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+          "blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e"
+        },
+        {
+          "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+          "blob": "790e7c98820df61306ad67bd5897b1301118d335"
+        },
+        "wp14-static-finding.json"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts"
+      ],
+      "dependencies": [
+        "Explicit existing owner/lease handoff",
+        "Preserve current canonical callers and C08 authority",
+        "No shared Atlas69/bridge68 takeover"
+      ],
+      "task_ids": [
+        "WP14.T04",
+        "WP14.T05",
+        "WP10.T01"
+      ],
+      "independence": "Static preparation is independent. Product correction waits for concrete path lease and host boundary; not ready for another writer.",
+      "completion_evidence": "Three invariants cease to be statically contradicted, concrete persistence remains authorized, callers receive qualification on the resulting candidate.",
+      "unresolved_path_or_interface": [
+        "Authorized WP10 host adapter path to be named by current owner before edit"
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q52",
+      "title": "Concluir frente52 com responsável preservado e release explícita",
+      "owner": "52 existing owner",
+      "status": "OWNER_RETAINED_NO_TERMINAL_AT_PIN",
+      "inputs": [
+        {
+          "ref": "07c430c23d5ae301050cfcde9daddae1b3fc2efc",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/PRODUCT-MANIFEST.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/07c430c23d5ae301050cfcde9daddae1b3fc2efc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/PRODUCT-MANIFEST.json"
+        }
+      ],
+      "paths": [
+        "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/http.ts"
+      ],
+      "dependencies": [
+        "Existing owner publishes complete current source release, W/S/run/job and dependency closure",
+        "71 checks atomically compatible installed composition;52 map55 retained until replacement release",
+        "65 retains prepared-apply/receipt-review-binding source release; consume through71 only",
+        "76 owns result-store/criterion-comparison cost corrections;52 receives producer release, no competing edit",
+        "74 owns installation.ts transport corrections;52 shared proposal needs explicit reconciliation",
+        "C31 host-context now contains64 assembly; preserve native admission while reconciling52 proposal",
+        "Shared12path proposal plus9own paths require coherent terminal package;9 runtime59 dependencies are read-only and already consumedC29"
+      ],
+      "task_ids": [
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04"
+      ],
+      "independence": "52 retains only its explicit own source lane. Shared proposals and producer dependencies are not52 write grants. No release inferred from failed run or silence.",
+      "completion_evidence": "Actual source outcomes and limitations, complete path manifest/patch, explicit terminal handoff, then71 intake and separate qualification.",
+      "shared_proposal_paths_not_writer_grant": [
+        "apps/cli/src/sucafina-product/installation.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+        "apps/cli/src/sucafina-product/decision-case-http.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+        "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "apps/cli/src/sucafina-product/planner-evidence.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "apps/cli/src/sucafina-product/portfolio-services.ts"
+      ],
+      "read_only_foreign_dependencies": [
+        "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts"
+      ],
+      "path_scope_basis": {
+        "ref": "07c430c23d5ae301050cfcde9daddae1b3fc2efc",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/PRODUCT-MANIFEST.json",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/07c430c23d5ae301050cfcde9daddae1b3fc2efc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/PRODUCT-MANIFEST.json",
+        "blob": "8a09dacd0abcb9707ed43f84ce59b1dca20620cc"
+      },
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-Q62",
+      "title": "Concluir frente62 com responsável preservado e release explícita",
+      "owner": "62 existing owner",
+      "status": "OWNER_RETAINED_NO_TERMINAL_AT_PIN",
+      "inputs": [
+        {
+          "ref": "015254f8c377bb38cbfceb68db5ac0cb67ce8760",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/ACK62.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/015254f8c377bb38cbfceb68db5ac0cb67ce8760/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/ACK62.json"
+        }
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/catalog.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/planner-projected.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/planner.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/portfolio-view.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/procurement.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/tickets.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts"
+      ],
+      "dependencies": [
+        "Existing owner publishes complete current source release, W/S/run/job and dependency closure",
+        "Canonical BI producers and mounted installed consumer proof"
+      ],
+      "task_ids": [
+        "WP05.T01",
+        "WP05.T02",
+        "WP05.T03",
+        "WP05.T04",
+        "WP05.T05"
+      ],
+      "independence": "Work remains with assigned source owner. No liveness conclusion from missing release;78 creates no competing lane.",
+      "completion_evidence": "Actual source outcomes and limitations, complete path manifest/patch, explicit terminal handoff, then71 intake and separate qualification.",
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-CHECKS45",
+      "title": "Vincular checks autorizados ao candidato material composto",
+      "owner": "45 compiler/checks owner;71 provides frozen inputs",
+      "status": "BLOCKED_ON_AUTHORIZED_INTERFACE_AND_FINAL_CANDIDATE",
+      "inputs": [
+        {
+          "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json"
+        },
+        {
+          "ref": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C31-native64.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e64ed4f2e59e0baabcc8655b8067ff9eb847665/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C31-native64.json"
+        }
+      ],
+      "paths": [
+        "modules/sucafina/",
+        "apps/cli/",
+        "packages/app-shell/"
+      ],
+      "dependencies": [
+        "Actual final material candidate and exact execution config",
+        "45 supported execution interface; no alternative dispatcher invented",
+        "Causal corrections for inherited compiler/generation findings"
+      ],
+      "task_ids": [
+        "WP10.T04"
+      ],
+      "independence": "Input review is independent; execution remains exclusively45 and was not dispatched by78.",
+      "completion_evidence": "Checks receipt binds W/S/tree/request/runtime/config/run/job/artefacts and retains all failures; checks PASS does not close functional or AM gates.",
+      "unresolved_path_or_interface": [
+        "Existing45 checks request/receipt interface"
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    },
+    {
+      "id": "M78-FINAL-QUALIFICATION",
+      "title": "Congelar C e completar aceitação funcional, nativa e reviews",
+      "owner": "S0 final acceptance;71 composition; independent assigned reviewers",
+      "status": "BLOCKED_ON_COMPOSED_CORRECTIONS_AND_GATES",
+      "inputs": [
+        {
+          "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json"
+        },
+        "ledger/index.json",
+        "next-actions.json",
+        {
+          "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md"
+        }
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/",
+        "packages/app-shell/e2e/sucafina/operations.spec.ts",
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "packages/app-shell/e2e/sucafina/reports.spec.ts"
+      ],
+      "dependencies": [
+        "71 freezes candidate after bounded releases/corrections",
+        "M78-CHECKS45",
+        "Original P03/MI07 causes resolved without budget/assertion weakening",
+        "Eight existing final recipes plus inherited suites",
+        "AM01-AM06 and three independent FINAL reviews",
+        "C/G7 before separate D envelope/G8"
+      ],
+      "task_ids": [
+        "WP00.T04",
+        "WP10.T02",
+        "WP10.T04",
+        "WP10.T05",
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "independence": "Preparation can proceed; acceptance depends on the same material C and exact execution envelope. No new ninth final recipe or test dispatch by78.",
+      "completion_evidence": "S0 accepts only evidence bound to final C; D has its own envelope and G8. Product/criterion/task/WP DONE remains unestablished until those obligations are met.",
+      "unresolved_path_or_interface": [
+        "Authorized S0 final acceptance receipts"
+      ],
+      "executed_by78": false,
+      "candidate_context": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+    }
+  ],
+  "historical_coverage_pools": [
+    {
+      "id": "RW01",
+      "accountable_wp": "WP00",
+      "task_ids": [
+        "WP00.T01",
+        "WP00.T02",
+        "WP00.T03"
+      ],
+      "scope": "Baseline/contracts/corpus and remaining measurement receipt reconciliation",
+      "coordination_dependencies": [],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW02",
+      "accountable_wp": "WP00",
+      "task_ids": [
+        "WP00.T04"
+      ],
+      "scope": "Independent installed GNATIVE qualification; no implementation of runtime",
+      "coordination_dependencies": [
+        "RW05",
+        "RW12",
+        "RW13",
+        "RW16",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW03",
+      "accountable_wp": "WP01",
+      "task_ids": [
+        "WP01.T01",
+        "WP01.T02",
+        "WP01.T03",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "scope": "Shared UI navigation, recovery and exact ACK consumer; excludes producer repair",
+      "coordination_dependencies": [
+        "RW01",
+        "RW04",
+        "RW05",
+        "RW06",
+        "RW10",
+        "RW12",
+        "RW13"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": [
+        "FIN-A02"
+      ]
+    },
+    {
+      "id": "RW04",
+      "accountable_wp": "WP02",
+      "task_ids": [
+        "WP02.T01",
+        "WP02.T02",
+        "WP02.T03",
+        "WP02.T04"
+      ],
+      "scope": "Dashboard source/intake gaps, including undated milestone producer",
+      "coordination_dependencies": [
+        "RW01",
+        "RW03",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW05",
+      "accountable_wp": "WP03",
+      "task_ids": [
+        "WP03.T01",
+        "WP03.T02",
+        "WP03.T03",
+        "WP03.T04",
+        "WP03.T05"
+      ],
+      "scope": "Planner projection/BI/context and scenario consumers; no common-C execution duplication",
+      "coordination_dependencies": [
+        "RW01",
+        "RW03",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": [
+        "FIN-A06"
+      ]
+    },
+    {
+      "id": "RW06",
+      "accountable_wp": "WP04",
+      "task_ids": [
+        "WP04.T01",
+        "WP04.T02",
+        "WP04.T03",
+        "WP04.T04",
+        "WP04.T05"
+      ],
+      "scope": "Procurement Apply and stage-aware export intakes and scoped regressions",
+      "coordination_dependencies": [
+        "RW01",
+        "RW03",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW07",
+      "accountable_wp": "WP05",
+      "task_ids": [
+        "WP05.T01",
+        "WP05.T02",
+        "WP05.T03",
+        "WP05.T04",
+        "WP05.T05"
+      ],
+      "scope": "Eight chart consumers, interaction and source semantics; existing producers reused",
+      "coordination_dependencies": [
+        "RW01",
+        "RW04",
+        "RW05",
+        "RW06",
+        "RW12",
+        "RW14",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": [
+        "FIN-A03"
+      ]
+    },
+    {
+      "id": "RW08",
+      "accountable_wp": "WP06",
+      "task_ids": [
+        "WP06.T01",
+        "WP06.T02",
+        "WP06.T03",
+        "WP06.T04",
+        "WP06.T05"
+      ],
+      "scope": "Admission recovery, schema intent reuse, document authorization/truncation consumers",
+      "coordination_dependencies": [
+        "RW01",
+        "RW04",
+        "RW05",
+        "RW11",
+        "RW12",
+        "RW13",
+        "RW17",
+        "RW18"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW09",
+      "accountable_wp": "WP07",
+      "task_ids": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T03",
+        "WP07.T04"
+      ],
+      "scope": "Preserved review/context/report consumers and nonempty memory outcome",
+      "coordination_dependencies": [
+        "RW01",
+        "RW04",
+        "RW05",
+        "RW06",
+        "RW07",
+        "RW12",
+        "RW15",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW10",
+      "accountable_wp": "WP08",
+      "task_ids": [
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T03",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06"
+      ],
+      "scope": "Recipient authority/ACK and answer-reuse producer closure; UI work charged to WP01",
+      "coordination_dependencies": [
+        "RW01",
+        "RW04",
+        "RW11",
+        "RW12",
+        "RW13",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW11",
+      "accountable_wp": "WP09",
+      "task_ids": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T02",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T05",
+        "WP09.T06"
+      ],
+      "scope": "Four routines and native Relay output/consumer qualification",
+      "coordination_dependencies": [
+        "RW01",
+        "RW02",
+        "RW08",
+        "RW12",
+        "RW13",
+        "RW15",
+        "RW16",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW12",
+      "accountable_wp": "WP11",
+      "task_ids": [
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04"
+      ],
+      "scope": "Case/decision ledger producer and C12 recovery integration",
+      "coordination_dependencies": [
+        "RW01",
+        "RW05",
+        "RW10",
+        "RW16",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": [
+        "FIN-A08"
+      ]
+    },
+    {
+      "id": "RW13",
+      "accountable_wp": "WP12",
+      "task_ids": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "scope": "18 skills/source load/output/consumer witnesses and resident behavior; bridge mechanics excluded",
+      "coordination_dependencies": [
+        "RW01",
+        "RW02",
+        "RW05",
+        "RW08",
+        "RW11",
+        "RW12",
+        "RW16",
+        "RW17",
+        "RW18"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW14",
+      "accountable_wp": "WP13",
+      "task_ids": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "scope": "Portfolio 15000/15001 journey, exact threshold, historical reopen and performance cause",
+      "coordination_dependencies": [
+        "RW01",
+        "RW05",
+        "RW12",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": [
+        "FIN-A05"
+      ]
+    },
+    {
+      "id": "RW15",
+      "accountable_wp": "WP14",
+      "task_ids": [
+        "WP14.T01",
+        "WP14.T02",
+        "WP14.T03",
+        "WP14.T04",
+        "WP14.T05"
+      ],
+      "scope": "Pure memory layer/overlap decision and authorized consumer wiring; Atlas proof execution charged to RW18",
+      "coordination_dependencies": [
+        "RW01",
+        "RW08",
+        "RW10",
+        "RW12",
+        "RW16",
+        "RW18"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW16",
+      "accountable_wp": "WP10",
+      "task_ids": [
+        "WP10.T01"
+      ],
+      "scope": "Single-candidate selective intake and composition compatibility; domain repairs charged to owner pools",
+      "coordination_dependencies": [
+        "RW17",
+        "RW18"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": [
+        "FIN-A01",
+        "FIN-A04",
+        "FIN-A09"
+      ]
+    },
+    {
+      "id": "RW17",
+      "accountable_wp": "WP10",
+      "task_ids": [
+        "WP10.T06"
+      ],
+      "scope": "Real resident registration/private MCP bridge/authority and 39 routes",
+      "coordination_dependencies": [
+        "RW01",
+        "RW05",
+        "RW12",
+        "RW13",
+        "RW16"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW18",
+      "accountable_wp": "WP10",
+      "task_ids": [
+        "WP10.T07"
+      ],
+      "scope": "Atlas integrity, packaging, protected store and AM05 restart/recall/UI proof",
+      "coordination_dependencies": [
+        "RW01",
+        "RW08",
+        "RW15",
+        "RW16",
+        "RW17"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW19",
+      "accountable_wp": "WP10",
+      "task_ids": [
+        "WP10.T02"
+      ],
+      "scope": "Integrated user journeys and usability/visual evidence after owner fixes",
+      "coordination_dependencies": [
+        "RW13",
+        "RW15",
+        "RW17",
+        "RW18"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW20",
+      "accountable_wp": "WP10",
+      "task_ids": [
+        "WP10.T03"
+      ],
+      "scope": "Three independent final reviews and re-evaluation on the same C",
+      "coordination_dependencies": [],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    },
+    {
+      "id": "RW21",
+      "accountable_wp": "WP10",
+      "task_ids": [
+        "WP10.T04"
+      ],
+      "scope": "Cumulative candidate verification/envelope; no product code reimplementation",
+      "coordination_dependencies": [
+        "RW18"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": [
+        "FIN-A07"
+      ]
+    },
+    {
+      "id": "RW22",
+      "accountable_wp": "WP10",
+      "task_ids": [
+        "WP10.T05"
+      ],
+      "scope": "Final acceptance index, guide and D archival after gates",
+      "coordination_dependencies": [
+        "RW16"
+      ],
+      "not_a_schedule_DAG": true,
+      "accountable_common_action_refs": []
+    }
+  ],
+  "task_queue": [
+    {
+      "task_id": "WP00.T01",
+      "coverage_pool": "RW01",
+      "action_refs": [
+        "M31-FINANCIAL-CONTRACT"
+      ],
+      "historical_remaining_pointer": "/tasks/0",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP00.T02",
+      "coverage_pool": "RW01",
+      "action_refs": [
+        "M31-FINANCIAL-CONTRACT"
+      ],
+      "historical_remaining_pointer": "/tasks/1",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP00.T03",
+      "coverage_pool": "RW01",
+      "action_refs": [
+        "M78-Q69",
+        "M78-Q69E"
+      ],
+      "historical_remaining_pointer": "/tasks/2",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP00.T04",
+      "coverage_pool": "RW02",
+      "action_refs": [
+        "NATIVE64-AUTHENTICATED-ORIGIN",
+        "M78-FINAL-QUALIFICATION"
+      ],
+      "historical_remaining_pointer": "/tasks/3",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP01.T01",
+      "coverage_pool": "RW03",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/4",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP01.T02",
+      "coverage_pool": "RW03",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/5",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP01.T03",
+      "coverage_pool": "RW03",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/6",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP01.T04",
+      "coverage_pool": "RW03",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/7",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP01.T05",
+      "coverage_pool": "RW03",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/8",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP02.T01",
+      "coverage_pool": "RW04",
+      "action_refs": [
+        "M78-Q67"
+      ],
+      "historical_remaining_pointer": "/tasks/9",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP02.T02",
+      "coverage_pool": "RW04",
+      "action_refs": [
+        "M78-Q67"
+      ],
+      "historical_remaining_pointer": "/tasks/10",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP02.T03",
+      "coverage_pool": "RW04",
+      "action_refs": [
+        "C12-MINIMAL-FIRST-SAVE",
+        "M78-Q67"
+      ],
+      "historical_remaining_pointer": "/tasks/11",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP02.T04",
+      "coverage_pool": "RW04",
+      "action_refs": [
+        "M78-Q67"
+      ],
+      "historical_remaining_pointer": "/tasks/12",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP03.T01",
+      "coverage_pool": "RW05",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/13",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP03.T02",
+      "coverage_pool": "RW05",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/14",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP03.T03",
+      "coverage_pool": "RW05",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/15",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP03.T04",
+      "coverage_pool": "RW05",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/16",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP03.T05",
+      "coverage_pool": "RW05",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/17",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP04.T01",
+      "coverage_pool": "RW06",
+      "action_refs": [
+        "M78-Q73"
+      ],
+      "historical_remaining_pointer": "/tasks/18",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP04.T02",
+      "coverage_pool": "RW06",
+      "action_refs": [
+        "M78-Q73"
+      ],
+      "historical_remaining_pointer": "/tasks/19",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP04.T03",
+      "coverage_pool": "RW06",
+      "action_refs": [
+        "M78-Q75",
+        "M78-Q73"
+      ],
+      "historical_remaining_pointer": "/tasks/20",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP04.T04",
+      "coverage_pool": "RW06",
+      "action_refs": [
+        "M78-Q73"
+      ],
+      "historical_remaining_pointer": "/tasks/21",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP04.T05",
+      "coverage_pool": "RW06",
+      "action_refs": [
+        "INTAKE-66",
+        "M31-FINANCIAL-CONTRACT",
+        "M78-Q73"
+      ],
+      "historical_remaining_pointer": "/tasks/22",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP05.T01",
+      "coverage_pool": "RW07",
+      "action_refs": [
+        "M78-Q62"
+      ],
+      "historical_remaining_pointer": "/tasks/23",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP05.T02",
+      "coverage_pool": "RW07",
+      "action_refs": [
+        "M78-Q62"
+      ],
+      "historical_remaining_pointer": "/tasks/24",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP05.T03",
+      "coverage_pool": "RW07",
+      "action_refs": [
+        "M78-Q62"
+      ],
+      "historical_remaining_pointer": "/tasks/25",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP05.T04",
+      "coverage_pool": "RW07",
+      "action_refs": [
+        "M78-Q62"
+      ],
+      "historical_remaining_pointer": "/tasks/26",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP05.T05",
+      "coverage_pool": "RW07",
+      "action_refs": [
+        "M78-Q62"
+      ],
+      "historical_remaining_pointer": "/tasks/27",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP06.T01",
+      "coverage_pool": "RW08",
+      "action_refs": [
+        "INTAKE-66"
+      ],
+      "historical_remaining_pointer": "/tasks/28",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP06.T02",
+      "coverage_pool": "RW08",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/29",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP06.T03",
+      "coverage_pool": "RW08",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/30",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP06.T04",
+      "coverage_pool": "RW08",
+      "action_refs": [
+        "INTAKE-66"
+      ],
+      "historical_remaining_pointer": "/tasks/31",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP06.T05",
+      "coverage_pool": "RW08",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/32",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP07.T01",
+      "coverage_pool": "RW09",
+      "action_refs": [
+        "REPORTS48-POST-CAUSE"
+      ],
+      "historical_remaining_pointer": "/tasks/33",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP07.T02",
+      "coverage_pool": "RW09",
+      "action_refs": [
+        "REPORTS48-POST-CAUSE"
+      ],
+      "historical_remaining_pointer": "/tasks/34",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP07.T03",
+      "coverage_pool": "RW09",
+      "action_refs": [
+        "REPORTS48-POST-CAUSE"
+      ],
+      "historical_remaining_pointer": "/tasks/35",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP07.T04",
+      "coverage_pool": "RW09",
+      "action_refs": [
+        "INTAKE-66",
+        "EXPORT66-LEGACY-EGRESS",
+        "REPORTS48-POST-CAUSE",
+        "EXPORT66-VISUAL-READER"
+      ],
+      "historical_remaining_pointer": "/tasks/36",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP08.T01",
+      "coverage_pool": "RW10",
+      "action_refs": [
+        "REPORTS48-POST-CAUSE"
+      ],
+      "historical_remaining_pointer": "/tasks/37",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP08.T02",
+      "coverage_pool": "RW10",
+      "action_refs": [
+        "REPORTS48-POST-CAUSE"
+      ],
+      "historical_remaining_pointer": "/tasks/38",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP08.T03",
+      "coverage_pool": "RW10",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/39",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP08.T04",
+      "coverage_pool": "RW10",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/40",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP08.T05",
+      "coverage_pool": "RW10",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/41",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP08.T06",
+      "coverage_pool": "RW10",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/42",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP09.T01",
+      "coverage_pool": "RW11",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/43",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP09.T07",
+      "coverage_pool": "RW11",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/44",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP09.T02",
+      "coverage_pool": "RW11",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/45",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP09.T03",
+      "coverage_pool": "RW11",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/46",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP09.T04",
+      "coverage_pool": "RW11",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/47",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP09.T05",
+      "coverage_pool": "RW11",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/48",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP09.T06",
+      "coverage_pool": "RW11",
+      "action_refs": [
+        "M78-Q75"
+      ],
+      "historical_remaining_pointer": "/tasks/49",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP10.T01",
+      "coverage_pool": "RW16",
+      "action_refs": [
+        "M78-Q76",
+        "M78-WP14-PURE-IO"
+      ],
+      "historical_remaining_pointer": "/tasks/50",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP10.T02",
+      "coverage_pool": "RW19",
+      "action_refs": [
+        "INTAKE-61",
+        "M78-FINAL-QUALIFICATION"
+      ],
+      "historical_remaining_pointer": "/tasks/51",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP10.T03",
+      "coverage_pool": "RW20",
+      "action_refs": [
+        "EXPORT66-LEGACY-EGRESS",
+        "M78-Q72",
+        "M78-Q73",
+        "M78-Q74",
+        "M78-Q70R"
+      ],
+      "historical_remaining_pointer": "/tasks/52",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP10.T04",
+      "coverage_pool": "RW21",
+      "action_refs": [
+        "INTAKE-61",
+        "M78-Q76",
+        "M78-Q70R",
+        "M78-CHECKS45",
+        "M78-FINAL-QUALIFICATION"
+      ],
+      "historical_remaining_pointer": "/tasks/53",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP10.T05",
+      "coverage_pool": "RW22",
+      "action_refs": [
+        "M78-FINAL-QUALIFICATION"
+      ],
+      "historical_remaining_pointer": "/tasks/54",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP10.T06",
+      "coverage_pool": "RW17",
+      "action_refs": [
+        "NATIVE64-AUTHENTICATED-ORIGIN",
+        "M78-Q68",
+        "M78-Q69E",
+        "M78-FINAL-QUALIFICATION"
+      ],
+      "historical_remaining_pointer": "/tasks/55",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP10.T07",
+      "coverage_pool": "RW18",
+      "action_refs": [
+        "M78-Q69",
+        "M78-Q69E",
+        "M78-FINAL-QUALIFICATION"
+      ],
+      "historical_remaining_pointer": "/tasks/56",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP11.T01",
+      "coverage_pool": "RW12",
+      "action_refs": [
+        "INTAKE-65",
+        "C12-MINIMAL-FIRST-SAVE",
+        "M31-FINANCIAL-CONTRACT",
+        "M78-Q76",
+        "M78-Q52"
+      ],
+      "historical_remaining_pointer": "/tasks/57",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP11.T02",
+      "coverage_pool": "RW12",
+      "action_refs": [
+        "INTAKE-65",
+        "C12-MINIMAL-FIRST-SAVE",
+        "M31-FINANCIAL-CONTRACT",
+        "M78-Q76",
+        "M78-Q52"
+      ],
+      "historical_remaining_pointer": "/tasks/58",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP11.T03",
+      "coverage_pool": "RW12",
+      "action_refs": [
+        "INTAKE-65",
+        "C12-MINIMAL-FIRST-SAVE",
+        "M78-Q76",
+        "M78-Q52"
+      ],
+      "historical_remaining_pointer": "/tasks/59",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP11.T04",
+      "coverage_pool": "RW12",
+      "action_refs": [
+        "INTAKE-65",
+        "M78-Q52"
+      ],
+      "historical_remaining_pointer": "/tasks/60",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP12.T01",
+      "coverage_pool": "RW13",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/61",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP12.T02",
+      "coverage_pool": "RW13",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/62",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP12.T03",
+      "coverage_pool": "RW13",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/63",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP12.T04",
+      "coverage_pool": "RW13",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/64",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP13.T01",
+      "coverage_pool": "RW14",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/65",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP13.T02",
+      "coverage_pool": "RW14",
+      "action_refs": [
+        "M78-Q76"
+      ],
+      "historical_remaining_pointer": "/tasks/66",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP13.T03",
+      "coverage_pool": "RW14",
+      "action_refs": [
+        "M78-Q76"
+      ],
+      "historical_remaining_pointer": "/tasks/67",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP13.T04",
+      "coverage_pool": "RW14",
+      "action_refs": [
+        "M78-Q76"
+      ],
+      "historical_remaining_pointer": "/tasks/68",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP14.T01",
+      "coverage_pool": "RW15",
+      "action_refs": [
+        "INTAKE-61"
+      ],
+      "historical_remaining_pointer": "/tasks/69",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP14.T02",
+      "coverage_pool": "RW15",
+      "action_refs": [
+        "INTAKE-61",
+        "M31-FINANCIAL-CONTRACT"
+      ],
+      "historical_remaining_pointer": "/tasks/70",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP14.T03",
+      "coverage_pool": "RW15",
+      "action_refs": [],
+      "historical_remaining_pointer": "/tasks/71",
+      "independent_dispatch": "UNKNOWN_REVIEW_HISTORICAL_OBLIGATION_AND_CURRENT_LEASE_BEFORE_DISPATCH"
+    },
+    {
+      "task_id": "WP14.T04",
+      "coverage_pool": "RW15",
+      "action_refs": [
+        "INTAKE-61",
+        "M78-WP14-PURE-IO"
+      ],
+      "historical_remaining_pointer": "/tasks/72",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    },
+    {
+      "task_id": "WP14.T05",
+      "coverage_pool": "RW15",
+      "action_refs": [
+        "M78-WP14-PURE-IO"
+      ],
+      "historical_remaining_pointer": "/tasks/73",
+      "independent_dispatch": "USE_EXISTING_OWNER_ACTION_ONLY"
+    }
+  ],
+  "consumption_transitions_not_remaining_actions": [
+    {
+      "source_mission": 59,
+      "state": "CONSUMED_IN_C31_NOT_PRODUCT_DONE",
+      "evidence": "target-refresh.json"
+    },
+    {
+      "source_mission": 63,
+      "state": "CONSUMED_IN_C31_NOT_PRODUCT_DONE",
+      "evidence": "target-refresh.json"
+    },
+    {
+      "source_mission": 64,
+      "state": "CONSUMED_IN_C31_NOT_PRODUCT_DONE",
+      "evidence": "target-refresh.json"
+    }
+  ],
+  "no_new_estimate": "Historical hour bands are not carried forward as estimates. No measured duration/throughput/percentage is asserted.",
+  "deduplication": [
+    "73 owns numeric procurement and privacy on the same runtime path;75 shell/scanner kept separate.",
+    "Single finite intake action per pending release61/65/66. Already consumed59/63/64 do not remain in intake queue.",
+    "52/62/67/68/69 stay with current source owners; scopes referenced by multiple tasks are not duplicate jobs.",
+    "Coverage pools are inherited accountability containers, not22 additional work items. Task queue references actions and historical obligations; unknown independence stays unknown."
+  ],
+  "global_gate_contract": {
+    "S0_functional_eight_selections": {
+      "state": "NOT_RUN_REQUIRED_ON_SAME_FINAL_ACCEPTED_MATERIAL_CANDIDATE",
+      "recipes": [
+        {
+          "id": "CI-SF",
+          "request": {
+            "package": "sucafina",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "modules/sucafina"
+        },
+        {
+          "id": "CI-CLI",
+          "request": {
+            "package": "cli",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "apps/cli"
+        },
+        {
+          "id": "CI-APP-SRC",
+          "request": {
+            "package": "app",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "packages/app-shell"
+        },
+        {
+          "id": "CI-APP-BROWSER",
+          "request": {
+            "package": "app",
+            "runner": "bun",
+            "args": [
+              "test-browser"
+            ]
+          },
+          "directory": "packages/app-shell"
+        },
+        {
+          "id": "CI-ATLAS-BUSINESS",
+          "request": {
+            "package": "atlas-boundary",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "30000"
+            ]
+          },
+          "directory": "modules/atlas/boundary"
+        },
+        {
+          "id": "CI-UI-OPERATIONS",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/operations.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell"
+        },
+        {
+          "id": "CI-UI-DECISIONS",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/decisions.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell"
+        },
+        {
+          "id": "CI-UI-REPORTS",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/reports.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell"
+        }
+      ],
+      "constraints": "Production config, exact nominal spec selector, one worker, zero retries, one repetition as documented in final-bundle README and canonical request builder; preserve source selection and runtime evidence.",
+      "additional_suites_preserved": "Inherited plan/Atlas/Omni/unit-rest/e2e matrices, cold --force semantics and exact runtime evidence. Eight nominal selections do not replace the inherited suites.",
+      "no_ninth_final_recipe_from_surgical_requests": true,
+      "required_not_run": [
+        "C/G7",
+        "D/G8",
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06",
+        "FINAL-review-1",
+        "FINAL-review-2",
+        "FINAL-review-3"
+      ],
+      "scope": {
+        "work_packages": 15,
+        "tasks": 74,
+        "criteria": 1610,
+        "contracts": 17,
+        "profiles": 5,
+        "skills": 18,
+        "packs": 8,
+        "operations": 39
+      },
+      "GLOBAL_RELEASE": false,
+      "rule": "Eight minimum recipes remain exactly unchanged;12 surgical requests neither replace these nor create a ninth final recipe. All inherited plan/Atlas/Omni/unit/e2e suites remain mandatory.",
+      "historical_source_binding": {
+        "source": {
+          "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json"
+        },
+        "candidate": {
+          "symbol": "C28",
+          "W": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+          "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+          "parent": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+        },
+        "candidate_binding": {
+          "symbol": "C28",
+          "W": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+          "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+          "parent": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "qualification": "HOLD_NOT_RUN",
+          "source_snapshot_S": "NOT_CREATED_BY60",
+          "required_executor_record": "Exact checkout/candidate tree/request/selection/runtime/config/tooling/fixture/run/attempt/job/artifact identities; source results never reattributed toC28",
+          "rule": "C28 is complete released Reports48 material prepared for validation. Candidate construction does not close qualification or permit unchanged failing journeys."
+        },
+        "meaning": "Historical C28 envelope preserved only; not executable qualification authorization on the current or final candidate."
+      },
+      "audited_candidate": {
+        "name": "C31",
+        "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+        "observed_at_utc": "2026-11-15T03:17:23Z",
+        "qualification": "HOLD_NOT_RUN",
+        "cutoff_rule": "Bounded immutable snapshot. Later branch movement requires a new delta; no live-head guarantee."
+      },
+      "final_execution_binding": {
+        "state": "UNBOUND_NOT_RUN",
+        "owner": "S0",
+        "requires": "Freeze exact final composed material C and bind every required recipe/suite/AM/review to its actual W/S/tree/request/config/runtime/run/job; never reuse historicalC28 or sourcePASS as finalC evidence."
+      }
+    },
+    "budgets": {
+      "P03": {
+        "request_default_ms": 120000,
+        "individual_test_and_fixture_ms": 180000,
+        "original_assertion_lines": 72,
+        "state": "HOLD_NO_IDENTICAL_RETRY_MATERIAL_CAUSAL59_REQUIRED"
+      },
+      "MI07": {
+        "request_default_ms": 120000,
+        "cooperative_deadline_ms": 225000,
+        "individual_test_ms": 240000,
+        "state": "HOLD_ORIGINAL_FINANCIAL_CAPTURE_NO_UNCHANGED_RETRY"
+      }
+    },
+    "gates": {
+      "checks_owner": 45,
+      "epic_owner": "S0",
+      "final_acceptance": "S0",
+      "C_G7": "OPEN",
+      "D_G8": "OPEN",
+      "AM01_AM06": "OPEN",
+      "three_FINAL_reviews": "OPEN",
+      "eight_functional_selections": "OPEN",
+      "target_tests": "NOT_RUN",
+      "GLOBAL_RELEASE": false
+    },
+    "frozen_scope": {
+      "WPs": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610,
+      "resident_profiles": 5,
+      "skills": 18,
+      "packs": 8,
+      "operations": 39,
+      "AM": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ]
+    }
+  },
+  "execution_by78": "NONE"
+}

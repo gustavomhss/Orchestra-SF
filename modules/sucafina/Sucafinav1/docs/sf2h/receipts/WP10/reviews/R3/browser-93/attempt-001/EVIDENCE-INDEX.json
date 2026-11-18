@@ -1,0 +1,142 @@
+{
+  "schema": "sf2h.r3.evidence-index.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 93,
+  "actor": "S3-R3",
+  "phase": "PRELIMINARY_ONLY",
+  "mode": "read_only_GitHub_MCP",
+  "authorship": "none",
+  "testsTriggered": 0,
+  "dispatchesTriggered": 0,
+  "source": {
+    "branch": "sf2-stack",
+    "candidate": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+    "reviewBranch": "review-runtime-final",
+    "reviewAck": "a332fab7a142d49e4b98a9d1e2e26dcaf9839de7",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "missionControl": "6c1b346633f7d00997e76f13eec21d6ebd901332",
+    "finalCandidateFrozen": false
+  },
+  "manifests": {
+    "sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "profiles": 5,
+    "skills": 18,
+    "mcpPacks": 8,
+    "operations": 39,
+    "profileSource": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+    "sourceSkillsCount": 18,
+    "nativeProbe": {
+      "profiles": 1,
+      "skills": 1,
+      "operations": 1
+    }
+  },
+  "owner68Evidence": {
+    "commit": "edb91ea6466683437f13bfb983d473303e12cdd4",
+    "material": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "loads": 25,
+    "skills": 18,
+    "profiles": 5,
+    "bindings": 39,
+    "positiveSdkMcp": 9,
+    "positivePublicTool": 4,
+    "additionalRealDomainUi": 4,
+    "additionalSyntheticProjection": 3,
+    "missingCreditedPositive": 23,
+    "integratedAM": "NOT_RUN"
+  },
+  "native64": {
+    "run": 43667749802,
+    "head": "e148ff33a1c3f4864d039f5d443934173b8e9030",
+    "status": "success",
+    "tests": "158 component PASS",
+    "productTaskExecuted": false,
+    "installedAM": false
+  },
+  "native90": {
+    "observedHead": "74667973b737bb9dd1ee448d54ef32365fe0734e",
+    "sourceCommitParent": "446e3a9bc0aa0512f2bda4fe83d2dd4f9e1abb44",
+    "integratedIntoObservedC": false
+  },
+  "scanner75": {
+    "controls": {
+      "run": 43672349552,
+      "head": "209c613895a2555ba7de8befc33f1bd41b263f62",
+      "results": "7PASS real ClamD clean/EICAR/error/down/malformed"
+    },
+    "journeys": {
+      "run": 43675784039,
+      "job": 132695512980,
+      "attempt": 1,
+      "head": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "parentCandidate": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+      "parentTree": "b325894e636ae31db80886bb9ca2add1ce4ec126",
+      "cases": "5PASS/0FAIL",
+      "artifact": 14146162056,
+      "artifactSha256": "11fd4542d0a29a1841a0a640b7100cf04a340b0948db60a13139c262898a8d21",
+      "artifactBytes": 319886,
+      "actualRunStatus": "success"
+    },
+    "am05OnC": "NOT_PROVEN"
+  },
+  "exports": {
+    "mission66Commit": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+    "gitOriginalBlobs": {
+      "R1": 10,
+      "R2": 2,
+      "R3": 2,
+      "total": 14
+    },
+    "historicalActions": [
+      {
+        "run": 43667294352,
+        "artifactCount": 0
+      },
+      {
+        "run": 43667789028,
+        "artifactCount": 0
+      },
+      {
+        "run": 43668383518,
+        "artifactCount": 0
+      }
+    ],
+    "reader83BranchHead": "a1be5ae4e7e934ca1c47674ee0b166cc560e2b31",
+    "status": "NO_VISUAL_GALLERY_ACCEPTED",
+    "counterEvidence": "Git originals exist even without Actions zip",
+    "hashMatchIndependent": "NOT_RUN",
+    "renderedPagesReviewed": 0
+  },
+  "finalChecks": {
+    "nominalRecipes": 8,
+    "nominalPlaywrightTests": {
+      "operations": 5,
+      "decisions": 4,
+      "reports": 4
+    },
+    "typechecks": 5,
+    "e2eTypecheck": "SOURCE_CONFIG_EXISTS_NOT_EXECUTED",
+    "atC44WorkflowRunsObserved": 0,
+    "aggregateEpic": "NOT_VERIFIED",
+    "AM": [
+      "OPEN",
+      "OPEN",
+      "OPEN",
+      "OPEN",
+      "OPEN",
+      "OPEN"
+    ],
+    "C_G7": "NOT_OBSERVED",
+    "D_G8": "NOT_OBSERVED",
+    "D": "NOT_OBSERVED",
+    "globalRelease": false
+  },
+  "limitations": [
+    "No tests/checks/dispatch triggered",
+    "No local render or hash comparison",
+    "Owner-authored source receipts do not replace independent C qualification",
+    "CI run metadata and artifact metadata independently queried; ZIP member hash claims remain source-index evidence",
+    "Review branch remains source-head independent and is not itself a product C/D"
+  ]
+}

@@ -1,0 +1,275 @@
+{
+  "schema": "sf2h.product-ci200.queue.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 200,
+  "epoch": "product-ci-e6-browser200",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "model": "GPT-6",
+  "session_id": null,
+  "github_actor": "gustavomhss",
+  "product": {
+    "sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+    "accepted_final_C": false
+  },
+  "ready_new_unique_work": [],
+  "in_flight": [],
+  "completed_new": [
+    {
+      "batch": "B6-C08-LIFECYCLE",
+      "run_id": 43775214053,
+      "S": "12a1a84593c5b060a1168faf607e8b7abe2bfab8",
+      "conclusion": "success"
+    },
+    {
+      "batch": "B7-F04-ROUTES",
+      "run_id": 43775606150,
+      "S": "30fdda6d68a0f8d917ba75136b0124f8aac80966",
+      "conclusion": "success"
+    },
+    {
+      "batch": "B8-AM-NEW-PROOF-FILES",
+      "run_id": 43775802204,
+      "S": "63dd323ae114238d817a915d3b97d6ae5f5f66e5",
+      "conclusion": "failure"
+    }
+  ],
+  "blocked": [
+    {
+      "id": "193-DECISIONS",
+      "state": "WAIT_CONSUMER_CAS",
+      "owner": 189,
+      "author": 193,
+      "selector": "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "pre": "6183175ebce968280b61668085d27771697a4b64",
+      "required_post": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+      "reason": "W still has preblob; previous B1 failed, unchanged failing test cannot be repeated"
+    },
+    {
+      "id": "A01-A11-PROJECTIONS",
+      "state": "WAIT_CONSUMER_CAS",
+      "owner": 189,
+      "authors": [
+        177,
+        176
+      ],
+      "selectors": [
+        "Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "Sucafinav1/test/native-ui-contract/operations.test.ts"
+      ],
+      "required_postblobs": {
+        "domain": "eae532dae73f282d9cefd66228da15fc26b63040",
+        "operations": "02b5f163387aaee657336f5544003ab123af5dd4"
+      },
+      "reason": "W contains neither projection implementation; B2 import failure not rerunnable without new blobs"
+    },
+    {
+      "id": "205-S05-NEWLINE",
+      "state": "WAIT_AUTHOR_THEN_189_CAS",
+      "owner": 205,
+      "consumer": 189,
+      "selector": "./test-browser/sucafina-native/s05.test.ts",
+      "current_source_blob": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "current_test_blob": "5d02157e04299a299cd3c4fada3dd19913a59598",
+      "prior_run": 43773852118,
+      "reason": "B5 7PASS1FAIL S05 owner-switch newline; unchanged, 182 F03 /183 S01/S02 green historically"
+    },
+    {
+      "id": "194-U15",
+      "state": "WAIT_189_CAS_AND_F04_LIVE_INSTALL",
+      "owner": 189,
+      "author": 194,
+      "selector": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+      "pre": "1d59507133649d2ca57c0c30e2507193f35181fd",
+      "required_post": "01e56d1ac9cb3930f2c0486e15328e136a0a3e04",
+      "reason": "requires private 0700 installation, 0600 manifest, original valid host URLs and real Microsoft requester/holder/denied; cannot pass unauthenticated"
+    },
+    {
+      "id": "195-U39-U40",
+      "state": "WAIT_189_CAS_206_AND_F04_LIVE_INSTALL",
+      "owner": 189,
+      "authors": [
+        195,
+        206
+      ],
+      "selectors": [
+        "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts"
+      ],
+      "pre": [
+        "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+        "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926"
+      ],
+      "required_post": [
+        "285db9bfdd046366f8fd814991f9f0724eff445f",
+        "83ee904b4ecf79248410a7714bb63ed7baf4aaf5"
+      ],
+      "reason": "no accepted 189 consumed postblobs; 206 may supersede, real CAP04/CAP05 install+source read/save/actor prerequisites missing"
+    },
+    {
+      "id": "196-AM01-AM02",
+      "state": "WAIT_189_CONSUME_AND_OWNER_FIX",
+      "owner": 196,
+      "consumer": 189,
+      "reason": "196 newer profile/performance proofs not in W; older AM01 failed shared hypothetical source; AM02 passed only synthetic component"
+    },
+    {
+      "id": "197-AM03-AM04",
+      "state": "WAIT_189_CONSUME_AND_OWNER_FIX",
+      "owner": 197,
+      "consumer": 189,
+      "reason": "197 newer real isolation/single-effect proofs not in W; prior AM03 import ERROR"
+    },
+    {
+      "id": "198-AM05-AM06",
+      "state": "WAIT_189_CONSUME",
+      "owner": 198,
+      "consumer": 189,
+      "reason": "198 scanner/rollback and Relay new proofs not yet integrated; AM05 older real scanner component green only"
+    },
+    {
+      "id": "199-F04-D01",
+      "state": "WAIT_189_CONSUME_AND_REAL_DESKTOP_HARNESS",
+      "owner": 199,
+      "consumer": 189,
+      "reason": "199 newer fixture/desktop proof unconsumed; route contract green not real installed authenticated or packaged Electron D01"
+    },
+    {
+      "id": "C-FINAL-8-PLUS-EPIC",
+      "state": "WAIT_189_ACCEPT_FINAL_C",
+      "owner": 189,
+      "consumer": 200,
+      "reason": "no same-C accepted candidate and mandatory installed runner; historical snapshots cannot be rebranded"
+    },
+    {
+      "id": "G7-C_AND_G8-D",
+      "state": "WAIT_190_AND_189_ACCEPT_C_D",
+      "owners": [
+        190,
+        189
+      ],
+      "reason": "G7 needs actual C; D append-only evidential separate and G8 in D; 200 must not duplicate compiler guards"
+    }
+  ],
+  "reconciled_prior": [
+    {
+      "batch": "B1",
+      "W": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "run_id": 43772149086,
+      "result": "3PASS_8FAIL_DECISIONS_EFFECT_DECODER"
+    },
+    {
+      "batch": "B2",
+      "W": "e344a6685e7244ea65b20031ae6f917bcec819be",
+      "run_id": 43772487366,
+      "result": "48PASS_2IMPORT_ERROR_A01_A11_MISSING_PROJECTIONS"
+    },
+    {
+      "batch": "B3",
+      "W": "77e58de895b5157b2a32e3427483bd12f40a7525",
+      "run_id": 43772869717,
+      "result": "31PASS_F01_A12_NEGATIVE_NOT_NATIVE_POSITIVE"
+    },
+    {
+      "batch": "B4",
+      "W": "25038d3d83a3ffc58b1011c54770c1a985ffff32",
+      "run_id": 43773234546,
+      "result": "20PASS_AM_NEGATIVE_ONLY"
+    },
+    {
+      "batch": "B5",
+      "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "run_id": 43773852118,
+      "result": "7PASS_1FAIL_BROWSER_S05_NOT_LIFECYCLE"
+    }
+  ],
+  "final_C_minimum_8": [
+    {
+      "id": "CI-SF",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": []
+    },
+    {
+      "id": "CI-CLI",
+      "package": "cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": []
+    },
+    {
+      "id": "CI-APP-SRC",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "bun",
+      "args": []
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "bun",
+      "args": [
+        "test-browser"
+      ]
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "package": "atlas-boundary",
+      "directory": "modules/atlas/boundary",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000"
+      ]
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/operations.spec.ts"
+      ]
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/decisions.spec.ts"
+      ]
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/reports.spec.ts"
+      ]
+    }
+  ],
+  "final_more": [
+    "epic/e2e bundle from AGENTS",
+    "all required additional suites from epic",
+    "AM01–AM06 real native witnesses",
+    "installed F04 and desktop D01",
+    "C/G7 compiler and guard190",
+    "D/G8 separately after permitted append-only D",
+    "R01/R02/R03 independent reviews"
+  ],
+  "next_event": "189 CAS consumes verified source postblob or 196/197 author supplies fixed patch; then re-read HEAD/tree and relevant blobs, reconcile Actions, dedup, dispatch only exact causal selector",
+  "dispatcher_owner": 200,
+  "compiler_owner": 190,
+  "integrator_owner": 189,
+  "reason_for_checkpoint": "NO_UNIQUE_READY_SELECTION on observed W after B6 B7 B8; other requests blocked causally, NOT quota-based stop",
+  "native_goal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}

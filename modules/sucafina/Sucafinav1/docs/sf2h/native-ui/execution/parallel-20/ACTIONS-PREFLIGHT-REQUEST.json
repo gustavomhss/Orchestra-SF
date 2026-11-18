@@ -1,0 +1,80 @@
+{
+  "schema": "sf2h.native-ui.preflight.github-actions.v1",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "ux-20-dispatch",
+    "immutable_canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "design_source_head_before_adapter": "805d7f798dddd138009d9ddf05544cd88360a0a4",
+    "previous_approved_head": "805d7f798dddd138009d9ddf05544cd88360a0a4",
+    "next_validation_parent_sha": "1a9ac1a0cf089fa6e574c59883e8f66c18d50800"
+  },
+  "workflow": "test-ci.yml",
+  "method": "ci-run-linux-<request-id> temporary snapshot pushed to existing workflow, cleanup by existing job; do not create a new workflow/controller",
+  "normalized_request": {
+    "package": "sucafina",
+    "packageSelector": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "node",
+    "args": [
+      "Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/preflight-actions.node-smoke.mjs"
+    ],
+    "env": {}
+  },
+  "authorized_scope": "documentation-only preflight; product CI 101 and compiler/guards 45 retain their separate authority",
+  "assertions": [
+    "validate_dispatch.py document-only on snapshot",
+    "validate_plan.py --strict with exact SHA-pinned immutable canonical campaign",
+    "21 adversarial launch-input unittest regressions",
+    "TypeScript parser diagnostics empty for host-signatures.ts, component-signatures.ts, route-signatures.ts"
+  ],
+  "run_constraints": [
+    "ONLY GitHub Actions",
+    "No local tests/checks or Python execution",
+    "No new workflow, no product tests, no second scheduler",
+    "No product/CI package mutations",
+    "One causal request, source SHA+tree+normalized request evidence",
+    "Do not claim GO on green preflight; N0 independent review and leases still required"
+  ],
+  "status": "ACTIONS_21_REGRESSIONS_AND_TS_PARSER_PASS_INDEPENDENT_N0_PENDING",
+  "actions_run": null,
+  "actions_job": null,
+  "actions_attempt": null,
+  "verdict": "PASS_DOCUMENTARY_NOT_AUTHORING_GO",
+  "canonical_materialization": {
+    "strategy": "GitHub Actions only: git fetch exact pinned canonical commit, git show exact campaign blob into ephemeral temp file",
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "expected_blob_sha": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "behavior": "Fail closed on missing object, hash mismatch, empty content or git fetch errors; do not mutate the PR99 tree"
+  },
+  "first_actions_attempt": {
+    "run_id": 43706300252,
+    "job_id": 132788011981,
+    "head_sha": "2879168f34bc40b84f0c91f4c473e541a9fc1f15",
+    "conclusion": "failure",
+    "cause": "Canonical campaign absent in PR99 checkout; all three Node test cases stopped at shared existence assertion before Python started",
+    "evidence": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43706300252",
+    "disposition": "FIX_CAUSAL_INPUT_NO_CLAIM_OF_PYTHON_TEST_PASS"
+  },
+  "last_actions_attempt": {
+    "run_id": 43724291296,
+    "job_id": 132842733633,
+    "snapshot_sha": "058e8226193243e70ca36408c0da34204e5c8fa6",
+    "run_attempt": 1,
+    "conclusion": "success",
+    "tests": {
+      "node": 4,
+      "python_negative": 21,
+      "typescript_parser": 3,
+      "criteria": 1610
+    }
+  },
+  "legacy_pass": {
+    "run_id": 43706901262,
+    "job_id": 132789826273,
+    "snapshot_sha": "87b536aca6ff3e444c468362c991decb23e104b4",
+    "regressions": 12,
+    "status": "HISTORICAL_PASS_BEFORE_LAUNCH_GUARD_FIX"
+  },
+  "new_tests_count": 21,
+  "global_release": false
+}

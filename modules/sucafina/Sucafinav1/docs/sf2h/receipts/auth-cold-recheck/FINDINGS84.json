@@ -1,0 +1,226 @@
+{
+  "schema": "sf2h.auth-cold-recheck.findings.v1",
+  "mission": 84,
+  "base_review": "M70",
+  "reviewed_against": {
+    "review70": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "review70Doc": "9c6946c31887ca1899a99ce120921c8bf937e721",
+    "source72": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "source72Tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+    "terminal72": "2690de74b0581130ae92e1129d986d31d1663fe8",
+    "source73": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "source73Tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+    "terminal73": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+    "source74": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+    "source74Tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+    "terminal74": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+    "target": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "targetTree": "94be5190a25b973af4ca647db5149e2ecec6df37"
+  },
+  "target_kind": "observed sf2-stack C37, not accepted final C",
+  "semantics": {
+    "FIXED": "causal source flaw removed in inspected immutable work, with scoped hosted behavior where indicated",
+    "OPEN": "mandatory behavior absent or known unresolved on inspected target; blocks claiming target closure",
+    "REGRESSED": "previously integrated and proven fix reintroduced; none established in this inspection",
+    "MISSING_PROOF": "necessary candidate-specific/dynamic evidence not available, never implicitly passing"
+  },
+  "findings": [
+    {
+      "id": "M70-AUTH-01",
+      "severity": "P2 / MEDIUM",
+      "origin": "challenge/session/revocation state grew without bounds; never-issued logout markers",
+      "source": {
+        "status": "FIXED",
+        "commit": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+        "tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+        "terminal": "2690de74b0581130ae92e1129d986d31d1663fe8",
+        "cause_removed": [
+          "durable issuance and consumed/pending/completed parent correlation",
+          "unknown handle denied before pending fence or SQLite write",
+          "atomic shared quotas 4096 records/512 challenges/33554432 ciphertext bytes/65536 each",
+          "periodic batch<=128 expiry collection outside business scope",
+          "retire protects pending callback and refresh/restart/two-instance lookups"
+        ],
+        "evidence": [
+          "runtime/local-identity.ts:45-97,120-182,184-230",
+          "runtime/auth-maintenance.ts:4-7,22-50,59-75,84-154,170-252",
+          "runtime/local-store.ts:64-77,190-211",
+          "local/entry.ts:102-108,163-165,252"
+        ],
+        "blobs": {
+          "runtime/local-contract.ts": "d82b40928a235f2d249e45e59732f281dfded97f",
+          "runtime/local-identity.ts": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+          "runtime/local-store.ts": "7cca20a0fc9741c0b57bda9684e5e69fedcc027b",
+          "runtime/auth-maintenance.ts": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+          "local/entry.ts": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877"
+        },
+        "actions": {
+          "before": {
+            "run": 43671182262,
+            "job": 132681354612,
+            "status": "EXPECTED_FAIL",
+            "test_fail": 1,
+            "control": "unknown handles grew authentication_payloads from 1 to 33"
+          },
+          "after": {
+            "run": 43671466268,
+            "job": 132682240447,
+            "head": "dda8ba9d0624b921d7b206f96c55ea9aa25d4955",
+            "pass": 138,
+            "fail": 0,
+            "skips": 2,
+            "assertions": 1279
+          }
+        }
+      },
+      "target": {
+        "status": "OPEN",
+        "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+        "tree": "94be5190a25b973af4ca647db5149e2ecec6df37",
+        "evidence": "local-identity.ts old blob 9b501e6c0a4ee13764fd94be755077a3b1bb5844; local-store.ts a36440a750d5671a34c3ab41b2af48093af9f7ee; auth-maintenance.ts absent; entry.ts old blob 0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "risk": "The original unbounded revocation/retention logic remains in this observed target; source 72 is not composed."
+      },
+      "candidate_proof": {
+        "status": "MISSING_PROOF",
+        "required": "85 composed 72+readonly59 in real Microsoft entry with races/read-root/GC/refresh/logout/restart/two instances, then 71's exact C and 45 checks",
+        "mission85": "PREPARED_NOT_STARTED at package 606c253; auth-retention-fix head remains 2690de74"
+      },
+      "owner": "85 for auth successor/71 for composition/45 CI/ S0 acceptance"
+    },
+    {
+      "id": "M70-ISO-01",
+      "severity": "P2 / MEDIUM",
+      "origin": "hidden Procurement record ID reveals presence/record version via 404,409,403",
+      "source": {
+        "status": "FIXED",
+        "commit": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+        "tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+        "terminal": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+        "cause_removed": [
+          "all non-create request operations check visibleRequests before conflict/transition",
+          "missing/hidden both return public 404 without version metadata",
+          "visible still executes conflict/CAS 409 and holder/role gates; no commit for denied path",
+          "create ignores caller supplied id"
+        ],
+        "evidence": [
+          "runtime/procurement.ts:473-489,553-555,615-655",
+          "src/requests.ts:1-9",
+          "runtime/application.ts:347-357"
+        ],
+        "blobs": {
+          "runtime/procurement.ts": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "runtime/application.ts": "81f469822a2756b3e1ca87effbf5fd865a56010d"
+        },
+        "actions": {
+          "after": {
+            "run": 43671737333,
+            "job": 132683058916,
+            "head": "2c0b92951ea5a4d15cc40a473860465cb84ca61d",
+            "pass": 29,
+            "fail": 0,
+            "assertions": 889,
+            "filtered": 15
+          }
+        },
+        "tests": "10 actions missing/hidden across equal/divergent versions, full SQLite no-effect, authorized CAS/reject/approve, upload boundary"
+      },
+      "target": {
+        "status": "FIXED",
+        "qualification": "STATIC_BLOB_IDENTITY_ONLY",
+        "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+        "tree": "94be5190a25b973af4ca647db5149e2ecec6df37",
+        "evidence": "Both target procurement.ts and application.ts Git blobs exactly match source 73. The status/visibility guard is present at target."
+      },
+      "candidate_proof": {
+        "status": "MISSING_PROOF",
+        "required": "71 composed POST over actual auth/Request/Procurement and upload interfaces on same C; verify 404 status, headers, body, audit and SQLite equivalence vs invisible/missing at stale/equal/future version, visible CAS409, role/holder/approval after 74 transport; verify egress owned by 86 if changed."
+      },
+      "owner": "71 exact target,86 application egress/privacy, S0 acceptance"
+    },
+    {
+      "id": "M70-HTTP-01",
+      "severity": "P2 / MEDIUM",
+      "origin": "Node→Web stream body could fully buffer Workbench before rejecting 65536 byte budget",
+      "source": {
+        "status": "FIXED",
+        "commit": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+        "tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+        "terminal": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+        "cause_removed": [
+          "NodeStream→bounded ReadableStream with incremental byte counter before enqueue",
+          "reject over-limit before EOF at source, including no CL and chunked",
+          "readRequestBody bounded UTF8 only for Workbench before JSON/admit/dispatch",
+          "abort/cancel and private response; preserve origin/proxy fences and allowed binary paths"
+        ],
+        "evidence": [
+          "apps/cli/src/sucafina-product/installation.ts:40-99,106-114",
+          "runtime/request-body.ts:12-20,23-107,110-145",
+          "product/interface/http.ts:91-105"
+        ],
+        "blobs": {
+          "apps/cli/src/sucafina-product/installation.ts": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+          "runtime/request-body.ts": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+          "product/interface/http.ts": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38"
+        },
+        "actions": {
+          "node": {
+            "run": 43673455601,
+            "job": 132688348708,
+            "head": "4185f64af08e01c885c471db0988a2da3c951841",
+            "pass": 3,
+            "fail": 0,
+            "cancelled": 0
+          },
+          "bun": {
+            "run": 43673697145,
+            "job": 132689107232,
+            "head": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+            "pass": 15,
+            "fail": 0,
+            "assertions": 341
+          }
+        },
+        "qualification": "Node suite isolates real bridge but not full Microsoft import graph; Bun's Microsoft domain peer is synthetic; integration not demonstrated."
+      },
+      "target": {
+        "status": "OPEN",
+        "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+        "tree": "94be5190a25b973af4ca647db5149e2ecec6df37",
+        "evidence": "installation.ts old blob 21236af83e4de879242fd298d9e15a9923f3bf41; product/interface/http.ts old blob 164c8208067d9feaa2c720adfd9e8bf27e272715; request-body.ts absent.",
+        "risk": "Original Node stream/Workbench read-before-budget behavior remains in this observed target."
+      },
+      "candidate_proof": {
+        "status": "MISSING_PROOF",
+        "required": "71 applies three exact 74 product blobs (plus dependency/map patches) and runs real installed listener early 413 before EOF, chunked/multibyte/understated & missing CL, disconnect/cancel/cleanup, original Request and auth, no effects, 25MiB contract path while respecting lower host cap; qualify procurement consumer after composition",
+        "holds": [
+          "H74-45",
+          "H74-MAP",
+          "H74-25MIB",
+          "H74-PROCUREMENT",
+          "H74-COMPOSED"
+        ]
+      },
+      "owner": "74 owner for any transport patch;71 composition;45 guards;S0 acceptance"
+    }
+  ],
+  "cross_finding": {
+    "status": "OPEN",
+    "reason": "At observed C37 only 73 is integrated. No exact accepted final C/manifest or combined 72+73+74 candidate-specific run was observed.",
+    "no_regressed_claim": true,
+    "no_final_three_reviews_claim": true,
+    "required_integrity": [
+      "Git blob equivalence after 71 composes",
+      "new candidate SHA/tree and manifest",
+      "Actions jobs point to exact C/test/fixture map",
+      "interactions auth readroot + procurement identity/status + HTTP bounder",
+      "45 compiler/guards",
+      "three independent campaign final reviews on same accepted C",
+      "unchanged C→D receipt-only guard envelope"
+    ]
+  },
+  "reproducibility": {
+    "new_tests_dispatched": false,
+    "method": "GitHub MCP direct source/contract/test/workflow/Actions jobs and decoded logs",
+    "CI_snapshots_diff": "W→S one .ci-run.json only for 72-R1/73-R1/74-Node/74-Bun"
+  }
+}

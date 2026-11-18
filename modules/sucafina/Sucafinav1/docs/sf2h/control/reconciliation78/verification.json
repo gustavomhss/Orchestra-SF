@@ -1,0 +1,85 @@
+{
+  "schema": "sf2h.reconciliation78.document-verification.v1",
+  "state": "STATIC_DOCUMENT_RECONCILIATION_VERIFIED",
+  "not_a_product_test": true,
+  "canonical_criterion_count": 1610,
+  "unique_criterion_count": 1610,
+  "task_count": 74,
+  "wp_count": 15,
+  "contract_count": 17,
+  "criterion_identity_text_pointer_drift": 0,
+  "historical_assessment_changes": 0,
+  "task_pool_assignment_count": 74,
+  "task_pool_duplicates": 0,
+  "criterion_events": 675,
+  "criterion_ids_with_delta_reference": 585,
+  "canonical_outputs": 19,
+  "inherited_ledger_anomalies_preserved": 32,
+  "pending_ids_preserved": 56,
+  "prior47_to57_findings_preserved": 28,
+  "additional60_findings_preserved": 10,
+  "action_count": 25,
+  "action_status_counts": {
+    "READY_FOR_71_REVIEW_NOT_APPLIED_AT_C31": 3,
+    "PREPARED_MISSION_INPUTS_READY_ACK_NOT_AUDITED": 1,
+    "COMPLETE_INERT_PATCH_OWNER_REQUIRED": 1,
+    "COMPLETE_INERT_PATCH_AND_REPRODUCTION_READY_OWNER_REQUIRED": 1,
+    "CONCRETE_CONTRACT_READY_IMPLEMENTATION_BLOCKED_ON_AUTHORITY": 1,
+    "BLOCKED_CONTRACT_DECISION": 1,
+    "REMAINING_WORK_OWNER_REQUIRED": 1,
+    "PREPARED_PROPOSAL_OWNER_REQUIRED": 1,
+    "IN_PROGRESS_OWNER_RETAINED": 3,
+    "REVIEW_READY_IMPLEMENTATION_BLOCKED": 1,
+    "PREPARED_NO_ACK_OBSERVED": 4,
+    "ACK_IN_PROGRESS": 1,
+    "BLOCKED_ON_72_73_74_DELIVERIES": 1,
+    "BLOCKED_ON_EXPLICIT_OWNER_HANDOFF": 1,
+    "OWNER_RETAINED_NO_TERMINAL_AT_PIN": 2,
+    "BLOCKED_ON_AUTHORIZED_INTERFACE_AND_FINAL_CANDIDATE": 1,
+    "BLOCKED_ON_COMPOSED_CORRECTIONS_AND_GATES": 1
+  },
+  "current_qualification_counts": {
+    "NOT_ESTABLISHED": 1607,
+    "STATIC_FAIL": 3
+  },
+  "accepted_counts": {
+    "criteria": 0,
+    "tasks": 0,
+    "WPs": 0
+  },
+  "canonical_criterion_set_hash": {
+    "algorithm": "SHA256 of sorted IDs joined by LF, without terminal LF",
+    "value": "2fd34810120a78b56c2e8d4caf2a14166f5f6052b7d4a787730d425d921451bd"
+  },
+  "campaign_bytes": {
+    "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "git_blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "bytes": 1503706
+  },
+  "acceptance_digest": {
+    "value": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+    "status": "INHERITED_FROM60_AND71_NOT_RECOMPUTED_ALGORITHM_UNKNOWN"
+  },
+  "write_scope": "modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/",
+  "remote_publication_verification": "Exact generated file hashes and remote tree/diff readback recorded by publication receipt; this file itself cannot predict its containing commit.",
+  "execution": {
+    "product_tests": 0,
+    "CI_dispatch": 0,
+    "build": 0,
+    "typecheck": 0,
+    "guards": 0,
+    "preflights": 0,
+    "product_edits": 0,
+    "other_branch_writes": 0
+  },
+  "limits": [
+    "Snapshot-specific observations, not full runtime census.",
+    "Unknown owner or release is preserved; no abandoned-writer inference.",
+    "Zero accepted criteria does not mean zero implemented work.",
+    "No percentage or new ETA generated."
+  ],
+  "document_review": "document-review.json",
+  "document_review_open_material_findings": 0,
+  "readable_document_links": "ALL_LOCAL_RELATIVE_LINKS_RESOLVE",
+  "scope_validation": "All generated paths are inside assigned documentary namespace and have .json or .md extension."
+}

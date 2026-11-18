@@ -1,0 +1,535 @@
+{
+  "schema": "sf2h.native-review77.findings.v1",
+  "verdict": "FIX-FIRST",
+  "scope": "Independent documentary review; inferred design gaps, not executed product defects.",
+  "plan_sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+  "code_baseline": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "canonical_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "current_stack_observed": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+  "product_qualification": "NOT_RUN",
+  "findings": [
+    {
+      "id": "R77-F01",
+      "severity": "P1",
+      "title": "Transição de servidor/projeto não cobre todas as entradas do shell",
+      "blocks": [
+        "77A",
+        "77D",
+        "77E"
+      ],
+      "criteria": [
+        "WP01.T01.DOD.01",
+        "WP01.T01.CHK.02",
+        "WP01.T01.INV.01",
+        "CAMP.INV.04"
+      ],
+      "evidence": [
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md",
+          "lines": "63-73",
+          "observation": "URL explícita determina contexto; seleção visual deve acompanhá-lo.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md#L63"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "packages/app-shell/src/context/layout-route.ts",
+          "lines": "11-17",
+          "observation": "Chapter perde query/contexto no parser atual.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/app-shell/src/context/layout-route.ts#L11"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "packages/app-shell/src/orchestra/sidebar.tsx",
+          "lines": "117-124",
+          "observation": "Perfil visual usa seleção persistida.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/app-shell/src/orchestra/sidebar.tsx#L117"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "packages/app-shell/src/orchestra/sidebar.tsx",
+          "lines": "260-287",
+          "observation": "Mudança de projeto publica seleção antes de resolver rota e pode abrir Chat.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/app-shell/src/orchestra/sidebar.tsx#L260"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "packages/app-shell/src/orchestra/shell/navigation-commands.tsx",
+          "lines": "35-83",
+          "observation": "Menu/atalhos constroem rota sem tuple ou mudam seleção sem URL.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/app-shell/src/orchestra/shell/navigation-commands.tsx#L35"
+        }
+      ],
+      "scenario": "URL SF de A com seleção persistida B: um resolver novo pode servir A corretamente enquanto rodapé/comandos indicam B. Troca por teclado pode manter URL A ou abrir Chat. É risco de contrato, não defeito reproduzido de UI ainda inexistente.",
+      "correction": "77A/N0 implementa uma transição única para links, sidebar, menus, atalhos e histórico; URL explícita vence, contexto inválido não usa fallback. Publica URL, owner resolvido e seleção visual numa etapa após autenticação; troca voluntária conserva chapter permitido e remove detalhe de objeto anterior. Inclui layout-route.ts, navigation-commands.tsx, compact-navigation.ts, app.tsx ConnectionGate e language.tsx no ownership central.",
+      "future_recheck": [
+        "URL A/seleção B; A indisponível/B saudável",
+        "menu, teclado, back/forward/reload e deep link",
+        "request de A termina depois da mudança para B e não publica",
+        "SF troca projeto sem abrir Chat e sem enviar ação ao owner errado"
+      ],
+      "resolution": "Proposta fechada em CONTRACT-FREEZE.md §§1–3; adoção e implementação futuras.",
+      "later_head_triage": "PARTIAL"
+    },
+    {
+      "id": "R77-F02",
+      "severity": "P1",
+      "title": "Bootstrap de binding público e porta nativa não têm produtor definido",
+      "blocks": [
+        "77A",
+        "77B",
+        "77D"
+      ],
+      "criteria": [
+        "WP01.T01.CHK.02",
+        "WP01.T01.INV.01",
+        "WP10.T06.INV.01",
+        "WP10.QLT.10"
+      ],
+      "evidence": [
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md",
+          "lines": "11-49",
+          "observation": "Pressupõe configuração publicada da instalação e Context autorizado.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md#L11"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "packages/app-shell/src/context/server.tsx",
+          "lines": "180-193",
+          "observation": "Conexão HTTP não fornece binding SF.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/app-shell/src/context/server.tsx#L180"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "lines": "10-16",
+          "observation": "Instalação tem mount/handler; não há discovery.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/src/sucafina-product/installation.ts#L10"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "800-803",
+          "observation": "Identidade nasce no host com ProjectV2.resolve e location configurada.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/src/sucafina-product/host-context.ts#L800"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "lines": "47-105",
+          "observation": "productHttp requer surface; identity é privada; nativeHttp ainda não existe.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/host-context.ts#L47"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "lines": "53-69",
+          "observation": "Roteador legado recusa /api/native antes do product handler.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/runtime/application.ts#L53"
+        }
+      ],
+      "scenario": "O consumer adivinha mount ou trata o servidor selecionado como instalação/projeto autenticados; adicionar handler à cadeia legada não torna /api/native alcançável.",
+      "correction": "77B publica discovery metadata no HttpApi global existente com provider opcional da trusted factory e seletores fechados IDs/location; a API SF de negócio permanece no mount. /context verifica expectativa de instalação/projeto/host e autentica SF. N0 compõe porta privada nativeHttp após identity.prepare e antes de business, passando o mesmo Request preparado. Nunca derivar principal SF do Basic do Orchestra.",
+      "future_recheck": [
+        "IDs de deep link A funcionam sem usar directory B persistido",
+        "mismatch/provider ausente/cross-origin/Desktop indisponíveis sem fallback",
+        "directory retornado é workspace autorizado, nunca storage privado",
+        "endpoint montado efetivamente e Request preparado preservado"
+      ],
+      "resolution": "CONTRACT-FREEZE.md §§2,4; DISPATCH.md define novos arquivos e patches centrais.",
+      "later_head_triage": "PARTIAL"
+    },
+    {
+      "id": "R77-F03",
+      "severity": "P1",
+      "title": "Primeiro acesso e retorno Microsoft ainda não fecham a entrada nativa",
+      "blocks": [
+        "77B",
+        "77D",
+        "77E"
+      ],
+      "criteria": [
+        "WP01.T01.CHK.01",
+        "WP01.T01.CHK.02",
+        "WP01.T01.CMP.01",
+        "WP10.T01.CMP.01",
+        "WP10.INV.02"
+      ],
+      "evidence": [
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md",
+          "lines": "95-112",
+          "observation": "Reconhece cookie Path=mount e bridge opaca, sem contrato executável fechado.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md#L95"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "lines": "220-224",
+          "observation": "safeReturn aceita somente as três superfícies legadas, conservando query.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/runtime/local-identity.ts#L220"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "lines": "233-239",
+          "observation": "Bootstrap ocorre somente em path legado.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/local/entry.ts#L233"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/runtime/local-bootstrap.ts",
+          "lines": "6-29",
+          "observation": "Semeia apenas mapa ausente após membership vivo de admin; mapa vazio é intencional.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/runtime/local-bootstrap.ts#L6"
+        }
+      ],
+      "scenario": "O primeiro admin chega ao /context e não recebe inicialização equivalente ao legado, ou uma correção apressada restaura roleMap vazio. Login pode perder destino ou ampliar safeReturn indevidamente.",
+      "correction": "N0 reutiliza bootstrapLocalSurface só para Procurement no piloto e nas mesmas condições de identidade/configuração, depois de prepare. N1 entrega return-intent opaco, efêmero, limitado e sem grant; safeReturn continua apontando a dashboard com sf=native-return; o bridge revalida binding e redireciona apenas para rota nativa permitida. 72 revisa a composição; não se alteram cookies, CORS, OAuth, grupos ou safeReturn para aceitar URLs livres.",
+      "future_recheck": [
+        "admin autorizado/mapa ausente versus mapa vazio e usuário sem grupo",
+        "query duplicada, retorno externo, ticket expirado/reusado e host reiniciado",
+        "sessão expirada preserva draft somente em memória do owner e revalida mesmo principal, sem repetir comando"
+      ],
+      "resolution": "CONTRACT-FREEZE.md §4.2; composição/live aguardam release/ACK72.",
+      "later_head_triage": "PARTIAL"
+    },
+    {
+      "id": "R77-F04",
+      "severity": "P1",
+      "title": "Métodos, admissão e semântica da ação piloto ainda são ambíguos",
+      "blocks": [
+        "77B",
+        "77D",
+        "N1-consumers"
+      ],
+      "criteria": [
+        "WP10.QLT.10",
+        "WP10.INV.02",
+        "WP10.T06.QLT.01",
+        "WP04.T01.CHK.01",
+        "WP04.T02.CHK.03"
+      ],
+      "evidence": [
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md",
+          "lines": "64-89",
+          "observation": "GET/PATCH/DELETE de views e GET de análises continuam listados, embora exceção de POST seja admitida em nota.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md#L64"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+          "lines": "9-45",
+          "observation": "Inclusive reads humanos exigem POST, Origin e digest do payload exato.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/integration/human-authority.ts#L9"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+          "lines": "5-30",
+          "observation": "Operações list/open/save/remove são POST com Idempotency-Key.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/interface/views-http.ts#L5"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "lines": "13-67",
+          "observation": "list/read/output exigem POST; output atual apresenta HTML.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts#L13"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "lines": "475-507",
+          "observation": "save usa CAS e permite PR draft/pr_rejected; campo real é pr.title.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/runtime/procurement.ts#L475"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "lines": "301-350",
+          "observation": "save retorna ok/warnings; não fornece receipt C12.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/runtime/application.ts#L301"
+        },
+        {
+          "kind": "code",
+          "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "lines": "89-129",
+          "observation": "Actor é autenticado dentro da transação; Command legado não tem expectativa de owner. Hook proposto precisa usar esse actor e não só precheck no browser.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e64ed4f2e59e0baabcc8655b8067ff9eb847665/modules/sucafina/Sucafinav1/runtime/application.ts#L89"
+        }
+      ],
+      "scenario": "Equipes seguem matriz aparente e recebem recusa ou criam Request sintética para contorná-la. Piloto não nomeia uma ação e pode exibir recibo/idempotência inexistente ou chamar title-save de aprovação. Mesmo com path/payload corretos, o POST legado não carrega a expectativa de owner do draft: cookie trocado ou mount remapeado pode aceitar um ID/CAS coincidente sob outro contexto.",
+      "correction": "Preservar POST e intentos fechados de views/análises; separar DTO nativo de saída HTML sem scraping. Piloto: fila/detalhe GET por productView autorizado e edição de pr.title via POST JSON real ao endpoint existente /procurement. CAS é versions['requests:'+id], distinto da projectionVersion C02. Resultado perdido fica incerto, com leitura autorizada sem replay nem receipt inventado. Client envia X-SF-Native-Owner fechado; N0 adiciona precondição síncrona no Application, dentro da mesma transação depois da autenticação e antes do execute, comparando tuple privado/principal real; mismatch não commita. Sem alterar payload legado ou fabricar authority.",
+      "future_recheck": [
+        "Request/digest/método originais e calls diretas recusadas sem autoridade",
+        "title persistido após reload, demais campos intactos, conflito conserva tentativa",
+        "perda de resposta não duplica efeito nem atribui causalidade pela igualdade do título",
+        "rechecagem de invisibilidade/ausência depois da correção73",
+        "cookie A→B com ambos autorizados e mount A→B com ID/CAS iguais recusam o draft antigo antes de Domain.execute"
+      ],
+      "resolution": "CONTRACT-FREEZE.md §§5–6; fontes72/73/74 condicionam qualificação instalada.",
+      "later_head_triage": "PARTIAL_METHODS_RESULTS_ADDRESSED"
+    },
+    {
+      "id": "R77-F05",
+      "severity": "P1",
+      "title": "Falta precedência de saída com edição pendente antes do remount",
+      "blocks": [
+        "77A",
+        "77C",
+        "77D"
+      ],
+      "criteria": [
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "CAMP.QLT.03"
+      ],
+      "evidence": [
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md",
+          "lines": "73-116",
+          "observation": "Limpa owner e prevê draft local; não define guarda anterior à navegação.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md#L73"
+        },
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md",
+          "lines": "123-128",
+          "observation": "Cancel/unmount/clear em troca e retenção em falha precisam precedência.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/API-AND-ISOLATION.md#L123"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "packages/app-shell/src/orchestra/chapter-route.tsx",
+          "lines": "84-155",
+          "observation": "Mudança de owner desmonta árvore keyed.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/app-shell/src/orchestra/chapter-route.tsx#L84"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "lines": "417-474",
+          "observation": "Legado conserva refresh com dirty e protege beforeunload; isso não intercepta SPA.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/src/screen-shell.ts#L417"
+        }
+      ],
+      "scenario": "Clique em sidebar, atalho, back ou troca de projeto elimina a edição sem decisão. Limpeza por segurança e preservação em falha transitória não podem depender de cada chapter.",
+      "correction": "77C fornece DraftState/LeaveGuard; 77A integra antes de qualquer mutação voluntária de URL/owner. Estados clean/dirty/saving/outcome-unknown. Ficar, Descartar e sair, Revisar; revisar não salva automaticamente. Revogação/logout removem conteúdo; 503 conserva draft no owner ainda autorizado. Descartar visualmente nunca cancela uma mutação já enviada.",
+      "future_recheck": [
+        "dirty + sidebar/teclado/back mantém valores ao escolher Ficar",
+        "Revisar retorna ao formulário e foco; nenhuma gravação implícita",
+        "saving/outcome-unknown não admite novo envio concorrente",
+        "principal novo não recebe draft do anterior"
+      ],
+      "resolution": "CONTRACT-FREEZE.md §3 e DISPATCH77C/77A.",
+      "later_head_triage": "DOCUMENTARILY_ADDRESSED_NOT_RUNTIME_VERIFIED"
+    },
+    {
+      "id": "R77-F06",
+      "severity": "P1",
+      "title": "Salvar vista de Meu trabalho e entrada preferida não cabem no contrato legado",
+      "blocks": [
+        "N3-saved-views",
+        "UI32"
+      ],
+      "criteria": [
+        "WP01.T04.DOD.01",
+        "WP01.T04.INV.01",
+        "WP01.T04.CHK.02",
+        "WP01.T04.CMP.01"
+      ],
+      "evidence": [
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/SCREEN-INVENTORY.md",
+          "lines": "57",
+          "observation": "UI32 tem CRUD de views no sf-work.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/SCREEN-INVENTORY.md#L57"
+        },
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md",
+          "lines": "17-73",
+          "observation": "Hoje fixo como home e personal views existentes como persistência.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md#L17"
+        },
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-BOARDS.pdf",
+          "lines": null,
+          "observation": "Página7 contém Salvar vista em Meu trabalho.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-BOARDS.pdf"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+          "lines": "10-38",
+          "observation": "surface e filtros restritos a dashboard/planner/procurement.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/interface/personal-views.ts#L10"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+          "lines": "75-135",
+          "observation": "Validação rejeita destino/campos desconhecidos e só permite páginas legadas.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/interface/personal-views.ts#L75"
+        }
+      ],
+      "scenario": "Salvar filtros de perguntas/aprovações de sf-work não é representável. Alias falso dashboard ou localStorage perderiam semântica e isolamento.",
+      "correction": "N1 + owner do produtor reservam extensão versionada com target nativo fechado, filtros por destino e preferência de landing; migração aditiva e resolução/reautorização no servidor. Traduzir bidirecionalmente as views legadas das 28 capacidades, preservar ACL/CAS. Hoje é default somente sem preferência válida. UI32 permanece HOLD até ACK; piloto não promete essa ação.",
+      "future_recheck": [
+        "view sf-work salva/reabre com principal/contexto corretos",
+        "view legada continua válida sem recodificação destrutiva",
+        "destino removido/restrito/versão inexistente não concede acesso",
+        "entrada preferida inválida tem recuperação explícita"
+      ],
+      "resolution": "BOARD-COVERAGE.md e CONTRACT-FREEZE.md §8; não bloqueia a primeira edição de PR.",
+      "later_head_triage": "PARTIAL_STILL_OPEN"
+    },
+    {
+      "id": "R77-F07",
+      "severity": "P1",
+      "title": "Colagem de intervalos mensais fica sem contrato nativo",
+      "blocks": [
+        "N2-MonthlyGrid",
+        "N4"
+      ],
+      "criteria": [
+        "WP03.T02.SUC.03",
+        "CAMP.CMP.01",
+        "CAMP.QLT.03"
+      ],
+      "evidence": [
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md",
+          "lines": "114-118",
+          "observation": "Grid descreve célula/draft/spread/reset, sem TSV/retângulo/resultado por linha.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/UX-DESIGN.md#L114"
+        },
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/NATIVE-ARCHITECTURE.md",
+          "lines": "38",
+          "observation": "MonthlyGrid tem célula/linha/APG; não fecha colagem multi-linha.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/NATIVE-ARCHITECTURE.md#L38"
+        },
+        {
+          "kind": "canonical",
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+          "lines": "343",
+          "observation": "Task requer várias linhas/meses e colagem com inválidos/locks/versionamento.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json#L343"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+          "lines": "71-110",
+          "observation": "TSV/límites/locks e retenção das alterações não salvas já existem.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts#L71"
+        },
+        {
+          "kind": "code",
+          "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "path": "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+          "lines": "90-106",
+          "observation": "Resultado de persistência por linha.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/planner/monthly-host.ts#L90"
+        }
+      ],
+      "scenario": "Um editor célula/linha parece aderente às pranchas3/16, mas perde colagem retangular, recusas seletivas e reaplicação das correções exigidas pelo canônico.",
+      "correction": "N2/N4 congelam seleção retangular/TSV, preview de inválidas/locks, texto original, CAS por linha, parcial/conflict e reenvio só de correções. Consumir monthly-edit/monthly-host existentes; sem cálculo financeiro alternativo. Mobile mantém entrada multi-linha por fluxo de prévia, não reduz capacidade a uma célula.",
+      "future_recheck": [
+        "duas linhas × três meses com texto inválido e mês bloqueado",
+        "conflito de uma linha não apaga outra",
+        "após correção, somente células restantes são reenviadas; actual/locked permanecem"
+      ],
+      "resolution": "CONTRACT-FREEZE.md §8; MonthlyGrid sai da dependência do piloto, mas continua obrigatório.",
+      "later_head_triage": "NOT_ADDRESSED"
+    },
+    {
+      "id": "R77-F08",
+      "severity": "P1",
+      "title": "Os três revisores FINAL foram redefinidos sem manter o escopo IA",
+      "blocks": [
+        "FINAL-review-dispatch",
+        "N10-final"
+      ],
+      "criteria": [
+        "WP10.T03.CMP.02",
+        "WP10.T03.CMP.40"
+      ],
+      "evidence": [
+        {
+          "kind": "plan",
+          "sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/ACCEPTANCE.md",
+          "lines": "122",
+          "observation": "Tripla proposta: arquitetura/autorização, paridade/números, UX/acessibilidade.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2f143330a0a44d34eb764ebfb851804c504edb6d/modules/sucafina/Sucafinav1/docs/sf2h/native-ui/ACCEPTANCE.md#L122"
+        },
+        {
+          "kind": "canonical",
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+          "lines": "581-672",
+          "observation": "Exige produto/UX; finanças/permissões/persistência; IA/Relay/integração, incluindo MCP/Atlas/documentos/WP14/skills.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json#L581"
+        }
+      ],
+      "scenario": "Arquitetura e UX duplicam o enquadramento de revisão enquanto nenhum revisor FINAL fica explicitamente responsável por IA/residentes/Relay/memória/documentos.",
+      "correction": "R1 produto/UX/native/a11y; R2 finanças/semântica/permissões/persistência; R3 IA/MCP/Atlas/Relay/integração/documentos/WP14/todas as fontes de skills. Arquitetura entra nos escopos pertinentes. Sem autoria dos arquivos julgados, substituição se revisor assumir implementação e mesmo candidato corrigido.",
+      "future_recheck": [
+        "dispatch dos três papéis canônicos com independência real",
+        "receipts do mesmo candidato e nenhuma obrigação substituída por missão77",
+        "AM01–06, oito seleções e C/G7–D/G8 continuam exigidos"
+      ],
+      "resolution": "DISPATCH.md e HANDOFF77.json preservam os papéis; esta missão não é FINAL de produto.",
+      "later_head_triage": "NOT_ADDRESSED"
+    }
+  ],
+  "later_plan_head": "de7da0689f1a2aba2ebe190f83d807ca949e2c5a",
+  "later_plan_triage": "LATE-DRIFT.md; findings remain pinned to reviewed SHA, not automatically open/unchanged in later head."
+}

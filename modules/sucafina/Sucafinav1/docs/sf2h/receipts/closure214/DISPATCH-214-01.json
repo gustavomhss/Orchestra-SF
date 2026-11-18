@@ -1,0 +1,96 @@
+{
+  "schema": "sf2h.product-ci214.dispatch.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 214,
+  "epoch": "product-ci-e7-browser214",
+  "sole_dispatcher": true,
+  "source_candidate": {
+    "W": "569b3213525aa6eb23741cb1034bd0f054ccd381",
+    "tree": "2656f665eaac92ea9214d685decb36f5479ed2fb",
+    "branch": "sf-closure-bundle",
+    "pr": 191,
+    "accepted_final_C": false
+  },
+  "workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator": "script/test-ci-request.ts",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "runner": "ubuntu-24.04",
+    "os": "linux",
+    "env": {},
+    "fixture_identity": "PRODUCT_W_PINNED_TEST_AND_FIXTURE_CONTENTS"
+  },
+  "diff_verified": "GitHub compare W..S: exactly one added .ci-run.json; W preserved",
+  "requests": [
+    {
+      "id": "B9-NATIVE-UI",
+      "S": "99ae47f628ec7862211b4f49de5811138f5ef5a4",
+      "Stree": "899fd7fd2a867e3fc341677f0a458568aff102f1",
+      "request_blob": "38056954038b86a6cfa45444104f976a4083412c",
+      "branch": "ci-run-linux-sf214-native-ui-1",
+      "run_id": 43780028332,
+      "attempt": 1,
+      "observed_status": "in_progress",
+      "job_ids": null,
+      "selected_files_expected": 4,
+      "selected_tests": null,
+      "counts": "PENDING",
+      "artifacts": "PENDING",
+      "omni": "PENDING",
+      "selectors": [
+        "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "Sucafinav1/test/native-ui-contract/operations.test.ts",
+        "Sucafinav1/test/native-ui-contract/work.test.ts"
+      ],
+      "timeout_ms": 120000
+    },
+    {
+      "id": "B10-AM03-IMPORT",
+      "S": "0d3a73dc100391d8d7dbfbb138de18dd55d0eb92",
+      "Stree": "799f8e219d049e5024103573a8c274679905224d",
+      "request_blob": "3dcfb7a17e196fd89d0b62f570f58b7ad2d54478",
+      "branch": "ci-run-linux-sf214-am03-1",
+      "run_id": 43780060382,
+      "attempt": 1,
+      "observed_status": "in_progress",
+      "job_ids": null,
+      "selected_files_expected": 2,
+      "counts": "PENDING",
+      "artifacts": "PENDING",
+      "omni": "PENDING",
+      "selectors": [
+        "Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts"
+      ],
+      "timeout_ms": 240000
+    },
+    {
+      "id": "B11-AM04-06",
+      "S": "052985c1dc411b95149337ea6f2682e1afce60b2",
+      "Stree": "d2d9d1dbfa22cf51420e3177a06e59a6123f3092",
+      "request_blob": "a38e3731dcdccf93bc3ae497ca8edb406badd25e",
+      "branch": "ci-run-linux-sf214-am04-06-1",
+      "run_id": 43780062327,
+      "attempt": 1,
+      "observed_status": "in_progress",
+      "job_ids": null,
+      "selected_files_expected": 6,
+      "counts": "PENDING",
+      "artifacts": "PENDING",
+      "omni": "PENDING",
+      "selectors": [
+        "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am06/native-terminal-unavailable.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am06/schedule-native-retry.test.ts"
+      ],
+      "timeout_ms": 240000
+    }
+  ],
+  "rule": "PENDING is not PASS; final same-C/installed/native/guards/reviews remain NOT_RUN",
+  "GLOBAL_RELEASE": false
+}

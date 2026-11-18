@@ -1,0 +1,100 @@
+{
+  "schema": "sf2h.mission84.delta-C39.v1",
+  "mission": 84,
+  "record_kind": "APPEND_ONLY_DELTA_AFTER_ORIGINAL_C37_REVIEW",
+  "from": {
+    "candidate": "C37",
+    "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "tree": "94be5190a25b973af4ca647db5149e2ecec6df37"
+  },
+  "via": {
+    "candidate": "C38",
+    "sha": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+    "tree": "9ad861864150f4690ad1ed3faa1f8c7164130212"
+  },
+  "to": {
+    "candidate": "C39",
+    "sha": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+    "tree": "6975ec3f93801e081f14091343f6c2f2d1b57252",
+    "branch": "sf2-stack",
+    "kind": "OBSERVED_HEAD_NOT_ACCEPTED_FINAL_C"
+  },
+  "verified_by": "GitHub REST direct commit/branch, blob readback, test source read, parent ancestry, C38 manifest cross-check",
+  "status_table": [
+    {
+      "finding": "M70-AUTH-01",
+      "source": "FIXED",
+      "target_C39": "FIXED",
+      "qualification": "STATIC_RECONCILED_72_PLUS_READONLY59",
+      "candidate_proof": "MISSING_PROOF",
+      "acceptance": "OPEN",
+      "reason": "C38 composed all auth product and readonly59 overlay; no C38/C39 hosted qualification of readonly-composed test or new C exact combination."
+    },
+    {
+      "finding": "M70-ISO-01",
+      "source": "FIXED",
+      "target_C39": "FIXED",
+      "qualification": "STATIC_BLOBS_EXACT_73",
+      "candidate_proof": "MISSING_PROOF",
+      "acceptance": "OPEN",
+      "reason": "No same-C installed HTTP/auth identity privacy matrix yet."
+    },
+    {
+      "finding": "M70-HTTP-01",
+      "source": "FIXED",
+      "target_C39": "OPEN",
+      "qualification": "UNINTEGRATED_74",
+      "candidate_proof": "MISSING_PROOF",
+      "acceptance": "OPEN",
+      "reason": "Old installation and workbench remain, no request-body helper."
+    }
+  ],
+  "auth_C38_exact_blobs": {
+    "modules/sucafina/Sucafinav1/runtime/local-identity.ts": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+    "modules/sucafina/Sucafinav1/runtime/local-contract.ts": "d82b40928a235f2d249e45e59732f281dfded97f",
+    "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+    "modules/sucafina/Sucafinav1/local/entry.ts": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+    "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a"
+  },
+  "auth_overlay_qualification": "local-store C38/C39 d9ea... intentionally differs from source72 7cca... due to readSnapshotRoot/readonly59 integration; direct code read confirms initializeAuthentication, independent credential reads, writer admission, poison of nested write. Source72 R1 did not run this overlay.",
+  "privacy_C39_blobs": {
+    "procurement": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "application": "81f469822a2756b3e1ca87effbf5fd865a56010d"
+  },
+  "http_C39_blobs": {
+    "installation": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "workbench": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+    "request_body": null
+  },
+  "evidence": {
+    "71_C38_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C38-auth72.json",
+    "71_C38_readback": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/verification/C38-readback.json",
+    "C38_receipt_state": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+    "C38_readback_state": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+    "C38_validation": "NOT_RUN",
+    "readonly_test": "Two source tests exist in C38/C39; no actual hosted run of this test witnessed",
+    "candidate_run_for_C39": "NOT_VERIFIED_BY_84"
+  },
+  "source_snapshots_remain": [
+    "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "d2a1227ae8858ed6defd80df7383d5648dd97b5e"
+  ],
+  "non_claims": {
+    "regressed": false,
+    "combined_test_pass": false,
+    "accepted_final_C": false,
+    "three_final_reviews": false,
+    "GLOBAL_RELEASE": false
+  },
+  "actions_for_owner": [
+    "71: consume this delta before deciding target is fully qualified; integrate 74 with complete exact maps and no competing writes",
+    "85: qualify 72+59 new readonly-composed.test.ts over actual C candidate, preserve pending Graph/logout proof",
+    "86: certify egress/privacy on final combined target if changed",
+    "45: compiler/guards and authorized CI only",
+    "S0: three independent final reviews/eight selections/AM/C-G7/D-G8"
+  ],
+  "no_product_edits": true,
+  "no_new_actions_runs": true
+}

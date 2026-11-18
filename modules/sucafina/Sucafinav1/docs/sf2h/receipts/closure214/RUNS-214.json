@@ -1,0 +1,701 @@
+{
+  "schema": "sf2h.product-ci214.runs.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 214,
+  "epoch": "product-ci-e7-browser214",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "dispatcher": "214_EXCLUSIVE_AFTER_200_TRANSFER",
+  "model": "GPT-6",
+  "session_id": null,
+  "history_preserved": {
+    "queue200_blob": "bae56cb80ac60db3699596140e40214543252481",
+    "runs200_blob": "9146d5a4624d1ecf4b1303ee667fafcaea1824c8",
+    "findings200_blob": "bf3c5e8f4e46e4d018ff795e7fbaff4367f13bd9",
+    "historic_test_runs": [
+      43772149086,
+      43772487366,
+      43772869717,
+      43773234546,
+      43773852118,
+      43775214053,
+      43775606150,
+      43775802204
+    ],
+    "compiler190_runs": [
+      43772959867,
+      43774116387
+    ]
+  },
+  "official_workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator": "script/test-ci-request.ts",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "alternate_workflow": false,
+    "local_execution": false
+  },
+  "all_snapshots": "github_compare_1_committed_added_ci-run.json_on_exact_W",
+  "runs": [
+    {
+      "id": "B9",
+      "W": "569b3213525aa6eb23741cb1034bd0f054ccd381",
+      "tree": "2656f665eaac92ea9214d685decb36f5479ed2fb",
+      "S": "99ae47f628ec7862211b4f49de5811138f5ef5a4",
+      "Stree": "899fd7fd2a867e3fc341677f0a458568aff102f1",
+      "request_blob": "38056954038b86a6cfa45444104f976a4083412c",
+      "branch": "ci-run-linux-sf214-native-ui-1",
+      "run_id": 43780028332,
+      "job_id": 133014881019,
+      "cleanup_job_id": 133015517232,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "Sucafinav1/test/native-ui-contract/operations.test.ts",
+        "Sucafinav1/test/native-ui-contract/work.test.ts"
+      ],
+      "requested_file_count": 4,
+      "actual_file_count": 4,
+      "counts": {
+        "pass": 33,
+        "fail": 2,
+        "errors": 1,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 35
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "not_observed",
+        "delegated": null
+      },
+      "result_type": "FAIL_SCOPED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43780028332"
+    },
+    {
+      "id": "B10",
+      "W": "569b3213525aa6eb23741cb1034bd0f054ccd381",
+      "tree": "2656f665eaac92ea9214d685decb36f5479ed2fb",
+      "S": "0d3a73dc100391d8d7dbfbb138de18dd55d0eb92",
+      "Stree": "799f8e219d049e5024103573a8c274679905224d",
+      "request_blob": "3dcfb7a17e196fd89d0b62f570f58b7ad2d54478",
+      "branch": "ci-run-linux-sf214-am03-1",
+      "run_id": 43780060382,
+      "job_id": 133014979866,
+      "cleanup_job_id": 133015421585,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts"
+      ],
+      "requested_file_count": 2,
+      "actual_file_count": 2,
+      "counts": {
+        "pass": 1,
+        "fail": 1,
+        "errors": 1,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 2
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": null
+      },
+      "result_type": "FAIL_SCOPED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43780060382"
+    },
+    {
+      "id": "B11",
+      "W": "569b3213525aa6eb23741cb1034bd0f054ccd381",
+      "tree": "2656f665eaac92ea9214d685decb36f5479ed2fb",
+      "S": "052985c1dc411b95149337ea6f2682e1afce60b2",
+      "Stree": "d2d9d1dbfa22cf51420e3177a06e59a6123f3092",
+      "request_blob": "a38e3731dcdccf93bc3ae497ca8edb406badd25e",
+      "branch": "ci-run-linux-sf214-am04-06-1",
+      "run_id": 43780062327,
+      "job_id": 133014985875,
+      "cleanup_job_id": 133015498935,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am06/native-terminal-unavailable.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am06/schedule-native-retry.test.ts"
+      ],
+      "requested_file_count": 6,
+      "actual_file_count": 6,
+      "counts": {
+        "pass": 2,
+        "fail": 4,
+        "errors": 2,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 6
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "pass_4_spawn_0_delegated",
+        "delegated": 0
+      },
+      "result_type": "FAIL_SCOPED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43780062327"
+    },
+    {
+      "id": "B12",
+      "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+      "tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+      "S": "1d6b530d9e3ea7714985d8ad8da82e58174b8b4d",
+      "Stree": "40d88e42f897faa3367267c47d15d3e23c15e67a",
+      "request_blob": "93cd7e97aeef10342610e4b41c9fbeaaf5b7b956",
+      "branch": "ci-run-linux-sf214-f01f02-2",
+      "run_id": 43781218586,
+      "job_id": 133018614617,
+      "cleanup_job_id": 133019173401,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "Sucafinav1/test/native-ui-contract/live-context.test.ts",
+        "Sucafinav1/test/native-ui-contract/transport.test.ts"
+      ],
+      "requested_file_count": 2,
+      "actual_file_count": 2,
+      "counts": {
+        "pass": 26,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 26
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": null
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781218586"
+    },
+    {
+      "id": "B13",
+      "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+      "tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+      "S": "c099789164550468b54d2c085d677534922087bb",
+      "Stree": "ed7d6ed3c16fb92e8589a9caf70b0b42881664cf",
+      "request_blob": "e999588baf9a7b2ada97bdb281ec868ff22dd10a",
+      "branch": "ci-run-linux-sf214-biatlas-2",
+      "run_id": 43781246250,
+      "job_id": 133018693912,
+      "cleanup_job_id": 133019281241,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "Sucafinav1/test/native-ui-contract/bi.test.ts",
+        "Sucafinav1/test/native-ui-contract/people.test.ts",
+        "Sucafinav1/test/product/wp05/semantics.test.ts",
+        "Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts"
+      ],
+      "requested_file_count": 4,
+      "actual_file_count": 4,
+      "counts": {
+        "pass": 29,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 29
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": null
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781246250"
+    },
+    {
+      "id": "B14",
+      "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+      "tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+      "S": "5577776e73c3a3cbf219c2417573ba7e1e24fb00",
+      "Stree": "96881a58b34dc408db0ff6a675309dcef37bc0ef",
+      "request_blob": "957891df988de18d29a8ace120cafd4a73e08ef4",
+      "branch": "ci-run-linux-sf214-client-2",
+      "run_id": 43781269811,
+      "job_id": 133018763437,
+      "cleanup_job_id": 133019311049,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "client",
+      "directory": "packages/client",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "test/sucafina/transport-type-repair/f02-transport.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 5,
+        "fail": 1,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 6
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "not_observed",
+        "delegated": null
+      },
+      "result_type": "FAIL_SCOPED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781269811"
+    },
+    {
+      "id": "B15",
+      "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+      "tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+      "S": "5600736cea0438692adf4ed5ce36d1f11a181b07",
+      "Stree": "b20b97d48fe5e470a71037315c606593ed0cf556",
+      "request_blob": "721ac87f840f542b4f40828c565a61cd28790595",
+      "branch": "ci-run-linux-sf214-s05-2",
+      "run_id": 43781292706,
+      "job_id": 133018838137,
+      "cleanup_job_id": 133019481602,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "test-browser/sucafina-native/s05.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 0,
+      "counts": {
+        "pass": 0,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 0
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "not_applicable_zero_selection",
+        "delegated": null
+      },
+      "result_type": "FAILED_ZERO_SELECTION",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781292706"
+    },
+    {
+      "id": "B16",
+      "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+      "tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+      "S": "c3dc581eb80ac614d06185bde88659ccf3b35681",
+      "Stree": "e4c77043fb26546e52ca3ad27a8522642004f71c",
+      "request_blob": "45c363d1e5413b87b882c4db40172b55fcabe03d",
+      "branch": "ci-run-linux-sf214-am02-2",
+      "run_id": 43781314836,
+      "job_id": 133018910748,
+      "cleanup_job_id": 133019461386,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 1
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": null
+      },
+      "result_type": "FAIL_SCOPED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781314836"
+    },
+    {
+      "id": "B15R",
+      "W": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+      "tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+      "S": "b4c54f6f9d9a590cbd59836db2aab78a5c931d96",
+      "Stree": "757e316570e737d616719f68fd9c1c93c1125775",
+      "request_blob": "34bdf52e4b34933f54fe3d7ecee7e262d4101536",
+      "branch": "ci-run-linux-sf214-s05-2r",
+      "run_id": 43781695995,
+      "job_id": 133020120069,
+      "cleanup_job_id": 133020734573,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "./test-browser/sucafina-native/s05.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 5,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 5
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": null
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781695995"
+    },
+    {
+      "id": "B17",
+      "W": "0ab90984ea0656f8abd6f2776e8e7b3ee377ff5b",
+      "tree": "1c0d7f71f22a034b984eb15f3a810cc86538eaa3",
+      "S": "53cce20396875c50a72515f02f27853637a500b2",
+      "Stree": "25131ffefa8799c1a0c29b6c5811a9ee20862604",
+      "request_blob": "81ca5f29a2abe0e7700796ff7d0fdb54f656dfa4",
+      "branch": "ci-run-linux-sf214-operations-fix-3",
+      "run_id": 43781471855,
+      "job_id": 133019404235,
+      "cleanup_job_id": 133020068086,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/native-ui-contract/operations.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 9,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 9
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": null
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781471855"
+    },
+    {
+      "id": "B18",
+      "W": "0ab90984ea0656f8abd6f2776e8e7b3ee377ff5b",
+      "tree": "1c0d7f71f22a034b984eb15f3a810cc86538eaa3",
+      "S": "f9b7801a781b4eb213e9f839c627e0254405c96b",
+      "Stree": "e557db35c912d182ff1aa98265c627f30cc4ec96",
+      "request_blob": "abd3fec740f24bae45e582cbf6a28045932d14f8",
+      "branch": "ci-run-linux-sf214-am03am04-fix-3",
+      "run_id": 43781497192,
+      "job_id": 133019486672,
+      "cleanup_job_id": 133020018845,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts"
+      ],
+      "requested_file_count": 3,
+      "actual_file_count": 3,
+      "counts": {
+        "pass": 2,
+        "fail": 2,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 4
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": null
+      },
+      "result_type": "FAIL_SCOPED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781497192"
+    },
+    {
+      "id": "B19",
+      "W": "0ab90984ea0656f8abd6f2776e8e7b3ee377ff5b",
+      "tree": "1c0d7f71f22a034b984eb15f3a810cc86538eaa3",
+      "S": "efca638d4a9382827d83bf11857e415ce622d654",
+      "Stree": "8752fb5e2e13349ebfac83ed9fce66a7149885a1",
+      "request_blob": "7d188382e43bc13e1ecafffa39dc68e14ddede8a",
+      "branch": "ci-run-linux-sf214-am01-212-fix-3",
+      "run_id": 43781520064,
+      "job_id": 133019558133,
+      "cleanup_job_id": 133020721126,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "requested_args": [
+        "--timeout",
+        "240000",
+        "Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+        "Sucafinav1/test/product/wp03/scenario-costs.test.ts"
+      ],
+      "requested_file_count": 2,
+      "actual_file_count": 2,
+      "counts": {
+        "pass": 1,
+        "fail": 1,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 2
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "pass_24_spawn_0_delegated",
+        "delegated": 0
+      },
+      "result_type": "FAIL_SCOPED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43781520064"
+    },
+    {
+      "id": "B20",
+      "W": "25bf8587a2f99457db7734f6f78ce7893ef30362",
+      "tree": "230dae37040cde5c593ac1255b77d3331c602e97",
+      "S": "8d2e8b277857947c5b8860a2245159df79106295",
+      "Stree": "fbd712e0af3f69325e6a2146c94bb5a411692a83",
+      "request_blob": "decf9f7693278be5ad60c735e24954f25b1661ef",
+      "branch": "ci-run-linux-sf214-owner-nav-4",
+      "run_id": 43782484684,
+      "job_id": 133022584733,
+      "cleanup_job_id": 133023137488,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "./test-browser/sucafina-native/context.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 11,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 11
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": 0
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43782484684",
+      "source_change": "211 composed 207 CAP06 CAP24 navigation CTA original owner candidate and approved Q01 15/74/1610 mapping; synthetic/browser component only"
+    },
+    {
+      "id": "B21",
+      "W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+      "tree": "6bcc92ea3ce21e8aecdfa953939bdd598fc4baf9",
+      "S": "e21cc07a15457c8a0649532f068bd7aebbfc8865",
+      "Stree": "3c1ef7acd93ba125da0c59af38b7946d09d126a4",
+      "request_blob": "957891df988de18d29a8ace120cafd4a73e08ef4",
+      "branch": "ci-run-linux-sf214-client-mime-5",
+      "run_id": 43783167215,
+      "job_id": 133024785654,
+      "cleanup_job_id": 133025341570,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "client",
+      "directory": "packages/client",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "test/sucafina/transport-type-repair/f02-transport.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 6,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 6
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "not_observed",
+        "delegated": null
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43783167215",
+      "source_change": {
+        "source": "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts",
+        "pre": "6f470dcc23300873223ec2c01bb7d36c6a5c23ea",
+        "post": "fef5c0a8702ffde3921a7cd65829cfba9259716d",
+        "composer": "211/INTAKE-213-214-MIME.json",
+        "product_same_C": false
+      }
+    },
+    {
+      "id": "B22",
+      "W": "e6488a4d7694464d9d7d457f0604abe93e0ea49e",
+      "tree": "6bcc92ea3ce21e8aecdfa953939bdd598fc4baf9",
+      "S": "07b69b39bfa655d7b5f8019109d0f6d6fb0a2a62",
+      "Stree": "b2644df2cf4d3d1d33360d8e386183e5120ea96b",
+      "request_blob": "13afcc1e6582e8bde6aaaec2837467aac9e7185e",
+      "branch": "ci-run-linux-sf214-desktop-enroll-5",
+      "run_id": 43783196912,
+      "job_id": 133024878286,
+      "cleanup_job_id": 133025533032,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": ".github/workflows/test-ci.yml",
+      "runner": "ubuntu-24.04",
+      "package": "desktop",
+      "directory": "apps/desktop",
+      "requested_args": [
+        "--timeout",
+        "180000",
+        "test/sucafina-bootstrap213/enrollment-bridge.test.ts"
+      ],
+      "requested_file_count": 1,
+      "actual_file_count": 1,
+      "counts": {
+        "pass": 4,
+        "fail": 0,
+        "errors": 0,
+        "skipped": "NOT_REPORTED",
+        "selected_tests": 4
+      },
+      "artifacts": [],
+      "omni_control": {
+        "evidence": "na_no_declaration",
+        "delegated": 0
+      },
+      "result_type": "PASS_SCOPED_ONLY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43783196912",
+      "source_change": {
+        "source": "apps/desktop/test/sucafina-bootstrap213/enrollment-bridge.test.ts",
+        "blob": "b33bbab29041342727df5d9f9e9b33f45d77870c",
+        "composer": "211/INTAKE-213-214-MIME.json",
+        "proof_class": "SCOPED_SYNTHETIC_UNIT_NOT_INSTALLED_D01"
+      }
+    }
+  ],
+  "totals": {
+    "pass": 134,
+    "fail": 12,
+    "tests": 146,
+    "success": 7,
+    "failed": 8
+  },
+  "dedup_causal": {
+    "B9_to_B17": "operations/projection.ts syntactic blob correction verified",
+    "B10_B11_to_B18": "AM03/AM04 imports corrected by exact postimage",
+    "B15_to_B15R": "Bun selector ./ path syntax correction",
+    "B19": "212 AM01 causal test newly composed; failure is new domain admission, not old hypothetical null assertion",
+    "B20": "Fresh composer W3 owner navigation CTA source changes; first unique exact selection; no rerun on unchanged source",
+    "B21": "Composer consumed 214 literal MIME postblob fef5c0...; same F02 selector now 6pass0fail",
+    "B22": "New 213 real broker code with synthetic enrollment bridge unit test, no native packaged proof"
+  },
+  "limitations": {
+    "same_final_C": false,
+    "accepted_C": false,
+    "installed_host": false,
+    "native_provider": false,
+    "omni_positive_native": false,
+    "artifacts_uploaded_count": 0,
+    "completed_runs_are_not_global_release": true
+  },
+  "pending_new_material": null,
+  "GLOBAL_RELEASE": false,
+  "all_terminal_as_of_reconciliation": true,
+  "recent_composer_candidate": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab",
+  "actions_terminal_all": true
+}

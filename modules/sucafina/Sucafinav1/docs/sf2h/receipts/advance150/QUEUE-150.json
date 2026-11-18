@@ -1,0 +1,146 @@
+{
+  "mission": 150,
+  "epoch": "product-ci-e3-browser150",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "integrator": 132,
+  "compiler": 149,
+  "ci": 150,
+  "global_release": false,
+  "goal": "paused",
+  "schema": "sf2h.product-ci150.queue.v1",
+  "tested_W": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+  "tested_tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7",
+  "tested_run": 43758731378,
+  "do_not_repeat_identical_C64_or_W": true,
+  "owner_recheck": [
+    {
+      "id": "A07",
+      "pr": 141,
+      "selector": "Sucafinav1/test/native-ui-contract/reviews.test.ts",
+      "condition": "Corrected exclusive source blob consumed in new sf2-stack W/tree"
+    },
+    {
+      "id": "A09",
+      "pr": 140,
+      "selector": "Sucafinav1/test/native-ui-contract/routines.test.ts",
+      "condition": "Corrected exclusive source blob consumed in new sf2-stack W/tree"
+    },
+    {
+      "id": "A12",
+      "pr": 144,
+      "selector": "Sucafinav1/test/native-ui-contract/work.test.ts",
+      "condition": "Corrected exclusive source blob consumed in new sf2-stack W/tree"
+    },
+    {
+      "id": "A13",
+      "pr": 139,
+      "selector": "Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+      "condition": "Corrected exclusive source blob consumed in new sf2-stack W/tree"
+    },
+    {
+      "id": "A15",
+      "pr": 137,
+      "selector": "Sucafinav1/test/native-ui-contract/analyses.test.ts",
+      "condition": "Corrected exclusive source blob consumed in new sf2-stack W/tree"
+    }
+  ],
+  "integrator_missing_sources": [
+    {
+      "id": "A01",
+      "owner_pr": 133,
+      "test": "Sucafinav1/test/native-ui-contract/domain.test.ts",
+      "test_blob": "1eca59606897df8c2a291bff860e51cb6e3f81ad",
+      "missing": "apps/cli/src/sucafina-product/native-ui/domain/projection.ts",
+      "source_blob": "eae532dae73f282d9cefd66228da15fc26b63040",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A11",
+      "owner_pr": 143,
+      "test": "Sucafinav1/test/native-ui-contract/operations.test.ts",
+      "test_blob": "0a692b53eadcab8eb619ee49298c3fa97516f70a",
+      "missing": "apps/cli/src/sucafina-product/native-ui/operations/projection.ts",
+      "source_blob": "02b5f163387aaee657336f5544003ab123af5dd4",
+      "status": "NOT_RUN"
+    }
+  ],
+  "C64_pending": [
+    {
+      "id": "A02",
+      "owner_pr": 116,
+      "path": "packages/schema/src/sucafina/planner.ts",
+      "tested_blob": "30cd40e03ffb3d557243e26f772bdb3c7d5ae50c",
+      "candidate_source_blob": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+      "state": "HOLD_UNTIL_COMPOSED"
+    },
+    {
+      "id": "A04",
+      "owner_pr": 135,
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "tested_blob": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+      "candidate_source_blob": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "state": "HOLD_UNTIL_COMPOSED"
+    },
+    {
+      "id": "A05",
+      "owner_pr": 134,
+      "path": "packages/schema/src/sucafina/portfolio.ts",
+      "tested_blob": "2ba680ae66d493b8f04c5d921773ac3a56f66829",
+      "candidate_source_blob": "708731dbbaf1fe69664715a4f34007976a4b0476",
+      "state": "HOLD_UNTIL_COMPOSED"
+    },
+    {
+      "id": "F03",
+      "owner_pr": 129,
+      "path": "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+      "tested_blob": null,
+      "candidate_source_blob": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15",
+      "state": "HOLD_UNTIL_COMPOSED"
+    },
+    {
+      "id": "S01",
+      "owner_pr": 125,
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+      "tested_blob": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+      "candidate_source_blob": "5523d9cc6680f8461e4f2a5ef31c687a7432dfbd",
+      "state": "HOLD_UNTIL_COMPOSED"
+    },
+    {
+      "id": "S02",
+      "owner_pr": 124,
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+      "tested_blob": "8da2af9dd881d5879eb89b6bd83e073697fe4a10",
+      "candidate_source_blob": "dc4410482ac81171d2c779c2a93240c236a42dc2",
+      "state": "HOLD_UNTIL_COMPOSED"
+    },
+    {
+      "id": "S05",
+      "owner_pr": 119,
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "tested_blob": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+      "candidate_source_blob": null,
+      "state": "HOLD_UNTIL_COMPOSED"
+    }
+  ],
+  "WP01": {
+    "status": "HOLD",
+    "reason": "Bun executed lifecycle before consumers despite request file order; deterministic sequencing not proved",
+    "old_run": 43724652351,
+    "required": [
+      "wp01/browser-startup.test.ts",
+      "creation-reload-fix/creation-browser.test.ts",
+      "creation-recovery-link/recovery-browser.test.ts",
+      "wp01/browser-lifecycle.test.ts"
+    ]
+  },
+  "installed_Q01_Q02": "HOLD_REAL_HOST_CODECS_AND_TWO_AUTHORIZED_ACTORS",
+  "epic_full8": "NOT_RUN_FINAL_COHERENT_BUNDLE_MISSING",
+  "sf2_stack_later_observed": {
+    "sha": "8094e599e3d18609e269548d24619a3246fbc735",
+    "tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+    "qualified_by_150": false
+  },
+  "next_exact_action_132": "Reconcile latest HEAD + preimages; consume owner source blobs including missing A01/A11 projections and C64 fixes, await A07/A09/A12/A13/A15 fixes, publish new coherent W/tree with changed test/fixture blobs, request file-precise 150 checks; ask149 compiler/SDK separately."
+}

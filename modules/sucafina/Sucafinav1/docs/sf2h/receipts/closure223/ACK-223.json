@@ -1,0 +1,39 @@
+{
+  "schema": "sf2h.product-ci223.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 223,
+  "epoch": "product-ci-e8-browser223",
+  "actor": "SOLE_PRODUCT_CI_DISPATCHER",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "session_id_exposed": false,
+  "session_lifecycle_claim": null,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "expected_head": "79179b9f966357babe535aab120a4478a69de5b9",
+  "verified_head": "79179b9f966357babe535aab120a4478a69de5b9",
+  "head_parent": "00f1c623fb07490149b6124ce1a778e6109184ea",
+  "verified_S0_FENCE_blob": "077f3ec538da89a0943b6db2e18f5deed17d0296",
+  "predecessor": 214,
+  "predecessor_terminal_handoff_sha": "00f1c623fb07490149b6124ce1a778e6109184ea",
+  "source_packet_sha": "8422717e47f9d78ed5d751d8263ec878d4021b6e",
+  "authority": "ACK_AFTER_S0_FENCE_HEAD_VERIFICATION",
+  "source_scope": "15WP/74tasks/17contracts/1610criteria; approved UX immutable",
+  "write_paths": [
+    "existing validated ci-run-* .ci-run.json snapshots only",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure223/**"
+  ],
+  "decision": "REATTACH_PRIOR_RUNS_BEFORE_NEW_DISPATCH",
+  "restrictions": {
+    "only_official_actions": true,
+    "cas_expected_head": true,
+    "force": false,
+    "no_local_tests": true,
+    "no_secrets": true,
+    "no_azure_changes": true,
+    "no_merge": true
+  },
+  "goal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}

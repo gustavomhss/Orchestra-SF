@@ -1,0 +1,317 @@
+{
+  "schema": "sf2h.review.integrity.findings.v1",
+  "mission": 92,
+  "candidate_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "candidate_tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+  "review_kind": "PRELIMINARY_INDEPENDENT_STATIC",
+  "finding_count": 9,
+  "findings": [
+    {
+      "id": "F92-EGRESS-01",
+      "kind": "STATIC_CODE_FINDING",
+      "severity": "HIGH",
+      "status": "OPEN_ON_C44",
+      "owner": "mission86 -> integrator71",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02",
+        "WP10.QLT.40"
+      ],
+      "contracts": [
+        "C03",
+        "C06",
+        "privacy-egress"
+      ],
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+        "lines": [
+          705,
+          798
+        ],
+        "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/runtime/application.ts#L705"
+      },
+      "observation": "serveDownload captures authorized snapshot and actor in persistence transaction, then calls download() outside transaction at line782 and returns file.bytes lines791-798 without second authorization/source-version fence",
+      "counterexample": "During a deliberately delayed export, revoke principal/role or modify authorized source between transaction closure and byte delivery; old snapshot/actor remain captured. Code-path counterexample, NOT_EXECUTED.",
+      "required_correction": "Reconcile PR86 egress reauthorization/source digest with integrated C and current visibility rules; at byte boundary fail 403 revoked /409 changed source, preserve abort, HEAD, legitimate content and no leaks.",
+      "source_proposal": "PR86 runtime/application.ts blob a0deff8a3b272019f472aa2f93499d1940a78370",
+      "proof": "Installed host race with delayed generation and principal revoke/source change; authorized control; exact-C run+jobs+artifacts",
+      "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/86#issuecomment-6889361413"
+    },
+    {
+      "id": "F92-PURE-02",
+      "kind": "ARCHITECTURAL_CODE_FINDING",
+      "severity": "HIGH",
+      "status": "FIX_FIRST_ON_C44",
+      "owner": "mission81 WP14/WP10 -> integrator71",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.INV.40"
+      ],
+      "contracts": [
+        "WP14-pure",
+        "WP10-persistence"
+      ],
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+          "blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+          "lines": [
+            58,
+            89,
+            169
+          ],
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts#L58"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+          "blob": "790e7c98820df61306ad67bd5897b1301118d335",
+          "lines": [
+            50
+          ],
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts#L50"
+        }
+      ],
+      "observation": "Registry/outcome selection functions in product/decision-memory directly perform state.transaction with preference mutations; still identical on pure-memory-boundary branch at observation.",
+      "counterexample": "Static import/dependency inspection: WP14 layer cannot be pure if its exported behavior directly executes database transactions. Runtime break not proven.",
+      "required_correction": "Move persistence and transport to owned WP10 adapters; retain pure WP14 transforms; reconcile imports, lifecycle, dedupe, CAS, revocation, restart; no rename-only repair.",
+      "proof": "Static architectural boundary check and real persistence/restart/permissions controls on composed C",
+      "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889362463"
+    },
+    {
+      "id": "F92-FIRSTSAVE-03",
+      "kind": "INTEGRATION_AND_PROOF_GAP",
+      "severity": "HIGH",
+      "status": "MISSING_INTEGRATION_AND_PROOF_C44",
+      "owner": "mission87 producer / 52 consumer / integrator71 / dispatcher45",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02"
+      ],
+      "contracts": [
+        "C08",
+        "C12"
+      ],
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "blob": "a0c1d07be1ddd63492e7bcc3ff5980c0666b432a",
+        "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts#L1"
+      },
+      "source_proposal": "PR92 producer blob d880fe5a5f7fd3c9c4fa249dbc374620a39a43a7; adds lookupFirstSave; dashboard HTTP and decisions consumers",
+      "observation": "C44 lacks lookupFirstSave producer; PR92 producer plus route and test source are a non-composed branch, not installed release.",
+      "counterexample": "Lose first save ACK; reload holding only original caseRef+idempotencyKey; retained-body recovery65 is inapplicable; no re-dispatch allowed.",
+      "required_correction": "Integrate validated producer and UI52 checkpoint, look up original committed intent via exact key/principal/incarnation, zero writes, no selection by time/text; verify revocation/final egress/advanced case and two independent same-text intents",
+      "proof": "Exact-C installed SQLite POST/reload/restart and final revocation controls; real job ids and proof diff",
+      "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/92#issuecomment-6889361757"
+    },
+    {
+      "id": "F92-C10-04",
+      "kind": "PROOF_GAP_WITH_SOURCE_PRESENT",
+      "severity": "HIGH",
+      "status": "SOURCE_BLOB_PRESENT_FINAL_C_PROOF_MISSING",
+      "owner": "mission80 -> integrator71 / dispatcher45",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02"
+      ],
+      "contracts": [
+        "C03",
+        "C06",
+        "C10"
+      ],
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+        "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts#L1"
+      },
+      "observation": "C44 cost-coverage.ts blob equals PR90 source blob. Separate hosted R3 pass exists on S da3097fc..., while R4 intentionally fails on counterfactual S 1b0359f..., neither is an independently verified full C44 release selection. R2 prior failed.",
+      "counterexample": "Use null versus 0 versus missing training, explicit N/A, EUR FX, changed alternative/version/horizon or 70000 implementation quotation; do not silently seal incomplete coverage.",
+      "required_correction": "Preserve 55000 implementation ceiling and 15000 minimum advantage oracles, all monetary totals and original choice identity. Link all tests, coverage categories and consumers to exact frozen C with prior runs adopted only for identical product/test/config digests.",
+      "proof": "GitHub verified success https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675129605 on S da3097fc435b232ab3dcf77c036f3d3dfb5e0142; deliberate diagnostic failure https://github.com/gustavomhss/Orchestra-SF/actions/runs/43676126745 on S 1b0359f078951b819622d0438394ac63ef43e010; NO exact-C full suite evidence from this review",
+      "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/90#issuecomment-6889362045"
+    },
+    {
+      "id": "F92-M31-05",
+      "kind": "INTEGRATED_PROOF_GAP",
+      "severity": "HIGH",
+      "status": "MISSING_EXACT_C_END_TO_END_PROOF",
+      "owner": "financial owner / 71 / dispatcher45",
+      "contracts": [
+        "M31",
+        "C03",
+        "C06",
+        "C12"
+      ],
+      "criteria": [
+        "WP10.T03.CHK.01"
+      ],
+      "sources": [
+        {
+          "path": "modules/sucafina/porta/act.ts",
+          "blob": "fe257cef702f6459d510d823d18377da34888dbf",
+          "lines": [
+            239,
+            268
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+          "blob": "eb486f52910425e9ca06d1f11ce18c90528ff36c",
+          "lines": [
+            32,
+            67
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "lines": [
+            629,
+            654
+          ]
+        }
+      ],
+      "observation": "Static source chain calculates PR approval amount, copies approval holder route and starts sourcing only after last approval. No claim of defect in this chain; independent installed proof of persisted amount/base currency and holder across reload/mismatched actors was not linked to C44.",
+      "required_correction": "Do not change policy, threshold, actor permissions or oracle to conceal contradiction. Run actual draft→submit persisted amount→frozen holder approval→sourcing with correct/incorrect holders, currency snapshot, reload/CAS.",
+      "proof": "Exact candidate run required; NOT_EXECUTED_BY_R2"
+    },
+    {
+      "id": "F92-AUTH-06",
+      "kind": "INTEGRATION_PROOF_GAP",
+      "severity": "HIGH",
+      "status": "MISSING_C44_COMPOSITE_NEGATIVE_PROOF",
+      "owner": "72+59/85 -> 71 / dispatcher45",
+      "contracts": [
+        "C03",
+        "C06",
+        "revocation",
+        "readonly59"
+      ],
+      "criteria": [
+        "WP10.T03.CHK.02"
+      ],
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "blob": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+        "lines": [
+          160,
+          244
+        ]
+      },
+      "observation": "Authentication issuance/revoke code read directly: pending revocation fenced before async DB writer and retry on SQL failure. Does not itself demonstrate Graph cancellation/restart/nested readonly composition and same final target.",
+      "required_correction": "Recheck exact C72+59/85 SQL write gate, Graph cancellation, nested maintenance refusal, logout/refresh/redemption, two instances/restart, expiry/GC/capacity; distinguish local pending fence from persisted revoke.",
+      "proof": "Exact-C integrated negative test and job required"
+    },
+    {
+      "id": "F92-ATLAS-07",
+      "kind": "INTEGRATED_PROOF_GAP",
+      "severity": "HIGH",
+      "status": "AM05_MISSING_FINAL_C_PROOF",
+      "owner": "Atlas69 / WP10 / 71 / dispatcher45",
+      "contracts": [
+        "Atlas",
+        "WP10",
+        "WP14"
+      ],
+      "criteria": [
+        "WP10.T03.CHK.02"
+      ],
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+        "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+        "lines": [
+          1,
+          52
+        ]
+      },
+      "observation": "Adapter validates MemoryRecord owner/kind, rejects invalid log all-or-nothing and appends to caller snapshot. Full installed scanner path, commit/restart/reload, identity/revocation and AM05 not certified by static review.",
+      "required_correction": "Prove actual Atlas boundary + real scanner clean/secret/timeout/unavailable, durable append/commit/read/restart, owner/case/ACL/physical-incarnation and idempotency; link generator digests/check:spawn-imports to same C.",
+      "proof": "Exact candidate AM05 with real scanner + CI-ATLAS-BUSINESS required"
+    },
+    {
+      "id": "F92-HTTP-08",
+      "kind": "INTEGRATION_PROOF_GAP",
+      "severity": "HIGH",
+      "status": "MISSING_NODE_EFFECT_COMPOSITION_PROOF",
+      "owner": "mission74 / 71 / dispatcher45",
+      "contracts": [
+        "C03",
+        "HTTP-body-bound",
+        "auth-proxy"
+      ],
+      "criteria": [
+        "WP10.T03.CHK.02"
+      ],
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+        "blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+        "lines": [
+          12,
+          145
+        ]
+      },
+      "observation": "Bounded byte reader is present and compares declared and actual stream length; independent installed listener Node→Effect→Request, body identity, cancellation and auth boundary not proven by file read.",
+      "required_correction": "Run real listener tests valid/chunked/multibyte/oversize/content-length mismatch, abort/disconnect, upload exemptions and 65536 Workbench semantics without double consumption or POST hang; exact-C job, no tests launched here.",
+      "proof": "Exact candidate installed Node/Effect regression required"
+    },
+    {
+      "id": "F92-COMPOSE-09",
+      "kind": "RELEASE_GATE_GAP",
+      "severity": "BLOCKER",
+      "status": "NO_EXPLICIT_FROZEN_FINAL_C_OR_INDEPENDENT_RECHECK",
+      "owner": "integrator71 / S0",
+      "contracts": [
+        "R41",
+        "G7C",
+        "G8D",
+        "WP10.T03"
+      ],
+      "criteria": [
+        "WP10.CMP.01",
+        "WP10.CMP.02",
+        "WP10.CMP.10",
+        "WP10.CMP.40",
+        "WP10.CMP.60",
+        "WP10.DOD.01",
+        "WP10.DOD.02",
+        "WP10.DOD.10",
+        "WP10.DOD.40",
+        "WP10.DOD.60",
+        "WP10.INV.01",
+        "WP10.INV.02",
+        "WP10.INV.10",
+        "WP10.INV.40",
+        "WP10.INV.60",
+        "WP10.QLT.01",
+        "WP10.QLT.02",
+        "WP10.QLT.10",
+        "WP10.QLT.40",
+        "WP10.QLT.60",
+        "WP10.SUC.01",
+        "WP10.SUC.02",
+        "WP10.SUC.10",
+        "WP10.SUC.40",
+        "WP10.SUC.60",
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02",
+        "WP10.T03.CHK.03",
+        "WP10.T03.CHK.40",
+        "WP10.T03.CMP.01",
+        "WP10.T03.CMP.02",
+        "WP10.T03.CMP.40",
+        "WP10.T03.DOD.01",
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.01",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40",
+        "WP10.T03.SUC.01",
+        "WP10.T03.SUC.40"
+      ],
+      "observation": "Observed C44 HEAD and tree, but no explicit frozen/accepted FINAL C; C44 itself carries independent open findings and no exact matching 8 selection/AM01..06/G7C/G8D evidence.",
+      "required_correction": "Freeze C with SHA/tree/manifest, account for full diff since C44 including every owner patch/consumer, run/adopt deduplicated C-matched checks, 3 reviews, G7C/G8D; R2 rechecks independently; no GLOBAL_RELEASE.",
+      "proof": "Frozen candidate + full diff + exact proof ledger + R2 follow-up"
+    }
+  ],
+  "GLOBAL_RELEASE": false
+}

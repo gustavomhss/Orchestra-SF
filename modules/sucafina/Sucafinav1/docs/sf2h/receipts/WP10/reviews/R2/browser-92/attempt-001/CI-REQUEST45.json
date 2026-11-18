@@ -1,0 +1,188 @@
+{
+  "schema": "sf2h.review.integrity.dispatcher-request.v1",
+  "target": "existing dispatcher45, integrator71",
+  "operation": "READ_AND_ADOPT_OR_SCHEDULE_ONLY_UNDER_EXISTING_LEASE",
+  "executed_by_R2": false,
+  "create_new_controller": false,
+  "dedupe_required": true,
+  "product_candidate_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+  "freeze_condition": "Reevaluate against explicit final C; these requests do not authorize automatic CI.",
+  "ci_selectors": [
+    {
+      "id": "CI-SF",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": []
+      },
+      "selected_roots": [],
+      "proof_state": "MISSING_VERIFIED_SAME_C_RUN"
+    },
+    {
+      "id": "CI-CLI",
+      "request": {
+        "package": "cli",
+        "runner": "bun",
+        "args": []
+      },
+      "selected_roots": [],
+      "proof_state": "MISSING_VERIFIED_SAME_C_RUN"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": []
+      },
+      "selected_roots": [
+        "packages/app-shell/src"
+      ],
+      "proof_state": "MISSING_VERIFIED_SAME_C_RUN"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ]
+      },
+      "selected_roots": [
+        "packages/app-shell/test-browser"
+      ],
+      "proof_state": "MISSING_VERIFIED_SAME_C_RUN"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "request": {
+        "package": "atlas-boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ]
+      },
+      "selected_roots": [],
+      "proof_state": "MISSING_VERIFIED_SAME_C_RUN"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ]
+      },
+      "selected_roots": [],
+      "proof_state": "MISSING_VERIFIED_SAME_C_RUN"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ]
+      },
+      "selected_roots": [],
+      "proof_state": "MISSING_VERIFIED_SAME_C_RUN"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ]
+      },
+      "selected_roots": [],
+      "proof_state": "MISSING_VERIFIED_SAME_C_RUN"
+    }
+  ],
+  "additional_static_gates": [
+    {
+      "id": "BUILD-ATLAS",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun run generate",
+      "proof_state": "MISSING_VERIFIED_SAME_C_GATE"
+    },
+    {
+      "id": "CHECK-ATLAS-GENERATED",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun run check:generated",
+      "proof_state": "MISSING_VERIFIED_SAME_C_GATE"
+    },
+    {
+      "id": "TYPECHECK-ATLAS",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun typecheck",
+      "proof_state": "MISSING_VERIFIED_SAME_C_GATE"
+    },
+    {
+      "id": "GUARDS",
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "proof_state": "MISSING_VERIFIED_SAME_C_GATE"
+    },
+    {
+      "id": "CHECK-SPAWNS",
+      "cwd": ".",
+      "command": "bun run check:spawn-imports",
+      "proof_state": "MISSING_VERIFIED_SAME_C_GATE"
+    }
+  ],
+  "integrated_proofs": [
+    {
+      "id": "AM01",
+      "state": "NOT_CERTIFIED_IN_R2"
+    },
+    {
+      "id": "AM02",
+      "state": "NOT_CERTIFIED_IN_R2"
+    },
+    {
+      "id": "AM03",
+      "state": "NOT_CERTIFIED_IN_R2"
+    },
+    {
+      "id": "AM04",
+      "state": "NOT_CERTIFIED_IN_R2"
+    },
+    {
+      "id": "AM05",
+      "state": "NOT_CERTIFIED_IN_R2"
+    },
+    {
+      "id": "AM06",
+      "state": "NOT_CERTIFIED_IN_R2"
+    }
+  ],
+  "specific_rechecks": [
+    "F92-EGRESS-01 revoke-after-generation 403 and source-change 409",
+    "F92-PURE-02 pure boundary+CAS/restart",
+    "F92-FIRSTSAVE-03 SQLite lost ACK/reopen/original key/no redispatch and UI52",
+    "F92-C10-04 numerical null/zero/NA/FX/source change/55000/15000 unchanged oracles",
+    "F92-M31-05 persisted draft/holder and full approval chain",
+    "F92-AUTH-06 Graph cancellation+readonly/nested writes+logout restart",
+    "F92-ATLAS-07 AM05 durable scanner/restart/revocation",
+    "F92-HTTP-08 Node/Effect streaming/multibyte/abort POST"
+  ],
+  "dedupe_key_fields": [
+    "product_candidate_sha",
+    "product_tree_hash",
+    "normalized_request_hash",
+    "workflow_and_validator_source_identity",
+    "effective_runtime_and_config_identity",
+    "fixture_and_test_selection_identity"
+  ],
+  "rule": "No duplicate requests; 45 retrieves existing run/job/omni/source digests; job not launched by this reviewer."
+}

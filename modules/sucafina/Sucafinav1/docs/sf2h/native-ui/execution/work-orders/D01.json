@@ -1,0 +1,186 @@
+{
+  "id": "D01",
+  "title": "Broker desktop e sessão Microsoft isolada",
+  "kind": "foundation",
+  "status": "PLANNED_NOT_AUTHORIZED",
+  "priority": 1,
+  "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+  "owns": [
+    "apps/desktop/src/main/sucafina/**",
+    "apps/desktop/src/preload/sucafina.ts",
+    "apps/desktop/src/renderer/sucafina.ts",
+    "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+  ],
+  "may_write_shared_registry": false,
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "task_refs": [
+      "WP00.T04",
+      "WP10.T01"
+    ],
+    "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+  },
+  "surfaces": [],
+  "exports": [
+    "createSfDesktopBroker",
+    "createSfDesktopPreloadCapability",
+    "createSfDesktopCapability",
+    "attachSfNativeEnrollment"
+  ],
+  "depends_authoring": [
+    {
+      "lock": "ctx",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "transport",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    }
+  ],
+  "depends_integration": [
+    "F02"
+  ],
+  "depends_qualification": {
+    "work_orders": [
+      "F02"
+    ],
+    "external": [
+      "Microsoft authorized test identities and live native auth surface"
+    ],
+    "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+  },
+  "consumes": {
+    "contracts": [
+      "ctx",
+      "transport"
+    ],
+    "producer_exports": [
+      {
+        "order": "F02",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      }
+    ],
+    "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+    "microcopy": "SURFACE-SPECS.md COPY-02 and surface-manifest.json#/copy/desktop; the five exact main-native copy keys, locale rule and safe default IDs are frozen.",
+    "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+    "operation_refs": [],
+    "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+  },
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "host-signatures.ts",
+      "route-signatures.ts"
+    ],
+    "local": [
+      "work-orders/D01.json"
+    ],
+    "contracts": [
+      "ctx",
+      "transport"
+    ],
+    "surfaces": [],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": []
+  },
+  "deliver": [
+    "Implement narrow main-process broker using isolated Session partition per approved server/installation and fixed operation allowlist.",
+    "Login window uses the same partition; preserve issuer/tenant/resource membership and current provider grants.",
+    "Validate mainFrame sender and owner generation; abort/remove cookies on logout and owner disposal.",
+    "Downloads/upload pickers follow existing desktop permission/save-dialog paths; renderer cannot choose arbitrary URLs or headers.",
+    "Implement broker.test.ts inside the owned main/sucafina subtree; fixture asserts sender, operation allowlist, owner epoch, cookie partition and upload/download mediation.",
+    "Use existing authenticated AppDockSocket per-launch channel for local enrollment: main/CLI request-reply stays outside HTTP and renderer; no token stdout/log/cookie import. Explicit unmanaged loopback chooser parses original open-local.html only as data.",
+    "Use the exact four entrypoints and constructor dependencies from CONTRACTS §6.1. Approved connection registry and lifecycle are injected by I00; serverKey received from a renderer never approves or registers a connection.",
+    "Native connection consent uses only COPY-02/SF_DESKTOP_COPY and SF_DESKTOP_COPY_BR in the owned main copy.ts. Cancel is default/cancelId 0; main never imports APP dictionaries. Register and release use exact generation-bound typed channels; a connection can be released before bind.",
+    "For remote ids selection, do not require Location.directory from unrelated current SDK owner; registry registration still validates connection+consent, then broker uses loaded installation identity. Auth return marker is dashboard?sf=native-return with opaque one-use ref, not new /auth/native-return exception."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "D01-AC01",
+      "expected": "oc://renderer can complete authorized business read/action through broker; web success alone does not qualify desktop.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "D01-AC02",
+      "expected": "Wrong sender, stale owner, unknown operation, URL/header injection and cross-install partition are rejected before request.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "D01-AC03",
+      "expected": "Logout invalidates in-flight results and session state; no secret/cookie enters renderer storage or logs.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "D01-77-LOGIN",
+      "expected": "Remote deep link A loads after prior connection B, login return stays in Session partition and validates original A; no renderer token or URL injection; auth marker expires and cannot be reused.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "gates": {
+    "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+    "test_files": [
+      "apps/desktop/src/main/sucafina/broker.test.ts"
+    ],
+    "typecheck_packages": [
+      "apps/desktop",
+      "apps/cli"
+    ],
+    "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+    "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+    "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+  },
+  "stop": [
+    "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+    "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+    "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+    "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+    "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+    "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+  ],
+  "handoff": {
+    "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+    "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+    "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+  },
+  "entrypoints": [
+    {
+      "path": "apps/desktop/src/main/sucafina/index.ts",
+      "symbol": "createSfDesktopBroker",
+      "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+    },
+    {
+      "path": "apps/desktop/src/preload/sucafina.ts",
+      "symbol": "createSfDesktopPreloadCapability",
+      "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+    },
+    {
+      "path": "apps/desktop/src/renderer/sucafina.ts",
+      "symbol": "createSfDesktopCapability",
+      "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+      "symbol": "attachSfNativeEnrollment",
+      "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+    }
+  ],
+  "i18n_exports": [
+    {
+      "path": "apps/desktop/src/main/sucafina/copy.ts",
+      "en_symbol": "SF_DESKTOP_COPY",
+      "pt_br_symbol": "SF_DESKTOP_COPY_BR",
+      "source": "SURFACE-SPECS.md COPY-02 and surface-manifest.json#/copy/desktop",
+      "registry": "desktop-main-only; never imported into app-shell/orchestra.ts",
+      "locale": "app.getLocale(): pt* -> pt-BR; otherwise en",
+      "defaultId": 0,
+      "cancelId": 0
+    }
+  ]
+}

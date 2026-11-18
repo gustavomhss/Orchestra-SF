@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.product-ci107.failure_queue.v1",
+  "mission": 107,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "C": "C53",
+  "W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "actor": {
+    "effective_model": "GPT-6",
+    "label": "Astra",
+    "github_actor": "gustavomhss",
+    "runtime_session_id": null,
+    "lease": "product-ci-browser107"
+  },
+  "failures": [
+    {
+      "id": "CI107-NATIVE103-HISTREAD-001",
+      "classification": "PRODUCT_CONTRACT_POSITIVE_HISTORICAL_READ",
+      "W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+      "S": "e826732db28589f117f5e3c7fb0cd8d18f16496c",
+      "run_id": 43707901079,
+      "job_id": 132792877003,
+      "attempt": 1,
+      "failed_test": "component: fresh reauthorized read projects native admission with no Task execution authority",
+      "path": "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts:54:30",
+      "expected": "ok",
+      "actual": "undefined",
+      "case": "withReauthenticatedRead around readAdmission(authId, context); 178 other tests pass; import errors fixed",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43707901079/job/132792877003",
+      "classification_evidence": "Run tests step failure, not setup; file loaded and tests executed; 179 total",
+      "owner_pr": 96,
+      "writer_notification": "https://github.com/gustavomhss/Orchestra-SF/pull/96#issuecomment-6893521879",
+      "integrator_notification": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6893522292",
+      "next": "writer103 release minimal causal patch; integrator106 compose next C; 107 recheck if new C and authority active"
+    }
+  ],
+  "source_baseline_failures_closed_in_scoped_C53": [
+    {
+      "id": "CI101-FIRSTSAVE87-HTTP-KEY",
+      "C51_run": 43682448571,
+      "C53_run": 43707908864,
+      "status": "SCOPED_PASS_NEW_W_NOT_RETROACTIVE"
+    },
+    {
+      "id": "CI101-NATIVE90-IMPORT",
+      "C51_run": 43682450677,
+      "C53_run": 43707901079,
+      "status": "IMPORT_RESOLVED_BUT_HISTORICAL_READ_FAIL_REMAINS"
+    }
+  ],
+  "infrastructure_failures": [],
+  "unqualified": [
+    "native installed C15",
+    "first save UI reload96",
+    "P03 original",
+    "xlsx102 visual",
+    "final 8 and epic",
+    "AM01–06",
+    "review91–93"
+  ],
+  "GLOBAL_RELEASE": false
+}

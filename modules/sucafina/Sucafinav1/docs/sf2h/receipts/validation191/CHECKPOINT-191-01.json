@@ -1,0 +1,165 @@
+{
+  "schema": "sf2h.product-ci191.checkpoint.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 191,
+  "epoch": "product-ci-e5-browser191",
+  "role": "sole_product_ci_dispatcher",
+  "model": "GPT-6",
+  "session_id": null,
+  "git_actor": "gustavomhss",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "ack_commit": "17c3304e055c8117e185e5c5cea8ef673cb7ae61",
+  "integrator": {
+    "mission": 189,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "latest_observed_head": "77e58de895b5157b2a32e3427483bd12f40a7525",
+    "latest_observed_tree": "28feb531911172b68a5615e81510a00fda9cb1b8",
+    "not_qualified_as_final": true
+  },
+  "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+  "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "historical164": {
+    "runs": [
+      43765725305,
+      43766390097,
+      43766719584,
+      43766970018
+    ],
+    "wrong_browser_0_selected": "INVALID",
+    "browser_corrected_path_prefix": "./",
+    "older_pass_not_transferred": true
+  },
+  "batches": [
+    {
+      "id": "B1_DECISIONS_173",
+      "W": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "Wtree": "d950e96d6f3b6e488e6e5587a0bdc93b471339cf",
+      "S": "36ba918ea9128a724754ac9bace02cef8409adbe",
+      "Stree": "b81ded60a5f6809c9e41051bf19b8fe3a09bac24",
+      "request_blob": "391348941a7914085c3661e2e49960fea4d8f22d",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/native-ui-contract/decisions.test.ts"
+      ],
+      "env": {},
+      "snapshot_diff": [
+        ".ci-run.json"
+      ],
+      "run": 43772149086,
+      "job": 132990216337,
+      "cleanup_job": 132990743266,
+      "attempt": 1,
+      "conclusion": "failure",
+      "selected_files": 1,
+      "selected_cases": 11,
+      "pass": 3,
+      "fail": 8,
+      "expects": 95,
+      "artifacts": [],
+      "omni": "not_applicable_no_spawn_not_omni_qualification",
+      "cause": "unchanged decisions.test.ts:15 Schema.decodeUnknownEither undefined in installed Effect4-beta.83; 173 producer import fixed; 8 asserts cannot execute",
+      "test_blob": "6183175ebce968280b61668085d27771697a4b64",
+      "producer_post_blobs": [
+        "1a77ff23bee415941916467d75c81304a4aab382",
+        "6c1d974d807e84c244b601ae03a1402ecf27e405"
+      ],
+      "owner_pr": 135,
+      "owner_comment": 6902821249,
+      "integrator_comment": 6902821704,
+      "followup": "owner fix exact test decoder preserving strict negative coverage ->189 CAS consume ->191 same exact selector new W only"
+    },
+    {
+      "id": "B2_NATIVE_174_181",
+      "W": "e344a6685e7244ea65b20031ae6f917bcec819be",
+      "Wtree": "c8b7a4c189dbf924aeba244cb24a7becd3819d2a",
+      "S": "35040a8df4cfc2b84cd993824a76a24cb508c8d7",
+      "Stree": "60ff36b0d7d7311328c8898553bbe8ef016e9034",
+      "request_blob": "35060d648dc90c9979195d0c021e8bf2c0e6450d",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/native-ui-contract/planner.test.ts",
+        "Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+        "Sucafinav1/test/native-ui-contract/operations.test.ts",
+        "Sucafinav1/test/native-ui-contract/memory.test.ts",
+        "Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "Sucafinav1/test/native-ui-contract/people.test.ts",
+        "Sucafinav1/test/native-ui-contract/routines.test.ts"
+      ],
+      "env": {},
+      "snapshot_diff": [
+        ".ci-run.json"
+      ],
+      "run": 43772487366,
+      "attempt": 1,
+      "status": "in_progress",
+      "conclusion": null,
+      "results": "PENDING_REAL_ACTIONS",
+      "artifacts": "PENDING_JOB_COMPLETION",
+      "dedup": "first new W including 173-181 and 171-172"
+    }
+  ],
+  "queue": [
+    {
+      "next": "B2 result",
+      "when": "job terminal",
+      "status": "IN_FLIGHT_NOT_PROOF"
+    },
+    {
+      "next": "A12/F01 direct tests",
+      "selectors": [
+        "Sucafinav1/test/native-ui-contract/work.test.ts",
+        "Sucafinav1/test/native-ui-contract/live-context.test.ts"
+      ],
+      "when": "after B2 and exact W/consumer producer checks",
+      "status": "READY_CHANGE_SCOPED_NOT_DISPATCHED"
+    },
+    {
+      "next": "F03/S01/S05 browser",
+      "selectors": [
+        "./test-browser/sucafina-native/page-frame.test.ts",
+        "./test-browser/sucafina-native/s01.test.ts",
+        "./test-browser/sucafina-native/s05.test.ts"
+      ],
+      "when": "189 CAS consumes author182/183/184 real source+test postimages; app/browser fixture preserved",
+      "status": "HOLD_CONSUMPTION"
+    },
+    {
+      "next": "AM01-AM06",
+      "status": "NOT_RUN_POSITIVE",
+      "when": "189 integrates six proof codes + actual installed native identity/provider/session/skills/scanner/Atlas/Relay and consumer evidence",
+      "reason": "source correlator/negative checks not native positive"
+    },
+    {
+      "next": "U15/U39/U40 e2e",
+      "status": "NOT_RUN",
+      "when": "185/186 corrections consumed and F04 private same-C installation/identities/fixture/URLs available"
+    },
+    {
+      "next": "FullEPIC/final8/gates",
+      "status": "NOT_RUN",
+      "when": "coherent C with all WPs/real consumers/AM/final independently reviewed; compiler/guards and D/G8 separate"
+    }
+  ],
+  "action_state": {
+    "in_progress": [
+      {
+        "id": 43772487366,
+        "head": "35040a8df4cfc2b84cd993824a76a24cb508c8d7"
+      }
+    ],
+    "queued": [],
+    "native_goal": "paused",
+    "global_release": false
+  },
+  "prohibitions": "No local builds/tests/validators/typecheck, no product/source modifications, no concurrent dispatcher, no merge/dev/deploy/force"
+}

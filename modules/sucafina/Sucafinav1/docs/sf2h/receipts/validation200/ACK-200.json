@@ -1,0 +1,75 @@
+{
+  "schema": "sf2h.product-ci200.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 200,
+  "epoch": "product-ci-e6-browser200",
+  "role": "SOLE_PRODUCT_CI_DISPATCHER",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "github_actor": "gustavomhss",
+  "effective_model": "GPT-6",
+  "requested_session": "NOVA",
+  "session_id": null,
+  "session_id_reason": "ChatGPT/GitHub interface does not expose a stable Astra/host session ID; no session ID or predecessor termination inferred",
+  "transfer": {
+    "previous_mission": 191,
+    "previous_epoch": "product-ci-e5-browser191",
+    "authority": "NEW_USER_MISSION_200_WITH_EXPLICIT_HANDOFF",
+    "predecessor_runtime_termination_claimed": false,
+    "previous_fence_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation191/S0-FENCE.json",
+    "legacy_fence_epoch": "product-ci-e5-browser191",
+    "historical_receipts": "PRESERVED_UNCHANGED"
+  },
+  "readset": {
+    "packet200_ref": "f552f02336a4de85e7c62ca1e19baed23d17ae8b",
+    "packet200_blob": "425eec041494063221d2e2867ca8f57a19603b29",
+    "packet191_ref": "8b0db4f8122a645a17dd6d6e43ab3ff33e2548ba",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "head_preimage": "38b88f976992da68085bdf2f0b9ed549ee49b517",
+    "head_tree_preimage": "d8b54fb33d659551d5a266a9e174d20ad24a263b",
+    "product_W": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "product_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+  },
+  "actions_reconciliation": {
+    "query": "GET /actions/runs?per_page=100; GET status=in_progress,queued,waiting",
+    "in_progress": [],
+    "queued": [],
+    "waiting": [],
+    "latest_run": 43774116387,
+    "latest_compiler": {
+      "run": 43774116387,
+      "sha": "b935f51ca9333c77d2b13ced8e7ad743df79468d",
+      "status": "completed",
+      "conclusion": "failure",
+      "owner": 190
+    },
+    "product_runs_to_preserve": [
+      43772149086,
+      43772487366,
+      43772869717,
+      43773234546,
+      43773852118
+    ],
+    "no_duplicate_dispatch": true
+  },
+  "preimages": {
+    "decisions_test": "6183175ebce968280b61668085d27771697a4b64",
+    "domain_projection": "ABSENT",
+    "operations_projection": "ABSENT",
+    "s05_test": "5d02157e04299a299cd3c4fada3dd19913a59598",
+    "s05_source": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+    "lifecycle_test": "89f6bbe2fa429be861eab0bb27777ae947f533c2"
+  },
+  "historical_qualification": {
+    "B3": "31/31 negative and source contracts only",
+    "B4": "20/20 negative correlators only",
+    "B5": "7 PASS / 1 FAIL S05 on earlier W ca31aa7",
+    "final_C": "NOT_RUN"
+  },
+  "status": "ACK_ACTIVE_CI_QUEUE_RECONCILED",
+  "native_goal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}

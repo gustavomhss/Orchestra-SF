@@ -1,0 +1,157 @@
+{
+  "schema": "sf2h.product-ci214.handoff.v1",
+  "mission": 214,
+  "epoch": "product-ci-e7-browser214",
+  "campaign": "sf2h-integral-20261112",
+  "actor": "SOLE_PRODUCT_CI_DISPATCHER",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "session_id_exposed": false,
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ci-validation",
+  "pr": {
+    "number": 106,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/106",
+    "state": "open_draft_preserved",
+    "base": "sf2-stack",
+    "merge_performed": false
+  },
+  "authority": {
+    "reserved_head": "32c60ae4e56d8aa773840fe9cfd2a00ee18183fc",
+    "original_fence_blob": "2217ec0669fb60d0b393eb81c73f1c1b814bbe02",
+    "predecessor": 200,
+    "predecessor_handoff_blob": "97d616d88f3b54868e19c1cdd5ecfd5cc0554c1b",
+    "ack_commit": "0a3bade7567277b9a336e6d6f6e75aa0111f4447",
+    "head_pre_handoff_commit": "a649c8f42f144048d217a0100619998c85aed141",
+    "tree_pre_handoff": "8233f7c84988b17eb28f6c0975844d2aa2634218",
+    "force": false,
+    "cas": true,
+    "no_predecessor_lifecycle_claim": true
+  },
+  "readset": {
+    "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "full_pack_214": "647f232d0748b11c06145bd562f1488db4f3a74f",
+    "restored200": [
+      "validation200/HANDOFF-200.md",
+      "validation200/QUEUE-200.json",
+      "validation200/RUNS-200.json",
+      "validation200/FINDINGS-200.json"
+    ],
+    "source_scope": {
+      "WP": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610,
+      "ux_surfaces": 70,
+      "ux_routes": 165
+    }
+  },
+  "evidence": {
+    "runs_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/RUNS-214.json",
+    "runs_blob": "f4e3bb33bcc3bbaa1a54d701e9cd3c2144870b8f",
+    "findings_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/FINDINGS-214.json",
+    "findings_blob": "6d987cd3af6e51f63f1bdf15f008bf3aa7b03b49",
+    "queue_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/QUEUE-214.json",
+    "run_ids": [
+      43780028332,
+      43780060382,
+      43780062327,
+      43781218586,
+      43781246250,
+      43781269811,
+      43781292706,
+      43781314836,
+      43781695995,
+      43781471855,
+      43781497192,
+      43781520064,
+      43782484684,
+      43783167215,
+      43783196912
+    ],
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "all_S_snapshots": ".ci-run.json only on exact W; all compared W..S",
+    "run_attempt_each": 1,
+    "counts": {
+      "runs": 15,
+      "successful": 7,
+      "failed": 8,
+      "tests_pass": 134,
+      "tests_fail": 12,
+      "zero_selection_one": 43781292706,
+      "corrected_to": 43781695995,
+      "artifacts_uploaded": 0
+    },
+    "omni_positive_native": false
+  },
+  "source_consumptions": {
+    "composer_pr": 191,
+    "composer_head_observed": "e9d6e30c65bfbd1e67cb3d6e082cdef1d06ee5ab",
+    "composed_changes": [
+      {
+        "id": "214-FIX-OPERATIONS-IMPORTS",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/INERT-211-CAUSAL-PATCHES.json",
+        "postblobs": [
+          "bdde554d78b3c2e9c880499d879388a65147b3f0",
+          "bb4cdec036331bc180db16795c7dcae215cfbe98",
+          "aa144a649d9f3378f9b0861941b3c7f4379fc472",
+          "20be7565a7d63a1f042a718dbc1c5787340b62e1"
+        ],
+        "consumed_by": "211/INTAKE-212-214.json"
+      },
+      {
+        "id": "214-FIX-F02-MIME",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure214/INERT-211-CLIENT-MIME-214.json",
+        "source_preblob": "6f470dcc23300873223ec2c01bb7d36c6a5c23ea",
+        "source_postblob": "fef5c0a8702ffde3921a7cd65829cfba9259716d",
+        "consumed_by": "211/INTAKE-213-214-MIME.json",
+        "recheck_run": 43783167215
+      },
+      {
+        "id": "213-DESKTOP",
+        "receipt": "receipts/closure213/INERT-211-CROSS-LEASE.json",
+        "consumed_by": "211/INTAKE-213-214-MIME.json",
+        "bridge_recheck_run": 43783196912
+      }
+    ],
+    "merged_to_sf2_stack": false,
+    "accepted_product_C": false
+  },
+  "unresolved": {
+    "ci": "DECISIONS-EXTRA-FIELD; AM04-REVIEW-HTTP400; AM01-212-BASELINE-COVERAGE-CASE-NOT-SELECTED; AM05-C12-CAPTURE; AM02-C16-AUTHORITY-UNAVAILABLE",
+    "external": "199_PRIVATE_INSTALLED_IDENTITY_BROWSER_ORIGINAL_F01_ROUTES_PACKAGED_ELECTRON_ATTESTATION",
+    "reviews": "207/208/209_FIX_FIRST_NOT_FINAL",
+    "guard": "190_C_G7_NOT_RUN_AND_D_G8_NOT_RUN",
+    "final_lanes": "CI-SF CI-CLI CI-APP-SRC CI-APP-BROWSER CI-ATLAS-BUSINESS CI-UI-OPERATIONS CI-UI-DECISIONS CI-UI-REPORTS plus epic/e2e NOT_RUN_ON_ACCEPTED_C"
+  },
+  "required_external_nonsecrets": [
+    "SF_NATIVE_CANDIDATE_SHA exact accepted C",
+    "SF_NATIVE_INSTALLED_MANIFEST private 0600",
+    "SF_NATIVE_BROWSER_ENDPOINT_FILE private 0600 and preexisting authenticated Microsoft contexts",
+    "SF_NATIVE_D01_PACKAGED_ATTESTATION private 0600 real packaged binary SHA",
+    "main-owned approved Orchestra connection descriptor and original CAP14/04/05 route results with source IDs",
+    "official Actions runner and authentic runtime/provenance"
+  ],
+  "consumers": {
+    "source_authors": "193,197,198,196,212,211 (fresh if sessions ended)",
+    "compositor": 211,
+    "integrator_S0": 189,
+    "compiler_G7": 190,
+    "real_installed_host": 199,
+    "desktop_source": 213,
+    "reviewers": [
+      207,
+      208,
+      209
+    ],
+    "dispatcher_on_new_authorized_input": 214
+  },
+  "state": "TERMINAL_ACCOUNTING_FOR_ALL_INDEPENDENT_CI; RELEASE_BLOCKED_BY_EXACT_EXTERNAL_AND_CAUSAL_GATES",
+  "no_further_unconditional_dispatch": true,
+  "no_merge": true,
+  "goal": "PAUSED",
+  "GLOBAL_RELEASE": false
+}
