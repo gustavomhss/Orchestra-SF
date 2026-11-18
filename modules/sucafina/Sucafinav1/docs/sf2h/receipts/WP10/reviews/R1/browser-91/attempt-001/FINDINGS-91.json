@@ -1,0 +1,140 @@
+{
+  "schema": "sf2h.s1-r1.findings.v1",
+  "mission": 91,
+  "actor": "S1-R1",
+  "review_phase": "PRELIMINARY_FIX_FIRST",
+  "baseline_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "baseline_tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "findings": [
+    {
+      "finding_id": "R1-91-001",
+      "status": "OPEN_STATIC_CAUSAL_NOT_RUNTIME_REPRODUCED",
+      "severity": "HIGH_FUNCTIONAL",
+      "title": "Create decision lost-ACK reload drops idempotency identity",
+      "criteria": [
+        "WP01.T01.CMP.01",
+        "WP01.T05.CMP.01",
+        "WP11.T01.DOD.01",
+        "WP10.T03.CHK.02",
+        "WP10.CMP.02"
+      ],
+      "owner": "WP01/WP11 UI and case writer; integrator71",
+      "source": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+          "blob": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+          "lines": "16,47-66,82-95",
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/ui/decision-create.ts#L14-L95",
+          "evidence": "intention/key retained only in current browser closure; new page generates fresh randomUUID on re-submit"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+          "lines": "45-54",
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/decisions/case-port.ts#L45-L54",
+          "evidence": "idempotency is tied to original operation and command digest"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "blob": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+          "lines": "135-180",
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/packages/app-shell/e2e/sucafina/decisions.spec.ts#L135-L180",
+          "evidence": "test intercepts lost response via CDP to obtain outputRef and reloads known case; does not reload unknown original creation form"
+        }
+      ],
+      "impact": "After real server commit with POST response lost, reload leaves no original key; a new submission can create a distinct case or no actionable recovery. Duplication is a risk, not yet an observed run failure.",
+      "required_correction": "Durable, privacy-scoped authoritative lookup/replay of original creation intention without guessing timestamp or redispatching with fresh key. Browser UI must recover after reload and restart while preserving principal/access revocation.",
+      "reproduction_for_45": "Hold or discard response after committed POST to sf_case_draft; reload original create form with no outputRef observed; prove same one saved case/receipt after recovery, no second mutation, include restart and revoked access.",
+      "recheck": "Inspect fix commit/preimages in frozen C and exact UI/host/server E2E one-effect proof, run/artifacts and independent delta review",
+      "comment_urls": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/43#issuecomment-6889326140",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/43#issuecomment-6889370520",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889326462"
+      ]
+    },
+    {
+      "finding_id": "R1-91-002",
+      "status": "OPEN_STATIC_CAUSAL_AT_FIXED_BASELINE",
+      "severity": "HIGH_AUTHORIZATION_AND_STALE_DATA",
+      "title": "Legacy export bytes can egress after stale or revoked authorization",
+      "criteria": [
+        "WP06.T01.CHK.05",
+        "WP10.T01.CHK.10",
+        "WP10.T03.CHK.01",
+        "WP10.CMP.02"
+      ],
+      "owner": "Export/procurement fix PR#86; integrator71",
+      "source": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+          "lines": "705-772,780-798",
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/runtime/application.ts#L705-L798",
+          "evidence": "transaction authenticates and snapshots before download(); after generation, only request.signal checked before Response(file.bytes); no current role/source fence."
+        }
+      ],
+      "suggested_fix_on_pr86_source_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "impact": "Permission revoked or source mutated while file generation runs can cause release of captured privileged or outdated report. Direct repro pending.",
+      "required_correction": "Compose egress reauthorization + source-version digest after generation and before byte return, respecting HEAD, 403/revocation and 409/source-changed, privacy.",
+      "reproduction_for_45": "Start authorized download then pause downstream generator; revoke role or change source version, resume and assert 403 or 409 with zero private bytes. Positive same-source control remains identical.",
+      "recheck": "Blob in composed frozen C must include protection; verify actual complete legacy and UI export cases with late revocation and source change",
+      "comment_urls": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/86#issuecomment-6889343223",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889343660"
+      ]
+    },
+    {
+      "finding_id": "R1-91-003",
+      "status": "BLOCKED_MISSING_FINAL_C_PROOF_NOT_PROVEN_DEFECT",
+      "severity": "RELEASE_BLOCKER",
+      "title": "No explicitly frozen final C and complete integrated acceptance proof",
+      "criteria": [
+        "WP10.T03.CHK.02",
+        "WP10.CMP.02",
+        "WP10.T04.CHK.41",
+        "WP01.T05.CHK.30"
+      ],
+      "owner": "71/S0 freeze and integration; 45 dispatcher proof; R1 independent recheck",
+      "source": [
+        {
+          "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+          "blob": "412d55047a1b6dda686ce1054c15b20307217577",
+          "lines": "3-34",
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/src/nav.ts#L3-L34",
+          "evidence": "nominal 16 Dashboard +7 Planner +5 Procurement names, not executed journey proof"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+          "lines": "8-35",
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/packages/app-shell/e2e/sucafina/operations.spec.ts#L8-L35",
+          "evidence": "5 scoped tests and explicit not-a-complete-acceptance annotation"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+          "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+          "lines": "manifest",
+          "link": "https://github.com/gustavomhss/Orchestra-SF/blob/eecbdacb21734695094332deb6142aa35d5c9c3c/modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+          "evidence": "5 profiles/18 skills/8 packs/39 routes declared, real end-to-end skill+consumer witnesses not established"
+        }
+      ],
+      "observed_actions": {
+        "direct_runs_for_baseline_head": 0,
+        "total_source_run_history_nonzero": true,
+        "examples": [
+          43677629469,
+          43677729466,
+          43675784039
+        ],
+        "interpretation": "Different source/snapshot SHAs do not transfer full PASS to an unfrozen C"
+      },
+      "required_correction": "71/S0 freeze exact C/tree and source deltas. Dispatcher45 deduplicate/retrieve 8 mandatory CI selections, typechecks/guards, AM01–AM06, 28 real-capability/multi-role UI journeys, numerical oracles, three independent reviews, same C.",
+      "recheck": "Read full selected tests/steps/runs/artifacts keyed to C and snapshots parent C, then delta/fix review and no remaining blockers; D evidence envelope and G8 only after G7 and frozen C.",
+      "comment_urls": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/63#issuecomment-6889371128",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889370843"
+      ]
+    }
+  ]
+}

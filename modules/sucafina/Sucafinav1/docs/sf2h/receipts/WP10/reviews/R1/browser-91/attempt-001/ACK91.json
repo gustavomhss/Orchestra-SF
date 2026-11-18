@@ -1,0 +1,84 @@
+{
+  "mission": 91,
+  "actor": "S1-R1",
+  "review_part": "RUN-REVIEW-UX",
+  "campaign": "sf2h-integral-20261112",
+  "status": "ACK_PRELIMINARY_REVIEW_START",
+  "reviewer_model_observed": "GPT-6",
+  "model_configuration": "ChatGPT",
+  "github_actor_observed": "gustavomhss",
+  "session_id": "NOT_EXPOSED_BY_CURRENT_RUNTIME",
+  "previous_product_authorship": "NONE_IN_THIS_NEW_SESSION",
+  "no_earlier_review_authorship_claim": "This session has not authored product or tests; other GitHub authorship is not inferred from account identity",
+  "fixed_review_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "fixed_review_tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+  "review_branch": "review-functional-final",
+  "review_branch_pre_ack_head": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "target_branch": "sf2-stack",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_manifest_sha": "370d95b09314d94e82ae4733ccc7becefefb54f2",
+  "actor_pack_blob_sha": "f164c7b081b77b47cec72085de07780a55cd2acb",
+  "common_blob_sha": "d61f32af03fe10747a50274233f953af044decf6",
+  "appendix_blobs": {
+    "specs/product-acceptance.md": "ded082688fce327def0b48968fa3b89a5831029c",
+    "specs/resident-runtime.md": "033737b1051b23443e633df7874c550629bf55a1"
+  },
+  "input_refs": [
+    "mission 91.json at 6c1b346633f7d00997e76f13eec21d6ebd901332",
+    "AGENTS.md at fixed review SHA",
+    "sf2h-plan/START.md, WORKFLOW.md, execution/COMMON.md, execution/actors/S1-R1.json and mandatory_appendices at planning SHA",
+    "GitHub branch head, fixed commit/tree and current sf2-stack head"
+  ],
+  "assigned_primary_task": "WP10.T03",
+  "primary_criterion_count": 40,
+  "coverage_intent": {
+    "review_wps": [
+      "WP01",
+      "WP02",
+      "WP03",
+      "WP04",
+      "WP05",
+      "WP06",
+      "WP07",
+      "WP08",
+      "WP09",
+      "WP10",
+      "WP11",
+      "WP12",
+      "WP13",
+      "WP14"
+    ],
+    "capabilities": 28,
+    "skilled_personas": 5,
+    "skills": 18,
+    "priority": [
+      "Dashboard",
+      "Planner",
+      "Procurement",
+      "BI",
+      "meetings",
+      "collaboration",
+      "exports",
+      "decisions",
+      "portfolio",
+      "memory"
+    ],
+    "sidebar_plan": "USER_OWNED_EXCLUDED"
+  },
+  "receipt_only_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/R1/browser-91/attempt-001/",
+  "lease_epoch": "independent-review-browser91",
+  "mutually_disjoint_review_writers": [
+    "R2",
+    "R3"
+  ],
+  "older_attempts_checked": "No WP10/reviews path present on review-functional-final at fixed head; do not infer an ended lease from silence.",
+  "execution_constraints": [
+    "READ_ONLY product/tests/skills/prompts/workflows",
+    "NO tests or CI dispatch",
+    "NO code fixes",
+    "comments only in campaign internal PRs",
+    "no merge/deploy/Azure",
+    "no GLOBAL_RELEASE"
+  ],
+  "final_policy": "Final approval needs explicit C frozen by 71/S0, exact candidate SHA/tree, full delta review, corrections recheck, and linked suite/live evidence. Without C only preliminary FIX_FIRST/MISSING_PROOF."
+}

@@ -1,0 +1,44 @@
+{
+  "schema": "sf2h.s1-r1.delta-watch.v1",
+  "actor": "S1-R1",
+  "prior_inspection": {
+    "sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "tree": "4d4b149917a2c74cfeb73e45774fe098666c208d"
+  },
+  "later_integrator_head": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "integrator_tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+  "integrator_parent": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "snapshot_kind": "NONFINAL_POST_BASELINE_DELTA_READ_ONLY_NO_RUN",
+  "source_changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "old_blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+      "new_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "delta": "21 lines added / 2 deleted (C45 GitHub commit API)",
+      "inspection": "New lines 784-806 perform post-download transaction authorization and downloadSnapshotDigest comparison before byte delivery, returning 403/409. The causal absence at fixed C44 is now corrected in source, but no independent C45 run or final frozen C proof was observed.",
+      "review_result": "SOURCE_CORRECTION_PRESENT_PROOF_PENDING",
+      "affected_finding": "R1-91-002"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+      "old_blob": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+      "new_blob": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+      "inspection": "Compare whether same closure-only intention persists; no recheck E2E performed.",
+      "review_result": "UNCHANGED_IN_C45_OPEN_STATIC",
+      "affected_finding": "R1-91-001"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "old_blob": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "new_blob": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "review_result": "UNCHANGED_IN_C45",
+      "affected_finding": "R1-91-001"
+    }
+  ],
+  "tested_status": "NO_C45_DIRECT_RUN_RECORDED_BY_REVIEWER; S snapshots and prior origin runs not equivalent to final frozen C",
+  "validation": "Do not reclassify R1-91-002 as FINAL_FIXED until its test selection/role/source 403/409/zero-byte artifacts and composed candidate C-specific run are linked. No final C explicitly frozen by71/S0 as of this read.",
+  "reviewer_product_edits": false,
+  "ci_dispatched": false,
+  "dispatch_owner": "45",
+  "final_verdict": "PRELIMINARY_HOLD"
+}
