@@ -1,9 +1,8 @@
-import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import { canonicalSfValue, digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { ScenarioRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { PlannerScenarioInputs } from "./scenario-port.ts"
-import { projectionDigest } from "./scenario-comparison-port.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import { roleMap } from "../../runtime/admin.ts"
@@ -90,7 +89,19 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
     const again = await compare()
     const sourceAgain = await input.sources.resolveForecastSource(scenario.baseRef, context)
     const resolvedAgain = await resolve()
-    const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? digestSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : digestSfValue(entry)
-    return again.status === "ok" && projectionDigest(again.value.baseline) === projectionDigest(values) && sourceAgain.status === "ok" && sourceAgain.value.evidence.refDigest === source.value.evidence.refDigest && resolvedAgain.length === resolved.length && resolvedAgain.every((entry, index) => stable(entry) === stable(resolved[index]!)) && !request.signal.aborted && await input.host.revalidate(context)
+    const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? canonicalSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : canonicalSfValue(entry)
+    // ProjectionDigest's two nested SHA256 computations proved only equality at
+    // this read-back fence. Compare the identical canonicalized content directly
+    // instead; SHA256 evidence publication and the source projection verification
+    // in the planner transaction above remain unchanged. Both observations are
+    // taken independently, including all getters, asynchronous hosts and revocation.
+    const stableProjection = (value: typeof values) => canonicalSfValue({
+      ...value,
+      context: { ...value.context, sourceRefs: value.context.sourceRefs.map((ref) => ({ ...ref, observedAt: "" })) },
+      components: value.components.map((component) => ({
+        ...component, sourceRefs: component.sourceRefs.map((ref) => ({ ...ref, observedAt: "" })),
+      })),
+    })
+    return again.status === "ok" && stableProjection(again.value.baseline) === stableProjection(values) && sourceAgain.status === "ok" && sourceAgain.value.evidence.refDigest === source.value.evidence.refDigest && resolvedAgain.length === resolved.length && resolvedAgain.every((entry, index) => stable(entry) === stable(resolved[index]!)) && !request.signal.aborted && await input.host.revalidate(context)
   }
 }
