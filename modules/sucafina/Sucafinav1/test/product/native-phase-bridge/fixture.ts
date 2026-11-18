@@ -139,6 +139,7 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
     }) }
     const application = AppNodeBuilder.build(LayerNode.group([
       Database.node, EventV2.node, SessionStore.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node,
+      ToolSafety.node,
     ]), [[SessionExecution.node, SessionExecutionLocal.node], [ToolSafety.node, safety], [TaskGovernance.node, governance],
       ...(prepared.bridge.contribution.replacements ?? []),
       [LayerNodePlatform.llmClient, Layer.succeed(LLMClient.Service, client)], [Snapshot.node, Snapshot.noopLayer],
