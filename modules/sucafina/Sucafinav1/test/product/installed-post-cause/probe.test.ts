@@ -126,7 +126,11 @@ test("M79 real local operator Versions save crosses body auth dispatch persisten
     }
     await withListener79({
       hostname: "localhost", port: 4110, compose: composeSfInstallation,
-      create: (origin) => createLocalInstallation({ origin }, file, environment),
+      create: async (origin) => {
+        const installation = await createLocalInstallation({ origin }, file, environment)
+        if (!installation.mount.startsWith("/")) throw new Error("M79 installation mount is not a path")
+        return { ...installation, mount: installation.mount as `/${string}` }
+      },
       run: async ({ listener, capture }) => {
         const enrolled = await fetch(JSON.parse(enrollmentMatch[1]), { redirect: "manual", headers: { connection: "close", "x-m79-probe-id": "enrollment" }, signal: AbortSignal.timeout(1800) })
         expect(enrolled.status).toBe(303)
@@ -144,7 +148,9 @@ test("M79 real local operator Versions save crosses body auth dispatch persisten
         }, body }, capture)
         // Unknown outcome is reconciled by a read; the mutation is never sent a second time.
         const observer = await openLocalStore(path.join(directory, "business-local"))
-        const state = await observer.readSnapshotRoot(() => observer.transaction("planner", async (snapshot) => ({ commit: false, value: {
+        const readRoot = observer.readSnapshotRoot
+        if (!readRoot) throw new Error("local store read root unavailable")
+        const state = await readRoot(() => observer.transaction("planner", async (snapshot) => ({ commit: false, value: {
           versions: Array.isArray(snapshot.data.versions) ? snapshot.data.versions.length : 0,
           auditCount: snapshot.audit.length,
         } }))).finally(() => observer.dispose())

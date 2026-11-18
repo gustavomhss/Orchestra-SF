@@ -40,7 +40,8 @@ export async function inspectProof233Hosted(input: HostedInput233) {
   if (![input.productCandidateSha, input.productTreeSha, input.sucafinaSubtreeSha].every((value) => sha40.test(value)))
     gaps.push("candidate-C-tree-or-product-subtree-not-observed")
   if (!Array.isArray(input.runs) || input.runs.length === 0) gaps.push("no-original-GitHub-Actions-runs")
-  const runs = (Array.isArray(input.runs) ? input.runs : []).map((run) => {
+  const listed: readonly HostedRun233[] = Array.isArray(input.runs) ? input.runs : []
+  const runs = listed.map((run) => {
     const valid = Number.isSafeInteger(run.id) && run.id > 0 && run.url === url(run.id) &&
       sha40.test(run.headSha) && run.candidateSha === input.productCandidateSha &&
       run.sucafinaSubtreeSha === input.sucafinaSubtreeSha &&
