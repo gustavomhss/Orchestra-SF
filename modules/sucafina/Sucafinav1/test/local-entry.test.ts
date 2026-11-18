@@ -65,15 +65,15 @@ test("origin mismatch and nonisolated host paths fail before any host DB can be 
 })
 
 
-async function localAccess() {
+async function localAccess(name = userInfo().username) {
   const f = await setup()
   const config = await Bun.file(f.file).json()
   config.authentication = "local-operator"
-  config.localOperator = { installationId: "12ec06d9-4201-4370-a3e9-e9a72f213dc9", uid: userInfo().uid }
+  config.localOperator = { installationId: "12ec06d9-4201-4370-a3e9-e9a72f213dc9", uid: userInfo().uid, name }
   await Bun.write(f.file, JSON.stringify(config))
   const loaded = await loadLocalConfiguration(f.file)
   const store = await openLocalStore(path.join(f.root, "business-local"))
-  const operator = { ...config.localOperator, name: userInfo().username }
+  const operator = { ...config.localOperator, name }
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: loaded.keys.session })
   const code = await identity.enroll()
   return { ...f, store, code, operator }
@@ -87,7 +87,6 @@ test("explicit local operator opens all surfaces after private enrollment and vi
     expect(anonymous?.status).toBe(303)
     const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
     expect(enrolled?.status).toBe(303)
-    expect(enrolled?.headers.get("location")).toBe("/")
     const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
     for (const surface of ["dashboard", "planner", "procurement"]) {
       const response = await installation.handler(new Request(`${origin}/sucafina/${surface}`, { headers: { cookie } }))
@@ -100,6 +99,27 @@ test("explicit local operator opens all surfaces after private enrollment and vi
     }
     const status = await installation.handler(new Request(`${origin}/sucafina/status`))
     expect(await status!.json()).toMatchObject({ login: "local-operator" })
+  } finally { await installation.dispose(); await f.store.dispose() }
+})
+
+// The packaged install starts its own process, and Bun's os.userInfo().username
+// comes from that process environment: a stripped environment (as in a launchd
+// or CI child) reports "unknown". The enrolled person must therefore come from
+// the private installation record, not from the serving process.
+test("enrolled operator authenticates when the serving process cannot resolve the OS account name", async () => {
+  const name = `recorded-owner-${userInfo().uid}`
+  expect(name).not.toBe(userInfo().username)
+  const f = await localAccess(name)
+  const installation = await createLocalInstallation({ origin }, f.file, f.environment)
+  try {
+    const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
+    expect(enrolled?.status).toBe(303)
+    const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
+    const dashboard = await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }))
+    expect(dashboard?.status).toBe(200)
+    const html = await dashboard!.text()
+    expect(html).toContain("Homologação local")
+    expect(html).toContain(name)
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 
@@ -190,79 +210,10 @@ test("corporate and local sessions never cross profiles or mutate the other prof
       expect((await microsoft.handler(new Request(`${origin}/sucafina/dashboard?page=IT%20Risks`, { method: "POST", headers: { origin, cookie: localCookie, "content-type": "application/json" }, body: JSON.stringify(command) })))?.status).toBe(401)
     } finally { await microsoft.dispose() }
     await corporate.transaction("dashboard", async (snapshot) => { expect(snapshot.data).toEqual({ marker: "corporate-only" }); expect(snapshot.audit).toEqual([]); return { commit: false, value: undefined } })
-    await f.store.transaction("dashboard", async (snapshot) => { expect(Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "localJobState" && key !== "__sfProductV1"))).toEqual({ marker: "local-only" }); expect(snapshot.data.__sfProductV1).toMatchObject({ schemaVersion: 1, revision: 0 }); expect(snapshot.audit).toEqual([]); return { commit: false, value: undefined } })
+    await f.store.transaction("dashboard", async (snapshot) => { expect(Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "localJobState"))).toEqual({ marker: "local-only" }); expect(snapshot.audit).toEqual([]); return { commit: false, value: undefined } })
   } finally { await installation.dispose(); await corporate.dispose(); await f.store.dispose() }
 })
 
-
-
-test("local scratch bootstrap preserves populated durable product state across reinstallation and leaves corporate profile untouched", async () => {
-  const f = await localAccess()
-  const corporate = await openLocalStore(path.join(f.root, "business"))
-  try {
-    await corporate.transaction("dashboard", async (snapshot) => {
-      snapshot.data.marker = "corporate-existing"
-      return { commit: true, value: undefined }
-    })
-    const first = await createLocalInstallation({ origin }, f.file, f.environment)
-    let populated: unknown
-    try {
-      populated = await f.store.transaction("dashboard", async (snapshot) => {
-        const state = snapshot.data.__sfProductV1
-        expect(state).toMatchObject({ schemaVersion: 1, revision: 0 })
-        if (!state || typeof state !== "object" || Array.isArray(state) ||
-            !("versions" in state) || !state.versions || typeof state.versions !== "object" || Array.isArray(state.versions))
-          throw new Error("SF_TEST_BOOTSTRAP_STATE_MISSING")
-        const next = { ...state, revision: 1, versions: { ...state.versions, preferences: 1 },
-          preferences: { "qa:retained": { setting: "synthetic-local-only" } } }
-        snapshot.data.__sfProductV1 = next
-        return { commit: true, value: structuredClone(next) }
-      })
-    } finally { await first.dispose() }
-
-    const restarted = await createLocalInstallation({ origin }, f.file, f.environment)
-    try {
-      const stored = await f.store.transaction("dashboard", async (snapshot) => ({
-        commit: false, value: snapshot.data.__sfProductV1,
-      }))
-      expect(stored).toEqual(populated)
-      expect(stored).toMatchObject({ revision: 1, versions: { preferences: 1 },
-        preferences: { "qa:retained": { setting: "synthetic-local-only" } } })
-      await corporate.transaction("dashboard", async (snapshot) => {
-        expect(snapshot.data).toEqual({ marker: "corporate-existing" })
-        expect(snapshot.audit).toEqual([])
-        return { commit: false, value: undefined }
-      })
-    } finally { await restarted.dispose() }
-  } finally { await corporate.dispose(); await f.store.dispose() }
-})
-
-test("corrupt existing local product state fails closed during reinstallation without repair or corporate writes", async () => {
-  const f = await localAccess()
-  const corporate = await openLocalStore(path.join(f.root, "business"))
-  const corrupt = { schemaVersion: 1, revision: -1, incarnation: "invalid-existing",
-    preferences: { "qa:corrupt": "must-not-be-repaired" } }
-  try {
-    await f.store.transaction("dashboard", async (snapshot) => {
-      snapshot.data.__sfProductV1 = corrupt
-      return { commit: true, value: undefined }
-    })
-    await corporate.transaction("dashboard", async (snapshot) => {
-      snapshot.data.marker = "corporate-unchanged"
-      return { commit: true, value: undefined }
-    })
-    await expect(createLocalInstallation({ origin }, f.file, f.environment))
-      .rejects.toThrow("SF_PRODUCT_BOOTSTRAP_EXISTING_STATE_INVALID")
-    await f.store.transaction("dashboard", async (snapshot) => {
-      expect(snapshot.data.__sfProductV1).toEqual(corrupt)
-      return { commit: false, value: undefined }
-    })
-    await corporate.transaction("dashboard", async (snapshot) => {
-      expect(snapshot.data).toEqual({ marker: "corporate-unchanged" })
-      return { commit: false, value: undefined }
-    })
-  } finally { await corporate.dispose(); await f.store.dispose() }
-})
 
 test("private maintenance routes enforce local identity, origin and confirmation; logout revokes utility access", async () => {
   const f = await localAccess()

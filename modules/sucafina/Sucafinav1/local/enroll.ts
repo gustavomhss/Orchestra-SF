@@ -10,11 +10,16 @@ import { createOperatorIdentity } from "../runtime/operator-identity.ts"
 export async function prepareOperatorAccess(file: string, enableLocal = false) {
   const loaded = await loadLocalConfiguration(file)
   if (!enableLocal && loaded.config.authentication !== "local-operator") throw new Error("Explicit local operator profile required")
-  const operator = requireLocalOperator(loaded.config.localOperator ?? { installationId: randomUUID(), uid: userInfo().uid })
+  // Record the owner's OS account name with the installation. Bun derives
+  // os.userInfo().username from the environment, so a later serve started with
+  // a different environment would otherwise seal a different person than the
+  // one this enrollment authenticated.
+  const owner = requireLocalOperator(loaded.config.localOperator ?? { installationId: randomUUID(), uid: userInfo().uid })
+  const operator = { ...owner, name: owner.name ?? userInfo().username }
   const config = { ...loaded.config, authentication: "local-operator" as const, localOperator: operator }
   const store = await openLocalStore(path.join(loaded.directory, "business-local"))
   try {
-    const identity = createOperatorIdentity({ origin: config.origin, mount: config.mount, operator: { ...operator, name: userInfo().username }, key: loaded.keys.session, secrets: store.secrets })
+    const identity = createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, key: loaded.keys.session, secrets: store.secrets })
     const destination = new URL(`${config.mount}/auth/local`, config.origin)
     destination.searchParams.set("code", await identity.enroll())
     const temporary = path.join(loaded.directory, `open-local-${randomUUID()}.html`)
