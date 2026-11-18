@@ -121,7 +121,7 @@ export function SfEligibilityRegistration(props: {
             <p>Source result refs: <bdi>{request().comparison.scenarioRefs.join(" / ")}</bdi></p>
           </div>}
         </Show>
-        <Show when={ui.receipt && ui.phase === "committed"}>
+        <Show when={ui.phase === "committed" ? ui.receipt : undefined}>
           {(receipt) => <div role="status" class="sf-n24-review">
             <p>Escolha confirmada pelo produtor: case v{receipt().version} · correlação <bdi>{receipt().key}</bdi></p>
             <Show when={receipt().resultRef}><p>Resultado: <bdi>{receipt().resultRef}</bdi></p></Show>

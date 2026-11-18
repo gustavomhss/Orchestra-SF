@@ -429,10 +429,12 @@ export const domain: Domain = {
           hr: computed.hr,
         }
       })
+    const directory = structuredClone(environment.directory)
+    if (!directory.some((person) => person.id === actor.id)) directory.push({ id: actor.id, name: actor.id })
     const data = {
       ...normalized,
       versions,
-      directory: structuredClone(environment.directory),
+      directory,
     }
     return {
       data: privateAccess(actor) ? data : object(redact(data)),
@@ -799,7 +801,8 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
 
   if (values.owner !== undefined) {
     const requested = text(values.owner)
-    const person = environment.directory.find((person) => person.id === requested)
+    const person = environment.directory.find((person) => person.id === requested) ??
+      (requested && requested === actor.id ? { id: actor.id, name: actor.id } : undefined)
     if (person) next.owner = { id: person.id, name: person.name }
     else if (!requested) next.owner = ""
     else {

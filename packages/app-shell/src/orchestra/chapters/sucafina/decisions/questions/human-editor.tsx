@@ -297,7 +297,7 @@ export function SfQuestionHumanEditor(props: {
           <button type="button" class="mx-btn primary" disabled={!authorized("decisions.decision-answer-question")}
             onClick={() => void link()}>Vincular resposta confirmada ao caso com CAS</button>
         </Show>
-        <Show when={ui.caseReceipt && ui.phase === "linked"}>
+        <Show when={ui.phase === "linked" ? ui.caseReceipt : undefined}>
           {(receipt) => <div class="sf-n24-review" role="status">
             <p>Questão respondida no caso v{receipt().version} · tentativa <bdi>{receipt().key}</bdi></p>
             <button type="button" class="mx-btn" onClick={props.onRecorded}>Releitura autorizada do caso</button>

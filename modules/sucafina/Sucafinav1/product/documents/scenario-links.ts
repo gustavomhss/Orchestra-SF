@@ -189,8 +189,9 @@ export function createSfDocumentScenarioLinks(input: {
     if (loaded.status !== "ok" || !loaded.value || await input.sourceFence(context) !== fence ||
         !await input.host.revalidate(context))
       return { status: "unavailable", reason: "document-link-read-unavailable" }
+    const links = loaded.value
     return { status: "ok", value: targets.map((target, index) => {
-      const value = loaded.value[index]
+      const value = links[index]
       return storedLink(value) && value.installationId === context.binding.installationId &&
         value.projectId === context.binding.projectId && value.policyVersion === context.binding.policyVersion &&
         value.sourceFence === fence && value.receipt.id === keys[index] &&

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { mkdirSync, readFileSync, readdirSync, writeFileSync, statSync, lstatSync, realpathSync } from "node:fs"
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, statSync, lstatSync, realpathSync } from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
@@ -20,13 +20,119 @@ const SUITE_DIRECTORIES = Object.freeze({
   "CI-UI-REPORTS": "packages/app-shell",
 })
 const PROOFS = ["AM01", "AM02", "AM03", "AM04", "AM05", "AM06"]
-const JOBS = ["preflight", "static", "omni", "unit", "ui"]
+const JOBS = ["preflight", "static", "omni", "unit", "unit-sf", "ui"]
+// CI-SF is the only suite that outgrows one Linux job. Its parts are a strict
+// partition of the manifest selection, proven complete and disjoint below.
+export const SHARDED = Object.freeze({ "CI-SF": 8 })
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex")
 const fail = (message) => { throw new Error("SF_CI_FAIL_CLOSED: " + message) }
 
 
 /** Manifest is authoritative; this module never infers a platform outside Linux/X64. */
 export const sha256Lines = (items) => createHash("sha256").update([...items].sort().join("\n")).digest("hex")
+
+/**
+ * Bun schedules test files on its own, so a fixture that requires one ordered
+ * process (WP01's browser pool: startup first, finalizer last) cannot run inside
+ * this suite. Those files are declared in the manifest, excluded from the
+ * selection, and asserted to stay excluded.
+ */
+const BROWSER_POOL_ENTRY = "wp01/browser-fixture.ts"
+
+function staticImports(file) {
+  let text
+  try { text = readFileSync(file, "utf8") } catch { fail("shard input is unreadable: " + file) }
+  const found = []
+  for (const match of text.matchAll(/(?:from|import|require)\s*\(?\s*["'](\.[^"']+)["']/g)) {
+    const specifier = match[1]
+    const target = path.resolve(path.dirname(file), specifier)
+    const candidates = [target, target + ".ts", target + ".tsx", target + ".mts", target + ".js",
+      path.join(target, "index.ts"), path.join(target, "index.tsx"), path.join(target, "index.js")]
+    if (/\.js$/.test(target)) candidates.push(target.replace(/\.js$/, ".ts"), target.replace(/\.js$/, ".tsx"))
+    const candidate = candidates.find((entry) => existsSync(entry) && statSync(entry).isFile())
+    if (candidate) found.push(candidate)
+  }
+  return found
+}
+
+/** Whole static graph reachable from the selection; missing/cycle edges never decide alone. */
+function staticGraph(files, root) {
+  const graph = new Map()
+  const queue = files.map((file) => path.resolve(root, file))
+  while (queue.length) {
+    const file = queue.pop()
+    if (graph.has(file)) continue
+    const imports = staticImports(file)
+    graph.set(file, imports)
+    for (const next of imports) if (!graph.has(next)) queue.push(next)
+  }
+  return graph
+}
+
+/** Files whose static import closure occupies the WP01 ordered browser pool. */
+export function browserPoolConsumers(files, root = process.cwd()) {
+  const graph = staticGraph(files, root)
+  const reaching = new Set([...graph.keys()].filter((file) => file.split(path.sep).join("/").endsWith(BROWSER_POOL_ENTRY)))
+  let changed = reaching.size > 0
+  while (changed) {
+    changed = false
+    for (const [file, imports] of graph) {
+      if (reaching.has(file)) continue
+      if (!imports.some((next) => reaching.has(next))) continue
+      reaching.add(file)
+      changed = true
+    }
+  }
+  return new Set(files.map((file) => path.resolve(root, file)).filter((file) => reaching.has(file)))
+}
+
+/** A suite that drops the ordered-pool files must prove none of the rest needs them. */
+function assertNoOrderedPoolConsumers(files, root) {
+  const consumers = browserPoolConsumers(files, root)
+  if (consumers.size) {
+    fail("ordered browser pool file is still selected: " + [...consumers][0])
+  }
+}
+
+/** Stable hash partition: every accepted file lands in exactly one part. */
+export function shardFiles(files, index, count) {
+  if (!Number.isSafeInteger(count) || count < 1 || !Number.isSafeInteger(index) || index < 1 || index > count) {
+    fail("invalid shard index/count")
+  }
+  const sorted = [...files].sort()
+  const buckets = Array.from({ length: count }, () => [])
+  for (const file of sorted) {
+    buckets[Number(BigInt("0x" + digest(file).slice(0, 16)) % BigInt(count))].push(file)
+  }
+  const union = buckets.flat().sort()
+  if (union.length !== sorted.length || new Set(union).size !== sorted.length ||
+      JSON.stringify(union) !== JSON.stringify(sorted)) {
+    fail("shard partition is not a complete disjoint cover")
+  }
+  return buckets[index - 1]
+}
+function shardRequest(suiteId) {
+  const count = SHARDED[suiteId]
+  if (!count) return null
+  const raw = process.env.SF_SHARD_INDEX
+  if (raw === undefined || raw === "") return null
+  if (!/^[0-9]+$/.test(raw) || process.env.SF_SHARD_COUNT !== String(count)) fail("shard count drift: " + suiteId)
+  const index = Number(raw)
+  if (index < 1 || index > count) fail("shard index out of range: " + suiteId)
+  return { index, count }
+}
+function evidenceId(suiteId, shard) {
+  return shard ? `${suiteId}-shard-${shard.index}` : suiteId
+}
+function suiteRoot(manifest, suiteId, repoRoot = process.cwd()) {
+  const suite = manifest.suites.find((entry) => entry.id === suiteId)
+  if (!suite) fail("unknown suite root: " + suiteId)
+  return path.join(repoRoot, suite.directory)
+}
+function shardSelection(manifest, suiteId, shard, repoRoot = process.cwd()) {
+  const full = selectSuiteFiles(manifest, suiteId, repoRoot)
+  return shard ? shardFiles(full, shard.index, shard.count) : full
+}
 
 const isTestFile = (file) => /(?:\.test|\.spec)\.[cm]?[jt]sx?$/.test(file)
 const validateRelative = (name) => {
@@ -104,6 +210,21 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
   } else if (selection.kind === "directory" || selection.kind === "full-except-release-only") {
     files = discover(root, selection.testDirectory)
   } else fail("unknown selection: " + suiteId)
+  const harnessOwned = selection.harnessOwnedFiles || []
+  if (!Array.isArray(harnessOwned) || new Set(harnessOwned).size !== harnessOwned.length) {
+    fail("invalid harness-owned inventory")
+  }
+  for (const name of harnessOwned) {
+    ensureContained(root, name, "file")
+    if (!isTestFile(name) || !files.includes(name)) fail("harness-owned file is outside admitted selection: " + name)
+  }
+  files = files.filter((name) => !harnessOwned.includes(name))
+  for (const name of harnessOwned) {
+    if (browserPoolConsumers([name], root).size === 0) {
+      fail("harness-owned file does not reach the ordered pool: " + name)
+    }
+  }
+  assertNoOrderedPoolConsumers(files, root)
   const excluded = selection.releaseOnlyFiles || []
   if (!Array.isArray(excluded) || new Set(excluded).size !== excluded.length) fail("invalid release-only inventory")
   for (const name of excluded) {
@@ -115,7 +236,7 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
   return accepted
 }
 /** Converts summary to a stable multiset of case identities; duplicate parametrized titles stay counted. */
-export function bunCoverageIdentity(raw) {
+function bunCaseKeys(raw) {
   let data
   try { data = typeof raw === "string" ? JSON.parse(raw) : raw } catch { fail("invalid Bun coverage JSON") }
   if (data?.status !== "PASS" || !Array.isArray(data.cases) || data.cases.length === 0) fail("missing Bun case evidence")
@@ -128,6 +249,10 @@ export function bunCoverageIdentity(raw) {
   if (cases.length !== data.counts?.product_executed || data.cases.length !== data.counts?.tests) {
     fail("Bun testcase inventory/count disagreement")
   }
+  return cases
+}
+export function bunCoverageIdentity(raw) {
+  const cases = bunCaseKeys(raw)
   const files = [...new Set(cases.map((name) => name.split("\0", 1)[0]))].sort()
   return { cases: cases.length, files, fileCount: files.length,
     casesSha256: sha256Lines(cases), filesSha256: sha256Lines(files) }
@@ -321,7 +446,7 @@ function coverageForReport(bytes, suite) {
     : playwrightCoverageIdentity(raw, suite.specFile)
 }
 
-export function checkReceipt(receipt, suite, meta, reportBytes, selectedFiles) {
+export function checkReceipt(receipt, suite, meta, reportBytes, selectedFiles, options = {}) {
   if (!receipt || receipt.schemaVersion !== 1) fail("invalid receipt schema")
   if (receipt.suiteId !== suite.id || receipt.kind !== suite.kind) fail("receipt suite mismatch")
   if (receipt.sourceSha !== meta.sha || receipt.checkoutSha !== meta.sha) fail("candidate or checkout SHA mismatch")
@@ -335,7 +460,11 @@ export function checkReceipt(receipt, suite, meta, reportBytes, selectedFiles) {
     ? countBunReport(reportBytes.toString("utf8"))
     : countPlaywrightReport(reportBytes.toString("utf8"), suite.specFile)
   if (receipt.executedTests !== count) fail("receipt test count mismatch")
-  const coverage = checkCoverageBaseline(suite, coverageForReport(reportBytes, suite))
+  // A shard part records real execution identity; the reviewed union baseline
+  // is enforced by verifyShardedSuite once every part passes its own checks.
+  const coverage = options.skipBaseline
+    ? coverageForReport(reportBytes, suite)
+    : checkCoverageBaseline(suite, coverageForReport(reportBytes, suite))
   const selected = sha256Lines(selectedFiles)
   if (coverage.filesSha256 !== selected) fail("selected files were not all executed: " + suite.id)
   if (receipt.selectedFilesSha256 !== selected ||
@@ -359,22 +488,63 @@ export function requirePrerequisites(needs) {
   return JOBS.length
 }
 
-export function verifyAll({ manifest, receipts, reports, needs, sha, runId, attempt, treeSha,
-  selectionProvider = selectSuiteFiles }) {
+function verifyShardedSuite({ manifest, suite, parts, meta, selectionProvider, repoRoot = process.cwd() }) {
+  const count = SHARDED[suite.id]
+  if (!Array.isArray(parts) || parts.length !== count) fail("missing shard parts: " + suite.id)
+  const full = selectionProvider(manifest, suite.id)
+  const caseKeys = []
+  let sum = 0
+  parts.forEach((part, offset) => {
+    const shard = { index: offset + 1, count }
+    const selection = shardFiles(full, shard.index, shard.count)
+    const executed = checkReceipt(part.receipt, suite, meta, part.report, selection, { skipBaseline: true })
+    if (part.receipt.shard?.index !== shard.index || part.receipt.shard?.count !== shard.count) {
+      fail("shard receipt identity mismatch: " + suite.id)
+    }
+    caseKeys.push(...bunCaseKeys(part.report.toString("utf8")))
+    sum += executed
+  })
+  const baseline = suite.coverageBaseline
+  if (baseline?.schemaVersion !== 1 || baseline.status !== "HISTORIC_SUCCESSFUL_ARTIFACT") {
+    fail("coverage baseline requires authentic successful run and independent review: " + suite.id)
+  }
+  const files = [...new Set(caseKeys.map((key) => key.split("\0", 1)[0]))].sort()
+  if (!Number.isSafeInteger(baseline.minimumCases) || baseline.minimumCases < 1 ||
+      !Number.isSafeInteger(baseline.minimumFiles) || baseline.minimumFiles < 1) {
+    fail("malformed coverage baseline: " + suite.id)
+  }
+  if (sha256Lines(files) !== baseline.filesSha256 || sha256Lines(caseKeys) !== baseline.casesSha256 ||
+      files.length < baseline.minimumFiles || caseKeys.length < baseline.minimumCases) {
+    fail("missing/changed baseline case or file inventory: " + suite.id)
+  }
+  return sum
+}
+
+export function verifyAll({ manifest, receipts, reports, shards = {}, needs, sha, runId, attempt, treeSha,
+  selectionProvider = selectSuiteFiles, repoRoot = process.cwd() }) {
   const suites = validateManifest(manifest)
   if (!/^[a-f0-9]{40}$/.test(String(sha))) fail("invalid candidate SHA")
   if (!/^[0-9]+$/.test(String(runId)) || !/^[0-9]+$/.test(String(attempt))) fail("missing run identity")
   if (!/^[a-f0-9]{40}$/.test(String(treeSha))) fail("missing tree identity")
   requirePrerequisites(needs)
-  if (Object.keys(receipts).length !== suites.length || Object.keys(reports).length !== suites.length) {
+  const sharded = suites.filter((suite) => SHARDED[suite.id])
+  const plain = suites.filter((suite) => !SHARDED[suite.id])
+  if (Object.keys(receipts).length !== plain.length || Object.keys(reports).length !== plain.length) {
     fail("missing or extra suite artifacts")
   }
+  if (Object.keys(shards).length !== sharded.length ||
+      sharded.some((suite) => !Object.hasOwn(shards, suite.id))) {
+    fail("missing or extra shard artifacts")
+  }
+  const meta = { sha, runId, attempt, treeSha, manifestSha256: digest(JSON.stringify(manifest)) }
   let sum = 0
-  for (const suite of suites) {
+  for (const suite of plain) {
     if (!Object.hasOwn(receipts, suite.id) || !Object.hasOwn(reports, suite.id)) fail("missing suite: " + suite.id)
     const selection = selectionProvider(manifest, suite.id)
-    sum += checkReceipt(receipts[suite.id], suite, { sha, runId, attempt, treeSha,
-      manifestSha256: digest(JSON.stringify(manifest)) }, reports[suite.id], selection)
+    sum += checkReceipt(receipts[suite.id], suite, meta, reports[suite.id], selection)
+  }
+  for (const suite of sharded) {
+    sum += verifyShardedSuite({ manifest, suite, parts: shards[suite.id], meta, selectionProvider, repoRoot })
   }
   return { suiteCount: suites.length, executedTests: sum, candidateSha: sha, runId: String(runId) }
 }
@@ -462,17 +632,19 @@ function cli() {
   }
   if (command === "select") {
     if (process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") fail("selection must run on Linux X64")
-    for (const name of selectSuiteFiles(manifest, process.env.SF_SUITE_ID)) process.stdout.write(name + "\n")
+    const id = process.env.SF_SUITE_ID
+    for (const name of shardSelection(manifest, id, shardRequest(id))) process.stdout.write(name + "\n")
     return
   }
   if (command === "coverage") {
     const id = process.env.SF_SUITE_ID
+    const shard = shardRequest(id)
     const suite = suites.find((entry) => entry.id === id)
     if (!suite || process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") fail("invalid coverage request")
-    const output = path.join("sf-ci-evidence", id)
+    const output = path.join("sf-ci-evidence", evidenceId(id, shard))
     const reportBytes = readFileSync(path.join(output, reportName(suite.kind)))
     const coverage = coverageForReport(reportBytes, suite)
-    const expectedFiles = selectSuiteFiles(manifest, id)
+    const expectedFiles = shardSelection(manifest, id, shard)
     if (coverage.filesSha256 !== sha256Lines(expectedFiles)) fail("coverage omitted selected file: " + id)
     console.log("SF_CI_COVERAGE_CANDIDATE " + JSON.stringify({ suiteId: id, ...meta,
       cases: coverage.cases, files: coverage.fileCount,
@@ -482,19 +654,25 @@ function cli() {
   }
   if (command === "receipt") {
     const id = process.env.SF_SUITE_ID
+    const shard = shardRequest(id)
     const suite = suites.find((entry) => entry.id === id)
     if (!suite) fail("unknown suite receipt request")
     if (process.env.SF_TEST_EXIT_CODE !== "0") fail("test command failed: " + String(id))
     if (process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") fail("unsupported runner")
     const checkout = process.env.SF_CHECKOUT_SHA
     if (checkout !== meta.sha) fail("checkout mismatch")
-    const output = path.join("sf-ci-evidence", id)
+    const output = path.join("sf-ci-evidence", evidenceId(id, shard))
     const reportBytes = readFileSync(path.join(output, reportName(suite.kind)))
     const count = suite.kind === "bun"
       ? countBunReport(reportBytes.toString("utf8"))
       : countPlaywrightReport(reportBytes.toString("utf8"), suite.specFile)
-    const coverage = checkCoverageBaseline(suite, coverageForReport(reportBytes, suite))
-    const selected = sha256Lines(selectSuiteFiles(manifest, id))
+    // A shard receipt records real execution identity; the reviewed union
+    // baseline is enforced by verify. PENDING suites may produce evidence but
+    // still fail verification until an authentic baseline is versioned.
+    const coverage = shard
+      ? coverageForReport(reportBytes, suite)
+      : checkCoverageBaseline(suite, coverageForReport(reportBytes, suite))
+    const selected = sha256Lines(shardSelection(manifest, id, shard))
     if (coverage.filesSha256 !== selected) fail("not every manifest-selected file executed: " + id)
     const receipt = {
       schemaVersion: 1, suiteId: id, kind: suite.kind,
@@ -505,6 +683,7 @@ function cli() {
       executedTests: count, executedFiles: coverage.fileCount,
       selectedFilesSha256: selected, coverageFilesSha256: coverage.filesSha256,
       coverageCaseSha256: coverage.casesSha256, reportSha256: digest(reportBytes),
+      ...(shard ? { shard: { index: shard.index, count: shard.count } } : {}),
     }
     mkdirSync(output, { recursive: true })
     writeFileSync(path.join(output, "receipt.json"), JSON.stringify(receipt, null, 2) + "\n")
@@ -514,18 +693,33 @@ function cli() {
   if (command === "verify") {
     const root = "sf-ci-collected"
     const names = readdirSync(root, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name)
-    if (names.length !== suites.length || names.some((name) => !REQUIRED.includes(name.replace(/^sf-evidence-/, "")))) {
+    const expected = suites.flatMap((suite) => {
+      const count = SHARDED[suite.id] || 1
+      return Array.from({ length: count }, (_, offset) =>
+        count === 1 ? "sf-evidence-" + suite.id : `sf-evidence-${suite.id}-shard-${offset + 1}`)
+    })
+    if (names.length !== expected.length || names.some((name) => !expected.includes(name))) {
       fail("artifact directory inventory mismatch")
     }
     const receipts = {}
     const reports = {}
+    const shards = {}
     for (const suite of suites) {
-      const dir = path.join(root, "sf-evidence-" + suite.id)
-      receipts[suite.id] = readJson(path.join(dir, "receipt.json"))
-      reports[suite.id] = readFileSync(path.join(dir, reportName(suite.kind)))
+      const count = SHARDED[suite.id] || 1
+      if (count === 1) {
+        const dir = path.join(root, "sf-evidence-" + suite.id)
+        receipts[suite.id] = readJson(path.join(dir, "receipt.json"))
+        reports[suite.id] = readFileSync(path.join(dir, reportName(suite.kind)))
+        continue
+      }
+      shards[suite.id] = Array.from({ length: count }, (_, offset) => {
+        const dir = path.join(root, `sf-evidence-${suite.id}-shard-${offset + 1}`)
+        return { receipt: readJson(path.join(dir, "receipt.json")),
+          report: readFileSync(path.join(dir, reportName(suite.kind))) }
+      })
     }
     const result = verifyAll({
-      manifest, receipts, reports, needs: JSON.parse(process.env.SF_NEEDS_JSON || "null"), ...meta,
+      manifest, receipts, reports, shards, needs: JSON.parse(process.env.SF_NEEDS_JSON || "null"), ...meta,
       treeSha: realTreeSha(),
     })
     console.log("SF_CI_ALL_SUITES_PASS " + JSON.stringify(result))
