@@ -9,7 +9,7 @@ import type { InstalledNativeHarness } from "../fixture.ts"
  * fails explicitly. No authorization flags, mocked grants, fake responses,
  * replayed mutations or browser storage-state exports.
  */
-const surfaceId = "CAP04" as "CAP04" | "CAP05"
+const surfaceId = "CAP04"
 const title = "OPEX Detail"
 const recordName = "Owner name"
 
@@ -243,10 +243,11 @@ type SourcePage = Readonly<{
   principalRef: string
   accessRevision: string
 }>
-const sourceCollection = surfaceId === "CAP04" ? "opexOwners" : "capexProjects"
-const sourceEntries = surfaceId === "CAP04" ? "opexEntries" : "capexEntries"
-const sourceKind = surfaceId === "CAP04" ? "opex" : "capex"
-const newButtonName = surfaceId === "CAP04" ? "New line" : "New CAPEX project"
+// This installed journey binds one concrete source; no impossible opposite branch.
+const sourceCollection = "opexOwners"
+const sourceEntries = "opexEntries"
+const sourceKind = "opex"
+const newButtonName = "New line"
 
 function sourceRows(value: unknown, label: string): SourceRow[] {
   if (!Array.isArray(value) || !value.every((row) => asRecord(row) !== undefined)) {
@@ -662,7 +663,7 @@ function requireRegisteredLiveCase(
   caseName: string,
 ): void {
   const selected = nativeHarness.selected
-  if (!selected || selected.suite !== (surfaceId === "CAP04" ? "U39" : "U40") ||
+  if (!selected || selected.suite !== "U39" ||
       // 199 must bind this exact test to its genuinely authenticated case.
       // Merely registering a private scenario file is not selecting its actor.
       nativeHarness.selectedCase !== caseName ||
@@ -761,17 +762,13 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
       .toBe(nativeHarness.manifest.target.projectId)
     await page.goto(nativeJourneyEntryHref(nativeHarness.manifest.target, surfaceId, 2026))
     await expect(surface).toBeVisible()
-    if (surfaceId === "CAP05") {
-      await expect(surface.getByRole("link", { name: "Import Excel", exact: true })).toHaveCount(0)
+    const permissions = await originalPage(page, nativeHarness)
+    const importControl = surface.getByRole("link", { name: "Import Excel", exact: true })
+    if (permissions.allowedActionIds.includes("import")) {
+      await expect(importControl).toBeVisible()
+      await expect(importControl).toHaveAttribute("href", /\/orchestra\/sf-imports\/new/)
     } else {
-      const permissions = await originalPage(page, nativeHarness)
-      const importControl = surface.getByRole("link", { name: "Import Excel", exact: true })
-      if (permissions.allowedActionIds.includes("import")) {
-        await expect(importControl).toBeVisible()
-        await expect(importControl).toHaveAttribute("href", /\/orchestra\/sf-imports\/new/)
-      } else {
-        await expect(importControl).toHaveCount(0)
-      }
+      await expect(importControl).toHaveCount(0)
     }
   })
 
@@ -1186,11 +1183,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · exact original read fi
     }
     await expect(detail.locator('[data-sf-field="source-version"] dd'))
       .toHaveText(String(ownerVersion(original, String(owner.id))))
-    if (surfaceId === "CAP05") {
-      const row = ownerRow(surface, owner.name)
-      const status = owner.status === null || owner.status === undefined ? "Not available" : String(owner.status)
-      await expect(row).toContainText(status)
-    }
+
     const annualMonths = detail.locator(".sf-budget-months tr[data-sf-month]")
     await expect(annualMonths).toHaveCount(12)
     for (let month = 1; month <= 12; month++) {

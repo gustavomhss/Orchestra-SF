@@ -114,6 +114,20 @@ Selecione **Preview import** e confira as alterações, origens e erros de linha
 
 Quando a integração de arquivos estiver disponível em **Talent Review**, **Import** abre o fluxo de importação. Escolha o destino do Dashboard para **All Members**, carregue a planilha e revise a prévia antes de aplicar. **Export** baixa a planilha original de membros; a exportação exige autorização de administrador e é recusada se o acesso mudar durante a geração.
 
+## Editar o título de um pedido
+
+Em **Requests**, o título do pedido tem um editor próprio, separado dos demais campos da requisição. Ele só aparece quando o pedido está em um estágio editável e o seu acesso permite salvar aquele registro. O editor consulta o pedido atual, mostra os campos que vai alterar em **Review request action** e só envia depois da sua confirmação.
+
+A gravação usa o mesmo comando de salvamento do pedido, com a versão que você revisou. Se o pedido mudar de estágio, de versão ou de responsável enquanto a revisão está aberta, a tela bloqueia o envio e pede uma nova consulta. Uma resposta perdida não libera uma segunda gravação: o pedido permanece inconclusivo até você conferir o registro. Para descartar uma edição ainda não enviada, use **Discard draft**; um envio pendente ou inconclusivo não pode ser descartado.
+
+## Baixar relatórios em Word e PowerPoint
+
+Em **Generate Report**, escolha o relatório preservado, marque as seções que quer incluir e selecione o formato DOCX ou PPTX. A preparação usa as seções imutáveis do relatório e o seu acesso atual; depois o arquivo é baixado da instalação.
+
+Se a preparação ou o download não puderem ser confirmados, a tela informa a indisponibilidade e não converte uma resposta JSON em arquivo. Nesse caso, use **Try again** para repetir a mesma operação: a instalação mantém os primeiros bytes gerados e a repetição não cria um segundo relatório. Não inicie uma nova exportação enquanto o resultado da primeira estiver inconclusivo.
+
+O título do arquivo vem do relatório preservado; não é possível substituí-lo por outro texto na exportação. Se uma seção não estiver autorizada ou não estiver disponível, ela não entra no arquivo.
+
 ## Quando uma ação falha ou o acesso muda
 
 Nas edições comuns das páginas, uma resposta perdida deixa o resultado **inconclusivo**. A interface preserva sua tentativa e não reenvia esse comando por conta própria. **Inspect current record without resending** consulta a versão atual para comparação; essa consulta não altera a versão original da tentativa nem confirma que ela foi aplicada. Se o serviço ainda não puder recuperar o resultado, mantenha a página aberta e confira o registro com o responsável antes de iniciar outra alteração. O texto digitado nesses formulários não é guardado no navegador; sair da página pode perdê-lo.

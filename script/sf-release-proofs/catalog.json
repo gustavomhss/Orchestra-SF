@@ -1,0 +1,80 @@
+{
+  "schema": "sf2h.f04-am-proofs-catalog.v1",
+  "q01": {
+    "cwd": "packages/app-shell",
+    "file": "test-browser/sucafina-native/transport-integration.test.ts",
+    "caseIds": [
+      "Q01-TRANSPORT-GUEST",
+      "Q01-TRANSPORT-INVALID-OWNER",
+      "Q01-TRANSPORT-STALE-FENCE"
+    ],
+    "expectedCount": 3
+  },
+  "u39": {
+    "cwd": "packages/app-shell",
+    "file": "e2e/sucafina/native/journeys/u39.spec.ts",
+    "expectedCount": 22,
+    "capability": "CAP04"
+  },
+  "u40": {
+    "cwd": "packages/app-shell",
+    "file": "e2e/sucafina/native/journeys/u40.spec.ts",
+    "expectedCount": 22,
+    "capability": "CAP05"
+  },
+  "am01": {
+    "cwd": "modules/sucafina",
+    "files": [
+      "Sucafinav1/test/product/integrated-proofs/am01/hypothetical-closure212.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts"
+    ],
+    "requiresOriginalProducerWitness": true
+  },
+  "am02": {
+    "cwd": "modules/sucafina",
+    "files": [
+      "Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts"
+    ],
+    "requiresOriginalProducerWitness": true
+  },
+  "am03": {
+    "cwd": "modules/sucafina",
+    "files": [
+      "Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts"
+    ],
+    "requiresOriginalProducerWitness": true
+  },
+  "am04": {
+    "cwd": "modules/sucafina",
+    "files": [
+      "Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts"
+    ],
+    "requiresOriginalProducerWitness": true
+  },
+  "am05": {
+    "cwd": "modules/sucafina",
+    "files": [
+      "Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am05/sequence-integrity216.test.ts"
+    ],
+    "requiresOriginalProducerWitness": true
+  },
+  "am06": {
+    "cwd": "modules/sucafina",
+    "files": [
+      "Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am06/native-terminal-unavailable.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am06/schedule-native-retry.test.ts"
+    ],
+    "requiresOriginalProducerWitness": true
+  }
+}
