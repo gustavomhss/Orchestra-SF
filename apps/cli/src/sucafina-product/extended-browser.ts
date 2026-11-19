@@ -157,7 +157,9 @@ if (root && bootstrap) {
       client: { ...client, contribution: (payload) => guarded(() => client.contribution(payload)), agenda: (items) => guarded(() => client.agenda(items)),
         preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)), report: (payload) => guarded(() => client.report(payload)),
         downloadUrl: (reference) => closed ? undefined : client.downloadUrl(reference) },
-      refreshItems: (items) => guarded(() => refreshDashboardReviewAgenda(items, discover)),
+      refreshItems: (items) => guarded<ReviewAgendaItem[]>(() => items.length > 0 && items.every((item) => item.kind === "dashboard" && item.recordRefs !== undefined)
+        ? refreshDashboardReviewAgenda(items, discover)
+        : Promise.resolve({ status: "ok", value: structuredClone([...items]) })),
       openReview: (reference) => { if (!closed) location.assign(reviewUrl(reference)) } })
     const choices = document.createElement("fieldset"), legend = document.createElement("legend"), message = document.createElement("p")
     legend.textContent = "Seleção da revisão sucessora"; choices.append(legend); message.setAttribute("role", "status")
