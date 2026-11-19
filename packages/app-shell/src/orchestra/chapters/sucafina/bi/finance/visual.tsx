@@ -1,6 +1,6 @@
 import { For, Show, createMemo } from "solid-js"
 import type { SfBiFigureProps, SfBiOwnedView } from "./model"
-import { sfBiChartModel, sfBiEvidenceRef, sfBiKey } from "./model"
+import { sfBiChartModel, sfBiEvidenceRef, sfBiKey, sfBiPeriodLabel } from "./model"
 import { SfChartFrame } from "../../shared/frame"
 import { useSfPresentation } from "../../shared/frame/presentation"
 import "./figure.css"
@@ -8,7 +8,7 @@ import "./figure.css"
 /** Pure Solid renderer. F01/I00 own admission, owner fencing and read callbacks. */
 export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly<{ copy: "sf.u20" | "sf.u21" }>) {
   const { t, locale } = useSfPresentation()
-  const model = createMemo(() => sfBiChartModel(props.viewId, props.projection, props.copy))
+  const model = createMemo(() => sfBiChartModel(props.viewId, props.projection, props.copy, locale()))
   const fmt = (n: number | null) => n === null ? t(sfBiKey(props.copy + ".missing")) :
     new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(n)
   const assigned = () => new Map(props.projection.projection.values.map((value) => [value.id, value]))
@@ -21,7 +21,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
       questionKey={sfBiKey(props.copy + ".question." + props.viewId)}
       context={model().state === "unavailable" ? [] : [
         { label: { key: sfBiKey(props.copy + ".context.period") },
-          value: { kind: "data", text: props.projection.projection.context.period.start + " – " + props.projection.projection.context.period.end } },
+          value: { kind: "data", text: sfBiPeriodLabel(props.projection.projection.context.period.start, props.projection.projection.context.period.end, locale()) } },
         { label: { key: sfBiKey(props.copy + ".context.currency") },
           value: { kind: "data", text: props.projection.projection.context.currency } },
         { label: { key: sfBiKey(props.copy + ".context.version") },

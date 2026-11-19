@@ -95,7 +95,19 @@ export type SfBiChartModel = Readonly<{
   }>[]
 }>
 
-export function sfBiChartModel(viewId: SfBiOwnedView, result: SfBiSnapshot, prefix: "sf.u20" | "sf.u21"): SfBiChartModel {
+export function sfBiPeriodLabel(start: string, end: string, locale: string) {
+  const day = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
+  const left = day(start)
+  const right = day(end)
+  return start.slice(0, 10) === end.slice(0, 10) ? left : left + " – " + right
+}
+export function sfBiChartModel(viewId: SfBiOwnedView, result: SfBiSnapshot, prefix: "sf.u20" | "sf.u21", locale = "en"): SfBiChartModel {
   const emptyTable: SfChartFrameProps["table"] = { caption: message(prefix + ".table"),
     columns: [
       { id: "series", label: message(prefix + ".column.series") },
@@ -170,8 +182,7 @@ export function sfBiChartModel(viewId: SfBiOwnedView, result: SfBiSnapshot, pref
           value.granularity !== "month" && value.granularity !== "year")
         return unavailable()
       const reference = sfBiEvidenceRef(value)
-      const period = value.period.start === value.period.end
-        ? value.period.start : value.period.start + " – " + value.period.end
+      const period = sfBiPeriodLabel(value.period.start, value.period.end, locale)
       const amount = numeric(value)
       rows.push({ id: value.id, label: series.label, unit: series.unit,
         period, value: amount, ...(reference ? { evidenceRef: reference } : {}),

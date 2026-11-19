@@ -191,6 +191,13 @@ function formFields(editor: SecurityEditor, value: FormValues): SfReviewField[] 
 export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const language = useLanguage()
   const t = (copy: SfCopyKey) => language.t(copy as Parameters<typeof language.t>[0])
+  const shownDate = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(language.intl(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
   const owner = useSfContext()
   const [state, setState] = createStore<SecurityView>({
     state: "loading", page: undefined,
@@ -881,7 +888,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
               </tr></thead><tbody>
                 <For each={securityIncidents(state.page!)}>{(incident) => (
                   <tr><th scope="row">{securityString(incident.title)}</th>
-                    <td><time dateTime={securityString(incident.date)}>{securityString(incident.date)}</time></td>
+                    <td><time dateTime={securityString(incident.date)}>{shownDate(securityString(incident.date))}</time></td>
                     <td>{incident.contained && incident.remediated && incident.rootCause ?
                       t(key("table.done")) : t(key("table.open"))}</td>
                     <td>{securityString(incident.impact)}</td>

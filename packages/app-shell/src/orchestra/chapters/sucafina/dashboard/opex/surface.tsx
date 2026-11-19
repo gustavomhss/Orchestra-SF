@@ -70,7 +70,11 @@ const asRef = (id: string | number): SfRef => String(id) as SfRef
 export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
   const context = useSfContext()
   const navigate = useNavigate()
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
+  const unspecified = () => t(("sf.u02.noCurrency") as SfCopyKey)
+  const amountText = (value: number | null | undefined) =>
+    value === null || value === undefined ? t(key("missing")) :
+    new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value) + " · " + unspecified()
   const formId = createUniqueId()
   const [view, setView] = createStore<{
     page: BudgetPage | undefined
@@ -562,7 +566,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       : []
   const ownerColumns: readonly SfColumn<BudgetOwner>[] = [
     { id: "name", labelKey: key("name"), align: "start", sortKey: "name", widthPolicy: { kind: "flex", minPx: 180, weight: 2 }, render: (owner) => <bdi>{owner.name ?? t(key("missing"))}</bdi> },
-    { id: "budget", labelKey: key("annualBudget"), align: "end", sortKey: "budget", widthPolicy: { kind: "content", minPx: 140, maxPx: 220 }, render: (owner) => <span class="sf-budget-number">{owner.budget === null || owner.budget === undefined ? t(key("missing")) : String(owner.budget)}</span> },
+    { id: "budget", labelKey: key("annualBudget"), align: "end", sortKey: "budget", widthPolicy: { kind: "content", minPx: 140, maxPx: 220 }, render: (owner) => <span class="sf-budget-number">{amountText(owner.budget)}</span> },
     ...(props.capability === "CAP05" ? [{
       id: "status", labelKey: key("status"), align: "start" as const, widthPolicy: { kind: "content" as const, minPx: 120, maxPx: 180 },
       render: (owner: BudgetOwner) => <bdi>{owner.status ?? t(key("missing"))}</bdi>,
@@ -578,10 +582,10 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     return (
       <tr data-sf-month={month}>
         <th scope="row">{month}</th>
-        <td>{entry?.budget === undefined || entry.budget === null ? t(key("missing")) : String(entry.budget)}</td>
-        <td>{entry?.actual === undefined || entry.actual === null ? t(key("missing")) : String(entry.actual)}</td>
-        <td>{entry?.forecast === undefined || entry.forecast === null ? t(key("missing")) : String(entry.forecast)}</td>
-        <td>{deviation?.flag === undefined ? t(key("missing")) : deviation.flag || t(key("missing"))}</td>
+        <td>{amountText(entry?.budget)}</td>
+        <td>{amountText(entry?.actual)}</td>
+        <td>{amountText(entry?.forecast)}</td>
+        <td>{deviation?.flag === undefined ? t(key("missing")) : deviation.flag}</td>
         <td><bdi>{deviation?.text ?? t(key("missing"))}</bdi></td>
         <Show when={allowed("save-entry") || allowed("save-deviation")}>
           <td class="sf-budget-row-actions">
@@ -598,7 +602,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
   }
   const value = (v: number | string | null | undefined): SfDisplayValue =>
     v === null || v === undefined ? { kind: "missing", reason: { key: key("missing") } } :
-      { kind: "text", text: { kind: "data", text: String(v) } }
+      { kind: "text", text: { kind: "data", text: typeof v === "number" ? amountText(v) : String(v) } }
   const detail = (owner: BudgetOwner) => (
     <SfRecordDetail
       title={{ kind: "data", text: owner.name ?? String(owner.id) }}
@@ -623,7 +627,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
             </Show>
             <Show when={hintFor(owner)}>
               {(hint) => <dl class="sf-budget-hint">
-                <div><dt>{t(key("yearAmount"))}</dt><dd>{hint().amount}</dd></div>
+                <div><dt>{t(key("yearAmount"))}</dt><dd>{amountText(hint().amount)}</dd></div>
                 <div><dt>{t(key("month"))}</dt><dd>{hint().months}</dd></div>
                 <div><dt>{t(key("sourceVersion"))}</dt><dd>{view.page?.versions.budgetYtd ?? t(key("missing"))}</dd></div>
               </dl>}

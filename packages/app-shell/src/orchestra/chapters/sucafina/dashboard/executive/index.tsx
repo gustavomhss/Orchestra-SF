@@ -38,9 +38,23 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value!)
   const monetary = (value: number | undefined | null) => numeric(value)
   const entries = () => data()?.signals ?? []
-  const signals = createMemo(() => [...entries()].sort((a, b) =>
-    Number(pinned().has(b.id)) - Number(pinned().has(a.id)) ||
-    (b.date || "").localeCompare(a.date || "") || a.id.localeCompare(b.id)))
+  const shownDate = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
+  const signals = createMemo(() => {
+    const selectedYear = year()
+    const selectedMonth = month()
+    const prefix = selectedYear !== undefined && selectedMonth !== undefined
+      ? String(selectedYear) + "-" + String(selectedMonth).padStart(2, "0")
+      : selectedYear !== undefined ? String(selectedYear) : undefined
+    return [...entries()].filter((signal) => prefix === undefined || signal.date.startsWith(prefix)).sort((a, b) =>
+      Number(pinned().has(b.id)) - Number(pinned().has(a.id)) ||
+      (b.date || "").localeCompare(a.date || "") || a.id.localeCompare(b.id))
+  })
   const byYear = () => year() === undefined ? undefined : data()?.executiveByYear?.[String(year())]
   const executive = () => byYear()
   const unscoped = () => t(key("sf.u02.sourceWarning"))
@@ -186,7 +200,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                 <th scope="col">{t(key("sf.u02.origin"))}</th><th scope="col">{t(key("sf.u02.priority"))}</th></tr></thead>
               <tbody><For each={signals()}>{(signal) =>
                 <tr><th scope="row">{signal.fact}</th><td>{signal.rule}</td>
-                  <td>{signal.date || missing()}</td><td><bdi>{signal.page + " / " + signal.recordId}</bdi></td>
+                  <td><time dateTime={signal.date}>{signal.date ? shownDate(signal.date) : missing()}</time></td><td><bdi>{signal.page + " / " + signal.recordId}</bdi></td>
                   <td><button type="button" class="mx-btn" aria-pressed={pinned().has(signal.id)}
                     onClick={() => { const next = new Set(pinned());
                       if (next.has(signal.id)) next.delete(signal.id); else next.add(signal.id);

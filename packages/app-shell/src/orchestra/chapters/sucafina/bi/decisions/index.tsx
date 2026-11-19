@@ -15,6 +15,7 @@ import {
   type SfDisplayValue, type SfMessage, type SfPlotSeries, type SfText, type SfUiState,
 } from "../../shared/frame"
 import type { SF_U22_COPY } from "@/i18n/orchestra-chapters/sf-u22"
+import { sfBiPeriodLabel } from "../finance/model"
 import "./u22.css"
 
 type DecisionViewId = "BI09" | "BI10" | "BI11"
@@ -108,7 +109,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
         return {
           id: valueId, x: recorded?.period.start ?? valueId,
           xLabel: data(recorded
-            ? recorded.period.start + " – " + recorded.period.end
+            ? sfBiPeriodLabel(recorded.period.start, recorded.period.end, language.intl())
             : valueId),
           value: recorded && typeof recorded.value === "number" && recorded.evidenceState !== "absent"
             ? { kind: "known" as const, value: recorded.value }
@@ -142,7 +143,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
             value: measured ? display(measured.value) : missing(),
             unit: display(measured?.unit ?? measured?.currency ?? item.unit),
             evidence: display(measured?.evidenceState ?? "absent"),
-            period: measured ? display(measured.period.start + " – " + measured.period.end) : missing(),
+            period: measured ? display(sfBiPeriodLabel(measured.period.start, measured.period.end, language.intl())) : missing(),
             source: source ? display(source.refId) : missing(),
           },
         }
@@ -162,7 +163,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
     return "ready"
   }
   const chartContext = createMemo((): SfChartFrameProps["context"] => [
-    { label: msg("sf.u22.chart.period"), value: data(packet().request.period.start + " – " + packet().request.period.end) },
+    { label: msg("sf.u22.chart.period"), value: data(sfBiPeriodLabel(packet().request.period.start, packet().request.period.end, language.intl())) },
     { label: msg("sf.u22.chart.unit"), value: data(projection().context.currency) },
     { label: msg("sf.u22.chart.engine"), value: data(projection().engineVersion) },
     { label: msg("sf.u22.chart.selection"), value: data(packet().request.selectionRef) },

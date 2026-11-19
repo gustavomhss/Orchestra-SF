@@ -238,6 +238,13 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
   }
   const formatNumber = (amount: number) =>
     new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(amount)
+  const shownDate = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
   const refresh = () => { void owner.reload() }
   const data = () => screen.status === "ready" ? screen.data : null
   const caseItems = () => {
@@ -345,7 +352,7 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                     )}>{topic.action || topic.id}</button>
                     <span class="block">{t(key("sf.ui29.priority"))}: {topic.priority ?? t(key("sf.ui29.notProjected"))} · {topic.status ?? t(key("sf.ui29.notProjected"))}</span>
                     <span class="block">{t(key("sf.ui29.owner"))}: <bdi>{topic.owner || t(key("sf.ui29.notProjected"))}</bdi></span>
-                    <span class="block">{t(key("sf.ui29.deadline"))}: {topic.due || t(key("sf.ui29.notProjected"))}</span>
+                    <span class="block">{t(key("sf.ui29.deadline"))}: {topic.due ? shownDate(topic.due) : t(key("sf.ui29.notProjected"))}</span>
                   </li>
                 )}</For>
               </ul>
@@ -363,7 +370,7 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                       "/orchestra/sf-operations/risks/" + encodeSfRouteRef(String(risk.id)),
                     )}>{scalar(risk.title) || scalar(risk.name) || String(risk.id)}</button>
                     <span class="block">{t(key("sf.ui29.owner"))}: <bdi>{scalar(risk.owner) || scalar(risk.responsible) || t(key("sf.ui29.notProjected"))}</bdi></span>
-                    <span class="block">{t(key("sf.ui29.deadline"))}: {scalar(risk.due) || t(key("sf.ui29.notProjected"))}</span>
+                    <span class="block">{t(key("sf.ui29.deadline"))}: {scalar(risk.due) ? shownDate(scalar(risk.due)) : t(key("sf.ui29.notProjected"))}</span>
                     <span class="block">{t(key("sf.ui29.riskStatus"))}: {scalar(risk.status) || t(key("sf.ui29.notProjected"))}</span>
                   </li>
                 )}</For>
