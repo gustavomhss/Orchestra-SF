@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: a2ec3e7648f088a310461ec2fe3e9df6a21af03b (código; o commit deste documento é posterior)
+SHA: d4a0930efc2c57734ac2400e2de01ea5a30a536e (checkpoint C12; commit deste documento posterior)
 Data: 2026-11-19
 Estado: partial
 
@@ -34,7 +34,7 @@ Estado: partial
 
 - BI instalado/cost-waterfall — modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts:126 e installed-bi-closure/fixture.ts:123 — deadlines foram localizados em comparison.persist/dispatch/exact-threshold, não em HTML morto. Há investigação CPU isolada na snapshotcc7bd5371df5ec5fd2024c44a8164cfe7cb9e81d. Nenhum producer foi otimizado sem evidência. O inventário [with-case-consumers-44594789225.md](./with-case-consumers-44594789225.md) documenta por que NÃO se removeu cases.read do binding global.
 - C12 — modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts:72 e :197 — o consumer ainda renderiza decisionApplyForms/Script, que não fornece Retry same application nem Recover recorded receipt. É necessário portar as2 provas ao capítulo nativo e conservar interrupção após commit, reenvio idêntico409, recibo único, novo contexto e SQLite reaberto. Não apagar os unitários antes da prova equivalente passar.
-- UI39 — packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx:236 e :450 — ainda exige coverage complete e oferece recover só no estado local outcomeUnknown, incompatíveis com o caso C12 original de campo autorizado com total pendente e recuperação após reload. Posse liberada por WP5; alterações devem usar o contrato original, sem fabricar coverage/receipt. Ainda não editado.
+- UI39 — packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx:256 e :473 — checkpoint d4a0930 implementa retry humano exato e recovery disponível após reload/sucesso, dependente de F02 1b74d2 do WP5. Ainda sem gate instalado. Não atribuir PASS aos seletores ou ao novo probe C12 antes do run.
 
 ## Decisões e asserções removidas ou remapeadas
 
@@ -92,3 +92,14 @@ Estado: partial
 Correção de evidência: versões anteriores interpretaram uma linha de timeout como prova de logout204 nos gates8/9. Esses gates não emitiram o POST. A prova positiva está no run44580949588 e no spec de revogação que passou no ingresso15/run44589423843.
 
 Toda verificação foi executada em GitHub Actions. Nenhum resultado foi fabricado.
+
+## Checkpoint C12 nativo — d4a0930
+
+- Código d4a0930efc2c57734ac2400e2de01ea5a30a536e: UI39 guarda apenas em memória a intenção exata (payload/key/geração/transporte) da primeira aplicação. Só o botão Retry same application fornece retry="same-intent". Uma resposta terminal409 limpa a intenção; o domínio conserva CAS, reautorização e recibo único. Sem auto-retry nem persistência de intenção.
+- 7108b771 removeu apenas o gate cliente coverage==complete que não pertence ao original prepared review. Coverage continua renderizado. Recovery usa a operação original purpose=recover e relê projection.case após sucesso, inclusive depois de reload.
+- Novo apps/cli/src/sucafina-product/native-ui/decision-application-health.ts:11 observa exatamente review/apply/recover instalados. Confere registry original, binding por identidade do handler e dependências, Request original, stamp/admissão sf_case_read, ações humanas, namespaces C08 cases+receipts com dupla leitura e revalidação final. Não executa aplicação, não fabrica grant/receipt e não declara autorização de um alvo.
+- Factory packages/app-shell/e2e/sucafina/operations-support/installation.ts:37 aceita grants explícitos só no fixture e expõe runtime.services; defaults existentes de Operations permanecem iguais. Isso permite que o harness C12 use a MESMA autoridade e SQLite da instalação nativa.
+- Contrato conferido: host-context.ts encadeia portfolioHttp ANTES de procurementDecisionHttp. apps/cli/src/sucafina-product/portfolio-http.ts:59–60/:103 aceita review com3campos; o fallback procurement/decision-http.ts exige purpose=review. O schema e payload nativos de3campos foram preservados; nenhuma suposição sobre o fallback virou edição.
+- Pendente: modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts:72/:197 continua no HTML legado; nenhuma asserção foi removida. Portar2provas completas ao host nativo: perda503, body/key idênticos com segundoPOST409/1efeito, reload, contexto novo, SQLite reaberto, recover e recovery repetida; também perda200/recibo já ligado. O contexto novo pode possuir preferências normais de servidor/projeto, mas não dados privados C12 em storage.
+- Pendente: qualificação de tipagem e gate instalado C12 com F02 WP5 1b74d2. Os arquivos host-context mudam2pins; medir hashes em Actions antes de atualizar o freeze, como coordenado pelo integrador. Nenhum digest calculado por suposição.
+- Runs: nenhum run executado para d4a0930; estado partial. Run44598844856 do integrador passou CLI e parou em3erros de tipos prévios no appshell, antes de qualquer prova browser; correções fora deste checkpoint pertencem ao WP5.
