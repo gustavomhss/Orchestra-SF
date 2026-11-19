@@ -1,35 +1,34 @@
 # Handoff — finish-browser-20261119
 
-SHA: código bcc011b24da954f55a6d00fd5e5800044da44a6e; snapshot CI 01c0db6abce360462210409206cb93450ec657c0; composição ede80eb16eabf621019c111cc723b8d23251932e.
+SHA de código: c1e13923e4903b4517bfa848d35ad9f6090c9c9e
 Data: 2026-11-19
 Estado: complete
 
 ## Feito
-- Atualizado o contrato exato do registry para as cinco extensões originais de edição de decisão e agenda/preservação/leitura de review. O catálogo I00 permanece nos mesmos 305 IDs e blob 31dbec1726fd8147156b01dc545726650ffd49e1.
-- Fixtures de admissão UI49/UI50 agora publicam reviews.review-read, o leitor original que admite o dossiê de múltiplos domínios. Adicionada negativa explícita: somente dashboard.dashboard-review não admite a rota genérica.
-- Preservadas todas as expectativas de métodos, efeitos, rotas, bytes reais, ausência de export legado e limites de admissão.
+
+- transport-contract.test.ts compara as305operações do blob31dbec1726fd8147156b01dc545726650ffd49e1, os48bindings de superfície literal e todas as extensões originais por igualdade exata.
+- As duas leituras privadas UI54 dashboard-draft-read e dashboard-hot-topic-draft-outcome são POST read/dashboard com suas queries originais. O teste confirma que não existiam no catálogo congelado; o catálogo não foi editado.
+- As correções anteriores dos outros contratos de navegador estão na composição; este último commit só altera o teste literal das duas extensões. O conjunto de protocolos e este arquivo foram mergeados no PR383, integração bd45b3135c2a0cfc0a3cc2f5bdc6ed7373caebb5.
 
 ## Pendente
-- Integração dos dois testes aguarda os branches de produto correspondentes; nenhuma falha restante nestes dois arquivos no gate abaixo.
-- Procurement independente foi qualificado por finish-operations-20261119 no run44589603579; não está no escopo dos dois arquivos deste branch.
-- Integrar somente após a composição e o gate correspondente; este branch isolado depende das mudanças de produto de Reports/Bindings ainda em revisão.
+
+- Nenhum para este teste de metadata. Não qualifica autorização instalada, mutações ou jornadas dos capítulos.
+- Os demais WPs nativos e o sf-ci final permanecem com seus próprios gates.
 
 ## Decisões e justificativas
-- Asserções removidas: nenhuma. Os valores antigos de fixture do leitor Dashboard foram substituídos pelo leitor genérico original, e a capacidade insuficiente do leitor antigo foi acrescentada como negativa.
-- Não modificado baseline, digest, coverage, catálogo congelado nem política de autorização.
+
+- Asserções removidas: nenhuma. Mantidos igualdade exata, campos congelados, método/mutação, resposta desconhecida, busca privada porPOST e bytes porGET.
+- Sem baseline, catálogo, cobertura ou digestfabricado. A definição do catálogo original permanece validada porhash de blob no teste.
 
 ## Como retomar
-Compor estes dois arquivos de teste com os SHAs atuais de Reports/Bindings; executar via test-ci os dois arquivos test-browser. Depois incluir a correção independente de Procurement e repetir somente o gate necessário.
+
+1. Partir de sf-join-four bd45b3135c2a0cfc0a3cc2f5bdc6ed7373caebb5.
+2. Prosseguir nos gates nativos; qualquer nova extensão requer fonte original e expectativa literal, sem reescrever305operações históricas.
 
 ## Comandos e resultados
-- Auditoria [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131), job135778309143: 110 pass, 4 fail, 895 expect, 114 testes em 32 arquivos. Estas mudanças tratam as três falhas de catálogo/rotas; a quarta é de Procurement.
-- Leitura do log original via Actions [44588580717](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44588580717): success na extração; não é execução de teste.
-- Gate [44589103071](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589103071): SUCCESS, 5 pass, 0 fail, 2183 expect; snapshot 3fc5740182f8966719064bf80055a2cdf6633ca0, composição f568cb40f41ea7747866b346ae82b2ab5bab91b6. Jobs135789937911 e135791754465 success. Código deste WP 159085097266bfd9eb964ef9116a2ad1954e9ac6.
 
-## Atualização — bindings originais sem campo surface
-
-- As 48 operações já existentes no catálogo I00 com input fechado sem surface têm binding literal verificado: 29 Collaboration e 15 Decisions em dashboard; quatro C12 em procurement. A extensão posterior decisions.decision-edit também usa dashboard. Queries, métodos, efeitos, discriminadores e limites continuam comparados com a origem congelada.
-- Os IDs atuais são uma união sem duplicação entre catálogo e extensões. O teste continua exigindo o conjunto exato de extensões e o hash original31dbec1726fd8147156b01dc545726650ffd49e1; nenhuma linha do catálogo305 foi modificada.
-- Asserções removidas: nenhuma. O path antigo parametrizado continua provado no catálogo; o binding atual é comparado com o mapa explícito do adaptador original. Gate anterior44589103071 não qualifica este delta. A nova execução44596486889 abaixo o qualifica.
-
-- [44596486889](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44596486889): SUCCESS; 5 pass, 0 fail, 2288 expect,2arquivos,401ms. Jobs135816033730 e135817508969 SUCCESS. Catálogo305 intacto, lista exata e48bindings originais comprovados; nenhum claim de instalação por esse teste puro.
+- test-ci44596486889 SUCCESS,5pass/2288expect para o conjunto anterior de contratos de navegador. https://github.com/gustavomhss/Orchestra-SF/actions/runs/44596486889
+- test-ci44612205026 SUCCESS,2pass/2277expect/1arquivo, snapshot3778d6b93e7b2b416f925f63125b68e01e0a468f; job135871472932 e cleanup135872761066SUCCESS. https://github.com/gustavomhss/Orchestra-SF/actions/runs/44612205026
+- bun run typecheck: trêschecks passaram no candidato em44606780612; esse gate deUI completo falhou e não é sucesso deOperations.
+- bun run check:guards --base origin/dev: não executado neste patch.
+- Todas as verificações emGitHubActions; nenhum sf-ci final.
