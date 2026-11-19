@@ -19,6 +19,7 @@ import {
   u18Coverage, u18ErrorKey, u18Key, u18Message, u18PortState,
   u18Ref, u18TransportState, type SfChoiceOptions, type SfChoiceReview,
 } from "./model"
+import { SfRecordChoice } from "./record"
 import "./u18.css"
 
 type View = {
@@ -271,6 +272,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
       tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="comparison"
       onLayoutMode={() => undefined}
     >
+      <SfRecordChoice caseRef={String(props.route.params.caseRef)} />
       <SfStatePanel
         state={currentState()} messageKey={u18ErrorKey(currentState())}
         onRetryRead={view.outcome === "unknown" ? undefined : () => void read()}
