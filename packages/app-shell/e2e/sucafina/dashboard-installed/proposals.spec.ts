@@ -613,7 +613,14 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
         await expect(historic).toContainText("Original action")
         await expect(historic).not.toContainText("Current revised action")
 
-        const panel = await openProposal(page, installation.origin)
+        const refreshing = page.waitForResponse(modeResponse("dashboard-workbench"))
+        await page.getByRole("button", { name: "Refresh access", exact: true }).click()
+        const refreshed = await refreshing
+        expect(refreshed.status()).toBe(200)
+        expect(object(proposalResponseBody(refreshed)).status).toBe("ok")
+        const panel = page.locator("[data-sf-private-proposal]")
+        await expect(panel).toBeVisible()
+        await expect(panel).not.toContainText("Unrelated confidential case")
         await chooseNew(panel, "Current revised action")
         await panel.getByLabel("Action", { exact: true }).fill("Approved new action")
         await panel.getByLabel("Due date", { exact: true }).fill("2026-12-20")
