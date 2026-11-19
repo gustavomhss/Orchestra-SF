@@ -24,7 +24,7 @@ import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { DomainProjection } from "../../../product/contracts/context.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
-import { available, createRelationsFixture, readFixtureSource } from "./relations-fixture.ts"
+import { available, createRelationsFixture } from "./relations-fixture.ts"
 
 /** Real SQLite, domain selectors, UI admissions, actor scopes and Dashboard historical access verifier.
  * Recipient leases and capture archive remain explicit fixture boundaries; this is not a native/host witness.
@@ -73,12 +73,7 @@ export async function createThreadActorsFixture(options: Pick<Parameters<typeof 
   const threadHistoryWrites = new WeakSet<object>()
   const caseSelectionWrites = new WeakSet<object>()
   const state = createSfProductState({ persistence: base.persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: base.creationTarget.incarnation }), authorize: async (candidate) => identity(candidate), threadHistoryWrites, caseSelectionWrites })
-  const originalRecords = createDashboardRecordEvidenceHost({ host, scopedSources: base.persistence, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: base.persistence }) })
-  const records = {
-    ...originalRecords,
-    resolve: (reference: string, context: TrustedDomainContext) => readFixtureSource(host, context, () => originalRecords.resolve(reference, context)),
-    read: (reference: string, context: TrustedDomainContext) => readFixtureSource(host, context, () => originalRecords.read(reference, context)),
-  }
+  const records = createDashboardRecordEvidenceHost({ host, scopedSources: base.persistence, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: base.persistence }) })
   const pageSources = createDashboardSourceHost({ host, scopedSources: base.persistence })
   const dashboard = createDashboardPort({ host, sources: pageSources })
   const observer = createDashboardConfirmationObserver({ host, scopedSources: base.persistence, readProjection: (selection, context) => selection.recordType === "dashboard-page" ? dashboard.read({ selectionRef: selection.reference, fields: selection.fields, period: selection.period }, context) : records.read(selection.reference, context) })
