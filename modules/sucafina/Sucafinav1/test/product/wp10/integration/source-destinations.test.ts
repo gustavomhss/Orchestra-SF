@@ -38,9 +38,9 @@ test("authorized monthly source links select the native chapter and producer wit
     const handlers = [...createSfDomainProjectionHandlers(dependencies), ...createSfOperationsProjectionHandlers(dependencies)]
     const legacy = createApplication("/sucafina", application)
     for (const item of [
-      { page: "IT Operations", cap: "CAP11", path: "/orchestra/sf-operations/service", field: "opsTickets", year: "2027", month: "2", end: "2027-02-28" },
-      { page: "IT Security KPIs", cap: "CAP12", path: "/orchestra/sf-operations/security", field: "secKpi", year: "2024", month: "2", end: "2024-02-29" },
-      { page: "Executive Dashboard", cap: "CAP01", path: "/orchestra/sf-dashboard/executive", field: "executiveMonths", year: "2025", month: "3", end: "2025-03-31" },
+      { page: "IT Operations", cap: "CAP11", yearKey: "opsYear", monthKey: "operationsMonth", path: "/orchestra/sf-operations/service", field: "opsTickets", year: "2027", month: "2", end: "2027-02-28" },
+      { page: "IT Security KPIs", cap: "CAP12", yearKey: "secYear", monthKey: "securityMonth", path: "/orchestra/sf-operations/security", field: "secKpi", year: "2024", month: "2", end: "2024-02-29" },
+      { page: "Executive Dashboard", cap: "CAP01", yearKey: "execYear", monthKey: "executiveMonth", path: "/orchestra/sf-dashboard/executive", field: "executiveMonths", year: "2025", month: "3", end: "2025-03-31" },
     ]) {
       const period = { start: `${item.year}-${item.month.padStart(2, "0")}-01`, end: item.end }
       const issued = await issue({ page: item.page, fields: [item.field], period }, call)
@@ -61,7 +61,11 @@ test("authorized monthly source links select the native chapter and producer wit
       expect(handler, `The real ${item.page} native producer must be mounted`).toBeDefined()
       if (!handler) throw new Error("Native source producer unavailable")
       const source = new URL(`/sucafina/api/ui/pages/${item.cap}`, destination.origin)
-      source.search = destination.search
+      // The mounted chapter maps its public year/month to the original producer selectors.
+      source.search = new URLSearchParams({
+        [item.yearKey]: destination.searchParams.get("year")!,
+        [item.monthKey]: destination.searchParams.get("month")!,
+      }).toString()
       const response = await handler.handle(new Request(source))
       expect(response.status).toBe(200)
       expect(response.headers.get("content-type")).toContain("application/json")
