@@ -11,6 +11,7 @@ import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucaf
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections"
 import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider"
+import { createSfWorkbenchHttp } from "../../../../../modules/sucafina/Sucafinav1/product/interface/http"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
 import { prepareC12Change } from "../../../../../modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture"
@@ -147,14 +148,20 @@ if (!retained) {
   if (queue.status !== "ok" || matches.length !== 1) throw new Error("C12_REAL_C02_SOURCE_AMBIGUOUS")
   const evidence = Schema.decodeUnknownSync(Schema.toType(SfSourceEvidenceInput))(matches[0]!.evidence)
   if (evidence.kind !== "record") throw new Error("C12_RECORD_EVIDENCE_REQUIRED")
-  const draftResponse = await installation.application(new Request(origin + mount + "/dashboard?sf=workbench-command", {
+  // The production installation composes this original command producer after
+  // productHttp. Operations does not mount it; use the same runtime for the seed.
+  const workbench = createSfWorkbenchHttp({ origin, mount, runtime: () => installation.services?.() })
+  const draftResponse = await workbench(new Request(origin + mount + "/dashboard?sf=workbench-command", {
     method: "POST", headers: { cookie: sessionHeader, origin, "content-type": "application/json", "idempotency-key": randomUUID() },
     body: JSON.stringify({ operation: "sf_case_draft", input: {
       objective: "Review a controlled requisition amount", criteria: ["Budget impact"],
       horizon: { start: "2026-01-01", end: "2026-12-31" }, currency: "USD", sourceRefs: [evidence],
     } }),
-  }))
-  if (draftResponse?.status !== 200) throw new Error("C12_REAL_CASE_CREATION_FAILED")
+  }), "dashboard")
+  if (draftResponse?.status !== 200) {
+    const rejected = draftResponse ? object(await draftResponse.json().catch(() => ({}))) : {}
+    throw new Error(`C12_REAL_CASE_CREATION_FAILED status=${draftResponse?.status ?? "unmounted"} outcome=${typeof rejected.status === "string" ? rejected.status : "unknown"}`)
+  }
   const draft = object(await draftResponse.json())
   const match = typeof draft.outputRef === "string" ? /^case:([^:]+):([^:]+)$/.exec(draft.outputRef) : null
   if (draft.status !== "ok" || !match) throw new Error("C12_REAL_CASE_IDENTITY_MISSING")
