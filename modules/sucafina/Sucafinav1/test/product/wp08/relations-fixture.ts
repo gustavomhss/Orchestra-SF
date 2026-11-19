@@ -41,6 +41,18 @@ function applied(result: Result) {
   return result
 }
 
+/** Run only a pure source read under the original SQLite snapshot boundary.
+ * Each invocation reopens authority; issuers and mutations never enter this scope.
+ */
+export async function readFixtureSource<T>(host: DomainPortHost, context: TrustedDomainContext, read: () => Promise<PortResult<T>>): Promise<PortResult<T>> {
+  const persistence = host.persistence
+  if (!persistence.readSnapshotRoot || !persistence.currentSnapshots) throw new Error("Fixture requires original SQLite read scopes")
+  const result = persistence.currentSnapshots() ? await read() : await persistence.readSnapshotRoot(read)
+  // A new root has closed before this check. An existing caller-owned fence
+  // still performs its own final revalidation after releasing that root.
+  return await host.revalidate(context) ? result : { status: "denied", reason: "source-authority-unavailable" }
+}
+
 function businessSnapshot(snapshot: Snapshot) {
   return { ...snapshot, data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")) }
 }
@@ -62,6 +74,7 @@ export async function createRelationsFixture(options: { threadHistoryWrites?: We
     transaction: (surface, work, options) => resources.store.transaction(surface, work, options),
     transactionAll: (work, options) => resources.store.transactionAll!(work, options),
     currentSnapshots: () => resources.store.currentSnapshots?.(),
+    readSnapshotRoot: (work, options) => resources.store.readSnapshotRoot(work, options),
   }, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at) })
   for (const surface of ["dashboard", "planner", "procurement"] as const) {
     await persistence.initializeSources(surface)
@@ -95,7 +108,12 @@ export async function createRelationsFixture(options: { threadHistoryWrites?: We
   const read = available(await ui.admit(request(), "sf_relation_read", digestSfValue(payload)))
   if (!await ui.validate(read, "sf_relation_read", digestSfValue(payload))) throw new Error("Read admission unavailable")
   const admit = async (action: CollaborationHumanAction, value: unknown) => available(await human.admit(request(), action, value))
-  const records = createDashboardRecordEvidenceHost({ host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: persistence }) })
+  const originalRecords = createDashboardRecordEvidenceHost({ host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: persistence }) })
+  const records = {
+    ...originalRecords,
+    resolve: (reference: string, context: TrustedDomainContext) => readFixtureSource(host, context, () => originalRecords.resolve(reference, context)),
+    read: (reference: string, context: TrustedDomainContext) => readFixtureSource(host, context, () => originalRecords.read(reference, context)),
+  }
   const contextFor = async (context: TrustedDomainContext) => ({ status: "ok" as const, value: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "procurement" as const, period, currency: await persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: text(object(object(snapshot.data.store).settings).currency) })), sourceRefs: [], capabilities: [] } })
   const suppliers = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor })
   const evidence = createSfBusinessContext({ revalidate: host.revalidate, resolveSource: async (ref, context) => {

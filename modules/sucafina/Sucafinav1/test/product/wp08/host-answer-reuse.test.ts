@@ -28,6 +28,7 @@ import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { DomainPortHost, PortResult } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import { readFixtureSource } from "./relations-fixture.ts"
 
 function ok<T>(result: PortResult<T>, label: string): T {
   if (result.status !== "ok") throw new Error(`${label}: ${result.reason}`)
@@ -64,7 +65,8 @@ test("host-created capabilities consume a confirmed answer through shared dispat
     const workPeriod = { start: "2026-01-01", end: "2026-12-31" }
     const issued = await createDashboardSourceIssuer({ host, scopedSources: persistence })({ page: "Budget Overview", fields: ["budgetSeries"], period }, read.value)
     if (issued.status !== "ok") throw new Error("Dashboard source unavailable")
-    const sources = createDashboardSourceHost({ host, scopedSources: persistence })
+    const originalSources = createDashboardSourceHost({ host, scopedSources: persistence })
+    const sources = { ...originalSources, resolveDashboardSource: (...args: Parameters<typeof originalSources.resolveDashboardSource>) => readFixtureSource(host, args[1], () => originalSources.resolveDashboardSource(...args)) }
     const dashboard = createDashboardPort({ host, sources })
     const observer = createDashboardConfirmationObserver({ host, scopedSources: persistence, readProjection: (selection, context) => dashboard.read({ selectionRef: selection.reference, fields: selection.fields, period: selection.period }, context) })
     const evidence = createSfBusinessContext({ revalidate: host.revalidate, resolveSource: async (ref, context) => {
