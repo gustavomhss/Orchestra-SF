@@ -624,7 +624,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 </select>
               </label>
               <button type="button" class="mx-btn primary"
-                disabled={!state.sourceSelectionRef || state.busy} onClick={() => { void admit() }}>
+                disabled={!state.sourceSelectionRef || state.busy || !permitted("files.document-admit")} onClick={() => { void admit() }}>
                 {t("sf.u24.openDocument")}
               </button>
             </div>
@@ -729,7 +729,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               </label>
               <button type="submit" class="mx-btn primary"
                 disabled={!state.documentRef || !state.fieldId.trim() || state.busy ||
-                  state.phase === "unknown"}>{t("sf.u24.extract")}</button>
+                  state.phase === "unknown" || !permitted("files.document-schema") ||
+                  !permitted("files.document-extract")}>{t("sf.u24.extract")}</button>
             </form>
             <Show when={evidence() && selected()?.status === "extracted" && state.phase === "confirm-review"}>
               <section class="sf-files-section" data-sf-confirmation="review">
@@ -740,7 +741,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 <Show when={state.opened}><blockquote>{state.opened!.excerpt}</blockquote></Show>
                 <button type="button" class="mx-btn" disabled={state.busy}
                   onClick={() => { setState("phase", "candidates") }}>{t("sf.common.keepEditing")}</button>
-                <button type="button" class="mx-btn primary" disabled={state.busy}
+                <button type="button" class="mx-btn primary" disabled={state.busy || !permitted("files.document-confirm")}
                   onClick={() => { void confirm() }}>{t("sf.u24.confirmField")}</button>
                 <label>{t("sf.u24.rejectReason")}
                   <textarea maxlength="500" rows="3" value={state.rejectionReason} disabled={state.busy}
@@ -778,7 +779,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 </select>
               </label>
               <Show when={!state.targets.length}><p role="status">{t("sf.u24.noTargets")}</p></Show>
-              <button type="button" class="mx-btn primary" disabled={!state.selectedTarget || state.busy}
+              <button type="button" class="mx-btn primary" disabled={!state.selectedTarget || state.busy ||
+                !permitted("files.document-scenario-preview")}
                 onClick={() => { void scenario() }}>{t("sf.u24.previewScenario")}</button>
             </section>
             <Show when={preview()}>

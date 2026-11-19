@@ -334,12 +334,22 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     setUi("phase","reviewing")
     setUi("lastError",null)
   }
+  const quoteAmount = (quote: QuoteEdit) => {
+    const amount = quote.total == null || quote.total === "" ? "" : asString(quote.total)
+    const currency = typeof quote.currency === "string" ? quote.currency.trim() : ""
+    if (!amount && !currency) return null
+    return amount ? amount + (currency ? " " + currency : " unspecified") : currency
+  }
   const fields=(intent:Intent):SfReviewField[]=>[
     {path:"status",label:m("sf.u12.stage"),value:toView(request()?.status)},
     {path:"sourcing.evaluator",label:m("sf.u12.evaluator"),value:toView(intent.sourcing.evaluator)},
     {path:"sourcing.selectionJustification",label:m("sf.u12.selectionJustification"),value:toView(intent.sourcing.selectionJustification)},
     {path:"sourcing.contractStrategy",label:m("sf.u12.contractStrategy"),value:toView(intent.sourcing.contractStrategy)},
     {path:"sourcing.quotes",label:m("sf.u12.quotes"),value:toView(intent.sourcing.quotes?.length)},
+    ...(intent.sourcing.quotes ?? []).flatMap((quote, index) => [
+      {path:"sourcing.quotes." + index + ".currency",label:m("sf.u12.quoteCurrency"),value:toView(quote.currency)},
+      {path:"sourcing.quotes." + index + ".total",label:m("sf.u12.quoteTotal"),value:toView(quoteAmount(quote))},
+    ]),
     {path:"quoteId",label:m("sf.u12.selectId"),value:toView(intent.quoteId)},
   ]
   const reviewSnapshot=(intent:Intent):SfReviewSnapshot=>({

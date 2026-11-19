@@ -382,7 +382,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       } else if (result.body.status !== "ok") {
         setState({ paste: { ...original, phase: "failed" }, error: t("sf.u07.previewError") })
       } else {
-        setState({ paste: reconcileBudgetPaste(original, result.body.value.rows, false),
+        const reviewed = reconcileBudgetPaste(original, result.body.value.rows, false)
+        setState({ paste: { ...reviewed, phase: reviewed.phase === "complete" ? "review" : reviewed.phase },
           pasteInput: input, error: "" })
       }
     } catch (error) {
@@ -432,7 +433,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const input = state.pasteInput
     const paste = state.paste
     if (!ready || !input || !allowed("save") ||
-        (paste.phase !== "review" && paste.phase !== "partial" && paste.phase !== "conflict")) return
+        (paste.phase !== "review" && paste.phase !== "partial")) return
     const admitted = new Set(rows.filter((row) => row.result === "ready").map((row) => row.rowRef))
     const drafts = input.drafts.filter((row) => admitted.has(row.rowId as SfRef))
     if (!drafts.length) return
@@ -442,6 +443,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       const response = await createSfPlannerClient(ready.transport)["planner.monthly.apply"](
         { action: "apply", input: request }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() },
       )
+      if (response.kind === "response" && (response.status === 409 ||
+          response.body.status === "conflict" || response.body.status === "provider-conflict")) {
+        setState({ paste: { ...paste, phase: "conflict" }, phase: "conflict", error: t("sf.common.conflict") })
+        return
+      }
       const remaining = unresolvedSfPlannerMonthlyRows(request,response)
       if (remaining.status === "outcome-unknown") {
         setState({ uncertainty: true, phase: "outcome-unknown", error: t("sf.common.operationUnknown"),
@@ -530,17 +536,28 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const r=state.review
     const ready=owner.ready()
     if (!r || !ready || !allowed(reviewAction()) || !versionId()) return
+    const sourceRecord=record()
+    if (r.kind==="line-save" || r.kind==="project-save") {
+      const editor = r.kind==="project-save" ? (project() && getEditor(project()!)) : (sourceRecord && getEditor(sourceRecord))
+      const snapshot = editor?.snapshot()
+      if (!snapshot || snapshot.availability !== "active" || snapshot.conflict || snapshot.phase === "conflict") {
+        setState({ phase: "conflict", error: t("sf.common.conflict") })
+        return
+      }
+    }
     const idem=crypto.randomUUID()
     const signal=new AbortController().signal
     const base={version:r.revision,confirmed:true as const}
     const client=createSfPlannerClient(ready.transport)
-    setState({busy:true,review:null,error:""})
+    setState({busy:true,error:""})
     try {
-      const sourceRecord=record()
       let reply: {kind:string;status?:number;body?:{ok:boolean;errors?:readonly string[]}} | undefined
       if (r.kind==="line-save" && sourceRecord) {
         const snapshot=getEditor(sourceRecord)?.snapshot()
-        if (snapshot?.availability!=="active") return
+        if (snapshot?.availability!=="active" || snapshot.conflict || snapshot.phase==="conflict") {
+          setState({ phase: "conflict", error: t("sf.common.conflict") })
+          return
+        }
         const original=snapshot.base ?? initialEdit(sourceRecord)
         const values=Object.fromEntries(Object.entries(snapshot.value).filter(([field,value]) =>
           field!=="code" && value !== original[field as keyof Edit]))
@@ -551,7 +568,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           : await client["domain.command.CAP19.save"]({...input,page:"CAPEX"}, {signal,idempotencyKey:idem})
       } else if (r.kind==="project-save" && project()) {
         const snapshot=getEditor(project()!)?.snapshot()
-        if (snapshot?.availability!=="active") return
+        if (snapshot?.availability!=="active" || snapshot.conflict || snapshot.phase==="conflict") {
+          setState({ phase: "conflict", error: t("sf.common.conflict") })
+          return
+        }
         const original=snapshot.base ?? initialEdit(project()!)
         const values=Object.fromEntries(Object.entries(snapshot.value).filter(([field,value]) =>
           ["name","desc","owner","code","approvalState","investmentStart","investmentEnd"].includes(field) && value !== original[field as keyof Edit]))
@@ -587,10 +607,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         setState({phase:"outcome-unknown",uncertainty:true,error:t("sf.common.operationUnknown")})
       } else if (!(reply.status!>=200 && reply.status!<300 && reply.body?.ok===true)) {
         setState({phase:reply.status===409?"conflict":reply.status===403?"denied":"invalid",
-          error:reply.body?.errors?.join("; ")??t("sf.common.failed")})
+          error:reply.status===409 ? t("sf.common.conflict") : reply.body?.errors?.join("; ")??t("sf.common.failed")})
       } else {
         if (sourceRecord) getEditor(sourceRecord)?.discard()
-        setState({phase:"loading",error:t("sf.u07.saved")})
+        setState({review:null,phase:"loading",error:t("sf.u07.saved")})
         reload()
       }
     } catch(error) {
@@ -739,7 +759,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                       <For each={fieldNames()}>{(field)=><label>
                         {t("sf.u07."+(field==="desc"?"description":field==="cur"?"currency":field==="alloc"?"allocation":field==="cls"?"classification":field==="el"?"element":field==="proj"?"project":field))}
                         <Show when={field === "approvalState"} fallback={
-                          <input type={field === "investmentStart" || field === "investmentEnd" ? "month" : "text"}
+                          <input type={(field === "investmentStart" || field === "investmentEnd") &&
+                            (draft().value[field] === "" || /^\d{4}-\d{2}$/.test(draft().value[field])) ? "month" : "text"}
                             value={draft().value[field]} disabled={!allowed("save")}
                             onInput={(event)=>{
                               const ctrl=getEditor(rec())
