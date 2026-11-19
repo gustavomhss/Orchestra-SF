@@ -40,7 +40,10 @@ test("reissue checks actor access and the live physical incarnation", async () =
       return { ...ref, refDigest: digestSfEvidenceRef(ref) }
     }
     const original = await issue("A")
-    const host = { persistence, requestFor: (binding: TrustedUiContext) => new Request("https://example.test/", { headers: { actor: binding.binding.principalRef } }), revalidate: async () => current.allowed } as unknown as DomainPortHost
+    const requests = new Map(["A", "B"].map((principalRef) => [
+      principalRef, new Request("https://example.test/", { headers: { actor: principalRef } }),
+    ]))
+    const host = { persistence, requestFor: (binding: TrustedUiContext) => requests.get(binding.binding.principalRef), revalidate: async () => current.allowed } as unknown as DomainPortHost
     const evidence = createSfBusinessContext({ revalidate: async () => current.allowed, resolveSource: async (ref, binding) => {
       const source = ref.kind === "record" ? await persistence.resolveScopedSource(ref.target.surface, ref.target.incarnation, async (_snapshot, scope) => current.allowed && scope.principalRef === binding.binding.principalRef) : undefined
       return { state: source && ref.kind === "record" && source.version === ref.target.version && source.inputDigest === ref.target.projectionDigest ? "fresh" : "unavailable", ref, accessRevision: binding.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
