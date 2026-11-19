@@ -8,7 +8,7 @@ import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { useSfCase, sfFailureUiState, sfOperationReady } from "../cases/model"
+import { useSfCase, sfContextUiState, sfFailureUiState, sfOperationReady } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
 
@@ -32,6 +32,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const [ui, setUi] = createStore<{
     selection: readonly string[]
     choices?: ChoiceValue
+    choicesCase?: string
     choicesState: SfUiState
     choiceReview?: ReviewValue
     reviewState: SfUiState
@@ -61,32 +62,63 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
       && first.costCoverage.basisVersion === second.costCoverage.basisVersion
   }
 
+  const routeCase = () => sourceRef()
+  const choicesForRoute = () => {
+    if (ui.choicesState !== "ready" || ui.choicesCase !== routeCase()) return undefined
+    const selected = ui.choices?.selected
+    if (!selected || selected.caseRef.id !== routeCase()) return undefined
+    return selected
+  }
+  const choicePanelState = (): SfUiState => {
+    if (ui.choicesState !== "ready") return ui.choicesState
+    if (ui.choicesCase !== routeCase()) return "stale"
+    const selected = ui.choices?.selected
+    if (selected && selected.caseRef.id !== routeCase()) return "stale"
+    return selected ? "ready" : "empty"
+  }
   createEffect(() => {
     const active = caseData.owner.ready()
+    const ownerStatus = caseData.owner.state().status
     const current = sourceRef()
     const generation = caseData.owner.generation()
     const refresh = ui.readSequence
-    setUi({ choices: undefined, choicesState: active ? "loading" : "unavailable", choiceReview: undefined, reviewState: "empty" })
+    const blocked = !active && (ownerStatus === "unauthenticated" || ownerStatus === "denied")
+      ? sfContextUiState(ownerStatus)
+      : undefined
+    setUi({
+      choices: undefined, choicesCase: undefined,
+      choicesState: active ? "loading" : blocked ?? "unavailable",
+      choiceReview: undefined, reviewState: blocked ?? "empty",
+    })
     if (!active || !current || !sfOperationReady(active.context, "decisions.choice.read")) return
     const abort = new AbortController()
     onCleanup(() => abort.abort())
     void createSfDecisionsClient(active.transport)["decisions.choice.read"](
       { case: current }, { signal: abort.signal },
     ).then((result) => {
-      if (abort.signal.aborted || caseData.owner.generation() !== generation) return
+      if (abort.signal.aborted || caseData.owner.generation() !== generation || sourceRef() !== current) return
       if (result.kind === "transport-error") {
-        setUi("choicesState", "unavailable")
+        setUi({ choices: undefined, choicesCase: undefined, choicesState: "unavailable" })
         return
       }
       if (result.body.status !== "ok") {
-        setUi("choicesState", sfFailureUiState(result.body.status, result.status))
+        const failure = sfFailureUiState(result.body.status, result.status)
+        setUi({
+          choices: undefined, choicesCase: undefined, choicesState: failure, choiceReview: undefined,
+          ...(failure === "denied" || failure === "session-expired" ? { reviewState: failure } : {}),
+        })
         return
       }
-      setUi({ choices: result.body.value, choicesState: "ready" })
+      const selected = result.body.value.selected
+      if (selected && selected.caseRef.id !== current) {
+        setUi({ choices: undefined, choicesCase: undefined, choicesState: "stale" })
+        return
+      }
+      setUi({ choices: result.body.value, choicesCase: current, choicesState: "ready" })
     }).catch((error: unknown) => {
       if (abort.signal.aborted) return
       console.error("Sucafina choice projection failed", error)
-      setUi("choicesState", "unavailable")
+      setUi({ choices: undefined, choicesCase: undefined, choicesState: "unavailable" })
     })
     void refresh
   })
@@ -97,9 +129,14 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
       [...ui.selection.slice(-1), ref], compare: false, choiceReview: undefined })
   }
   const prepare = async (choiceId: string) => {
-    const current = ui.choices?.selected?.choices.find((item) => item.id === choiceId)
+    const requestedCase = routeCase()
+    const selected = ui.choicesCase === requestedCase ? ui.choices?.selected : undefined
+    const current = selected?.caseRef.id === requestedCase
+      ? selected.choices.find((item) => item.id === choiceId)
+      : undefined
     const active = caseData.owner.ready()
-    if (!current?.request || !active || !sfOperationReady(active.context, "decisions.current-choice-prepare") ||
+    if (!current?.request || current.request.caseRef.id !== requestedCase || !active ||
+      !sfOperationReady(active.context, "decisions.current-choice-prepare") ||
       ui.reviewState === "loading" || ui.reviewState === "outcome-unknown") return
     const ticket = caseData.owner.generation()
     setUi({ reviewState: "loading", choiceReview: undefined })
@@ -108,22 +145,45 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
       const result = await createSfDecisionsClient(active.transport)["decisions.current-choice-prepare"](
         current.request, { signal: abort.signal, idempotencyKey: crypto.randomUUID() },
       )
+      if (sourceRef() !== requestedCase) return
+      if (result.kind === "response" && result.body.status !== "ok") {
+        const failure = sfFailureUiState(result.body.status, result.status)
+        if (failure === "denied" || failure === "session-expired") {
+          setUi({
+            choices: undefined, choicesCase: undefined, choicesState: failure,
+            choiceReview: undefined, reviewState: failure,
+          })
+          return
+        }
+      }
       if (caseData.owner.generation() !== ticket || !caseData.owner.ready()) return
       if (result.kind === "transport-error") {
-        setUi("reviewState", "outcome-unknown")
-      } else if (result.body.status !== "ok") {
-        setUi("reviewState", sfFailureUiState(result.body.status, result.status))
-      } else {
-        setUi({ choiceReview: result.body.value, reviewState: "ready" })
+        setUi({ reviewState: "outcome-unknown", choiceReview: undefined })
+        return
       }
+      if (result.body.status !== "ok") {
+        setUi({ reviewState: sfFailureUiState(result.body.status, result.status), choiceReview: undefined })
+        return
+      }
+      const review = result.body.value
+      if (review.promotion.caseRef.id !== requestedCase || review.promotion.choiceId !== choiceId) {
+        setUi({ reviewState: "stale", choiceReview: undefined })
+        return
+      }
+      setUi({ choiceReview: review, reviewState: "ready" })
     } catch (error) {
+      if (sourceRef() !== requestedCase) return
       console.error("Sucafina current-choice comparison failed", error)
-      setUi("reviewState", "outcome-unknown")
+      setUi({ reviewState: "outcome-unknown", choiceReview: undefined })
     }
   }
   const amount = (value: number | null) => value === null ? t("sf.ui35.missing") : String(value)
-  const canReview = () => !!ui.choices?.selected?.choices.some((choice) => !!choice.request)
-    && !!caseData.owner.ready()?.context && sfOperationReady(caseData.owner.ready()!.context, "decisions.current-choice-prepare")
+  const canReview = () => {
+    const active = caseData.owner.ready()
+    const selected = choicesForRoute()
+    return !!active && !!selected?.choices.some((choice) => choice.request?.caseRef.id === routeCase()) &&
+      sfOperationReady(active.context, "decisions.current-choice-prepare")
+  }
   return (
     <SfPageFrame
       titleKey={k("sf.ui35.title")}
@@ -157,6 +217,9 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
             <Show when={route()?.kind === "new"}>
               <p role="status" class="sf-n24-status">{t("sf.ui35.newUnavailable")}</p>
             </Show>
+            <Show when={ui.reviewState !== "session-expired" && ui.choicesState !== "session-expired"} fallback={
+              <SfStatePanel state="session-expired" messageKey={k("sf.common.loginAgain")} />
+            }>
             <Show when={record().alternatives.length} fallback={<SfStatePanel state="empty" messageKey={k("sf.ui35.noItems")} />}>
               <div class="sf-n24-compare">
                 <For each={displayed()}>
@@ -212,11 +275,15 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                 <p role="status">{t("sf.ui35.incompatible")}</p>
               </Show>
             </Show>
+            </Show>
             <section class="mx-card sf-n24-section" aria-label={t("sf.ui35.choice")}>
               <h2>{t("sf.ui35.choice")}</h2>
-              <Show when={ui.choicesState === "ready" && ui.choices?.selected} fallback={
-                <SfStatePanel state={ui.choicesState === "ready" ? "empty" : ui.choicesState}
-                  messageKey={k(ui.choicesState === "ready" ? "sf.ui35.noChoices" : "sf.ui35.unavailable")} />
+              <Show when={choicesForRoute()} fallback={
+                <SfStatePanel state={choicePanelState()}
+                  messageKey={k(choicePanelState() === "empty" ? "sf.ui35.noChoices" :
+                    choicePanelState() === "denied" ? "sf.common.noAccess" :
+                    choicePanelState() === "session-expired" ? "sf.common.loginAgain" :
+                    "sf.ui35.unavailable")} />
               }>
                 {(selection) => <div class="sf-n24">
                   <p><bdi>{selection().title}</bdi></p>
@@ -230,7 +297,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                   </For>
                 </div>}
               </Show>
-              <Show when={ui.reviewState === "ready" && ui.choiceReview}>
+              <Show when={ui.reviewState === "ready" && ui.choiceReview?.promotion.caseRef.id === routeCase() ? ui.choiceReview : undefined}>
                 {(review) => <section class="sf-n24-review" aria-live="polite">
                   <h3>{t("sf.ui35.prepareReview")}</h3>
                   <p>{t("sf.ui35.prepared")}</p>
@@ -242,8 +309,12 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                   </dl>
                 </section>}
               </Show>
-              <Show when={ui.reviewState === "outcome-unknown" || ui.reviewState === "conflict" || ui.reviewState === "denied" || ui.reviewState === "unavailable"}>
-                <SfStatePanel state={ui.reviewState} messageKey={k("sf.ui35.error")} />
+              <Show when={ui.reviewState === "outcome-unknown" || ui.reviewState === "conflict" || ui.reviewState === "stale" || ui.reviewState === "denied" || ui.reviewState === "session-expired" || ui.reviewState === "unavailable"}>
+                <SfStatePanel state={ui.reviewState} messageKey={k(
+                  ui.reviewState === "denied" ? "sf.common.noAccess" :
+                  ui.reviewState === "session-expired" ? "sf.common.loginAgain" :
+                  "sf.ui35.error"
+                )} />
               </Show>
             </section>
           </>}

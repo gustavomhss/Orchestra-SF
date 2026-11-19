@@ -284,7 +284,7 @@ export function SfQuestionHumanEditor(props: {
             <h4>Revisar confirmação (recibo da fonte)</h4>
             <p><bdi>{prepared().answer}</bdi> · <bdi>{prepared().authorRef}</bdi></p>
             <p>Observação: <bdi>{prepared().observationRef}</bdi> · v{prepared().observedSourceVersion}</p>
-            <button type="button" class="mx-btn primary"
+            <button type="button" class="mx-btn primary" disabled={!authorized("collaboration.answer-confirm")}
               onClick={() => void confirm()}>Confirmar resposta humana com CAS</button>
           </div>}
         </Show>
