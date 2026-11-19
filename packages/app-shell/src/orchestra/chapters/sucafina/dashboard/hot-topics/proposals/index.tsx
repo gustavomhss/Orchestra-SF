@@ -3,6 +3,7 @@ import { createStore, unwrap } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../../context/contracts"
 import { useSfContext } from "../../../context"
@@ -138,6 +139,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
   const navigate = useNavigate()
   const previewIntent = crypto.randomUUID() as SfIntentRef
   const [revision, bump] = createSignal(0)
+  const [appliedOwner, setAppliedOwner] = createSignal<{ key: string; generation: number; transport: SfTransport }>()
   const [store, setStore] = createStore<{
     state: SfUiState; workbench: Workbench | null; review: Review | null; discovery: unknown
     reason: string | null; preparationBusy: boolean; applyBusy: boolean
@@ -146,6 +148,11 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     preparationBusy: false, applyBusy: false, outcome: "none" })
   const reference = () => props.route.params.proposalRef
   const current = () => context.state().status === "ready" ? context.ready() : undefined
+  const appliedHere = () => {
+    const saved = appliedOwner(), owner = context.state()
+    return store.outcome === "applied" && !!saved && owner.status === "ready" && owner.ownerKey === saved.key &&
+      context.generation() === saved.generation && current()?.transport === saved.transport
+  }
   const isAdmitted = (operationId: string) => {
     const ready = current()
     return !!ready?.context.availability.some((resource) =>
@@ -262,8 +269,8 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     finally {setStore("preparationBusy", false)}
   }
   async function apply() {
-    const change = chosenChange(), currentReview = store.review, ready = current()
-    if (!change || !currentReview || !ready || store.applyBusy ||
+    const change = chosenChange(), currentReview = store.review, ready = current(), owner = context.state()
+    if (!change || !currentReview || !ready || owner.status !== "ready" || store.applyBusy ||
       store.outcome === "unknown" || !store.workbench?.permissions.apply ||
       !isAdmitted("dashboard.dashboard-hot-topic-apply") ||
       currentReview.state !== "planned" || change.state !== "planned") return
@@ -277,6 +284,9 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       if (context.generation() !== generation || current()?.transport !== ready.transport) return
       if (response.kind !== "response") {setStore("outcome", "unknown");return}
       if (response.body.status !== "ok") {setStore("outcome", "rejected");return}
+      const now = context.state()
+      if (now.status !== "ready" || now.ownerKey !== owner.ownerKey) return
+      setAppliedOwner({ key: owner.ownerKey, generation, transport: ready.transport })
       setStore("outcome", "applied")
       bump((count) => count + 1) // read current source/receipt; never reapply
     } catch {setStore("outcome", "unknown")}
@@ -394,12 +404,14 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
             </dl>}
           </Show>
         </section>
-        <Show when={store.outcome !== "none"}><p role="alert" data-proposal-outcome={store.outcome}>
-          {t(key(store.outcome === "applied" ? "sf.u38.savedRefetch" :
-            store.outcome === "unknown" ? "sf.u38.savePending" : "sf.u38.applyError"))}
+        <Show when={store.outcome === "unknown" || store.outcome === "rejected"}><p role="alert" data-proposal-outcome={store.outcome}>
+          {t(key(store.outcome === "unknown" ? "sf.u38.savePending" : "sf.u38.applyError"))}
         </p></Show>
         <Show when={store.reason}><p role="status">{t(key("sf.u38.sourceUnknown"))}</p></Show>
       </SfStatePanel>
+      <Show when={appliedHere()}><p role="alert" data-proposal-outcome="applied">
+        {t(key("sf.u38.savedRefetch"))}
+      </p></Show>
     </div>
   </SfPageFrame>
 }
