@@ -477,7 +477,7 @@ function ConnectionGate(
     props.disableHealthCheck
       ? true
       : Effect.gen(function* () {
-          if (!server.current) return true
+          if (!server.current) return false
           const trusted = checked.key === server.key
           checked.key = undefined
           if (trusted) return true

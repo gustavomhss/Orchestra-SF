@@ -94,6 +94,7 @@ export function useSfPlannerVersions(props: SfSurfaceProps<"CAP23">) {
       year === undefined ? {} : { year }, { signal: abort.signal },
     ).then((result) => {
       if (abort.signal.aborted || generation !== owner.generation()) return
+      if (pending === abort) pending = undefined
       if (result.kind !== "response") {
         setView({ state: result.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable", page: undefined, reason: result.reason, request })
         return
