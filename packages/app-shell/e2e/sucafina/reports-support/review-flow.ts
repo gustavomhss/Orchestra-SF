@@ -8,7 +8,6 @@ import type { ReportsInstallation } from "./production-installation.ts"
 import type { ReportsCorpus } from "./corpus.ts"
 import { object, observedReportResponse, projection, readReview, responseFor, review, text } from "./model.ts"
 import { inspectReport, officePackageText } from "./ooxml.ts"
-import { connectInstalledShell } from "../installed-shell"
 
 const reportPages = ["Portfolio Dashboard", "Budget Overview", "Hot Topics & Actions"] as const
 const reportPageTopics = {
@@ -120,7 +119,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await expect(article).toBeVisible()
   await expect(article.locator("dd").first()).toHaveText(saved.id)
   for (const section of saved.sections) {
-    const row = article.locator(`[data-section-id="${section.id}"]`)
+    const row = article.locator(`li[data-section-id="${section.id}"]`)
     await expect(row.locator("h3")).toHaveText(section.title)
     await expect(row).toContainText(String(section.count))
   }
@@ -234,7 +233,7 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
 }
 
 export async function changeForecast(page: Page, app: ReportsInstallation, corpus: ReportsCorpus) {
-  const source = await page.context().newPage()
+  const source = page
   const pageRead = (response: Response) => {
     const url = new URL(response.url())
     return response.request().method() === "GET" && url.origin === app.origin &&
@@ -249,8 +248,8 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
   }
   source.on("request", recordMutation)
   try {
-    // The new tab selects the real installed server/project using the existing operator session.
-    await connectInstalledShell(source, app)
+    // Keep the already admitted server/project and operator session. The saved
+    // review stays immutable on the producer while this page edits its source.
     const loaded = source.waitForResponse(pageRead)
     await source.goto("/orchestra/sf-dashboard/opex/" + encodeReviewRef("reports-opex") +
       "?" + new URLSearchParams({ year: String(corpus.year) }))
@@ -327,7 +326,6 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     throw error
   } finally {
     source.off("request", recordMutation)
-    await source.close()
   }
 }
 

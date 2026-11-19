@@ -62,7 +62,7 @@ export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; co
       })
       try { await use({ app, corpus }) }
       finally {
-        await page.unroute(reportJson)
+        await page.unrouteAll({ behavior: "wait" })
         page.off("console", diagnostic)
         page.off("request", begin); page.off("requestfinished", finish); page.off("requestfailed", finish)
         if (info.status !== info.expectedStatus) {
