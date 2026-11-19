@@ -112,6 +112,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       await expect(shown.getByRole("table").getByRole("cell")).toHaveText(captured.projection.values.flatMap((value) => [
         value.id, `${value.value === null ? "Unavailable" : String(value.value)} ${value.currency ?? value.unit ?? ""}`.trim(),
         `${value.period.start} – ${value.period.end}`,
+        { confirmed: "Confirmed", estimated: "Estimated", hypothetical: "Hypothetical", absent: "Absent" }[value.evidenceState],
       ]))
       const saving = page.waitForResponse(responseFor(dashboard, "dashboard-review-preserve", "POST"))
       const preserveStartedAt = Date.now()

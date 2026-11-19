@@ -135,9 +135,9 @@ test("installed Dashboard confirms exact monthly changes and purges late results
         await expect(reopened.getByLabel("forecast", { exact: true })).toHaveValue("140")
         await reopened.getByRole("button", { name: "Cancel", exact: true }).click()
         const shown = surface.locator('.sf-budget-detail tr[data-sf-month="1"]')
-        await expect(shown.getByRole("cell").nth(0)).toHaveText("123")
-        await expect(shown.getByRole("cell").nth(1)).toHaveText("34")
-        await expect(shown.getByRole("cell").nth(2)).toHaveText("140")
+        await expect(shown.getByRole("cell").nth(0)).toHaveText("123 · Source currency not specified")
+        await expect(shown.getByRole("cell").nth(1)).toHaveText("34 · Source currency not specified")
+        await expect(shown.getByRole("cell").nth(2)).toHaveText("140 · Source currency not specified")
       }
       expect(applications).toBe(1)
       await info.attach("dashboard-installed-confirmed-month.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
