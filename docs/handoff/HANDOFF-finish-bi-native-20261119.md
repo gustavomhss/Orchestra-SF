@@ -1,6 +1,6 @@
 # Handoff — finish-bi-native-20261119
 
-SHA: 3aca6a6e8cbe0b9bf7ed1d4b635f5aba4e28ddc7 (código; este documento é o commit seguinte)
+SHA: 484c61f87a3be55580f2571a40898ef11e03a2b6 (código; este documento é o commit seguinte)
 Data: 2026-11-19
 Estado: partial
 
@@ -44,3 +44,14 @@ Estado: partial
 - addLine usa agora a região nativa OPEX única e seus labels reais Name, Owner, Element, Currency e Annual budget, conferidos no renderer planner/opex/budget-view.tsx:867–898 e no DOM original. Mantém a rota fechada CAP18, count1, controle visível, owner original, USD, valores literais, confirmação humana, CAS e leitura original da linha criada. O seletor técnico form[data-page][data-command][data-record] deixou de ser necessário; nenhuma comparação de dado ou resultado foi removida.
 - Asserções removidas: nenhuma asserção de negócio, autoridade, contagem de POST, ID, moeda, período, treinamento40000, zeros, coverage ou reload. Não aumentou timeout. Pendente/unbound: installed-fixture.ts:407 (criação de linha), :419 (comando observado) e :344 (grade mensal) dependem do gate; os cenários BI09/BI10 ainda não chegaram à comparação.
 - Retomar: compor o único blob deste código sobre o candidato com reports-support/model.ts original de retainReportResponse/observedReportResponse. Executar somente installed-bi.spec.ts e installed-bi-regressions.spec.ts, uma vez no gate coordenado pela raiz. Os resultados antigos não qualificam este novo checkpoint.
+
+
+## BI6 — aborto depois de200; diagnóstico mantendo falha terminal
+
+- Run [44620048170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44620048170), snapshot 5c07b0984bedc50e0efc3ffa0fb9c92c645c796a, composição c00178c2101e3c8810c7d37ee5d0a2db0c823b6b, job135898959034: FAILURE, 2 failed / 1 did not run. Três typechecks e cleanup135902481507 passaram.
+- As duas preparações falharam no primeiro Versions/save: o observador reteve POST200 application/json e depois requestfailed net::ERR_ABORTED; nenhum comando foi reenviado. Auditorias [44621448575](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44621448575) e [44622349690](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44622349690) passaram somente na extração dos artefatos originais, sem novo teste. Docs em audit-bi6-original-20261119 e audit-bi6-context-20261119.
+- O DOM final principal mostrou Sucafina route not admitted, porém owner-runtime231.ts:261/273–285 usa esse texto também em resolving; não prova negação terminal. O artefato não reteve trace ou corpo ctx.context. Revisão focal confirmou que UI46 limpa commandAbort antes do readback, modelo limpa pending antes de publicar page e plannerHref preserva tuple completo/year; não houve correção especulativa de F01/F02.
+- Código 484c61f87a3be55580f2571a40898ef11e03a2b6: installed-fixture.ts:450–540 acrescenta observação fechada dos GETs originais de discovery/context/CAP23 durante o comando. No mesmo ponto fatal, registra pathname, nomes de query, year, presença do tuple, estados públicos F01 e contagem; se o browser pediu contexto, relê exatamente essa URL com a sessão atual e guarda somente status/destino/disponibilidade da capability. Nenhum owner selector, cookie ou header é publicado.
+- O diagnóstico não muda condições de sucesso, prioridade do requestfailed, timeout, número de POSTs, payload, CAS, readback, corpus financeiro ou a perda de resposta. A exceção original continua fatal. Nenhuma asserção foi removida.
+- Estado: partial. Pendente/unbound: installed-fixture.ts:539, localizar quem cancela a confirmação usando os fatos originais; installed-bi.spec.ts:12 e installed-bi-regressions.spec.ts:42/:84 permanecem sem qualificação. Não interpretar diagnóstico como aprovação.
+- Retomar: compor este único arquivo sobre Assembly32 b75cd49fc53701209c116511fc6643693b09c2d7 e executar os mesmos dois specs uma vez para observar o ponto fatal autorizado pela raiz. Ler o resultado e corrigir somente a causa comprovada.
