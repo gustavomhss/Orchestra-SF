@@ -69,19 +69,24 @@ export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; co
         await retainReportResponse(request, original)
         // Compare only the original responses already delivered to this page.
         // No extra context GET, stored authority, owner values or replay.
-        if (url.pathname === app.mount + "/api/ui/context") {
-          const body = object(await original.json())
-          observedStamp = body.status === "ok" ? object(object(body.value).stamp) : undefined
-        } else if (url.searchParams.get("sf") === "review-read" && original.status() === 200) {
-          const body = object(await original.json()), saved = object(body.value)
-          const sections = Array.isArray(saved.sections) ? saved.sections : []
-          console.info("SF_REPORTS_OWNER_COMPARISON", JSON.stringify(sections.map((value) => {
-            const section = object(value), content = object(section.content), context = object(content.context)
-            return { title: section.title, projectionValid: Option.isSome(Schema.decodeUnknownOption(SfReviewDomainProjection)(content)),
-              originalContextCaptured: observedStamp !== undefined,
-              matchesCurrentStamp: Object.fromEntries(["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"]
-                .map((key) => [key, observedStamp === undefined ? null : context[key] === observedStamp[key]])) }
-          })))
+        try {
+          if (url.pathname === app.mount + "/api/ui/context") {
+            const body = object(await original.json())
+            observedStamp = body.status === "ok" ? object(object(body.value).stamp) : undefined
+          } else if (url.searchParams.get("sf") === "review-read" && original.status() === 200) {
+            const body = object(await original.json()), saved = object(body.value)
+            const sections = Array.isArray(saved.sections) ? saved.sections : []
+            console.info("SF_REPORTS_OWNER_COMPARISON", JSON.stringify(sections.map((value) => {
+              const section = object(value), content = object(section.content), context = object(content.context)
+              return { title: section.title, projectionValid: Option.isSome(Schema.decodeUnknownOption(SfReviewDomainProjection)(content)),
+                originalContextCaptured: observedStamp !== undefined,
+                matchesCurrentStamp: Object.fromEntries(["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"]
+                  .map((key) => [key, observedStamp === undefined ? null : context[key] === observedStamp[key]])) }
+            })))
+          }
+        } catch {
+          observedStamp = undefined
+          console.info("SF_REPORTS_OWNER_COMPARISON_UNAVAILABLE")
         }
         await route.fulfill({ response: original })
       })
