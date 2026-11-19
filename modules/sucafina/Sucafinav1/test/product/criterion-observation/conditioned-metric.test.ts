@@ -77,7 +77,9 @@ for (const fault of ["case", "result", "source", "coverage", "acl", "preferences
           }
           if (fault === "coverage") {
             const alternative = decision.alternatives[1]!
-            alternative.result = { ...alternative.result, costCoverage: { ...alternative.result.costCoverage, issues: ["changed actual coverage"] } }
+            const result = alternative.result
+            if (result.comparisonStatus !== "conditioned" || result.total !== null) throw new Error("Expected real conditioned coverage")
+            alternative.result = { ...result, costCoverage: { ...result.costCoverage, issues: ["changed actual coverage"] } }
           }
         })
       }
