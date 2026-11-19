@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
-import { expect } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 import type { Page, TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult, SfInstallationList } from "@orchestra/schema/sucafina/context"
@@ -48,8 +48,9 @@ export async function readManifest(): Promise<Manifest> {
 export async function login(page: Page, key: "first" | "second" | "viewer", scenario: string): Promise<Account> {
   const manifest = await readManifest()
   const selected = manifest.accounts[key]
-  const enrollment = selected.enrollments[scenario]
-  if (!enrollment) throw new Error("The existing real-host enrollment is missing for " + key + "/" + scenario)
+  const enrollmentKey = path.basename(test.info().file) + ":" + scenario
+  const enrollment = selected.enrollments[enrollmentKey]
+  if (!enrollment) throw new Error("The existing real-host enrollment is missing for " + key + "/" + enrollmentKey)
   const url = new URL(enrollment)
   expect(url.origin).toBe(manifest.origin)
   expect(url.pathname).toBe(new URL(selected.baseURL).pathname + "/auth/local")

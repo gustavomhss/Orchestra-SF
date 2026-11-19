@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { expect, test } from "@playwright/test"
+import { Schema } from "effect"
+import { SfDomainPageCap25 } from "@orchestra/schema/sucafina/procurement"
 import type { Locator, Page, TestInfo } from "@playwright/test"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
@@ -20,15 +22,29 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   const create = page.locator('form[data-command="create"][data-page="Requests"]').getByRole("button", { name: "Create request", exact: true })
   if (account === "viewer") await expect(create).toHaveCount(0)
   if (account !== "viewer") await expect(create).toBeEnabled()
+  const nativeRead = page.waitForResponse((response) =>
+    response.request().method() === "GET" &&
+    new URL(response.url()).pathname === new URL(selected.baseURL).pathname + "/api/ui/pages/CAP25")
   const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", selected.baseURL).href)
   expect(entry?.status()).toBe(200)
+  const original = await nativeRead
+  expect(original.status()).toBe(200)
+  const projection = Schema.decodeUnknownSync(Schema.toType(SfDomainPageCap25.output), { onExcessProperty: "error" })(await original.json())
+  if (projection.status !== "ok") throw new Error("The native Procurement projection was not admitted")
+  expect(projection.context.principalRef).toBe(selected.principal)
+  const manifest = await readManifest()
+  const published = projection.value.data.requests.find((record) => record.number === manifest.records.comparison)
+  if (!published) throw new Error("The original comparison request is missing from CAP25")
+  expect(published.sourceRef, "The producer must publish the current request source").toMatch(/.+/)
+  expect(published.sourceDigest).toMatch(/^[a-f0-9]{64}$/)
+  expect(published.sourceVersion).toBeGreaterThan(0)
   await expect(page.locator('[data-component="sf-requests-pr-po"]').getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
-  // The native CAP25 entry mounts the real C02 queue and its producer provenance.
-  const source = page.locator("a[data-source-ref]").first()
+  // Match the exact producer record and provenance, not whichever link appears first.
+  const source = page.getByRole("link", { name: manifest.records.comparison, exact: true })
   await expect(source).toBeVisible()
-  await expect(source).toHaveAttribute("data-source-ref", /.+/)
-  await expect(source).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
-  await expect(source).toHaveAttribute("data-source-version", /^\d+$/)
+  await expect(source).toHaveAttribute("data-source-ref", published.sourceRef!)
+  await expect(source).toHaveAttribute("data-source-digest", published.sourceDigest!)
+  await expect(source).toHaveAttribute("data-source-version", String(published.sourceVersion))
   return selected
 }
 
