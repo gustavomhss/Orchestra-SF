@@ -1,8 +1,7 @@
 name: sf-current-unit-audit
 
 on:
-  push:
-    branches: [audit-sf-20261119]
+  workflow_dispatch:
 
 permissions:
   contents: read
