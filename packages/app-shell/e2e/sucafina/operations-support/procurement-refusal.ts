@@ -49,11 +49,11 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(cells.nth(8)).toHaveText("Unavailable")
   await expect(cells.nth(9)).toHaveText("Unavailable")
   await expect(cells.nth(10)).toHaveText("Monetary issue: fx-missing")
-  await expect(comparison.getByRole("status", { name: "Comparison is limited: fewer than two proposals are eligible.", exact: true })).toBeVisible()
+  await expect(comparison.getByRole("status").filter({ hasText: /^Comparison is limited: fewer than two proposals are eligible\.$/ })).toBeVisible()
   const winning = comparison.getByRole("combobox", { name: "Selected quotation", exact: true })
   await winning.selectOption({ label: "Journey registered supplier · JPY 28000" })
   const selected = await confirmCommand(page, account, "select_quote", id, comparison.getByRole("button", { name: "Select winning quote", exact: true }), "Confirm once")
-  expect(selected.request().postDataJSON()).toMatchObject({ values: { quoteId } })
+  expect(selected.command).toMatchObject({ values: { quoteId } })
   await page.getByRole("button", { name: "Sourcing", exact: true }).click()
   const version = await sourceVersion(page)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/history`)
@@ -62,19 +62,18 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   expect(historyText.length).toBeGreaterThan(0)
   const summary = await page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ }).innerText()
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
-  const pending = commandResponse(page, account.origin, "submit_sourcing", id)
   await page.getByRole("button", { name: "Submit sourcing", exact: true }).click()
   const review = page.locator('[data-component="sf-change-review"]')
   await expect(review).toHaveCount(1)
-  await review.getByRole("button", { name: "Confirm once", exact: true }).click()
-  const rejected = await pending
+  const rejected = await captureCommand(page, account, "submit_sourcing", id,
+    review.getByRole("button", { name: "Confirm once", exact: true }))
   const producer = "Quote 1: no FX rate defined for JPY (Settings → Currencies)"
   const alert = "sourcing.quotes.0.currency: " + producer
-  expect(rejected.status()).toBe(422)
-  expect(rejected.request().postDataJSON()).toMatchObject({ page: "Requests", action: "submit_sourcing", id, version: Number(version) })
-  expect(await rejected.json()).toMatchObject({ ok: false, errors: [producer], fieldErrors: [{ field: "sourcing.quotes.0.currency", message: producer }] })
+  expect(rejected.status).toBe(422)
+  expect(rejected.command).toMatchObject({ page: "Requests", action: "submit_sourcing", id, version: Number(version) })
+  expect(rejected.body).toMatchObject({ ok: false, errors: [producer], fieldErrors: [{ field: "sourcing.quotes.0.currency", message: producer }] })
   await expect(page.getByRole("alert").filter({ hasText: alert })).toHaveText(alert)
-  await expect(page.getByRole("alert", { name: "The producer did not accept this operation.", exact: true })).toBeVisible()
+  await expect(page.getByRole("alert").filter({ hasText: /^The producer did not accept this operation\.$/ })).toBeVisible()
   const currency = page.locator("fieldset.sf-u12-quote").first().getByRole("textbox", { name: "Currency", exact: true })
   await expect(currency).toHaveValue("JPY")
   await expect(currency).toHaveAttribute("aria-invalid", "true")
@@ -128,12 +127,11 @@ async function approveRequest(page: Page, account: Account, id: string) {
   const review = page.locator('[data-component="sf-change-review"]')
   await expect(review).toHaveCount(1)
   await page.getByRole("textbox", { name: "Approval comment (optional)", exact: true }).fill("Operations missing FX approval")
-  const pending = commandResponse(page, account.origin, "approve", id)
-  await review.getByRole("button", { name: "Approve PR", exact: true }).click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(await response.json()).toMatchObject({ ok: true })
-  expect(response.request().postDataJSON()).toMatchObject({ page: "My approvals", action: "approve", id, values: { comment: "Operations missing FX approval" } })
+  const response = await captureCommand(page, account, "approve", id,
+    review.getByRole("button", { name: "Approve PR", exact: true }))
+  expect(response.status).toBe(200)
+  expect(response.body).toMatchObject({ ok: true })
+  expect(response.command).toMatchObject({ page: "My approvals", action: "approve", id, values: { comment: "Operations missing FX approval" } })
   await expect(page.getByText("The producer acknowledged the command. No receipt was returned.", { exact: true })).toBeVisible()
 }
 
@@ -142,24 +140,64 @@ async function confirmCommand(page: Page, account: Account, action: string, id: 
   await openReview.click()
   const review = page.locator('[data-component="sf-change-review"]')
   await expect(review).toHaveCount(1)
-  const pending = commandResponse(page, account.origin, action, id)
-  await expect(review.getByRole("button", { name: confirmName, exact: true })).toBeEnabled()
-  await review.getByRole("button", { name: confirmName, exact: true }).click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(await response.json()).toMatchObject({ ok: true })
-  expect(response.request().postDataJSON()).toMatchObject({ page: "Requests", action, ...(id ? { id } : {}) })
+  const response = await captureCommand(page, account, action, id,
+    review.getByRole("button", { name: confirmName, exact: true }))
+  expect(response.status).toBe(200)
+  expect(response.body).toMatchObject({ ok: true })
+  expect(response.command).toMatchObject({ page: "Requests", action, ...(id ? { id } : {}) })
   return response
 }
 
-function commandResponse(page: Page, origin: string, action: string, id?: string) {
-  return page.waitForResponse((response) => {
-    const request = response.request()
-    const url = new URL(request.url())
-    if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/procurement") return false
-    const body = request.postDataJSON() as { action?: string; id?: string }
-    return body.action === action && (id === undefined || body.id === id)
+type PausedCommand = {
+  requestId: string
+  request: { url: string; method: string; postData?: string }
+  responseStatusCode?: number
+  responseHeaders?: { name: string; value: string }[]
+}
+
+/** Hold the original reply at Chromium's response stage before the native
+ * readback can evict it. Fulfill the exact same status, headers and bytes.
+ * This sends one browser command: no replacement request, retry or fake body.
+ */
+async function captureCommand(page: Page, account: Account, action: string, id: string | undefined, button: Locator) {
+  await expect(button).toBeEnabled()
+  const session = await page.context().newCDPSession(page)
+  const captured = Promise.withResolvers<{ status: number; json: string; command: unknown }>()
+  session.once("Fetch.requestPaused", async (event: PausedCommand) => {
+    try {
+      const url = new URL(event.request.url)
+      expect(url.origin).toBe(account.origin)
+      expect(url.pathname).toBe("/sucafina/procurement")
+      expect(event.request.method).toBe("POST")
+      if (typeof event.request.postData !== "string") throw new Error("Original Procurement command body is missing")
+      const command: unknown = JSON.parse(event.request.postData)
+      expect(command).toMatchObject({ action, ...(id === undefined ? {} : { id }) })
+      const status = event.responseStatusCode
+      if (typeof status !== "number") throw new Error("Original Procurement command status is missing")
+      const headers = event.responseHeaders ?? []
+      expect(headers.find((header) => header.name.toLowerCase() === "content-type")?.value).toContain("application/json")
+      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+      const bytes = raw.base64Encoded ? Buffer.from(raw.body, "base64") : Buffer.from(raw.body, "utf8")
+      await session.send("Fetch.fulfillRequest", { requestId: event.requestId, responseCode: status,
+        responseHeaders: headers, body: bytes.toString("base64") })
+      captured.resolve({ status, json: bytes.toString("utf8"), command })
+    } catch (error) {
+      try { await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "Failed" }) }
+      catch { /* Preserve the original capture failure if the browser already released it. */ }
+      captured.reject(error)
+    }
   })
+  await session.send("Fetch.enable", {
+    patterns: [{ urlPattern: account.origin + "/sucafina/procurement*", requestStage: "Response" }],
+  })
+  try {
+    await button.click()
+    const original = await captured.promise
+    return { status: original.status, body: JSON.parse(original.json) as unknown, command: original.command }
+  } finally {
+    await session.send("Fetch.disable")
+    await session.detach()
+  }
 }
 
 async function fillEnabledScores(quote: Locator) {

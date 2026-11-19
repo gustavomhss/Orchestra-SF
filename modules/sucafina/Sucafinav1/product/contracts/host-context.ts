@@ -124,6 +124,11 @@ export type CreateSfHostRuntime = (input: {
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"
     | "decisions.decision-coverage" | "decisions.decision-promote"
     | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
+    | "files.import-targets" | "files.import-admit" | "files.import-preview"
+    | "files.import-reference" | "files.import-detail" | "files.import-apply"
+    | "files.document-requests" | "files.document-sources" | "files.document-admit"
+    | "files.document-schemas" | "files.document-schema" | "files.document-extract"
+    | "files.document-confirm" | "files.document-candidates" | "files.document-open" | "files.document-search"
     | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision",
     producer: object) => object | undefined
   nativeActions?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp,

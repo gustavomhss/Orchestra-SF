@@ -8,6 +8,7 @@ import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../.
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { observeSfAssetHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
 import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
@@ -245,6 +246,10 @@ export async function createConfiguredInstallation(
       observeSfPlannerPages(nativeApplication, request, stamp),
       observeSfDashboardPages(nativeApplication, request, stamp),
       observeSfDomainHealth(nativeDependencies, nativeHandlers, request, stamp),
+      observeSfAssetHealth(nativeDependencies, () => applicationServices.assets === nativeApplication.assets &&
+        applicationServices.persistence === nativeApplication.persistence &&
+        applicationServices.authenticate === nativeApplication.authenticate &&
+        applicationServices.environment === nativeApplication.environment ? business : undefined, request, stamp),
       observeSfHome(runtime?.services?.(), request, stamp),
       observeSfCases(nativeDependencies, nativeHandlers, request, stamp),
       actions.operational(request, stamp),
