@@ -1,6 +1,6 @@
 # Handoff — finish-wp4-native-20261119
 
-SHA do código: 344891101ffe11f1c5f6ea1aa858459eb035e022
+SHA do código: 0cea3b2a5cfae50dc6b8dd4cc95655e5dd30da9f
 Data: 2026-11-19
 Estado: partial
 
@@ -125,3 +125,10 @@ Estado: partial
 - Código 344891101ffe11f1c5f6ea1aa858459eb035e022, wp10/composition.spec.ts149–159: usa sfNativeChapterEntry("sf-dashboard"), cujo destino original é /orchestra/sf-dashboard/executive. Arma a observação do GET original /sucafina/api/ui/pages/CAP01 antes de navegar e exige HTTP200 antes do mesmo marcador CAP01 e Sign out. Não inventa owner/query, não acrescenta GET nem modifica F01.
 - O mesmo arquivo conserva o vínculo Network.requestWillBeSent.requestId/Fetch.networkId do checkpoint1a35, a Request Playwright única, bytes/status/headers originais, requestfailed fatal e todos os valores, Schemas e CAS. Nenhuma asserção removida; nenhum timeout alterado.
 - Estado partial. Pendente/unbound: wp10/composition.spec.ts152–159 (qualificar montagem canônica), :487–621 (qualificar captura nas jornadas); wp03/planner-mounted.spec.ts284 e bi-installed/installed-fixture.ts422–585 aguardam a prova deste capturador antes de portar somente a observação original. Como retomar: compor apenas composition.spec.ts e este handoff sobre Assembly32 e executar apenas wp10/composition.spec.ts. Registrar resultado terminal antes de qualquer novo gate.
+
+
+## WP10 native5 — import transitivo fora do runner E2E
+
+- Run [44629509547](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44629509547), snapshotf6d7761c59969976aa78e48655099b37c806c6b2, composiçãoefe1f0dc7bc3a3f8281d59d55fed1fc473cc75f7, job135932086089: FAILURE antes do browser. CLI e app-shell typechecks passaram; SF-E2E falhou com titlebar.tsx637/639 (channel possivelmente undefined) e server-sync.tsx778 (Window.api). Cleanup135934187163 passou.
+- A nova importação de host/native-chapter-entry trouxe tipos transitivos da árvore da aplicação para o projeto E2E. Código 0cea3b2a5cfae50dc6b8dd4cc95655e5dd30da9f remove somente esse import e usa o literal /orchestra/sf-dashboard/executive, previamente conferido no mapa canônico native-chapter-entry.ts7. Preserva GET CAP01 original antes do mesmo marcador e Sign out. Nenhuma alteração em titlebar, server-sync, tsconfig, owner/F01 ou runtime.
+- Estado partial; nenhuma asserção removida nem timeout alterado. Pendente/unbound: composition.spec.ts151–158 (qualificar o ingresso); :486–620 (capturador e todas as jornadas ainda não executados por este gate). Como retomar: compor somente composition.spec.ts e este handoff sobre Assembly32 e executar o mesmo spec estreito. A falha de tipos não é prova de UI nem autoriza portar a captura para BI/WP03.
