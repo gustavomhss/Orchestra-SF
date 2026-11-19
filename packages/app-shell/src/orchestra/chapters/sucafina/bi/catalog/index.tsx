@@ -467,7 +467,9 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
             </section>}
           </Show>
           <SfStatePanel state={store.readState}
-            messageKey={sfBiKey(store.readState === "filtered-empty" ? "sf.u21.noChoices" : "sf.u21.readStatus")}
+            messageKey={store.readState === "session-expired" ? sfCommonKey("sf.common.loginAgain") :
+              store.readState === "denied" ? sfCommonKey("sf.common.noAccess") :
+              sfBiKey(store.readState === "filtered-empty" ? "sf.u21.noChoices" : "sf.u21.readStatus")}
             onRetryRead={store.readState === "unavailable" ? () => { void chooseContext() } : undefined}>
             <Show when={store.options}>
               {(options) => <>

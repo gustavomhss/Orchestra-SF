@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test"
-import type { Page, TestInfo } from "@playwright/test"
+import type { Page, Response, TestInfo } from "@playwright/test"
+import { Schema } from "effect"
+import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
+import { SfDomainPageCap03 } from "@orchestra/schema/sucafina/domain"
+import { SfBiBiDataOutput, SfBiBiOptionsOutput } from "@orchestra/schema/sucafina/bi"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { createHash } from "node:crypto"
 import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises"
 import { release, tmpdir } from "node:os"
@@ -159,26 +164,43 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         }
 
         await observe("dashboard-budget", async (record) => {
-          const opened = await page.goto(origin + "/sucafina/dashboard?page=Budget+Overview&year=2026")
-          record.facts.openHttp = opened?.status() ?? 0
+          const initial = page.waitForResponse((response) => response.request().method() === "GET" &&
+            new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP03" &&
+            new URL(response.url()).searchParams.get("year") === "2026")
+          const opened = await page.goto(origin + "/orchestra/sf-dashboard/budget?year=2026")
           expect(opened?.status()).toBe(200)
+          const initialResponse = await initial
+          record.facts.openHttp = initialResponse.status()
+          await nativeBody(initialResponse)
           await expect(page.getByRole("heading", { name: "Budget Overview", exact: true, level: 1 })).toBeVisible()
           state.authenticated = true
-          const year = page.getByRole("combobox", { name: "FY", exact: true })
+          const budget = page.locator('[data-sf-surface="CAP03"]')
+          const year = budget.getByLabel("Year", { exact: true })
           await expect(year).toHaveValue("2026")
-          const [changed] = await Promise.all([
-            page.waitForResponse((response) => response.request().method() === "GET" && new URL(response.url()).pathname === "/sucafina/dashboard" && new URL(response.url()).searchParams.get("year") === "2027"),
-            year.selectOption("2027"),
-          ])
+          const pendingYear = page.waitForResponse((response) => response.request().method() === "GET" &&
+            new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP03" &&
+            new URL(response.url()).searchParams.get("year") === "2027")
+          await year.selectOption("2027")
+          const changed = await pendingYear
+          const projection = Schema.decodeUnknownSync(Schema.toType(SfDomainPageCap03.output))(await nativeBody(changed))
+          if (projection.status !== "ok") throw new Error("The original CAP03 financial projection was unavailable")
           record.facts.filterHttp = changed.status()
-          expect(record.facts.filterHttp).toBe(200)
+          expect(projection.value.selection.year).toBe(2027)
+          expect(projection.value.data.totals?.opexActual).toBe(1000)
+          expect(projection.value.data.totals?.opexForecast).toBe(2000)
+          expect(corpus.expected.actual2027).toBe("$1000")
+          expect(corpus.expected.forecast2027).toBe("$2000")
           await expect(year).toHaveValue("2027")
-          const opex = page.getByRole("row").filter({ has: page.getByRole("cell", { name: "OPEX", exact: true }) })
-          await expect(opex.getByRole("cell", { name: corpus.expected.actual2027, exact: true })).toBeVisible()
-          await expect(opex.getByRole("cell", { name: corpus.expected.forecast2027, exact: true })).toBeVisible()
-          await expect(page.getByRole("img", { name: "Effective monthly budget", exact: true })).toBeVisible()
-          const months = page.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Flat reference (annual allocations / 12)", exact: true }) })
+          const opex = budget.getByRole("row").filter({ has: budget.getByRole("rowheader", { name: "OPEX", exact: true }) })
+          // The native source declares no currency. Keep the exact amounts
+          // without relabeling them as USD based on the old console's dollar glyph.
+          await expect(opex.getByRole("cell").nth(1)).toHaveText("1,000")
+          await expect(opex.getByRole("cell").nth(2)).toHaveText("2,000")
+          await expect(budget.getByRole("img", { name: "Effective monthly budget", exact: true })).toBeVisible()
+          const months = budget.getByRole("table").filter({ has: budget.getByRole("columnheader", { name: "Flat reference (annual allocations / 12)", exact: true }) })
           await expect(months.getByRole("row")).toHaveCount(13)
+          expect(projection.value.data.budgetSeries?.effective).toHaveLength(12)
+          expect(projection.value.data.budgetSeries?.flatReference).toHaveLength(12)
           record.facts.year = "2027"
           record.facts.actual = corpus.expected.actual2027
           record.facts.forecast = corpus.expected.forecast2027
@@ -187,138 +209,166 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         })
 
         await observe("workbench-create-reopen", async (record) => {
-          expect((await page.goto(origin + "/sucafina/dashboard?page=Budget+Overview&year=2027"))?.status()).toBe(200)
-          await openWorkbench(page)
-          const create = page.locator("details").filter({ has: page.locator("summary").filter({ hasText: /^Create a decision$/ }) })
+          expect((await page.goto(origin + "/orchestra/sf-decisions/new"))?.status()).toBe(200)
+          const create = page.locator(".sf-n24-create")
           await expect(create).toHaveCount(1)
-          await create.locator("summary").click()
-          const form = create.locator("form[data-decision-create]")
           const objective = "WP10 persisted composition decision"
-          await form.getByRole("textbox", { name: "Decision objective", exact: true }).fill(objective)
-          await form.getByLabel("Start", { exact: true }).fill("2027-01-01")
-          await form.getByLabel("End", { exact: true }).fill("2027-12-31")
-          await form.getByRole("textbox", { name: "Currency", exact: true }).fill("USD")
-          await form.getByRole("textbox", { name: "Criteria, one per line", exact: true }).fill("Budget transparency\nSource traceability")
-          // Submit once. An uncertain/refused command is evidence of failure, never a reason to retry creation.
-          const [response] = await Promise.all([
-            page.waitForResponse((current) => current.request().method() === "POST" && new URL(current.url()).pathname === "/sucafina/dashboard" && new URL(current.url()).searchParams.get("sf") === "workbench-command"),
-            form.getByRole("button", { name: "Create decision", exact: true }).click(),
-          ])
-          const result: unknown = await response.json()
+          const criteria = ["Budget transparency", "Source traceability"]
+          await create.getByLabel("Decision objective", { exact: true }).fill(objective)
+          await create.getByLabel("Start", { exact: true }).fill("2027-01-01")
+          await create.getByLabel("End", { exact: true }).fill("2027-12-31")
+          await create.getByLabel("Currency", { exact: true }).fill("USD")
+          await create.getByLabel("Criteria, one per line", { exact: true }).fill(criteria.join("\n"))
+          let commands = 0
+          const countCreate = (request: import("@playwright/test").Request) => {
+            if (request.method() === "POST" && new URL(request.url()).searchParams.get("sf") === "workbench-command" &&
+              request.postDataJSON()?.operation === "sf_case_draft") commands++
+          }
+          page.on("request", countCreate)
+          await create.getByRole("button", { name: "Review creation", exact: true }).click()
+          await expect(create.getByRole("group", { name: "Review creation", exact: true }).getByRole("listitem")).toHaveText(criteria)
+          expect(commands).toBe(0)
+          const pendingCreation = page.waitForResponse((response) => response.request().method() === "POST" &&
+            new URL(response.url()).pathname === "/sucafina/dashboard" &&
+            new URL(response.url()).searchParams.get("sf") === "workbench-command" &&
+            response.request().postDataJSON()?.operation === "sf_case_draft")
+          await create.getByRole("button", { name: "Confirm this decision creation", exact: true }).click()
+          const response = await pendingCreation
+          const result = await nativeBody(response)
           record.facts.commandHttp = response.status()
           record.facts.commandStatus = statusOf(result)
           record.facts.commandReason = reasonOf(result)
-          if (response.status() !== 200 || !result || typeof result !== "object" || !("status" in result) || result.status !== "ok" || !("outputRef" in result) || typeof result.outputRef !== "string" || !result.outputRef) {
-            throw new Error(`sf_case_draft did not confirm creation: HTTP ${response.status()}, ${statusOf(result)}, ${reasonOf(result)}`)
-          }
+          if (!result || typeof result !== "object" || !("status" in result) || result.status !== "ok" ||
+              !("outputRef" in result) || typeof result.outputRef !== "string" || !result.outputRef)
+            throw new Error("sf_case_draft did not return its authoritative case reference")
+          expect(response.request().postDataJSON()).toEqual({ operation: "sf_case_draft",
+            input: { objective, horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria, sourceRefs: [] } })
+          expect(commands).toBe(1)
           const caseRef = result.outputRef
           record.facts.caseRefDigest = createHash("sha256").update(caseRef).digest("hex")
-          const decision = page.getByRole("region", { name: "Decision", exact: true })
-          await expect(decision.getByRole("heading", { name: objective, exact: true, level: 2 })).toBeVisible({ timeout: 30000 })
-          await expect(decision.locator("header")).toContainText("Version 1")
+          const initialCase = page.waitForResponse((current) => current.request().method() === "GET" &&
+            new URL(current.url()).pathname === "/sucafina/api/ui/projections/case" &&
+            new URL(current.url()).searchParams.get("caseRef") === caseRef)
+          await create.getByRole("link", { name: "Open decision", exact: true }).click()
+          const created = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.case"].output))(await nativeBody(await initialCase))
+          if (created.status !== "ok") throw new Error("The original case projection was unavailable")
+          const originalCase = created.value.projection.case
+          expect(originalCase).toMatchObject({ objective, version: 1, horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD" })
+          expect(originalCase.criteria.map((criterion) => criterion.description)).toEqual(criteria)
+          await expect(page.getByRole("heading", { name: "Case summary", exact: true, level: 1 })).toBeVisible()
+          await expect(page.getByRole("region", { name: "Question", exact: true })).toContainText(objective)
+          await expect(page.locator(".sf-n24-metadata")).toContainText("Current version: 1")
           await capture(page, testInfo, record, "workbench-created")
-          // Leave the DOM and discover the exact saved case in a newly authorized server rendering.
-          expect((await page.goto(origin + "/sucafina/dashboard?page=Budget+Overview&year=2027"))?.status()).toBe(200)
-          await openWorkbench(page)
-          const saved = page.getByRole("link", { name: objective, exact: true })
+          const listed = page.waitForResponse((current) => current.request().method() === "GET" &&
+            new URL(current.url()).pathname === "/sucafina/api/ui/projections/cases")
+          await page.goto(origin + "/orchestra/sf-decisions")
+          const list = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.cases"].output))(await nativeBody(await listed))
+          if (list.status !== "ok") throw new Error("The fresh authorized case list was unavailable")
+          const exactCases = list.value.cases.filter((entry) => entry.caseRef === caseRef)
+          expect(exactCases).toHaveLength(1)
+          expect(exactCases[0]).toMatchObject({ title: objective, version: 1 })
+          const saved = page.locator(".sf-n24-record-list > li").filter({ hasText: objective })
           await expect(saved).toHaveCount(1)
-          await expect(saved).toBeVisible()
-          const href = await saved.getAttribute("href")
-          if (!href) throw new Error("Persisted decision has no reopen destination")
-          const destination = new URL(href, page.url())
+          await expect(saved.locator("small")).toHaveText(caseRef)
+          const link = saved.getByRole("link", { name: "Open decision", exact: true })
+          const destination = new URL((await link.getAttribute("href"))!, page.url())
           expect(destination.origin).toBe(origin)
-          expect(destination.pathname).toBe("/sucafina/dashboard")
-          expect(destination.searchParams.get("sf")).toBe("workbench-case")
-          expect(createHash("sha256").update(destination.searchParams.get("caseRef") ?? "").digest("hex")).toBe(record.facts.caseRefDigest)
-          const [reopened] = await Promise.all([
-            page.waitForResponse((current) => current.request().method() === "GET" && current.url() === destination.href),
-            saved.click(),
-          ])
-          record.facts.reopenHttp = reopened.status()
-          expect(record.facts.reopenHttp).toBe(200)
-          await expect(decision.getByRole("heading", { name: objective, exact: true, level: 2 })).toBeVisible()
-          await expect(decision.locator("header")).toContainText("Version 1")
-          await expect(decision.locator("header")).toContainText("2027-01-01 – 2027-12-31 · USD")
-          await expect(decision.getByRole("listitem").filter({ hasText: /^Budget transparency(?: \(required\))?$/ })).toBeVisible()
-          await expect(decision.getByRole("listitem").filter({ hasText: /^Source traceability(?: \(required\))?$/ })).toBeVisible()
+          expect(destination.pathname).toBe("/orchestra/sf-decisions/" + encodeSfRouteRef(caseRef))
+          const pendingReopen = page.waitForResponse((current) => current.request().method() === "GET" &&
+            new URL(current.url()).pathname === "/sucafina/api/ui/projections/case" &&
+            new URL(current.url()).searchParams.get("caseRef") === caseRef)
+          await link.click()
+          const reopenedResponse = await pendingReopen
+          const reopened = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.case"].output))(await nativeBody(reopenedResponse))
+          if (reopened.status !== "ok") throw new Error("The fresh case read was unavailable")
+          expect(reopened.value.projection.case).toEqual(originalCase)
+          record.facts.reopenHttp = reopenedResponse.status()
+          await expect(page.getByRole("region", { name: "Question", exact: true })).toContainText(objective)
+          const metadata = page.locator(".sf-n24-metadata")
+          await expect(metadata).toContainText("Current version: 1")
+          await expect(metadata).toContainText("2027-01-01")
+          await expect(metadata).toContainText("2027-12-31")
+          await expect(metadata).toContainText("USD")
+          const shownCriteria = page.getByRole("region", { name: "Criteria", exact: true }).getByRole("listitem")
+          await expect(shownCriteria).toHaveCount(2)
+          for (const [index, description] of criteria.entries()) await expect(shownCriteria.nth(index)).toContainText(description)
+          expect(commands).toBe(1)
+          page.off("request", countCreate)
           record.facts.objective = objective
           record.facts.createdVersion = 1
           record.facts.reopenedVersion = 1
-          record.facts.persistenceObservation = "Authorized command followed by fresh list and case HTTP reads; server remains running"
+          record.facts.persistenceObservation = "One original command, then fresh authorized native list and case projections"
         })
 
         await observe("procurement-requests", async (record) => {
-          const response = await page.goto(origin + "/sucafina/procurement?page=Requests&q=" + encodeURIComponent(corpus.sourcing.title))
+          const response = await page.goto(origin + "/orchestra/sf-procurement/requests/" +
+            encodeSfRouteRef(corpus.sourcing.requestId) + "/sourcing/compare")
           record.facts.openHttp = response?.status() ?? 0
           expect(response?.status()).toBe(200)
-          await expect(page.getByRole("heading", { name: "Requests", exact: true, level: 1 })).toBeVisible()
-          const request = page.locator("details").filter({ has: page.locator("summary").filter({ hasText: corpus.sourcing.requestId + " · " + corpus.sourcing.title }) })
-          await expect(request).toHaveCount(1)
-          if (!await request.evaluate((element) => element.hasAttribute("open"))) await request.locator("summary").click()
-          const table = request.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Proposal", exact: true }) })
-          await expect(table.getByRole("columnheader")).toHaveText(["Proposal", "Stated total", "Quantity × unit price", "Base amount / FX", "Technical", "Price", "Commercial", "Overall", "Rank"])
+          const sourcing = page.locator(".sf-u12-root")
+          await expect(sourcing.locator('p[data-request-summary="' + corpus.sourcing.requestId + '"]')).toContainText(corpus.sourcing.title)
+          await expect(sourcing.locator("header[data-source-version]")).toHaveAttribute("data-source-version", /^[1-9]\d*$/)
+          const table = sourcing.getByRole("table", { name: "Quotations", exact: true })
+          await expect(table.getByRole("columnheader")).toHaveText([
+            "Supplier", "Eligibility", "Currency", "Stated total", "Base amount / FX", "Technical", "Price",
+            "Commercial", "Overall", "Rank", "Excluded reason", "Quantity", "Unit price", "Technical scores", "Commercial scores",
+          ])
           await expect(table.getByRole("row")).toHaveCount(4)
-          const a = table.getByRole("row").filter({ has: page.getByRole("cell", { name: "Synthetic Supplier A", exact: true }) })
-          const b = table.getByRole("row").filter({ has: page.getByRole("cell", { name: "Synthetic Supplier B", exact: true }) })
+          const a = table.getByRole("row").filter({ has: table.getByRole("cell", { name: "Synthetic Supplier A", exact: true }) })
+          const b = table.getByRole("row").filter({ has: table.getByRole("cell", { name: "Synthetic Supplier B", exact: true }) })
           await expect(a.getByRole("cell", { name: "87.9", exact: true })).toBeVisible()
           await expect(b.getByRole("cell", { name: "85.0", exact: true })).toBeVisible()
           await expect(b.getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toBeVisible()
+          // Quantity and unit price remain separate original inputs. The native
+          // renderer deliberately does not multiply them into a browser subtotal.
           record.facts.requestId = corpus.sourcing.requestId
           record.facts.proposals = 3
-          record.facts.source = "Published WP00 corpus through the existing local store and Procurement renderer"
+          record.facts.source = "Published WP00 corpus through the existing store and native source-owned comparison facts"
           await table.scrollIntoViewIfNeeded()
         })
 
+        let budgetBiSelection: string | undefined
         await observe("bi-table", async (record) => {
-          expect((await page.goto(origin + "/sucafina/dashboard?page=Budget+Overview&year=2027"))?.status()).toBe(200)
-          const navigation = page.getByRole("navigation", { name: "Business analysis", exact: true })
-          const [opened] = await Promise.all([
-            page.waitForResponse((response) => response.request().method() === "GET" && new URL(response.url()).pathname === "/sucafina/dashboard" && new URL(response.url()).searchParams.get("sf") === "bi"),
-            navigation.getByRole("link", { name: "Business intelligence", exact: true }).click(),
-          ])
-          record.facts.openHttp = opened.status()
-          expect(record.facts.openHttp).toBe(200)
-          await expect(page.getByRole("heading", { name: "Business intelligence", exact: true, level: 1 })).toBeVisible()
-          const panel = page.locator("[data-sf-bi]")
-          const update = panel.getByRole("button", { name: "Atualizar visualização", exact: true })
-          await expect(update).toBeEnabled({ timeout: 30000 })
-          await panel.getByRole("combobox", { name: "Visualização", exact: true }).selectOption("BI01")
-          await panel.getByLabel("Início", { exact: true }).fill("2027-01-01")
-          await panel.getByLabel("Fim", { exact: true }).fill("2027-12-31")
-          const [response] = await Promise.all([
-            page.waitForResponse((current) => {
-              const url = new URL(current.url())
-              return current.request().method() === "GET" && url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI01" && url.searchParams.get("start") === "2027-01-01" && url.searchParams.get("end") === "2027-12-31"
-            }),
-            update.click(),
-          ])
-          const result: unknown = await response.json()
-          record.facts.dataHttp = response.status()
-          record.facts.dataStatus = statusOf(result)
-          record.facts.dataReason = reasonOf(result)
-          if (response.status() !== 200 || !result || typeof result !== "object" || !("projection" in result) || !result.projection || typeof result.projection !== "object" || !("values" in result.projection) || !Array.isArray(result.projection.values)) {
-            throw new Error(`BI01 did not return its authorized projection: HTTP ${response.status()}, ${statusOf(result)}, ${reasonOf(result)}`)
-          }
-          // The producer emits basis, effective, actual and forecast for each month. Unknown values stay visible.
-          expect(result.projection.values.length).toBe(48)
-          await expect(panel.getByRole("status").filter({ hasText: /^Dados atualizados\.$/ })).toBeVisible()
-          await expect(panel.getByRole("heading", { name: "Como orçamento, realizado e outlook evoluem?", exact: true, level: 2 })).toBeVisible()
-          const table = panel.getByRole("table", { name: "Dados e referências", exact: true })
-          await expect(table.getByRole("columnheader")).toHaveText(["Medida", "Valor", "Unidade", "Período", "Granularidade", "Evidência", "Origem"])
+          const result = await openBudgetBi(page)
+          budgetBiSelection = result.request.selectionRef
+          record.facts.openHttp = 200
+          record.facts.dataHttp = 200
+          const panel = page.locator('[data-sf-catalog="UI46"]')
+          expect(result.projection.context.surface).toBe("dashboard")
+          expect(result.request.viewId).toBe("BI01")
+          expect(result.request.period).toEqual({ start: "2027-01-01", end: "2027-12-31" })
+          expect(result.projection.values).toHaveLength(48)
+          await expect(panel.getByRole("heading", { name: "How do budget, actuals and outlook evolve?", exact: true }).first()).toBeVisible()
+          const table = panel.getByRole("table", { name: "Authorized values and source references", exact: true })
+          await expect(table.getByRole("columnheader")).toHaveText(["Measure", "Value", "Unit", "Period", "Granularity", "Evidence", "Source reference"])
           await expect(table.getByRole("row")).toHaveCount(49)
-          await expect(table.getByRole("cell", { name: "budget:2027-01:effective", exact: true })).toBeVisible()
-          await expect(panel.getByRole("list", { name: "Limitações da visualização", exact: true })).toContainText("Currency is unspecified in Dashboard; missing actual or forecast stays unknown.")
+          const values = new Map(result.projection.values.map((value) => [value.id, value]))
+          const rows = result.presentation.series.flatMap((series) => series.valueIds.map((id) => {
+            const value = values.get(id)
+            if (!value) throw new Error("The original presentation referenced an absent value")
+            return { measure: series.label + " · " + value.id, granularity: value.granularity }
+          }))
+          expect(rows).toHaveLength(48)
+          for (const [index, expected] of rows.entries()) {
+            const cells = table.locator("tbody tr").nth(index).locator("td, th")
+            await expect(cells.nth(0)).toHaveText(expected.measure)
+            await expect(cells.nth(4)).toHaveText(expected.granularity)
+          }
+          await expect(table.getByRole("cell").filter({ hasText: "budget:2027-01:effective" })).toHaveCount(1)
+          const limitations = panel.locator(".sf-bi-limitations").getByRole("listitem")
+          await expect(limitations).toHaveText(result.presentation.limitations)
+          expect(result.presentation.limitations).toContain("Currency is unspecified in Dashboard; missing actual or forecast stays unknown.")
           record.facts.viewId = "BI01"
           record.facts.period = "2027-01-01/2027-12-31"
           record.facts.projectionRows = result.projection.values.length
           record.facts.dataStatus = "authorized-projection-rendered"
-          record.facts.limitations = await panel.getByRole("list", { name: "Limitações da visualização", exact: true }).getByRole("listitem").allTextContents()
+          record.facts.limitations = result.presentation.limitations
           const invalid = await context.request.get(origin + "/sucafina/dashboard?sf=bi-data&unexpected=1")
           const refused: unknown = await invalid.json()
           record.facts.invalidSelectionHttp = invalid.status()
           record.facts.invalidSelectionStatus = statusOf(refused)
           record.facts.invalidSelectionReason = reasonOf(refused)
-          expect(invalid.status(), "The real host must refuse an unsupported selection query").toBe(400)
+          expect(invalid.status(), "The real host refuses an unsupported selection query").toBe(400)
           expect(statusOf(refused)).toBe("needs-input")
           expect(reasonOf(refused)).toBe("invalid-query")
           await table.scrollIntoViewIfNeeded()
@@ -335,27 +385,32 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           if (!reviewRevocationUrl) throw new Error("A preserved review is required for the revocation proof")
           const reviewPrivacy = await prepareWp10ReviewRevocation({ context, url: reviewRevocationUrl, testInfo })
           try {
-          await page.goto(origin + "/sucafina/dashboard?sf=bi&viewId=BI01&start=2027-01-01&end=2027-12-31")
-          const panel = page.locator("[data-sf-bi]")
-          await expect(panel.getByRole("table", { name: "Dados e referências", exact: true })).toBeVisible({ timeout: 30000 })
-          expect(await panel.getByLabel("Dados para visualizar", { exact: true }).locator("option").count()).toBeGreaterThan(1)
-          const logout = await context.request.post(origin + "/sucafina/auth/logout", { headers: { origin } })
-          record.facts.logoutHttp = logout.status()
-          expect(logout.status()).toBe(204)
-          const rejected = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-options")
-          await page.evaluate(() => window.dispatchEvent(new Event("focus")))
-          record.facts.recheckHttp = (await rejected).status()
-          expect([401, 403]).toContain(record.facts.recheckHttp)
-          await expect(panel.getByRole("status")).toHaveText("O acesso mudou. Abra novamente os dados autorizados.")
-          await expect(panel.getByRole("table")).toHaveCount(0)
-          for (const label of ["Dados para visualizar", "Versão base", "Versão candidata"]) await expect(panel.getByLabel(label, { exact: true }).locator("option")).toHaveCount(1)
-          await expect(panel.getByRole("navigation", { name: "Fontes e preparação de dados", exact: true }).getByRole("link")).toHaveCount(0)
-          record.facts.privateProjectionRemoved = true
-          record.facts.privateChoicesRemoved = true
-          const reviewStatuses = await reviewPrivacy.verifyAfterLogout()
-          for (const [operation, status] of Object.entries(reviewStatuses)) record.facts[`review-${operation}-denied`] = status
-          record.facts.reviewPrivateSectionsRemoved = true
-          record.facts.reviewLateResponseDiscarded = true
+            if (!budgetBiSelection) throw new Error("The original BI01 selector is required for reload and revocation")
+            await openBudgetBi(page, budgetBiSelection)
+            const panel = page.locator('[data-sf-catalog="UI46"]')
+            await expect(panel.getByRole("table", { name: "Authorized values and source references", exact: true })).toBeVisible()
+            expect(await panel.locator('[data-sf-field="selection"] option').count()).toBeGreaterThan(1)
+            const logout = await context.request.post(origin + "/sucafina/auth/logout", { headers: { origin } })
+            record.facts.logoutHttp = logout.status()
+            expect(logout.status()).toBe(204)
+            const rejected = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-options")
+            await panel.getByRole("button", { name: "Choose context", exact: true }).click()
+            record.facts.recheckHttp = (await rejected).status()
+            expect([401, 403]).toContain(record.facts.recheckHttp)
+            await expect(panel).toContainText(/Sign in again to continue\.|You do not have access to this content\./)
+            await expect(panel.getByRole("table")).toHaveCount(0)
+            await expect(panel.locator('[data-sf-field="selection"] option, [data-sf-field="base-ref"] option, [data-sf-field="candidate-ref"] option')).toHaveCount(0)
+            await expect(panel.getByRole("navigation", { name: "Authorized source links", exact: true }).getByRole("link")).toHaveCount(0)
+            record.facts.privateProjectionRemoved = true
+            record.facts.privateChoicesRemoved = true
+            const deniedContext = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/api/ui/context" && response.status() === 401)
+            await page.getByRole("button", { name: "Refresh access", exact: true }).click()
+            expect((await deniedContext).status()).toBe(401)
+            await expect(page.locator('[data-sf-f01="unauthenticated"]')).toBeVisible()
+            const reviewStatuses = await reviewPrivacy.verifyAfterLogout()
+            for (const [operation, status] of Object.entries(reviewStatuses)) record.facts[`review-${operation}-denied`] = status
+            record.facts.reviewPrivateSectionsRemoved = true
+            record.facts.reviewLateResponseDiscarded = true
           } finally { await reviewPrivacy.dispose() }
         })
 
@@ -389,14 +444,48 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
   }
 })
 
-async function openWorkbench(page: Page) {
-  const [opened] = await Promise.all([
-    page.waitForResponse((response) => response.request().method() === "GET" && new URL(response.url()).pathname === "/sucafina/dashboard" && new URL(response.url()).searchParams.get("sf") === "workbench"),
-    page.getByRole("link", { name: "Workbench", exact: true }).click(),
-  ])
-  expect(opened.status(), "The actual Workbench route must be available").toBe(200)
-  await expect(page.getByRole("heading", { name: "Workbench", exact: true, level: 1 })).toBeVisible()
-  await expect(page.getByRole("heading", { name: "Decisions", exact: true, level: 2 })).toBeVisible()
+async function nativeBody(response: Response): Promise<unknown> {
+  expect(response.status()).toBe(200)
+  expect(await response.finished()).toBeNull()
+  expect(response.request().failure()).toBeNull()
+  return response.json()
+}
+
+async function openBudgetBi(page: Page, expectedSelection?: string) {
+  if (expectedSelection !== undefined) {
+    const reloaded = page.waitForResponse((response) => response.request().method() === "GET" &&
+      new URL(response.url()).searchParams.get("sf") === "bi-data" &&
+      new URL(response.url()).searchParams.get("viewId") === "BI01" &&
+      new URL(response.url()).searchParams.get("selectionRef") === expectedSelection)
+    await page.goto(origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI01"))
+    const body = Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(await nativeBody(await reloaded))
+    if (!("request" in body)) throw new Error("Reload did not reauthorize the original BI01 selection")
+    expect(body.request.selectionRef).toBe(expectedSelection)
+    expect(body.request.period).toEqual({ start: "2027-01-01", end: "2027-12-31" })
+    await expect(page.locator('[data-sf-field="selection"]')).toHaveValue(expectedSelection)
+    return body
+  }
+  await page.goto(origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI01"))
+  const panel = page.locator('[data-sf-catalog="UI46"]')
+  await panel.locator('[data-sf-field="start"]').fill("2027-01-01")
+  await panel.locator('[data-sf-field="end"]').fill("2027-12-31")
+  const pendingOptions = page.waitForResponse((response) => response.request().method() === "GET" &&
+    new URL(response.url()).searchParams.get("sf") === "bi-options")
+  await panel.getByRole("button", { name: "Choose context", exact: true }).click()
+  const options = Schema.decodeUnknownSync(Schema.toType(SfBiBiOptionsOutput))(await nativeBody(await pendingOptions))
+  if (options.status !== "ok") throw new Error("The original BI01 catalog was unavailable")
+  expect(options.value.choices).toHaveLength(1)
+  const selection = panel.locator('[data-sf-field="selection"]')
+  await expect(selection).toHaveValue("")
+  await selection.selectOption(options.value.choices[0]!.selectionRef)
+  const pendingData = page.waitForResponse((response) => response.request().method() === "GET" &&
+    new URL(response.url()).searchParams.get("sf") === "bi-data" &&
+    new URL(response.url()).searchParams.get("viewId") === "BI01")
+  await panel.locator('[data-sf-action="view-data"]').click()
+  const result = Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(await nativeBody(await pendingData))
+  if (!("request" in result)) throw new Error("BI01 did not return its authorized original projection")
+  expect(result.request.selectionRef).toBe(options.value.choices[0]!.selectionRef)
+  return result
 }
 
 async function capture(page: Page, testInfo: TestInfo, record: Observation, name: string) {
@@ -423,13 +512,17 @@ function reasonOf(value: unknown) {
 
 function safeRoute(value: string) {
   const url = new URL(value)
-  if (url.origin !== origin || !["/sucafina/dashboard", "/sucafina/planner", "/sucafina/procurement", "/sucafina/status"].includes(url.pathname)) return undefined
+  if (url.origin !== origin) return undefined
+  const api = ["/sucafina/dashboard", "/sucafina/planner", "/sucafina/procurement", "/sucafina/status"].includes(url.pathname) ||
+    /^\/sucafina\/api\/ui\/(?:context|pages\/CAP\d+|projections\/(?:case|cases|review))$/.test(url.pathname)
+  const chapter = /^\/orchestra\/sf-(?:dashboard|planner|procurement|bi|decisions|reviews)(?:\/|$)/.test(url.pathname)
+  if (!api && !chapter) return undefined
   const query = new URLSearchParams()
   for (const key of ["sf", "page", "year", "viewId", "start", "end"]) {
     const selected = url.searchParams.get(key)
     if (selected !== null) query.set(key, selected)
   }
-  return url.pathname + (query.size ? "?" + query.toString() : "")
+  return url.pathname.replace(/\/r_[^/]+/g, "/:ref") + (query.size ? "?" + query.toString() : "")
 }
 
 function redact(value: string) {
