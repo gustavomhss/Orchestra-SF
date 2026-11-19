@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page, type Response, type Route } from "@playwright/test"
+import { expect, test, type BrowserContext, type Locator, type Page, type Response, type Route, type TestInfo } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract"
@@ -62,6 +62,24 @@ async function saveDraft(page: Page, panel: Locator) {
   expect(object(proposalResponseBody(discovered)).status).toBe("ok")
   await expect(panel.getByText(savedMessage, { exact: true })).toBeVisible()
   return written.request().postDataJSON() as Record<string, unknown>
+}
+async function retainProposalFailure(context: BrowserContext, info: TestInfo, observe: () => Promise<ProposalObservation>) {
+  // Only inspect the failed journey: these are original host observations and
+  // the still-mounted page, never replacement responses or a second mutation.
+  const observations = await Promise.allSettled([
+    observe().then((state) => ({ traffic: state.traffic.slice(-8), preferences: state.preferences,
+      decision: state.decision, receipts: state.receipts, record: state.record })),
+    ...context.pages().map(async (page) => ({ path: new URL(page.url()).pathname,
+      text: (await page.locator("body").innerText({ timeout: 1000 })).slice(0, 20000) })),
+  ])
+  await info.attach("proposal-original-observation.json", { body: JSON.stringify(observations.map((item) =>
+    item.status === "fulfilled" ? item.value : { observationUnavailable: String(item.reason) })),
+    contentType: "application/json" }).catch(() => { console.info("Proposal failure observation attachment unavailable") })
+}
+async function closeProposalContext(context: BrowserContext) {
+  await Promise.all(context.pages().map((page) => page.unrouteAll({ behavior: "wait" })))
+  await context.unrouteAll({ behavior: "wait" })
+  await context.close()
 }
 function onlyDraft(observation: ProposalObservation) {
   expect(observation.preferences.status).toBe("ok")
@@ -212,7 +230,10 @@ test("Dashboard reads the current source and active private proposal while prese
         expect(latest.record).toMatchObject({ action: "Current materially changed source", notes: "Current source context" })
         expect(initial).toEqual(original)
         expect(errors).toEqual([])
-      } finally { await context.close() }
+      } catch (error) {
+        await retainProposalFailure(context, info, host.control)
+        throw error
+      } finally { await closeProposalContext(context) }
     })
   } finally { await installation.dispose() }
 })
@@ -351,7 +372,10 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
         expect(browserState).not.toContain("Private retained operator action")
         expect(browserState).not.toContain("Private retained operator context")
         expect(errors).toEqual([])
-      } finally { await context.close() }
+      } catch (error) {
+        await retainProposalFailure(context, info, host.control)
+        throw error
+      } finally { await closeProposalContext(context) }
     })
   } finally { await installation.dispose() }
 })
@@ -403,7 +427,10 @@ test("Dashboard contextual draft retains edits when current write authority is w
         expect(state.record.action).toBe("Original action")
         expect((await host.control()).record.action).toBe("Original action")
         expect(errors).toEqual([])
-      } finally { await context.close() }
+      } catch (error) {
+        await retainProposalFailure(context, info, host.control)
+        throw error
+      } finally { await closeProposalContext(context) }
     })
   } finally { await installation.dispose() }
 })
@@ -491,7 +518,10 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
         expect(unrelated?.id).not.toBe(first.id)
         expect(latest.record.action).toBe("Original action")
         expect(errors).toEqual([])
-      } finally { await context.close() }
+      } catch (error) {
+        await retainProposalFailure(context, info, host.control)
+        throw error
+      } finally { await closeProposalContext(context) }
     })
   } finally { await installation.dispose() }
 })
@@ -657,7 +687,10 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
         expect(saved.receipts.value).toHaveLength(1)
         expect(saved.record.action).toBe("Approved new action")
         expect(errors).toEqual([])
-      } finally { await context.close() }
+      } catch (error) {
+        await retainProposalFailure(context, info, host.control)
+        throw error
+      } finally { await closeProposalContext(context) }
     })
   } finally { await installation.dispose() }
 })

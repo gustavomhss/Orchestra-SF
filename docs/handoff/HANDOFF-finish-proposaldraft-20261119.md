@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: 54227e787d0c1cc9bfa6b2a5a7c95b5a9a4bfa44 (5 jornadas + retenção original + tipagem; este checkpoint prepara snapshots sem wrapper e o grant original de review)
+SHA de código: a9b4e29a810c7d1884e9641b9898e2606941c269 (checkpoint causal após gate5 e revisão de identidade; ainda não qualificado)
 Data: 2026-11-19
 Estado: partial
 
@@ -22,7 +22,7 @@ Estado: partial
 - O código de produtor e runtime/application.ts permanecem intocados.
 
 ## Pendente
-- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:1`: qualificar os 5 cenários (2 consumer-read e 3 host-workbench), sem aumento dos timeouts originais. Composição base para próximo gate: `dbe6e348367d8e1f915dac918a23bc5028f8a408`, com health/capture/history e Evidence UI47 do root.
+- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:1`: qualificar os 5 cenários (2 consumer-read e 3 host-workbench), sem aumento dos timeouts originais. Composição atual: `fa3f3850494f0a42e9096858af0a447f44c61774` (assembly30), incluindo health/capture/history, Evidence e observedAt UI47. Parent prepara a próxima composição com estes quatro deltas.
 - `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/capture.tsx:1`: novo consumidor original implementado, ainda sem gate. Save desconhecido não é repetido; GET histórico não atribui recibo a tentativa desconhecida.
 - `modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:139,241,461` e `.../dashboard-installed-closure/consumer-read.test.ts:53,168`: ainda mantidos até equivalência nativa passar; root coordena o remapeamento canônico. Os 2 units puros host-workbench :406/:430 permanecem.
 - Parent root compõe F02, health e registros; nunca copiar common/registry antigos desta branch sobre os adapters compostos.
@@ -38,7 +38,7 @@ Estado: partial
 - Registry/common nesta branch têm base main350dfc1, anterior à composição atual de adapters. Ao compor com a branch retry, aplicar apenas os dois novos IDs, preservando os overrides de rotas e a construção SfFrozenOperationRoutes daquela branch.
 
 ## Como retomar
-1. Sobrepor os 9 blobs UI/fixture/spec desta branch à composição `dbe6e348367d8e1f915dac918a23bc5028f8a408`.
+1. Sobrepor os quatro deltas do código `4ed90938b10c3532b773fb5732688608e7a589f2` à composição corrente do root (assembly30 já contém os nove blobs anteriores). O dispatcher recebe somente o import e branch da leitura privada; preservar os outros revalidadores.
 2. Pedido test-ci: package `app`, directory `packages/app-shell`, runner `playwright`, config `e2e/playwright.production.config.ts`, args `["e2e/sucafina/dashboard-installed/proposals.spec.ts"]`, env ORCHESTRA_CHANNEL=prod.
 3. Corrigir erros concretos, registrar SHA/run/resultado. Depois remapear as jornadas Bun correspondentes, mantendo as duas unidades puras e todas asserções de negócio.
 
@@ -56,11 +56,11 @@ Estado: partial
 
 | Jornada original | Jornada nativa | Fatos preservados |
 | --- | --- | --- |
-| consumer-read.test.ts:53 | proposals.spec.ts:116 | Identidade/incarnation, CAS409, v1→v2→v3, origem original/atual, base anterior/proposta atual/edição local, revisão explícita. |
-| consumer-read.test.ts:168 | proposals.spec.ts:220 | Leitura interrompida, retirada de escrita entre admissões, captura bloqueada e limpeza somente após perda real de leitura. |
-| host-workbench.test.ts:461 | proposals.spec.ts:359 | Save403 retém edição, leitura readonly, capture403, ausência de draft em preferences e domínio intacto. |
-| host-workbench.test.ts:241 | proposals.spec.ts:411 | Duas propostas independentes, mesma identidade no conflito/releitura, CAS da versão correta e nenhuma alteração da proposta independente. |
-| host-workbench.test.ts:139 | proposals.spec.ts:499 | Pauta, retrato individual, histórico, escolha condicionada, review, confirmação humana e um único Apply/recibo. |
+| consumer-read.test.ts:53 | proposals.spec.ts:134 | Identidade/incarnation, CAS409, v1→v2→v3, origem original/atual, base anterior/proposta atual/edição local, revisão explícita. |
+| consumer-read.test.ts:168 | proposals.spec.ts:241 | Leitura interrompida, retirada de escrita entre admissões, captura bloqueada e limpeza somente após perda real de leitura. |
+| host-workbench.test.ts:461 | proposals.spec.ts:383 | Save403 retém edição, leitura readonly, capture403, ausência de draft em preferences e domínio intacto. |
+| host-workbench.test.ts:241 | proposals.spec.ts:438 | Duas propostas independentes, mesma identidade no conflito/releitura, CAS da versão correta e nenhuma alteração da proposta independente. |
+| host-workbench.test.ts:139 | proposals.spec.ts:529 | Pauta, retrato individual, histórico, escolha condicionada, review, confirmação humana e um único Apply/recibo. |
 
 As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate Bun. O remapeamento canônico será feito pelo root somente após equivalência nativa qualificada.
 
@@ -71,3 +71,19 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 - O fixture acrescenta somente `sf_review_prepare`, operação original admitida para projection.review em native-ui/report-health.ts:65–91 e para os leitores de pauta em :168–190. Permanecem os produtores/ACL/health reais; não há override de disponibilidade ou vínculo.
 - A antiga coluna Origem passa a ser verificada no parágrafo nativo que já renderiza sourceRefs: igualdade dos dados originais surface/type/id/version/incarnation, além de valores/unidades/períodos/evidenceState em todas as células.
 - Nenhuma asserção removida; os cinco testes legados ainda não foram excluídos ou remapeados.
+
+## Gate5 e auditoria original
+- [44615301691](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44615301691): FAILURE, 5 failed / 0 passed; os três typechecks SUCCESS. Snapshot `b1d173beac4daea9054cb7cce73fcfa6af05536e`, assembly27 `dde78b94d45b384f589435ba57a89659772f9970`; job135882256489 e cleanup135886311106 SUCCESS. Os casos1/4 receberam POST200/ok e workbench200/ok, depois perderam Saved; casos2/3 receberam draft-read200, depois não exibiram Retained; caso5 chegou ao detalhe CAP02, mas um route.fetch ainda em curso falhou quando o contexto foi fechado.
+- Auditorias somente de leitura [44618012325](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44618012325) e [44618290244](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44618290244): SUCCESS. Abriram o artifact original14574791796, inclusive report ZIP embutido no HTML e proposal-host.log; não executaram testes de produto.
+- Limitação observada: os cinco error-context não guardaram Page snapshot; o attachment do host contém inicialização/eventos, sem traffic/response bodies. Não foi possível inferir igualdade ou estado de UI desses arquivos. Os documentos originais estão na branch `audit-proposal-screens-20261119`.
+
+## Correções causais após gate5 (4ed9093, aguardando revisão/gate)
+- `host/owner-runtime231.tsx:587-605` coloca view em resolving e desmonta a folha ao admitir a nova URL. `proposals/draft.tsx:217` agora retém somente o resultado real {draftRef,version} recebido do produtor, junto do input exato, no registry efêmero do owner. Não inventa operationRef nem chama confirmSave com identificador sintético.
+- `proposals/draft.tsx:142` consome/descarta o resultado quando a descoberta original autorizada corresponder a todos os campos, referências e versão esperados. Abrir uma proposta por leitura sem o resultado retido nunca produz Saved.
+- `host/draft-revalidation-proposal.ts:14` revalida apenas esse escopo UI54, por dashboard.dashboard-draft-read original: input fechado, case/id/incarnation e draftRef exato do resultado, source original, destino e disponibilidade atuais. O PortResult não publica body.context: fresh.stamp nomeia o contexto F01 observado; o F02 cerca o transport/generation e o registry cerca signal/owner. Nenhuma alteração no F01 global ou uso de CAP02.domain como autorização de proposta privada.
+- Causa estática da segunda falha: `apps/cli/src/sucafina-product/dashboard-services.ts:210` cria fields na ordem action/owner/due/notes/priority; `dashboard-decisions.ts:205` usa action/owner/due/priority/notes. O JSON.stringify da comparação distinguia a ordem apesar de valores idênticos. Após validação, draftFor ordena somente os cinco campos conhecidos e conserva quaisquer propriedades remanescentes; nenhuma referência/array/valor é omitido.
+- Cleanup do spec aguarda todos os handlers originais de página/contexto antes de fechar. Não converte falha de fetch em sucesso nem ignora erros. Se uma jornada falhar, o fixture anexa suas últimas oito observações originais do host e texto das páginas ainda montadas; o erro original continua lançado.
+- Asserções removidas/relaxadas: nenhuma. Permanecem 211 chamadas expect e os timeouts originais; não houve reexecução de produto ainda.
+- `proposals.spec.ts:134` e `capture.tsx:1`: ainda unbound de qualificação dos cinco fluxos, até o gate no checkpoint composto terminal. Os testes legados continuam mantidos. Nenhuma alegação de integração ou GO.
+
+- Revisão do root acrescentou igualdade explícita current.draftRef === original.draftRef no revalidador (a9b4e29), além da comparação integral no consumo. O leitor de edição pode retornar uma versão ativa mais nova; o portador de confirmação não restaura esse resultado como se fosse o mesmo draftRef.
