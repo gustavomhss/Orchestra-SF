@@ -148,7 +148,7 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
   const preserved = await pendingPreserve
   expect(preserved.status()).toBe(200)
   expect(preserved.request().postDataJSON()).toEqual({ selectionRef: preview.selectionRef, sectionRefs: selectedSections.map((section) => section.id) })
-  const body = object(await preserved.json())
+  const body = object(await readNativeReportResponse(preserved))
   expect(body.status).toBe("ok")
   const saved = review(body.value)
   expect(saved.previousReviewRef).toBeUndefined()

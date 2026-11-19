@@ -88,6 +88,10 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
     setStore({ phase: "loading", preview: undefined, sectionRefs: [], message: "" })
     try {
       const result = await createSfReviewsClient(access.transport)["reviews.review-agenda"]({ items }, { signal: abort.signal })
+      if (result.kind !== "response" || result.body.status !== "ok")
+        console.info("SF_REPORTS_AGENDA_RESULT " + JSON.stringify(result.kind === "response"
+          ? { kind: result.kind, status: result.status, producerStatus: result.body.status }
+          : { kind: result.kind, reason: result.reason }))
       if (abort.signal.aborted || !current(generation, ownerKey)) return
       if (commandAbort === abort) commandAbort = undefined
       if (result.kind !== "response" || result.body.status !== "ok") {

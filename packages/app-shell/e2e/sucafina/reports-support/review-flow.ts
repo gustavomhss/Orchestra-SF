@@ -6,7 +6,7 @@ import { Schema } from "effect"
 import { SfDashboardDashboardAgenda } from "@orchestra/schema/sucafina/reviews"
 import type { ReportsInstallation } from "./production-installation.ts"
 import type { ReportsCorpus } from "./corpus.ts"
-import { object, projection, readReview, responseFor, review, text } from "./model.ts"
+import { object, observedReportResponse, projection, readReview, responseFor, review, text } from "./model.ts"
 import { inspectReport, officePackageText } from "./ooxml.ts"
 
 const reportPages = ["Portfolio Dashboard", "Budget Overview", "Hot Topics & Actions"] as const
@@ -88,7 +88,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   const response = await pendingPreserve
   expect(response.status()).toBe(200)
   expect(object(response.request().postDataJSON())).toEqual({ selectionRef, sectionRefs: sectionIds })
-  const body = object(await response.json())
+  const body = object(await readNativeReportResponse(response))
   expect(body.status).toBe("ok")
   const saved = review(body.value)
   expect(saved.sections.map((section) => section.id)).toEqual(sectionIds)
@@ -195,7 +195,7 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
   const response = await preserve
   expect(response.status()).toBe(200)
   expect(response.request().postDataJSON()).toMatchObject({ previousReviewRef: prior.id, selectionRef: selected.preview.selectionRef })
-  const body = object(await response.json())
+  const body = object(await readNativeReportResponse(response))
   expect(body.status).toBe("ok")
   const next = review(body.value)
   expect(next.id).not.toBe(prior.id)
@@ -352,7 +352,7 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const response = await pending
   expect(response.status()).toBe(200)
   expect(response.request().postDataJSON()).toEqual({ reviewRef: saved.id, sectionRefs, format })
-  const body = object(await response.json())
+  const body = object(await readNativeReportResponse(response))
   expect(body.status).toBe("ok")
   const material = object(body.result)
   expect(material.reviewSelectionRef).toBe(saved.id)
@@ -613,7 +613,7 @@ export async function readNativeReportResponse(response: Response): Promise<unkn
     failure: request.failure()?.errorText ?? null,
   }
   try {
-    const value: unknown = await response.json()
+    const value = observedReportResponse(response)
     console.info("SF_REPORTS_RESPONSE", JSON.stringify({ ...metadata, chars: JSON.stringify(value)?.length ?? 0 }))
     return value
   } catch (error) {
