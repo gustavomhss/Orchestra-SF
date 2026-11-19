@@ -1,5 +1,5 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
 import { useSfContext } from "../../context"
@@ -534,11 +534,13 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       sending = false
       return
     }
+    // Keep every original field; only remove the reactive wrapper before codec admission.
+    const value = unwrap(intent.value)
     const opRef = crypto.randomUUID() as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
     const requestBody = { page: "Suppliers", action: intent.action,
       ...(intent.ref ? { id: intent.ref } : {}), version: intent.version,
-      values: ["create","save","change-bank"].includes(intent.action) ? { supplier: intent.value } : {} }
+      values: ["create","save","change-bank"].includes(intent.action) ? { supplier: value } : {} }
     let payloadDigest: string
     try {
       const bytes = new Uint8Array(await crypto.subtle.digest(
@@ -566,11 +568,11 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       const record = { page:"Suppliers" as const, ...(intent.ref ? { id: intent.ref } : {}), version:intent.version }
       const response =
         intent.action === "create"
-          ? await client["domain.command.CAP27.create"]({ ...record, action:"create", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.create"]({ ...record, action:"create", values: {supplier:value} }, options)
         : intent.action === "save"
-          ? await client["domain.command.CAP27.save"]({ ...record, action:"save", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.save"]({ ...record, action:"save", values: {supplier:value} }, options)
         : intent.action === "change-bank"
-          ? await client["domain.command.CAP27.change-bank"]({ ...record, action:"change-bank", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.change-bank"]({ ...record, action:"change-bank", values: {supplier:value} }, options)
         : intent.action === "activate"
           ? await client["domain.command.CAP27.activate"]({ ...record, action:"activate", values:{} }, options)
         : intent.action === "block"
