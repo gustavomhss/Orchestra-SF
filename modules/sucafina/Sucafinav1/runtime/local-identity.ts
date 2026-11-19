@@ -197,6 +197,10 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       if (!current || current.value.tokens.expiresAt > now() + 60000) return
       const pending = refreshing.get(current.handle)
       if (pending) return pending
+      // Collected session generations do not free refresh calls still waiting on the provider.
+      // Reuse the installation cap and keep each pending call counted until its finally runs.
+      const limit = options.secrets.authentication?.limits.maxRecords
+      if (limit !== undefined && refreshing.size >= limit) return
       const work = (async () => {
         if (!current.value.tokens.refreshToken) return
         const refreshed = await options.client.refresh(current.value.tokens.refreshToken).catch(() => undefined)
