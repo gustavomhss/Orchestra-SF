@@ -302,6 +302,7 @@ export const SfOperationIds = [
   "reviews.export.pptx",
   "reviews.report.prepare",
   "reviews.review-source",
+  "reviews.review-thread-context",
   "reviews.review-update",
   "routines.catalog",
   "routines.prepare-admission",

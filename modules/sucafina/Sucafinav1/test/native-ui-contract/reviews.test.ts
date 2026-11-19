@@ -37,7 +37,7 @@ describe("A07 closed schema / source equivalence", () => {
       "dashboard.dashboard-history", "dashboard.dashboard-review",
       "dashboard.dashboard-review-preserve", "projection.review",
       "reviews.export.docx", "reviews.export.pptx", "reviews.report.prepare", "reviews.review-source",
-      "reviews.review-update",
+      "reviews.review-thread-context", "reviews.review-update",
     ].sort())
   })
 

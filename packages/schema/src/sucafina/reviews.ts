@@ -221,6 +221,21 @@ export const SfReviewsReviewUpdate = {
   input: Schema.Struct({ reviewRef: Text }).annotate({ parseOptions: { onExcessProperty: "error" } }),
   output: Result(SfReviewUpdate),
 }
+const ReviewThreadBasis = Schema.Struct({
+  sourceRef: Text, sourceIncarnation: Text, observedVersion: Positive, period: Period,
+  evidenceRefs: Schema.Array(Evidence).check(Schema.isMinLength(1)),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
+/** C05 pin issued by the installed review-thread-context producer. The digest is never client-computed. */
+export const SfReviewsReviewThreadContext = {
+  operationId: "reviews.review-thread-context" as const,
+  input: Schema.Struct({
+    reviewRef: Text, sectionId: Text, basis: ReviewThreadBasis,
+  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: Result(Schema.Struct({
+    reviewRef: Text, reviewVersion: Positive, sectionId: Text,
+    reviewDigest: Schema.String.check(Schema.isPattern(/^[a-f0-9]{64}$/)),
+  }).annotate({ parseOptions: { onExcessProperty: "error" } })),
+}
 export const SfReviews = {
   "dashboard.dashboard-agenda": SfDashboardDashboardAgenda,
   "dashboard.dashboard-capture": SfDashboardDashboardCapture,
@@ -232,6 +247,7 @@ export const SfReviews = {
   "reviews.export.pptx": SfReviewsExportPptx,
   "reviews.report.prepare": SfReviewsReportPrepare,
   "reviews.review-source": SfReviewsReviewSource,
+  "reviews.review-thread-context": SfReviewsReviewThreadContext,
   "reviews.review-update": SfReviewsReviewUpdate,
 } as const
 

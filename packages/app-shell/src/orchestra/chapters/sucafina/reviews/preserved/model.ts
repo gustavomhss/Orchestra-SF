@@ -9,6 +9,29 @@ export type PreservedValue = ReviewProjection["values"][number]
 export type PreservedComponent = ReviewProjection["components"][number]
 export type PreservedSourceRef = PreservedSection["sourceRefs"][number]
 
+/** The record basis the C05 producer will re-read. Empty when the section has no single covering record. */
+export function preservedAnswerBasis(section: PreservedSection) {
+  const projection = readPreservedProjection(section.content)
+  if (!projection) return undefined
+  const value = projection.values.find((entry) => {
+    const records = entry.sourceRefs.filter((ref) => ref.kind === "record" && covers(ref.target.period, section.period))
+    return records.length === 1 && entry.sourceRefs.filter((ref) => ref.refId === records[0]!.refId).length === 1
+  })
+  const source = value?.sourceRefs.find((ref) => ref.kind === "record" && covers(ref.target.period, section.period))
+  if (!value || !source || source.kind !== "record" || source.target.version < 1) return undefined
+  return {
+    sourceRef: source.refId,
+    sourceIncarnation: source.target.incarnation,
+    observedVersion: source.target.version,
+    period: section.period,
+    evidenceRefs: value.sourceRefs,
+  }
+}
+
+function covers(period: { start: string; end: string } | undefined, section: { start: string; end: string }) {
+  return !!period && period.start <= section.start && period.end >= section.end
+}
+
 /** Public review content is a producer-owned JSON value, not an editable or numeric model. */
 export function readPreservedProjection(content: unknown): ReviewProjection | undefined {
   const decoded = Schema.decodeUnknownOption(SfReviewDomainProjection)(content)
