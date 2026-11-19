@@ -51,6 +51,7 @@ test("planner issuer resolves authenticated current identities and rejects stale
     const completed = createSfPlannerEvidence({ host, sources: product.sources, readSourceProjection: product.readSourceProjection })
     const period = { start: "2027-01-01", end: "2027-01-31" }
     const expectedProjection = await direct(first.value.evidence, binding, { period, currency: "USD" })
+    expect(expectedProjection.status).toBe("ok")
     const canonicalRead = persistence.readScopedSourcePrepared!
     let sourceReads = 0
     persistence.readScopedSourcePrepared = async (...args) => {
@@ -164,7 +165,7 @@ test("planner issuer resolves authenticated current identities and rejects stale
     expect(await localProduct.readSourceProjection(localRef, localBinding)).toMatchObject({ status: "denied" })
     const localLegacy = createSfPlannerEvidence({ host: localHost, sources: localProduct.sources })
     const localCompleted = createSfPlannerEvidence({ host: localHost, sources: localProduct.sources, readSourceProjection: localProduct.readSourceProjection })
-    expect(await localLegacy(localSource.value.evidence, localBinding, { period, currency: "USD" })).toMatchObject({ status: "denied" })
+    expect(await localLegacy(localSource.value.evidence, localBinding, { period, currency: "USD" })).toMatchObject({ status: "stale", reason: "planner-source-changed" })
     expect(await localCompleted(localSource.value.evidence, localBinding, { period, currency: "USD" })).toMatchObject({ status: "denied" })
 
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
