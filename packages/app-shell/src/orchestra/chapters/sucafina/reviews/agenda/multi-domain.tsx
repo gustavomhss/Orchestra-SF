@@ -84,7 +84,7 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
     commandAbort?.abort()
     const abort = new AbortController(); commandAbort = abort
     const generation = owner.generation(), ownerKey = state.ownerKey
-    const items = store.selected.map((option) => unwrap(option.item))
+    const items = store.selected.map((option) => structuredClone(unwrap(option.item)))
     setStore({ phase: "loading", preview: undefined, sectionRefs: [], message: "" })
     try {
       const result = await createSfReviewsClient(access.transport)["reviews.review-agenda"]({ items }, { signal: abort.signal })

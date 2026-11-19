@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA de código: 9b0660736bb247bbedbd46664672036121ac6943
+SHA de código: c716d9a5aa528fa7e7c11253c8835e8b940106eb; snapshot do builder completo neste commit (handoff atualizado após qualificação).
 Data: 2026-11-19
 Estado: partial
 
@@ -133,3 +133,10 @@ Estado: partial
 - Auditoria de leitura44611238509 SUCCESS: docs/handoff/observed-reports-read-44606978085.md no ramo audit-logs-20261119. O primeiro teste preservou todas as7escolhas na UI, mas Review selected sections retornou unavailable sem POST; o segundo preservou o dossier e a rota UI48 mostrou Sucafina route not admitted;3/4 falharam no corpoCDP. Isso não qualifica nenhuma jornada.
 - Diagnóstico novo é fechado: resposta de reviews.review-agenda emite somente kind/status/producerStatus/reason; contexto retém somente IDs conhecidos e estados operacionais de reviews. Sem headers, cookies, corpo privado ou referências opacas no log.
 - Pendente: reviews/agenda/multi-domain.tsx:90 — identificar o fence que impede o POST original; host/reviews-route.tsx:54 — determinar por que reviews.review-read não admite UI48 no contexto real; reports.spec.ts:27,42,108,124 — executar novamente o spec completo após incorporar a causa observada. Sem aumento de timeout/skip, sem sf-ci final executado.
+
+## Snapshot do input reativo
+
+- O run Operations44612655999 falhou em operation-input-schema antes doPOST para CAP25/CAP27; os probes literais passaram e a observação de shape confirmou somente campos esperados. A UI passava valores do createStore. Não se atribui essa falha a um símbolo específico sem evidência.
+- SfMultiDomainAgenda usa a mesma fronteira: itens escolhidos estão no createStore e eram passados diretamente. O builder agora usa structuredClone(unwrap(option.item)), padrão já existente em procurement/settings/index.tsx248. A cópia preserva todos os campos/undefined e remove apenas a representação reativa; não usa JSON roundtrip e não relaxa schema, idempotência, owner ou seleção original.
+- Código inicial unwrapc716d9a5aa528fa7e7c11253c8835e8b940106eb; snapshot completo neste commit. Reports10 run44613459367 está em andamento no snapshot4768b0958d63eb489378d86c44559e4153c3cd9d e NÃO inclui este builder. Vai medir a retenção dos bytes9b066, colunaEvidence e os diagnósticos de admission.
+- Pendente: reviews/agenda/multi-domain.tsx87 e reports.spec.ts27 — gate posterior precisa verificar os mesmos7itens,8seções de preview, exclusão/reordenação e preservação original. Não foi removida nenhuma asserção nem alterado timeout.
