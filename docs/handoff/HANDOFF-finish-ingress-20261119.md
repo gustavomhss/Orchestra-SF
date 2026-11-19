@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: 49234909ad66e323ceb43b6a6ecdf067336c418b (código)
+SHA: bfe42f909a5acd8ccf6b13e295a8a63848501c0b (código)
 Data: 2026-11-19
 Estado: partial
 
@@ -11,13 +11,15 @@ Estado: partial
 - A conexão inicial sem servidor admitido usa o componente de recuperação existente. Ações de ingresso possuem limites de até 10s, sem aumentar timeout dos cenários.
 - F01 valida a query completa de cada família antes de extrair o owner; queries desconhecidas, repetidas e seletores parciais continuam rejeitados.
 - Causa confirmada do bloqueio restante: fetch nativo era entregue sem receptor e chamado como método do objeto de opções. O adaptador agora chama platform.fetch ou globalThis.fetch com receptor correto; esse código passou no run 44573615311.
-- Em4923490, loadContext conserva a própria instância que recebeu ctx.context real. createTransport a aceita somente com binding por identidade e geração exata. O provider deixa de reutilizar transporte vencido após reload. Nenhum stamp é injetado, copiado ou dispensado.
+- Em 4923490, loadContext conserva a própria instância que recebeu ctx.context real. createTransport a aceita somente com binding por identidade e geração exata. O provider deixa de reutilizar transporte vencido após reload. Nenhum stamp é injetado, copiado ou dispensado.
 - Controles nativos Sign out/Refresh access usam createSfAuthActions.logout (POST original 204) e handle.reload. Só após logout confirmado a geração é invalidada e o contexto relido. Não há sinal de sessão artificial entre abas.
 - Chamadores WP03, Dashboard, BI, WP10 e prepare-installation agora usam signIn/origem pública reais. As asserções de negócio ainda não migradas continuam presentes.
+- O tipo SfTransportFetch declara somente a assinatura HTTP, sem exigir Bun.fetch.preconnect no wrapper do browser. Mantém o receiver correto já qualificado.
+- Criações nativas CAP23, OPEX/CAPEX e Risks omitem id quando ausente. O run client 44578426680 provou que o schema original rejeita propriedade id:undefined antes da conversão JSON. O codec estrito permanece intacto.
 - Código incorpora a integração 41ba8c6f220138a97ee33ac4e70d996e8cbfbbf9.
 
 ## Pendente
-- Nova geração/primeiro POST/logout — packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx:363 e context/index.tsx:195 — código 4923490 aguarda gate 8. O sucesso do run 44573615311 cobre o ingresso anterior, não essas mudanças novas.
+- Nova geração/primeiro POST/logout — packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx:365 e context/index.tsx:195 — gate 8 falhou: CAP23 não enviou POST; logout 204 ocorreu, mas a releitura UI não emitiu ctx.context 401. Gate 9 testa a omissão de id e registra o resultado real da descoberta/provider após logout. Não declarar writes/revogação qualificados antes do run 44579042477.
 - WP2 — packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts:35 e confirmation-access.spec.ts:37 — remapeamento para seleção de um registro por UI47/48, CAS, sinais, confirmação nativa e leitura tardia preparado, ainda não commitado. Nenhum check de negócio foi apagado.
 - BI — packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts:49 e :279 — preparação Decisions/editor mensal ainda dirige o console morto. Preservar cobertura, totais e os 12 meses ao migrar.
 - WP03 — packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts:30 — ingresso corrigido; restante do cenário ainda precisa de seu gate próprio.
@@ -32,10 +34,10 @@ Estado: partial
 - A ordem posterior do dono autoriza corrigir causas e repetir gates até completar; o limite anterior de uma verificação/20 min não encerra esta rodada.
 
 ## Como retomar
-1. Branch finish-ingress-20261119, código 49234909ad66e323ceb43b6a6ecdf067336c418b.
-2. Ler o gate 8 e corrigir a primeira falha observada. Não considerar transporte/POST qualificados pelo gate 7 de leitura.
+1. Branch finish-ingress-20261119, código bfe42f909a5acd8ccf6b13e295a8a63848501c0b.
+2. Ler o gate 9 (44579042477) e corrigir a primeira falha observada. Não considerar transporte/POST qualificados pelo gate 7 de leitura.
 3. Gate: primeiro criar commit não referenciado com .ci-run.json parent do código; depois criar branch ci-run-linux nesse commit. Isso evita disparo vazio.
-4. Configuração gate 8: package=app, runner=playwright, config=e2e/playwright.production.config.ts; specs wp03/native-ingress.spec.ts e bi-installed/installed-planner-ingress.spec.ts.
+4. Configuração gate 9: package=app, runner=playwright, config=e2e/playwright.production.config.ts; specs wp03/native-ingress.spec.ts e bi-installed/installed-planner-ingress.spec.ts.
 5. Após a prova, aplicar as mudanças de negócio WP2/WP3/WP10 e verificar os specs correspondentes. Root possui Reports/first-agenda; WP5 possui Operations.
 6. Root faz a integração. Este agente não fez merge/push em sf-join-four nem em branch proibida.
 
@@ -49,6 +51,9 @@ Estado: partial
 | [44571193684](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44571193684) |a892bb6|failure, 1 failed: discovery ready, provider unavailable, sem resposta de contexto do browser.|
 | [44572449631](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44572449631) |6597dc8|failure, 1 failed: codec passou; transport network, geração 1/1 e sameOrigin=true.|
 | [44573615311](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44573615311) |af8f4b4|**success, 1 passed**; typecheck SF E2E passou; CAP23/reload/year reais.|
-| [44575467126](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44575467126) |4923490|in_progress; config8640295f161990205b528b3f79b9315c518573ce; primeiro POST e logout/reload ainda não concluídos.|
+| [44575467126](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44575467126) |4923490|failure, 2 failed; typecheck SF E2E passou. CAP23 count=0 antes do POST; logout original204 confirmado, espera por ctx.context401 não concluída.|
+| [44576103909](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44576103909) |snapshot Reports do integrador|failure no app typecheck: wrapper exigia Bun.fetch.preconnect; nenhum E2E executado. Corrigido no código0b0cf31.|
+| [44578426680](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44578426680) |snapshot client do integrador|success, 3 passed / 8 expect; sourceAccepted=false para id:undefined. Diagnóstico exige omissão no caller, sem relaxar codec.|
+| [44579042477](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44579042477) |bfe42f9|in_progress; configddcaea7c0baf49307fbfe639a74bc5d40916351b; primeiro POST e diagnóstico/logout ainda pendentes.|
 
 Toda verificação foi executada em GitHub Actions. Typecheck completo do app-shell e guards não foram executados por este agente nesta rodada.
