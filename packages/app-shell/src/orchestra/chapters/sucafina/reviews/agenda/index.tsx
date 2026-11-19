@@ -131,7 +131,7 @@ export function SfAgendaEditor(props: {
       return
     }
     if (store.ownerKey !== state.ownerKey) {
-      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [...props.initial ?? []], available: [],
+      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [...(props.initial ?? [])], available: [],
         preview: undefined, preserved: undefined, phase: "selecting", status: props.initial?.length ? "ready" : "loading" })
       return
     }
