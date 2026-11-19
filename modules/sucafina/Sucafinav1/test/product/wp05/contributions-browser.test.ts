@@ -1,16 +1,14 @@
 import { test } from "bun:test"
 import { expect } from "@playwright/test"
 import path from "node:path"
-import { localBrowser } from "../../fixture/local-browser.ts"
+import { inspectWp05Browser } from "./browser.ts"
 
 test("contribution and capacity panels preserve signs, missing values, selection and focus", async () => {
   const built = await Bun.build({ entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm" })
   if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
   const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
-  const fixture = await localBrowser()
-  try {
-    const page = await fixture.browser.newPage()
-    await page.goto("about:blank")
+  await inspectWp05Browser("contribution and capacity panels", async (page, phase) => {
+    phase("render original projection fixtures")
     await page.evaluate(async (moduleUrl) => {
       const module = await import(moduleUrl)
       const period = { start: "2027-01-01", end: "2027-03-31" }
@@ -57,7 +55,5 @@ test("contribution and capacity panels preserve signs, missing values, selection
     await expect(capacity).toContainText("Custo · USD: indisponível")
     await expect(capacity.getByRole("button", { name: /fte · fte: 0/ })).toHaveCount(1)
     await expect(capacity.getByRole("row").filter({ hasText: "cost" })).toContainText("Indisponível")
-  } finally {
-    await fixture.dispose()
-  }
+  })
 }, 180000)
