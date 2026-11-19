@@ -1,6 +1,6 @@
 # Handoff — finish-dashboard-native-20261119
 
-SHA: c2fd49975d49ce7b1ebbcd712e8b5b25030710f2 (código; este documento é o commit seguinte)
+SHA: 904403d78dd0bb49bc7df3cd9d48c6a4d79b8139 (código; este documento é o commit seguinte)
 Data: 2026-11-19
 Estado: partial
 
@@ -43,3 +43,15 @@ Estado: partial
 - records-signals-history.spec.ts:41–49 agora retém os bytes completos do GET original de descoberta pelo helper Reports já existente: route.fetch sem retries/redirects, seguida de fulfill da resposta original. Apenas a descoberta exata de Hot Topics & Actions é interceptada; nenhum POST ou GET extra é criado. Schema, HTTP200, seleção exata de1registro, exclusão do unrelated, projeção integral e janela original de observedAt permanecem.
 - Asserções removidas: nenhuma. Não aumentou timeout. Pendente/unbound: confirmation-access.spec.ts:34 precisa provar a segunda linha e continuar o ciclo mensal; records-signals-history.spec.ts:40 precisa qualificar a captura original e as asserções subsequentes.
 - Retomar: compor os dois blobs de código acima sobre o candidato que contém reports-support/model.ts com retainReportResponse/observedReportResponse; executar somente os dois specs Dashboard no gate coordenado pela raiz. Este branch não contém os novos helpers Reports, pois são posse do integrador. Não repetir sem nova causa.
+
+
+## Dashboard8 — ausência original antes do primeiro mês e bytes da agenda
+
+- Run [44620042406](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44620042406), snapshot 99c33abde0a1576c69bdc56e10ed5606c7cb6b85, job 135898939882: FAILURE, 2 failed. Os três typechecks passaram; cleanup 135904597272 passou. O gate usou composição c00178c2101e3c8810c7d37ee5d0a2db0c823b6b.
+- Progresso comprovado: as duas linhas reais de OPEX foram criadas, a revisão mensal abriu e a outra aba leu a fonte; falhou somente porque support.ts:191 exigia opexEntries antes do primeiro save-entry. O produtor original runtime/dashboard-budget.ts:74–77 omite coleções que ainda não existem.
+- Código 904403d78dd0bb49bc7df3cd9d48c6a4d79b8139: support.ts:184–193 devolve a ausência original sem inventar []; confirmation-access.spec.ts:48–66 prova ausência explícita antes/depois do cancelamento e igualdade integral de data e versions após reload, mantendo zero aplicações. Todas as leituras depois do save real continuam exigindo a coleção e valores mensais, exclusão do mês2 e do unrelated, recarga nas duas abas e revogação da sessão.
+- Asserções substituídas por falta do dado no produtor: os dois filtros de before.entries/unchanged.entries que exigiam [] antes da primeira gravação não têm coleção publicada para filtrar. Em seu lugar há Object.hasOwn falso, undefined original e igualdade integral de dados/versões, sem normalização. Nenhuma asserção de efeito gravado, CAS, perda de resposta, logout ou contagem foi removida.
+- O segundo teste passou descoberta e seleção exata, mas previewResponse.json em records-signals-history.spec.ts:91 falhou com CDP No data found após POST dashboard-agenda200/ERR_ABORTED. O mesmo pass-through já usado na descoberta agora cobre somente os métodos originais de dashboard-agenda, dashboard-review-preserve e review-read. route.fetch possui retries0/redirects0; fulfill entrega a mesma resposta e observedReportResponse lê os bytes retidos. Nenhuma mutação ou leitura adicional é enviada; Schemas, corpo integral, seleção/exclusão, versão, janela observedAt e igualdade após reload permanecem.
+- Os blobs support.ts e confirmation-access.spec.ts partem exatamente da composição c00178c qualificada pelos três typechecks do Dashboard8; o branch cirúrgico anterior ainda possuía versões antigas desses helpers. Incluí os dois arquivos completos para a próxima composição, preservando a surface.tsx c2fd sem novo delta.
+- Pendente/unbound: confirmation-access.spec.ts:65 (perda de resposta mensal/reload/logout ainda não alcançados neste gate); records-signals-history.spec.ts:40 (preview/preservação/readback histórico ainda precisam passar com bytes originais). O novo código ainda não executou um gate.
+- Retomar: compor support.ts, confirmation-access.spec.ts, records-signals-history.spec.ts e manter dashboard/opex/surface.tsx de c2fd. Usar somente os dois specs Dashboard no próximo gate estreito coordenado; registrar run e resultado antes de integrar. Não rodar sf-ci aqui.
