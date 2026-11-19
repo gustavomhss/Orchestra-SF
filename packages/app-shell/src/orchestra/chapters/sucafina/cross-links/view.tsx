@@ -2,7 +2,8 @@ import { createEffect, createSignal, For, onCleanup, Show, type JSX } from "soli
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import { useSfContext } from "../context"
-import { useSfPresentation } from "../shared/frame/presentation"
+import { sfCommonKey, useSfPresentation } from "../shared/frame/presentation"
+import { SfStatePanel } from "../shared/states"
 import { sfExecutiveLinkAllowed, type SfExecutiveLink, type SfExecutiveSourceRoute } from "./index"
 
 type Label = Readonly<{ en: string; pt: string }>
@@ -19,7 +20,7 @@ export function SfExecutiveAction(props: Readonly<{
   const owner = useSfContext()
   const { locale } = useSfPresentation()
   const [busy, setBusy] = createSignal(false)
-  const [failure, setFailure] = createSignal<string>()
+  const [failure, setFailure] = createSignal<"denied" | "invalid" | "unavailable">()
   const pt = () => locale().toLowerCase().startsWith("pt")
   const allowed = () => {
     const state = owner.state(), access = owner.ready()
@@ -31,23 +32,25 @@ export function SfExecutiveAction(props: Readonly<{
     setBusy(true); setFailure(undefined)
     try {
       const status = await owner.followExecutiveLink?.(props.from, props.target)
-      if (status !== "committed") setFailure(status ?? "unavailable")
+      if (status === "committed" || status === "aborted" || status === "kept-editing") return
+      setFailure(status === "denied" ? "denied" : status === "invalid-link" ? "invalid" : "unavailable")
     } catch {
       setFailure("unavailable")
     } finally {
       setBusy(false)
     }
   }
-  return <span data-sf-executive-action={props.target.kind}>
+  const failureKey = () => sfCommonKey(failure() === "denied" ? "sf.common.noAccess"
+    : failure() === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable")
+  return <div data-sf-executive-action={props.target.kind}>
     <button type="button" class="mx-btn" disabled={!allowed() || busy()} aria-busy={busy()}
       onClick={() => { void invoke() }}>
       {pt() ? props.label.pt : props.label.en}
     </button>
-    <Show when={failure()}>{(reason) => <span role="alert" class="block text-sm">
-      {pt() ? "Destino não autorizado ou referência indisponível" : "Destination denied or reference unavailable"}
-      {" (" + reason() + ")"}
-    </span>}</Show>
-  </span>
+    <Show when={failure()}>{(state) =>
+      <SfStatePanel state={state()} messageKey={failureKey()} />
+    }</Show>
+  </div>
 }
 
 /**
@@ -64,12 +67,13 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
   const [records, setRecords] = createSignal<readonly Related[]>([])
   const [choice, setChoice] = createSignal("")
   const [loading, setLoading] = createSignal(false)
+  const [failed, setFailed] = createSignal(false)
   const pt = () => locale().toLowerCase().startsWith("pt")
   const chosen = () => records().find((item) => JSON.stringify([item.kind, item.ref]) === choice())
 
   createEffect(() => {
     const generation = owner.generation(), state = owner.state(), ready = owner.ready()
-    setRecords([]); setChoice(""); setLoading(false)
+    setRecords([]); setChoice(""); setLoading(false); setFailed(false)
     if (state.status !== "ready" || !ready) return
     const controller = new AbortController()
     const { signal } = controller
@@ -77,6 +81,15 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
       owner.state().status === "ready" && owner.ready()?.transport === ready.transport
     const add = (kind: Related["kind"], next: readonly Related[]) => {
       if (current()) setRecords((old) => [...old.filter((item) => item.kind !== kind), ...next])
+    }
+    const miss = (response: { kind: string; status?: number; reason?: string; body?: { status?: string } }) => {
+      if (!current()) return
+      if (response.kind !== "response") {
+        if (response.reason !== "aborted") setFailed(true)
+        return
+      }
+      if (response.body?.status === "denied" || response.status === 401 || response.status === 403) return
+      setFailed(true)
     }
     const jobs: Promise<void>[] = []
     if (props.omit !== "risk" && sfExecutiveLinkAllowed(ready.context, { kind: "risks" })) {
@@ -88,8 +101,10 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
               kind: "risk", ref: String(row.id), label: display(row.title, display(row.name, String(row.id))),
             }))
             add("risk", next)
+            return
           }
-        }).catch(() => undefined))
+          miss(response)
+        }).catch(() => { if (current()) setFailed(true) }))
     }
     if (props.omit !== "stakeholder" && sfExecutiveLinkAllowed(ready.context, { kind: "stakeholders" })) {
       jobs.push(createSfDomainClient(ready.transport)["domain.page.CAP15"]({}, { signal })
@@ -100,8 +115,10 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
               kind: "stakeholder", ref: String(row.id), label: display(row.name, String(row.id)),
             }))
             add("stakeholder", next)
+            return
           }
-        }).catch(() => undefined))
+          miss(response)
+        }).catch(() => { if (current()) setFailed(true) }))
     }
     if (props.omit !== "topic" && sfExecutiveLinkAllowed(ready.context, { kind: "topics" })) {
       jobs.push(createSfPeopleClient(ready.transport)["domain.page.CAP02"]({ topicStatus: "" }, { signal })
@@ -112,8 +129,10 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
               kind: "topic", ref: row.id, label: display(row.action, row.id),
             }))
             add("topic", next)
+            return
           }
-        }).catch(() => undefined))
+          miss(response)
+        }).catch(() => { if (current()) setFailed(true) }))
     }
     setLoading(jobs.length > 0)
     void Promise.all(jobs).finally(() => { if (current()) setLoading(false) })
@@ -139,7 +158,10 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
           label={{ pt: "Abrir referência", en: "Open reference" }} />}
       </Show>
     </div>
-    <Show when={!loading() && records().length === 0}>
+    <Show when={!loading() && failed()}>
+      <SfStatePanel state="unavailable" messageKey={sfCommonKey("sf.common.unavailable")} />
+    </Show>
+    <Show when={!loading() && !failed() && records().length === 0}>
       <p role="status" class="text-sm">
         {pt() ? "Nenhum destino autorizado ou disponível" : "No authorized or available destinations"}
       </p>
