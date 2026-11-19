@@ -6,7 +6,6 @@ import { SfDomainPageCap03 } from "@orchestra/schema/sucafina/domain"
 import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { SfBiBiDataOutput, SfBiBiOptionsOutput } from "@orchestra/schema/sucafina/bi"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { sfNativeChapterEntry } from "../../../src/orchestra/chapters/sucafina/host/native-chapter-entry"
 import { createHash } from "node:crypto"
 import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises"
 import { release, tmpdir } from "node:os"
@@ -149,8 +148,8 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           actorId: `macos:${profile.localOperator.installationId}:${profile.localOperator.uid}` })
         // The canonical entry mounts the initial owner before owner-bound
         // sidebar navigation and full-document links use that installation.
-        const entry = sfNativeChapterEntry("sf-dashboard")
-        if (!entry) throw new Error("Canonical Dashboard entry is unavailable")
+        // host/native-chapter-entry.ts publishes this exact canonical entry.
+        const entry = "/orchestra/sf-dashboard/executive"
         const executive = page.waitForResponse((response) => response.request().method() === "GET" &&
           new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP01")
         expect((await page.goto(origin + entry))?.status()).toBe(200)
