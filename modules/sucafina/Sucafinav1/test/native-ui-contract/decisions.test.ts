@@ -18,7 +18,7 @@ function accepts<S extends Schema.Top>(schema: S, value: unknown) {
 }
 
 describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qualifies)", () => {
-  test("all 21 literal IDs exist without a generic endpoint", () => {
+  test("all 21 pinned literal IDs and the original edit extension exist without a generic endpoint", () => {
     expect(Object.keys(SfDecisions.operations).sort()).toEqual([
       "projection.cases", "projection.case",
       "decisions.choice.read", "decisions.controls.read",
@@ -28,6 +28,7 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
       "decisions.decision-choose", "decisions.decision-condition", "decisions.decision-coverage",
       "decisions.decision-criteria", "decisions.decision-prepare-changes", "decisions.decision-promote",
       "decisions.decision-recover", "decisions.decision-review", "decisions.decision-select-portfolio",
+      "decisions.decision-edit",
     ].sort())
     for (const [id, operation] of Object.entries(SfDecisions.operations)) {
       expect<string>(operation.operationId).toBe(id)

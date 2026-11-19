@@ -132,8 +132,53 @@ export const SfDashboardDashboardReviewPreserve = {
   }).annotate({ parseOptions: { onExcessProperty: "error" } }),
   output: Result(SfReviewPreserved),
 }
+
+/** The installed multi-domain discovery emits only these original selector forms. */
+const AgendaItemBase = {
+  id: Text, period: Period, recordRefs: Schema.optional(RefList),
+  agendaNote: Schema.optional(Schema.String),
+}
+const MultiDomainAgendaItem = Schema.Union([
+  Schema.Struct({ ...AgendaItemBase, kind: Schema.Literal("dashboard"), topic: Text, selectionRef: Text }),
+  Schema.Struct({ ...AgendaItemBase, kind: Schema.Literal("forecast-comparison"), title: Text,
+    baseRef: Text, candidateRef: Text, currency: Text, sides: Schema.Array(Schema.Literals(["baseline", "candidate"])) }),
+  Schema.Struct({ ...AgendaItemBase, kind: Schema.Literal("procurement-request"), title: Text, requestRef: Text }),
+  Schema.Struct({ ...AgendaItemBase, kind: Schema.Literal("procurement-supplier"), title: Text, supplierRef: Text, fields: RefList }),
+  Schema.Struct({ ...AgendaItemBase, kind: Schema.Literal("procurement-contract"), title: Text, contractRef: Text, fields: RefList }),
+]).annotate({ parseOptions: { onExcessProperty: "error" } })
+export const SfReviewsReviewAgendaOptions = {
+  operationId: "reviews.review-agenda-options" as const,
+  input: Schema.Struct({ start: Text, end: Text,
+    domain: Schema.optional(Schema.Literals(["dashboard", "planner", "procurement"])) }),
+  output: Result(Schema.Struct({ options: Schema.Array(Schema.Struct({
+    key: Text, label: Text, domain: Schema.Literals(["dashboard", "planner", "procurement"]), item: MultiDomainAgendaItem,
+  })) })),
+}
+export const SfReviewsReviewAgenda = {
+  operationId: "reviews.review-agenda" as const,
+  input: Schema.Struct({ items: Schema.Array(MultiDomainAgendaItem) }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: Result(Schema.Struct({
+    selectionRef: Text, sectionRefs: RefList, sections: Schema.Array(ReviewSection),
+    sectionRecordRefs: Schema.Array(Schema.Struct({ sectionRef: Text, recordRefs: RefList })),
+    agendaNotes: Schema.Array(Schema.Struct({ sectionRef: Text, text: Schema.String })),
+    gaps: Schema.Array(Schema.Struct({ id: Text, reason: Text })),
+  })),
+}
+export const SfReviewsReviewRead = {
+  operationId: "reviews.review-read" as const,
+  input: Schema.Struct({ reviewRef: Text }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: Result(SfReviewPreserved),
+}
+export const SfReviewsReviewPreserve = {
+  operationId: "reviews.review-preserve" as const,
+  input: SfDashboardDashboardReviewPreserve.input,
+  output: Result(SfReviewPreserved),
+}
+
 const ReviewAgendaItem = Schema.Struct({
   kind: Schema.Literal("dashboard"), id: Text, topic: Text, selectionRef: Text,
+  title: Schema.optional(Text),
+  recordOptions: Schema.optional(Schema.Array(Schema.Struct({ recordRef: Text, recordId: Text, label: Text }))),
   period: Period, recordRefs: Schema.optional(RefList), agendaNote: Schema.optional(Schema.String),
 })
 export const SfReviewUpdate = Schema.Struct({
@@ -237,6 +282,10 @@ export const SfReviewsReviewThreadContext = {
   }).annotate({ parseOptions: { onExcessProperty: "error" } })),
 }
 export const SfReviews = {
+  "reviews.review-agenda-options": SfReviewsReviewAgendaOptions,
+  "reviews.review-agenda": SfReviewsReviewAgenda,
+  "reviews.review-preserve": SfReviewsReviewPreserve,
+  "reviews.review-read": SfReviewsReviewRead,
   "dashboard.dashboard-agenda": SfDashboardDashboardAgenda,
   "dashboard.dashboard-capture": SfDashboardDashboardCapture,
   "dashboard.dashboard-history": SfDashboardDashboardHistory,

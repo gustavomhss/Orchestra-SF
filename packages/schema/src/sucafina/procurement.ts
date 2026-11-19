@@ -204,6 +204,11 @@ export const SfProcurementSupplier = Schema.Struct({
   validatedAt: Schema.optional(Schema.NullOr(Schema.String)),
   validatedBy: Schema.optional(Schema.NullOr(Schema.String)),
   history: Schema.optional(Schema.Array(Schema.Struct({ field: Schema.String }))),
+  attachments: Schema.optional(Schema.Array(Schema.Struct({
+    id: Schema.optional(Schema.Union([Schema.String, NonNegativeInteger])),
+    name: Schema.optional(Schema.String), type: Schema.optional(Schema.String),
+    bytes: Schema.optional(NonNegativeInteger), size: Schema.optional(NonNegativeInteger),
+  }).annotate({ parseOptions: { onExcessProperty: "error" } }))),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Level = Schema.Struct({
   id: Schema.String, name: Schema.String, threshold: NumericInput,
