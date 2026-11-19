@@ -394,6 +394,18 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const state = editing()?.draft.snapshot()
     return state?.availability === "active" && state.dirty
   }
+  const shownSelected = () => {
+    const owner = selected()
+    if (!owner) return undefined
+    return filtered().some((row) => String(row.id) === String(owner.id)) ? owner : undefined
+  }
+  createEffect(() => {
+    const ref = selectedRef()
+    if (!view.page || !ref || !view.filter.trim()) return
+    if (filtered().some((owner) => String(owner.id) === ref)) return
+    if (editing()?.owner && String(editing()!.owner!.id) === ref) setEditing(undefined)
+    if (props.route.kind === "detail" || props.route.kind === "edit") navigate(listHref("entry"))
+  })
   const closeEditor = () => {
     if (view.busy) return
     setEditing(undefined)
@@ -556,10 +568,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       render: (owner: BudgetOwner) => <bdi>{owner.status ?? t(key("missing"))}</bdi>,
     }] : []),
   ]
-  const pageAction = (): SfAction => ({
+  const pageAction = (): SfAction | undefined => !allowed("save") ? undefined : ({
     id: "new", labelKey: primaryKey(), tone: "primary",
-    disabled: !allowed("save"), reasonKey: !allowed("save") ? sfCommonKey("sf.common.readOnly") : undefined,
-    busy: view.busy, onInvoke: () => navigate(listHref("new")),
+    disabled: view.busy, busy: view.busy, onInvoke: () => navigate(listHref("new")),
   })
   const showMonth = (owner: BudgetOwner, month: number) => {
     const entry = entryFor(owner, month)
@@ -572,10 +583,16 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         <td>{entry?.forecast === undefined || entry.forecast === null ? t(key("missing")) : String(entry.forecast)}</td>
         <td>{deviation?.flag === undefined ? t(key("missing")) : deviation.flag || t(key("missing"))}</td>
         <td><bdi>{deviation?.text ?? t(key("missing"))}</bdi></td>
-        <td class="sf-budget-row-actions">
-          <button type="button" class="mx-btn" disabled={!allowed("save-entry") || view.busy} onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
-          <button type="button" class="mx-btn" disabled={!allowed("save-deviation") || view.busy} onClick={() => startEdit("save-deviation", owner, month)}>{t(key("saveDeviation"))}</button>
-        </td>
+        <Show when={allowed("save-entry") || allowed("save-deviation")}>
+          <td class="sf-budget-row-actions">
+            <Show when={allowed("save-entry")}>
+              <button type="button" class="mx-btn" disabled={view.busy} onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
+            </Show>
+            <Show when={allowed("save-deviation")}>
+              <button type="button" class="mx-btn" disabled={view.busy} onClick={() => startEdit("save-deviation", owner, month)}>{t(key("saveDeviation"))}</button>
+            </Show>
+          </td>
+        </Show>
       </tr>
     )
   }
@@ -594,10 +611,16 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       sections={[
         { id: "annual-monthly", titleKey: key("entry"), state: view.page?.entries ? "ready" : "partial", content: (
           <div class="sf-budget-detail-section">
-            <div class="sf-budget-actions">
-              <button class="mx-btn" type="button" disabled={!allowed("annual-entry") || view.busy} onClick={() => startEdit("annual-entry", owner)}>{t(key("applyAnnual"))}</button>
-              <button class="mx-btn" type="button" disabled={!allowed("year-amount") || view.busy} onClick={() => startEdit("year-amount", owner)}>{t(key("applyYear"))}</button>
-            </div>
+            <Show when={allowed("annual-entry") || allowed("year-amount")}>
+              <div class="sf-budget-actions">
+                <Show when={allowed("annual-entry")}>
+                  <button class="mx-btn" type="button" disabled={view.busy} onClick={() => startEdit("annual-entry", owner)}>{t(key("applyAnnual"))}</button>
+                </Show>
+                <Show when={allowed("year-amount")}>
+                  <button class="mx-btn" type="button" disabled={view.busy} onClick={() => startEdit("year-amount", owner)}>{t(key("applyYear"))}</button>
+                </Show>
+              </div>
+            </Show>
             <Show when={hintFor(owner)}>
               {(hint) => <dl class="sf-budget-hint">
                 <div><dt>{t(key("yearAmount"))}</dt><dd>{hint().amount}</dd></div>
@@ -615,7 +638,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
                   <th scope="col">{t(key("forecast"))}</th>
                   <th scope="col">{t(key("flag"))}</th>
                   <th scope="col">{t(key("notes"))}</th>
-                  <th scope="col">{t(sfCommonKey("sf.common.edit"))}</th>
+                  <Show when={allowed("save-entry") || allowed("save-deviation")}>
+                    <th scope="col">{t(sfCommonKey("sf.common.edit"))}</th>
+                  </Show>
                 </tr></thead>
                 <tbody><For each={months}>{(month) => showMonth(owner, month)}</For></tbody>
               </table>
@@ -791,15 +816,15 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
                 rows={filtered()}
                 getRowKey={(owner) => asRef(owner.id)}
                 columns={ownerColumns}
-                selectedKey={selected() ? asRef(selected()!.id) : undefined}
+                selectedKey={shownSelected() ? asRef(shownSelected()!.id) : undefined}
                 sort={view.sort}
                 page={{ kind: "none", total: view.page?.owners?.length ?? null }}
                 onSort={(next) => { setView("sort", next); rememberView({ sort: next }) }}
                 onPage={() => setView("reload", (value) => value + 1)}
                 onSelect={(recordRef) => navigate(listHref("detail", String(recordRef)))}
-                rowActions={(owner) => [
-                  { id: "edit", labelKey: sfCommonKey("sf.common.edit"), tone: "secondary", disabled: !allowed("save"), busy: view.busy },
-                  { id: "delete", labelKey: key("delete"), tone: "danger", disabled: !allowed("delete"), busy: view.busy },
+                rowActions={() => [
+                  ...(allowed("save") ? [{ id: "edit", labelKey: sfCommonKey("sf.common.edit"), tone: "secondary" as const, disabled: view.busy, busy: view.busy }] : []),
+                  ...(allowed("delete") ? [{ id: "delete", labelKey: key("delete"), tone: "danger" as const, disabled: view.busy, busy: view.busy }] : []),
                 ]}
                 onRowAction={(request) => {
                   const owner = view.page?.owners?.find((item) => String(item.id) === String(request.recordRef))
@@ -815,7 +840,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
                 <a class="mx-btn" href={importHref()}>{t(key("import"))}</a>
               </Show>
             </section>
-            <Show when={selected()}>
+            <Show when={shownSelected()}>
               {(owner) => <section class="sf-budget-detail" aria-label={t(key("record"))}>{detail(owner())}</section>}
             </Show>
           </div>

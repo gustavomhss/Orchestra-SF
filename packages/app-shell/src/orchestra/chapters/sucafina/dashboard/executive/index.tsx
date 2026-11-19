@@ -42,7 +42,9 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     Number(pinned().has(b.id)) - Number(pinned().has(a.id)) ||
     (b.date || "").localeCompare(a.date || "") || a.id.localeCompare(b.id)))
   const byYear = () => year() === undefined ? undefined : data()?.executiveByYear?.[String(year())]
-  const executive = () => byYear() ?? data()?.executive
+  const executive = () => byYear()
+  const unscoped = () => t(key("sf.u02.sourceWarning"))
+  const periodTotals = () => year() === undefined ? data()?.totals : undefined
   const operations = () => {
     const period = year() !== undefined && selected().opsMonth !== undefined ?
       String(year()) + ":" + String(selected().opsMonth) :
@@ -60,8 +62,11 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
   const canEdit = (action: string) => reader.canAction(action, "domain.command.CAP01." + action)
   const stat = (id: string, label: Key, value: number | null | undefined) =>
     <div class="sf-u02-stat" data-sf-metric={id}><dt>{t(key(label))}</dt><dd>{numeric(value)}</dd></div>
+  const unscopedStat = (id: string, label: Key) =>
+    <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped"><dt>{t(key(label))}</dt><dd>{unscoped()}</dd></div>
   const metricTable = () => {
-    const totals = data()?.totals
+    if (year() !== undefined) return <p role="status">{unscoped()}</p>
+    const totals = periodTotals()
     if (!totals) return <p role="status">{t(key("sf.u02.sourceMissing"))}</p>
     return <div class="sf-u02-table-scroll">
       <table><caption>{t(key("sf.u02.budgetByLine"))}</caption>
@@ -119,10 +124,11 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-financial">
           <h2 id="sf-u02-financial">{t(key("sf.u02.financial"))}</h2>
+          <p role="status">{unscoped()}</p>
           <dl class="sf-u02-stats sf-u02-four">
-            {stat("budget", "sf.u02.budget", data()?.totals?.totalBudget)}
-            {stat("actual", "sf.u02.actual", data()?.totals?.totalActual)}
-            {stat("forecast", "sf.u02.forecast", data()?.totals?.totalForecast)}
+            {year() === undefined ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
+            {year() === undefined ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
+            {year() === undefined ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
             {stat("active", "sf.u02.active", executive()?.active)}
           </dl>
           <p>{t(key("sf.u02.noCurrency"))}</p>
@@ -132,9 +138,9 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
           <h2 id="sf-u02-variance">{t(key("sf.u02.variance"))}</h2>
           <p>{t(key("sf.u02.sourceWarning"))}</p>
           <dl class="sf-u02-stats">
-            {stat("opex-budget", "sf.u02.opex", data()?.totals?.opexBudget)}
-            {stat("capex-budget", "sf.u02.capex", data()?.totals?.capexBudget)}
-            {stat("total-forecast", "sf.u02.forecast", data()?.totals?.totalForecast)}
+            {year() === undefined ? stat("opex-budget", "sf.u02.opex", periodTotals()?.opexBudget) : unscopedStat("opex-budget", "sf.u02.opex")}
+            {year() === undefined ? stat("capex-budget", "sf.u02.capex", periodTotals()?.capexBudget) : unscopedStat("capex-budget", "sf.u02.capex")}
+            {year() === undefined ? stat("total-forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("total-forecast", "sf.u02.forecast")}
           </dl>
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-delivery">
