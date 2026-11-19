@@ -15,6 +15,16 @@ import type { SfCaseControls, SfSensitivityResultView } from "../scenarios/model
 import "./sensitivity.css"
 
 const k = (key: keyof typeof SF_U19_COPY) => key as SfCopyKey
+const horizonLabel = (start: string, end: string, locale: string) => {
+  const day = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
+  return day(start) + " — " + day(end)
+}
 type View = {
   status: SfUiState; caseState: SfUiState
   controls: SfCaseControls | null
@@ -259,7 +269,7 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
               <Show when={selection()}>
                 {(current) => <>
                   <header class="sf-u19-sensitivity-header"><h2>{current().objective}</h2>
-                    <p>{current().currency} · {current().horizon.start} — {current().horizon.end}</p></header>
+                    <p>{current().currency} · {horizonLabel(current().horizon.start, current().horizon.end, language.intl())}</p></header>
                   <Show when={routeResult()} fallback={
                     <section class="sf-u19-sensitivity-form">
                       <p>{t("sf.u19.sensitivity.choose")}</p>
