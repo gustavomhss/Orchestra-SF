@@ -16,8 +16,8 @@ export function parseReviewsRouteQuery(params: URLSearchParams, candidate: SfNat
   if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const keys = [...params.keys()]
   const allowed = ["server", "project", "installation",
-    ...(candidate.surfaceId === "UI47" ? ["year"] : []),
-    ...(candidate.surfaceId === "UI48" ? ["reviewThread", "reviewMessage", "reviewIncarnation", "reviewVersion"] : []),
+    ...(candidate.surfaceId === "UI47" ? ["year", "sourcePage"] : []),
+    ...(candidate.surfaceId === "UI48" ? ["reviewThread", "reviewMessage", "reviewIncarnation", "reviewVersion", "sectionRef"] : []),
     ...(candidate.surfaceId === "UI49" ? ["previousReview", "currentReview"] : []),
   ]
   if (new Set(keys).size !== keys.length || keys.some((key) => !allowed.includes(key))) return
@@ -26,10 +26,16 @@ export function parseReviewsRouteQuery(params: URLSearchParams, candidate: SfNat
   const year = params.get("year"), previous = params.get("previousReview"), current = params.get("currentReview")
   if (year !== null && (!/^\d{4}$/.test(year) || Number(year) === 0)) return
   if ([previous, current].some((ref) => ref !== null && (!ref.trim() || ref.length > 2048)) || previous !== null && previous === current) return
+  const sourcePage = params.get("sourcePage")
+  if (sourcePage !== null && (sourcePage.length > 200 || !sourcePage.trim() ||
+      Option.isNone(Schema.decodeUnknownOption(Schema.toType(SfReviews["projection.review"].input), { onExcessProperty: "error" })({ page: sourcePage })))) return
+  const section = params.get("sectionRef")
+  if (section !== null && (candidate.surfaceId !== "UI48" || !["entry", "present"].includes(candidate.kind) ||
+      !section.trim() || section.length > 2048 || /[\u0000-\u001f\u007f]/.test(section))) return
   if (candidate.surfaceId === "UI48" && !admittedReviewBinding(params)) return
   if (year !== null && Option.isNone(Schema.decodeUnknownOption(SfReviews["projection.review"].input, { onExcessProperty: "error" })({ start: `${year}-01-01`, end: `${year}-12-31` }))) return
   if ([previous, current].some((ref) => ref !== null && Option.isNone(Schema.decodeUnknownOption(SfReviews["dashboard.dashboard-review"].input, { onExcessProperty: "error" })({ id: ref })))) return
-  return { ...(year === null ? {} : { year: Number(year) }), ...(previous === null ? {} : { previousReview: previous as SfRef }), ...(current === null ? {} : { currentReview: current as SfRef }) }
+  return { ...(sourcePage === null ? {} : { sourcePage }), ...(year === null ? {} : { year: Number(year) }), ...(previous === null ? {} : { previousReview: previous as SfRef }), ...(current === null ? {} : { currentReview: current as SfRef }), ...(section === null ? {} : { sectionRef: section as SfRef }) }
 }
 
 function admittedReviewBinding(params: URLSearchParams) {
@@ -45,7 +51,7 @@ function admittedReviewBinding(params: URLSearchParams) {
 }
 export function reviewsRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
-  const id = candidate.surfaceId === "UI47" ? SfReviews["projection.review"].operationId : SfReviews["dashboard.dashboard-review"].operationId
+  const id = candidate.surfaceId === "UI47" ? SfReviews["projection.review"].operationId : SfReviews["reviews.review-read"].operationId
   if (!context.availability.some((resource) => resource.family === "reviews" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))) return false
   if (candidate.surfaceId !== "UI50") return true
   const prepare = "reviews.report.prepare"

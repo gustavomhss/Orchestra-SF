@@ -853,6 +853,10 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
               {(owner) => <section class="sf-budget-detail" aria-label={t(key("record"))}>{detail(owner())}</section>}
             </Show>
           </div>
+          <Show when={props.capability === "CAP04"}>
+            <p><a href={"/orchestra/sf-reviews/agenda?" + new URLSearchParams({ sourcePage: "OPEX Detail", year: String(year()) }).toString()}>
+              {t(sfCommonKey("sf.common.reportsBackup"))}</a></p>
+          </Show>
         </SfStatePanel>
         <Show when={context.state().status === "ready" && view.page && editing() ? editing() : undefined} keyed>
           {(editor) => <section class="sf-budget-editor" data-sf-action={editor.action} data-sf-draft-phase={editPhase(editor)}>{editorView(editor)}</section>}
