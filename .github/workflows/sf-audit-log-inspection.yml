@@ -1,4 +1,4 @@
-name: sf-audit-log-inspection
+name: sf-native-screen-inspection
 on:
   push:
     branches: [audit-logs-20261119]
@@ -10,30 +10,38 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read the original completed job log
+      - name: Read the two original Playwright artifacts
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/jobs/135778309143/logs > "$RUNNER_TEMP/original-job.log"
-      - name: Extract bounded failure locations
+        run: |
+          gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14562244092/zip > "$RUNNER_TEMP/ingress16.zip"
+          gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14563577838/zip > "$RUNNER_TEMP/wp10native1.zip"
+      - name: Extract only bounded screen context
         run: |
           python3 - <<'PY'
-          import base64, json, os, pathlib, re
+          import base64, json, os, pathlib, re, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          lines = (root / "original-job.log").read_text(errors="replace").splitlines()
-          keep = re.compile(r"^(?:\(fail\)|error:|Expected:|Received:|\s+at .*\.[cm]?[jt]sx?:\d+|\s*\d+ pass$|\s*\d+ fail$|\s*\d+ expect\(\) calls|Ran \d+ tests|.*timed out|TimeoutError)")
-          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|access.token", re.I)
-          selected = []
-          for line in lines:
-              line = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", line)
-              body = re.sub(r"^\d{4}-\d\d-\d\dT\S+\s", "", line)
-              if keep.search(body) and not sensitive.search(line):
-                  selected.append(line[:1000])
-          text = "Original run: 44585817131\nOriginal job: 135778309143\nSnapshot: 2dcbd93a41608e171dfde8896e0721a42fbede6d\nThis is a bounded log excerpt, not a rerun or a passing receipt.\n\n" + "\n".join(selected[:500]) + "\n"
-          payload = {"message": "docs(sf): retain original app browser failure locations", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
-          (root / "log-payload.json").write_text(json.dumps(payload))
-          print(text)
+          output = ["# Original native screen observations", "", "Read-only extraction from already completed Actions; no tests rerun.", ""]
+          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token", re.I)
+          for name, run, artifact in [("ingress16", 44591584962, 14562244092), ("wp10native1", 44590617991, 14563577838)]:
+              output += [f"## Run {run}; artifact {artifact}", ""]
+              with zipfile.ZipFile(root / f"{name}.zip") as archive:
+                  members = [item for item in archive.namelist() if item.endswith("/error-context.md")]
+                  output += [f"Screen context files: {len(members)}", ""]
+                  for member in members:
+                      output += [f"### {member}", ""]
+                      for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:250]:
+                          if sensitive.search(line):
+                              continue
+                          line = re.sub(r"([?&](?:code|token|key)=)[^&#\\s\\\"'<>]*", r"\\1[redacted]", line, flags=re.I)
+                          output.append(line[:1200])
+                      output.append("")
+          text = "\n".join(output) + "\n"
+          payload = {"message": "docs(sf): preserve original failed native screen observations", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
+          (root / "screen-payload.json").write_text(json.dumps(payload))
+          print(f"Extracted {len(output)} bounded lines; no trace, headers or requests were read.")
           PY
-      - name: Persist the observed excerpt on this audit branch
+      - name: Persist the observed screen context
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/audit-logs-135778309143-v2.txt --input "$RUNNER_TEMP/log-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-screens-44591584962.md --input "$RUNNER_TEMP/screen-payload.json" > /dev/null
