@@ -1,6 +1,6 @@
 # Handoff — finish-dashboard-native-20261119
 
-SHA: 904403d78dd0bb49bc7df3cd9d48c6a4d79b8139 (código; este documento é o commit seguinte)
+SHA: cdc7e6497fe9be1dc5c1b178f0f1f91f8ac41201 (Hot Topics); f1114b326ae705db97597f7f1bc8e731e79cf3ee (ano CAP04 e spec; documento no commit seguinte)
 Data: 2026-11-19
 Estado: partial
 
@@ -65,3 +65,15 @@ Estado: partial
 - Asserções removidas: nenhuma. Foram acrescentados fatos reais às expectativas completas. Mesmos números, exclusão de registros alheios, seleção, preservação, versões/CAS, lost response, reload das duas abas e purge após logout continuam obrigatórios.
 - Estado partial. Pendente/unbound: confirmation-access.spec.ts142–205 (concluir as duas recargas e revogação); records-signals-history.spec.ts117–236 (preservar, conflito, sinais e histórico). Nenhum novo comportamento de produto foi alterado neste delta.
 - Retomar: compor os três helpers Dashboard do head atual (support mantém correção de coleção ausente904403), surfacec2fd já no candidato, e executar somente os dois specs Dashboard. Registrar run e resultado antes de integrar.
+
+
+## Dashboard10 — conflito retido e criação do valor anual
+
+- Run [44626339410](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44626339410), snapshot6126e6d7d6ac6d48f9a9315993d902c784872c7b, composição109da8755a33c53442e57538054288ad0e58e677, job135921056179: FAILURE, 2 failed. Três typechecks e cleanup135929067291 passaram. A confirmação mensal passou efeito único, perda de resposta, readback, reload e os valores/células completos; o fluxo de registros passou agenda/review e chegou ao conflito409 real.
+- Auditoria [44629681301](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44629681301): SUCCESS somente extração de DOM e timeline do artefato14579563600. Documento `audit-dashboard10-original-20261119/docs/handoff/observed-dashboard10-original-20261119.md`; nenhum browser/spec foi reexecutado pela auditoria.
+- Hot Topics: screenshot textual original mostra Action/Notes locais, versão2, versão concorrente, alerta “This topic changed. Review the current version before saving.” e botão Keep edits. A folha não foi negada e o draft não sumiu. edit.tsx164–170 recebe409, F03.rejectSave confere a identidade completa da operação e conserva phase conflict; onRefetch publica loading/records:null e remonta a folha com feedback local none. Código cdc7e6497fe9be1dc5c1b178f0f1f91f8ac41201, dashboard/hot-topics/edit.tsx80–87, deriva o feedback dessa phase retida. Não muda reader, F01, CAS, draft, comando ou resposta. Esse arquivo parte do blob realmente executado no snapshot6126/Assembly32, preservando os deltas Core anteriores que ainda não estavam no branch de trabalho antigo.
+- CAP04: confirmation-access.ts154 esperava typeof versions.budgetYtd igual a number antes de existir qualquer year-amount. O produtor original dashboard-budget.ts272–284 usa budgetYtd como CAS primário; :510–521 cria a coleção; runtime/contract.ts107–109 define exatamente CAS0 para ausência. native-ui/domain/projection.ts140–144/214–226 omite o dado e a versão que ainda não existem. Não há número publicado a ser asserted nesse ponto.
+- Código f1114b326ae705db97597f7f1bc8e731e79cf3ee, dashboard/opex/surface.tsx308–325/385–390: admite o novo draft anual somente com a conjunção ytd ausente e CAS ausente. Um dado visível sem CAS continua recusado. O mesmo predicado define a validação do CAS0 documentado pelo produtor; qualquer versão nova distinta torna o draft stale. A base da criação é null, sem dado persistido forjado.
+- Asserção removida/substituída: somente typeof source.versions.budgetYtd === number, porque a instalação ainda não escreveu esse singleton. confirmation-access.spec.ts154–156 exige agora ausência explícita tanto no dado original quanto no mapa de versões e valor undefined. Nenhuma asserção financeira, de conflito, status409, CAS, zero POST antes da confirmação, efeito único, logout, purge ou resposta tardia foi removida; nenhum timeout aumentado.
+- Estado partial. Pendente/unbound: records-signals-history.spec.ts163–176 (qualificar feedback retido, manter edições e nova confirmação); confirmation-access.spec.ts157–219 (qualificar revisão/Revise do777 e revogação real com projeção tardia). Este spec revisa/revoga o valor anual e não qualifica aplicação anual persistida; não declarar essa aplicação provada.
+- Como retomar: compor os três helpers Dashboard atuais mais surface.tsx, hot-topics/edit.tsx e este handoff sobre Assembly32; executar apenas records-signals-history.spec.ts e confirmation-access.spec.ts, registrar run e resultado terminal. Nenhum sf-ci por este WP.
