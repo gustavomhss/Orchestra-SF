@@ -13,6 +13,7 @@ import { plannerDifferencePresentation } from "./bi-difference.ts"
 import { projectionDigest, resolvePlannerScenarioBatch } from "./scenario-comparison-port.ts"
 import type { PlannerScenarioHost, ResolvedScenario } from "./scenario-comparison-port.ts"
 import { comparePlannerVersions } from "./version-comparison.ts"
+import { plannerComponentDigest } from "./comparison.ts"
 
 type View = { projection: DomainProjection; presentation: BiPresentation }
 type Pair = { baseline: ResolvedScenario; candidate: ResolvedScenario }
@@ -50,10 +51,11 @@ export function plannerScenarioBiPresentation(projection: DomainProjection, pair
   })
   const state = (result: ScenarioResult, amount: number | null): EvidenceState => amount === null ? "absent" : result.components.some((component) => component.evidenceState === "hypothetical") ? "hypothetical" : result.comparisonStatus !== "complete" || result.components.some((component) => component.evidenceState === "estimated") ? "estimated" : "confirmed"
   const monetary = (id: string, amount: number | null, result: ScenarioResult, refs: readonly BusinessEvidenceRef[] = result.sourceRefs): DomainProjection["values"][number] => ({ id, value: amount, unit: "money", currency: result.currency, period: result.horizon, granularity: "aggregate", sourceRefs: refs, drilldown: refs.length === 1 ? refs[0]! : null, evidenceState: state(result, amount) })
+  const subtotal = (id: string, entry: ResolvedScenario) => ({ ...monetary(id, entry.result.knownSubtotal, entry.result), drilldown: knownSubtotalSource(entry) })
   const canonical = [
-    monetary("scenario:baseline-known-subtotal", pair.baseline.result.knownSubtotal, pair.baseline.result),
+    subtotal("scenario:baseline-known-subtotal", pair.baseline),
     monetary("scenario:baseline-complete-total", pair.baseline.result.total, pair.baseline.result),
-    monetary("scenario:candidate-known-subtotal", pair.candidate.result.knownSubtotal, pair.candidate.result),
+    subtotal("scenario:candidate-known-subtotal", pair.candidate),
     monetary("scenario:candidate-complete-total", pair.candidate.result.total, pair.candidate.result),
     monetary("scenario:known-difference", comparison.knownDifference, pair.candidate.result, sources),
     monetary("scenario:complete-difference", comparison.completeDifference, pair.candidate.result, sources),
@@ -158,6 +160,24 @@ export function createPlannerScenarioBiHost(input: {
       return observed.status === "ok" && sameBiProjection(observed.value.projection, projection)
     },
   }
+}
+
+/** Coverage may cite other records without making them the origin of this subtotal.
+ * A destination requires every priced component to remain an observed component of
+ * the exact primary source; mixed sources and transformed scenario values stay unlinked. */
+function knownSubtotalSource({ result, source, projection }: ResolvedScenario): BusinessEvidenceRef | null {
+  if (result.knownSubtotal === null || !Number.isFinite(result.knownSubtotal) || !source.target.period ||
+    source.installationId !== projection.context.installationId || source.projectId !== projection.context.projectId ||
+    !result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(source))) return null
+  const target = source.target
+  const priced = result.components.filter((component) => component.amount !== null)
+  const observed = new Set(projection.components.map((component) => plannerComponentDigest([component])))
+  if (!priced.length || priced.some((component) => !Number.isFinite(component.amount) || !component.sourceRefs.length ||
+    component.sourceRefs.some((ref) => ref.surface !== target.surface || ref.type !== target.recordType ||
+      ref.id !== target.recordId || ref.incarnation !== target.incarnation || ref.version !== target.version ||
+      digestSfValue(ref.fields) !== digestSfValue(target.fields) || digestSfValue(ref.period) !== digestSfValue(target.period)) ||
+    !observed.has(plannerComponentDigest([component])))) return null
+  return structuredClone(source)
 }
 
 function uniqueEvidence(refs: readonly BusinessEvidenceRef[]) {
