@@ -198,7 +198,11 @@ export function SfCaseSourcesEditor(props: Readonly<{
       <For each={draft.criteria}>{(criterion, index) => <label class="sf-n24-field">
         <span>{t("sf.ui34.criteria")} {index() + 1}</span>
         <input value={criterion.description} disabled={!editing()}
-          onInput={(event) => setDraft("criteria", index(), "description", event.currentTarget.value)} />
+          onInput={(event) => {
+            const description = event.currentTarget.value
+            setDraft("criteria", draft.criteria.map((current, currentIndex) =>
+              currentIndex === index() ? { ...current, description } : current))
+          }} />
       </label>}</For>
     </div>
     <p>{t("sf.ui34.attachScope")}</p>
