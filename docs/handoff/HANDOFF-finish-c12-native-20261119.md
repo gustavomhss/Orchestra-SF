@@ -2,17 +2,19 @@
 
 SHA: c00b150b48f576a79a7c8b33f15c4fb55d72dfd1 (código; handoff no commit seguinte)
 Data: 2026-11-19
-Estado: partial
+Estado: complete
 
 ## Feito
 
 - Recorte de 14 arquivos de código a partir de sf-join-four `2682f82da2650314e3437ab48b5c65e52c5b3fe4`. O capítulo UI39 usa os produtores originais de revisão, aplicação e recuperação; as duas jornadas rodam no shell :3000 com host real, sessão cifrada, C08 e SQLite.
 - Equivalência nativa C12 completa na composição `875d100c55d4c5953356b6939bf78e2facf63c4e`: run [44629501930](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44629501930), snapshot `84d397702236b6f4aa0c85d792fbdea5f78e55b6`, job135932059289 SUCCESS, cleanup135937863740 SUCCESS, três typechecks PASS, **2 passed (2.4m)**. Artefato original14581471462.
-- Primeiro journey: commit real do receipt, resposta503 perdida, edição concorrente autorizada do caso, exatamente2POST Apply com corpo/key idênticos, retry409 sem novo efeito, reload, encerramento do processo, reabertura da mesma SQLite, admissão nova e browser inicialmente vazio. Recuperação200 e repetição200 ligam o mesmo receipt; um só efeito financeiro; versão preparada3, concorrente4 e reconciliada5, exatamente.
+- Primeiro journey: commit real do receipt, resposta503 perdida, edição concorrente autorizada do caso, exatamente2POST Apply com corpo/key idênticos, retry409 sem novo efeito, reload, encerramento do processo, reabertura da mesma SQLite, admissão nova e browser inicialmente vazio. Recuperação200 e repetição200 ligam o mesmo receipt; um só efeito financeiro; versão do caso após prepare 3, concorrente 4 e reconciliada 5, exatamente.
 - Segundo journey: resposta200 original perdida, recuperação200 do receipt já vinculado, uma só aplicação e um só efeito financeiro. Nenhum estado privado de recuperação é persistido no browser.
 - UI39 conserva a intenção original apenas em memória e no mesmo owner/generation para retry explícito; rejeições definitivas encerram a retenção. Recovery faz releitura do caso. Os guards comparam exatamente caseVersion histórico+1 com a versão atual publicada por prepare-changes.
 - O novo observador decision-application-health usa as três operações C12 originais, bindings efetivamente instalados e metadados C08; nenhuma autoridade, grant de produção ou receipt é criado pelo observador.
 - Factory Operations recebe grants opcionais somente no fixture, preserva os defaults existentes e expõe runtime.services original. O seed C12 reutiliza prepareC12Change original, com ator opcional e os defaults alice/bob preservados; PR-1 permanece draft, a fonte individual é emitida a partir do C02 original e a seleção de período é admitida/revalidada.
+
+- Recorte mínimo deste PR também qualificado: [run 44632508338](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44632508338), snapshot `9f14610bfd810b51bb8da4ccc6e65728974239ec` sobre head `8d8666bad24dc397cb063f564ec809f4c3a370c4`, job 135942547521 SUCCESS e cleanup 135944615791 SUCCESS. Três typechecks PASS, **2 passed (2.1m)**, artefato original 14583211611. Os mesmos receipts únicos, estados, perdas de resposta e transições CAS foram confirmados sem os outros bindings da composição ampla. Este checkpoint altera somente documentação depois desse gate.
 
 ## Recorte e blobs qualificados
 
@@ -38,7 +40,6 @@ O F02 já integrado no main permite somente o retry humano da mesma decisão ret
 
 ## Pendente (file:line e motivo)
 
-- `packages/app-shell/e2e/sucafina/decisions-native-recovery.spec.ts:7/12`: qualificar o recorte mínimo deste branch, que exclui os outros bindings da composição originalmente aprovada. O gate deve executar somente este spec; ainda não há resultado terminal do recorte no momento deste checkpoint.
 - `sf/ci/suites.json:218–221`: registrar estas duas jornadas permanentemente na CI-UI-DECISIONS preservando o specFile único canônico. Coordenação com WP7/ci_resume. `script/sf-ci/gate.mjs:192/263–268` e `.github/workflows/sf-ci.yml:441–513` exigem seleção única; não contornar esse contrato.
 - `modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts:72/197`: os dois Bun UI antigos permanecem intactos até a cobertura nativa entrar na suite permanente e a raiz confirmar o remapeamento. Nenhuma exclusão neste PR.
 - Merge do recorte reservado à raiz após seu gate. O sf-ci final e o pacote continuam sob responsabilidade da integração.
@@ -53,7 +54,7 @@ O F02 já integrado no main permite somente o retry humano da mesma decisão ret
 
 ## Como retomar
 
-1. Executar o gate estreito de decisions-native-recovery.spec.ts no SHA deste recorte e registrar run/snapshot/resultado.
+1. O gate estreito deste recorte já passou no run 44632508338; não o repetir sem uma alteração causal.
 2. Revisar somente os14arquivos e os três hunks compartilhados acima; confirmar que o diff preserva os demais bindings do main.
 3. Coordenar o registro permanente com WP7 antes de remover/remapear os dois Bun UI antigos. A raiz faz o merge; este branch não dispara sf-ci nem pacote.
 4. Em falha, ler o log/artefato original antes de editar; não repetir sem causa nova e não reabrir seed/grants se a falha for de sincronização da UI.
@@ -66,3 +67,5 @@ Toda execução foi por GitHub Actions, sem shell local ou acesso à máquina do
 - [44629501930](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44629501930): SUCCESS,2passed; snapshot84d397702236b6f4aa0c85d792fbdea5f78e55b6, composição875d100c55d4c5953356b6939bf78e2facf63c4e; prova nativa completa.
 - [44626328510](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44626328510): FAILURE,1failed/1didnotrun; havia passado efeito/retry/newSQLite e faltava aguardar a projeção original antes de Recover. Auditoria [44627902959](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627902959): SUCCESS somente extração do mesmo artefato; screenshot já mostrava Recover.
 - [44604756705](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44604756705): SUCCESS do seletor de namespaces; é prova da infraestrutura de metadados, separada da prova de efeitos C12.
+
+- [44632508338](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44632508338): SUCCESS, 2 passed; snapshot `9f14610bfd810b51bb8da4ccc6e65728974239ec`, recorte `8d8666bad24dc397cb063f564ec809f4c3a370c4`, três tipos e cleanup PASS. PR [#391](https://github.com/gustavomhss/Orchestra-SF/pull/391) pronto para revisão/merge da raiz; o registro permanente de CI continua coordenado com WP7.
