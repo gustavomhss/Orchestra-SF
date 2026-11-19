@@ -1,10 +1,14 @@
 # Handoff — finish-operations-20261119
 
-SHA: e53b49cd23c3af5d72a761d2a46f9658940847a0 (código; este documento é um checkpoint posterior)
+SHA: 4620b9fb93a2ec996c411e467aa02b841fe34366 (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
 ## Feito
+
+- O snapshot de conflito de PR conserva o tipo público SfPublicDraftController; não usa quarantine/restoreSameAuthority/revoke internos. Correção 89f5097b54b5cfd05f9e2165bfe59250d7552b08.
+- O teste procurement-draft-leaves agora verifica a revisão nativa de conflito: fieldset presente e disabled, descrição local exata preservada, revisão anterior removida e somente um POST. O descarte é selecionado pelo nome explícito, pois a primeira ação agora é Review current record. Timeout, casos e prova de conflito continuam intactos (4620b9fb93a2ec996c411e467aa02b841fe34366).
+- Supplier edit omite somente propriedades opcionais undefined, como os demais builders, sem normalização global do codec (a910756151609a539f0fa3c76de062615e911490).
 
 - Preservado o histórico da branch e integrado o ancestral sf-join-four@0a3c05fbc4175f9514a12036d43ff1e5cca51d56 por merge com dois parents, sem force.
 - A redeclaração de detail em operations-support/imports.ts foi corrigida com versionDetail; todos os usos/asserts foram mantidos. Essa correção já está na integração.
@@ -27,6 +31,8 @@ Estado: partial
 
 ## Pendente
 
+- packages/app-shell/test-browser/sucafina-native/procurement-draft-leaves.test.ts:139 — requalificação estreita pelo root após 4620b9f. A falha anterior esperava remoção do fieldset; o contrato nativo mantém a cópia local bloqueada durante revisão. Nenhum resultado de novo gate disponível neste checkpoint.
+
 - packages/app-shell/e2e/sucafina/operations-support/runtime.ts:48 e :90: qualificar o ingresso completo até CAP25. O último run Operations chegou ao owner-runtime231/resolving; o defeito comum de receiver de fetch foi corrigido no WP de ingresso, mas ainda não está nesta branch.
 - packages/app-shell/e2e/sucafina/wp04/native-ingress.spec.ts:6: repetir o gate estreito com o transporte compartilhado qualificado; OP-PROC-01 ainda não tem um run SUCCESS.
 - packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:146, :214, :315, :401, :461, :627, :708, :799: a migração está commitada; os oito fluxos ainda precisam da verificação runtime no novo host/transporte. Não equivalem a cobertura executada.
@@ -36,6 +42,8 @@ Estado: partial
 - apps/web/vite.config.ts e packages/app-shell/e2e/playwright.production.config.ts: infraestrutura pertence ao WP de ingresso. Os quatro gates abaixo usaram exatamente os dois arquivos de 88c06fcee93719f8d4758db35a46328112c38bda em snapshots; não são alterações próprias desta branch.
 
 ## Decisões e justificativas
+
+- No teste de conflito, a asserção de ausência do fieldset foi substituída por bloqueio explícito e conteúdo local exato, com revisão removida e contagem de gravações mantida. Isso conserva a proibição de edição/envio com CAS antigo e permite ao operador comparar a cópia local com o registro atual. O descarte continua obrigatório para abandonar essa cópia.
 
 - Nenhum teste foi excluído/pulado; nenhum timeout foi aumentado. As observações antigas substituídas estão explicitadas abaixo.
 - O título existente é salvo pelo W19 e pelo comando real Requests/save com values.pr.title; não foi misturado no payload residual de PR.
@@ -51,7 +59,7 @@ Estado: partial
 
 ## Como retomar
 
-1. Continuar em finish-operations-20261119, código e53b49cd23c3af5d72a761d2a46f9658940847a0.
+1. Continuar em finish-operations-20261119, código 4620b9fb93a2ec996c411e467aa02b841fe34366.
 2. Obter do WP de ingresso o SHA qualificado para GET e POST/revogação. O run 44573615311 passou 1/1 para leitura CAP23/reload/year com receiver corrigido; a escrita ainda era um gate separado neste checkpoint.
 3. Compor um snapshot com este código e a infraestrutura compartilhada qualificada, preservando a origem de cada arquivo. Executar .ci-run.json com package app, runner playwright, config e2e/playwright.production.config.ts e args [e2e/sucafina/wp04/native-ingress.spec.ts].
 4. Depois do ingresso, executar procurement.spec.ts e operations.spec.ts em gates separados: o fixture usa códigos de enrollment de cenário de uso único; não misturar as suites no mesmo host.
@@ -70,3 +78,6 @@ Estado: partial
 - e53b49cd23c3af5d72a761d2a46f9658940847a0: ainda sem gate próprio neste checkpoint.
 - Dependência compartilhada, sem qualificar Operations: ingresso [44573615311](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44573615311) SUCCESS 1/1 para CAP23/reload/year; ingresso [44575467126](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44575467126) FAILURE 2/2, com primeiro POST bloqueado pelo codec opcional undefined e waiter de logout a corrigir. O ingresso9 [44579042477](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44579042477) confirmou POST real200/ok, mas falhou em um assert body.value inexistente e no logout por perda do transporte original. O ingresso10 [44580949588](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44580949588) ainda estava em andamento neste checkpoint; nenhum gate Operations foi disparado sobre uma dependência sabidamente falha.
 - guards: não executados nesta branch. sf-ci: nenhum novo dispatch, rerun ou cancelamento por este WP.
+
+- Audit APP-BROWSER [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131), job 135778309143: 110 pass / 4 fail / 895 expect, 114 testes em 32 arquivos. Procurement wrapper terminou com exit137 após180s; primeira falha interna era a expectativa fieldset=null recebendo HTMLFieldSetElement. O dump enorme encobriu o restante. Não se aumentou timeout; corrigiu-se o contrato de UI e o seletor de descarte.
+- Ingresso composto [44585650902](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585650902): falhou no typecheck app, incluindo o tipo interno de draft em requests/page.tsx. [44587034870](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44587034870): CLI e app passaram, E2E typecheck falhou em decoder BI separado. Nenhum desses resultados qualifica execução de Operations no browser.
