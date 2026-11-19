@@ -25,3 +25,7 @@ Executar test-ci com runner bun, package sucafina e os três specs alterados. Re
 ## Comandos e resultados
 - Auditoria anterior 44581783913, snapshot 64dccec8da78d769d15e955aeb5981104da6e2ec: FAILURE; 21 pass, 7 fail, 297 expectativas em seis specs. Não qualifica esta correção.
 - Gate desta correção: pendente.
+
+### Diagnóstico do primeiro gate
+- Run44584118437 / snapshot127c5350adf27a7a1332c4f152a9bb52f40f61c4: FAILURE, 20 pass / 3 fail / 354 expectativas. domain-outcome e projection-access passaram. Restaram três provas em review-port que usavam o mesmo callback para admissão da sessão e revogação de fontes; o fallback revalidate(binding,[]) produzia binding-unavailable e um lote vazio legítimo.
+- A fixture agora declara revalidateReadAccess separadamente. Fontes/seções/comentários continuam sujeitos a seus controles originais; nenhuma asserção existente removida. Foi acrescentada prova explícita de revogação do binding com reason binding-unavailable e recuperação autorizada, além das negativas de fonte já existentes.

@@ -38,9 +38,10 @@ test("preserved review survives changed projections and is denied after access r
         values: [{ id: "forecast", value: 1320, period, granularity: "year", sourceRefs: [evidence], drilldown: null, evidenceState: "confirmed" }, { id: "budget", value: 1500, period, granularity: "year", sourceRefs: [evidence], drilldown: null, evidenceState: "confirmed" }],
       },
     }
-    const access = { allowed: true, sections: true, comments: true, sourceAvailable: true }
+    const access = { allowed: true, bindingAllowed: true, sections: true, comments: true, sourceAvailable: true }
     const port = createReviewPort({
       state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => admittedRequest, authorizeOutcomeComparison: async (_context, outcomes) => access.allowed && outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => access.allowed && outcomes.length === 0, authorizeDecision: async (_context, decisions) => access.allowed && decisions.length === 0, authorizeSections: async () => access.sections, authorizeComments: async () => access.comments, authorizeSensitivity: async () => access.allowed, revalidate: async () => access.allowed, revalidateEvidence: async () => access.allowed,
+      revalidateReadAccess: async () => access.bindingAllowed,
       select: async () => access.sourceAvailable ? { status: "ok", value: [section] } : { status: "unavailable", reason: "source-removed" },
     })
     const emptySection: ReviewSection = { ...section, id: "restricted", recordCount: 0, comments: [], projection: { ...section.projection, values: [], components: [], context: { ...section.projection.context, sourceRefs: [] } } }
@@ -179,6 +180,10 @@ test("preserved review survives changed projections and is denied after access r
     expect(artifacts).toHaveLength(1)
     expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
     access.allowed = true
+    access.bindingAllowed = false
+    expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "binding-unavailable" })
+    access.bindingAllowed = true
+    expect((await port.read("review-1", binding)).status).toBe("ok")
     await storage.transaction("dashboard", async (snapshot) => {
       const stored = snapshot.data.__sfProductV1 as SfProductState
       stored.reviews["review-1"]!.sections[0]!.title = "Tampered"
@@ -214,6 +219,7 @@ test("compact review receipts survive SQLite restart, legacy replay and concurre
     creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => admittedRequest,
     authorizeOutcomeComparison: async (_context, outcomes) => control.allowed && outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => control.allowed && outcomes.length === 0, authorizeDecision: async (_context, decisions) => control.allowed && decisions.length === 0,
     authorizeSections: async () => control.allowed, authorizeComments: async () => control.allowed, authorizeSensitivity: async () => control.allowed,
+    revalidateReadAccess: async () => true,
     revalidate: async () => control.allowed, revalidateEvidence: async () => control.allowed,
     select: async () => {
       control.selections++
@@ -336,6 +342,7 @@ test("review egress revalidates decision and section sources after the other aut
   const access = { allowed: true, revokeDuringSensitivity: false, batches: [] as string[][] }
   const port = createReviewPort({ state, creationTarget: { ref: "review-creation", incarnation: "target" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => admittedRequest, authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSections: async () => true, authorizeComments: async () => true,
     authorizeSensitivity: async () => { if (access.revokeDuringSensitivity) access.allowed = false; return true },
+    revalidateReadAccess: async () => true,
     revalidate: async (_context, refs) => { access.batches.push(refs.map((ref) => ref.id)); return refs.every((ref) => ref.id !== decisionSource.id || access.allowed) },
     revalidateEvidence: async () => true,
     select: async () => ({ status: "ok", value: [{ id: "decision", title: "Decision", period, recordCount: 1, projection: { context: { installationId: "i", projectId: "p", principalRef: "principal", accessRevision: "access", policyVersion: "policy", surface: "planner", period, currency: "USD", sourceRefs: [source], capabilities: [] }, version: 1, engineVersion: "v1", components: [], values: [], missing: [], decision } }] }),
