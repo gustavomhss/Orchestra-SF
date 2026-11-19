@@ -26,7 +26,7 @@ jobs:
               output += [f"## Run {run}; artifact {artifact}", ""]
               with zipfile.ZipFile(root / f"{name}.zip") as archive:
                   all_contexts = [item for item in archive.namelist() if item.endswith("/error-context.md")]
-                  members = [item for item in all_contexts if re.search(r"OP-(?:PROC-0[23]|DOC-01)", item, re.I)]
+                  members = [item for item in all_contexts if re.search(r"/sucafina-operations-", item, re.I)]
                   output += ["Available contexts: " + ", ".join(all_contexts), ""]
                   output += [f"Screen context files: {len(members)}", ""]
                   for member in members:
@@ -44,4 +44,4 @@ jobs:
       - name: Persist the observed screen context
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-screens-44594105701.md --input "$RUNNER_TEMP/screen-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-screens-44594105701-v2.md --input "$RUNNER_TEMP/screen-payload.json" > /dev/null
