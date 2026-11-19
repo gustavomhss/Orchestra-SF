@@ -219,8 +219,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
       change.caseVersion === data.version &&
       review.expectedVersion === change.expectedVersion &&
       review.changeId === change.id && review.choiceId === change.choiceId &&
-      !review.receipt && !view.busy && !view.outcomeUnknown && active() === "ready" &&
-      change.preview.costCoverage.coverageState === "complete")
+      !review.receipt && !view.busy && !view.outcomeUnknown && active() === "ready")
   }
   const coverage = (): SfCoverage => selected() ? u18Coverage(selected()!.preview.costCoverage) :
     { state: "unavailable", summary: u18Message("sf.u18.choice.coverage"), reasons: [], knownCount: null, expectedCount: null }
@@ -309,8 +308,9 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
-        setView({ applyOutcome: result.body.value, outcomeUnknown: false,
+        setView({ applyOutcome: result.body.value, outcomeUnknown: false, review: null,
           state: result.body.value.outcome === "applied" ? "ready" : result.body.value.outcome === "conflict" ? "conflict" : "partial" })
+        await read()
       } else if (result.kind === "response") {
         const state = u18PortState(result)
         if (state === "denied" || state === "session-expired") clearPrivate(state)
@@ -447,11 +447,11 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
         </>}
       </Show>
     </SfStatePanel>
-    <Show when={view.outcomeUnknown && active() === "outcome-unknown"}>
+    <Show when={selected() && view.caseData && !privateState()}>
       <button type="button" class="mx-btn"
         disabled={view.busy || !operationGranted("decisions.decision-recover")}
         onClick={() => void reconcile()}>
-        decisions.decision-recover
+        {t("sf.u18.changes.recover")}
       </button>
     </Show>
   </SfPageFrame>
