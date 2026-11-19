@@ -14,6 +14,7 @@ import type { RenderContext } from "./ui.ts"
 import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
 import { publicSfData } from "../product/integration/public-state.ts"
 import { readProcurementQueueView } from "../product/procurement/queue-view.ts"
+import { renderInstalledConsole } from "./installed-console.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -55,7 +56,7 @@ export function createApplication(mount: string, application: Application) {
     if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement") return reply("Not found", 404)
     if (!["GET", "HEAD", "POST"].includes(request.method))
       return reply("Method not allowed", 405, { Allow: "GET, HEAD, POST" })
-    // Old document pages are no longer a product interface. API/export/asset dispatch stays below.
+    // A bare or empty-query console GET stays decommissioned. One page query, and no download, asset, or projection, is the installed screen.
     const decommissioned = () => reply(request.method === "HEAD" ? null : "legacy console decommissioned — use /", 404, {
       "Content-Type": "text/plain; charset=utf-8",
     })
@@ -99,6 +100,13 @@ export function createApplication(mount: string, application: Application) {
     if (retiredPage) {
       const denied = await admitRetiredPage(request, surface, application)
       if (denied) return denied
+      if (singlePageShell(request, url)) {
+        const rendered = await renderInstalledConsole(request, surface, application)
+        if (rendered?.ok) return rendered
+        const plain = await renderInstalledConsole(request, surface, { ...application, productView: undefined })
+        if (plain) return plain
+        if (rendered) return rendered
+      }
       return decommissioned()
     }
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
@@ -491,6 +499,11 @@ function json(value: unknown, status: number) {
   return reply(JSON.stringify(value), status, {
     "Content-Type": "application/json; charset=utf-8",
   })
+}
+function singlePageShell(request: Request, url: URL) {
+  if (request.method !== "GET" && request.method !== "HEAD") return false
+  const pages = url.searchParams.getAll("page")
+  return pages.length === 1 && pages[0] !== "" && !url.searchParams.has("download") && !url.searchParams.has("asset") && !url.searchParams.has("asset-link") && !url.searchParams.has("projection")
 }
 async function admitRetiredPage(request: Request, surface: Surface, application: Application) {
   const principal = await application.persistence.transaction(surface, async (snapshot) => ({

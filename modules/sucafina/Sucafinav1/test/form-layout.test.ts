@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
+import { PLANNER_TABS, PROCUREMENT_NAV } from "../src/nav.ts"
 import { localBrowser } from "./fixture/local-browser.ts"
 
 test("All editor screens keep readable field widths and ordered configuration sections", async () => {
@@ -47,7 +48,8 @@ test("All editor screens keep readable field widths and ordered configuration se
     for (const width of [1440, 1024, 390]) {
       await page.setViewportSize({ width, height: 1000 })
       for (const surface of ["dashboard", "planner", "procurement"]) {
-        await page.goto(`http://localhost:4110/sucafina/${surface}`)
+        const opening = surface === "dashboard" ? "Executive Dashboard" : surface === "planner" ? PLANNER_TABS[0] : PROCUREMENT_NAV[0]
+        await page.goto(`http://localhost:4110/sucafina/${surface}?page=${encodeURIComponent(opening)}`)
         const hrefs = await page.locator("aside.sidebar > nav > a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
         expect(new Set(hrefs).size).toBe(hrefs.length)
