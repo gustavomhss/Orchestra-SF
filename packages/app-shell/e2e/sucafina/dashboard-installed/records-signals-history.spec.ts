@@ -38,11 +38,16 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
     })
 
     await test.step("preserve exactly the authorized record through a real native agenda", async () => {
-      // Retain the complete original discovery body before CDP discards it on rerender.
+      // Retain the complete original bodies before CDP discards them on rerender.
       await page.route((url) => url.origin === installation.origin &&
-        url.pathname === "/sucafina/api/ui/projections/review" && url.searchParams.get("page") === topicsPage,
+        (url.pathname === "/sucafina/api/ui/projections/review" && url.searchParams.get("page") === topicsPage ||
+          url.pathname === "/sucafina/dashboard" &&
+            ["dashboard-agenda", "dashboard-review-preserve", "review-read"].includes(url.searchParams.get("sf") ?? "")),
       async (route) => {
-        if (route.request().method() !== "GET") return route.fallback()
+        const target = new URL(route.request().url())
+        const method = target.pathname === "/sucafina/api/ui/projections/review" ||
+          target.searchParams.get("sf") === "review-read" ? "GET" : "POST"
+        if (route.request().method() !== method) return route.fallback()
         const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
         await retainReportResponse(route.request(), original)
         await route.fulfill({ response: original })
@@ -88,7 +93,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       const request = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.input)(previewResponse.request().postDataJSON())
       expect(request.sections).toHaveLength(1)
       expect(request.sections[0]!.recordRefs).toEqual([selected.recordRef])
-      const preview = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.output)(await previewResponse.json())
+      const preview = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.output)(observedReportResponse(previewResponse))
       if (preview.status !== "ok") throw new Error("The original agenda was not admitted")
       expect(preview.value.sections).toHaveLength(1)
       const captured = preview.value.sections[0]!
@@ -114,7 +119,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       const savedResponse = await saving
       expect(savedResponse.status()).toBe(200)
       expect(savedResponse.request().postDataJSON()).toEqual({ selectionRef: preview.value.selectionRef, sectionRefs: [item.id] })
-      const saved = Schema.decodeUnknownSync(SfDashboardDashboardReviewPreserve.output)(await savedResponse.json())
+      const saved = Schema.decodeUnknownSync(SfDashboardDashboardReviewPreserve.output)(observedReportResponse(savedResponse))
       const preserveFinishedAt = Date.now()
       if (saved.status !== "ok") throw new Error("The original producer did not preserve the selected record")
       preserved = saved.value
@@ -212,7 +217,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       await page.goto("/orchestra/sf-reviews/reviews/r_" + Buffer.from(preserved.id).toString("base64url"))
       const response = await reopened
       expect(response.status()).toBe(200)
-      const read = Schema.decodeUnknownSync(SfReviewsReviewRead.output)(await response.json())
+      const read = Schema.decodeUnknownSync(SfReviewsReviewRead.output)(observedReportResponse(response))
       expect(read).toEqual({ status: "ok", value: preserved })
       const article = page.locator('[data-sf-surface="UI48"]').locator('article[data-review-ref="' + preserved.id + '"]')
       await expect(article).toHaveAttribute("data-review-version", String(preserved.version))
@@ -222,7 +227,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       await page.reload()
       const reloaded = await pendingReload
       expect(reloaded.status()).toBe(200)
-      expect(Schema.decodeUnknownSync(SfReviewsReviewRead.output)(await reloaded.json()))
+      expect(Schema.decodeUnknownSync(SfReviewsReviewRead.output)(observedReportResponse(reloaded)))
         .toEqual({ status: "ok", value: preserved })
       await expect(article).toHaveAttribute("data-review-version", String(preserved.version))
       await expect(article).toContainText(original)
