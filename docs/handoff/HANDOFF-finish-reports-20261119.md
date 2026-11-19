@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA: 291d28f31a726343c15a6f2fa4e5fc9d84f9a407 (código; commit de handoff posterior).
+SHA de código: 9b0660736bb247bbedbd46664672036121ac6943
 Data: 2026-11-19
 Estado: partial
 
@@ -123,5 +123,13 @@ Estado: partial
 
 - Código 291d28f31a726343c15a6f2fa4e5fc9d84f9a407, absorvendo os3blobs UI/copy de dafe5523272e9e4dae6f80d20ee5cea577e1bdca. UI47 simples e multidomínio exibem uma quarta coluna Evidence/Evidência, traduzindo somente value.evidenceState original (confirmed/estimated/hypothetical/absent). Não inferimos evidência a partir de valor, fonte, disponibilidade ou presença de dinheiro.
 - review-flow.ts73 e first-agenda.ts189 agora exigem as quatro células de cada valor: ID, valor com unidade/moeda, período e estado da evidência. As demais referências/contagens/valores e74expectativas da agenda continuam; a prova de cada campo ficou mais específica.
-- O run Reports9 [44606978085](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606978085), snapshot da22ff3ef01697a9859a93eba63fd543cde8a60c, está em andamento com a versão anterior3colunas. Não qualifica este campo novo. A próxima verificação instalada deve incluir estes5arquivos juntos, depois de analisar o resultado anterior.
+- O run Reports9 [44606978085](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606978085), snapshot da22ff3ef01697a9859a93eba63fd543cde8a60c, terminou FAILURE, 4 falhas, com a versão anterior3colunas. Não qualifica este campo novo. A próxima verificação instalada deve incluir estes5arquivos juntos, depois de analisar o resultado anterior.
 - Asserções removidas: nenhuma. Nenhum timeout, retry ou produtor mudou. Pendente: review-flow.ts73/first-agenda.ts189 — gate da renderização Evidence com os helpers atualizados.
+
+## Respostas originais e bloqueios observados no run9
+
+- Código9b0660736bb247bbedbd46664672036121ac6943. O run44606978085 FAILURE4 (job135853161059; cleanup135862483960SUCCESS) mostrou que só route.fetch/fulfill ainda deixa o CDP perder o body. A fixture agora retém os bytes e status da mesma APIResponse antes de entregar ao navegador; WeakMap é indexado pela Request exata. Asserções exigem a observação, comparam status e decodificam esses bytes. Não há fallback, segundo GET, resposta fabricada ou retry de POST. A UI continua sendo verificada contra o conteúdo original.
+- model.ts/first-agenda.ts/review-flow.ts usam essa observação para descoberta/agenda/preservação/report-prepare. Office permanece GET original review-download, sem interceptação. As asserções de origem, corpo, valores, fontes, C05 e imutabilidade não foram removidas.
+- Auditoria de leitura44611238509 SUCCESS: docs/handoff/observed-reports-read-44606978085.md no ramo audit-logs-20261119. O primeiro teste preservou todas as7escolhas na UI, mas Review selected sections retornou unavailable sem POST; o segundo preservou o dossier e a rota UI48 mostrou Sucafina route not admitted;3/4 falharam no corpoCDP. Isso não qualifica nenhuma jornada.
+- Diagnóstico novo é fechado: resposta de reviews.review-agenda emite somente kind/status/producerStatus/reason; contexto retém somente IDs conhecidos e estados operacionais de reviews. Sem headers, cookies, corpo privado ou referências opacas no log.
+- Pendente: reviews/agenda/multi-domain.tsx:90 — identificar o fence que impede o POST original; host/reviews-route.tsx:54 — determinar por que reviews.review-read não admite UI48 no contexto real; reports.spec.ts:27,42,108,124 — executar novamente o spec completo após incorporar a causa observada. Sem aumento de timeout/skip, sem sf-ci final executado.
