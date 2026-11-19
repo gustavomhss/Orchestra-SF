@@ -141,7 +141,7 @@ test("Page BCS refuses " + fault + " drift during real projection work", async (
   try {
     const call = fault === "lease" || fault === "binding" ? mutablePageCall(f) : f.read
     const environment = f.host.environment
-    let changed = false
+    let changed = false, mutationApplied = false
     f.host.environment = async (request) => {
       const value = await environment(request)
       if (!changed && f.bodies.length === 2) {
@@ -154,13 +154,14 @@ test("Page BCS refuses " + fault + " drift during real projection work", async (
         if (fault === "headers") request.headers.set("actor", "another-person")
         if (fault === "request") f.host.requestFor = () => new Request(request.url, { headers: request.headers })
         if (fault === "period") Reflect.set(f.ref.target.period!, "end", "2026-11-30")
-        if (fault === "lease") expect(Reflect.set(call, "lease", {})).toBe(true)
-        if (fault === "binding") expect(Reflect.set(call, "binding", { ...call.binding })).toBe(true)
+        if (fault === "lease") mutationApplied = Reflect.set(call, "lease", {})
+        if (fault === "binding") mutationApplied = Reflect.set(call, "binding", { ...call.binding })
       }
       return value
     }
     const result = await f.access(f.ref, call)
     expect(changed).toBe(true)
+    if (fault === "lease" || fault === "binding") expect(mutationApplied).toBe(true)
     expect(result.state).toBe("unavailable")
     expect(result).not.toHaveProperty("currentRef")
     expect(result).not.toHaveProperty("authorizedProjection")
@@ -214,13 +215,13 @@ test("Page BCS refuses " + fault + " replacement after its final await", async (
   try {
     const call = fault === "lease" || fault === "binding" ? mutablePageCall(f) : f.read
     const revalidate = f.host.revalidate
-    let last = 0
+    let last = 0, mutationApplied = false
     f.host.revalidate = async (context) => {
       const allowed = await revalidate(context)
       if (f.bodies.length === 4 && ++last === 5) {
         if (fault === "headers") f.host.requestFor(context)!.headers.set("late", "changed")
-        if (fault === "lease") expect(Reflect.set(context, "lease", {})).toBe(true)
-        if (fault === "binding") expect(Reflect.set(context, "binding", { ...context.binding })).toBe(true)
+        if (fault === "lease") mutationApplied = Reflect.set(context, "lease", {})
+        if (fault === "binding") mutationApplied = Reflect.set(context, "binding", { ...context.binding })
         if (fault === "ref") Reflect.set(f.ref.target, "recordId", "another-page")
         if (fault === "input-owner") f.input.host = { ...f.host }
         if (fault === "issuer-owner") f.issuerOwners.scopedSources = { ...f.persistence }
@@ -240,6 +241,7 @@ test("Page BCS refuses " + fault + " replacement after its final await", async (
     }
     const result = await f.access(f.ref, call)
     expect(last).toBe(5)
+    if (fault === "lease" || fault === "binding") expect(mutationApplied).toBe(true)
     expect(result.state).toBe("unavailable")
     expect(result).not.toHaveProperty("authorizedProjection")
   } finally { await f.dispose() }
