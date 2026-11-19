@@ -63,6 +63,7 @@ export const SfOperationIds = [
   "decisions.command.sf_change_prepare",
   "decisions.command.sf_question_prepare",
   "decisions.controls.read",
+  "decisions.decision-edit",
   "decisions.current-choice-prepare",
   "decisions.current-choice-promote",
   "decisions.decision-add-question",
