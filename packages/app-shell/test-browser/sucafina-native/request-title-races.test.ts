@@ -113,10 +113,18 @@ async function review(view: Awaited<ReturnType<typeof mount>>) {
   const input = view.node.querySelector<HTMLInputElement>("input")!
   input.value = "private proposed title"
   input.dispatchEvent(new Event("input", { bubbles: true }))
-  view.button("Review save")!.click()
+  const reviewButton = view.button("Review save")
+  expect(reviewButton, `Rendered title actions: ${[...view.node.querySelectorAll("button")].map((item) => item.textContent?.trim()).join(" | ")}; text: ${view.node.textContent?.trim().slice(0, 500)}`).toBeDefined()
+  reviewButton!.click()
   await waitFor(() => !!view.node.querySelector('[data-component="sf-change-review"]'))
   expect(view.writes).toEqual([]) // Positive control: the review really precedes the POST.
-  return view.button("Confirm action")!
+  // S03 renders its button through the shared dictionary, not the feature-
+  // local U11 labels. Reuse the already registered "Confirm save" translation
+  // for this exact save confirmation, and retain a strict accessible-label
+  // positive control before any command can be submitted.
+  const confirm = view.button("Confirm save")
+  expect(confirm, `Missing source-reviewed confirmation label. Rendered actions: ${[...view.node.querySelectorAll("button")].map((item) => item.textContent?.trim()).join(" | ")}`).toBeDefined()
+  return confirm!
 }
 
 function gateDigest() {
