@@ -12,7 +12,7 @@ const input = {
 
 test("case edit uses the original human route and returns the exact committed CAS", () => {
   expect(SfOperationRegistry["decisions.decision-edit"]).toEqual({
-    method: "POST", pathTemplate: "{mount}/{surface}", effect: "mutation", responseMode: "json",
+    method: "POST", pathTemplate: "{mount}/dashboard", effect: "mutation", responseMode: "json",
     fixedQuery: { sf: "decision-edit" }, maxRequestBytes: 262144,
   })
   expect(codec.decodeInput(input)).toEqual({ status: "ok", value: input })
