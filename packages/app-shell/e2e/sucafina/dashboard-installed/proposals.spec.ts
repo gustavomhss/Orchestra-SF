@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page, type Response, type Route } from
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract"
-import { createProposalInstallation, enterProposalShell, withProposalHost } from "../proposals-support/installation"
+import { createProposalInstallation, enterProposalShell, proposalResponseBody, retainProposalResponse, withProposalHost } from "../proposals-support/installation"
 import type { ProposalObservation } from "../proposals-support/protocol"
 
 test.use({ trace: "off", screenshot: "off", video: "off" })
@@ -24,14 +24,14 @@ async function openProposal(page: Page, origin: string, reference = "new") {
       page.waitForResponse(modeResponse("dashboard-workbench")), create.click(),
     ])
     expect(response.status()).toBe(200)
-    expect(object(await response.json()).status).toBe("ok")
+    expect(object(proposalResponseBody(response)).status).toBe("ok")
   } else {
     const [response] = await Promise.all([
       page.waitForResponse(modeResponse("dashboard-workbench")),
       page.goto(origin + "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef(reference)),
     ])
     expect(response.status()).toBe(200)
-    expect(object(await response.json()).status).toBe("ok")
+    expect(object(proposalResponseBody(response)).status).toBe("ok")
   }
   const panel = page.locator("[data-sf-private-proposal]")
   await expect(panel).toBeVisible()
@@ -57,9 +57,9 @@ async function saveDraft(page: Page, panel: Locator) {
     panel.getByRole("button", { name: "Save proposal", exact: true }).click(),
   ])
   expect(written.status()).toBe(200)
-  expect(object(await written.json()).status).toBe("ok")
+  expect(object(proposalResponseBody(written)).status).toBe("ok")
   expect(discovered.status()).toBe(200)
-  expect(object(await discovered.json()).status).toBe("ok")
+  expect(object(proposalResponseBody(discovered)).status).toBe("ok")
   await expect(panel.getByText(savedMessage, { exact: true })).toBeVisible()
   return written.request().postDataJSON() as Record<string, unknown>
 }
@@ -82,7 +82,7 @@ async function prepareRecordAgenda(page: Page, origin: string) {
   await agenda.getByRole("button", { name: "Find authorized sections", exact: true }).click()
   const discovery = await found
   expect(discovery.status()).toBe(200)
-  const discovered = object(await discovery.json())
+  const discovered = object(proposalResponseBody(discovery))
   expect(discovered.status).toBe("ok")
   expect(object(discovered.value).items).toHaveLength(1)
   await agenda.getByRole("button", { name: "Add to agenda", exact: true }).click()
@@ -93,7 +93,7 @@ async function prepareRecordAgenda(page: Page, origin: string) {
   await page.getByRole("button", { name: "Review selected sections", exact: true }).click()
   const response = await pending
   expect(response.status()).toBe(200)
-  const preview = object(await response.json())
+  const preview = object(proposalResponseBody(response))
   expect(preview.status).toBe("ok")
   const sections = object(preview.value).sections
   expect(sections).toHaveLength(1)
@@ -177,7 +177,7 @@ test("Dashboard reads the current source and active private proposal while prese
         expect(checked.request().postDataJSON()).toEqual({
           caseRef: original.caseRef, targetEvidence: original.targetEvidence, draftRef: original.draftRef,
         })
-        const checkedBody = object(await checked.json())
+        const checkedBody = object(proposalResponseBody(checked))
         expect(checkedBody.status).toBe("ok")
         const current = object(checkedBody.value), proposal = object(current.draft)
         expect(current.originalSource).toEqual({ refId: original.targetEvidence.refId, refDigest: original.targetEvidence.refDigest })
@@ -237,7 +237,9 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
         const interrupted = Promise.withResolvers<{ status: number; body: unknown }>()
         const abortRead = async (route: Route) => {
           try {
-            const response = await route.fetch({ maxRetries: 0 }), body: unknown = await response.json()
+            const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+            await retainProposalResponse(route, response)
+            const body: unknown = await response.json()
             await route.abort("aborted")
             interrupted.resolve({ status: response.status(), body })
             await response.dispose()
@@ -270,7 +272,9 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
         const priorWrite = Promise.withResolvers<unknown>()
         const withdrawWrite = async (route: Route) => {
           try {
-            const response = await route.fetch({ maxRetries: 0 }), body: unknown = await response.json()
+            const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+            await retainProposalResponse(route, response)
+            const body: unknown = await response.json()
             expect(response.status()).toBe(200)
             await host.control("withdraw-write")
             await route.fulfill({ response })
@@ -286,7 +290,7 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
         await page.unroute(workbenchUrl, withdrawWrite)
         expect(object(object(object(prior).value).decisions).permissions).toMatchObject({ draft: true })
         expect(restricted.status()).toBe(200)
-        const restrictedValue = object(object(await restricted.json()).value)
+        const restrictedValue = object(object(proposalResponseBody(restricted)).value)
         expect(restrictedValue.permissions).toMatchObject({ draft: false, prepare: false, apply: false, capture: false, preserve: false })
         await expect(panel.getByText(retainedMessage, { exact: true })).toBeVisible()
         await expect(panel.getByRole("button", { name: "Save proposal", exact: true })).toBeDisabled()
@@ -306,7 +310,9 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
         const actualDenial = Promise.withResolvers<{ status: number; body: unknown }>()
         const observeDenial = async (route: Route) => {
           try {
-            const response = await route.fetch({ maxRetries: 0 }), body: unknown = await response.json()
+            const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+            await retainProposalResponse(route, response)
+            const body: unknown = await response.json()
             await route.fulfill({ response })
             actualDenial.resolve({ status: response.status(), body })
             await response.dispose()
@@ -314,7 +320,8 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
         }
         const withdrawRead = async (route: Route) => {
           try {
-            const response = await route.fetch({ maxRetries: 0 })
+            const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+            await retainProposalResponse(route, response)
             expect(response.status()).toBe(200)
             await host.control("withdraw-read")
             await route.fulfill({ response })
@@ -369,7 +376,7 @@ test("Dashboard contextual draft retains edits when current write authority is w
           panel.getByRole("button", { name: "Save proposal", exact: true }).click(),
         ])
         expect(rejected.status()).toBe(403)
-        expect(object(await rejected.json()).status).toBe("denied")
+        expect(object(proposalResponseBody(rejected)).status).toBe("denied")
         await expect(panel.getByText("Reading is available. The current authority does not permit saving this proposal.", { exact: true })).toBeVisible()
         await expect(panel.getByLabel("Action", { exact: true })).toHaveValue("Unsaved operator wording")
         await expect(panel).toHaveAttribute("data-dirty", "true")
@@ -458,7 +465,7 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
           panel.getByRole("button", { name: reloadLabel, exact: true }).click(),
         ])
         expect(discovered.status()).toBe(200)
-        expect(object(await discovered.json()).status).toBe("ok")
+        expect(object(proposalResponseBody(discovered)).status).toBe("ok")
         expect(read.status()).toBe(200)
         expect(read.request().postDataJSON()).toEqual({ caseRef: first.caseRef, targetEvidence: first.targetEvidence, draftRef: first.draftRef })
         await expect(panel.getByText(currentLoaded, { exact: true })).toBeVisible()
@@ -527,7 +534,7 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
         await shown.getByRole("button", { name: "Confirm preservation", exact: true }).click()
         const preserved = await preserve
         expect(preserved.status()).toBe(200)
-        const preservedBody = object(await preserved.json())
+        const preservedBody = object(proposalResponseBody(preserved))
         expect(preservedBody.status).toBe("ok")
         expect(object(preservedBody.value).sections).toHaveLength(1)
         await expect(preservedPage.locator("[data-sf-preserved-confirmed]")).toContainText("The producer confirmed that the review was preserved.")
@@ -540,7 +547,7 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
         await capture.getByRole("button", { name: "Preserve this record", exact: true }).click()
         const captured = await capturing
         expect(captured.status()).toBe(200)
-        const capturedBody = object(await captured.json())
+        const capturedBody = object(proposalResponseBody(captured))
         expect(capturedBody.status).toBe("ok")
         const captureId = object(capturedBody.value).captureId
         expect(typeof captureId).toBe("string")
@@ -558,7 +565,7 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
         const reopened = await reopening
         expect(reopened.status()).toBe(200)
         expect(new URL(reopened.url()).searchParams.get("id")).toBe(captureId)
-        const reopenedBody = object(await reopened.json())
+        const reopenedBody = object(proposalResponseBody(reopened))
         expect(reopenedBody.status).toBe("ok")
         expect(object(reopenedBody.value)).toMatchObject({ state: "historical", captureId })
         const historic = capture.locator("[data-sf-capture-history]")
@@ -585,9 +592,9 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
           page.getByRole("button", { name: "Review before applying", exact: true }).click(),
         ])
         expect(prepared.status()).toBe(200)
-        expect(object(await prepared.json()).status).toBe("ok")
+        expect(object(proposalResponseBody(prepared)).status).toBe("ok")
         expect(reviewed.status()).toBe(200)
-        const reviewBody = object(await reviewed.json())
+        const reviewBody = object(proposalResponseBody(reviewed))
         expect(reviewBody.status).toBe("ok")
         expect(object(reviewBody.value).reviewDigest).toMatch(/^[a-f0-9]{64}$/)
         const review = page.locator('[data-component="sf-change-review"]')
@@ -607,7 +614,9 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
         const release = Promise.withResolvers<void>()
         await page.route(modeUrl("dashboard-hot-topic-apply"), async (route) => {
           try {
-            const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 }), body: unknown = await original.json()
+            const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+            await retainProposalResponse(route, original)
+            const body: unknown = await original.json()
             committed.resolve({ status: original.status(), body })
             await release.promise
             await route.fulfill({ response: original })
