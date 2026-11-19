@@ -33,7 +33,7 @@ export type PlannerCriterionObservation = {
 type ObservationReader = { current: () => boolean; active: WeakMap<TrustedDomainContext, CriterionFrame> }
 type ComparisonOwner = { input: ComparisonFactoryInput; current: () => boolean; readers: Set<ObservationReader> }
 type CriterionInvocation = {
-  owner: ComparisonOwner; readers: readonly ObservationReader[]; call: TrustedDomainContext; current: () => boolean
+  owner: ComparisonOwner; readers: readonly ObservationReader[]; usedReaders: Set<ObservationReader>; call: TrustedDomainContext; current: () => boolean
 }
 type CriterionFrame = {
   invocation: CriterionInvocation; criterionId: string; observation: PlannerCriterionObservation
@@ -101,6 +101,7 @@ export function createPlannerCriterionObservationReader(compare: PlannerPort["co
       }
       frame.claimed = true
       frame.reader = reader
+      frame.invocation.usedReaders.add(reader)
       const expectedRequest = digestSfValue(request)
       const borrowed = structuredClone(frame.observation)
       const expectedObservation = digestSfValue(borrowed)
@@ -132,7 +133,7 @@ function criterionInvocation(owner: ComparisonOwner | undefined, input: Comparis
   const requestDigest = digestSfValue(incoming)
   const transportDigest = () => digestSfValue([transport.url, transport.method, [...transport.headers.entries()]])
   const originalTransport = transportDigest()
-  return { owner, readers, call, current: () => owner.current() && call.kind === "ui" && call.binding === binding && call.lease === lease &&
+  return { owner, readers, usedReaders: new Set(), call, current: () => owner.current() && call.kind === "ui" && call.binding === binding && call.lease === lease &&
     digestSfValue([call.kind, call.binding]) === bindingDigest && digestSfValue(incoming) === requestDigest &&
     input.host.requestFor(call) === transport && !transport.signal.aborted && transportDigest() === originalTransport }
 }
@@ -233,6 +234,7 @@ async function compareScenariosObserved(input: ComparisonInput, incoming: Scenar
   const checked = await evaluate()
   const finalScenarios = await resolveScenarios()
   if (checked.some((item, index) => digestSfValue(item) !== digestSfValue(evaluated[index])) || finalScenarios.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || !(await input.host.revalidate(binding)) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "criterion-or-authority-changed" }
+  if (invocation && observation && (!invocation.current() || [...invocation.usedReaders].some((reader) => !reader.current()))) return { status: "stale", reason: "criterion-observation-changed" }
   const criterionResults = evaluated.flatMap((item) => item.status === "ok" ? [{ criterionId: item.value.criterionId, state: item.value.state, reason: item.value.reason }] : [])
   return { status: "ok", value: { ...comparison, criterionResults, unresolvedConditions: criterionResults.some((item) => item.state === "unknown") ? [...comparison.unresolvedConditions, "criterion-rules-unavailable"] : comparison.unresolvedConditions } }
 }

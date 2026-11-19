@@ -24,16 +24,24 @@ export function createSfConditionedCriterionMetric(input: {
 }) {
   const { authority, business } = input
   const host = authority.host, state = authority.state, planner = business.planner, sources = business.plannerSources
-  const scenarios = business.plannerProduct.scenarios, results = business.results
+  const product = business.plannerProduct, scenarios = product.scenarios, results = business.results, cases = business.cases
   const compare = planner.compareScenarios
   const methods = [
     [host, "requestFor"], [host, "revalidate"], [state, "read"], [business, "selectedCase"], [business, "lockedSourceFences"],
+    [business, "authorizeCase"], [cases, "read"], [planner, "compareScenarios"],
     [results, "readHistoricalScenario"], [sources, "resolveForecastSource"], [sources, "resolveForecastCoverage"],
   ] as const
-  const pinned = methods.map(([object, key]) => Object.getOwnPropertyDescriptor(object, key)?.value)
-  const current = () => authority.host === host && authority.state === state && business.planner === planner &&
-    planner.compareScenarios === compare && business.plannerSources === sources && business.plannerProduct.scenarios === scenarios && business.results === results &&
-    methods.every(([object, key], index) => Object.getOwnPropertyDescriptor(object, key)?.value === pinned[index])
+  const fields = [[authority, "host"], [authority, "state"], [business, "planner"], [business, "plannerSources"],
+    [business, "plannerProduct"], [product, "scenarios"], [business, "results"], [business, "cases"]] as const
+  const own = (object: object, key: string) => {
+    const descriptor = Object.getOwnPropertyDescriptor(object, key)
+    return descriptor && "value" in descriptor ? descriptor.value : undefined
+  }
+  const pinned = methods.map(([object, key]) => own(object, key))
+  const containers = fields.map(([object, key]) => own(object, key))
+  const supported = pinned.every((value) => typeof value === "function") && containers.every((value) => !!value && typeof value === "object")
+  const current = () => supported && methods.every(([object, key], index) => own(object, key) === pinned[index]) &&
+    fields.every(([object, key], index) => own(object, key) === containers[index])
   const observe = createPlannerCriterionObservationReader(compare, current)
   return async (request: MetricRequest, call: TrustedDomainContext, stored: StoredDecisionResult) => {
     const captured = structuredClone(request), storedDigest = digestSfValue(stored)
@@ -50,11 +58,23 @@ export function createSfConditionedCriterionMetric(input: {
         let borrowed: unknown
         const found = await state.read(transport, "cases", async (snapshot, actor) => {
           if (!sameAuthority(actor, call) || !unchanged()) return undefined
+          const ruleKey = criterionRuleKey(captured.caseRef, captured.criterionId)
+          let ruleDigest: string | undefined
+          const rule = await state.read(transport, "preferences", (preferences, ruleActor) => {
+            if (!sameAuthority(ruleActor, call) || !unchanged()) return undefined
+            const value = preferences.preferences[ruleKey]
+            ruleDigest = digestSfValue(value)
+            return value
+          })
+          if (rule.status !== "ok" || !unchanged() || ruleDigest !== digestSfValue(rule.value) ||
+            !same(rule.value, snapshot.preferences[ruleKey])) return undefined
           const selection: Selection = { decision: snapshot.cases[captured.caseRef.id],
-            results: observation.scenarioRefs.map((reference) => snapshot.decisionResults?.[reference]),
-            rule: snapshot.preferences[criterionRuleKey(captured.caseRef, captured.criterionId)] }
+            results: observation.scenarioRefs.map((reference) => snapshot.decisionResults?.[reference]), rule: rule.value }
           const proof = inspect(selection, captured, observation, storedDigest, call)
           if (!proof) return undefined
+          const caseCopy = structuredClone(selection.decision!)
+          const caseDigest = digestSfValue(caseCopy)
+          if (!await business.authorizeCase(caseCopy, call) || digestSfValue(caseCopy) !== caseDigest || !unchanged()) return undefined
           const fences = business.lockedSourceFences()
           if (!fences) return undefined
           borrowed = { selection, actor, fences, revision: snapshot.revision, incarnation: snapshot.incarnation, versions: snapshot.versions }
