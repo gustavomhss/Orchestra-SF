@@ -518,9 +518,9 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
               </Show>
             </section>
           </Show>
-          <Show when={decision()?.kind === "portfolio"}>{() => {
-            const current = decision()
-            if (current?.kind !== "portfolio") return null
+          <Show when={decision()?.kind === "portfolio" ? decision() : undefined}>{(record) => {
+            const current = record()
+            if (current.kind !== "portfolio") return null
             const token = tokenForResult(current.portfolioResultRef)
             return <Show when={token}>{(target) => <button class="mx-btn" type="button"
               onClick={() => props.onSelect(ref(target()))}>{t("sf.u22.portfolio.open", { ref: current.portfolioResultRef })}</button>}</Show>

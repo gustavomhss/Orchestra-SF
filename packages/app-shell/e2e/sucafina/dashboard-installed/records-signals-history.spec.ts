@@ -73,7 +73,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       await expect(section.locator("[data-sf-record-ref]")).toHaveAttribute("data-sf-record-id", topic)
       await expect(section.locator("[data-sf-record-ref]")).toContainText(original)
       const pendingAgenda = page.waitForResponse(responseFor(dashboard, "dashboard-agenda", "POST"))
-      await agenda.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ }).click()
+      await page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ }).click()
       const previewResponse = await pendingAgenda
       expect(previewResponse.status()).toBe(200)
       const request = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.input)(previewResponse.request().postDataJSON())

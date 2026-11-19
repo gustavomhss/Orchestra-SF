@@ -323,14 +323,26 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const title = form.getByRole("textbox", { name: "Title", exact: true })
   await title.fill("Isolated Reports preserved dossier")
   await expect(title).toHaveValue("Isolated Reports preserved dossier")
-  const sectionRefs = sectionIdsForPages(saved, reportPages)
+  const sectionRefs = saved.sections.map((section) => section.id)
+  const dashboardSections = sectionIdsForPages(saved, reportPages)
   for (const pageName of reportPages) expect(saved.sections.some((section) => sectionMatchesPage(section, pageName)), pageName).toBe(true)
-  expect(sectionRefs).toEqual(saved.sections.map((section) => section.id))
+  expect(dashboardSections).toHaveLength(reportPages.length)
+  expect(sectionRefs.filter((id) => dashboardSections.includes(id))).toEqual(dashboardSections)
   const contents = report.getByRole("region", { name: /Authorized report sections|Seções autorizadas do relatório/ })
   for (const box of await contents.getByRole("checkbox").all()) await box.uncheck()
   for (const pageName of reportPages) await expect(form.getByRole("checkbox", { name: pageName, exact: true })).toBeEnabled()
   for (const pageName of reportPages) await form.getByRole("checkbox", { name: pageName, exact: true }).check()
   for (const pageName of reportPages) await expect(form.getByRole("checkbox", { name: pageName, exact: true })).toBeChecked()
+  for (const section of saved.sections) {
+    const row = contents.locator("[data-section-id]").filter({ has: page.getByText(section.title, { exact: true }) })
+    await expect(row).toHaveCount(1)
+    await expect(row).toHaveAttribute("data-section-id", section.id)
+    await expect(row).toHaveAttribute("data-source-record-count", String(section.count))
+    await row.getByRole("checkbox").check()
+  }
+  await expect(contents.getByRole("checkbox", { checked: true })).toHaveCount(sectionRefs.length)
+  expect(await contents.locator("[data-section-id]").filter({ has: page.getByRole("checkbox", { checked: true }) })
+    .evaluateAll((rows) => rows.map((row) => row.getAttribute("data-section-id")))).toEqual(saved.sections.map((section) => section.id))
   const button = form.getByRole("button", { name: "Generate Report", exact: true })
   await expect(button).toBeEnabled()
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
@@ -470,7 +482,19 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
   await expect(open).toHaveCount(1)
   await expect(open).toHaveAttribute("href", destination.toString())
+  const currentBudget = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.pathname === app.mount + "/api/ui/pages/CAP03" &&
+      url.searchParams.get("year") === String(corpus.year)
+  })
   await open.click()
+  const currentResponse = await currentBudget
+  expect(currentResponse.status()).toBe(200)
+  const current = object(await currentResponse.json())
+  expect(current.status).toBe("ok")
+  const selectedBudget = object(current.value)
+  expect(object(selectedBudget.selection).year).toBe(corpus.year)
+  expect(object(object(selectedBudget.data).totals).totalForecast).toBe(corpus.after)
   await expect(page).toHaveURL(destination.toString())
   const dashboard = page.locator('[data-sf-surface="CAP03"]')
   await expect(dashboard).toBeVisible()
@@ -479,7 +503,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   expect(target.pathname).toBe("/orchestra/sf-dashboard/budget")
   expect(target.searchParams.get("year")).toBe(String(corpus.year))
   await expect(dashboard.locator('[data-sf-metric="forecast"] dd'),
-    "UNBOUND WP1: the native year-selected forecast must expose the producer total instead of an unscoped warning").toHaveText(String(corpus.after))
+    "UNBOUND WP1: the native year-selected forecast must expose the producer total instead of an unscoped warning").toHaveText(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(corpus.after))
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
 }
 

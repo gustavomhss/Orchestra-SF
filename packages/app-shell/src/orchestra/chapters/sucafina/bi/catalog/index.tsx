@@ -251,7 +251,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     const current = context.ready()
     if (!current || !store.viewId) return
     const stamp = current.context.stamp
-    return JSON.stringify(["sf-bi-selection", stamp.installationId, stamp.projectId,
+    return JSON.stringify(["sf-bi-selection", stamp.installationId, stamp.projectId, stamp.hostId,
       stamp.principalRef, stamp.policyVersion, stamp.accessRevision, store.viewId])
   }
   const rememberSelection = () => {
