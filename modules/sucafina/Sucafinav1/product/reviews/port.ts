@@ -24,6 +24,12 @@ export type ReviewChart =
   | { status: "ok"; viewId: string; series: readonly { id: string; label: string; unit: string; role: string; valueIds: readonly string[]; alignmentKeys?: readonly string[]; values: DomainProjection["values"] }[]; limitations: readonly string[]; unassigned: DomainProjection["values"]; sensitivity?: { result: SensitivityResult; parameterUnit: string; resultUnit: string }; waterfall?: ReviewWaterfall; timeline?: { status: "ok"; items: readonly { label: string; dateValueId: string; state: "planned" | "completed" | "unknown"; date: string | null; source: DomainProjection["values"][number] }[] } | { status: "unavailable"; reason: string } }
   | { status: "unavailable"; reason: string }
 export type ReviewSection = { id: string; title: string; period: Period; recordCount: number; projection: DomainProjection; agendaNote?: string; outcome?: ObservedResultProjection; outcomeComparison?: ReviewOutcomeComparison; chart?: ReviewChart; comments?: readonly { id: string; version: number; content: string; authorRef: string; createdAt: string; sourceRefs: readonly SourceRef[] }[] }
+export type HistoricalSelectionProof = {
+  kind: "server-issued-result"
+  selectionRef: string
+  resultDigest: string
+  stamps: readonly { sectionId: string; role: "projection" | "comparison"; principalRef: string; installationId: string; projectId: string; accessRevision: string; policyVersion: string }[]
+}
 export type ReviewHost = {
   state: SfProductStatePort
   creationTarget: { ref: string; incarnation: string }
@@ -41,8 +47,8 @@ export type ReviewHost = {
   revalidateReadEvidence?: (binding: TrustedDomainContext, refs: readonly BusinessEvidenceRef[]) => Promise<boolean>
   revalidateReadAccess?: (binding: TrustedDomainContext) => Promise<boolean>
   select: (selectionRef: string, sectionRefs: readonly string[], binding: TrustedDomainContext, period?: Period) => Promise<PortResult<readonly ReviewSection[]>>
-  /** Only a server-issued immutable result selection may retain historical authority stamps. */
-  isHistoricalSelection?: (selectionRef: string, binding: TrustedDomainContext) => boolean
+  /** Only a re-read immutable server-issued result may retain historical authority stamps. */
+  isHistoricalSelection?: (selectionRef: string, binding: TrustedDomainContext) => Promise<HistoricalSelectionProof | false> | false
 }
 
 export function createReviewPort(host: ReviewHost) {
@@ -77,7 +83,9 @@ export function createReviewPort(host: ReviewHost) {
         return previous !== undefined && previous !== digest
       })) return { status: "unavailable", reason: "conflicting-comment-snapshot" } as const
       if (selected.value.some((section) => !validChart(section.projection, section.chart))) return { status: "unavailable", reason: "chart-projection-mismatch" } as const
-      if (selected.value.some((section) => [section.projection.context, ...(section.projection.comparison ? [section.projection.comparison.context] : [])].some((context) => context.principalRef !== binding.binding.principalRef || context.installationId !== binding.binding.installationId || context.projectId !== binding.binding.projectId || ((context.accessRevision !== binding.binding.accessRevision || context.policyVersion !== binding.binding.policyVersion) && !host.isHistoricalSelection?.(selectionRef, binding)))))
+      const drifted = selected.value.some((section) => sectionAuthorityContexts(section).some((item) => item.context.accessRevision !== binding.binding.accessRevision || item.context.policyVersion !== binding.binding.policyVersion))
+      const historical = drifted ? await historicalAuthorityProof(host, selectionRef, binding) : undefined
+      if (selected.value.some((section) => sectionAuthorityContexts(section).some((item) => item.context.principalRef !== binding.binding.principalRef || item.context.installationId !== binding.binding.installationId || item.context.projectId !== binding.binding.projectId || ((item.context.accessRevision !== binding.binding.accessRevision || item.context.policyVersion !== binding.binding.policyVersion) && !retainsIssuedStamp(historical, section.id, item.role, item.context)))))
         return { status: "denied", reason: "context-mismatch" } as const
       if (selected.value.some((section) => section.projection.values.some((value) => (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
       if (!(await host.revalidateEvidence(binding, selected.value.flatMap((section) => reviewProjectionEvidence(section.projection, section))))) return { status: "denied", reason: "access-unavailable" } as const
@@ -195,6 +203,25 @@ async function reopenReviewReceipt(value: unknown, expectedId: string, read: (id
   if (result.status !== "ok") return result
   if (digestSfValue(result.value) !== receipt.reviewDigest) return { status: "conflict", reason: "preserved-review-changed" }
   return result
+}
+
+async function historicalAuthorityProof(host: ReviewHost, selectionRef: string, binding: TrustedDomainContext) {
+  if (!host.isHistoricalSelection) return undefined
+  try {
+    const proof = await host.isHistoricalSelection(selectionRef, binding)
+    if (!proof || typeof proof !== "object" || proof.kind !== "server-issued-result" || proof.selectionRef !== selectionRef || !/^[a-f0-9]{64}$/.test(proof.resultDigest) || !Array.isArray(proof.stamps)) return undefined
+    return proof
+  } catch {
+    return undefined
+  }
+}
+
+function sectionAuthorityContexts(section: ReviewSection) {
+  return [{ role: "projection" as const, context: section.projection.context }, ...(section.projection.comparison ? [{ role: "comparison" as const, context: section.projection.comparison.context }] : [])]
+}
+
+function retainsIssuedStamp(proof: HistoricalSelectionProof | undefined, sectionId: string, role: "projection" | "comparison", context: DomainProjection["context"]) {
+  return !!proof && proof.stamps.some((stamp) => !!stamp && stamp.sectionId === sectionId && stamp.role === role && stamp.principalRef === context.principalRef && stamp.installationId === context.installationId && stamp.projectId === context.projectId && stamp.accessRevision === context.accessRevision && stamp.policyVersion === context.policyVersion)
 }
 
 type ReviewProjection = DomainProjection & { reviewChart?: ReviewChart; reviewAgendaNote?: string; reviewOutcome?: ObservedResultProjection; reviewOutcomeComparison?: ReviewOutcomeComparison; reviewCommentRefs?: readonly ReviewCommentRef[] }

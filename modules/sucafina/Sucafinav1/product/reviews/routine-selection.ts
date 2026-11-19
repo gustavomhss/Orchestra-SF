@@ -5,7 +5,7 @@ import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { createRoutineReviewResultReader } from "../routines/review-result.ts"
-import type { ReviewSection } from "./port.ts"
+import type { HistoricalSelectionProof, ReviewSection } from "./port.ts"
 import type { ReviewAgendaPreview } from "./selection.ts"
 
 export type RoutineReviewSelectionRequest = { runRef: string; resultRef: string; outputDigest: string }
@@ -78,12 +78,16 @@ export function createReviewRoutineSelection(input: {
       return { status: "ok", value: structuredClone(ordered) }
     },
     release(selectionRef: string) { selections.delete(selectionRef) },
-    // Provenance comes from this private registry after its authenticated reader,
-    // never from a caller's prefix or claim about the source of the selection.
-    isHistoricalSelection(selectionRef: string, context: TrustedDomainContext) {
+    // A binding digest or an unexpired map entry is not historical authority.
+    // Retain stamps only after the immutable server-issued result is re-read and matches.
+    async isHistoricalSelection(selectionRef: string, context: TrustedDomainContext): Promise<HistoricalSelectionProof | false> {
       const selected = selections.get(selectionRef)
-      const at = Date.parse(input.now())
-      return !!selected && Number.isFinite(at) && at < selected.expiresAt && selected.binding === bindingDigest(context)
+      if (!selected || selected.binding !== bindingDigest(context) || !await input.revalidate(context)) return false
+      const loaded = await read(structuredClone(selected.request), context).catch(() => ({ status: "unavailable" as const, reason: "routine-review-unavailable" }))
+      if (loaded.status !== "ok" || digestSfValue(loaded.value) !== selected.digest) return false
+      const again = await read(structuredClone(selected.request), context).catch(() => ({ status: "unavailable" as const, reason: "routine-review-unavailable" }))
+      if (again.status !== "ok" || digestSfValue(again.value) !== selected.digest || selections.get(selectionRef) !== selected || selected.binding !== bindingDigest(context) || !await input.revalidate(context)) return false
+      return { kind: "server-issued-result", selectionRef, resultDigest: digestSfValue(again.value), stamps: issuedStamps(again.value) }
     },
   }
 }
@@ -96,4 +100,15 @@ function validRoutineSelectionRequest(value: unknown): value is RoutineReviewSel
 
 function bindingDigest(context: TrustedDomainContext) {
   return digestSfValue([context.binding.installationId, context.binding.projectId, context.binding.principalRef, context.binding.accessRevision, context.binding.policyVersion])
+}
+
+function issuedStamps(value: Omit<RoutineReviewSelection, "selectionRef">): HistoricalSelectionProof["stamps"] {
+  return value.sections.flatMap((section) => {
+    const projection = issuedStamp(section.id, "projection", section.projection.context)
+    return section.projection.comparison ? [projection, issuedStamp(section.id, "comparison", section.projection.comparison.context)] : [projection]
+  })
+}
+
+function issuedStamp(sectionId: string, role: "projection" | "comparison", context: ReviewSection["projection"]["context"]): HistoricalSelectionProof["stamps"][number] {
+  return { sectionId, role, principalRef: context.principalRef, installationId: context.installationId, projectId: context.projectId, accessRevision: context.accessRevision, policyVersion: context.policyVersion }
 }
