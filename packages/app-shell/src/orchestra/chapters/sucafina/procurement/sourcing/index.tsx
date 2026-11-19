@@ -96,13 +96,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     unknownOperation:string|null
     lastError:SfUiState|null
     sourceWarnings:readonly string[]
+    fieldErrors:readonly {field:string;message:string}[]
     sort: "source"|"supplier"|"currency"
     search:string
     layoutMode:"single"|"split"|"split-context"
   }>({
     token:null,page:null,state:"loading",selected:null,quoteChoice:"",
     stage:"sourcing",phase:"idle",sending:false,review:null,unknownOperation:null,lastError:null,
-    sourceWarnings:[],sort:"source",search:"",layoutMode:"split",
+    sourceWarnings:[],fieldErrors:[],sort:"source",search:"",layoutMode:"split",
   })
   let readController:AbortController|undefined
   let commandController:AbortController|undefined
@@ -196,7 +197,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     commandController=undefined
     setUi({token,page:null,state:token?"loading":"session-expired",
       selected:wanted,quoteChoice:"",stage:props.route.kind==="quotes"?"quotes":"sourcing",
-      phase:"idle",sending:false,review:null,unknownOperation:null,lastError:null,sourceWarnings:[]})
+      phase:"idle",sending:false,review:null,unknownOperation:null,lastError:null,sourceWarnings:[],fieldErrors:[]})
     if(token)void refresh(token,wanted??undefined)
     onCleanup(()=>{readController?.abort();commandController?.abort()})
   })
@@ -477,8 +478,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       }
       if(response.status!==200||!response.body.ok){
         const code=response.body.ok?response.status:response.body.status
-        setUi("sourceWarnings",response.body.ok?[]:response.body.fieldErrors?.map((error)=>
-          error.field+": "+error.message)??response.body.errors??[])
+        const fieldErrors=response.body.ok?[]:response.body.fieldErrors??[]
+        setUi("fieldErrors",fieldErrors)
+        setUi("sourceWarnings",response.body.ok?[]:fieldErrors.length?fieldErrors.map((error)=>
+          error.field+": "+error.message):response.body.errors??[])
         if(response.status===409&&!response.body.ok&&response.body.status===409)controllerDraft.rejectSave({status:409,operation:pending})
         else if(response.status===422&&!response.body.ok&&response.body.status===422)controllerDraft.rejectSave({status:422,operation:pending})
         else controllerDraft.setPhase("failed")
@@ -491,6 +494,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       }
       setUi("review",null)
       setUi("sourceWarnings",response.body.warnings??[])
+      setUi("fieldErrors",[])
       setUi("phase","verifying")
       // The producer returned an explicit success, not a receipt. Close the
       // exact pending draft fence only with that acknowledgement, and use a
@@ -542,12 +546,23 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     return <fieldset class="sf-u12-quote">
       <legend>{t("sf.u12.quotes")} {index+1} · {quote.id??t("sf.u12.missing")}</legend>
       <div class="sf-u12-fields">
-        <For each={fields}>{([name,key])=><label>{t(key)}
-          <input type={["total","qty","unitPrice"].includes(name)?"number":"text"}
-            step={["total","qty","unitPrice"].includes(name)?"any":undefined}
-            value={asString(quote[name])}
-            onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
-        </label>}</For>
+        <For each={fields}>{([name,key])=>{
+          const refusal=name==="currency"?ui.fieldErrors.find((error)=>error.field==="sourcing.quotes."+index+".currency"):undefined
+          const described=refusal?"sf-u12-currency-"+index:undefined
+          return <>
+            <label>{t(key)}
+              <input type={["total","qty","unitPrice"].includes(name)?"number":"text"}
+                step={["total","qty","unitPrice"].includes(name)?"any":undefined}
+                value={asString(quote[name])}
+                aria-invalid={refusal?"true":undefined}
+                aria-describedby={described}
+                onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
+            </label>
+            <Show when={refusal}>
+              <span id={described}>{refusal?.message}</span>
+            </Show>
+          </>
+        }}</For>
         <label>{t("sf.u12.quoteSupplierId")}
           <select value={quote.supplierId??""}
             onChange={(event)=>updateQuote(index,"supplierId",event.currentTarget.value||null)}>
@@ -782,7 +797,35 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           <header class="sf-u12-heading">
             <h2>{request()?.pr?.title??t("sf.u12.requestTitle")}</h2>
             <p>{t("sf.u12.stage")}: {request()?.status} · {t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
+            <Show when={request()?.requestSummary}>
+              <p data-request-summary={request()?.number}>{request()?.requestSummary}</p>
+            </Show>
+            <Show when={request()?.moneySentence}>
+              <p data-request-money={request()?.number}>{request()?.moneySentence}</p>
+            </Show>
           </header>
+          <Show when={request()?.status==="sourcing"||request()?.po}>
+            <section>
+              <Show when={request()?.po}>
+                <fieldset disabled>
+                  <label>{t("sf.u12.quoteSupplier")}
+                    <input type="text" value={request()?.po?.supplier??""} disabled/>
+                  </label>
+                  <label>{t("sf.u12.quoteCurrency")}
+                    <input type="text" value={request()?.po?.currency??""} disabled/>
+                  </label>
+                  <label>{t("sf.u12.quotePrice")}
+                    <input type="number" step="any" value={asString(request()?.po?.lines?.[0]?.unitPrice)} disabled/>
+                  </label>
+                </fieldset>
+              </Show>
+              <Show when={request()?.poEstimate}><p role="status">{request()?.poEstimate}</p></Show>
+              <Show when={request()?.orderDifference}><p role="status">{request()?.orderDifference}</p></Show>
+              <Show when={request()?.status==="sourcing"}>
+                <button type="button" disabled>{language.t("sf.u11.remaining.submitPo")}</button>
+              </Show>
+            </section>
+          </Show>
           <div class="sf-u12-switch">
             <button type="button" aria-pressed={ui.stage==="sourcing"} class="mx-btn"
               onClick={()=>setUi("stage","sourcing")}>{t("sf.u12.sourcing")}</button>
