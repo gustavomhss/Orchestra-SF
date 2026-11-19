@@ -85,3 +85,10 @@ Estado: partial
 - Gates ingress12 44584522510, WP2 44584527788, Reports5 44584532213 e Operations44584656842 não executaram navegador: CLI passou, app typecheck falhou em sources.tsx (Schema.Schema serviços desconhecidos) e CAP19 setters readonly. Correção de tipo e validação do próprio codec no ingresso7fe991b0ec6679d97bfa795eac5f45998591521f; próxima composição usa esse código.
 
 - Follow de Budget: a CAP03 formata o valor com Intl.NumberFormat. O helper confere separadamente o GET original 200/statusok, selection.year e data.totals.totalForecast numérico (1400), e a apresentação inglesa exata (1,400), em vez de esperar texto sem o separador de milhar. A releitura preservada continua idêntica; não recalcula finanças.
+
+### Continuação C05 — 2026-11-19
+
+- Revisão estática encontrou perda da preparação de confirmação: submitIntent limpa ui.prepared antes de finish comparar o recibo original. O Intent de confirmação agora conserva a preparação exata inspecionada pelo operador; finish usa esse valor, mantendo answerRef/observedVersion e a releitura original.
+- O controle de inspeção usa botão explícito + Show, preservando os dois JSON originais e os mesmos rótulos. Retirado o details/summary preexistente para respeitar a restrição do console descomissionado.
+- Asserções removidas: nenhuma. Sem alteração de retries, idempotência, timeout, permissões ou produtor.
+- Gate Reports6 usa snapshot ac233ca04fcc609301673c7ce27667d53bd0ec0d anterior a esta correção; serve para revelar os próximos bloqueios reais. A confirmação C05 deste commit ainda exige sua prova no mesmo reports.spec.ts.
