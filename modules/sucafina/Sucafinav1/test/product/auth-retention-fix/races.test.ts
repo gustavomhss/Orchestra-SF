@@ -146,6 +146,12 @@ test("hung refresh admissions remain bounded across expired and collected sessio
     await within(f.identity.prepare(f.request("/planner", fourth.sessionCookie)))
     expect(refreshRequests).toBe(3)
     expect(await f.identity.person(f.request("/planner", fourth.sessionCookie))).not.toBeNull()
+    // Capacity returns only when the original I/O settles, not when its durable row is collected.
+    for (const gate of gates) gate.release()
+    await within(Promise.all(pending))
+    await within(f.identity.prepare(f.request("/planner", fourth.sessionCookie)))
+    expect(refreshRequests).toBe(4)
+    expect(await f.identity.person(f.request("/planner", fourth.sessionCookie))).not.toBeNull()
   } finally {
     for (const gate of gates) gate.release()
     await within(Promise.allSettled(pending))

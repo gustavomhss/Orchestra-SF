@@ -76,11 +76,20 @@ test("T8: 303 to root never widens the operator's path-scoped cookie or authenti
 test("T8: no session / eight-hour expiry / durable logout all stay 401; wrong Origin stays 403", async () => {
   const f = await fixture()
   try {
-    const page = (cookie?: string) => new Request(origin + mount + "/dashboard", {
+    // The original JSON export remains protected after the HTML console is retired.
+    const page = (cookie?: string) => new Request(origin + mount + "/dashboard?download=json", {
       headers: cookie ? { cookie } : undefined,
     })
-    expect((await f.module(page()))?.status).toBe(401)
+    const anonymous = await f.module(page())
+    expect(anonymous?.status).toBe(401)
+    expect(await anonymous!.text()).toBe("Authentication required")
     const first = await f.enroll()
+    const legacy = await f.module(new Request(origin + mount + "/dashboard", { headers: { cookie: first.cookie } }))
+    expect(legacy?.status).toBe(404)
+    expect(await legacy!.text()).toBe("legacy console decommissioned — use /")
+    const authorized = await f.module(page(first.cookie))
+    expect(authorized?.status).toBe(200)
+    expect(authorized?.headers.get("content-type")).toContain("application/json")
     const csrf = new Request(origin + mount + "/dashboard", {
       method: "POST", headers: { cookie: first.cookie, origin: "https://untrusted.example" },
       body: "{}",
@@ -88,7 +97,9 @@ test("T8: no session / eight-hour expiry / durable logout all stay 401; wrong Or
     expect((await f.module(csrf))?.status).toBe(403)
     f.clock.value += 28_800_000
     expect(await f.identity.person(page(first.cookie))).toBeNull()
-    expect((await f.module(page(first.cookie)))?.status).toBe(401)
+    const expired = await f.module(page(first.cookie))
+    expect(expired?.status).toBe(401)
+    expect(await expired!.text()).toBe("Authentication required")
 
     const next = await f.enroll()
     const logout = (headerOrigin: string) => f.identity.handle(new Request(origin + mount + "/auth/logout", {
@@ -100,7 +111,9 @@ test("T8: no session / eight-hour expiry / durable logout all stay 401; wrong Or
     expect(loggedOut?.status).toBe(204)
     expect(loggedOut?.headers.getSetCookie()[0]).toContain("Path=/sucafina;")
     expect(loggedOut?.headers.getSetCookie()[0]).toContain("Max-Age=0")
-    expect((await f.module(page(next.cookie)))?.status).toBe(401)
+    const revoked = await f.module(page(next.cookie))
+    expect(revoked?.status).toBe(401)
+    expect(await revoked!.text()).toBe("Authentication required")
   } finally { await f.dispose() }
 })
 
