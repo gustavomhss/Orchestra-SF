@@ -122,6 +122,22 @@ const request = (actor = actorId, mode?: string, payload?: unknown, key: string 
     ...(payload === undefined ? {} : { body: JSON.stringify(payload) }),
   })
 }
+// The original C12 fixture retains this authorized period for subsequent case
+// evidence reads. C02's request-scoped page period alone cannot admit withCase.
+const selectionPayload = { purpose: "work-selection", period: { start: "2026-01-01", end: "2026-12-31" } }
+const selectionDigest = digestSfValue(selectionPayload)
+const selectionCall = await authority.ui.admit(request(), "sf_work_list", selectionDigest)
+if (selectionCall.status !== "ok") throw new Error("C12_ORIGINAL_SELECTION_ADMISSION_FAILED")
+try {
+  if (!await authority.ui.validate(selectionCall.value, "sf_work_list", selectionDigest))
+    throw new Error("C12_ORIGINAL_SELECTION_AUTHORITY_CHANGED")
+  const selection = await authority.procurementSelections?.create(selectionCall.value, selectionPayload.period)
+  if (!selection || selection.status !== "ok" || !selection.value.selectionRef ||
+      digestSfValue(selection.value.period) !== digestSfValue(selectionPayload.period))
+    throw new Error("C12_ORIGINAL_SELECTION_UNAVAILABLE")
+} finally {
+  authority.ui.finish(selectionCall.value)
+}
 const http = async (mode: string, payload: unknown, actor = actorId, key: string = randomUUID()) => {
   const response = await installation.application(request(actor, mode, payload, key))
   if (!response) throw new Error("C12_ORIGINAL_HTTP_NOT_MOUNTED")
