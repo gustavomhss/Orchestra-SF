@@ -55,7 +55,7 @@ export async function createDashboardProofFixture() {
     const environment = async (request: Request) => ({ at: clock.at, id: randomUUID, directory: (await Promise.all(identities.map((entry) => entry.identity.directory(request)))).flat() })
     const authority = createSfProductAuthority({ identity: () => binding,
       installationId, origin, policyVersion: "dashboard67-policy", persistence, authenticate, environment, now: Date.now, createId: randomUUID,
-      isAuthenticated: async (request) => (await Promise.all(identities.map((entry) => entry.identity.authenticate(request)))).filter((value) => value !== null).length === 1,
+      isAuthenticated: async (request) => (await Promise.all(identities.map((entry) => entry.identity.person(request)))).filter((value) => value !== null).length === 1,
       commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() :
         request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
