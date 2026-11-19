@@ -6,6 +6,7 @@ import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
 import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
+import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
@@ -25,7 +26,7 @@ import { createPortfolioPort } from "../../../product/portfolio/port.ts"
 import { portfolioEvaluationDigest, preparePortfolioChoice } from "../../../product/portfolio/handoff.ts"
 import type { PortfolioHost } from "../../../product/portfolio/port.ts"
 
-test("portfolio handoff records a human choice against C08, prepares two changes, and resumes application without repeating a receipt", async () => {
+for (const failurePoint of ["before-dispatch", "after-reservation"] as const) test(`C08 portfolio handoff preserves original intent and receipts with ${failurePoint} unavailability`, async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-portfolio-handoff-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -171,7 +172,7 @@ test("portfolio handoff records a human choice against C08, prepares two changes
       authorizeReceipt: async (receipt, request) => receipt.targetIncarnation === request.targetIncarnation && receipt.commandDigest === request.commandDigest,
       confirmHuman: async (request, change, context) => confirmations.apply && !!reviewDigestFor(context, request, change),
       resolveActor: () => ({ id: "principal", roles: ["finance", "buyer"], canWrite: true }),
-      resolveMutation: (_snapshot, change): PreparedDomainMutation | undefined => change.target.surface === "procurement" && domain.procurementFails ? undefined : ({
+      resolveMutation: (_snapshot, change): PreparedDomainMutation | undefined => failurePoint === "after-reservation" && change.target.surface === "procurement" && domain.procurementFails ? undefined : ({
         surface: change.target.surface, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest, expectedVersion: change.expectedVersion,
         execute: (snapshot): ReturnType<PreparedDomainMutation["execute"]> => {
           if (snapshot.versions.wp13Amount?.version !== change.expectedVersion) return { commit: false, value: { status: "conflict" } }
@@ -191,6 +192,7 @@ test("portfolio handoff records a human choice against C08, prepares two changes
       const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)
       const digest = change && reviewDigestFor(context, request, change)
       if (!change || !digest) return { status: "unavailable", reason: "review-producer-unavailable" }
+      if (failurePoint === "before-dispatch" && change.target.surface === "procurement" && domain.procurementFails) return { status: "unavailable", reason: "supplier-system-unavailable" }
       const version = await store.transaction(change.target.surface, async (snapshot) => ({ commit: false, value: snapshot.versions.wp13Amount?.version }))
       return version === change.expectedVersion ? { status: "ok", value: { reviewDigest: digest } } : { status: "stale", reason: "review-source-changed" }
     }, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => confirmations.apply, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
@@ -221,7 +223,8 @@ test("portfolio handoff records a human choice against C08, prepares two changes
     expect(digestSfValue(afterFirst.value.case.choices[0])).toBe(digestSfValue(choice))
     expect(await execution(firstRequest, binding)).toEqual(firstExecution)
     expect(domain.plannerCalls).toBe(1)
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: afterFirst.value.case.version }, changeId: secondChange.id, choiceId: choice.id }, binding)).status).toBe("unavailable")
+    const secondAttemptRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: afterFirst.value.case.version }, changeId: secondChange.id, choiceId: choice.id }
+    expect((await execution(secondAttemptRequest, binding)).status).toBe("unavailable")
     const partial = await cases.read({ caseRef: caseSelector }, binding)
     expect(partial.status).toBe("ok")
     if (partial.status !== "ok") return
@@ -230,9 +233,34 @@ test("portfolio handoff records a human choice against C08, prepares two changes
     expect(partial.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "planned"])
     expect(domain.procurementCalls).toBe(0)
     expect(await amounts()).toEqual([40, 50])
+    const reserved = await state.read(admittedRequest, "cases", (productState) => applicationAttempts(productState, secondAttemptRequest))
+    expect(reserved.status).toBe("ok")
+    if (reserved.status !== "ok") throw new Error("application reservation unavailable")
+    expect(reserved.value).toHaveLength(failurePoint === "after-reservation" ? 1 : 0)
     domain.procurementFails = false
     expect(await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
     expect(await execution(firstRequest, binding)).toEqual(firstExecution)
+    if (failurePoint === "after-reservation") {
+      // Once dispatch was reserved, a recovered provider and no receipt do not
+      // authorize another application. Preserve the real indeterminate tail.
+      const readBlocked = () => state.read(admittedRequest, "cases", (productState) => ({
+        decision: productState.cases[decision.id],
+        attempts: applicationAttempts(productState, secondAttemptRequest),
+        receipts: Object.values(productState.receipts),
+      }))
+      const beforeBlocked = await readBlocked()
+      expect(beforeBlocked.status).toBe("ok")
+      if (beforeBlocked.status !== "ok") throw new Error("indeterminate state unavailable")
+      expect(beforeBlocked.value.attempts).toHaveLength(1)
+      expect(beforeBlocked.value.receipts).toHaveLength(1)
+      expect(await execution(secondAttemptRequest, binding)).toEqual({ status: "unavailable", reason: "application-indeterminate-reconciliation-required" })
+      expect(await execution(secondAttemptRequest, binding)).toEqual({ status: "unavailable", reason: "application-indeterminate-reconciliation-required" })
+      expect(await readBlocked()).toEqual(beforeBlocked)
+      expect(domain.plannerCalls).toBe(1)
+      expect(domain.procurementCalls).toBe(0)
+      expect(await amounts()).toEqual([40, 50])
+      return
+    }
     const beforeResume = await cases.read({ caseRef: caseSelector }, binding)
     if (beforeResume.status !== "ok") throw new Error("case unavailable after first retry")
     const secondRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: beforeResume.value.case.version }, changeId: secondChange.id, choiceId: choice.id }
