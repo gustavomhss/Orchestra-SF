@@ -9,6 +9,7 @@ import type { DashboardSourceHost } from "./port.ts"
 import type { DomainProjection, Period, SourceRef } from "../contracts/context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
+import { dashboardRecordIssuanceReader } from "../integration/dashboard-sources.ts"
 
 export function dashboardSourceSelector(incarnation: string, version: number) {
   return `sf-source:${encodeURIComponent(incarnation)}:${version}`
@@ -144,9 +145,24 @@ export function createDashboardRecordEvidenceHost(input: {
       }),
     issue: async (selection: { page: string; recordType: string; recordId: string; fields: readonly string[]; period: Period }, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
       if (!selection || typeof selection.page !== "string" || !selection.page || typeof selection.recordType !== "string" || !selection.recordType || typeof selection.recordId !== "string" || !selection.recordId || !Array.isArray(selection.fields) || !selection.fields.length || selection.fields.some((field) => typeof field !== "string" || !field) || new Set(selection.fields).size !== selection.fields.length || !isSfPeriod(selection.period)) return { status: "needs-input", reason: "invalid-source-selection" }
-      const issued = await input.issueRecord(selection, context).catch(() => undefined)
+      const issueRecord = input.issueRecord
+      const read = dashboardRecordIssuanceReader(issueRecord, input.host, input.scopedSources)
+      const request = read && input.host.requestFor(context), lease = context.lease
+      const binding = digestSfValue([context.kind, context.binding]), selectionDigest = digestSfValue(selection)
+      const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+      const completed = read && await read(selection, context).catch(() => undefined)
+      const issued = read ? completed?.issued : await issueRecord(selection, context).catch(() => undefined)
       if (!issued || issued.source.surface !== "dashboard" || issued.source.type !== selection.recordType || issued.source.id !== selection.recordId || digestSfValue([...issued.source.fields].sort()) !== digestSfValue([...selection.fields].sort()) || digestSfValue(issued.source.period) !== digestSfValue(selection.period) || object(issued.scope.selector).page !== selection.page) return { status: "denied", reason: "source-unavailable" }
-      const resolved = await resolve(dashboardSourceSelector(issued.source.incarnation, issued.source.version), context)
+      // Only the original factory and its exact host/source pair can complete
+      // this path. A substituted issuer still goes through resolveCurrent.
+      if (read && (!completed || !request || request.signal.aborted || input.host.requestFor(context) !== request || context.lease !== lease ||
+        input.issueRecord !== issueRecord || dashboardRecordIssuanceReader(issueRecord, input.host, input.scopedSources) !== read ||
+        digestSfValue([context.kind, context.binding]) !== binding || digestSfValue(selection) !== selectionDigest ||
+        digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) !== requestDigest))
+        return { status: "stale", reason: "source-or-authority-changed" }
+      const resolved: PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>> = completed
+        ? { status: "ok", value: structuredClone(completed.evidence) }
+        : await resolve(dashboardSourceSelector(issued.source.incarnation, issued.source.version), context)
       if (resolved.status !== "ok") return resolved
       if (resolved.value.target.recordType !== selection.recordType || resolved.value.target.recordId !== selection.recordId || digestSfValue(resolved.value.target.fields) !== digestSfValue([...selection.fields].sort()) || digestSfValue(resolved.value.target.period) !== digestSfValue(selection.period)) return { status: "stale", reason: "source-or-authority-changed" }
       return resolved

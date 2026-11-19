@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test"
 import { rows } from "../../../runtime/contract.ts"
+import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
+import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
 import { available, createRelationsFixture } from "./relations-fixture.ts"
 
 test("record projection stays inside two independent canonical source observations", async () => {
@@ -79,6 +81,120 @@ test("record projection refuses a borrowed final source mutated by final revalid
     }
     const result = await fixture.records.read(source.refId, fixture.read)
     expect(observed).toHaveLength(2)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+
+test("record issuance uses two canonical observations and equivalent wrappers retain four", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const selection = { page: "Portfolio Dashboard", recordType: "projects", recordId: "project",
+      fields: ["status", "name"], period: fixture.period }
+    const read = fixture.persistence.readScopedSource, resolve = fixture.persistence.resolveScopedSource
+    const counts = { read: 0, resolve: 0 }
+    fixture.persistence.readScopedSource = async (...args) => { counts.read++; return read(...args) }
+    fixture.persistence.resolveScopedSource = async (...args) => { counts.resolve++; return resolve(...args) }
+    const direct = available(await fixture.records.issue(selection, fixture.read))
+    expect(counts).toEqual({ read: 2, resolve: 0 })
+    const issuer = createDashboardRecordSourceIssuer({ host: fixture.host, scopedSources: fixture.persistence })
+    const wrapped = createDashboardRecordEvidenceHost({ host: fixture.host, scopedSources: fixture.persistence,
+      issueRecord: (...args) => issuer(...args) })
+    counts.read = 0; counts.resolve = 0
+    expect(available(await wrapped.issue(selection, fixture.read))).toEqual(direct)
+    expect(counts).toEqual({ read: 4, resolve: 2 })
+    const otherHost = createDashboardRecordEvidenceHost({ host: { ...fixture.host }, scopedSources: fixture.persistence, issueRecord: issuer })
+    counts.read = 0; counts.resolve = 0
+    expect(available(await otherHost.issue(selection, fixture.read))).toEqual(direct)
+    expect(counts).toEqual({ read: 4, resolve: 2 })
+  } finally { await fixture.dispose() }
+})
+
+for (const fault of ["source", "access", "request", "headers", "lease", "selection"] as const)
+test("record issuance refuses " + fault + " drift between its independent observations", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const selection = { page: "Portfolio Dashboard", recordType: "projects", recordId: "project",
+      fields: ["name"], period: fixture.period }
+    // A host-owned mutable alias lets the test isolate the producer's lease pin;
+    // the normal UI admission itself already freezes its context.
+    const context = fault === "lease" ? { ...fixture.read } : fixture.read
+    if (fault === "lease") {
+      const requestFor = fixture.host.requestFor, revalidate = fixture.host.revalidate
+      fixture.host.requestFor = (candidate) => requestFor(candidate === context ? fixture.read : candidate)
+      fixture.host.revalidate = (candidate) => revalidate(candidate === context ? fixture.read : candidate)
+    }
+    const environment = fixture.host.environment
+    let changed = false
+    fixture.host.environment = async (request) => {
+      const value = await environment(request)
+      if (!changed) {
+        changed = true
+        if (fault === "source") await fixture.persistence.transaction("dashboard", async (snapshot) => {
+          rows(snapshot.data.projects).find((row) => row.id === "project")!.name = "Changed during issuance"
+          return { commit: true, value: undefined }
+        })
+        if (fault === "access") fixture.gate.dashboard = false
+        if (fault === "request") fixture.host.requestFor = () => new Request(request.url, { method: request.method, headers: request.headers })
+        if (fault === "headers") request.headers.set("actor", "another-person")
+        if (fault === "lease") Reflect.set(context, "lease", {})
+        if (fault === "selection") selection.fields.push("status")
+      }
+      return value
+    }
+    const result = await fixture.records.issue(selection, context)
+    expect(changed).toBe(true)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+for (const borrowed of [0, 1] as const)
+test("record issuance rejects borrowed observation " + borrowed + " mutated by the consumer's final authority check", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const read = fixture.persistence.readScopedSource
+    const observed: NonNullable<Awaited<ReturnType<typeof read>>>[] = []
+    fixture.persistence.readScopedSource = async (...args) => {
+      const value = await read(...args)
+      if (value) observed.push(value)
+      return value
+    }
+    const revalidate = fixture.host.revalidate
+    let finalChecks = 0
+    fixture.host.revalidate = async (context) => {
+      const allowed = await revalidate(context)
+      if (observed.length === 2 && ++finalChecks === 2)
+        Reflect.set(observed[borrowed]!.projection as object, "name", "Changed after the consumer reauthenticated")
+      return allowed
+    }
+    const result = await fixture.records.issue({ page: "Portfolio Dashboard", recordType: "projects",
+      recordId: "project", fields: ["name"], period: fixture.period }, fixture.read)
+    expect(observed).toHaveLength(2)
+    expect(finalChecks).toBe(2)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+test("record issuance does not publish a factory observation after issuer substitution", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const issueRecord = createDashboardRecordSourceIssuer({ host: fixture.host, scopedSources: fixture.persistence })
+    const input = { host: fixture.host, scopedSources: fixture.persistence, issueRecord }
+    const records = createDashboardRecordEvidenceHost(input)
+    const environment = fixture.host.environment
+    let changed = false
+    fixture.host.environment = async (request) => {
+      const value = await environment(request)
+      changed = true
+      input.issueRecord = (...args) => issueRecord(...args)
+      return value
+    }
+    const result = await records.issue({ page: "Portfolio Dashboard", recordType: "projects",
+      recordId: "project", fields: ["name"], period: fixture.period }, fixture.read)
+    expect(changed).toBe(true)
     expect(result.status).not.toBe("ok")
     expect(result).not.toHaveProperty("value")
   } finally { await fixture.dispose() }
