@@ -1,6 +1,8 @@
 import { createHash, randomUUID } from "node:crypto"
 import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
+import { Schema } from "effect"
+import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import type { APIResponse, Locator, Page, Response, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
@@ -98,17 +100,36 @@ export async function importJourney(page: Page, info: TestInfo) {
     void response.catch(() => undefined)
     return response
   }
+  const beforeVersionsResponse = await page.request.get(account.baseURL + "/api/ui/pages/CAP23")
+  expect(beforeVersionsResponse.status()).toBe(200)
+  const beforeVersions = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await beforeVersionsResponse.json())
+  expect(beforeVersions.status).toBe("ok")
+  if (beforeVersions.status !== "ok") throw new Error("The installed Planner versions were not admitted")
   expect((await page.goto("/orchestra/sf-planner/versions/new"))?.status()).toBe(200)
   const surface = page.locator('[data-sf-surface="CAP23"]')
   const created = await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }))
   expect(created.response.request().postDataJSON()).toMatchObject({ page: "Versions", action: "save", confirmed: true, values: {} })
   expect(created.response.request().postDataJSON().id).toBeUndefined()
+  await expect(page.locator('[data-component="sf-change-review"]')).toHaveCount(0)
+  const afterVersionsResponse = await page.request.get(account.baseURL + "/api/ui/pages/CAP23")
+  expect(afterVersionsResponse.status()).toBe(200)
+  const afterVersions = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await afterVersionsResponse.json())
+  expect(afterVersions.status).toBe("ok")
+  if (afterVersions.status !== "ok") throw new Error("The installed Planner readback was not admitted")
+  const inserted = afterVersions.value.data.versions.filter((record) =>
+    !beforeVersions.value.data.versions.some((before) => before.id === record.id))
+  expect(inserted).toHaveLength(1)
+  const persisted = inserted[0]!
+  const version = persisted.id
+  expect((await page.goto("/orchestra/sf-planner/versions?" + new URLSearchParams({ year: String(persisted.year) })))?.status()).toBe(200)
+  const insertedRow = page.locator(`tr[data-sf-row="${version}"]`)
+  await expect(insertedRow).toHaveCount(1)
+  await expect(insertedRow.locator(".sf-s01-cell-value")).toHaveText(persisted.name)
+  await insertedRow.locator('button[data-sf-action="select"]').click()
   const versionDetail = page.locator("[data-sf-record-detail]")
   await expect(versionDetail).toHaveCount(1)
   const identity = versionDetail.locator("p.sf-s01-secondary bdi")
-  await expect(identity).toHaveText(/\S+/)
-  const version = (await identity.innerText()).trim()
-  expect(created.body.value).toBe(version)
+  await expect(identity).toHaveText(version)
   const year = versionDetail.locator("#sf-u46-year")
   await expect(year).toHaveValue(/^\d{4}$/)
   const nameField = versionDetail.locator("#sf-u46-name")
