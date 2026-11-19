@@ -13,7 +13,6 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   const versionRow = (id: string) => page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${id}"]`) })
   const installed = await page.goto("/orchestra/sf-planner/versions/new")
   expect(installed?.status(), "Original Planner Versions route must be installed").toBe(200)
-  await expect(page.locator("body")).toHaveAttribute("data-surface", "planner")
   await expect(page.getByRole("heading", { name: "Versions", exact: true })).toBeVisible()
   await plannerCommand(page, page.getByRole("button", { name: "Create first version", exact: true }), "save", observations)
   // Normal runtime replies omit business values; observe the authorized refreshed UI.

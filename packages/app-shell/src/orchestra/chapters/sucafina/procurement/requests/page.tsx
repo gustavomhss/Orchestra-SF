@@ -1,4 +1,5 @@
 import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
+import { Dynamic } from "solid-js/web"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
@@ -692,6 +693,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       </Show>
       <Show when={activePr() && (creating() || isPrWritable(current!))}>
         <section class="sf-u11-stage" data-stage="pr">
+          <Dynamic component={creating() ? "form" : "div"}
+            {...(creating() ? { "data-command": "create", "data-page": "Requests", "data-record": "", "data-version": "0" } : {})}>
           <Show when={current && !creating()}>
             <p>{t("sf.u11.remaining.noTitleMutation")}: {current?.pr?.title ?? ""}</p>
             {/* The W19 title editor is a separate source-locked intent/draft. */}
@@ -720,6 +723,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
               disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
               onClick={() => prDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
           </div>
+          </Dynamic>
         </section>
       </Show>
       <Show when={current && stage() === "pr" && !canPr()}>

@@ -49,16 +49,24 @@ export function SfRequisitionForm(props: PrProps) {
         return <label class="sf-u11-field" data-field={field}>
           <span>{label()}</span>
           <Show when={field === "recurring"} fallback={
-            <Show when={field === "description" || field === "justification"} fallback={
-              <input type={field === "needBy" ? "date" :
-                field === "estAmount" || field === "estAnnual" ? "number" : "text"}
-                step={field === "estAmount" || field === "estAnnual" ? "any" : undefined}
-                required={props.creating && field === "title"}
-                value={textValue(value())}
-                onInput={(event) => edit(field, (field === "estAmount" || field === "estAnnual") && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
+            <Show when={field === "type" && props.creating} fallback={
+              <Show when={field === "description" || field === "justification"} fallback={
+                <input name={`pr.${field}`} type={field === "needBy" ? "date" :
+                  field === "estAmount" || field === "estAnnual" ? "number" : "text"}
+                  step={field === "estAmount" || field === "estAnnual" ? "any" : undefined}
+                  required={props.creating && field === "title"}
+                  value={textValue(value())}
+                  onInput={(event) => edit(field, (field === "estAmount" || field === "estAnnual") && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
+              }>
+                <textarea name={`pr.${field}`} rows={3} value={textValue(value())}
+                  onInput={(event) => edit(field, event.currentTarget.value)} />
+              </Show>
             }>
-              <textarea rows={3} value={textValue(value())}
-                onInput={(event) => edit(field, event.currentTarget.value)} />
+              <select name="pr.type" value={textValue(value())} onChange={(event) => edit("type", event.currentTarget.value)}>
+                <option value="">Choose…</option>
+                <option value="product">product</option>
+                <option value="service">service</option>
+              </select>
             </Show>
           }>
             <input type="checkbox" checked={value() === true || value() === "true" || value() === "on"}

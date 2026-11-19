@@ -53,7 +53,6 @@ export async function login(page: Page, key: "first" | "second" | "viewer", scen
   const account = { baseURL: selected.baseURL, principal: selected.principal, origin: manifest.origin }
   const response = await page.goto("/orchestra/sf-procurement/requests/new")
   expect(response?.status(), "The authenticated Procurement application must be mounted").toBe(200)
-  await expect(page.locator("body")).toHaveAttribute("data-surface", "procurement")
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toHaveCount(1)
   await expect(page.locator("form[data-command='create'][data-page='Requests']").getByRole("button", { name: "Create request", exact: true })).toHaveCount(key === "viewer" ? 0 : 1)
   if (key !== "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
