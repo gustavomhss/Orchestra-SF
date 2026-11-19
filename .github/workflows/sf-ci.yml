@@ -365,6 +365,10 @@ jobs:
       SF_SHARD_INDEX: ${{ matrix.shard }}
       SF_SHARD_COUNT: "8"
       ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+      # Same owner label the static job already passes. The in-suite
+      # check:guards reads this env. Without it the shard fails a finding
+      # the approved PR gate has already cleared.
+      GUARDRAIL_APPROVED: ${{ contains(github.event.pull_request.labels.*.name, 'guardrail-approved') && 'protected-paths' || '' }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
