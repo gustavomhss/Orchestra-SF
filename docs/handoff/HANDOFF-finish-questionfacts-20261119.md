@@ -1,6 +1,6 @@
 # Handoff — finish-questionfacts-20261119
 
-SHA: 350dfc1bf332fcf1806813231c4aec8a3a45440f (base; o commit deste handoff contém a alteração proposta)
+SHA: 19aa402fb17b2656f7de0514ff24cb5b88193467 (código qualificado; este commit acrescenta somente a evidência)
 Data: 2026-11-19
 Estado: partial
 
@@ -11,7 +11,7 @@ Estado: partial
 - Acrescentadas igualdades da descrição integral do cenário, sourceRefs, evaluatedSourceRefs, basisId/basisVersion, moeda e horizonte. As condições são exatamente o aviso agregado do comparador e a pendência humana de training.
 
 ## Pendente
-- Gate das duas unidades que consomem esses helpers: ainda não executado; a alteração será submetida à revisão concreta antes da Actions.
+- Nenhum pendente nos dois consumidores qualificados. O caso Planner separado continua unbound pelas razões abaixo.
 - Planner answer scope: `apps/cli/src/sucafina-product/business-services.ts:205` não fornece resolveAnswerScope; `product/collaboration/host.ts:262-266` tem fallback somente Dashboard e exige fields exatos do ref.
 - O callback simples não basta: `product/integration/planner-sources.ts:23` emite as chaves da projeção inteira, enquanto `product/planner/confirmation.ts:22` só admite fields [summary]. Não foi publicado um callback incapaz de satisfazer esse contrato, nem afrouxada a igualdade.
 - `test/product/wp12/native-execution-questions.test.ts:340` permanece unbound até existir leitura de resposta Planner com prova canônica do escopo. Produtor/capacidade ainda sem ligação compatível; não é autorizado inventar sourceRef, digest, confirmação ou readiness.
@@ -23,11 +23,13 @@ Estado: partial
 
 ## Como retomar
 1. Ler o diff desta branch e revisar as duas substituições com os produtores citados.
-2. Criar snapshot test-ci dos arquivos native-execution-dashboard-answer.test.ts e native-execution-question-handoff.test.ts.
-3. Registrar run/resultado e resolver a ligação Planner separadamente; não enfraquecer o contrato de confirmação.
+2. Integrar os dois arquivos de unidade qualificados pelo run 44602006474.
+3. Resolver a ligação Planner separadamente; não enfraquecer o contrato de confirmação ou substituir fields do ref original.
 
 ## Comandos e resultados
 - Auditoria original [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131), shard 7 job 135778309477: FAILURE; expectativas antigas de cenário e leitura Planner observadas como falhas.
 - `bun run typecheck`: não rodado neste recorte.
 - `bun run check:guards --base origin/dev`: não rodado neste recorte.
-- test-ci: ainda não rodado nesta alteração; nenhum resultado de qualificação afirmado.
+- test-ci [44602006474](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44602006474): SUCCESS, 2 pass / 0 fail / 243 expect. Snapshot `2bed9f802eb1f921252a59fb665e3453b87b0346`, pai `19aa402fb17b2656f7de0514ff24cb5b88193467`; job `135835605438`, cleanup `135839919351` SUCCESS.
+- Pedido: `{"package":"sucafina","runner":"bun","args":["Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts","Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts"]}`. Timeouts originais mantidos; consumidores reais concluídos em 162.12 s e 155.87 s.
+- O run não executou native-execution-questions.test.ts, não publicou comprovação de inferência nativa quando nenhum modelo estava configurado e não declara GO.
