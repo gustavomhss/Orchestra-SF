@@ -28,7 +28,7 @@ jobs:
           for name, expected in manifest['artifacts'].items():
               source = (path.parent / name).resolve()
               source.relative_to(root)
-              observed = hashlib.sha256(source.read_bytes()).hexdigest()
+              observed = hashlib.sha256(source.read_bytes()).hexdigest() if source.is_file() else None
               observations.append({'path': str(source.relative_to(root)), 'expected': expected, 'observed': observed, 'matches': observed == expected})
           result = {'schema': 'sf-contract-byte-observation-v1', 'candidate': os.environ['CHECKED_SHA'], 'workflowRun': os.environ['GITHUB_RUN_ID'], 'originalRevision': manifest['revision'], 'originalManifestSha256': hashlib.sha256(manifest_bytes).hexdigest(), 'observations': observations, 'qualification': 'Read-only byte observation. No manifest, baseline, coverage or acceptance status was changed.'}
           target = pathlib.Path(os.environ['RUNNER_TEMP'])

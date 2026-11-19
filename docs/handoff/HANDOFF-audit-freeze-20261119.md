@@ -22,4 +22,5 @@ Ler o run deste workflow e o JSON gerado. Só avaliar eventual atualização de 
 
 ## Comandos e resultados
 - Auditoria44585817131: FAILURE em contract-freeze.test.ts:19.
-- Observação desta fatia: pendente.
+- [44595632264](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44595632264): FAILURE de observação, pois baseline-decisions.md listado no manifesto está ausente. A leitura agora registra explicitamente arquivos ausentes, sem considerá-los equivalentes ou alterar o teste.
+- Próxima observação: pendente.
