@@ -240,7 +240,8 @@ function MountedSurface(props: Readonly<{
         await handle.reload()
       }
     } catch (error) {
-      console.warn("Sucafina sign-out failed", error instanceof Error ? error.name : "unknown")
+      console.warn("Sucafina sign-out failed", error instanceof Error && /^SF_NATIVE_[A-Z_]+$/.test(error.message)
+        ? error.message : error instanceof Error ? error.name : "unknown")
       setAuthFailed(true)
     } finally { setAuthBusy(false) }
   }
