@@ -116,6 +116,7 @@ export type CreateSfHostRuntime = (input: {
   nativeReadBinding?: (operationId:
     | "projection.review" | "dashboard.dashboard-review"
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"
+    | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
     | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision", producer: object) => object | undefined
   nativeActions?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp,
     pages: readonly Readonly<{ surface: "dashboard" | "planner" | "procurement"; page: string }>[]) =>
