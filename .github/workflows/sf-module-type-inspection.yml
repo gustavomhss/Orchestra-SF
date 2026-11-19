@@ -1,0 +1,22 @@
+name: SF module canonical typecheck inspection
+on:
+  push:
+    branches:
+      - audit-types-20261119
+permissions:
+  contents: read
+jobs:
+  types:
+    name: Sucafina canonical types
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 540df5210f1771b00c3418c0fb1926a8e289e260
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+      - name: Canonical module typecheck
+        working-directory: modules/sucafina
+        run: bun run typecheck
