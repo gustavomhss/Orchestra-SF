@@ -137,7 +137,7 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
   expect(firstId).not.toBe(secondId)
   expect(object(object(requests[firstId]).request)).toMatchObject({ createdBy: oid, requesterName: f.provider.account.name, pr: { title: firstTitle } })
   expect(object(object(requests[secondId]).request)).toMatchObject({ createdBy: other, requesterName: f.provider.second.name, pr: { title: secondTitle } })
-  expect(created.audit.filter((entry) => entry.record.startsWith("requests:")).map((entry) => entry.who)).toEqual([oid, other])
+  expect(created.audit.map((entry) => entry.who)).toEqual(["microsoft:installation-config", oid, other])
   expect(created.audit.filter((entry) => entry.record === "bootstrap:role-map")).toEqual([expect.objectContaining({ who: "microsoft:installation-config" })])
   expect(created.audit.filter((entry) => entry.record.startsWith("requests:")).every((entry) => entry.name === f.provider.account.name)).toBe(true)
   expect(JSON.stringify(created)).not.toContain("same-synthetic@example.test")
