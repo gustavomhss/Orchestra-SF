@@ -1,11 +1,20 @@
 import { expect } from "@playwright/test"
 import type { Page, TestInfo } from "@playwright/test"
+import { object, text } from "../reports-support/model"
 
 /** Called by the real WP10 installation spec after operator enrollment; does not start or mock a service. */
 export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string; testInfo: TestInfo }) {
   const { page, origin, testInfo } = input
   const facts: Record<string, string | number | boolean> = {}
-  const query = (mode: string, extra: Record<string, string> = {}) => `${origin}/sucafina/dashboard?${new URLSearchParams({ sf: mode, page: "OPEX Detail", start: "2027-01-01", end: "2027-12-31", ...extra })}`
+  const query = (mode: "bi" | "review", extra: Record<string, string>) => {
+    if (mode === "review" && extra.sectionId) {
+      throw new Error("UNBOUND WP4: UI48 has no native sectionId deep-link binding; a whole-review URL cannot qualify the selected section.")
+    }
+    const reference = text(mode === "bi" ? extra.viewId : extra.reviewRef)
+    return (mode === "bi" ? "/orchestra/sf-bi/" : "/orchestra/sf-reviews/reviews/") +
+      "r_" + Buffer.from(reference, "utf8").toString("base64url")
+  }
+  // UNBOUND: the native BI route admits no legacy page/start/end query or data-sf-bi form.
   await page.goto(query("bi", { viewId: "BI02" }))
   const bi = page.locator("[data-sf-bi]")
   await expect(bi.getByRole("combobox", { name: "Dados para visualizar", exact: true })).toBeVisible()
@@ -51,7 +60,7 @@ export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string;
   await expect(bi.getByRole("table", { name: "Dados e referências", exact: true })).toBeVisible()
   await testInfo.attach("wp10-bi-procurement-choice.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
 
-  await page.goto(`${origin}/sucafina/dashboard?page=OPEX+Detail&year=2027`)
+  await page.goto("/orchestra/sf-dashboard/opex?year=2027")
   const navigation = page.getByRole("navigation", { name: "Business analysis", exact: true })
   await navigation.getByRole("link", { name: "Prepare review and reports", exact: true }).click()
   expect(new URL(page.url()).searchParams.get("page")).toBe("OPEX Detail")
@@ -71,31 +80,51 @@ export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string;
   expect(original.value.sections).toHaveLength(1)
   await workspace.getByRole("button", { name: "Check for updates", exact: true }).click()
   await expect(workspace.getByRole("status").filter({ hasText: /As fontes conferidas mantêm/ })).toBeVisible()
-  // Apply one actual domain edit through the existing OPEX form, then prove the saved record survives reload.
-  await page.goto(`${origin}/sucafina/dashboard?page=OPEX+Detail&year=2027`)
-  const ownerForm = page.locator('form[data-page="OPEX Detail"][data-command="save"]').first()
-  await expect(ownerForm).toBeAttached()
-  const ownerId = await ownerForm.getAttribute("data-record")
-  expect(ownerId).toBeTruthy()
+  // Edit the exact owner returned by CAP04, through its native draft and confirmation.
+  const loaded = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === origin &&
+      url.pathname === "/sucafina/api/ui/pages/CAP04" && url.searchParams.get("year") === "2027"
+  })
+  await page.goto("/orchestra/sf-dashboard/opex?year=2027")
+  const loadedResponse = await loaded
+  expect(loadedResponse.status()).toBe(200)
+  const loadedBody = object(await loadedResponse.json())
+  expect(loadedBody.status).toBe("ok")
+  const owners = object(object(loadedBody.value).data).opexOwners
+  if (!Array.isArray(owners)) throw new Error("CAP04 did not expose authorized OPEX owners")
+  const ownerIds = owners.map((owner: unknown) => text(object(owner).id)).sort()
+  expect(ownerIds.length).toBeGreaterThan(0)
+  const ownerId = ownerIds[0]!
+  const ownerRow = page.locator('tr[data-sf-row="' + ownerId + '"]')
+  await expect(ownerRow).toHaveCount(1)
+  await ownerRow.locator('button[data-sf-action="edit"]').click()
+  const ownerForm = page.locator('section.sf-budget-editor[data-sf-action="save"] form.sf-budget-form')
+  await expect(ownerForm).toHaveCount(1)
   const oldBudget = Number(await ownerForm.getByLabel("Annual budget", { exact: true }).inputValue())
   expect(Number.isFinite(oldBudget)).toBe(true)
   const newBudget = oldBudget + 120
-  await ownerForm.locator("..").getByText("Save", { exact: true }).first().click()
   await ownerForm.getByLabel("Annual budget", { exact: true }).fill(String(newBudget))
-  const [edit] = await Promise.all([
-    page.waitForResponse((response) => {
-      if (response.request().method() !== "POST" || new URL(response.url()).pathname !== "/sucafina/dashboard") return false
-      const body = response.request().postDataJSON()
-      return body?.page === "OPEX Detail" && body?.action === "save" && body?.id === ownerId
-    }),
-    ownerForm.getByRole("button", { name: "Save", exact: true }).click(),
-  ])
+  await ownerForm.getByRole("button", { name: /^(Review changes|Revisar alterações)$/ }).click()
+  const change = page.locator('[data-component="sf-change-review"]')
+  await expect(change).toHaveCount(1)
+  const edited = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    if (response.request().method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/dashboard") return false
+    const body = object(response.request().postDataJSON())
+    return body.page === "OPEX Detail" && body.action === "save" && body.id === ownerId
+  })
+  await expect(change.getByRole("button", { name: "Save", exact: true })).toBeEnabled()
+  await change.getByRole("button", { name: "Save", exact: true }).click()
+  const edit = await edited
   expect(edit.status()).toBe(200)
+  expect(object(edit.request().postDataJSON())).toMatchObject({ id: ownerId, values: { budget: newBudget } })
   expect(await edit.json()).toMatchObject({ ok: true })
+  await expect(ownerForm).toHaveCount(0)
   await page.reload()
-  const savedForm = page.locator('form[data-page="OPEX Detail"][data-command="save"]').filter({ has: page.locator('input[name="budget"]') }).first()
-  expect(await savedForm.getAttribute("data-record")).toBe(ownerId)
-  await expect(savedForm.getByLabel("Annual budget", { exact: true })).toHaveValue(String(newBudget))
+  await expect(ownerRow).toHaveCount(1)
+  await ownerRow.locator('button[data-sf-action="edit"]').click()
+  await expect(ownerForm.getByLabel("Annual budget", { exact: true })).toHaveValue(String(newBudget))
   await page.goto(query("review", { reviewRef: reference! }))
   const reopened = await (await page.request.get(`${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "review-read", reviewRef: reference! })}`)).json()
   expect(reopened).toEqual(original)
