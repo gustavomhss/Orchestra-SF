@@ -18,8 +18,39 @@ const reportPageTopics = {
 export async function prepareReview(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo, options: { removeOne?: boolean } = {}) {
   await page.goto(`/orchestra/sf-dashboard/budget?${new URLSearchParams({ year: String(corpus.year) })}`)
   const reportsEntry = page.getByRole("link", { name: "Reports and backup", exact: true })
-  await expect(reportsEntry).toBeVisible()
-  await expect(reportsEntry).toHaveAttribute("href", "/orchestra/sf-reviews/agenda")
+  try {
+    await expect(reportsEntry).toBeVisible()
+    await expect(reportsEntry).toHaveAttribute("href", "/orchestra/sf-reviews/agenda")
+  } catch (error) {
+    try {
+      const observed = await page.evaluate(() => {
+        const visible = (node: Element) => node.getClientRects().length > 0 &&
+          getComputedStyle(node).visibility !== "hidden" && !node.closest('[hidden], [aria-hidden="true"]')
+        const headings = Array.from(document.querySelectorAll("h1, h2, h3")).filter(visible)
+        const knownHeadings = ["Budget Overview", "Orchestra", "Sucafina", "Access denied", "Select a server", "Select a project", "Loading"]
+        return {
+          pathname: location.pathname,
+          visibleHeadingCount: headings.length,
+          headings: headings.slice(0, 12).map((node) => {
+            const label = node.textContent?.trim() ?? ""
+            return knownHeadings.includes(label) ? label : "[unrecognized heading omitted]"
+          }),
+          surfaces: Array.from(document.querySelectorAll("[data-sf-surface]")).filter(visible).slice(0, 12)
+            .map((node) => node.getAttribute("data-sf-surface")).filter((value) => /^(CAP|UI)\d+$/.test(value ?? "")),
+          states: Array.from(document.querySelectorAll("[data-sf-state]")).filter(visible).slice(0, 12)
+            .map((node) => node.getAttribute("data-sf-state"))
+            .filter((value) => ["loading", "ready", "partial", "stale", "conflict", "empty", "filtered-empty", "unavailable", "denied", "unauthenticated", "invalid"].includes(value ?? "")),
+        }
+      })
+      const evidence = { ...observed, reportsEntryCount: await reportsEntry.count() }
+      console.error("REPORTS_ENTRY_UNBOUND", JSON.stringify(evidence))
+      await info.attach("reports-entry-unbound", { contentType: "application/json", body: JSON.stringify(evidence) })
+    } catch {
+      // Diagnostics must never replace the original failed product assertion.
+      console.error("REPORTS_ENTRY_DIAGNOSTICS_UNAVAILABLE")
+    }
+    throw error
+  }
   await reportsEntry.click()
   const agenda = page.locator('[data-sf-surface="UI47"]')
   await expect(agenda).toBeVisible()

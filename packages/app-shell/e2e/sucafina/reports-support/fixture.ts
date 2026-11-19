@@ -1,13 +1,14 @@
 import { expect, test } from "@playwright/test"
 import { reportsCorpus } from "./corpus.ts"
 import type { ReportsCorpus } from "./corpus.ts"
-import { withReportsInstallation } from "./production-installation.ts"
+import { REPORTS_ORIGIN, withReportsInstallation } from "./production-installation.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 
 export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; corpus: ReportsCorpus } }>({
+  baseURL: REPORTS_ORIGIN,
   reports: [async ({ page }, use, info) => {
     expect(info.project.metadata.bundle, "CI-UI-REPORTS requires the existing production config").toBe("production")
-    expect(info.config.workers, "The production installer binds its fixed port 4110").toBe(1)
+    expect(info.config.workers, "The production installer binds its owned loopback origin").toBe(1)
     expect(info.project.retries, "Do not retry a Reports journey containing mutations").toBe(0)
     const corpus = reportsCorpus()
     await withReportsInstallation({

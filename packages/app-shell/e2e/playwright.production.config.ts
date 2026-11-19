@@ -8,6 +8,10 @@ const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
 // The existing CI runner supplies an exact filename regex. This only starts the
 // declared real Procurement fixture; it changes no grep, selector or CI allowlist.
 const wp04 = wp04BrowserSelected(process.argv.slice(2)) && !process.argv.includes("--list")
+const reports = process.argv.slice(2).some((argument) => {
+  const selected = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
+  return selected.endsWith("e2e/sucafina/reports.spec.ts") || selected.endsWith("e2e/sucafina/reports.spec.ts$")
+})
 const sfNative = nativeSpecSelected(process.argv.slice(2))
 const sfInstalled = process.argv.slice(2).some((argument) =>
   argument.replaceAll("[\\\\/]", "/").replaceAll("\\", "/").includes("e2e/sucafina/"))
@@ -38,7 +42,7 @@ export default defineConfig({
     reuseExistingServer: false,
     ...(sfInstalled ? { env: {
       VITE_ORCHESTRA_SERVER_HOST: "", VITE_ORCHESTRA_SERVER_PORT: "",
-      ORCHESTRA_SF_E2E_UPSTREAM: wp04 ? "http://127.0.0.1:4174" : "http://localhost:4110",
+      ORCHESTRA_SF_E2E_UPSTREAM: reports ? "" : wp04 ? "http://127.0.0.1:4174" : "http://localhost:4110",
     } } : {}),
   }, ...(wp04 ? [{
     command: "bun e2e/sucafina/wp04/host.ts",
