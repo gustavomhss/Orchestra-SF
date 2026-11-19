@@ -538,23 +538,30 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       // Refetch is mandatory before exposing new values or claiming a clean base.
       const postRead = await readBudgetPage(ready.transport, props.capability, year(), ready.context.stamp, abort.signal)
       if (!isCurrentOwner() || editing() !== editor) return
+      // A fresh installation may omit a collection. Its first persisted record
+      // is proved by the original new CAS key/version, never by assuming [].
       let projected: { version: number; value: BudgetForm } | undefined
       if (postRead.state === "ready") {
         const current = postRead.page
-        if (editor.action === "save" && ownersBefore) {
+        if (editor.action === "save") {
           const matches = current.owners?.filter((owner) =>
-            (editor.recordId ? String(owner.id) === editor.recordId : !ownersBefore.has(String(owner.id))) &&
+            (editor.recordId ? String(owner.id) === editor.recordId :
+              !Object.hasOwn(page.versions, ownerCollection(props.capability) + ":" + owner.id) &&
+              (!ownersBefore || !ownersBefore.has(String(owner.id)))) &&
             owner.name === input.form.name && owner.budget === Number(input.form.budget),
           )
           const owner = matches?.length === 1 ? matches[0] : undefined
           const version = owner && current.versions[ownerCollection(props.capability) + ":" + owner.id]
-          if (owner && typeof version === "number" && Number.isSafeInteger(version) && version > editor.version)
+          if (owner && typeof version === "number" && Number.isSafeInteger(version) &&
+              (editor.recordId ? version > editor.version : version === 1))
             projected = { version, value: formFor(owner, undefined, editor.month) }
         }
-        if (editor.action === "save-entry" && entriesBefore) {
+        if (editor.action === "save-entry") {
           const owner = current.owners?.find((item) => String(item.id) === editor.parentId)
           const matches = current.entries?.filter((entry) =>
-            (editor.recordId ? String(entry.id) === editor.recordId : !entriesBefore.has(String(entry.id))) &&
+            (editor.recordId ? String(entry.id) === editor.recordId :
+              !Object.hasOwn(page.versions, entryCollection(props.capability) + ":" + entry.id) &&
+              (!entriesBefore || !entriesBefore.has(String(entry.id)))) &&
             String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === editor.parentId &&
             entry.year === input.year && entry.month === input.form.month &&
             entry.budget === Number(input.form.budget) && entry.actual === Number(input.form.actual) &&
@@ -562,7 +569,8 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
           )
           const entry = matches?.length === 1 ? matches[0] : undefined
           const version = entry && current.versions[entryCollection(props.capability) + ":" + entry.id]
-          if (owner && entry && typeof version === "number" && Number.isSafeInteger(version) && version > editor.version)
+          if (owner && entry && typeof version === "number" && Number.isSafeInteger(version) &&
+              (editor.recordId ? version > editor.version : version === 1))
             projected = { version, value: formFor(owner, entry, input.form.month) }
         }
       }

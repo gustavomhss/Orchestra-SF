@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test"
 import { Schema } from "effect"
 import { SfProjectionReview, SfReviewDomainProjection, SfDashboardDashboardAgenda, SfReviewsReviewRead, SfDashboardDashboardReviewPreserve } from "@orchestra/schema/sucafina/reviews"
-import { responseFor } from "../reports-support/model"
+import { observedReportResponse, retainReportResponse, responseFor } from "../reports-support/model"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 import { addTopic, command, dashboardUrl, observeDashboardRequests, openTopic, topicRow, topicsPage } from "./support"
 
@@ -38,6 +38,15 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
     })
 
     await test.step("preserve exactly the authorized record through a real native agenda", async () => {
+      // Retain the complete original discovery body before CDP discards it on rerender.
+      await page.route((url) => url.origin === installation.origin &&
+        url.pathname === "/sucafina/api/ui/projections/review" && url.searchParams.get("page") === topicsPage,
+      async (route) => {
+        if (route.request().method() !== "GET") return route.fallback()
+        const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+        await retainReportResponse(route.request(), original)
+        await route.fulfill({ response: original })
+      })
       await page.goto("/orchestra/sf-reviews/agenda?year=2026")
       const agenda = page.locator('[data-sf-surface="UI47"]')
       await expect(agenda).toBeVisible()
@@ -50,7 +59,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       await agenda.getByRole("button", { name: /Find authorized sections|Buscar seções autorizadas/ }).click()
       const discovery = await found
       expect(discovery.status()).toBe(200)
-      const discovered = Schema.decodeUnknownSync(SfProjectionReview.output)(await discovery.json())
+      const discovered = Schema.decodeUnknownSync(SfProjectionReview.output)(observedReportResponse(discovery))
       if (discovered.status !== "ok" || !("items" in discovered.value)) throw new Error("Authorized review records were not provided")
       expect(discovered.value.items).toHaveLength(1)
       const item = discovered.value.items[0]!
