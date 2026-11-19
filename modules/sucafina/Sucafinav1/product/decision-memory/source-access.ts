@@ -8,6 +8,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { Period } from "../contracts/context.ts"
 import type { SfDocumentReader } from "../documents/evidence-resolver.ts"
 import type { createProcurementSourceResolver } from "../procurement/sources.ts"
+import { dashboardRecordObservationReader } from "../dashboard/sources.ts"
 import type { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
@@ -67,6 +68,46 @@ export function createSfDashboardRecordSourceAccess(input: { host: DomainPortHos
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {
       if (ref.kind !== "record" || ref.target.surface !== "dashboard" || ref.target.recordType === "dashboard-page" || !ref.target.period || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
+      const host = input.host, records = input.records
+      const reader = dashboardRecordObservationReader(records, host)
+      if (reader) {
+        const observe = reader.read
+        const selected = structuredClone(ref), expected = digestSfValue(selected)
+        const request = host.requestFor(call), lease = call.lease, bindingObject = call.binding
+        const binding = digestSfValue([call.kind, call.binding])
+        const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+        const current = () => reader.current() && !!request && !request.signal.aborted && input.host === host && input.records === records &&
+          host.requestFor(call) === request && call.lease === lease &&
+          call.binding === bindingObject && digestSfValue([call.kind, call.binding]) === binding && digestSfValue(ref) === expected &&
+          digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
+        if (!request || !current() || !await host.revalidate(call) || !current()) return unavailable()
+        const at = (await host.environment(request)).at
+        if (!Number.isFinite(Date.parse(at)) || !current()) return unavailable()
+        const resolved = await observe<BusinessEvidenceResolution>(selected.refId, call, {
+          current,
+          before: async (evidence) => digestSfValue(evidence) === expected && current() && await host.revalidate(call) && current(),
+          project: ({ evidence, projection }) => {
+            if (projection.context.installationId !== call.binding.installationId || projection.context.projectId !== call.binding.projectId ||
+              projection.context.principalRef !== call.binding.principalRef || projection.context.accessRevision !== call.binding.accessRevision ||
+              projection.context.policyVersion !== call.binding.policyVersion || projection.context.surface !== "dashboard" ||
+              digestSfValue(projection.context.period) !== digestSfValue(selected.target.period))
+              return { status: "unavailable", reason: "source-projection-unavailable" }
+            const sources = projection.context.sourceRefs
+            if (sources.length !== 1 || sources[0]!.surface !== "dashboard" || sources[0]!.type !== selected.target.recordType ||
+              sources[0]!.id !== selected.target.recordId || sources[0]!.incarnation !== selected.target.incarnation ||
+              sources[0]!.version !== selected.target.version || digestSfValue(sources[0]!.fields) !== digestSfValue(selected.target.fields) ||
+              digestSfValue(sources[0]!.period) !== digestSfValue(selected.target.period) ||
+              projection.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== expected || digestSfValue(value.drilldown) !== expected))
+              return { status: "unavailable", reason: "source-projection-unavailable" }
+            return { status: "ok", value: { state: "fresh", ref: selected, currentRef: structuredClone(evidence),
+              authorizedProjection: structuredClone(projection), accessRevision: call.binding.accessRevision, checkedAt: at } }
+          },
+          // This remains the consumer's independent authorization. The producer
+          // checks both borrowed source bodies synchronously after it completes.
+          after: async () => current() && await host.revalidate(call) && current(),
+        })
+        return resolved.status === "ok" && current() ? resolved.value : unavailable(at)
+      }
       const request = input.host.requestFor(call)
       const binding = digestSfValue(call.binding)
       if (!request || request.signal.aborted || !await input.host.revalidate(call) || digestSfValue(call.binding) !== binding) return unavailable()
