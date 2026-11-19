@@ -2,8 +2,20 @@ import { expect, type Locator, type Page, type Request, type TestInfo } from "@p
 
 export const topicsPage = "Hot Topics & Actions"
 
-export function dashboardUrl(origin: string, page: string, extra: Record<string, string> = {}) {
-  return `${origin}/sucafina/dashboard?${new URLSearchParams({ page, year: "2026", ...extra })}`
+export function dashboardUrl(_origin: string, page: string, extra: Record<string, string> = {}) {
+  const routes: Record<string, string> = {
+    "Hot Topics & Actions": "/orchestra/sf-dashboard/hot-topics",
+    "OPEX Detail": "/orchestra/sf-dashboard/opex",
+    "IT Risks": "/orchestra/sf-operations/risks",
+    "Executive Dashboard": "/orchestra/sf-dashboard/executive",
+  }
+  const route = routes[page]
+  if (!route) throw new Error("No native Dashboard route for " + page)
+  const query = new URLSearchParams({ year: "2026", ...extra })
+  if (extra.execYear !== undefined) { query.set("year", extra.execYear); query.delete("execYear") }
+  if (extra.executiveMonth !== undefined) { query.set("month", extra.executiveMonth); query.delete("executiveMonth") }
+  // Browser navigation uses Playwright's :3000 origin; the CLI is a producer.
+  return `${route}?${query}`
 }
 
 /** Only fixed protocol labels leave this observer; no URL query, headers or body. */
@@ -114,30 +126,41 @@ export async function confirmDialog(page: Page, button: Locator, message: string
 }
 
 export function topicRow(page: Page, id: string) {
-  return page.getByRole("row").filter({ has: page.locator(`form[data-page="${topicsPage}"][data-command="save"][data-record="${id}"]`) })
+  return page.locator(`tr[data-sf-topic="${id}"]`)
 }
 
 export async function addTopic(page: Page, action: string, due: string) {
-  await page.getByText("Add action", { exact: true }).click()
-  const form = page.locator(`form[data-page="${topicsPage}"][data-command="save"][data-record=""]`)
+  await page.getByRole("button", { name: "New topic", exact: true }).click()
+  const editor = page.locator("[data-sf-topic-editor]")
+  const form = editor.locator("form")
+  await expect(form).toBeVisible()
   await form.getByLabel("Action", { exact: true }).fill(action)
   await form.getByLabel("Owner", { exact: true }).fill("Installed operator")
-  await form.getByLabel("Due", { exact: true }).fill(due)
+  await form.getByLabel("Due date", { exact: true }).fill(due)
   await form.getByRole("combobox", { name: "Status", exact: true }).selectOption("open")
   await form.getByRole("combobox", { name: "Priority", exact: true }).selectOption("high")
-  await command(page, form.getByRole("button", { name: "Save", exact: true }), "save")
-  const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: action, exact: true }) })
+  await form.getByRole("button", { name: "Review save", exact: true }).click()
+  const review = editor.locator('[data-component="sf-change-review"]')
+  await expect(review).toBeVisible()
+  await expect(review).toContainText(action)
+  await command(page, review.getByRole("button", { name: "Confirm save", exact: true }), "save")
+  await expect(editor.locator("[data-topic-feedback]")).toHaveAttribute("data-topic-feedback", "saved")
+  await editor.getByRole("button", { name: "Back to topics", exact: true }).click()
+  const row = page.locator("tr[data-sf-topic]").filter({ has: page.getByRole("rowheader", { name: action, exact: true }) })
+  await expect(row).toHaveCount(1)
   await expect(row).toBeVisible()
-  const id = await row.locator('form[data-command="save"]').getAttribute("data-record")
+  const id = await row.getAttribute("data-sf-topic")
   if (!id) throw new Error("Created Hot Topic has no durable record identity")
   return id
 }
 
 export async function openTopic(page: Page, id: string) {
-  await topicRow(page, id).getByRole("button", { name: "Edit", exact: true }).click()
-  const dialog = page.getByRole("dialog", { name: "Edit record", exact: true })
-  await expect(dialog).toBeVisible()
-  return dialog
+  await topicRow(page, id).getByRole("button", { name: "View details", exact: true }).click()
+  await page.locator("[data-sf-topic-detail]").getByRole("button", { name: "Edit topic", exact: true }).click()
+  const editor = page.locator("[data-sf-topic-editor]")
+  await expect(editor).toBeVisible()
+  await expect(editor.getByLabel("Action", { exact: true })).toBeEnabled()
+  return editor
 }
 
 export async function openForm(form: Locator) {
@@ -153,21 +176,36 @@ export function monthlyForm(page: Page, owner: string, month: number) {
 }
 
 export async function openMonth(page: Page, owner: string, month: number) {
-  const form = monthlyForm(page, owner, month)
-  await page.getByRole("row").filter({ has: form }).getByRole("button", { name: "Edit", exact: true }).click()
-  await openForm(form)
-  return form
+  const row = page.locator(`tr[data-sf-row="${owner}"]`)
+  await row.locator('button[data-sf-action="select"]').click()
+  await expect(row).toHaveAttribute("aria-selected", "true")
+  const monthly = page.locator(`.sf-budget-detail tr[data-sf-month="${month}"]`)
+  await monthly.getByRole("button", { name: "Save month", exact: true }).click()
+  const editor = page.locator('.sf-budget-editor[data-sf-action="save-entry"]')
+  await expect(editor).toBeVisible()
+  await expect(editor.getByLabel("Month", { exact: true })).toHaveValue(String(month))
+  await expect(editor.getByLabel("forecast", { exact: true })).toBeEnabled()
+  return editor
 }
 
 export async function addOwner(page: Page, name: string, annual: string) {
-  const form = page.locator('form[data-page="OPEX Detail"][data-command="save"][data-record=""]')
-  await openForm(form)
+  await page.getByRole("button", { name: "New line", exact: true }).click()
+  const editor = page.locator('.sf-budget-editor[data-sf-action="save"]')
+  const form = editor.locator("form")
+  await expect(form).toBeVisible()
   await form.getByLabel("Owner name", { exact: true }).fill(name)
   await form.getByLabel("Annual budget", { exact: true }).fill(annual)
-  await command(page, form.getByRole("button", { name: "Add", exact: true }), "save")
-  const section = page.locator("section").filter({ has: page.getByRole("heading", { name, exact: true }) })
-  await expect(section.getByRole("heading", { name, exact: true })).toBeVisible()
-  const id = await section.locator('form[data-command="save"]').getAttribute("data-record")
+  await form.getByRole("button", { name: "Review changes", exact: true }).click()
+  const review = editor.locator('[data-component="sf-change-review"]')
+  await expect(review).toBeVisible()
+  await expect(review).toContainText(name)
+  await expect(review).toContainText(annual)
+  await command(page, review.getByRole("button", { name: "Save", exact: true }), "save")
+  await expect(editor).toBeHidden()
+  const row = page.locator("tr[data-sf-row]").filter({ has: page.getByText(name, { exact: true }) })
+  await expect(row).toHaveCount(1)
+  await expect(row).toBeVisible()
+  const id = await row.getAttribute("data-sf-row")
   if (!id) throw new Error("Created OPEX line has no durable record identity")
   return id
 }
