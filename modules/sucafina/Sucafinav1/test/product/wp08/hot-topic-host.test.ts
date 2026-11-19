@@ -8,6 +8,8 @@ import { createCollaborationHotTopicReadHost } from "../../../product/collaborat
 import { createHotTopicPort } from "../../../product/dashboard/hot-topics.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 
@@ -20,12 +22,14 @@ test("SQLite commits the Hot Topic and its correlation together and revalidates 
   const ids = { n: 0 }
   const open = async () => {
     const store = await openLocalStore(directory)
+    const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, createId: () => `source-${++ids.n}` })
+    await persistence.initializeSources("dashboard")
     const request = new Request("https://example.test/", { headers: { "x-test-principal": "person-A" } })
     const authenticate = async (candidate: Request) => candidate.headers.get("x-test-principal") === "person-A" && gate.allowed ? { id: "person-A", canWrite: true, roles: [{ surface: "dashboard" as const, role: "domain leader" }] } : null
-    const host = { persistence: store, authenticate, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => { ids.n++; if (gate.revokeAfter > 0 && --gate.revokeAfter === 0) gate.allowed = false; return `id-${ids.n}` }, directory: [{ id: "person-A", name: "Owner" }] }), requestFor: () => request, revalidate: async () => gate.allowed }
-    const state = createSfProductState({ persistence: store, createId: () => "state-inc", authorize: async (candidate) => await authenticate(candidate) ? { principalRef: "person-A", policyVersion: "policy", accessRevision: "access" } : undefined, resolveTarget: async (_request, _snapshot, _namespace, ref) => ref === "project-A" && gate.allowed ? { incarnation: "inc-A" } : undefined })
+    const host = { persistence, authenticate, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => { ids.n++; if (gate.revokeAfter > 0 && --gate.revokeAfter === 0) gate.allowed = false; return `id-${ids.n}` }, directory: [{ id: "person-A", name: "Owner" }] }), requestFor: () => request, revalidate: async () => gate.allowed }
+    const state = createSfProductState({ persistence, createId: () => "state-inc", authorize: async (candidate) => await authenticate(candidate) ? { principalRef: "person-A", policyVersion: "policy", accessRevision: "access" } : undefined, resolveTarget: async (_request, _snapshot, _namespace, ref) => ref === "project-A" && gate.allowed ? { incarnation: "inc-A" } : undefined })
     const evidence: BusinessContextService = { context: async ({ refs }) => store.transaction("dashboard", async () => ({ commit: false, value: gate.allowed && refs.every((ref) => ref.refId === "project-A") ? refs.map((ref) => ({ state: "fresh" as const, ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })) : [] })), resolve: async () => { throw new Error("not used") }, recall: async () => [], emitFromLedger: async () => { throw new Error("not used") } }
-    return { store, port: createHotTopicPort(createCollaborationHotTopicHost({ mutationFence: createCollaborationMutationFence({ persistence: store }), authorizeMutation: async () => true, host, state, evidence, creationTarget: { ref: "project-A", incarnation: "inc-A" } })) }
+    return { store, port: createHotTopicPort(createCollaborationHotTopicHost({ mutationFence: createCollaborationMutationFence({ persistence }), authorizeMutation: async () => true, host, state, evidence, creationTarget: { ref: "project-A", incarnation: "inc-A" } })) }
   }
   try {
     const first = await open()
