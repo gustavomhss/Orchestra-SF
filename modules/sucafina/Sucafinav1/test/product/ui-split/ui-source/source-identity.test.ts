@@ -159,7 +159,7 @@ test("CREATE atomically persists its real source incarnation and correlation thr
       .toMatchObject({ id, targetIncarnation: original.incarnation, result: created.value.topic })
     expect(saved.budget).toEqual(before.budget)
     expect(await f.runtime.otherSurfaces()).toBe(other)
-    const repeated = { status: "ok", value: { state: "existing", topic: created.value.topic } }
+    const repeated = { status: "ok" as const, value: { state: "existing" as const, topic: created.value.topic } }
     expect(await f.runtime.create(request)).toEqual(repeated)
     expect(await f.runtime.inspect()).toEqual(saved)
     await f.reopen()
