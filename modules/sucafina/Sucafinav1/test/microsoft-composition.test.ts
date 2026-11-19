@@ -21,10 +21,12 @@ type Entry = {
 type Loader = { composeSfInstallation: (value: unknown, origin: string) => Promise<Installation & { layer: Layer.Layer<never, never, HttpRouter.HttpRouter>; privacy: Layer.Layer<never> }> }
 let entry: Entry
 let loader: Loader
+let nativeFixture: Awaited<ReturnType<typeof setup>>
 const cleanups: (() => Promise<void>)[] = []
 beforeAll(async () => {
   entry = await integrationModule<Entry>("modules/sucafina/Sucafinav1/local/entry.ts")
   loader = await integrationModule<Loader>("apps/cli/src/sucafina-product/installation.ts")
+  nativeFixture = await setup(true)
 })
 afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await close() })
 
@@ -68,7 +70,7 @@ async function setup(native = false) {
 }
 
 test("installed Microsoft viewer reads the native projection without gaining administrator rights", async () => {
-  const f = await setup(true)
+  const f = nativeFixture
   expect(f.application.transport).toEqual({ kind: "explicit-https-proxy", listenerOrigin, ingressOrigin, publicOrigin })
   const anonymous = await f.request("/sucafina/api/ui/pages/CAP01")
   expect(anonymous.status).toBe(401)
