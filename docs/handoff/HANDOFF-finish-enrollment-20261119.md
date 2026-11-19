@@ -1,36 +1,35 @@
 # Handoff — finish-enrollment-20261119
 
-SHA de código: a55a65a077a9200eb15109f8894f9ca9ca871962
+SHA de código qualificado: a55a65a077a9200eb15109f8894f9ca9ca871962
 Data: 2026-11-19
-Estado: partial
+Estado: complete
 
 ## Feito
-- `modules/sucafina/Sucafinav1/test/operator-browser.test.ts`: o mesmo Chrome real abre o artefato privado de enrollment; observa o GET original 303, redirect para /, no-store e cookie original HttpOnly/SameSite/Path.
-- A configuração e o navegador usam a origem pública http://localhost:3000. O runtime protegido não foi editado.
-- A prova positiva de autorização usa o GET original dashboard?download=json: antes do enrollment retorna o 303 original para auth/login com returnTo exato e no-store, observado com maxRedirects:0; depois retorna 200 com o arquivo JSON original, headers e igualdade integral com publicSfData do snapshot autoritativo.
-- Os três consoles e todas as páginas de seus registries são navegados pelo browser e devem devolver 404 e o corpo exato de descomissionamento. Preservados screenshots, ausência de erro de página e ausência da mensagem de falha Microsoft.
-- Fontes conferidas: runtime/operator-identity.ts (enrollment/location/cookie), runtime/application.ts:58–95 e :524–635 (404 e autorização do download), runtime/downloads.ts:18–33 (nome/MIME/conteúdo JSON).
+- `modules/sucafina/Sucafinav1/test/operator-browser.test.ts`: Chrome real abre o mesmo artefato privado de enrollment, observa GET303/location /, no-store e cookie original HttpOnly/SameSite/Path.
+- Configuração e navegador usam http://localhost:3000. Runtime protegido intacto.
+- Antes do enrollment, o GET original dashboard?download=json recebe303 para auth/login com returnTo exato, sem seguir redirects. Depois, recebe200 com nome/MIME/no-store e JSON integralmente igual a publicSfData do snapshot autoritativo.
+- Os três consoles e todas as páginas de seus registries são navegados e devem devolver404 com corpo exato de descomissionamento. Screenshots e ausência de erro de página preservados.
+- Gate [44622375499](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44622375499) SUCCESS: 1pass/0fail/110expect, 14.19s. Snapshotca203215f18e67ebd895584c63c9815ea2bfc976; jobs135907128956 e135908496686 SUCCESS.
 
 ## Pendente
-- `modules/sucafina/Sucafinav1/test/operator-browser.test.ts:13`: gate1 falhou no novo probe anônimo por seguir o redirect automaticamente; corrigido conforme local/entry.ts:351–355, gate2 pendente. Não prova a renderização do capítulo; esta pertence aos specs app-shell.
-- `modules/sucafina/Sucafinav1/test/local-controls-browser.test.ts:24`: fluxo de backup/notificações ainda usa fixture e navegação legada; não incluído neste branch.
+- Nenhum item pendente dentro deste arquivo/recorte.
+- Fora deste recorte: `modules/sucafina/Sucafinav1/test/local-controls-browser.test.ts:24` ainda dirige backup/notificações a partir de navegação legada; não recebe qualificação por este run.
+- Guards gerais, pacote e sf-ci único dependem da integração final; não executados aqui.
 
 ## Decisões e justificativas
-- Asserções removidas: body[data-surface], #content contendo Homologação local, sidebar/ordem dos links e seus HTML200 (linhas29–51 do arquivo anterior). O produtor não publica mais esse HTML: seu contrato deliberado é 404. A cobertura de cada rota foi preservada com status/corpo exatos; nenhuma asserção financeira, CAS ou mutação foi eliminada.
-- Esta é a exceção explícita do briefing para dado/controle que o produtor não carrega. Não restaura console e não troca o contrato por check vazio.
-- O redirect / é o original do enrollment. A instalação modular pode devolver o frame estático da raiz (local/entry.ts:283–286); este teste não declara qualificação do capítulo por esse frame. A sessão é demonstrada pelo download original autorizado e comparado integralmente.
-- O capítulo/owner e o catálogo têm provas separadas: 44607176525 SUCCESS (2 testes F01) e 44612205026 SUCCESS (2 testes/2277 expect); não são gates deste commit.
-- Timeout original de 60000ms, lançamento Chrome, isolamento e cleanup preservados.
+- Asserções removidas: body[data-surface], #content contendo Homologação local, sidebar/ordem dos links e HTML200 dessas telas (linhas29–51 anteriores). O produtor não publica esse HTML desde o descomissionamento. A navegação de cada rota permanece coberta por404/corpo exatos; nenhuma asserção financeira, CAS ou mutação foi eliminada.
+- Exceção explícita do briefing para controle/dado que o produtor deixou de carregar. Não há skip, check vazio, timeout aumentado ou console recriado.
+- Fontes: runtime/application.ts:58–95/524–635; runtime/downloads.ts:18–33; runtime/operator-identity.ts e local/entry.ts:351–355. O wrapper local encaminha anônimo para login antes do download; o primeiro probe esperava401 do nível interno e seguia esse redirect até200/Signed out. Corrigido para aferir o contrato externo real.
+- A raiz pode fornecer frame estático de apps/web/index.html. Este teste comprova a sessão pelo produtor autenticado; não declara qualificação de capítulo pela existência desse frame.
+- Timeout60000ms, lançamento Chrome, isolamento e cleanup originais preservados.
 
 ## Como retomar
-1. Partir de finish-enrollment-20261119, código 6eddfd0219ac8f92691aab67fe08ad805c4836a7.
-2. Criar snapshot ci-run-linux-enrollment-20261119 com package sucafina, runner bun e args ["Sucafinav1/test/operator-browser.test.ts"].
-3. Registrar run terminal e causa exata se falhar; só integrar após prova do arquivo. Não executar sf-ci antes do gate final único.
+1. Branch finish-enrollment-20261119, código a55a65a077a9200eb15109f8894f9ca9ca871962.
+2. Reproduzir pelo test-ci com package sucafina, runner bun, args ["Sucafinav1/test/operator-browser.test.ts"], branchci-run-linux-*.
+3. Continuar o backlog nativo e guards finais sem repetir este gate na ausência de mudança causal.
 
 ## Comandos e resultados
-- `bun run typecheck`: não executado neste checkpoint.
-- `bun run check:guards --base origin/dev`: não executado neste checkpoint.
-- `bun test Sucafinav1/test/operator-browser.test.ts` via test-ci: pendente.
-- Nenhum GO declarado. Nenhuma baseline/coverage/digest fabricada.
-
-- Gate1 [44621735409](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44621735409): FAILURE, 0 pass/1 fail; snapshot43157ccec8aefc6a0c25a3f458471d4f619e1249. Probe anônimo seguia o 303 do wrapper até a página Signed out200. Fonte original local/entry.ts:351–355 confirma 303+returnTo; teste agora observa esse redirect sem seguir. Cleanup135906373407 SUCCESS; runtime permanece intacto.
+- `bun test Sucafinav1/test/operator-browser.test.ts` via GitHub Actions: 44622375499 SUCCESS, 1pass/110expect.
+- Gate1 [44621735409](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44621735409): FAILURE, 0pass/1fail, snapshot43157ccec8aefc6a0c25a3f458471d4f619e1249. Probe anônimo seguia303 até Signed out200. Corrigido conforme wrapper original; cleanup135906373407 SUCCESS.
+- `bun run typecheck` e `bun run check:guards --base origin/dev`: não executados neste recorte.
+- Nenhum GO declarado; baseline/coverage/digest não fabricados.
