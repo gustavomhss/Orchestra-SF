@@ -51,7 +51,33 @@ export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof
       }
     }
     if (target.period) url.searchParams.set("year", target.period.start.slice(0, 4))
-    links.push({ label: `${target.surface} · ${target.recordId} · v${target.version}${target.period ? ` · ${target.period.start} a ${target.period.end}` : ""}`, url: `${url.pathname}${url.search}` })
+    if (target.surface === "dashboard") {
+      const routes: Record<string, string> = {
+        "Executive Dashboard": "/orchestra/sf-dashboard/executive",
+        "Budget Overview": "/orchestra/sf-dashboard/budget",
+        "OPEX Detail": "/orchestra/sf-dashboard/opex",
+        "CAPEX Projects": "/orchestra/sf-dashboard/capex",
+        "Hot Topics & Actions": "/orchestra/sf-dashboard/hot-topics",
+        "Portfolio Dashboard": "/orchestra/sf-portfolio/overview",
+        "All Projects": "/orchestra/sf-portfolio/projects",
+        "Headcount Overview": "/orchestra/sf-people/overview",
+        "Team Structure": "/orchestra/sf-people/structure",
+        "Talent Review": "/orchestra/sf-people/talent",
+        "IT Operations": "/orchestra/sf-operations/service",
+        "IT Security KPIs": "/orchestra/sf-operations/security",
+        "IT Risks": "/orchestra/sf-operations/risks",
+        "Vendor Contracts": "/orchestra/sf-procurement/contracts",
+        "Stakeholder Management": "/orchestra/sf-operations/stakeholders",
+        "IT Performance Contract": "/orchestra/sf-operations/performance",
+      }
+      const destination = routes[url.searchParams.get("page") ?? ""]
+      if (!destination) continue
+      const month = url.searchParams.get("operationsMonth") ?? url.searchParams.get("securityMonth") ?? url.searchParams.get("executiveMonth")
+      const year = url.searchParams.get("year")
+      url.pathname = destination
+      url.search = new URLSearchParams({ ...(year ? { year } : {}), ...(month ? { month } : {}) }).toString()
+    }
+    links.push({ label: `${target.surface} · ${target.recordId} · v${target.version}${target.period ? ` · ${target.period.start} a ${target.period.end}` : ""}`, url: url.href })
   }
   return await input.business.host.revalidate(input.call) ? [...new Map(links.map((link) => [link.url, link])).values()] : []
 }

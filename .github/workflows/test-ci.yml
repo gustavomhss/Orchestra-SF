@@ -163,6 +163,11 @@ jobs:
         if: steps.request.outputs.runner != 'pytest'
         uses: ./.github/actions/omni-binaries
 
+      - name: Typecheck the app shell
+        if: steps.request.outputs.sf_e2e == 'true'
+        working-directory: packages/app-shell
+        run: bun run typecheck
+
       - name: Typecheck the installed SF E2E sources
         if: steps.request.outputs.sf_e2e == 'true'
         working-directory: packages/app-shell
