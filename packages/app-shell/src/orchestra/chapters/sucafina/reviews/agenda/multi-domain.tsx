@@ -60,6 +60,7 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
         { start: store.start, end: store.end, domain: store.domain }, { signal: abort.signal },
       )
       if (abort.signal.aborted || !current(generation, ownerKey)) return
+      if (readAbort === abort) readAbort = undefined
       if (result.kind !== "response" || result.body.status !== "ok") {
         deny(result.kind === "response" ? result.body.status : result.reason)
         return
@@ -88,6 +89,7 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
     try {
       const result = await createSfReviewsClient(access.transport)["reviews.review-agenda"]({ items }, { signal: abort.signal })
       if (abort.signal.aborted || !current(generation, ownerKey)) return
+      if (commandAbort === abort) commandAbort = undefined
       if (result.kind !== "response" || result.body.status !== "ok") {
         deny(result.kind === "response" ? result.body.status : result.reason)
         return
@@ -132,6 +134,7 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
         { selectionRef: preview.selectionRef, sectionRefs }, { signal: abort.signal, idempotencyKey: crypto.randomUUID() },
       )
       if (!current(generation, ownerKey)) return
+      if (commandAbort === abort) commandAbort = undefined
       if (result.kind !== "response" || result.body.status !== "ok") {
         if (result.kind === "transport-error" && result.reason === "outcome-unknown")
           setStore({ phase: "outcome-unknown", message: "sf.u25.pending" })

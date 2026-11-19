@@ -26,8 +26,12 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
   if (!["entry", "new", "detail", "edit"].includes(candidate.kind)) return
   const keys = [...params.keys()]
   const allowed = [...selectors, "year", ...(candidate.surfaceId === "CAP04" || candidate.surfaceId === "CAP05" ? [] : ["month"]),
-    ...(candidate.surfaceId === "CAP02" ? ["status"] : [])]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !allowed.includes(key))) return
+    ...(candidate.surfaceId === "CAP02" ? ["status"] : []),
+    ...(candidate.surfaceId === "CAP01" ? ["signalPriority"] : [])]
+  const singleKeys = keys.filter((key) => key !== "signalPriority")
+  const priorities = params.getAll("signalPriority")
+  if (new Set(singleKeys).size !== singleKeys.length || keys.some((key) => !allowed.includes(key)) ||
+      priorities.some((value) => !value.trim()) || new Set(priorities).size !== priorities.length) return
   const selected = selectors.map((key) => params.get(key))
   if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
   const year = params.get("year"), month = params.get("month"), status = params.get("status")
@@ -35,7 +39,9 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
   if (status !== null && !["open", "progress", "blocked", "done"].includes(status)) return
   const input = { ...(year === null ? {} : { year: Number(year) }), ...(month === null ? {} : { month: Number(month) }) }
   const schema = schemas[candidate.surfaceId as keyof typeof schemas]
-  const sourceInput = candidate.surfaceId === "CAP02" && status !== null ? { ...input, topicStatus: status } : input
+  const sourceInput = candidate.surfaceId === "CAP01"
+    ? { ...(year === null ? {} : { execYear: Number(year) }), ...(month === null ? {} : { executiveMonth: Number(month) }) }
+    : candidate.surfaceId === "CAP02" && status !== null ? { ...input, topicStatus: status } : input
   if (Option.isNone(Schema.decodeUnknownOption(schema, { onExcessProperty: "error" })(sourceInput))) return
   return { ...input, ...(status === null ? {} : { status }) }
 }

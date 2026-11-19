@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA: código base 4f753c53b62dcbec079225ec9efca1c0e09d7f56; este commit acrescenta somente observação da resposta original.
+SHA: e664fccc3deb9ee42ba0255deca264a4005c48be (base deste ajuste; o commit atual acrescenta conclusão dos controllers, seletor primário e disponibilidade do leitor genérico).
 Data: 2026-11-19
 Estado: partial
 
@@ -69,3 +69,12 @@ Estado: partial
 ```json
 {"package":"sucafina","runner":"bun","args":["Sucafinav1/test/product/wp10/integration/source-destinations.test.ts"]}
 ```
+
+### Continuação — Reports 4 e composição instalada
+
+- Reports 4: [44581042555](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44581042555), snapshot 005624b218008a91eecbf92395b918a88f95b7e5; FAILURE 4/4. Typechecks app e SF E2E passaram; job135761432669 failure, cleanup135769419962 success. Catálogos de Dashboard/Planner/Procurement e previews reais foram lidos. RPT03 preservou o dossiê e releu a igualdade original; falhou ao abrir UI48. RPT01 ainda procurava o comando primário dentro do corpo da página, embora SfPageFrame o coloque no cabeçalho. RPT02 aguardou conclusão da resposta; RPT04 sofreu CDP No data found após preservação.
+- Correção mínima: retirar referências de AbortControllers concluídos imediatamente após o retorno do transporte e antes de alterar estado. Aborts de requisições pendentes, owner/generation fences e validações continuam. O padrão era a mesma classe de ERR_ABORTED observada no CAP23; aguarda nova prova em Reports.
+- O seletor de Review selected sections aponta ao botão único do SfPageFrame. A disponibilidade de UI48/49/50 exige reviews.review-read, exatamente o leitor genérico agora usado nessas telas.
+- Adicionado diagnóstico dos eventos reais requestfinished/requestfailed e superfície/heading em falha. Não imprime cookies, Authorization, senhas, conteúdo privado do contexto ou grant fabricado.
+- Ingress11 composto: [44582641085](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44582641085), snapshot 7fb4d28b4223d4a47331671253f8a1064ad91494; FAILURE no novo typecheck CLI (job135767084245). O tipo nativeReadBinding ainda aceitava só duas operações. Corrigido no branch finish-bindings-20261119, código a45298af5012ef787502fddaac6373bc9bdd6b41, união fechada das operações realmente observadas. Não houve teste de navegador neste run.
+- Asserções removidas nesta continuação: nenhuma. UI48/exports/revisão/revogação permanecem unbound até o próximo gate nominal.

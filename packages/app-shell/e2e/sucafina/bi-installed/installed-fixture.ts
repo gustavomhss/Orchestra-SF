@@ -330,8 +330,8 @@ async function explicitForecast(page: Page, amounts: Record<string, number>) {
   await expect(rows).toHaveCount(Object.keys(amounts).length)
   const labels = await rows.evaluateAll((elements) => elements.map((row) =>
     row.querySelector('[role="rowheader"]')?.textContent?.trim() ?? ""))
-  expect(labels.slice().sort()).toEqual(Object.keys(amounts).map((name) => `licenses · ${name}`).sort())
-  const matrix = labels.map((label) => Array.from({ length: 12 }, (_, month) => month === 10 ? amounts[label.slice("licenses · ".length)] : 0))
+  expect(labels.slice().sort()).toEqual(Object.keys(amounts).sort())
+  const matrix = labels.map((label) => Array.from({ length: 12 }, (_, month) => month === 10 ? amounts[label] : 0))
   const tsv = matrix.map((row) => row.join("\t")).join("\n")
   // Select the real Forecast cell; the grid owns its 0-based coordinate. Pasting
   // invokes the original producer preview and does not persist monthly values.

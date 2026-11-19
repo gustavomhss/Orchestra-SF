@@ -1,9 +1,11 @@
-import { For, Show, createEffect, createMemo, createSignal } from "solid-js"
+import { For, Show, createMemo } from "solid-js"
+import { useLocation, useNavigate } from "@solidjs/router"
 import type { JSX } from "solid-js"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
 import { SfExecutiveAction } from "../../cross-links/view"
+import type { SfExecutiveLink } from "../../cross-links"
 import { SfStatePanel } from "../../shared/states"
 import { sfCommonKey, useSfPresentation, SF_STATE_FALLBACK_KEY } from "../../shared/frame/presentation"
 import type { SfCopyKey } from "../../shared/frame/types"
@@ -27,8 +29,20 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
       ...(selection.month === undefined ? {} : { executiveMonth: selection.month }),
       ...(selection.opsMonth === undefined ? {} : { opsMonth: selection.opsMonth }),
     }, { signal }))
-  const [pinned, setPinned] = createSignal<ReadonlySet<string>>(new Set())
-  createEffect(() => { const generation = reader.context.generation();void generation;setPinned(new Set<string>()) })
+  const location = useLocation(), navigate = useNavigate()
+  // A priority is only a visual selection of a currently authorized signal.
+  const pinned = () => new Set(new URLSearchParams(location.search).getAll("signalPriority")
+    .filter((id) => entries().some((signal) => signal.id === id)))
+  const togglePriority = (id: string) => {
+    if (!entries().some((signal) => signal.id === id)) return
+    const next = new Set(pinned())
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    const query = new URLSearchParams(location.search)
+    query.delete("signalPriority")
+    for (const selected of next) query.append("signalPriority", selected)
+    navigate(location.pathname + "?" + query.toString())
+  }
   const data = () => reader.snapshot()?.data
   const selected = () => reader.selection()
   const year = () => selected().year
@@ -45,20 +59,21 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     if (!Number.isFinite(date.getTime())) return value
     return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
   }
-  const signals = createMemo(() => {
-    const selectedYear = year()
-    const selectedMonth = month()
-    const prefix = selectedYear !== undefined && selectedMonth !== undefined
-      ? String(selectedYear) + "-" + String(selectedMonth).padStart(2, "0")
-      : selectedYear !== undefined ? String(selectedYear) : undefined
-    return [...entries()].filter((signal) => prefix === undefined || signal.date.startsWith(prefix)).sort((a, b) =>
-      Number(pinned().has(b.id)) - Number(pinned().has(a.id)) ||
-      (b.date || "").localeCompare(a.date || "") || a.id.localeCompare(b.id))
-  })
+  // Eligibility and periods belong to the producer. signal.date is a due or
+  // renewal date, so a financial month must not remove an overdue record.
+  const signals = createMemo(() => [...entries()].sort((a, b) =>
+    Number(pinned().has(b.id)) - Number(pinned().has(a.id)) ||
+    (b.date || "").localeCompare(a.date || "") || a.id.localeCompare(b.id)))
+  const signalTarget = (signal: NonNullable<ExecutiveData["signals"]>[number]): SfExecutiveLink | undefined => {
+    const kind = signal.page === "Hot Topics & Actions" ? "topic" :
+      signal.page === "IT Risks" ? "risk" : signal.page === "Vendor Contracts" ? "contract" : undefined
+    return kind && signal.recordId ? { kind, ref: signal.recordId } : undefined
+  }
   const byYear = () => year() === undefined ? undefined : data()?.executiveByYear?.[String(year())]
   const executive = () => byYear()
   const unscoped = () => t(key("sf.u02.sourceWarning"))
-  const periodTotals = () => year() === undefined ? data()?.totals : undefined
+  const totalsSelected = () => reader.snapshot()?.selection.year === year()
+  const periodTotals = () => totalsSelected() ? data()?.totals : undefined
   const operations = () => {
     const period = year() !== undefined && selected().opsMonth !== undefined ?
       String(year()) + ":" + String(selected().opsMonth) :
@@ -79,7 +94,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
   const unscopedStat = (id: string, label: Key) =>
     <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped"><dt>{t(key(label))}</dt><dd>{unscoped()}</dd></div>
   const metricTable = () => {
-    if (year() !== undefined) return <p role="status">{unscoped()}</p>
+    if (!totalsSelected()) return <p role="status">{unscoped()}</p>
     const totals = periodTotals()
     if (!totals) return <p role="status">{t(key("sf.u02.sourceMissing"))}</p>
     return <div class="sf-u02-table-scroll">
@@ -138,11 +153,11 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-financial">
           <h2 id="sf-u02-financial">{t(key("sf.u02.financial"))}</h2>
-          <p role="status">{unscoped()}</p>
+          <Show when={!totalsSelected()}><p role="status">{unscoped()}</p></Show>
           <dl class="sf-u02-stats sf-u02-four">
-            {year() === undefined ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
-            {year() === undefined ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
-            {year() === undefined ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
+            {totalsSelected() ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
+            {totalsSelected() ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
+            {totalsSelected() ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
             {stat("active", "sf.u02.active", executive()?.active)}
           </dl>
           <p>{t(key("sf.u02.noCurrency"))}</p>
@@ -152,9 +167,9 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
           <h2 id="sf-u02-variance">{t(key("sf.u02.variance"))}</h2>
           <p>{t(key("sf.u02.sourceWarning"))}</p>
           <dl class="sf-u02-stats">
-            {year() === undefined ? stat("opex-budget", "sf.u02.opex", periodTotals()?.opexBudget) : unscopedStat("opex-budget", "sf.u02.opex")}
-            {year() === undefined ? stat("capex-budget", "sf.u02.capex", periodTotals()?.capexBudget) : unscopedStat("capex-budget", "sf.u02.capex")}
-            {year() === undefined ? stat("total-forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("total-forecast", "sf.u02.forecast")}
+            {totalsSelected() ? stat("opex-budget", "sf.u02.opex", periodTotals()?.opexBudget) : unscopedStat("opex-budget", "sf.u02.opex")}
+            {totalsSelected() ? stat("capex-budget", "sf.u02.capex", periodTotals()?.capexBudget) : unscopedStat("capex-budget", "sf.u02.capex")}
+            {totalsSelected() ? stat("total-forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("total-forecast", "sf.u02.forecast")}
           </dl>
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-delivery">
@@ -191,7 +206,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
             {stat("open-security", "sf.u02.openSecurity", operations()?.openIncidents)}
           </dl>
         </section>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-alerts">
+        <section class="sf-u02-section" aria-labelledby="sf-u02-alerts" data-dashboard-signals>
           <h2 id="sf-u02-alerts">{t(key("sf.u02.signals"))}</h2>
           <Show when={signals().length} fallback={<p>{t(sfCommonKey("sf.common.empty"))}</p>}>
             <div class="sf-u02-table-scroll"><table>
@@ -199,12 +214,15 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                 <th scope="col">{t(key("sf.u02.rule"))}</th><th scope="col">{t(key("sf.u02.date"))}</th>
                 <th scope="col">{t(key("sf.u02.origin"))}</th><th scope="col">{t(key("sf.u02.priority"))}</th></tr></thead>
               <tbody><For each={signals()}>{(signal) =>
-                <tr><th scope="row">{signal.fact}</th><td>{signal.rule}</td>
-                  <td><time dateTime={signal.date}>{signal.date ? shownDate(signal.date) : missing()}</time></td><td><bdi>{signal.page + " / " + signal.recordId}</bdi></td>
+                <tr data-sf-signal={signal.id}><th scope="row">{signal.fact}</th><td>{signal.rule}</td>
+                  <td><time dateTime={signal.date}>{signal.date ? shownDate(signal.date) : missing()}</time></td>
+                  <td><bdi>{signal.page + " / " + signal.recordId}</bdi>
+                    <Show when={signalTarget(signal)}>{(target) =>
+                      <SfExecutiveAction from={props.route} target={target()}
+                        label={{ en: "Open record", pt: "Abrir registro" }} />}</Show>
+                  </td>
                   <td><button type="button" class="mx-btn" aria-pressed={pinned().has(signal.id)}
-                    onClick={() => { const next = new Set(pinned());
-                      if (next.has(signal.id)) next.delete(signal.id); else next.add(signal.id);
-                      setPinned(next) }}>
+                    onClick={() => togglePriority(signal.id)}>
                     {t(key(pinned().has(signal.id) ? "sf.u02.unprioritize" : "sf.u02.prioritize"))}
                   </button></td>
                 </tr>}</For></tbody></table></div>

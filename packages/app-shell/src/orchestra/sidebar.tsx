@@ -478,6 +478,7 @@ export function OrchestraSidebar(props: {
           <Trigger
             type="button"
             class="orchestra-nav-button"
+            data-nav-id={item.id}
             aria-label={name()}
             aria-description={showWip(item.id) ? language.t("orchestra.shell.wip.description") : undefined}
             disabled={

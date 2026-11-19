@@ -81,7 +81,7 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
   await expect(chosen.getByText(`Budget Overview · dashboard · ${corpus.annual.start} – ${corpus.annual.end}`, { exact: true })).toBeVisible()
 
   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
-  await preparation.getByRole("button", { name: "Review selected sections", exact: true }).click()
+  await page.getByRole("button", { name: "Review selected sections", exact: true }).click()
   const agendaResponse = await pendingAgenda
   const submitted = object(agendaResponse.request().postDataJSON())
   expect(Array.isArray(submitted.items)).toBe(true)

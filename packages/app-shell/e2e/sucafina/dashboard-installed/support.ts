@@ -1,8 +1,10 @@
 import { expect, type Locator, type Page, type Request, type TestInfo } from "@playwright/test"
+import { Schema } from "effect"
+import { SfDomainPageCap04 } from "@orchestra/schema/sucafina/domain"
 
 export const topicsPage = "Hot Topics & Actions"
 
-export function dashboardUrl(_origin: string, page: string, extra: Record<string, string> = {}) {
+export function dashboardUrl(origin: string, page: string, extra: Record<string, string> = {}) {
   const routes: Record<string, string> = {
     "Hot Topics & Actions": "/orchestra/sf-dashboard/hot-topics",
     "OPEX Detail": "/orchestra/sf-dashboard/opex",
@@ -11,11 +13,13 @@ export function dashboardUrl(_origin: string, page: string, extra: Record<string
   }
   const route = routes[page]
   if (!route) throw new Error("No native Dashboard route for " + page)
-  const query = new URLSearchParams({ year: "2026", ...extra })
+  const query = new URLSearchParams(page === "IT Risks" ? extra : { year: "2026", ...extra })
   if (extra.execYear !== undefined) { query.set("year", extra.execYear); query.delete("execYear") }
   if (extra.executiveMonth !== undefined) { query.set("month", extra.executiveMonth); query.delete("executiveMonth") }
-  // Browser navigation uses Playwright's :3000 origin; the CLI is a producer.
-  return `${route}?${query}`
+  // The installed descriptor supplies the shell origin; no browser visits the listener.
+  const url = new URL(route, origin)
+  url.search = query.toString()
+  return url.toString()
 }
 
 /** Only fixed protocol labels leave this observer; no URL query, headers or body. */
@@ -100,29 +104,9 @@ export async function command(page: Page, button: Locator, action: string, expec
     new URL(request.url()).pathname === "/sucafina/dashboard" && !new URL(request.url()).searchParams.has("sf") &&
     request.postDataJSON()?.action === action)
   expect(response.status()).toBe(expectedStatus)
-  const result = await response.json() as { ok: boolean; value?: { applied?: boolean; previewRef?: string }; stored?: unknown }
+  const result = await response.json() as { ok: boolean }
   expect(result.ok).toBe(expectedStatus === 200)
   return result
-}
-
-export async function hostCommand(page: Page, button: Locator, mode: string) {
-  await expect(button).toBeEnabled()
-  const response = await clickedResponse(page, button, (request) => new URL(request.url()).pathname === "/sucafina/dashboard" &&
-    new URL(request.url()).searchParams.get("sf") === mode)
-  expect(response.status()).toBe(200)
-  const result = await response.json() as { status: string }
-  expect(result.status).toBe("ok")
-}
-
-export async function confirmDialog(page: Page, button: Locator, message: string, accept: boolean) {
-  const pending = page.waitForEvent("dialog")
-  const clicking = button.click()
-  const dialog = await pending
-  expect(dialog.type()).toBe("confirm")
-  expect(dialog.message()).toBe(message)
-  if (accept) await dialog.accept()
-  else await dialog.dismiss()
-  await clicking
 }
 
 export function topicRow(page: Page, id: string) {
@@ -144,8 +128,7 @@ export async function addTopic(page: Page, action: string, due: string) {
   await expect(review).toBeVisible()
   await expect(review).toContainText(action)
   await command(page, review.getByRole("button", { name: "Confirm save", exact: true }), "save")
-  await expect(editor.locator("[data-topic-feedback]")).toHaveAttribute("data-topic-feedback", "saved")
-  await editor.getByRole("button", { name: "Back to topics", exact: true }).click()
+  await expect(editor).toBeHidden()
   const row = page.locator("tr[data-sf-topic]").filter({ has: page.getByRole("rowheader", { name: action, exact: true }) })
   await expect(row).toHaveCount(1)
   await expect(row).toBeVisible()
@@ -161,18 +144,6 @@ export async function openTopic(page: Page, id: string) {
   await expect(editor).toBeVisible()
   await expect(editor.getByLabel("Action", { exact: true })).toBeEnabled()
   return editor
-}
-
-export async function openForm(form: Locator) {
-  const details = form.locator("..")
-  if (await details.getAttribute("open") === null) await details.locator(":scope > summary").click()
-  await expect(form).toBeVisible()
-}
-
-export function monthlyForm(page: Page, owner: string, month: number) {
-  return page.locator('form[data-page="OPEX Detail"][data-command="save-entry"]')
-    .filter({ has: page.locator(`input[name="ownerId"][value="${owner}"]`) })
-    .filter({ has: page.locator(`input[name="month"][value="${month}"]`) })
 }
 
 export async function openMonth(page: Page, owner: string, month: number) {
@@ -208,4 +179,17 @@ export async function addOwner(page: Page, name: string, annual: string) {
   const id = await row.getAttribute("data-sf-row")
   if (!id) throw new Error("Created OPEX line has no durable record identity")
   return id
+}
+
+/** Reread the original authorized monthly source; absence is never coerced to an empty collection. */
+export async function readOpex(page: Page, year: number) {
+  const url = new URL("/sucafina/api/ui/pages/CAP04", page.url())
+  url.searchParams.set("year", String(year))
+  const response = await page.request.get(url.toString())
+  expect(response.status()).toBe(200)
+  const body = Schema.decodeUnknownSync(SfDomainPageCap04.output)(await response.json())
+  if (body.status !== "ok" || body.value.data.opexEntries === undefined)
+    throw new Error("The authorized OPEX entries were not provided")
+  expect(body.value.capabilityId).toBe("CAP04")
+  return { ...body.value, entries: body.value.data.opexEntries }
 }
