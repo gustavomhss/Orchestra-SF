@@ -244,7 +244,13 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                 <Show when={ui.phase === "reviewing"}>
                   <div class="sf-n24-review" role="group" aria-label={t("sf.ui37.confirm")}>
                     <p><bdi>{ui.text}</bdi></p>
+                    <p>{t("sf.ui37.criterion")}: <bdi>{
+                      current().criteria.find((item) => item.id === ui.criterion)?.description || ui.criterion || t("sf.ui37.noCriterion")
+                    }</bdi></p>
                     <p>{t("sf.ui37.recipient")}: <bdi>{ui.recipient || t("sf.ui37.noRecipient")}</bdi></p>
+                    <p>{t("sf.ui37.scope")}</p>
+                    <ul class="sf-n24-list"><For each={current().sourceRefs}>{(source) =>
+                      <li><bdi>{source.refId}</bdi></li>}</For></ul>
                   </div>
                 </Show>
                 <Show when={ui.message}><p role="status">{t(ui.message)}</p></Show>
