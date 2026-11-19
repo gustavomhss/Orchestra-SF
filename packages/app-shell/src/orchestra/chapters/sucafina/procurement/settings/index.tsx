@@ -329,7 +329,11 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       tabs={[]}
       activeTab={null}
       primaryAction={primary()}
-      secondaryActions={[]}
+      secondaryActions={[{
+        id: "reset-settings", labelKey: key("sf.u36.reset"), tone: "danger",
+        disabled: !actionAllowed("reset") || view.busy || !active(),
+        busy: view.busy, onInvoke: () => openReview("reset"),
+      }]}
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}
@@ -405,7 +409,11 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                     onCancel={closeReview}
                   />
                 </Show>
-
+                <details class="mx-card sf-n21-reset-help">
+                  <summary>{t(key("sf.u36.reset"))}</summary>
+                  <p>{t(key("sf.u36.resetHelp"))}</p>
+                  <p role="status">{t(sfCommonKey("sf.common.previousValuesUnavailable"))}</p>
+                </details>
                   </>
                 )}
               </Show>
