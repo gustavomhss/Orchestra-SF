@@ -160,7 +160,7 @@ export function createSfReviewsProjectionHandlers(input: Input) {
           return fail("unavailable", "review-source-selection-unavailable", 503)
         const source = discovered.value.agenda.section
         const item = sfDashboardReviewAgendaItem({ ...source, id: source.selectionRef })
-        data = { items: [{ ...item, title: reviewAgendaItemLabel(item), recordOptions: source.recordOptions }], period }
+        data = { items: [{ ...item, title: reviewAgendaItemLabel(item), recordOptions: discovered.value.agenda.recordOptions }], period }
         // Preserve the same live scoped source. A new discovery would mint a
         // different selectionRef, so validate the original issued reference.
         check = async () => {
