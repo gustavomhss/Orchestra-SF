@@ -1,6 +1,6 @@
 # Handoff — finish-wp4-native-20261119
 
-SHA do código: a4d29fff44349d058324c3e54c041d5cf0cad859
+SHA do código: 344891101ffe11f1c5f6ea1aa858459eb035e022
 Data: 2026-11-19
 Estado: partial
 
@@ -116,3 +116,12 @@ Estado: partial
 - Contrato primário conferido pelo GitHub: [Fetch.pdl211–231](https://github.com/ChromeDevTools/devtools-protocol/blob/master/pdl/domains/Fetch.pdl) e [Network.pdl1314–1335](https://github.com/ChromeDevTools/devtools-protocol/blob/master/pdl/domains/Network.pdl). O vínculo networkId/requestId é definido pelo protocolo; não é inferido por ordem de chegada. PostData pequeno deve permanecer exatamente igual; ausência não substitui corpo existente.
 - Mantidos status/headers/bytes originais, Requestfinished/Requestfailed da mesma Request, ambiguidade fatal, todos os valores/Schemas/CAS e timeouts. Apenas observa o início do HTTP; não reenvia request nem cria autoridade.
 - Estado partial. Pendente/unbound: composition.spec.ts155 (admissão CAP01 ausente apesar marcador real); :484–618 (capturador ainda não exercitado no gate); wp03/BI não recebem helper compartilhado até qualificação. Nenhuma asserção removida. Como retomar: ler os eventos originais da auditoria WP10native4, corrigir causa concreta do ingresso e qualificar apenas composition.spec.ts antes de portar a captura.
+
+
+## WP10 native4 — causa do ingresso e espera do CAP01 original
+
+- Auditoria [44627909938](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627909938): SUCCESS somente extração do artefato14580111530 do run44626345242. `audit-wp10-native4-20261119/docs/handoff/observed-wp10-native4-20261119.md` registra stage authenticate-existing-operator, seis jornadas not-reached e http vazio. A captura CDP ainda não foi exercitada.
+- Causa conferida: sidebar.tsx355 chama openSfNativeChapter; host/native-chapter-entry.ts não navega pelo fallback quando o owner ainda está unmounted. O homepage depois da seleção de projeto ainda não montou um capítulo. O marcador CAP01 existe em dashboard/executive/index.tsx119; não foi substituído.
+- Código 344891101ffe11f1c5f6ea1aa858459eb035e022, wp10/composition.spec.ts149–159: usa sfNativeChapterEntry("sf-dashboard"), cujo destino original é /orchestra/sf-dashboard/executive. Arma a observação do GET original /sucafina/api/ui/pages/CAP01 antes de navegar e exige HTTP200 antes do mesmo marcador CAP01 e Sign out. Não inventa owner/query, não acrescenta GET nem modifica F01.
+- O mesmo arquivo conserva o vínculo Network.requestWillBeSent.requestId/Fetch.networkId do checkpoint1a35, a Request Playwright única, bytes/status/headers originais, requestfailed fatal e todos os valores, Schemas e CAS. Nenhuma asserção removida; nenhum timeout alterado.
+- Estado partial. Pendente/unbound: wp10/composition.spec.ts152–159 (qualificar montagem canônica), :487–621 (qualificar captura nas jornadas); wp03/planner-mounted.spec.ts284 e bi-installed/installed-fixture.ts422–585 aguardam a prova deste capturador antes de portar somente a observação original. Como retomar: compor apenas composition.spec.ts e este handoff sobre Assembly32 e executar apenas wp10/composition.spec.ts. Registrar resultado terminal antes de qualquer novo gate.
