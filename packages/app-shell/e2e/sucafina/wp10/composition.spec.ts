@@ -146,6 +146,14 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         await page.setViewportSize({ width: 1440, height: 900 })
         await connectInstalledShell(page, { root: directory, origin, mount: "/sucafina",
           actorId: `macos:${profile.localOperator.installationId}:${profile.localOperator.uid}` })
+        // Let the shell publish its selected owner through the actual chapter
+        // ingress before full-document links exercise that admitted installation.
+        const navigation = page.locator('aside[data-component="orchestra-sidebar"]')
+        const advanced = navigation.locator('button[aria-controls="orchestra-advanced-navigation"]')
+        if (await advanced.getAttribute("aria-expanded") !== "true") await advanced.click()
+        await navigation.locator('button[data-nav-id="sf-dashboard"]').click()
+        await expect(page.locator('[data-sf-surface="CAP01"]')).toBeVisible()
+        await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
         const corpus = state.corpus
         if (!corpus) throw new Error("Published synthetic corpus receipt is missing")
 
