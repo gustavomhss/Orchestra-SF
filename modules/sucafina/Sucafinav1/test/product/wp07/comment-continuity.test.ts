@@ -97,10 +97,15 @@ test("authorized C06 capture creates immutable section membership and reopens th
       expect(text).not.toContain("INITIAL-A-V1:")
     }
     f.historical.allowed = false
+    const unavailable = await services.reviews.read(review.id, f.author)
+    expect(unavailable.status).toBe("unavailable")
+    expect(JSON.stringify(unavailable)).not.toContain("PRESERVED")
+    f.historical.revoked = true
     expect((await services.reviews.read(review.id, f.author)).status).toBe("denied")
     expect((await currentThread(review.id, captured[0]!.id, f.author)).status).toBe("denied")
     expect((await http(request(), "dashboard"))?.status).toBe(403)
     f.historical.allowed = true
+    f.historical.revoked = false
     f.actors.person!.enabled = false
     const revoked = await currentThread(review.id, captured[0]!.id, f.author)
     expect(revoked.status).toBe("denied")
