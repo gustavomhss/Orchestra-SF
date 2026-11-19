@@ -40,8 +40,22 @@ export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; co
           failure: request.failure()?.errorText ?? null }))
       }
       page.on("request", begin); page.on("requestfinished", finish); page.on("requestfailed", finish)
+      // The native client has consumed these responses when Chromium sometimes
+      // evicts their CDP bodies. Buffer the one original HTTP response, then
+      // deliver its unchanged status, headers and bytes to both client and test.
+      // Office downloads and authentication keep their original browser path.
+      const dashboardPath = new URL(app.dashboardURL).pathname
+      const reportJson = (url: URL) => url.origin === new URL(page.url()).origin &&
+        (url.pathname.endsWith("/api/ui/projections/review") ||
+          url.pathname === dashboardPath && url.searchParams.has("sf") &&
+            url.searchParams.get("sf") !== "review-download")
+      await page.route(reportJson, async (route) => {
+        const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+        await route.fulfill({ response: original })
+      })
       try { await use({ app, corpus }) }
       finally {
+        await page.unroute(reportJson)
         page.off("request", begin); page.off("requestfinished", finish); page.off("requestfailed", finish)
         if (info.status !== info.expectedStatus) {
           console.info("SF_REPORTS_FAILED_SURFACE", JSON.stringify(await page.locator("body").evaluate((body) => ({

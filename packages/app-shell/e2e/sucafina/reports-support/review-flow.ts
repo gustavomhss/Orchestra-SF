@@ -605,12 +605,11 @@ function observeAgendaTransport(page: Page, app: ReportsInstallation) {
 /** Observe the original browser response; never retry or substitute a producer request. */
 export async function readNativeReportResponse(response: Response): Promise<unknown> {
   const request = response.request(), url = new URL(response.url())
-  const finished = await response.finished()
   const metadata = {
     method: request.method(), path: url.pathname, operation: url.searchParams.get("sf"),
     status: response.status(), resourceType: request.resourceType(),
     contentLength: response.headers()["content-length"] ?? null,
-    finished: finished?.message ?? null, failure: request.failure()?.errorText ?? null,
+    failure: request.failure()?.errorText ?? null,
   }
   try {
     const value: unknown = await response.json()
