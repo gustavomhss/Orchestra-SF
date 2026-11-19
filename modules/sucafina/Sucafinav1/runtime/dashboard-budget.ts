@@ -27,6 +27,7 @@ import {
 } from "../src/dashboard-accounts.ts"
 import type { BudgetData } from "../src/dashboard-accounts.ts"
 import { dashboardSignals } from "../product/dashboard/signals.ts"
+import { DASHBOARD_PAGES } from "../src/nav.ts"
 export const pages = ["Executive Dashboard", "Budget Overview", "OPEX Detail", "CAPEX Projects"] as const
 const budgetKeys = [
   "opexOwners",
@@ -609,7 +610,20 @@ export function budgetData(data: Record<string, unknown>): BudgetData {
     })),
   }
 }
+const reportTopics = ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"]
+
+function reportsAndBackup(page: string, context: RenderContext): string {
+  const topics = DASHBOARD_PAGES.filter((key) => key !== "Talent Review" || context.actor.roles.includes("admin"))
+  return `<aside data-slot="footer"><details class="editor-panel"><summary>Reports and backup</summary><form method="get" class="report-form"><input type="hidden" name="page" value="${esc(page)}"><label>Format<select name="download"><option value="pptx">PowerPoint</option><option value="docx">Word</option></select></label><label>Year<select name="year">${[2024, 2025, 2026, 2027].map((year) => `<option value="${year}"${year === context.year ? " selected" : ""}>${year}</option>`).join("")}</select></label><label>Title<input name="title"></label><fieldset><legend>Topics</legend>${topics.map((key) => `<label><input type="checkbox" name="topic" value="${esc(key)}"${reportTopics.includes(key) ? " checked" : ""}>${esc(key)}</label>`).join("")}</fieldset><button>Generate Report</button></form></details></aside>`
+}
+
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
+  const html = renderBudgetPage(page, data, context)
+  if (html === undefined) return undefined
+  return html + reportsAndBackup(page, context)
+}
+
+function renderBudgetPage(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
   if (!pages.some((owned) => owned === page)) return undefined
   const totals = computeBudgetTotals(budgetData(data), context.year)
   const current = currentBudgetMonth(data, context.year, context.at)

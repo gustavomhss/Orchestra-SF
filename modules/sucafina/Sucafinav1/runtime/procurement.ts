@@ -1185,8 +1185,31 @@ function repeatRows(
     )
     .join("")
 }
+function procurementPageData(data: Record<string, unknown>, context: RenderContext) {
+  if (Array.isArray(data.requests) || !data.store || typeof data.store !== "object") return { data, context }
+  const view = domain.view(
+    { data, versions: context.versions, sequences: {}, audit: [], notices: [] } as Snapshot,
+    context.actor,
+    { at: context.at, id: () => "procurement-page", directory: [{ id: context.actor.id, name: context.actor.id }] },
+  )
+  return {
+    data: {
+      ...view.data,
+      ...(Object.hasOwn(data, "request") ? { request: data.request } : {}),
+      ...(Object.hasOwn(data, "q") ? { q: data.q } : {}),
+      ...(Object.hasOwn(data, "filter") ? { filter: data.filter } : {}),
+      ...(Object.hasOwn(data, "search") ? { search: data.search } : {}),
+      ...(Object.hasOwn(data, "procurementQueueView") ? { procurementQueueView: data.procurementQueueView } : {}),
+    },
+    context: { ...context, versions: view.versions },
+  }
+}
+
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
   if (!pages.includes(page as (typeof pages)[number])) return undefined
+  const projected = procurementPageData(data, context)
+  data = projected.data
+  context = projected.context
   const requests = rows(data.requests)
   const queueView = readProcurementQueueView(data.procurementQueueView)
   if (["Requests", "My approvals"].includes(page) && Object.hasOwn(data, "procurementQueueView") &&
