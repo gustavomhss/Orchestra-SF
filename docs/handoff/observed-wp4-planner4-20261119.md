@@ -1,0 +1,363 @@
+# WP4 planner4 original diagnostics
+
+Original run 44623928135. Artifact 14577074454. No test rerun. Visible synthetic corpus state and bounded observer counters only; no headers or authentication material.
+
+## wp4 / packages/app-shell/e2e/test-results/sucafina-wp03-planner-moun-120b4-d-official-version-controls-chromium/error-context.md
+
+- main [ref=e236]:
+        - generic [ref=e238]:
+          - toolbar "Context and access" [ref=e239]:
+            - button "Refresh access" [ref=e240] [cursor=pointer]
+            - button "Sign out" [ref=e241] [cursor=pointer]
+          - region "OPEX" [ref=e243]:
+            - generic [ref=e244]:
+              - generic [ref=e245]:
+                - generic [ref=e246]:
+                  - generic [ref=e247]: ⁨sf-wp03-browser-mCqHdK⁩ · OPEX
+                  - heading "OPEX" [level=1] [ref=e248]
+                - button "Review changes" [disabled] [ref=e251]
+              - generic [ref=e252]:
+                - generic [ref=e253]:
+                  - generic [ref=e254]:
+                    - term [ref=e255]: Year
+                    - definition [ref=e256]: "2027"
+                  - generic [ref=e257]:
+                    - term [ref=e258]: Version
+                    - definition [ref=e259]: WP03 Browser Plan
+                - generic [ref=e263]:
+                  - generic [ref=e264]:
+                    - generic [ref=e265]:
+                      - text: Version
+                      - combobox "Version" [ref=e266]:
+                        - option "WP03 Browser Plan · 2027" [selected]
+                    - link "Import workbook" [ref=e267] [cursor=pointer]:
+                      - /url: /orchestra/sf-imports/new
+                    - generic [ref=e268]:
+                      - text: Closed through
+                      - combobox "Closed through" [ref=e269]:
+                        - option "0" [selected]
+                        - option "1"
+                        - option "2"
+                        - option "3"
+                        - option "4"
+                        - option "5"
+                        - option "6"
+                        - option "7"
+                        - option "8"
+                        - option "9"
+                        - option "10"
+                        - option "11"
+                        - option "12"
+                    - button "Review changes" [ref=e270] [cursor=pointer]
+                  - region "Monthly plan" [ref=e271]:
+                    - heading "Monthly plan" [level=2] [ref=e272]
+                    - region "Monthly values" [ref=e273]:
+                      - paragraph [ref=e274]: Use arrow keys to move; Shift with arrows selects a range. Press Enter or F2 to edit an allowed cell.
+                      - grid "Monthly values" [ref=e276]:
+                        - row "Line Currency January February March April May June July August September October November December" [ref=e277]:
+                          - columnheader "Line" [ref=e278]
+                          - columnheader "Currency" [ref=e279]
+                          - columnheader "January" [ref=e280]
+                          - columnheader "February" [ref=e281]
+                          - columnheader "March" [ref=e282]
+                          - columnheader "April" [ref=e283]
+                          - columnheader "May" [ref=e284]
+                          - columnheader "June" [ref=e285]
+                          - columnheader "July" [ref=e286]
+                          - columnheader "August" [ref=e287]
+                          - columnheader "September" [ref=e288]
+                          - columnheader "October" [ref=e289]
+                          - columnheader "November" [ref=e290]
+                          - columnheader "December" [ref=e291]
+                        - row [ref=e292]:
+                          - rowheader "WP03 License A" [ref=e293]
+                          - rowheader "USD" [ref=e294]
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e295]:
+                            - generic [ref=e296]:
+                              - generic [ref=e297]: Budget
+                              - generic [ref=e298]:
+                                - generic [ref=e299]: "100.00"
+                                - generic [ref=e300]: USD
+                              - button "Edit monthly value" [ref=e301] [cursor=pointer]: Edit
+                            - generic [ref=e302]:
+                              - generic [ref=e303]: Actual
+                              - generic [ref=e305]: Not provided
+                            - generic [ref=e306]:
+                              - generic [ref=e307]: Forecast
+                              - generic [ref=e308]:
+                                - generic [ref=e309]: "100.00"
+                                - generic [ref=e310]: USD
+                                - generic [ref=e311]: Inherited value
+                              - button "Edit monthly value" [ref=e312] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e313]:
+                            - generic [ref=e314]:
+                              - generic [ref=e315]: Budget
+                              - generic [ref=e316]:
+                                - generic [ref=e317]: "100.00"
+                                - generic [ref=e318]: USD
+                              - button "Edit monthly value" [ref=e319] [cursor=pointer]: Edit
+                            - generic [ref=e320]:
+                              - generic [ref=e321]: Actual
+                              - generic [ref=e323]: Not provided
+                            - generic [ref=e324]:
+                              - generic [ref=e325]: Forecast
+                              - generic [ref=e326]:
+                                - generic [ref=e327]: "100.00"
+                                - generic [ref=e328]: USD
+                                - generic [ref=e329]: Inherited value
+                              - button "Edit monthly value" [ref=e330] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e331]:
+                            - generic [ref=e332]:
+                              - generic [ref=e333]: Budget
+                              - generic [ref=e334]:
+                                - generic [ref=e335]: "100.00"
+                                - generic [ref=e336]: USD
+                              - button "Edit monthly value" [ref=e337] [cursor=pointer]: Edit
+                            - generic [ref=e338]:
+                              - generic [ref=e339]: Actual
+                              - generic [ref=e341]: Not provided
+                            - generic [ref=e342]:
+                              - generic [ref=e343]: Forecast
+                              - generic [ref=e344]:
+                                - generic [ref=e345]: "100.00"
+                                - generic [ref=e346]: USD
+                                - generic [ref=e347]: Inherited value
+                              - button "Edit monthly value" [ref=e348] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e349]:
+                            - generic [ref=e350]:
+                              - generic [ref=e351]: Budget
+                              - generic [ref=e352]:
+                                - generic [ref=e353]: "100.00"
+                                - generic [ref=e354]: USD
+                              - button "Edit monthly value" [ref=e355] [cursor=pointer]: Edit
+                            - generic [ref=e356]:
+                              - generic [ref=e357]: Actual
+                              - generic [ref=e359]: Not provided
+                            - generic [ref=e360]:
+                              - generic [ref=e361]: Forecast
+                              - generic [ref=e362]:
+                                - generic [ref=e363]: "100.00"
+                                - generic [ref=e364]: USD
+                                - generic [ref=e365]: Inherited value
+                              - button "Edit monthly value" [ref=e366] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e367]:
+                            - generic [ref=e368]:
+                              - generic [ref=e369]: Budget
+                              - generic [ref=e370]:
+                                - generic [ref=e371]: "100.00"
+                                - generic [ref=e372]: USD
+                              - button "Edit monthly value" [ref=e373] [cursor=pointer]: Edit
+                            - generic [ref=e374]:
+                              - generic [ref=e375]: Actual
+                              - generic [ref=e377]: Not provided
+                            - generic [ref=e378]:
+                              - generic [ref=e379]: Forecast
+                              - generic [ref=e380]:
+                                - generic [ref=e381]: "100.00"
+                                - generic [ref=e382]: USD
+                                - generic [ref=e383]: Inherited value
+                              - button "Edit monthly value" [ref=e384] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e385]:
+                            - generic [ref=e386]:
+                              - generic [ref=e387]: Budget
+                              - generic [ref=e388]:
+                                - generic [ref=e389]: "100.00"
+                                - generic [ref=e390]: USD
+                              - button "Edit monthly value" [ref=e391] [cursor=pointer]: Edit
+                            - generic [ref=e392]:
+                              - generic [ref=e393]: Actual
+                              - generic [ref=e395]: Not provided
+                            - generic [ref=e396]:
+                              - generic [ref=e397]: Forecast
+                              - generic [ref=e398]:
+                                - generic [ref=e399]: "100.00"
+                                - generic [ref=e400]: USD
+                                - generic [ref=e401]: Inherited value
+                              - button "Edit monthly value" [ref=e402] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e403]:
+                            - generic [ref=e404]:
+                              - generic [ref=e405]: Budget
+                              - generic [ref=e406]:
+                                - generic [ref=e407]: "100.00"
+                                - generic [ref=e408]: USD
+                              - button "Edit monthly value" [ref=e409] [cursor=pointer]: Edit
+                            - generic [ref=e410]:
+                              - generic [ref=e411]: Actual
+                              - generic [ref=e413]: Not provided
+                            - generic [ref=e414]:
+                              - generic [ref=e415]: Forecast
+                              - generic [ref=e416]:
+                                - generic [ref=e417]: "100.00"
+                                - generic [ref=e418]: USD
+                                - generic [ref=e419]: Inherited value
+                              - button "Edit monthly value" [ref=e420] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e421]:
+                            - generic [ref=e422]:
+                              - generic [ref=e423]: Budget
+                              - generic [ref=e424]:
+                                - generic [ref=e425]: "100.00"
+                                - generic [ref=e426]: USD
+                              - button "Edit monthly value" [ref=e427] [cursor=pointer]: Edit
+                            - generic [ref=e428]:
+                              - generic [ref=e429]: Actual
+                              - generic [ref=e431]: Not provided
+                            - generic [ref=e432]:
+                              - generic [ref=e433]: Forecast
+                              - generic [ref=e434]:
+                                - generic [ref=e435]: "100.00"
+                                - generic [ref=e436]: USD
+                                - generic [ref=e437]: Inherited value
+                              - button "Edit monthly value" [ref=e438] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e439]:
+                            - generic [ref=e440]:
+                              - generic [ref=e441]: Budget
+                              - generic [ref=e442]:
+                                - generic [ref=e443]: "100.00"
+                                - generic [ref=e444]: USD
+                              - button "Edit monthly value" [ref=e445] [cursor=pointer]: Edit
+                            - generic [ref=e446]:
+                              - generic [ref=e447]: Actual
+                              - generic [ref=e449]: Not provided
+                            - generic [ref=e450]:
+                              - generic [ref=e451]: Forecast
+                              - generic [ref=e452]:
+                                - generic [ref=e453]: "100.00"
+                                - generic [ref=e454]: USD
+                                - generic [ref=e455]: Inherited value
+                              - button "Edit monthly value" [ref=e456] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e457]:
+                            - generic [ref=e458]:
+                              - generic [ref=e459]: Budget
+                              - generic [ref=e460]:
+                                - generic [ref=e461]: "100.00"
+                                - generic [ref=e462]: USD
+                              - button "Edit monthly value" [ref=e463] [cursor=pointer]: Edit
+                            - generic [ref=e464]:
+                              - generic [ref=e465]: Actual
+                              - generic [ref=e467]: Not provided
+                            - generic [ref=e468]:
+                              - generic [ref=e469]: Forecast
+                              - generic [ref=e470]:
+                                - generic [ref=e471]: "100.00"
+                                - generic [ref=e472]: USD
+                                - generic [ref=e473]: Inherited value
+                              - button "Edit monthly value" [ref=e474] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e475]:
+                            - generic [ref=e476]:
+                              - generic [ref=e477]: Budget
+                              - generic [ref=e478]:
+                                - generic [ref=e479]: "100.00"
+                                - generic [ref=e480]: USD
+                              - button "Edit monthly value" [ref=e481] [cursor=pointer]: Edit
+                            - generic [ref=e482]:
+                              - generic [ref=e483]: Actual
+                              - generic [ref=e485]: Not provided
+                            - generic [ref=e486]:
+                              - generic [ref=e487]: Forecast
+                              - generic [ref=e488]:
+                                - generic [ref=e489]: "100.00"
+                                - generic [ref=e490]: USD
+                                - generic [ref=e491]: Inherited value
+                              - button "Edit monthly value" [ref=e492] [cursor=pointer]: Edit
+                          - gridcell "Budget 100.00 USD Edit monthly value Actual Not provided Forecast 100.00 USD Inherited value Edit monthly value" [ref=e493]:
+                            - generic [ref=e494]:
+                              - generic [ref=e495]: Budget
+                              - generic [ref=e496]:
+                                - generic [ref=e497]: "100.00"
+                                - generic [ref=e498]: USD
+                              - button "Edit monthly value" [ref=e499] [cursor=pointer]: Edit
+                            - generic [ref=e500]:
+                              - generic [ref=e501]: Actual
+                              - generic [ref=e503]: Not provided
+                            - generic [ref=e504]:
+                              - generic [ref=e505]: Forecast
+                              - generic [ref=e506]:
+                                - generic [ref=e507]: "100.00"
+                                - generic [ref=e508]: USD
+                                - generic [ref=e509]: Inherited value
+                              - button "Edit monthly value" [ref=e510] [cursor=pointer]: Edit
+                      - region "Paste monthly values" [ref=e511]:
+                        - heading "Paste monthly values" [level=3] [ref=e512]
+                        - generic [ref=e513]: Paste tab-separated values
+                        - paragraph [ref=e514]: Start at the selected month. Blank cells and line endings are preserved.
+                        - textbox "Paste tab-separated values" [ref=e515]
+                        - button "Review pasted values" [ref=e516] [cursor=pointer]
+                  - region "Lines" [ref=e517]:
+                    - heading "Lines" [level=2] [ref=e518]
+                    - region [ref=e519]:
+                      - table [ref=e520]:
+                        - rowgroup [ref=e521]:
+                          - row "Name Owner Element Currency Annual budget ID Show details" [ref=e522]:
+                            - columnheader "Name" [ref=e523]
+                            - columnheader "Owner" [ref=e524]
+                            - columnheader "Element" [ref=e525]
+                            - columnheader "Currency" [ref=e526]
+                            - columnheader "Annual budget" [ref=e527]
+                            - columnheader "ID" [ref=e528]
+                            - columnheader "Show details" [ref=e529]
+                        - rowgroup [ref=e530]:
+                          - row "WP03 License A macos:90f0a130-5839-4d1f-9291-cbd7f56b96f7:1001 licenses USD 1200 827e16e6-d1f3-4569-a807-81161b40748e Manage" [ref=e531]:
+                            - cell "WP03 License A" [ref=e532]
+                            - cell "macos:90f0a130-5839-4d1f-9291-cbd7f56b96f7:1001" [ref=e533]
+                            - cell "licenses" [ref=e534]
+                            - cell "USD" [ref=e535]
+                            - cell "1200" [ref=e536]
+                            - cell "827e16e6-d1f3-4569-a807-81161b40748e" [ref=e537]:
+                              - code [ref=e538]: 827e16e6-d1f3-4569-a807-81161b40748e
+                            - cell "Manage" [ref=e539]:
+                              - button "Manage" [ref=e540] [cursor=pointer]
+                  - generic [ref=e541]:
+                    - generic [ref=e542]:
+                      - text: Name
+                      - textbox "Name" [ref=e543]
+                    - generic [ref=e544]:
+                      - text: Owner
+                      - combobox "Owner" [ref=e545]:
+                        - option [selected]
+                        - option "unknown"
+                    - generic [ref=e546]:
+                      - text: Element
+                      - combobox "Element" [ref=e547]:
+                        - option "licenses" [selected]
+                        - option "services"
+                        - option "hwo"
+                        - option "depr"
+                        - option "fac"
+                        - option "te"
+                        - option "oth"
+                    - generic [ref=e548]:
+                      - text: Currency
+                      - combobox "Currency" [ref=e549]:
+                        - option "USD" [selected]
+                    - generic [ref=e550]:
+                      - text: Annual budget
+                      - textbox "Annual budget" [ref=e551]
+                    - button "Save" [ref=e552] [cursor=pointer]
+                  - generic [ref=e553]:
+                    - heading "Elements and structure" [level=2] [ref=e554]
+                    - list [ref=e555]:
+                      - listitem [ref=e556]:
+                        - generic [ref=e557]: "licenses · Split: true"
+                        - button "Review changes" [ref=e558] [cursor=pointer]
+                      - listitem [ref=e559]:
+                        - generic [ref=e560]: "services · Split: true"
+                        - button "Review changes" [ref=e561] [cursor=pointer]
+                      - listitem [ref=e562]:
+                        - generic [ref=e563]: "hwo · Split: true"
+                        - button "Review changes" [ref=e564] [cursor=pointer]
+                      - listitem [ref=e565]:
+                        - generic [ref=e566]: "depr · Split: false"
+                        - button "Review changes" [ref=e567] [cursor=pointer]
+                      - listitem [ref=e568]:
+                        - generic [ref=e569]: "fac · Split: false"
+                        - button "Review changes" [ref=e570] [cursor=pointer]
+                      - listitem [ref=e571]:
+                        - generic [ref=e572]: "te · Split: true"
+                        - button "Review changes" [ref=e573] [cursor=pointer]
+                      - listitem [ref=e574]:
+                        - generic [ref=e575]: "oth · Split: false"
+                        - button "Review changes" [ref=e576] [cursor=pointer]
+  - generic:
+    - region "Notifications alt+T"
+```
+
