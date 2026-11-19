@@ -138,7 +138,7 @@ export function SfLocalAdministrationView(_props: SfSurfaceProps<"UI69">): JSX.E
               </section>
               <section aria-labelledby="sf-u28-notifications">
                 <h2 id="sf-u28-notifications">{heading("sf.u28.notifications")}</h2>
-                <Show when={data().notifications.length} fallback={<p>{heading("sf.common.empty")}</p>}>
+                <Show when={data().notifications.length} fallback={<SfStatePanel state="empty" messageKey={copyKey("sf.common.empty")} />}>
                   <ul class="sf-u28-notifications">
                     <For each={data().notifications}>
                       {(notification) => (

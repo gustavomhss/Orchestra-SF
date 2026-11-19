@@ -418,7 +418,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
             <Show when={view.mode === "inspect"}>
               <section class="mx-card">
                 <h2>{t("sf.u34.details")}</h2>
-                <Show when={selected()} fallback={<p>{t("sf.u34.noSchedule")}</p>}>
+                <Show when={selected()} fallback={<SfStatePanel state="empty" messageKey={n29Key("sf.u34.noSchedule")} />}>
                   {(row) => (
                     <>
                       <p>{t("sf.u34.version")}: {row().version}</p>

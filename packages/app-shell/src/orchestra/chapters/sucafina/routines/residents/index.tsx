@@ -342,7 +342,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
                       <h3>{t("sf.u35.contribution")}</h3>
                       <Show when={selectedCase()} fallback={<p>{t("sf.u35.selectCaseFirst")}</p>}>
                         <Show when={view.outputState === "ready" && view.output}
-                          fallback={<p role="status">{t("sf.u35.contributionNotVerified")} · {t(n29StateKey(view.outputState))}</p>}>
+                          fallback={<SfStatePanel state={view.outputState} messageKey={n29Key("sf.u35.contributionNotVerified")} />}>
                           {(proof) => <>
                             <p><strong>{t("sf.u35.verified")}:</strong> {t("sf.u35.producerVerified")}</p>
                             <p><strong>{t("sf.u35.outputRef")}:</strong> <bdi>{proof().outputRef}</bdi></p>
@@ -389,7 +389,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
                     <section aria-label={t("sf.u35.execution")} data-sf-resident-run data-state={view.runState}>
                       <h3>{t("sf.u35.latestRun")}</h3>
                       <Show when={view.runState === "ready" && view.run}
-                        fallback={<p role="status">{t("sf.u35.noRunForProfile")} · {t(n29StateKey(view.runState))}</p>}>
+                        fallback={<SfStatePanel state={view.runState} messageKey={n29Key("sf.u35.noRunForProfile")} />}>
                         {(run) => <>
                           <dl>
                             <dt>{t("sf.u35.runRef")}</dt><dd><bdi>{run().runRef}</bdi></dd>
@@ -404,7 +404,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
                     <section aria-label={t("sf.u35.humanDecision")} data-sf-human-decision data-state={view.choiceState}>
                       <h3>{t("sf.u35.humanDecision")}</h3>
                       <Show when={view.choiceState === "ready" && view.choice}
-                        fallback={<p role="status">{t("sf.u35.noHumanChoice")} · {t(n29StateKey(view.choiceState))}</p>}>
+                        fallback={<SfStatePanel state={view.choiceState} messageKey={n29Key("sf.u35.noHumanChoice")} />}>
                         {(choice) => <>
                           <p><strong>{t("sf.u35.choiceRef")}:</strong> <bdi>{choice().id}</bdi></p>
                           <p><strong>{t("sf.u35.alternative")}:</strong> <bdi>{choice().alternativeId}</bdi></p>

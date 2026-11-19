@@ -100,11 +100,12 @@ export function SfEvidencePanel(props: SfEvidencePanelProps): JSX.Element {
         </Show>
 
         <Show when={props.items.length === 0}>
-          <p class="mx-note" role="status">
-            {props.state === "filtered-empty"
-              ? language.t("sf.common.filterEmpty")
-              : language.t("orchestra.sf.s04.evidence.empty")}
-          </p>
+          <SfStatePanel
+            state={props.state === "filtered-empty" ? "filtered-empty" : "empty"}
+            messageKey={props.state === "filtered-empty"
+              ? "sf.common.filterEmpty" as SfCopyKey
+              : "orchestra.sf.s04.evidence.empty" as SfCopyKey}
+          />
         </Show>
 
         <Show when={props.items.length > 0}>

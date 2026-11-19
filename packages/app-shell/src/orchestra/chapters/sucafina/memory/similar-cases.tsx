@@ -414,7 +414,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
         <SfStatePanel state={resultsState()} messageKey={k(resultsMessage())}
           onRetryRead={privacy() === "ready" ? () =>
             view.resultState !== "idle" && view.source ? void submit() : void loadCatalog(owner.generation()) : undefined}>
-          <Show when={view.result}>
+          <Show when={view.sourceState === "ready" && view.result}>
             {(data) =>
               <section class="sf-memory-section" data-sf-similar-matches>
                 <h2>{t("sf.u26.similarMatches")}</h2>

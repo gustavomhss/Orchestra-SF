@@ -2,7 +2,8 @@ import { For, Show, createEffect, createSignal, createUniqueId } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_S05_COPY } from "@/i18n/orchestra-chapters/sf-s05"
-import type { SfMessage, SfText, SfUiState, SfRelationsProps, SfThreadProps, SfQuestionProps, SfConfirmationProps } from "./types"
+import type { SfCopyKey, SfMessage, SfText, SfUiState, SfRelationsProps, SfThreadProps, SfQuestionProps, SfConfirmationProps } from "./types"
+import { SfStatePanel } from "../shared/states"
 import "./collaboration.css"
 import "../../kit.css"
 
@@ -63,21 +64,10 @@ const stateCopy: Partial<Record<SfUiState, SfSharedCopyKey>> = {
 }
 
 function SfNotice(props: { state: SfUiState }) {
-  const copy = useCopy()
   const label = () => stateCopy[props.state]
   return (
     <Show when={label()}>
-      {(value) => (
-        <p
-          class="sf-collab-notice"
-          classList={{ "sf-collab-notice-alert": props.state === "denied" || props.state === "session-expired" ||
-            props.state === "invalid" || props.state === "conflict" || props.state === "outcome-unknown" }}
-          role={props.state === "denied" || props.state === "session-expired" || props.state === "invalid" ||
-            props.state === "outcome-unknown" ? "alert" : "status"}
-        >
-          {copy.key(value())}
-        </p>
-      )}
+      {(value) => <SfStatePanel state={props.state} messageKey={value() as SfCopyKey} />}
     </Show>
   )
 }
@@ -210,7 +200,7 @@ export function SfRelations(props: SfRelationsProps) {
         </div>
         <h3 class="sf-collab-subheading">{copy.key("sf.s05.relations.current")}</h3>
         <Show when={props.relations.some((relation) => relation.sourceRef === props.sourceRef)}
-          fallback={<p class="sf-collab-help">{copy.key("sf.common.empty")}</p>}>
+          fallback={<SfStatePanel state="empty" messageKey={"sf.common.empty" as SfCopyKey} />}>
           <ul class="sf-collab-items" aria-label={copy.key("sf.s05.relations.current")}>
             <For each={props.relations.filter((relation) => relation.sourceRef === props.sourceRef)}>
               {(relation) => {
