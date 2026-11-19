@@ -202,7 +202,6 @@ export function createPortfolioProofVerifier(input: {
   }
   const verifySensitivity = async (incomingBinding: CriterionResultBinding, incomingStored: StoredDecisionResult, context: TrustedDomainContext) => {
     const host = input.sensitivityReadScope
-    if (!host) return replaySensitivity(incomingBinding, incomingStored, context)
     let fenceKey: string | undefined
     let attempt: symbol | undefined
     let published = false
@@ -219,6 +218,27 @@ export function createPortfolioProofVerifier(input: {
       const authorityDigest = digestSfValue({ kind: context.kind, binding: context.binding })
       const binding = structuredClone(incomingBinding)
       const stored = structuredClone(incomingStored)
+      const unchangedInputs = () => input.sensitivityReadScope === host && sensitivityAttempts.get(fenceKey!) === attempt &&
+        digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest &&
+        digestSfValue(incomingBinding) === bindingDigest && digestSfValue(incomingStored) === storedDigest &&
+        digestSfValue(binding) === bindingDigest && digestSfValue(stored) === storedDigest
+      const staged: { capture?: StagedCapture } = {}
+      const stageCapture = (entry: StagedCapture) => {
+        if (staged.capture || entry.key !== fenceKey) throw new Error("Sensitivity source fence capture changed")
+        staged.capture = entry
+      }
+      const publish = () => {
+        const entry = staged.capture
+        if (!entry || entry.key !== fenceKey || !unchangedInputs()) return false
+        const now = Date.now()
+        for (const [ref, value] of fences) if (value.expires <= now) fences.delete(ref)
+        if (entry.value.expires <= now || fences.size >= 2048 && !fences.has(fenceKey!)) return false
+        // No awaited callback follows publication, with or without a LocalStore read scope.
+        fences.set(fenceKey!, entry.value)
+        published = true
+        return true
+      }
+      if (!host) return await replaySensitivity(binding, stored, context, stageCapture) && publish()
       const persistence = host.persistence
       const transaction = persistence.transaction
       const currentSnapshots = persistence.currentSnapshots
@@ -234,37 +254,23 @@ export function createPortfolioProofVerifier(input: {
         return digestSfValue({ method: request.method, url: request.url, headers: headers.sort(([left], [right]) => left.localeCompare(right)) })
       }
       const requestDigest = requestFingerprint()
-      const unchanged = () => !request.signal.aborted && input.sensitivityReadScope === host && host.persistence === persistence &&
+      const unchanged = () => unchangedInputs() && !request.signal.aborted && host.persistence === persistence &&
         persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots &&
-        host.requestFor === requestFor && host.revalidate === revalidate && host.requestFor(context) === request && requestFingerprint() === requestDigest &&
-        sensitivityAttempts.get(fenceKey!) === attempt && digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest &&
-        digestSfValue(incomingBinding) === bindingDigest && digestSfValue(incomingStored) === storedDigest &&
-        digestSfValue(binding) === bindingDigest && digestSfValue(stored) === storedDigest
+        host.requestFor === requestFor && host.revalidate === revalidate && host.requestFor(context) === request && requestFingerprint() === requestDigest
       let invocations = 0
       let workAccepted = false
-      const staged: { capture?: StagedCapture } = {}
       const accepted = await persistence.transaction("planner", async () => {
         invocations++
         if (invocations !== 1 || !currentSnapshots.call(persistence) || !unchanged() || !await host.revalidate(context) || !unchanged()) return { commit: false, value: false }
-        const replayed = await replaySensitivity(binding, stored, context, (entry) => {
-          if (staged.capture || entry.key !== fenceKey) throw new Error("Sensitivity source fence capture changed")
-          staged.capture = entry
-        })
+        const replayed = await replaySensitivity(binding, stored, context, stageCapture)
         // All asynchronous authority observations finish inside the immutable root.
         // LocalStore can still refuse this value for a swallowed nested write.
         workAccepted = replayed && unchanged() && await host.revalidate(context) && unchanged() && !!currentSnapshots.call(persistence)
         return { commit: false, value: workAccepted }
       }, { signal: request.signal })
-      const entry = staged.capture
-      if (!accepted || !workAccepted || invocations !== 1 || !entry || entry.key !== fenceKey || !unchanged()) return false
-      const now = Date.now()
-      for (const [ref, value] of fences) if (value.expires <= now) fences.delete(ref)
-      if (entry.value.expires <= now || fences.size >= 2048 && !fences.has(fenceKey)) return false
-      // No awaited callback follows publication. A rejected/aborted/poisoned root
-      // never publishes its staged capture and never reuses an earlier grant.
-      fences.set(fenceKey, entry.value)
-      published = true
-      return true
+      if (!accepted || !workAccepted || invocations !== 1 || !unchanged()) return false
+      // A rejected, aborted or poisoned root never publishes its staged capture.
+      return publish()
     } catch {
       return false
     } finally {

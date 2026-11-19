@@ -70,7 +70,7 @@ export function createPlannerSensitivity(input: {
     const interval = input.coveragePreview ? structuredClone(await input.coveragePreview.issue(structuredClone(request), binding.baselineRef, context)) : undefined
     if (interval && interval.status !== "ok" && interval.status !== "unavailable") return interval
     const samples: { request: ScenarioRequest; resultRef: string; digest: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean; qualification?: PortfolioCoverageQualification }[] = []
-    const exactEvidence: { value?: KnownSubtotalThreshold } = {}
+    const exactEvidence: { value?: KnownSubtotalThreshold; coverageDigest?: string } = {}
     const certify = (certificate: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] }, trusted: TrustedDomainContext) => validatePlannerThreshold({ request, binding, source: sourceScenario, baseline: baselineScenario, certificate, preview: input.preview, context: trusted })
     const evaluate = createSensitivityEvaluator({
       sample: async (_request, value, trusted) => {
@@ -94,10 +94,14 @@ export function createPlannerSensitivity(input: {
         return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: preview.value.comparison.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion, ...(qualification ? { coverageQualification: qualification } : {}) } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario) || !assessedKnownSubtotalCoverage(sourceScenario) || !assessedKnownSubtotalCoverage(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
-        // Pending coverage stays a sampled disclosure. The canonical solver is a separate proof;
-        // calling it here would publish a numeric bound and hide the unresolved categories.
-        if (sourceScenario.costCoverage.coverageState !== "complete" || baselineScenario.costCoverage.coverageState !== "complete" || sourceScenario.comparisonStatus !== "complete" || baselineScenario.comparisonStatus !== "complete" || sourceScenario.total === null || baselineScenario.total === null) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        // Bootstrap inventory is not a coverage proof. Current classified components
+        // can prove a known-subtotal bound while missing categories stay disclosed.
+        if (!assessedKnownSubtotalCoverage(sourceScenario) || !assessedKnownSubtotalCoverage(baselineScenario)) {
+          const coverage = await input.coveragePreview?.proveKnownSubtotal(request, binding.baselineRef, { source: sourceScenario, baseline: baselineScenario }, trusted)
+          if (coverage?.status !== "ok") return { status: "unavailable", reason: "exact-threshold-not-proven" }
+          exactEvidence.coverageDigest = coverage.value
+        }
         const result = structuredClone(await input.exactThreshold(structuredClone(request), structuredClone(binding), trusted))
         if (result.status !== "ok") return result
         const certificate = await certify(result.value, trusted)
@@ -122,6 +126,10 @@ export function createPlannerSensitivity(input: {
         // Reproduce its boundary and adjacent rejected input with fresh previews;
         // searching for the same boundary again adds work, not a new observation.
         const certificate = await certify(structuredClone(exactEvidence.value), trusted)
+        if (exactEvidence.coverageDigest !== undefined) {
+          const coverage = await input.coveragePreview?.proveKnownSubtotal(request, binding.baselineRef, { source: sourceScenario, baseline: baselineScenario }, trusted)
+          if (coverage?.status !== "ok" || coverage.value !== exactEvidence.coverageDigest) return false
+        }
         return certificate.status === "ok" && digestSfValue(certificate.value) === digestSfValue(exactEvidence.value) && await input.revalidate(structuredClone(binding), trusted)
       },
       verifyCoverageQualification: input.coveragePreview?.verify,
@@ -188,7 +196,8 @@ export function finalizePlannerSensitivity(input: {
   })
 }
 
-/** Pending categories stay disclosed. Known priced components can still prove a conditioned bound. */
+/** Every priced component needs assessed coverage; omitted categories remain unknown. */
 function assessedKnownSubtotalCoverage(scenario: ScenarioResult) {
-  return scenario.knownSubtotal !== null && Number.isFinite(scenario.knownSubtotal) && scenario.components.some((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState !== "absent" && component.sourceRefs.length > 0)
+  const included = scenario.costCoverage.entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
+  return scenario.costCoverage.coverageState !== "unavailable" && scenario.costCoverage.issues.length === 0 && quantifiedSensitivityScenario(scenario) && scenario.components.every((component) => included.includes(component.id))
 }

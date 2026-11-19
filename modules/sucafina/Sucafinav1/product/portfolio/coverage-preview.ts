@@ -102,8 +102,7 @@ export function createPortfolioCoveragePreview(input: {
     if (!certificate || digestSfValue(certificate) !== digestSfValue(saved.interval.certificate)) return { status: "stale", reason: "coverage-certificate-changed" }
     return { status: "ok", value: authority }
   }
-  const issue = async (incoming: SensitivityRequest, baselineRef: string, context: TrustedDomainContext): Promise<PortResult<PortfolioCoverageInterval>> => {
-    const request = structuredClone(incoming)
+  const observeAuthority = async (request: SensitivityRequest, baselineRef: string, context: TrustedDomainContext): Promise<PortResult<{ authority: PortfolioCoverageAuthority; digest: string }>> => {
     const resolved = await input.resolveAuthority(structuredClone(request), baselineRef, context)
     if (resolved.status !== "ok") return resolved
     const authority = detach(resolved.value)
@@ -117,6 +116,38 @@ export function createPortfolioCoveragePreview(input: {
     if (authority.rule.criterionId !== request.criterion.id || authority.rule.operator !== request.criterion.operator || authority.rule.value !== request.criterion.value || !Number.isFinite(request.criterion.value) || authority.storedResult.currency !== "USD" || authority.baseline.result.currency !== "USD" || digestSfValue(authority.baseline.result.horizon) !== digestSfValue(authority.storedResult.horizon)) return { status: "unavailable", reason: "coverage-rule-or-scope-mismatch" }
     if ([authority.storedResult, authority.baseline.result].some((result) => result.comparisonStatus === "unavailable" || result.comparisonStatus === "incompatible" || result.knownSubtotal === null || !Number.isFinite(result.knownSubtotal) || result.unresolvedConditions.some((condition) => !eligibleConditions.includes(condition)) || result.restrictions.some((restriction) => restriction !== "preview-not-applied"))) return { status: "unavailable", reason: "coverage-source-unresolved" }
     if (authority.evidence.some((item) => item.state !== "fresh" || item.accessRevision !== context.binding.accessRevision || !item.checkedAt.trim() || !Number.isFinite(Date.parse(item.checkedAt)))) return { status: "unavailable", reason: "coverage-evidence-unavailable" }
+    return { status: "ok", value: { authority, digest: initialDigest } }
+  }
+  // Incomplete category coverage may still authenticate every priced component.
+  // This proof does not qualify an interval or change the result's completeness.
+  const proveKnownSubtotal = async (incoming: SensitivityRequest, baselineRef: string, originals: { source: ScenarioResult; baseline: ScenarioResult }, context: TrustedDomainContext): Promise<PortResult<string>> => {
+    const request = structuredClone(incoming)
+    const captured = structuredClone(originals)
+    const observed = await observeAuthority(request, baselineRef, context)
+    if (observed.status !== "ok") return observed
+    const authority = observed.value.authority
+    const selected = authority.decision.alternatives.filter((alternative) => alternative.id === authority.selection.alternativeId)
+    if (selected.length !== 1 || digestSfValue(selected[0]!.scenario) !== digestSfValue(authority.scenario) || digestSfValue(selected[0]!.result) !== digestSfValue(authority.storedResult)) return { status: "unavailable", reason: "coverage-selection-mismatch" }
+    for (const [original, result, classification] of [[captured.source, authority.storedResult, authority.classification], [captured.baseline, authority.baseline.result, authority.baseline.classification]] as const) {
+      if (classification.schema !== "sf-coverage-classification-v1" || classification.classificationDigest !== classificationDigest(classification) || classification.caseRef.id !== authority.decision.id || classification.caseRef.incarnation !== authority.decision.incarnation || classification.caseRef.version > authority.decision.version || digestSfValue(classification.basis) !== digestSfValue(authority.basis)) return { status: "unavailable", reason: "known-subtotal-classification-unavailable" }
+      const financialDigest = (value: ScenarioResult) => digestSfValue({ ...value, costCoverage: undefined, components: plannerComponentDigest(value.components) })
+      if (financialDigest(original) !== financialDigest(result) || validateScenarioCoverage(result, authority.basis, result.costCoverage)) return { status: "unavailable", reason: "known-subtotal-source-mismatch" }
+      const assessment = assess(authority, result, classification)
+      const included = assessment.entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
+      if (assessment.coverageState === "unavailable" || assessment.issues.length || !result.components.length || result.components.some((component) => !included.includes(component.id) || component.amount === null || !Number.isFinite(component.amount) || component.evidenceState === "absent")) return { status: "unavailable", reason: "known-subtotal-unassessed" }
+    }
+    const current = await observeAuthority(request, baselineRef, context)
+    return current.status === "ok" && current.value.digest === observed.value.digest
+      ? { status: "ok", value: observed.value.digest }
+      : { status: "stale", reason: "coverage-authority-changed" }
+  }
+  const issue = async (incoming: SensitivityRequest, baselineRef: string, context: TrustedDomainContext): Promise<PortResult<PortfolioCoverageInterval>> => {
+    const request = structuredClone(incoming)
+    const observed = await observeAuthority(request, baselineRef, context)
+    if (observed.status !== "ok") return observed
+    const authority = observed.value.authority
+    const initialDigest = observed.value.digest
+    const classification = authority.baseline.classification
     const assessment = authority.storedResult.costCoverage
     const baselineAssessment = authority.baseline.result.costCoverage
     if (assessment.coverageState !== "complete" || baselineAssessment.coverageState !== "complete" || validateScenarioCoverage(authority.storedResult, authority.basis, assessment) || validateScenarioCoverage(authority.baseline.result, authority.basis, baselineAssessment) || assess(authority, authority.storedResult, authority.classification).coverageState !== "complete" || assess(authority, authority.baseline.result, classification).coverageState !== "complete") return { status: "unavailable", reason: "coverage-incomplete" }
@@ -176,5 +207,5 @@ export function createPortfolioCoveragePreview(input: {
     const replay = await qualify(value.intervalRef, value.parameterValue, preview.value, context)
     return replay.status === "ok" && digestSfValue(replay.value) === digestSfValue(value)
   }
-  return { issue, qualify, revalidate, verify }
+  return { issue, qualify, revalidate, verify, proveKnownSubtotal }
 }
