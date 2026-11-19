@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto"
 import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
-import type { APIResponse, Page, Response, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Response, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { login, modeURL, observation } from "./runtime.ts"
@@ -41,13 +41,45 @@ async function tokens(page: Page, account: Account, version: string, ids: string
   expect((await page.goto(`/orchestra/sf-planner/opex?${new URLSearchParams({ version })}`))?.status()).toBe(200)
   const result: Record<string, number> = {}
   for (const id of ids) {
-    const form = page.locator(`form[data-page="OPEX"][data-command="save"][data-record="${id}"]`)
-    await expect(form).toHaveCount(1)
-    const revision = await form.getAttribute("data-version")
-    expect(revision).toMatch(/^\d+$/)
-    result[id] = Number(revision)
+    const row = page.locator("tbody tr").filter({ has: page.locator("code", { hasText: id }) })
+    await expect(row).toHaveCount(1)
+    await row.getByRole("button", { name: "Show details", exact: true }).click()
+    const detail = page.locator("section.sf-u07-detail")
+    const line = detail.locator("p").filter({ has: page.locator("code", { hasText: id }) })
+    await expect(line).toHaveCount(1)
+    const match = /Source revision:\s*(\d+)/.exec(await line.innerText())
+    expect(match).not.toBeNull()
+    const revision = Number(match![1])
+    expect(Number.isSafeInteger(revision)).toBe(true)
+    result[id] = revision
   }
   return result
+}
+
+function versionSave(page: Page, account: Account) {
+  const path = new URL(account.baseURL).pathname + "/planner"
+  return page.waitForResponse((response) => {
+    const request = response.request()
+    const url = new URL(request.url())
+    return request.method() === "POST" && url.origin === account.origin && url.pathname === path && url.searchParams.get("page") === "Versions" && request.postDataJSON()?.action === "save"
+  })
+}
+
+async function confirmVersion(page: Page, account: Account, opener: Locator) {
+  await expect(opener).toBeEnabled()
+  await opener.click()
+  const review = page.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+  const confirm = review.getByRole("button", { name: "Confirm", exact: true })
+  await expect(confirm).toBeEnabled()
+  const pending = versionSave(page, account)
+  await confirm.click()
+  const response = await pending
+  expect(response.status()).toBe(200)
+  const body = await response.json() as { ok?: boolean; value?: unknown }
+  expect(body).toMatchObject({ ok: true })
+  return { response, body }
 }
 
 /** PR34 15df31a: actual XLSX admission, C02 preview, one Apply, delivery loss and read-only reconciliation. */
@@ -67,24 +99,32 @@ export async function importJourney(page: Page, info: TestInfo) {
     return response
   }
   expect((await page.goto("/orchestra/sf-planner/versions/new"))?.status()).toBe(200)
-  const first = page.locator('form[data-page="Versions"][data-command="save"][data-record=""]')
-  await expect(first).toHaveCount(1)
-  const created = page.waitForResponse((response) => response.url() === page.url() && response.request().method() === "POST")
-  await first.getByRole("button", { name: "Create first version", exact: true }).click()
-  expect((await created).status()).toBe(200)
-  const versionForm = page.locator('form[data-page="Versions"][data-command="save"]:not([data-record=""])')
-  await expect(versionForm).toHaveCount(1)
-  const version = await versionForm.getAttribute("data-record")
-  if (!version) throw new Error("The actual Planner did not expose the created version identity")
-  const versionRow = page.getByRole("row").filter({ has: versionForm })
+  const surface = page.locator('[data-sf-surface="CAP23"]')
+  const created = await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }))
+  expect(created.response.request().postDataJSON()).toMatchObject({ page: "Versions", action: "save", confirmed: true, values: {} })
+  expect(created.response.request().postDataJSON().id).toBeUndefined()
+  const detail = page.locator("[data-sf-record-detail]")
+  await expect(detail).toHaveCount(1)
+  const identity = detail.locator("p.sf-s01-secondary bdi")
+  await expect(identity).toHaveText(/\S+/)
+  const version = (await identity.innerText()).trim()
+  expect(created.body.value).toBe(version)
+  const year = detail.locator("#sf-u46-year")
+  await expect(year).toHaveValue(/^\d{4}$/)
+  const nameField = detail.locator("#sf-u46-name")
+  await expect(nameField).toBeEnabled()
+  await nameField.fill(name)
+  const renamed = await confirmVersion(page, account, detail.getByRole("button", { name: "Save", exact: true }))
+  expect(renamed.response.request().postDataJSON()).toMatchObject({ page: "Versions", action: "save", id: version, confirmed: true, values: { name } })
+  await expect(detail.locator("#sf-u46-name")).toHaveValue(name)
+  await expect(detail.getByRole("heading", { name, exact: true })).toBeVisible()
+  const fiscalYear = await year.inputValue()
+  expect((await page.goto(`/orchestra/sf-planner/versions?${new URLSearchParams({ year: fiscalYear })}`))?.status()).toBe(200)
+  const versionRow = page.locator("tr[data-sf-row]").filter({ has: page.getByText(name, { exact: true }) })
   await expect(versionRow).toHaveCount(1)
-  await versionRow.getByRole("button", { name: "Manage", exact: true }).click()
-  await expect(versionRow.getByRole("dialog", { name: "Manage record", exact: true })).toBeVisible()
-  await versionForm.getByLabel("Name", { exact: true }).fill(name)
-  const renamed = page.waitForResponse((response) => response.url() === page.url() && response.request().method() === "POST")
-  await versionForm.getByRole("button", { name: "Save", exact: true }).click()
-  expect((await renamed).status()).toBe(200)
-  await expect(versionForm.getByLabel("Name", { exact: true })).toHaveValue(name)
+  expect(await versionRow.getAttribute("data-sf-row")).toBe(version)
+  await expect(versionRow.locator(".sf-s01-cell-value")).toHaveText(name)
+  await expect(versionRow.getByRole("cell").nth(1)).toHaveText(fiscalYear)
   // Seed isolated preconditions through the real domain; line creation is not claimed as UI coverage.
   for (const [id, label, amount] of [[renewal, "Renewal", 72000], [fixed, "Unchanged", 518000]] as const) {
     const response = await page.request.post(account.baseURL + "/planner", { maxRetries: 0, headers: { Origin: account.origin }, data: { page: "OPEX", action: "save", id, version: 0, values: { versionId: version, name: label, el: "licenses", cur: "USD", owner: account.principal, f0: amount } } })

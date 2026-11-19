@@ -3,11 +3,21 @@ import { expect } from "@playwright/test"
 import type { APIResponse, Page, Response, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import { login, modeURL, observation } from "./runtime.ts"
-import { commandResponse } from "./procurement.ts"
+import type { Account } from "./runtime.ts"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type Schema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
 type Presentation = { title: string; excerpt: string; location: string; href?: string }
+
+function domainPost(page: Page, account: Account, action: string, id?: string) {
+  return page.waitForResponse((response) => {
+    const request = response.request()
+    const url = new URL(request.url())
+    if (request.method() !== "POST" || url.origin !== account.origin || !url.pathname.endsWith("/procurement") || url.searchParams.get("page") !== "Suppliers") return false
+    const body = request.postDataJSON() as { action?: string; id?: string }
+    return body.action === action && (id === undefined || body.id === id)
+  })
+}
 
 async function valueOf<T>(response: APIResponse | Response): Promise<T> {
   expect(response.status()).toBe(200)
@@ -29,8 +39,12 @@ export async function documentJourney(page: Page, info: TestInfo) {
   }
   const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
   expect((await page.goto("/orchestra/sf-procurement/suppliers"))?.status()).toBe(200)
-  const create = page.locator('form[data-page="Suppliers"][data-command="create"]')
-  await expect(create).toHaveCount(1)
+  const suppliers = page.locator(".sf-u14-layout")
+  await expect(suppliers).toHaveCount(1)
+  await page.getByRole("button", { name: "New supplier", exact: true }).click()
+  const editor = suppliers.locator(".sf-u14-editor")
+  await expect(editor).toHaveCount(1)
+  await expect(editor.getByRole("heading", { name: "Create supplier", exact: true })).toBeVisible()
   for (const [label, value] of [
     ["Legal name", name],
     ["Country", "France"],
@@ -39,25 +53,32 @@ export async function documentJourney(page: Page, info: TestInfo) {
     ["Contact email", "operations@example.invalid"],
     ["Payment terms", "Net 45"],
     ["Currency", "USD"],
-  ]) await create.getByLabel(label!, { exact: true }).fill(value!)
-  await create.getByRole("combobox", { name: "Risk rating", exact: true }).selectOption("Low")
-  const creation = commandResponse(page, "create")
-  await create.getByRole("button", { name: "Create supplier", exact: true }).click()
+    ["Risk rating", "Low"],
+  ]) await editor.getByLabel(label!, { exact: true }).fill(value!)
+  const openReview = editor.getByRole("button", { name: "Create supplier", exact: true })
+  await expect(openReview).toBeEnabled()
+  await openReview.click()
+  const review = page.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+  await expect(review).toContainText(name)
+  const confirmCreate = review.getByRole("button", { name: "Confirm once", exact: true })
+  await expect(confirmCreate).toBeEnabled()
+  const creation = domainPost(page, account, "create")
+  await confirmCreate.click()
   const created = await creation
   expect(created.status()).toBe(200)
   expect(await created.json()).toMatchObject({ ok: true })
   expect(created.request().postDataJSON()).toMatchObject({
     page: "Suppliers", action: "create", version: 0,
-    values: { legalName: name, country: "France", address: "Isolated E2E supplier", taxId: key, contactEmail: "operations@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" },
+    values: { supplier: { legalName: name, country: "France", address: "Isolated E2E supplier", taxId: key, contactEmail: "operations@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" } },
   })
   const suppliersURL = "/orchestra/sf-procurement/suppliers"
   expect((await page.goto(suppliersURL))?.status()).toBe(200)
-  const supplierLink = page.getByRole("link", { name, exact: true })
-  await expect(supplierLink).toHaveCount(1)
-  const anchor = await supplierLink.getAttribute("href")
-  expect(anchor).toMatch(/^#supplier-/)
-  const supplier = decodeURIComponent(anchor!.slice("#supplier-".length))
-  expect(supplier).toMatch(/^[a-zA-Z0-9_-]+$/)
+  const supplierRow = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name, exact: true }) })
+  await expect(supplierRow).toHaveCount(1)
+  const supplier = await supplierRow.getAttribute("data-sf-row")
+  if (!supplier || !/^[a-zA-Z0-9_-]+$/.test(supplier)) throw new Error("The supplier chapter did not expose the created supplier identity")
   const upload = page.locator(`form[data-private-upload="supplier"][data-record="${supplier}"]`)
   await expect(upload).toHaveCount(1)
   await expect(upload).toHaveAttribute("data-version", /^\d+$/)
@@ -182,30 +203,48 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(await readCandidates()).toEqual([confirmed])
   expect(await readSchemas()).toEqual([schema])
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract", "document-confirm"])
+  const projection = reader.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === account.origin && url.pathname.endsWith("/api/ui/pages/CAP27")
+  })
   expect((await reader.goto("/orchestra/sf-procurement/suppliers"))?.status()).toBe(200)
-  const remove = reader.locator(`details[id="supplier-${supplier}"] form[data-command="delete"][data-record="${supplier}"]`)
+  const projected = await projection
+  expect(projected.status()).toBe(200)
+  const projectedBody = await projected.json() as { status: string; value?: { versions?: Record<string, { version?: number }> } }
+  expect(projectedBody.status).toBe("ok")
+  const projectedVersion = projectedBody.value?.versions?.["suppliers:" + supplier]?.version
+  expect(projectedVersion).toBe(beforeVersion + 1)
+  const readerRow = reader.locator(`tr[data-sf-row="${supplier}"]`)
+  await expect(readerRow).toHaveCount(1)
+  await readerRow.getByRole("button", { name: "Open record", exact: true }).click()
+  const readerDetail = reader.locator("[data-sf-record-detail]")
+  await expect(readerDetail).toHaveCount(1)
+  await expect(readerDetail.locator("p.sf-s01-secondary bdi")).toHaveText(supplier)
+  const remove = readerDetail.getByRole("button", { name: "Delete pending supplier", exact: true })
   await expect(remove).toHaveCount(1)
-  await expect(remove).toHaveAttribute("data-version", String(beforeVersion + 1))
+  await expect(remove).toBeEnabled()
   const currentSource = await page.request.get(endpoint("document-open", { ref: JSON.stringify(confirmed.ref) }), { maxRetries: 0 })
   const currentPresentation = await valueOf<Presentation>(currentSource)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
   await expect(cards.getByRole("heading", { name: "Price: 42 USD", exact: true })).toBeVisible()
   await expect(cards.locator("blockquote")).toHaveText("42")
-  const deletion = commandResponse(reader, "delete", supplier)
-  const confirmation = reader.waitForEvent("dialog")
-  const deleting = remove.getByRole("button", { name: "Delete", exact: true }).click()
-  const dialog = await confirmation
-  expect(dialog.type()).toBe("confirm")
-  expect(dialog.message()).toBe("Confirm this change?")
-  await dialog.accept()
-  await deleting
+  await remove.click()
+  const deleteReview = reader.locator('[data-component="sf-change-review"]')
+  await expect(deleteReview).toHaveCount(1)
+  await expect(deleteReview.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+  await expect(deleteReview).toContainText(supplier)
+  const confirmDelete = deleteReview.getByRole("button", { name: "Confirm once", exact: true })
+  await expect(confirmDelete).toBeEnabled()
+  const deletion = domainPost(reader, account, "delete", supplier)
+  await confirmDelete.click()
   const deleted = await deletion
   expect(deleted.status()).toBe(200)
   expect(await deleted.json()).toMatchObject({ ok: true })
-  expect(deleted.request().postDataJSON()).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {}, confirmed: true })
+  expect(deleted.request().postDataJSON()).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {} })
   expect((await reader.goto(suppliersURL))?.status()).toBe(200)
-  await expect(reader.getByRole("link", { name, exact: true })).toHaveCount(0)
+  await expect(reader.locator(`tr[data-sf-row="${supplier}"]`)).toHaveCount(0)
+  await expect(reader.getByRole("cell", { name, exact: true })).toHaveCount(0)
   await expect(reader.getByRole("link", { name: filename, exact: true })).toHaveCount(0)
   const revokedAsset = await page.request.get(assetURL.href, { maxRetries: 0 })
   expect(revokedAsset.status()).toBe(403)
