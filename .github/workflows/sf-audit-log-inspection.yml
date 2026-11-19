@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read the completed Planner detail artifact
+      - name: Read the completed Operations artifact
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14565536261/zip > "$RUNNER_TEMP/ingress17.zip"
+          gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14565396740/zip > "$RUNNER_TEMP/operations4.zip"
       - name: Extract only bounded screen context
         run: |
           python3 - <<'PY'
@@ -22,10 +22,12 @@ jobs:
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
           output = ["# Original native screen observations", "", "Read-only extraction from already completed Actions; no tests rerun.", ""]
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
-          for name, run, artifact in [("ingress17", 44593983417, 14565536261)]:
+          for name, run, artifact in [("operations4", 44594105701, 14565396740)]:
               output += [f"## Run {run}; artifact {artifact}", ""]
               with zipfile.ZipFile(root / f"{name}.zip") as archive:
-                  members = [item for item in archive.namelist() if item.endswith("/error-context.md")]
+                  all_contexts = [item for item in archive.namelist() if item.endswith("/error-context.md")]
+                  members = [item for item in all_contexts if re.search(r"OP-(?:PROC-0[23]|DOC-01)", item, re.I)]
+                  output += ["Available contexts: " + ", ".join(all_contexts), ""]
                   output += [f"Screen context files: {len(members)}", ""]
                   for member in members:
                       output += [f"### {member}", ""]
@@ -42,4 +44,4 @@ jobs:
       - name: Persist the observed screen context
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-screens-44593983417.md --input "$RUNNER_TEMP/screen-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-screens-44594105701.md --input "$RUNNER_TEMP/screen-payload.json" > /dev/null
