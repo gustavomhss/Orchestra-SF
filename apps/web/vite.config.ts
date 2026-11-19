@@ -35,6 +35,14 @@ const shellFixtures: Plugin = {
   },
 }
 
+// An explicitly configured upstream keeps the installed browser and producer on
+// one public origin. Host, Origin, paths, cookies and response bodies are unchanged.
+const sfUpstream = process.env.ORCHESTRA_SF_E2E_UPSTREAM
+if (sfUpstream && !/^http:\/\/(?:localhost|127\.0\.0\.1):(?:4110|4174)$/.test(sfUpstream))
+  throw new Error("SF E2E upstream must be an explicitly owned loopback listener")
+const sfProxy = sfUpstream ? Object.fromEntries(["/api", "/sucafina", "/wp04"].map((prefix) =>
+  [prefix, { target: sfUpstream, changeOrigin: false }])) : undefined
+
 export default defineConfig({
   publicDir: fileURLToPath(new URL("../../packages/app-shell/public", import.meta.url)),
   plugins: [desktopPlugin, shellFixtures, sentry] as any,
@@ -42,7 +50,9 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
     port: 3000,
+    proxy: sfProxy,
   },
+  preview: { proxy: sfProxy },
   build: {
     target: "esnext",
     sourcemap: true,

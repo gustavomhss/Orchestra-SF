@@ -5,7 +5,7 @@ import { prepareOperatorAccess } from "../../../../../modules/sucafina/Sucafinav
 // Run only in the Bun child used by the browser fixture. Production preparation owns
 // directory permissions, independent encryption keys and the single-use enrollment.
 const directory = process.argv[2]
-if (!directory || !path.isAbsolute(directory) || process.argv.length !== 3)
+if (!directory || !path.isAbsolute(directory) || process.argv.length !== 4)
   throw new Error("An absolute temporary installation directory is required")
-const file = await prepareLocalConfiguration(directory)
+const file = await prepareLocalConfiguration(directory, process.argv[3])
 await prepareOperatorAccess(file, true)
