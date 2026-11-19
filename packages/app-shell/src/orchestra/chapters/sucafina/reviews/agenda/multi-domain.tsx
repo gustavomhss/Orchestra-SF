@@ -205,9 +205,10 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
               <h3>{section.title}</h3>
               <p>{t("sf.u25.sectionRef")}: {section.id}</p>
               <p>{section.period.start} – {section.period.end} · {section.recordCount} {t("sf.u25.selectedRecords")}</p>
-              <For each={section.projection.context.sourceRefs}>{(source) =>
+              <For each={section.projection.context.sourceRefs}>{(source) => <>
                 <p>{t("sf.u25.sourceRef")}: {source.surface} · {source.type} · {source.id} · {t("sf.u25.sourceVersion")} {source.version} · {t("sf.u25.incarnation")} {source.incarnation}</p>
-              }</For>
+                <p>{t("sf.u25.observedAt")}: <time dateTime={source.observedAt}>{source.observedAt}</time></p>
+              </>}</For>
               <Show when={section.recordCount === 0}><p>{t("sf.u25.noRecords")}</p></Show>
               <table aria-label={section.title + " · " + t("sf.u25.values")}>
                 <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th><th>{t("sf.u25.evidence")}</th></tr></thead>
