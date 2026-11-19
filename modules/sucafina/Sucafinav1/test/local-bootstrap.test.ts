@@ -79,13 +79,16 @@ test("role bootstrap requires verified admin and never overwrites deliberate sav
 })
 
 
-test("startup refuses insecure or aliased temporary directories and incompatible redirect port", async () => {
+test("startup accepts explicit loopback origin and refuses unsafe origins or temporary directories", async () => {
   const root = await directory()
-  const file = await prepareLocalConfiguration(root)
+  const file = await prepareLocalConfiguration(root, "http://localhost:3000")
   const config = await Bun.file(file).json()
-  config.origin = "http://localhost:4111"
-  await Bun.write(file, JSON.stringify(config))
-  await expect(loadLocalConfiguration(file)).rejects.toThrow()
+  expect((await loadLocalConfiguration(file)).config.origin).toBe("http://localhost:3000")
+  for (const origin of ["http://example.invalid:3000", "https://localhost:3000", "http://localhost:3000/path"]) {
+    config.origin = origin
+    await Bun.write(file, JSON.stringify(config))
+    await expect(loadLocalConfiguration(file)).rejects.toThrow()
+  }
   const environment = {
     ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"), ORCHESTRA_INHERIT_CREDENTIALS: "0",
     ORCHESTRA_CONFIG_DIR: path.join(root, "host-config"), ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(root, "host-credential.key"),
