@@ -77,7 +77,7 @@ test("the actual title component submits only its title once and retains an unkn
     button("Review save")!.click()
     await waitFor(() => !!node.querySelector('[data-component="sf-change-review"]'))
     expect(writes).toEqual([])
-    button("Confirm save")!.click()
+    button("Confirm action")!.click()
     await waitFor(() => writes.length === 1 && !node.querySelector('[data-component="sf-change-review"]'))
     expect(writes[0]!.body).toEqual({ page: "Requests", action: "save", id: "PR-1", version: 7, values: { pr: { title: "after" } } })
     expect(writes[0]!.idempotencyKey).toBeTruthy()
