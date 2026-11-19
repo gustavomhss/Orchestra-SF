@@ -2,6 +2,9 @@ import type { SfContext } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
 
 const views = ["BI01", "BI02", "BI03", "BI04", "BI05", "BI06", "BI07", "BI08", "BI09", "BI10", "BI11"] as const
+export function isBiSurface(id: string): boolean {
+  return id === "UI45" || id === "UI46"
+}
 /** Opaque path decoding is already done by Q01. A valid ID is still only a selector. */
 export function validBiRoute(candidate: SfNativeRouteCandidate, params: URLSearchParams): boolean {
   if (candidate.chapterId !== "sf-bi" || candidate.kind !== "entry" ||

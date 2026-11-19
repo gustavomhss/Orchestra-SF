@@ -11,6 +11,9 @@ const kinds: Readonly<Record<string, readonly string[]>> = {
   CAP27: ["entry", "new", "detail", "edit"],
   CAP28: ["entry"],
 }
+export function isProcurementSurface(id: string): boolean {
+  return Object.hasOwn(kinds, id)
+}
 
 /** Recognition never grants access. Record references are admitted again by the original page read. */
 export function parseProcurementRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {

@@ -1,5 +1,6 @@
 /**
- * Mission 231: installed F01 owner composition for UI29 / UI33 / UI34.
+ * Mission 231: installed F01 owner composition. UI29 / UI33 / UI34 stay admitted;
+ * other sidebar chapters admit through the existing family parsers.
  *
  * This is the real chapter body consumed by chapter-route's inert callsite,
  * NOT a provider that manufactures context or an independent login/session.
@@ -13,24 +14,25 @@ import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { usePlatform } from "@/context/platform"
 import { ServerConnection } from "@/context/server"
+import { pathKey } from "@/utils/path-key"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
 import { createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
-import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { createSfDraft } from "../shared/draft"
 import { createSfNavigationState, type SfNativeNavigationState } from "../navigation-state"
 import { matchSfNativeRoutePath } from "../route-registry"
 import { useSfContext } from "../context"
-import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
-  SfDraftRevalidation, SfSurfaceProps } from "../context/contracts"
+import type { SfContextDependencies, SfContextHandle, SfSurfaceProps } from "../context/contracts"
 import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
-import { confirmSfOwnerExit } from "./native-chapter-entry"
+import { bindSfNativeChapterNavigation, confirmSfOwnerExit, transitionSfNativeChapter } from "./native-chapter-entry"
+import { extendedRouteAvailable, isExtendedSurface, parseExtendedRouteQuery, SfExtendedPages } from "./extended-routes"
+import { revalidateSfNativeDraft } from "./draft-revalidation"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -84,12 +86,6 @@ const sameServerKey = (selected: string, connected: string) => selected === conn
 
 function isSfServerKey(value: string): value is SfServerKey {
   return value.length > 0
-}
-
-function readCaseRef(value: SfDraftRevalidationInput["read"]["input"]): string | undefined {
-  if (!value || typeof value !== "object" || Array.isArray(value) || !("caseRef" in value)) return
-  const caseRef = value.caseRef
-  return typeof caseRef === "string" ? caseRef : undefined
 }
 
 function explicitSelection(query: string): { kind: "none" } | { kind: "invalid" } |
@@ -195,6 +191,9 @@ function MountedSurface(props: Readonly<{
       <Match when={props.view().status === "ready" && current()?.surfaceId === "UI34"}>
         <SfIntentView surfaceId="UI34" route={current() as SfSurfaceProps<"UI34">["route"]} />
       </Match>
+      <Match when={props.view().status === "ready" && current() && isExtendedSurface(current()!.surfaceId)}>
+        <SfExtendedPages route={current()!} />
+      </Match>
     </Switch>
   )
 }
@@ -267,37 +266,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     ),
     resolveTransportIdentity: (selected) => sameServer(selected) ? source.transportIdentity : "",
     createDraft: createSfDraft,
-    revalidateDraft: async (input: SfDraftRevalidationInput, fresh, transport, signal): Promise<SfDraftRevalidation> => {
-      // Retained record reads only. No guessed field/action grants or automatic
-      // restoration of pending writes; those require producer-specific proofs.
-      if (signal.aborted || input.read.operationId !== "projection.case" ||
-        input.identity.kind !== "record" || input.read.fieldPaths.length ||
-        input.read.actionIds.length) return { status: "unavailable" }
-      const ready = fresh.availability.some((resource) => resource.operations.some((operation) =>
-        operation.operationId === "projection.case" && operation.state === "ready" && operation.operational))
-      if (!ready) return { status: "denied" }
-      const result = await createSfDecisionsClient(transport)["projection.case"]({
-        caseRef: input.identity.recordRef,
-      }, { signal }).catch(() => undefined)
-      if (signal.aborted || !result || result.kind !== "response" ||
-        result.body.status !== "ok") return { status: "unavailable" }
-      const projection = result.body.value.projection
-      // The original case selector is opaque, NOT equal to projection.case.id.
-      // Confirm it matches the registered revalidation input, then require the
-      // original producer's independently stamped case read and intact version.
-      if (readCaseRef(input.read.input) !== input.identity.recordRef ||
-        !sameStamp(result.body.context, fresh.stamp) ||
-        projection.context.installationId !== fresh.stamp.installationId ||
-        projection.context.projectId !== fresh.stamp.projectId ||
-        projection.context.principalRef !== fresh.stamp.principalRef ||
-        projection.context.policyVersion !== fresh.stamp.policyVersion ||
-        projection.context.accessRevision !== fresh.stamp.accessRevision ||
-        !projection.case.id || !projection.case.incarnation ||
-        !Number.isSafeInteger(projection.case.version))
-        return { status: "denied" }
-      return { status: "authorized", authority: "unchanged",
-        stamp: fresh.stamp, sourceVersion: projection.case.version }
-    },
+    revalidateDraft: revalidateSfNativeDraft,
   }
 
   const navigation: SfNativeNavigationState = createSfNavigationState({
@@ -338,14 +307,18 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         if (url.origin !== window.location.origin || url.hash || url.username || url.password)
           return { status: "invalid-link" }
       } catch { return { status: "invalid-link" } }
-      if ([...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)))
-        return { status: "invalid-link" }
       const candidate = matchSfNativeRoutePath(url.pathname)
-      if (!candidate || !(
+      const core = !!candidate && (
         candidate.surfaceId === "UI29" && candidate.kind === "entry" ||
         candidate.surfaceId === "UI33" && candidate.kind === "entry" ||
         candidate.surfaceId === "UI34" && candidate.kind === "entry"
-      )) return { status: "invalid-link" }
+      )
+      const extended = !!candidate && !core && isExtendedSurface(candidate.surfaceId)
+      if (!candidate || (!core && !extended)) return { status: "invalid-link" }
+      if (core && [...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)))
+        return { status: "invalid-link" }
+      const parsed = extended ? parseExtendedRouteQuery(url.searchParams, candidate) : {}
+      if (!parsed) return { status: "invalid-link" }
       const found = await source.listByIds(selected, signal)
       if (signal.aborted || !found) return { status: "unavailable" }
       if (found.installations.length !== 1) return { status: "denied" }
@@ -360,11 +333,13 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       if (stamp.projectId !== binding.projectId ||
         stamp.installationId !== binding.installationId || stamp.hostId !== binding.hostId)
         return { status: "denied" }
-      const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
-        : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
-      if (!context.value.availability.some((resource) => resource.operations.some((operation) =>
-        operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
-        return { status: "denied" }
+      if (core) {
+        const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
+          : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
+        if (!context.value.availability.some((resource) => resource.operations.some((operation) =>
+          operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
+          return { status: "denied" }
+      } else if (!extendedRouteAvailable(context.value, candidate)) return { status: "denied" }
       // UI34 data admission remains at original useSfCase. When returning from
       // UI29, the exact 227 resume port alone performs BOTH original case reads
       // (preflight and pre-commit), not a third implicit prefetch here.
@@ -379,7 +354,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const route = {
         surfaceId: candidate.surfaceId, kind: candidate.kind,
         params: candidate.parameters, ownerSelection: selected,
-        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: {},
+        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: parsed,
       } as SfResolvedRoute
       return { status: "authorized", route, ownerKey }
     },
@@ -394,6 +369,15 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   })
   // The exact 227 resume adapter receives this single navigation instance.
   const boundDependencies: SfContextDependencies = Object.freeze({ ...dependencies, navigation })
+  const releaseChapter = bindSfNativeChapterNavigation(async (request) => {
+    if (request.server !== ServerConnection.key(props.server) ||
+      pathKey(request.directory ?? "") !== pathKey(props.directory)) return "profile-mismatch"
+    const selected = selection()
+    const state = mounted?.state()
+    if (!selected || state?.status !== "ready" || !state.ownerKey) return "blocked"
+    const result = await transitionSfNativeChapter(request.chapter, selected, state.ownerKey, navigation)
+    return result.status === "committed" ? "committed" : "blocked"
+  })
   let discoveryAttempt = 0
   createEffect(() => {
     // Route selectors never borrow missing values from a remembered profile.
@@ -470,6 +454,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   onCleanup(() => {
     disposed = true
     ownerEpoch += 1
+    releaseChapter()
     navigation.dispose()
     releaseExit()
     if (typeof window !== "undefined") window.removeEventListener("beforeunload", unload)
