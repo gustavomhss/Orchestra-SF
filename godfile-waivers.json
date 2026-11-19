@@ -380,7 +380,7 @@
     },
     "packages/client/src/generated-effect/client.ts": {
       "maximumLines": 4000,
-      "reason": "Generated Effect V2 HttpApi client; regenerated model-default, owned OAuth, agent engine, session model-policy, archive, rename/remove, project directories and config read contracts. Exact generated-output ceiling; owner answered 'Autorizar s\u00f3 gerados'. Handwritten source limits unchanged. Raised for the V2 MCP routes (list, add, remove, connect, disconnect), then for MCP resources and OAuth (start, callback, remove). Raised for the V2 session command route, then for the V1 parity routes (session fork, move, shell, skill, synthetic, generate, compaction and the vcs and activity group). Raised for the V2 Lean dashboard routes (get, update, history). Raised for the capability setup, connection, artifact and operator routes. Raised for the V2 location paths, MCP config, entries and tools routes, the V2 per-turn message diff route and the capability schedule routes. Raised for the merge of dev's per-turn diff and capability routes with the integration's V2-only surface. Generated output is 2723 LOC plus a small margin. Raised for the board spend, decisions, proof and settings routes (slice F1). Raised for the agent detail route and the avatar and skill fields; generated output is 11045 LOC plus a small margin. Raised for the Relay document routes (workflow and hook authoring, step tools). Raised for the campaign payload additions (skill.catalog/by-name; Maestro authorization 2026-11-09).",
+      "reason": "Generated Effect V2 HttpApi client; regenerated model-default, owned OAuth, agent engine, session model-policy, archive, rename/remove, project directories and config read contracts. Exact generated-output ceiling; owner answered 'Autorizar só gerados'. Handwritten source limits unchanged. Raised for the V2 MCP routes (list, add, remove, connect, disconnect), then for MCP resources and OAuth (start, callback, remove). Raised for the V2 session command route, then for the V1 parity routes (session fork, move, shell, skill, synthetic, generate, compaction and the vcs and activity group). Raised for the V2 Lean dashboard routes (get, update, history). Raised for the capability setup, connection, artifact and operator routes. Raised for the V2 location paths, MCP config, entries and tools routes, the V2 per-turn message diff route and the capability schedule routes. Raised for the merge of dev's per-turn diff and capability routes with the integration's V2-only surface. Generated output is 2723 LOC plus a small margin. Raised for the board spend, decisions, proof and settings routes (slice F1). Raised for the agent detail route and the avatar and skill fields; generated output is 11045 LOC plus a small margin. Raised for the Relay document routes (workflow and hook authoring, step tools). Raised for the campaign payload additions (skill.catalog/by-name; Maestro authorization 2026-11-09).",
       "authorizedBy": "Gustavo, standing rule that generated outputs may raise their ceiling (2026-10-10)",
       "authorizedAt": "2026-10-28"
     },
@@ -437,6 +437,126 @@
       "reason": "Campaign growth consolidated in this merge; splitting deferred with Maestro authorization 2026-11-09.",
       "authorizedBy": "maestro",
       "authorizedAt": "2026-11-09"
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts": {
+      "maximumLines": 775,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts": {
+      "maximumLines": 820,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts": {
+      "maximumLines": 1176,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts": {
+      "maximumLines": 1176,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/i18n/orchestra.ts": {
+      "maximumLines": 901,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx": {
+      "maximumLines": 819,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx": {
+      "maximumLines": 888,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx": {
+      "maximumLines": 788,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx": {
+      "maximumLines": 1068,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx": {
+      "maximumLines": 947,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx": {
+      "maximumLines": 794,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx": {
+      "maximumLines": 829,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx": {
+      "maximumLines": 768,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx": {
+      "maximumLines": 894,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts": {
+      "maximumLines": 1054,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/client/src/sucafina/transport.ts": {
+      "maximumLines": 908,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/core/src/session.ts": {
+      "maximumLines": 809,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/core/src/session/runner/llm.ts": {
+      "maximumLines": 753,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/schema/src/sucafina/decisions/source-contracts.ts": {
+      "maximumLines": 902,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
+    },
+    "packages/schema/src/sucafina/planner.ts": {
+      "maximumLines": 836,
+      "reason": "Sucafina go-live (Azure VM + Web) files land above the 750 LOC cap; owner authorized waiver 2026-11-16; split deferred to post-release.",
+      "authorizedBy": "stakeholder",
+      "authorizedAt": "2026-11-16"
     }
   }
 }

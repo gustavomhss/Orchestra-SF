@@ -43,21 +43,37 @@ export async function withInstallation(page: Page, info: TestInfo,
       ...(request.headers()["idempotency-key"] ? { idempotencyKey: request.headers()["idempotency-key"] } : {}) })
   }
   page.on("request", listener)
+  const diagnostics: string[] = []
+  const onConsole = (message: { type: () => string; text: () => string }) => { if (message.type() === "error") diagnostics.push(receiptDiagnostic(`console.error: ${message.text()}`)) }
+  const onPageError = (error: Error) => diagnostics.push(receiptDiagnostic(`pageerror: ${error.message}`))
+  const onNavigated = (frame: { page: () => unknown }) => { if (frame.page() === page) diagnostics.push(receiptDiagnostic(`navigated: ${page.url()}`)) }
+  page.on("console", onConsole)
+  page.on("pageerror", onPageError)
+  page.on("framenavigated", onNavigated)
   try {
     await page.context().addCookies([installation.cookie])
     await action(installation, observations)
     body.completed = true
   } finally {
     page.off("request", listener)
+    page.off("console", onConsole)
+    page.off("pageerror", onPageError)
+    page.off("framenavigated", onNavigated)
     // Never retain cookies, authorization headers, enrollment URLs or arbitrary response bodies.
     try {
       await info.attach("decisions-observations.json", { contentType: "application/json", body: JSON.stringify({
-        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests,
+        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests, diagnostics: diagnostics.slice(-200),
         verdict: "The Playwright runtime report owns the terminal test result.",
         limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
       }, null, 2) })
     } finally { await installation.stop() }
   }
+}
+
+function receiptDiagnostic(value: string) {
+  return value
+    .replace(/https?:\/\/\S*\/sucafina\/auth\/\S*/g, "[enrollment-url]")
+    .replace(/([?&]code=)[^&\s]*/gi, "$1redacted")
 }
 
 export async function enterWorkbench(page: Page, origin: string) {
@@ -84,23 +100,69 @@ export async function fillDecision(page: Page, objective: string) {
   return form
 }
 
+type PausedCommand = {
+  requestId: string
+  request: { url: string; method: string }
+  responseStatusCode?: number
+  responseHeaders?: { name: string; value: string }[]
+}
+
+/** Capture the actual server reply at the response stage, before a document
+ * navigation evicts its body from Chromium. Exactly one original command is
+ * sent; these bytes/status/headers are fulfilled back to the same browser.
+ */
 export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
   await expect(button).toBeEnabled()
-  const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
-  await button.click()
-  const response = await pending
-  return readReply(response, observations)
+  const origin = new URL(page.url()).origin
+  const session = await page.context().newCDPSession(page)
+  const captured = Promise.withResolvers<{ url: string; status: number; contentType: string; json: string }>()
+  session.once("Fetch.requestPaused", async (event: PausedCommand) => {
+    try {
+      const url = new URL(event.request.url)
+      expect(url.origin).toBe(origin)
+      expect(url.pathname).toBe("/sucafina/dashboard")
+      expect(url.searchParams.get("sf")).toBe(mode)
+      expect(event.request.method).toBe(method)
+      const status = event.responseStatusCode
+      if (typeof status !== "number") throw new Error("Missing original command HTTP status")
+      const headers = event.responseHeaders ?? []
+      const contentType = headers.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
+      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+      const bytes = raw.base64Encoded ? Buffer.from(raw.body, "base64") : Buffer.from(raw.body, "utf8")
+      await session.send("Fetch.fulfillRequest", { requestId: event.requestId, responseCode: status,
+        responseHeaders: headers, body: bytes.toString("base64") })
+      captured.resolve({ url: event.request.url, status, contentType, json: bytes.toString("utf8") })
+    } catch (error) {
+      try { await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "Failed" }) }
+      catch { /* Already released by the browser; surface original error below. */ }
+      captured.reject(error)
+    }
+  })
+  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
+  try {
+    await button.click()
+    const reply = await captured.promise
+    return checkedReply({ mode: new URL(reply.url).searchParams.get("sf"), httpStatus: reply.status, contentType: reply.contentType },
+      () => JSON.parse(reply.json), observations)
+  } finally {
+    await session.send("Fetch.disable")
+    await session.detach()
+  }
 }
 
 export async function readReply(response: Response, observations: Record<string, unknown>[]) {
-  const contentType = response.headers()["content-type"] ?? ""
-  const record = { mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(), contentType }
+  return checkedReply({ mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(),
+    contentType: response.headers()["content-type"] ?? "" }, () => response.json(), observations)
+}
+
+async function checkedReply(record: { mode: string | null; httpStatus: number; contentType: string },
+  read: () => unknown | Promise<unknown>, observations: Record<string, unknown>[]) {
   observations.push(record)
-  // A legacy HTML page returned with 200 must never satisfy a domain-command assertion.
-  expect(contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain("application/json")
-  const result = asRecord(await response.json())
+  // A legacy HTML page returned with 200 cannot satisfy a domain command.
+  expect(record.contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain("application/json")
+  const result = asRecord(await read())
   observations.push({ mode: record.mode, status: result.status, reason: result.reason, outputRef: result.outputRef })
-  expect(response.status(), `Domain response for ${record.mode}`).toBe(200)
+  expect(record.httpStatus, `Domain response for ${record.mode}`).toBe(200)
   expect(result.status, `Domain outcome for ${record.mode}`).toBe("ok")
   return result
 }

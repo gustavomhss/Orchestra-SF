@@ -70,7 +70,11 @@ const asRef = (id: string | number): SfRef => String(id) as SfRef
 export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
   const context = useSfContext()
   const navigate = useNavigate()
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
+  const unspecified = () => t(("sf.u02.noCurrency") as SfCopyKey)
+  const amountText = (value: number | null | undefined) =>
+    value === null || value === undefined ? t(key("missing")) :
+    new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value) + " · " + unspecified()
   const formId = createUniqueId()
   const [view, setView] = createStore<{
     page: BudgetPage | undefined
@@ -394,6 +398,18 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const state = editing()?.draft.snapshot()
     return state?.availability === "active" && state.dirty
   }
+  const shownSelected = () => {
+    const owner = selected()
+    if (!owner) return undefined
+    return filtered().some((row) => String(row.id) === String(owner.id)) ? owner : undefined
+  }
+  createEffect(() => {
+    const ref = selectedRef()
+    if (!view.page || !ref || !view.filter.trim()) return
+    if (filtered().some((owner) => String(owner.id) === ref)) return
+    if (editing()?.owner && String(editing()!.owner!.id) === ref) setEditing(undefined)
+    if (props.route.kind === "detail" || props.route.kind === "edit") navigate(listHref("entry"))
+  })
   const closeEditor = () => {
     if (view.busy) return
     setEditing(undefined)
@@ -483,7 +499,8 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     if (!fingerprint || context.ready() !== ready || editing() !== editor || validate(editor)) return
     const payloadDigest = Array.from(new Uint8Array(fingerprint), (byte) => byte.toString(16).padStart(2, "0")).join("")
     editor.draft.setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version })
-    if (editor.draft.snapshot().availability !== "active" || editor.draft.snapshot().pendingOperation?.operationRef !== operationRef) return
+    const pendingSnapshot = editor.draft.snapshot()
+    if (pendingSnapshot.availability !== "active" || pendingSnapshot.pendingOperation?.operationRef !== operationRef) return
     editor.draft.setPhase("submitting")
     activeSubmissionRef = operationRef
     setView("busy", true)
@@ -501,12 +518,11 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         return
       }
       if (!result.body.ok) {
-        if (result.body.status === 409) {
-          editor.draft.setPhase("conflict")
-          setView("error", t(sfCommonKey("sf.common.conflict")))
-        } else if (result.body.status === 422) {
-          editor.draft.setPhase("validation-error")
-          setView("error", result.body.errors?.join("; ") ?? t(sfCommonKey("sf.common.fieldErrorSummary")))
+        if (result.body.status === 409 || result.body.status === 422) {
+          // A definite rejection is not an unknown outcome; release the pending operation via the draft contract.
+          editor.draft.rejectSave({ status: result.body.status, operation: { operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version } })
+          if (result.body.status === 409) setView("error", t(sfCommonKey("sf.common.conflict")))
+          else setView("error", result.body.errors?.join("; ") ?? t(sfCommonKey("sf.common.fieldErrorSummary")))
         } else {
           editor.draft.setPhase("failed")
           setView("error", t(sfCommonKey(result.body.status === 403 ? "sf.common.noAccess" : "sf.common.unavailable")))
@@ -550,16 +566,15 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       : []
   const ownerColumns: readonly SfColumn<BudgetOwner>[] = [
     { id: "name", labelKey: key("name"), align: "start", sortKey: "name", widthPolicy: { kind: "flex", minPx: 180, weight: 2 }, render: (owner) => <bdi>{owner.name ?? t(key("missing"))}</bdi> },
-    { id: "budget", labelKey: key("annualBudget"), align: "end", sortKey: "budget", widthPolicy: { kind: "content", minPx: 140, maxPx: 220 }, render: (owner) => <span class="sf-budget-number">{owner.budget === null || owner.budget === undefined ? t(key("missing")) : String(owner.budget)}</span> },
+    { id: "budget", labelKey: key("annualBudget"), align: "end", sortKey: "budget", widthPolicy: { kind: "content", minPx: 140, maxPx: 220 }, render: (owner) => <span class="sf-budget-number">{amountText(owner.budget)}</span> },
     ...(props.capability === "CAP05" ? [{
       id: "status", labelKey: key("status"), align: "start" as const, widthPolicy: { kind: "content" as const, minPx: 120, maxPx: 180 },
       render: (owner: BudgetOwner) => <bdi>{owner.status ?? t(key("missing"))}</bdi>,
     }] : []),
   ]
-  const pageAction = (): SfAction => ({
+  const pageAction = (): SfAction | undefined => !allowed("save") ? undefined : ({
     id: "new", labelKey: primaryKey(), tone: "primary",
-    disabled: !allowed("save"), reasonKey: !allowed("save") ? sfCommonKey("sf.common.readOnly") : undefined,
-    busy: view.busy, onInvoke: () => navigate(listHref("new")),
+    disabled: view.busy, busy: view.busy, onInvoke: () => navigate(listHref("new")),
   })
   const showMonth = (owner: BudgetOwner, month: number) => {
     const entry = entryFor(owner, month)
@@ -567,21 +582,27 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     return (
       <tr data-sf-month={month}>
         <th scope="row">{month}</th>
-        <td>{entry?.budget === undefined || entry.budget === null ? t(key("missing")) : String(entry.budget)}</td>
-        <td>{entry?.actual === undefined || entry.actual === null ? t(key("missing")) : String(entry.actual)}</td>
-        <td>{entry?.forecast === undefined || entry.forecast === null ? t(key("missing")) : String(entry.forecast)}</td>
-        <td>{deviation?.flag === undefined ? t(key("missing")) : deviation.flag || t(key("missing"))}</td>
+        <td>{amountText(entry?.budget)}</td>
+        <td>{amountText(entry?.actual)}</td>
+        <td>{amountText(entry?.forecast)}</td>
+        <td>{deviation?.flag === undefined ? t(key("missing")) : deviation.flag}</td>
         <td><bdi>{deviation?.text ?? t(key("missing"))}</bdi></td>
-        <td class="sf-budget-row-actions">
-          <button type="button" class="mx-btn" disabled={!allowed("save-entry") || view.busy} onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
-          <button type="button" class="mx-btn" disabled={!allowed("save-deviation") || view.busy} onClick={() => startEdit("save-deviation", owner, month)}>{t(key("saveDeviation"))}</button>
-        </td>
+        <Show when={allowed("save-entry") || allowed("save-deviation")}>
+          <td class="sf-budget-row-actions">
+            <Show when={allowed("save-entry")}>
+              <button type="button" class="mx-btn" disabled={view.busy} onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
+            </Show>
+            <Show when={allowed("save-deviation")}>
+              <button type="button" class="mx-btn" disabled={view.busy} onClick={() => startEdit("save-deviation", owner, month)}>{t(key("saveDeviation"))}</button>
+            </Show>
+          </td>
+        </Show>
       </tr>
     )
   }
   const value = (v: number | string | null | undefined): SfDisplayValue =>
     v === null || v === undefined ? { kind: "missing", reason: { key: key("missing") } } :
-      { kind: "text", text: { kind: "data", text: String(v) } }
+      { kind: "text", text: { kind: "data", text: typeof v === "number" ? amountText(v) : String(v) } }
   const detail = (owner: BudgetOwner) => (
     <SfRecordDetail
       title={{ kind: "data", text: owner.name ?? String(owner.id) }}
@@ -594,13 +615,19 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       sections={[
         { id: "annual-monthly", titleKey: key("entry"), state: view.page?.entries ? "ready" : "partial", content: (
           <div class="sf-budget-detail-section">
-            <div class="sf-budget-actions">
-              <button class="mx-btn" type="button" disabled={!allowed("annual-entry") || view.busy} onClick={() => startEdit("annual-entry", owner)}>{t(key("applyAnnual"))}</button>
-              <button class="mx-btn" type="button" disabled={!allowed("year-amount") || view.busy} onClick={() => startEdit("year-amount", owner)}>{t(key("applyYear"))}</button>
-            </div>
+            <Show when={allowed("annual-entry") || allowed("year-amount")}>
+              <div class="sf-budget-actions">
+                <Show when={allowed("annual-entry")}>
+                  <button class="mx-btn" type="button" disabled={view.busy} onClick={() => startEdit("annual-entry", owner)}>{t(key("applyAnnual"))}</button>
+                </Show>
+                <Show when={allowed("year-amount")}>
+                  <button class="mx-btn" type="button" disabled={view.busy} onClick={() => startEdit("year-amount", owner)}>{t(key("applyYear"))}</button>
+                </Show>
+              </div>
+            </Show>
             <Show when={hintFor(owner)}>
               {(hint) => <dl class="sf-budget-hint">
-                <div><dt>{t(key("yearAmount"))}</dt><dd>{hint().amount}</dd></div>
+                <div><dt>{t(key("yearAmount"))}</dt><dd>{amountText(hint().amount)}</dd></div>
                 <div><dt>{t(key("month"))}</dt><dd>{hint().months}</dd></div>
                 <div><dt>{t(key("sourceVersion"))}</dt><dd>{view.page?.versions.budgetYtd ?? t(key("missing"))}</dd></div>
               </dl>}
@@ -615,7 +642,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
                   <th scope="col">{t(key("forecast"))}</th>
                   <th scope="col">{t(key("flag"))}</th>
                   <th scope="col">{t(key("notes"))}</th>
-                  <th scope="col">{t(sfCommonKey("sf.common.edit"))}</th>
+                  <Show when={allowed("save-entry") || allowed("save-deviation")}>
+                    <th scope="col">{t(sfCommonKey("sf.common.edit"))}</th>
+                  </Show>
                 </tr></thead>
                 <tbody><For each={months}>{(month) => showMonth(owner, month)}</For></tbody>
               </table>
@@ -791,15 +820,15 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
                 rows={filtered()}
                 getRowKey={(owner) => asRef(owner.id)}
                 columns={ownerColumns}
-                selectedKey={selected() ? asRef(selected()!.id) : undefined}
+                selectedKey={shownSelected() ? asRef(shownSelected()!.id) : undefined}
                 sort={view.sort}
                 page={{ kind: "none", total: view.page?.owners?.length ?? null }}
                 onSort={(next) => { setView("sort", next); rememberView({ sort: next }) }}
                 onPage={() => setView("reload", (value) => value + 1)}
                 onSelect={(recordRef) => navigate(listHref("detail", String(recordRef)))}
-                rowActions={(owner) => [
-                  { id: "edit", labelKey: sfCommonKey("sf.common.edit"), tone: "secondary", disabled: !allowed("save"), busy: view.busy },
-                  { id: "delete", labelKey: key("delete"), tone: "danger", disabled: !allowed("delete"), busy: view.busy },
+                rowActions={() => [
+                  ...(allowed("save") ? [{ id: "edit", labelKey: sfCommonKey("sf.common.edit"), tone: "secondary" as const, disabled: view.busy, busy: view.busy }] : []),
+                  ...(allowed("delete") ? [{ id: "delete", labelKey: key("delete"), tone: "danger" as const, disabled: view.busy, busy: view.busy }] : []),
                 ]}
                 onRowAction={(request) => {
                   const owner = view.page?.owners?.find((item) => String(item.id) === String(request.recordRef))
@@ -815,7 +844,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
                 <a class="mx-btn" href={importHref()}>{t(key("import"))}</a>
               </Show>
             </section>
-            <Show when={selected()}>
+            <Show when={shownSelected()}>
               {(owner) => <section class="sf-budget-detail" aria-label={t(key("record"))}>{detail(owner())}</section>}
             </Show>
           </div>

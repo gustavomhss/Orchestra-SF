@@ -18,6 +18,16 @@ import type { SfCaseControls, SfPortfolioCombination, SfPortfolioHistory,
 import "./scenarios.css"
 
 const k = (key: keyof typeof SF_U19_COPY) => key as SfCopyKey
+const horizonLabel = (start: string, end: string, locale: string) => {
+  const day = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
+  return day(start) + " — " + day(end)
+}
 const kt = (key: keyof typeof SF_U19_COPY) => key as unknown as SfTableKey
 type Result = Readonly<{ resultRef: string; result: SfPortfolioResultView }>
 type View = {
@@ -277,7 +287,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                 {(source) => <>
                   <header class="sf-u19-case-head">
                     <h2>{source().objective}</h2>
-                    <p>{source().currency} · {source().horizon.start} — {source().horizon.end} · {t("sf.u19.case.version")} {source().caseRef.version}</p>
+                    <p>{source().currency} · {horizonLabel(source().horizon.start, source().horizon.end, language.intl())} · {t("sf.u19.case.version")} {source().caseRef.version}</p>
                     <button class="mx-btn" type="button" onClick={() => routeTo("list")}>{t("sf.u19.case.choose")}</button>
                   </header>
                   <Show when={props.surfaceId === "UI42"} fallback={

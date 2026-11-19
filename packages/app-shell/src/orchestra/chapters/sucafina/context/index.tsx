@@ -1,10 +1,11 @@
-import { batch, createContext, createEffect, onCleanup, useContext, type JSX } from "solid-js"
+import { batch, createContext, createEffect, onCleanup, untrack, useContext, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { createStore, reconcile } from "solid-js/store"
 import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { createSfOwnerDrafts } from "./drafts"
 import { createSfTodayResumePort, type SfCurrentResumeOwner } from "../navigation-state/resume"
+import { sfExecutiveLinkAllowed, sfExecutiveLinkMatches, sfExecutiveLinkRequest, sfExecutiveRevalidateRef } from "../cross-links"
 import type {
   SfContext, SfContextHandle, SfContextProviderProps, SfContextState,
   SfOwnerIdentity, SfSurfaceProps,
@@ -91,6 +92,14 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
         item.contractRevision === "sf-native-ui/1",
       )
       if (!choices.length) {
+        if (discoveryDenied(discovery) || (!changingSelection && prior.status === "denied")) {
+          const lostDrafts = current?.drafts.dirty() === true
+          current?.drafts.revoke("access-revoked")
+          current = undefined
+          publish(generation, { status: "denied", selection })
+          if (lostDrafts) notifyDraftRevoked()
+          return
+        }
         current?.drafts.revoke("owner-changed")
         current = undefined
         fail(generation, selection, "installation-unavailable")
@@ -217,6 +226,14 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
       publish(generation, { status: "ready", selection, owner: renewedIdentity, ownerKey: renewedKey, binding, context: fresh }, current)
     } catch (error) {
       if (abort.signal.aborted || disposed || generation !== store.generation) return
+      if (discoveryDenied(error) || (!changingSelection && prior.status === "denied")) {
+        const lostDrafts = current?.drafts.dirty() === true
+        current?.drafts.revoke("access-revoked")
+        current = undefined
+        publish(generation, { status: "denied", selection })
+        if (lostDrafts) notifyDraftRevoked()
+        return
+      }
       console.error("Sucafina context read failed", error instanceof Error ? error.name : "unknown")
       current?.drafts.quarantine()
       fail(generation, selection, "network")
@@ -260,6 +277,46 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   }
   const navigation = props.dependencies.navigation
   const resumePort = navigation ? createSfTodayResumePort(navigation, currentResumeOwner) : undefined
+  const followExecutiveLink: NonNullable<SfContextHandle["followExecutiveLink"]> = async (from, target) => {
+    const state = store.state
+    const active = store.active
+    const generation = store.generation
+    if (!navigation || state.status !== "ready" || !active ||
+        active.drafts.state() !== "active") return "denied"
+    const originalOwnerKey = state.ownerKey
+    const originalAccessRevision = state.context.stamp.accessRevision
+    const originalPolicyVersion = state.context.stamp.policyVersion
+    const destination = sfExecutiveLinkRequest(from, target)
+    if (!destination) return "invalid-link"
+    const selection = from.ownerSelection
+    const stillSource = () => {
+      const latest = store.state
+      return !disposed && store.generation === generation && latest.status === "ready" &&
+        latest.ownerKey === originalOwnerKey && store.active === active &&
+        latest.context.stamp.accessRevision === originalAccessRevision &&
+        latest.context.stamp.policyVersion === originalPolicyVersion &&
+        latest.selection.serverKey === selection.serverKey &&
+        latest.selection.projectId === selection.projectId &&
+        latest.selection.installationId === selection.installationId &&
+        latest.context.stamp.projectId === selection.projectId &&
+        latest.context.stamp.installationId === selection.installationId &&
+        active.drafts.state() === "active"
+    }
+    if (!stillSource() || !sfExecutiveLinkAllowed(active.context, target)) return "denied"
+    const result = await navigation.requestNativeTransition(destination, "link", {
+      expectedOwnerKey: originalOwnerKey,
+      admit: (resolved) => stillSource() &&
+        resolved.ownerSelection.serverKey === selection.serverKey &&
+        resolved.ownerSelection.projectId === selection.projectId &&
+        resolved.ownerSelection.installationId === selection.installationId &&
+        sfExecutiveLinkMatches(resolved, target) &&
+        sfExecutiveLinkAllowed(active.context, target),
+      preCommit: async (_resolved, signal) => stillSource() && !signal.aborted &&
+        await sfExecutiveRevalidateRef(active.transport, from, target, signal) &&
+        stillSource() && sfExecutiveLinkAllowed(active.context, target),
+    })
+    return result.status
+  };
   const handle: SfContextHandle = {
     state: () => store.state,
     generation: () => store.generation,
@@ -272,6 +329,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     },
     reload: () => load(props.selection()),
     invalidate,
+    ...(navigation ? { followExecutiveLink } : {}),
     ...(resumePort ? {
       resumeCase: resumePort.resumeCase,
       claimResumeFocus: (input: Parameters<NonNullable<SfContextHandle["claimResumeFocus"]>>[0]) => {
@@ -296,7 +354,13 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
       },
     } : {}),
   }
-  createEffect(() => { const selection = props.selection(); void load(selection) })
+  createEffect(() => {
+    const selection = props.selection()
+    // The owner selection alone triggers loading. The synchronous part of load()
+    // reads state and generation; tracking either here would launch competing
+    // reloads after each fence, revoking or resurrecting an unrelated owner.
+    untrack(() => { void load(selection) })
+  })
   onCleanup(() => {
     disposed = true
     inFlight?.abort()
@@ -306,6 +370,14 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     current = undefined
   })
   return <Context.Provider value={handle}>{props.children}</Context.Provider>
+}
+
+function discoveryDenied(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false
+  const detail = value as { status?: unknown; httpStatus?: unknown; reason?: unknown }
+  return detail.status === "denied" || detail.status === "unauthenticated"
+    || detail.httpStatus === 401 || detail.httpStatus === 403
+    || detail.reason === "denied" || detail.reason === "unauthenticated"
 }
 
 export function useSfContext(): SfContextHandle {

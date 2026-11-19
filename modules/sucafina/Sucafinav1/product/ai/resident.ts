@@ -6,7 +6,7 @@ import { SkillV2 } from "@orchestra/core/skill"
 import { Schema } from "effect"
 import type { ResidentProfile, SkillManifest } from "../contracts/resident-ai.ts"
 import type { SfSelectedRuntime } from "../contracts/runtime.ts"
-import normative from "../contracts/normative-contracts.json"
+import normative from "../contracts/normative-contracts.json" with { type: "json" }
 import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas } from "../contracts/output-schemas.ts"
 import { sfOperationInputSchemas } from "../contracts/operations.ts"
 

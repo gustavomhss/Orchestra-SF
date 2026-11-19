@@ -1,11 +1,8 @@
 import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
-import { createReviewAgendaDiscoveryBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts"
-import { createReviewCollaborationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
 import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
 import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
 import type { ReviewCurrentThread } from "../../../../modules/sucafina/Sucafinav1/product/reviews/current-thread.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
-import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import { createReviewPreparationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/workspace.ts"
 import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import type { PreservedReview, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -16,26 +13,16 @@ const root = document.querySelector<HTMLElement>("[data-sf-review-workspace]")
 const bootstrap = document.querySelector<HTMLScriptElement>("script[data-sf-review-bootstrap]")
 const reviewUrl = (reviewRef: string, sectionId?: string) => {
   const url = new URL(location.href)
-  const context = url.searchParams.get("reviewRef") === reviewRef ? new URLSearchParams(url.search) : undefined
-  const thread = context?.get("reviewThread")
-  url.search = new URLSearchParams({ sf: "review", reviewRef }).toString()
-  if (thread) {
-    url.searchParams.set("reviewThread", thread)
-    for (const key of ["reviewMessage", "reviewIncarnation", "reviewVersion"]) {
-      const selected = context?.get(key)
-      if (selected) url.searchParams.set(key, selected)
-    }
-  }
+  url.searchParams.set("sf", "review"); url.searchParams.set("reviewRef", reviewRef)
+  url.searchParams.delete("previousReviewRef"); url.searchParams.delete("sectionId")
   if (sectionId) url.searchParams.set("sectionId", sectionId)
   return url
 }
 if (root && bootstrap) {
   const value = JSON.parse(bootstrap.textContent ?? "null")
-  const accessRevision = document.querySelector<HTMLMetaElement>('meta[name="sf-access-revision"]')?.content
   bootstrap.remove()
   let closed = false, generation = 0
   let dispose = () => {}
-  let refreshCollaboration = () => {}
   const pending = new Set<AbortController>()
   let probing = false
   const clearPrivate = () => {
@@ -46,19 +33,13 @@ if (root && bootstrap) {
     const message = document.createElement("p"); message.setAttribute("role", "status"); message.textContent = "O acesso mudou. Reabra uma revisão autorizada."
     root.replaceChildren(message)
   }
-  const accessDenied = (response: Response) => {
-    if (response.status === 401 || response.status === 403) return true
-    if (!response.redirected) return false
-    const destination = new URL(response.url, location.href)
-    return destination.origin === location.origin && /\/auth\/login\/?$/.test(destination.pathname)
-  }
   const privateRead = async (url: URL) => {
     if (closed) return undefined
     const turn = generation, controller = new AbortController(); pending.add(controller)
     const timer = setTimeout(() => controller.abort(), 30_000)
     try {
       const response = await fetch(url, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
-      if (accessDenied(response)) { clearPrivate(); return undefined }
+      if (response.status === 401 || response.status === 403) { clearPrivate(); return undefined }
       const body = await response.json().catch(() => undefined)
       return !closed && turn === generation && !controller.signal.aborted ? { response, body } : undefined
     } catch { return undefined } finally { clearTimeout(timer); pending.delete(controller) }
@@ -70,16 +51,12 @@ if (root && bootstrap) {
     const timer = setTimeout(() => controller.abort(), 30_000)
     try {
       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
-      const echoedAccess = response.headers.get("X-SF-Access-Revision")
-      if (accessDenied(response) || echoedAccess !== null && accessRevision !== undefined && echoedAccess !== accessRevision) {
-        clearPrivate()
-        window.dispatchEvent(new Event("sf-access-revoked"))
-      }
+      if (response.status === 401 || response.status === 403) clearPrivate()
       await response.body?.cancel()
     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
     finally { clearTimeout(timer); pending.delete(controller); probing = false }
   }
-  window.addEventListener("focus", () => { void probe().then(() => { if (!closed) refreshCollaboration() }) })
+  window.addEventListener("focus", () => { void probe() })
   // The shell has just reopened this exact review/preparation under current
   // authority. Keep the mounted reader and human choices; updates remain an
   // explicit successor operation, not a replacement of preserved history.
@@ -91,8 +68,7 @@ if (root && bootstrap) {
   window.addEventListener("pagehide", clearPrivate, { once: true })
   window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
   if (value && typeof value === "object" && typeof value.reviewRef === "string") {
-    const status = document.createElement("p"), sources = document.createElement("nav"), collaboration = document.createElement("section")
-    let conversation: ReturnType<typeof createReviewCollaborationView> | undefined
+    const status = document.createElement("p"), sources = document.createElement("nav")
     status.setAttribute("role", "status"); sources.setAttribute("aria-label", "Origens autorizadas da revisão")
     let sourceGeneration = 0
     const openSource = async (reference: BusinessEvidenceRef) => {
@@ -120,11 +96,6 @@ if (root && bootstrap) {
         const found = await privateRead(url), body = found?.body
         if (!found?.response.ok || body?.status !== "ok" || body.value?.id !== reference || !Array.isArray(body.value?.sections) || !Array.isArray(body.value?.comments))
           return { status: closed ? "denied" : "unavailable", reason: "review-unavailable" }
-        if (!conversation && typeof value.principalRef === "string" && value.principalRef.trim()) {
-          conversation = createReviewCollaborationView({ review: body.value, principalRef: value.principalRef })
-          collaboration.replaceChildren(conversation.element)
-          refreshCollaboration = () => { if (!closed) void conversation?.refresh() }
-        }
         return { status: "ok", value: body.value }
       },
       readComparison: async (reference): Promise<PortResult<ReviewComparisonRead>> => {
@@ -151,7 +122,6 @@ if (root && bootstrap) {
         return { status: "ok", value: thread as ReviewCurrentThread }
       },
       checkUpdate: async (reference) => {
-        refreshCollaboration()
         const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-update", reviewRef: reference }).toString()
         const found = await privateRead(url)
         if (closed) return { status: "denied", reason: "review-access-changed" }
@@ -166,19 +136,18 @@ if (root && bootstrap) {
       },
       requestUpdate: (reference) => {
         if (closed) return
-        const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review", previousReviewRef: reference }).toString()
+        const url = new URL(location.href); url.searchParams.delete("reviewRef"); url.searchParams.delete("sectionId"); url.searchParams.set("previousReviewRef", reference)
         location.assign(url)
       },
       openSource, openReviewSection: (reference, sectionId) => { if (!closed) location.assign(reviewUrl(reference, sectionId)) },
     })
     const selected = value.selectedSection as PreservedReview["sections"][number] | undefined
     const selectedView = selected ? selectedSection(selected, openSource) : undefined
-    root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, collaboration, status, sources)
-    dispose = () => { refreshCollaboration = () => {}; conversation?.dispose(); collaboration.replaceChildren(); view.dispose() }
+    root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, status, sources)
+    dispose = view.dispose
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
     const client = createReviewPreparationBrowser()
-    const discover = createReviewAgendaDiscoveryBrowser()
     const guarded = async <T>(read: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
       const turn = generation
       if (closed) return { status: "denied", reason: "review-access-changed" }
@@ -188,8 +157,6 @@ if (root && bootstrap) {
       return closed || turn !== generation ? { status: "denied", reason: "review-access-changed" } : result
     }
     const view = createReviewPreparationView({ items: update.items, ...(typeof update.previousReviewRef === "string" ? { previousReviewRef: update.previousReviewRef } : {}),
-      ...(isSfPeriod(value.period) ? { discoveryPeriod: value.period } : {}),
-      discover: (query) => guarded(() => discover(query)),
       client: { ...client, contribution: (payload) => guarded(() => client.contribution(payload)), agenda: (items) => guarded(() => client.agenda(items)),
         preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)), report: (payload) => guarded(() => client.report(payload)),
         downloadUrl: (reference) => closed ? undefined : client.downloadUrl(reference) },
@@ -200,11 +167,11 @@ if (root && bootstrap) {
     const confirm = (label: string) => {
       const container = document.createElement("label"), check = document.createElement("input")
       check.type = "checkbox"; checks.push(check); container.append(check, document.createTextNode(label)); choices.append(container, document.createElement("br"))
-      check.addEventListener("change", () => { view.element.inert = checks.some((entry) => !entry.checked) || (!!update.previousReviewRef && !update.items.length); message.textContent = view.element.inert ? "Confirme a nova seleção antes de carregar e preservar." : "Carregue a seleção, confira os registros e preserve a sucessora." })
+      check.addEventListener("change", () => { view.element.inert = checks.some((entry) => !entry.checked) || !update.items.length; message.textContent = view.element.inert ? "Confirme a nova seleção antes de carregar e preservar." : "Carregue a seleção, confira os registros e preserve a sucessora." })
     }
     for (const entry of update.confirmations ?? []) confirm(entry.label)
     for (const entry of update.unavailableSections ?? []) confirm(`Excluir explicitamente o tópico ${entry.title} desta nova pauta. ${entry.reason}`)
-    view.element.inert = checks.length > 0 || (!!update.previousReviewRef && !update.items.length)
+    view.element.inert = checks.length > 0 || !update.items.length
     if (update.previousReviewRef) {
       const previous = document.createElement("a"); previous.href = reviewUrl(update.previousReviewRef).toString(); previous.textContent = "Reabrir a revisão anterior"; choices.append(previous)
       message.textContent = update.items.length ? "A revisão anterior permanecerá preservada. Confirme a seleção de cada tópico para preparar sua sucessora." : "Nenhum tópico pode ser reconstruído com uma seleção exata. Abra a origem e prepare uma nova agenda; nenhum tópico foi substituído automaticamente."

@@ -7,6 +7,7 @@ import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { SfPageFrame } from "../../shared/frame"
+import { SfExecutiveAction, SfExecutiveRelatedLinks } from "../../cross-links/view"
 import type { SfColumn, SfCopyKey, SfUiState } from "../../shared/table"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
@@ -16,7 +17,8 @@ import "./collection.css"
 
 type Cap = "CAP13" | "CAP15"
 type Entity = Readonly<{ id: string | number }>
-export type Filters = Readonly<{ q?: string; status?: string; filter?: string; owner?: string }>
+// Mutable: store paths write through setStore("filtersEdit", key, ...), which requires writable keys.
+export type Filters = { q?: string; status?: string; filter?: string; owner?: string }
 export type PageResult<Row> =
   | Readonly<{ kind: "ok"; rows: readonly Row[]; versions: Readonly<Record<string, number>>; actions: readonly string[] }>
   | Readonly<{ kind: "error"; state: SfUiState }>
@@ -415,10 +417,10 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                     onPage={() => undefined} onSelect={(recordRef) => setStore({
                       mode: "detail", selected: recordRef })}
                     rowActions={() => [
-                      { id: "edit", labelKey: k("sf.common.edit"), tone: "secondary",
-                        disabled: !admitted("save"), busy: store.busy },
-                      { id: "delete", labelKey: k("sf.u30.delete"), tone: "danger",
-                        disabled: !admitted("delete"), busy: store.busy },
+                      ...(admitted("save") ? [{ id: "edit", labelKey: k("sf.common.edit"), tone: "secondary" as const,
+                        disabled: store.busy, busy: store.busy }] : []),
+                      ...(admitted("delete") ? [{ id: "delete", labelKey: k("sf.u30.delete"), tone: "danger" as const,
+                        disabled: store.busy, busy: store.busy }] : []),
                     ]}
                     onRowAction={({ recordRef, actionId }) => {
                       const candidates = rows().filter((row) => String(row.id) === String(recordRef))
@@ -448,6 +450,17 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                           <Show when={admitted("delete")}><button type="button" class="mx-btn danger"
                             onClick={() => beginDeleteReview(row())}>{t("sf.u30.delete")}</button></Show>
                         </div>
+                        <div class="flex flex-wrap gap-2 mt-3" data-sf-executive-handoff>
+                          <SfExecutiveAction from={props.route} target={{ kind: "new-topic" }}
+                            label={{ pt: "Criar ação em Hot Topics", en: "Create Hot Topic action" }} />
+                          <SfExecutiveAction from={props.route}
+                            target={{ kind: "relations", source: {
+                              kind: spec.id === "CAP13" ? "risk" : "stakeholder", ref: String(row().id),
+                            } }}
+                            label={{ pt: "Encaminhar vínculo por referência", en: "Link action by reference" }} />
+                        </div>
+                        <SfExecutiveRelatedLinks from={props.route}
+                          omit={spec.id === "CAP13" ? "risk" : "stakeholder"} />
                       </article>}
                     </Show>
                     <Show when={store.mode === "edit" && activeState()?.availability === "active" ? draft() : null}>
@@ -505,15 +518,18 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                         const sourceVersion = () => { const state = current(); return state.availability === "active" ? state.baseVersion : null }
                         const proposedFields = () => { const state = current(); return state.availability === "active"
                           ? reviewFields(active().entity, state.value) : [] }
+                        const intentRef = () => {
+                          const identity = active().identity
+                          return identity.kind === "new" ? identity.newIntentRef
+                            : ("n16-review:" + String(active()!.entity!.id)) as SfIntentRef
+                        }
                         return <SfChangeReview
                           operation={{ ref: active().operationRef, label: message(spec.primary),
                             scope: { kind: "message", message: message(spec.title) } }}
                           base={originalSnapshot(active().entity)}
                           current={originalSnapshot(active().entity)}
                           proposed={{ kind: "draft",
-                            intentRef: active().identity.kind === "new"
-                              ? active().identity.newIntentRef
-                              : ("n16-review:" + String(active().entity!.id)) as SfIntentRef,
+                            intentRef: intentRef(),
                             sourceRef: active().entity ? idOf(active().entity!.id) : null,
                             sourceVersion: sourceVersion(), fields: proposedFields() }}
                           effects={[{ id: "domain-save", domain: "dashboard", state: "proposed",

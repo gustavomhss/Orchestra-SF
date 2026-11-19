@@ -243,10 +243,11 @@ type SourcePage = Readonly<{
   principalRef: string
   accessRevision: string
 }>
-const sourceCollection = surfaceId === "CAP04" ? "opexOwners" : "capexProjects"
-const sourceEntries = surfaceId === "CAP04" ? "opexEntries" : "capexEntries"
-const sourceKind = surfaceId === "CAP04" ? "opex" : "capex"
-const newButtonName = surfaceId === "CAP04" ? "New line" : "New CAPEX project"
+// This installed journey binds one concrete source; no impossible opposite branch.
+const sourceCollection = "capexProjects"
+const sourceEntries = "capexEntries"
+const sourceKind = "capex"
+const newButtonName = "New CAPEX project"
 
 function sourceRows(value: unknown, label: string): SourceRow[] {
   if (!Array.isArray(value) || !value.every((row) => asRecord(row) !== undefined)) {
@@ -626,7 +627,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     expect(command.id).toBe(id)
     expect(asRecord(command.values)?.month).toBe(7)
     await expect.poll(async () =>
-      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7])?.flag,
+      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7"])?.flag,
     ).toBe("dev-amber")
     const before = await originalPage(page, nativeHarness)
     const priorVersion = before.versions[deviationKey]
@@ -642,10 +643,10 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     const updated = await commitReviewed(page, nativeHarness, "save-deviation")
     expect(updated.version).toBe(priorVersion)
     await expect.poll(async () =>
-      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7])?.text,
+      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7"])?.text,
     ).toBe("N206 updated producer deviation")
     const after = await originalPage(page, nativeHarness)
-    expect(asRecord(after.deviations[sourceKind + "-" + id + "-2026-7])?.flag).toBe("dev-red")
+    expect(asRecord(after.deviations[sourceKind + "-" + id + "-2026-7"])?.flag).toBe("dev-red")
     expect(after.versions[deviationKey]).toBeGreaterThan(priorVersion as number)
     await deleteRealOwner(page, nativeHarness, surface, name, id)
   })
@@ -662,7 +663,7 @@ function requireRegisteredLiveCase(
   caseName: string,
 ): void {
   const selected = nativeHarness.selected
-  if (!selected || selected.suite !== (surfaceId === "CAP04" ? "U39" : "U40") ||
+  if (!selected || selected.suite !== "U40" ||
       // 199 must bind this exact test to its genuinely authenticated case.
       // Merely registering a private scenario file is not selecting its actor.
       nativeHarness.selectedCase !== caseName ||
@@ -761,18 +762,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
       .toBe(nativeHarness.manifest.target.projectId)
     await page.goto(nativeJourneyEntryHref(nativeHarness.manifest.target, surfaceId, 2026))
     await expect(surface).toBeVisible()
-    if (surfaceId === "CAP05") {
-      await expect(surface.getByRole("link", { name: "Import Excel", exact: true })).toHaveCount(0)
-    } else {
-      const permissions = await originalPage(page, nativeHarness)
-      const importControl = surface.getByRole("link", { name: "Import Excel", exact: true })
-      if (permissions.allowedActionIds.includes("import")) {
-        await expect(importControl).toBeVisible()
-        await expect(importControl).toHaveAttribute("href", /\/orchestra\/sf-imports\/new/)
-      } else {
-        await expect(importControl).toHaveCount(0)
-      }
-    }
+    await expect(surface.getByRole("link", { name: "Import Excel", exact: true })).toHaveCount(0)
   })
 
   nativeInstalledFixture("206-AC02 real read-only principal sees source but no enabled mutation or private false affordance", async ({ page, nativeHarness }) => {
@@ -1186,11 +1176,9 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · exact original read fi
     }
     await expect(detail.locator('[data-sf-field="source-version"] dd'))
       .toHaveText(String(ownerVersion(original, String(owner.id))))
-    if (surfaceId === "CAP05") {
-      const row = ownerRow(surface, owner.name)
-      const status = owner.status === null || owner.status === undefined ? "Not available" : String(owner.status)
-      await expect(row).toContainText(status)
-    }
+    const row = ownerRow(surface, owner.name)
+    const status = owner.status === null || owner.status === undefined ? "Not available" : String(owner.status)
+    await expect(row).toContainText(status)
     const annualMonths = detail.locator(".sf-budget-months tr[data-sf-month]")
     await expect(annualMonths).toHaveCount(12)
     for (let month = 1; month <= 12; month++) {

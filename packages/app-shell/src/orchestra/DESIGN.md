@@ -254,7 +254,7 @@ Measured at 1920×1200 in the dev app. Spacing values sit on a 2px grid; most ga
   Chapters that build their own page (Settings, Workspaces, Agents, the CI/CD library) use the same kit markup:
   `header.mx-heading` holding a `div` with `.mx-eyebrow`, the h1 and the sentence, then the action. The eyebrow
   appears once per view: a breadcrumb shows only on contextual pages, never above a chapter's own eyebrow.
-- **Sidebar overflow.** The chapter list scrolls under a fade mask (8px top, 32px bottom) with matching block
+- **Sidebar overflow.** The chapter list scrolls under a fade mask (8px top, 16px bottom) with matching block
   padding, so no entry is clipped flat against the chrome. Composer chips (28px) name a mode in one word; the full
   sentence lives in the picker.
 - **Dialogs.** Float glass over the scrim, radius xl, title 2xl. The head is flat, the foot a

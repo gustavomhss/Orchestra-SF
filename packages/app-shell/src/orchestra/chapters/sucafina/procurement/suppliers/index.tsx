@@ -155,12 +155,13 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       if (response.status === 404) return { kind: "not-found" }
       if (response.status === 409 || response.body.status === "stale") return { kind: "stale" }
       if (response.status !== 200 || response.body.status !== "ok") return { kind: "unavailable" }
-      if (response.body.value.capabilityId !== "CAP27" ||
+      const page = response.body
+      if (page.value.capabilityId !== "CAP27" ||
           Object.keys(ready.context.stamp).some((field) =>
-            response.body.context[field as keyof typeof response.body.context] !==
+            page.context[field as keyof typeof page.context] !==
             ready.context.stamp[field as keyof typeof ready.context.stamp],
           )) return { kind: "invalid" }
-      return { kind: "ok", page: response.body }
+      return { kind: "ok", page }
     } catch {
       return { kind: "unavailable" }
     }
@@ -268,7 +269,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     const query = ui.search.trim().toLocaleLowerCase()
     const filtered = current.value.data.suppliers.filter((item) =>
       (ui.filter === "All" || item.status === ui.filter) &&
-      (!query || [item.number, item.legalName, item.taxId]
+      (!query || [item.number, item.legalName]
         .some((v) => display(v).toLocaleLowerCase().includes(query))),
     )
     if (ui.sort.kind !== "field") return filtered
@@ -288,8 +289,11 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     if (ui.state !== "ready") return ui.state
     if (ui.phase === "outcome-unknown") return "outcome-unknown"
     if (ui.phase === "conflict") return "conflict"
-    if (ui.phase === "failed") return ui.error === "denied" || ui.error === "session-expired" || ui.error === "not-found" ||
-      !!editState()?.pendingOperation ? ui.error ?? "unavailable" : "ready"
+    if (ui.phase === "failed") {
+      const snap = editState()
+      return ui.error === "denied" || ui.error === "session-expired" || ui.error === "not-found" ||
+        !!(snap?.availability === "active" && snap.pendingOperation) ? ui.error ?? "unavailable" : "ready"
+    }
     if (routeRef() && !supplier()) return "not-found"
     if (ui.mode !== "new" && !routeRef() && page()?.value.data.suppliers.length === 0) return "empty"
     if (ui.mode !== "new" && !routeRef() && rows().length === 0) return "filtered-empty"
@@ -491,8 +495,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
         "domain.command.CAP27.create" | "domain.command.CAP27.save" | "domain.command.CAP27.activate" |
         "domain.command.CAP27.block" | "domain.command.CAP27.inactivate" |
         "domain.command.CAP27.delete" | "domain.command.CAP27.change-bank",
-        version: intent.ref ? { kind: "record", expectedVersion: intent.version } :
-          { kind: "none" }, confirmation: "presentation-only",
+        version: intent.ref ? { kind: "record", expectedVersion: intent.version } as const : { kind: "none" } as const, confirmation: "presentation-only",
       },
     } as const
   }
@@ -777,7 +780,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           busy:false,onInvoke:()=>setUi("mode","edit")} : undefined}
         secondaryActions={[
           ...(["activate","block","inactivate"] as const).filter(can).map((action) =>
-            ({id:action,labelKey:k("sf.u14."+action),tone:"secondary" as const,
+            ({id:action,labelKey:k(({activate:"sf.u14.activate",block:"sf.u14.block",inactivate:"sf.u14.inactivate"} as const)[action]),tone:"secondary" as const,
               disabled:active(ui.phase),busy:false,onInvoke:()=>begin(action)})),
           ...(can("delete") ? [{id:"delete",labelKey:k("sf.u14.delete"),tone:"danger" as const,
             disabled:active(ui.phase) || selected.status !== "pending" || linked.length !== 0,
@@ -802,9 +805,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     primaryAction={can("create") ? {id:"create",labelKey:k("sf.cap27.primary"),tone:"primary",
       disabled:active(ui.phase),busy:false,
       onInvoke:()=>{setUi("mode","new");setUi("selected",null)}} : undefined}
-    secondaryActions={[{id:"csv",labelKey:k("sf.u14.csv"),tone:"secondary",
-      disabled:!csvReady(),reasonKey:csvReady() ? undefined : k("sf.u14.csvUnavailable"),
-      busy:ui.csvState==="downloading",onInvoke:()=>void beginCsv()}]}
+    secondaryActions={[]}
   >
     <div class="sf-u14-layout">
       <Show when={state() === "ready" || state() === "empty" || state() === "filtered-empty" || state() === "outcome-unknown"}
@@ -885,7 +886,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               captionKey={k("sf.cap27.title")} density="comfortable"
               state={rows().length===0 ? page()?.value.data.suppliers.length===0 ? "empty" : "filtered-empty" : "ready"}
             />
-            <Show when={!csvAllowed()}><p class="sf-u14-hint">{t("sf.u14.csvUnavailable")}</p></Show>
+
             <Show when={ui.csvState === "downloading"}><p role="status">{t("sf.u14.loading")}</p></Show>
             <Show when={ui.csvState === "unavailable"}><p role="alert">{t("sf.u14.unavailable")}</p></Show>
             <Show when={ui.csvState === "stale"}><p role="alert">{t("sf.u14.stale")}</p></Show>

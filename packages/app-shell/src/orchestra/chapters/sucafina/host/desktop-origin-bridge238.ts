@@ -3,12 +3,12 @@
  * opaque handles; no cross-origin renderer fetch, CORS, bearer tokens or
  * invented identity. Explicit remote selections require existing consent.
  */
-import { ServerConnection } from "@/context/server"
+import { ServerConnection } from "../../../../context/server-connection"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import {
   createSfTransport, type SfConnectionCandidate, type SfDesktopBinding,
   type SfDesktopCapability, type SfDesktopInvalidation, type SfDesktopLocationProbe,
-  type SfTransport,
+  type SfTransport, type SfTransportFetch,
 } from "@orchestra/client/sucafina/transport"
 import type {
   SfInstallationDescriptor, SfInstallationList, SfOwnerSelection, SfResolvedRoute,
@@ -51,7 +51,7 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
   desktop: SfDesktopCapability
   server: ServerConnection.Any
   directory: string
-  fetch: typeof globalThis.fetch
+  fetch: SfTransportFetch
   onInvalidated: (reason: SfDesktopInvalidation["reason"]) => void
 }>): Bridge {
   const serverKey = ServerConnection.key(deps.server)
@@ -91,7 +91,7 @@ export function createSfDesktopOriginBridge238(deps: Readonly<{
     if (previous) releaseBinding(previous)
   }
   const allowedSelection = (selected: SfOwnerSelection) =>
-    usable && !disposed && selected.serverKey === serverKey &&
+    usable && !disposed && selected.serverKey === String(serverKey) &&
     !!selected.projectId && !!selected.installationId
   const validBound = (binding: SfDesktopBinding, selected: SfOwnerSelection,
     generation: number) =>

@@ -1,6 +1,5 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
-import { useNavigate } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
@@ -10,7 +9,6 @@ import { SfPageFrame } from "../../shared/frame"
 import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
-import { sfEntryDestinationRequest } from "../../navigation-state"
 import "./overview.css"
 
 type Projection = Extract<typeof SfProcurement.operations["domain.page.CAP24"]["output"]["Type"], { status: "ok" }>
@@ -21,7 +19,6 @@ type Request = Projection["value"]["data"]["requests"][number]
  * Those fields require the frozen queue/BI producer's own measured output. */
 export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.Element {
   const owner = useSfContext()
-  const navigate = useNavigate()
   const language = useLanguage()
   const { t } = useSfPresentation()
   const key = (value: string) => value as SfCopyKey
@@ -118,23 +115,6 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
       projection.context.policyVersion === stamp.policyVersion &&
       projection.context.accessRevision === stamp.accessRevision ? projection : undefined
   }
-  const requestsHref = () => {
-    const projection = currentProjection()
-    const active = owner.ready()
-    const state = owner.state()
-    if (!projection || !active || state.status !== "ready" ||
-        state.selection.serverKey !== props.route.ownerSelection.serverKey ||
-        state.selection.projectId !== props.route.ownerSelection.projectId ||
-        state.selection.installationId !== props.route.ownerSelection.installationId) return undefined
-    if (!active.context.destinations.some((item) => item.capabilityId === "CAP25" &&
-        item.surface === "procurement" && item.canRead)) return undefined
-    const availability = active.context.availability.find((item) =>
-      item.family === "domain-read" && item.resource === "CAP25")
-    if (!availability || availability.state === "denied" || availability.state === "unavailable" ||
-        !availability.operations.some((op) => op.operationId === "domain.page.CAP25" &&
-          op.state === "ready" && op.operational)) return undefined
-    return sfEntryDestinationRequest(props.route, "CAP25")
-  }
   const requests = createMemo(() => currentProjection()?.value.data.requests ?? [])
   const statuses = createMemo(() => [...new Set(requests().map((row) => row.status))])
   const filtered = createMemo(() => requests().filter((row) =>
@@ -142,6 +122,12 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
   const state = (): SfUiState =>
     currentProjection() && view.statusFilter && filtered().length === 0 ? "filtered-empty" : view.state
   const currency = () => currentProjection()?.value.data.formSettings.currency ?? ""
+  const count = (value: number | null | undefined): JSX.Element =>
+    value === null || value === undefined || !Number.isInteger(value)
+      ? <span class="sf-n21-unknown">{t(sfCommonKey("sf.common.unknown"))}</span>
+      : <span class="sf-n21-number">{new Intl.NumberFormat(language.intl(), {
+          maximumFractionDigits: 0,
+        }).format(value)}</span>
   const money = (value: number | null | undefined): JSX.Element =>
     value === null || value === undefined || !Number.isFinite(value)
       ? <span class="sf-n21-unknown">{t(sfCommonKey("sf.common.unknown"))}</span>
@@ -165,11 +151,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
       context={[]}
       tabs={[]}
       activeTab={null}
-      primaryAction={{
-        id: "open-requests", labelKey: key("sf.cap24.primary"), tone: "primary",
-        disabled: !requestsHref(), reasonKey: sfCommonKey("sf.common.unavailable"),
-        busy: false, onInvoke: () => { const href = requestsHref(); if (href) navigate(href) },
-      }}
+      primaryAction={undefined}
       secondaryActions={[]}
       density="comfortable"
       layout="work"
@@ -211,7 +193,10 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
                   </Show>
                 </section>
                 <dl class="sf-n21-metrics">
-                  {metric("sf.n21.open", projection().value.data.metrics.open)}
+                  <div class="mx-card sf-n21-metric">
+                    <dt>{t(key("sf.n21.open"))}</dt>
+                    <dd>{count(filtered().length)}</dd>
+                  </div>
                   {metric("sf.n21.approvedOpex", projection().value.data.metrics.approved.OPEX,
                     projection().value.data.metrics.unavailable.length > 0)}
                   {metric("sf.n21.approvedCapex", projection().value.data.metrics.approved.CAPEX,

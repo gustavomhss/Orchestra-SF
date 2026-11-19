@@ -22,8 +22,8 @@ type Version = Page["data"]["versions"][number]
 const key = (value: keyof typeof SF_U06_COPY | "sf.common.empty" | "sf.common.loading" |
   "sf.common.unavailable" | "sf.common.noAccess" | "sf.common.invalidLink" |
   "sf.common.stale" | "sf.common.loginAgain" | "sf.common.partial" | "sf.common.removed" |
-  "sf.common.observedZero"): SfCopyKey => value as SfCopyKey
-const message = (value: keyof typeof SF_U06_COPY, params?: Record<string, string | number>): SfMessage =>
+  "sf.common.observedZero" | "sf.u02.noCurrency"): SfCopyKey => value as SfCopyKey
+const message = (value: keyof typeof SF_U06_COPY | "sf.u02.noCurrency", params?: Record<string, string | number>): SfMessage =>
   ({ key: key(value), params })
 const data = (value: string) => ({ kind: "data" as const, text: value })
 
@@ -41,17 +41,17 @@ function stateOfContext(status: ReturnType<ReturnType<typeof useSfContext>["stat
 const months = Array.from({ length: 12 }, (_, index) => String(index + 1))
 function currencyValue(value: number | null): SfDisplayValue {
   if (value === null) return { kind: "missing", reason: message("sf.u06.missingActual") }
-  return { kind: "number", value, unit: { kind: "currency", code: "USD" }, fractionDigits: 2 }
+  return { kind: "number", value, unit: { kind: "unspecified", label: message("sf.u02.noCurrency") }, fractionDigits: 2 }
 }
 
 function chartTable(summary: Summary): SfChartTable {
   return {
-    caption: message("sf.u06.monthly"),
+    caption: message("sf.u06.budget"),
     columns: [
       { id: "month", label: message("sf.u06.month") },
-      { id: "budget", label: message("sf.u06.budgetUsd") },
-      { id: "actual", label: message("sf.u06.actualUsd") },
-      { id: "outlook", label: message("sf.u06.outlookUsd") },
+      { id: "budget", label: message("sf.u06.budget") },
+      { id: "actual", label: message("sf.u06.actual") },
+      { id: "outlook", label: message("sf.u06.outlookShort") },
     ],
     rows: months.map((month, index) => ({
       id: month,
@@ -182,7 +182,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
     const partial = !!source && (source.warnings.length > 0 || known !== 12)
     return {
       state: partial ? "partial" as const : source ? "complete" as const : "unavailable" as const,
-      summary: message("sf.u06.monthly"),
+      summary: message("sf.u06.budget"),
       reasons: source?.warnings.map((warning) => message("sf.u06.missingFx", { codes: warning })) ?? [],
       knownCount: known,
       expectedCount: source ? 12 : null,
@@ -196,7 +196,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
       { id: "actual", values: source.actual, label: "sf.u06.actual" },
       { id: "outlook", values: source.outlook, label: "sf.u06.outlookShort" },
     ] as const).map((series) => ({
-      id: series.id, label: message(series.label), unit: { kind: "currency" as const, code: "USD" },
+      id: series.id, label: message(series.label), unit: { kind: "unspecified" as const, label: message("sf.u02.noCurrency") },
       semanticToken: series.id,
       points: series.values.map((value, index) => ({
         id: String(index + 1), x: index + 1, xLabel: data(String(index + 1)),
@@ -227,7 +227,6 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
       context={selected() ? [
         { id: "year", label: message("sf.u06.year"), value: data(String(selected()!.year)) },
         { id: "version", label: message("sf.u06.version"), value: data(selected()!.name) },
-        { id: "currency", label: message("sf.u06.currency"), value: data("USD") },
       ] : []}
       tabs={[]}
       activeTab={null}
@@ -295,7 +294,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                   <>
                     <dl class="sf-u06-metrics">
                       <For each={[
-                        { label: "sf.u06.totalBudget", value: item().total },
+                        { label: "sf.u06.budget", value: item().total },
                         { label: "sf.u06.actualYtd", value: item().actualYTD },
                         { label: "sf.u06.outlook", value: item().fullYear },
                         { label: "sf.u06.hrStaff", value: item().hrTotal },
@@ -304,7 +303,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                           <div class="sf-u06-metric">
                             <dt>{copy.t(key(metric.label))}</dt>
                             <dd>{metric.value === null ? copy.t(key("sf.u06.missingActual")) :
-                              new Intl.NumberFormat(copy.locale(), { style: "currency", currency: "USD" }).format(metric.value)}</dd>
+                              new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(metric.value) + " " + copy.t(key("sf.u02.noCurrency"))}</dd>
                           </div>
                         )}
                       </For>
@@ -317,7 +316,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                       </ul>
                     </Show>
                     <SfChartFrame
-                      titleKey={key("sf.u06.monthly")}
+                      titleKey={key("sf.u06.budget")}
                       questionKey={key("sf.u06.missingActual")}
                       context={[{ label: message("sf.u06.year"), value: data(String(year())) }]}
                       coverage={coverage()}
@@ -328,14 +327,13 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                       onSelect={(ref) => setView("selectedMonth", ref)}
                       onOpenSource={() => undefined}
                     >
-                      <svg class="sf-u06-plot" viewBox="0 0 390 155" aria-hidden="true" focusable="false">
+                      <svg class="sf-u06-plot" viewBox="0 0 390 155" aria-hidden={"true"}>
                         <path d="M 16 10 V 128 H 380" fill="none" stroke="currentColor" opacity=".4"/>
                         <For each={plot()}>
                           {(point) => <circle class={point.className} cx={point.x} cy={point.y} r="4" />}
                         </For>
                       </svg>
                     </SfChartFrame>
-                    <p class="sf-u06-description">{copy.t(key("sf.u06.budgetExplanation"), { year: year() ?? "" })}</p>
                     <div class="sf-u06-compare">
                       <label for="sf-u06-compare-filter">{copy.t(key("sf.u06.compareBudget"))}</label>
                       <select id="sf-u06-compare-filter" class="mx-input"
@@ -364,7 +362,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                           <caption>{copy.t(key("sf.u06.compareBudgets"))}</caption>
                           <thead><tr>
                             <th scope="col">{copy.t(key("sf.u06.version"))}</th>
-                            <th scope="col">{copy.t(key("sf.u06.budgetUsd"))}</th>
+                            <th scope="col">{copy.t(key("sf.u06.budget"))}</th>
                             <th scope="col">{copy.t(key("sf.u06.fteDecember"))}</th>
                           </tr></thead>
                           <tbody>
@@ -375,7 +373,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                               {(comparison) => <tr>
                                 <th scope="row">{comparison.name}</th>
                                 <td>{comparison.total === null ? copy.t(key("sf.u06.missingActual")) :
-                                  new Intl.NumberFormat(copy.locale(), { style: "currency", currency: "USD" }).format(comparison.total)}</td>
+                                  new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(comparison.total) + " " + copy.t(key("sf.u02.noCurrency"))}</td>
                                 <td>{comparison.fte === null ? copy.t(key("sf.u06.missingActual")) :
                                   new Intl.NumberFormat(copy.locale()).format(comparison.fte)}</td>
                               </tr>}

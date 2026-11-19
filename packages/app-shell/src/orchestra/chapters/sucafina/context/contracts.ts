@@ -7,7 +7,8 @@ import type {
 import type { SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared/draft"
-import type { SfNativeNavigationState } from "../navigation-state"
+import type { SfNativeNavigationState, SfNativeTransitionResult } from "../navigation-state"
+import type { SfExecutiveLink, SfExecutiveSourceRoute } from "../cross-links"
 import type { SfTodayResumePort } from "../home"
 
 export type {
@@ -36,7 +37,7 @@ export type SfContextState =
   | Readonly<{ status: "denied"; selection: SfOwnerSelection }>
   | Readonly<{ status: "unavailable"; selection: SfOwnerSelection; reason: "installation-unavailable" | "identity-unavailable" | "host-unavailable" | "connection-auth-unavailable" | "connection-unapproved" | "network" | "contract-mismatch" }>
   | Readonly<{ status: "context-mismatch"; selection: SfOwnerSelection }>
-  | Readonly<{ status: "ready"; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfContext }>
+  | Readonly<{ status: "ready"; selection: SfOwnerSelection; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfContext }>
 
 export type SfPublicDraftController<Value> = Pick<
   SfDraftController<Value>, "snapshot" | "edit" | "discard" | "receiveRemote" | "setPhase" | "setPending" | "confirmSave" | "rejectSave"
@@ -94,6 +95,8 @@ export type SfContextHandle = Readonly<{
   reload: () => Promise<void>
   /** Session expiry quarantines for same-owner revalidation; other reasons purge. */
   invalidate: (reason: "logout" | "revoked" | "session-expired" | "owner-changed" | "host-changed") => void
+  /** Canonical source ref -> fresh F01 authorization -> source re-read -> commit. */
+  followExecutiveLink?: (from: SfExecutiveSourceRoute, target: SfExecutiveLink) => Promise<SfNativeTransitionResult["status"]>
   /** Only installed with the real F01 navigation; no optimistic fallback. */
   resumeCase?: SfTodayResumePort["resumeCase"]
   /** Consumes an owner/access-scoped returnRef once after Home renders. */

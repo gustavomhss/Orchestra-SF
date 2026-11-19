@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
-import corpus from "./fixtures/corpus-v2.json"
-import inputs from "./fixtures/consumer-inputs.json"
+import corpus from "./fixtures/corpus-v2.json" with { type: "json" }
+import inputs from "./fixtures/consumer-inputs.json" with { type: "json" }
 import { createVolumeCorpus } from "./fixtures/volume.ts"
 import { requestValue } from "../../../src/procurement-screen.ts"
 import { domain } from "../../../runtime/dashboard-operations.ts"

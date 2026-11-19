@@ -6,7 +6,7 @@ import { ProcurementModule } from "../../../../../../modules/sucafina/Sucafinav1
 import { initialProcurementSettings } from "../../../../../../modules/sucafina/Sucafinav1/src/initial-settings.ts"
 import { createVolumeCorpus } from "../../../../../../modules/sucafina/Sucafinav1/test/product/wp00/fixtures/volume.ts"
 import { createPlannerCorpus } from "../../../../../../modules/sucafina/Sucafinav1/test/product/wp00/fixtures/planner.ts"
-import inputs from "../../../../../../modules/sucafina/Sucafinav1/test/product/wp00/fixtures/consumer-inputs.json"
+import inputs from "../../../../../../modules/sucafina/Sucafinav1/test/product/wp00/fixtures/consumer-inputs.json" with { type: "json" }
 
 export const nativeCorpus = {
   schema: "sf2h-native-corpus-v1" as const,

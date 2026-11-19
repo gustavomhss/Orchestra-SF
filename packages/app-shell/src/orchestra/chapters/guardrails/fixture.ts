@@ -1,5 +1,5 @@
 import type { Finding, Report, Rule } from "./contract"
-import catalog from "./rules.fixture.json"
+import catalog from "./rules.fixture.json" with { type: "json" }
 
 // Fixture data in the exact contract shapes (brief §5) for the dev scenario switch and tests; production reads the
 // server's guardrail routes. The rules are generated from script/guards/rules/*.toml, without the samples of the secret

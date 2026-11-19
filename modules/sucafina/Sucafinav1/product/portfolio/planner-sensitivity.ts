@@ -94,7 +94,7 @@ export function createPlannerSensitivity(input: {
         return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: preview.value.comparison.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion, ...(qualification ? { coverageQualification: qualification } : {}) } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario) || !assessedKnownSubtotalCoverage(sourceScenario) || !assessedKnownSubtotalCoverage(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = structuredClone(await input.exactThreshold(structuredClone(request), structuredClone(binding), trusted))
         if (result.status !== "ok") return result
         const certificate = await certify(result.value, trusted)
@@ -183,4 +183,9 @@ export function finalizePlannerSensitivity(input: {
     costCoverageRefs: [...new Set([input.binding.baselineCoverageRef, input.binding.scenarioCoverageRef, ...observations.flatMap((sample) => sample.coverageRefs)])],
     unit: input.binding.unit, engineVersion: input.binding.engineVersion, thresholdEvidence,
   })
+}
+
+/** Pending-only inventory has not assessed a category. Do not search it into an exact bound. */
+function assessedKnownSubtotalCoverage(scenario: ScenarioResult) {
+  return scenario.costCoverage.entries.some((entry) => entry.status !== "pending")
 }

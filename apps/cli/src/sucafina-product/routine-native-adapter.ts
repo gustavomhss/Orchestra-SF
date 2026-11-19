@@ -20,6 +20,7 @@ import type { SfRoutineNativeInput, SfRoutineNativeOwner } from "./routine-nativ
 import type { createSfRoutineNativeGovernance } from "./routine-native-governance.ts"
 import type { NativeAdmission, NativePlan, NativeTerminal } from "./routine-native-records.ts"
 import type { SfRoutineNativeRuntimeResources } from "./routine-native-runtime.ts"
+import type { createSfRoutineNativePhaseBridge } from "./routine-native-phase-bridge.ts"
 import { dispatchSfRoutineNativeTask, withSfRoutineNativeAbort } from "./routine-native-dispatch.ts"
 import { routineSourceDigest } from "./routine-services.ts"
 import type { SfRoutineNativePort, SfRoutineNativeRecord, SfRoutinePlan, SfRoutineServicesInput } from "./routine-services.ts"
@@ -48,6 +49,8 @@ export type SfRoutineNativeAdapterInput = Pick<SfRoutineServicesInput, "resolveC
   generation: () => Promise<number | undefined>
   publication: () => RoutinePublicationHost | undefined
   governance: ReturnType<typeof createSfRoutineNativeGovernance>
+  /** Original-Request phase bridge. Its runner, not this adapter, executes the native Task. */
+  phases?: Pick<ReturnType<typeof createSfRoutineNativePhaseBridge>, "start">
 }
 
 type Scope = {
@@ -181,7 +184,9 @@ export function createSfRoutineNativeAdapter(input: SfRoutineNativeAdapterInput)
     } : {
       ...base, admission: admission.state === "needs-review" ? "needs-review" : "preparing",
       admissionRef: admission.reference, admissionVersion: admission.version,
-      pending: [admission.state === "needs-review" ? "native-human-review-and-approval-required" : "native-admission-required"],
+       pending: [admission.state === "needs-review" ? "native-human-review-and-approval-required" :
+         input.phases && !admission.reservation && !admission.bound && admission.review?.verdict === "APPROVE" &&
+           admission.approval?.outcome === "APPROVED" && admission.presentation ? "native-approved-run-required" : "native-admission-required"],
     }
     if (!await scope.current()) return hold("denied", "routine-authority-changed")
     return { result, input: retained.input, inputDigest: retained.inputDigest, workflow: admission.revision.workflowBinding }
@@ -226,10 +231,19 @@ export function createSfRoutineNativeAdapter(input: SfRoutineNativeAdapterInput)
   }
 
   const port: SfRoutineNativePort = {
-    resolvePlan: (recipe, purpose, context) => query(context, async (scope) => {
-      const found = await selectPlan(scope, recipe.documentId, purpose, recipe.publishedVersion)
-      return found ? planValue(found.plan, found.retained) : null
-    }),
+     resolvePlan: (recipe, purpose, context) => query(context, async (scope) => {
+       const found = await selectPlan(scope, recipe.documentId, purpose, recipe.publishedVersion)
+       if (found) return planValue(found.plan, found.retained)
+       if (!input.phases) return null
+       // No plan is not an exclusion: that would make the first catalogue an empty success and never bootstrap.
+       // A current source-verified latest plan for this purpose may deliberately select another publication.
+       for (const plan of await scope.resources.records.listPlans(scope.owner.authoritySessionID)) {
+         if (!await scope.resources.records.isLatestPlan(plan)) continue
+         const retained = await checkPlan(scope, plan, true)
+         if (retained.purpose === purpose && plan.workflowBinding.publication.documentID !== recipe.documentId) return null
+       }
+       return hold("needs-input", "native-routine-plan-required")
+     }),
     resolveRecipe: (reference, context) => query(context, async (scope) => {
       const found = await selectPlan(scope, reference)
       if (!found) return hold("needs-input", "native-routine-plan-required")
@@ -244,9 +258,15 @@ export function createSfRoutineNativeAdapter(input: SfRoutineNativeAdapterInput)
         if (request.inputDigest !== retained.inputDigest || !isDeepStrictEqual(request.input, retained.input) ||
           routineSourceDigest(request.sourceRefs) !== routineSourceDigest(retained.sourceRefs) || !isDeepStrictEqual(request.workflow, revision.workflowBinding))
           return hold("stale", "native-routine-plan-input-changed")
-        const admissions = await scope.resources.records.listAdmissions(revision.id)
-        const task = scope.owner.task
-        if (!task) return hold("unavailable", "native-routine-task-invocation-unavailable")
+         const admissions = await scope.resources.records.listAdmissions(revision.id)
+         const task = scope.owner.task
+         if (input.phases) {
+           // Planning authority projects existing native approval; it never reserves a Task or manufactures approval.
+           // More than one native authorization requires an explicit canonical selection, not newest/first guessing.
+           if (admissions.length !== 1) return hold("needs-input", "native-human-authorization-required")
+           return projectRecord(scope, admissions[0]!)
+         }
+         if (!task) return hold("unavailable", "native-routine-task-invocation-unavailable")
         const entry = await Effect.runPromise(scope.resources.store.message(task.assistantMessageID))
         const part = entry?.message.type === "assistant" ? entry.message.content.find((part) => part.type === "tool" && part.id === task.toolCallID) : undefined
         const authorizationID = part?.type === "tool" && part.state.status !== "pending" && typeof part.state.input === "object" && part.state.input !== null && "authorizationID" in part.state.input
@@ -295,9 +315,28 @@ export function createSfRoutineNativeAdapter(input: SfRoutineNativeAdapterInput)
     start: (incoming, context) => {
       const request = structuredClone(incoming)
       return query(context, async (scope) => {
-        const admission = await readAdmission(scope, request.admissionRef)
-        const retained = await checkPlan(scope, admission.revision, true)
-        if (admission.state !== "admitted" || !admission.reservation) return hold("needs-input", "native-routine-admission-required")
+         const admission = await readAdmission(scope, request.admissionRef)
+         const retained = await checkPlan(scope, admission.revision, true)
+         if (input.phases) {
+           if (request.expectedAdmissionVersion !== admission.version || request.inputDigest !== retained.inputDigest ||
+             !isDeepStrictEqual(request.caseRef, retained.input.caseRef)) return hold("stale", "routine-admission-changed")
+           // Existing admissions are factual receipts on retry, never a reason to run a second Task.
+           if (admission.state === "admitted") return projectRecord(scope, admission)
+           if (admission.state !== "preparing" || admission.reservation || admission.bound ||
+             admission.review?.verdict !== "APPROVE" || admission.approval?.outcome !== "APPROVED" || !admission.presentation)
+             return hold("needs-input", "native-human-authorization-required")
+           const result = await input.phases.start(context, {
+             admissionRef: request.admissionRef, expectedAdmissionVersion: request.expectedAdmissionVersion, caseRef: request.caseRef,
+           })
+           if (result === "busy") return hold("conflict", "native-routine-session-busy")
+           if (result !== "settled" || !await scope.current()) return hold("denied", "routine-authority-changed")
+           const after = await scope.resources.records.readAdmission(admission.authorizationID)
+           if (!after || after.state !== "admitted" || !after.reservation || !after.bound ||
+             after.authorizationID !== admission.authorizationID || !isDeepStrictEqual(after.revision, admission.revision))
+             return hold("unavailable", "native-routine-admission-unverified")
+           return projectRecord(scope, after)
+         }
+         if (admission.state !== "admitted" || !admission.reservation) return hold("needs-input", "native-routine-admission-required")
         if (request.expectedAdmissionVersion !== admission.version || request.inputDigest !== retained.inputDigest ||
           !isDeepStrictEqual(request.caseRef, retained.input.caseRef)) return hold("stale", "routine-admission-changed")
         const call = await invocation(scope, admission)
@@ -370,4 +409,3 @@ export function createSfRoutineNativeAdapter(input: SfRoutineNativeAdapterInput)
   }
   return { port, available, native: () => available() ? port : undefined }
 }
-

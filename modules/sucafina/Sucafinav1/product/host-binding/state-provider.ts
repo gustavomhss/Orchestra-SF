@@ -48,6 +48,99 @@ export function selectSfNamespaceHealth(namespace: "cases" | "reviews" | "docume
   return read
 }
 
+// Only these constructor-owned C08 callbacks may project cases plus stored
+// result envelopes. The registry never holds an observed snapshot, outcome or
+// grant. Opaque and wrapped functions still receive the whole private clone.
+type ResultSelection = { references: readonly string[]; fixedCaseId?: string; skip?: (index: number) => boolean }
+const resultReads = new WeakMap<object, ResultSelection>()
+
+type SfDecisionReadValue = {
+  stored: NonNullable<SfProductState["decisionResults"]>[string]
+  current: SfProductState["cases"][string] | undefined
+}
+export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext): (state: Readonly<SfProductState>, authority: SfStateAuthority) => SfDecisionReadValue | undefined
+export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId: string): (state: Readonly<SfProductState>, authority: SfStateAuthority) => { stored: SfDecisionReadValue["stored"] | undefined; current: SfDecisionReadValue["current"] } | undefined
+export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId?: string): (state: Readonly<SfProductState>, authority: SfStateAuthority) => SfDecisionReadValue | { stored: SfDecisionReadValue["stored"] | undefined; current: SfDecisionReadValue["current"] } | undefined {
+  const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
+    if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
+    const stored = state.decisionResults?.[resultRef]
+    return fixedCaseId !== undefined ? { current: state.cases[fixedCaseId], stored }
+      : stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
+  }
+  registerResultRead(read, context, { references: [resultRef], fixedCaseId })
+  return read
+}
+
+export function selectSfDecisionResultBatch(references: readonly string[], context: TrustedDomainContext, skip: (index: number) => boolean) {
+  const refs = [...references]
+  const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
+    if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
+    return refs.map((resultRef, index) => {
+      if (skip(index)) return undefined
+      const stored = state.decisionResults?.[resultRef]
+      return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
+    })
+  }
+  registerResultRead(read, context, { references: refs, skip })
+  return read
+}
+
+function registerResultRead(read: object, context: TrustedDomainContext, selection: ResultSelection) {
+  const binding = Object.getOwnPropertyDescriptor(context, "binding")
+  // A mutable context or accessor retains the opaque full-clone path; the
+  // predicate is evaluated at the original callback observation, not cached.
+  if (!Object.isFrozen(context) || !binding || !("value" in binding) || !binding.value || typeof binding.value !== "object" || !Object.isFrozen(binding.value) ||
+    !selection.references.every((ref) => typeof ref === "string") ||
+    !["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })) return
+  resultReads.set(read, selection)
+}
+
+function projectResultRead(state: SfProductState, selection: ResultSelection): SfProductState | undefined {
+  const casesField = Object.getOwnPropertyDescriptor(state, "cases")
+  const resultsField = Object.getOwnPropertyDescriptor(state, "decisionResults")
+  if (!casesField?.enumerable || !("value" in casesField) || !resultsField?.enumerable || !("value" in resultsField)) return undefined
+  const plain = (value: unknown): value is Record<string, unknown> =>
+    !!value && typeof value === "object" && !Array.isArray(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value))
+  if (!plain(casesField.value) || !plain(resultsField.value)) return undefined
+  const cases = casesField.value
+  const results = resultsField.value
+  const chosenCases: Record<string, unknown> = Object.create(null)
+  const chosenResults: Record<string, unknown> = Object.create(null)
+  for (const [index, ref] of selection.references.entries()) {
+    if (selection.skip?.(index)) continue
+    const field = Object.getOwnPropertyDescriptor(results, ref)
+    if (!field) { if (ref in results || ref in Object.prototype) return undefined }
+    else {
+      if (!field.enumerable || !("value" in field)) return undefined
+      chosenResults[ref] = field.value
+    }
+    const stored = field && "value" in field ? field.value : undefined
+    const caseId = (() => {
+      if (selection.fixedCaseId !== undefined) return selection.fixedCaseId
+      if (stored === undefined) return undefined
+      if (!plain(stored)) return null
+      const caseRef = Object.getOwnPropertyDescriptor(stored, "caseRef")
+      if (!caseRef?.enumerable || !("value" in caseRef) || !plain(caseRef.value)) return null
+      const id = Object.getOwnPropertyDescriptor(caseRef.value, "id")
+      return id?.enumerable && "value" in id && typeof id.value === "string" ? id.value : null
+    })()
+    if (caseId === null) return undefined
+    if (caseId === undefined) continue
+    const current = Object.getOwnPropertyDescriptor(cases, caseId)
+    if (!current) { if (caseId in cases || caseId in Object.prototype) return undefined; continue }
+    if (!current.enumerable || !("value" in current)) return undefined
+    chosenCases[caseId] = current.value
+  }
+  // Clone one joint selected graph to retain aliases, structuredClone errors,
+  // getter behaviour *inside* selected records and cross-occurrence separation.
+  // Durable SQLite snapshots have plain cloneable root maps; unsafe selected
+  // descriptors, inherited fields and legacy state take the original path.
+  return structuredClone({ cases: chosenCases, decisionResults: chosenResults }) as unknown as SfProductState
+}
+
 /** The caller composes current product authority; a Dashboard role never grants it implicitly. */
 export function createSfProductState(input: {
   persistence: Persistence
@@ -79,6 +172,8 @@ export function createSfProductState(input: {
         const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
         const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
           ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
+        const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
+        const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
         // Keep missing/inherited, accessor and malformed lookups on the original
         // path. Durable SQLite snapshots contain plain cloneable data.
         const value = readiness
@@ -86,6 +181,7 @@ export function createSfProductState(input: {
           : selection && selected?.enumerable && "value" in selected && selected.value &&
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
+          : selectedResults ? await read(selectedResults, authority)
           : await read(structuredClone(state), authority)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await input.authorize(request, snapshot, namespace, mode)
@@ -207,6 +303,28 @@ export function createSfProductState(input: {
 
 function sameAuthority(expected: SfStateAuthority, current: SfStateAuthority | undefined) {
   return current?.principalRef === expected.principalRef && current.accessRevision === expected.accessRevision && current.policyVersion === expected.policyVersion
+}
+
+/**
+ * One-time installation schema bootstrap. Materializes a real, durable empty
+ * product namespace before the first native read; never manufactures a user,
+ * role, case or grant, and never repairs an invalid existing product state.
+ * Called only after configured installation and source initialization.
+ */
+export async function initializeAbsentSfProductState(
+  persistence: Pick<Persistence, "transaction">,
+  createId: () => string,
+): Promise<void> {
+  await persistence.transaction("dashboard", async (snapshot) => {
+    if (snapshot.data.__sfProductV1 !== undefined) {
+      if (!readSfState(snapshot)) throw new Error("SF_PRODUCT_BOOTSTRAP_EXISTING_STATE_INVALID")
+      return { commit: false, value: undefined }
+    }
+    const initial = emptySfState(createId())
+    if (!initial) throw new Error("SF_PRODUCT_BOOTSTRAP_INVALID_INCARNATION")
+    snapshot.data.__sfProductV1 = initial
+    return { commit: true, value: undefined }
+  })
 }
 
 function emptySfState(incarnation: string): SfProductState | undefined {

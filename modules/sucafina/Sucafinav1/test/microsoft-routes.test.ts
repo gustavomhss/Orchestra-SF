@@ -159,13 +159,15 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
 
   const before = await f.snapshot("procurement")
   const denied = await f.post(first, "save", { pr: { title: "ATTACKER-REPLACEMENT" } }, secondId, 1)
-  expect(denied.status).toBe(403)
+  // runtime/procurement.ts first hides unknown and foreign request IDs with 404,
+  // before CAS/version or edit-role checks. Even a stale foreign ID is unobservable.
+  expect(denied.status).toBe(404)
   expect(await denied.text()).not.toContain(secondTitle)
   const stale = await f.post(first, "save", { pr: { title: "ATTACKER-STALE" } }, secondId, 0)
-  expect(stale.status).toBe(409)
-  const conflict = await stale.text()
-  expect(conflict).not.toContain(secondTitle)
-  expect(conflict).not.toContain("stored")
+  expect(stale.status).toBe(404)
+  const hidden = await stale.text()
+  expect(hidden).not.toContain(secondTitle)
+  expect(hidden).not.toContain("stored")
   const spoofed = await f.request("/procurement", first, { page: "Requests", action: "save", id: secondId, version: 1, values: { pr: { title: "FORGED-ADMIN" } }, actor: { id: other, roles: ["admin"] } })
   expect(spoofed.status).toBe(400)
   expect(await f.snapshot("procurement")).toEqual(before)

@@ -2,7 +2,6 @@ import { expect, test } from "bun:test"
 import { protectSfReviewReads } from "../../../../../../apps/cli/src/sucafina-product/review-read-integrity.ts"
 import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 import { object } from "../../../runtime/contract.ts"
-import type { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { available } from "../wp08/relations-fixture.ts"
 import { receiptQuestion } from "../wp08/recipient-receipt-fixture.ts"
 import { createReviewReadBoundaryFixture } from "./review-read-boundary-fixture.ts"
@@ -13,12 +12,6 @@ import { createReviewReadBoundaryFixture } from "./review-read-boundary-fixture.
  */
 async function createInstalledIntegrityFixture(localSnapshotReaders: boolean) {
   const f = await createReviewReadBoundaryFixture()
-  const creationTarget: ReturnType<typeof createSfProductAuthority>["creationTarget"] = {
-    ref: `sf-workspace:${encodeURIComponent(f.fixture.author.binding.installationId)}`,
-    incarnation: f.fixture.author.binding.installationId,
-  }
-  if (f.fixture.creationTarget.ref !== creationTarget.ref || f.fixture.creationTarget.incarnation !== creationTarget.incarnation)
-    throw new Error("Read integrity C08 fixture target is not bound to the authenticated installation")
   const raw: { calls: number; unavailableAt?: number; afterRead?: () => Promise<void> } = { calls: 0 }
   const proof: { calls: number; unavailableAt?: number; afterProof?: () => Promise<void> } = { calls: 0 }
   const read = f.services.reviews.read.bind(f.services.reviews)
@@ -35,7 +28,7 @@ async function createInstalledIntegrityFixture(localSnapshotReaders: boolean) {
     await proof.afterProof?.()
     return ordinal === proof.unavailableAt ? { status: "unavailable", reason: "test-integrity-proof-unavailable" } : result
   } }
-  const scope = protectSfReviewReads({ authority: { host: f.fixture.host, state, creationTarget }, reviews, localSnapshotReaders })
+  const scope = protectSfReviewReads({ authority: { host: f.fixture.host, state, creationTarget: f.fixture.creationTarget }, reviews, localSnapshotReaders })
   const request = f.fixture.host.requestFor(f.fixture.author)
   if (!request) throw new Error("Actual admitted C05 Request unavailable")
   return { f, raw, proof, read: () => scope.run(request, () => reviews.read(f.fixture.review.id, f.fixture.author)),

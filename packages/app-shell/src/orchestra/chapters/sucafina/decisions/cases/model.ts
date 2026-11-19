@@ -10,7 +10,7 @@ import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { useSfContext } from "../../context"
 import type { SfUiState } from "../../shared/frame"
-import type { SfContext } from "../../context/contracts"
+import type { SfContext, SfContextHandle } from "../../context/contracts"
 
 type CaseEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["projection.case"]["output"]>
 type CasesEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["projection.cases"]["output"]>
@@ -52,7 +52,7 @@ function sameAuthorizedProjection(projection: SfCaseProjection, context: SfConte
 }
 
 export function useSfCase(caseRef: () => string): {
-  owner: ReturnType<typeof useSfContext>
+  owner: SfContextHandle
   read: {
     state: SfUiState
     projection?: SfCaseProjection

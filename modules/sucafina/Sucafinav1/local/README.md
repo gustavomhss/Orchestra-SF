@@ -1,14 +1,16 @@
-# Acesso local neste Mac
+# Orchestra Sucafina Edition — homologação local
 
-A execução gerenciada deste Mac fica em `~/Library/Application Support/Sucafina`: `runtime` contém a cópia aprovada do módulo e do host; `installation` guarda configurações, chaves, bancos e bases do scanner com acesso privado. Os fontes em Documents permanecem preservados. O macOS recusou o início direto de executáveis em Documents pelo launchd; por isso os três serviços apontam para a cópia em Application Support. O atalho em Documents abre essa instalação.
+A **Orchestra Sucafina Edition** é a **única interface do produto**, integralmente no shell Orchestra (`/`), preservando sidebar, temas e identidade visual Orchestra com camada de marca Sucafina. Os GETs HTML `/sucafina/dashboard`, `/sucafina/planner` e `/sucafina/procurement` foram aposentados e, após admissão, respondem 404 (`legacy console decommissioned — use /`). Projeções JSON, POSTs, downloads/arquivos autorizados e autenticação continuam nos endpoints próprios; não há console paralelo.
 
-A homologação está disponível em `http://localhost:4110/sucafina/dashboard`. O perfil ativo é **local-operator**, com a conta real do macOS. Não representa uma conta nem grupos do Microsoft 365. A faixa amarela identifica esse perfil em todas as telas.
+A execução gerenciada deste Mac fica em `~/Library/Application Support/Sucafina`: `runtime` contém a cópia aprovada da adaptação legada de homologação e do host Orchestra; `installation` guarda configurações, chaves, bancos e bases do scanner com acesso privado. Os fontes em Documents permanecem preservados. O macOS recusou o início direto de executáveis em Documents pelo launchd; por isso os três serviços apontam para a cópia em Application Support. O atalho em Documents abre essa instalação.
 
-Para reabrir uma sessão no Chrome, usar o atalho `/Users/gustavoschneiter/Documents/sucafina/Abrir Sucafina.command`. Ele prepara uma credencial de uso único em arquivo privado e abre a aplicação. A credencial dura dez minutos; a sessão HttpOnly dura oito horas. O atalho renova o acesso sem exibir tokens. A emissão exige o UID do dono e configuração privada com permissão 0600 em diretório 0700. Nenhuma rota HTTP emite acesso anônimo.
+A entrada de homologação é `http://localhost:4110/` na Orchestra Sucafina Edition, condicionada à admissão same-origin do shell. O perfil **local-operator** usa a conta real do macOS, não uma identidade Microsoft 365. Dashboard, Planner e Procurement deixam de ter páginas HTML separadas.
+
+Para reabrir uma sessão no Chrome, usar o atalho `/Users/gustavoschneiter/Documents/sucafina/Abrir Sucafina.command`. Ele prepara uma credencial de uso único em arquivo privado; após resgate, o HTTP 303 aponta para `/` (shell Orchestra). A credencial autentica o backend local e não dispensa admissão pelo shell. Dura dez minutos; a sessão HttpOnly dura oito horas. A emissão exige UID do dono, arquivo 0600 e diretório 0700. Nenhuma rota emite acesso anônimo.
 
 O operador possui a política administrativa das três superfícies somente neste perfil de homologação. Compras exige ainda a opção booleana explícita `localOperator.buyer: true` no arquivo privado para conceder o papel buyer apenas em Procurement. O padrão continua sem esse papel; a opção não altera a identidade local nem as permissões Microsoft. Os registros ficam em `business-local/installation.sqlite`, separados do perfil Microsoft em `business/installation.sqlite`. A auditoria identifica `macos:<installationId>:<uid>` e o nome real da conta do sistema. Não são criados usuários locais novos, empregados fictícios ou grupos Entra. Dados locais não são promovidos automaticamente ao perfil corporativo.
 
-A opção `authentication: "local-operator"` é explícita no arquivo privado. A ausência da opção, ou `authentication: "microsoft"`, preserva a autenticação corporativa e não concede papéis quando ela está indisponível. Alternar o perfil exige atualizar somente a instância isolada; o aplicativo Orchestra existente não participa desse processo.
+A opção `authentication: "local-operator"` é explícita no arquivo privado. A ausência da opção, ou `authentication: "microsoft"`, preserva a autenticação corporativa e não concede papéis quando ela está indisponível. Alternar o perfil exige atualizar somente a instância de homologação; outras instalações do Orchestra não são reconfiguradas.
 
 Para preparar o acesso pela linha de comando:
 
@@ -19,12 +21,12 @@ bun local/enroll.ts /absolute/private/installation.json --enable-local
 
 O primeiro comando ativa explicitamente o perfil do dono e prepara um arquivo privado de entrada. Invocações posteriores podem omitir `--enable-local`; o helper recusa ativação implícita. O arquivo de entrada substitui a navegação, não publica a credencial em mensagens de console e não reutiliza senhas do Orchestra.
 
-O teste de Chrome hospedado abriu o arquivo privado, autenticou e percorreu as 28 telas. A suíte desta correção aprovou 45 testes, incluindo persistência/auditoria com a conta local, negação de acesso anônimo e isolamento de sessões e dados nos dois sentidos entre Microsoft e local.
+Evidência histórica: o Chrome percorreu 28 páginas do console **agora aposentado**; isso não comprova a montagem autenticada dos capítulos nativos no shell. Testes de persistência/auditoria, negação de acesso e isolamento de perfis continuam relevantes ao backend.
 
 ## Infraestrutura e perfil Microsoft
 
 
-Esta instalação permanece externa ao produto Orchestra. O launcher usa uma instância própria do Orchestra em `http://localhost:4110`, com o módulo no mesmo processo e listener, e arquivos privados fora deste código. O início em primeiro plano não registra serviço. A instalação opcional dos três LaunchAgents próprios está descrita abaixo e preserva o aplicativo existente.
+Este ambiente de homologação é uma instância isolada do próprio servidor Orchestra em `http://localhost:4110`, com backend Sucafina no mesmo processo/listener e capítulos nativos no shell Orchestra. Não há aplicativo ou console separado. Os arquivos privados permanecem fora deste código; LaunchAgents opcionais são exclusivos deste ambiente.
 
 A ativação Microsoft foi adiada por orientação do responsável: “microsoft nao tem ainda, vamos ter que pular”. O adaptador permanece preparado; sem aplicação registrada, o acesso corporativo continua indisponível. O acesso local é um perfil distinto e identificado.
 
@@ -66,7 +68,7 @@ Para iniciar em primeiro plano, após instalar as dependências do checkout e do
 
 A prontidão técnica está em `http://localhost:4110/sucafina/status`, sem divulgar IDs, grupos ou credenciais. O status distingue configuração de comprovação real e identifica uploads indisponíveis sem scanner. A porta desta instalação é fixa em 4110.
 
-Abrir `http://localhost:4110/sucafina/dashboard`, `/planner` ou `/procurement`. No perfil Microsoft, sem os IDs reais o módulo responde 503 de configuração, sem conceder acesso. O perfil local explícito descrito acima usa autenticação própria de homologação. Se a porta estiver ocupada, o início falha. Para encerrar, usar Ctrl-C somente nesse terminal; não encerrar o app Orchestra existente. Alterar o arquivo privado exige novo início somente desta instância.
+Para homologar a interface, abrir `http://localhost:4110/` e comprovar a admissão same-origin e os capítulos nativos da Edition. Os GETs HTML `/sucafina/dashboard`, `/sucafina/planner` e `/sucafina/procurement` respondem 404 após admissão; operações JSON e downloads autorizados permanecem. Sem IDs Microsoft reais, o backend responde 503 de configuração, sem concessão de acesso. Se a porta estiver ocupada, o início falha. Para encerrar, usar Ctrl-C somente no terminal desta instância.
 
 O launcher define XDG, banco do host, chave de credenciais e diretório temporário próprios **antes** de importar o host; também desativa herança de credenciais e configuração de projeto. O factory verifica esses caminhos antes de o host migrar o banco. O SQLite de negócio fica em `business/installation.sqlite`: dados, versões, sequências, auditoria e BLOBs privados participam da mesma transação. Credenciais cifradas ficam em tabela separada e não entram no backup de negócio.
 
@@ -76,13 +78,13 @@ Uploads são recusados quando o scanner está ausente ou não responde com resul
 
 No perfil local, notificações destinadas à conta real do operador são entregues à caixa de entrada durável do aplicativo. Destinatários externos ou do diretório corporativo não são redirecionados para essa conta: permanecem pendentes. No perfil Microsoft, o envio continua dependendo de um transporte corporativo real; não são fabricados recibos de e-mail ou Teams. A existência destes adaptadores e de testes com provedor sintético não prova login, consentimento, grupos ou antivírus reais. A ativação só fica concluída após a validação com a organização.
 
-## Interface e tamanhos de tela
+## Evidência histórica do console aposentado (não é aceite da Edition)
 
-Dashboard, Planner e Procurement compartilham os mesmos tamanhos de controles, tipografia e espaçamentos. Indicadores relacionados ocupam grades de colunas iguais; a visão executiva separa finanças, pessoas, entrega, operações, níveis de serviço e segurança. A navegação destaca a página atual.
+Os antigos componentes e estilos de sidebar verde descritos abaixo são apenas registro da implementação desativada; a Edition usa exclusivamente a interface Orchestra.
 
-Em telas menores, as grades reduzem o número de colunas e a navegação passa para o topo. Tabelas largas mantêm rolagem horizontal dentro do próprio painel. O aviso de homologação continua visível em todas as telas do perfil local.
+As capturas legadas não representam os capítulos nativos. Comportamento de colunas, controles e navegação dessa tela não é prova atual.
 
-A validação de layout usa Chrome no GitHub Actions em larguras de 1440, 1024 e 390 pixels, cobrindo as 28 páginas. Para reproduzir no checkout de validação, usar `bun run test:ci script test/fixture/sucafina/Sucafinav1/test/visual-layout.test.ts`. O teste cria apenas uma instalação temporária própria e um plano de teste pelo comando normal da aplicação; não usa os dados privados desta instalação.
+O teste histórico de layout exercitava Chrome em 1440, 1024 e 390 pixels sobre 28 páginas hoje aposentadas. Esse roteiro não comprova a interface atual e deve ser retargetado para capítulos nativos antes de ser usado como gate da Edition.
 
 Os editores usam campos alinhados em até quatro colunas, com áreas de texto em largura completa e ações separadas. Configurações repetidas e importação de planilhas ficam em painéis expansíveis; relatórios e backup permanecem disponíveis no painel correspondente. A barra superior permite alternar entre Dashboard, Budget Planner e Procurement.
 
@@ -90,7 +92,7 @@ A edição de um registro em tabela abre uma janela nativa do navegador. Escape 
 
 ## Inicialização no login deste Mac
 
-A instalação usa três serviços de usuário exclusivos desta instalação, sem substituir o app Orchestra: scanner, atualizador de assinaturas e servidor. Preparar o plano não encerra nem inicia processos:
+O ambiente de homologação usa três serviços de usuário próprios, sem substituir outras instalações do Orchestra: scanner, atualizador de assinaturas e servidor. Preparar o plano não encerra nem inicia processos:
 
 ```sh
 ./local/install-startup.command --prepare /caminho/absoluto/Orchestra /caminho/absoluto/instalacao-privada
@@ -126,7 +128,7 @@ Os snapshots horários da camada diária são retidos por 35 dias no Dashboard/P
 
 Uma réplica e arquivos no mesmo disco não protegem contra perda deste Mac. Um destino externo autorizado continua necessário para essa proteção. O objetivo de RPO de uma hora e RTO de quatro horas precisa ser medido no volume real e revisto em exercícios periódicos; os testes de aceitação usam bases temporárias e não constituem garantia para qualquer volume futuro.
 
-## Paridade com os artefatos
+## Contratos de dados preservados após aposentadoria do console
 
 O Planner aceita planilhas `.xlsx` e `.xls` BIFF8 reais, com limites de tamanho, folhas e células, sem executar fórmulas nem aceitar links externos. A exportação All Members do Dashboard pode ser importada diretamente: Summary by Leader é auxiliar e os campos de talento não entram no roster. Em planos desbloqueados, a importação sincroniza as posições atomicamente; em planos bloqueados, apenas o roster é atualizado.
 

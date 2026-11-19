@@ -192,6 +192,7 @@ function isolatedEnvironment(root: string) {
     XDG_CACHE_HOME: path.join(root, "host-cache"),
     XDG_STATE_HOME: path.join(root, "host-state"),
     SUCAFINA_LOCAL_CONFIG: path.join(root, "installation.json"),
+    SF_REPORTS_TRACE: "1",
   }
 }
 
@@ -220,7 +221,7 @@ async function redeemOperatorEnrollment(page: Page, installation: Omit<ReportsIn
   const response = await fetch(destination, { redirect: "manual", signal }).catch(() => {
     throw new Error("Production operator enrollment transport failed")
   })
-  if (response.status !== 303 || response.headers.get("location") !== `${installation.mount}/dashboard`) throw new Error(`Production operator enrollment failed (${response.status})`)
+  if (response.status !== 303 || response.headers.get("location") !== "/") throw new Error(`Production operator enrollment failed (${response.status})`)
   // Reuse the transport-normalization fix qualified by Decisions44. It keeps
   // the exact cookie policy while accepting Effect's attribute serialization.
   const cookie = readOperatorSessionCookie(response.headers)

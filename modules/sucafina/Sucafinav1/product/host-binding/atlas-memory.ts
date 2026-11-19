@@ -35,6 +35,21 @@ export async function revalidateSfAtlasRecall(groups: readonly (readonly unknown
   try { return await first.complete(observations, call) && stable() } catch { return false }
 }
 
+/** Canonical readers copy results so callers cannot mutate a protected root.
+ * Rank revalidates the records array it received. An external structuredClone
+ * still has no observation and must deny; only this copy keeps the tagged array. */
+export function cloneSfAtlasRecallResult<T>(value: T): T {
+  const clone = structuredClone(value)
+  const records = recallRecords(value)
+  if (!records || !recallObservations.has(records) || !clone || typeof clone !== "object") return clone
+  return Object.assign(clone, { records })
+}
+
+function recallRecords(value: unknown): readonly unknown[] | undefined {
+  if (!value || typeof value !== "object" || !("records" in value)) return undefined
+  return Array.isArray(value.records) ? value.records : undefined
+}
+
 /** Bind the record and scanner identity to the durable publication receipt,
  * without substituting the currently installed scanner for its historical one. */
 export function sfAtlasPublicationMatches(envelope: BusinessMemoryEnvelope, record: MemoryRecord, outbox: Readonly<Record<string, SfAtlasOutboxEntry>>) {

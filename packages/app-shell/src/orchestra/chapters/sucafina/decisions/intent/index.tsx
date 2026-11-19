@@ -17,7 +17,10 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [ui, setUi] = createStore({ reviewing: false })
   const valid = () => props.surfaceId === "UI34"
-  const source = () => valid() ? props.route.params.caseRef : undefined
+  const source = () => {
+    if (props.surfaceId !== "UI34") return undefined
+    return props.route.params.caseRef
+  }
   const caseData = useSfCase(() => String(source() ?? ""))
   const data = () => caseData.read.projection?.case
   const route = () => valid() ? props.route as SfSurfaceProps<"UI34">["route"] : undefined

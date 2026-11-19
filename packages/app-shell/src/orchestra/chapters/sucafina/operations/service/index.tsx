@@ -4,7 +4,7 @@ import { useLanguage } from "@/context/language"
 import { createSfOperationsClient } from "@orchestra/client/sucafina/operations"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps, SfEditScopeKey, SfRef, SfOwnerKey, SfPublicDraftController } from "../../context/contracts"
-import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/context"
+import type { SfIntentRef, SfOperationRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
@@ -30,7 +30,8 @@ type Editor = Readonly<{
   review: boolean
   operationRef: SfOperationRef
 }>
-type ReadState = Readonly<{
+// Solid store state: no Readonly<> wrapper, see security/index.tsx.
+type ReadState = {
   state: SfUiState
   page: SfServicePage | undefined
   year: number | undefined
@@ -40,7 +41,7 @@ type ReadState = Readonly<{
   submitting: boolean
   operationState: "idle" | "saved" | "failed" | "unknown" | "conflict"
   errorText: string | null
-}>
+}
 const sourceKey = (part: string) => ("sf.cap11." + part) as SfCopyKey
 const commonKey = (part: string) => ("sf.common." + part) as SfCopyKey
 const message = (key: SfCopyKey) => ({ key })
@@ -120,7 +121,10 @@ function serviceReadState(page: SfServicePage): "ready" | "empty" | "filtered-em
     ...(page.data.opsHeatmap ?? []),
   ]
   if (records.length === 0) return "empty"
-  return records.some((row) => row.year === page.selection.year) ? "ready" : "filtered-empty"
+  const period = [
+    serviceCurrentTickets(page), serviceCurrentSla(page), ...serviceCurrentMonthHeatmap(page),
+  ].filter((row) => row != null)
+  return period.length ? "ready" : "filtered-empty"
 }
 
 function reviewFields(action: SfServiceAction, values: DraftValues): SfReviewField[] {
@@ -143,6 +147,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     year: props.route.query.year, month: props.route.query.month,
     refresh: 0, editor: null, submitting: false, operationState: "idle", errorText: null,
   })
+  const setEditorReview = (review: boolean) =>
+    setState("editor", (current) => current ? { ...current, review } : null)
   let draft: Draft | undefined
   let draftOwner: SfOwnerKey | undefined
   let submitted: Readonly<{ operationRef: SfOperationRef; action: SfServiceAction; owner: SfOwnerKey; year: number; month: number }> | undefined
@@ -412,7 +418,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       return
     }
     draft?.setPhase("reviewing")
-    setState("editor", "review", true)
+    setEditorReview(true)
     setState("errorText", null)
   }
 
@@ -591,7 +597,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   const reviewState = () => state.operationState === "conflict" ? "conflict" :
     state.operationState === "unknown" ? "outcome-unknown" :
     state.operationState === "failed" ? "invalid" : state.state
-  const reviewSnapshot = (values: DraftValues, original: boolean, version = state.editor!.version): SfReviewSnapshot => {
+  const reviewSnapshot = (values: DraftValues, original: boolean, version: SfVersion = state.editor!.version): SfReviewSnapshot => {
     const editor = state.editor!
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: message(commonKey("empty")) }
@@ -676,8 +682,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                 </thead>
                 <tbody>
                   <For each={(state.page!.data.opsTickets ?? []).filter(
-                    (row) => row.year === state.page!.selection.year,
-                  ).slice().sort((a, b) => Number(a.month) - Number(b.month))}>
+                    (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
+                  )}>
                     {(row) => (
                       <tr><th scope="row">{serviceString(row.month)}</th>
                         <For each={serviceTicketKeys(state.page!)}>{(key) => (
@@ -689,7 +695,11 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                 </tbody>
               </table>
             </div>
-            <Show when={(state.page!.data.opsTickets ?? []).length === 0}><p>{t(commonKey("empty"))}</p></Show>
+            <Show when={(state.page!.data.opsTickets ?? []).filter(
+              (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
+            ).length === 0}>
+              <p>{t((state.page!.data.opsTickets ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
+            </Show>
             <h3>{t(sourceKey("section.openedClosed"))}</h3>
             <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.openedClosed"))} tabindex="0">
               <table>
@@ -699,15 +709,13 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   <th scope="col">{t(sourceKey("table.closed"))}</th>
                 </tr></thead>
                 <tbody>
-                  <For each={SERVICE_MONTHS}>{(month) => (
-                    <tr>
-                      <th scope="row">{month}</th>
-                      <td>{state.page!.data.display?.opened[month - 1] == null
-                        ? t(sourceKey("table.noData")) : String(state.page!.data.display!.opened[month - 1])}</td>
-                      <td>{state.page!.data.display?.closed[month - 1] == null
-                        ? t(sourceKey("table.noData")) : String(state.page!.data.display!.closed[month - 1])}</td>
-                    </tr>
-                  )}</For>
+                  <tr>
+                    <th scope="row">{state.page!.selection.month}</th>
+                    <td>{state.page!.data.display?.opened[state.page!.selection.month - 1] == null
+                      ? t(sourceKey("table.noData")) : String(state.page!.data.display!.opened[state.page!.selection.month - 1])}</td>
+                    <td>{state.page!.data.display?.closed[state.page!.selection.month - 1] == null
+                      ? t(sourceKey("table.noData")) : String(state.page!.data.display!.closed[state.page!.selection.month - 1])}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -727,8 +735,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                 </tr></thead>
                 <tbody>
                   <For each={(state.page!.data.opsSLA ?? []).filter(
-                    (row) => row.year === state.page!.selection.year,
-                  ).slice().sort((a, b) => Number(a.month) - Number(b.month))}>
+                    (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
+                  )}>
                     {(row) => <tr><th scope="row">{serviceString(row.month)}</th>
                       <For each={SERVICE_SLA_FIELDS}>{(key) =>
                         <td>{row[key] == null ? t(sourceKey("table.noData")) : String(row[key])}</td>}
@@ -748,7 +756,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   <th scope="col">{t(sourceKey("table.availability"))}</th>
                 </tr></thead>
                 <tbody>
-                  <For each={SERVICE_MONTHS}>{(month) => {
+                  <For each={[state.page!.selection.month]}>{(month) => {
                     const row = (state.page!.data.opsSLA ?? []).find((source) =>
                       source.year === state.page!.selection.year && source.month === month)
                     return <tr>
@@ -761,6 +769,9 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                 </tbody>
               </table>
             </div>
+            <Show when={!serviceCurrentSla(state.page!)}>
+              <p>{t((state.page!.data.opsSLA ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
+            </Show>
             <button type="button" disabled={!can("save-sla")} onClick={() => openEditor("save-sla")}>
               {t(sourceKey("action.save-sla"))}
             </button>
@@ -771,27 +782,26 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.heatmap"))} tabindex="0">
               <table>
                 <thead><tr><th>{t(sourceKey("table.item"))}</th>
-                  <For each={SERVICE_MONTHS}>{(month) => <th scope="col">{month}</th>}</For>
+                  <th scope="col">{state.page!.selection.month}</th>
                 </tr></thead>
                 <tbody>
                   <For each={serviceItems(state.page!)}>{(item) => (
                     <tr><th scope="row">{item}</th>
-                      <For each={SERVICE_MONTHS}>{(month) => {
-                        const row = (state.page!.data.opsHeatmap ?? []).find(
-                          (candidate) => candidate.year === state.page!.selection.year &&
-                            candidate.month === month && candidate.item === item,
-                        )
-                        return <td>{row ? (
-                          <span title={serviceString(row.comments)}>
-                            {[row.p1 ?? "", row.p2 ?? "", row.tickets ?? ""].join("/")}
-                          </span>
-                        ) : t(sourceKey("table.noData"))}</td>
-                      }}</For>
+                      <td>{(() => {
+                        const row = serviceCurrentHeatmap(state.page!, item)
+                        if (!row) return t(sourceKey("table.noData"))
+                        const comments = serviceString(row.comments)
+                        const figures = [row.p1 ?? "", row.p2 ?? "", row.tickets ?? ""].join("/")
+                        return comments ? <span title={comments}>{figures}</span> : <span>{figures}</span>
+                      })()}</td>
                     </tr>
                   )}</For>
                 </tbody>
               </table>
             </div>
+            <Show when={serviceCurrentMonthHeatmap(state.page!).length === 0}>
+              <p>{t((state.page!.data.opsHeatmap ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
+            </Show>
             <div class="sf-ops-actions">
               <For each={serviceItems(state.page!)}>{(item) => (
                 <button type="button" disabled={!can("save-heatmap")} onClick={() => openEditor("save-heatmap", item)}>
@@ -890,8 +900,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   }}
                   state={reviewState()}
                   onConfirm={() => { void submitReviewed() }}
-                  onRevise={() => { setState("editor", "review", false); draft?.setPhase("dirty") }}
-                  onCancel={() => setState("editor", "review", false)}
+                  onRevise={() => { setEditorReview(false); draft?.setPhase("dirty") }}
+                  onCancel={() => setEditorReview(false)}
                    onReconcile={() => setState("refresh", (value) => value + 1)}
                 />
               }>

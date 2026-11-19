@@ -1,0 +1,43 @@
+---
+name: sf-user-journey-qa-cap-cap01-05-cap03-p01
+description: "QA manutenção SF: executar story SF-CAP03-P01 (CAP03: Entender orçamento aprovado, consumido e projeção de fim de) pela UI; ator FINANCE, registrar evidência e contraprovas."
+internal: true
+when: "O QA solicitou a story SF-CAP03-P01 ou o caso específico CAP03: Entender orçamento aprovado, consumido e projeção de fim d"
+not-when: "Outra story; carregue a folha que possui o ID solicitado, não esta SF-CAP03-P01"
+---
+# SF-CAP03-P01 — CAP03: Entender orçamento aprovado, consumido e projeção de fim de ano
+
+**Uso:** QA/manutenção interna; o LLM interpreta o(s) ator(es) como usuários, não é uma skill para o cliente. **Protocolo:** carregar `sf-user-journey-qa` antes desta folha; interagir exclusivamente pela UI instalada e preservar a evidência.
+
+**Prioridade:** P0 · **Protagonista:** FINANCE · **Superfícies:** CAP03 · **Jornadas:** J01, J05.
+
+**Entrada UI indicada:** `/orchestra/sf-dashboard/budget` (rota do app-shell; confirmar owner e mount reais).
+
+**Situação / dados sintéticos:** BUD-2026-IT · budget 600000 · actual Jan–Set 400000 · open 190000 USD
+
+**Resultado de negócio:** Como Sofie, Finance (conta existente quando tenant de demonstração for aprovado), quero entender orçamento aprovado, consumido e projeção de fim de ano para tomar a próxima ação com prova e governança.
+
+## Pré-condições específicas
+
+- Fixture disponível: BUD-2026-IT · budget 600000 · actual Jan–Set 400000 · open 190000 USD. Se produtor ou porta não estiver instalado, registrar BLOCKED/UNAVAILABLE sem simular PASS.
+
+## Passos, mecanismos e limites das ferramentas
+
+1. **[READ_ONLY_WITNESS]** Registrar no formulário de execução SHA/tenant lógico/instalação/principal/competência e capturar tela inicial.
+2. **[READ_ONLY_WITNESS]** Abrir Planner → Versions (/orchestra/sf-planner/versions), localizar V-2026-OFFICIAL no ano 2026 e registrar ID real, lock e year como versionRef; o Dashboard não tem seletor de planVersion.
+3. **[UI_ACTION]** Navegar ao Dashboard → Budget (/orchestra/sf-dashboard/budget) e selecionar ano; ler budget, actual e forecast por competência sem atribuir a projeção a versionRef.
+4. **[READ_ONLY_WITNESS]** Abrir Dashboard → OPEX/CAPEX por ano; depois abrir Planner → OPEX/CAPEX, selecionar official pelo ID real no controle de versões e conferir fonte, ano e moeda.
+5. **[READ_ONLY_WITNESS]** Voltar a Planner → Versions, registrar versionRef de V-2026-WHATIF-A e selecionar esse ID em Planner OPEX para comparar com official; não procurar WHATIF no Dashboard.
+6. **[READ_ONLY_WITNESS]** Reabrir Dashboard por ano e Planner OPEX por versionRef separadamente; registrar fontes, IDs, período e estado final.
+
+## Oráculos observáveis (não reescrever para passar)
+
+- 600000/400000/590000 USD rotulados por medida e período
+- Desvio base vs budget é -10000 USD
+- Hipótese A = 602000 USD somente na fonte Planner sob seu versionRef; official/locked permanece intacta em Versions
+- Null, zero e período incompleto recebem tratamento distinto
+- Evidência de execução deve relacionar ator, momento, URL, versão do registro, resultado e hash/recibo quando houver.
+
+**Fontes de teste existentes:** u02, u39, u40. Reusar para diagnosticar, não substituir a execução da UI.
+
+**Evidência exigida:** registrar a sequência de ações, qual perfil autenticado agiu, estado anterior/posterior, revisões, recibo ou não-commit comprovado, e o veredito no modelo `docs/qa/sucafina/uat-cio/EVIDENCE-RECORD.json` em diretório privado. Se não houver navegador, tenant, sessão ou recurso instalado: `BLOCKED_*`, nunca PASS.

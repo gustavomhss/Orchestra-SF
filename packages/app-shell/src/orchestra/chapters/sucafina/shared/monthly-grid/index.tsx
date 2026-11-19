@@ -10,6 +10,8 @@ import { createEffect, createMemo, createUniqueId, For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
+import type { SfCopyKey } from "../frame/types"
+import { SfStatePanel } from "../states"
 import type {
   SfCellCoordinate, SfDraftCell, SfGridCell, SfGridNavigation,
   SfGridRange, SfMessage, SfMonthlyGridProps, SfUnit,
@@ -18,7 +20,7 @@ import "./monthly-grid.css"
 
 export type {
   SfMonthId, SfMonth, SfCellCoordinate, SfCellValue, SfGridCell, SfDraftCell,
-  SfGridNavigation, SfGridRange, SfPasteMeasure, SfPasteCell, SfPasteRow,
+  SfGridNavigation, SfGridRange, SfMessage, SfPasteMeasure, SfPasteCell, SfPasteRow,
   SfPasteState, SfPasteRequest, SfMonthlyGridProps,
 } from "./types"
 
@@ -338,7 +340,7 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
       return <span class="sf-s02-cell-absence">{message(value.reason)}</span>
     if (value.kind === "inherited" && value.value === null)
       return <span class="sf-s02-cell-absence">{t("sf.s02.missing")}</span>
-    const amount = value.kind === "known" ? value.value : value.value
+    const amount = value.kind === "known" ? value.value : (value as Readonly<{ kind: "inherited"; value: number }>).value
     return <>
       <span class="sf-s02-cell-amount">{formatValue(amount, cell.fractionDigits)}</span>
       <span class="sf-s02-cell-unit">{unitLabel(value.unit)}</span>
@@ -347,14 +349,17 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
       </Show>
     </>
   }
-  const stateMessage = () => props.state === "loading" ? "sf.common.loading"
-    : props.state === "denied" || props.state === "session-expired" ? "sf.common.noAccess"
+  const wellState = (): "loading" | "denied" | "unavailable" | undefined =>
+    props.state === "loading" || props.state === "denied" || props.state === "unavailable" ? props.state : undefined
+  const wellKey = (state: "loading" | "denied" | "unavailable"): SfCopyKey =>
+    (state === "loading" ? "sf.common.loading" : state === "denied" ? "sf.common.noAccess" : "sf.common.unavailable") as SfCopyKey
+  const stateMessage = () => props.state === "session-expired" ? "sf.common.noAccess"
     : props.state === "outcome-unknown" ? "sf.common.pending"
     : props.state === "conflict" || props.state === "stale" ? "sf.common.conflict"
     : props.state === "partial" ? "sf.common.partial"
-    : props.state === "empty" || props.state === "filtered-empty" ? "sf.common.empty"
-    : props.state === "unavailable" || props.state === "invalid" || props.state === "not-found"
-      ? "sf.common.unavailable" : null
+    : props.state === "empty" ? "sf.common.empty"
+    : props.state === "filtered-empty" ? "sf.common.filterEmpty"
+    : props.state === "invalid" || props.state === "not-found" ? "sf.common.unavailable" : null
   const firstIssue = (cell: SfGridCell) => {
     const draft = draftFor(cell.coordinate)
     if (draft?.error) return message(draft.error)
@@ -365,6 +370,9 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
 
   return (
     <section class="sf-s02" aria-label={t("sf.s02.grid")}>
+      <Show when={wellState()}>
+        {(state) => <SfStatePanel state={state()} messageKey={wellKey(state())} />}
+      </Show>
       <Show when={stateMessage()}>
         {(key) => <div class="sf-s02-status" role={protectedState() ? "alert" : "status"}>{t(key())}</div>}
       </Show>

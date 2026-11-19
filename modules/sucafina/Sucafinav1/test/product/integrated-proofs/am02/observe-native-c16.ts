@@ -3,6 +3,7 @@ import { SessionSchema } from "@orchestra/core/session/schema"
 import { Effect } from "effect"
 import resident from "../../../../product/ai/manifests/resident.json" with { type: "json" }
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
 import { decodeSfOperationOutput } from "../../../../product/contracts/schema-admission.ts"
 import type { SfOperationInputMap } from "../../../../product/contracts/operations.ts"
 import { object } from "../../../../runtime/contract.ts"
@@ -112,7 +113,7 @@ export async function compareObservedNativeWithUi(context: Wp12NativeMissionCont
       fromNative.inputDigest !== digestSfValue(fromNative.input))
       throw new Error(`Native ${operation} was not admitted by frozen C15/C16 routing`)
     const fresh = await context.ui("sf_case_read", { caseRef: completed.caseRef },
-      (call) => context.business.cases.read({ caseRef: completed.caseRef }, call))
+      (call) => context.business.cases.read({ caseRef: encodeCaseRef(completed.caseRef) }, call))
     if (fresh.status !== "ok" || fresh.value.case.version !== completed.caseRef.version)
       throw new Error(`Native/UI ${operation} case version or authorization changed`)
     const ui = await dispatchWp12Ui(context, operation, fromNative.input)

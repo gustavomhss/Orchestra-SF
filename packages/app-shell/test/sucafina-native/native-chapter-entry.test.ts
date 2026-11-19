@@ -79,15 +79,15 @@ describe("native chapter entry", () => {
     await openSfNativeChapter(request, { ...deps, request: async () => "committed" })
     expect(calls).toEqual([])
     await openSfNativeChapter(request, { ...deps, request: async () => "unmounted" })
-    expect(calls).toEqual(["profile", "/orchestra/sf-people/overview"])
+    expect(calls).toEqual(["exit"])
     calls.length = 0
     await openSfNativeChapter(request, { ...deps, request: async () => "profile-mismatch", confirmExit: async () => false })
     expect(calls).toEqual([])
     await openSfNativeChapter(request, { ...deps, request: async () => "profile-mismatch" })
-    expect(calls).toEqual(["exit", "profile", "/orchestra/sf-people/overview"])
+    expect(calls).toEqual(["exit"])
     calls.length = 0
     await openSfNativeChapter(request, { ...deps, request: async () => "unmounted", sameProfile: () => false })
-    expect(calls).toEqual([])
+    expect(calls).toEqual(["exit"])
   })
   test("the live owner callback is explicitly bound and retired", async () => {
     const request = { chapter: "sf-home", server: "server", directory: "/repo" }

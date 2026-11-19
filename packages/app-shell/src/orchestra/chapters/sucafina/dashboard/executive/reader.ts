@@ -52,7 +52,8 @@ export function useU02Projection<T>(
   const current = () => context.state().status === "ready" ? context.ready() : undefined
   const admitted = (operation: string): boolean => {
     const ready = current()
-    const destination = ready?.context.destinations.find((item) => item.capabilityId === surfaceId)
+    if (!ready) return false
+    const destination = ready.context.destinations.find((item) => item.capabilityId === surfaceId)
     if (!destination?.canRead) return false
     return ready.context.availability.some((resource) =>
       resource.family === "domain-read" && resource.resource === surfaceId &&
@@ -61,10 +62,11 @@ export function useU02Projection<T>(
   }
   const canAction = (action: string, operation: string): boolean => {
     const ready = current()
-    const destination = ready?.context.destinations.find((item) => item.capabilityId === surfaceId)
+    if (!ready) return false
+    const destination = ready.context.destinations.find((item) => item.capabilityId === surfaceId)
     return !!destination?.canRead && destination.allowedActionIds.includes(action) &&
       !!store.projection?.allowedActionIds.includes(action) &&
-      ready!.context.availability.some((resource) =>
+      ready.context.availability.some((resource) =>
         resource.family === "domain-read" && resource.resource === surfaceId &&
         resource.operations.some((item) => item.operationId === operation && item.state === "ready" && item.operational),
       )
@@ -130,9 +132,7 @@ export function useU02Projection<T>(
     snapshot: () => store.projection,
     diagnostic: () => store.diagnostic,
     refresh: () => setRevision((count) => count + 1),
-    selection: () => ({ year: selection.year ?? store.projection?.selection.year ?? store.projection?.selection.execYear,
-      month: selection.month ?? store.projection?.selection.month ?? store.projection?.selection.executiveMonth,
-      opsMonth: selection.opsMonth ?? store.projection?.selection.opsMonth }),
+    selection: () => ({ year: selection.year, month: selection.month, opsMonth: selection.opsMonth }),
     setYear: (year: number) => { if (validYear(year) !== undefined) setSelection("year", year) },
     setMonth: (month: number) => { if (validMonth(month) !== undefined) setSelection("month", month) },
     setOpsMonth: (month: number) => { if (validMonth(month) !== undefined) setSelection("opsMonth", month) },

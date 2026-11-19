@@ -278,6 +278,10 @@ export function createSfProductAuthority(input: {
       if (loggedIn === undefined) return { status: "unavailable", reason: "host-unavailable" } as const
       return loggedIn ? { status: "denied" } as const : { status: "unauthenticated" } as const
     }
+    // Re-read the real role maps inside the canonical persistence scope. The
+    // SQLite driver only exposes currentSnapshots() while a transaction is open;
+    // observing it outside one incorrectly reported a valid installed host as 503.
+    const readAdmittedContext = async () => {
     const snapshots = input.persistence.currentSnapshots?.()
     if (!snapshots) return { status: "unavailable", reason: "host-unavailable" } as const
     const surfacePages = await Promise.all((["dashboard", "planner", "procurement"] as const).map(async (surface) => {
@@ -307,6 +311,12 @@ export function createSfProductAuthority(input: {
       },
       pages: surfacePages.flat(),
     }
+    }
+    // commit=false is mandatory: context admission never mutates business state.
+    // The same real driver, authenticator and second principal check remain in use.
+    return input.persistence.transaction("dashboard", async () => ({
+      commit: false, value: await readAdmittedContext(),
+    }), { signal: request.signal })
   }
   return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission }
 }

@@ -15,7 +15,7 @@ import { SETTINGS_REF, changedSettings, settingsReview } from "./model"
 import type { Settings, SettingsProjection } from "./model"
 import "./settings.css"
 
-type ReviewMode = "save" | "reset" | null
+type ReviewMode = "save" | null
 const key = (value: string) => value as SfCopyKey
 const stateMessage = (state: SfUiState): SfCopyKey => sfCommonKey(
   state === "ready" ? "sf.common.currentSource" :
@@ -196,14 +196,13 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const projection = currentProjection()
     const state = active()
     if (!projection || !state || !view.review || !view.reviewRef) return undefined
-    return settingsReview(projection, state.value, view.reviewRef, view.review)
+    return settingsReview(projection, state.value, view.reviewRef)
   })
-  const openReview = (kind: Exclude<ReviewMode, null>) => {
-    if (kind === "save" && !canReview()) return
-    if (kind === "reset" && (!actionAllowed("reset") || view.busy)) return
+  const openReview = () => {
+    if (!canReview()) return
     const draftState = active()
     if (!draftState || draftState.pendingOperation !== null || draftState.conflict) return
-    setView({ review: kind, reviewRef: crypto.randomUUID() as SfOperationRef, errorLines: [] })
+    setView({ review: "save", reviewRef: crypto.randomUUID() as SfOperationRef, errorLines: [] })
     draft()?.setPhase("reviewing")
   }
   const closeReview = () => {
@@ -319,7 +318,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     id: "review-settings", labelKey: key("sf.cap28.primary"), tone: "primary" as const,
     disabled: !canReview(), busy: view.busy,
     reasonKey: !actionAllowed("save") ? sfCommonKey("sf.common.readOnly") : undefined,
-    onInvoke: () => openReview("save"),
+    onInvoke: () => openReview(),
   })
 
   return (
@@ -329,11 +328,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       tabs={[]}
       activeTab={null}
       primaryAction={primary()}
-      secondaryActions={[{
-        id: "reset-settings", labelKey: key("sf.u36.reset"), tone: "danger",
-        disabled: !actionAllowed("reset") || view.busy || !active(),
-        busy: view.busy, onInvoke: () => openReview("reset"),
-      }]}
+      secondaryActions={[]}
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}
@@ -362,28 +357,30 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           onRetryRead={() => setView("refresh", (value) => value + 1)}
           onLogin={() => { void owner.reload() }}
         >
-          <Show when={currentProjection() && active()}>
-            {() => (
-              <>
+          <Show when={currentProjection()}>
+            {(projection) => (
+              <Show when={active()}>
+                {(activeDraft) => (
+                  <>
                 <Show when={!pageAllowed() || !actionAllowed("save")}>
                   <p role="status">{t(sfCommonKey("sf.common.readOnly"))}</p>
                 </Show>
-                <Show when={active()?.conflict}>
+                <Show when={activeDraft().conflict}>
                   <p role="alert">{t(sfCommonKey("sf.common.conflict"))}</p>
                 </Show>
                 <Show when={view.review && reviewProps()} fallback={
                   <form class="sf-n21-settings-form" onSubmit={(event) => {
                     event.preventDefault()
-                    openReview("save")
+                    openReview()
                   }}>
                     <SfProcurementSettingsFields
-                      settings={active()!.value}
-                      directory={currentProjection()!.value.data.directory}
+                      settings={activeDraft().value}
+                      directory={projection().value.data.directory}
                       disabled={readOnly()}
                       onEdit={(next) => { if (!readOnly()) { draft()?.edit(next); setView("confirmed", false) } }}
                     />
                     <div class="sf-n21-settings-footer">
-                      <p role="status">{active()?.dirty
+                      <p role="status">{activeDraft().dirty
                         ? t(sfCommonKey("sf.common.changesPending"))
                         : t(sfCommonKey("sf.common.currentSource"))}</p>
                       <Show when={view.confirmDiscard}>
@@ -393,7 +390,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                           {t(sfCommonKey("sf.common.keepEditing"))}
                         </button>
                       </Show>
-                      <button class="mx-btn" type="button" disabled={!active()?.dirty || view.busy}
+                      <button class="mx-btn" type="button" disabled={!activeDraft().dirty || view.busy}
                         onClick={discard}>{t(sfCommonKey("sf.common.discard"))}</button>
                       <button class="mx-btn primary" type="submit" disabled={!canReview()}>
                         {t(sfCommonKey("sf.common.review"))}</button>
@@ -407,12 +404,9 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                     onCancel={closeReview}
                   />
                 </Show>
-                <details class="mx-card sf-n21-reset-help">
-                  <summary>{t(key("sf.u36.reset"))}</summary>
-                  <p>{t(key("sf.u36.resetHelp"))}</p>
-                  <p role="status">{t(sfCommonKey("sf.common.previousValuesUnavailable"))}</p>
-                </details>
-              </>
+                  </>
+                )}
+              </Show>
             )}
           </Show>
         </SfStatePanel>

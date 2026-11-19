@@ -1,0 +1,180 @@
+{
+  "schema": "orchestra-sf-adversarial-findings-v1",
+  "generatedAt": "2026-11-17",
+  "repository": "gustavomhss/Orchestra-SF",
+  "baseBranch": "close-final-candidate",
+  "reviewedSha": "dd378ad2ac14dff3559aa3aa546e6d87b43140c8",
+  "reviewType": "static-adversarial-multifocal",
+  "dynamicExecution": "NOT_RUN",
+  "productChanges": false,
+  "findings": [
+    {
+      "id": "ADV-PARSER-001",
+      "severity": "P1",
+      "confidence": "HIGH_STATIC_CAUSAL_PATH",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "process-wide document parser availability",
+      "profiles": ["microsoft", "local-operator"],
+      "summary": "A worker that never settles boot can retain one of two module-global parser slots indefinitely; two such workers can leave parsing permanently busy until process restart.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/documents/parser.ts",
+        "modules/sucafina/Sucafinav1/product/documents/parser-worker.ts"
+      ],
+      "acceptance": [
+        "slot release is idempotent and has a terminal deadline independent of worker ready",
+        "two never-ready workers do not prevent a later valid parse without process restart",
+        "abort, error, exit, ready and timeout races release exactly once"
+      ]
+    },
+    {
+      "id": "ADV-PARSER-002",
+      "severity": "P2",
+      "confidence": "HIGH_COPY_PATH_LOW_PEAK_CERTAINTY",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "document parser memory",
+      "profiles": ["microsoft", "local-operator"],
+      "summary": "Documents up to 20 MiB are structured-cloned into a worker and PDF bytes are copied again with slice; two global workers are allowed without a measured RSS budget.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/documents/limits.ts",
+        "modules/sucafina/Sucafinav1/product/documents/parser.ts",
+        "modules/sucafina/Sucafinav1/product/documents/parser-worker.ts"
+      ],
+      "acceptance": [
+        "measure peak RSS with two maximum-size PDF and DOCX operations",
+        "prove cancellation and capacity recovery",
+        "remove avoidable copies or document and enforce a safe memory budget"
+      ]
+    },
+    {
+      "id": "ADV-IMPORT-001",
+      "severity": "P1",
+      "confidence": "HIGH_STATIC_ORDERING",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "HTTP availability before operation admission",
+      "profiles": ["microsoft", "local-operator"],
+      "summary": "The import-admit route buffers and parses approximately 16 MiB multipart before ui/human admission; the product router runs before general application authentication.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "modules/sucafina/Sucafinav1/product/interface/import-http.ts"
+      ],
+      "acceptance": [
+        "unauthorized requests are rejected before full body materialization",
+        "bound total bytes, part count, concurrency and slow-upload duration",
+        "stress without session does not degrade authenticated traffic or create side effects"
+      ]
+    },
+    {
+      "id": "ADV-BACKUP-001",
+      "severity": "P1_CONDITIONAL",
+      "confidence": "HIGH_STATIC_CAUSAL_PATH",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "SQLite and request availability during backup",
+      "profiles": ["local-operator", "manual-or-future-microsoft-scheduler"],
+      "summary": "Backup capture retains a BEGIN IMMEDIATE transaction while copying, syncing, verifying and pruning files; queued store transactions use a default five-second deadline.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-backups.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts"
+      ],
+      "acceptance": [
+        "external filesystem IO is not performed under a long business write lock",
+        "snapshot and blobs remain generation-consistent",
+        "realistic backup causes no Local storage lock timeout in concurrent GET and POST traffic"
+      ]
+    },
+    {
+      "id": "ADV-JOBS-001",
+      "severity": "P1_CONDITIONAL",
+      "confidence": "HIGH_STATIC_SCHEDULER_PATH",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "maintenance scheduler liveness",
+      "profiles": ["local-operator"],
+      "summary": "Timer ticks during an active cycle set pending and cause an immediate rerun; cycles longer than the interval can keep maintenance running continuously.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-jobs.ts"
+      ],
+      "acceptance": [
+        "missed ticks are coalesced without immediate infinite catch-up",
+        "explicit backoff and next-run policy are tested with cycles longer than the interval"
+      ]
+    },
+    {
+      "id": "ADV-JOBS-002",
+      "severity": "P2",
+      "confidence": "HIGH_STATIC_COST_PATH",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "maintenance IO scaling",
+      "profiles": ["local-operator", "manual-or-future-microsoft-scheduler"],
+      "summary": "Each cycle lists archives twice per surface and each list fully verifies snapshots and every retained blob, making recurring cost proportional to total retained bytes.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-jobs.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-backups.ts"
+      ],
+      "acceptance": [
+        "inventory does not rehash all retained bytes every cycle",
+        "full verification has an explicit cadence, budget and cursor",
+        "cost is measured through 84 monthly archives per surface"
+      ]
+    },
+    {
+      "id": "ADV-BACKUP-002",
+      "severity": "P2",
+      "confidence": "HIGH_SWALLOW_PATH_MEDIUM_HEALTH_IMPACT",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "backup corruption observability and retention",
+      "profiles": ["local-operator", "manual-or-future-microsoft-scheduler"],
+      "summary": "list and prune convert any archive load error into absence, so corrupt archives can disappear from inventory, evade prune and remain invisible to maintenance health.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-backups.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-jobs.ts"
+      ],
+      "acceptance": [
+        "distinguish missing archives from corruption",
+        "surface corruption and orphaned bytes in health",
+        "quarantine or custody-safe remediation is explicit"
+      ]
+    },
+    {
+      "id": "ADV-BACKUP-003",
+      "severity": "P2",
+      "confidence": "HIGH_STATIC_ORPHAN_PATH",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "backup disk exhaustion after abrupt process loss",
+      "profiles": ["local-operator", "manual-or-future-microsoft-scheduler"],
+      "summary": "An abrupt crash can leave a nearly complete .stage-* directory; list and prune only recognize backup-* names and no stage scavenger exists in the backup module.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-backups.ts"
+      ],
+      "acceptance": [
+        "subprocess kill is tested between durable writes, verify and rename",
+        "restart discovers and safely quarantines or removes stale owned stages",
+        "orphaned bytes are observable"
+      ]
+    },
+    {
+      "id": "ADV-LIFECYCLE-001",
+      "severity": "P2",
+      "confidence": "MEDIUM_HIGH_STATIC_WAIT_PATH",
+      "dynamicStatus": "NOT_RUN",
+      "scope": "shutdown and cutover",
+      "profiles": ["local-operator", "manual-or-future-microsoft-scheduler"],
+      "summary": "jobs.dispose and store.dispose await active operations, while backup capture has no cancellation signal; slow or stuck filesystem IO can extend shutdown without a bounded deadline.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-jobs.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-backups.ts"
+      ],
+      "acceptance": [
+        "define a safe cancellation point and shutdown deadline",
+        "systemd stop during each backup phase leaves no partial publication or stuck lock",
+        "restart behavior is proven"
+      ]
+    }
+  ],
+  "testCoverageObservations": [
+    "No dedicated never-ready parser worker and two-slot recovery test was identified in the inspected test inventory.",
+    "local-backups.test.ts uses a four-byte retained blob and does not exercise realistic IO latency or concurrent request timeouts.",
+    "local-jobs.test.ts uses a three-byte blob and schedule=false, so it does not exercise real timer overlap or catch-up behavior.",
+    "No adversarial maximum multipart without-session concurrency benchmark was identified in this review."
+  ]
+}

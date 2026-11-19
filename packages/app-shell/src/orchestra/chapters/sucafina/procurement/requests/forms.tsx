@@ -1,7 +1,7 @@
 import { For, Show } from "solid-js"
 import { useLanguage } from "@/context/language"
-import { SF_U11_REMAINING_COPY } from "./copy"
-import type { SfPoEdit, SfPoLine, SfPrEdit } from "./model"
+import { sfU11Label, SF_U11_REMAINING_COPY } from "./copy"
+import { postedPoLine, type SfPoEdit, type SfPoLine, type SfPrEdit } from "./model"
 
 type Key = keyof typeof SF_U11_REMAINING_COPY
 type PrField = Exclude<keyof SfPrEdit, "requesterName">
@@ -33,7 +33,7 @@ type PoProps = Readonly<{
 }>
 function useCopy() {
   const language = useLanguage()
-  return (key: Key) => language.t(key as Parameters<typeof language.t>[0])
+  return (key: Key) => sfU11Label(key, language.locale(), language.t(key as Parameters<typeof language.t>[0]))
 }
 
 export function SfRequisitionForm(props: PrProps) {
@@ -83,18 +83,18 @@ export function SfPurchaseOrderForm(props: PoProps) {
     props.onEdit({
       ...props.value,
       lines: props.value.lines.map((line, index) =>
-        index === lineIndex ? { ...line, [field]: value } : line),
+        postedPoLine(index === lineIndex ? { ...line, [field]: value } : line)),
     })
   }
   const addLine = () => {
     if (props.disabled) return
     // Local row identity is an unsaved intent, not a producer ID/receipt.
     const draft: SfPoLine = { id: crypto.randomUUID(), desc: "", qty: "", unitPrice: "" }
-    props.onEdit({ ...props.value, lines: [...(props.value.lines ?? []), draft] })
+    props.onEdit({ ...props.value, lines: [...(props.value.lines ?? []).map(postedPoLine), draft] })
   }
   const removeLine = (index: number) => {
     if (props.disabled || !props.value.lines) return
-    props.onEdit({ ...props.value, lines: props.value.lines.filter((_, at) => at !== index) })
+    props.onEdit({ ...props.value, lines: props.value.lines.filter((_, at) => at !== index).map(postedPoLine) })
   }
   return <fieldset class="sf-u11-fieldset" disabled={props.disabled} data-sf-po-fields>
     <legend>{copy("sf.u11.remaining.po")}</legend>

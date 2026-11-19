@@ -1,5 +1,5 @@
 import { A } from "@solidjs/router"
-import { createEffect, onCleanup, Show, untrack } from "solid-js"
+import { createEffect, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -8,18 +8,6 @@ import { sfOperationReady } from "./model"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext } from "../../context/contracts"
-import { useSfContext } from "../../context"
-import type { SfEditScopeKey, SfIntentRef } from "@orchestra/schema/sucafina/context"
-
-export const sfUi33DraftSelection = Object.freeze({
-  surfaceId: "UI33" as const,
-  identity: { kind: "new" as const, newIntentRef: "sf-ui33-case-create-local-v1" as SfIntentRef },
-  editScopeKey: "sf-ui33-create-form-v1" as SfEditScopeKey,
-})
-export const sfUi33BlankFields = Object.freeze({
-  objective: "", start: "", end: "", currency: "", criteria: "",
-})
-export type SfUi33DraftFields = { [K in keyof typeof sfUi33BlankFields]: string }
 
 type Phase = "editing" | "reviewing" | "submitting" | "unknown" | "confirmed" | "invalid" | "unavailable"
 const PENDING_PREFIX = "sf:n24:case-create:pending:v1:"
@@ -58,7 +46,6 @@ export function SfCreateCase(props: Readonly<{
   onCreated: () => void
 }>) {
   const language = useLanguage()
-  const owner = useSfContext()
   const t = (key: string) => language.t(key as Parameters<typeof language.t>[0])
   const [form, setForm] = createStore({
     objective: "", start: "", end: "", currency: "", criteria: "",
@@ -68,40 +55,13 @@ export function SfCreateCase(props: Readonly<{
     readyPrefix: "" as string,
     hasPending: false,
   })
-  const draftFields = (): SfUi33DraftFields => ({
-    objective: form.objective, start: form.start, end: form.end,
-    currency: form.currency, criteria: form.criteria,
-  })
-  const editField = (field: keyof SfUi33DraftFields, value: string) => {
-    const drafts = owner.ready()?.drafts
-    // No registry entry exists while the editor remains untouched.
-    if (!drafts) return
-    const existing = drafts.peek<SfUi33DraftFields>(sfUi33DraftSelection)
-    const controller = existing ?? drafts.acquire<SfUi33DraftFields>({
-      ...sfUi33DraftSelection,
-      base: null,
-      baseVersion: null,
-      value: draftFields(),
-      // This is only a local new-intent draft. The original 231 revalidator
-      // rejects such intents on access changes; no read/grant is manufactured.
-      revalidation: {
-        operationId: "projection.cases",
-        input: undefined,
-        fieldPaths: [],
-        actionIds: [],
-      },
-    })
-    controller.edit({ ...draftFields(), [field]: value })
-  }
   let generation = 0
   let commandAbort: AbortController | undefined
   onCleanup(() => commandAbort?.abort())
   createEffect(() => {
     const context = props.context()
     const ticket = ++generation
-    const restored = untrack(() => owner.ready()?.drafts.peek<SfUi33DraftFields>(sfUi33DraftSelection)?.snapshot())
-    const values = restored?.availability === "active" ? restored.value : sfUi33BlankFields
-    setForm({ ...values, readyPrefix: "", hasPending: false, createdRef: "", phase: "editing", message: "" })
+    setForm({ objective: "", start: "", end: "", currency: "", criteria: "", readyPrefix: "", hasPending: false, createdRef: "", phase: "editing", message: "" })
     if (!context) return
     let alive = true
     onCleanup(() => { alive = false; commandAbort?.abort() })
@@ -169,7 +129,6 @@ export function SfCreateCase(props: Readonly<{
       setForm({ phase: "unavailable", message: "sf.ui33.recoveryUnavailable" })
       return
     }
-    owner.ready()?.drafts.markUnresolved(sfUi33DraftSelection, true)
     const actor = context.stamp
     const ticket = generation
     const request = {
@@ -198,15 +157,18 @@ export function SfCreateCase(props: Readonly<{
         setForm({ phase: "unknown", message: "sf.ui33.createDenied" })
         return
       }
-      if (result.kind === "response" && result.body.status === "ok"
+      if (result.kind === "response" && (result.status === 401 || result.status === 403 ||
+        result.body.status === "denied" || result.body.status === "unauthenticated")) {
+        setForm({ phase: "unknown", hasPending: true, message: "sf.ui33.createDenied" })
+        return
+      }
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok"
         && result.body.outputRef && /^case:[^:]+:[^:]+$/.test(result.body.outputRef)) {
         // Only source returned outputRef is authoritative for a new case.
         try { localStorage.removeItem(slot) } catch (error) {
           console.error("Sucafina confirmed creation marker cleanup failed", error)
         }
-        owner.ready()?.drafts.markUnresolved(sfUi33DraftSelection, false)
-        owner.ready()?.drafts.discard(sfUi33DraftSelection)
-        setForm({ ...sfUi33BlankFields, phase: "confirmed", hasPending: false, createdRef: result.body.outputRef, message: "sf.ui33.createReady" })
+        setForm({ phase: "confirmed", hasPending: false, createdRef: result.body.outputRef, message: "sf.ui33.createReady" })
         props.onCreated()
         return
       }
@@ -229,21 +191,11 @@ export function SfCreateCase(props: Readonly<{
     }
   }
   const busy = () => form.phase === "submitting"
-  const field = (label: string, value: () => string, onInput: (value: string) => void, type = "text") => (
+  const field = (label: string, value: string, onInput: (value: string) => void, type = "text") => (
     <label class="sf-n24-field">
       <span>{t(label)}</span>
-      <input type={type} value={value()} disabled={busy() || form.hasPending}
-        onInput={(event) => {
-          const next = event.currentTarget.value
-          // Controller receives the exact same normalized value as this field.
-          const normalized = label === "sf.ui33.currency" ? next.toUpperCase() : next
-          const fieldKey = label === "sf.ui33.objective" ? "objective"
-            : label === "sf.ui33.start" ? "start"
-            : label === "sf.ui33.end" ? "end" : "currency"
-          editField(fieldKey, normalized)
-          onInput(next)
-          setForm({ phase: "editing", message: "" })
-        }} required />
+      <input type={type} value={value} disabled={busy() || form.hasPending}
+        onInput={(event) => { onInput(event.currentTarget.value); setForm({ phase: "editing", message: "" }) }} required />
     </label>
   )
   return (
@@ -251,24 +203,22 @@ export function SfCreateCase(props: Readonly<{
       <h2 id="sf-create-case-title">{t("sf.ui33.new")}</h2>
       <form onSubmit={(event) => { event.preventDefault(); if (form.phase === "reviewing") void submit(); else review() }}>
         <div class="sf-n24-form-grid">
-          {field("sf.ui33.objective", () => form.objective, (value) => setForm("objective", value))}
-          {field("sf.ui33.start", () => form.start, (value) => setForm("start", value), "date")}
-          {field("sf.ui33.end", () => form.end, (value) => setForm("end", value), "date")}
-          {field("sf.ui33.currency", () => form.currency, (value) => setForm("currency", value.toUpperCase()))}
+          {field("sf.ui33.objective", form.objective, (value) => setForm("objective", value))}
+          {field("sf.ui33.start", form.start, (value) => setForm("start", value), "date")}
+          {field("sf.ui33.end", form.end, (value) => setForm("end", value), "date")}
+          {field("sf.ui33.currency", form.currency, (value) => setForm("currency", value.toUpperCase()))}
           <label class="sf-n24-field sf-n24-span">
             <span>{t("sf.ui33.criteria")}</span>
             <textarea value={form.criteria} disabled={busy() || form.hasPending}
-              onInput={(event) => {
-                editField("criteria", event.currentTarget.value)
-                setForm({ criteria: event.currentTarget.value, phase: "editing", message: "" })
-              }} required rows={5} />
+              onInput={(event) => { setForm({ criteria: event.currentTarget.value, phase: "editing", message: "" }) }} required rows={5} />
           </label>
         </div>
         <Show when={form.phase === "reviewing"}>
           <div class="sf-n24-review" role="group" aria-label={t("sf.ui33.createReview")}>
-            <p><strong>{t("sf.ui33.objective")}:</strong> <bdi>{form.objective}</bdi></p>
-            <p>{form.start} – {form.end} · <bdi>{form.currency}</bdi></p>
+            <p><strong>{t("sf.ui33.objective")}:</strong> <bdi>{form.objective.trim()}</bdi></p>
+            <p>{form.start} – {form.end} · <bdi>{form.currency.trim()}</bdi></p>
             <ol>{form.criteria.split("\n").map((part) => part.trim()).filter(Boolean).map((criterion) => <li><bdi>{criterion}</bdi></li>)}</ol>
+            <p>sourceRefs: []</p>
           </div>
         </Show>
         <Show when={form.message}><p role="status" aria-live="polite">{t(form.message)}</p></Show>

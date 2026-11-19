@@ -21,7 +21,10 @@ test("Dashboard browser keeps the monthly draft through a real conflict, reviews
   const driver = await openLocalStore(directory)
   const delayed: { next: boolean; release?: () => void; started?: () => void } = { next: false }
   const routing: { handle: (request: Request) => Promise<Response | undefined> } = { handle: async () => undefined }
-  const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => await routing.handle(request) ?? new Response("Not found", { status: 404 }) })
+  const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => {
+    if (request.method === "GET" && new URL(request.url).pathname === "/") return new Response("<!doctype html><title>Orchestra</title>", { headers: { "content-type": "text/html; charset=utf-8" } })
+    return await routing.handle(request) ?? new Response("Not found", { status: 404 })
+  } })
   const origin = server.url.origin
   const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID })
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId: randomUUID(), uid: 1000, name: "Dashboard operator" }, secrets: driver.secrets, key: randomBytes(32) })

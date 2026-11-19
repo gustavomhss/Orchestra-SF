@@ -3,9 +3,13 @@
     "target": "ESNext",
     "module": "Preserve",
     "moduleResolution": "Bundler",
+    "paths": {
+      "@/*": ["../../../packages/app-shell/src/*"]
+    },
     "allowImportingTsExtensions": true,
     "strict": true,
     "noEmit": true,
+    "jsx": "preserve",
     "skipLibCheck": true,
     "types": [
       "bun"

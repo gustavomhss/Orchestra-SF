@@ -13,6 +13,7 @@ import {
   n29ContextState, n29Key, n29Permitted, n29ResponseState, n29SameAuthority,
   n29StateKey, useN29Copy,
 } from "./ui"
+import { StatusText } from "../../reviews/labels"
 import "./catalog.css"
 
 type ChoicesBody = (typeof SfAnalyses.operations["intelligence.analysis.choices"]["output"])["Type"]
@@ -170,8 +171,9 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
       }
       setView("recipes", result.body.value)
       setView("recipesState", result.body.value.length ? "ready" : "empty")
-      if (props.route.kind === "recipe") {
-        const selectedRecipe = result.body.value.findIndex((item) => item.documentId === props.route.params.recipeRef)
+      const route = props.route
+      if (route.kind === "recipe") {
+        const selectedRecipe = result.body.value.findIndex((item) => item.documentId === route.params.recipeRef)
         if (selectedRecipe >= 0) setView("recipeIndex", selectedRecipe)
       }
     } catch (error) {
@@ -415,7 +417,10 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
             <section class="mx-card" aria-label={t("sf.u27.recipe")}>
               <h2>{t("sf.u27.recipe")}</h2>
               <Show when={view.recipesState === "ready"} fallback={
-                <p role="status">{view.recipesState === "empty" ? t("sf.u27.noRecipes") : t(n29StateKey(view.recipesState))}</p>
+                <SfStatePanel
+                  state={view.recipesState}
+                  messageKey={view.recipesState === "empty" ? n29Key("sf.u27.noRecipes") : n29StateKey(view.recipesState)}
+                />
               }>
                 <label class="sf-n29-field">
                   <span>{t("sf.u27.selectRecipe")}</span>
@@ -453,7 +458,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
             <section class="mx-card" aria-label={t("sf.u27.readiness")}>
               <h2>{t("sf.u27.readiness")}</h2>
               <p>{t("sf.u27.reviewSummary")}</p>
-              <Show when={view.requestError}><p role="status">{view.requestError}</p></Show>
+              <Show when={view.requestError}><p role="status">{t(n29StateKey(view.admissionState))}</p></Show>
               <Show when={view.phase === "reviewing"}>
                 <div class="sf-n29-review" role="group" aria-label={t("sf.u27.review")}>
                   <h3>{t("sf.u27.review")}</h3>
@@ -462,6 +467,9 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                   <p>{t("sf.u27.version")}: <bdi>{recipe()?.publishedVersion}</bdi></p>
                   <p>{t("sf.u27.scope")}: <bdi>{recipe()?.writeScope.join(", ")}</bdi></p>
                   <p>{t("sf.u27.inputs")}: <bdi>{refs().join(", ")}</bdi></p>
+                  <p>{t("sf.u44.incarnation")}: <bdi>{currentCase()?.incarnation}</bdi></p>
+                  <p>{t("sf.u32.sourceVersion")}: <bdi>{recipe()?.planRevisionId}</bdi></p>
+                  <p>{t("sf.u27.parameters")}: <bdi>{view.parameters}</bdi></p>
                   <button type="button" class="mx-btn primary" disabled={!canPrepare()}
                     onClick={() => { void prepare() }}>{t("sf.u27.prepare")}</button>
                   <button type="button" class="mx-btn" onClick={() => setView("phase", "clean")}>
@@ -478,7 +486,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
               <Show when={view.preparation}>
                 {(result) => (
                   <dl class="sf-n29-facts">
-                    <div><dt>{t("sf.u27.status")}</dt><dd><bdi>{result().admission}</bdi></dd></div>
+                    <div><dt>{t("sf.u27.status")}</dt><dd><StatusText value={result().admission} /></dd></div>
                     <div><dt>{t("sf.u27.correlation")}</dt><dd><bdi>{result().correlationId}</bdi></dd></div>
                     <div><dt>{t("sf.u27.admissionVersion")}</dt><dd>{result().admissionVersion}</dd></div>
                     <div><dt>{t("sf.u27.runRef")}</dt><dd><bdi>{result().runRef ?? t("sf.u27.runningUnverified")}</bdi></dd></div>
@@ -488,7 +496,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
               </Show>
               <Show when={view.preparation && view.preparation.pending.length}>
                 <div role="status"><h3>{t("sf.u27.pending")}</h3>
-                  <ul><For each={view.preparation?.pending ?? []}>{(item) => <li><bdi>{item}</bdi></li>}</For></ul>
+                  <ul><For each={view.preparation?.pending ?? []}>{(item) => <li><StatusText value={item} /></li>}</For></ul>
                 </div>
               </Show>
               <Show when={view.admissionState === "partial"}>

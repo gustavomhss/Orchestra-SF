@@ -8,7 +8,7 @@ import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orches
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { SfPageFrame } from "../../shared/frame"
-import type { SfCopyKey, SfUiState } from "../../shared/table"
+import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
@@ -726,13 +726,16 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                         : editing().command === "save-item" ? "sf.u31.saveItem" : "sf.u31.saveSub"),
                       scope: { kind: "message", message: labelMessage("sf.cap16.title") } }}
                     base={sourceReview()} current={sourceReview()}
-                    proposed={{ kind: "draft", intentRef: editing().identity.kind === "new"
-                      ? editing().identity.newIntentRef :
-                        ("n16-edit:" + String(editing().identity.recordRef)) as SfIntentRef,
-                      sourceRef: editing().identity.kind === "record" ? editing().identity.recordRef : null,
-                      sourceVersion: (() => { const state = currentDraft(); return state.availability === "active"
-                        ? state.baseVersion : null })(),
-                      fields: proposed() ? fields(proposed()!) : [] }}
+                    proposed={(() => {
+                      const identity = editing().identity
+                      const state = currentDraft()
+                      const value = state.availability === "active" ? state.value : undefined
+                      return { kind: "draft" as const, intentRef: identity.kind === "new"
+                        ? identity.newIntentRef : ("n16-edit:" + String(identity.recordRef)) as SfIntentRef,
+                        sourceRef: identity.kind === "record" ? identity.recordRef : null,
+                        sourceVersion: state.availability === "active" ? state.baseVersion : null,
+                        fields: value ? fields(value) : [] }
+                    })()}
                     effects={[{ id: "itperf-save", domain: "dashboard", state: "proposed",
                       title: { kind: "message", message: labelMessage("sf.cap16.title") },
                       details: proposed() ? fields(proposed()!) : [] }]}

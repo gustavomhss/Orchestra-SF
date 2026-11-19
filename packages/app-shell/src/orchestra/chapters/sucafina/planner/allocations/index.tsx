@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onCleanup, Show } from "solid-js"
+import { createEffect, createSignal, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import type { Schema } from "effect"
@@ -24,7 +24,11 @@ type Result = Schema.Schema.Type<(typeof SfPlanner)["operations"]["domain.page.C
 type Authorized = Extract<Result, { status: "ok" }>
 type CatalogRow = Authorized["value"]["data"]["entities"][number]
 type Catalog = "entities" | "allocations"
-type RecordDraft = Readonly<{ collection: Catalog; id: string | null; name: string; detail?: string }>
+type AllocationSplit = Readonly<{ entityRef: string; percent: number }>
+type RecordDraft = Readonly<{
+  collection: Catalog; id: string | null; name: string; detail?: string;
+  contractRef: string; splits: readonly AllocationSplit[];
+}>
 type Intent = Readonly<{ kind: "save" | "delete" | "common"; collection: Catalog; id: string | null; version: number; ref: string }>
 type Copy = keyof typeof SF_U09_COPY | keyof typeof SF_COMMON_COPY
 const key = (value: Copy) => value as SfCopyKey
@@ -87,6 +91,14 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
   }
   const selectedDetail = (row: CatalogRow, collection: Catalog) =>
     collection === "entities" ? row.code : row.desc
+  const draftFor = (collection: Catalog, row: CatalogRow): RecordDraft => ({
+    collection, id: row.id, name: row.name,
+    ...(selectedDetail(row, collection) === undefined ? {} : { detail: selectedDetail(row, collection) }),
+    contractRef: collection === "allocations" ? row.contractRef ?? "" : "",
+    splits: collection === "allocations" ? row.splits ?? [] : [],
+  })
+  const splitTotal = (splits: readonly AllocationSplit[]) =>
+    Math.round(splits.reduce((sum, split) => sum + split.percent * 100, 0)) / 100
   const versionFor = (collection: Catalog, id: string | null) =>
     screen.page?.value.versions[collection + ":" + (id ?? "")]?.version ??
     rows(collection).find((row) => row.id === id)?.revision ?? 0
@@ -148,20 +160,18 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
         const source = result.body.value.data[current.collection].find((row) => row.id === current.id)
         const controller = draft()
         if (controller && source) {
-          const remote: RecordDraft = {
-            collection: current.collection, id: source.id, name: source.name,
-            ...(selectedDetail(source, current.collection) === undefined ? {}
-              : { detail: selectedDetail(source, current.collection) }),
-          }
+          const remote = draftFor(current.collection, source)
           controller.receiveRemote({ baseVersion: source.revision, value: remote })
         }
       }
-      if (props.route.kind === "entity" && !result.body.value.data.entities.some(
-        (row) => row.id === props.route.params.entityRef,
-      )) setScreen("state", "not-found")
-      if (props.route.kind === "allocation" && !result.body.value.data.allocations.some(
-        (row) => row.id === props.route.params.allocationRef,
-      )) setScreen("state", "not-found")
+      if (props.route.kind === "entity") {
+        const routeEntityRef = props.route.params.entityRef
+        if (!result.body.value.data.entities.some((row) => row.id === routeEntityRef)) setScreen("state", "not-found")
+      }
+      if (props.route.kind === "allocation") {
+        const routeAllocationRef = props.route.params.allocationRef
+        if (!result.body.value.data.allocations.some((row) => row.id === routeAllocationRef)) setScreen("state", "not-found")
+      }
       return
     }
     const status = result.body.status
@@ -171,7 +181,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       return
     }
     setScreen("state", status === "stale" ? "stale" : status === "invalid" || status === "needs-input" ? "invalid" : "unavailable")
-    setScreen("problem", result.body.reason)
+    setScreen("problem", "reason" in result.body ? result.body.reason : null)
   }
   createEffect(() => {
     const status = host.state().status
@@ -216,10 +226,8 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     setScreen({ collection, selected: row?.id ?? null, intent: null, problem: null })
     const intent = row ? null : crypto.randomUUID() as SfIntentRef
     setNewIntent(intent)
-    const value: RecordDraft = {
-      collection, id: row?.id ?? null, name: row?.name ?? "",
-      ...(row && selectedDetail(row, collection) === undefined ? {}
-        : { detail: row ? selectedDetail(row, collection) : "" }),
+    const value: RecordDraft = row ? draftFor(collection, row) : {
+      collection, id: null, name: "", detail: "", contractRef: "", splits: [],
     }
     const version = row ? versionFor(collection, row.id) : null
     const controller = owner.drafts.acquire<RecordDraft>({
@@ -231,7 +239,8 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
         operationId: "domain.page.CAP21",
         input: props.route.query.year === undefined ? {} : { year: props.route.query.year },
         fieldPaths: row ? ["id", "name", ...(selectedDetail(row, collection) === undefined ? []
-          : [collection === "entities" ? "code" : "desc"])] : [],
+          : [collection === "entities" ? "code" : "desc"]),
+          ...(collection === "allocations" ? ["contractRef", "splits"] : [])] : [],
         actionIds: ["save"],
       },
     })
@@ -254,6 +263,24 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       draft()?.setPhase("validation-error")
       setScreen("problem", language.t("sf.cap21.field.name.label"))
       return
+    }
+    if (kind === "save" && collection === "allocations" && value) {
+      const splits = value.splits
+      const seen = new Set<string>()
+      const valid = splits.every((split) => {
+        const scaled = split.percent * 100
+        if (!Number.isFinite(scaled) || scaled <= 0 || scaled > 10000 ||
+          Math.abs(scaled - Math.round(scaled)) > 1e-8 ||
+          !rows("entities").some((entity) => entity.id === split.entityRef) ||
+          seen.has(split.entityRef)) return false
+        seen.add(split.entityRef)
+        return true
+      })
+      if (!valid || (splits.length > 0 && splitTotal(splits) !== 100)) {
+        draft()?.setPhase("validation-error")
+        setScreen("problem", language.t("sf.cap21.splits-invalid"))
+        return
+      }
     }
     if (kind === "save") draft()?.setPhase("reviewing")
     setScreen({ intent: { kind, collection, id, version, ref: crypto.randomUUID() }, problem: null })
@@ -295,6 +322,8 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
           collection: intent.collection, name: value!.name,
           ...(value?.detail === undefined ? {} :
             intent.collection === "entities" ? { code: value.detail } : { desc: value.detail }),
+          ...(intent.collection === "allocations"
+            ? { contractRef: value!.contractRef, splits: [...value!.splits] } : {}),
         },
       } as const
       return { input, call: () => client["domain.command.CAP21.save"](input, options) }
@@ -312,7 +341,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     const bindPending = () => {
       if (intent.kind !== "save") return
       draft()?.setPending({
-        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
         idempotencyKey: options.idempotencyKey,
         payloadDigest: digest,
         expectedVersion: intent.id === null ? null : intent.version,
@@ -349,7 +378,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       bindPending()
       draft()?.confirmSave({
         kind: "confirmed-without-projection",
-        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
         resultVersion: null,
       })
       if (draft()?.snapshot().availability === "confirmed-without-projection") setDraft(null)
@@ -365,6 +394,12 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       value.collection === "entities" ? "sf.cap21.field.code.label" : "sf.cap21.field.desc.label",
       value.detail,
     )]),
+    ...(value.collection === "allocations" ? [
+      field("sf.cap21.field.contractRef.label", value.contractRef),
+      field("sf.cap21.field.splits.label", value.splits.map((split) =>
+        split.entityRef + ": " + split.percent + "%").join(", ")),
+      field("sf.cap21.field.total.label", String(splitTotal(value.splits)) + "%"),
+    ] : []),
   ]
   const revisionSnapshot = (): SfReviewSnapshot | null => {
     const intent = screen.intent
@@ -373,11 +408,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     if (!row) return null
     return {
       kind: "persisted", ref: ref(row.id), version: versionFor(intent.collection, row.id),
-      fields: reviewFields({
-        collection: intent.collection, id: row.id, name: row.name,
-        ...(selectedDetail(row, intent.collection) === undefined ? {}
-          : { detail: selectedDetail(row, intent.collection) }),
-      }),
+      fields: reviewFields(draftFor(intent.collection, row)),
     }
   }
   const proposedSnapshot = (): SfReviewSnapshot => {
@@ -494,13 +525,23 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                     <dt>{language.t("sf.cap21.field.name.label")}</dt><dd><bdi>{row.name}</bdi></dd>
                     <dt>{language.t(screen.collection === "entities" ? "sf.cap21.field.code.label" : "sf.cap21.field.desc.label")}</dt>
                     <dd><bdi>{selectedDetail(row, screen.collection) ?? language.t("sf.cap21.missing")}</bdi></dd>
+                    <Show when={screen.collection === "allocations"}>
+                      <dt>{language.t("sf.cap21.field.contractRef.label")}</dt>
+                      <dd><bdi>{row.contractRef || language.t("sf.cap21.missing")}</bdi></dd>
+                      <dt>{language.t("sf.cap21.field.splits.label")}</dt>
+                      <dd>{(row.splits ?? []).length
+                        ? row.splits?.map((split) => split.entityRef + " · " + split.percent + "%").join(", ")
+                        : language.t("sf.cap21.unconfigured")}</dd>
+                      <dt>{language.t("sf.cap21.field.total.label")}</dt>
+                      <dd>{splitTotal(row.splits ?? [])}%</dd>
+                    </Show>
                     <dt>{language.t("sf.cap21.current-version")}</dt><dd>{versionFor(screen.collection, row.id)}</dd>
                   </dl>
                 )}
               </Show>
             </section>
           </Show>
-          <Show when={currentValue() && !screen.intent && !screen.lockedOutcome}>
+          <Show when={(!screen.intent && !screen.lockedOutcome) ? currentValue() : undefined}>
             {(value) => (
               <form class="mx-card sf-n20-editor" onSubmit={(event) => {
                 event.preventDefault()
@@ -518,6 +559,37 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                     <input class="mx-input" value={value().detail ?? ""}
                       onInput={(event) => draft()?.edit({ ...value(), detail: event.currentTarget.value })} />
                   </label>
+                </Show>
+                <Show when={value().collection === "allocations"}>
+                  <label>
+                    <span>{language.t("sf.cap21.field.contractRef.label")}</span>
+                    <input class="mx-input" value={value().contractRef} maxLength={256}
+                      onInput={(event) => draft()?.edit({ ...value(), contractRef: event.currentTarget.value })} />
+                  </label>
+                  <section class="sf-n20-allocation-splits" aria-label={language.t("sf.cap21.field.splits.label")}>
+                    <h3>{language.t("sf.cap21.field.splits.label")}</h3>
+                    <p>{language.t("sf.cap21.splits-hint")}</p>
+                    <For each={rows("entities")}>{(entity) => (
+                      <label>
+                        <span>{entity.name} · {entity.id}</span>
+                        <input class="mx-input" type="number" min="0" max="100" step="0.01"
+                          aria-label={entity.name + " " + language.t("sf.cap21.field.percent.label")}
+                          value={value().splits.find((split) => split.entityRef === entity.id)?.percent ?? ""}
+                          onInput={(event) => {
+                            const token = event.currentTarget.value.trim()
+                            const other = value().splits.filter((split) => split.entityRef !== entity.id)
+                            if (!token) {
+                              draft()?.edit({ ...value(), splits: other })
+                              return
+                            }
+                            const percent = Number(token)
+                            if (!Number.isFinite(percent)) return
+                            draft()?.edit({ ...value(), splits: [...other, { entityRef: entity.id, percent }] })
+                          }} />
+                      </label>
+                    )}</For>
+                    <p role="status">{language.t("sf.cap21.field.total.label")}: {splitTotal(value().splits)}%</p>
+                  </section>
                 </Show>
                 <div class="sf-n20-actions">
                   <button class="mx-btn primary" type="submit" disabled={!can("save") || screen.busy}>

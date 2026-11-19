@@ -1,3 +1,4 @@
+import { AgentV2 } from "@orchestra/core/agent"
 import { Catalog } from "@orchestra/core/catalog"
 import { makeGlobalNode, makeLocationNode } from "@orchestra/core/effect/app-node"
 import type { Node } from "@orchestra/core/effect/app-node"
@@ -9,6 +10,7 @@ import type { ModelV2 } from "@orchestra/core/model"
 import { SessionRunnerModel } from "@orchestra/core/session/runner/model"
 import { ExecutionHost } from "@orchestra/core/session/runner"
 import { SessionSchema } from "@orchestra/core/session/schema"
+import type { SessionScope } from "@orchestra/core/session/scope"
 import { SessionStore } from "@orchestra/core/session/store"
 import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
 import { InvalidRequestReason, LLMError, LLMRequest, Model } from "@orchestra/llm"
@@ -40,6 +42,30 @@ type RecordState = {
   active: boolean
 }
 
+/** A native Maestro budget is never minted from the SF resident profile or a caller's session ID.
+ * The caller must already possess the authenticated human Request and persisted SF origin.
+ */
+export type SfMaestroGateAdmission = Readonly<{
+  sessionID: SessionSchema.ID
+  request: Request
+  model: ModelV2.Ref
+  location: Location.Ref
+  projectId: string
+  expiresAt: string
+  scope: SessionScope.Scope
+  contextBudgetTokens: number
+  revalidate: () => Effect.Effect<boolean, unknown>
+  persistReceipt: (receipt: SfTokenCountReceipt) => Effect.Effect<void, unknown>
+}>
+
+const maestroBrand: unique symbol = Symbol("sf-native-maestro-c15-ticket")
+export type SfMaestroGateTicket = { readonly [maestroBrand]: true }
+type MaestroRecord = SfMaestroGateAdmission & {
+  modelMount: object
+  hostMount: object
+  active: boolean
+}
+
 export type SfTokenGateStorage = {
   isSfOwned: (sessionID: SessionSchema.ID) => Effect.Effect<boolean, unknown>
 }
@@ -50,6 +76,9 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
   if (!upstream.implementation || upstream.kind !== "layer") throw new Error("execution-host-upstream-unavailable")
   const upstreamLayer = upstream.implementation as Layer.Layer<ExecutionHost.Service>
   const owned = new Set<SessionSchema.ID>()
+  const maestro = new Map<SessionSchema.ID, MaestroRecord>()
+  const maestroModels = new WeakMap<Model, MaestroRecord>()
+  const maestroTickets = new WeakMap<SfMaestroGateTicket, MaestroRecord>()
   const skillIDs = new Set(normative.resident.skills.map((skill) => skill.id))
   const operationIDs = new Set(freeze.operations.map((operation) => operation.operation))
   const sfLineage = (store: SessionStore.Interface, sessionID: SessionSchema.ID) => Effect.gen(function* () {
@@ -83,6 +112,20 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
     item[kind].add(token)
     return () => { item[kind].delete(token); if (!item.models.size && !item.hosts.size) locations.delete(key) }
   }
+  const maestroSame = (session: SessionSchema.Info | undefined, record: MaestroRecord) => !!session &&
+    session.id === record.sessionID && !session.parentID && !session.time.archived &&
+    session.agent === AgentV2.defaultID && session.projectID === record.projectId &&
+    !!session.model && digestSfValue(sfNativeModelRef(session.model)) === digestSfValue(sfNativeModelRef(record.model)) &&
+    keyOf(session.location) === keyOf(record.location)
+  const maestroAlive = (record: MaestroRecord) => record.active && mount.current &&
+    maestro.get(record.sessionID) === record && !record.request.signal.aborted &&
+    Number.isFinite(Date.parse(record.expiresAt)) && Date.now() < Date.parse(record.expiresAt) &&
+    !!locations.get(keyOf(record.location))?.models.has(record.modelMount) &&
+    !!locations.get(keyOf(record.location))?.hosts.has(record.hostMount)
+  const maestroCheck = (record: MaestroRecord) => Effect.suspend(() => {
+    if (!maestroAlive(record)) return Effect.succeed(false)
+    return record.revalidate().pipe(Effect.catch(() => Effect.succeed(false)), Effect.map((ok) => ok === true && maestroAlive(record)))
+  })
   const alive = (record: RecordState) => record.active && mount.current && sessions.get(record.admission.sessionID) === record &&
     !record.admission.request.signal.aborted && Date.now() < Date.parse(record.binding.expiresAt) &&
     !!locations.get(keyOf(record.location))?.models.has(record.modelMount) &&
@@ -110,6 +153,21 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
       const context = yield* Layer.build(SessionRunnerModel.locationLayer)
       const original = Context.get(context, SessionRunnerModel.Service)
       return SessionRunnerModel.Service.of({ resolve: (session) => Effect.gen(function* () {
+        const native = maestro.get(session.id)
+        if (native) {
+          if (!maestroSame(session, native) || !maestroSame(yield* store.get(session.id), native) ||
+            !(yield* maestroCheck(native))) return yield* unavailable(session)
+          const observed = yield* store.scope(session.id)
+          if (!observed || digestSfValue(observed.scope) !== digestSfValue(native.scope)) return yield* unavailable(session)
+          const model = yield* original.resolve(session)
+          if (!maestroSame(yield* store.get(session.id), native) || !(yield* maestroCheck(native))) return yield* unavailable(session)
+          const previous = maestroModels.get(model)
+          if (previous && previous !== native && maestroAlive(previous)) return yield* unavailable(session)
+          // Prior Request was revoked/expired. A fresh, separately authenticated
+          // human continuation may replace its stale Model association only then.
+          maestroModels.set(model, native)
+          return model
+        }
         const record = sessions.get(session.id)
         if (!record && !session.agent?.startsWith("sf_") && !(yield* sfLineage(store, session.id))) return yield* original.resolve(session)
         if (!record || !session.model || !same(session, record) || !same(yield* store.get(session.id), record) ||
@@ -136,14 +194,26 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
         mount.current = false
         sessions.forEach((record) => { record.active = false })
         sessions.clear()
+        maestro.forEach((record) => { record.active = false })
+        maestro.clear()
       }))
       const classify = (request: LLMRequest) => Effect.gen(function* () {
         const record = models.get(request.model)
         if (record) return { kind: "sf" as const, record }
+        const native = maestroModels.get(request.model)
         const header = Object.entries(request.http?.headers ?? {}).find(([name]) => name.toLowerCase() === "x-session-id")?.[1]
+        // A shared Catalog Model object is not a session owner. Only the core-issued
+        // Session header may route into this private C15 capability.
+        if (native && header === native.sessionID) return { kind: "maestro" as const, record: native }
         if (!header?.startsWith("ses_")) return { kind: "other" as const }
         if (yield* sfLineage(store, SessionSchema.ID.make(header))) return { kind: "denied" as const }
         return { kind: "other" as const }
+      })
+      const readyMaestro = (record: MaestroRecord) => Effect.gen(function* () {
+        if (!maestroSame(yield* store.get(record.sessionID), record) || !(yield* maestroCheck(record))) return false
+        const scope = yield* store.scope(record.sessionID)
+        return !!scope && digestSfValue(scope.scope) === digestSfValue(record.scope) &&
+          maestroSame(yield* store.get(record.sessionID), record) && maestroAlive(record)
       })
       const ready = (record: RecordState) => Effect.gen(function* () {
         if (!same(yield* store.get(record.admission.sessionID), record) || !(yield* check(record))) return false
@@ -165,16 +235,17 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
           if (route.kind === "other") return original.stream(request)
           if (route.kind === "denied") return Stream.fail(refusal("sf-model-unbound"))
           const record = route.record
-          if (!(yield* ready(record)) || request.model.route.protocol !== "openai-responses" || request.model.route.transport.id !== "http-json")
+          const valid = () => route.kind === "maestro" ? readyMaestro(route.record) : ready(route.record)
+          if (!(yield* valid()) || request.model.route.protocol !== "openai-responses" || request.model.route.transport.id !== "http-json")
             return Stream.fail(refusal("sf-route-unavailable"))
           const originalRoute = request.model.route
           const transportRoute = { ...originalRoute, streamPrepared: (prepared: Parameters<typeof originalRoute.streamPrepared>[0],
             compiled: Parameters<typeof originalRoute.streamPrepared>[1], runtime: Parameters<typeof originalRoute.streamPrepared>[2]) =>
             Stream.unwrap(Effect.gen(function* () {
-              if (!(yield* ready(record))) return Stream.fail(refusal("sf-authority-unavailable"))
+              if (!(yield* valid())) return Stream.fail(refusal("sf-authority-unavailable"))
               const guarded = HttpClient.mapRequestEffect(base, (httpRequest) =>
-                enforceSfResponseTokenBudget(httpRequest, runtime.http, { model: request.model.id, contextBudgetTokens: record.budget,
-                  revalidate: () => ready(record), persistReceipt: record.persistReceipt }).pipe(
+                enforceSfResponseTokenBudget(httpRequest, runtime.http, { model: request.model.id, contextBudgetTokens: route.kind === "maestro" ? route.record.contextBudgetTokens : route.record.budget,
+                  revalidate: valid, persistReceipt: record.persistReceipt }).pipe(
                   Effect.mapError(() => new HttpClientError.HttpClientError({ reason: new HttpClientError.TransportError({
                     request: httpRequest, description: "SF budget gate denied request",
                   }) })),
@@ -211,6 +282,50 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
   return {
     contribution,
     hostNode,
+    /** Register only after the native host created/scoped an authentic Maestro Session and the
+     * SF authority durably reserved its provenance. Children of this root are fail-closed, not
+     * silently downgraded to unguarded provider calls. New requests require a new ticket.
+     */
+    registerMaestro: (input: SfMaestroGateAdmission) => Effect.gen(function* () {
+      const store = yield* SessionStore.Service
+      const parent = yield* store.get(input.sessionID)
+      const scope = yield* store.scope(input.sessionID)
+      const registered = locations.get(keyOf(input.location))
+      const modelMount = registered?.models.values().next().value
+      const hostMount = registered?.hosts.values().next().value
+      if (!mount.current || !parent || !scope || !modelMount || !hostMount ||
+        registered?.models.size !== 1 || registered.hosts.size !== 1 || maestro.has(input.sessionID) ||
+        !maestroSame(parent, { ...input, modelMount, hostMount, active: true }) ||
+        digestSfValue(scope.scope) !== digestSfValue(input.scope) ||
+        !Number.isSafeInteger(input.contextBudgetTokens) || input.contextBudgetTokens < 1 ||
+        input.request.signal.aborted || Date.now() >= Date.parse(input.expiresAt)) return undefined
+      const record: MaestroRecord = { ...input, modelMount, hostMount, active: true }
+      owned.add(input.sessionID)
+      maestro.set(input.sessionID, record)
+      if (!(yield* maestroCheck(record)) || !maestroSame(yield* store.get(input.sessionID), record)) {
+        record.active = false
+        if (maestro.get(input.sessionID) === record) maestro.delete(input.sessionID)
+        return undefined
+      }
+      const ticket: SfMaestroGateTicket = Object.freeze({ [maestroBrand]: true })
+      maestroTickets.set(ticket, record)
+      return ticket
+    }),
+    validMaestro: (ticket: SfMaestroGateTicket) => Effect.gen(function* () {
+      const record = maestroTickets.get(ticket)
+      if (!record || !(yield* maestroCheck(record))) return false
+      const store = yield* SessionStore.Service
+      const scope = yield* store.scope(record.sessionID)
+      return !!scope && digestSfValue(scope.scope) === digestSfValue(record.scope) &&
+        maestroSame(yield* store.get(record.sessionID), record) && maestroAlive(record)
+    }),
+    revokeMaestro: (ticket: SfMaestroGateTicket) => {
+      const record = maestroTickets.get(ticket)
+      if (!record) return
+      record.active = false
+      if (maestro.get(record.sessionID) === record) maestro.delete(record.sessionID)
+      maestroTickets.delete(ticket)
+    },
     reserveSession: (sessionID: SessionSchema.ID) => { owned.add(sessionID) },
     register: (input: { admission: SfNativeAdmission; binding: TrustedExecutionBinding; model: ModelV2.Ref; location: Location.Ref;
       revalidate: () => Effect.Effect<boolean, unknown>; persistReceipt: (receipt: SfTokenCountReceipt) => Effect.Effect<void, unknown> }) => Effect.gen(function* () {

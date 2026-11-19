@@ -243,7 +243,7 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
     if (originalCall && admitted.status === "ok") { metrics.privateAdmissions++; privateCalls.push(admitted.value); options.afterPrivateAdmission?.(admitted.value) }
     return admitted
   } }
-  const currentAuthority = { host: authority.host, human }
+  const currentAuthority = { host: authority.host, state: authority.state, human }
   const stale = createSfStaleAnalysisAccess({ authority: currentAuthority, persistence, request, start,
     proof: { runRef: run.runRef, caseRef, contextFingerprint: run.contextFingerprint, evidenceRefs: [calculation] },
     context: { context: async (selection, call) => {

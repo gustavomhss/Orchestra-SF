@@ -2,11 +2,14 @@ import { expect, test } from "bun:test"
 import path from "node:path"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
+import { pathToFileURL } from "node:url"
 import { createEmbeddedRoutes } from "@orchestra/server/routes"
 import { Context, Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { ProductHost } from "../src/host.ts"
 import { createSfHostRuntime } from "../src/sucafina-product/host-context.ts"
+import { createSfCurrentChoiceServices } from "../src/sucafina-product/current-choice-services.ts"
+import { createCurrentChoiceFence, isCurrentChoiceFence } from "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
@@ -34,6 +37,13 @@ test("the actual server root registers resident agents and skills and releases t
         roles: [{ surface: context.surface, role: context.surface === "procurement" ? "requester" : "viewer" }] } : null,
       grants: [{ principalRef: "person", namespaces: ["cases"], operations: ["sf_work_list", "sf_case_read"] }],
       environment: async () => ({ at: new Date().toISOString(), id: () => crypto.randomUUID(), directory: [] }) })
+    // This boots the real Host graph, not an isolated replacement of SessionV2 or the Task engine.
+    const nativeIds = runtime.contributions.map((contribution) => contribution.id)
+    expect(nativeIds).toContain("sucafina/native-phase-provider-fence")
+    expect(nativeIds).toContain("sucafina/native-phase-prompt")
+    expect(nativeIds).toContain("sucafina/routine-native-governance")
+    expect(nativeIds).toContain("sucafina/routine-native-runtime")
+    expect(nativeIds).toContain("sucafina-routine-publication")
     const workbench = createSfWorkbenchHttp({ origin: "http://localhost", mount: "/sucafina", runtime: () => runtime.services?.() })
     const web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
       .pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true, memoMap: Layer.makeMemoMapUnsafe() })
@@ -100,4 +110,43 @@ test("the actual server root registers resident agents and skills and releases t
     expect(runtime.identity()).toBeUndefined()
     expect(runtime.services?.()).toBeUndefined()
   } finally { await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
+  {
+    const fenceDirectory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-fence-identity-"))
+    const fenceDriver = await openLocalStore(path.join(fenceDirectory, "business"))
+    try {
+      // Match the real packaging boundary: a separately bundled copy carries
+      // another module-private WeakSet, even if it wraps the same real driver.
+      const built = await Bun.build({
+        entrypoints: [path.resolve(import.meta.dir, "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts")],
+        target: "bun", format: "esm", splitting: false, minify: true,
+      })
+      expect(built.success).toBe(true)
+      expect(built.outputs).toHaveLength(1)
+      const otherModule = path.join(fenceDirectory, "foreign-current-choice.mjs")
+      await Bun.write(otherModule, await built.outputs[0]!.arrayBuffer())
+      const foreign = await import(pathToFileURL(otherModule).href)
+      const deps = {
+        persistence: fenceDriver,
+        host: () => { throw new Error("SF_CURRENT_CHOICE_HOST_UNAVAILABLE") },
+        identity: () => undefined,
+        operationIdentity: () => undefined,
+      }
+      const foreignFence = foreign.createCurrentChoiceFence(deps) as ReturnType<typeof createCurrentChoiceFence>
+      expect(foreign.isCurrentChoiceFence(foreignFence)).toBe(true)
+      expect(isCurrentChoiceFence(foreignFence)).toBe(false)
+      // Deliberately unreachable collaborators: the real service must reject
+      // the valid-but-foreign fence *before* touching authority or business.
+      expect(() => createSfCurrentChoiceServices({
+        authority: undefined as never, business: undefined as never,
+        fence: foreignFence, proposalCoverageWrites: new WeakSet(),
+      })).toThrow("SF_CURRENT_CHOICE_REAL_FENCE_REQUIRED")
+      const owned = createCurrentChoiceFence(deps)
+      expect(isCurrentChoiceFence(owned)).toBe(true)
+      expect(isCurrentChoiceFence({ ...owned })).toBe(false)
+      expect(foreign.isCurrentChoiceFence(owned)).toBe(false)
+    } finally {
+      await fenceDriver.dispose()
+      await rm(fenceDirectory, { recursive: true, force: true })
+    }
+  }
 }, 60_000)

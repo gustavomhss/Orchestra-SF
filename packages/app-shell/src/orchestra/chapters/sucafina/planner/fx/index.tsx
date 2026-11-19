@@ -24,7 +24,8 @@ import "./fx.css"
 type Result = Schema.Schema.Type<(typeof SfPlanner)["operations"]["domain.page.CAP22"]["output"]>
 type Authorized = Extract<Result, { status: "ok" }>
 type FxRate = Authorized["value"]["data"]["rates"][number]
-type RateDraft = Readonly<{ id: string | null; cur: string; rate: string | number | null }>
+type RateDraft = Readonly<{ id: string | null; cur: string; rate: string | number | null;
+  sourceRef: string; provider: string; observedAt: string }>
 type Intent = Readonly<{ kind: "save" | "delete"; id: string | null; version: number; ref: string }>
 type Copy = keyof typeof SF_U45_COPY | keyof typeof SF_COMMON_COPY
 const key = (value: Copy) => value as SfCopyKey
@@ -65,6 +66,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
   })
   const [draft, setDraft] = createSignal<SfPublicDraftController<RateDraft> | null>(null)
   const [localIntent, setLocalIntent] = createSignal<SfIntentRef | null>(null)
+  const [draftPage, setDraftPage] = createSignal<{ year: number | undefined; versionId: string } | null>(null)
   const currentValue = () => {
     const state = draft()?.snapshot()
     return state?.availability === "active" ? state.value : null
@@ -142,7 +144,8 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       if (source && draft()) {
         draft()!.receiveRemote({
           baseVersion: source.revision,
-          value: { id: source.id, cur: source.cur, rate: source.rate },
+          value: { id: source.id, cur: source.cur, rate: source.rate,
+             sourceRef: source.sourceRef ?? "", provider: source.provider ?? "", observedAt: source.observedAt ?? "" },
         })
       }
       return
@@ -153,11 +156,20 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
         state: result.body.status === "denied" ? "denied" : "session-expired",
       })
       setDraft(null)
+      setDraftPage(null)
       return
     }
     setScreen("state", result.body.status === "stale" ? "stale" :
       result.body.status === "invalid" || result.body.status === "needs-input" ? "invalid" : "unavailable")
-    setScreen("problem", result.body.reason)
+    setScreen("problem", "reason" in result.body ? result.body.reason : null)
+  }
+  let seenYear: { year: number | undefined } | undefined
+  const dropOpenDraft = () => {
+    draft()?.discard()
+    setDraft(null)
+    setLocalIntent(null)
+    setDraftPage(null)
+    setScreen({ intent: null, selection: null })
   }
   createEffect(() => {
     const generation = host.generation()
@@ -165,14 +177,16 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     const versionId = screen.versionId
     const year = props.route.query.year
     const controller = new AbortController()
+    if (seenYear && seenYear.year !== year) dropOpenDraft()
+    seenYear = { year }
     if (status !== "ready" || !host.ready() || !canRead()) {
       setScreen({ state: status === "denied" || status === "ready" ? "denied" : "loading", page: null, intent: null })
       setDraft(null)
+      setDraftPage(null)
     } else {
       void read(controller.signal, generation, versionId)
     }
     onCleanup(() => controller.abort())
-    void year
   })
   const refresh = () => {
     void read(new AbortController().signal, host.generation(), screen.versionId)
@@ -186,6 +200,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     draft()?.discard()
     setDraft(null)
     setLocalIntent(null)
+    setDraftPage(null)
     setScreen({ versionId: next, selection: null, intent: null, problem: null, state: "loading" })
   }
   const displayed = () => {
@@ -207,8 +222,9 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     const owner = host.ready()
     if (!owner) return
     const value: RateDraft = row
-      ? { id: row.id, cur: row.cur, rate: row.rate }
-      : { id: null, cur: "", rate: "" }
+      ? { id: row.id, cur: row.cur, rate: row.rate,
+          sourceRef: row.sourceRef ?? "", provider: row.provider ?? "", observedAt: row.observedAt ?? "" }
+      : { id: null, cur: "", rate: "", sourceRef: "", provider: "", observedAt: "" }
     const local = row ? null : crypto.randomUUID() as SfIntentRef
     setLocalIntent(local)
     const controller = owner.drafts.acquire<RateDraft>({
@@ -224,11 +240,12 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
           ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
           version: activeVersionId()!,
         },
-        fieldPaths: row ? ["id", "cur", "rate"] : ["versions", "rates"],
+        fieldPaths: row ? ["id", "cur", "rate", "sourceRef", "provider", "observedAt"] : ["versions", "rates"],
         actionIds: ["save"],
       },
     })
     setDraft(controller)
+    setDraftPage({ year: props.route.query.year, versionId: activeVersionId()! })
     setScreen({ selection: row?.id ?? null, intent: null, problem: null })
   }
   const discard = () => {
@@ -238,6 +255,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     draft()?.discard()
     setDraft(null)
     setLocalIntent(null)
+    setDraftPage(null)
     setScreen({ intent: null, problem: null })
   }
   const prepare = (kind: Intent["kind"], id: string | null) => {
@@ -249,6 +267,19 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       setScreen("problem", language.t("sf.cap22.field.cur.label"))
       return
     }
+    if (kind === "save" && value) {
+      const provenance = [value.sourceRef.trim(), value.provider.trim(), value.observedAt.trim()]
+      const rateProvided = value.rate !== null && String(value.rate).trim() !== ""
+      const attributed = provenance.some(Boolean)
+      if ((rateProvided || attributed) && (
+        provenance.some((item) => !item) ||
+        !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(value.observedAt.trim())
+      )) {
+        draft()?.setPhase("validation-error")
+        setScreen("problem", language.t("sf.cap22.provenance-required"))
+        return
+      }
+    }
     if (kind === "save") draft()?.setPhase("reviewing")
     setScreen({ intent: { kind, id, version: versionFor(id), ref: crypto.randomUUID() }, problem: null })
   }
@@ -258,8 +289,10 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     const versionId = activeVersionId()
     if (!intent || !owner || !versionId || screen.busy || !can(intent.kind)) return
     const prior = draft()?.snapshot()
+    const bound = draftPage()
     if (intent.kind === "save" && (!prior || prior.availability !== "active" ||
         prior.conflict !== null || prior.pendingOperation !== null ||
+        !bound || bound.versionId !== versionId || bound.year !== props.route.query.year ||
         !Object.is(prior.baseVersion, intent.id === null ? null : intent.version))) {
       setScreen({ state: "conflict", problem: language.t("sf.common.conflict") })
       return
@@ -279,7 +312,8 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       const input = {
         page: "FX rates", action: "save", version: intent.version,
         ...(intent.id ? { id: intent.id } : {}),
-        values: { versionId, cur: value!.cur, rate: value!.rate },
+        values: { versionId, cur: value!.cur, rate: value!.rate,
+          sourceRef: value!.sourceRef, provider: value!.provider, observedAt: value!.observedAt },
       } as const
       return { input, call: () => client["domain.command.CAP22.save"](input, options) }
     })()
@@ -293,10 +327,14 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       return
     }
     if (generation !== host.generation() || !host.ready()) return
+    if (intent.kind === "save" && (draftPage()?.versionId !== versionId || draftPage()?.year !== props.route.query.year)) {
+      setScreen({ busy: false, state: "conflict", problem: language.t("sf.common.conflict") })
+      return
+    }
     const bindPending = () => {
       if (intent.kind !== "save") return
       draft()?.setPending({
-        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
         idempotencyKey: options.idempotencyKey,
         payloadDigest: digest,
         expectedVersion: intent.id === null ? null : intent.version,
@@ -324,7 +362,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       setScreen("state", status === 409 ? "conflict" : status === 403 ? "denied" :
         status === 404 ? "not-found" : status === 422 || status === 400 ? "invalid" : "unavailable")
       setScreen("problem", result.body.errors?.join("; ") ?? language.t("sf.cap22.errors"))
-      if (status === 403) { setScreen({ page: null, intent: null }); setDraft(null) }
+      if (status === 403) { setScreen({ page: null, intent: null }); setDraft(null); setDraftPage(null) }
       if (status === 409) draft()?.setPhase("conflict")
       else draft()?.setPhase("validation-error")
       return
@@ -333,10 +371,10 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       bindPending()
       draft()?.confirmSave({
         kind: "confirmed-without-projection",
-        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
         resultVersion: null,
       })
-      if (draft()?.snapshot().availability === "confirmed-without-projection") setDraft(null)
+      if (draft()?.snapshot().availability === "confirmed-without-projection") { setDraft(null); setDraftPage(null) }
     }
     setScreen({ intent: null, selection: null, problem: null, state: "loading" })
     await read(new AbortController().signal, generation, screen.versionId)
@@ -351,6 +389,9 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       fields: [
         reviewField("sf.cap22.field.code.label", row.cur),
         reviewField("sf.cap22.field.rate.label", rateText(row.rate)),
+        reviewField("sf.cap22.field.sourceRef.label", row.sourceRef ?? ""),
+        reviewField("sf.cap22.field.provider.label", row.provider ?? ""),
+        reviewField("sf.cap22.field.observedAt.label", row.observedAt ?? ""),
       ],
     } : null
   }
@@ -366,6 +407,9 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
         : value ? [
           reviewField("sf.cap22.field.code.label", value.cur),
           reviewField("sf.cap22.field.rate.label", rateText(value.rate)),
+          reviewField("sf.cap22.field.sourceRef.label", value.sourceRef),
+          reviewField("sf.cap22.field.provider.label", value.provider),
+          reviewField("sf.cap22.field.observedAt.label", value.observedAt),
         ] : [],
     }
   }
@@ -432,6 +476,12 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                 { id: "rate", labelKey: key("sf.cap22.field.rate.label"), align: "start",
                   widthPolicy: { kind: "flex", minPx: 120, weight: 2 }, sortKey: "rate",
                   render: (row) => <span data-sf-rate-state={row.rate === null ? "missing" : "known"}><bdi>{rateText(row.rate)}</bdi></span> },
+                { id: "provider", labelKey: key("sf.cap22.field.provider.label"), align: "start",
+                  widthPolicy: { kind: "flex", minPx: 130, weight: 1 },
+                  render: (row) => <bdi>{row.provider || language.t("sf.cap22.no-provenance")}</bdi> },
+                { id: "observedAt", labelKey: key("sf.cap22.field.observedAt.label"), align: "start",
+                  widthPolicy: { kind: "flex", minPx: 160, weight: 2 },
+                  render: (row) => <time dateTime={row.observedAt ?? ""}>{row.observedAt || language.t("sf.cap22.no-provenance")}</time> },
               ]}
               selectedKey={screen.selection ? ref(screen.selection) : undefined}
               sort={screen.sort} onSort={(next) => setScreen("sort", next)}
@@ -472,7 +522,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
               </ul>
             </Show>
           </section>
-          <Show when={currentValue() && !screen.intent && !screen.lockedOutcome}>
+          <Show when={(!screen.intent && !screen.lockedOutcome) ? currentValue() : undefined}>
             {(value) => (
               <form class="mx-card sf-n20-fx-editor" onSubmit={(event) => {
                 event.preventDefault()
@@ -490,6 +540,22 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                   <input class="mx-input" inputMode="decimal" type="text"
                     value={value().rate === null ? "" : String(value().rate)}
                     onInput={(event) => draft()?.edit({ ...value(), rate: event.currentTarget.value })} />
+                </label>
+                <label>
+                  <span>{language.t("sf.cap22.field.sourceRef.label")}</span>
+                  <input class="mx-input" value={value().sourceRef} maxLength={256}
+                    onInput={(event) => draft()?.edit({ ...value(), sourceRef: event.currentTarget.value })} />
+                </label>
+                <label>
+                  <span>{language.t("sf.cap22.field.provider.label")}</span>
+                  <input class="mx-input" value={value().provider} maxLength={128}
+                    onInput={(event) => draft()?.edit({ ...value(), provider: event.currentTarget.value })} />
+                </label>
+                <label>
+                  <span>{language.t("sf.cap22.field.observedAt.label")}</span>
+                  <input class="mx-input" type="text" placeholder="2026-11-17T12:00:00Z"
+                    value={value().observedAt}
+                    onInput={(event) => draft()?.edit({ ...value(), observedAt: event.currentTarget.value })} />
                 </label>
                 <p>{language.t("sf.cap22.rate-warning")}</p>
                 <div class="sf-n20-fx-actions">

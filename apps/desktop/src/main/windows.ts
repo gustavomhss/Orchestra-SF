@@ -2,7 +2,7 @@ import windowState from "electron-window-state"
 import { resolveThemeVariant } from "@orchestra/ui/theme/resolve"
 import type { DesktopTheme } from "@orchestra/ui/theme/types"
 import type { NativeTitlebarFrame } from "@orchestra/app/native-titlebar"
-import oc2ThemeJson from "../../../../packages/ui/src/theme/themes/oc-2.json"
+import oc2ThemeJson from "../../../../packages/ui/src/theme/themes/oc-2.json" with { type: "json" }
 import { randomUUID } from "node:crypto"
 import { rmSync } from "node:fs"
 import { app, BrowserWindow, dialog, net, nativeImage, nativeTheme, protocol, session, shell, type Rectangle } from "electron"

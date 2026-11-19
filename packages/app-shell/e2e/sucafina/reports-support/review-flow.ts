@@ -174,6 +174,15 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await row.getByRole("button", { name: "Edit", exact: true }).click()
     const editor = source.getByRole("dialog", { name: "Edit record", exact: true })
     await expect(editor).toBeVisible()
+    // Regression: Forecast exists in a closed Save month disclosure. The
+    // operator must open that real control; hidden-field fills are not valid.
+    const monthPanel = editor.locator("details.editor-panel").filter({ has: form })
+    await expect(monthPanel.locator("summary")).toHaveText("Save month")
+    await expect(monthPanel).not.toHaveAttribute("open", "")
+    await expect(form).toBeHidden()
+    await monthPanel.locator("summary").click()
+    await expect(monthPanel).toHaveAttribute("open", "")
+    await expect(form).toBeVisible()
     await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("110")
     const version = Number(await form.getAttribute("data-version"))
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
@@ -221,6 +230,7 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
   await expect(button).toBeEnabled()
+  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
   await button.click()
   const response = await pending
@@ -262,8 +272,13 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
+  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
+  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+  const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
+  await expect(open).toBeVisible()
+  await expect(open).toBeEnabled()
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
-  await page.getByRole("region", { name: "Prepare review", exact: true }).getByRole("button", { name: "Open meeting", exact: true }).click()
+  await open.click()
   expect(object(await (await pending).json()).value).toEqual(saved)
   const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting).toHaveCount(1)

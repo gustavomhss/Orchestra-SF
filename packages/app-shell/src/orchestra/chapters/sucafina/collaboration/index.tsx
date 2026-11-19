@@ -2,7 +2,9 @@ import { For, Show, createEffect, createSignal, createUniqueId } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_S05_COPY } from "@/i18n/orchestra-chapters/sf-s05"
-import type { SfMessage, SfText, SfUiState, SfRelationsProps, SfThreadProps, SfQuestionProps, SfConfirmationProps } from "./types"
+import type { SfCopyKey, SfMessage, SfText, SfUiState, SfRelationsProps, SfThreadProps, SfQuestionProps, SfConfirmationProps } from "./types"
+import { SfStatePanel } from "../shared/states"
+import { SfWhenText } from "./labels"
 import "./collaboration.css"
 import "../../kit.css"
 
@@ -63,21 +65,10 @@ const stateCopy: Partial<Record<SfUiState, SfSharedCopyKey>> = {
 }
 
 function SfNotice(props: { state: SfUiState }) {
-  const copy = useCopy()
   const label = () => stateCopy[props.state]
   return (
     <Show when={label()}>
-      {(value) => (
-        <p
-          class="sf-collab-notice"
-          classList={{ "sf-collab-notice-alert": props.state === "denied" || props.state === "session-expired" ||
-            props.state === "invalid" || props.state === "conflict" || props.state === "outcome-unknown" }}
-          role={props.state === "denied" || props.state === "session-expired" || props.state === "invalid" ||
-            props.state === "outcome-unknown" ? "alert" : "status"}
-        >
-          {copy.key(value())}
-        </p>
-      )}
+      {(value) => <SfStatePanel state={props.state} messageKey={value() as SfCopyKey} />}
     </Show>
   )
 }
@@ -119,7 +110,8 @@ export function SfRelations(props: SfRelationsProps) {
     return !!fence && fence.sourceRef === props.sourceRef && fence.targetRef === selectedTarget()?.ref &&
       fence.kind === allowedKind()?.id && !linked()
   }
-  const canCreate = () => mayEdit(props.state) && !!selectedTarget() && !!allowedKind() && !linked() && !createPending()
+  const writes = () => props.canWrite !== false
+  const canCreate = () => writes() && mayEdit(props.state) && !!selectedTarget() && !!allowedKind() && !linked() && !createPending()
   const updateQuery = (value: string) => {
     setSelection({ sourceRef: props.sourceRef, query: value, targetRef: "", kind: "" })
     props.onSearchTargets(value) // user input only; never on render, route load or refetch
@@ -210,7 +202,7 @@ export function SfRelations(props: SfRelationsProps) {
         </div>
         <h3 class="sf-collab-subheading">{copy.key("sf.s05.relations.current")}</h3>
         <Show when={props.relations.some((relation) => relation.sourceRef === props.sourceRef)}
-          fallback={<p class="sf-collab-help">{copy.key("sf.common.empty")}</p>}>
+          fallback={<SfStatePanel state="empty" messageKey={"sf.common.empty" as SfCopyKey} />}>
           <ul class="sf-collab-items" aria-label={copy.key("sf.s05.relations.current")}>
             <For each={props.relations.filter((relation) => relation.sourceRef === props.sourceRef)}>
               {(relation) => {
@@ -224,19 +216,17 @@ export function SfRelations(props: SfRelationsProps) {
                         <span aria-hidden="true">→</span>
                         <span>{copy.text(relation.targetLabel)}</span>
                       </div>
-                      <span class="sf-collab-kind">{relation.kind}</span>
+                      <span class="sf-collab-kind">{copy.message({ key: "sf.s05.relations.observedKind" as SfMessage["key"], params: { kind: relation.kind } })}</span>
                     </div>
                     <div class="sf-collab-actions">
                       <button class="mx-btn" type="button" disabled={!mayDisplay(props.state)}
                         onClick={() => props.onOpen(relation.targetRef)}>
                         {copy.key("sf.s05.relations.open")}
                       </button>
-                      <Show when={relation.canRemove}>
-                        <button class="mx-btn danger" type="button"
-                          disabled={!mayEdit(props.state) || pending()} onClick={() => remove(relation)}>
-                          {copy.key("sf.s05.relations.remove")}
-                        </button>
-                      </Show>
+                      <button class="mx-btn danger" type="button"
+                        disabled={!mayEdit(props.state) || !relation.canRemove || pending()} onClick={() => remove(relation)}>
+                        {copy.key("sf.s05.relations.remove")}
+                      </button>
                     </div>
                   </li>
                 )
@@ -271,7 +261,8 @@ export function SfThread(props: SfThreadProps) {
     return !!fence && fence.threadRef === props.threadRef &&
       fence.incarnation === props.incarnation && fence.version === props.version
   }
-  const canPost = () => mayEdit(props.state) && props.draft.trim().length > 0 && !locked() &&
+  const writes = () => props.canWrite !== false
+  const canPost = () => writes() && mayEdit(props.state) && props.draft.trim().length > 0 && !locked() &&
     props.incarnation.length > 0 && Number.isSafeInteger(props.version) && props.version >= 0
   const post = () => {
     if (!canPost()) return
@@ -311,7 +302,7 @@ export function SfThread(props: SfThreadProps) {
                   <li class="sf-collab-item sf-collab-message">
                     <header class="sf-collab-message-meta">
                       <strong>{copy.text(entry.author)}</strong>
-                      <time datetime={entry.createdAt}>{entry.createdAt}</time>
+                      <SfWhenText iso={entry.createdAt} />
                     </header>
                     <p class="sf-collab-message-body">{entry.text}</p>
                     <Show when={entry.sourceRefs.length > 0}>
@@ -332,7 +323,7 @@ export function SfThread(props: SfThreadProps) {
           <label class="sf-collab-field" for={uid + "-draft"}>
             <span>{copy.key("sf.s05.thread.compose")}</span>
             <textarea id={uid + "-draft"} rows={4} ref={draftInput} value={domDraft()}
-              disabled={!mayEdit(props.state)} onInput={(event) => props.onEditDraft(event.currentTarget.value)} />
+              disabled={!writes() || !mayEdit(props.state)} onInput={(event) => props.onEditDraft(event.currentTarget.value)} />
           </label>
           <button class="mx-btn primary sf-collab-primary" type="submit" disabled={!canPost()}>
             {copy.key("sf.ui52.primary")}
@@ -459,6 +450,7 @@ export function SfQuestion(props: SfQuestionProps) {
 
 export function SfConfirmation(props: SfConfirmationProps) {
   const copy = useCopy()
+  const language = useLanguage()
   const uid = createUniqueId()
   const [confirmFence, setConfirmFence] = createSignal<{ selectionRef: string; materialVersion: string | number }>()
   const revoked = () => props.status === "revoked" || props.state === "denied" || props.state === "session-expired"
@@ -466,7 +458,7 @@ export function SfConfirmation(props: SfConfirmationProps) {
     props.coverage.state === "complete" && props.coverage.reasons.length === 0
   const locked = () => confirmFence()?.selectionRef === props.selectionRef &&
     confirmFence()?.materialVersion === props.materialVersion
-  const canConfirm = () => current() && !locked()
+  const canConfirm = () => props.canWrite !== false && current() && !locked()
   const canRevalidate = () => props.state !== "loading" && !revoked() && props.status !== "not-found"
   const confirm = () => {
     if (!canConfirm()) return
@@ -502,7 +494,7 @@ export function SfConfirmation(props: SfConfirmationProps) {
             </div>
             <div>
               <dt>{copy.key("sf.s05.confirmation.version")}</dt>
-              <dd><code>{String(props.materialVersion)}</code></dd>
+              <dd><code>{typeof props.materialVersion === "number" ? new Intl.NumberFormat(language.intl()).format(props.materialVersion) : props.materialVersion}</code></dd>
             </div>
             <div>
               <dt>{copy.key("sf.s05.confirmation.coverage")}</dt>

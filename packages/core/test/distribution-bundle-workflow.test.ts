@@ -24,7 +24,7 @@ const Job = Schema.Struct({ name: Schema.optional(Schema.String), "runs-on": Sch
 const Workflow = Schema.Struct({ name: Schema.String, on: Schema.Record(Schema.String, Schema.Unknown),
   permissions: Schema.Record(Schema.String, Schema.String), defaults: Schema.Struct({ run: Schema.Struct({ shell: Schema.String }) }),
   env: Schema.Record(Schema.String, Schema.String), jobs: Schema.Record(Schema.String, Job) })
-const source = YAML.parse(await Bun.file(path.join(root, ".github/workflows/distribution-bundle.yml")).text())
+const source = YAML.parse(await Bun.file(path.join(root, ".github/inherited-workflows/distribution-bundle.yml.disabled")).text())
 const selector = await Bun.file(path.join(root, "apps/cli/script/test.ts")).text()
 const distribution = [...new Bun.Glob("test/distribution-*.test.ts").scanSync({ cwd: path.join(root, "apps/cli") })].map((file) => `./${file.replaceAll("\\", "/")}`)
 const checkout = "actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5"

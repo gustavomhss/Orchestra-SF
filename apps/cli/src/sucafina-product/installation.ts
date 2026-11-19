@@ -8,6 +8,7 @@ import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerRespo
 import { limitRequestBody, requestBodyLength, RequestBodyError } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
 import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
 import type { SfFilesHostSources } from "./native-ui/files"
+import type { SfTrustedInstallationSource } from "../../../../packages/server/src/sucafina-installations.ts"
 import { mountSfFilesOriginalRoutes } from "./native-ui/files-routing"
 
 export type SfInstallation = {
@@ -16,6 +17,8 @@ export type SfInstallation = {
   dispose: () => void | Promise<void>
   host?: ReadonlyArray<Host.Contribution>
   transport?: MicrosoftTransport
+  /** Only the host-loaded installation may supply discovery, never a request. */
+  discovery?: SfTrustedInstallationSource
   /** Private owner-injected ORIGINAL producers; absence remains fail-closed. */
   nativeFiles?: SfFilesHostSources
 }
@@ -23,10 +26,13 @@ export type SfInstallation = {
 /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
 export async function loadSfInstallation(file: string, origin: string) {
   if (!path.isAbsolute(file) || new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ABSOLUTE_PATH_AND_ORIGIN_REQUIRED")
-  const { createSfHostRuntime } = await import("./host-context")
-  const module = await import(pathToFileURL(await realpath(file)).href)
+  const { createSfHostRuntime, createCurrentChoiceFence } = await import("./host-context")
+  const resolved = await realpath(file)
+  const module = await import(pathToFileURL(resolved).href)
   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
-  const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime })
+  // Owner-selected factory and its colocated, read-only AI policy tree; do not rely on bundler-rewritten import.meta.dir.
+  const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime, createCurrentChoiceFence,
+    sourceRoot: path.resolve(path.dirname(resolved), "../product/ai") })
   return composeSfInstallation(value, origin)
 }
 

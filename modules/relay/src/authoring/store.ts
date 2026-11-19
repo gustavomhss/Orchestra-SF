@@ -10,15 +10,15 @@ import type { RelaySprint } from "@orchestra/schema/relay-sprint"
 import { RelayJson } from "../json"
 import { AuthoringGraph } from "./graph"
 import { connect } from "#sqlite"
-import bugfix from "../../profiles/bugfix.sprint.json"
-import design from "../../profiles/design.sprint.json"
-import featureLaunch from "../../profiles/feature-launch.sprint.json"
-import planning from "../../profiles/planning.sprint.json"
-import researchV2 from "../../profiles/research-v2.sprint.json"
-import safeRefactor from "../../profiles/safe-refactor.sprint.json"
-import specDecompose from "../../profiles/spec-decompose.sprint.json"
-import tddFeature from "../../profiles/tdd_feature.sprint.json"
-import wpExecute from "../../profiles/wp-execute.sprint.json"
+import bugfix from "../../profiles/bugfix.sprint.json" with { type: "json" }
+import design from "../../profiles/design.sprint.json" with { type: "json" }
+import featureLaunch from "../../profiles/feature-launch.sprint.json" with { type: "json" }
+import planning from "../../profiles/planning.sprint.json" with { type: "json" }
+import researchV2 from "../../profiles/research-v2.sprint.json" with { type: "json" }
+import safeRefactor from "../../profiles/safe-refactor.sprint.json" with { type: "json" }
+import specDecompose from "../../profiles/spec-decompose.sprint.json" with { type: "json" }
+import tddFeature from "../../profiles/tdd_feature.sprint.json" with { type: "json" }
+import wpExecute from "../../profiles/wp-execute.sprint.json" with { type: "json" }
 
 // Documents, versions and scopes in `authoring.sqlite3` (`#sqlite`; relay_authoring/store.py; WP8). The same tables
 // and row bodies as the Python store, so a Python-made database opens unchanged. Unlike Python, a save rewrites only the

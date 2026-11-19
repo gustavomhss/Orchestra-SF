@@ -117,11 +117,20 @@ if (!values.inventory) {
     // A failed showConfig may contain a diagnostic instead of JSON. Preserve it as failed evidence.
     const effective = configStatus === 0 ? JSON.parse(effectiveText) : null
     if (effective) {
-      const files = new Set((effective.files ?? []).map((file) => path.resolve(app, file)))
+      // tsgo's --showConfig prints options at the top level and does not repeat the
+      // resolved root list that tsc nests under `files`; the --listFiles log below is
+      // the program for that case, so both shapes are read with the same teeth.
+      const options = effective.compilerOptions ?? effective
+      const declared = (effective.files ?? []).map((file) => path.resolve(app, file))
+      const log = readFileSync(outputFiles[1], "utf8")
+      const program = [...new Set(log.split(/\r?\n/).map((line) => line.trim())
+        .filter((line) => /\.(?:[cm]?[tj]sx?|json)$/.test(line))
+        .map((line) => path.resolve(app, line)).filter(isFile).map((file) => realpathSync(file)))].sort()
+      const files = new Set(declared.length > 0 ? declared : program)
       requireCheck(files.size > 0, "EMPTY_COMPILER_CONFIG: showConfig selected no files")
-      requireCheck(effective.compilerOptions?.strict === true && effective.compilerOptions?.noEmit === true &&
-        effective.compilerOptions?.composite === false && effective.compilerOptions?.noCheck !== true &&
-        effective.compilerOptions?.noResolve !== true, "EFFECTIVE_OPTIONS: strict, nonemitting, noncomposite, resolved check required")
+      requireCheck(options.strict === true && options.noEmit === true &&
+        options.composite === false && options.noCheck !== true &&
+        options.noResolve !== true, "EFFECTIVE_OPTIONS: strict, nonemitting, noncomposite, resolved check required")
       for (const file of roots) requireCheck(files.has(file), `CONFIG_OMISSION: ${relative(file)}`)
       observation.effective_root_count = files.size
     }

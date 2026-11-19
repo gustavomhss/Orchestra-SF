@@ -45,6 +45,7 @@ type BudgetSurface = SfSurfaceProps<"CAP18" | "CAP19">
 type Edit = Readonly<{
   name: string; desc: string; owner: string; entity: string; alloc: string;
   cls: string; cur: string; el: string; proj: string; code: string;
+  approvalState: string; investmentStart: string; investmentEnd: string;
 }>
 type ReviewKind = "line-save" | "project-save" | "line-delete" | "project-delete" |
   "spread" | "reset" | "closed" | "split"
@@ -65,6 +66,9 @@ const initialEdit = (row: PlanLine | PlanProject): Edit => ({
   el: "el" in row ? row.el ?? "" : "",
   proj: "proj" in row ? row.proj ?? "" : "",
   code: "code" in row ? row.code ?? "" : "",
+  approvalState: "approvalState" in row ? row.approvalState ?? "" : "",
+  investmentStart: "investmentStart" in row ? row.investmentStart ?? "" : "",
+  investmentEnd: "investmentEnd" in row ? row.investmentEnd ?? "" : "",
 })
 const cellKey = (coord: SfCellCoordinate) =>
   JSON.stringify([coord.measure, coord.month])
@@ -104,6 +108,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   let lastIdentity = ""
 
   const isOpex = () => props.surfaceId === "CAP18"
+  const projectRows = () => { const data = state.page?.data; return data && "projects" in data ? data.projects : [] }
+  const splitRows = () => { const data = state.page?.data; return data && "split" in data ? data.split : [] }
   const pageName = () => isOpex() ? "OPEX" as const : "CAPEX" as const
   const currentYear = () => state.page?.selection.year ?? props.route.query.year
   const version = () => state.page?.data.selectedVersion
@@ -186,8 +192,9 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           setState({ phase: "stale", page: null }); return
         }
         const projection = body.value
-        for (const rec of projection.data.lines) {
-          const handle = editors.get(JSON.stringify([projection.selection.year, projection.data.selectedVersion?.id,rec.id]))
+        for (const rec of [...projection.data.lines,
+          ...("projects" in projection.data ? projection.data.projects : [])]) {
+          const handle = editors.get(JSON.stringify([projection.selection.year, projection.data.selectedVersion?.id, rec.id]))
           handle?.receiveRemote({ baseVersion: rec.revision, value: initialEdit(rec) })
         }
         const lineRef = "lineRef" in props.route.params ? props.route.params.lineRef : undefined
@@ -196,7 +203,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         const refMissing = lineRef && !projection.data.lines.some(row => row.id === lineRef) ||
           projectRef && !projectRows.some(row => row.id === projectRef)
         setState({ page: projection, phase: refMissing ? "not-found" :
-          projection.data.lines.length ? "ready" :
+          (projection.data.lines.length || projectRows.length) ? "ready" :
           (props.route.query.filter || props.route.query.element ? "filtered-empty" : "empty"),
           closedChoice: projection.data.selectedVersion?.closed ?? 0, error: "" })
       } catch (error) {
@@ -304,7 +311,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const rows = grid()?.rows ?? []
     const previous = rows.findIndex((row) => row.id === event.from.rowRef)
     if (previous < 0) return
-    let row = previous, month = event.from.month
+    let row = previous, month: number = event.from.month
     switch (event.key) {
       case "ArrowUp": row -= 1; break
       case "ArrowDown": row += 1; break
@@ -368,15 +375,18 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const abort = new AbortController()
     try {
       const result = await createSfPlannerClient(ready.transport)["planner.monthly.preview"](
-        { action: "preview", input }, { signal: abort.signal, idempotencyKey: crypto.randomUUID() },
+        { action: "preview", input }, { signal: abort.signal },
       )
       if (result.kind === "transport-error") {
         setState({ paste: { ...original, phase: "failed" }, error: t("sf.u07.previewError") })
       } else if (result.body.status !== "ok") {
         setState({ paste: { ...original, phase: "failed" }, error: t("sf.u07.previewError") })
       } else {
-        setState({ paste: reconcileBudgetPaste(original, result.body.value.rows, false),
-          pasteInput: input, error: "" })
+        const reviewed = reconcileBudgetPaste(original, result.body.value.rows, false)
+        const paste: SfPasteState = reviewed.phase === "complete"
+          ? { ...original, phase: "review" }
+          : reviewed
+        setState({ paste, pasteInput: input, error: "" })
       }
     } catch (error) {
       console.error("N19 monthly preview failed", error instanceof Error ? error.name : "unknown")
@@ -425,7 +435,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const input = state.pasteInput
     const paste = state.paste
     if (!ready || !input || !allowed("save") ||
-        (paste.phase !== "review" && paste.phase !== "partial" && paste.phase !== "conflict")) return
+        (paste.phase !== "review" && paste.phase !== "partial")) return
     const admitted = new Set(rows.filter((row) => row.result === "ready").map((row) => row.rowRef))
     const drafts = input.drafts.filter((row) => admitted.has(row.rowId as SfRef))
     if (!drafts.length) return
@@ -435,6 +445,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       const response = await createSfPlannerClient(ready.transport)["planner.monthly.apply"](
         { action: "apply", input: request }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() },
       )
+      if (response.kind === "response" && (response.status === 409 ||
+          response.body.status === "conflict" || response.body.status === "provider-conflict")) {
+        setState({ paste: { ...paste, phase: "conflict" }, phase: "conflict", error: t("sf.common.conflict") })
+        return
+      }
       const remaining = unresolvedSfPlannerMonthlyRows(request,response)
       if (remaining.status === "outcome-unknown") {
         setState({ uncertainty: true, phase: "outcome-unknown", error: t("sf.common.operationUnknown"),
@@ -523,17 +538,28 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const r=state.review
     const ready=owner.ready()
     if (!r || !ready || !allowed(reviewAction()) || !versionId()) return
+    const sourceRecord=record()
+    if (r.kind==="line-save" || r.kind==="project-save") {
+      const editor = r.kind==="project-save" ? (project() && getEditor(project()!)) : (sourceRecord && getEditor(sourceRecord))
+      const snapshot = editor?.snapshot()
+      if (!snapshot || snapshot.availability !== "active" || snapshot.conflict || snapshot.phase === "conflict") {
+        setState({ phase: "conflict", error: t("sf.common.conflict") })
+        return
+      }
+    }
     const idem=crypto.randomUUID()
     const signal=new AbortController().signal
     const base={version:r.revision,confirmed:true as const}
     const client=createSfPlannerClient(ready.transport)
-    setState({busy:true,review:null,error:""})
+    setState({busy:true,error:""})
     try {
-      const sourceRecord=record()
       let reply: {kind:string;status?:number;body?:{ok:boolean;errors?:readonly string[]}} | undefined
       if (r.kind==="line-save" && sourceRecord) {
         const snapshot=getEditor(sourceRecord)?.snapshot()
-        if (snapshot?.availability!=="active") return
+        if (snapshot?.availability!=="active" || snapshot.conflict || snapshot.phase==="conflict") {
+          setState({ phase: "conflict", error: t("sf.common.conflict") })
+          return
+        }
         const original=snapshot.base ?? initialEdit(sourceRecord)
         const values=Object.fromEntries(Object.entries(snapshot.value).filter(([field,value]) =>
           field!=="code" && value !== original[field as keyof Edit]))
@@ -544,10 +570,13 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           : await client["domain.command.CAP19.save"]({...input,page:"CAPEX"}, {signal,idempotencyKey:idem})
       } else if (r.kind==="project-save" && project()) {
         const snapshot=getEditor(project()!)?.snapshot()
-        if (snapshot?.availability!=="active") return
+        if (snapshot?.availability!=="active" || snapshot.conflict || snapshot.phase==="conflict") {
+          setState({ phase: "conflict", error: t("sf.common.conflict") })
+          return
+        }
         const original=snapshot.base ?? initialEdit(project()!)
         const values=Object.fromEntries(Object.entries(snapshot.value).filter(([field,value]) =>
-          ["name","desc","owner","code"].includes(field) && value !== original[field as keyof Edit]))
+          ["name","desc","owner","code","approvalState","investmentStart","investmentEnd"].includes(field) && value !== original[field as keyof Edit]))
         reply=await client["domain.command.CAP19.save"]({
           ...base,page:"CAPEX",action:"save",id:r.id,
           values:{versionId:versionId(),collection:"projects",...values},
@@ -580,10 +609,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         setState({phase:"outcome-unknown",uncertainty:true,error:t("sf.common.operationUnknown")})
       } else if (!(reply.status!>=200 && reply.status!<300 && reply.body?.ok===true)) {
         setState({phase:reply.status===409?"conflict":reply.status===403?"denied":"invalid",
-          error:reply.body?.errors?.join("; ")??t("sf.common.failed")})
+          error:reply.status===409 ? t("sf.common.conflict") : reply.body?.errors?.join("; ")??t("sf.common.failed")})
       } else {
         if (sourceRecord) getEditor(sourceRecord)?.discard()
-        setState({phase:"loading",error:t("sf.u07.saved")})
+        setState({review:null,phase:"loading",error:t("sf.u07.saved")})
         reload()
       }
     } catch(error) {
@@ -599,7 +628,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   }
   const documentTitle = () => isOpex() ? "sf.cap18.title" : "sf.cap19.title"
   const fieldNames = () => project()
-    ? ["name","desc","owner","code"] as const :
+    ? ["name","desc","owner","code","approvalState","investmentStart","investmentEnd"] as const :
       ["name","desc","owner","entity","alloc","cls","cur","el","proj"] as const
   const review = () => state.review
   const note = () => state.phase === "outcome-unknown" ? "sf.common.operationUnknown" :
@@ -700,9 +729,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             <Show when={!isOpex() && "projects" in page().data}>
               <section><h2>{t("sf.u07.projects")}</h2>
                 <div class="sf-u07-project-list">
-                  <For each={"projects" in page().data? page().data.projects:[]}>{(p)=>
+                  <For each={projectRows()}>{(p)=>
                     <button type="button" class="mx-btn" onClick={()=>setState("selected",p.id)}>
-                      {p.name} · {p.code??p.id}
+                      {p.name} · {p.code??p.id} · {p.approvalState || "draft"}
+                       {p.investmentStart && p.investmentEnd ? ` · ${p.investmentStart} → ${p.investmentEnd}` : ""}
                     </button>}
                   </For>
                 </div>
@@ -710,7 +740,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             </Show>
             <Show when={isOpex() && "split" in page().data}>
               <section><h2>{t("sf.u07.structure")}</h2>
-                <ul><For each={"split" in page().data?page().data.split:[]}>{(element)=><li>
+                <ul><For each={splitRows()}>{(element)=><li>
                   <span>{element.element} · {t("sf.u07.split")}: {String(element.split)}</span>
                   <button class="mx-btn" type="button" disabled={!allowed("save")}
                     onClick={()=>openReview("split","",element.revision,
@@ -730,12 +760,29 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                     <div class="sf-u07-form-fields">
                       <For each={fieldNames()}>{(field)=><label>
                         {t("sf.u07."+(field==="desc"?"description":field==="cur"?"currency":field==="alloc"?"allocation":field==="cls"?"classification":field==="el"?"element":field==="proj"?"project":field))}
-                        <input value={draft().value[field]} disabled={!allowed("save")}
-                          onInput={(event)=>{
-                            const ctrl=getEditor(rec())
-                            const snapshot=ctrl?.snapshot()
-                            if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,[field]:event.currentTarget.value})
-                          }}/>
+                        <Show when={field === "approvalState"} fallback={
+                          <input type={(field === "investmentStart" || field === "investmentEnd") &&
+                            (draft().value[field] === "" || /^\d{4}-\d{2}$/.test(draft().value[field])) ? "month" : "text"}
+                            value={draft().value[field]} disabled={!allowed("save")}
+                            onInput={(event)=>{
+                              const ctrl=getEditor(rec())
+                              const snapshot=ctrl?.snapshot()
+                              if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,[field]:event.currentTarget.value})
+                            }}/>
+                        }>
+                          <select value={draft().value.approvalState} disabled={!allowed("save")}
+                            onChange={(event)=>{
+                              const ctrl=getEditor(rec())
+                              const snapshot=ctrl?.snapshot()
+                              if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,approvalState:event.currentTarget.value})
+                            }}>
+                            <option value="">{t("sf.u07.approval.unset")}</option>
+                            <option value="draft">{t("sf.u07.approval.draft")}</option>
+                            <option value="pending">{t("sf.u07.approval.pending")}</option>
+                            <option value="approved">{t("sf.u07.approval.approved")}</option>
+                            <option value="rejected">{t("sf.u07.approval.rejected")}</option>
+                          </select>
+                        </Show>
                       </label>}</For>
                     </div>
                     <div class="sf-u07-actions">

@@ -46,24 +46,46 @@ export function securityKpi(page: SfSecurityPage) {
   return (page.data.secKpi ?? []).find((row) =>
     row.year === page.selection.year && row.month === page.selection.month)
 }
+function periodStamp(year: number, month: number) {
+  return year * 12 + month
+}
+function yearMonth(value: string | null | undefined) {
+  if (typeof value !== "string") return null
+  const match = /^(\d{4})-(\d{2})-\d{2}$/.exec(value)
+  if (!match) return null
+  const year = Number(match[1])
+  const month = Number(match[2])
+  return month >= 1 && month <= 12 ? periodStamp(year, month) : null
+}
+function recordedPeriod(row: object, year: number, month: number) {
+  if (!("year" in row) || !("month" in row)) return false
+  return Reflect.get(row, "year") === year && Reflect.get(row, "month") === month
+}
 export function securityActions(page: SfSecurityPage) {
-  // These are the producer's current action records, not a selected-year archive.
-  return page.data.secActions ?? []
+  // Action rows store no year, month, or date, so none belong to the selected period.
+  return (page.data.secActions ?? []).filter((row) =>
+    recordedPeriod(row, page.selection.year, page.selection.month))
 }
 export function securityIncidents(page: SfSecurityPage) {
+  const prefix = String(page.selection.year) + "-" + String(page.selection.month).padStart(2, "0")
   return (page.data.secIncidents ?? []).filter((row) =>
-    typeof row.date === "string" && row.date.startsWith(String(page.selection.year)))
+    typeof row.date === "string" && (row.date === prefix || row.date.startsWith(prefix + "-")))
 }
 export function securityCampaigns(page: SfSecurityPage) {
-  // Campaign records are current, not a fabricated snapshot for the KPI year.
-  return page.data.secPhishing ?? []
+  const stamp = periodStamp(page.selection.year, page.selection.month)
+  return (page.data.secPhishing ?? []).filter((row) => {
+    const start = yearMonth(row.start)
+    const end = yearMonth(row.end)
+    if (start === null && end === null) return false
+    const from = start ?? end!
+    const to = end ?? start!
+    return from <= stamp && stamp <= to
+  })
 }
 export function securityRow(page: SfSecurityPage, kind: SecurityEntity, id: string) {
   if (kind === "kpi")
     return securityKpi(page)?.id != null && String(securityKpi(page)!.id) === id ? securityKpi(page) : undefined
-  if (kind === "action")
-    return securityActions(page).find((row) => String(row.id) === id)
-  if (kind === "incident")
-    return (page.data.secIncidents ?? []).find((row) => String(row.id) === id)
-  return securityCampaigns(page).find((row) => String(row.id) === id)
+  const rows = kind === "action" ? page.data.secActions :
+    kind === "incident" ? page.data.secIncidents : page.data.secPhishing
+  return (rows ?? []).find((row) => String(row.id) === id)
 }

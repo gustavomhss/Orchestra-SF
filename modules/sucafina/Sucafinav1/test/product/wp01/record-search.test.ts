@@ -7,7 +7,6 @@ import { randomBytes, randomUUID } from "node:crypto"
 import { createModule } from "../../../index.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
@@ -54,7 +53,7 @@ async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFix
     return { ...principal, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
   }
   const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) })
-  const app = createModule("/sucafina", { persistence: store, authenticate, environment, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  const app = createModule("/sucafina", { persistence: store, authenticate, environment, maxJsonBytes: 100000 })
   state.handle = async (request) => await identity.handle(request) ?? await app(request)
   let context: BrowserContext | undefined
   let page: Page | undefined

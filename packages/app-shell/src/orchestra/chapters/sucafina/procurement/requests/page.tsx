@@ -10,12 +10,13 @@ import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
+import { SfBoundAssets } from "../../shared/attachments/bound-assets"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
 import { SF_U11_REMAINING_COPY } from "./copy"
 import {
-  decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, prFromRecord,
+  decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, postedPoLine, prFromRecord,
   requestRef, requestVersion, uiCommandAction, validatePo, validatePr,
   type SfPoEdit, type SfPrEdit, type SfRequest, type SfRequestCommand, type SfRequestsRead,
 } from "./model"
@@ -291,8 +292,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const editPo = (next: SfPoEdit) => {
     if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
   }
-  const stageAllowed = (action: SfRequestCommand) => {
-    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown || view.sending ||
+  const stageAllowed = (action: SfRequestCommand, inCurrentDispatch = false) => {
+    if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown ||
+        (view.sending && !inCurrentDispatch) ||
         prConflict() || poConflict() || prPending() || poPending()) return false
     const current = row()
     if (action === "create") return creating() && !!activePr()
@@ -319,7 +321,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       version: action === "create" ? 0 : version()!,
       status: currentRow?.status ?? "draft",
       pr: pr ? { ...pr } : undefined,
-      po: po ? { ...po, ...(po.lines ? { lines: po.lines.map((line) => ({ ...line })) } : {}) } : undefined,
+      po: po ? { ...po, ...(po.lines ? { lines: po.lines.map(postedPoLine) } : {}) } : undefined,
       reason,
       operationRef: crypto.randomUUID() as SfOperationRef,
       intentRef: crypto.randomUUID() as SfIntentRef,
@@ -428,7 +430,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           ownerKey: currentOwner.status === "ready" ? currentOwner.ownerKey : undefined,
           epoch: sf.generation(), prController: pr ? prDraft() : undefined,
           poController: po ? poDraft() : undefined, payload: JSON.stringify(input),
-        }) || !stageAllowed(review.action) ||
+        }) || inFlight !== abort || !stageAllowed(review.action, true) ||
         (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
           activePr()?.baseVersion !== (review.ref ? review.version : null))) ||
         (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
@@ -648,6 +650,17 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const current = row()
     if (!current && !creating()) return null
     const ref = selectedRef()
+    const currentVersion = version()
+    const assetTarget = current && ref && currentVersion !== undefined
+      ? { row: current, ref, version: currentVersion } : undefined
+    const stageWritable = !!current && (
+      (isPrWritable(current) && actionAllowed("save-pr")) ||
+      (isPoWritable(current) && actionAllowed("save-po"))
+    )
+    const uploadKind = !stageWritable ? undefined
+      : current?.status === "sourcing" || current?.status === "src_rejected" ? "quote"
+      : current?.status === "po_approved" || current?.status === "po_issued" ? "signed-po"
+      : undefined
     return <article class="sf-u11-detail" data-sf-request-ref={ref ?? undefined}>
       <header class="sf-u11-detail-head">
         <h2>{creating() ? t("sf.u11.remaining.new") : current?.pr?.title ?? ref}</h2>
@@ -761,7 +774,13 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       <Show when={current}>
         <section class="sf-u11-stage" data-stage="attachments">
           <h3>{t("sf.u11.remaining.attachments")}</h3>
-          <p role="status">{t("sf.u11.remaining.notUploaded")}</p>
+          <Show when={assetTarget} fallback={<p role="status">{t("sf.u11.remaining.notUploaded")}</p>}>
+            {(target) => <SfBoundAssets surface="procurement" page="Requests"
+              uploadKind={uploadKind} recordRef={target().ref} recordVersion={target().version}
+              assets={target().row.attachments ?? []}
+              disabled={view.sending || view.outcomeUnknown || !!view.reviewing || !sourceAvailable() || !stageWritable}
+              onReconcile={refresh} />}
+          </Show>
         </section>
         <div class="sf-u11-actions">
           <Show when={stageAllowed("cancel")}>

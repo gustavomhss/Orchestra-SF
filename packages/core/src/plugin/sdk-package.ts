@@ -7,7 +7,7 @@ import path from "node:path"
 import { lstat, mkdir, realpath, rm, writeFile } from "node:fs/promises"
 import { PluginSdkLimits, SetupError } from "./sdk-limits"
 export { SetupError } from "./sdk-limits"
-import sdk from "../../../plugin/package.json"
+import sdk from "../../../plugin/package.json" with { type: "json" }
 
 export class VersionError extends Schema.TaggedErrorClass<VersionError>()("PluginSdkVersionError", {
   requested: Schema.String,

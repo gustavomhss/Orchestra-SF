@@ -14,6 +14,7 @@ import { SfReceiptView, type SfReceipt } from "../../shared/receipt"
 import type { SfEffect } from "../../shared/change-review"
 import type { SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
+import { sfOperationReady } from "../cases/model"
 import type { SF_U18_COPY } from "@/i18n/orchestra-chapters/sf-u18"
 import {
   u18ErrorKey, u18Key, u18Message, u18PortState, u18Ref,
@@ -56,8 +57,15 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
   })
   let activeAbort: AbortController | undefined
   let serial = 0
+  let boundCase = ""
   const requested = () => props.route.kind === "entry" ? props.route.params.receiptRef : null
-  const selected = () => view.caseData?.receipts.find((receipt) => receipt.id === (view.selectedReceiptId ?? requested()))
+  const ledger = () => (view.caseData?.receipts ?? []).filter((receipt) =>
+    receipt.targetIncarnation === view.caseData?.incarnation)
+  const selected = () => ledger().find((receipt) => receipt.id === (view.selectedReceiptId ?? requested()))
+  const canRecover = () => {
+    const ready = owner.ready()
+    return !!ready && sfOperationReady(ready.context, "decisions.decision-recover")
+  }
   const change = (): SfCaseChange | undefined => {
     const receipt = selected()
     return receipt && view.caseData?.preparedChanges.find((entry) => entry.receiptRef === receipt.id)
@@ -91,9 +99,20 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
         requestNo !== serial || ref !== props.route.params.caseRef) return
       if (result.kind === "response" && result.body.status === "ok") {
         const data = result.body.value.projection.case
+        if (!sameRouteCase(ref, data.id, data.incarnation)) {
+          setView({ caseData: null, selectedReceiptId: null, outcome: null, state: "not-found" })
+          return
+        }
         const receiptRef = requested()
-        setView({ caseData: data, state: receiptRef && !data.receipts.some((entry) => entry.id === receiptRef)
-          ? "not-found" : data.receipts.length ? "ready" : "empty" })
+        const kept = view.selectedReceiptId && data.receipts.some((entry) =>
+          entry.id === view.selectedReceiptId && entry.targetIncarnation === data.incarnation)
+          ? view.selectedReceiptId : null
+        const visible = data.receipts.filter((entry) => entry.targetIncarnation === data.incarnation)
+        setView({
+          caseData: data, selectedReceiptId: kept, outcome: kept ? view.outcome : null,
+          state: receiptRef && !visible.some((entry) => entry.id === receiptRef)
+            ? "not-found" : visible.length ? "ready" : "empty",
+        })
       } else if (result.kind === "response") {
         const state = u18PortState(result)
         if (state === "denied" || state === "session-expired") clearPrivate(state)
@@ -111,10 +130,14 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
   }
 
   createEffect(() => {
+    const ref = props.route.params.caseRef
+    if (ref !== boundCase) {
+      boundCase = ref
+      setView({ caseData: null, selectedReceiptId: null, outcome: null, recovery: "idle" })
+    }
     owner.generation()
     owner.ready()
     owner.state().status
-    props.route.params.caseRef
     requested()
     void read()
     onCleanup(() => activeAbort?.abort())
@@ -128,7 +151,8 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
     const original = change()
     const current = view.caseData
     const ready = owner.ready()
-    if (!original || !current || !ready || view.busy || currentState() !== "ready") return
+    if (!original || !current || !ready || !canRecover() || view.busy || currentState() !== "ready" ||
+      !sameRouteCase(props.route.params.caseRef, current.id, current.incarnation)) return
     const controller = new AbortController()
     activeAbort?.abort()
     activeAbort = controller
@@ -142,9 +166,12 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
         { signal: controller.signal, idempotencyKey: crypto.randomUUID() },
       )
       if (controller.signal.aborted || generation !== owner.generation()) return
-      if (result.kind === "response" && result.body.status === "ok") {
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok" && result.body.value.outcome === "applied") {
         setView({ outcome: { receiptId: result.body.value.receiptId,
           outcome: result.body.value.outcome }, recovery: "confirmed" })
+      } else if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
+        setView({ outcome: { receiptId: result.body.value.receiptId, outcome: result.body.value.outcome },
+          recovery: "unknown", state: result.body.value.outcome === "conflict" ? "conflict" : "partial" })
       } else if (result.kind === "response") {
         const state = u18PortState(result)
         if (state === "denied" || state === "session-expired") clearPrivate(state)
@@ -206,9 +233,9 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
         {(data) => <>
           <section aria-label={t("sf.u18.receipts.history")}>
             <h2>{t("sf.u18.receipts.history")}</h2>
-            <Show when={data().receipts.length} fallback={<p>{t("sf.u18.receipts.noHistory")}</p>}>
+            <Show when={ledger().length} fallback={<p>{t("sf.u18.receipts.noHistory")}</p>}>
               <div class="sf-u18-receipt-list">
-                <For each={data().receipts}>{(receipt) => displayReceipt(receipt)}</For>
+                <For each={ledger()}>{(receipt) => displayReceipt(receipt)}</For>
               </div>
             </Show>
           </section>
@@ -221,7 +248,6 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
                   effects={[receiptEffect(receipt())]}
                   receipts={exactProducerReceipts()}
                   state={currentState()}
-                  onReconcileRead={() => void recover()}
                 />}
               </Show>
               <Show when={view.outcome}>
@@ -229,6 +255,10 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
                   {t("sf.u18.receipts.outcome")}: {outcome().outcome}
                   {" · "}{outcome().receiptId}
                 </p>}
+              </Show>
+              <Show when={change()}>
+                <button type="button" class="mx-btn" disabled={view.busy || !canRecover()}
+                  onClick={() => void recover()}>decisions.decision-recover</button>
               </Show>
               <Show when={view.recovery === "unknown"}>
                 <p role="alert">{t("sf.u18.receipts.pending")}</p>
@@ -239,4 +269,8 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
       </Show>
     </SfStatePanel>
   </SfPageFrame>
+}
+
+function sameRouteCase(routeRef: string, id: string, incarnation: string) {
+  return `case:${encodeURIComponent(id)}:${encodeURIComponent(incarnation)}` === routeRef
 }

@@ -158,9 +158,12 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
   }
   const begin = (action: CommandAction, version: PlannerVersion | null, first = false) => {
     if (!allowed(version, action, first)) return
-    if (action === "save" && !first && screen.draft?.snapshot().dirty !== true) return
+    if (action === "save" && !first) {
+      const snap = screen.draft?.snapshot()
+      if (snap?.availability !== "active" || snap.dirty !== true) return
+    }
     const revision = first ? page()?.versions["versions:first"]?.version ?? 0
-      : version && currentCas(version, action)
+      : version ? currentCas(version, action) : undefined
     if (revision === undefined) return
     const draft = draftValue()
     const proposed = first ? { name: "", year: year() ?? page()!.selection.year }
@@ -267,10 +270,15 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         return
       }
       if (!result.body.ok) {
+        const snap = screen.draft?.snapshot()
+        const pending = snap?.availability === "active" ? snap.pendingOperation : null
+        if ((result.body.status === 409 || result.body.status === 422) && pending && request.action === "save" && !request.first) {
+          screen.draft?.rejectSave({ status: result.body.status, operation: pending })
+        } else if (request.action === "save" && !request.first) {
+          screen.draft?.setPhase("failed")
+        }
         setScreen({ outcome: result.body.status === 409 ? "conflict" : "failed", busy: false,
           error: result.body.errors?.join("; ") ?? String(result.body.status) })
-        if (request.action === "save" && !request.first)
-          screen.draft?.setPhase(result.body.status === 409 ? "conflict" : "failed")
         return
       }
       // Creation/copy must return an exact source-assigned identity. Another
@@ -451,7 +459,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
           </div>,
         }]}
         primaryAction={{
-          id: "save", labelKey: key("sf.u46.save"), tone: "primary", disabled: !editable || screen.draft?.snapshot().dirty !== true,
+          id: "save", labelKey: key("sf.u46.save"), tone: "primary", disabled: !editable || (() => { const s = screen.draft?.snapshot(); return s?.availability !== "active" || s.dirty !== true })(),
           busy: screen.busy, onInvoke: () => begin("save", item),
         }}
         secondaryActions={actions.filter((item) => item.tone !== "danger")}

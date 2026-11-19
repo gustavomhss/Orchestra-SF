@@ -10,6 +10,8 @@ import type { SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfConfirmation, type SfCoverage } from "../../collaboration"
+import { operationGranted } from "../../collaboration/grant"
+import { SfAmountText, SfEnumText, SfPeriodText, sfEnumKey } from "../../collaboration/labels"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
 import { encodeSfRouteRef } from "../../navigation-state"
@@ -19,6 +21,8 @@ type Scope = typeof SfConfirmationScope.Type
 type Prepared = Extract<typeof SfCollaboration.operations["collaboration.confirmation-prepare"]["output"]["Type"], { status: "ok" }>["value"]
 type Recorded = Extract<typeof SfCollaboration.operations["collaboration.confirmation-confirm"]["output"]["Type"], { status: "ok" }>["value"]
 type Projection = Exclude<Extract<typeof SfCollaboration.operations["collaboration.confirmation-project"]["output"]["Type"], { status: "ok" }>["value"], { kind: "prepared-selection" }>
+type BoundStamp = Readonly<{ installationId: string; projectId: string; hostId: string; principalRef: string; policyVersion: string; accessRevision: string }>
+type StampedValidity = Readonly<{ value: Projection; recordId: string; stamp: BoundStamp }>
 type Snapshot = Readonly<{ transport: SfTransport; generation: number; ownerKey: string; accessRevision: string }>
 function failure(result: { kind: string; reason?: string; status?: number; body?: unknown }): SfUiState {
   if (result.kind === "transport-error") return result.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable"
@@ -42,14 +46,14 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     "sf.common.stale" | "sf.common.partial"): Key => copy as Key
   const t = (copy: keyof typeof SF_U44_COPY) => language.t(copy as Parameters<typeof language.t>[0])
   const selectedRef = () => String(props.route.params.selectionRef)
+  const recordedRoute = () => !selectedRef().startsWith("confirmation-selection:")
   const [manualScope, setManualScope] = createSignal("")
   const [scope, setScope] = createSignal<Scope>()
   const [prepared, setPrepared] = createSignal<Prepared>()
   const [preparedFence, setPreparedFence] = createSignal("")
   const [storageVersion, setStorageVersion] = createSignal<number>()
   const [confirmed, setConfirmed] = createSignal<Recorded>()
-  const [projection, setProjection] = createSignal<Projection>()
-  const [confirmationId, setConfirmationId] = createSignal("")
+  const [validity, setValidity] = createSignal<StampedValidity>()
   const [state, setState] = createSignal<SfUiState>("ready")
   const [busy, setBusy] = createSignal(false)
   const [pendingKey, setPendingKey] = createSignal<string>()
@@ -64,6 +68,16 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
       ownerKey: state.ownerKey, accessRevision: state.context.stamp.accessRevision,
     } : undefined
   }
+  const granted = (operationId: string) => operationGranted(owner.ready()?.context, operationId)
+  const stamp = (): BoundStamp | undefined => {
+    const state = owner.state()
+    return state.status === "ready" ? state.context.stamp : undefined
+  }
+  const sameStamp = (left: BoundStamp, right: BoundStamp) =>
+    left.installationId === right.installationId && left.projectId === right.projectId &&
+    left.hostId === right.hostId && left.principalRef === right.principalRef &&
+    left.policyVersion === right.policyVersion && left.accessRevision === right.accessRevision
+  const pageRecordId = () => confirmed()?.id ?? (recordedRoute() ? selectedRef() : undefined)
   const current = (s: Snapshot, signal: AbortSignal): boolean => {
     const state = owner.state(), ready = owner.ready()
     return !signal.aborted && state.status === "ready" && !!ready &&
@@ -77,8 +91,8 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
   }, () => {
     readAbort?.abort(); writeAbort?.abort()
     setScope(undefined); setPrepared(undefined); setPreparedFence(""); setManualScope("")
-    setStorageVersion(undefined); setConfirmed(undefined); setProjection(undefined)
-    setConfirmationId(""); setBusy(false); setPendingKey(undefined); setError(undefined); setState("ready")
+    setStorageVersion(undefined); setConfirmed(undefined); setValidity(undefined)
+    setBusy(false); setPendingKey(undefined); setError(undefined); setState("ready")
   }))
   onCleanup(() => { readAbort?.abort(); writeAbort?.abort() })
   const prepareManual = async () => {
@@ -111,7 +125,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     const abort = new AbortController()
     readAbort = abort
     setPrepared(undefined); setScope(undefined); setPreparedFence(""); setStorageVersion(undefined)
-    setConfirmed(undefined); setProjection(undefined); setError(undefined)
+    setConfirmed(undefined); setValidity(undefined); setError(undefined)
     setState("loading"); setBusy(true)
     try {
       const client = createSfCollaborationClient(s.transport)
@@ -130,8 +144,14 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
       if (version.kind !== "response" || version.body.status !== "ok") {
         setState(failure(version)); return
       }
-      if (selectedRef() !== reference || observed.incarnation !== selected.sourceRef.incarnation ||
-          observed.evidence.target.incarnation !== selected.sourceRef.incarnation) {
+      const bound = stamp()
+      const context = observed.projection.context
+      if (!bound || selectedRef() !== reference || observed.incarnation !== selected.sourceRef.incarnation ||
+          observed.evidence.target.incarnation !== selected.sourceRef.incarnation ||
+          observed.evidence.installationId !== bound.installationId || observed.evidence.projectId !== bound.projectId ||
+          context.installationId !== bound.installationId || context.projectId !== bound.projectId ||
+          context.principalRef !== bound.principalRef || context.accessRevision !== bound.accessRevision ||
+          context.policyVersion !== bound.policyVersion) {
         setState("stale"); return
       }
       const fixed = structuredClone(selected)
@@ -147,35 +167,46 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     } catch { if (current(s, abort.signal)) setState("unavailable") }
     finally { if (current(s, abort.signal)) setBusy(false) }
   }
-  createEffect(on(() => {
-    const state = owner.state()
-    return state.status === "ready" ? `${state.ownerKey}|${owner.generation()}|${selectedRef()}` : ""
-  }, (value) => { if (value) void readSelection() }))
   const project = async (id: string) => {
-    const s = snapshot()
-    if (!s || !id.trim() || busy()) return
+    const s = snapshot(), bound = stamp()
+    if (!s || !bound || !id.trim() || busy() || pageRecordId() !== id) return
     readAbort?.abort()
     const abort = new AbortController()
     readAbort = abort
-    setProjection(undefined); setBusy(true); setState("loading")
+    setValidity(undefined); setBusy(true); setState("loading")
     try {
       const result = await createSfCollaborationClient(s.transport)["collaboration.confirmation-project"](
         { id }, { signal: abort.signal },
       )
-      if (!current(s, abort.signal) || confirmationId() !== id) return
+      const live = stamp()
+      if (!current(s, abort.signal) || !live || !sameStamp(bound, live) || pageRecordId() !== id) return
       if (result.kind !== "response" || result.body.status !== "ok") {
         setState(failure(result)); return
       }
       if ("kind" in result.body.value || result.body.value.confirmationId !== id) { setState("invalid"); return }
-      setProjection(result.body.value)
+      const record = confirmed()
+      if (record && (record.id !== id || record.authorId !== live.principalRef)) { setState("denied"); return }
+      setValidity({ value: result.body.value, recordId: id, stamp: live })
       setState(result.body.value.state === "valid" ? "ready" :
         result.body.value.state === "stale" ? "stale" : "partial")
     } catch { if (current(s, abort.signal)) setState("unavailable") }
     finally { if (current(s, abort.signal)) setBusy(false) }
   }
+  // UI30 may open a *recorded* confirmation id. It is read-only and must
+  // reproject by id at the original producer; it is never a prepared selection.
+  createEffect(on(() => {
+    const state = owner.state()
+    return state.status === "ready" ? `${state.ownerKey}|${owner.generation()}|${selectedRef()}` : ""
+  }, (value) => {
+    if (!value) return
+    if (recordedRoute()) void project(selectedRef())
+    else void readSelection()
+  }))
   const confirm = async (request: { selectionRef: SfRef; materialVersion: SfVersion }) => {
     const s = snapshot(), selected = scope(), material = prepared(), version = storageVersion()
-    if (!s || !selected || !material || version === undefined || busy() || pendingKey() ||
+    const bound = stamp()
+    if (!s || !bound || !selected || !material || version === undefined || busy() || pendingKey() ||
+        !granted("collaboration.confirmation-confirm") || material.projection.missing.length > 0 ||
         request.selectionRef !== selectedRef() || request.materialVersion !== material.sourceVersion ||
         preparedFence() !== JSON.stringify([selected, material.sourceVersion, material.scopeFingerprint]) || state() !== "ready") return
     const abort = new AbortController()
@@ -193,27 +224,56 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     setBusy(false)
     if (!result) { setState("outcome-unknown"); return }
     if (result.kind === "response" && result.body.status === "ok") {
-      if (result.body.value.sourceRef.incarnation !== selected.sourceRef.incarnation ||
-          result.body.value.observedSourceVersion !== material.sourceVersion ||
-          result.body.value.observedScopeFingerprint !== material.scopeFingerprint) {
-        setState("conflict"); return
+      const value = result.body.value
+      const live = stamp()
+      if (!live || !sameStamp(bound, live) || !value.id.trim() || !value.auditRef.trim() ||
+          value.authorId !== live.principalRef ||
+          value.sourceRef.incarnation !== selected.sourceRef.incarnation ||
+          value.observedSourceVersion !== material.sourceVersion ||
+          value.observedScopeFingerprint !== material.scopeFingerprint) {
+        setState("outcome-unknown"); return
       }
-      setConfirmed(result.body.value); setConfirmationId(result.body.value.id)
+      setConfirmed(value)
       setPendingKey(undefined); setPrepared(undefined); setStorageVersion(undefined)
-      void project(result.body.value.id)
+      void project(value.id)
       return
     }
     const outcome = failure(result)
     setState(outcome)
     if (outcome !== "outcome-unknown") setPendingKey(undefined)
   }
-  const coverage = (): SfCoverage => ({
-    state: prepared() && storageVersion() !== undefined ? "complete" : "unavailable",
-    summary: { key: (prepared() ? "sf.u44.materialScopeReady" : "sf.u44.scopeRequired") as SfCoverage["summary"]["key"] },
-    reasons: [],
-    knownCount: prepared()?.projection.values.length ?? null,
-    expectedCount: null,
-  })
+  const coverage = (): SfCoverage => {
+    const material = prepared()
+    const missing = material?.projection.missing ?? []
+    const known = material?.projection.values.length ?? null
+    if (!material || storageVersion() === undefined) {
+      return { state: "unavailable", summary: { key: "sf.u44.scopeRequired" as SfCoverage["summary"]["key"] }, reasons: [], knownCount: known, expectedCount: null }
+    }
+    if (missing.length > 0) {
+      return {
+        state: "partial",
+        summary: { key: "sf.u44.materialGaps" as SfCoverage["summary"]["key"] },
+        reasons: missing.map((gap) => ({ key: sfEnumKey(gap.reason) as SfCoverage["reasons"][number]["key"] })),
+        knownCount: known,
+        expectedCount: (known ?? 0) + missing.length,
+      }
+    }
+    return {
+      state: "complete",
+      summary: { key: "sf.u44.materialScopeReady" as SfCoverage["summary"]["key"] },
+      reasons: [],
+      knownCount: known,
+      expectedCount: known,
+    }
+  }
+  const currentValidity = () => {
+    const shown = validity(), bound = stamp(), recordId = pageRecordId()
+    if (!shown || !bound || !recordId || !sameStamp(shown.stamp, bound) || shown.recordId !== recordId ||
+        shown.value.confirmationId !== recordId) return
+    const record = confirmed()
+    if (record && (record.id !== recordId || record.authorId !== bound.principalRef)) return
+    return shown.value
+  }
   const effectiveState = (): SfUiState => {
     const status = owner.state().status
     return status === "ready" ? state() : status === "denied" ? "denied" :
@@ -231,19 +291,13 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
       density="comfortable" layout="reading" onLayoutMode={() => undefined}
     >
       <section class="sf-u44-confirm" data-sf-surface="UI53">
-        <p>{t("sf.u44.navigationSelection")}: <code data-sf-selection-ref>{selectedRef()}</code></p>
-        <Show when={owner.state().status === "ready" && !confirmed()}>
+        <p>{t(recordedRoute() ? "sf.u44.confirmationId" : "sf.u44.navigationSelection")}: <code data-sf-selection-ref>{selectedRef()}</code></p>
+        <Show when={owner.state().status === "ready" && !confirmed() && !recordedRoute()}>
           <details><summary>{t("sf.u44.prepareMaterial")}</summary>
             <form class="sf-u44-scope-form" onSubmit={(event) => { event.preventDefault(); void prepareManual() }}>
               <label>{t("sf.u44.scopeJson")}<textarea data-sf-confirm-scope rows={9} required value={manualScope()}
                 disabled={busy() || !!pendingKey()} onInput={(event) => setManualScope(event.currentTarget.value)} /></label>
               <button type="submit" class="mx-btn" disabled={busy() || !!pendingKey()}>{t("sf.u44.prepareMaterial")}</button>
-            </form>
-          </details>
-          <details><summary>{t("sf.u44.revalidateMaterial")}</summary>
-            <form class="sf-u44-project-form" onSubmit={(event) => { event.preventDefault(); void project(confirmationId()) }}>
-              <label>{t("sf.u44.confirmationId")}<input data-sf-confirm-lookup required value={confirmationId()} onInput={(event) => setConfirmationId(event.currentTarget.value)} /></label>
-              <button type="submit" class="mx-btn" disabled={busy()}>{t("sf.u44.revalidateMaterial")}</button>
             </form>
           </details>
         </Show>
@@ -252,6 +306,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
           onRetryRead={() => {
             if (pendingKey()) return
             if (confirmed()) void project(confirmed()!.id)
+            else if (recordedRoute()) void project(selectedRef())
             else void readSelection()
           }}>
           <Show when={scope() && prepared() && !confirmed()}>
@@ -260,20 +315,20 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
               <dl>
                 <div><dt>{t("sf.u44.sourceRef")}</dt><dd><code>{scope()!.sourceRef.id}</code></dd></div>
                 <div><dt>{t("sf.u44.incarnation")}</dt><dd><code>{scope()!.sourceRef.incarnation}</code></dd></div>
-                <div><dt>{t("sf.u44.period")}</dt><dd>{scope()!.period.start} – {scope()!.period.end}</dd></div>
+                <div><dt>{t("sf.u44.period")}</dt><dd><SfPeriodText start={scope()!.period.start} end={scope()!.period.end} /></dd></div>
                 <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{prepared()!.sourceVersion}</dd></div>
                 <div><dt>{t("sf.u44.fields")}</dt><dd>{scope()!.fields.join(", ")}</dd></div>
                 <div><dt>{t("sf.u44.dependencies")}</dt><dd>{scope()!.materialDependencies.length}</dd></div>
               </dl>
               <h3>{t("sf.u44.materialValues")}</h3>
               <ul><For each={prepared()!.projection.values}>
-                {(entry) => <li><strong>{entry.id}</strong> — {entry.value === null ? t("sf.u44.missing") : String(entry.value)}
-                  <small> ({entry.evidenceState}, {entry.period.start} – {entry.period.end})</small>
+                {(entry) => <li><strong>{entry.id}</strong> — <SfAmountText value={entry.value} currency={entry.currency} />
+                  <small> (<SfEnumText value={entry.evidenceState} />, <SfPeriodText start={entry.period.start} end={entry.period.end} />)</small>
                 </li>}
               </For></ul>
               <Show when={prepared()!.projection.missing.length}>
                 <ul><For each={prepared()!.projection.missing}>
-                  {(value) => <li>{value.field}: {value.reason}</li>}
+                  {(value) => <li><bdi>{value.field}</bdi>: <SfEnumText value={value.reason} /></li>}
                 </For></ul>
               </Show>
               <SfConfirmation
@@ -282,10 +337,24 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
                 status="current"
                 coverage={coverage()}
                 state={effectiveState()}
+                canWrite={granted("collaboration.confirmation-confirm") && (prepared()?.projection.missing.length ?? 0) === 0}
                 onConfirm={(request) => void confirm(request)}
                 onRevalidate={() => void readSelection()}
               />
             </section>
+          </Show>
+          <Show when={recordedRoute() && currentValidity()}>
+            {(observed) => <section class="sf-u44-receipt" data-sf-confirm-record-project>
+              <h2>{t("sf.u44.revalidateMaterial")}</h2>
+              <dl>
+                <div><dt>{t("sf.u44.confirmationId")}</dt><dd><code>{observed().confirmationId}</code></dd></div>
+                <div><dt>{t("sf.u44.status")}</dt><dd><SfEnumText value={observed().state} /></dd></div>
+                <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{observed().evaluatedSourceVersion}</dd></div>
+              </dl>
+              <button type="button" class="mx-btn" disabled={busy()} onClick={() => void project(selectedRef())}>
+                {t("sf.u44.revalidateMaterial")}
+              </button>
+            </section>}
           </Show>
           <Show when={confirmed()}>
             {(record) => (
@@ -295,7 +364,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
                   <div><dt>{t("sf.u44.confirmationId")}</dt><dd><code>{record().id}</code></dd></div>
                   <div><dt>{t("sf.u44.auditRef")}</dt><dd><code>{record().auditRef}</code></dd></div>
                   <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{record().observedSourceVersion}</dd></div>
-                  <div><dt>{t("sf.u44.status")}</dt><dd>{projection()?.state ?? t("sf.u44.checking")}</dd></div>
+                  <div><dt>{t("sf.u44.status")}</dt><dd>{currentValidity()?.confirmationId === record().id ? <SfEnumText value={currentValidity()!.state} /> : t("sf.u44.checking")}</dd></div>
                 </dl>
                 <button type="button" class="mx-btn" disabled={busy()} onClick={() => void project(record().id)}>
                   {t("sf.u44.revalidateMaterial")}
@@ -303,8 +372,8 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
               </section>
             )}
           </Show>
-          <Show when={projection() && !confirmed()}>
-            {(observed) => <p role="status">{t("sf.u44.status")}: {observed().state} ({observed().reason})</p>}
+          <Show when={!confirmed() && recordedRoute() ? currentValidity() : undefined}>
+            {(observed) => <p role="status">{t("sf.u44.status")}: <SfEnumText value={observed().state} /> (<SfEnumText value={observed().reason} />)</p>}
           </Show>
         </SfStatePanel>
         <Show when={pendingKey()}>

@@ -15,6 +15,7 @@ import {
   type SfDisplayValue, type SfMessage, type SfPlotSeries, type SfText, type SfUiState,
 } from "../../shared/frame"
 import type { SF_U22_COPY } from "@/i18n/orchestra-chapters/sf-u22"
+import { sfBiPeriodLabel } from "../finance/model"
 import "./u22.css"
 
 type DecisionViewId = "BI09" | "BI10" | "BI11"
@@ -108,7 +109,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
         return {
           id: valueId, x: recorded?.period.start ?? valueId,
           xLabel: data(recorded
-            ? recorded.period.start + " – " + recorded.period.end
+            ? sfBiPeriodLabel(recorded.period.start, recorded.period.end, language.intl())
             : valueId),
           value: recorded && typeof recorded.value === "number" && recorded.evidenceState !== "absent"
             ? { kind: "known" as const, value: recorded.value }
@@ -142,7 +143,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
             value: measured ? display(measured.value) : missing(),
             unit: display(measured?.unit ?? measured?.currency ?? item.unit),
             evidence: display(measured?.evidenceState ?? "absent"),
-            period: measured ? display(measured.period.start + " – " + measured.period.end) : missing(),
+            period: measured ? display(sfBiPeriodLabel(measured.period.start, measured.period.end, language.intl())) : missing(),
             source: source ? display(source.refId) : missing(),
           },
         }
@@ -162,7 +163,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
     return "ready"
   }
   const chartContext = createMemo((): SfChartFrameProps["context"] => [
-    { label: msg("sf.u22.chart.period"), value: data(packet().request.period.start + " – " + packet().request.period.end) },
+    { label: msg("sf.u22.chart.period"), value: data(sfBiPeriodLabel(packet().request.period.start, packet().request.period.end, language.intl())) },
     { label: msg("sf.u22.chart.unit"), value: data(projection().context.currency) },
     { label: msg("sf.u22.chart.engine"), value: data(projection().engineVersion) },
     { label: msg("sf.u22.chart.selection"), value: data(packet().request.selectionRef) },
@@ -244,27 +245,25 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
             <section class="sf-u22-detail" aria-label={t("sf.u22.chart.sensitivity")}>
               <h3>{t("sf.u22.chart.sensitivity")}</h3>
               <Show when={scenario()?.sensitivity}>
-                {() => {
-                  const current = decision()
-                  if (!current || current.kind !== "scenario" || !current.sensitivity) return null
-                  const sensitivity = current.sensitivity
+                {(sensitivity) => {
+                  const current = sensitivity()
                   return <>
                     <dl>
-                      <dt>{t("sf.u22.chart.comparison")}</dt><dd>{sensitivity.comparisonStatus}</dd>
+                      <dt>{t("sf.u22.chart.comparison")}</dt><dd>{current.comparisonStatus}</dd>
                       <dt>{t("sf.u22.chart.threshold")}</dt>
-                      <dd>{sensitivity.threshold === null ? t("sf.u22.chart.missing") : String(sensitivity.threshold)}</dd>
+                      <dd>{current.threshold === null ? t("sf.u22.chart.missing") : String(current.threshold)}</dd>
                       <dt>{t("sf.u22.chart.thresholdEvidence")}</dt>
-                      <dd>{thresholdEvidence(sensitivity.thresholdEvidence)}</dd>
+                      <dd>{thresholdEvidence(current.thresholdEvidence)}</dd>
                     </dl>
                     <div class="sf-u22-table-scroll">
                       <table>
                         <caption>{t("sf.u22.bi11.question")}</caption>
                         <thead><tr>
-                          <th scope="col">{t("sf.u22.chart.parameter")} ({sensitivity.parameterUnit ?? sensitivity.unit})</th>
-                          <th scope="col">{t("sf.u22.chart.result")} ({sensitivity.resultUnit ?? sensitivity.unit})</th>
+                          <th scope="col">{t("sf.u22.chart.parameter")} ({current.parameterUnit ?? current.unit})</th>
+                          <th scope="col">{t("sf.u22.chart.result")} ({current.resultUnit ?? current.unit})</th>
                           <th scope="col">{t("sf.u22.chart.source")}</th>
                         </tr></thead>
-                        <tbody><For each={sensitivity.evaluated}>
+                        <tbody><For each={current.evaluated}>
                           {(point) => {
                             const targetToken = tokenForResult(point.resultRef)
                             return <tr>
@@ -280,9 +279,9 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
                         </For></tbody>
                       </table>
                     </div>
-                    <Show when={sensitivity.unresolvedConditions.length}>
+                    <Show when={current.unresolvedConditions.length}>
                       <h4>{t("sf.u22.chart.conditions")}</h4>
-                      <ul><For each={sensitivity.unresolvedConditions}>
+                      <ul><For each={current.unresolvedConditions}>
                         {(item) => <li>{item.category}: {item.reason}</li>}
                       </For></ul>
                     </Show>

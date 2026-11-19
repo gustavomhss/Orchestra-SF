@@ -70,6 +70,16 @@ export function prFromRecord(row?: SfRequest): SfPrEdit {
     expenseType: pr?.expenseType, category: pr?.category,
   }
 }
+export function postedPoLine(line: SfPoLine): SfPoLine {
+  return {
+    ...(line.id !== undefined ? { id: line.id } : {}),
+    ...(line.desc !== undefined ? { desc: line.desc } : {}),
+    ...(line.qty !== undefined ? { qty: line.qty } : {}),
+    ...(line.unitPrice !== undefined ? { unitPrice: line.unitPrice } : {}),
+    ...(line.unit !== undefined ? { unit: line.unit } : {}),
+    ...(line.notes !== undefined ? { notes: line.notes } : {}),
+  }
+}
 export function poFromRecord(row: SfRequest): SfPoEdit {
   const po = row.po
   return {
@@ -77,7 +87,8 @@ export function poFromRecord(row: SfRequest): SfPoEdit {
     supplier: po?.supplier, supplierId: po?.supplierId,
     description: po?.description,
     // The source's nested line IDs/order must survive all edits and refetches.
-    ...(po?.lines ? { lines: po.lines.map((line) => ({ ...line })) } : {}),
+    // description is not an editor field and must not ride along on save.
+    ...(po?.lines ? { lines: po.lines.map(postedPoLine) } : {}),
     paymentTerms: po?.paymentTerms, deliveryDate: po?.deliveryDate,
     deliveryConditions: po?.deliveryConditions,
     contractRef: po?.contractRef, incoterm: po?.incoterm, incoterms: po?.incoterms,

@@ -40,8 +40,8 @@ export function portfolioRouteAvailable(context: SfContext, candidate: SfNativeR
   const ready = (family: "decisions" | "portfolio", operationId: string) => context.availability.some((resource) => resource.family === family &&
     resource.operations.some((item) => item.operationId === operationId && item.state === "ready" && item.operational))
   if (!ready("decisions", SfDecisions.operations["decisions.controls.read"].operationId)) return false
-  if (candidate.surfaceId === "UI43") return ready("portfolio", SfPortfolio.operations["portfolio.decision-portfolio-read"].operationId)
-  if (candidate.surfaceId === "UI44" && candidate.kind === "entry") return ready("portfolio", SfPortfolio.operations["portfolio.decision-sensitivity-read"].operationId)
+  if (candidate.surfaceId === "UI43") return ready("portfolio", SfPortfolio["portfolio.decision-portfolio-read"].operationId)
+  if (candidate.surfaceId === "UI44" && candidate.kind === "entry") return ready("portfolio", SfPortfolio["portfolio.decision-sensitivity-read"].operationId)
   return true
 }
 export function SfPortfolioPages(props: Readonly<{ route: SfResolvedRoute }>): JSX.Element {

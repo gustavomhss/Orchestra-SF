@@ -83,7 +83,7 @@ describe("A09 schema equivalence and authority boundary", () => {
     })
     const withoutOptionals = decode(result)
     expect(Option.isSome(withoutOptionals)).toBe(true)
-    if (Option.isSome(withoutOptionals)) expect(withoutOptionals.value).toEqual(result)
+    if (Option.isSome(withoutOptionals)) expect<object>(withoutOptionals.value).toEqual(result)
     expect(Option.isSome(decode({ ...result, admissionVersion: 0 }))).toBe(true)
     expect(Option.isNone(decode({ ...result, admissionVersion: -1 }))).toBe(true)
     expect(Option.isNone(Schema.decodeUnknownOption(SfRoutineCaseRef)(
@@ -177,6 +177,36 @@ describe("A09 schema equivalence and authority boundary", () => {
     expect(await response.json()).toEqual({
       status: "unavailable", reason: "schedule-detail-port-unavailable",
     })
+  })
+
+  test("native proof wire decodes JSON output without exposing private owner authority", () => {
+    const decode = Schema.decodeUnknownOption(SfRoutines.operations["projection.routine"].output, {
+      onExcessProperty: "error",
+    })
+    const run = {
+      documentId: "recipe-1", publishedVersion: "publication-1",
+      principalRef: "principal", projectId: "project",
+      correlationId: "corr-1", sourceRefs: [], pending: [],
+      admission: "admitted", admissionRef: "admission-1", admissionVersion: 1,
+      runRef: "run-1", resultRef: "artifact-1",
+    }
+    const outputDigest = "a".repeat(64)
+    const proof = {
+      execution: { runRef: "run-1", resultRef: "artifact-1", state: "completed", revision: "revision-1", outputDigest },
+      verifier: "verified",
+      output: { runRef: "run-1", resultRef: "artifact-1", outputDigest,
+        createdAt: "2026-11-17T14:00:00Z", content: { zero: 0, null: null, false: false } },
+    }
+    expect(Option.isSome(decode({ status: "ok", value: run, proof }))).toBe(true)
+    expect(Option.isNone(decode({ status: "ok", value: run,
+      proof: { ...proof, output: { ...proof.output, authoritySessionId: "private" } } }))).toBe(true)
+    expect(Option.isNone(decode({ status: "ok", value: run,
+      proof: { ...proof, verifier: "faked-pass" } }))).toBe(true)
+    expect(Option.isNone(decode({ status: "ok", value: run,
+      proof: { ...proof, execution: { ...proof.execution, state: "success" } } }))).toBe(true)
+    // A reader that lacks C08 execution evidence cannot publish verified output.
+    expect(Option.isSome(decode({ status: "ok", value: run,
+      proof: { verifier: "unavailable", reason: "native-routine-evidence-port-unavailable" } }))).toBe(true)
   })
 
   test("routine projection rejects extra query fields before producer access", async () => {

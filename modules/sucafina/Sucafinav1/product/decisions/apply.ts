@@ -102,6 +102,12 @@ export function createPreparedExecution(input: {
       if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
     }
     const observed = structuredClone(lookup.value.state === "found" ? { status: "ok" as const, value: lookup.value.receipt } : await callDomain(() => input.apply.executePrepared(request, context)))
+    // A choice replaced after the domain receipt commits fails retention as
+    // receipt-authority-changed. That is the material conflict, not a lost receipt.
+    if (observed.status === "unavailable" && observed.reason === "receipt-authority-changed") {
+      const raced = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[value.id] : undefined).catch(() => undefined)
+      if (raced?.status === "ok" && raced.value && digestSfValue(raced.value.choices.filter((choice) => choice.id === request.choiceId)) !== choiceDigest) return { status: "stale", reason: "prepared-choice-changed" }
+    }
     if (observed.status !== "ok") return observed
     const result = structuredClone(await input.classifyReceipt(structuredClone(observed.value), structuredClone(change), context).catch(() => undefined))
     if (!result || !await input.host.revalidate(context)) return { status: "unavailable", reason: "receipt-classification-unavailable" }

@@ -236,10 +236,19 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     }
     const request = prepareRead()
     if (!request) return
+    // The producer echoes viewId as an open string; the closed BI catalog is the
+    // only legal viewId space, and an off-catalog echo means this data is not
+    // for any selectable view, so the source link cannot be resolved.
+    const viewId = BI_CATALOG.some((item) => item.id === result.request.viewId)
+      ? result.request.viewId as ViewId : undefined
+    if (!viewId) {
+      setStore({ selectedSource: reference, links: undefined, sourceState: "invalid" })
+      return
+    }
     setStore({ selectedSource: reference, links: undefined, sourceState: "loading", busy: true })
     try {
       const output = await request.client["bi.bi-source"]({
-        viewId: result.request.viewId,
+        viewId,
         selectionRef: result.request.selectionRef,
         valueId: matched[0]!.value.id,
         referenceDigest: matched[0]!.source.refDigest,
@@ -306,7 +315,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     >
       <section class="sf-bi-catalog" data-sf-catalog={props.surfaceId} data-sf-layout-mode={store.layout}>
         <SfStatePanel state={ownerState()}
-          messageKey={sfCommonKey(ownerState() === "denied" ? "sf.common.denied" : "sf.common.unavailable")}
+          messageKey={sfCommonKey(ownerState() === "denied" ? "sf.common.noAccess" : "sf.common.unavailable")}
           onRetryRead={() => { void context.reload() }}>
           <form class="sf-bi-catalog-form" onSubmit={(event) => { event.preventDefault(); void chooseContext() }}>
             <label>

@@ -9,6 +9,8 @@ import {
   canRequestDownload,
   canRequestReferenceRemoval,
 } from "./guards"
+import { SfStatePanel } from "../states"
+import type { SfCopyKey } from "../frame/types"
 import "../evidence/s04.css"
 
 export type { SfAttachment, SfFileAdmission, SfAttachmentFieldProps } from "../evidence/types"
@@ -155,7 +157,7 @@ export function SfAttachmentField(props: SfAttachmentFieldProps): JSX.Element {
       </Switch>
 
       <Show when={props.attachments.length === 0}>
-        <p class="mx-note" role="status">{language.t("orchestra.sf.s04.attachments.empty")}</p>
+        <SfStatePanel state="empty" messageKey={"orchestra.sf.s04.attachments.empty" as SfCopyKey} />
       </Show>
       <ul class="sf-s04-list" aria-label={language.t("orchestra.sf.s04.attachments.title")}>
         <For each={props.attachments}>{(item) => (

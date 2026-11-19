@@ -1,3 +1,7 @@
+// T2a retarget frontier: UI33/34/35/38/39/40 are mounted natively, but
+// U16/U17/U18 do not yet prove all historical C10/C12 contracts end-to-end.
+// Keep the original executable contracts until the same authenticated native
+// host can produce an equivalent observation; a route/200 is not parity.
 import { expect, test } from "@playwright/test"
 import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase, withInstallation } from "./decisions-support/journey"
 import { loseCreationResponse } from "./decisions-support/lost-response"
@@ -11,6 +15,7 @@ test.describe.configure({ retries: 0 })
 
 test("CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change", async ({ page }, info) => {
   test.setTimeout(180_000)
+  info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — SEM EQUIVALENTE de contrato completo. Native UI35/UI38/UI40 (U17/U18) cobrem superficies parciais, nao attachment da evidencia + duas alternativas + escolha humana apos source change sob o mesmo owner." })
   info.annotations.push({ type: "proof-limit", description: "Human choice and historical C10 coverage with pending costs; this path has no executable Procurement operation and does not accept financial approval, C12 Apply, native model or AM proofs" })
   await withInstallation(page, info, async (installation, observations) => {
     const selection = await initialAlternativesJourney(page, installation, observations)
@@ -20,6 +25,7 @@ test("CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve
 
 test("CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt", async ({ page }, info) => {
   test.setTimeout(180_000)
+  info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — SEM EQUIVALENTE end-to-end. UI39/UI40 + native CAP25/CAP26 (U12/U13/U18) nao demonstram proposta financeira aprovada ANTES de C12 Apply e um unico recibo recuperado." })
   info.annotations.push({ type: "dependency", description: "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them." })
   info.annotations.push({ type: "proof-limit", description: "Consumes the published C12 Apply and recovery; selection and confirmation alone do not prove financial approval, native provider/critique or restart." })
   await withInstallation(page, info, async (installation, observations) => {
@@ -34,6 +40,7 @@ test("CI-UI-DECISIONS — require a real Procurement proposal and approval befor
 
 test("CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench", async ({ page }, info) => {
   test.setTimeout(180_000)
+  info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — UI33/UI34 em U16 verifica lista e preview de criacao, nao a sequencia confirmada create/edit/reopen e versao persistida na mesma instalacao autenticada." })
   await withInstallation(page, info, async (installation, observations) => {
     await test.step("enter the installed Workbench from the dashboard", async () => {
       await enterWorkbench(page, installation.origin)
@@ -86,6 +93,7 @@ test("CI-UI-DECISIONS — create, edit and reopen the same durable case through 
 
 test("CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200", async ({ page }, info) => {
   test.setTimeout(180_000)
+  info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — native UI33/UI35 U16/U17 possuem navegacao, mas nao reproduzem a consulta autorizada do catalogo vazio e suas refs exatas apos caso recem-criado." })
   info.annotations.push({ type: "dependency", description: "WP10: installed decision-list/decision-portfolio-catalog and a public UI producer for initial C09/C10 alternatives" })
   await withInstallation(page, info, async (installation, observations) => {
     await enterWorkbench(page, installation.origin)
@@ -134,6 +142,7 @@ test("CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalo
 
 test("CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting", async ({ page }, info) => {
   test.setTimeout(180_000)
+  info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — U16 nao prova perda de response em create nativo, leitura autorizada de mesmo caseRef e zero resubmissions." })
   info.annotations.push({ type: "proof-limit", description: "Creation confirmation C09 only; not a financial Apply receipt/retry proof under C12 or AM04" })
   await withInstallation(page, info, async (installation, observations) => {
     await enterWorkbench(page, installation.origin)

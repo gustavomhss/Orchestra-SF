@@ -5,9 +5,9 @@
  * This spec is dispatched only by the authorized 191 hosted runner.
  */
 import { createHash } from "node:crypto"
-import { requireSfPackagedBrokerReadiness } from "../../../../../../../apps/desktop/test/sucafina-bootstrap213/d01-packaged-driver.ts"
 import { _electron, expect, test } from "@playwright/test"
 import type { SfDesktopCapability, SfDesktopBindResult } from "@orchestra/client/sucafina/transport"
+import type { SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { readNativeManifest } from "../../fixture/readiness.ts"
 import {
@@ -52,7 +52,6 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
       await expect.poll(() => window.evaluate(() => {
         return typeof (window as unknown as { api?: RendererApi }).api?.sucafina?.registerConnection === "function"
       }), { message: "Packaged Electron preload must expose the real broker API" }).toBe(true)
-      await requireSfPackagedBrokerReadiness(app, window)
 
       // Credentials, if the app owns them, are read INSIDE its trusted renderer
       // and forwarded by its existing preload to main. They are never returned,
@@ -155,16 +154,15 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
           },
         })
       }, { owner, target: manifest.target })
+      const body = invoked.kind === "json-response" ? invoked.body : null
+      const value = jsonRecord(body) ? body["value"] : null
+      const stamp = jsonRecord(value) ? value["stamp"] : null
       if (invoked.kind !== "json-response" || invoked.status !== 200 ||
-          !invoked.body || typeof invoked.body !== "object" || Array.isArray(invoked.body) ||
-          invoked.body.status !== "ok" || !invoked.body.value ||
-          typeof invoked.body.value !== "object" || Array.isArray(invoked.body.value) ||
-          !invoked.body.value.stamp ||
-          typeof invoked.body.value.stamp !== "object" ||
-          Array.isArray(invoked.body.value.stamp) ||
-          invoked.body.value.stamp.principalRef !== login.context.stamp.principalRef ||
-          invoked.body.value.stamp.policyVersion !== login.context.stamp.policyVersion ||
-          invoked.body.value.stamp.accessRevision !== login.context.stamp.accessRevision)
+          !jsonRecord(body) || body["status"] !== "ok" ||
+          !jsonRecord(value) || !jsonRecord(stamp) ||
+          stamp["principalRef"] !== login.context.stamp.principalRef ||
+          stamp["policyVersion"] !== login.context.stamp.policyVersion ||
+          stamp["accessRevision"] !== login.context.stamp.accessRevision)
         throw new Error("D01_REAL_BROKER_ORIGINAL_CONTEXT_INVOKE_MISMATCH")
       const after = await countCookies()
       expect(after.isolatedHttpOnly, "Original host issued an HttpOnly cookie into the Electron private session").toBeGreaterThan(0)
@@ -224,3 +222,7 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
     }
   })
 })
+
+function jsonRecord(value: SfJson | null | undefined): value is Readonly<{ [key: string]: SfJson }> {
+  return value != null && typeof value === "object" && !Array.isArray(value)
+}

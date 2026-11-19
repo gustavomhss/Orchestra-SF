@@ -18,8 +18,13 @@ import { createSfReviewsClient } from "../../../../../packages/client/src/sucafi
 import type { SfOperation, SfTransportResult } from "../../../../../packages/schema/src/sucafina/common.ts"
 import type { SfCallOptions, SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
 
-const accepts = <S extends Schema.Top>(schema: S, value: unknown) =>
+const accepts = <A>(schema: Schema.Decoder<A, never>, value: unknown): boolean =>
   Option.isSome(Schema.decodeUnknownOption(schema)(value))
+
+// Schema.toType verifies decoded values without claiming the wire's erased
+// DecodingServices (including Receipt/EvidenceRef) are context-free.
+const acceptsDecoded = <S extends Schema.Top>(schema: S, value: unknown): boolean =>
+  Option.isSome(Schema.decodeUnknownOption(Schema.toType(schema), { onExcessProperty: "error" })(value))
 const section = {
   id: "line-one", title: "Current agenda", selectionRef: "scoped-selection",
   topic: "budget", period: { start: "2026-01-01", end: "2026-12-31" },
@@ -115,9 +120,9 @@ describe("A07 closed schema / source equivalence", () => {
     expect(accepts(SfReviewsReportPrepare.input, input)).toBe(true)
     expect(accepts(SfReviewsReportPrepare.input, { ...input, title: "invented" })).toBe(false)
     expect(accepts(SfReviewsReportPrepare.input, { ...input, format: "html" })).toBe(false)
-    expect(accepts(SfReviewsReportPrepare.output, { status: "stale", reason: "review-changed",
+    expect(acceptsDecoded(SfReviewsReportPrepare.output, { status: "stale", reason: "review-changed",
       receipt: { kind: "unbound", operation: "sf_report_prepare", code: "unavailable", at: "now" } })).toBe(true)
-    expect(accepts(SfReviewsReportPrepare.output, { status: "ok", result: {}, outputRef: "https://example.test" })).toBe(false)
+    expect(acceptsDecoded(SfReviewsReportPrepare.output, { status: "ok", result: {}, outputRef: "https://example.test" })).toBe(false)
   })
 })
 

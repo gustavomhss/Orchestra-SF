@@ -1,8 +1,10 @@
-import { For, Show, createEffect, onCleanup, type JSX } from "solid-js"
+import { For, Show, createEffect, onCleanup, untrack, type JSX } from "solid-js"
 import { A } from "@solidjs/router"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfFilesClient } from "@orchestra/client/sucafina/files"
+import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import { decodeRequestsPage, requestRef, requestVersion, type SfRequestsRead } from "../procurement/requests/model"
 import type { SfFilesOperationOutput } from "@orchestra/schema/sucafina/files"
 import type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 import type { SfSurfaceProps } from "../context/contracts"
@@ -63,8 +65,12 @@ type LeafState = {
   detail: Detail | undefined
   busy: boolean
   error: SfUiState | undefined
-  exportKind: "xlsx" | "suppliers" | "register" | "json"
-  download: Readonly<{ href: string; name: string }> | undefined
+  exportKind: "xlsx" | "suppliers" | "register" | "json" | "po"
+  download: Readonly<{ name: string }> | undefined
+  poRead: Extract<SfRequestsRead, { kind: "ready" }> | undefined
+  poSelection: string
+  poState: "idle" | "loading" | "ready" | "denied" | "stale" | "unavailable"
+  poRefresh: number
 }
 
 // The document contract remains the authority for the financial result, receipt,
@@ -81,11 +87,12 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     file: undefined, newVersion: false, removeMissing: false, replace: false,
     headerRow: "", manifest: undefined, reference: undefined, detail: undefined,
     busy: false, error: undefined, exportKind: "xlsx", download: undefined,
+    poRead: undefined, poSelection: "", poState: "idle", poRefresh: 0,
   })
   let generation = 0
   let controller = new AbortController()
   let applyIntent: Readonly<{ id: string; version: number; digest: string; key: string }> | undefined
-  let exportHref: string | undefined
+  let installedScope: string | undefined
 
   const ownerStamp = () => {
     const context = auth.state()
@@ -101,11 +108,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   }
   const current = (token: ReturnType<typeof fence>) =>
     !token.signal.aborted && token.generation === generation && token.stamp === ownerStamp()
-  const revokeExport = () => {
-    if (exportHref) URL.revokeObjectURL(exportHref)
-    exportHref = undefined
-    setState("download", undefined)
-  }
+  // Export bytes must not remain as a reusable blob URL after authorization changes.
+  const revokeExport = () => setState("download", undefined)
   const clearReview = () => {
     applyIntent = undefined
     setState({ manifest: undefined, reference: undefined, detail: undefined,
@@ -138,7 +142,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const ready = auth.ready()
     const resource = ready?.context.availability.find((entry) =>
       entry.family === "files" && entry.operations.some((op) => op.operationId === operationId))
-    return resource?.operations.some((op) => op.operationId === operationId && op.state === "ready") ?? false
+    return resource?.operations.some((op) => op.operationId === operationId && op.state === "ready" && op.operational) ?? false
   }
   const editLocked = () => state.busy || state.phase === "unknown" || state.phase === "submitting"
   const newSource = (surface: ImportSurface) => {
@@ -177,7 +181,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       surface: state.surface, start: state.start, end: state.end, owner,
     }
     const token = fence()
-    setState({ status: "loading", busy: true, targets: [], discovery: undefined, selectionRef: "" })
+    // Keep the native file/date controls mounted while the read is in flight.
+    // SfStatePanel removes its children on "loading", losing the browser FileList.
+    setState({ status: "ready", busy: true, targets: [], discovery: undefined, selectionRef: "" })
     const reply = await api["files.import-targets"]({
       surface: requested.surface,
       ...(requested.start && requested.end ? { start: requested.start, end: requested.end } : {}),
@@ -281,7 +287,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     }
     const token = fence()
     clearReview()
-    setState({ busy: true, status: "loading", phase: "selecting" })
+    // Admission and preview are busy actions, not a new page load. Unmounting
+    // SfStatePanel here would discard the selected native file input.
+    setState({ busy: true, status: "ready", phase: "selecting" })
     const bytes = new Uint8Array(await file.arrayBuffer())
     if (!current(token)) return
     const admit = unpack(await api["files.import-admit"]({
@@ -353,14 +361,15 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       failure({ state: "outcome-unknown" }, true)
       return
     }
-    await refreshReference(intent.id, manifest.context.surface, token)
-    if (current(token)) setState({ phase: "receipt", busy: false })
+    const settled = await refreshReference(intent.id, source, token)
+    if (current(token) && settled?.receipt) setState({ phase: "receipt", busy: false })
+    else if (current(token)) setState({ busy: false })
   }
   const reconcile = async () => {
     const ref = state.manifest?.id ?? applyIntent?.id
     if (!ref) return
     const token = fence()
-    setState({ busy: true, status: "loading" })
+    setState({ busy: true, status: isImport() ? "ready" : "loading" })
     const source = state.manifest?.context.surface ?? state.surface
     if (source !== "planner" && source !== "dashboard") { failure({ state: "invalid" }); return }
     const fresh = await refreshReference(ref, source, token)
@@ -371,38 +380,132 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     else setState({ phase: "reviewing", status: "ready" })
     setState("busy", false)
   }
+  const poCandidates = () => {
+    const read = state.poRead
+    if (!read) return []
+    return read.records.filter((row) => {
+      const ref = requestRef(row)
+      return !!ref && !!row.po && !!row.po.number &&
+        requestVersion(read, ref) !== undefined && /^[A-Za-z0-9._:-]{1,128}$/.test(ref)
+    })
+  }
+  // A new PO selection MUST come from an authorized CAP25 projection, never a free-text URL.
+  createEffect(() => {
+    if (props.surfaceId !== "UI68" || state.exportKind !== "po") return
+    const expectedOwner = ownerStamp()
+    const ready = auth.ready()
+    const generationAtRead = auth.generation()
+    void state.poRefresh
+    setState({ poRead: undefined, poSelection: "", poState: "loading" })
+    if (!ready || !expectedOwner ||
+        !ready.context.destinations.some((item) => item.capabilityId === "CAP25" && item.canRead) ||
+        !ready.context.availability.some((item) => item.family === "procurement" && item.resource === "CAP25" &&
+          item.operations.some((operation) => operation.operationId === "domain.page.CAP25" &&
+            operation.state === "ready" && operation.operational))) {
+      setState("poState", "denied")
+      return
+    }
+    const abort = new AbortController()
+    void createSfProcurementClient(ready.transport)["domain.page.CAP25"]({}, { signal: abort.signal })
+      .then((reply) => {
+        if (abort.signal.aborted || expectedOwner !== ownerStamp() || generationAtRead !== auth.generation()) return
+        if (reply.kind !== "response") { setState("poState", "unavailable"); return }
+        if (reply.status === 401 || reply.status === 403) { setState("poState", "denied"); return }
+        const read = decodeRequestsPage(reply.body, ready.context.stamp)
+        if (read.kind !== "ready") {
+          setState("poState", read.kind === "stale" ? "stale" :
+            read.kind === "denied" || read.kind === "unauthenticated" ? "denied" : "unavailable")
+          return
+        }
+        setState({ poRead: read, poState: "ready" })
+      }).catch(() => {
+        if (!abort.signal.aborted && generationAtRead === auth.generation()) setState("poState", "unavailable")
+      })
+    onCleanup(() => abort.abort())
+  })
   const download = async () => {
     const api = client()
-    if (!api || state.busy || !permitted("files.export." + state.exportKind)) {
+    const kind = state.exportKind
+    const poSelection = state.poSelection
+    const poRead = state.poRead
+    const selectedPo = kind === "po" && poRead
+      ? poCandidates().find((row) => requestRef(row) === poSelection) : undefined
+    const selectedRef = selectedPo && requestRef(selectedPo)
+    const selectedVersion = selectedRef && poRead
+      ? requestVersion(poRead, selectedRef) : undefined
+    if (!api || state.busy || !permitted("files.export." + kind) ||
+        kind === "po" && (!selectedPo || !selectedRef || selectedVersion === undefined ||
+          !poRead || state.poState !== "ready")) {
       setState("status", "unavailable")
       return
     }
     const token = fence()
     revokeExport()
     setState({ busy: true, status: "loading" })
-    const result = state.exportKind === "xlsx"
-      ? await api["files.export.xlsx"]({ surface: "planner" }, { signal: token.signal })
-      : state.exportKind === "suppliers"
-        ? await api["files.export.suppliers"]({ surface: "procurement" }, { signal: token.signal })
-        : state.exportKind === "register"
-          ? await api["files.export.register"]({ surface: "procurement" }, { signal: token.signal })
-          : await api["files.export.json"]({ surface: "dashboard" }, { signal: token.signal })
+    // Re-read the selected PO from its authorized producer immediately before exporting.
+    if (kind === "po") {
+      const ready = auth.ready()
+      if (!ready || !selectedPo || !selectedRef || selectedVersion === undefined) {
+        if (current(token)) failure({ state: "denied" })
+        return
+      }
+      const fresh = await createSfProcurementClient(ready.transport)["domain.page.CAP25"](
+        { request: selectedRef }, { signal: token.signal },
+      )
+      if (!current(token)) return
+      if (fresh.kind !== "response" || fresh.status !== 200) {
+        failure({ state: fresh.kind === "response" && fresh.status === 403 ? "denied" : "unavailable" })
+        return
+      }
+      const verified = decodeRequestsPage(fresh.body, ready.context.stamp)
+      if (verified.kind !== "ready" || !verified.records.some((row) => {
+        const ref = requestRef(row)
+        return ref === selectedRef && !!row.po && !!row.po.number &&
+          requestVersion(verified, ref) === selectedVersion
+      })) {
+        failure({ state: "stale" })
+        return
+      }
+    }
+    const result = kind === "po"
+      ? await api["files.export.po"]({ surface: "procurement", request: poSelection }, { signal: token.signal })
+      : kind === "xlsx"
+        ? await api["files.export.xlsx"]({ surface: "planner" }, { signal: token.signal })
+        : kind === "suppliers"
+          ? await api["files.export.suppliers"]({ surface: "procurement" }, { signal: token.signal })
+          : kind === "register"
+            ? await api["files.export.register"]({ surface: "procurement" }, { signal: token.signal })
+            : await api["files.export.json"]({ surface: "dashboard" }, { signal: token.signal })
     if (!current(token)) return
-    if (result.kind !== "response" || result.status >= 400) {
-      failure({ state: result.kind === "transport-error" && result.reason === "outcome-unknown"
-        ? "outcome-unknown" : result.kind === "response" && result.status === 403 ? "denied" : "unavailable" })
+    if (result.kind !== "response" || result.status !== 200 || !(result.body instanceof Uint8Array) ||
+        result.body.byteLength === 0) {
+      failure({ state: result.kind === "response" && result.status === 403 ? "denied" :
+        result.kind === "response" && (result.status === 404 || result.status === 409) ? "stale" : "unavailable" })
       return
     }
-    const blob = new Blob([Uint8Array.from(result.body)], {
-      type: result.headers["content-type"] || "application/octet-stream",
-    })
+    if (kind === "po" && (state.poSelection !== poSelection || state.poState !== "ready" ||
+        !poCandidates().some((row) => requestRef(row) === poSelection))) {
+      failure({ state: "stale" })
+      return
+    }
     const disposition = result.headers["content-disposition"] ?? ""
     const matched = /filename="?([^";\r\n]+)"?/i.exec(disposition)
     const originalName = matched?.[1]?.replace(/[^a-zA-Z0-9_.-]/g, "_")
-    const filename = originalName && !originalName.startsWith(".")
-      ? originalName : "sucafina-" + state.exportKind + (state.exportKind === "xlsx" ? ".xlsx" : state.exportKind === "json" ? ".json" : ".csv")
-    exportHref = URL.createObjectURL(blob)
-    setState({ download: { href: exportHref, name: filename }, status: "ready", busy: false })
+    const suffix = kind === "po" ? ".html" : kind === "xlsx" ? ".xlsx" :
+      kind === "json" ? ".json" : ".csv"
+    const filename = originalName && !originalName.startsWith(".") && originalName.endsWith(suffix)
+      ? originalName : "sucafina-" + kind +
+        (kind === "po" ? "-" + poSelection.replace(/[^A-Za-z0-9._-]/g, "_") : "") + suffix
+    const href = URL.createObjectURL(new Blob([new Uint8Array(result.body)], {
+      type: result.headers["content-type"] ?? "application/octet-stream",
+    }))
+    const anchor = document.createElement("a")
+    anchor.href = href
+    anchor.download = filename
+    anchor.click()
+    requestAnimationFrame(() => URL.revokeObjectURL(href))
+    // Terminal result only: there is no persistent authorization-free download link.
+    setState({ download: { name: filename }, status: "ready", busy: false })
   }
 
   createEffect(() => {
@@ -410,24 +513,29 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const chapter = props.surfaceId
     const ready = auth.ready()
     const selectedOwner = ownerStamp()
-    fence()
-    revokeExport()
-    applyIntent = undefined
-    setState({ status: ready ? "ready" : auth.state().status === "resolving" ? "loading" :
-      auth.state().status === "unauthenticated" ? "session-expired" :
-      auth.state().status === "denied" ? "denied" : "unavailable",
-      phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
-      reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
-      historyRef: "", reference: undefined, detail: undefined, file: undefined,
-      busy: false, error: undefined })
-    if (!ready || !selectedOwner) return
-    if (chapter === "UI57" && routeKind === "history") {
-      // No auto-fetch of an unscoped collection: original Files only authorizes
-      // reference/detail reads. Never infer an empty collection or issue a grant.
-      setState("historyRef", "")
-    }
-    // Route-param consumers must request an explicit producer surface: no guessed
-    // dashboard→planner fallback and no replay of a hidden previous selection.
+    const authStatus = auth.state().status
+    const scope = JSON.stringify([routeKind, chapter, props.route.href, selectedOwner, authStatus])
+    // A same-owner context publication must not erase an in-progress import.
+    // Revoke private state on an actual route, authority or session transition.
+    if (scope === installedScope) return
+    installedScope = scope
+    untrack(() => {
+      fence()
+      revokeExport()
+      applyIntent = undefined
+      setState({ status: ready ? "ready" : authStatus === "resolving" ? "loading" :
+        authStatus === "unauthenticated" ? "session-expired" :
+        authStatus === "denied" ? "denied" : "unavailable",
+        phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
+        reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
+        historyRef: "", reference: undefined, detail: undefined, file: undefined,
+        busy: false, error: undefined, poRead: undefined, poSelection: "", poState: "idle" })
+      if (chapter === "UI57" && routeKind === "history" && ready && selectedOwner) {
+        // Reference/detail reads only; no inferred history collection.
+        setState("historyRef", "")
+      }
+      // Route-param consumers require an explicit producer surface.
+    })
   })
   onCleanup(() => { fence(); revokeExport() })
 
@@ -446,7 +554,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const isHistory = () => props.surfaceId === "UI57" && props.route.kind === "history"
   const isReference = () => props.surfaceId === "UI56" || (props.surfaceId === "UI57" && !isHistory())
   const isExport = () => props.surfaceId === "UI68"
-  const canApply = () => !state.busy && state.phase === "reviewing" &&
+  const canApply = () => permitted("files.import-apply") && !state.busy && state.phase === "reviewing" &&
     !!state.manifest && !state.manifest.domainApplied && state.manifest.state === "preview" &&
     !!state.reference && !state.reference.receipt &&
     (!isImport() || (!!state.reviewedSelectionRef &&
@@ -461,14 +569,19 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     <SfPageFrame titleKey={key(title())} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={isExport() ? {
-        id: "export", labelKey: key("sf.ui68.primary"), tone: "primary", disabled: state.busy,
+        id: "export", labelKey: key("sf.ui68.primary"), tone: "primary",
+        disabled: state.busy || !permitted("files.export." + state.exportKind) ||
+          state.exportKind === "po" && (!state.poSelection || state.poState !== "ready"),
         busy: state.busy, onInvoke: () => { void download() },
       } : undefined}
     >
       <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())}
-          onRetryRead={() => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) void download() }}
+          onRetryRead={() => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
+              if (state.exportKind === "po") setState("poRefresh", state.poRefresh + 1)
+              else void download()
+            } }}
           onBack={isHistory() && state.status === "not-found" ? () => {
             fence(); clearReview(); setState({ status: "ready", historyRef: "", busy: false })
           } : undefined}>
@@ -523,7 +636,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 <input type="number" min="1" step="1" value={state.headerRow} disabled={editLocked()}
                   onChange={(e) => { change(); setState("headerRow", e.currentTarget.value) }} />
               </label>
-              <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file}
+              <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file ||
+                !permitted("files.import-admit") || !permitted("files.import-preview")}
                 onClick={() => { void prepare() }}>{t("sf.ui55.primary")}</button>
             </div>
           </Show>
@@ -546,7 +660,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   }} />
               </label>
               <button type="submit" class="mx-btn primary"
-                disabled={state.busy || !state.historyRef.trim()}>{t("sf.u23.reconcile")}</button>
+                disabled={state.busy || !state.historyRef.trim() ||
+                  !permitted("files.import-reference") || !permitted("files.import-detail")}>{t("sf.u23.reconcile")}</button>
             </form>
           </Show>
           <Show when={isReference()}>
@@ -651,16 +766,41 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             <div class="sf-files-fields">
               <label>{t("sf.u23.format")}
                 <select value={state.exportKind} disabled={state.busy}
-                  onChange={(e) => { revokeExport(); setState("exportKind", e.currentTarget.value as LeafState["exportKind"]) }}>
+                  onChange={(event) => {
+                    const value = event.currentTarget.value
+                    if (value !== "xlsx" && value !== "suppliers" && value !== "register" &&
+                        value !== "json" && value !== "po") return
+                    revokeExport()
+                    setState("exportKind", value)
+                  }}>
                   <option value="xlsx">{t("sf.u23.exportXlsx")}</option>
                   <option value="suppliers">{t("sf.u23.exportSuppliers")}</option>
                   <option value="register">{t("sf.u23.exportRegister")}</option>
                   <option value="json">{t("sf.u23.exportJson")}</option>
+                  <option value="po">Individual purchase order / approvals (HTML)</option>
                 </select>
               </label>
+              <Show when={state.exportKind === "po"}>
+                <label>Current authorized purchase order
+                  <select value={state.poSelection} disabled={state.busy || state.poState !== "ready"}
+                    onChange={(event) => { revokeExport(); setState("poSelection", event.currentTarget.value) }}>
+                    <option value="">Select a PO by its source PR reference</option>
+                    <For each={poCandidates()}>{(row) =>
+                      <option value={requestRef(row)}>{row.po?.number} · {row.number} · {row.status}</option>
+                    }</For>
+                  </select>
+                </label>
+                <p role="status">Selection: {state.poState}. Only a producer-authenticated PO is exportable;
+                  a receiving receipt is not available as a separate admitted producer.</p>
+                <button type="button" class="mx-btn" disabled={state.busy}
+                  onClick={() => { revokeExport(); setState("poRefresh", state.poRefresh + 1) }}>
+                  Refresh PO source references
+                </button>
+              </Show>
               <Show when={state.download}>
-                {(download) => <a class="mx-btn" href={download().href} download={download().name}
-                  data-sf-export="authorized-bytes">{t("sf.u23.download")}: {download().name}</a>}
+                {(download) => <p role="status" data-sf-export="authorized-bytes">
+                  {t("sf.u23.download")}: {download().name}. To download again, request fresh authorization.
+                </p>}
               </Show>
             </div>
           </Show>

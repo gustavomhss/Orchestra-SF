@@ -60,13 +60,20 @@ export type SfRoutineServicesInput = {
   /** A Schedule function that only returns unavailable is not an installed watch admission binding. */
   watchAvailable?: () => boolean
   requiredAuthority?: RoutineHost["requiredAuthority"]
+  /** Host-private source scopes. Invoked after the original capability/native registry consumed its real lease. */
+  source?: {
+    routines: (original: BusinessPorts["routines"]) => BusinessPorts["routines"]
+    recipe: <A>(reference: string, context: TrustedDomainContext, read: () => Promise<PortResult<A>>) => Promise<PortResult<A>>
+    runRead: <A>(reference: string, context: TrustedDomainContext, read: () => Promise<PortResult<A>>) => Promise<PortResult<A>>
+    artifact: <A>(reference: string, context: TrustedDomainContext, read: () => Promise<PortResult<A>>) => Promise<PortResult<A>>
+  }
 }
 
 /** C08/C16 composition for UI, native MCP and factual result consumers, using the WP09 producers. */
 export function createSfRoutineServices(input: SfRoutineServicesInput) {
   const authorized = (context: TrustedDomainContext) => input.authority.revalidateDomainContext(context)
   const sameNative = (native: SfRoutineNativePort, context: TrustedDomainContext) => input.native?.() === native && authorized(context)
-  const planFor: RoutineHost["resolveRecipe"] = async (reference, context) => {
+  const readPlanFor: RoutineHost["resolveRecipe"] = async (reference, context) => {
     if (!await authorized(context)) return denied()
     const native = input.native?.()
     if (!native) return unavailable("native-routine-plan-reader-unavailable")
@@ -75,6 +82,8 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
     if (!validPlan(found.value) || !await sameNative(native, context)) return denied()
     return { status: "ok", value: structuredClone(found.value) }
   }
+  const planFor: RoutineHost["resolveRecipe"] = (reference, context) => input.source
+    ? input.source.recipe(reference, context, () => readPlanFor(reference, context)) : readPlanFor(reference, context)
   const publicationFor = (context: TrustedDomainContext) => {
     const publication = input.publication?.()
     if (!publication || publication.publication.projectID !== context.binding.projectId) return undefined
@@ -132,7 +141,7 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
     return checked
   }
 
-  const routines: BusinessPorts["routines"] = {
+  const originalRoutines: BusinessPorts["routines"] = {
     catalog: async (purpose, context) => {
       if (!await authorized(context)) return denied()
       const publication = publicationFor(context)
@@ -187,7 +196,13 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
       const admitted = await readRecord("admission", request.admissionRef, context)
       if (admitted.status !== "ok") return admitted
       const before = structuredClone(admitted.value)
-      if (before.result.admission !== "admitted") return { status: "needs-input", reason: "admission-required" }
+       // This marker is projected only from native APPROVE + APPROVED + Authorization.Granted under source-backed
+       // planning authority. A generic preparing result is never executable; the phase bridge rechecks the full chain.
+       const approvedPreparing = before.result.admission === "preparing" &&
+         before.result.pending.length === 1 && before.result.pending[0] === "native-approved-run-required" &&
+         !!before.result.authorizationId && before.result.admissionRef === before.result.authorizationId &&
+         !before.result.runRef && !before.result.armRef && !before.result.childSessionId && !before.result.resultRef
+       if (before.result.admission !== "admitted" && !approvedPreparing) return { status: "needs-input", reason: "admission-required" }
       if (before.result.admissionVersion !== request.expectedAdmissionVersion || digestSfValue(before.input.caseRef) !== digestSfValue(request.caseRef)) return { status: "stale", reason: "routine-admission-changed" }
       if (!await sameNative(native, context)) return denied()
       const started = await native.start({ ...request, inputDigest: before.inputDigest }, context)
@@ -195,10 +210,13 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
       const checked = await validateRecord(started.value, native, context)
       if (checked.status !== "ok") return checked
       const after = checked.value
-      if (after.result.admission !== "admitted" || !after.result.runRef || after.result.admissionRef !== before.result.admissionRef ||
-        after.result.admissionVersion !== before.result.admissionVersion || after.inputDigest !== before.inputDigest ||
+       if (after.result.admission !== "admitted" || !after.result.runRef || !after.result.armRef ||
+         (approvedPreparing ? !after.result.admissionRef || after.result.admissionRef === before.result.admissionRef ||
+           after.result.admissionVersion === undefined || before.result.admissionVersion === undefined ||
+           after.result.admissionVersion <= before.result.admissionVersion : after.result.admissionRef !== before.result.admissionRef ||
+           after.result.admissionVersion !== before.result.admissionVersion) || after.inputDigest !== before.inputDigest ||
         digestSfValue(after.workflow) !== digestSfValue(before.workflow) || after.result.correlationId !== before.result.correlationId ||
-        after.result.authorizationId !== before.result.authorizationId || after.result.armRef !== before.result.armRef ||
+         after.result.authorizationId !== before.result.authorizationId || (!approvedPreparing && after.result.armRef !== before.result.armRef) ||
         digestSfValue(after.result.sourceRefs) !== digestSfValue(before.result.sourceRefs) ||
         (before.result.childSessionId !== undefined && after.result.childSessionId !== before.result.childSessionId) ||
         (before.result.runRef !== undefined && after.result.runRef !== before.result.runRef) ||
@@ -206,6 +224,7 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
       return { status: "ok", value: after.result }
     },
   }
+  const routines = input.source?.routines(originalRoutines) ?? originalRoutines
 
   const expectedInputDigest = async (run: RoutineResult, context: TrustedDomainContext): Promise<PortResult<string>> => {
     if (!run.runRef) return { status: "needs-input", reason: "run-reference-required" }
@@ -246,8 +265,12 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
     revalidateOutput: async (context, output) => await authorized(context) && (!("sourceRefs" in output) || await input.revalidateSources(output.sourceRefs, context)),
     resolveResult: async (run, context) => {
       if (!run.runRef) return { status: "needs-input", reason: "run-reference-required" }
-      const result = await resultAccess.readResult(run.runRef, context)
-      return result.status === "ok" ? { status: "ok", value: result.value.run } : result
+      const reference = run.runRef
+      const read = async () => {
+        const result = await resultAccess.readResult(reference, context)
+        return result.status === "ok" ? { status: "ok" as const, value: result.value.run } : result
+      }
+      return input.source ? input.source.runRead(reference, context, read) : read()
     },
     requiredAuthority: input.requiredAuthority ?? {
       sf_routine_catalog: ["routines:read"], sf_routine_prepare: ["routines:prepare"], sf_routine_run: ["routines:execute"],
@@ -281,19 +304,25 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
     },
     resultAccess, expectedInputDigest, readExecution,
     readArtifact: async (resultRef: string, context: TrustedDomainContext): Promise<PortResult<RoutineArtifact>> => {
+      const read = async (): Promise<PortResult<RoutineArtifact>> => {
       const artifact = await readArtifact(resultRef, context)
       if (artifact.status !== "ok") return artifact
       const verified = await resultAccess.readResult(artifact.value.runRef, context)
       if (verified.status !== "ok") return verified
       return verified.value.output.resultRef === resultRef ? { status: "ok", value: verified.value.output } : denied()
+      }
+      return input.source ? input.source.artifact(resultRef, context, read) : read()
     },
     routineRuns: { discoverRuns: async (context: TrustedDomainContext): Promise<PortResult<readonly RoutineResult[]>> => {
       const product = productFor(context)
       return product ? product.discoverRuns(context) : unavailable("routine-publication-port-unavailable")
     } },
     openResult: async (runRef: string, context: TrustedDomainContext) => {
+      const read = async () => {
       const product = productFor(context)
       return product ? product.openResult(runRef, context) : unavailable("routine-publication-port-unavailable")
+      }
+      return input.source ? input.source.runRead(runRef, context, read) : read()
     },
   }
 }
@@ -308,4 +337,3 @@ export function routineSourceDigest(sources: readonly SourceRef[]) {
 }
 function unavailable(reason: string) { return { status: "unavailable" as const, reason } }
 function denied() { return { status: "denied" as const, reason: "routine-authority-unavailable" } }
-

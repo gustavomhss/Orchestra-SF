@@ -11,7 +11,7 @@ import type { createSfBusinessServices } from "./business-services.ts"
  * Lifecycle readers may reach a newer version of the same authorized case. The
  * selector stays at the original version, so fresh domain execution still refuses drift. */
 export function createSfAnalysisRunContext(input: {
-  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "human">
+  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "human" | "state">
   business: Pick<ReturnType<typeof createSfBusinessServices>, "withCase">
   request: Request
   runRef: string
@@ -22,6 +22,23 @@ export function createSfAnalysisRunContext(input: {
 }) {
   const selected = structuredClone(input.caseRef)
   const start = structuredClone(input.start)
+  const live = (call: TrustedDomainContext) => input.authority.host.requestFor(call) === input.request && !input.request.signal.aborted &&
+    input.active() && input.replayContexts.get(call) === input.runRef
+  const member = (call: TrustedDomainContext) => input.authority.state.read(input.request, "cases", (state, actor) => {
+    const value = state.cases[selected.id]
+    return !!value && value.id === selected.id && value.incarnation === selected.incarnation && Number.isSafeInteger(value.version) &&
+      value.version >= selected.version && value.participants.includes(actor.principalRef) && actor.principalRef === call.binding.principalRef &&
+      actor.policyVersion === call.binding.policyVersion && actor.accessRevision === call.binding.accessRevision
+  })
+  const projected = async (call: TrustedDomainContext) => {
+    const held = await input.authority.host.persistence.transaction("dashboard", async (snapshot) => {
+      const before = digestSfValue(snapshot.data.__sfProductV1)
+      const read = await member(call)
+      const intact = digestSfValue(snapshot.data.__sfProductV1) === before && live(call)
+      return { commit: false, value: intact && read.status === "ok" && read.value === true }
+    }, { signal: input.request.signal })
+    return held === true && live(call)
+  }
   return async <T>(id: string, action: (call: TrustedDomainContext) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const denied = (): PortResult<T> => ({ status: "denied", reason: "analysis-authority-unavailable" })
     if (id !== input.runRef || input.request.signal.aborted || !input.active()) return denied()
@@ -30,10 +47,13 @@ export function createSfAnalysisRunContext(input: {
     const call = admitted.value
     input.replayContexts.set(call, input.runRef)
     try {
+      if (!await projected(call)) return denied()
       const result = await input.business.withCase(call, selected, { allowHistoricalRetry: true }, () => action(call))
+      if (!await projected(call)) return denied()
       const current = await input.authority.human.authorize(call, "analysis.start", start)
-      return current && !input.request.signal.aborted && input.active() && input.authority.host.requestFor(call) === input.request &&
-        input.replayContexts.get(call) === input.runRef ? result : denied()
+      if (!current || !live(call)) return denied()
+      const again = await member(call)
+      return again.status === "ok" && again.value === true && live(call) ? result : denied()
     } finally {
       input.replayContexts.delete(call)
       input.authority.human.finish(call)

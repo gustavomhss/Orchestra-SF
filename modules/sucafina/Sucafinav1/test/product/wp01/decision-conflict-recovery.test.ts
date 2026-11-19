@@ -24,7 +24,6 @@ import { createDecisionIntentFences } from "../../../product/decisions/intent-fe
 import { createDecisionHttp } from "../../../product/decisions/http.ts"
 import { createPortfolioResultBindings } from "../../../product/decisions/portfolio-bindings.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
-import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
@@ -128,7 +127,7 @@ async function fixture() {
     validateOutput: (_descriptor, result) => result.status !== "ok" || operation === "sf_case_read" && decodeSfOperationOutput("sf_case_read", result.result).ok })
   const services = { ...authority, dispatch } as SfHostServices
   const workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-  const module = createModule("/sucafina", { persistence, authenticate, environment, product: async (request, surface) => await edit(request) ?? await workbench(request, surface), productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  const module = createModule("/sucafina", { persistence, authenticate, environment, product: async (request, surface) => await edit(request) ?? await workbench(request, surface), maxJsonBytes: 100000 })
   const writes: { principal: string | undefined; status: number; body: Edit; key: string | null }[] = []
   routing.handle = async (request) => {
     if (new URL(request.url).pathname === "/sucafina/auth/logout") return (await first.person(request) ? first : second).handle(request)

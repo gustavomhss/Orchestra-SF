@@ -47,10 +47,15 @@ export function prepareBudgetPaste(
     const row = rows[baseIndex + r]
     const rowRef = (row?.id ?? ("unresolved-" + r)) as SfRef
     const revision = row?.revision ?? 0
-    const pasteCells: SfPasteCell[] = (raw[r] ?? []).map((text, c) => ({
-      coordinate: { rowRef, month: Math.min(11, colIndex + c) as SfCellCoordinate["month"], measure },
-      rawText: text,
-    }))
+    const pasteCells: SfPasteCell[] = []
+    for (let c = 0; c < (raw[r] ?? []).length; c++) {
+      const month = colIndex + c
+      if (month < 0 || month > 11) continue
+      pasteCells.push({
+        coordinate: { rowRef, month: month as SfCellCoordinate["month"], measure },
+        rawText: raw[r]?.[c] ?? "",
+      })
+    }
     const issue = invalidShape ? "sf.s02.paste.irregular" :
       outOfBounds ? "sf.s02.paste.overflow" :
       unsupported ? "sf.s02.paste.unsupported" :

@@ -95,16 +95,15 @@ export const SfNativeOperationBindings: SfOperationBindings = (() => {
   add(SfWork.operations)
   add(SfMemory.operations)
   add(SfAnalyses.operations)
-  // Source A06's 25 codecs and the two original download extensions.
-  const sourceFiles = Object.entries(SfFilesOperationBindings)
-  if (sourceFiles.length !== 27) throw new Error("SF_A06_27_OPERATIONS_REQUIRED")
-  for (const [candidate, fileCodec] of sourceFiles) {
-    if (!Schema.is(SfOperationId)(candidate)) throw new Error("SF_A06_OPERATION_UNKNOWN")
-    const id = candidate as SfOperationId
-    const meta = SfOperationRegistry[id]
-    if (!meta || meta.responseMode === "navigation" || !fileCodec || bindings.has(id))
-      throw new Error("SF_A06_BINDING_CONFLICT")
-    bindings.set(id, fileCodec)
-  }
+  const membersId = "files.export.members"
+  const membersCodec = SfFilesOperationBindings[membersId]
+  const membersRoute = SfOperationRegistry[membersId]
+  if (!Schema.is(SfOperationId)(membersId) || !membersCodec
+    || membersRoute.method !== "GET" || membersRoute.pathTemplate !== "{mount}/{surface}"
+    || membersRoute.effect !== "read" || membersRoute.responseMode !== "bytes"
+    || membersRoute.fixedQuery?.download !== "members"
+    || Object.keys(membersRoute.fixedQuery).length !== 1
+    || bindings.has(membersId)) throw new Error("SF_NATIVE_MEMBERS_CODEC_MISSING")
+  bindings.set(membersId, membersCodec)
   return Object.freeze(Object.fromEntries(bindings))
 })()

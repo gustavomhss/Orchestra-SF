@@ -1,0 +1,85 @@
+name: sucafina-native-localhost-visual
+
+on:
+  push:
+    branches: [sfa-sucafina-white-label]
+    paths:
+      - ".github/workflows/sucafina-native-localhost-visual.yml"
+      - "packages/app-shell/e2e/sucafina/native/localhost-preview.capture.ts"
+      - "packages/client/src/sucafina/transport.ts"
+      - "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+      - "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+      - "modules/sucafina/Sucafinav1/local/entry.ts"
+      - "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx"
+      - "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    name: sucafina/native-localhost-capture
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      ORCHESTRA_BRAND: sucafina
+      ORCHESTRA_CHANNEL: prod
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "0"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - name: Install authorized Chromium
+        working-directory: packages/app-shell
+        run: bunx playwright install --with-deps chromium
+      - name: Build real native SF white-label
+        working-directory: apps/web
+        run: bun run build
+      - name: Prepare isolated local operator, run real installed SF and screenshot native routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          export SF_LOCAL_ROOT="$(mktemp -d /tmp/sf-brand-preview-XXXXXXXX)"
+          chmod 700 "$SF_LOCAL_ROOT"
+          export SF_VISUAL_OUT="$GITHUB_WORKSPACE/sf-native-localhost-proof"
+          export ORCHESTRA_DB="$SF_LOCAL_ROOT/host-data/orchestra.db"
+          export ORCHESTRA_CONFIG_DIR="$SF_LOCAL_ROOT/host-config"
+          export ORCHESTRA_INHERIT_CREDENTIALS=0
+          export ORCHESTRA_DISABLE_PROJECT_CONFIG=1
+          export ORCHESTRA_CREDENTIAL_KEY_FILE="$SF_LOCAL_ROOT/host-credential.key"
+          export SUCAFINA_LOCAL_CONFIG="$SF_LOCAL_ROOT/installation.json"
+          export ORCHESTRA_WEB_UI_DIR="$GITHUB_WORKSPACE/apps/web/dist"
+          export TMPDIR="$SF_LOCAL_ROOT/host-tmp"
+          export XDG_DATA_HOME="$SF_LOCAL_ROOT/host-data"
+          export XDG_CONFIG_HOME="$SF_LOCAL_ROOT/host-config"
+          export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+          export XDG_CACHE_HOME="$SF_LOCAL_ROOT/host-cache"
+          export XDG_STATE_HOME="$SF_LOCAL_ROOT/host-state"
+          export ORCHESTRA_SERVER_PASSWORD="$(openssl rand -hex 24)"
+          cleanup() {
+            if [ -n "${host_pid:-}" ]; then kill "$host_pid" 2>/dev/null || true; wait "$host_pid" 2>/dev/null || true; fi
+            rm -rf "$SF_LOCAL_ROOT"
+          }
+          trap cleanup EXIT
+          bun packages/app-shell/e2e/sucafina/wp03/installation-setup.ts "$SF_LOCAL_ROOT"
+          bun apps/cli/src/index.ts serve --hostname localhost --port 4110 --installation "$GITHUB_WORKSPACE/modules/sucafina/Sucafinav1/local/entry.ts" > "$SF_LOCAL_ROOT/host.log" 2>&1 &
+          host_pid=$!
+          ready=0
+          for attempt in $(seq 1 100); do
+            if curl --fail --silent --max-time 2 "http://localhost:4110/sucafina/status" > /dev/null; then ready=1; break; fi
+            if ! kill -0 "$host_pid" 2>/dev/null; then break; fi
+            sleep 0.3
+          done
+          test "$ready" -eq 1 || { echo "SF_LOCALHOST_REAL_HOST_FAILED"; exit 1; }
+          (cd packages/app-shell && bun e2e/sucafina/native/localhost-preview.capture.ts)
+      - name: Attach only synthetic native screenshots and non-sensitive proof
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-native-localhost-proof
+          path: sf-native-localhost-proof
+          if-no-files-found: warn
+          retention-days: 7

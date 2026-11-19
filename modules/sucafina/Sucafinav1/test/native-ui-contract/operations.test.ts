@@ -34,9 +34,14 @@ const expected = [
   "domain.command.CAP12.delete-campaign",
 ] as const
 
-function valid<S extends Schema.Top>(schema: S, value: unknown): boolean {
+function valid<A>(schema: Schema.Decoder<A, never>, value: unknown): boolean {
   return Option.isSome(Schema.decodeUnknownOption(schema)(value, { onExcessProperty: "error" }))
 }
+
+// Type-side check only: JsonValue's broad Schema<Json> annotation erases
+// decoding requirements. Keep excess-property rejection, never assert R=never.
+const validDecoded = <S extends Schema.Top>(schema: S, value: unknown): boolean =>
+  Option.isSome(Schema.decodeUnknownOption(Schema.toType(schema))(value, { onExcessProperty: "error" }))
 const stamp = {
   installationId: "test-installation", projectId: "test-project",
   hostId: "test-current-host", principalRef: "test-current-principal",
@@ -45,7 +50,7 @@ const stamp = {
 
 describe("A11 operation fidelity", () => {
   test("exactly the sixteen IDs, two source pages, fourteen closed actions", () => {
-    expect(Object.keys(SfOperations.operations)).toEqual(expected)
+    expect<readonly string[]>(Object.keys(SfOperations.operations)).toEqual(expected)
     expect(SF_OPERATIONS_PAGES).toEqual({
       CAP11: "IT Operations", CAP12: "IT Security KPIs",
     })
@@ -144,9 +149,9 @@ describe("A11 operation fidelity", () => {
 
   test("legacy result stays original safeFailure, never an invented PortResult", () => {
     const output = SfOperations.operations["domain.command.CAP12.delete-incident"].output
-    expect(valid(output, { ok: true, warnings: [] })).toBe(true)
-    expect(valid(output, { ok: false, status: 409, stored: null, currentVersionCAS: 0 })).toBe(true)
-    expect(valid(output, { status: "ok", value: { id: "privileged" } })).toBe(false)
+    expect(validDecoded(output, { ok: true, warnings: [] })).toBe(true)
+    expect(validDecoded(output, { ok: false, status: 409, stored: null, currentVersionCAS: 0 })).toBe(true)
+    expect(validDecoded(output, { status: "ok", value: { id: "privileged" } })).toBe(false)
   })
 
   test("CAP11 output preserves absent/null/zero; does not echo privileged snapshot", () => {

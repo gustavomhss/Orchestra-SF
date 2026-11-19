@@ -6,6 +6,7 @@ import type { SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { SfPageFrame } from "../../shared/frame"
+import { SfExecutiveAction, SfExecutiveRelatedLinks } from "../../cross-links/view"
 import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
@@ -46,7 +47,14 @@ function labelForPriority(value: string): Key | undefined {
 }
 
 export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
+  const shownDate = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
   const navigate = useNavigate()
   const source = useHotTopicsSource(props.route)
   const [deleteRequested, setDeleteRequested] = createSignal(false)
@@ -134,7 +142,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
                       <td>{topic.owner ?? t(key("sf.u38.unknown"))}</td>
                       <td>{topic.status && labelForStatus(topic.status) ? t(key(labelForStatus(topic.status)!)) : t(key("sf.u38.unknown"))}</td>
                       <td>{topic.priority && labelForPriority(topic.priority) ? t(key(labelForPriority(topic.priority)!)) : t(key("sf.u38.unknown"))}</td>
-                      <td>{topic.due || t(key("sf.u38.unknown"))}</td>
+                      <td>{topic.due ? <time dateTime={topic.due}>{shownDate(topic.due)}</time> : t(key("sf.u38.unknown"))}</td>
                       <td><button type="button" class="mx-btn" onClick={() => open(topic, "detail")}>{t(key("sf.u38.show"))}</button></td>
                     </tr>}</For></tbody>
                 </table>
@@ -157,7 +165,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
             <Show when={props.route.kind === "detail"}>
               <dl class="sf-u38-meta">
                 <div><dt>{t(key("sf.u38.owner"))}</dt><dd>{topic().owner || t(key("sf.u38.unknown"))}</dd></div>
-                <div><dt>{t(key("sf.u38.due"))}</dt><dd>{topic().due || t(key("sf.u38.unknown"))}</dd></div>
+                <div><dt>{t(key("sf.u38.due"))}</dt><dd>{(() => { const due = topic().due; return due ? <time dateTime={due}>{shownDate(due)}</time> : t(key("sf.u38.unknown")) })()}</dd></div>
                 <div><dt>{t(key("sf.u38.status"))}</dt>
                   <dd>{topic().status && labelForStatus(topic().status!) ? t(key(labelForStatus(topic().status!)!)) : t(key("sf.u38.unknown"))}</dd></div>
                 <div><dt>{t(key("sf.u38.priority"))}</dt>
@@ -165,6 +173,12 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
                 <div><dt>{t(key("sf.u38.notes"))}</dt><dd class="sf-u38-long">{topic().notes || t(key("sf.u38.unknown"))}</dd></div>
                 <div><dt>{t(key("sf.u38.version"))}</dt><dd>{version() ?? t(key("sf.u38.unknown"))}</dd></div>
               </dl>
+              <div class="sf-u38-actions" data-sf-executive-handoff>
+                <SfExecutiveAction from={props.route}
+                  target={{ kind: "relations", source: { kind: "topic", ref: topic().id } }}
+                  label={{ pt: "Relacionar ação por referência", en: "Relate action by reference" }} />
+              </div>
+              <SfExecutiveRelatedLinks from={props.route} omit="topic" />
               <div class="sf-u38-actions">
                 <button type="button" class="mx-btn primary" disabled={!source.allowed("save") || version() === undefined}
                   onClick={edit}>{t(key("sf.u38.editTopic"))}</button>

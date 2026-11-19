@@ -9,9 +9,7 @@ import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV } from "../../src/nav.ts
 export type SfViewSelectionKey = "year" | "own" | "execYear" | "opsYear" | "secYear" | "month" | "executiveMonth" | "operationsMonth" | "securityMonth" | "version" | "owner" | "class" | "mode" | "filter" | "status" | "topicStatus" | "memberStatus" | "opsMonth" | "request" | "supplier"
 export type SfPersonalView = { id: string; title: string; surface: "dashboard" | "planner" | "procurement"; page: string; period?: Period; currency?: string; density?: "comfortable" | "compact"; filters?: { query?: string; selections?: Partial<Record<SfViewSelectionKey, string>> } }
 export type SfPersonalViewRecord = { view: SfPersonalView; version: number }
-/** A private preference may remain after its destination disappears. Its former contents stay hidden. */
 export type SfUnavailablePersonalView = { id: string; version: number; availability: "unavailable" }
-export type SfPersonalViewListEntry = SfPersonalViewRecord | SfUnavailablePersonalView
 export type SfPersonalViewSave = { view: SfPersonalView; expectedVersion: number | null }
 export type SfPersonalViewRemove = { id: string; expectedVersion: number }
 
@@ -53,13 +51,13 @@ export function createSfPersonalViews(input: {
   const authorized = async (context: TrustedDomainContext, action: "views.read" | "views.save" | "views.remove", payload: unknown) => context.kind === "ui" && !!input.host.requestFor(context) && await input.host.revalidate(context).catch(() => false) && await input.humanAuthorize(context, action, payload).catch(() => false)
   const prefix = (context: TrustedDomainContext) => `sf:personal-view:${encodeURIComponent(context.binding.principalRef)}:`
   return {
-    list: async (context: TrustedDomainContext): Promise<PortResult<readonly SfPersonalViewListEntry[]>> => {
+    list: async (context: TrustedDomainContext): Promise<PortResult<readonly (SfPersonalViewRecord | SfUnavailablePersonalView)[]>> => {
       if (!await authorized(context, "views.read", {})) return { status: "denied", reason: "views-access-unavailable" }
       const request = input.host.requestFor(context)!
       const found = await input.state.read(request, "preferences", (state, authority) => sameAuthority(authority, context) ? Object.entries(state.preferences).filter(([key, value]) => key.startsWith(prefix(context)) && viewRecord(value) && key === `${prefix(context)}${value.view.id}`).map(([, value]) => value).filter(viewRecord) : undefined).catch(() => undefined)
       if (found?.status === "unavailable" && found.reason === "product-state-uninitialized") return { status: "ok", value: [] }
       if (!found || found.status !== "ok" || !found.value) return { status: "unavailable", reason: "views-unavailable" }
-      const permitted = await Promise.all(found.value.map(async (entry): Promise<SfPersonalViewListEntry> => await input.authorizeView(entry.view, context).catch(() => false) ? entry : { id: entry.view.id, version: entry.version, availability: "unavailable" }))
+      const permitted = await Promise.all(found.value.map(async (entry) => await input.authorizeView(entry.view, context).catch(() => false) ? entry : { id: entry.view.id, version: entry.version, availability: "unavailable" as const }))
       if (!await authorized(context, "views.read", {})) return { status: "denied", reason: "views-access-unavailable" }
       return { status: "ok", value: permitted }
     },

@@ -88,6 +88,14 @@ export async function sfU02SubmitReview(
       review.controller.setPhase("outcome-unknown")
       return { status: "stale" }
     }
+    // A definite 409/422 with the exact pending operation is a KNOWN rejection,
+    // never a lost receipt. Settle it through the draft contract itself.
+    if (response.kind !== "transport-error" && !response.body.ok &&
+        (response.body.status === 409 || response.body.status === 422)) {
+      const state = review.controller.snapshot()
+      const pendingOperation = state.availability === "active" ? state.pendingOperation : null
+      if (pendingOperation) review.controller.rejectSave({ status: response.body.status, operation: pendingOperation })
+    }
     return { status: "response", response }
   } catch {
     review.controller.setPhase("outcome-unknown")
@@ -214,7 +222,7 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     label: { key: key(props.valueLabelKey) },
     value: { kind: "text" as const, text: { kind: "data" as const, text: active()?.value.text ?? "" } },
   }]
-  const base = () => props.recordId
+  const base = () => props.recordId && props.version !== undefined
     ? { kind: "persisted" as const, ref: props.recordId as SfRef, version: props.version,
       fields: [{ path: reviewFields()[0].path, label: { key: key(props.valueLabelKey) },
         value: props.value === undefined ?
@@ -243,9 +251,10 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
       if (response.kind === "transport-error") {
         saved.controller.setPhase("outcome-unknown");setFeedback("outcome-unknown")
       } else if (!response.body.ok) {
-        saved.controller.setPhase("outcome-unknown")
-        setFeedback(response.body.status === 409 ? "conflict" :
-          response.body.status === 403 ? "denied" : "failed")
+        const status = response.body.status
+        if (status !== 409 && status !== 422) saved.controller.setPhase("outcome-unknown")
+        setFeedback(status === 409 ? "conflict" :
+          status === 403 ? "denied" : "failed")
         saved.onConfirmed()
       } else {
         // Legacy success returns no record/version, never promote submitted fields.
@@ -307,7 +316,9 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
         blockingReasons={[]}
         confirmation={{ kind: "admitted", labelKey: key("sf.u02.confirmSave"),
           purpose: "save", binding: { kind: "catalog-command", operationId: props.operationId,
-            version: { kind: "record", expectedVersion: props.version },
+            version: props.recordId && props.version !== undefined
+              ? { kind: "record", expectedVersion: props.version }
+              : { kind: "none" },
             confirmation: "presentation-only" } }}
         state="ready" onConfirm={() => { void confirm() }}
         onRevise={() => setReview(undefined)} onCancel={() => setReview(undefined)}

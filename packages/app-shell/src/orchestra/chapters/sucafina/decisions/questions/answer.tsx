@@ -7,7 +7,7 @@ import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import type { SfContextHandle } from "../../context/contracts"
 import type { SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
-import { sfFailureUiState, sfOperationReady, type SfCaseRecord } from "../cases/model"
+import { sfContextUiState, sfFailureUiState, sfOperationReady, type SfCaseRecord } from "../cases/model"
 
 type AnswerEnvelope = Schema.Schema.Type<(typeof SfCollaboration.operations)["collaboration.answer-read"]["output"]>
 type AnswerValue = Extract<AnswerEnvelope, { status: "ok" }>["value"]
@@ -34,14 +34,25 @@ export function SfQuestionAnswer(props: Readonly<{
   createEffect(() => {
     const active = props.owner.ready()
     const generation = props.owner.generation()
+    const ownerStatus = props.owner.state().status
     const question = props.question
     setUi({ answer: undefined, prepared: undefined, storageVersion: undefined,
       readState: "loading", reviewState: "empty" })
+    if (!active) {
+      const blocked = ownerStatus === "denied" || ownerStatus === "unauthenticated"
+        ? sfContextUiState(ownerStatus)
+        : "unavailable"
+      setUi({
+        readState: blocked,
+        reviewState: blocked === "denied" || blocked === "session-expired" ? blocked : "empty",
+      })
+      return
+    }
     if (!question.answerRef) {
       setUi("readState", "empty")
       return
     }
-    if (!active || !sfOperationReady(active.context, "collaboration.answer-read")) {
+    if (!sfOperationReady(active.context, "collaboration.answer-read")) {
       setUi("readState", "unavailable")
       return
     }
@@ -74,6 +85,10 @@ export function SfQuestionAnswer(props: Readonly<{
   const mayReview = () => !!ui.answer && !!props.question.answerRef && !!props.owner.ready() &&
     sfOperationReady(props.owner.ready()!.context, "collaboration.answer-prepare") &&
     sfOperationReady(props.owner.ready()!.context, "collaboration.storage-version")
+  const mayConfirm = () => {
+    const active = props.owner.ready()
+    return !!active && sfOperationReady(active.context, "collaboration.answer-confirm")
+  }
   const review = async () => {
     const active = props.owner.ready()
     const answerRef = props.question.answerRef
@@ -121,6 +136,10 @@ export function SfQuestionAnswer(props: Readonly<{
       commandInFlight = undefined
     }
   }
+  const canConfirmReuse = () => {
+    const ready = props.owner.ready()
+    return !!ready && sfOperationReady(ready.context, "collaboration.answer-confirm")
+  }
   const confirm = async () => {
     const active = props.owner.ready()
     const preparation = ui.prepared
@@ -128,6 +147,7 @@ export function SfQuestionAnswer(props: Readonly<{
     if (!active || !preparation || storageVersion === undefined || ui.reviewState !== "ready" || !!commandInFlight ||
       !sfOperationReady(active.context, "collaboration.answer-confirm")) return
     const generation = props.owner.generation()
+    const questionId = props.question.id
     const answerRef = props.question.answerRef
     if (answerRef !== preparation.answerRef) {
       setUi("reviewState", "stale")
@@ -151,11 +171,22 @@ export function SfQuestionAnswer(props: Readonly<{
         },
         { signal, idempotencyKey },
       )
-      if (signal.aborted || props.owner.generation() !== generation) return
+      if (signal.aborted || props.question.id !== questionId) return
+      if (result.kind === "response" && result.body.status !== "ok") {
+        const failure = sfFailureUiState(result.body.status, result.status)
+        if (failure === "denied" || failure === "session-expired") {
+          setUi({
+            answer: undefined, prepared: undefined, storageVersion: undefined,
+            readState: failure, reviewState: failure,
+          })
+          return
+        }
+      }
+      if (props.owner.generation() !== generation) return
       if (result.kind === "transport-error") {
         setUi("reviewState", "outcome-unknown")
-      } else if (result.body.status !== "ok") {
-        setUi("reviewState", sfFailureUiState(result.body.status, result.status))
+      } else if (result.status === 401 || result.status === 403 || result.body.status !== "ok" || result.status !== 200) {
+        setUi("reviewState", result.status === 401 ? "session-expired" : sfFailureUiState(result.body.status, result.status))
       } else if (result.body.value.answerRef !== preparation.answerRef) {
         setUi("reviewState", "conflict")
       } else {
@@ -174,9 +205,12 @@ export function SfQuestionAnswer(props: Readonly<{
   return (
     <section class="mx-card sf-n24-section" aria-label={t("sf.ui37.answer")}>
       <h3>{t("sf.ui37.answer")}</h3>
-      <Show when={ui.readState === "ready" && ui.answer} fallback={
+      <Show when={ui.reviewState !== "denied" && ui.reviewState !== "session-expired" && ui.readState === "ready" && ui.answer} fallback={
+        ui.reviewState === "denied" || ui.reviewState === "session-expired" ? null :
         <SfStatePanel state={ui.readState}
-          messageKey={"sf.ui37.noAnswers" as import("../../shared/frame").SfCopyKey} />
+          messageKey={ui.readState === "denied" ? "sf.common.noAccess" as import("../../shared/frame").SfCopyKey :
+            ui.readState === "session-expired" ? "sf.common.loginAgain" as import("../../shared/frame").SfCopyKey :
+            "sf.ui37.noAnswers" as import("../../shared/frame").SfCopyKey} />
       }>
         {(answer) => <>
           <p><bdi>{answer().answer}</bdi></p>
@@ -186,13 +220,19 @@ export function SfQuestionAnswer(props: Readonly<{
             onClick={() => void review()}>{t("sf.ui37.answerPrepare")}</button>
         </>}
       </Show>
-      <Show when={ui.prepared && ui.reviewState === "ready"}>
+      <Show when={ui.reviewState === "ready" ? ui.prepared : undefined}>
         {(prepared) => <section class="sf-n24-review" role="group" aria-label={t("sf.ui37.answerSelected")}>
           <p><bdi>{prepared().answer}</bdi></p>
           <p><bdi>{prepared().authorRef}</bdi> · {prepared().observedSourceVersion}</p>
-          <button class="mx-btn primary" type="button"
+          <button class="mx-btn primary" type="button" disabled={!mayConfirm()}
             onClick={() => void confirm()}>{t("sf.ui37.answerConfirm")}</button>
         </section>}
+      </Show>
+      <Show when={ui.reviewState === "denied" || ui.reviewState === "session-expired"}>
+        <SfStatePanel
+          state={ui.reviewState}
+          messageKey={(ui.reviewState === "session-expired" ? "sf.common.loginAgain" : "sf.common.noAccess") as import("../../shared/frame").SfCopyKey}
+        />
       </Show>
       <Show when={ui.reviewState === "outcome-unknown" || ui.reviewState === "conflict" || ui.reviewState === "stale"}>
         <SfStatePanel state={ui.reviewState} messageKey={"sf.ui37.answerUnknown" as import("../../shared/frame").SfCopyKey} />

@@ -4,7 +4,6 @@ import type {
   SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef, SfVersion, SurfaceId,
 } from "@orchestra/schema/sucafina/context"
 import type { SfDraftRegistry } from "../../context/contracts"
-import type { SfJson } from "@orchestra/schema/sucafina/common"
 import { SfChangeReview } from "../../shared/change-review"
 import { SfStatePanel } from "../../shared/states"
 import { SfActionButton, sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
@@ -29,7 +28,6 @@ export type PeopleEditorProps = Readonly<{
   scopeKey: string
   entity: "cio" | "leader" | "member" | "talent"
   recordRef?: SfRef
-  readInput: SfJson
   version: number
   original: PeopleFormValues | null
   fields: readonly PeopleField[]
@@ -83,7 +81,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
     value: initialValues(props),
     revalidation: {
       operationId: props.surfaceId === "CAP07" ? "domain.page.CAP07" : "domain.page.CAP08",
-      input: props.readInput,
+      input: {},
       fieldPaths: props.original
         ? props.fields.filter((field) => Object.hasOwn(props.original!, field.name)).map((field) => field.name)
         : [],
@@ -129,7 +127,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
     const operationRef = local.reviewRef
     if (!current || !operationRef || current.phase !== "reviewing" ||
         current.pendingOperation || current.conflict || !props.admitted || busy()) return
-    if (typeof current.baseVersion !== "number" || !Number.isSafeInteger(current.baseVersion) || current.baseVersion < 0) return
+    if (typeof current.baseVersion !== "number" || !Number.isSafeInteger(current.baseVersion)) return
     const version = current.baseVersion
     const value = { ...current.value }
     const key = crypto.randomUUID()

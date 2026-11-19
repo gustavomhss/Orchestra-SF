@@ -74,12 +74,12 @@ export async function createExportArtifactFixture(options: { maxBytes?: number }
   }
   const note = "Café, ação e e\u0301; literal <scope> & evidence. " + "Complete source note. ".repeat(12) + "END-EXPORT-66-NOTE"
   const actor: Actor = { id: owner, roles: ["admin"], canWrite: true }
-  const environment = (id = randomUUID()) => ({ at: clock.at, id: () => id, directory: [{ id: owner, name: "Synthetic export owner" }] })
+  const environment = (id: string = randomUUID()) => ({ at: clock.at, id: () => id, directory: [{ id: owner, name: "Synthetic export owner" }] })
   await persistence.transaction("dashboard", async (snapshot) => {
     const project = DashboardPortfolio.domain.execute(snapshot, actor, { page: "All Projects", action: "save", version: 0,
-      values: { name: "Export66 source project", budget: 1250, spent: 320, status: "In Progress", risk: "Low", notes: note } }, environment("66000000-0000-4000-8000-000000000001"))
+      values: { name: "Export66 source project", budget: 1250, spent: 320, status: "In Progress", risk: "Low", notes: note } }, environment("export66-project"))
     const privateRow = DashboardPeople.domain.execute(snapshot, actor, { page: "Talent Review", action: "save", version: 0,
-      values: { name: "SYNTHETIC_UNSELECTED_PRIVATE_66", title: "Private fixture", status: "Active", cls: "Talent", outlook: "Promote", notes: "SYNTHETIC_UNSELECTED_PRIVATE_66_NOTE" } }, environment("66000000-0000-4000-8000-000000000002"))
+      values: { name: "SYNTHETIC_UNSELECTED_PRIVATE_66", title: "Private fixture", status: "Active", cls: "Talent", outlook: "Promote", notes: "SYNTHETIC_UNSELECTED_PRIVATE_66_NOTE" } }, environment("export66-private"))
     if (!project.ok || !privateRow.ok) throw new Error("Canonical export source seed rejected")
     return { commit: true, value: undefined }
   })

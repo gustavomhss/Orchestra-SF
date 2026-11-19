@@ -143,13 +143,13 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
             ...section.table.flatMap((row, rowIndex) => {
               const widths = [4900, 2100, 2906] as const
               const fragments = [row.value, row.period, row.sources].map((text, column) =>
-                fitSlideText(text, { fontSize: 10, boxWidthInches: widths[column]! / 1440, marginInches: 0.1 }))
+                fitSlideText(text, { fontSize: 10, boxWidthInches: widths[column]! / 1440, marginInches: 100 / 1440 }))
               // A Word row split across a page does not repeat its first cell. Bound each
               // physical row before cantSplit; never mark an arbitrarily tall row unsplittable.
               const linesPerRow = 12
               const rowCount = Math.ceil(Math.max(...fragments.map((cell) => cell.length)) / linesPerRow)
               const identifier = row.value.slice(0, row.value.indexOf(": "))
-              const identifierLines = fitSlideText(identifier, { fontSize: 10, boxWidthInches: widths[0] / 1440, marginInches: 0.1 })
+              const identifierLines = fitSlideText(identifier, { fontSize: 10, boxWidthInches: widths[0] / 1440, marginInches: 100 / 1440 })
               const periodLines = fragments[1]!
               const label = identifierLines.slice(0, 2).join(" ") + (identifierLines.length > 2 ? "…" : "")
               const periodLabel = periodLines.slice(0, 2).join(" ") + (periodLines.length > 2 ? "…" : "")

@@ -21,6 +21,8 @@ export type SfNativeOperationRoute = Readonly<{
 /** Original dashboard serveDownload supports admin GET ?download=members. */
 export const SfOperationExtensions = Object.freeze({
   "files.export.members": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"members"}},
+  // Original procurement download(kind="po") requires one authorized request selector.
+  "files.export.po": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"po"}},
   "files.export.review": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"sf":"review-download"}},
   "reviews.report.prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"review-report"},"maxRequestBytes":65536},
 } as const satisfies Readonly<Partial<Record<SfOperationId, SfNativeOperationRoute>>>)

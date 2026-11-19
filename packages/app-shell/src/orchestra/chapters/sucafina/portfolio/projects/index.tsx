@@ -7,6 +7,7 @@ import type { SfEditScopeKey, SfIntentRef, SfRef } from "@orchestra/schema/sucaf
 import { useSfContext } from "../../context"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame, type SfCopyKey, type SfLayoutMode, type SfUiState } from "../../shared/frame"
+import { SfDisplayValueText } from "../../shared/frame/presentation"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfSort, type SfCopyKey as SfTableCopyKey } from "../../shared/table"
 import { SfListDetail, SfRecordDetail } from "../../shared/detail"
@@ -19,6 +20,11 @@ import "./projects.css"
 
 const k = (key: keyof typeof SF_U05_COPY) => key as SfCopyKey
 const kt = (key: keyof typeof SF_U05_COPY) => key as unknown as SfTableCopyKey
+const recordedDate = (value: string | null | undefined, missing: string) => {
+  const iso = sfSourceDate(value)
+  if (!iso) return missing
+  return <SfDisplayValueText value={{ kind: "date", isoDate: iso }} />
+}
 type ReviewCommand =
   | Readonly<{ kind: "delete-project"; id: string }>
   | Readonly<{ kind: "save-milestone"; projectId: string; draft: SfMilestoneDraft }>
@@ -148,9 +154,8 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
       identity, baseVersion: version, base: record ? value : null, value,
       revalidation: {
         operationId: "domain.page.CAP10", input: route.query.year === undefined ? {} : { year: route.query.year },
-        fieldPaths: record ? (["name", "desc", "status", "risk", "priority", "pm", "start", "end",
-          "budget", "spent", "pct", "watchList", "notes"] as const).filter((field) => record[field] !== undefined) : [],
-        actionIds: ["save"],
+        fieldPaths: ["data.projects", "versions"],
+        actionIds: ["save", "delete", "save-milestone", "delete-milestone"],
       },
     })
     setDraft(holder)
@@ -278,8 +283,8 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
         </dl> },
       { id: "schedule", titleKey: kt("sf.u05.projects.schedule"), state: "ready" as const,
         content: <dl class="sf-u05-detail-fields">
-          <div><dt>{t("sf.u05.projects.form.start")}</dt><dd>{sfSourceDate(row.start) ?? t("sf.u05.projects.notRecorded")}</dd></div>
-          <div><dt>{t("sf.u05.projects.form.end")}</dt><dd>{sfSourceDate(row.end) ?? t("sf.u05.projects.notRecorded")}</dd></div>
+          <div><dt>{t("sf.u05.projects.form.start")}</dt><dd>{recordedDate(row.start, t("sf.u05.projects.notRecorded"))}</dd></div>
+          <div><dt>{t("sf.u05.projects.form.end")}</dt><dd>{recordedDate(row.end, t("sf.u05.projects.notRecorded"))}</dd></div>
         </dl> },
       { id: "budget-spent", titleKey: kt("sf.u05.projects.financial"), state: "ready" as const,
         content: <dl class="sf-u05-detail-fields">
@@ -295,7 +300,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
           <ul class="sf-u05-milestones">
             <For each={row.milestones ?? []}>{(milestone) => <li>
               <strong><bdi>{milestone.name}</bdi></strong>
-              <small>{sfSourceDate(milestone.date) ?? t("sf.u05.projects.notRecorded")} · {milestone.status ?? t("sf.u05.projects.notRecorded")}</small>
+              <small>{recordedDate(milestone.date, t("sf.u05.projects.notRecorded"))} · {milestone.status ?? t("sf.u05.projects.notRecorded")}</small>
               <Show when={props.route.kind === "milestones" && sourceVersion() !== null}>
                 <SfMilestoneEditor projectId={row.id} source={milestone}
                   allowed={canSaveMilestone() && !view.uncertain}

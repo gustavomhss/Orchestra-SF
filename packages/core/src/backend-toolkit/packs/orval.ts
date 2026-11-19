@@ -1,5 +1,5 @@
 import type { Pack } from "../manifest"
-import lock from "./orval.package-lock.json"
+import lock from "./orval.package-lock.json" with { type: "json" }
 
 // The lock keeps every platform's optional packages (esbuild's among them), so one lock installs on all five targets.
 const VERSION = "8.39.0"

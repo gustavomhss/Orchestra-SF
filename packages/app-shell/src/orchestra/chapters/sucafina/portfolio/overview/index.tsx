@@ -7,6 +7,7 @@ import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
+import { SfDisplayValueText } from "../../shared/frame/presentation"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey } from "../../shared/table"
 import { sfReadProjects, sfAdmitted, sfOwnerMatches } from "../projects/producer"
@@ -16,6 +17,11 @@ import "./overview.css"
 
 const k = (value: keyof typeof SF_U05_COPY) => value as SfCopyKey
 const kt = (value: keyof typeof SF_U05_COPY) => value as unknown as SfTableCopyKey
+const recordedDate = (value: string | null | undefined, missing: string) => {
+  const iso = sfSourceDate(value)
+  if (!iso) return <span>{missing}</span>
+  return <SfDisplayValueText value={{ kind: "date", isoDate: iso }} />
+}
 
 /** CAP09: read-only review of live source, never a stored historical snapshot. */
 export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Element {
@@ -103,7 +109,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
     { id: "risk", labelKey: kt("sf.u05.projects.risk"), align: "start", widthPolicy: { kind: "content", minPx: 90, maxPx: 140 },
       render: (row) => <span>{row.risk ?? t("sf.u05.projects.notRecorded")}</span> },
     { id: "end", labelKey: kt("sf.u05.projects.target"), align: "start", widthPolicy: { kind: "content", minPx: 130, maxPx: 180 },
-      render: (row) => <span>{sfSourceDate(row.end) ?? t("sf.u05.projects.notRecorded")}</span> },
+      render: (row) => recordedDate(row.end, t("sf.u05.projects.notRecorded")) },
     { id: "watchList", labelKey: kt("sf.u05.projects.watch"), align: "center", widthPolicy: { kind: "content", minPx: 90, maxPx: 150 },
       render: (row) => <span>{row.watchList === null || row.watchList === undefined ?
         t("sf.u05.projects.notRecorded") : row.watchList ? "✓" : "—"}</span> },
@@ -179,7 +185,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
                     <tbody>
                       <For each={milestoneRows()}>{(row) => (
                         <tr><th scope="row"><bdi>{row.project.name}</bdi></th><td><bdi>{row.milestone.name}</bdi></td>
-                          <td>{sfSourceDate(row.milestone.date) ?? t("sf.u05.projects.notRecorded")}</td>
+                          <td>{recordedDate(row.milestone.date, t("sf.u05.projects.notRecorded"))}</td>
                           <td>{row.milestone.status ?? t("sf.u05.projects.notRecorded")}</td></tr>
                       )}</For>
                     </tbody>
