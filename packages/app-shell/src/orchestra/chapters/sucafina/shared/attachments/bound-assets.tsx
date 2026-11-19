@@ -3,6 +3,8 @@ import { createStore } from "solid-js/store"
 import { createSfFilesClient, readSfFilesSignedAssetQuery } from "@orchestra/client/sucafina/files"
 import { useLanguage } from "@/context/language"
 import { useSfContext } from "../../context"
+import { SfStatePanel } from "../states"
+import type { SfCopyKey } from "../frame/types"
 
 /**
  * WS-7: UI adapter to the ORIGINAL A06 source asset producer.
@@ -240,7 +242,7 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
 
   const label = (asset: PublicAsset) => assetName(asset) ?? t("orchestra.sf.s04.bound.unidentified")
   return <div class="sf-bound-assets" data-sf-asset-record={props.recordRef} data-sf-asset-phase={ui.phase}>
-    <Show when={props.assets.length} fallback={<p>{t("orchestra.sf.s04.bound.empty")}</p>}>
+    <Show when={props.assets.length} fallback={<SfStatePanel state="empty" messageKey={"orchestra.sf.s04.bound.empty" as SfCopyKey} />}>
       <ul><For each={props.assets}>{(asset) => {
         const id = assetRef(asset.id)
         const name = label(asset)

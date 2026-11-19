@@ -25,7 +25,6 @@ type State = {
 }
 const key = (value: string) => value as SfCopyKey
 const TYPES: readonly KindFilter[] = ["all", "document", "record", "calculation", "receipt", "case-event", "policy"]
-const EVIDENCE_LEVELS = ["observed", "claim", "assumption", "proposal", "decision"] as const
 
 /**
  * The published GET search route serializes q in the HTTP URL. Neither an
@@ -129,7 +128,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
       }
       if (result.body.status === "ok") {
         setScreen({
-          state: result.body.value.matches.length ? "ready" : screen.kind === "all" ? "empty" : "filtered-empty",
+          state: result.body.value.matches.length ? "ready" : "filtered-empty",
           matches: result.body.value.matches,
           limitations: result.body.value.limitations,
           sourceRevision: result.headers["x-sf-access-revision"] ?? revision,
@@ -150,10 +149,6 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
       setScreen({ state: "unavailable", matches: [], limitations: [], sourceRevision: null })
     })
   }
-  const evidenceLabel = (level: string) =>
-    (EVIDENCE_LEVELS as readonly string[]).includes(level)
-      ? t(key(`sf.ui31.evidence.${level}`))
-      : t(key("sf.common.unknown"))
   const retry = () => {
     if (screen.searched && screen.submitted && sourceReady()) {
       submit()
@@ -167,8 +162,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
       : screen.state === "loading" ? "sf.common.loading"
       : screen.state === "invalid" ? "sf.ui31.queryRequired"
       : screen.state === "stale" ? "sf.common.stale"
-      : screen.state === "empty" ? "sf.common.empty"
-      : screen.state === "filtered-empty" || (screen.searched && screen.kind !== "all" && !selected().length) ? "sf.common.filterEmpty"
+      : screen.state === "filtered-empty" || (screen.searched && !selected().length) ? "sf.common.filterEmpty"
       : "sf.common.unavailable")
 
   return (
@@ -228,9 +222,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
         <h2 id="sf-u42-results">{t(key("sf.ui31.results"))}</h2>
         <Show when={screen.searched && screen.state === "ready"}>
           <p role="status">
-            {screen.kind === "all"
-              ? t(key("sf.ui31.queryCount"), { shown: selected().length })
-              : t(key("sf.ui31.filteredCount"), { shown: selected().length })}
+            {t(key("sf.ui31.resultCount"), { shown: selected().length, returned: screen.matches.length })}
           </p>
         </Show>
         <Show
@@ -247,10 +239,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
         >
           <Show when={!screen.searched}><p>{t(key("sf.ui31.noQuery"))}</p></Show>
           <Show when={screen.searched && selected().length === 0}>
-            <SfStatePanel
-              state={screen.kind === "all" ? "empty" : "filtered-empty"}
-              messageKey={key(screen.kind === "all" ? "sf.common.empty" : "sf.common.filterEmpty")}
-            />
+            <SfStatePanel state="filtered-empty" messageKey={key("sf.common.filterEmpty")} />
           </Show>
           <Show when={selected().length > 0}>
             <ol class="list-decimal ps-5" data-sf-search-results="authorized">
@@ -262,7 +251,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
                       <dt>{t(key("sf.ui31.typeFilter"))}</dt>
                       <dd>{t(key(`sf.ui31.kind.${match.documentRef.kind}`))}</dd>
                       <dt>{t(key("sf.ui31.evidenceLevel"))}</dt>
-                      <dd>{evidenceLabel(match.documentRef.evidenceLevel)}</dd>
+                      <dd><bdi>{match.documentRef.evidenceLevel}</bdi></dd>
                     </dl>
                     <p>{t(key("sf.ui31.sourceNavigationRequiresAuth"))}</p>
                   </li>
