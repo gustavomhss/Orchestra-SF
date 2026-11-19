@@ -1,10 +1,13 @@
 # Handoff — finish-operations-20261119
 
-SHA: 877f8d16828f58ba849aaf7e58adf7977ddbc1d3 (código; este documento é um checkpoint posterior)
+SHA: 9865ba7d31f660a4f534bedf54e12d6396ae3ca0 (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
 ## Feito
+
+- 9865ba7d31f660a4f534bedf54e12d6396ae3ca0 admite somente o seletor request já declarado no schema CAP26 e enviado pelos dois renderers de aprovação. native-ui/procurement.ts:29 antes aceitava apenas year/month e devolvia 400 needs-input antes da autoridade. A correção preserva a fila C02 original, os gates de ator, a versão e todas as asserções. Ainda não foi executada em Actions.
+- Operations6 (44619924653) chegou às cinco jornadas reais com três typechecks e ClamD aprovados: OP-PROC-01 passou; os quatro bloqueios seguintes estão discriminados abaixo. Nenhum resultado foi generalizado para toda a suíte.
 
 - O gate 44612655999 registrou o estágio real: operation-input-schema em CAP25/create e CAP27/create, antes do codec/rota/key/stamp. Os campos enumeráveis têm somente nomes permitidos, os tipos originais e excess:0; isso não é um resultado de comando. O builder enviava valores guardados no Solid store diretamente à fronteira.
 - O unwrap simples de d382a3a48d71a5899c504d88aa0ac171688ded79 foi insuficiente: o run 44614040615 repetiu a recusa operation-input-schema nos dois creates. O checkpoint 849847e6e68a4805d7ee047beb43709e378197f3 usa nos três builders (Requests, Suppliers, Sourcing) o padrão já existente em Settings: structuredClone(unwrap(value)). Preserva todos os campos, inclusive undefined, usa uma única cópia para digest e POST e mantém a comparação exata com o review após await. No run 44616217286 os dois creates finalmente emitiram POST; Supplier passou com identidade/número/reload, enquanto PR recebeu 403. Nenhum schema/F02 foi relaxado.
@@ -49,6 +52,13 @@ Estado: partial
 - OP-IMP-01 não presume um ID em POST body.value: comprova exatamente um ID novo na projeção CAP23 original, igualdade da linha nativa e identidade no editor aberto pelo botão select real, além do nome/ano/reload já existentes.
 
 ## Pendente
+
+### Bloqueios atuais observados em Operations6
+
+- packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:106 — aprovação não chegou a Review decision: o handler CAP26 respondeu 400 needs-input por rejeitar request. Correção de seletor 9865ba7d preparada, aguardando gate.
+- packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:150 — POST submit_pr original retornou HTTP200, mas response.json() perdeu o recurso DevTools (No data found). Preservar os bytes originais antes da navegação/releitura, sem repetir POST nem retirar a asserção do corpo.
+- packages/app-shell/e2e/sucafina/operations-support/imports.ts:167 — F01 mostrou Sucafina route not admitted; contexto original anunciou files.import-targets indisponível. O integrador cuida do probe original de Imports.
+- packages/app-shell/e2e/sucafina/operations-support/documents.ts:103 — Supplier novo e detalhe CAP27 montaram, porém anexos ficaram desabilitados porque o contexto original declarou files.asset.upload/link/download e documents indisponíveis. Readiness precisa observar os serviços/armazenamento/admissão reais; não liberar o controle à força.
 
 - packages/app-shell/e2e/sucafina/operations.spec.ts:18, :23 e :33 — os pré-requisitos PR/Supplier passaram no run 44618682048, mas os fluxos completos de snapshot, recusa e documentos ainda precisam do gate combinado com o importador. A recusa pré-rede dos creates foi resolvida pelo snapshot completo; a recusa PR403 foi resolvida pela conversão numérica original. Não ampliar permissões nem remover os asserts posteriores.
 - packages/app-shell/e2e/sucafina/operations-support/imports.ts:167 — Ops5 avançou após CAP23 e falhou em [data-import-workbench] ausente. O integrador é dono da ligação do importador nativo original e da próxima composição. Esta branch não modifica esse arquivo neste checkpoint.
@@ -114,3 +124,6 @@ Estado: partial
 
 - [44616217286](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44616217286) FAILURE, job 135885494477, cleanup 135889734949 SUCCESS. Snapshot a5e85904327c2a0455b735ac6ebc788e15b52595, base Assembly29, builders 849847. Três typechecks SUCCESS; 1 passed / 1 failed em 1,2 min. Supplier criou pelo POST real200, conservou identidade/número e passou após reload. PR emitiu POST real403 e falhou em procurement-snapshot.ts:128; não houve recusa F02 observada. Artifact 14576700012 contém evidência de teste, não package digest.
 - [44618682048](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44618682048) SUCCESS, job 135894121480, cleanup 135897227555 SUCCESS. Snapshot 03a1ddcffcc9c62937e011b4351120b2e5d6b5be = Assembly29 b29e5909fcee7bfe49cdc933beebe056d63afc78 + dois arquivos de 877f8d + requisição estreita native-create.spec.ts. CLI/app/E2E typechecks SUCCESS; 2 passed em 1,2 min. PR exige POST200, values.pr.estAmount numérico100 e a identidade exata após reload; Supplier exige POST200, identidade/número e igualdade após reload. Usa F02 final da base, sem diagnóstico temporário. Este gate não executou os cinco cenários Operations completos nem o scanner de uploads.
+
+- [44619924653](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44619924653) FAILURE, job 135898520754, cleanup 135903491809 SUCCESS. Snapshot ca3727278c379646a7dc7a91e13940ab53b849c9 = Assembly30 fa3f3850494f0a42e9096858af0a447f44c61774 + dois blobs 877f8d + handoff + request nominal operations.spec.ts. CLI/app/E2E typechecks e ClamD real SUCCESS; 1 passed / 4 failed em 3,9 min. OP-PROC-01 passou. Demais falhas: aprovação CAP26 needs-input; resposta submit_pr HTTP200 indisponível no DevTools; Imports F01 route not admitted; anexos Supplier desabilitados por files.* indisponível no contexto. Artifact 14577090913 é evidência, não package digest.
+- Auditorias read-only [44621812706](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44621812706) e [44622222711](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44622222711) SUCCESS extraíram somente evidência já produzida pelo run acima. Documentos: audit-operations6-20261119/docs/handoff/observed-operations-screens-44619924653.md e audit-opscontext-20261119/docs/handoff/observed-opscontext-44619924653.md. Não são novos gates funcionais.
