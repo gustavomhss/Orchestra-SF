@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: 4a6593f2bc832bcc73e1126eecb27a6b5355ac55 (comparação estrutural e retenção readonly após gate6; ainda não qualificado)
+SHA de código: e0793cbb683c97352e8f3d1d4a52e2035032da1b (inclui digest Node69711218 e confirmação Applyfc5c0d; correções após gate7, ainda sem gate8)
 Data: 2026-11-19
 Estado: partial
 
@@ -22,11 +22,12 @@ Estado: partial
 - O código de produtor e runtime/application.ts permanecem intocados.
 
 ## Pendente
-- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:1`: qualificar os 5 cenários (2 consumer-read e 3 host-workbench), sem aumento dos timeouts originais. Composição atual: `fa3f3850494f0a42e9096858af0a447f44c61774` (assembly30), incluindo health/capture/history, Evidence e observedAt UI47. Parent prepara a próxima composição com estes quatro deltas.
-- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/capture.tsx:1`: novo consumidor original implementado, ainda sem gate. Save desconhecido não é repetido; GET histórico não atribui recibo a tentativa desconhecida.
+- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:135,530`: casos1/5 ainda sem conclusão de sucesso. Gate7 passou integralmente casos2/3/4; caso1 chegou a saves/CAS e falhou no cálculo esperado executado em Node, corrigido69711218; caso5 confirmou Apply/recibo original antes do timeout, corrigida apresentaçãofc5c0d e navegação repetidae0793c.
+- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx:412`: confirmação real durante releitura aguarda gate8 no snapshot composto; owner/generation/transport precisam continuar atuais para exibi-la.
+- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/capture.tsx:1`: captura/histórico/imutabilidade e source render passaram suas etapas no caso5, mas a jornada completa ainda aguarda o próximo gate. Save desconhecido não é repetido.
 - `modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:139,241,461` e `.../dashboard-installed-closure/consumer-read.test.ts:53,168`: ainda mantidos até equivalência nativa passar; root coordena o remapeamento canônico. Os 2 units puros host-workbench :406/:430 permanecem.
 - Parent root compõe F02, health e registros; nunca copiar common/registry antigos desta branch sobre os adapters compostos.
-- Sem qualificação de UI ou integração afirmada neste checkpoint.
+- Estado partial; sem qualificação dos cinco fluxos ou integração afirmada.
 
 ## Decisões e justificativas
 - Asserções removidas: nenhuma. Os testes legados continuam presentes. Todos os fatos/negativos foram portados para 5 jornadas Playwright; a mecânica de checkbox/refresh do console virou a confirmação S03 original, releitura do review e ausência de segundo Apply enquanto o retorno original está retido. O valor financeiro permanece condicionado/null do fixture original, sem fabricar baseline novo.
@@ -38,7 +39,7 @@ Estado: partial
 - Registry/common nesta branch têm base main350dfc1, anterior à composição atual de adapters. Ao compor com a branch retry, aplicar apenas os dois novos IDs, preservando os overrides de rotas e a construção SfFrozenOperationRoutes daquela branch.
 
 ## Como retomar
-1. Sobrepor os quatro deltas do código `4ed90938b10c3532b773fb5732688608e7a589f2` à composição corrente do root (assembly30 já contém os nove blobs anteriores). O dispatcher recebe somente o import e branch da leitura privada; preservar os outros revalidadores.
+1. Sobrepor somente proposals/index.tsx de fc5c0d e proposals.spec.ts de e0793c à composição corrente do root (assembly33 f9ade6c já contém os deltas anteriores). O spec inclui o digest Node69711218. Preservar todos os outros revalidadores e health compostos.
 2. Pedido test-ci: package `app`, directory `packages/app-shell`, runner `playwright`, config `e2e/playwright.production.config.ts`, args `["e2e/sucafina/dashboard-installed/proposals.spec.ts"]`, env ORCHESTRA_CHANNEL=prod.
 3. Corrigir erros concretos, registrar SHA/run/resultado. Depois remapear as jornadas Bun correspondentes, mantendo as duas unidades puras e todas asserções de negócio.
 
@@ -101,3 +102,18 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 - Sob retirada de escrita, o produtor realmente emite nova incarnation/refId/refDigest da fonte, embora os campos materiais permaneçam iguais. `needsCurrent` continua true; comparação e aviso de mudança continuam visíveis; salvar continua bloqueado. A UI acrescenta a informação factual de que a edição local foi retida, junto ao aviso da autoridade de escrita.
 - Apenas `proposals/draft.tsx` foi alterado neste delta. Nenhuma asserção, timeout, workflow de produto, F01 global ou produtor foi modificado. As 211 chamadas expect permanecem.
 - Estado continua partial; `proposals.spec.ts:134,241,383,438,529` e `capture.tsx:1` aguardam gate7 no próximo snapshot composto. Os cinco testes legados continuam preservados até equivalência qualificada.
+
+## Gate7 e auditoria original do encerramento
+- Run [44623930895](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44623930895): FAILURE, **3 passed / 2 failed**; CLI/host, app-shell e SF E2E typechecks SUCCESS. Snapshot `fc566a0a339b674f71166119eac4563551315287`, parent assembly33 `f9ade6c8bf9b872400dbb1a49c70e867b2e4d701`. Job135912617792; cleanup135916439779 SUCCESS.
+- Casos2/3/4 passaram integralmente: leitura interrompida e retirada real, retenção readonly/capture403, conflito de mesma identidade com duas propostas independentes. Nenhuma mudança nesses casos após esse run.
+- Caso1 passou savesv1/v2 e CAS409; falhou no cálculo esperado da chave C08 porque Playwright executa em Node e digestSfValue usa Bun.CryptoHasher. Em69711218 o spec usa `createHash("sha256").update(canonicalSfValue(original.id)).digest("hex")`: canonicalização original e SHA256 idênticos, sem duplicar/alterar algoritmo do produto.
+- Auditoria [44625382756](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44625382756), SUCCESS, reteve somente observation do caso1; o timeout do caso5 interrompeu seu attachment. Não foi alegado estado de UI ou deadlock com base nessa ausência.
+- Auditoria [44625975743](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44625975743), SUCCESS, extraiu a timeline original do mesmo artifact14578598211, sem reteste. Documento `audit-proposal-screens-20261119:docs/handoff/observed-proposal-timeline-44623930895.md`.
+- Timeline do caso5: prepare200/ok aos43.8s; review200/ok e campos antes/depois aos51.5s; Revise com texto igual aos55.7s; Apply200/ok, botão bloqueado, Revise sem reexecutar, tráfego Apply único e um recibo C08 aos57.8s. A espera de confirmação visible começou aos58s e foi interrompida pelo limite original60s.
+- O alerta Applied ficava dentro do SfStatePanel; a releitura original do workbench iniciada após Apply colocava esse panel em loading e ocultava o alerta. Isso é causa de apresentação observada no código; não houve prova de deadlock ou falha do produtor.
+
+## Correções causais após gate7 (aguardam gate8)
+- `fc5c0d07377ba8f995da8fa48b864d4b287d891f` muda somente proposals/index.tsx: confirmação recebida do Apply real aparece fora do conteúdo condicionado pela leitura. Seu ownerKey, geração e transport devem ser exatamente os capturados na resposta original; troca de contexto não restaura confirmação. Releitura do workbench/recibo continua; não inventa receipt/status ou nova operação.
+- `e0793cbb683c97352e8f3d1d4a52e2035032da1b` muda somente a navegação do caso5: após atualizar o registro externamente, usa Refresh access original na UI54/new já aberta. A primeira travessia CAP02→New private proposal continua verificada; evita repetir esse desvio completo. Observa a resposta original de workbench e verifica HTTP200/ok, painel visível e ausência do caso confidencial antes da seleção da fonte atual.
+- Todas as **211 chamadas expect originais permanecem**; quatro checks da releitura foram acrescentados (215 atuais). Nenhuma asserção de dado/negação/CAS/recibo foi removida ou enfraquecida. Timeouts10/15/60s permanecem; nenhuma repetição de mutação, alteração de health/produtor ou workaround global.
+- Os cinco testes legados ainda não foram removidos/remapeados. Root revisa os dois commits separáveis antes de compor e executar o único gate8.
