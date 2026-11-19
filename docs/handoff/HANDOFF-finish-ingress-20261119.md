@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: 102b3074ed1ee41a5af5f736edca18e8d16daf36 (código; este documento é o commit seguinte)
+SHA: ec9236920bd810012de727c9b77f5f2eacb4c14f (código; este documento é o commit seguinte)
 Data: 2026-11-19
 Estado: partial
 
@@ -179,3 +179,14 @@ Toda verificação foi executada em GitHub Actions. Nenhum resultado foi fabrica
 - Asserções removidas: nenhuma. O guard de RecordEvidence ficou mais estrito (surface, tipo e ID), e o guard da referência individual verifica período e revalidação. A preparação sintética continua explicitamente setup; não constitui teste de criação pela UI. Permanecem exatamente 2 Apply POST / 1 efeito, retry explícito, 409 terminal, perda após commit real, CAS, reload, processo novo sobre o mesmo SQLite e recuperação repetível.
 - Pendente/unbound: packages/app-shell/e2e/sucafina/decisions-support/c12-host.ts:179 precisa qualificar a leitura/produção individual; decisions-native-recovery.spec.ts:7 e :12 ainda não executaram a prova nativa. recovery-ui.test.ts:72/:197 não foi removido ou remapeado. Não declarar sucesso C12 com o run de F02 ou com auditoria.
 - Retomar: compor somente c12-host.ts deste código no candidato que contém os demais arquivos C12. A raiz executará o mesmo spec estreito uma vez após compor; se houver recusa, usar o status original registrado antes de preparar o caso. Não repetir gate sem nova causa observada.
+
+
+## C12native5 — seleção de trabalho persistida
+
+- Código ec9236920bd810012de727c9b77f5f2eacb4c14f; estado partial. Run [44618293094](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44618293094), snapshot883e62ec6e40de814f368c4e5aefacafa44decf7, job135892774710: FAILURE, 1 failed / 1 did not run; typechecks CLI/app/SF E2E SUCCESS; cleanup135896690169 SUCCESS. A fixture parou antes do browser em c12-host.ts:180, C12_ORIGINAL_SOURCE_READ_FAILED status=unavailable.
+- Auditoria [44619636116](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44619636116) SUCCESS somente na extração; artifact14575717381, documento audit-c12-seed5-20261119/docs/handoff/observed-c12-seed5-20261119.md.
+- Causa conferida no produtor: product/procurement/queue-page.ts:37–43 libera a seleção C02 e seus filhos no encerramento da página; sources.ts:225–230 remove os membros dessa seleção, preservando outras seleções equivalentes. A ref UUID da linha C02 não pode ser reaberta depois pelo sf_request_read. O descriptor é o original createProcurementCapabilities, business-services.ts:485; os grants continuam exatamente os do fixture canônico, sem extensão.
+- Feito: o setup conserva a selectionRef real de procurementSelections.create. Admite e despacha sf_work_list com o contrato fechado original {selectionRef,period} (contracts/operations.ts:110), decodifica a resposta e seleciona exatamente uma evidência da requisição PR-1 por identidade/digest. Esse requestRef pertence à seleção persistida. O sf_request_read subsequente e a emissão/resolução individual original continuam intactos. A evidência C02 permanece apenas prova da linha; nenhuma referência é inventada ou reparada.
+- Asserções removidas: nenhuma. Nenhuma alteração em authority, dispatcher, source registry, queue-page, factory, withCase, retry ou grants. Nenhum total/baseline/coverage/recibo sintético adicional. Se work/source recusarem, o erro inclui status e razão originais antes de qualquer preparação.
+- Pendente/unbound: decisions-support/c12-host.ts:182 e :202 precisam qualificar as leituras da seleção persistida e da fonte; decisions-native-recovery.spec.ts:7/:12 continuam sem prova de navegador. recovery-ui.test.ts:72/:197 permanece sem remapeamento. O ingresso/foundation já mergeado não foi reaberto.
+- Retomar: compor somente c12-host.ts deste código sobre Assembly30 ou posterior e executar o mesmo narrow C12 uma vez com a raiz; o novo gate só é justificado pela disposição do seletor temporário comprovada acima. Conservar exatamente2ApplyPOST/1efeito, CAS, reload, SQLite novo processo, perda de resposta e recuperação repetível.
