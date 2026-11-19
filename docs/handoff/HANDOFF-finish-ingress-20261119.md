@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: 642c94e483b1bfdea24ee1d118e6d1e18e5597da (checkpoint seed C12 original; Dashboard4d778b822ddf8f72a379c62228fb0c354a0df708; harness44be0f18917d71476c575660a29e571f19a47f92; ingresso qualificado15388053117883174329454207e60e2a878f5426)
+SHA: 102b3074ed1ee41a5af5f736edca18e8d16daf36 (código; este documento é o commit seguinte)
 Data: 2026-11-19
 Estado: partial
 
@@ -157,3 +157,14 @@ Toda verificação foi executada em GitHub Actions. Nenhum resultado foi fabrica
 - Asserções removidas: os guards de setup HTTP200/outputRef foram substituídos pelos guards de transação C08 e readback acima. Nenhuma asserção do fluxo C12 foi retirada, relaxada ou aumentada em timeout.
 - Pendente/unbound: decisions-native-recovery.spec.ts:7 e :12 aguardam o gate C12native3 coordenado pela raiz. Os unitários recovery-ui.test.ts:72/:197 continuam intactos até qualificar a equivalência nativa. Não reutilizar auditoria, F02 ou typecheck como prova do efeito/recibo.
 - Retomar: compor somente o novo c12-host.ts sobre o candidato atual e executar o mesmo narrow uma vez. Se a transação inicial recusar, diagnosticar o status original; não contornar a autoridade.
+
+## C12native3 — seleção original de período antes de withCase
+
+- Run [44612790098](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44612790098), snapshot bf9bde5297535ddaf37adba44f93fa2b599614c0, job135873474757: FAILURE, 1 failed / 1 did not run. CLI, app-shell e SF E2E typechecks passaram; cleanup135879815477 SUCCESS. Apply/Recover ainda não executaram no browser.
+- [Auditoria44614911431](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44614911431) SUCCESS somente extração do log original do artifact14574366955, sem novo teste. Documento audit-c12-seed3-20261119/docs/handoff/observed-c12-seed3-20261119.md: o caso e a escolha foram persistidos, mas prepareC12Change:249 recebeu HTTP403, status denied, reason case-selection-unavailable.
+- Causa conferida: business-services.ts:95–116 exige selectedPeriod para resolver evidência Procurement; a projeção C02 registra pagePeriods apenas durante aquela requisição (:616–621), removendo depois. O fixture C12 original chama procurementSelections.create antes da emissão de evidência; o harness instalado tinha omitido esse setup. Atlas já inicializa antes de publicar identity (host-context.ts:878), portanto não foi recriado.
+- Código 102b3074ed1ee41a5af5f736edca18e8d16daf36, somente decisions-support/c12-host.ts:125: chama o serviço original publicado procurementSelections por ui.admit/validate(sf_work_list, digest do work-selection), confere resultado e período e executa ui.finish em finally. Usa a Request do operador matriculado real, a autoridade já composta e o mesmo SQLite. A seleção é realizada também ao reabrir o processo, antes de continuar o caso retido.
+- Não altera grants, factory, withCase, produtores, schemas, períodos globais, F01 ou política de retry. Nenhuma authority paralela, callback de autorização substituto ou resultado de domínio fabricado.
+- UI39 review/apply/recover foram conferidos após diagnóstico de proxy em Operations: seus comandos são literais de campos escalares, e applyIntent é variável comum. Não foi aplicado unwrap por hipótese.
+- Asserções removidas: nenhuma. Mantidos CAS, exatamente2POST Apply/1efeito, perda após recibo real, concorrência autorizada, reload, processo novo/SQLite, recuperação repetida e purga. Unitários legados continuam intactos.
+- Pendente/unbound: decisions-native-recovery.spec.ts:7/:12 aguardam C12native4. O integrador deve compor apenas c12-host.ts deste código e lançar o mesmo spec estreito uma vez. Este delta ainda não tem run de qualificação; auditoria e tipos não substituem prova UI/C08.
