@@ -311,7 +311,7 @@ async function pasteMonthly(page: Page, text: string) {
   const pending = page.waitForResponse((response) => monthlyRequest(response.request(), "preview"))
   await grid.focus()
   await page.keyboard.press("Control+V")
-  const body = Schema.decodeUnknownSync(SfPlannerMonthlyPreview.output)(await responseBody(await pending))
+  const body = Schema.decodeUnknownSync(Schema.toType(SfPlannerMonthlyPreview.output))(await responseBody(await pending))
   if (body.status !== "ok") throw new Error("The original monthly preview was unavailable")
   return body
 }
@@ -320,7 +320,7 @@ async function applyMonthly(page: Page) {
   await monthlyEditor(page).getByRole("button", { name: "Apply reviewed rows", exact: true }).click()
   const response = await pending
   const input = Schema.decodeUnknownSync(SfPlannerMonthlyApply.input)(response.request().postDataJSON())
-  const body = Schema.decodeUnknownSync(SfPlannerMonthlyApply.output)(await responseBody(response))
+  const body = Schema.decodeUnknownSync(Schema.toType(SfPlannerMonthlyApply.output))(await responseBody(response))
   if (body.status !== "ok") throw new Error("The original monthly apply was unavailable")
   return { input, value: body.value }
 }
