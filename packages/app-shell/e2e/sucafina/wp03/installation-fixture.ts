@@ -93,6 +93,7 @@ export async function startPlannerInstallation(info: TestInfo) {
         return body.login
       } catch { return "not-listening" }
     }, { message: "the real CLI serves the isolated local-operator installation", timeout: 75_000 }).toBe("local-operator")
+    console.info("[sf-installed] The real CLI installation is ready")
     const config = JSON.parse(await readFile(environment.SUCAFINA_LOCAL_CONFIG, "utf8")) as { localOperator: { installationId: string; uid: number } }
     const handoff = (await readFile(path.join(directory, "open-local.html"), "utf8")).match(/location\.replace\(("[^"\r\n]*")\)/)?.[1]
     if (!handoff) throw new Error("Production enrollment artifact is malformed")

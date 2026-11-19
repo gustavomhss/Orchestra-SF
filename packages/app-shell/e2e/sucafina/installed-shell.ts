@@ -29,7 +29,11 @@ export async function connectInstalledShell(page: Page, installation: {
   if (!password) throw new Error("The isolated host has no issued credential")
   const discovery = new URL("/api/sucafina/installations", installation.origin)
   discovery.search = new URLSearchParams({ select: "location", "location[directory]": installation.root }).toString()
-  const response = await fetch(discovery, { headers: { Authorization: "Basic " + Buffer.from("orchestra:" + password).toString("base64") } })
+  console.info("[sf-installed] Reading authenticated host discovery")
+  const response = await fetch(discovery, {
+    headers: { Authorization: "Basic " + Buffer.from("orchestra:" + password).toString("base64") },
+    signal: AbortSignal.timeout(10_000),
+  })
   expect(response.status, "The selected host must expose real installation discovery").toBe(200)
   const discovered = Schema.decodeUnknownSync(SfInstallationList, { onExcessProperty: "error" })(await response.json())
   expect(discovered.installations).toHaveLength(1)
@@ -39,6 +43,7 @@ export async function connectInstalledShell(page: Page, installation: {
   expect(binding.authMode).toBe("local-operator")
   const contextURL = new URL(binding.mount + "/api/ui/context", binding.publicOrigin)
   contextURL.search = new URLSearchParams({ installationId: binding.installationId, projectId: binding.projectId, hostId: binding.hostId }).toString()
+  console.info("[sf-installed] Reading the original native context")
   const contextResponse = await page.request.get(contextURL.toString())
   expect(contextResponse.status(), "The operator session must admit its original native context").toBe(200)
   const context = Schema.decodeUnknownSync(SfContextResult, { onExcessProperty: "error" })(await contextResponse.json())
@@ -46,6 +51,7 @@ export async function connectInstalledShell(page: Page, installation: {
   expect(context.value.stamp).toMatchObject({ installationId: binding.installationId, projectId: binding.projectId,
     hostId: binding.hostId, principalRef: installation.actorId })
 
+  console.info("[sf-installed] Selecting the issued server credential in the shell")
   await page.goto(installation.origin + "/")
   await page.getByRole("button", { name: "Status", exact: true }).click()
   await page.getByRole("button", { name: "Manage servers", exact: true }).click()
@@ -60,6 +66,7 @@ export async function connectInstalledShell(page: Page, installation: {
   await add.getByRole("button", { name: "Add server", exact: true }).click()
   await expect(add).toHaveCount(0)
 
+  console.info("[sf-installed] Selecting the installation project in the shell")
   const profile = page.getByRole("button", { name: "Choose project", exact: true })
   await profile.click()
   await page.locator('[data-component="orchestra-profile-picker"]').getByRole("menuitem", { name: "Add project", exact: true }).click()
