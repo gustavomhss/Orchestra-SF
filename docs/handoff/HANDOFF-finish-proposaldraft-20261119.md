@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: 092c6d202557960541fb43b68e2cf995ee489e38 (consumo do CommandReceipt original após gate8; ainda sem gate9)
+SHA de código: deff10482b4d2846ca838bb3e8e6f0e205f81f56 (recibo original e limpeza antes da releitura explícita; aguardando gate9)
 Data: 2026-11-19
 Estado: partial
 
@@ -136,3 +136,8 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 - Remove apenas a redescoberta automática redundante desse acknowledgement. O botão Refresh source chama o leitor original explicitamente, sob a autoridade atual. Não se alterou produtor, C08, withCase, cache ou transação, nem se alegou deadlock resolvido.
 - O spec mantém a leitura independente final de preferences/cases/receipts/registro e a prova de um Apply/recibo. Acrescenta comparação da UI com id/version/at e result.ok do corpo original retido, presença da releitura explícita e ausência de novo Confirm application: **221 expects**, sem remover as215 anteriores, sem aumentar os timeouts.
 - Código `092c6d202557960541fb43b68e2cf995ee489e38`; arquivos somente proposals/index.tsx, sf-u38.ts (EN/PT) e proposals.spec.ts. Nenhum gate9 lançado neste checkpoint.
+
+## Fence da releitura explícita (deff1048)
+- Revisão concreta do root: o acknowledgement fica fora do SfStatePanel e poderia sobreviver a uma releitura negativa se o owner não mudasse. O botão Refresh source agora limpa applicationResult **antes** de bump e da leitura original; dados privados do recibo anterior não permanecem após a releitura.
+- `proposals/index.tsx:451`: nenhuma mudança de autorização, resultado do Apply ou produtor. O bloqueio de nova aplicação continua pelo estado original/review=null. Root autorizou o gate9 após este ajuste.
+- Código `deff10482b4d2846ca838bb3e8e6f0e205f81f56`; único delta sobre092c6d é a limpeza do acknowledgement. Mantidas221 chamadas expect, leitura final independente e timeouts originais.
