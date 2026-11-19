@@ -186,6 +186,6 @@ export function finalizePlannerSensitivity(input: {
 }
 
 /** Pending-only inventory has not assessed a category. Do not search it into an exact bound. */
-function assessedKnownSubtotalCoverage(scenario: ScenarioResult) {
+export function assessedKnownSubtotalCoverage(scenario: ScenarioResult) {
   return scenario.costCoverage.entries.some((entry) => entry.status !== "pending")
 }
