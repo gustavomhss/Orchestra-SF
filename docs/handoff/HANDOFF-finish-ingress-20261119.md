@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: ec9236920bd810012de727c9b77f5f2eacb4c14f (código; este documento é o commit seguinte)
+SHA: 09c2e35aa0e35226d9e8c6a13738658817fc2637 (código; este documento é o commit seguinte)
 Data: 2026-11-19
 Estado: partial
 
@@ -190,3 +190,15 @@ Toda verificação foi executada em GitHub Actions. Nenhum resultado foi fabrica
 - Asserções removidas: nenhuma. Nenhuma alteração em authority, dispatcher, source registry, queue-page, factory, withCase, retry ou grants. Nenhum total/baseline/coverage/recibo sintético adicional. Se work/source recusarem, o erro inclui status e razão originais antes de qualquer preparação.
 - Pendente/unbound: decisions-support/c12-host.ts:182 e :202 precisam qualificar as leituras da seleção persistida e da fonte; decisions-native-recovery.spec.ts:7/:12 continuam sem prova de navegador. recovery-ui.test.ts:72/:197 permanece sem remapeamento. O ingresso/foundation já mergeado não foi reaberto.
 - Retomar: compor somente c12-host.ts deste código sobre Assembly30 ou posterior e executar o mesmo narrow C12 uma vez com a raiz; o novo gate só é justificado pela disposição do seletor temporário comprovada acima. Conservar exatamente2ApplyPOST/1efeito, CAS, reload, SQLite novo processo, perda de resposta e recuperação repetível.
+
+
+## C12 native6 — draft fora de aging e contexto original C02
+
+- Run [44620702918](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44620702918), snapshot 7115f14604cf7a28c22afa64337d3cbd4a845b46, composição 0d4f00041063bca779359e0b1557843a2df8fe83, job135901257575: FAILURE; três typechecks passaram; 1 failed / 1 did not run antes do browser. Cleanup135904947405 passou.
+- Auditoria [44622280746](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44622280746): SUCCESS somente extração de c12-initial-host.log do artefato14578240289. Original em audit-c12-seed6-20261119/docs/handoff/observed-c12-seed6-20261119.md: C12_ORIGINAL_WORK_SOURCE_AMBIGUOUS.
+- Causa conferida em product/procurement/port.ts:207: aging contém somente *_pending; collaboration/work-port.ts:175 lê aging e :182 exige holder atual. O PR-1 draft original de C12 não pertence a essa lista. O teste não modifica estado/holder para forçar admissão.
+- Código 09c2e35aa0e35226d9e8c6a13738658817fc2637, decisions-support/c12-host.ts:173–203: decodifica rows[].projection, que queue-view.ts:8–11/49 publica como DomainProjection original. Confere a versão com evidence do mesmo registro; usa o ProductContext literalmente devolvido pelo C02, admitindo e validando sf_request_read com o mesmo host. createProcurementSourceResolver original reautentica a fonte SQLite e emite/resolve a identidade individual persistida; o callback aceita apenas a chamada admitida e revalidada. Nenhum campo de contexto, digest, seleção ou fonte é inventado.
+- Mantém seleção de período original e grants canônicos; a referência de coleção descartada não é despachada como fonte viva. Remove apenas a tentativa de obter um draft por sf_work_list. Não acrescenta serviço/endpoint de produção, grant, autoridade, withCase ou lógica de UI.
+- Asserções removidas das jornadas: nenhuma. Exatamente2POST/1efeito, perda de resposta após commit de receipt, edição concorrente, reload, novo processo com SQLite compartilhado, CAS e releituras imutáveis continuam obrigatórios.
+- Estado: partial. Pendente/unbound: decisions-support/c12-host.ts:175 (qualificar emissão a partir do contexto original C02); decisions-native-recovery.spec.ts:7/:12 (jornadas UI39 ainda não alcançadas); recovery-ui.test.ts:72/:197 continua sem remapeamento até equivalência nativa passar.
+- Como retomar: compor somente c12-host.ts deste checkpoint sobre o candidato com UI39/F02/health já montados e executar apenas decisions-native-recovery.spec.ts. Registrar run/resultados; não repetir sem nova causa e não rodar sf-ci aqui.
