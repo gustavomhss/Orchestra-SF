@@ -1,0 +1,40 @@
+Original run: 44585817131
+Original job: 135778309143
+Snapshot: 2dcbd93a41608e171dfde8896e0721a42fbede6d
+This is a bounded log excerpt, not a rerun or a passing receipt.
+
+2026-11-19T18:17:12.5809354Z error: expect(received).toEqual(expected)
+2026-11-19T18:17:12.5835883Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/transport-contract.test.ts:32:35)
+      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/transport-contract.test.ts:32:35)
+2026-11-19T18:17:12.5885876Z (fail) Q01 integrated transport contract / original producer > Q01-TRANSPORT-REGISTRY preserves the frozen catalog and its explicit source extension [0.38ms]
+2026-11-19T18:20:12.7119097Z error: bun test v1.3.14 (0d9b296a)
+2026-11-19T18:20:12.7125630Z error: expect(received).toBeNull()
+2026-11-19T18:20:12.7125903Z Received: HTMLFieldSetElement {
+2026-11-19T18:20:19.4617706Z Expected: 0
+2026-11-19T18:20:19.4617798Z Received: 137
+2026-11-19T18:20:19.4618405Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/procurement-draft-leaves.test.ts:15:29)
+error: expect(received).toBeNull()
+Received: HTMLFieldSetElement {
+2026-11-19T18:20:23.9888200Z (fail) procurement draft leaves in the browser lane [180354.92ms]
+2026-11-19T18:20:23.9952007Z error: expect(received).toBe(expected)
+2026-11-19T18:20:23.9952235Z Expected: true
+2026-11-19T18:20:23.9952411Z Received: false
+2026-11-19T18:20:23.9952889Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts:22:55)
+Received: false
+      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts:22:55)
+2026-11-19T18:20:23.9956008Z (fail) review routes > requires the original review operation with CAP-only destinations [0.32ms]
+2026-11-19T18:20:23.9959173Z error: expect(received).toBe(expected)
+2026-11-19T18:20:23.9959387Z Expected: true
+2026-11-19T18:20:23.9959571Z Received: false
+2026-11-19T18:20:23.9960016Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts:36:55)
+Received: false
+      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts:36:55)
+2026-11-19T18:20:23.9962451Z (fail) review routes > report admission uses source-backed prepare and download, not legacy Office codecs [0.29ms]
+2026-11-19T18:20:23.9996256Z (fail) Q01 integrated transport contract / original producer > Q01-TRANSPORT-REGISTRY preserves the frozen catalog and its explicit source extension [0.38ms]
+2026-11-19T18:20:23.9996862Z (fail) procurement draft leaves in the browser lane [180354.92ms]
+2026-11-19T18:20:23.9997275Z (fail) review routes > requires the original review operation with CAP-only destinations [0.32ms]
+2026-11-19T18:20:23.9997807Z (fail) review routes > report admission uses source-backed prepare and download, not legacy Office codecs [0.29ms]
+2026-11-19T18:20:23.9998161Z  110 pass
+2026-11-19T18:20:23.9998334Z  4 fail
+2026-11-19T18:20:23.9998490Z  895 expect() calls
+2026-11-19T18:20:23.9998687Z Ran 114 tests across 32 files. [189.37s]
