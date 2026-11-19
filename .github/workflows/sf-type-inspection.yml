@@ -23,11 +23,14 @@ jobs:
           - scope: SF-E2E
             directory: packages/app-shell
             command: bun run typecheck:sf-e2e --pretty false
+          - scope: Sucafina
+            directory: modules/sucafina
+            command: bun run typecheck
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: 15388053117883174329454207e60e2a878f5426
+          ref: 8352f935663cc17de63a44fa269ce81c14fe618b
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
       - name: Match canonical Playwright Node
