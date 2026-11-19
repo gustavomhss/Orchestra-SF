@@ -355,11 +355,12 @@ export function SfAgendaEditor(props: {
                 </p>}</For>
                 <Show when={section.recordCount === 0}><p>{t("sf.u25.noRecords")}</p></Show>
                 <table aria-label={section.title + " · " + t("sf.u25.values")}>
-                  <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th></tr></thead>
+                  <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th><th>{t("sf.u25.evidence")}</th></tr></thead>
                   <tbody><For each={section.projection.values}>{(value) => <tr>
                     <td>{value.id}</td>
                     <td>{(value.value === null ? t("sf.u25.unavailableValue") : String(value.value)) + (value.currency || value.unit ? " " + (value.currency ?? value.unit) : "")}</td>
                     <td>{value.period.start} – {value.period.end}</td>
+                  <td>{t("sf.u25.evidence." + value.evidenceState)}</td>
                   </tr>}</For></tbody>
                 </table>
               </li>}</For>
