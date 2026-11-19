@@ -195,7 +195,7 @@ export async function localBrowser() {
       page.goto(destination.href, { waitUntil: "domcontentloaded", timeout: 10000 }),
     ]).catch((error) => { throw new Error("Private test browser enrollment failed: " + (error instanceof Error ? error.message : String(error))) })
     if (enrollment.status() !== 303) throw new Error(`Test enrollment failed with status ${enrollment.status()}`)
-    await page.waitForURL("http://localhost:4110/sucafina/dashboard", { timeout: 10000 })
+    await page.waitForURL("http://localhost:4110/", { timeout: 10000 })
     console.info("browser fixture: authenticated")
     await mkdir(path.join(import.meta.dir, "../artifacts"), { recursive: true })
     return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose }

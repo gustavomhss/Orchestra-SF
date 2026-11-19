@@ -276,6 +276,10 @@ export async function createConfiguredInstallation(
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
+      if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) {
+        const frame = Bun.file(path.join(import.meta.dir, "../../../../apps/web/index.html"))
+        if (await frame.exists()) return new Response(request.method === "HEAD" ? null : await frame.bytes(), { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+      }
       if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
       const readiness = status(request)
       if (readiness) return readiness
