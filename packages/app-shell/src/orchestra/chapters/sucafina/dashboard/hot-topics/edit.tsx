@@ -1,4 +1,4 @@
-import { For, Show, createMemo, createSignal } from "solid-js"
+import { For, Show, createEffect, createMemo, createSignal, untrack } from "solid-js"
 import type { JSX } from "solid-js"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
@@ -7,7 +7,7 @@ import { SfChangeReview } from "../../shared/change-review"
 import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfCopyKey, SfDisplayValue } from "../../shared/frame/types"
 import type { SfDraftRegistry } from "../../context/contracts"
-import type { SfJson } from "@orchestra/schema/sucafina/common"
+import type { SfDomainPageCap02 } from "@orchestra/schema/sucafina/people"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
 import type { Topic } from "./reader"
 
@@ -50,7 +50,7 @@ export type HotTopicEditProps = Readonly<{
   canSave: boolean
   onRefetch: () => void
   scope: string
-  readInput: SfJson
+  readInput: typeof SfDomainPageCap02.input.Type
   onBack: () => void
 }>
 
@@ -76,12 +76,45 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
   }))
   const [stage, setStage] = createSignal<"edit" | "review">("edit")
   const [busy, setBusy] = createSignal(false)
-  const [feedback, setFeedback] = createSignal<"none" | "invalid" | "saved" | "rejected" | "conflict" | "unknown">("none")
+  const [discardRequested, setDiscardRequested] = createSignal(false)
+  const [localFeedback, setFeedback] = createSignal<"none" | "invalid" | "saved" | "rejected" | "conflict" | "unknown">("none")
   const active = () => {
     const snapshot = draft().snapshot()
     return snapshot.availability === "active" ? snapshot : undefined
   }
+  // A source reread may remount the editor after an exact producer409.
+  // F03 retains that verified rejection together with the same private draft.
+  const feedback = () => active()?.phase === "conflict" ? "conflict" : localFeedback()
   const value = () => active()?.value ?? blank
+  createEffect(() => {
+    const current = props.record, version = props.version
+    if (!current || version === undefined) return
+    const controller = draft(), fields = fieldsFrom(current)
+    untrack(() => controller.receiveRemote({ baseVersion: version, value: fields }))
+  })
+  const keepEditsAtCurrentVersion = () => {
+    const current = active()
+    if (!props.canSave || busy() || !current?.conflict || current.pendingOperation ||
+        current.conflict.currentVersion !== props.version) return
+    // This explicit choice adopts the freshly read source version. The user's
+    // unsent values remain a draft and must pass a new review before any POST.
+    const proposed = current.value
+    draft().discard()
+    draft().edit(proposed)
+    setStage("edit")
+    setFeedback("none")
+  }
+  const back = () => {
+    if (active()?.pendingOperation) return
+    if (active()?.dirty) setDiscardRequested(true)
+    else props.onBack()
+  }
+  const discardAndBack = () => {
+    if (active()?.pendingOperation) return
+    draft().discard()
+    setDiscardRequested(false)
+    props.onBack()
+  }
   const admitted = () => props.canSave && (props.record === undefined || props.version !== undefined) &&
     valid(value()) && !busy() && !!active() && !active()?.pendingOperation && !active()?.conflict
   const edit = <K extends keyof TopicFields>(field: K, next: TopicFields[K]) => {
@@ -131,14 +164,38 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
         draft().setPhase("outcome-unknown");setFeedback("unknown");return
       }
       if (!result.body.ok) {
-        draft().setPhase("outcome-unknown")
+        if (result.body.status === 409 || result.body.status === 422) {
+          draft().rejectSave({ status: result.body.status, operation: {
+            operationRef, idempotencyKey, payloadDigest, expectedVersion: props.record ? props.version ?? 0 : null,
+          } })
+        } else draft().setPhase("outcome-unknown")
         setFeedback(result.body.status === 409 ? "conflict" : "rejected")
         props.onRefetch()
         return
       }
-      draft().confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+      const persistedId = props.record?.id
+      // New commands do not return an ID in this catalog. The authorized list
+      // must supply it; a label match is never treated as a mutation receipt.
+      if (!persistedId) {
+        draft().confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+        setFeedback("saved");props.onRefetch();props.onBack();return
+      }
+      const currentPage = await createSfPeopleClient(props.transport)["domain.page.CAP02"](
+        props.readInput, { signal: new AbortController().signal })
+      if (currentPage.kind !== "response" || currentPage.body.status !== "ok") {
+        draft().confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+        setFeedback("saved");props.onRefetch();props.onBack();return
+      }
+      const persisted = currentPage.body.value.data.hotTopics.find((topic) => topic.id === persistedId)
+      const persistedVersion = currentPage.body.value.versions["hotTopics:" + persistedId]
+      if (!persisted || persistedVersion === undefined) {
+        draft().confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+        setFeedback("saved");props.onRefetch();props.onBack();return
+      }
+      draft().confirmSave({ kind: "projected", operationRef, baseVersion: persistedVersion, value: fieldsFrom(persisted) })
       setFeedback("saved")
       props.onRefetch()
+      props.onBack()
     } catch {
       draft().setPhase("outcome-unknown");setFeedback("unknown")
     } finally { setBusy(false) }
@@ -181,8 +238,8 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
           <div class="sf-u38-actions">
             <button type="submit" class="mx-btn primary" disabled={!admitted()}>{t(key("sf.u38.reviewSave"))}</button>
             <button type="button" class="mx-btn" disabled={!!active()?.pendingOperation}
-              onClick={() => { draft().discard();setFeedback("none") }}>{t(key("sf.u38.discard"))}</button>
-            <button type="button" class="mx-btn" onClick={props.onBack}>{t(key("sf.u38.back"))}</button>
+              onClick={() => setDiscardRequested(true)}>{t(key("sf.u38.discard"))}</button>
+            <button type="button" class="mx-btn" onClick={back}>{t(key("sf.u38.back"))}</button>
           </div>
         </form>
       </Show>
@@ -205,7 +262,29 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
           state="ready" onConfirm={() => { void save() }}
           onRevise={() => setStage("edit")} onCancel={() => setStage("edit")} />
       </Show>
-      <Show when={active()?.conflict}><p role="alert">{t(key("sf.u38.sourceChanged"))}</p></Show>
+      <Show when={props.record}>
+        <section data-current-revision>
+          <h3>{t(key("sf.u38.currentVersion"))}</h3>
+          <Show when={active()?.conflict}><p role="alert">{t(key("sf.u38.sourceChanged"))}</p></Show>
+          <dl>
+            <For each={snapshotFields(fieldsFrom(props.record))}>{(item) => <div>
+              <dt>{t(item.label.key)}</dt>
+              <dd>{item.value.kind === "text" && item.value.text.kind === "data" ? item.value.text.text : t(key("sf.u38.unknown"))}</dd>
+            </div>}</For>
+          </dl>
+          <Show when={active()?.conflict}>
+            <button type="button" class="mx-btn" disabled={!props.canSave || busy() || !!active()?.pendingOperation}
+              onClick={keepEditsAtCurrentVersion}>{t(key("sf.u38.keepEdits"))}</button>
+          </Show>
+        </section>
+      </Show>
+      <Show when={discardRequested()}>
+        <div role="group" aria-label={t(key("sf.u38.confirmDiscard"))}>
+          <p>{t(key("sf.u38.confirmDiscard"))}</p>
+          <button type="button" class="mx-btn" onClick={discardAndBack}>{t(key("sf.u38.discard"))}</button>
+          <button type="button" class="mx-btn" onClick={() => setDiscardRequested(false)}>{t(key("sf.u38.cancel"))}</button>
+        </div>
+      </Show>
     </Show>
     <Show when={feedback() !== "none"}>
       <p role="alert" data-topic-feedback={feedback()}>{t(key(feedback() === "invalid" ? "sf.u38.validation" :
