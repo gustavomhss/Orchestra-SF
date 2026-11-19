@@ -164,6 +164,7 @@ export function createSfDashboardServices(input: {
       const selectedAgenda = agendaRequest ? await agenda(agendaRequest, context) : undefined
       if (selectedAgenda && selectedAgenda.status !== "ok") return selectedAgenda
       const records: { label: string; sourceRef: string; draft?: { target: SourceRef; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; fields: { action: string; owner: string; due: string; priority: "critical" | "high" | "normal"; notes: string } } }[] = []
+      const recordOptions: { recordRef: string; recordId: string; label: string }[] = []
       if (selectedAgenda?.status === "ok") for (const reference of selectedAgenda.value.recordRefs.slice(0, 100)) {
         const resolved = await input.records.resolve(reference, context)
         if (resolved.status !== "ok" || !resolved.value.target.period) continue
@@ -196,6 +197,7 @@ export function createSfDashboardServices(input: {
         const labelValue = ["action", "name", "title", "vendor", "owner"].map((field) => values.find((value) => value.id === `${prefix}${field}`)?.value).find((value) => typeof value === "string" && value.trim())
         const signalLabel = signal.find((value) => value.id.endsWith(".fact"))?.value
         const label = typeof signalLabel === "string" ? signalLabel : typeof labelValue === "string" ? labelValue : periodLabel ? `Chamados · ${periodLabel}` : `${request.page} · ${records.length + 1}`
+        recordOptions.push({ recordRef: reference, recordId: target.recordId, label })
         const entry: typeof records[number] = { label, sourceRef: record.value.refId }
         if (target.recordType === "hotTopics") {
           const draftSource = await issue({ recordType: "hotTopics", recordId: target.recordId, fields: ["action", "due", "notes", "owner", "priority"], period: recordPeriod }, context)
@@ -234,7 +236,7 @@ export function createSfDashboardServices(input: {
           return { status: "stale" as const, reason: "dashboard-discovery-source-changed" }
       }
       if (!await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
-      return { status: "ok" as const, value: { period, ...(agendaRequest && selectedAgenda?.status === "ok" ? { agenda: { section: { ...agendaRequest, recordRefs: selectedAgenda.value.recordRefs }, recordCount: selectedAgenda.value.recordCount } } : {}),
+      return { status: "ok" as const, value: { period, ...(agendaRequest && selectedAgenda?.status === "ok" ? { agenda: { section: { ...agendaRequest, recordRefs: selectedAgenda.value.recordRefs, recordOptions }, recordCount: selectedAgenda.value.recordCount } } : {}),
         records, recordLimit: 100, history: historyOptions, permissions: {
           preserve: actions.includes("reviews.preserve") && (savedReviews.status === "ok" || savedReviews.status === "unavailable" && savedReviews.reason === "product-state-uninitialized"),
           capture: actions.includes("reviews.preserve") && (preferences.status === "ok" || preferences.status === "unavailable" && preferences.reason === "product-state-uninitialized"),

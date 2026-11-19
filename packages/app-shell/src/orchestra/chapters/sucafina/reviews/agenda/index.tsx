@@ -313,8 +313,10 @@ export function SfAgendaEditor(props: {
                 </div>
                 <Show when={item.recordRefs !== undefined}>
                   <ul aria-label={item.title ?? item.topic}>
-                    <For each={item.recordRefs}>{(reference) => <li>
-                      <span>{reference}</span>
+                    <For each={item.recordRefs}>{(reference) => <li
+                      data-sf-record-ref={reference}
+                      data-sf-record-id={item.recordOptions?.find((record) => record.recordRef === reference)?.recordId}>
+                      <span>{item.recordOptions?.find((record) => record.recordRef === reference)?.label ?? reference}</span>
                       <button type="button" class="mx-btn" aria-label={"Remove record " + reference}
                         disabled={store.phase === "submitting" || store.phase === "outcome-unknown" || store.phase === "previewing" || store.phase === "confirmed"}
                         onClick={() => {

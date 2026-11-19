@@ -135,6 +135,7 @@ export const SfDashboardDashboardReviewPreserve = {
 const ReviewAgendaItem = Schema.Struct({
   kind: Schema.Literal("dashboard"), id: Text, topic: Text, selectionRef: Text,
   title: Schema.optional(Text),
+  recordOptions: Schema.optional(Schema.Array(Schema.Struct({ recordRef: Text, recordId: Text, label: Text }))),
   period: Period, recordRefs: Schema.optional(RefList), agendaNote: Schema.optional(Schema.String),
 })
 export const SfReviewUpdate = Schema.Struct({
