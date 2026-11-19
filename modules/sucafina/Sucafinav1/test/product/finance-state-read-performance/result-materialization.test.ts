@@ -156,3 +156,42 @@ for (const fault of ["case-callback", "source-callback", "case-identity", "case-
     } finally { await f.close() }
   })
 }
+
+test("C08 sibling authorizers receive distinct clones while retaining the private expected case", async () => {
+  const f = await resultFixture()
+  try {
+    const retained: Parameters<Settings["authorizeCase"]>[0][] = []
+    f.hooks.authorizeCase = async (value) => {
+      expect(value.objective).toBe(f.decision.objective)
+      expect(retained.some((prior) => prior === value)).toBe(false)
+      for (const prior of retained) prior.objective = "late mutation of a previous callback clone"
+      retained.push(value)
+      await Promise.resolve()
+      return true
+    }
+    const result = await readHistoricalScenarios(f.results, [f.first.resultRef, f.second.resultRef, f.first.resultRef], f.context)
+    expect(result).toEqual([{ status: "ok", value: f.first }, { status: "ok", value: f.second }, { status: "ok", value: f.first }])
+    expect(retained).toHaveLength(6)
+    expect(new Set(retained).size).toBe(6)
+    expect(f.calls.authorizeCase).toBe(6)
+    expect(f.calls.verifySources).toBe(6)
+  } finally { await f.close() }
+})
+
+for (const occurrence of [2, 4, 6]) {
+  test("C08 sibling authorization rehashes callback clone " + occurrence + " after its await", async () => {
+    const f = await resultFixture()
+    try {
+      let changed = false
+      f.hooks.authorizeCase = async (value) => {
+        await Promise.resolve()
+        if (f.calls.authorizeCase === occurrence) { changed = true; value.objective = "callback mutation must be refused" }
+        return true
+      }
+      const result = await readHistoricalScenarios(f.results, [f.first.resultRef, f.second.resultRef, f.first.resultRef], f.context)
+      expect(changed).toBe(true)
+      expect(result.map((value) => value.status)).toEqual(occurrence === 2 ? ["ok", "denied", "ok"] : occurrence === 4 ? ["denied", "ok", "ok"] : ["ok", "ok", "denied"])
+      expect(result.filter((value) => value.status !== "ok").every((value) => !Object.hasOwn(value, "value"))).toBe(true)
+    } finally { await f.close() }
+  })
+}
