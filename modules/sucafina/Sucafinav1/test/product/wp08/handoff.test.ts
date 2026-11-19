@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test"
+import { afterEach, expect, test } from "bun:test"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -8,11 +8,15 @@ import { createSfUiAuthority } from "../../../product/integration/ui-authority.t
 import { createHandoffPort } from "../../../product/collaboration/handoff.ts"
 import { createRelationPort } from "../../../product/collaboration/relations.ts"
 import { createHotTopicPort } from "../../../product/dashboard/hot-topics.ts"
-import type { HotTopic, HotTopicHost } from "../../../product/dashboard/hot-topics.ts"
+import type { HotTopic } from "../../../product/dashboard/hot-topics.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
+import { hotTopicHostFixture } from "../wp02/hot-topic-host-fixture.ts"
+
+const topicCleanups: (() => Promise<void>)[] = []
+afterEach(async () => { for (const close of topicCleanups.splice(0).reverse()) await close() })
 
 test("handoff retries the canonical action and keeps the same contextual link", async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-handoff-"))
@@ -21,13 +25,13 @@ test("handoff retries the canonical action and keeps the same contextual link", 
   const source = { schema: "sf-evidence-v1", refId: "source", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "projects", recordId: "project-A", incarnation: "inc-A", version: 1, fields: ["name"], projectionDigest: "b".repeat(64) } } as const
   const state: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
   const correlations: Record<string, { digest: string; id: string; result?: HotTopic }> = {}
-  const host: HotTopicHost = { transact: async (_binding, _refs, work) => {
-    const snapshot = structuredClone(state)
-    const pending = structuredClone(correlations)
-    const result = work(snapshot, { id: "person-A", roles: ["domain leader"], canWrite: true }, { at: "2026-11-13T00:00:00Z", id: () => "topic-1", directory: [] }, pending)
-    if (result.commit) { Object.assign(state, snapshot); Object.assign(correlations, pending) }
-    return result.value
-  } }
+  const topicFixture = await hotTopicHostFixture({
+    state, correlations,
+    actor: { id: "person-A", roles: ["domain leader"], canWrite: true },
+    environment: { at: "2026-11-13T00:00:00Z", id: () => "topic-1", directory: [] },
+  })
+  topicCleanups.push(topicFixture.close)
+  const host = topicFixture.host
   const store = await openLocalStore(directory)
   try {
     const product = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc-A" }), authorize: async () => ({ principalRef: "person-A", policyVersion: "policy", accessRevision: "access" }) })
@@ -63,13 +67,13 @@ test("handoff and its relation require the exact real human admission", async ()
     const source = { schema: "sf-evidence-v1", refId: "source", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "projects", recordId: "project-A", incarnation: "inc-A", version: 1, fields: ["name"], projectionDigest: "b".repeat(64) } } as const
     const snapshot: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
     const correlations: Record<string, { digest: string; id: string; result?: HotTopic }> = {}
-    const hotTopicHost: HotTopicHost = { transact: async (_context, _refs, work) => {
-      const staged = structuredClone(snapshot)
-      const pending = structuredClone(correlations)
-      const result = work(staged, { id: "person-A", roles: ["domain leader"], canWrite: true }, { at: "2026-11-13T00:00:00Z", id: () => "topic-1", directory: [] }, pending)
-      if (result.commit) { Object.assign(snapshot, staged); Object.assign(correlations, pending) }
-      return result.value
-    } }
+    const topicFixture = await hotTopicHostFixture({
+      state: snapshot, correlations,
+      actor: { id: "person-A", roles: ["domain leader"], canWrite: true },
+      environment: { at: "2026-11-13T00:00:00Z", id: () => "topic-1", directory: [] },
+    })
+    topicCleanups.push(topicFixture.close)
+    const hotTopicHost = topicFixture.host
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc-A" }), authorize: async () => ({ principalRef: "person-A", policyVersion: "policy", accessRevision: "access" }) })
     const permit = Symbol("test")
     const relations = createRelationPort({ mutationFence: createCollaborationMutationFence({ persistence: store }), state, human, handoffPermit: permit, host: { requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined, revalidate: async (context) => context.kind === "ui" && await ui.revalidate(context) }, authorizePair: async () => true, creationTarget: { ref: "project-A", incarnation: "inc-A" }, createId: () => "relation-1", now: () => "2026-11-13T00:00:00Z" })

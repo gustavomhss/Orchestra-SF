@@ -4,6 +4,24 @@ import { startPlannerInstallation } from "./installation-fixture"
 test.use({ trace: "off", video: "off" })
 
 test("the real installed operator reaches native CAP23 through the shell origin", async ({ page }, info) => {
+  const network: { operation: string; status: number; outcome?: string; reason?: string }[] = []
+  const browserErrors: string[] = []
+  page.on("pageerror", (error) => browserErrors.push(error.name))
+  page.on("response", async (response) => {
+    const path = new URL(response.url()).pathname
+    const operation = path === "/api/sucafina/installations" ? "discovery" :
+      path === "/sucafina/api/ui/context" ? "context" : undefined
+    if (!operation || network.length >= 40) return
+    const entry: (typeof network)[number] = { operation, status: response.status() }
+    network.push(entry)
+    if (operation === "context") {
+      const body: unknown = await response.json().catch(() => undefined)
+      if (body && typeof body === "object") {
+        if ("status" in body && typeof body.status === "string") entry.outcome = body.status
+        if ("reason" in body && typeof body.reason === "string") entry.reason = body.reason
+      }
+    }
+  })
   const installation = await test.step("Launch the real isolated installation", () => startPlannerInstallation(info))
   try {
     const live = await test.step("Discover and select the original installed context", () => installation.signIn(page))
@@ -15,6 +33,18 @@ test("the real installed operator reaches native CAP23 through the shell origin"
     await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
     await page.goto("/orchestra/sf-planner/versions?year=2026")
     await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
+  } catch (error) {
+    console.log("INSTALLED_NATIVE_RENDER", JSON.stringify({
+      path: new URL(page.url()).pathname,
+      owners: await page.locator('[data-sf-host="owner-runtime231"]').evaluateAll((nodes) => nodes.map((node) => ({
+        discovery: node.getAttribute("data-sf-discovery-state"),
+        provider: node.getAttribute("data-sf-provider-state"),
+        view: node.getAttribute("data-sf-view-state"),
+      }))),
+      states: await page.locator("[data-sf-f01]").evaluateAll((nodes) => nodes.map((node) => node.getAttribute("data-sf-f01"))),
+      network, browserErrors,
+    }))
+    throw error
   } finally {
     await installation.stop()
   }

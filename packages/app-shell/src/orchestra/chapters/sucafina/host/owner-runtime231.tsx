@@ -227,7 +227,7 @@ function MountedSurface(props: Readonly<{
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
   return (
-    <Show when={props.gate()} fallback={<p role="status" data-sf-f01="resolving">Resolving installed Sucafina</p>}>
+    <Show when={props.gate()} fallback={<p role="status" data-sf-f01={handle.state().status}>Resolving installed Sucafina</p>}>
       <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
         <Match when={current()?.surfaceId === "UI29"}>
           <SfTodayView surfaceId="UI29" route={current() as SfSurfaceProps<"UI29">["route"]} />
@@ -543,6 +543,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
 
   return (
     <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
+      data-sf-discovery-state={discovery.status} data-sf-provider-state={provider.status}
+      data-sf-view-state={view.status}
       onFocusIn={(event) => {
         if (event.target instanceof HTMLElement &&
           event.target.matches("input, textarea, select, [contenteditable='true']"))

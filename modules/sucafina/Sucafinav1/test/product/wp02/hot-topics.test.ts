@@ -1,31 +1,31 @@
-import { expect, test } from "bun:test"
+import { afterEach, expect, test } from "bun:test"
 import { createHotTopicPort } from "../../../product/dashboard/hot-topics.ts"
 import type { HotTopic, HotTopicHost } from "../../../product/dashboard/hot-topics.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
-import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
+import { hotTopicHostFixture } from "./hot-topic-host-fixture.ts"
+
+const cleanups: (() => Promise<void>)[] = []
+afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await close() })
 
 const binding = {} as TrustedDomainContext
 const source = { schema: "sf-evidence-v1", refId: "source", installationId: "i", projectId: "p", refDigest: "digest", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "project", recordId: "p", incarnation: "1", version: 1, fields: ["name"], projectionDigest: "digest" } } as BusinessEvidenceRef
 
 test("canonical hot topic retries once, detects changed intent and follows completion", async () => {
   const state: Snapshot = { data: { members: [{ id: "person", name: "Private" }] }, versions: {}, sequences: {}, audit: [], notices: [] }
-  const correlations: Record<string, { digest: string; id: string; result?: HotTopic }> = {}
+  const correlations: Record<string, { digest: string; id: string; targetIncarnation?: string; result?: HotTopic }> = {}
   const actor = { id: "leader", roles: ["domain leader"], canWrite: true }
   const access = { enabled: true }
   let next = 0
-  const host: HotTopicHost = { transact: async (_binding, refs, work) => {
-    if (!access.enabled || !refs.length) return { status: "denied", reason: "source-denied" }
-    const snapshot = structuredClone(state)
-    const pending = structuredClone(correlations)
-    const result = work(snapshot, actor, { at: "2026-11-13T00:00:00Z", id: () => `topic-${++next}`, directory: [] }, pending)
-    if (result.commit) {
-      Object.assign(state, snapshot)
-      Object.assign(correlations, pending)
-    }
-    return result.value
-  } }
+  const fixture = await hotTopicHostFixture({
+    state, correlations, actor,
+    environment: { at: "2026-11-13T00:00:00Z", id: () => `topic-${++next}`, directory: [] },
+    authorize: async () => access.enabled,
+  })
+  cleanups.push(fixture.close)
+  const host = fixture.host
   const port = createHotTopicPort(host)
   const intent = { correlationKey: "handoff", sourceRefs: [source], action: "Review project", owner: "owner", due: "2026-12-01", priority: "high" as const, notes: "" }
   expect(await port.create({ ...intent, action: 7 } as unknown as typeof intent, binding)).toMatchObject({ status: "needs-input" })
@@ -36,11 +36,9 @@ test("canonical hot topic retries once, detects changed intent and follows compl
   actor.id = "another-leader"
   expect(await port.create(intent, binding)).toMatchObject({ status: "conflict" })
   actor.id = "leader"
-  // This unit host supplies the current producer identity for an existing action.
-  // collaboration-consumer.test.ts exercises issuance and replacement through real C17 persistence.
-  state.sfSources = { schemaVersion: 1, records: { [JSON.stringify(["hotTopics", "topic-1"])]: {
-    incarnation: "original-topic-incarnation", version: 1, alive: true, inputDigest: digestSfValue(state.data.hotTopics),
-  } } }
+  const identity = sfSourceIdentity(state, "hotTopics", "topic-1")
+  expect(identity).toBeDefined()
+  expect(Object.values(correlations)[0]?.targetIncarnation).toBe(identity?.incarnation)
   expect(await port.update({ id: "topic-1", version: 0, idempotencyKey: "stale", sourceRefs: [source], values: { status: "done" } }, binding)).toMatchObject({ status: "conflict" })
   const update = { id: "topic-1", version: 1, idempotencyKey: "finish", sourceRefs: [source], values: { status: "done" } }
   expect(await port.update(update, binding)).toMatchObject({ status: "ok", value: { status: "done", version: 2 } })
@@ -59,10 +57,13 @@ test("canonical hot topic retries once, detects changed intent and follows compl
 test("action input is fixed before asynchronous host authorization", async () => {
   const state: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
   const actor = { id: "leader", roles: ["domain leader"], canWrite: true }
-  const host: HotTopicHost = { transact: async (_binding, _refs, work) => {
-    await Promise.resolve()
-    return work(state, actor, { at: "2026-11-13T00:00:00Z", id: () => "topic", directory: [] }, {}).value
-  } }
+  const fixture = await hotTopicHostFixture({
+    state, correlations: {}, actor,
+    environment: { at: "2026-11-13T00:00:00Z", id: () => "topic", directory: [] },
+    authorize: async () => { await Promise.resolve(); return true },
+  })
+  cleanups.push(fixture.close)
+  const host = fixture.host
   const request = { correlationKey: "key", sourceRefs: [source], action: "Original", owner: "owner", due: "2026-12-01", priority: "high" as const, notes: "" }
   const pending = createHotTopicPort(host).create(request, binding)
   request.action = "Changed after call"
@@ -76,7 +77,7 @@ test("ambiguous normalized topic IDs cannot be read or updated", async () => {
     { id: "7", action: "Second", owner: "two", due: "2026-12-02", status: "open", priority: "normal", notes: "" },
   ] }, versions: { "hotTopics:7": { version: 1, by: "leader" } }, sequences: {}, audit: [], notices: [] }
   const actor = { id: "leader", roles: ["domain leader"], canWrite: true }
-  const correlations: Record<string, { digest: string; id: string; result?: HotTopic }> = {}
+  const correlations: Record<string, { digest: string; id: string; targetIncarnation?: string; result?: HotTopic }> = {}
   const host: HotTopicHost = { transact: async (_binding, _refs, work) => {
     const snapshot = structuredClone(state)
     const pending = structuredClone(correlations)
