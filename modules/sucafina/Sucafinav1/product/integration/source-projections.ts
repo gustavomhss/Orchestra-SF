@@ -60,11 +60,15 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     const logical = ["budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear"].includes(scope.recordType)
     const visible = logical ? projectDashboardSource(snapshot, actor, { at: asOf, id: () => "", directory: [] }, selector.page) : undefined
     const projection = logical ? undefined : projectDashboardScope(snapshot, actor, { page: selector.page, fields: [scope.recordType], period: selector.period as Period }, asOf)
-    const records = logical ? normalizeDashboardRecords(scope.recordType, snapshot.data[scope.recordType]) : projection?.selected[scope.recordType]
+    // A live collection is day-gated. The selected row is still the actor's page record;
+    // the period check below admits a dated milestone or explicit year, never a homonym name.
+    const pageView = !logical && !Array.isArray(projection?.selected[scope.recordType]) ? projectDashboardSource(snapshot, actor, { at: asOf, id: () => "", directory: [] }, selector.page) : undefined
+    const records = logical ? normalizeDashboardRecords(scope.recordType, snapshot.data[scope.recordType]) : Array.isArray(projection?.selected[scope.recordType]) ? projection.selected[scope.recordType] : pageView?.[scope.recordType]
     if (!Array.isArray(records)) return undefined
     const matches = records.filter((entry) => String(object(entry).id ?? "") === scope.recordId)
-    if (matches.length !== 1 || selector.fields.some((field) => !Object.hasOwn(object(matches[0]), field))) return undefined
     const record = object(matches[0])
+    const missingMilestone = scope.recordType === "projects" && selector.fields.includes("milestones") && !Object.hasOwn(record, "milestones")
+    if (matches.length !== 1 || selector.fields.some((field) => field === "milestones" && missingMilestone ? false : !Object.hasOwn(record, field))) return undefined
     if (logical) {
       if (!visible) return undefined
       if (scope.recordType === "revenueByYear" || scope.recordType === "budgetCurrentMonth") {
@@ -91,7 +95,7 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     const start = month === undefined ? `${year}-01-01` : `${year}-${String(month).padStart(2, "0")}-01`
     const end = month === undefined ? `${year}-12-31` : `${year}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(year, month, 0)).getUTCDate()).padStart(2, "0")}`
     if (period.start > start || period.end < end) return undefined
-    return Object.fromEntries([...selector.fields].sort().map((field) => [field, record[field]]))
+    return Object.fromEntries([...selector.fields].sort().map((field) => [field, field === "milestones" && !Object.hasOwn(record, field) ? [] : record[field]]))
   }
   if (surface !== "planner" || !["planner-source-v1", "planner-roster-v1"].includes(String(selector.kind)) ||
     selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "planner")) || typeof selector.canWrite !== "boolean" ||

@@ -1,6 +1,6 @@
 import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
-import type { Actor } from "../../runtime/contract.ts"
+import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
@@ -12,7 +12,7 @@ import type { HotTopicHost } from "../dashboard/hot-topics.ts"
 const prefix = "sf:hot-topic:"
 
 /** C08 stages the producer's domain mutation and its correlations in one durable transaction. */
-export function createCollaborationHotTopicHost(input: { host: DomainPortHost; state: SfProductStatePort; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string }; authorizeMutation: (context: TrustedDomainContext) => Promise<boolean>; mutationFence: CollaborationMutationFence }): HotTopicHost {
+export function createCollaborationHotTopicHost(input: { host: DomainPortHost; state: SfProductStatePort; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string }; authorizeMutation: (context: TrustedDomainContext) => Promise<boolean>; mutationFence: CollaborationMutationFence; bindCreatedIdentity?: (snapshot: Snapshot, recordId: string) => string }): HotTopicHost {
   const transact: HotTopicHost["transact"] = async (context, sourceRefs, work) => {
     const refs = structuredClone(sourceRefs)
     const request = input.host.requestFor(context)
@@ -50,7 +50,7 @@ export function createCollaborationHotTopicHost(input: { host: DomainPortHost; s
     if (!await input.host.revalidate(context) || !await sourcesAvailable(input.evidence, refs, context)) return { status: "denied", reason: "source-access-unavailable" }
     return saved.value
   }
-  return { transact }
+  return { transact, ...(input.bindCreatedIdentity ? { bindCreatedIdentity: input.bindCreatedIdentity } : {}) }
 }
 
 async function sourcesAvailable(evidence: BusinessContextService, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) {

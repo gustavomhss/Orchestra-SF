@@ -53,22 +53,15 @@ async function seedReceipt(f: Fixture, request: HotTopicIntent, id: string, targ
   return key
 }
 
-test("CREATE binds the new action atomically, including exact retry and reopen", async () => {
+test("CREATE refuses until the host exposes an atomic source-identity seam", async () => {
   const f = await sourceFixture()
   try {
     const request = await intent(f, "atomic-create"), other = await f.runtime.otherSurfaces()
     const created = await f.runtime.create(request)
-    if (created.status !== "ok") throw new Error(`Create rejected: ${created.reason}`)
-    expect(created.value.state).toBe("created")
-    const key = `sf:hot-topic:${digestSfValue({ correlationKey: request.correlationKey })}`
-    const receipt = (await f.runtime.inspect()).relations[key]
-    expect(receipt).toMatchObject({ id: created.value.topic.id, targetIncarnation: expect.any(String), result: created.value.topic })
-    const retried = await f.runtime.create(request)
-    expect(retried).toMatchObject({ status: "ok", value: { state: "existing", topic: { id: created.value.topic.id, action: created.value.topic.action, notes: created.value.topic.notes } } })
-    await f.reopen()
-    expect(await f.runtime.create(request)).toEqual(retried)
+    expect(created).toEqual({ status: "unavailable", reason: "action-create-identity-unavailable" })
+    expect(await f.runtime.create(request)).toEqual(created)
     expect(await f.runtime.otherSurfaces()).toBe(other)
-    console.log("UI_SOURCE_CREATE", JSON.stringify({ result: "BOUND", domainEffects: 1, correlations: 1, reopened: true, atomicCreateAccepted: true }))
+    expect((await f.runtime.inspect()).topics).toEqual([])
   } finally { await f.close() }
 }, 60000)
 

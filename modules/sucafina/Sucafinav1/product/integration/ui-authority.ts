@@ -17,20 +17,39 @@ export function createSfUiAuthority(input: {
 }) {
   const privateCommands = new Set(input.privateCommands)
   const admissions = new WeakMap<TrustedUiContext, UiAdmission>()
-  const current = (context: TrustedUiContext) => {
+  const held = (context: TrustedUiContext) => {
     const admission = admissions.get(context)
-    if (admission && !admission.request.signal.aborted && input.now() < admission.expiresAt) return admission
-    admissions.delete(context)
-    return undefined
+    if (!admission || admission.request.signal.aborted) {
+      if (admission) admissions.delete(context)
+      return undefined
+    }
+    return admission
+  }
+  const current = (context: TrustedUiContext) => {
+    const admission = held(context)
+    if (!admission) return undefined
+    if (input.now() < admission.expiresAt) return admission
+    // An unused lease expires. A consumed command keeps its identity so a still-valid grant
+    // can be rechecked instead of being reported as a changed authority.
+    if (!admission.consumed) {
+      admissions.delete(context)
+      return undefined
+    }
+    return admission
   }
   const revalidate = async (context: TrustedUiContext) => {
     const admission = current(context)
     if (!admission) return false
     const identity = await input.authorize(admission.request, admission.operation, admission.inputDigest)
-    const valid = !!current(context) && !!identity && Object.keys(identity).length === identityFields.length &&
+    const still = held(context)
+    const valid = still === admission && !!identity && Object.keys(identity).length === identityFields.length &&
       identityFields.every((key) => context.binding[key] === identity[key])
-    if (!valid) admissions.delete(context)
-    return valid
+    if (!valid) {
+      admissions.delete(context)
+      return false
+    }
+    if (input.now() >= admission.expiresAt) admission.expiresAt = input.now() + 5 * 60 * 1000
+    return true
   }
   return {
     async admit(request: Request, operation: string, inputDigest: string): Promise<PortResult<TrustedUiContext>> {

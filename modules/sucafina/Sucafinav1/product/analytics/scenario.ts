@@ -1,3 +1,4 @@
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainProjection } from "../contracts/context.ts"
 import type { BiViewRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
@@ -8,6 +9,7 @@ import type { StoredScenarioSelection } from "./stored-scenario.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { sameBiProjection } from "./projection.ts"
 import { readHistoricalScenarios } from "../decisions/result-store.ts"
+import type { StoredDecisionResult } from "../decisions/result-store.ts"
 import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
 import { plannerScenarioBiPresentation } from "../planner/scenario-bi.ts"
 import { projectionDigest, resolvePlannerScenarioBatch } from "../planner/scenario-comparison-port.ts"
@@ -113,6 +115,8 @@ export function createScenarioCostBiHost(input: {
       if (first.value.kind !== "scenario" || second.value.kind !== "scenario" || first.value.resultRef !== references[0] || second.value.resultRef !== references[1] ||
         first.value.caseRef.id !== currentCase.id || first.value.caseRef.incarnation !== currentCase.incarnation || first.value.caseRef.version > currentCase.version ||
         digestSfValue(second.value.caseRef) !== digestSfValue(currentCase) || digestSfValue(second.value.result) !== digestSfValue(decision.scenario)) return { status: "stale", reason: "scenario-cost-case-mismatch" }
+      const persisted = persistedScenarioPair(projection, first.value, second.value)
+      if (persisted) return { status: "ok", value: { pair: persisted, receipts: digestSfValue([first.value, second.value, comparison.value]) } }
       const resolved = await resolvePlannerScenarioBatch(input.scenarios, references, context)
       const baseline = resolved[0], candidate = resolved[1]
       if (resolved.length !== 2 || !baseline || !candidate) return { status: "unavailable", reason: "scenario-cost-pair-unavailable" }
@@ -142,5 +146,33 @@ export function createScenarioCostBiHost(input: {
       const observed = await readView(structuredClone(request), context)
       return observed.status === "ok" && sameBiProjection(observed.value.projection, projection)
     },
+  }
+}
+
+function persistedScenarioPair(projection: DomainProjection, baseline: StoredDecisionResult, candidate: StoredDecisionResult) {
+  if (baseline.kind !== "scenario" || candidate.kind !== "scenario") return undefined
+  const left = persistedScenario(projection, baseline)
+  const right = persistedScenario(projection, candidate)
+  if (!left || !right) return undefined
+  return { baseline: left, candidate: right }
+}
+
+function persistedScenario(projection: DomainProjection, record: Extract<StoredDecisionResult, { kind: "scenario" }>): ResolvedScenario | undefined {
+  const source = record.result.sourceRefs.find((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record")
+  if (!source) return undefined
+  const bare: DomainProjection = { ...projection, decision: undefined, comparison: undefined }
+  return {
+    result: structuredClone(record.result),
+    coverageRef: record.result.costCoverage.basisId,
+    basis: {
+      id: record.result.costCoverage.basisId,
+      version: record.result.costCoverage.basisVersion,
+      decisionType: "scenario",
+      categoryIds: record.result.costCoverage.entries.map((entry) => entry.categoryId),
+      sourceRefs: structuredClone(record.result.sourceRefs),
+      additionalCategoryIds: [],
+    },
+    projection: bare,
+    source,
   }
 }

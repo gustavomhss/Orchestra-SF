@@ -15,7 +15,7 @@ import type { PortResult } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
-import { createSfSourcePersistence, sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
+import { bindCreatedSourceIdentity, createSfSourcePersistence, sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
@@ -94,6 +94,7 @@ async function fixture(options: { role?: Role; handoffGrant?: boolean } = {}) {
     const mutationFence = createCollaborationMutationFence(authority.host)
     const admitted = new WeakMap<TrustedDomainContext, { action: SfHumanAction; payload: unknown }>()
     const topics = createHotTopicPort(createCollaborationHotTopicHost({ host: authority.host, state: authority.state, evidence, creationTarget: authority.creationTarget, mutationFence,
+      bindCreatedIdentity: (snapshot, recordId) => bindCreatedSourceIdentity(snapshot, "hotTopics", recordId),
       authorizeMutation: async (context) => { const active = admitted.get(context); return !!active && authority.human.authorize(context, active.action, active.payload) } }))
     const permit = Symbol("private-handoff")
     const relations = createRelationPort({ state: authority.state, host: authority.host, human: authority.human, authorizePair: collaboration.authorizePair,

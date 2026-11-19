@@ -57,6 +57,11 @@ export function createSfBiServices(input: {
     const scenarios = business.plannerProduct.scenarios
     if (!selection || !scenarios) return { status: "unavailable", reason: "bi-decision-selection-unavailable" }
     const reference = "scenarioResultRef" in selection ? selection.scenarioResultRef : selection.sourceScenarioRef
+    const stored = await business.results.read({ kind: "scenario", resultRef: reference }, call)
+    if (stored.status === "ok" && stored.value.kind === "scenario") {
+      const persisted = projectionFromPersistedScenario(stored.value.result, call)
+      if (persisted) return { status: "ok", value: persisted }
+    }
     const result = await scenarios.resolve(reference, call)
     return result.status === "ok" ? { status: "ok", value: result.value.projection } : result
   }
@@ -276,5 +281,18 @@ export function createSfAuthorizedScenarioBiProjection(input: {
     const projected = await read(selection, call)
     if (!current() || !await input.host.revalidate(call) || !current()) return denied()
     return projected
+  }
+}
+
+function projectionFromPersistedScenario(result: { version: number; components: DomainProjection["components"]; currency: string; horizon: DomainProjection["context"]["period"]; sourceRefs: readonly { kind: string }[] }, call: TrustedDomainContext): DomainProjection | undefined {
+  const source = result.components.flatMap((component) => component.sourceRefs).find((ref) => ref.surface === "planner")
+  if (!source || !result.components.length) return undefined
+  return {
+    context: {
+      installationId: call.binding.installationId, projectId: call.binding.projectId, principalRef: call.binding.principalRef,
+      accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion, surface: "planner",
+      period: result.horizon, currency: result.currency, sourceRefs: result.components.flatMap((component) => [...component.sourceRefs]), capabilities: [],
+    },
+    version: result.version, engineVersion: "planner-runtime-v1", components: result.components, values: [], missing: [],
   }
 }

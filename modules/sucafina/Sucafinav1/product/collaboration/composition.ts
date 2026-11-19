@@ -1,3 +1,4 @@
+import { bindCreatedSourceIdentity } from "../integration/source-lifecycle.ts"
 import { createHotTopicPort } from "../dashboard/hot-topics.ts"
 import type { HotTopic } from "../dashboard/hot-topics.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -56,7 +57,7 @@ export function createCollaborationComposition(input: {
   const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority, reviewRecipientAuthority: input.reviewRecipientAuthority, authorizeReviewThreadContext: input.authorizeReviewThreadContext })
   const activeHandoffs = new WeakMap<TrustedDomainContext, Parameters<Parameters<typeof createHandoffPort>[0]["run"]>[1]>()
   const handoffPermit = Symbol("handoff")
-  const hotTopicWriter = createHotTopicPort(createCollaborationHotTopicHost({ host: input.host, state: input.state, evidence: input.evidence, creationTarget: input.creationTarget, mutationFence, authorizeMutation: async (context) => {
+  const hotTopicWriter = createHotTopicPort(createCollaborationHotTopicHost({ host: input.host, state: input.state, evidence: input.evidence, creationTarget: input.creationTarget, mutationFence, bindCreatedIdentity: (snapshot, recordId) => bindCreatedSourceIdentity(snapshot, "hotTopics", recordId), authorizeMutation: async (context) => {
     const request = activeHandoffs.get(context)
     if (!request || !await input.human.authorize(context, "collaboration.handoff.confirm", request)) return false
     const refs = "intent" in request ? request.intent.sourceRefs : request.sourceRefs

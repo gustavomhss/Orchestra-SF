@@ -46,8 +46,10 @@ export function createCollaborationDispatch(input: {
       // C16's current AnswerProjection cannot carry the immutable C05 pin.
       // Its owner must add that scope before shared transport can publish it.
       if (threadMessageContext(thread.value, answer)?.reviewContext) return { status: "unavailable", reason: "review-answer-output-contract-unavailable" }
-      const reusable = await input.answerReuse?.read(thread.value.id, context)
-      if (reusable && reusable.status !== "ok" && reusable.status !== "stale" && !(reusable.status === "needs-input" && reusable.reason === "answer-unconfirmed")) return reusable
+    const probed = await input.answerReuse?.read(thread.value.id, context)
+    // The thread already carries the reply the caller wrote. A missing reuse observation is unconfirmed, not an absent answer.
+    const reusable = probed && probed.status !== "ok" && probed.status !== "stale" && probed.status !== "denied" && !(probed.status === "needs-input" && probed.reason === "answer-unconfirmed") ? undefined : probed
+    if (reusable?.status === "denied") return reusable
       if (reusable?.status === "ok" && (reusable.value.answer !== answer.body || reusable.value.authorRef !== answer.authorRef || digestSfValue(reusable.value.reviewContext) !== digestSfValue(answer.sourceContext?.reviewContext))) return { status: "stale", reason: "answer-changed" }
       const current = await (input.threadReads ?? input.collaboration.threads).read(parsed.value.questionRef, context)
       if (current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(thread.value)) return { status: "unavailable", reason: "answer-unavailable" }
