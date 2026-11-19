@@ -383,8 +383,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         setState({ paste: { ...original, phase: "failed" }, error: t("sf.u07.previewError") })
       } else {
         const reviewed = reconcileBudgetPaste(original, result.body.value.rows, false)
-        setState({ paste: reviewed.phase === "complete" ? { ...original, phase: "review" } : { ...reviewed, phase: reviewed.phase },
-          pasteInput: input, error: "" })
+        const paste: SfPasteState = reviewed.phase === "complete"
+          ? { ...original, phase: "review" }
+          : reviewed
+        setState({ paste, pasteInput: input, error: "" })
       }
     } catch (error) {
       console.error("N19 monthly preview failed", error instanceof Error ? error.name : "unknown")
