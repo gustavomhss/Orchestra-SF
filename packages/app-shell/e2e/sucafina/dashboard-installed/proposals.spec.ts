@@ -1,6 +1,7 @@
+import { createHash } from "node:crypto"
 import { expect, test, type BrowserContext, type Locator, type Page, type Response, type Route, type TestInfo } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
+import { canonicalSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract"
 import { createProposalInstallation, enterProposalShell, proposalResponseBody, retainProposalResponse, withProposalHost } from "../proposals-support/installation"
 import type { ProposalObservation } from "../proposals-support/protocol"
@@ -170,7 +171,7 @@ test("Dashboard reads the current source and active private proposal while prese
         })
         await expect(panel.getByText("This topic changed. Review the current version before saving.", { exact: true })).toBeVisible()
 
-        const activeKey = "sf:proposal-coverage:hot-topic:active:" + digestSfValue(original.id)
+        const activeKey = "sf:proposal-coverage:hot-topic:active:" + createHash("sha256").update(canonicalSfValue(original.id)).digest("hex")
         const observation = await host.control()
         expect(observation.preferences.value?.keys).toContain(activeKey)
         const active = onlyDraft(observation)
