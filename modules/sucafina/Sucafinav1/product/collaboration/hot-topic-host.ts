@@ -1,6 +1,6 @@
 import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
-import type { Actor } from "../../runtime/contract.ts"
+import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { bindCreatedSourceIdentity } from "../integration/source-lifecycle.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -51,7 +51,7 @@ export function createCollaborationHotTopicHost(input: { host: DomainPortHost; s
     if (!await input.host.revalidate(context) || !await sourcesAvailable(input.evidence, refs, context)) return { status: "denied", reason: "source-access-unavailable" }
     return saved.value
   }
-  return { transact, bindCreatedIdentity: (snapshot, recordId) => bindCreatedSourceIdentity(snapshot, "hotTopics", recordId) }
+  return { transact, bindCreatedIdentity: (snapshot: Snapshot, recordId: string) => bindCreatedSourceIdentity(snapshot, "hotTopics", recordId) }
 }
 
 async function sourcesAvailable(evidence: BusinessContextService, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) {
