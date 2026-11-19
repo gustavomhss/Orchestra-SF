@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { classificationDigest } from "../../../product/decisions/coverage-classification.ts"
 import { createPortfolioCoveragePreview } from "../../../product/portfolio/coverage-preview.ts"
 import { createPortfolioCoverageFixture } from "./coverage-preview-fixture.ts"
 
@@ -141,5 +142,48 @@ test("WP13 does not qualify a real foreign currency preview with missing FX", as
     expect(fixture.selectedResult.total).toBeNull()
     expect((await fixture.coverage.issue(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)).status).not.toBe("ok")
     expect((await fixture.exact(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)).status).not.toBe("ok")
+  } finally { await fixture.cleanup() }
+}, 180000)
+
+test("classified known-subtotal proof retains omitted training and rejects changed money, classification and authority", async () => {
+  const fixture = await createPortfolioCoverageFixture("omitted")
+  try {
+    const originals = { source: fixture.selectedResult, baseline: fixture.baselineResult }
+    const before = structuredClone(originals)
+    const proof = await fixture.coverage.proveKnownSubtotal(fixture.sensitivityRequest, fixture.baselineRef, originals, fixture.context)
+    expect(proof.status).toBe("ok")
+    expect((await fixture.coverage.issue(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)).status).not.toBe("ok")
+    expect(fixture.selectedCoverage.assessment.coverageState).toBe("pending")
+    expect(fixture.selectedCoverage.assessment.derivedMissingCategoryIds).toContain("training")
+    expect(originals).toEqual(before)
+    expect(originals.source.total).toBeNull()
+    expect(originals.source.comparisonStatus).toBe("conditioned")
+
+    for (const source of [
+      { ...originals.source, knownSubtotal: (originals.source.knownSubtotal ?? 0) + 1 },
+      { ...originals.source, currency: "EUR" },
+      { ...originals.source, horizon: { ...originals.source.horizon, start: "2026-01-01" } },
+      { ...originals.source, sourceRefs: originals.source.sourceRefs.slice(1) },
+      { ...originals.source, components: originals.source.components.map((component, index) => index === 0 ? { ...component, amount: (component.amount ?? 0) + 1 } : component) },
+    ]) expect((await fixture.coverage.proveKnownSubtotal(fixture.sensitivityRequest, fixture.baselineRef, { ...originals, source }, fixture.context)).status).not.toBe("ok")
+
+    const missing = createPortfolioCoveragePreview({ units: fixture.issuer, preview: fixture.preview, resolveAuthority: async (...args) => {
+      const observed = await fixture.resolveAuthority(...args)
+      if (observed.status !== "ok") return observed
+      const classification = { ...observed.value.classification, mappings: [] }
+      classification.classificationDigest = classificationDigest(classification)
+      return { status: "ok", value: { ...observed.value, classification } }
+    } })
+    expect((await missing.proveKnownSubtotal(fixture.sensitivityRequest, fixture.baselineRef, originals, fixture.context)).status).not.toBe("ok")
+
+    const reads = { count: 0 }
+    const changed = createPortfolioCoveragePreview({ units: fixture.issuer, preview: fixture.preview, resolveAuthority: async (...args) => {
+      const observed = await fixture.resolveAuthority(...args)
+      if (observed.status !== "ok" || ++reads.count < 2) return observed
+      return { status: "ok", value: { ...observed.value, selection: { ...observed.value.selection, version: observed.value.selection.version + 1 } } }
+    } })
+    expect(await changed.proveKnownSubtotal(fixture.sensitivityRequest, fixture.baselineRef, originals, fixture.context)).toMatchObject({ status: "stale", reason: "coverage-authority-changed" })
+    fixture.revokeStatement()
+    expect((await fixture.coverage.proveKnownSubtotal(fixture.sensitivityRequest, fixture.baselineRef, originals, fixture.context)).status).not.toBe("ok")
   } finally { await fixture.cleanup() }
 }, 180000)
