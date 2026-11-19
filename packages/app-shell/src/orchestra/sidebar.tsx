@@ -46,9 +46,22 @@ import { showToast } from "@/utils/toast"
 const icons = {
   home: '<path d="M2.8 6.6 8 2.6l5.2 4v6a1 1 0 0 1-1 1h-2.7v-3.8H6.5v3.8H3.8a1 1 0 0 1-1-1z"/>',
   chat: '<path d="M2.6 3.6h10.8v6.9H6.9l-3.1 2.3v-2.3H2.6z"/>',
-  // UI29 Today and admitted UI33/UI34 Decisions (approved 16-unit icon grid).
-  "sf-home": '<path d="M2.5 3h11v10h-11zM5 6h6M5 8h6M5 10h4"/>',
-  "sf-decisions": '<path d="M3 3h10v10H3zM5 6l2 2 4-4M5 11h6"/>',
+  // Sucafina chapter marks. Same 16-unit stroke grid as the nav icons; each silhouette is that screen.
+  "sf-home": '<path d="M2.8 11.4h10.4"/><path d="M4.4 11.4a3.6 3.6 0 0 1 7.2 0"/><path d="M8 3.1v1.5M5 4.9l1 .9M11 4.9l-1 .9"/>',
+  "sf-decisions": '<path d="M8 2.4 12.6 8 8 13.6 3.4 8Z"/><path d="m6.15 8.1 1.3 1.3 2.4-2.55"/>',
+  "sf-dashboard": '<rect x="2" y="2" width="5.2" height="5.2" rx="1.05"/><rect x="8.8" y="2" width="5.2" height="5.2" rx="1.05"/><rect x="2" y="8.8" width="5.2" height="5.2" rx="1.05"/><rect x="8.8" y="8.8" width="5.2" height="5.2" rx="1.05"/>',
+  "sf-people": '<circle cx="3.7" cy="5.2" r="1.25"/><circle cx="8" cy="4.5" r="1.5"/><circle cx="12.3" cy="5.2" r="1.25"/><path d="M2.1 12.3c.7-2.1 2-3 3.2-3h5.4c1.2 0 2.5.9 3.2 3"/>',
+  "sf-operations": '<rect x="2.6" y="2.1" width="10.8" height="3.2" rx=".75"/><rect x="2.6" y="6.4" width="10.8" height="3.2" rx=".75"/><rect x="2.6" y="10.7" width="10.8" height="3.2" rx=".75"/><path d="M11.2 3v1.4M11.2 7.3v1.4M11.2 11.6v1.4"/>',
+  "sf-portfolio": '<path d="M4.6 3.2h6.8"/><path d="M3.4 5.2h9.2"/><rect x="2.2" y="7" width="11.6" height="6.6" rx="1.05"/>',
+  "sf-procurement": '<rect x="3.1" y="3.6" width="9.8" height="10" rx="1.05"/><path d="M6.2 3.6V2.2h3.6v1.4"/><path d="M5.3 6.8h5.4M5.3 9h5.4M5.3 11.1h3.2"/>',
+  "sf-planner": '<path d="M2.6 2.3v11.4"/><rect x="4.4" y="3.1" width="6.4" height="2" rx="1"/><rect x="4.4" y="7" width="8.8" height="2" rx="1"/><rect x="4.4" y="10.9" width="4.4" height="2" rx="1"/>',
+  "sf-work": '<circle cx="4.5" cy="4.7" r="1.65"/><path d="M2.3 11.5c.45-1.9 1.45-2.8 2.2-2.8s1.75.9 2.2 2.8"/><path d="M9.1 4.1h4.3M9.1 7.2h4.3M9.1 10.3h2.7"/>',
+  "sf-bi": '<path d="M2.4 2.5v11h11.2"/><path d="m4.2 10.2 2.5-2.5 2.1 1.6 3.4-4"/>',
+  "sf-reviews": '<rect x="2.5" y="1.8" width="11" height="12.4" rx="1.2"/><path d="M2.5 4.6h11"/><path d="M4.2 7.1h1.15M4.2 9.4h1.15M4.2 11.7h1.15"/><path d="M6.3 7.1h5M6.3 9.4h5M6.3 11.7h3.2"/>',
+  "sf-imports": '<path d="M8 1.9v6.4"/><path d="m5.1 6.1 2.9 2.9 2.9-2.9"/><path d="M2.8 11.2h10.4v1.6a1 1 0 0 1-1 1H3.8a1 1 0 0 1-1-1z"/>',
+  "sf-documents": '<path d="M4.8 3.4h6.4v8.6"/><path d="M3.2 4.8v7.6"/><path d="M6.4 5.2h4.2l1.7 1.7v6.2a.9.9 0 0 1-.9.9H6.4a.9.9 0 0 1-.9-.9V6.1a.9.9 0 0 1 .9-.9z"/><path d="M10.6 5.3v1.7h1.7"/>',
+  "sf-memory": '<circle cx="8" cy="11.6" r="1.15"/><path d="M5.3 9a3.7 3.7 0 0 1 5.4 0"/><path d="M3.2 6.7a6.6 6.6 0 0 1 9.6 0"/>',
+  "sf-routines": '<path d="M12.6 6.2A4.6 4.6 0 1 0 11.4 11.8"/><path d="M12.6 2.8v3.5H9.1"/>',
   inbox: '<path d="m2 9 2-6h8l2 6v4H2V9Z"/><path d="M2 9h3l1.2 2h3.6L11 9h3"/>',
   // Projects board: three columns of cards.
   board: '<rect x="2" y="2.6" width="3.2" height="10.8" rx="1"/><rect x="6.4" y="2.6" width="3.2" height="7.4" rx="1"/><rect x="10.8" y="2.6" width="3.2" height="4.6" rx="1"/>',
