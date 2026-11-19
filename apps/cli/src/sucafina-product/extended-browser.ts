@@ -8,6 +8,8 @@ import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/p
 import type { PreservedReview, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { SfReviewUpdate } from "./extended-review-cycle.ts"
+import { createReviewAgendaDiscoveryBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts"
+import { refreshDashboardReviewAgenda } from "../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-refresh.ts"
 import { sfReviewNavigationUrl } from "./extended-review-navigation.ts"
 
 const root = document.querySelector<HTMLElement>("[data-sf-review-workspace]")
@@ -142,6 +144,7 @@ if (root && bootstrap) {
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
     const client = createReviewPreparationBrowser()
+    const discover = createReviewAgendaDiscoveryBrowser()
     const guarded = async <T>(read: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
       const turn = generation
       if (closed) return { status: "denied", reason: "review-access-changed" }
@@ -154,6 +157,7 @@ if (root && bootstrap) {
       client: { ...client, contribution: (payload) => guarded(() => client.contribution(payload)), agenda: (items) => guarded(() => client.agenda(items)),
         preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)), report: (payload) => guarded(() => client.report(payload)),
         downloadUrl: (reference) => closed ? undefined : client.downloadUrl(reference) },
+      refreshItems: (items) => guarded(() => refreshDashboardReviewAgenda(items, discover)),
       openReview: (reference) => { if (!closed) location.assign(reviewUrl(reference)) } })
     const choices = document.createElement("fieldset"), legend = document.createElement("legend"), message = document.createElement("p")
     legend.textContent = "Seleção da revisão sucessora"; choices.append(legend); message.setAttribute("role", "status")

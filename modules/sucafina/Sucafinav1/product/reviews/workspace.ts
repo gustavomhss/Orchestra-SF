@@ -1,4 +1,5 @@
 import type { Period, PreservedReview } from "../contracts/context.ts"
+import type { PortResult } from "../contracts/ports.ts"
 import type { MeetingMaterialProposal } from "../contracts/outputs.ts"
 import { createReviewPreparationBrowser } from "./browser.ts"
 import type { ReviewAgendaItem, ReviewAgendaPreview } from "./selection.ts"
@@ -14,6 +15,7 @@ export function createReviewPreparationView(input: {
   routineResult?: RoutineReviewSelectionRequest
   discover?: ReviewAgendaDiscovery
   discoveryPeriod?: Period
+  refreshItems?: (items: readonly ReviewAgendaItem[]) => Promise<PortResult<ReviewAgendaItem[]>>
   client?: ReturnType<typeof createReviewPreparationBrowser>
   openReview: (reviewRef: string) => void
 }) {
@@ -172,8 +174,14 @@ export function createReviewPreparationView(input: {
   }) : state.items
   const load = () => run("Loading authorized sources…", async (current) => {
     if (pendingPreserve) return
-    const items = remainingItems()
+    let items = remainingItems()
     const oldOrder = [...state.order]
+    if (state.reviewRef && input.refreshItems) {
+      const refreshed = await input.refreshItems(items)
+      if (!current()) return
+      if (refreshed.status !== "ok") { reject(refreshed.status, refreshed.reason); return }
+      items = refreshed.value
+    }
     const selection = await client.agenda(items)
     if (!current()) return
     if (selection.status !== "ok") { reject(selection.status, selection.reason); return }
