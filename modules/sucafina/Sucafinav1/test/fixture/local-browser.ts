@@ -47,7 +47,7 @@ export async function localBrowser() {
       close(socket) { scans.delete(socket) },
     } })
     cleanup.push(() => scanner.stop(true))
-    const configFile = await prepareLocalConfiguration(root)
+    const configFile = await prepareLocalConfiguration(root, "http://localhost:3000")
     const access = await prepareOperatorAccess(configFile, true)
     const config = await Bun.file(configFile).json()
     config.localOperator.buyer = true
@@ -60,9 +60,9 @@ export async function localBrowser() {
       XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
     }
     console.info("browser fixture: installation")
-    const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, configFile, environment)
+    const installation = await createLocalInstallation({ origin: "http://localhost:3000" }, configFile, environment)
     cleanup.push(() => installation.dispose())
-    const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
+    const server = Bun.serve({ hostname: "localhost", port: 3000, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
     const stopServer = () => server.stop(true)
     cleanup.push(stopServer)
     const { chromium } = await import("@playwright/test")
@@ -188,14 +188,14 @@ export async function localBrowser() {
     const handoff = (await Bun.file(access.artifact).text()).match(/location\.replace\(("[^"\r\n]*")\)/)?.[1]
     if (!handoff) throw new Error("Private test enrollment handoff is malformed")
     const destination = new URL(JSON.parse(handoff))
-    if (destination.origin !== "http://localhost:4110" || destination.pathname !== "/sucafina/auth/local") throw new Error("Unexpected test enrollment destination")
+    if (destination.origin !== "http://localhost:3000" || destination.pathname !== "/sucafina/auth/local") throw new Error("Unexpected test enrollment destination")
     console.info("browser fixture: private enrollment navigation")
     const [enrollment] = await Promise.all([
       page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/auth/local", { timeout: 10000 }),
       page.goto(destination.href, { waitUntil: "domcontentloaded", timeout: 10000 }),
     ]).catch((error) => { throw new Error("Private test browser enrollment failed: " + (error instanceof Error ? error.message : String(error))) })
     if (enrollment.status() !== 303) throw new Error(`Test enrollment failed with status ${enrollment.status()}`)
-    await page.waitForURL("http://localhost:4110/", { timeout: 10000 })
+    await page.waitForURL("http://localhost:3000/", { timeout: 10000 })
     console.info("browser fixture: authenticated")
     await mkdir(path.join(import.meta.dir, "../artifacts"), { recursive: true })
     return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose }
