@@ -60,6 +60,7 @@ jobs:
                       raw = archive.read(member).decode("utf-8", errors="replace")
                       if "# Page snapshot" in raw: raw = raw[raw.index("# Page snapshot"):]
                       if "# Test source" in raw: raw = raw[:raw.index("# Test source")]
+                      raw = "\n".join(line for line in raw.splitlines() if re.search(r"heading|rowheader|textbox|combobox|status|alert|button.*(?:Save|Review|Apply|Cancel)|WP03 License|pasted|invalid", line, re.I))
                       output += ["## " + name, "", clean(raw,18000), ""]
                   if name.endswith(".json"):
                       inspected.append(name)
@@ -80,4 +81,4 @@ jobs:
       - name: Persist original diagnostics
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-wp4-original-20261119.md --input "$RUNNER_TEMP/wp4-observations-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-wp4-planner-tail-20261119.md --input "$RUNNER_TEMP/wp4-observations-payload.json" > /dev/null
