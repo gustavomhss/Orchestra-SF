@@ -86,7 +86,15 @@ export function createSfProductAuthority(input: {
     Object.freeze(copy.location)
     return Object.freeze(copy)
   }
-  const principal = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.()) => {
+  const otherSurfaces = () => {
+    if (!input.persistence.currentSnapshot) return input.persistence.currentSnapshots?.()
+    // Dashboard already belongs to this canonical transaction. Capture the
+    // other two detached copies now, before any asynchronous authentication.
+    const planner = input.persistence.currentSnapshot("planner")
+    const procurement = input.persistence.currentSnapshot("procurement")
+    return planner && procurement ? { planner, procurement } : undefined
+  }
+  const principal = async (request: Request, dashboard: Snapshot, snapshots = otherSurfaces()) => {
     if (!snapshots) return undefined
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||

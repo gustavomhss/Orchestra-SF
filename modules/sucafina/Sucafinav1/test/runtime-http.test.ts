@@ -144,6 +144,21 @@ test("HTTP request boundaries retain host routes, serve one page query, and reti
     expect(empty?.status).toBe(404)
     expect(await empty?.text()).toBe("legacy console decommissioned — use /")
   }
+  for (const query of [
+    "sf=not-installed",
+    "sf=not-installed&page=IT%20Risks",
+    "sf=not-installed&asset=page&page=IT%20Risks",
+    "page=IT%20Risks&page=IT%20Risks",
+  ]) {
+    const rejected = await app.handler(new Request(`https://installation.example/sucafina/dashboard?${query}`))
+    expect(rejected?.status).toBe(404)
+    expect(await rejected?.text()).toBe("legacy console decommissioned — use /")
+  }
+  for (const query of ["sf=", "sf=workbench&sf=workbench", "sf=workbench&sf=not-installed"]) {
+    const invalid = await app.handler(new Request(`https://installation.example/sucafina/dashboard?${query}`))
+    expect(invalid?.status).toBe(400)
+    expect(await invalid?.text()).toBe("Invalid product operation")
+  }
   app.identity.principal = null
   // Export is still an authorized data operation, not an HTML route.
   expect((await app.handler(new Request("https://installation.example/sucafina/dashboard?download=json")))?.status).toBe(401)

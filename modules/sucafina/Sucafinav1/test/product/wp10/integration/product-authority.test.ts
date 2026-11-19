@@ -16,7 +16,7 @@ import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/cont
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { selection } from "../resident-runtime/fixture.ts"
 
-async function fixture(grants: readonly SfProductGrant[], work: (input: { product: ReturnType<typeof createSfProductAuthority>; request: Request; location: Location.Ref; persistence: LocalStore; actor: { write: boolean; active: boolean }; changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } }) => Promise<void>, options: { rejectNested?: boolean } = {}) {
+async function fixture(grants: readonly SfProductGrant[], work: (input: { product: ReturnType<typeof createSfProductAuthority>; request: Request; location: Location.Ref; persistence: LocalStore; actor: { write: boolean; active: boolean }; changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } }) => Promise<void>, options: { rejectNested?: boolean; onAuthenticate?: (surface: string) => void } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-product-authority-"))
   await chmod(directory, 0o700)
   const driver = await openLocalStore(join(directory, "store"))
@@ -37,6 +37,7 @@ async function fixture(grants: readonly SfProductGrant[], work: (input: { produc
   const product = createSfProductAuthority({ identity: () => identity, installationId: "installation", origin: "https://example.test",
     policyVersion: "policy", persistence, grants, now: Date.now, createId: () => crypto.randomUUID(),
     authenticate: async (_request, context) => {
+      if (context) options.onAuthenticate?.(context.surface)
       if (changes.mutateAuth) identity.hostId = "changed-during-auth"
       return !actor.active || !context ? null : { id: "person", canWrite: actor.write,
         roles: [{ surface: context.surface, role: context.surface === "dashboard" ? changes.role : "viewer" }] }
@@ -303,3 +304,51 @@ test("identity mutation during authentication is denied", async () => {
   })
 })
 
+
+test("product authority captures only missing surfaces before authentication and retains legacy and explicit snapshot paths", async () => {
+  const events: string[] = []
+  await fixture([{ principalRef: "person", namespaces: ["cases"], operations: ["sf_context_get"] }], async ({ product, request, persistence }) => {
+    const all = persistence.currentSnapshots!, one = persistence.currentSnapshot!
+    if (!all || !one) throw new Error("Current snapshot capabilities unavailable")
+    persistence.currentSnapshots = () => {
+      const value = all()
+      if (value) events.push("copy:all")
+      return value
+    }
+    const selected: NonNullable<LocalStore["currentSnapshot"]> = (surface) => {
+      const value = one(surface)
+      if (value) events.push("copy:" + surface)
+      return value
+    }
+    persistence.currentSnapshot = selected
+    const admitted = await product.ui.admit(request, "sf_context_get", "a".repeat(64))
+    expect(admitted.status).toBe("ok")
+    if (admitted.status !== "ok") throw new Error("Current principal not admitted")
+    expect(events.slice(0, 5)).toEqual(["copy:planner", "copy:procurement", "auth:dashboard", "auth:planner", "auth:procurement"])
+    expect(events).not.toContain("copy:all")
+    expect(events).not.toContain("copy:dashboard")
+    events.length = 0
+    delete persistence.currentSnapshot
+    expect(await product.ui.revalidate(admitted.value)).toBe(true)
+    expect(events).toContain("copy:all")
+    expect(events).not.toContain("copy:planner")
+    persistence.currentSnapshot = selected
+    events.length = 0
+    expect(await persistence.transaction("dashboard", async () => ({
+      commit: false, value: await product.ui.revalidate(admitted.value),
+    }))).toBe(true)
+    // resolve(request) already supplied its complete observation. Do not
+    // reacquire different per-surface bytes after any authentication callback.
+    expect(events).toContain("copy:all")
+    expect(events).not.toContain("copy:planner")
+    expect(events).not.toContain("copy:procurement")
+    await persistence.transaction("planner", async (snapshot) => {
+      snapshot.data.access = { person: { assigned: ["new-scope"], domains: [] } }
+      return { commit: true, value: undefined }
+    })
+    expect(await product.ui.revalidate(admitted.value)).toBe(false)
+    delete persistence.currentSnapshot
+    expect(await product.ui.revalidate(admitted.value)).toBe(false)
+    product.ui.finish(admitted.value)
+  }, { onAuthenticate: (surface) => { events.push("auth:" + surface) } })
+})

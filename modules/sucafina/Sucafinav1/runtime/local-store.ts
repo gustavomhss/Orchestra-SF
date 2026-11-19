@@ -130,6 +130,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       current = current.parent
     }
   }
+  const copyCurrentSnapshot = (scope: ReadScope, surface: Surface): Snapshot => {
+    const materialize = scope.root.copies?.[surface]
+    if (materialize) return materialize()
+    const snapshot = scope.root.snapshots[surface]
+    if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+    return cloneSnapshot(snapshot)
+  }
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
   const queue = { tail: undefined as Promise<void> | undefined }
@@ -259,14 +266,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const scope = context.getStore()
       if (!scope) return undefined
       requireScope(scope)
-      const copy = (surface: Surface) => {
-        const materialize = scope.root.copies?.[surface]
-        if (materialize) return materialize()
-        const snapshot = scope.root.snapshots[surface]
-        if (!snapshot) throw new Error("Local transaction snapshots unavailable")
-        return cloneSnapshot(snapshot)
-      }
-      return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
+      return { dashboard: copyCurrentSnapshot(scope, "dashboard"), planner: copyCurrentSnapshot(scope, "planner"), procurement: copyCurrentSnapshot(scope, "procurement") }
+    },
+    currentSnapshot: (surface) => {
+      const scope = context.getStore()
+      if (!scope) return undefined
+      requireScope(scope)
+      return copyCurrentSnapshot(scope, surface)
     },
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
       const parent = context.getStore()

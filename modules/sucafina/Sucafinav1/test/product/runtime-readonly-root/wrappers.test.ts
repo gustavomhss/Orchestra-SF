@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import type { Surface } from "../../../src/identity.ts"
+import type { Persistence } from "../../../runtime/contract.ts"
 import { readPortfolioSnapshot } from "../../../product/portfolio/read-snapshot.ts"
 import { createCanonicalReadFixture } from "./canonical-fixture.ts"
 
@@ -232,5 +233,31 @@ test("legacy persistence remains usable after unrelated capability-backed reads"
     expect(fixture.metrics.callbacks.dashboard).toBe(1)
     expect(fixture.metrics.revalidations).toBe(1)
     expect(fixture.driver.currentSnapshots!()).toBeUndefined()
+  } finally { await fixture.close() }
+})
+
+for (const wrapper of ["source", "fence"] as const) test(`single-surface copies preserve the canonical ${wrapper} publication fence`, async () => {
+  const fixture = await createCanonicalReadFixture({ wrapper })
+  try {
+    const persistence = fixture.capablePersistence as Persistence
+    if (!persistence.currentSnapshot) throw new Error("Single-surface observation unavailable")
+    expect(persistence.currentSnapshot("planner")).toBeUndefined()
+    let observed = 0
+    let published: boolean | undefined
+    await expect(fixture.withinFence(async () => {
+      fixture.fence.observe(fixture.context, () => false)
+      published = await fixture.read(async () => {
+        const first = persistence.currentSnapshot!("planner")
+        expect(first?.data.marker).toBe("planner")
+        if (first) first.data.marker = "copy only"
+        expect(persistence.currentSnapshot!("planner")?.data.marker).toBe("planner")
+        observed++
+        return true
+      })
+      return published
+    })).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
+    expect(observed).toBe(1)
+    expect(published).toBe(false)
+    expect(persistence.currentSnapshot("planner")).toBeUndefined()
   } finally { await fixture.close() }
 })

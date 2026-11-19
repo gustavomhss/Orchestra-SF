@@ -1,7 +1,11 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { object } from "../../../runtime/contract.ts"
+import { refreshDashboardReviewAgenda } from "../../../product/reviews/agenda-refresh.ts"
+import type { ReviewAgendaDiscovery } from "../../../product/reviews/agenda-picker.ts"
+import type { ReviewAgendaItem, ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
 import { createSfExtendedAssets } from "../../../../../../apps/cli/src/sucafina-product/extended-assets.ts"
+import { sfReviewNavigationUrl } from "../../../../../../apps/cli/src/sucafina-product/extended-review-navigation.ts"
 import { createSfExtendedBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts"
 import { financialCompositionFixture } from "../wp10/integration/financial-composition-fixture.ts"
 
@@ -124,6 +128,22 @@ test("an actual preserved review keeps update and successor focus recoverable wh
     })
     const saved = await post("review-preserve", { selectionRef: agenda.selectionRef, sectionRefs })
     if (typeof saved.id !== "string") throw new Error("The actual review and receipt were not preserved")
+    // Navigation leaves the Reports form selection behind and retains only the
+    // destination's preserved identity. Each URL still passes the real router.
+    const reportsLocation = new URL("https://example.test/dashboard?page=Budget+Overview&download=docx&year=2026&topic=Budget+Overview&topic=Portfolio+Dashboard#old-selection")
+    for (const destination of [
+      { reviewRef: saved.id },
+      { reviewRef: saved.id, sectionId: sectionRefs[0]! },
+      { previousReviewRef: saved.id },
+    ]) {
+      const next = sfReviewNavigationUrl(reportsLocation.href, destination)
+      expect(next.origin).toBe(reportsLocation.origin)
+      expect(next.pathname).toBe(reportsLocation.pathname)
+      expect(next.hash).toBe("")
+      expect(Object.fromEntries(next.searchParams)).toEqual({ sf: "review", ...destination })
+      expect([...next.searchParams.keys()]).toHaveLength(1 + Object.keys(destination).length)
+      expect((await f.send(next.searchParams)).status).toBe(200)
+    }
     const reviews = f.extended.reviews
     if (!reviews) throw new Error("The installed canonical review producer is missing")
     const read = reviews.reviews.read
@@ -230,5 +250,104 @@ test("installed Reports authorization I/O remains recoverable before consumption
       .rejects.toThrow("REPORTS48_INSTALLED_AUTHORITY_READ_INTERRUPTED")
     expect(await f.fixture.authority.ui.admit(f.fixture.request(), humanRead, digest))
       .toEqual({ status: "denied", reason: "ui-authority-unavailable" })
+  } finally { await f.dispose() }
+}, 60_000)
+
+test("explicit Reports refresh retains the exact selected records and preserves the previous review when source values change", async () => {
+  const f = await installedReportsFixture()
+  try {
+    const period = { start: "2026-01-01", end: "2026-12-31" }
+    await f.fixture.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.projects = Array.from({ length: 3 }, (_, index) => ({
+        id: "refresh-project-" + index, name: "Refresh project " + index,
+        status: "Planning", start: period.start, end: period.end, milestones: [],
+      }))
+      snapshot.data.opexEntries = [{ id: "january", ownerId: "owner", year: 2026, month: 1, budget: 100, actual: 100, forecast: 110 }]
+      return { commit: true, value: undefined }
+    })
+    const entry = await f.send(new URLSearchParams([
+      ["page", "Budget Overview"], ["download", "docx"], ["year", "2026"],
+      ["topic", "Budget Overview"], ["topic", "Portfolio Dashboard"],
+    ]))
+    expect(entry.status).toBe(200)
+    const encoded = /<script type="application\/json" data-sf-review-bootstrap>([\s\S]*?)<\/script>/.exec(await entry.text())?.[1]
+    if (!encoded) throw new Error("Real Reports bootstrap unavailable")
+    const items = object(JSON.parse(encoded)).items as Extract<ReviewAgendaItem, { kind: "dashboard" }>[]
+    expect(items.every((item) => item.kind === "dashboard")).toBe(true)
+    const post = async (mode: string, payload: unknown) => {
+      const response = await f.extended.productHttp(new Request(`https://example.test/dashboard?sf=${mode}`, {
+        method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      }), "dashboard")
+      if (!response) throw new Error("Real Reports command unavailable")
+      return response
+    }
+    const preview = async (selected: readonly ReviewAgendaItem[]): Promise<ReviewAgendaPreview> => {
+      const response = await post("review-agenda", { items: selected })
+      expect(response.status).toBe(200)
+      const result = await response.json()
+      expect(result.status).toBe("ok")
+      return result.value
+    }
+    const initial = await preview(items)
+    const projects = initial.sections.find((section) => section.title === "Projects")
+    if (!projects) throw new Error("Real project selection unavailable")
+    expect(projects.recordCount).toBe(3)
+    const selected = items.map((item) => ({
+      ...item, agendaNote: "Retain this explicit selection",
+      recordRefs: initial.sectionRecordRefs.find((section) => section.sectionRef === item.id)!.recordRefs
+        .filter((_ref, index) => item.id !== projects.id || index !== 0),
+    }))
+    const capturedItems = structuredClone(selected)
+    const chosen = await preview(selected)
+    expect(chosen.sections.find((section) => section.id === projects.id)?.recordCount).toBe(2)
+    const savedResponse = await post("review-preserve", { selectionRef: chosen.selectionRef, sectionRefs: chosen.sectionRefs })
+    expect(savedResponse.status).toBe(200)
+    const saved = object(await savedResponse.json()).value as { id: string }
+    const read = async () => {
+      const response = await f.send(new URLSearchParams({ sf: "review-read", reviewRef: saved.id }))
+      expect(response.status).toBe(200)
+      return object(await response.json()).value
+    }
+    const prior = await read()
+    await f.fixture.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.opexEntries = [{ id: "january", ownerId: "owner", year: 2026, month: 1, budget: 100, actual: 100, forecast: 190 }]
+      return { commit: true, value: undefined }
+    })
+    expect((await post("review-agenda", { items: selected })).status).toBe(409)
+    const discover: ReviewAgendaDiscovery = async (query) => {
+      const response = await f.send(new URLSearchParams({ sf: "review-agenda", domain: "dashboard",
+        start: query.period.start, end: query.period.end }))
+      return response.json()
+    }
+    const refreshed = await refreshDashboardReviewAgenda(selected, discover)
+    expect(refreshed.status).toBe("ok")
+    if (refreshed.status !== "ok") throw new Error(refreshed.reason)
+    expect(selected).toEqual(capturedItems)
+    expect(refreshed.value.map(({ selectionRef: _ref, ...item }) => item))
+      .toEqual(capturedItems.map(({ selectionRef: _ref, ...item }) => item))
+    const current = await preview(refreshed.value)
+    expect(current.sections.find((section) => section.id === projects.id)?.recordCount).toBe(2)
+    expect(current.sections.flatMap((section) => section.projection.values)
+      .find((value) => value.id === "budget:2026-01:forecast")?.value).toBe(190)
+    expect(await read()).toEqual(prior)
+    const nextResponse = await post("review-preserve", { selectionRef: current.selectionRef,
+      sectionRefs: current.sectionRefs, previousReviewRef: saved.id })
+    expect(nextResponse.status).toBe(200)
+    const successor = object(object(await nextResponse.json()).value)
+    expect(successor.previousReviewRef).toBe(saved.id)
+    expect(successor.id).not.toBe(saved.id)
+    expect(await read()).toEqual(prior)
+
+    for (const fault of ["missing", "ambiguous"] as const) {
+      const uncertain = await refreshDashboardReviewAgenda(selected, async (query) => {
+        const found = await discover(query)
+        if (found.status !== "ok") return found
+        return { status: "ok", value: { options: fault === "missing" ? [] : [...found.value.options, ...found.value.options] } }
+      })
+      expect(uncertain).toEqual({ status: "needs-input", reason: "agenda-refresh-selection-unavailable" })
+    }
+    f.fixture.active.value = false
+    expect((await refreshDashboardReviewAgenda(selected, discover)).status).toBe("denied")
   } finally { await f.dispose() }
 }, 60_000)

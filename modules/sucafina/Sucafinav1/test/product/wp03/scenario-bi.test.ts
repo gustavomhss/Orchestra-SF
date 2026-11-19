@@ -43,6 +43,42 @@ test("BI09 routes a real C08 pair through the Planner waterfall without promotin
   } finally { await f.close() }
 }, 180000)
 
+
+test("known-subtotal drilldown proves the complete primary origin of every priced component while retaining coverage refs", async () => {
+  const f = await scenarioBiFixture({ training: 0 })
+  try {
+    const source = await f.scenario.readView(f.payload, f.context)
+    const pair = await resolvePlannerScenarioBatch(f.scenarios, [f.baselineRef, f.candidateRef], f.context)
+    if (source.status !== "ok" || source.value.projection.decision?.kind !== "scenario" || pair[0]?.status !== "ok" || pair[1]?.status !== "ok") throw new Error("Canonical pair unavailable")
+    const baseline = pair[0].value, candidate = pair[1].value
+    const decision = source.value.projection.decision
+    const show = (entry: typeof candidate) => plannerScenarioBiPresentation({ ...source.value.projection, decision: { ...decision, scenario: entry.result } }, { baseline, candidate: entry }, "BI09")
+    const shown = show(candidate)
+    expect(shown.status).toBe("ok")
+    if (shown.status !== "ok") throw new Error(JSON.stringify(shown))
+    expect(candidate.result.sourceRefs.length).toBeGreaterThan(1)
+    expect(shown.value.projection.values.find((value) => value.id === "scenario:baseline-known-subtotal")?.drilldown).toEqual(baseline.source)
+    expect(shown.value.projection.values.find((value) => value.id === "scenario:candidate-known-subtotal")).toMatchObject({ value: candidate.result.knownSubtotal, sourceRefs: candidate.result.sourceRefs, drilldown: candidate.source })
+    const mutations: readonly ((entry: typeof candidate) => void)[] = [
+      (entry) => { entry.result.components[0]!.sourceRefs = [...entry.result.components[0]!.sourceRefs, baseline.projection.components[0]!.sourceRefs[0]!] },
+      (entry) => { entry.result.components[0]!.sourceRefs[0]!.version++ },
+      (entry) => { entry.result.components[0]!.sourceRefs[0]!.fields = ["different-field"] },
+      (entry) => { entry.result.components[0]!.sourceRefs[0]!.period = { start: "2027-01-01", end: "2027-01-31" } },
+      (entry) => { entry.result.components[0]!.evidenceState = "hypothetical" },
+      (entry) => { entry.result.components[0]!.amount = (entry.result.components[0]!.amount ?? 0) + 1 },
+      (entry) => { entry.result.sourceRefs = entry.result.sourceRefs.filter((ref) => ref.refId !== entry.source.refId) },
+    ]
+    for (const mutate of mutations) {
+      const changed = structuredClone(candidate)
+      mutate(changed)
+      const refused = show(changed)
+      expect(refused.status).toBe("ok")
+      if (refused.status !== "ok") throw new Error(JSON.stringify(refused))
+      expect(refused.value.projection.values.find((value) => value.id === "scenario:candidate-known-subtotal")).toMatchObject({ value: changed.result.knownSubtotal, sourceRefs: changed.result.sourceRefs, drilldown: null })
+    }
+  } finally { await f.close() }
+}, 180000)
+
 test("BI09 preserves explicit zero, missing amount and missing FX through actual Planner scenarios", async () => {
   for (const option of [{ training: 0 }, { training: null }, { missingFx: true }]) {
     const f = await scenarioBiFixture(option)

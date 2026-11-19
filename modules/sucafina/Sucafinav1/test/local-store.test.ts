@@ -17,14 +17,21 @@ test("current snapshots are isolated copies in a live transaction and expire wit
     const store = await open()
     if (!store.currentSnapshots) throw new Error("currentSnapshots unavailable")
     expect(store.currentSnapshots()).toBeUndefined()
+    expect(typeof store.currentSnapshot).toBe("function")
+    expect(store.currentSnapshot!("dashboard")).toBeUndefined()
     await store.transaction("planner", async (snapshot) => { snapshot.data.value = "persisted"; return { commit: true, value: undefined } })
     const release = Promise.withResolvers<void>()
-    const late: { pending?: Promise<unknown> } = {}
+    const late: { pending?: Promise<unknown>; single?: Promise<unknown> } = {}
     await store.transaction("dashboard", async (snapshot) => {
       snapshot.data.value = "staged"
       const current = store.currentSnapshots!()
       expect(current?.dashboard.data.value).toBe("staged")
       expect(current?.planner.data.value).toBe("persisted")
+      expect(store.currentSnapshot!("dashboard")).toEqual(current?.dashboard)
+      const single = store.currentSnapshot!("planner")
+      expect(single).toEqual(current?.planner)
+      if (single) single.data.value = "single copy only"
+      expect(store.currentSnapshot!("planner")?.data.value).toBe("persisted")
       if (!current) throw new Error("missing current snapshots")
       current.dashboard.data.value = "copy-only"
       current.planner.data.value = "copy-only"
@@ -32,13 +39,39 @@ test("current snapshots are isolated copies in a live transaction and expire wit
       expect(store.currentSnapshots!()?.planner.data.value).toBe("persisted")
       late.pending = release.promise.then(() => store.currentSnapshots!())
       void late.pending.catch(() => undefined)
+      late.single = release.promise.then(() => store.currentSnapshot!("planner"))
+      void late.single.catch(() => undefined)
       return { commit: true, value: undefined }
     })
     release.resolve()
     await expect(late.pending).rejects.toThrow("scope has ended")
+    await expect(late.single).rejects.toThrow("scope has ended")
+    expect(store.currentSnapshot!("planner")).toBeUndefined()
     expect(store.currentSnapshots()).toBeUndefined()
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("persisted")
     expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("staged")
+  })
+})
+
+
+test("single-surface copies inherit abort and cannot publish a poisoned root", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const controller = new AbortController()
+    await expect(store.transaction("dashboard", async () => {
+      controller.abort(new Error("single-copy-aborted"))
+      expect(() => store.currentSnapshot!("planner")).toThrow("single-copy-aborted")
+      expect(() => store.currentSnapshots!()).toThrow("single-copy-aborted")
+      return { commit: false, value: undefined }
+    }, { signal: controller.signal })).rejects.toThrow("single-copy-aborted")
+    await expect(store.transaction("dashboard", async () => {
+      await store.transaction("planner", async () => ({ commit: true, value: undefined })).catch(() => undefined)
+      // A copy is not a publication capability: the enclosing root retains the
+      // existing poison fence even when the forbidden nested write was caught.
+      expect(store.currentSnapshot!("planner")).toEqual(store.currentSnapshots!()?.planner)
+      return { commit: true, value: undefined }
+    })).rejects.toThrow("Nested local write attempted")
+    expect(store.currentSnapshot!("planner")).toBeUndefined()
   })
 })
 
@@ -62,6 +95,7 @@ test("current and nested snapshot copies preserve codec normalization and isolat
       const copies = store.currentSnapshots!()
       if (!copies) throw new Error("missing current snapshots")
       expect(copies.dashboard).toEqual(wire)
+      expect(store.currentSnapshot!("dashboard")).toEqual(wire)
       const copied = object(copies.dashboard.data.copyFixture)
       expect(Object.is(copied.minusZero, -0)).toBe(true)
       expect(Object.hasOwn(copied, "optional")).toBe(true)
@@ -128,6 +162,7 @@ test("current and nested snapshot copies retain codec rejection and snapshot val
         try {
           invalid.install(snapshot)
           expect(() => store.currentSnapshots!()).toThrow(invalid.reason)
+          expect(() => store.currentSnapshot!("dashboard")).toThrow(invalid.reason)
           await expect(store.transaction("dashboard", async () => ({ commit: false, value: undefined }))).rejects.toThrow(invalid.reason)
         } finally {
           // The invalid-map case tests decoding; leave the independent private-write guard intact.
