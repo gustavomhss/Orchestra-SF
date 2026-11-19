@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { expect, test } from "@playwright/test"
 import type { Locator, Page, TestInfo } from "@playwright/test"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
 type Account = { baseURL: string; principal: string; enrollments: Record<string, string> }
 type Manifest = { origin: string; accounts: { first: Account; second: Account; viewer: Account }; records: { supplier: string; comparison: string } }
@@ -19,8 +20,13 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   if (!enrollment) throw new Error("The selected real-host enrollment is unavailable")
   const response = await page.request.get(enrollment, { maxRedirects: 0 })
   expect(response.status()).toBe(303)
-  await page.goto(selected.baseURL + "/procurement?page=Requests")
+  const nativeOrigin = new URL(selected.baseURL)
+  nativeOrigin.port = "3000"
+  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", nativeOrigin).href)
+  expect(entry?.status()).toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
+  // UNBOUND: the Requests chapter does not expose the C02 provenance anchors.
+  // Keep the source-ref/digest/version assertions until a native route owns them.
   const source = page.locator("a[data-source-ref]").first()
   await expect(source).toBeVisible()
   await expect(source).toHaveAttribute("data-source-ref", /.+/)
@@ -41,32 +47,56 @@ function responseFor(page: Page, action: string, id?: string) {
 }
 
 async function createDraft(page: Page, account: Account, title: string) {
-  const form = page.locator('form[data-command="create"][data-page="Requests"]')
+  const nativeOrigin = new URL(account.baseURL)
+  nativeOrigin.port = "3000"
+  await page.goto(new URL("/orchestra/sf-procurement/requests/new", nativeOrigin).href)
+  const form = page.locator("article.sf-u11-detail").locator('form[data-command="create"][data-page="Requests"]')
+  await expect(form).toHaveCount(1)
   await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)
   await form.getByRole("combobox", { name: "Type", exact: true }).selectOption("service")
   await form.getByRole("textbox", { name: "Description", exact: true }).fill("Recorded service scope")
   await form.getByRole("spinbutton", { name: "Estimated amount", exact: true }).fill("100")
-  await form.getByRole("textbox", { name: "Cost centre", exact: true }).fill("Synthetic IT")
+  await form.getByRole("textbox", { name: "Cost center", exact: true }).fill("Synthetic IT")
   await form.getByLabel("Needed by", { exact: true }).fill("2026-12-01")
   await form.getByRole("textbox", { name: "Justification", exact: true }).fill("Recorded business need")
   const response = responseFor(page, "create")
   await form.getByRole("button", { name: "Create request", exact: true }).click()
-  expect((await response).status()).toBe(200)
-  const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: title, exact: true }) })
+  const review = page.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+  const confirm = review.getByRole("button", { name: "Confirm action", exact: true })
+  await expect(confirm).toBeEnabled()
+  await confirm.click()
+  const created = await response
+  expect(created.status()).toBe(200)
+  expect(await created.json()).toMatchObject({ ok: true })
+  expect(created.request().postDataJSON()).toMatchObject({ page: "Requests", action: "create", values: { pr: { title } } })
+  const row = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name: title, exact: true }) })
   await expect(row).toHaveCount(1)
-  const link = row.getByRole("link", { name: /^PR-/ })
-  await expect(link).toHaveText(/^PR-2026-\d+$/)
-  const id = (await link.textContent())!.trim()
+  const id = (await row.getAttribute("data-sf-row")) ?? ""
+  expect(id).toMatch(/^PR-2026-\d+$/)
+  await expect(row.getByRole("cell").first()).toContainText(id)
+  await expect(row.getByRole("link")).toHaveCount(0)
   await openRecord(page, account, id)
   await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Requisition draft")
   return id
 }
 
 async function openRecord(page: Page, account: Account, id: string) {
-  await page.goto(account.baseURL + "/procurement?" + new URLSearchParams({ page: "Requests", request: id, q: id }))
-  const detail = page.locator('details[id="' + id + '"]')
-  await expect(detail).toHaveAttribute("open", "")
-  await expect(detail.locator("[data-request-summary]")).toContainText("Version")
+  expect(id).toMatch(/^PR-2026-\d+$/)
+  const encoded = encodeSfRouteRef(id)
+  const nativeOrigin = new URL(account.baseURL)
+  nativeOrigin.port = "3000"
+  await page.goto(new URL(`/orchestra/sf-procurement/requests/${encoded}`, nativeOrigin).href)
+  await expect(page).toHaveURL((url) => url.origin === nativeOrigin.origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
+  const row = page.locator(`tr[data-sf-row="${id}"]`)
+  await expect(row).toHaveCount(1)
+  await expect(row).toHaveAttribute("aria-selected", "true")
+  const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
+  await expect(detail).toHaveCount(1)
+  await expect(detail.locator("p").filter({ hasText: /^Request identity:/ })).toHaveText(`Request identity: ${id}`)
+  await expect(detail.locator("p").filter({ hasText: /^Current source version:/ })).toHaveText(/^Current source version: [1-9]\d*$/)
+  await expect(detail.locator(`[data-request-summary="${id}"]`)).toContainText("Version")
   return detail
 }
 
