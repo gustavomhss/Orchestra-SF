@@ -63,7 +63,6 @@ function fields(settings: Readonly<Settings>, names: readonly (keyof Settings)[]
 }
 export function settingsReview(
   current: SettingsProjection, proposed: Readonly<Settings>, operationRef: SfOperationRef,
-  intent: "save" | "reset",
 ): Omit<SfChangeReviewProps, "onConfirm" | "onRevise" | "onCancel"> {
   const sourceVersion = current.value.versions.settings?.version
   const names = changedSettings(current.value.data.settings, proposed)
@@ -71,27 +70,24 @@ export function settingsReview(
     ? { kind: "not-provided", reason: message("sf.common.previousValuesUnavailable") }
     : { kind: "persisted", ref: SETTINGS_REF, version: sourceVersion as SfVersion,
         fields: fields(current.value.data.settings, names) }
-  const draft: SfReviewSnapshot = intent === "reset"
-    // Original CAP28 supplies no baseline-defaults/read-only reset preview.
-    ? { kind: "not-provided", reason: message("sf.common.previousValuesUnavailable") }
-    : { kind: "draft", intentRef: SETTINGS_INTENT, sourceRef: SETTINGS_REF,
-        sourceVersion: sourceVersion ?? null, fields: fields(proposed, names) }
-  const blocked = intent === "reset" || sourceVersion === undefined || (intent === "save" && names.length === 0)
+  const draft: SfReviewSnapshot = {
+    kind: "draft", intentRef: SETTINGS_INTENT, sourceRef: SETTINGS_REF,
+    sourceVersion: sourceVersion ?? null, fields: fields(proposed, names),
+  }
+  const blocked = sourceVersion === undefined || names.length === 0
   const reasons: SfMessage[] = blocked
-    ? [message(intent === "reset" ? "sf.u36.resetUnavailable"
-      : sourceVersion === undefined ? "sf.common.previousValuesUnavailable"
-        : "sf.common.changesPending")]
+    ? [message(sourceVersion === undefined ? "sf.common.previousValuesUnavailable" : "sf.common.changesPending")]
     : []
   return {
     operation: {
       ref: operationRef,
-      label: message(intent === "reset" ? "sf.u36.reset" : "sf.u36.save"),
+      label: message("sf.u36.save"),
       scope: { kind: "message", message: message("sf.cap28.title") },
     },
     base, current: base, proposed: draft, effects: [],
     coverage: {
-      state: intent === "reset" || sourceVersion === undefined ? "unavailable" : "partial",
-      summary: message(intent === "reset" ? "sf.common.previousValuesUnavailable" : "sf.common.partial"),
+      state: sourceVersion === undefined ? "unavailable" : "partial",
+      summary: message(sourceVersion === undefined ? "sf.common.previousValuesUnavailable" : "sf.common.partial"),
       reasons, knownCount: names.length, expectedCount: null,
     },
     blockingReasons: reasons,
