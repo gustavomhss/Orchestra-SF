@@ -13,6 +13,8 @@ import { SfContextStamp, SfContextResult, SfExpectedContextBinding,
   type SfContext, type SfInstallationDescriptor, type SfResolvedRoute,
 } from "@orchestra/schema/sucafina/context"
 import { SfSupplierCsvExportRequest, type SfSupplierCsvExportResult } from "@orchestra/schema/sucafina/procurement"
+import { SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
+import { SfRecordedChoiceIntent, recordedChoiceInProjection, type SfRecordedChoiceInspection } from "./transport/choice-replay"
 import {
   SF_FILE_BYTE_LIMIT, SF_FILE_MULTIPART_LIMIT, sfAllowedByteMime, sfFilesSourceQuery,
   sfIsByteOperation, sfIsUploadOperation, sfUploadSlot,
@@ -35,6 +37,14 @@ export type SfTransport = Readonly<{
     input: Input,
     options: SfCallOptions,
   ): Promise<SfTransportResult<Output>>
+  /**
+   * Read-only reconciliation of ONE historical decision choice after reload.
+   * The caller supplies untrusted retained input, never authority or a receipt.
+   * A ready result permits only a later, explicit same-intent call.
+   */
+  inspectRecordedChoice?: (
+    input: SfRecordedChoiceIntent, options: Pick<SfCallOptions, "signal">,
+  ) => Promise<SfRecordedChoiceInspection>
   /**
    * Exact admitted A06 supplier CSV byte source, NOT a generic byte dispatcher.
    * Optional until the I00-installed F02/D01 source adapter is composed.
@@ -136,7 +146,7 @@ const HUMAN_RETRY_OPERATIONS: ReadonlySet<SfOperationId> = new Set([
   "collaboration.thread-edit", "collaboration.answer-confirm",
 ])
 type PendingMutation = Readonly<{ digest: string; owner?: SfContextStamp }>
-type RetainedMutation = PendingMutation & Readonly<{ key: string; confirmed: boolean }>
+type RetainedMutation = PendingMutation & Readonly<{ key: string; confirmed: boolean; observedChoice?: boolean }>
 type ErrorReason = SfTransportFailure["reason"]
 const failure = (reason: ErrorReason): SfTransportFailure => ({ kind: "transport-error", reason })
 
@@ -167,8 +177,10 @@ export function createSfTransport(options: Readonly<{
   const pending = new Map<string, PendingMutation>()
   const retained = new Map<SfOperationId, RetainedMutation>()
   const mutationInFlight = new Set<string>()
+  let choiceInspection = false
+  let intentEpoch = 0
 
-  const clearIntents = () => { pending.clear(); retained.clear() }
+  const clearIntents = () => { pending.clear(); retained.clear(); intentEpoch++ }
   const clear = () => { stamp = undefined; clearIntents() }
   const transport: SfTransport = {
     async execute<Input, Output>(
@@ -284,12 +296,14 @@ export function createSfTransport(options: Readonly<{
       const last = retained.get(operation.operationId)
       const reportRetry = operation.operationId === "reviews.report.prepare"
       if (mutating) {
+        if (choiceInspection) return failure("outcome-unknown")
         if (mutationOwner && (!stamp || !equalContextStamp(mutationOwner, stamp)))
           return failure("contract-mismatch")
         if (humanRetry && (!last || last.key !== key || last.digest !== digest ||
             !last.owner || !stamp || !equalContextStamp(last.owner, stamp) ||
-            !previous && !last.confirmed))
+            !previous && !last.confirmed && !last.observedChoice))
           return failure("contract-mismatch")
+        if (!humanRetry && last?.observedChoice) return failure("outcome-unknown")
         if (!humanRetry && last && last.key === key) {
           if (last.digest !== digest || !last.owner || !stamp || !equalContextStamp(last.owner, stamp))
             return failure("contract-mismatch")
@@ -509,6 +523,51 @@ export function createSfTransport(options: Readonly<{
       } finally {
         if (mutating) mutationInFlight.delete(key!)
       }
+    },
+    async inspectRecordedChoice(input, call): Promise<SfRecordedChoiceInspection> {
+      const unavailable = { status: "unavailable" } as const
+      if (!validBinding || !owned || !isCurrent() || (!options.desktop && !webOrigin()) ||
+          call.signal.aborted || !stamp || choiceInspection || pending.size || mutationInFlight.size ||
+          retained.has("decisions.decision-choose")) return unavailable
+      const parsed = Schema.decodeUnknownOption(Schema.toType(SfRecordedChoiceIntent),
+        { onExcessProperty: "error" })(input)
+      if (Option.isNone(parsed) || !equalContextStamp(stamp, parsed.value.owner)) return unavailable
+      const intent = parsed.value, original = { ...stamp }, epoch = intentEpoch
+      const current = () => isCurrent() && !call.signal.aborted && intentEpoch === epoch &&
+        stamp !== undefined && equalContextStamp(stamp, original)
+      const metadata = cataloguedRoute("decisions.decision-choose")
+      const codec = options.operations["decisions.decision-choose"]
+      if (!metadata || metadata.method !== "POST" || metadata.effect !== "mutation" ||
+          metadata.pathTemplate !== "{mount}/dashboard" || metadata.responseMode !== "json" ||
+          metadata.fixedQuery?.sf !== "decision-choose" || !codec)
+        return unavailable
+      const decoded = (() => { try { return codec.decodeInput(intent.body) } catch { return { status: "invalid" } as const } })()
+      if (decoded.status !== "ok") return unavailable
+      const route = operationUrl(options.binding, metadata, decoded.value, "decisions.decision-choose")
+      const body = operationBody(metadata, decoded.value)
+      if (!route || body === undefined || metadata.maxRequestBytes === undefined ||
+          new TextEncoder().encode(JSON.stringify(body)).byteLength > metadata.maxRequestBytes) return unavailable
+      choiceInspection = true
+      try {
+        // No mutation is sent here. The original reader uses the current
+        // authenticated transport, schema, Request and generation fences.
+        const observed = await transport.execute(SfProjectionCase, { caseRef: intent.caseRef }, { signal: call.signal })
+        if (!current() || observed.kind !== "response" || observed.status !== 200 ||
+            observed.body.status !== "ok" || !equalContextStamp(observed.body.context, original))
+          return unavailable
+        const choiceId = recordedChoiceInProjection(intent, observed.body.value.projection)
+        if (!choiceId) return unavailable
+        const digest = await digestPayload("decisions.decision-choose", route, JSON.stringify(body))
+        if (!digest || !current() || pending.size || mutationInFlight.size ||
+            retained.has("decisions.decision-choose")) return unavailable
+        // This is an observed historical choice, NOT a fabricated receipt.
+        // C08 still owns original-key/body reconciliation and current authority.
+        retained.set("decisions.decision-choose", {
+          key: intent.key, digest, owner: original, confirmed: false, observedChoice: true,
+        })
+        return { status: "ready", choiceId }
+      } catch { return unavailable }
+      finally { choiceInspection = false }
     },
     /**
      * A06 original supplier CSV producer, exactly {mount}/procurement?download=suppliers.
