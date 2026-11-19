@@ -305,18 +305,22 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const recordId = action === "save-entry" ? (entry ? String(entry.id) : undefined) : owner ? String(owner.id) : undefined
     const keyValue = versionKey(action, owner, entry, month)
     const existingVersion = page.versions[keyValue]
+    const newYearHint = action === "year-amount" && page.ytd === undefined &&
+      !Object.hasOwn(page.versions, keyValue)
     // An existing entity without CAS is not writable. Absence for a new entity starts at v0.
     if (existingVersion === undefined && (
       (action === "save-entry" && entry !== undefined) ||
       (action === "save-deviation" && owner !== undefined && deviationFor(owner, month) !== undefined) ||
       (action === "save" && owner !== undefined) ||
-      action === "delete" || action === "annual-entry" || action === "year-amount"
+      (action === "year-amount" && !newYearHint) ||
+      action === "delete" || action === "annual-entry"
     )) {
       setView("error", t(sfCommonKey("sf.common.stale")))
       return
     }
     const base = formFor(owner, entry, month)
-    const sourcePresent = action === "save-entry" ? entry !== undefined :
+    const sourcePresent = action === "year-amount" ? !newYearHint :
+      action === "save-entry" ? entry !== undefined :
       action === "save-deviation" ? (owner ? deviationFor(owner, month) !== undefined : false) :
       owner !== undefined
     // Form-specific identity lives only inside the owner-scoped draft registry.
@@ -378,7 +382,12 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     if (editor.action === "annual-entry" && !numberPresent(fields.annual)) return t(sfCommonKey("sf.common.fieldErrorSummary"))
     if (editor.action === "year-amount" && fields.amount.trim() !== "" && (!numberPresent(fields.amount) || Number(fields.amount) < 0)) return t(sfCommonKey("sf.common.fieldErrorSummary"))
     if (editor.action !== "save" && editor.action !== "save-entry" && editor.action !== "annual-entry" && editor.action !== "year-amount" && editor.action !== "save-deviation" && editor.action !== "delete") return t(sfCommonKey("sf.common.invalidLink"))
-    if (editor.recordId !== undefined && view.page?.versions[editor.versionKey] !== editor.version && editor.action !== "save-entry") return t(sfCommonKey("sf.common.stale"))
+    // The producer uses CAS0 only for an absent year-hint singleton. A visible
+    // hint without its original CAS remains unavailable for editing.
+    const currentVersion = editor.action === "year-amount" && view.page &&
+      view.page.ytd === undefined && !Object.hasOwn(view.page.versions, editor.versionKey)
+      ? 0 : view.page?.versions[editor.versionKey]
+    if (editor.recordId !== undefined && currentVersion !== editor.version && editor.action !== "save-entry") return t(sfCommonKey("sf.common.stale"))
     if (!allowed(editor.action)) return t(sfCommonKey("sf.common.noAccess"))
     return undefined
   }
