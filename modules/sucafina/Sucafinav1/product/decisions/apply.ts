@@ -49,7 +49,7 @@ export function createPreparedExecution(input: {
       if (expectedCase.preparedChanges.filter((item) => item.receipt?.id === receipt.id).length !== 1 || expectedCase.preparedChanges.find((item) => item.receipt?.id === receipt.id)?.id !== change.id || expectedCase.receipts.filter((item) => item.id === receipt.id).length !== 1 || digestSfValue(expectedCase.receipts.find((item) => item.id === receipt.id)) !== digestSfValue(receipt)) return false
       // This is a consistency fence for a receipt already authorized by its
       // canonical reader, never a substitute for that reader's authority.
-      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, request, change, receipt, reviewDigest, context)).catch(() => undefined)
+      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, request, change, receipt, reviewDigest, context, mode === "apply" && !!change.receipt)).catch(() => undefined)
       return input.host.requestFor(context) === source && !source.signal.aborted && retained?.status === "ok" && retained.value
     }
     if (lookup.value.state === "found") {
@@ -164,11 +164,14 @@ export function createPreparedExecution(input: {
   }
 }
 
-function receiptSnapshotMatches(state: SfProductState, request: PreparedApplyRequest, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, context: TrustedDomainContext) {
+function receiptSnapshotMatches(state: SfProductState, request: PreparedApplyRequest, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, context: TrustedDomainContext, resume = false) {
   const proof = state.transactions[receiptProofTransactionKey(context.binding.principalRef, change.target.id, change.idempotencyKey)]
   const choices = state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? []
+  // Retention repeats the admitted original or current-version resume proof; it never authorizes another dispatch.
   return receiptProofMatches(state, change.target, receipt, context.binding.principalRef) && proof?.commandDigest === receiptReviewBinding(change, reviewDigest) &&
-    preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, applicationAttempts(state, request)) === "matched"
+    (preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, applicationAttempts(state, request)) === "matched" ||
+      resume && !!change.receipt && preparedResumeIntentState(state, request, change, choices, reviewDigest, context,
+        applicationAttempts(state, request), state.cases[request.caseRef.id]?.version ?? -1) === "matched")
 }
 
 async function callDomain<T>(work: () => Promise<PortResult<T>>): Promise<PortResult<T>> {
