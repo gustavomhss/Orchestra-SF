@@ -137,9 +137,9 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         const cookie = readOperatorSessionCookie(authenticated.headers, origin)
         await context.addCookies([cookie])
         const profile = JSON.parse(await readFile(environment.SUCAFINA_LOCAL_CONFIG!, "utf8")) as { localOperator: { installationId: string; uid: number } }
+        await page.setViewportSize({ width: 1440, height: 900 })
         await connectInstalledShell(page, { root: directory, origin, mount: "/sucafina",
           actorId: `macos:${profile.localOperator.installationId}:${profile.localOperator.uid}` })
-        await page.setViewportSize({ width: 1440, height: 900 })
         const corpus = state.corpus
         if (!corpus) throw new Error("Published synthetic corpus receipt is missing")
 
