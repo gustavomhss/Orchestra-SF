@@ -67,6 +67,11 @@ jobs:
             request.runner === 'bun' && sf66Args.length > 0 &&
             sf66Args.every((file) => /^Sucafinav1\/test\/product\/export-artifact-closure\/[^/]+\.test\.ts$/.test(file))
           appendFileSync(process.env.GITHUB_OUTPUT, `sf66_exports=${sf66Exports}\n`)
+          const sfE2e = request.package === 'app' && request.directory === 'packages/app-shell' &&
+            request.runner === 'playwright' && request.config === 'e2e/playwright.production.config.ts' &&
+            request.args.every((file) => file.startsWith('e2e/sucafina/'))
+          const sfOperations = sfE2e && request.args.includes('e2e/sucafina/operations.spec.ts')
+          appendFileSync(process.env.GITHUB_OUTPUT, `sf_e2e=${sfE2e}\nsf_operations=${sfOperations}\n`)
           NODE
 
       - name: Fetch source history for Script fixtures
@@ -157,6 +162,17 @@ jobs:
       - name: omni binaries
         if: steps.request.outputs.runner != 'pytest'
         uses: ./.github/actions/omni-binaries
+
+      - name: Typecheck the installed SF E2E sources
+        if: steps.request.outputs.sf_e2e == 'true'
+        working-directory: packages/app-shell
+        run: bun run typecheck:sf-e2e --pretty false
+
+      - name: Qualify real loopback ClamD for Operations uploads
+        if: steps.request.outputs.sf_operations == 'true'
+        run: |
+          bash script/sf-ci/operations-clamd.sh
+          echo "SF_OPERATIONS_CLAMD_PORT=3310" >> "$GITHUB_ENV"
 
       # The CLI's native Windows artifact controls compile with `rustup run 1.98.0` (packages/core/src/
       # artifact-native-windows.ts). The omni artifact above skips cargo, so nothing else installs the toolchain

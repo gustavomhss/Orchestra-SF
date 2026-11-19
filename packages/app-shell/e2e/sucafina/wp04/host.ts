@@ -2,6 +2,9 @@ import { randomBytes, randomUUID } from "node:crypto"
 import { chmod, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
+import { Layer } from "effect"
+import { HttpRouter, HttpServer } from "effect/unstable/http"
+import { createEmbeddedRoutes } from "../../../../server/src/routes.ts"
 import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../../../modules/sucafina/Sucafinav1/runtime/operator-identity.ts"
@@ -13,22 +16,25 @@ import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucaf
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
 import { createOperationsInstallation } from "../operations-support/installation.ts"
+import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
-// The fixture serves the real authenticated application, C02 queue, Planner, import/document services, renderer and shell.
-// Synthetic local-operator accounts qualify this browser path, not Entra or native residency.
+// One real embedded host serves the native producers through the production shell proxy.
+// The three isolated local-operator sessions exercise distinct actors, not Entra identities.
 const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-browser-"))
 await chmod(directory, 0o700)
 const at = "2026-11-13T12:00:00Z"
 const driver = await openLocalStore(directory)
 const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
 for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
+await initializeAbsentSfProductState(store, randomUUID)
 const manifest = path.join(import.meta.dirname, ".host-manifest.json")
 const installationId = randomUUID()
+const mount = "/sucafina"
 const configurations = [
-  { key: "first", mount: "/wp04/first", uid: 1001, name: "First procurement operator" },
-  { key: "second", mount: "/wp04/second", uid: 1002, name: "Second procurement operator" },
-  { key: "viewer", mount: "/wp04/viewer", uid: 1003, name: "Read-only procurement observer" },
+  { key: "first", uid: 1001, name: "First procurement operator" },
+  { key: "second", uid: 1002, name: "Second procurement operator" },
+  { key: "viewer", uid: 1003, name: "Read-only procurement observer" },
 ] as const
 const people = configurations.map((entry) => ({ id: "macos:" + installationId + ":" + entry.uid, name: entry.name }))
 const active: { ready: boolean; handle?: (request: Request) => Promise<Response> } = { ready: false }
@@ -41,37 +47,54 @@ const server = Bun.serve({
     return await active.handle?.(request) ?? new Response("Starting", { status: 503 })
   },
 })
-const origin = server.url.origin
+const origin = "http://127.0.0.1:3000"
 const bankKey = randomBytes(32)
 const environment = async () => ({ at, id: randomUUID, directory: people, bankKey })
 const signingKey = randomBytes(32)
 // The runner must provide an already approved real ClamD service. No service is installed here.
 const scannerPort = process.env.SF_OPERATIONS_CLAMD_PORT
 const scanner = scannerPort === undefined ? null : { host: "127.0.0.1" as const, port: Number(scannerPort) }
-const accounts = configurations.map((configuration) => {
-  const identity = createOperatorIdentity({
-    origin,
-    mount: configuration.mount,
+const accounts = configurations.map((configuration) => ({
+  ...configuration,
+  identity: createOperatorIdentity({
+    origin, mount,
     operator: { installationId, uid: configuration.uid, name: configuration.name, buyer: configuration.key !== "viewer" },
     secrets: store.secrets,
     key: randomBytes(32),
-  })
-  const authenticate: Application["authenticate"] = async (request, context) => {
-    if (!context) return null
-    const authenticated = await identity.authenticate(request, context)
-    // This synthetic test policy only reduces the real local-operator session's grants.
-    return authenticated && configuration.key === "viewer"
-      ? { ...authenticated, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
-      : authenticated
-  }
-  const installation = createOperationsInstallation({
-    installationId, directory, origin, mount: configuration.mount,
-    principalRef: "macos:" + installationId + ":" + configuration.uid,
-    readOnly: configuration.key === "viewer",
-    persistence: store, authenticate, environment, signingKey, scanner,
-  })
-  return { ...configuration, identity, installation, application: installation.application }
+  }),
+}))
+async function sessionAccount(request: Request) {
+  const authenticated = await Promise.all(accounts.map(async (account) =>
+    await account.identity.person(request) ? account : undefined))
+  const present = authenticated.filter((account) => account !== undefined)
+  // Each browser context owns one real session; ambiguous credentials fail closed.
+  return present.length === 1 ? present[0] : undefined
+}
+const authenticate: Application["authenticate"] = async (request, context) => {
+  if (!context) return null
+  const account = await sessionAccount(request)
+  if (!account) return null
+  const authenticated = await account.identity.authenticate(request, context)
+  return authenticated && account.key === "viewer"
+    ? { ...authenticated, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
+    : authenticated
+}
+const installation = await createOperationsInstallation({
+  installationId, directory, origin, mount,
+  operators: accounts.map((account) => ({
+    principalRef: "macos:" + installationId + ":" + account.uid,
+    readOnly: account.key === "viewer",
+  })),
+  persistence: store, authenticate,
+  isAuthenticated: async (request) => Boolean(await sessionAccount(request)),
+  environment, signingKey, scanner,
 })
+const embedded = HttpRouter.toWebHandler(createEmbeddedRoutes({
+  host: installation.host,
+  sucafinaInstallations: installation.discovery,
+}).pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true })
+const health = await embedded.handler(new Request(origin + "/api/health"))
+if (health.status !== 200 || !installation.identity()) throw new Error("OPERATIONS_REAL_HOST_NOT_READY")
 const records = await store.transaction("procurement", async (snapshot) => {
   const actor = { id: people[0]!.id, roles: ["admin", "buyer"], canWrite: true }
   const context = await environment()
@@ -117,21 +140,39 @@ const records = await store.transaction("procurement", async (snapshot) => {
   command("submit_sourcing")
   return { commit: true, value: { supplier: supplierId, comparison } }
 })
+const enrollmentOwners = new Map<string, (typeof accounts)[number]>()
 active.handle = async (request) => {
-  const pathname = new URL(request.url).pathname
-  const account = accounts.find((item) => pathname === item.mount || pathname.startsWith(item.mount + "/"))
-  if (!account) return new Response("Not found", { status: 404 })
-  await account.identity.prepare(request)
-  return await account.identity.handle(request) ?? await account.application(request) ?? new Response("Not found", { status: 404 })
+  const url = new URL(request.url)
+  if (url.origin !== origin) return new Response("Access denied", { status: 403 })
+  if (url.pathname === "/api" || url.pathname.startsWith("/api/")) return embedded.handler(request)
+  if (url.pathname !== mount && !url.pathname.startsWith(mount + "/")) return new Response("Not found", { status: 404 })
+  const enrollment = url.pathname === mount + "/auth/local" && url.searchParams.getAll("code").length === 1
+    ? url.searchParams.get("code") : undefined
+  const account = enrollment ? enrollmentOwners.get(enrollment) : await sessionAccount(request)
+  if (account) {
+    await account.identity.prepare(request)
+    const authentication = await account.identity.handle(request)
+    if (authentication) {
+      if (enrollment && authentication.status === 303) enrollmentOwners.delete(enrollment)
+      return authentication
+    }
+  }
+  if (request.method === "POST" && (request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site"))
+    return new Response("Access denied", { status: 403 })
+  return await installation.application(request) ?? new Response("Not found", { status: 404 })
 }
 const enrolled: Record<string, { baseURL: string; principal: string; enrollments: Record<string, string> }> = {}
 for (const [index, account] of accounts.entries()) {
   const enrollments: Record<string, string> = {}
-  for (const scenario of ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "settings"]) enrollments[scenario] = origin + account.mount + "/auth/local?code=" + await account.identity.enroll()
-  enrolled[account.key] = { baseURL: origin + account.mount, principal: people[index]!.id, enrollments }
+  for (const scenario of ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "settings"]) {
+    const code = await account.identity.enroll()
+    enrollmentOwners.set(code, account)
+    enrollments[scenario] = origin + mount + "/auth/local?code=" + code
+  }
+  enrolled[account.key] = { baseURL: origin + mount, principal: people[index]!.id, enrollments }
 }
 // Enrollment credentials remain private to this ephemeral test process and are not artifacts.
-await writeFile(manifest, JSON.stringify({ origin, accounts: enrolled, records }), { mode: 0o600 })
+await writeFile(manifest, JSON.stringify({ origin, directory, accounts: enrolled, records }), { mode: 0o600 })
 active.ready = true
 const closing = { started: false }
 async function close() {
@@ -139,7 +180,7 @@ async function close() {
   closing.started = true
   active.ready = false
   await server.stop(true)
-  for (const account of accounts) account.installation.dispose()
+  await embedded.dispose()
   await store.dispose()
   await rm(manifest, { force: true })
   await rm(directory, { recursive: true, force: true })

@@ -1,37 +1,40 @@
-import { randomUUID } from "node:crypto"
 import path from "node:path"
-import { Location } from "@orchestra/core/location"
-import { AbsolutePath } from "@orchestra/core/schema"
-import { createApplication } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+import { createApplication } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import type { LocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-contract.ts"
-import { PlannerModule } from "../../../../../modules/sucafina/Sucafinav1/runtime/planner.ts"
-import { ProcurementModule } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
+import { contributions } from "../../../../../modules/sucafina/Sucafinav1/index.ts"
 import { scanLocalFile } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-scanner.ts"
 import type { SfScopedSourcePort } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
-import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import { createSfProductAuthority } from "../../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
-import { createSfImportHttp } from "../../../../../modules/sucafina/Sucafinav1/product/interface/import-http.ts"
-import { createSfDocumentHttp } from "../../../../../modules/sucafina/Sucafinav1/product/interface/document-http.ts"
-import { createSfBusinessServices } from "../../../../../apps/cli/src/sucafina-product/business-services.ts"
-import { createSfImportServices } from "../../../../../apps/cli/src/sucafina-product/import-services.ts"
-import { createSfDocumentServices } from "../../../../../apps/cli/src/sucafina-product/document-services.ts"
-import { createSfDocumentTargetAuthority } from "../../../../../apps/cli/src/sucafina-product/document-authority.ts"
+import type { CreateSfHostRuntime } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+import { createSfHostRuntime } from "../../../../../apps/cli/src/sucafina-product/host-context.ts"
+import { createSfContextHandler } from "../../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
+import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
+import { createSfDomainProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
+import { observeSfDashboardPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
+import { observeSfDomainHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { createSfActionSource } from "../../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
+import { createSfPeopleProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
+import { createSfOperationsProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
+import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
+import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
+import { createSfProcurementProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
+import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
+import { createSfRoutinesHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
+import type { SfTrustedInstallationSource } from "../../../../server/src/sucafina-installations.ts"
 
-/** Assembly for the existing Actions host. It owns no listener or alternative renderer.
- * All operations use the committed production factories, one SQLite store, real
- * operator authentication and ClamD. Missing scanner configuration fails closed.
- * This browser composition provides no native Session/provider authority.
+/** The existing Actions host composes the production host graph and native
+ * projections with its real SQLite store, operator sessions and ClamD.
+ * Identity and discovery become available only after that graph initializes.
  */
-export function createOperationsInstallation(input: {
+export async function createOperationsInstallation(input: {
   installationId: string
   directory: string
   origin: string
   mount: string
-  principalRef: string
-  readOnly: boolean
+  operators: readonly { principalRef: string; readOnly: boolean }[]
   persistence: LocalStore & SfScopedSourcePort
   authenticate: Application["authenticate"]
+  isAuthenticated: (request: Request) => Promise<boolean>
   environment: Application["environment"]
   signingKey: Uint8Array
   scanner: { host: "127.0.0.1"; port: number } | null
@@ -43,156 +46,110 @@ export function createOperationsInstallation(input: {
     signingKey: input.signingKey,
     scan: (bytes: Uint8Array) => scanLocalFile(bytes, input.scanner),
   } }
-  const runtime = {
+  let nativeOperational: Parameters<CreateSfHostRuntime>[0]["operational"]
+  let nativeActions: Parameters<CreateSfHostRuntime>[0]["nativeActions"]
+  let nativeReadBinding: Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]
+  const runtime = await createSfHostRuntime({
     installationId: input.installationId,
     directory: input.directory,
     sourceRoot: path.resolve(import.meta.dirname, "../../../../../modules/sucafina/Sucafinav1/product/ai"),
     origin: input.origin,
     mount: input.mount,
+    authMode: "local-operator",
+    isAuthenticated: input.isAuthenticated,
     persistence: input.persistence,
     authenticate: input.authenticate,
     environment: input.environment,
     assets,
-  }
-  const proposalCoverageWrites = new WeakSet<object>()
-  const procurementEvidenceWrites = new WeakSet<object>()
-  const authority = createSfProductAuthority({
-    ...runtime,
-    identity: () => ({
-      installationId: input.installationId,
-      hostId: "wp04-browser",
-      projectId: input.installationId,
-      location: Location.Ref.make({ directory: AbsolutePath.make(input.directory) }),
-    }),
-    policyVersion: "operations-browser24",
-    grants: [{
-      principalRef: input.principalRef,
+    operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
+    nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
+    nativeActions: (request, stamp, pages) => nativeActions
+      ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
+    // Preserve the installation policy from the original Operations fixture.
+    // Domain roles still come exclusively from the authenticated operator session.
+    grants: input.operators.map((operator): NonNullable<Parameters<CreateSfHostRuntime>[0]["grants"]>[number] => ({
+      principalRef: operator.principalRef,
       namespaces: ["documents", "receipts"],
       operations: ["sf_request_read", "sf_import_preview", "sf_document_extract", "sf_knowledge_search", "sf_evidence_get"],
-      humanActions: input.readOnly ? [] : ["imports.admit", "imports.apply", "documents.schema", "documents.confirm"],
-    }],
-    createId: randomUUID,
-    now: Date.now,
-    commandIdentity: async (request, operation) => {
-      if (request.method === "GET" || request.method === "HEAD") return randomUUID()
-      const key = request.headers.get("Idempotency-Key")
-      return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
-    },
-    inspectSession: async () => undefined,
-    verifySelection: async () => false,
-    verifySkillReceipt: async () => false,
-    providerGeneration: async () => undefined,
-    authorizeDocument: createSfDocumentTargetAuthority(runtime),
-    proposalCoverageWrites,
-    procurementEvidenceWrites,
+      humanActions: operator.readOnly ? [] : ["imports.admit", "imports.apply", "documents.schema", "documents.confirm"],
+    })),
   })
-  const imports = createSfImportServices({ runtime, authority })
-  const documents = createSfDocumentServices({ runtime, authority })
-  if (!imports || !documents) throw new Error("OPERATIONS_REQUIRES_SHARED_ASSET_PERSISTENCE")
-  const business = createSfBusinessServices({
-    authority,
+  const application: Application = {
     persistence: input.persistence,
-    proposalCoverageWrites,
-    procurementEvidenceWrites,
-    documentRead: documents.documents.reader,
-    documentEvidenceList: documents.documents.list,
-    extraDescriptors: [...imports.descriptors, ...documents.descriptors],
+    authenticate: input.authenticate,
+    environment: input.environment,
+    assets,
+    product: async (request, surface) => runtime.services?.()?.productHttp?.(request, surface),
+    productView: async (request, surface, page) => runtime.services?.()?.productView?.(request, surface, page),
+    domains: contributions,
+    maxJsonBytes: 100_000,
+  }
+  const dependenciesBase = {
+    origin: input.origin,
+    mount: input.mount,
+    application,
+    runtime: () => runtime.services?.(),
+  }
+  const context = createSfContextHandler(dependenciesBase)
+  const dependencies: SfNativeHostDependencies = { ...dependenciesBase, readContext: context.readContext }
+  const reviewHandler = Object.freeze({
+    operationId: "projection.review" as const,
+    handle: async (request: Request) => {
+      const producer = runtime.services?.()?.nativeReviewProjection
+      return producer ? producer.handle(request) : Response.json(
+        { status: "unavailable", reason: "review-producer-unavailable" },
+        { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } },
+      )
+    },
   })
-  // Test-fixture diagnostics stay private to Actions and preserve each original
-  // call, Request, authority result and public response. Only the first failed
-  // gate of import-admit is recorded; names, selectors, bytes and credentials
-  // never enter these bounded records.
-  type AdmissionDiagnostic = { stage: "ui-admit" | "ui-validate" | "target" | "human-admit" | "file-admit"; status: string; reason?: string }
-  const admissionDiagnostics: AdmissionDiagnostic[] = []
-  const contextRequests = new WeakMap<object, Request>()
-  const failedRequests = new WeakSet<Request>()
-  const diagnosticReasons = new Set([
-    "invalid-ui-operation", "ui-authority-unavailable", "ui-identity-unavailable", "ui-authority-changed",
-    "authority-unavailable", "human-command-unavailable", "source-authority-unavailable", "source-access-unavailable",
-    "source-unavailable", "source-changed", "source-or-authority-changed", "target-access-unavailable",
-    "human-authority-required", "file-not-accepted", "file-admission-unavailable", "file-catalog-unavailable",
-    "file-admission-conflict", "file-access-unavailable", "invalid-file-admission",
-  ])
-  const observeAdmission = (request: Request | undefined, stage: AdmissionDiagnostic["stage"], result: { status: string; reason?: string }) => {
-    if (!request || new URL(request.url).searchParams.get("sf") !== "import-admit" ||
-      failedRequests.has(request) || admissionDiagnostics.length >= 32) return
-    if (result.status !== "ok") failedRequests.add(request)
-    const status = ["ok", "denied", "unavailable", "stale", "conflict", "needs-input"].includes(result.status) ? result.status : "unavailable"
-    const entry = { stage, status, ...(result.reason ? { reason: diagnosticReasons.has(result.reason) ? result.reason : "withheld" } : {}) }
-    admissionDiagnostics.push(entry)
-    // Playwright's webServer suppresses routine stdout. Keep successful probes
-    // as informational, but surface a bounded, allowlisted failed gate on
-    // stderr so an HTTP 403 can be attributed to its original producer.
-    if (status === "ok") console.info("OPERATIONS75_IMPORT_GATE " + JSON.stringify(entry))
-    else console.error("OPERATIONS75_IMPORT_GATE " + JSON.stringify(entry))
+  const handlers = [
+    ...createSfDomainProjectionHandlers(dependencies),
+    ...createSfPeopleProjectionHandlers(dependencies),
+    ...createSfOperationsProjectionHandlers(dependencies),
+    ...createSfWorkProjectionHandlers(dependencies),
+    ...createSfPlannerProjectionHandlers(dependencies),
+    ...createSfProcurementProjectionHandlers(dependencies),
+    ...createSfDecisionsProjectionHandlers(dependencies),
+    ...createSfRoutinesHandlers(dependencies),
+    reviewHandler,
+  ]
+  const native = mountSfNativeProjections({ mount: input.mount, context, handlers })
+  const productBinding = application.product
+  nativeReadBinding = (operationId, producer) => {
+    const current = runtime.services?.()
+    if (!current) return undefined
+    if (operationId === "projection.review")
+      return current.nativeReviewProjection === producer && handlers.includes(reviewHandler) ? reviewHandler : undefined
+    return current.productHttp === producer && application.product === productBinding ? productBinding : undefined
   }
-  const ui: typeof authority.ui = {
-    ...authority.ui,
-    admit: async (request, operation, digest) => {
-      const result = await authority.ui.admit(request, operation, digest)
-      if (result.status === "ok") contextRequests.set(result.value, request)
-      observeAdmission(request, "ui-admit", result)
-      return result
-    },
-    validate: async (context, operation, digest) => {
-      const result = await authority.ui.validate(context, operation, digest)
-      observeAdmission(contextRequests.get(context), "ui-validate", { status: result ? "ok" : "denied", ...(result ? {} : { reason: "authority-unavailable" }) })
-      return result
-    },
-    finish: (context) => { contextRequests.delete(context); authority.ui.finish(context) },
+  const actions = createSfActionSource(dependencies, handlers)
+  nativeActions = actions.actions
+  nativeOperational = async (request, stamp) => {
+    const observed = await Promise.allSettled([
+      observeSfPlannerPages(application, request, stamp),
+      observeSfDashboardPages(application, request, stamp),
+      observeSfDomainHealth(dependencies, handlers, request, stamp),
+      observeSfHome(runtime.services?.(), request, stamp),
+      observeSfCases(dependencies, handlers, request, stamp),
+      actions.operational(request, stamp),
+    ])
+    return observed.flatMap((item) => item.status === "fulfilled" ? item.value : [])
   }
-  const human: typeof authority.human = {
-    ...authority.human,
-    admit: async (request, action, payload) => {
-      const result = await authority.human.admit(request, action, payload)
-      if (result.status === "ok") contextRequests.set(result.value, request)
-      observeAdmission(request, "human-admit", result)
-      return result
+  const business = createApplication(input.mount, application)
+  const discovery: SfTrustedInstallationSource = {
+    current: async (signal) => signal.aborted ? undefined : {
+      publicOrigin: input.origin, mount: input.mount, authMode: "local-operator", identity: runtime.identity,
     },
-    finish: (context) => { contextRequests.delete(context); authority.human.finish(context) },
-  }
-  const importService: typeof imports = {
-    ...imports,
-    prepareTarget: async (selection, context) => {
-      const result = await imports.prepareTarget(selection, context)
-      observeAdmission(contextRequests.get(context), "target", result)
-      return result
-    },
-    imports: {
-      ...imports.imports,
-      admit: async (file, context) => {
-        const result = await imports.imports.admit(file, context)
-        observeAdmission(contextRequests.get(context), "file-admit", result)
-        return result
-      },
+    forAdmittedLocation: async (location, signal) => {
+      const identity = runtime.identity()
+      if (signal.aborted || !identity || location.workspace || location.directory !== identity.location.directory) return []
+      return [{ publicOrigin: input.origin, mount: input.mount, authMode: "local-operator", identity: runtime.identity }]
     },
   }
-  const importHttp = createSfImportHttp({
-    origin: input.origin, mount: input.mount,
-    runtime: () => ({ ui, human, service: importService }),
-  })
-  const documentHttp = createSfDocumentHttp({
-    origin: input.origin, mount: input.mount,
-    runtime: () => ({ ui: authority.ui, human: authority.human, ...documents }),
-  })
   return {
-    admissionDiagnostics: () => structuredClone(admissionDiagnostics),
-    application: createApplication(input.mount, {
-      persistence: input.persistence,
-      authenticate: input.authenticate,
-      environment: input.environment,
-      assets,
-      product: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface),
-      productView: business.procurementQueueView,
-      domains: { procurement: [ProcurementModule], dashboard: [], planner: [PlannerModule] },
-      maxJsonBytes: 100_000,
-    }),
-    dispose: () => {
-      // Source39 owns an in-memory selection cache; the composed service does not.
-      // Keep lifecycle cleanup compatible with both committed factory contracts.
-      try {
-        if ("dispose" in documents && typeof documents.dispose === "function") documents.dispose()
-      } finally { business.dispose() }
-    },
+    host: runtime.contributions,
+    discovery,
+    identity: runtime.identity,
+    application: async (request: Request) => await native(request) ?? await business(request),
   }
 }

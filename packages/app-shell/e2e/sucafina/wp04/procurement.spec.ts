@@ -3,6 +3,7 @@ import path from "node:path"
 import { expect, test } from "@playwright/test"
 import type { Locator, Page, TestInfo } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
+import { login as loginNative } from "../operations-support/runtime"
 
 type Account = { baseURL: string; principal: string; enrollments: Record<string, string> }
 type Manifest = { origin: string; accounts: { first: Account; second: Account; viewer: Account }; records: { supplier: string; comparison: string } }
@@ -16,24 +17,18 @@ async function readManifest() {
 async function login(page: Page, account: "first" | "second" | "viewer", scenario: string) {
   const manifest = await readManifest()
   const selected = manifest.accounts[account]
-  const enrollment = selected.enrollments[scenario]
-  if (!enrollment) throw new Error("The selected real-host enrollment is unavailable")
-  const response = await page.request.get(enrollment, { maxRedirects: 0 })
-  expect(response.status()).toBe(303)
-  const nativeOrigin = new URL(selected.baseURL)
-  nativeOrigin.port = "3000"
-  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", nativeOrigin).href)
+  await loginNative(page, account, scenario)
+  if (account === "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toHaveCount(0)
+  if (account !== "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
+  const entry = await page.goto("/orchestra/sf-procurement/requests")
   expect(entry?.status()).toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
-  // UNBOUND: the Requests chapter does not expose the C02 provenance anchors.
-  // Keep the source-ref/digest/version assertions until a native route owns them.
+  // The native CAP25 entry mounts the real C02 queue and its producer provenance.
   const source = page.locator("a[data-source-ref]").first()
   await expect(source).toBeVisible()
   await expect(source).toHaveAttribute("data-source-ref", /.+/)
   await expect(source).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
   await expect(source).toHaveAttribute("data-source-version", /^\d+$/)
-  if (account === "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toHaveCount(0)
-  if (account !== "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
   return selected
 }
 
