@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { expect, test } from "bun:test"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
+import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
 import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
@@ -191,6 +192,9 @@ test("portfolio handoff records a human choice against C08, prepares two changes
       const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)
       const digest = change && reviewDigestFor(context, request, change)
       if (!change || !digest) return { status: "unavailable", reason: "review-producer-unavailable" }
+      // This controlled outage is known before dispatch. A reserved attempt with an unknown outcome must remain
+      // indeterminate; the separate C12 recovery tests cover that refusal and never authorize a blind retry.
+      if (change.target.surface === "procurement" && domain.procurementFails) return { status: "unavailable", reason: "controlled-domain-unavailable" }
       const version = await store.transaction(change.target.surface, async (snapshot) => ({ commit: false, value: snapshot.versions.wp13Amount?.version }))
       return version === change.expectedVersion ? { status: "ok", value: { reviewDigest: digest } } : { status: "stale", reason: "review-source-changed" }
     }, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => confirmations.apply, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
@@ -230,6 +234,13 @@ test("portfolio handoff records a human choice against C08, prepares two changes
     expect(partial.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "planned"])
     expect(domain.procurementCalls).toBe(0)
     expect(await amounts()).toEqual([40, 50])
+    const pendingAttempt = await state.read(request, "cases", (productState) => applicationAttempts(productState, {
+      caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version },
+      changeId: secondChange.id, choiceId: choice.id,
+    }).length)
+    expect(pendingAttempt).toMatchObject({ status: "ok", value: 0 })
+    expect(await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version },
+      changeId: firstChange.id, choiceId: choice.id }, binding, "recover")).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
     domain.procurementFails = false
     expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
     const beforeResume = await cases.read({ caseRef: caseSelector }, binding)
