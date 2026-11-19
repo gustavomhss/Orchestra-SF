@@ -189,6 +189,7 @@ async function expectCompletePreview(page: Page, preparation: Locator, preview: 
       .toHaveText(section.projection.values.flatMap((value) => [
         value.id, `${value.value === null ? "Unavailable" : String(value.value)} ${value.currency ?? value.unit ?? ""}`.trim(),
         `${value.period.start} – ${value.period.end}`,
+        ({ confirmed: "Confirmed", estimated: "Estimated", hypothetical: "Hypothetical", absent: "Absent" })[value.evidenceState],
       ]))
   }
 }

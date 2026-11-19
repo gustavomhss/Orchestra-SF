@@ -73,6 +73,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
     await expect(row.getByRole("table").getByRole("cell")).toHaveText(section.projection.values.flatMap((value) => [
       value.id, `${value.value === null ? "Unavailable" : String(value.value)} ${value.currency ?? value.unit ?? ""}`.trim(),
       `${value.period.start} – ${value.period.end}`,
+      ({ confirmed: "Confirmed", estimated: "Estimated", hypothetical: "Hypothetical", absent: "Absent" })[value.evidenceState],
     ]))
   }
   await expect(shown.locator("li").nth(reportPages.indexOf("Portfolio Dashboard"))).toContainText(/Authorized records: 25|Registros autorizados: 25/)

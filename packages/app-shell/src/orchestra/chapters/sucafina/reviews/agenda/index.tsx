@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createSignal, createUniqueId, onCleanup, untrack } from "solid-js"
+import { For, Show, createEffect, createSignal, createUniqueId, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
@@ -31,13 +31,14 @@ function stateOf(result: { kind: "transport-error"; reason: string } | { kind: "
 /** UI47: the producer is the sole source for section identity, count and period. */
 export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   const [multiDomain, setMultiDomain] = createSignal(false)
-  return <Show when={multiDomain()} fallback={<SfAgendaEditor year={props.route.query.year} onDomains={() => setMultiDomain(true)} />}>
+  return <Show when={multiDomain()} fallback={<SfAgendaEditor year={props.route.query.year} sourcePage={props.route.query.sourcePage} onDomains={() => setMultiDomain(true)} />}>
     <SfMultiDomainAgenda year={props.route.query.year} onDashboard={() => setMultiDomain(false)} />
   </Show>
 }
 
 export function SfAgendaEditor(props: {
   year?: number
+  sourcePage?: string
   initial?: readonly Section[]
   previousReviewRef?: string
   onDomains?: () => void
@@ -48,7 +49,7 @@ export function SfAgendaEditor(props: {
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [store, setStore] = createStore({
     ownerKey: "",
-    sourcePage: "",
+    sourcePage: props.sourcePage ?? "",
     filter: "",
     available: [] as Section[],
     selected: [] as Section[],
@@ -134,12 +135,10 @@ export function SfAgendaEditor(props: {
       return
     }
     if (store.ownerKey !== state.ownerKey) {
-      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [...(props.initial ?? [])], available: [],
+      setStore({ ownerKey: state.ownerKey, sourcePage: props.sourcePage ?? "", selected: [...(props.initial ?? [])], available: [],
         preview: undefined, preserved: undefined, phase: "selecting", status: props.initial?.length ? "ready" : "loading" })
       return
     }
-    const source = untrack(() => store.sourcePage)
-    if (source.trim()) void discover(source)
     onCleanup(() => {
       if (owner.generation() !== generation) {
         sourceAbort?.abort()
@@ -356,11 +355,12 @@ export function SfAgendaEditor(props: {
                 </p>}</For>
                 <Show when={section.recordCount === 0}><p>{t("sf.u25.noRecords")}</p></Show>
                 <table aria-label={section.title + " · " + t("sf.u25.values")}>
-                  <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th></tr></thead>
+                  <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th><th>{t("sf.u25.evidence")}</th></tr></thead>
                   <tbody><For each={section.projection.values}>{(value) => <tr>
                     <td>{value.id}</td>
                     <td>{(value.value === null ? t("sf.u25.unavailableValue") : String(value.value)) + (value.currency || value.unit ? " " + (value.currency ?? value.unit) : "")}</td>
                     <td>{value.period.start} – {value.period.end}</td>
+                  <td>{t("sf.u25.evidence." + value.evidenceState)}</td>
                   </tr>}</For></tbody>
                 </table>
               </li>}</For>
