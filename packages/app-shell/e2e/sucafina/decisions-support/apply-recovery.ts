@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Request } from "@playwright/test"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { asRecord, caseIdentity, clickCommand, enterWorkbench, isCommand, readReply } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 
@@ -181,7 +182,7 @@ async function openCase(page: Page, origin: string, reference: string, objective
 
 async function openRequest(page: Page, origin: string, id: string) {
   expect(id).toMatch(/^PR-\d{4}-\d+$/)
-  await page.goto("/orchestra/sf-procurement/requests")
+  await page.goto("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(id))
   const detail = page.locator("details").filter({ has: page.locator(`section[id="${id}-pr"]`) })
   await expect(detail).toHaveCount(1)
   await expect(detail).toHaveAttribute("open", "")

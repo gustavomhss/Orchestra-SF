@@ -16,7 +16,27 @@ export type SfPrEdit = Extract<SfRequestSave["values"], { pr: unknown }>["pr"]
 export type SfPoEdit = Extract<SfRequestSave["values"], { po: unknown }>["po"]
 export type SfPoLine = NonNullable<SfPoEdit["lines"]>[number]
 export type SfRequestCommand = "create" | "save-pr" | "save-po" | "submit_pr" |
-  "submit_po" | "issue" | "cancel" | "delete"
+  "submit_po" | "approve" | "issue" | "cancel" | "delete"
+const REQUEST_STAGE_LABEL: Readonly<Record<string, string>> = {
+  draft: "Requisition draft",
+  pr_pending: "Requisition approval",
+  pr_rejected: "Requisition rejected",
+  sourcing: "Sourcing",
+  src_pending: "Sourcing approval",
+  src_rejected: "Sourcing rejected",
+  po_draft: "Purchase order draft",
+  po_pending: "Purchase order approval",
+  po_rejected: "Purchase order rejected",
+  po_approved: "Purchase order approved",
+  po_issued: "Issued internally",
+  cancelled: "Cancelled",
+}
+export function requestStageLabel(status: string) {
+  return REQUEST_STAGE_LABEL[status] ?? status
+}
+export function isApprovalPending(status: string) {
+  return status === "pr_pending" || status === "src_pending" || status === "po_pending"
+}
 
 export type SfRequestsRead = Readonly<{
   kind: "ready"

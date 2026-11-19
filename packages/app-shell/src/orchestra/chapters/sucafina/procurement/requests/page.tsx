@@ -1,5 +1,4 @@
 import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
-import { Dynamic } from "solid-js/web"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
@@ -17,8 +16,8 @@ import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-confl
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
 import { SF_U11_REMAINING_COPY } from "./copy"
 import {
-  decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, postedPoLine, prFromRecord,
-  requestRef, requestVersion, uiCommandAction, validatePo, validatePr,
+  decodeRequestsPage, displayScalar, isApprovalPending, isPoWritable, isPrWritable, poFromRecord, postedPoLine, prFromRecord,
+  requestRef, requestStageLabel, requestVersion, uiCommandAction, validatePo, validatePr,
   type SfPoEdit, type SfPrEdit, type SfRequest, type SfRequestCommand, type SfRequestsRead,
 } from "./model"
 import "./requests.css"
@@ -34,6 +33,7 @@ type Review = Readonly<{
   pr: SfPrEdit | undefined
   po: SfPoEdit | undefined
   reason: string
+  comment: string
   operationRef: SfOperationRef
   intentRef: SfIntentRef
   idempotencyKey: string
@@ -60,6 +60,7 @@ const actionKey: Record<SfRequestCommand, Key> = {
   "save-po": "sf.u11.remaining.savePo",
   submit_pr: "sf.u11.remaining.submitPr",
   submit_po: "sf.u11.remaining.submitPo",
+  approve: "sf.u11.remaining.approve",
   issue: "sf.u11.remaining.issue",
   cancel: "sf.u11.remaining.cancel",
   delete: "sf.u11.remaining.delete",
@@ -130,6 +131,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     layoutMode: "split" as "single" | "split" | "split-context",
     reviewing: undefined as Review | undefined,
     reason: "",
+    comment: "",
     sending: false,
     outcomeUnknown: false,
     notice: undefined as Key | undefined,
@@ -181,7 +183,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const epoch = sf.generation()
     const targetRef = routeRef()
     void view.refresh
-    setView({ read: undefined, state: "loading", reviewing: undefined, sending: false, notice: undefined })
+    setView({ read: undefined, state: "loading", reviewing: undefined, sending: false, notice: undefined, comment: "" })
     if (owner.status !== "ready" || !ready) {
       setView("state", owner.status === "denied" ? "denied" :
         owner.status === "unauthenticated" ? "session-expired" : "unavailable")
@@ -302,6 +304,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     if (!current || version() === undefined) return false
     if (action === "save-pr" || action === "submit_pr") return isPrWritable(current) && !!activePr()
     if (action === "save-po" || action === "submit_po") return isPoWritable(current) && !!activePo()
+    if (action === "approve") return isApprovalPending(current.status)
     if (action === "delete") return current.status === "draft"
     if (action === "cancel") return !["cancelled", "po_issued"].includes(current.status)
     if (action === "issue") return current.status === "po_approved"
@@ -324,6 +327,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       pr: pr ? { ...pr } : undefined,
       po: po ? { ...po, ...(po.lines ? { lines: po.lines.map(postedPoLine) } : {}) } : undefined,
       reason,
+      comment: action === "approve" ? view.comment : "",
       operationRef: crypto.randomUUID() as SfOperationRef,
       intentRef: crypto.randomUUID() as SfIntentRef,
       idempotencyKey: crypto.randomUUID(),
@@ -388,6 +392,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         case "save-po": return { ...base, action: "save" as const, values: { po: review.po! } }
         case "submit_pr": return { ...base, action: "submit_pr" as const, values: { pr: review.pr! } }
         case "submit_po": return { ...base, action: "submit_po" as const, values: { po: review.po! } }
+        case "approve": return { ...base, action: "approve" as const, values: { comment: review.comment } }
         case "issue": return { ...base, action: "issue" as const, values: {} }
         case "cancel": return { ...base, action: "cancel" as const, values: { reason: review.reason } }
         case "delete": return { ...base, action: "delete" as const, values: {} }
@@ -476,6 +481,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
             { ...base, action: "submit_pr", values: { pr: review.pr! } }, options)
           case "submit_po": return client["domain.command.CAP25.submit_po"](
             { ...base, action: "submit_po", values: { po: review.po! } }, options)
+          case "approve": return client["domain.command.CAP25.approve"](
+            { ...base, action: "approve", values: { comment: review.comment } }, options)
           case "issue": return client["domain.command.CAP25.issue"](
             { ...base, action: "issue", values: {} }, options)
           case "cancel": return client["domain.command.CAP25.cancel"](
@@ -593,7 +600,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const columns: readonly SfColumn<SfRequest>[] = [
     { id: "number", labelKey: tableKey("sf.u11.remaining.identity"), sortKey: "number",
       align: "start", widthPolicy: { kind: "content", minPx: 130, maxPx: 200 },
-      render: (row) => <span>{row.number ?? "—"}</span> },
+      render: (row) => {
+        const id = requestRef(row)
+        return id ? <a href={stageHref(id, "detail")}>{row.number}</a> : <span>{row.number ?? "—"}</span>
+      } },
     { id: "title", labelKey: tableKey("sf.u11.remaining.field.title"), sortKey: "title",
       align: "start", widthPolicy: { kind: "flex", minPx: 150, weight: 3 },
       render: (row) => <span>{row.pr?.title ?? "—"}</span> },
@@ -620,11 +630,12 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const operationId = ("domain.command.CAP25." + uiCommandAction(intent.action)) as
       "domain.command.CAP25.create" | "domain.command.CAP25.save" |
       "domain.command.CAP25.submit_pr" | "domain.command.CAP25.submit_po" |
-      "domain.command.CAP25.issue" | "domain.command.CAP25.cancel" | "domain.command.CAP25.delete"
+      "domain.command.CAP25.issue" | "domain.command.CAP25.cancel" | "domain.command.CAP25.delete" |
+      "domain.command.CAP25.approve"
     const purpose = intent.action === "create" ? "create" :
       intent.action === "save-pr" || intent.action === "save-po" ? "save" :
       intent.action === "delete" ? "delete" : intent.action === "cancel" ? "cancel" :
-      intent.action === "issue" ? "issue" : "submit"
+      intent.action === "issue" ? "issue" : intent.action === "approve" ? "approve" : "submit"
     return <SfChangeReview
       operation={{ ref: intent.operationRef, label: message(actionKey[intent.action]),
         scope: dataText(t("sf.u11.remaining.reviewScope")) }}
@@ -670,8 +681,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <p>{t("sf.u11.remaining.status")}: {current?.status}</p>
           <p>{t("sf.u11.remaining.version")}: {version() ?? "—"}</p>
         </Show>
-        <Show when={current}>
-          <p>{t("sf.u11.remaining.stage")}: {stage()}</p>
+        <Show when={current && ref}>
+          <p data-request-summary={ref}>{requestStageLabel(current!.status)}</p>
         </Show>
       </header>
       <Show when={current && ref}>
@@ -691,45 +702,61 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
             onClick={() => discardConflict("pr")}>{t("sf.u11.remaining.discard")}</button>
         </section>
       </Show>
-      <Show when={activePr() && (creating() || isPrWritable(current!))}>
-        <section class="sf-u11-stage" data-stage="pr">
-          <Dynamic component={creating() ? "form" : "div"}
-            {...(creating() ? { "data-command": "create", "data-page": "Requests", "data-record": "", "data-version": "0" } : {})}>
-          <Show when={current && !creating()}>
-            <p>{t("sf.u11.remaining.noTitleMutation")}: {current?.pr?.title ?? ""}</p>
-            {/* The W19 title editor is a separate source-locked intent/draft. */}
-            <SfRequestTitleEdit {...props} requestRef={selectedRef()} onConfirmed={refresh} />
-          </Show>
-          <SfRequisitionForm value={activePr()!.value} creating={creating()}
-            disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
-            onEdit={editPr} />
-          <div class="sf-u11-actions">
-            <Show when={creating() && stageAllowed("create")}>
-              <button type="button" class="mx-btn primary" onClick={() => reviewAction("create")}>
-                {t("sf.u11.remaining.new")}
-              </button>
+      <Show when={(creating() && activePr()) || (!creating() && current && ref && currentVersion !== undefined)}>
+        <section class="sf-u11-stage" data-stage="pr" id={!creating() && ref ? `${ref}-pr` : undefined}>
+          <form data-command={creating() ? "create" : "save"} data-page="Requests"
+            data-record={creating() ? "" : ref} data-version={creating() ? "0" : String(currentVersion)}
+            onSubmit={(event) => event.preventDefault()}>
+          <Show when={creating() || (current && isPrWritable(current) && activePr())} fallback={
+            <label class="sf-u11-field">
+              <span>{t("sf.u11.remaining.field.estAmount")}</span>
+              <input name="pr.estAmount" type="number" readOnly value={displayScalar(current?.pr?.estAmount)} />
+            </label>
+          }>
+            <Show when={current && !creating()}>
+              <p>{t("sf.u11.remaining.noTitleMutation")}: {current?.pr?.title ?? ""}</p>
+              {/* The W19 title editor is a separate source-locked intent/draft. */}
+              <SfRequestTitleEdit {...props} requestRef={selectedRef()} onConfirmed={refresh} />
             </Show>
-            <Show when={!creating() && canPr()}>
-              <button type="button" class="mx-btn" onClick={() => reviewAction("save-pr")}>
-                {t("sf.u11.remaining.savePr")}
-              </button>
-            </Show>
-            <Show when={!creating() && stageAllowed("submit_pr")}>
-              <button type="button" class="mx-btn primary" onClick={() => reviewAction("submit_pr")}>
-                {t("sf.u11.remaining.submitPr")}
-              </button>
-            </Show>
-            <button type="button" class="mx-btn"
+            <SfRequisitionForm value={activePr()!.value} creating={creating()}
               disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
-              onClick={() => prDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
-          </div>
-          </Dynamic>
+              onEdit={editPr} />
+            <div class="sf-u11-actions">
+              <Show when={creating() && stageAllowed("create")}>
+                <button type="button" class="mx-btn primary" onClick={() => reviewAction("create")}>
+                  {t("sf.u11.remaining.new")}
+                </button>
+              </Show>
+              <Show when={!creating() && canPr()}>
+                <button type="button" class="mx-btn" onClick={() => reviewAction("save-pr")}>
+                  {t("sf.u11.remaining.savePr")}
+                </button>
+              </Show>
+              <Show when={!creating() && stageAllowed("submit_pr")}>
+                <button type="button" class="mx-btn primary" onClick={() => reviewAction("submit_pr")}>
+                  {t("sf.u11.remaining.submitPr")}
+                </button>
+              </Show>
+              <button type="button" class="mx-btn"
+                disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
+                onClick={() => prDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
+            </div>
+          </Show>
+          </form>
         </section>
       </Show>
-      <Show when={current && stage() === "pr" && !canPr()}>
-        <section class="sf-u11-stage"><h3>{t("sf.u11.remaining.pr")}</h3>
-          <p>{current?.pr?.description ?? t("sf.u11.remaining.readonly")}</p>
-        </section>
+      <Show when={!creating() && current && ref && currentVersion !== undefined && stageAllowed("approve")}>
+        <form data-command="approve" data-page="Requests" data-record={ref} data-version={String(currentVersion)}
+          onSubmit={(event) => event.preventDefault()}>
+          <label class="sf-u11-field">
+            <span>{t("sf.u11.remaining.comment")}</span>
+            <textarea name="comment" rows={3} value={view.comment}
+              onInput={(event) => setView("comment", event.currentTarget.value)} />
+          </label>
+          <button type="button" class="mx-btn primary" onClick={() => reviewAction("approve")}>
+            {t("sf.u11.remaining.approve")}
+          </button>
+        </form>
       </Show>
       <Show when={current && stage() === "po"}>
         <section class="sf-u11-stage" data-stage="po">
@@ -765,13 +792,16 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           </Show>
         </section>
       </Show>
-      <Show when={current && (props.route.kind === "history" || props.route.kind === "detail")}>
-        <section class="sf-u11-stage" data-stage="history">
+      <Show when={current && ref}>
+        <section class="sf-u11-stage" id={`${ref!}-history`} data-stage="history">
           <h3>{t("sf.u11.remaining.history")}</h3>
           <Show when={(current?.history?.length ?? 0) > 0} fallback={<p>{t("sf.u11.remaining.noHistory")}</p>}>
-            <ol><For each={current?.history}>{(entry) =>
-              <li><time>{entry.at}</time> · {entry.action} · {entry.by} · {entry.note}</li>
-            }</For></ol>
+            <table>
+              <thead><tr><th>At</th><th>By</th><th>Action</th><th>Note</th></tr></thead>
+              <tbody><For each={current?.history}>{(entry) =>
+                <tr><td>{entry.at}</td><td>{entry.by}</td><td>{entry.action}</td><td>{entry.note}</td></tr>
+              }</For></tbody>
+            </table>
           </Show>
         </section>
       </Show>
@@ -844,7 +874,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           </div>
           <div class="sf-u11-detail-wrap">
             <Show when={row() || creating()} fallback={<p role="status">{t("sf.u11.remaining.open")}</p>}>
-              {renderDetail()}
+              <Show when={!creating() && selectedRef()} fallback={renderDetail()}>
+                {(id) => <details id={id()} open={true} attr:open=""><summary>{id()}</summary>{renderDetail()}</details>}
+              </Show>
             </Show>
           </div>
         </div>

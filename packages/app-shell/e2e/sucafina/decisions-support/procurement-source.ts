@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { asRecord } from "./journey"
 
 export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
@@ -73,7 +74,7 @@ export async function approveExactRequisition(page: Page, origin: string, review
 
 export async function openRequisition(page: Page, origin: string, id: string) {
   expect(id).toMatch(/^PR-\d{4}-\d+$/)
-  await page.goto("/orchestra/sf-procurement/requests")
+  await page.goto("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(id))
   const detail = page.locator(`details[id="${id}"]`)
   await expect(detail).toHaveCount(1)
   await expect(detail).toHaveAttribute("open", "")
@@ -95,6 +96,9 @@ async function domainCommand(page: Page, origin: string, form: Locator, label: s
   const button = form.getByRole("button", { name: label, exact: true })
   await expect(button).toBeEnabled()
   await button.click()
+  const confirm = page.getByRole("button", { name: "Confirm action", exact: true })
+  await expect(confirm).toBeEnabled()
+  await confirm.click()
   const response = await pending
   expect(response.request().postDataJSON()).toMatchObject({ page: "Requests", action, ...(recordId ? { id: recordId, version } : {}) })
   expect(response.status()).toBe(200)
