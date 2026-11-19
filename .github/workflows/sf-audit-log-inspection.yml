@@ -1,0 +1,90 @@
+name: sf-original-reports-context
+on:
+  push:
+    branches: [audit-reports13-20261119]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read completed Reports artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14577399208/zip > "$RUNNER_TEMP/original.zip"
+      - name: Inspect original owner comparisons and source command
+        run: |
+          python3 - <<'PY'
+          import base64, io, json, os, pathlib, re, urllib.parse, zipfile
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          lines = ["# Original Reports context comparison", "", "Read-only inspection of run44623670174, artifact14577399208. No product rerun or changed assertion. Owner values are not exported; only original equality results.", ""]
+          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
+          fields = ["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"]
+          matched = 0
+          with zipfile.ZipFile(root / "original.zip") as archive:
+              for name in archive.namelist():
+                  if name.endswith("/error-context.md"):
+                      lines += ["## " + name, ""]
+                      for line in archive.read(name).decode("utf-8", errors="replace").splitlines()[:350]:
+                          if not sensitive.search(line): lines.append(line[:1000])
+                      lines.append("")
+                  if not name.endswith(".zip"): continue
+                  matched += 1
+                  lines += ["## Original trace " + name, ""]
+                  with zipfile.ZipFile(io.BytesIO(archive.read(name))) as trace:
+                      entries = []
+                      for network in [p for p in trace.namelist() if p.endswith(".network")]:
+                          for raw in trace.read(network).decode("utf-8", errors="replace").splitlines():
+                              try: entry = json.loads(raw)
+                              except ValueError: continue
+                              entry = entry.get("snapshot", entry)
+                              request, response = entry.get("request", {}), entry.get("response", {})
+                              url = urllib.parse.urlsplit(request.get("url", ""))
+                              query = urllib.parse.parse_qs(url.query)
+                              if not (url.path.endswith("/api/ui/context") or query.get("sf", [""])[0] == "review-read" or
+                                      query.get("page", [""])[0] == "OPEX Detail"): continue
+                              content = response.get("content", {})
+                              sha = content.get("_sha1")
+                              resource = next((p for p in trace.namelist() if sha and p.endswith("/" + sha)), None)
+                              body = None
+                              if resource:
+                                  try: body = json.loads(trace.read(resource))
+                                  except (ValueError, UnicodeError): pass
+                              entries.append((entry.get("startedDateTime", ""), url.path, query, request, response, body))
+                      entries.sort(key=lambda item: item[0])
+                      contexts = [body["value"]["stamp"] for _, pathname, _, _, response, body in entries
+                                  if pathname.endswith("/api/ui/context") and response.get("status") == 200 and
+                                  isinstance(body, dict) and isinstance(body.get("value"), dict) and isinstance(body["value"].get("stamp"), dict)]
+                      latest = contexts[-1] if contexts else None
+                      observed = []
+                      for at, pathname, query, request, response, body in entries:
+                          row = {"at": at, "path": pathname, "method": request.get("method"), "status": response.get("status"),
+                                 "sf": query.get("sf", [None])[0], "page": query.get("page", [None])[0], "originalBodyCaptured": isinstance(body, dict)}
+                          if isinstance(body, dict):
+                              row["producerStatus"] = body.get("status")
+                              if "ok" in body: row["ok"] = body["ok"]
+                              value = body.get("value")
+                              if isinstance(value, dict) and query.get("sf", [""])[0] == "review-read":
+                                  row["sections"] = []
+                                  for section in value.get("sections", []):
+                                      if not isinstance(section, dict): continue
+                                      content = section.get("content")
+                                      context = content.get("context") if isinstance(content, dict) else None
+                                      row["sections"].append({"title": section.get("title"), "contentObject": isinstance(content, dict),
+                                          "contextKeys": sorted(context) if isinstance(context, dict) else [],
+                                          "matchesLatestStamp": {field: context.get(field) == latest.get(field) for field in fields}
+                                              if isinstance(context, dict) and latest else None})
+                          observed.append(row)
+                      lines += [json.dumps({"contextsCaptured": len(contexts), "observed": observed[-18:]}, ensure_ascii=False, indent=2), ""]
+          lines += ["Matching original trace archives: " + str(matched)]
+          result = "\n".join(lines) + "\n"
+          payload = {"message": "docs(sf): retain original Reports owner comparisons", "branch": "audit-reports13-20261119", "content": base64.b64encode(result.encode()).decode()}
+          (root / "payload.json").write_text(json.dumps(payload))
+          print("Inspected original screens and owner equality only; no headers or owner values exported.")
+          PY
+      - name: Persist original observation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-reports-context-44623670174.md --input "$RUNNER_TEMP/payload.json" > /dev/null
