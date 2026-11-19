@@ -12,7 +12,6 @@ import type { Command } from "../../../../../modules/sucafina/Sucafinav1/runtime
 import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
-import { renderInstalledConsole } from "../installed-console.ts"
 import { createOperationsInstallation } from "../operations-support/installation.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
@@ -125,17 +124,6 @@ active.handle = async (request) => {
   await account.identity.prepare(request)
   const identity = await account.identity.handle(request)
   if (identity) return identity
-  const url = new URL(request.url)
-  const surface = url.pathname.slice(account.mount.length + 1)
-  const consoleSurface = surface === "dashboard" || surface === "planner" || surface === "procurement" ? surface : undefined
-  if (consoleSurface && url.searchParams.has("sf")) {
-    const product = await account.services.product(request, consoleSurface)
-    if (product) return product
-  }
-  if (request.method !== "POST" && consoleSurface && !url.searchParams.has("download") && !url.searchParams.has("sf") && !url.searchParams.has("asset") && !url.searchParams.has("asset-link")) {
-    const rendered = await renderInstalledConsole(request, consoleSurface, account.services)
-    if (rendered) return rendered
-  }
   return await account.application(request) ?? new Response("Not found", { status: 404 })
 }
 const enrolled: Record<string, { baseURL: string; principal: string; enrollments: Record<string, string> }> = {}
