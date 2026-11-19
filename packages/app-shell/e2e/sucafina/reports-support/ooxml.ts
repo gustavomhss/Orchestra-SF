@@ -8,15 +8,16 @@ import type { ReportsCorpus } from "./corpus.ts"
 import { projection } from "./model.ts"
 
 /** Reads the downloaded OOXML package, not the app's renderer or its input fixture. */
-export async function inspectReport(file: string, format: "docx" | "pptx", saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo) {
+export async function inspectReport(file: string, format: "docx" | "pptx", saved: PreservedReview, corpus: ReportsCorpus, info: Pick<TestInfo, "attach">) {
   const bytes = await readFile(file)
   expect(bytes.length).toBeGreaterThan(100)
   const entries = xmlEntries(bytes, format)
   if (format === "docx") expect(entries.map((entry) => entry.name)).toEqual(["word/document.xml"])
   if (format === "pptx") expect(entries.length, "More than one slide must carry the complete selected corpus").toBeGreaterThan(1)
   const physicalRows = entries.flatMap((entry) => xmlTableRows(entry.xml, format, entry.name))
-  const expectedRows = saved.sections.flatMap((section) => projection(section.content).values.map((value) => ({
+  const expectedRows = saved.sections.flatMap((section) => projection(section.content).values.map((value, index) => ({
     sectionRef: section.id,
+    ordinal: index + 1,
     valueId: value.id,
     cells: [
       `${value.id}: ${value.value === null ? "unavailable" : String(value.value)}${value.unit ? ` ${value.unit}` : ""}${value.currency ? ` ${value.currency}` : ""}`,
@@ -62,8 +63,9 @@ function normalize(value: string) { return value.replace(/\s+/g, " ").trim() }
 function displayText(value: string) { return normalize(value.replace(/\r\n|\r|\n/g, " ↵ ")) }
 
 type Cells = [string, string, string]
-type PhysicalRow = { part: string; row: number; cells: Cells }
-type ExpectedRow = { sectionRef: string; valueId: string; cells: Cells }
+type Continuation = [string | undefined, string | undefined, string | undefined]
+type PhysicalRow = { part: string; row: number; cells: Cells; continuation: Continuation }
+type ExpectedRow = { sectionRef: string; ordinal: number; valueId: string; cells: Cells }
 
 /** Tables retain cell boundaries; a source found elsewhere cannot satisfy a row. */
 function xmlTableRows(xml: string, format: "docx" | "pptx", part: string): PhysicalRow[] {
@@ -72,14 +74,60 @@ function xmlTableRows(xml: string, format: "docx" | "pptx", part: string): Physi
   const rows = new RegExp(`<${namespace}:tr(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${namespace}:tr>`, "g")
   return [...xml.matchAll(rows)].flatMap((row, index) => {
     const cells = new RegExp(`<${namespace}:tc(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${namespace}:tc>`, "g")
-    const values = [...row[1]!.matchAll(cells)].map((cell) => xmlParagraphs(cell[1]!, format).join(""))
+    const parsed = [...row[1]!.matchAll(cells)].map((cell) => tableCell(cell[1]!, format))
+    const values = parsed.map((cell) => cell.value)
+    const continuation = parsed.map((cell) => cell.continuation) as Continuation
     expect(values, `${format}: ${part} table row ${index + 1} must have value, period and sources cells`).toHaveLength(3)
-    if (values.map(normalize).join("\u0000") === ["Captured value", "Period", "Sources"].join("\u0000")) return []
-    return [{ part, row: index + 1, cells: values as Cells }]
+    if (values.map(normalize).join("\u0000") === ["Captured value", "Period", "Sources"].join("\u0000")) {
+      expect(continuation.every((label) => label === undefined), "Table headers cannot carry captured-record continuation labels").toBe(true)
+      return []
+    }
+    return [{ part, row: index + 1, cells: values as Cells, continuation }]
   })
 }
 
-/** PPTX splits long cells into successive physical rows, including across slides. */
+/** Only an explicitly styled, first paragraph can be layout context. Its identity is checked against the current logical row below. */
+function tableCell(xml: string, format: "docx" | "pptx") {
+  if (format === "pptx") return { value: xmlParagraphs(xml, format).join(""), continuation: undefined }
+  const paragraphs = [...xml.matchAll(/<w:p(?:\s[^>]*)?>[\s\S]*?<\/w:p>/g)].map((paragraph) => paragraph[0])
+  let continuation: string | undefined
+  const value = paragraphs.map((paragraph, index) => {
+    const properties = paragraph.match(/<w:pPr(?:\s[^>]*)?>([\s\S]*?)<\/w:pPr>/)?.[1] ?? ""
+    const styles = [...properties.matchAll(/<w:pStyle\b[^>]*\/>/g)].map((style) => xmlAttributes(style[0])["w:val"])
+    if (!styles.includes("SfCapturedContinuation")) return xmlParagraphs(paragraph, format).join("")
+    expect(styles, "A continuation paragraph has one unambiguous style").toEqual(["SfCapturedContinuation"])
+    expect(index, "Continuation context must be the first paragraph in its cell").toBe(0)
+    expect(continuation, "Only one continuation paragraph is allowed per cell").toBeUndefined()
+    continuation = xmlParagraphs(paragraph, format).join("")
+    return ""
+  }).join("")
+  return { value, continuation }
+}
+
+function verifyContinuation(fragment: PhysicalRow, wanted: ExpectedRow, first: boolean) {
+  if (first) {
+    expect(fragment.continuation.every((label) => label === undefined), `docx: first fragment of ${wanted.valueId} cannot be a continuation`).toBe(true)
+    return
+  }
+  const [value, period, sources] = fragment.continuation
+  const prefix = `Record ${wanted.ordinal} · `
+  const suffix = " (continued)"
+  expect(value?.startsWith(prefix) && value.endsWith(suffix), `docx: continuation must identify record ${wanted.ordinal}`).toBe(true)
+  expect(period?.startsWith("Period: ") && period.endsWith(suffix), `docx: continuation must retain its period`).toBe(true)
+  expect(sources, `docx: continuation must retain its source association`).toBe("Sources (continued from the same captured record)")
+  // Soft wrapping may insert spaces in these short human labels. Complete data
+  // remains subject to the exact ordered value/period/source assertions below.
+  const matchesLabel = (label: string, expected: string) => {
+    const truncated = label.endsWith("…")
+    const shown = (truncated ? label.slice(0, -1) : label).replace(/\s/g, "")
+    const complete = displayText(expected).replace(/\s/g, "")
+    return truncated ? shown.length > 0 && shown.length < complete.length && complete.startsWith(shown) : shown === complete
+  }
+  expect(matchesLabel(value!.slice(prefix.length, -suffix.length), wanted.valueId), `docx: continuation label must belong to ${wanted.valueId}`).toBe(true)
+  expect(matchesLabel(period!.slice("Period: ".length, -suffix.length), wanted.cells[1]), `docx: continuation period must belong to ${wanted.valueId}`).toBe(true)
+}
+
+/** Both formats split long cells into successive physical rows, including across pages or slides. */
 function reassembleValueRows(actual: PhysicalRow[], expected: ExpectedRow[], format: "docx" | "pptx") {
   let cursor = 0
   const result = expected.map((wanted) => {
@@ -88,6 +136,7 @@ function reassembleValueRows(actual: PhysicalRow[], expected: ExpectedRow[], for
     do {
       expect(cursor, `${format}: missing captured value row ${wanted.valueId}`).toBeLessThan(actual.length)
       const fragment = actual[cursor++]!
+      if (format === "docx") verifyContinuation(fragment, wanted, fragments.length === 0)
       expect(fragment.cells.some((cell) => normalize(cell).length > 0), `${format}: empty continuation for ${wanted.valueId}`).toBe(true)
       fragments.push({ part: fragment.part, row: fragment.row })
       for (const column of [0, 1, 2] as const) {

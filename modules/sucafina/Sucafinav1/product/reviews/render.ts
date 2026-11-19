@@ -108,6 +108,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
       title: options.title,
       creator: "Sucafina",
       styles: {
+        paragraphStyles: [{ id: "SfCapturedContinuation", name: "Captured record continuation", basedOn: "Normal", next: "Normal" }],
         default: {
           document: { run: { font: "Aptos", size: 22, color: "243C30" }, paragraph: { spacing: { after: 120, line: 280 } } },
           heading1: { run: { color: "173D2C", size: 30 }, paragraph: { spacing: { before: 260, after: 160 }, keepNext: true } },
@@ -164,7 +165,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
                   return new TableCell({
                     margins: { top: 100, bottom: 100, left: 100, right: 100 },
                     children: [
-                      ...(continuation ? [new Paragraph({ children: [new TextRun({ text: continuation, bold: true, size: 18 })], widowControl: false, spacing: { after: 0, line: 240 } })] : []),
+                      ...(continuation ? [new Paragraph({ style: "SfCapturedContinuation", children: [new TextRun({ text: continuation, bold: true, size: 18 })], widowControl: false, spacing: { after: 0, line: 240 } })] : []),
                       ...(lines.length ? [new Paragraph({ children: lines.map((line, index) => new TextRun({ text: line, size: 20, ...(index ? { break: 1 } : {}) })), widowControl: false, spacing: { after: 0, line: 240 } })] : []),
                     ],
                   })
@@ -222,7 +223,7 @@ const seals = new WeakMap<Artifact, { digest: string; inclusion: ReviewInclusion
 
 function sealReviewArtifact(artifact: Artifact, review: PreservedReview, options: { title: string; format: "pptx" | "docx"; sectionRefs: readonly string[] }) {
   const inclusion = reviewInclusion(review, options.sectionRefs)
-  if (inclusion) seals.set(artifact, { digest: createHash("sha256").update(artifact.bytes).digest("hex"), inclusion, renderDigest: digestSfValue({ rendererVersion: "wp07-paginated-v2", title: options.title, format: options.format }) })
+  if (inclusion) seals.set(artifact, { digest: createHash("sha256").update(artifact.bytes).digest("hex"), inclusion, renderDigest: digestSfValue({ rendererVersion: "wp07-paginated-v3", title: options.title, format: options.format }) })
 }
 
 /** A store can verify this receipt but only the renderer can create it. */
