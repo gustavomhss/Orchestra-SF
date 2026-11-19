@@ -47,7 +47,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     await openAndReopenMeeting(page, app, saved)
     const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info, { loseReplyResponse: true, loseCreatedThreadRead: true }))
     const beforeReload = await api.version()
-    const read = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
+    const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
     const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
     await page.reload()
     const reopened = await read
@@ -84,7 +84,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     expect(recovered.version).toBe(answer.message.version + 2)
     const beforeReopen = await api.version()
     const threadRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
-    const reviewRead = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
+    const reviewRead = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
     await page.reload()
     const [threadResponse, reviewResponse] = await Promise.all([threadRead, reviewRead])
     expect(threadResponse.status()).toBe(200)

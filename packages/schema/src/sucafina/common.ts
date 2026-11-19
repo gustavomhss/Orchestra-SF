@@ -304,6 +304,7 @@ export const SfOperationIds = [
   "reviews.review-agenda-options",
   "reviews.review-agenda",
   "reviews.review-preserve",
+  "reviews.review-read",
   "reviews.review-source",
   "reviews.review-thread-context",
   "reviews.review-update",

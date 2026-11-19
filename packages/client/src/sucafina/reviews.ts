@@ -9,7 +9,7 @@ import {
   SfDashboardDashboardReviewPreserve, SfProjectionReview,
   SfReviewsExportDocx, SfReviewsExportPptx, SfReviewsReportPrepare,
   SfReviewsReviewSource, SfReviewsReviewThreadContext, SfReviewsReviewUpdate,
-  SfReviewsReviewAgendaOptions, SfReviewsReviewAgenda, SfReviewsReviewPreserve,
+  SfReviewsReviewAgendaOptions, SfReviewsReviewAgenda, SfReviewsReviewPreserve, SfReviewsReviewRead,
 } from "@orchestra/schema/sucafina/reviews"
 import type { SfCallOptions, SfTransport } from "./transport"
 
@@ -86,6 +86,11 @@ const report = (value: Input<typeof SfReviewsExportDocx>) =>
  */
 export function createSfReviewsClient(transport: SfTransport) {
   return {
+    "reviews.review-read": (
+      input: Input<typeof SfReviewsReviewRead>, options: SfCallOptions,
+    ) => text(input.reviewRef, 2048) && readOptions(options)
+      ? transport.execute(SfReviewsReviewRead, input, options)
+      : Promise.resolve(mismatch()),
     "reviews.review-agenda-options": (
       input: Input<typeof SfReviewsReviewAgendaOptions>, options: SfCallOptions,
     ) => period(input) && readOptions(options)

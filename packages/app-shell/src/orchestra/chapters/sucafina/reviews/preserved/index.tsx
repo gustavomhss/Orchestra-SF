@@ -61,8 +61,8 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     if (state.status === "ready" && active && reviewRef) {
       void (async () => {
         try {
-          const result = await createSfReviewsClient(active.transport)["dashboard.dashboard-review"](
-            { id: reviewRef }, { signal: controller.signal },
+          const result = await createSfReviewsClient(active.transport)["reviews.review-read"](
+            { reviewRef }, { signal: controller.signal },
           )
           if (controller.signal.aborted || !current(generation, state.ownerKey)) return
           if (result.kind === "response" && result.body.status === "ok") {
@@ -103,7 +103,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     const controller = new AbortController()
     successorAbort = controller
     const client = createSfReviewsClient(active.transport)
-    const read = await client["dashboard.dashboard-review"]({ id: review.id }, { signal: controller.signal })
+    const read = await client["reviews.review-read"]({ reviewRef: review.id }, { signal: controller.signal })
     if (controller.signal.aborted || !current(generation, state.ownerKey)) return
     if (read.kind !== "response" || read.body.status !== "ok" || read.body.value.id !== review.id) return
     const resolved = await client["reviews.review-source"]({ reviewRef: review.id, referenceId }, { signal: controller.signal })

@@ -373,7 +373,7 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
+  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id))
   const response = await pending
   expect(response.status()).toBe(200)
@@ -391,7 +391,7 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   await expect(meeting).toHaveCount(1)
   await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
   const url = page.url()
-  const reload = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
+  const reload = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   await page.reload()
   const reopened = await reload
   expect(reopened.status()).toBe(200)
@@ -447,7 +447,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const navigation = page.getByRole("list", { name: "Preserved source navigation", exact: true })
   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
-  const read = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
+  const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
   await link.click()
   expect(object(await (await read).json()).value).toEqual(saved)

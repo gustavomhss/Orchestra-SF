@@ -20,6 +20,8 @@ export type SfNativeOperationRoute = Readonly<{
 
 /** Original dashboard serveDownload supports admin GET ?download=members. */
 export const SfOperationExtensions = Object.freeze({
+  // Original review read accepts all preserved domain sources under current C08/ACL fences.
+  "reviews.review-read": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-read"}},
   // Original review-agenda GET/POST and human review-preserve; the producer retains all admission.
   "reviews.review-agenda-options": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-agenda"}},
   "reviews.review-agenda": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"preview","responseMode":"json","fixedQuery":{"sf":"review-agenda"},"maxRequestBytes":262144},

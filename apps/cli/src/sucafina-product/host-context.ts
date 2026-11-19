@@ -972,7 +972,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
               return { producer: productHttp, dependencies: [authority, authority.ui, authority.state, dashboardHttp,
                 business.dashboardServices, business.dashboardServices.readReview, input.persistence, input.persistence.resolveScopedSource] }
             }
-            if (operationId === "reviews.review-source" || operationId === "reviews.review-update") {
+            if (operationId === "reviews.review-source" || operationId === "reviews.review-update" || operationId === "reviews.review-read") {
               if (services.productHttp !== productHttp || !extended.reviews) return undefined
               return { producer: productHttp, dependencies: [extended.productHttp, extended.reviews, extended.reviews.reviews,
                 extended.reviews.reviews.read, business.dashboardSources, business.dashboardSources.resolveDashboardSource,

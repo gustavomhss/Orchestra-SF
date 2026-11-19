@@ -164,6 +164,11 @@ export const SfReviewsReviewAgenda = {
     gaps: Schema.Array(Schema.Struct({ id: Text, reason: Text })),
   })),
 }
+export const SfReviewsReviewRead = {
+  operationId: "reviews.review-read" as const,
+  input: Schema.Struct({ reviewRef: Text }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  output: Result(SfReviewPreserved),
+}
 export const SfReviewsReviewPreserve = {
   operationId: "reviews.review-preserve" as const,
   input: SfDashboardDashboardReviewPreserve.input,
@@ -280,6 +285,7 @@ export const SfReviews = {
   "reviews.review-agenda-options": SfReviewsReviewAgendaOptions,
   "reviews.review-agenda": SfReviewsReviewAgenda,
   "reviews.review-preserve": SfReviewsReviewPreserve,
+  "reviews.review-read": SfReviewsReviewRead,
   "dashboard.dashboard-agenda": SfDashboardDashboardAgenda,
   "dashboard.dashboard-capture": SfDashboardDashboardCapture,
   "dashboard.dashboard-history": SfDashboardDashboardHistory,

@@ -55,7 +55,7 @@ export async function observeSfReviewReadHealth(input: {
   ui: SfHostServices["ui"]
   state: SfHostServices["state"]
   binding?: Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]
-  source: (id: "dashboard.dashboard-review" | "projection.review" | "reviews.review-source" | "reviews.review-update") => { producer: object; dependencies: readonly object[] } | undefined
+  source: (id: "dashboard.dashboard-review" | "projection.review" | "reviews.review-source" | "reviews.review-update" | "reviews.review-read") => { producer: object; dependencies: readonly object[] } | undefined
 }, request: Request, stamp: SfContextStamp) {
   if (!input.binding || request.signal.aborted) return []
   const bindingFor = input.binding
@@ -67,13 +67,15 @@ export async function observeSfReviewReadHealth(input: {
     { id: "projection.review", operation: "sf_review_prepare", path: "{mount}/api/ui/projections/review" },
     { id: "reviews.review-source", operation: "sf_review_prepare", path: "{mount}/dashboard" },
     { id: "reviews.review-update", operation: "sf_review_prepare", path: "{mount}/dashboard" },
+    { id: "reviews.review-read", operation: "sf_review_prepare", path: "{mount}/dashboard" },
   ] as const
   const results = await Promise.allSettled(candidates.map(async (candidate) => {
     const metadata = SfOperationRegistry[candidate.id]
     if (!metadata || metadata.method !== "GET" || metadata.pathTemplate !== candidate.path || !sfHasOperationalResource(candidate.id)) return []
     if (candidate.id === "dashboard.dashboard-review" && SfOperationRegistry["dashboard.dashboard-review"].fixedQuery.sf !== "dashboard-review") return []
     if (candidate.id === "reviews.review-source" && SfOperationRegistry["reviews.review-source"].fixedQuery.sf !== "review-source" ||
-      candidate.id === "reviews.review-update" && SfOperationRegistry["reviews.review-update"].fixedQuery.sf !== "review-update") return []
+      candidate.id === "reviews.review-update" && SfOperationRegistry["reviews.review-update"].fixedQuery.sf !== "review-update" ||
+      candidate.id === "reviews.review-read" && SfOperationRegistry["reviews.review-read"].fixedQuery.sf !== "review-read") return []
     const source = sourceFor(candidate.id)
     if (!source || !source.dependencies.length) return []
     const binding = bindingFor(candidate.id, source.producer)

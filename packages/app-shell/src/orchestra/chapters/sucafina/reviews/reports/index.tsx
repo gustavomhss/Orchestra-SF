@@ -109,8 +109,8 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
         owner.ready()?.transport === access.transport && JSON.stringify(owner.ready()?.context.stamp) === stamp
       void (async () => {
         try {
-          const result = await createSfReviewsClient(access.transport)["dashboard.dashboard-review"](
-            { id: reviewRef }, { signal: controller.signal },
+          const result = await createSfReviewsClient(access.transport)["reviews.review-read"](
+            { reviewRef }, { signal: controller.signal },
           )
           if (!currentRead()) return
           if (result.kind === "response" && result.body.status === "ok") {

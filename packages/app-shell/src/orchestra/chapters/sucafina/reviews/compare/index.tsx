@@ -140,8 +140,8 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
     try {
       const client = createSfReviewsClient(access.transport)
       const [previousResult, currentResult] = await Promise.all([
-        client["dashboard.dashboard-review"]({ id: a }, { signal: controller.signal }),
-        client["dashboard.dashboard-review"]({ id: b }, { signal: controller.signal }),
+        client["reviews.review-read"]({ reviewRef: a }, { signal: controller.signal }),
+        client["reviews.review-read"]({ reviewRef: b }, { signal: controller.signal }),
       ])
       if (controller.signal.aborted || !sameOwner(generation, ownerKey)) return
       const statusA = previousResult.kind === "response" && previousResult.body.status === "ok"
