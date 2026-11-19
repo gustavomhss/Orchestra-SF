@@ -22,31 +22,41 @@ export function createStoredPlannerScenarioHost(input: {
   external?: { supports: (request: ScenarioRequest) => boolean; resolve: (alternative: DecisionCase["alternatives"][number], basis: CostCoverageBasis, context: TrustedDomainContext) => Promise<PortResult<{ projection: DomainProjection; source: Extract<BusinessEvidenceRef, { kind: "record" }> }>> }
   coverageRefFor: (caseRef: { id: string; incarnation: string; version: number }, alternative: { id: string; version: number }) => string
 }): PlannerScenarioHost {
-  const read = async (references: readonly string[], context: TrustedDomainContext) => {
+  const read = async (references: readonly string[], context: TrustedDomainContext, trace: (stage: string) => void, phase: string) => {
+    trace("RESULT_BATCH_" + phase + "_BEGIN")
     const store = input.store
     const observed = await readHistoricalScenarios(store, references, context)
     // A changed facade may add admission checks. Refuse this phase instead of
     // releasing observations made through the earlier store or replaying it.
     if (input.store !== store) return references.map(() => ({ status: "denied" as const, reason: "historical-reader-changed" }))
-    return structuredClone(observed)
+    const result = structuredClone(observed)
+    trace("RESULT_BATCH_" + phase + "_END")
+    return result
   }
-  const observeCase = async (stored: StoredScenario, observations: Map<string, CaseObservation>, context: TrustedDomainContext) => {
+  const observeCase = async (stored: StoredScenario, observations: Map<string, CaseObservation>, context: TrustedDomainContext, trace: (stage: string) => void, phase: string) => {
     // Historical producer versions may differ. They remain separate groups, not a refusal.
     const key = digestSfValue(stored.caseRef)
-    if (!observations.has(key)) observations.set(key, structuredClone(await input.cases.read({ caseRef: encodeCaseRef(stored.caseRef) }, context)))
+    if (!observations.has(key)) {
+      const occurrence = observations.size + 1
+      trace("CASE_" + phase + "_" + occurrence + "_BEGIN")
+      observations.set(key, structuredClone(await input.cases.read({ caseRef: encodeCaseRef(stored.caseRef) }, context)))
+      trace("CASE_" + phase + "_" + occurrence + "_END")
+    }
     return structuredClone(observations.get(key)!)
   }
   const resolveMany = async (incoming: readonly string[], context: TrustedDomainContext): Promise<PortResult<ResolvedScenario>[]> => {
+    const trace = auditPlannerTrace("STORED")
+    trace("ENTER")
     const references = [...incoming]
     // Group only this phase's C08 envelopes. Every occurrence still receives
     // its own result/source checks, including repeated refs and scalar facades.
-    const stored = await read(references, context)
+    const stored = await read(references, context, trace, "INITIAL")
     const initialCases = new Map<string, CaseObservation>()
     const prepared: PortResult<PreparedScenario>[] = []
     for (const [index, entry] of stored.entries()) {
       if (entry.status !== "ok") { prepared.push(entry); continue }
       if (entry.value.kind !== "scenario") { prepared.push({ status: "unavailable", reason: "scenario-unavailable" }); continue }
-      const current = await observeCase(entry.value, initialCases, context)
+      const current = await observeCase(entry.value, initialCases, context, trace, "INITIAL")
       if (current.status !== "ok") { prepared.push(current); continue }
       if (current.value.case.id !== entry.value.caseRef.id || current.value.case.incarnation !== entry.value.caseRef.incarnation || current.value.case.version < entry.value.caseRef.version) { prepared.push({ status: "stale", reason: "case-changed" }); continue }
       const caseDigest = digestSfValue(current.value.case)
@@ -59,14 +69,18 @@ export function createStoredPlannerScenarioHost(input: {
       if (!coverageRef.trim()) { prepared.push({ status: "unavailable", reason: "scenario-coverage-unavailable" }); continue }
       if (input.external?.supports(alternative.scenario)) {
         // The external producer replays its own calculator and current source; no forecast is fabricated.
+        trace("EXTERNAL_" + index + "_BEGIN")
         const external = structuredClone(await input.external.resolve(structuredClone(alternative), structuredClone(bases[0]!), context))
+        trace("EXTERNAL_" + index + "_END")
         if (external.status !== "ok") { prepared.push(external); continue }
         prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, ...external.value }) } })
         continue
       }
       const refs = alternative.result.sourceRefs.filter((ref) => ref.kind === "record" && ref.refId === alternative.scenario.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
       if (refs.length !== 1 || refs[0].kind !== "record") { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
+      trace("FORECAST_" + index + "_BEGIN")
       const projection = structuredClone(await input.planner.compareForecast({ baseRef: refs[0].refId, candidateRef: refs[0].refId, period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }, context))
+      trace("FORECAST_" + index + "_END")
       if (projection.status !== "ok") { prepared.push(projection); continue }
       prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, projection: projection.value.baseline, source: refs[0] }) } })
     }
@@ -74,7 +88,8 @@ export function createStoredPlannerScenarioHost(input: {
     const rereadReferences = prepared.flatMap((entry) => entry.status === "ok" ? [entry.value.reference] : [])
     // This is a new result observation after all projections. Finish every
     // per-result reread before the separate final complete-case observation.
-    const reread = await read(rereadReferences, context)
+    trace("PREPARATION_END")
+    const reread = await read(rereadReferences, context, trace, "AGAIN")
     let rereadIndex = 0
     for (const entry of prepared) {
       if (entry.status !== "ok") { checked.push(entry); continue }
@@ -86,11 +101,22 @@ export function createStoredPlannerScenarioHost(input: {
     const result: PortResult<ResolvedScenario>[] = []
     for (const entry of checked) {
       if (entry.status !== "ok") { result.push(structuredClone(entry)); continue }
-      const current = await observeCase(entry.value.stored, finalCases, context)
+      const current = await observeCase(entry.value.stored, finalCases, context, trace, "FINAL")
       if (current.status !== "ok") { result.push(current); continue }
       result.push(digestSfValue(current.value.case) === entry.value.caseDigest ? { status: "ok", value: structuredClone(entry.value.value) } : { status: "stale", reason: "case-changed" })
     }
+    trace("END")
     return result
   }
   return { resolveMany, resolve: async (reference, context) => (await resolveMany([reference], context))[0]! }
+}
+
+/** CI-only phase attribution; never part of the product integration. */
+function auditPlannerTrace(scope: string) {
+  const started = performance.now(), cpuStarted = process.cpuUsage()
+  return (stage: string) => {
+    if (process.env.SF_REPORTS_TRACE !== "1") return
+    const cpu = process.cpuUsage(cpuStarted)
+    console.info("SF_REPORTS_TRACE_PLANNER_" + scope + "_" + stage + "_AT_" + Date.now() + "_MS_" + Math.round(performance.now() - started) + "_CPU_USER_MS_" + Math.round(cpu.user / 1000) + "_CPU_SYSTEM_MS_" + Math.round(cpu.system / 1000))
+  }
 }
