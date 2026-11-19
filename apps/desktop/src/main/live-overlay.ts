@@ -221,8 +221,9 @@ export function registerLiveOverlay() {
     if (fromOverlay(event)) endDrag()
   })
   ipcMain.handle("get-live-overlay-content-protection", () => state.contentProtection)
-  ipcMain.handle("set-live-overlay-content-protection", (_event: IpcMainInvokeEvent, enabled: unknown) => {
-    if (typeof enabled === "boolean") setContentProtection(enabled)
+  ipcMain.handle("set-live-overlay-content-protection", (event: IpcMainInvokeEvent, enabled: unknown) => {
+    if (!fromOverlay(event) || typeof enabled !== "boolean") return
+    setContentProtection(enabled)
   })
 
   function setContentProtection(enabled: boolean) {

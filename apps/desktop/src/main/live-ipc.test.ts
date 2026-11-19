@@ -58,9 +58,11 @@ describe("live IPC", () => {
 
   test("validates what a renderer sends", async () => {
     registerLiveIpc(fakeLoop().loop)
-    expect(() => handlers.get("request-live-permission")!({}, "camera")).toThrow()
-    expect(handlers.get("set-live-hotkey")!({}, "nope", "Alt+M")).toEqual({ ok: false, reason: "invalid" })
-    expect(() => handlers.get("rename-live-meeting")!({}, 1, "x")).toThrow()
-    expect(await handlers.get("start-live-meeting")!({}, 5)).toEqual({ ok: true, meetingID: "untitled" })
+    const renderer = { senderFrame: { url: "oc://renderer/index.html" } }
+    expect(() => handlers.get("start-live-meeting")!({}, "title")).toThrow("Untrusted IPC sender")
+    expect(() => handlers.get("request-live-permission")!(renderer, "camera")).toThrow()
+    expect(handlers.get("set-live-hotkey")!(renderer, "nope", "Alt+M")).toEqual({ ok: false, reason: "invalid" })
+    expect(() => handlers.get("rename-live-meeting")!(renderer, 1, "x")).toThrow()
+    expect(await handlers.get("start-live-meeting")!(renderer, 5)).toEqual({ ok: true, meetingID: "untitled" })
   })
 })
