@@ -149,7 +149,7 @@ test("installed Dashboard confirms exact monthly changes and purges late results
       await expect(page.locator("body")).not.toContainText("M67 Installed operating line")
       expect(await page.evaluate(() => history.state)).toBeNull()
       const denied = await page.context().request.post(producerURL, {
-        headers: { origin: installation.origin },
+        headers: { origin: new URL(producerURL, page.url()).origin },
         data: { page: "OPEX Detail", action: "apply-preview", version: 0, values: { previewRef: late.previewRef } },
       })
       expect(denied.status()).toBe(403)
