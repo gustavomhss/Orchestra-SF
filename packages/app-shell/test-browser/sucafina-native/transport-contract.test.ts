@@ -54,6 +54,15 @@ describe("Q01 integrated transport contract / original producer", () => {
       method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
       responseMode: "json", fixedQuery: { sf: "memory-similar-cases" }, maxRequestBytes: 65536,
     })
+    // C05 pin stays outside the frozen 305 catalog. The installed producer is
+    // product/reviews/http.ts review-thread-context; this route only names it.
+    const reviewThreadContext = "reviews.review-thread-context"
+    expect(Object.hasOwn(catalog.operations, reviewThreadContext)).toBe(false)
+    expect(Object.hasOwn(SfOperationExtensions, reviewThreadContext)).toBe(false)
+    expect(SfOperationRegistry[reviewThreadContext]).toEqual({
+      method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
+      responseMode: "json", fixedQuery: { sf: "review-thread-context" }, maxRequestBytes: 65536,
+    })
     // NAV-01 deliberately replaced private-search GET with bounded POST to
     // avoid exposing the search text in URLs. Preserve the frozen source fact
     // and pin the installed original router's *different* method explicitly.
@@ -64,7 +73,7 @@ describe("Q01 integrated transport contract / original producer", () => {
       method: "POST", pathTemplate: "{mount}/api/ui/projections/search", effect: "read",
       responseMode: "json", maxRequestBytes: 4096,
     })
-    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions), similarCases].sort()
+    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions), similarCases, reviewThreadContext].sort()
     expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
     expect([...SfOperationIds].sort()).toEqual(expected)
     expect(SfOperationRegistry["files.export.members"]).toEqual(SfOperationExtensions["files.export.members"])

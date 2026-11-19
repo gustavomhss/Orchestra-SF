@@ -318,6 +318,7 @@ export const SfOperationRegistry = Object.freeze({
   "reviews.export.docx": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"page":"Generate Report","download":"docx"}},
   "reviews.export.pptx": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"page":"Generate Report","download":"pptx"}},
   "reviews.review-source": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-source"}},
+  "reviews.review-thread-context": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-thread-context"},"maxRequestBytes":65536},
   "reviews.review-update": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-update"}},
   "routines.catalog": {"method":"POST","pathTemplate":"{mount}/api/ui/routines/catalog","effect":"read","responseMode":"json","maxRequestBytes":65536},
   "routines.prepare-admission": {"method":"POST","pathTemplate":"{mount}/api/ui/routines/prepare-admission","effect":"prepare","responseMode":"json","maxRequestBytes":65536},

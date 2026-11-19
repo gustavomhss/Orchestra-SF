@@ -105,6 +105,43 @@ export async function observeSfReviewReadHealth(input: {
   return results.flatMap((item) => item.status === "fulfilled" ? item.value : [])
 }
 
+/** Installed C05 pin producer only. Does not issue a digest or authorize a section. */
+export async function observeSfReviewThreadContextHealth(input: {
+  ui: SfHostServices["ui"]
+  state: SfHostServices["state"]
+  source: { readonly http?: unknown; readonly threadContext?: { readonly prepare?: unknown; readonly authorize?: unknown }; readonly reviews?: { readonly read?: unknown } } | undefined
+}, request: Request, stamp: SfContextStamp) {
+  const source = input.source
+  const producer = source?.threadContext
+  if (!source || typeof source.http !== "function" || !producer || typeof producer.prepare !== "function" ||
+    typeof producer.authorize !== "function" || typeof source.reviews?.read !== "function" || request.signal.aborted ||
+    !sfHasOperationalResource("reviews.review-thread-context")) return []
+  const metadata = SfOperationRegistry["reviews.review-thread-context"]
+  if (metadata.method !== "POST" || metadata.pathTemplate !== "{mount}/dashboard" || metadata.effect !== "read" ||
+    metadata.responseMode !== "json" || metadata.fixedQuery.sf !== "review-thread-context" || metadata.maxRequestBytes !== 65536) return []
+  const digest = digestSfValue({ purpose: "review-thread-context-health", operation: "sf_review_prepare" })
+  const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+  if (admitted.status !== "ok") return []
+  try {
+    const authority = admitted.value.binding
+    if (authority.installationId !== stamp.installationId || authority.projectId !== stamp.projectId ||
+      authority.principalRef !== stamp.principalRef || authority.policyVersion !== stamp.policyVersion ||
+      authority.accessRevision !== stamp.accessRevision || !await input.ui.validate(admitted.value, "sf_review_prepare", digest) ||
+      input.ui.requestFor(admitted.value) !== request || input.source !== source || source.threadContext !== producer) return []
+    const read = () => input.state.read(request, "reviews", selectSfNamespaceHealth("reviews", stamp))
+    const first = await read()
+    if (first.status !== "ok" || !first.value || first.storageVersion !== first.value.storageVersion ||
+      first.aggregateRevision !== first.value.aggregateRevision || first.incarnation !== first.value.incarnation) return []
+    const second = await read()
+    if (second.status !== "ok" || !second.value || second.storageVersion !== second.value.storageVersion ||
+      second.aggregateRevision !== second.value.aggregateRevision || second.incarnation !== second.value.incarnation ||
+      first.storageVersion !== second.storageVersion || first.aggregateRevision !== second.aggregateRevision ||
+      first.incarnation !== second.incarnation || !await input.ui.revalidate(admitted.value) ||
+      input.ui.requestFor(admitted.value) !== request || input.source !== source || source.threadContext !== producer) return []
+    return [{ operationId: "reviews.review-thread-context" as const, state: "ready" as const, reason: null, operational: true as const }]
+  } finally { input.ui.finish(admitted.value) }
+}
+
 function isOperation(value: string): value is SfOperationId {
   return Object.hasOwn(SfOperationRegistry, value)
 }

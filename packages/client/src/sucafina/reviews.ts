@@ -8,7 +8,7 @@ import {
   SfDashboardDashboardHistory, SfDashboardDashboardReview,
   SfDashboardDashboardReviewPreserve, SfProjectionReview,
   SfReviewsExportDocx, SfReviewsExportPptx, SfReviewsReportPrepare,
-  SfReviewsReviewSource, SfReviewsReviewUpdate,
+  SfReviewsReviewSource, SfReviewsReviewThreadContext, SfReviewsReviewUpdate,
 } from "@orchestra/schema/sucafina/reviews"
 import type { SfCallOptions, SfTransport } from "./transport"
 
@@ -43,6 +43,13 @@ const review = (value: Input<typeof SfDashboardDashboardReviewPreserve>) =>
   (value.previousReviewRef === undefined || text(value.previousReviewRef))
 const source = (value: Input<typeof SfReviewsReviewSource>) =>
   !!value && text(value.reviewRef, 2048) && text(value.referenceId)
+const threadContext = (value: Input<typeof SfReviewsReviewThreadContext>) =>
+  !!value && text(value.reviewRef, 2048) && text(value.sectionId) && !!value.basis &&
+  text(value.basis.sourceRef) && text(value.basis.sourceIncarnation) &&
+  Number.isSafeInteger(value.basis.observedVersion) && value.basis.observedVersion >= 1 &&
+  period(value.basis.period) && Array.isArray(value.basis.evidenceRefs) &&
+  value.basis.evidenceRefs.length >= 1 && value.basis.evidenceRefs.length <= 512 &&
+  value.basis.evidenceRefs.filter((ref) => ref.refId === value.basis.sourceRef).length === 1
 const projection = (value: Input<typeof SfProjectionReview>) => {
   if (!value || typeof value !== "object") return false
   if (value.page !== undefined && !text(value.page)) return false
@@ -124,6 +131,11 @@ export function createSfReviewsClient(transport: SfTransport) {
       input: Input<typeof SfReviewsReviewSource>, options: SfCallOptions,
     ) => source(input) && readOptions(options)
       ? transport.execute(SfReviewsReviewSource, input, options)
+      : Promise.resolve(mismatch()),
+    "reviews.review-thread-context": (
+      input: Input<typeof SfReviewsReviewThreadContext>, options: SfCallOptions,
+    ) => threadContext(input) && readOptions(options)
+      ? transport.execute(SfReviewsReviewThreadContext, input, options)
       : Promise.resolve(mismatch()),
     "reviews.review-update": (
       input: Input<typeof SfReviewsReviewUpdate>, options: SfCallOptions,

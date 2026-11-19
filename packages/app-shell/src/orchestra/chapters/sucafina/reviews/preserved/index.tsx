@@ -8,6 +8,7 @@ import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
+import { SfPreservedAnswer } from "./answer"
 import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
 import "./preserved.css"
 
@@ -191,6 +192,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   </For>
                 </ol>
               </section>
+              <SfPreservedAnswer review={review()} />
               <section class="sf-n28-section" aria-label={t("sf.u32.comments")}>
                 <h2>{t("sf.u32.comments")}</h2>
                 <Show when={review().comments.length} fallback={<p>{t("sf.u32.none")}</p>}>

@@ -93,7 +93,7 @@ import { createSfProductContribution, createSfProductDispatch } from "./contribu
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
-import { observeSfReportHealth, observeSfReviewReadHealth } from "./native-ui/report-health.ts"
+import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
@@ -964,6 +964,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
+        observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewReadHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           source: (operationId) => {
             if (operationId === "dashboard.dashboard-review") {
