@@ -536,8 +536,8 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     }
     const opRef = crypto.randomUUID() as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
-    const requestBody = { page: "Suppliers", action: intent.action, id: intent.ref ?? undefined,
-      version: intent.version,
+    const requestBody = { page: "Suppliers", action: intent.action,
+      ...(intent.ref ? { id: intent.ref } : {}), version: intent.version,
       values: ["create","save","change-bank"].includes(intent.action) ? { supplier: intent.value } : {} }
     let payloadDigest: string
     try {
@@ -563,7 +563,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     try {
       const client = createSfProcurementClient(host.ready()!.transport)
       const options = { signal: controller.signal, idempotencyKey }
-      const record = { page:"Suppliers" as const, id:intent.ref ?? undefined,version:intent.version }
+      const record = { page:"Suppliers" as const, ...(intent.ref ? { id: intent.ref } : {}), version:intent.version }
       const response =
         intent.action === "create"
           ? await client["domain.command.CAP27.create"]({ ...record, action:"create", values: {supplier:intent.value} }, options)

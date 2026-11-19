@@ -59,16 +59,23 @@ const booleanInput = (item: string | boolean | undefined): boolean | "true" | "f
 
 export function prFromRecord(row?: SfRequest): SfPrEdit {
   const pr = row?.pr
+  const estAmount = numberInput(pr?.estAmount)
+  const estAnnual = numberInput(pr?.estAnnual)
+  const recurring = booleanInput(pr?.recurring)
   return {
     // Existing title belongs to W19. Never send it in a residual PR save.
     ...(row ? {} : { title: "" }),
-    type: pr?.type, description: pr?.description,
-    estAmount: numberInput(pr?.estAmount),
-    costCenter: pr?.costCenter, needBy: pr?.needBy,
-    justification: pr?.justification,
-    recurring: booleanInput(pr?.recurring),
-    frequency: pr?.frequency, estAnnual: numberInput(pr?.estAnnual),
-    expenseType: pr?.expenseType, category: pr?.category,
+    ...(pr?.type !== undefined ? { type: pr.type } : {}),
+    ...(pr?.description !== undefined ? { description: pr.description } : {}),
+    ...(estAmount !== undefined ? { estAmount } : {}),
+    ...(pr?.costCenter !== undefined ? { costCenter: pr.costCenter } : {}),
+    ...(pr?.needBy !== undefined ? { needBy: pr.needBy } : {}),
+    ...(pr?.justification !== undefined ? { justification: pr.justification } : {}),
+    ...(recurring !== undefined ? { recurring } : {}),
+    ...(pr?.frequency !== undefined ? { frequency: pr.frequency } : {}),
+    ...(estAnnual !== undefined ? { estAnnual } : {}),
+    ...(pr?.expenseType !== undefined ? { expenseType: pr.expenseType } : {}),
+    ...(pr?.category !== undefined ? { category: pr.category } : {}),
   }
 }
 export function postedPoLine(line: SfPoLine): SfPoLine {
@@ -84,18 +91,28 @@ export function postedPoLine(line: SfPoLine): SfPoLine {
 export function poFromRecord(row: SfRequest): SfPoEdit {
   const po = row.po
   return {
-    currency: po?.currency, expenseType: po?.expenseType,
-    supplier: po?.supplier, supplierId: po?.supplierId,
-    description: po?.description,
+    ...(po?.currency !== undefined ? { currency: po.currency } : {}),
+    ...(po?.expenseType !== undefined ? { expenseType: po.expenseType } : {}),
+    ...(po?.supplier !== undefined ? { supplier: po.supplier } : {}),
+    ...(po?.supplierId !== undefined ? { supplierId: po.supplierId } : {}),
+    ...(po?.description !== undefined ? { description: po.description } : {}),
     // The source's nested line IDs/order must survive all edits and refetches.
     // description is not an editor field and must not ride along on save.
     ...(po?.lines ? { lines: po.lines.map(postedPoLine) } : {}),
-    paymentTerms: po?.paymentTerms, deliveryDate: po?.deliveryDate,
-    deliveryConditions: po?.deliveryConditions,
-    contractRef: po?.contractRef, incoterm: po?.incoterm, incoterms: po?.incoterms,
-    assetRef: po?.assetRef, supplierContact: po?.supplierContact, quoteRef: po?.quoteRef,
-    billingAddress: po?.billingAddress, deliveryAddress: po?.deliveryAddress,
-    acceptance: po?.acceptance, warranty: po?.warranty, notes: po?.notes,
+    ...(po?.paymentTerms !== undefined ? { paymentTerms: po.paymentTerms } : {}),
+    ...(po?.deliveryDate !== undefined ? { deliveryDate: po.deliveryDate } : {}),
+    ...(po?.deliveryConditions !== undefined ? { deliveryConditions: po.deliveryConditions } : {}),
+    ...(po?.contractRef !== undefined ? { contractRef: po.contractRef } : {}),
+    ...(po?.incoterm !== undefined ? { incoterm: po.incoterm } : {}),
+    ...(po?.incoterms !== undefined ? { incoterms: po.incoterms } : {}),
+    ...(po?.assetRef !== undefined ? { assetRef: po.assetRef } : {}),
+    ...(po?.supplierContact !== undefined ? { supplierContact: po.supplierContact } : {}),
+    ...(po?.quoteRef !== undefined ? { quoteRef: po.quoteRef } : {}),
+    ...(po?.billingAddress !== undefined ? { billingAddress: po.billingAddress } : {}),
+    ...(po?.deliveryAddress !== undefined ? { deliveryAddress: po.deliveryAddress } : {}),
+    ...(po?.acceptance !== undefined ? { acceptance: po.acceptance } : {}),
+    ...(po?.warranty !== undefined ? { warranty: po.warranty } : {}),
+    ...(po?.notes !== undefined ? { notes: po.notes } : {}),
   }
 }
 export function isPrWritable(row: SfRequest) {

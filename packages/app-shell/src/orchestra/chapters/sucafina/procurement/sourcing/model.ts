@@ -61,15 +61,16 @@ export function editableSourcing(request: SourcingRequest): SourcingEdit {
   const source = request.sourcing
   return {
     quotes: source?.quotes?.map((quote) => ({ ...quote })) ?? [],
-    evaluator: source?.evaluator,
-    selectedId: source?.selectedId,
-    fewQuotesJustification: source?.fewQuotesJustification,
-    selectionJustification: source?.selectionJustification,
-    contractStrategy: source?.contractStrategy,
-    weights: source?.weights
-      ? { ...source.weights,criteria:source.weights.criteria?.map((entry)=>({...entry})),
-          commCriteria:source.weights.commCriteria?.map((entry)=>({...entry})) }
-      : undefined,
+    ...(source?.evaluator !== undefined ? { evaluator: source.evaluator } : {}),
+    ...(source?.selectedId !== undefined ? { selectedId: source.selectedId } : {}),
+    ...(source?.fewQuotesJustification !== undefined ? { fewQuotesJustification: source.fewQuotesJustification } : {}),
+    ...(source?.selectionJustification !== undefined ? { selectionJustification: source.selectionJustification } : {}),
+    ...(source?.contractStrategy !== undefined ? { contractStrategy: source.contractStrategy } : {}),
+    ...(source?.weights ? { weights: {
+      ...source.weights,
+      ...(source.weights.criteria ? { criteria: source.weights.criteria.map((entry) => ({ ...entry })) } : {}),
+      ...(source.weights.commCriteria ? { commCriteria: source.weights.commCriteria.map((entry) => ({ ...entry })) } : {}),
+    } } : {}),
   }
 }
 export function uniqueRequest(page: Cap25PageOk, requestRef: string): SourcingRequest | null {
