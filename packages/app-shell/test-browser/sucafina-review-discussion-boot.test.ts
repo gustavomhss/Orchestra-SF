@@ -61,12 +61,20 @@ function fixture(options: { thread?: boolean; response?: (mode: string, request:
     expect(found).toBeDefined()
     return found!
   }
+  const chooseRecipient = () => {
+    const recipient = view.element.querySelector<HTMLSelectElement>('select[aria-label="Recipient"]')!
+    expect([...recipient.options].map((option) => option.value)).toContain("person")
+    recipient.value = "person"; recipient.dispatchEvent(new Event("change", { bubbles: true }))
+    expect(recipient.value).toBe("person")
+    expect(recipient.selectedIndex).toBe(0)
+  }
   const enterQuestion = () => {
+    chooseRecipient()
     const input = view.element.querySelector<HTMLTextAreaElement>('textarea[aria-label="Question"]')!
     input.value = question; input.dispatchEvent(new Event("input", { bubbles: true }))
     return input
   }
-  return { view, review, pin, basis, requests, modes, button, enterQuestion, question }
+  return { view, review, pin, basis, requests, modes, button, chooseRecipient, enterQuestion, question }
 }
 
 function ok(value: unknown) {
@@ -77,8 +85,12 @@ test("an empty discussion boots with recipients only; explicit refresh still che
   const state = fixture()
   await settled(state.view)
   expect(state.modes()).toEqual(["collaboration-recipients"])
+  // Happy DOM 20.12 does not implement Option/defaultSelected and does not
+  // auto-select an option inserted into an already connected recipient select.
+  // Choose the actual displayed recipient, as the human journey does.
+  state.chooseRecipient()
   expect([...state.view.element.querySelectorAll("select")].map((select) => ({ label: select.getAttribute("aria-label"), value: select.value,
-    selectedIndex: select.selectedIndex, options: [...select.options].map((option) => ({ text: option.textContent, value: option.value, defaultSelected: option.defaultSelected })) }))).toEqual([
+    selectedIndex: select.selectedIndex, options: [...select.options].map((option) => ({ text: option.textContent, value: option.value, defaultSelected: option.hasAttribute("selected") })) }))).toEqual([
     { label: "Review section", value: "budget", selectedIndex: 0, options: [{ text: "Budget", value: "budget", defaultSelected: false }] },
     { label: "Review source", value: "render-source", selectedIndex: 0, options: [{ text: "dashboard · Budget Overview · version 1", value: "render-source", defaultSelected: false }] },
     { label: "Recipient", value: "person", selectedIndex: 0, options: [{ text: "Person", value: "person", defaultSelected: false }] },
@@ -126,16 +138,20 @@ test.each(["denied", "unavailable"] as const)("a %s question context never acqui
   else expect(state.button("Reconcile discussion").disabled).toBe(false)
 })
 
-test("explicit reconciliation after an unavailable boot still obtains the current draft pin", async () => {
-  let fail = true
+test("explicit reconciliation after an unavailable recipient refresh still obtains the current draft pin", async () => {
+  let fail = false
   const state = fixture({ response: (mode) => fail && mode === "collaboration-recipients" ? Response.json({ status: "unavailable", reason: "directory-test-unavailable" },
     { status: 503, headers: { "X-SF-Review-Binding": binding } }) : undefined })
   await settled(state.view)
   expect(state.modes()).toEqual(["collaboration-recipients"])
   const draft = state.enterQuestion()
+  fail = true; await state.view.refresh()
+  expect(state.modes()).toEqual(["collaboration-recipients", "collaboration-recipients"])
+  expect(draft.value).toBe(state.question)
+  expect(state.button("Ask about this review").disabled).toBe(true)
   fail = false; state.button("Reconcile discussion").click()
   await settled(state.view)
-  expect(state.modes()).toEqual(["collaboration-recipients", "collaboration-recipients", "review-thread-context"])
+  expect(state.modes()).toEqual(["collaboration-recipients", "collaboration-recipients", "collaboration-recipients", "review-thread-context"])
   expect(draft.value).toBe(state.question)
   expect(state.button("Ask about this review").disabled).toBe(false)
 })
