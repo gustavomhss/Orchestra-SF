@@ -3,7 +3,7 @@ import { useDialog } from "@orchestra/ui/context/dialog"
 import { Dialog, DialogHeader, DialogTitleGroup } from "@orchestra/ui/v2/dialog-v2"
 import { Icon } from "@orchestra/ui/v2/icon"
 import { ProjectAvatar } from "@orchestra/ui/v2/project-avatar-v2"
-import { useNavigate } from "@solidjs/router"
+import { useLocation, useNavigate } from "@solidjs/router"
 import { skipToken, useQuery } from "@tanstack/solid-query"
 import { createMemo, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -11,6 +11,7 @@ import { useDirectoryPicker } from "@/components/directory-picker"
 import { useCommand } from "@/context/command"
 import { useGlobal } from "@/context/global"
 import { directoryKey } from "@/context/global-sync/utils"
+import { chapterPageTitleKey, labeledNativeHref } from "@/context/layout-route"
 import { getProjectAvatarVariant, type LocalProject, useLayout } from "@/context/layout"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
@@ -113,6 +114,7 @@ export function OrchestraSidebar(props: {
   const language = useLanguage()
   const command = useCommand()
   const navigate = useNavigate()
+  const location = useLocation()
   const dialog = useDialog()
   const pickDirectory = useDirectoryPicker()
   const platform = usePlatform()
@@ -338,6 +340,16 @@ export function OrchestraSidebar(props: {
   async function openChapter(id: string, view = "") {
     const native = sfNativeChapterEntry(id)
     if (native) {
+      const label = navigation.find((item) => item.id === id)?.label
+      const named = label ? labeledNativeHref(id, label) : undefined
+      if (named && named !== native) {
+        if (!(await requestSfOwnerShellExit237())) return
+        const target = profile()
+        const directory = target.project?.worktree ?? target.directory
+        if (directory) layout.home.setSelection({ server: target.server, directory })
+        navigate(named)
+        return
+      }
       const target = profile()
       const directory = target.project?.worktree ?? target.directory
       await openSfNativeChapter({ chapter: id, server: target.server, directory }, {
@@ -440,22 +452,33 @@ export function OrchestraSidebar(props: {
 
   const advancedOpen = () => advanced.open() || advancedActive()
 
+  function rowName(item: (typeof navigation)[number]) {
+    if (!current(item.id)) return language.t(item.label)
+    const page = chapterPageTitleKey(location.pathname)
+    if (!page) return language.t(item.label)
+    const key = page as Parameters<typeof language.t>[0]
+    const text = language.t(key)
+    return text === page ? language.t(item.label) : text
+  }
+
   // One navigation row. Expanded, a WIP row's tooltip carries the mark's meaning; the compact rail keeps names.
   function row(item: (typeof navigation)[number]) {
+    const name = () => rowName(item)
     return (
       <OrchestraNavigationTooltip
         enabled={props.compact || showWip(item.id)}
+        openDelay={item.id.startsWith("sf-") ? 0 : undefined}
         value={
           !props.compact && showWip(item.id)
             ? language.t("orchestra.shell.wip.description")
-            : language.t(item.label)
+            : name()
         }
       >
         {(Trigger) => (
           <Trigger
             type="button"
             class="orchestra-nav-button"
-            aria-label={language.t(item.label)}
+            aria-label={name()}
             aria-description={showWip(item.id) ? language.t("orchestra.shell.wip.description") : undefined}
             disabled={
               (item.id === "search" && !command.options.some((option) => option.id === "command.palette")) ||
@@ -481,7 +504,7 @@ export function OrchestraSidebar(props: {
             }}
           >
             <svg class="orchestra-nav-icon" viewBox="0 0 16 16" aria-hidden="true" innerHTML={icons[item.id as keyof typeof icons] ?? (sfNativeChapterEntry(item.id) ? icons["sf-home"] : undefined)} />
-            <span class="orchestra-nav-label">{language.t(item.label)}</span>
+            <span class="orchestra-nav-label">{name()}</span>
             <Show when={item.id === "search"}>
               <kbd>{command.keybind("command.palette")}</kbd>
             </Show>

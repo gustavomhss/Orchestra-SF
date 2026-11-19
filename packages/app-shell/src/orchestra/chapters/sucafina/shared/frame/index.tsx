@@ -1,8 +1,9 @@
 import { getFilename } from "@orchestra/core/util/path"
-import { A } from "@solidjs/router"
+import { A, useLocation } from "@solidjs/router"
 import { createEffect, createMemo, createUniqueId, For, onCleanup, onMount, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
+import { chapterPageTitleKey } from "@/context/layout-route"
 import { useGlobal } from "@/context/global"
 import { useLanguage } from "@/context/language"
 import { useLayout } from "@/context/layout"
@@ -53,6 +54,7 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
   const id = createUniqueId()
   const { t } = useSfPresentation()
   const language = useLanguage()
+  const location = useLocation()
   const layout = useLayout()
   const global = useGlobal()
   const server = useServer()
@@ -70,6 +72,11 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
     return serverName(conn ?? server.current)
   }
   const area = () => {
+    const page = chapterPageTitleKey(location.pathname)
+    if (page) {
+      const text = language.t(page as Parameters<typeof language.t>[0])
+      if (text !== page) return text
+    }
     const route = layout.route()
     if (route.type === "chapter") {
       const label = navigation.find((item) => item.id === route.chapter)?.label

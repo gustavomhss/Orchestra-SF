@@ -276,8 +276,8 @@ body[data-new-layout] [data-slot="dialog-close-button"]:focus-visible {
   overflow-y: auto;
   /* Rows scrolling under the brand or the profile card fade out instead of being cut; the padding lets the
      first and last rows rest clear of the fades. */
-  padding-block: 8px 32px;
-  mask-image: linear-gradient(to bottom, transparent, #000 8px, #000 calc(100% - 32px), transparent);
+  padding-block: 8px 16px;
+  mask-image: linear-gradient(to bottom, transparent, #000 8px, #000 calc(100% - 16px), transparent);
   scrollbar-width: thin;
   scrollbar-color: var(--glass-border) transparent;
 }
