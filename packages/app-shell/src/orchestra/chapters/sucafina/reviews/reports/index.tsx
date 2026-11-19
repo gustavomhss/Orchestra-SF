@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createUniqueId, onCleanup } from "solid-js"
+import { For, Show, createEffect, createSignal, createUniqueId, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
@@ -15,6 +15,7 @@ import { PeriodText, WhenText } from "../labels"
 import "./reports.css"
 
 type Format = "docx" | "pptx"
+const reportPages = ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"] as const
 const key = (value: string) => value as SfCopyKey
 
 export function SfReportsView(props: SfSurfaceProps<"UI50">) {
@@ -23,6 +24,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
   const platform = usePlatform()
   const uid = createUniqueId()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
+  const [title, setTitle] = createSignal("")
   const [store, setStore] = createStore({
     readState: "loading" as SfUiState,
     review: undefined as PreservedReview | undefined,
@@ -142,6 +144,16 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     if (!pending || !review || !sameRecoveryOwner() || review.id !== pending.payload.reviewRef) return
     setStore({ selected: [...pending.payload.sectionRefs], format: pending.payload.format })
   })
+  const locked = () => store.busy || !!recovery() || store.marker !== null
+  const reportBlocked = () => !store.review || !exportAdmitted() || store.busy || !store.markerScope ||
+    (recovery() ? !canRecover() : store.marker !== null || !validSelection())
+  const togglePage = (review: PreservedReview, page: string, checked: boolean) => {
+    if (locked()) return
+    const ids = pageSections(review, page).map((section) => section.id)
+    if (!ids.length) return
+    const chosen = new Set(checked ? [...store.selected, ...ids] : store.selected.filter((id) => !ids.includes(id)))
+    setStore("selected", review.sections.map((item) => item.id).filter((id) => chosen.has(id)))
+  }
   const validSelection = () => !!store.review && store.selected.length >= 1 &&
     store.selected.length <= 40 && new Set(store.selected).size === store.selected.length &&
     store.selected.every((id) => !!id.trim() && id.length <= 16384 &&
@@ -192,8 +204,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={{
         id: "report", labelKey: key(recovery() ? "sf.common.retry" : "sf.ui50.primary"), tone: "primary",
-        disabled: !store.review || !exportAdmitted() || store.busy || !store.markerScope ||
-          (recovery() ? !canRecover() : store.marker !== null || !validSelection()),
+        disabled: reportBlocked(),
         busy: store.busy, onInvoke: () => { void requestReport() },
       }}
     >
@@ -211,6 +222,38 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
               <div><dt>{t("sf.u33.coverage")}</dt><dd>{t(coverageOwned(review()) ? "sf.u33.available" : "sf.u33.unavailable")}</dd></div>
               <div><dt>{t("sf.u33.selected")}</dt><dd>{store.selected.length} / {review().sections.length}</dd></div>
             </dl>
+            <form class="report-form sf-n28-form" onSubmit={(event) => { event.preventDefault(); void requestReport() }}>
+              <label class="sf-n28-field">Format
+                <select aria-label="Format" value={store.format} disabled={locked()}
+                  onChange={(event) => {
+                    if (locked()) return
+                    setStore("format", event.currentTarget.value === "pptx" ? "pptx" : "docx")
+                  }}>
+                  <option value="docx">docx</option>
+                  <option value="pptx">pptx</option>
+                </select>
+              </label>
+              <label class="sf-n28-field">Title
+                <input type="text" aria-label="Title" value={title()} disabled={locked()}
+                  onInput={(event) => setTitle(event.currentTarget.value)} />
+              </label>
+              <fieldset>
+                <For each={reportPages}>{(page) => {
+                  const matches = () => pageSections(review(), page)
+                  const bound = () => matches().length > 0
+                  return (
+                    <label>
+                      <input type="checkbox" aria-label={page}
+                        checked={bound() && matches().every((section) => store.selected.includes(section.id))}
+                        disabled={!bound() || locked()}
+                        onChange={(event) => togglePage(review(), page, event.currentTarget.checked)} />
+                      {page}
+                    </label>
+                  )
+                }}</For>
+              </fieldset>
+              <button type="submit" disabled={reportBlocked()}>Generate Report</button>
+            </form>
             <div class="sf-n28-form">
               <label class="sf-n28-field" for={uid + "-format"}>{t("sf.u33.format")}
                 <select id={uid + "-format"} value={store.format}
@@ -273,4 +316,10 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
       </div>
     </SfPageFrame>
   )
+}
+
+function pageSections(review: PreservedReview, page: string) {
+  return review.sections.filter((section) => section.title === page ||
+    section.sourceRefs.some((ref) => ref.type === "dashboard-page" && ref.id === page) ||
+    readPreservedProjection(section.content)?.context.sourceRefs.some((ref) => ref.type === "dashboard-page" && ref.id === page))
 }
