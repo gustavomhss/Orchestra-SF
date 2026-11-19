@@ -195,3 +195,47 @@ for (const occurrence of [2, 4, 6]) {
     } finally { await f.close() }
   })
 }
+
+test("C08 scalar authorizers keep private cases separate within and across reads", async () => {
+  const f = await resultFixture()
+  try {
+    const retained: Parameters<Settings["authorizeCase"]>[0][] = []
+    const initialObjectives: string[] = []
+    f.hooks.authorizeCase = async (value) => {
+      initialObjectives.push(value.objective)
+      for (const prior of retained) prior.objective = "late mutation of a previous scalar callback"
+      retained.push(value)
+      await Promise.resolve()
+      return true
+    }
+    const first = await f.results.read({ resultRef: f.comparison.resultRef, kind: "comparison" }, f.context)
+    const second = await f.results.read({ resultRef: f.comparison.resultRef, kind: "comparison" }, f.context)
+    expect(first).toEqual({ status: "ok", value: f.comparison })
+    expect(second).toEqual({ status: "ok", value: f.comparison })
+    expect(initialObjectives).toEqual(Array(4).fill(f.decision.objective))
+    expect(retained).toHaveLength(4)
+    expect(new Set(retained).size).toBe(4)
+    expect(f.calls.authorizeCase).toBe(4)
+    expect(f.calls.verifySources).toBe(4)
+  } finally { await f.close() }
+})
+
+test("C08 scalar authorization checks the second callback clone after its await", async () => {
+  const f = await resultFixture()
+  try {
+    let changed = false
+    f.hooks.authorizeCase = async (value) => {
+      await Promise.resolve()
+      if (f.calls.authorizeCase === 2) {
+        changed = true
+        value.objective = "late scalar callback mutation must be refused"
+      }
+      return true
+    }
+    const result = await f.results.read({ resultRef: f.comparison.resultRef, kind: "comparison" }, f.context)
+    expect(changed).toBe(true)
+    expect(f.calls.authorizeCase).toBe(2)
+    expect(result.status).toBe("denied")
+    expect(result).not.toHaveProperty("value")
+  } finally { await f.close() }
+})
