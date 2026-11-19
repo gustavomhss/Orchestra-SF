@@ -171,7 +171,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
       if (result.kind === "response" && result.body.status === "ok") {
         const review = result.body.value
         if (review.changeId !== current.id || review.choiceId !== current.choiceId ||
-          review.expectedVersion !== current.expectedVersion || current.caseVersion !== data.version) {
+          review.expectedVersion !== current.expectedVersion || current.caseVersion + 1 !== data.version) {
           setView({ state: "stale", review: null })
         } else {
           setView({ review, state: "ready" })
@@ -224,7 +224,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     const data = view.caseData
     return !!(change && review && data && operationGranted("decisions.decision-apply") &&
       review.state === "planned" && change.state === "planned" &&
-      change.caseVersion === data.version &&
+      change.caseVersion + 1 === data.version &&
       review.expectedVersion === change.expectedVersion &&
       review.changeId === change.id && review.choiceId === change.choiceId &&
       !review.receipt && !view.busy && !view.outcomeUnknown && active() === "ready")
