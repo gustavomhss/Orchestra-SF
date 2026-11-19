@@ -9,6 +9,7 @@ import { sfHasOperationalResource } from "./live-context.ts"
 type ImportSource = Readonly<{
   producer: object
   service: NonNullable<ReturnType<typeof createSfImportServices>>
+  scan: NonNullable<Parameters<CreateSfHostRuntime>[0]["assets"]>["services"]["scan"]
   dependencies: readonly object[]
 }>
 
@@ -48,7 +49,7 @@ export async function observeSfImportHealth(input: {
     const current = () => {
       const next = sourceFor()
       return input.binding === bindingFor && input.source === sourceFor && input.ui === ui && input.state === state &&
-        !!next && next.producer === source.producer && next.service === service &&
+        !!next && next.producer === source.producer && next.service === service && next.scan === source.scan &&
         next.dependencies.length === source.dependencies.length &&
         next.dependencies.every((dependency, index) => dependency === source.dependencies[index]) &&
         bindingFor(candidate.id, source.producer) === installed && !request.signal.aborted
@@ -63,6 +64,9 @@ export async function observeSfImportHealth(input: {
         actor.accessRevision !== stamp.accessRevision || !await ui.validate(admitted.value, "sf_import_preview", digest) ||
         ui.requestFor(admitted.value) !== request || !current()) return []
       if (candidate.human && !(await input.humanActions(request)).includes(candidate.human)) return []
+      // The configured scanner handles an empty health stream; this creates no
+      // admitted file and never substitutes for scanning the real upload bytes.
+      if (candidate.id === "files.import-admit" && !await source.scan(new Uint8Array(0), "application/octet-stream")) return []
       const namespaces = candidate.id === "files.import-apply" ? ["documents", "receipts"] as const : ["documents"] as const
       let aggregate: { revision: number; incarnation: string } | undefined
       for (const namespace of namespaces) {

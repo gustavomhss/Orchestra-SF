@@ -972,7 +972,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
             const assets = input.assets
             if (services.productHttp !== productHttp || !identity() || !imports || !assets ||
               assets.persistence !== input.persistence || typeof assets.services.scan !== "function") return undefined
-            return { producer: productHttp, service: imports, dependencies: [importHttp, imports, imports.imports,
+            return { producer: productHttp, service: imports, scan: assets.services.scan, dependencies: [importHttp, imports, imports.imports,
               imports.discover, imports.prepareTarget, imports.dispatch, imports.imports.admit, imports.imports.preview,
               imports.imports.readPreviewReference, imports.imports.detail, imports.imports.apply,
               assets, assets.persistence, assets.services, assets.services.scan, input.persistence.resolveScopedSource] }
