@@ -1,0 +1,34 @@
+name: sf-c12-native7-original-screenshot
+on:
+  push:
+    branches: [audit-c12-native7-screen-20261119]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read original completed C12 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14577212886/zip > "$RUNNER_TEMP/c12.zip"
+      - name: Preserve the original failure screenshot without alteration
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, pathlib, zipfile
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          with zipfile.ZipFile(root / "c12.zip") as archive:
+              matches = [name for name in archive.namelist() if name.endswith("/test-failed-1.png")]
+              assert len(matches) == 1, "Expected exactly the original C12 failure screenshot"
+              raw = archive.read(matches[0])
+              assert raw.startswith(b"\x89PNG\r\n\x1a\n"), "Original attachment is not PNG"
+          payload = {"message":"docs(sf): retain C12 native7 original screenshot","branch":"audit-c12-native7-screen-20261119","content":base64.b64encode(raw).decode()}
+          (root / "c12-screen.json").write_text(json.dumps(payload))
+          print("Original screenshot retained; no UI rerun or image transformation.")
+          PY
+      - name: Persist original screenshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/c12-native7-original.png --input "$RUNNER_TEMP/c12-screen.json" > /dev/null
