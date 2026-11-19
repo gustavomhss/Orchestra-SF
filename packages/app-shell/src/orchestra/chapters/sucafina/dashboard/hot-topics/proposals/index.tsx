@@ -125,7 +125,14 @@ function proposalRoute(props: SfSurfaceProps<"UI54">, changeId: string): string 
  * explicit apply → original receipt. Never writes a CAP02 record directly.
  */
 export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Element {
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
+  const shownDate = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
   const context = useSfContext()
   const navigate = useNavigate()
   const previewIntent = crypto.randomUUID() as SfIntentRef
@@ -297,7 +304,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
               {(draft) => <>
                 <div><dt>{t(key("sf.u38.action"))}</dt><dd>{draft().fields.action}</dd></div>
                 <div><dt>{t(key("sf.u38.proposalAssignee"))}</dt><dd>{draft().fields.owner || t(key("sf.u38.unknown"))}</dd></div>
-                <div><dt>{t(key("sf.u38.due"))}</dt><dd>{draft().fields.due || t(key("sf.u38.unknown"))}</dd></div>
+                <div><dt>{t(key("sf.u38.due"))}</dt><dd>{draft().fields.due ? <time dateTime={draft().fields.due}>{shownDate(draft().fields.due)}</time> : t(key("sf.u38.unknown"))}</dd></div>
                 <div><dt>{t(key("sf.u38.priority"))}</dt><dd>{draft().fields.priority}</dd></div>
                 <div><dt>{t(key("sf.u38.notes"))}</dt><dd class="sf-u38-long">{draft().fields.notes}</dd></div>
                 <div><dt>{t(key("sf.u38.proposalIdentity"))}</dt><dd><bdi>{draft().caseRef.id}</bdi></dd></div>
