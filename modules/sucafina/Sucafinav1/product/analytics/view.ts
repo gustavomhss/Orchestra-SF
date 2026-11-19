@@ -450,11 +450,13 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
 export function restoreBiFocus(container: HTMLElement, selection: BiSelection | BiFocusTarget | string) {
   const valueId = typeof selection === "string" ? selection : selection.valueId
   const origin = typeof selection === "string" ? undefined : "reference" in selection ? selection.reference?.refDigest : selection.originDigest
-  const values = Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId)
+  const values = Array.from(container.querySelectorAll("[data-bi-focus], [data-bi-value]")).filter((element) => element.getAttribute("data-bi-focus") === valueId || element.getAttribute("data-bi-value") === valueId)
+  const chart = values.filter((element) => element.closest("svg"))
   const candidates = [
+    ...chart,
     ...(origin ? values.filter((element) => element.getAttribute("data-bi-origin") === origin) : []),
     ...values,
-    ...Array.from(container.querySelectorAll("[data-bi-focus-fallback]")),
+    ...fallbacks,
   ]
   for (const target of candidates) {
     if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) continue

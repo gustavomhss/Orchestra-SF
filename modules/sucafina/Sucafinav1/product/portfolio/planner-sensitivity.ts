@@ -185,7 +185,7 @@ export function finalizePlannerSensitivity(input: {
   })
 }
 
-/** Pending-only inventory has not assessed a category. Do not search it into an exact bound. */
+/** Pending categories stay disclosed. Known priced components can still prove a conditioned bound. */
 function assessedKnownSubtotalCoverage(scenario: ScenarioResult) {
-  return scenario.costCoverage.entries.some((entry) => entry.status !== "pending")
+  return scenario.knownSubtotal !== null && Number.isFinite(scenario.knownSubtotal) && scenario.components.some((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState !== "absent" && component.sourceRefs.length > 0)
 }

@@ -1,7 +1,23 @@
+import { randomUUID } from "node:crypto"
 import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+
+const sanctionedIdentity = new WeakSet<Snapshot>()
+
+/** Allocate the incarnation a same-transaction correlation must name before finish() assigns it. */
+export function bindCreatedSourceIdentity(snapshot: Snapshot, recordType: string, recordId: string) {
+  requireSourceIdentities(snapshot)
+  const records = snapshot.sfSources!.records
+  const key = JSON.stringify([recordType, recordId])
+  const existing = records[key]
+  if (existing?.alive) return existing.incarnation
+  const incarnation = randomUUID()
+  records[key] = { incarnation, version: 1, alive: true, inputDigest: "0".repeat(64) }
+  sanctionedIdentity.add(snapshot)
+  return incarnation
+}
 
 export type SfSourceScope = NonNullable<NonNullable<Snapshot["sfSources"]>["scopes"]>[string]["scope"]
 export type SfScopedSourcePort = {
@@ -61,7 +77,7 @@ export function createSfSourcePersistence(input: {
     const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
     return () => {
       requireSourceIdentities(snapshot)
-      if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+      if (before !== digestSfValue(snapshot.sfSources) && !sanctionedIdentity.has(snapshot)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
       if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
       const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
       if (input.purpose === "business-restore") {
