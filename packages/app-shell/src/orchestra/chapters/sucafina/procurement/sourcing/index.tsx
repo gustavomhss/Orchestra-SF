@@ -691,9 +691,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         getRowKey={(quote)=>(quote.id??"") as SfRef}
         columns={[
           {id:"supplier",labelKey:k("sf.u12.quoteSupplier"),align:"start",widthPolicy:{kind:"flex",minPx:120,weight:2},render:(quote)=><>{quote.supplier??""}</>},
+          {id:"eligibility",labelKey:k("sf.u12.eligibility"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:240},render:(quote)=><>{fxRow(quote)?.eligibility??""}</>},
           {id:"currency",labelKey:k("sf.u12.quoteCurrency"),align:"start",widthPolicy:{kind:"content",minPx:60,maxPx:120},render:(quote)=><>{quote.currency??""}</>},
           {id:"total",labelKey:k("sf.u12.quoteTotal"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:170},render:(quote)=><>{asString(quote.total)||t("sf.u12.missing")}</>},
           {id:"baseFx",labelKey:k("sf.u12.baseFx"),align:"end",widthPolicy:{kind:"content",minPx:220,maxPx:360},render:(quote)=><>{fxRow(quote)?.baseFxText??t("sf.u12.missing")}</>},
+          {id:"technical",labelKey:k("sf.u12.technical"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.technicalText??""}</>},
+          {id:"price",labelKey:k("sf.u12.price"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.priceText??""}</>},
+          {id:"commercial",labelKey:k("sf.u12.commercial"),align:"end",widthPolicy:{kind:"content",minPx:88,maxPx:140},render:(quote)=><>{fxRow(quote)?.commercialText??""}</>},
+          {id:"overall",labelKey:k("sf.u12.overall"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.overallText??""}</>},
           {id:"rank",labelKey:k("sf.u12.rank"),align:"end",widthPolicy:{kind:"content",minPx:56,maxPx:88},render:(quote)=>{
             const rank=fxRow(quote)?.rank
             return <>{typeof rank==="number"?String(rank):""}</>
@@ -718,7 +723,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       />
       <Show when={facts?.rankLine}>{(line)=><p role="status">{line()}</p>}</Show>
       <Show when={facts?.premiumLine}>{(line)=><p role="status">{line()}</p>}</Show>
-      <Show when={limited}><p role="status">Comparison is limited: fewer than two proposals are eligible.</p></Show>
+      <Show when={facts?.rankingUnavailable}>{(line)=><p role="status">{line()}</p>}</Show>
       <Show when={!facts}>
         <p role="status">{t("sf.u12.rankUnavailable")}</p>
         <p>{t("sf.u12.fxUnavailable")}</p>

@@ -83,12 +83,22 @@ const QuoteComparison = Schema.Struct({
   premiumAmount: Schema.NullOr(Schema.Finite),
   premiumPercent: Schema.NullOr(Schema.Finite),
   excludedReason: Schema.NullOr(Schema.String),
+  eligibility: Schema.optional(Schema.NullOr(Schema.String)),
+  technical: Schema.optional(Schema.NullOr(Schema.Finite)),
+  price: Schema.optional(Schema.NullOr(Schema.Finite)),
+  commercial: Schema.optional(Schema.NullOr(Schema.Finite)),
+  overall: Schema.optional(Schema.NullOr(Schema.Finite)),
+  technicalText: Schema.optional(Schema.NullOr(Schema.String)),
+  priceText: Schema.optional(Schema.NullOr(Schema.String)),
+  commercialText: Schema.optional(Schema.NullOr(Schema.String)),
+  overallText: Schema.optional(Schema.NullOr(Schema.String)),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const SourcingComparison = Schema.Struct({
   eligibleCount: NonNegativeInteger,
   quotes: Schema.Array(QuoteComparison),
   rankLine: Schema.NullOr(Schema.String),
   premiumLine: Schema.NullOr(Schema.String),
+  rankingUnavailable: Schema.optional(Schema.NullOr(Schema.String)),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Sourcing = Schema.Struct({
   quotes: Schema.optional(Schema.Array(Quote)),
