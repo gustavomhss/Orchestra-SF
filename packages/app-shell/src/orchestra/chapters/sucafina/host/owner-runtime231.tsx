@@ -449,7 +449,13 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const query = location.search
     const directory = props.directory
     const actualServerKey = ServerConnection.key(props.server)
-    const parsed = explicitSelection(query)
+    const params = new URLSearchParams(query)
+    // Admit the complete family query before extracting the exact owner triplet.
+    // No unknown, repeated or partial selector can reach discovery.
+    const parsed = sfMountedPathAdmitted(location.pathname, params)
+      ? explicitSelection(new URLSearchParams([...params].filter(([key]) =>
+          ownerKeys.some((ownerKey) => ownerKey === key))).toString())
+      : { kind: "invalid" as const }
     const epoch = ++discoveryAttempt
     if (parsed.kind === "invalid") {
       explicitOwner = undefined
