@@ -9,8 +9,8 @@ import { inspectReport } from "./ooxml.ts"
 
 export async function prepareReview(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo, options: { removeOne?: boolean } = {}) {
   await page.goto("/orchestra/sf-dashboard/opex")
-  await expect(page.getByRole("heading", { name: "OPEX Detail", exact: true }),
-    "The real installation must enter the OPEX chapter before Reports").toBeVisible()
+  await expect(page.locator("#content").getByRole("heading", { name: "Decisions", exact: true }),
+    "The real installation must enter Workbench before Reports").toBeVisible()
   await page.goto(`/orchestra/sf-dashboard/budget?${new URLSearchParams({ year: String(corpus.year) })}`)
   await page.getByText("Reports and backup", { exact: true }).click()
   const form = page.locator("form.report-form")
