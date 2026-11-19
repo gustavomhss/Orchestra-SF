@@ -145,7 +145,12 @@ test("different historical producer versions share only their identical live-cas
     expect(result[0]).toEqual(result[2])
     if (result[0]!.status !== "ok" || result[2]!.status !== "ok") throw new Error("Duplicate result unavailable")
     expect(result[0]!.value).not.toBe(result[2]!.value)
-    result[0]!.value.result.unresolvedConditions.push("caller mutation")
+    expect(result[0]!.value.basis).not.toBe(result[2]!.value.basis)
+    expect(result[0]!.value.projection).not.toBe(result[2]!.value.projection)
+    const period = structuredClone(result[2]!.value.projection.context.period)
+    Object.assign(result[0]!.value.projection.context.period, { start: "2099-01-01" })
+    expect(result[2]!.value.projection.context.period).toEqual(period)
+    result[0]!.value.result.unresolvedConditions = [...result[0]!.value.result.unresolvedConditions, "caller mutation"]
     expect(result[2]!.value.result.unresolvedConditions).not.toContain("caller mutation")
     expect((await measured.read(refs, f.context)).map((entry) => entry.status)).toEqual(["ok", "ok", "ok"])
     expect(measured.counts.caseReads).toBe(4)
