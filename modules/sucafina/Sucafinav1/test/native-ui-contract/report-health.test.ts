@@ -74,12 +74,12 @@ test("F01 review reads require each real source, binding, lease and current C08 
     let mounted = true
     let dashboardMounted = true
     let nativeSource = true
-    const proof = (id: "dashboard.dashboard-review" | "projection.review", producer: object) => id === "projection.review"
+    const proof: NonNullable<Parameters<typeof observeSfReviewReadHealth>[0]["binding"]> = (id, producer) => id === "projection.review"
       ? mounted && producer === projection && handlers.includes(proxy) ? proxy : undefined
-      : dashboardMounted && producer === productHttp ? productHttp : undefined
-    const sources = (id: "dashboard.dashboard-review" | "projection.review") => id === "dashboard.dashboard-review"
+      : id === "dashboard.dashboard-review" && dashboardMounted && producer === productHttp ? productHttp : undefined
+    const sources: Parameters<typeof observeSfReviewReadHealth>[0]["source"] = (id) => id === "dashboard.dashboard-review"
       ? { producer: productHttp, dependencies: [f.authority, dashboardHttp, f.business.dashboardServices, f.business.dashboardServices.readReview, f.persistence] }
-      : nativeSource ? { producer: projection, dependencies: [f.authority, projection.handle, reviews, reviews.reviews.read, f.persistence] } : undefined
+      : id === "projection.review" && nativeSource ? { producer: projection, dependencies: [f.authority, projection.handle, reviews, reviews.reviews.read, f.persistence] } : undefined
     const input = { ui: f.authority.ui, state: f.authority.state, binding: proof, source: sources }
     const inRoot = <T>(work: () => Promise<T>) => f.store.readSnapshotRoot!(work)
     const admission = await inRoot(() => f.authority.readContextAdmission(original))
@@ -117,11 +117,11 @@ test("F01 review reads require each real source, binding, lease and current C08 
     expect((await inRoot(() => observeSfReviewReadHealth(input, original, admission.stamp))).map((item) => item.operationId)).toEqual(["dashboard.dashboard-review"])
     nativeSource = true
     let calls = 0
-    const replaced = { ...input, binding: (id: "dashboard.dashboard-review" | "projection.review", producer: object) =>
+    const replaced: Parameters<typeof observeSfReviewReadHealth>[0] = { ...input, binding: (id, producer) =>
       id === "projection.review" && ++calls > 1 ? {} : proof(id, producer) }
     expect((await inRoot(() => observeSfReviewReadHealth(replaced, original, admission.stamp))).map((item) => item.operationId)).toEqual(["dashboard.dashboard-review"])
     let sourceReads = 0
-    const changedSource = { ...input, source: (id: "dashboard.dashboard-review" | "projection.review") => {
+    const changedSource: Parameters<typeof observeSfReviewReadHealth>[0] = { ...input, source: (id) => {
       const source = sources(id)
       return id === "projection.review" && ++sourceReads > 1 && source ? { ...source, dependencies: [...source.dependencies, {}] } : source
     } }

@@ -3,7 +3,9 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { AbsolutePath } from "@orchestra/core/schema"
-import { createModule } from "../../../index.ts"
+import { contributions, createModule } from "../../../index.ts"
+import { createSfDomainProjectionHandlers } from "../../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
+import { createSfLiveContext, sfContextDestinationsFromPages } from "../../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import type { LocalStore } from "../../../runtime/local-contract.ts"
@@ -30,6 +32,7 @@ export async function createDashboardProofFixture() {
   const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
   const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
   const origin = server.url.origin, installationId = randomUUID()
+  const binding = { installationId, hostId: "dashboard67", projectId: "dashboard67-project", location: { directory: AbsolutePath.make(directory) } }
   const clock = { at: "2026-11-13T08:00:00Z" }
   const policies = { owner: { readable: true, writable: true }, other: { readable: true, writable: true } }
   const people = [
@@ -50,8 +53,9 @@ export async function createDashboardProofFixture() {
       return current.length === 1 ? current[0]! : null
     }
     const environment = async (request: Request) => ({ at: clock.at, id: randomUUID, directory: (await Promise.all(identities.map((entry) => entry.identity.directory(request)))).flat() })
-    const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "dashboard67", projectId: "dashboard67-project", location: { directory: AbsolutePath.make(directory) } }),
+    const authority = createSfProductAuthority({ identity: () => binding,
       installationId, origin, policyVersion: "dashboard67-policy", persistence, authenticate, environment, now: Date.now, createId: randomUUID,
+      isAuthenticated: async (request) => (await Promise.all(identities.map((entry) => entry.identity.person(request)))).filter((value) => value !== null).length === 1,
       commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() :
         request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
@@ -61,10 +65,32 @@ export async function createDashboardProofFixture() {
     const dashboard = createDashboardPort({ host: authority.host, sources: createDashboardSourceHost({ host: authority.host, scopedSources: persistence }), recordEvidence: records })
     const observer = createDashboardConfirmationObserver({ host: authority.host, scopedSources: persistence, readProjection: createDashboardConfirmationProjectionReader({ dashboard, records }) })
     const module = createModule("/sucafina", { persistence, authenticate, environment, maxJsonBytes: 100000 })
-    return { driver, persistence, identities, authenticate, environment, authority, records, dashboard, observer, module }
+    // Read the native DTO through the same original Request, encrypted sessions,
+    // source authority and Domain.view. No runtime or ready operation is invented.
+    const live = createSfLiveContext({
+      origin, mount: "/sucafina", currentBinding: () => binding,
+      admit: async (request) => {
+        const admitted = await authority.readContextAdmission(request)
+        if (admitted.status !== "ok") return admitted
+        const destinations = sfContextDestinationsFromPages(admitted.pages)
+        if (!destinations) return { status: "unavailable", reason: "contract-mismatch" } as const
+        return { status: "ok", stamp: admitted.stamp, authMode: "local-operator", destinations } as const
+      },
+    })
+    const nativePages = createSfDomainProjectionHandlers({
+      origin, mount: "/sucafina", runtime: () => undefined,
+      application: { persistence, authenticate, environment, maxJsonBytes: 100000, domains: contributions },
+      readContext: (request) => live.readRequestContext(request, binding),
+    })
+    return { driver, persistence, identities, authenticate, environment, authority, records, dashboard, observer, module, nativePages }
   }
   let current = await build(await openLocalStore(directory))
-  routing.handle = (request) => current.module(request)
+  routing.handle = (request) => {
+    const pathname = new URL(request.url).pathname
+    const capability = pathname === "/sucafina/api/ui/pages/CAP01" ? "CAP01" : pathname === "/sucafina/api/ui/pages/CAP13" ? "CAP13" : undefined
+    const projection = capability && current.nativePages.find((handler) => handler.operationId === `domain.page.${capability}`)
+    return projection ? projection.handle(request) : current.module(request)
+  }
   await current.persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.hotTopics = [
       { id: "topic", action: "Original action", owner: "Operations", due: "2026-12-01", status: "open", priority: "normal", notes: "Private operator context" },
@@ -98,6 +124,8 @@ export async function createDashboardProofFixture() {
     get persistence() { return current.persistence }, get authority() { return current.authority }, get records() { return current.records },
     get observer() { return current.observer }, get dashboard() { return current.dashboard },
     get environment() { return current.environment }, get authenticate() { return current.authenticate },
+    exportJson: (person: Person = "owner") => fetch(`${origin}/sucafina/dashboard?download=json`, { headers: { cookie: cookies.get(person)! } }),
+    nativePage: (capability: "CAP01" | "CAP13", person: Person = "owner") => fetch(`${origin}/sucafina/api/ui/pages/${capability}`, { headers: { cookie: cookies.get(person)! } }),
     page: (page: string, person: Person = "owner") => fetch(`${origin}/sucafina/dashboard?page=${encodeURIComponent(page)}`, { headers: { cookie: cookies.get(person)! } }),
     command: (command: Command, person: Person = "owner") => fetch(`${origin}/sucafina/dashboard`, { method: "POST", headers: { cookie: cookies.get(person)!, origin, "content-type": "application/json" }, body: JSON.stringify(command) }),
     logout: async (person: Person = "owner") => current.identities.find((entry) => entry.name === person)!.identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { origin, cookie: cookies.get(person)! } })),

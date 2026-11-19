@@ -3,7 +3,7 @@ import { createDashboardProofFixture } from "./fixture.ts"
 import { createDashboardSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
 import { dashboardSignals } from "../../../product/dashboard/signals.ts"
 import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
-import { rows } from "../../../runtime/contract.ts"
+import { object, rows } from "../../../runtime/contract.ts"
 
 type Fixture = Awaited<ReturnType<typeof createDashboardProofFixture>>
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -33,6 +33,16 @@ async function signals(f: Fixture) {
   })
 }
 
+async function nativeData(f: Fixture, capability: "CAP01" | "CAP13") {
+  const response = await f.nativePage(capability)
+  expect(response.status).toBe(200)
+  const body = object(await response.json())
+  expect(body.status).toBe("ok")
+  expect(object(body.context).principalRef).toBe(f.principal())
+  expect(object(body.value).capabilityId).toBe(capability)
+  return object(object(body.value).data)
+}
+
 async function business(f: Fixture) {
   return f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone({ data: snapshot.data, versions: snapshot.versions, audit: snapshot.audit }) }))
 }
@@ -53,14 +63,14 @@ test("WP02 Attention retains numeric risk and contract identities through canoni
     const facts = await signals(f)
     expect(facts.map((value) => value.value).sort()).toEqual(["Numeric identity contract", "Numeric identity risk", "Zero identity risk"])
     expect(facts.map((value) => value.drilldown?.kind === "record" ? value.drilldown.target.recordId : "missing").sort()).toEqual(["0", "7", "8"])
-    const executive = await f.page("Executive Dashboard")
-    expect(executive.status).toBe(200)
-    const html = await executive.text()
-    for (const id of ["risks:0", "risks:7", "contracts:8"]) expect(html).toContain(`data-signal-priority="${id}"`)
-    expect(html).toContain("#record-7")
-    const risks = await f.page("IT Risks")
-    expect(risks.status).toBe(200)
-    expect(await risks.text()).toContain('id="record-7"')
+    const executive = await nativeData(f, "CAP01")
+    const priorities = rows(executive.signals)
+    expect(priorities.map((signal) => signal.id).sort()).toEqual(["contracts:8", "risks:0", "risks:7"])
+    expect(priorities.find((signal) => signal.id === "risks:7")).toMatchObject({ page: "IT Risks", recordId: "7", fact: "Numeric identity risk" })
+    const risks = await nativeData(f, "CAP13")
+    expect(rows(risks.risks).find((risk) => risk.id === 7)).toMatchObject({ name: "Numeric identity risk" })
+    expect((await f.page("Executive Dashboard")).status).toBe(404)
+    expect((await f.page("IT Risks")).status).toBe(404)
     expect(await business(f)).toEqual(before)
     await f.reopen()
     expect(await business(f)).toEqual(before)
@@ -74,11 +84,8 @@ test("WP02 Attention retains numeric risk and contract identities through canoni
     expect((await signals(f)).map((value) => value.value).sort()).toEqual(["Numeric identity contract", "Zero identity risk"])
     await f.reopen()
     expect(await business(f)).toEqual(after)
-    const reopened = await f.page("Executive Dashboard")
-    const reopenedHtml = await reopened.text()
-    expect(reopenedHtml).not.toContain('data-signal-priority="risks:7"')
-    expect(reopenedHtml).toContain('data-signal-priority="risks:0"')
-    expect(reopenedHtml).toContain('data-signal-priority="contracts:8"')
+    const reopened = await nativeData(f, "CAP01")
+    expect(rows(reopened.signals).map((signal) => signal.id).sort()).toEqual(["contracts:8", "risks:0"])
   } finally { await f.close() }
 })
 
@@ -101,17 +108,16 @@ test("WP02 signal UTC boundaries match canonical evidence for offset clocks and 
     expect(facts.map((value) => value.value).sort()).toEqual(["Due before today's UTC day", "Renews on UTC day", "Renews on day ninety"])
     const topic = facts.find((value) => value.drilldown?.kind === "record" && value.drilldown.target.recordType === "hotTopics")
     expect(topic?.drilldown?.kind === "record" && topic.drilldown.target.period).toEqual({ start: "2026-11-14", end: "2026-11-14" })
-    const executive = await f.page("Executive Dashboard")
-    const html = await executive.text()
-    expect(html).toContain('data-signal-priority="hotTopics:topic"')
-    expect(html).toContain('data-signal-priority="contracts:boundary"')
-    expect(html).not.toContain('data-signal-priority="contracts:expired"')
-    expect(html).not.toContain('data-signal-priority="contracts:outside"')
+    const executive = await nativeData(f, "CAP01")
+    expect(rows(executive.signals).map((signal) => signal.id).sort()).toEqual(["contracts:boundary", "contracts:today", "hotTopics:topic"])
     expect(await business(f)).toEqual(before)
     f.policies.owner.readable = false
-    const denied = await f.page("Executive Dashboard")
+    const denied = await f.exportJson()
     expect(denied.status).toBe(401)
     expect(await denied.text()).not.toContain("Renews on day ninety")
+    const nativeDenied = await f.nativePage("CAP01")
+    expect(nativeDenied.status).toBe(403)
+    expect(await nativeDenied.text()).not.toContain("Renews on day ninety")
   } finally { await f.close() }
 })
 
