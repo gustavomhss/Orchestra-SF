@@ -2,6 +2,7 @@ import { expect, type Locator, type Page, type Request, type Response } from "@p
 import { randomUUID } from "node:crypto"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
+import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { asRecord, caseIdentity, enterWorkbench } from "../decisions-support/journey"
 import { observedReportResponse, retainReportResponse } from "../reports-support/model"
@@ -448,6 +449,13 @@ async function plannerCommand(page: Page, button: Locator, action: string, obser
   }
   const intent = { page: capability === "CAP23" ? "Versions" : "OPEX", action, record, version: String(version) }
   const observed: { response?: Response; failure?: string; unknown: boolean; count: number } = { unknown: false, count: 0 }
+  let contextReadUrl: string | undefined
+  const nativeRead = (request: Request) => {
+    const target = new URL(request.url())
+    return request.method() === "GET" && target.origin === origin &&
+      ["/sucafina/api/ui/context", "/sucafina/api/ui/pages/CAP23", "/api/sucafina/installations"].includes(target.pathname)
+      ? target : undefined
+  }
   const matches = (request: Request) => {
     const url = new URL(request.url())
     if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/planner" ||
@@ -460,13 +468,22 @@ async function plannerCommand(page: Page, button: Locator, action: string, obser
         typeof body.version === "number" && String(body.version) === intent.version && body.confirmed === true
     } catch { return false }
   }
-  const onRequest = (request: Request) => { if (matches(request)) observed.count++ }
+  const onRequest = (request: Request) => {
+    if (matches(request)) observed.count++
+    const target = nativeRead(request)
+    if (target?.pathname === "/sucafina/api/ui/context") contextReadUrl = target.toString()
+    if (target) observations.push({ stage: "planner-admission-request", path: target.pathname, queryKeys: [...target.searchParams.keys()].sort() })
+  }
   const onResponse = (response: Response) => {
+    const target = nativeRead(response.request())
+    if (target) observations.push({ stage: "planner-admission-response", path: target.pathname, httpStatus: response.status() })
     if (!matches(response.request())) return
     observed.response = response
     observations.push({ stage: "planner-command-response", ...intent, httpStatus: response.status(), contentType: response.headers()["content-type"] ?? null })
   }
   const onFailed = (request: Request) => {
+    const target = nativeRead(request)
+    if (target) observations.push({ stage: "planner-admission-failed", path: target.pathname, failure: request.failure()?.errorText ?? "request-failed" })
     if (!matches(request)) return
     observed.failure = request.failure()?.errorText ?? "request-failed"
     observations.push({ stage: "planner-command-request-failed", ...intent, failure: observed.failure })
@@ -493,6 +510,33 @@ async function plannerCommand(page: Page, button: Locator, action: string, obser
     }, { message: `Planner ${intent.page}/${action} must produce a response or an explicit transport/UI outcome`, timeout: 15_000 }).not.toBe("pending")
     if (observed.failure || observed.unknown) {
       observations.push({ stage: "planner-command-unconfirmed", ...intent, outcome: observed.failure ? "request-failed" : "outcome-unknown", retried: false })
+      // Preserve the terminal failure. Read only the original admission URL
+      // already requested by this browser, without publishing owner selectors.
+      try {
+        const destination = new URL(page.url())
+        const f01 = await page.locator('[data-sf-host="owner-runtime231"]').evaluateAll((elements) => elements.map((element) => ({
+          discovery: element.getAttribute("data-sf-discovery-state"), provider: element.getAttribute("data-sf-provider-state"),
+          reason: element.getAttribute("data-sf-provider-reason"), view: element.getAttribute("data-sf-view-state"),
+        })))
+        observations.push({ stage: "planner-terminal-route", path: destination.pathname,
+          queryKeys: [...destination.searchParams.keys()].sort(), year: destination.searchParams.get("year"),
+          ownerTriplet: ["server", "project", "installation"].every((key) => destination.searchParams.getAll(key).length === 1 && !!destination.searchParams.get(key)),
+          f01, count: observed.count,
+        })
+        if (observed.response) observations.push({ stage: "planner-terminal-response",
+          originalOk: asRecord(observedReportResponse(observed.response)).ok === true })
+        if (contextReadUrl) {
+          const original = await page.request.get(contextReadUrl)
+          const context = Schema.decodeUnknownSync(SfContextResult)(await original.json())
+          observations.push({ stage: "planner-terminal-context", httpStatus: original.status(), status: context.status,
+            ...(context.status === "ok" ? {
+              destinations: context.value.destinations.filter((item) => item.capabilityId === capability)
+                .map(({ capabilityId, canRead, allowedActionIds }) => ({ capabilityId, canRead, allowedActionIds })),
+              availability: context.value.availability.filter((item) => item.resource === capability),
+            } : {}),
+          })
+        }
+      } catch { observations.push({ stage: "planner-terminal-diagnostic-unavailable" }) }
       throw new Error(`Planner ${intent.page}/${action} was not confirmed (${observed.failure ?? "UI outcome unknown"}); the command was not resent.`)
     }
     expect(observed.count, "One native confirmation must submit exactly once").toBe(1)
