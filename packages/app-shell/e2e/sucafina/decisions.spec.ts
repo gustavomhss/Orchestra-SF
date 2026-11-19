@@ -23,7 +23,7 @@ test("CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve
   })
 })
 
-test("CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt", async ({ page }, info) => {
+test("CI-UI-DECISIONS — apply the reviewed Procurement proposal, recover its unique receipt, then require real approval", async ({ page }, info) => {
   test.setTimeout(180_000)
   info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — SEM EQUIVALENTE end-to-end. UI39/UI40 + native CAP25/CAP26 (U12/U13/U18) nao demonstram proposta financeira aprovada ANTES de C12 Apply e um unico recibo recuperado." })
   info.annotations.push({ type: "dependency", description: "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them." })
