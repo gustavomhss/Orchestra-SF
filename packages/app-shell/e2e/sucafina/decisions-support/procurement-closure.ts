@@ -58,8 +58,8 @@ export async function procurementClosureJourney(page: Page, installation: { orig
     await expect(form.getByLabel("Estimated amount", { exact: true })).toHaveValue("100")
     await expect(original.locator("[data-request-summary]")).toContainText("Requisition draft")
   } finally { await audit.close() }
-  // Published C12 is consumed here; no Apply is sent until its current preview and
-  // a real, compatible domain approval both succeed. Missing stages never pass.
+  // Published C12 applies and recovers the reviewed draft first; Procurement then
+  // submits and approves that exact saved amount. Missing stages never pass.
   await applyRecoveryJourney(page, installation.origin, { ...selection, choiceId }, observations,
     (approvalPage, review, operation) => approveExactRequisition(approvalPage, installation.origin, review, operation, observations))
 }

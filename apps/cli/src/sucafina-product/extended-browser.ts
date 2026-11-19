@@ -1,5 +1,6 @@
 import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
 import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+import { createReviewCollaborationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
 import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
 import type { ReviewCurrentThread } from "../../../../modules/sucafina/Sucafinav1/product/reviews/current-thread.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -8,16 +9,13 @@ import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/p
 import type { PreservedReview, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { SfReviewUpdate } from "./extended-review-cycle.ts"
+import { createReviewAgendaDiscoveryBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts"
+import { refreshDashboardReviewAgenda } from "../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-refresh.ts"
+import { sfReviewNavigationUrl } from "./extended-review-navigation.ts"
 
 const root = document.querySelector<HTMLElement>("[data-sf-review-workspace]")
 const bootstrap = document.querySelector<HTMLScriptElement>("script[data-sf-review-bootstrap]")
-const reviewUrl = (reviewRef: string, sectionId?: string) => {
-  const url = new URL(location.href)
-  url.searchParams.set("sf", "review"); url.searchParams.set("reviewRef", reviewRef)
-  url.searchParams.delete("previousReviewRef"); url.searchParams.delete("sectionId")
-  if (sectionId) url.searchParams.set("sectionId", sectionId)
-  return url
-}
+const reviewUrl = (reviewRef: string, sectionId?: string) => sfReviewNavigationUrl(location.href, { reviewRef, ...(sectionId ? { sectionId } : {}) })
 if (root && bootstrap) {
   const value = JSON.parse(bootstrap.textContent ?? "null")
   bootstrap.remove()
@@ -90,12 +88,17 @@ if (root && bootstrap) {
       }
       status.textContent = "Escolha a origem autorizada para abri-la."
     }
+    let discussion: ReturnType<typeof createReviewCollaborationView> | undefined
     const view = createMeetingViewFromReads({ reviewRef: value.reviewRef,
       read: async (reference): Promise<PortResult<PreservedReview>> => {
         const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-read", reviewRef: reference }).toString()
         const found = await privateRead(url), body = found?.body
         if (!found?.response.ok || body?.status !== "ok" || body.value?.id !== reference || !Array.isArray(body.value?.sections) || !Array.isArray(body.value?.comments))
           return { status: closed ? "denied" : "unavailable", reason: "review-unavailable" }
+        if (reference === value.reviewRef && !discussion && typeof value.principalRef === "string" && value.principalRef.trim()) {
+          discussion = createReviewCollaborationView({ review: body.value, principalRef: value.principalRef })
+          root.append(discussion.element)
+        }
         return { status: "ok", value: body.value }
       },
       readComparison: async (reference): Promise<PortResult<ReviewComparisonRead>> => {
@@ -136,18 +139,19 @@ if (root && bootstrap) {
       },
       requestUpdate: (reference) => {
         if (closed) return
-        const url = new URL(location.href); url.searchParams.delete("reviewRef"); url.searchParams.delete("sectionId"); url.searchParams.set("previousReviewRef", reference)
-        location.assign(url)
+        location.assign(sfReviewNavigationUrl(location.href, { previousReviewRef: reference }))
       },
       openSource, openReviewSection: (reference, sectionId) => { if (!closed) location.assign(reviewUrl(reference, sectionId)) },
     })
     const selected = value.selectedSection as PreservedReview["sections"][number] | undefined
     const selectedView = selected ? selectedSection(selected, openSource) : undefined
     root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, status, sources)
-    dispose = view.dispose
+    dispose = () => { view.dispose(); discussion?.dispose() }
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
+    const preparationUrl = location.href
     const client = createReviewPreparationBrowser()
+    const discover = createReviewAgendaDiscoveryBrowser()
     const guarded = async <T>(read: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
       const turn = generation
       if (closed) return { status: "denied", reason: "review-access-changed" }
@@ -160,6 +164,16 @@ if (root && bootstrap) {
       client: { ...client, contribution: (payload) => guarded(() => client.contribution(payload)), agenda: (items) => guarded(() => client.agenda(items)),
         preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)), report: (payload) => guarded(() => client.report(payload)),
         downloadUrl: (reference) => closed ? undefined : client.downloadUrl(reference) },
+      refreshItems: (items) => guarded<ReviewAgendaItem[]>(() => items.length > 0 && items.every((item) => item.kind === "dashboard" && item.recordRefs !== undefined)
+        ? refreshDashboardReviewAgenda(items, discover)
+        : Promise.resolve({ status: "ok", value: structuredClone([...items]) })),
+      // Align shell refreshes and focus probes with the confirmed preserved state
+      // without remounting the view or replacing the operator's current draft.
+      onPreserved: (reference) => { if (!closed) history.replaceState(history.state, "", reviewUrl(reference)) },
+      onPrepared: (previousReviewRef) => {
+        if (!closed) history.replaceState(history.state, "", previousReviewRef
+          ? sfReviewNavigationUrl(location.href, { previousReviewRef }) : preparationUrl)
+      },
       openReview: (reference) => { if (!closed) location.assign(reviewUrl(reference)) } })
     const choices = document.createElement("fieldset"), legend = document.createElement("legend"), message = document.createElement("p")
     legend.textContent = "Seleção da revisão sucessora"; choices.append(legend); message.setAttribute("role", "status")

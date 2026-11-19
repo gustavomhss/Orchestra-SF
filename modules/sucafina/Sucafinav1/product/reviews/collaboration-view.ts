@@ -1,12 +1,12 @@
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainProjection, PreservedReview } from "../contracts/context.ts"
 import { createReviewDiscussionClient, ReviewDiscussionError, discussionAnswer, discussionMessage, discussionObject, discussionPin, discussionText, discussionThread } from "./collaboration-client.ts"
-import type { ReviewDiscussionBasis, ReviewDiscussionMessage, ReviewDiscussionPin, ReviewDiscussionThread, ReviewPreparedAnswer } from "./collaboration-client.ts"
+import type { ReviewDiscussionBasis, ReviewDiscussionMessage, ReviewDiscussionPin, ReviewDiscussionThread, ReviewPreparedAnswer, ReviewDiscussionTransport } from "./collaboration-client.ts"
 
 /** Human actions against a preserved C05. All access and replay decisions remain
  * in the installed host. A displayed principal, draft or URL grants no access.
  */
-export function createReviewCollaborationView(input: { review: PreservedReview; principalRef: string }) {
+export function createReviewCollaborationView(input: { review: PreservedReview; principalRef: string; transport?: ReviewDiscussionTransport }) {
   const root = region("Review discussion")
   const status = document.createElement("p")
   status.setAttribute("role", "status")
@@ -37,10 +37,10 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
   const client = createReviewDiscussionClient(() => {
     dispose()
     window.dispatchEvent(new Event("sf-access-revoked"))
-  })
+  }, input.transport)
   const section = document.createElement("select"), source = document.createElement("select"), recipient = document.createElement("select")
   section.setAttribute("aria-label", "Review section"); source.setAttribute("aria-label", "Review source"); recipient.setAttribute("aria-label", "Recipient")
-  input.review.sections.forEach((entry) => section.append(new Option(entry.title, entry.id)))
+  input.review.sections.forEach((entry) => section.append(option(entry.title, entry.id)))
   const question = document.createElement("textarea")
   question.setAttribute("aria-label", "Question")
   const selected = () => input.review.sections.find((entry) => entry.id === section.value)
@@ -50,7 +50,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
     return [...new Map(refs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record").map((ref) => [ref.refId, ref])).values()]
   }
   const chooseSources = () => {
-    source.replaceChildren(...references().map((ref) => new Option(`${ref.target.surface} · ${ref.target.recordId} · version ${ref.target.version}`, ref.refId)))
+    source.replaceChildren(...references().map((ref) => option(`${ref.target.surface} · ${ref.target.recordId} · version ${ref.target.version}`, ref.refId)))
   }
   section.addEventListener("change", () => { question.value = ""; chooseSources() })
   source.addEventListener("change", () => { question.value = "" })
@@ -410,13 +410,13 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
     await run(readDiscussion)
   }
 
-  async function readDiscussion() {
+  async function readDiscussion(checkDraftContext = true) {
     live()
     const people = await client.recipients()
     live()
     const chosen = recipient.value
     if (chosen && !people.some((person) => person.id === chosen)) return changedScope()
-    recipient.replaceChildren(...people.map((person) => new Option(person.name, person.id)))
+    recipient.replaceChildren(...people.map((person) => option(person.name, person.id)))
     if (people.some((person) => person.id === chosen)) recipient.value = chosen
     lockDrafts()
     if (!people.length) status.textContent = "No authorized recipient is available."
@@ -428,7 +428,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
       live(); checkThread(updated)
       thread = updated
       renderThread(); renderHistory(); await readConfirmed()
-    } else {
+    } else if (checkDraftContext) {
       const chosen = selected(), reference = references().find((ref) => ref.refId === source.value)
       if (chosen && reference && recipient.value) {
         const basis: ReviewDiscussionBasis = { sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period: chosen.period, evidenceRefs: [reference] }
@@ -460,10 +460,16 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
 
   window.addEventListener("sf-access-revoked", accessRevoked)
   window.addEventListener("pagehide", accessRevoked)
-  void refresh()
+  // An empty discussion has no human question to validate yet. Ask obtains its
+  // own fresh pin; explicit reconciliation still rechecks the current draft.
+  void run(() => readDiscussion(false))
   return { element: root, refresh, dispose }
 }
 
+function option(text: string, value: string) {
+  const element = document.createElement("option"); element.textContent = text; element.value = value
+  return element
+}
 function region(name: string) { const element = document.createElement("section"); element.setAttribute("aria-label", name); return element }
 function heading(text: string) { const element = document.createElement("h3"); element.textContent = text; return element }
 function paragraph(text: string) { const element = document.createElement("p"); element.textContent = text; return element }

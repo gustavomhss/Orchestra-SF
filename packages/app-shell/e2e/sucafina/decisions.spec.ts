@@ -3,7 +3,7 @@
 // Keep the original executable contracts until the same authenticated native
 // host can produce an equivalent observation; a route/200 is not parity.
 import { expect, test } from "@playwright/test"
-import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase, withInstallation } from "./decisions-support/journey"
+import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reconcileCreationByRead, reopenCase, withInstallation } from "./decisions-support/journey"
 import { loseCreationResponse } from "./decisions-support/lost-response"
 import { initialAlternativesJourney } from "./decisions-support/initial-alternatives"
 import { choiceHistoryJourney } from "./decisions-support/choice-history"
@@ -23,7 +23,7 @@ test("CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve
   })
 })
 
-test("CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt", async ({ page }, info) => {
+test("CI-UI-DECISIONS — apply the reviewed Procurement proposal, recover its unique receipt, then require real approval", async ({ page }, info) => {
   test.setTimeout(180_000)
   info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — SEM EQUIVALENTE end-to-end. UI39/UI40 + native CAP25/CAP26 (U12/U13/U18) nao demonstram proposta financeira aprovada ANTES de C12 Apply e um unico recibo recuperado." })
   info.annotations.push({ type: "dependency", description: "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them." })
@@ -177,6 +177,7 @@ test("CI-UI-DECISIONS — recover a lost creation response by reading the same c
       expect(requests).toHaveLength(1)
       // Leave the uncertain form and reconcile by authorized reads, not another mutation.
       page.once("dialog", (dialog) => dialog.accept())
+      await reconcileCreationByRead(page, reference, observations)
       await reopenCase(page, reference, objective)
       await assertCase(page, reference, objective, 1)
       await page.reload()

@@ -77,7 +77,8 @@ function receiptDiagnostic(value: string) {
 }
 
 export async function enterWorkbench(page: Page, origin: string) {
-  await page.goto(`${origin}/sucafina/dashboard`)
+  // The bare dashboard is retired; enter the authenticated product operation.
+  await page.goto(`${origin}/sucafina/dashboard?sf=workbench`)
   await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
   const link = page.getByRole("link", { name: "Workbench", exact: true })
   await expect(link).toHaveCount(1)
@@ -116,6 +117,20 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
   const origin = new URL(page.url()).origin
   const session = await page.context().newCDPSession(page)
   const captured = Promise.withResolvers<{ url: string; status: number; contentType: string; json: string }>()
+  // A failed transport never emits the response-stage event. Reject the same
+  // waiter so the owned installation can unwind instead of outliving the test.
+  void captured.promise.catch(() => undefined)
+  const failed = (request: Request) => {
+    const url = new URL(request.url())
+    if (url.origin !== origin || url.pathname !== "/sucafina/dashboard" ||
+      url.searchParams.get("sf") !== mode || request.method() !== method) return
+    const codes = [...new Set(request.failure()?.errorText.match(/(?:net::)?ERR_[A-Z0-9_]+/g) ?? [])]
+    observations.push({ mode, method, stage: "command-transport-failed", codes })
+    captured.reject(new Error("Original " + mode + " transport failed" + (codes.length ? ": " + codes.join(", ") : "")))
+  }
+  const closed = () => captured.reject(new Error("Browser closed before the original " + mode + " response"))
+  page.on("requestfailed", failed)
+  page.once("close", closed)
   session.once("Fetch.requestPaused", async (event: PausedCommand) => {
     try {
       const url = new URL(event.request.url)
@@ -145,8 +160,12 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
     return checkedReply({ mode: new URL(reply.url).searchParams.get("sf"), httpStatus: reply.status, contentType: reply.contentType },
       () => JSON.parse(reply.json), observations)
   } finally {
-    await session.send("Fetch.disable")
-    await session.detach()
+    page.off("requestfailed", failed)
+    page.off("close", closed)
+    // Closing the page already detaches its session. Always attempt both
+    // releases; neither can authorize or replace the original domain response.
+    await session.send("Fetch.disable").catch(() => undefined)
+    await session.detach().catch(() => undefined)
   }
 }
 
@@ -191,4 +210,16 @@ export async function reopenCase(page: Page, reference: string, objective: strin
   const target = new URL((await link.getAttribute("href"))!, page.url())
   expect(target.searchParams.get("caseRef")).toBe(reference)
   await link.click()
+}
+
+/** Wait for the application's real read recovery before revisiting the stable catalog. */
+export async function reconcileCreationByRead(page: Page, reference: string, observations: Record<string, unknown>[]) {
+  const origin = new URL(page.url()).origin
+  // The confirmed reader navigates immediately. Capture its original bytes
+  // before Chromium evicts the response body, just as for the other commands.
+  const result = await clickCommand(page, page.getByRole("link", { name: "Workbench", exact: true }),
+    "workbench-create-recover", observations, "GET")
+  expect(result).toMatchObject({ status: "ok", state: "committed", outputRef: reference })
+  await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === "/sucafina/dashboard" &&
+    url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
 }

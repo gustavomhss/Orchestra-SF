@@ -351,3 +351,35 @@ test("Chromium navigates the own decision controls, saves real classification an
     } finally { await resources.state?.close() }
   }
 }, 120_000)
+
+test("installed decision list reads only authorized cases and rejects invalid or revoked requests", async () => {
+  const state = await fixture("https://example.test")
+  try {
+    const send = (query: string, init?: RequestInit) => state.http(new Request("https://example.test/sf/dashboard?" + query, init), "dashboard")
+    const before = await state.authority.state.read(state.request, "cases", () => null)
+    expect(before.status).toBe("ok")
+    if (before.status !== "ok") throw new Error("Actual case snapshot unavailable")
+    const response = await send("sf=decision-list")
+    expect(response?.status).toBe(200)
+    expect(response?.headers.get("Cache-Control")).toBe("no-store")
+    expect(await response!.json()).toEqual({ status: "ok", value: [{
+      caseRef: state.caseRef, objective: "Renovação de licenças", state: "draft",
+    }] })
+    const after = await state.authority.state.read(state.request, "cases", () => null)
+    expect(after.status).toBe("ok")
+    if (after.status !== "ok") throw new Error("Actual case snapshot unavailable")
+    expect(after.storageVersion).toBe(before.storageVersion)
+    for (const query of ["sf=decision-list&sf=decision-list", "sf=decision-list&case=private", "sf=decision-list&page=Budget"]) {
+      expect((await send(query))?.status).toBe(400)
+    }
+    expect((await send("sf=decision-list", { method: "POST" }))?.status).toBe(405)
+    expect((await send("sf=decision-list", { headers: { "sec-fetch-site": "cross-site" } }))?.status).toBe(403)
+    expect((await send("sf=decision-list", { headers: { origin: "https://other.test" } }))?.status).toBe(403)
+    expect((await state.http(new Request("https://other.test/sf/dashboard?sf=decision-list"), "dashboard"))?.status).toBe(403)
+    expect((await state.http(new Request("https://example.test/sf/planner?sf=decision-list"), "dashboard"))?.status).toBe(403)
+    state.actor.active = false
+    const revoked = await send("sf=decision-list")
+    expect(revoked?.status).toBe(403)
+    expect(await revoked!.text()).not.toContain("Renovação de licenças")
+  } finally { await state.close() }
+}, 60_000)

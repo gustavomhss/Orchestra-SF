@@ -1,4 +1,5 @@
 import type { Period, PreservedReview } from "../contracts/context.ts"
+import type { PortResult } from "../contracts/ports.ts"
 import type { MeetingMaterialProposal } from "../contracts/outputs.ts"
 import { createReviewPreparationBrowser } from "./browser.ts"
 import type { ReviewAgendaItem, ReviewAgendaPreview } from "./selection.ts"
@@ -14,10 +15,15 @@ export function createReviewPreparationView(input: {
   routineResult?: RoutineReviewSelectionRequest
   discover?: ReviewAgendaDiscovery
   discoveryPeriod?: Period
+  refreshItems?: (items: readonly ReviewAgendaItem[]) => Promise<PortResult<ReviewAgendaItem[]>>
   client?: ReturnType<typeof createReviewPreparationBrowser>
   openReview: (reviewRef: string) => void
+  /** Notify the host only after an authorized result survives the current read generation. */
+  onPrepared?: (previousReviewRef: string | undefined) => void
+  onPreserved?: (reviewRef: string) => void
 }) {
   const client = input.client ?? createReviewPreparationBrowser()
+  const preservedMessage = "Review preserved. Source updates will not replace this meeting's captured values."
   const root = document.createElement("section")
   root.setAttribute("aria-label", "Prepare review")
   let disposed = false
@@ -44,6 +50,11 @@ export function createReviewPreparationView(input: {
     status.setAttribute("aria-live", "polite")
     root.append(status)
     if (revoked) return
+    if (state.review) {
+      const confirmation = state.message === preservedMessage ? status : node("p", preservedMessage)
+      confirmation.setAttribute("data-preserved-review-ref", state.review.id)
+      if (confirmation !== status) root.append(confirmation)
+    }
     if (!state.reviewRef && !state.routine && picker) {
       picker.update(); root.append(picker.element)
       const chosen = document.createElement("ol")
@@ -172,8 +183,14 @@ export function createReviewPreparationView(input: {
   }) : state.items
   const load = () => run("Loading authorized sources…", async (current) => {
     if (pendingPreserve) return
-    const items = remainingItems()
+    let items = remainingItems()
     const oldOrder = [...state.order]
+    if (state.reviewRef && input.refreshItems) {
+      const refreshed = await input.refreshItems(items)
+      if (!current()) return
+      if (refreshed.status !== "ok") { reject(refreshed.status, refreshed.reason); return }
+      items = refreshed.value
+    }
     const selection = await client.agenda(items)
     if (!current()) return
     if (selection.status !== "ok") { reject(selection.status, selection.reason); return }
@@ -188,6 +205,7 @@ export function createReviewPreparationView(input: {
     state.sectionRecordRefs = structuredClone(selection.value.sectionRecordRefs)
     state.order = [...oldOrder.filter((ref) => selection.value.sectionRefs.includes(ref)), ...selection.value.sectionRefs.filter((ref) => !oldOrder.includes(ref))]
     state.message = "Review the selection, order and periods, then explicitly preserve it."
+    input.onPrepared?.(state.previousReviewRef)
   })
   const openRoutineResult = (request: RoutineReviewSelectionRequest) => run("Opening the authorized routine result…", async (current) => {
     if (pendingPreserve) return
@@ -206,6 +224,7 @@ export function createReviewPreparationView(input: {
     state.previousReviewRef = selection.value.previousReviewRef
     state.order = [...selection.value.sectionRefs]
     state.message = "Review the captured result and choose the sections to preserve. The source values remain those recorded by this run."
+    input.onPrepared?.(state.previousReviewRef)
   })
   const removeRecord = (sectionId: string, recordRef: string) => run("Updating the authorized record selection…", async (current) => {
     if (!state.selection || state.review) return
@@ -237,7 +256,8 @@ export function createReviewPreparationView(input: {
     state.review = result.value
     state.reviewRef = result.value.id
     state.order = result.value.sections.map((section) => section.id)
-    state.message = "Review preserved. Source updates will not replace this meeting's captured values."
+    state.message = preservedMessage
+    input.onPreserved?.(state.reviewRef)
   })
   const report = (format: "pptx" | "docx") => run(`Generating ${format.toUpperCase()} from the preserved review…`, async (current) => {
     if (!state.reviewRef) return
