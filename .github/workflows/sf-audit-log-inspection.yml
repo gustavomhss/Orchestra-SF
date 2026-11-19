@@ -1,0 +1,74 @@
+name: sf-original-operations-context
+on:
+  push:
+    branches: [audit-opscontext-20261119]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read completed Operations artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14577090913/zip > "$RUNNER_TEMP/original.zip"
+      - name: Inspect original bounded context and reader outcomes
+        run: |
+          python3 - <<'PY'
+          import base64, io, json, os, pathlib, re, urllib.parse, zipfile
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          lines = ["# Original Operations context", "", "Read-only inspection of run44619924653, artifact14577090913. No product rerun, replay or manufactured response.", ""]
+          matched = 0
+          with zipfile.ZipFile(root / "original.zip") as archive:
+              for name in archive.namelist():
+                  if not name.endswith(".zip") or not any(part in name for part in ["b41a7", "a3b16", "baa3d"]): continue
+                  matched += 1
+                  lines += ["## " + name, ""]
+                  with zipfile.ZipFile(io.BytesIO(archive.read(name))) as trace:
+                      records = []
+                      for network in [p for p in trace.namelist() if p.endswith(".network")]:
+                          for raw in trace.read(network).decode("utf-8", errors="replace").splitlines():
+                              try: item = json.loads(raw)
+                              except ValueError: continue
+                              item = item.get("snapshot", item)
+                              request, response = item.get("request", {}), item.get("response", {})
+                              url = urllib.parse.urlsplit(request.get("url", ""))
+                              query = urllib.parse.parse_qs(url.query)
+                              if not (url.path.endswith("/api/ui/context") or query.get("sf") or "/api/ui/pages/" in url.path): continue
+                              entry = {"path": url.path, "method": request.get("method"), "status": response.get("status"),
+                                       "query": {k: query[k] for k in ["sf", "page", "year", "resource", "capabilityId"] if k in query}}
+                              content = response.get("content", {})
+                              sha = content.get("_sha1")
+                              resource = next((p for p in trace.namelist() if sha and p.endswith("/" + sha)), None)
+                              if resource:
+                                  try: body = json.loads(trace.read(resource))
+                                  except (ValueError, UnicodeError): body = None
+                                  if isinstance(body, dict):
+                                      entry["producerStatus"] = body.get("status")
+                                      value = body.get("value")
+                                      if isinstance(value, dict) and url.path.endswith("/api/ui/context"):
+                                          availability = value.get("availability", [])
+                                          entry["availability"] = []
+                                          for row in availability if isinstance(availability, list) else []:
+                                              if not isinstance(row, dict): continue
+                                              ops = row.get("operations", [])
+                                              ops = [op for op in ops if isinstance(op, dict) and any(part in str(op.get("operationId", "")) for part in ["files.", "approval", "asset", "CAP27", "CAP26"])]
+                                              if not ops: continue
+                                              entry["availability"].append({
+                                                  "family": row.get("family"), "resource": row.get("resource"),
+                                                  "operations": [{k: op[k] for k in ["operationId", "state", "operational"] if k in op} for op in ops]})
+                              else: entry["originalBodyCaptured"] = False
+                              records.append(entry)
+                      lines += [json.dumps(records[-20:], ensure_ascii=False, indent=2), ""]
+          lines += ["Matching original trace archives: " + str(matched)]
+          result = "\n".join(lines) + "\n"
+          payload = {"message": "docs(sf): retain original Operations context outcomes", "branch": "audit-opscontext-20261119", "content": base64.b64encode(result.encode()).decode()}
+          (root / "payload.json").write_text(json.dumps(payload))
+          print("Inspected bounded original statuses and availability; no headers or source data exported.")
+          PY
+      - name: Persist original observation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-opscontext-44619924653.md --input "$RUNNER_TEMP/payload.json" > /dev/null
