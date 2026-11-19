@@ -121,13 +121,16 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
         setScreen({ status: "unavailable", data: null })
         return
       }
-      if (result.body.status === "ok") {
+      if (result.status === 401 || result.status === 403 || result.body.status === "denied") {
+        setScreen({ status: "denied", data: null })
+        return
+      }
+      if (result.status === 200 && result.body.status === "ok") {
         setScreen({ status: "ready", data: result.body.value })
         return
       }
       const status: SfUiState =
-        result.body.status === "denied" ? "denied"
-        : result.body.status === "stale" ? "stale"
+        result.body.status === "stale" ? "stale"
         : result.body.status === "conflict" ? "conflict"
         : result.body.status === "invalid" || result.body.status === "needs-input" ? "invalid"
         : "unavailable"
@@ -184,37 +187,43 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
         { topicStatus: "" }, { signal: abort.signal },
       ).then((response) => {
         if (!current()) return
-        if (response.kind === "response" && response.body.status === "ok" &&
+        if (response.kind === "response" && response.status === 200 && response.body.status === "ok" &&
             response.body.value.capabilityId === "CAP02" &&
             stampEqual(response.body.context, stamp)) {
           const rows = response.body.value.data.hotTopics
           setAttention({ topicState: rows.length ? "ready" : "empty", topics: rows })
-        } else setAttention({ topicState: readState(response), topics: [] })
+          return
+        }
+        setAttention({ topicState: response.kind === "response" && (response.status === 401 || response.status === 403) ? "denied" : readState(response), topics: [] })
       }).catch(() => { if (current()) setAttention({ topicState: "unavailable", topics: [] }) })
     } else setAttention({ topicState: "unavailable", topics: [] })
     if (admitted("CAP13", "domain.page.CAP13")) {
       void createSfDomainClient(ready.transport)["domain.page.CAP13"]({}, { signal: abort.signal })
         .then((response) => {
           if (!current()) return
-          if (response.kind === "response" && response.body.status === "ok" &&
+          if (response.kind === "response" && response.status === 200 && response.body.status === "ok" &&
               response.body.value.capabilityId === "CAP13" &&
               stampEqual(response.body.context, stamp)) {
             const rows = response.body.value.data.risks
             setAttention({ riskState: !rows ? "unavailable" : rows.length ? "ready" : "empty",
               risks: rows ?? [] })
-          } else setAttention({ riskState: readState(response), risks: [] })
+            return
+          }
+          setAttention({ riskState: response.kind === "response" && (response.status === 401 || response.status === 403) ? "denied" : readState(response), risks: [] })
         }).catch(() => { if (current()) setAttention({ riskState: "unavailable", risks: [] }) })
     } else setAttention({ riskState: "unavailable", risks: [] })
     if (admitted("CAP01", "domain.page.CAP01")) {
       void createSfDomainClient(ready.transport)["domain.page.CAP01"]({}, { signal: abort.signal })
         .then((response) => {
           if (!current()) return
-          if (response.kind === "response" && response.body.status === "ok" &&
+          if (response.kind === "response" && response.status === 200 && response.body.status === "ok" &&
               response.body.value.capabilityId === "CAP01" &&
               stampEqual(response.body.context, stamp)) {
             const totals = response.body.value.data.totals
             setAttention({ forecastState: totals ? "ready" : "unavailable", totals })
-          } else setAttention({ forecastState: readState(response), totals: undefined })
+            return
+          }
+          setAttention({ forecastState: response.kind === "response" && (response.status === 401 || response.status === 403) ? "denied" : readState(response), totals: undefined })
         }).catch(() => { if (current()) setAttention({ forecastState: "unavailable", totals: undefined }) })
     } else setAttention({ forecastState: "unavailable", totals: undefined })
     onCleanup(() => abort.abort())
@@ -238,6 +247,17 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
   }
   const formatNumber = (amount: number) =>
     new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(amount)
+  const formatDeadline = (value: string | number | boolean | null | undefined) => {
+    const text = scalar(value)
+    if (!text) return t(key("sf.ui29.notProjected"))
+    const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(text) ? `${text}T00:00:00Z` : text)
+    if (!Number.isFinite(date.getTime())) return text
+    try {
+      return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
+    } catch {
+      return text
+    }
+  }
   const refresh = () => { void owner.reload() }
   const data = () => screen.status === "ready" ? screen.data : null
   const caseItems = () => {
@@ -345,7 +365,7 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                     )}>{topic.action || topic.id}</button>
                     <span class="block">{t(key("sf.ui29.priority"))}: {topic.priority ?? t(key("sf.ui29.notProjected"))} · {topic.status ?? t(key("sf.ui29.notProjected"))}</span>
                     <span class="block">{t(key("sf.ui29.owner"))}: <bdi>{topic.owner || t(key("sf.ui29.notProjected"))}</bdi></span>
-                    <span class="block">{t(key("sf.ui29.deadline"))}: {topic.due || t(key("sf.ui29.notProjected"))}</span>
+                    <span class="block">{t(key("sf.ui29.deadline"))}: {formatDeadline(topic.due)}</span>
                   </li>
                 )}</For>
               </ul>
@@ -363,7 +383,7 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                       "/orchestra/sf-operations/risks/" + encodeSfRouteRef(String(risk.id)),
                     )}>{scalar(risk.title) || scalar(risk.name) || String(risk.id)}</button>
                     <span class="block">{t(key("sf.ui29.owner"))}: <bdi>{scalar(risk.owner) || scalar(risk.responsible) || t(key("sf.ui29.notProjected"))}</bdi></span>
-                    <span class="block">{t(key("sf.ui29.deadline"))}: {scalar(risk.due) || t(key("sf.ui29.notProjected"))}</span>
+                    <span class="block">{t(key("sf.ui29.deadline"))}: {formatDeadline(risk.due)}</span>
                     <span class="block">{t(key("sf.ui29.riskStatus"))}: {scalar(risk.status) || t(key("sf.ui29.notProjected"))}</span>
                   </li>
                 )}</For>
