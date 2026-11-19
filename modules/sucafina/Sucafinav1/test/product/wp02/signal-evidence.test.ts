@@ -24,7 +24,8 @@ test("executive signals open authorized canonical records and fail closed withou
     const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
     await persistence.initializeSources("dashboard")
     await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "admin" }]; snapshot.data.hotTopics = [{ id: "t", action: "Review", status: "open", due: "2026-11-01" }]; snapshot.data.risks = [{ id: "r", title: "Risk", status: "open", impact: 4, probability: 4 }]; snapshot.data.contracts = [{ id: "c", vendor: "Vendor", renewal: "2026-12-01" }]; return { commit: true, value: undefined } })
-    const host: DomainPortHost = { persistence, authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"), environment: async () => ({ at, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test"), revalidate: async () => true }
+    const sourceRequest = new Request("https://example.test")
+    const host: DomainPortHost = { persistence, authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"), environment: async () => ({ at, id: randomUUID, directory: [] }), requestFor: () => sourceRequest, revalidate: async () => true }
     const sources = createDashboardSourceHost({ host, scopedSources: persistence })
     const selection = await createDashboardSourceIssuer({ host, scopedSources: persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, binding)
     expect(selection.status).toBe("ok")

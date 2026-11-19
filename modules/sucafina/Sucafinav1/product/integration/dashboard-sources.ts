@@ -12,9 +12,20 @@ import type { SfScopedSourcePort, SfSourceScope } from "./source-lifecycle.ts"
 import { canonicalScopedSourceCheck } from "./source-lifecycle.ts"
 import { projectSfSourceScope } from "./source-projections.ts"
 
+const pageIssuers = new WeakMap<object, { host: DomainPortHost; sources: SfScopedSourcePort; current: () => boolean }>()
+
+/** Factory provenance only: no evidence or authorization is retained here. */
+export function dashboardPageIssuerCurrent(issue: object, host: DomainPortHost, sources: SfScopedSourcePort): (() => boolean) | undefined {
+  const owned = pageIssuers.get(issue)
+  if (!owned || owned.host !== host || owned.sources !== sources) return undefined
+  const current = () => pageIssuers.get(issue) === owned && owned.current()
+  return current() ? current : undefined
+}
+
 /** Issues only scopes derived from the current authenticated request and current role map. */
 export function createDashboardSourceIssuer(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort }) {
-  return async (selection: { page: string; fields: readonly string[]; period: Period }, context: TrustedDomainContext): Promise<PortResult<{ selectionRef: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>> => {
+  const host = input.host, scopedSources = input.scopedSources
+  const issue = async (selection: { page: string; fields: readonly string[]; period: Period }, context: TrustedDomainContext): Promise<PortResult<{ selectionRef: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>> => {
     const request = input.host.requestFor(context)
     if (!request || request.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "source-authority-unavailable" }
     if (!selection || typeof selection.page !== "string" || !Array.isArray(selection.fields) || !selection.fields.length || selection.fields.some((field) => typeof field !== "string" || !field) || new Set(selection.fields).size !== selection.fields.length || !selection.period || typeof selection.period.start !== "string" || typeof selection.period.end !== "string") return { status: "needs-input", reason: "invalid-source-selection" }
@@ -37,6 +48,10 @@ export function createDashboardSourceIssuer(input: { host: DomainPortHost; scope
     if (resolved.value.evidence.target.projectionDigest !== current.inputDigest || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
     return { status: "ok", value: { selectionRef, evidence: resolved.value.evidence } }
   }
+  pageIssuers.set(issue, { host, sources: scopedSources, current: () =>
+    Object.getOwnPropertyDescriptor(input, "host")?.value === host &&
+    Object.getOwnPropertyDescriptor(input, "scopedSources")?.value === scopedSources })
+  return issue
 }
 
 type DashboardRecordSelection = { page: string; recordType: string; recordId: string; fields: readonly string[]; period: Period }
