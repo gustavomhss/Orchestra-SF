@@ -219,11 +219,14 @@ function MountedSurface(props: Readonly<{
   view: () => View
   gate: () => boolean
   bind: (handle: SfContextHandle | undefined) => void
-  status: (status: string, generation: number) => void
+  status: (status: string, generation: number, reason?: string) => void
 }>): JSX.Element {
   const handle = useSfContext()
   props.bind(handle)
-  createEffect(() => props.status(handle.state().status, handle.generation()))
+  createEffect(() => {
+    const state = handle.state()
+    props.status(state.status, handle.generation(), "reason" in state ? state.reason : undefined)
+  })
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
   return (
@@ -258,7 +261,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const source = createSfInstalledOwnerSource231(props.server, fetcher)
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
   const [view, setView] = createStore<View>({ status: "resolving" })
-  const [provider, setProvider] = createStore({ status: "unmounted", generation: -1 })
+  const [provider, setProvider] = createStore({ status: "unmounted", generation: -1, reason: undefined as string | undefined })
   let mounted: SfContextHandle | undefined
   let explicitOwner: SfOwnerSelection | undefined
   let ownerEpoch = 0
@@ -299,6 +302,11 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       installationId: binding.installationId, projectId: binding.projectId,
       hostId: binding.hostId,
     }, { signal })
+    if (answer.kind !== "response") console.warn("Sucafina context transport failed", JSON.stringify({
+      reason: answer.reason, generation, currentGeneration: currentGeneration(),
+      sameOrigin: typeof window !== "undefined" && window.location.origin === binding.publicOrigin,
+      authMode: binding.authMode, publicOrigin: binding.publicOrigin,
+    }))
     return answer.kind === "response"
       ? answer.body
       : { status: "unavailable" as const, reason: "host-unavailable" as const }
@@ -543,7 +551,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
 
   return (
     <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
-      data-sf-discovery-state={discovery.status} data-sf-provider-state={provider.status}
+      data-sf-discovery-state={discovery.status} data-sf-provider-state={provider.status} data-sf-provider-reason={provider.reason}
       data-sf-view-state={view.status}
       onFocusIn={(event) => {
         if (event.target instanceof HTMLElement &&
@@ -564,7 +572,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         >
           <MountedSurface view={() => view} gate={() => provider.status === "ready" && provider.generation >= 0}
             bind={(handle) => { mounted = handle }}
-            status={(status, generation) => setProvider({ status, generation })} />
+            status={(status, generation, reason) => setProvider({ status, generation, reason })} />
         </SfTodayBoundOwnerProvider>
       </Show>
     </div>
