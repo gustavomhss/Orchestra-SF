@@ -20,7 +20,7 @@ test("Effect transport preserves a real operator session accepted by the browser
     const response = await identity.handle(new Request(origin + "/sucafina/auth/local?code=" + code))
     if (!response) throw new Error("Real operator enrollment returned no response")
     expect(response.status).toBe(303)
-    expect(response.headers.get("location")).toBe("/sucafina/dashboard")
+    expect(response.headers.get("location")).toBe("/")
     const direct = readOperatorSessionCookie(response.headers)
     const legacyCookie = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=\/sucafina; HttpOnly; SameSite=Lax; Max-Age=28800$/
     expect(legacyCookie.test(response.headers.get("set-cookie") ?? "")).toBe(true)
@@ -28,7 +28,7 @@ test("Effect transport preserves a real operator session accepted by the browser
     // Effect's real serializer; no replacement application or mocked transport.
     const transported = HttpServerResponse.toWeb(HttpServerResponse.fromWeb(response))
     expect(transported.status).toBe(303)
-    expect(transported.headers.get("location")).toBe("/sucafina/dashboard")
+    expect(transported.headers.get("location")).toBe("/")
     expect(transported.headers.get("cache-control")).toBe("no-store")
     // This discriminator reproduces the old fixture failure with the pinned
     // transport rather than constructing a second serialized response by hand.
