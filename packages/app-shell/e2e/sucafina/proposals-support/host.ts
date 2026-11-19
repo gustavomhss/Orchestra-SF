@@ -67,7 +67,7 @@ const installation = await createOperationsInstallation({
   environment: async (request) => ({ at, id: randomUUID, directory: await identity.directory(request) }),
   signingKey: randomBytes(32), scanner: null,
   grants: [{ principalRef: actorId, namespaces: ["cases", "preferences", "reviews", "receipts"],
-    operations: ["sf_dashboard_read", "sf_case_read"],
+    operations: ["sf_dashboard_read", "sf_case_read", "sf_review_prepare"],
     humanActions: ["reviews.preserve", "decisions.edit", "decisions.choose", "decisions.prepare-changes", "decisions.apply"] }],
 })
 const embedded = HttpRouter.toWebHandler(createEmbeddedRoutes({

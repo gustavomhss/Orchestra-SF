@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: 769d1d630d5f34a5176789c5cc819403a4120fe9 (5 jornadas + retenção original; este checkpoint corrige apenas refinamento de tipo no seed-choice)
+SHA de código: 54227e787d0c1cc9bfa6b2a5a7c95b5a9a4bfa44 (5 jornadas + retenção original + tipagem; este checkpoint prepara snapshots sem wrapper e o grant original de review)
 Data: 2026-11-19
 Estado: partial
 
@@ -51,3 +51,23 @@ Estado: partial
 
 - Gate3 [44610326842](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44610326842): FAILURE no typecheck SF E2E, host.ts:114/122 TS18048 authority possibly undefined. CLI/host e app-shell SUCCESS; nenhum navegador executado; cleanup135867029936 SUCCESS. Snapshot `dd34c4e175ef04084ce636955aab5736e88eb99f`, código `26ad8f21f5bd4d377bb5c85b3a3d95e6b3c8b107` sobre composição25. Function declaration virou const async após o guard original, sem cast ou alteração de autoridade. Esse snapshot não inclui retenção769d nem esse ajuste e não está qualificado.
 - Reports9 [44606978085](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606978085): root observou FAILURE com NoData CDP mesmo após pass-through. Esse defeito compartilhado justifica reter o corpo original por Request no fixture; não é evidência de aprovação das propostas.
+
+## Mapeamento das jornadas (legado preservado até qualificação)
+
+| Jornada original | Jornada nativa | Fatos preservados |
+| --- | --- | --- |
+| consumer-read.test.ts:53 | proposals.spec.ts:116 | Identidade/incarnation, CAS409, v1→v2→v3, origem original/atual, base anterior/proposta atual/edição local, revisão explícita. |
+| consumer-read.test.ts:168 | proposals.spec.ts:220 | Leitura interrompida, retirada de escrita entre admissões, captura bloqueada e limpeza somente após perda real de leitura. |
+| host-workbench.test.ts:461 | proposals.spec.ts:359 | Save403 retém edição, leitura readonly, capture403, ausência de draft em preferences e domínio intacto. |
+| host-workbench.test.ts:241 | proposals.spec.ts:411 | Duas propostas independentes, mesma identidade no conflito/releitura, CAS da versão correta e nenhuma alteração da proposta independente. |
+| host-workbench.test.ts:139 | proposals.spec.ts:499 | Pauta, retrato individual, histórico, escolha condicionada, review, confirmação humana e um único Apply/recibo. |
+
+As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate Bun. O remapeamento canônico será feito pelo root somente após equivalência nativa qualificada.
+
+- Gate4 [44612824007](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44612824007): FAILURE, 5 failed / 0 passed; os três typechecks SUCCESS. Snapshot `396ccdcf7c0363c5295670a53875bfae7d503de9` sobre assembly26 `fa6d8a86b3695301cba6fd7d539ad1d2d429ee9b`. Casos1/3/4 chegaram ao Save, sem POST; caso2 encerrou no limite original60s; caso5 não montou UI47. Não houve erro CDP NoData observado nessa execução.
+
+## Correções após gate4 (ainda não qualificadas)
+- UI54 recebia discovery de createStore e enviava caseRef de createStore aos produtores de review/prepare/apply. Aplica o padrão existente structuredClone(unwrap(...)) ao mesmo DTO completo, sem JSON roundtrip, alteração de campos, recálculo de evidência ou relaxamento do schema. A hipótese compartilhada foi diagnosticada em CAP25/CAP27 pelo root; a correção de UI54 ainda depende do próximo run.
+- O fixture acrescenta somente `sf_review_prepare`, operação original admitida para projection.review em native-ui/report-health.ts:65–91 e para os leitores de pauta em :168–190. Permanecem os produtores/ACL/health reais; não há override de disponibilidade ou vínculo.
+- A antiga coluna Origem passa a ser verificada no parágrafo nativo que já renderiza sourceRefs: igualdade dos dados originais surface/type/id/version/incarnation, além de valores/unidades/períodos/evidenceState em todas as células.
+- Nenhuma asserção removida; os cinco testes legados ainda não foram excluídos ou remapeados.
