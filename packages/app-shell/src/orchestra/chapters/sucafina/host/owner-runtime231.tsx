@@ -118,8 +118,10 @@ function isCoreEntry(candidate: SfNativeRouteCandidate): boolean {
 export function sfMountedPathAdmitted(pathname: string, params: URLSearchParams): boolean {
   const candidate = matchSfNativeRoutePath(pathname)
   if (!candidate) return false
-  if (isCoreEntry(candidate))
-    return ![...params.keys()].some((key) => !ownerKeys.includes(key as typeof ownerKeys[number]))
+  if (isCoreEntry(candidate)) {
+    if ([...params.keys()].length === 0) return true
+    return explicitSelection(params.toString()).kind === "selected"
+  }
   if (!isExtendedSurface(candidate.surfaceId)) return false
   return parseExtendedRouteQuery(params, candidate) !== undefined
 }
