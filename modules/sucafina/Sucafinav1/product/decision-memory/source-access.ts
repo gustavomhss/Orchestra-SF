@@ -9,6 +9,7 @@ import type { Period } from "../contracts/context.ts"
 import type { SfDocumentReader } from "../documents/evidence-resolver.ts"
 import type { createProcurementSourceResolver } from "../procurement/sources.ts"
 import { dashboardRecordObservationReader } from "../dashboard/sources.ts"
+import { dashboardPageObservationReader } from "../dashboard/port.ts"
 import type { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
@@ -22,15 +23,51 @@ export function createSfDashboardSourceAccess(input: { host: DomainPortHost; iss
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {
       if (ref.kind !== "record" || ref.target.surface !== "dashboard" || ref.target.recordType !== "dashboard-page" || !ref.target.period || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
-      const target = ref.target
-      const request = input.host.requestFor(call)
-      if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
+      const host = input.host, issue = input.issue, dashboard = input.dashboard
+      const owned = Object.getOwnPropertyDescriptor(input, "host")?.value === host &&
+        Object.getOwnPropertyDescriptor(input, "issue")?.value === issue && Object.getOwnPropertyDescriptor(input, "dashboard")?.value === dashboard
+      const reader = owned ? dashboardPageObservationReader(dashboard, host, issue) : undefined
+      const selected = reader ? structuredClone(ref) : ref, expected = reader ? digestSfValue(selected) : ""
+      const target = selected.target
+      const request = input.host.requestFor(call), lease = call.lease, bindingObject = call.binding
+      const binding = reader ? digestSfValue([call.kind, call.binding]) : ""
+      const requestDigest = reader && request ? digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) : ""
+      const current = () => !!reader && reader.current() && Object.getOwnPropertyDescriptor(input, "host")?.value === host &&
+        Object.getOwnPropertyDescriptor(input, "issue")?.value === issue && Object.getOwnPropertyDescriptor(input, "dashboard")?.value === dashboard &&
+        !!request && !request.signal.aborted && host.requestFor(call) === request && call.lease === lease && call.binding === bindingObject &&
+        digestSfValue([call.kind, call.binding]) === binding && digestSfValue(ref) === expected &&
+        digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest && reader.current()
+      if (!request || request.signal.aborted || reader && !current() || !await input.host.revalidate(call) || reader && !current()) return unavailable()
       const now = await input.host.environment(request)
-      if (!Number.isFinite(Date.parse(now.at))) return unavailable()
+      if (!Number.isFinite(Date.parse(now.at)) || reader && !current()) return unavailable()
       const period = target.period
       if (!period) return unavailable(now.at)
       const fields = [...target.fields].sort()
       if (!fields.length || new Set(fields).size !== fields.length) return unavailable(now.at)
+      // A current reference already has a scope issued for this exact actor.
+      // Another actor/revision and old historical references keep reissuance.
+      if (reader) {
+        const scope = () => currentDashboardPageScope(host, selected, fields, period, call, request, current)
+        const eligible = await scope()
+        if (!current()) return unavailable(now.at)
+        if (eligible) {
+          const resolved = await reader.read<BusinessEvidenceResolution>({ selectionRef: selected.refId, fields, period }, call, {
+            current,
+            before: async (evidence) => digestSfValue(evidence) === expected && current() && await host.revalidate(call) && current(),
+            project: ({ evidence, projection }) => {
+              if (digestSfValue(evidence) !== expected || projection.context.installationId !== call.binding.installationId ||
+                projection.context.projectId !== call.binding.projectId || projection.context.principalRef !== call.binding.principalRef ||
+                projection.context.accessRevision !== call.binding.accessRevision || projection.context.policyVersion !== call.binding.policyVersion ||
+                projection.context.surface !== "dashboard" || digestSfValue(projection.context.period) !== digestSfValue(period))
+                return { status: "unavailable", reason: "source-projection-unavailable" }
+              return { status: "ok", value: { state: "fresh", ref: structuredClone(selected), currentRef: structuredClone(evidence),
+                authorizedProjection: structuredClone(projection), accessRevision: call.binding.accessRevision, checkedAt: now.at } }
+            },
+            after: async () => current() && await scope() && current() && await host.revalidate(call) && current(),
+          })
+          return resolved.status === "ok" && current() ? resolved.value : unavailable(now.at)
+        }
+      }
       const issued = await input.issue({ page: target.recordId, fields, period }, call)
       if (issued.status !== "ok" || !await input.host.revalidate(call)) return unavailable(now.at)
       const current = issued.value.evidence
@@ -60,6 +97,36 @@ export function createSfDashboardSourceAccess(input: { host: DomainPortHost; iss
       return unavailable()
     }
   }
+}
+
+/** Only eligibility for the original port: this boolean is not evidence. The
+ * real resolver must still produce the current reference in the completed read. */
+async function currentDashboardPageScope(host: DomainPortHost, ref: RecordRef, fields: readonly string[], period: Period,
+  call: TrustedDomainContext, request: Request, current: () => boolean): Promise<boolean> {
+  if (!current() || !await host.revalidate(call) || !current()) return false
+  const valid = await host.persistence.transaction("dashboard", async (snapshot: Snapshot) => {
+    if (!current()) return { commit: false, value: false }
+    const principal = await host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
+    if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:") || !current())
+      return { commit: false, value: false }
+    const target = ref.target
+    const matches = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) =>
+      entry.alive && entry.incarnation === target.incarnation && entry.scope.principalRef === principal.id &&
+      entry.scope.accessRevision === call.binding.accessRevision && entry.scope.policyVersion === call.binding.policyVersion &&
+      entry.scope.recordType === target.recordType && entry.scope.recordId === target.recordId)
+    const active = matches.length === 1 ? matches[0] : undefined
+    const physical = snapshot.sfSources?.records[JSON.stringify([target.recordType, target.recordId])]
+    const selector = object(active?.scope.selector), access = object(object(snapshot.data.access)[principal.id])
+    const roles = principal.roles.filter((entry) => entry.surface === "dashboard").map((entry) => entry.role)
+    const actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"),
+      assigned: Array.isArray(access.assigned) ? access.assigned.filter((entry): entry is string => typeof entry === "string") : [],
+      domains: Array.isArray(access.domains) ? access.domains.filter((entry): entry is string => typeof entry === "string") : [] }
+    return { commit: false, value: !!active && !!physical?.alive && active.sourceIncarnation === physical.incarnation &&
+      active.version === target.version && active.inputDigest === target.projectionDigest && selector.page === target.recordId &&
+      digestSfValue(selector.actor) === digestSfValue(actor) && selector.roleMapDigest === digestSfValue(roleMap(snapshot, "dashboard")) &&
+      digestSfValue(selector.fields) === digestSfValue(fields) && digestSfValue(selector.period) === digestSfValue(period) && current() }
+  }, { signal: request.signal })
+  return valid && current() && await host.revalidate(call) && current()
 }
 
 /** Individual records remain bound to the currently authorized scoped reference. */
