@@ -563,9 +563,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const changeSummary = (kind: Detail["detail"]["changes"][number]["kind"]) =>
     state.detail?.detail.changes.filter((item) => item.kind === kind) ?? []
   const displayValue = (value: Detail["detail"]["changes"][number]["before"]) =>
-    value.state === "absent" ? t("sf.u23.absent") :
-    value.state === "undefined" ? t("sf.u23.undefined") :
-    value.value === null ? t("sf.u23.null") : JSON.stringify(value.value)
+    value.state === "present" ? value.value === null ? t("sf.u23.null") : JSON.stringify(value.value) :
+    value.state === "absent" ? t("sf.u23.absent") : t("sf.u23.undefined")
   const poStateLabel = () => t("sf.u23.poState." + state.poState)
   const matchedSurface = () => state.manifest?.context.surface === state.surface
 

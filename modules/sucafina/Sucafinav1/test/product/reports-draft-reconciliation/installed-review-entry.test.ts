@@ -140,7 +140,8 @@ test("an actual preserved review keeps update and successor focus recoverable wh
       expect(next.origin).toBe(reportsLocation.origin)
       expect(next.pathname).toBe(reportsLocation.pathname)
       expect(next.hash).toBe("")
-      expect(Object.fromEntries(next.searchParams)).toEqual({ sf: "review", ...destination })
+      const parameters: Record<string, string | undefined> = Object.fromEntries(next.searchParams)
+      expect(parameters).toEqual({ sf: "review", ...destination })
       expect([...next.searchParams.keys()]).toHaveLength(1 + Object.keys(destination).length)
       expect((await f.send(next.searchParams)).status).toBe(200)
     }
