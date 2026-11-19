@@ -85,9 +85,10 @@ export async function queueIdentity(page: Page, account: Account, id: string, am
   const href = await link.getAttribute("href")
   if (!href) throw new Error("C02 drilldown is missing")
   const url = new URL(href, page.url())
-  expect(url.origin + url.pathname).toBe(account.baseURL + "/procurement")
+  expect(url.origin).toBe(account.origin)
+  expect(url.pathname).toBe("/orchestra/sf-procurement/requests")
   expect(url.searchParams.get("request")).toBe(id)
-  expect(url.searchParams.get("q")).toBe(id)
+  expect([...url.searchParams.keys()]).toEqual(["request"])
   expect(decodeURIComponent(url.hash.slice(1))).toBe(id)
   return { id, amount, sourceRef: await link.getAttribute("data-source-ref"), refDigest: await link.getAttribute("data-source-digest"), sourceVersion: Number(await link.getAttribute("data-source-version")) }
 }

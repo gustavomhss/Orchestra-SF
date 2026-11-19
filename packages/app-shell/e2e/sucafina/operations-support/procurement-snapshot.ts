@@ -19,6 +19,8 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   await page.getByRole("textbox", { name: "Evaluator", exact: true }).fill("Synthetic Operations evaluator")
   await page.getByRole("textbox", { name: "Fewer quotations justification", exact: true }).fill("Isolated single-quote snapshot regression; comparison remains limited")
   await page.getByRole("textbox", { name: "Selection justification", exact: true }).fill("Review the EUR quotation with the current holder")
+  const quotations = page.locator("fieldset.sf-u12-quote")
+  if (await quotations.count() === 0) await page.getByRole("button", { name: "Add quotation", exact: true }).click()
   const quote = page.locator("fieldset.sf-u12-quote").first()
   await quote.getByRole("textbox", { name: "Supplier", exact: true }).fill("Journey registered supplier")
   await quote.getByRole("combobox", { name: "Registered supplier", exact: true }).selectOption(supplier)
@@ -96,7 +98,7 @@ async function createRequest(page: Page, account: Account, title: string) {
   return id
 }
 
-async function approveRequest(page: Page, account: Account, id: string) {
+export async function approveRequest(page: Page, account: Account, id: string) {
   const encoded = encodeSfRouteRef(id)
   await page.goto(`/orchestra/sf-procurement/approvals/${encoded}`)
   await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}`)
@@ -110,9 +112,10 @@ async function approveRequest(page: Page, account: Account, id: string) {
   expect(response.status()).toBe(200)
   expect(await response.json()).toMatchObject({ ok: true })
   expect(response.request().postDataJSON()).toMatchObject({ page: "My approvals", action: "approve", id, values: { comment: "Operations snapshot approval" } })
+  await expect(page.getByText("The producer acknowledged the command. No receipt was returned.", { exact: true })).toBeVisible()
 }
 
-async function confirmCommand(page: Page, account: Account, action: string, id: string | undefined, openReview: Locator, confirmName: string) {
+export async function confirmCommand(page: Page, account: Account, action: string, id: string | undefined, openReview: Locator, confirmName: string) {
   await expect(openReview).toBeEnabled()
   await openReview.click()
   const review = page.locator('[data-component="sf-change-review"]')
@@ -138,7 +141,7 @@ function commandResponse(page: Page, origin: string, action: string, id?: string
   })
 }
 
-async function fillEnabledScores(quote: Locator) {
+export async function fillEnabledScores(quote: Locator) {
   for (const name of ["Technical scores", "Commercial scores"]) {
     const section = quote.locator("section").filter({ has: quote.page().getByRole("heading", { name, exact: true }) })
     const scores = section.getByRole("spinbutton")
@@ -150,7 +153,7 @@ async function fillEnabledScores(quote: Locator) {
   }
 }
 
-async function setEurRate(page: Page, account: Account, value: string) {
+export async function setEurRate(page: Page, account: Account, value: string) {
   await page.goto("/orchestra/sf-procurement/settings")
   const settings = page.locator("form.sf-n21-settings-form")
   await expect(settings).toHaveCount(1)

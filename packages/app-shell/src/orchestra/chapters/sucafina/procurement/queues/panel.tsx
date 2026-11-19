@@ -157,6 +157,12 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
       render: (row) => <span>{display(row.monetaryState)}</span>,
     },
     {
+      id: "amount", labelKey: copyKey("sf.u10.queue.amount"), align: "end",
+      widthPolicy: { kind: "content", minPx: 100, maxPx: 200 },
+      render: (row) => <span>{row.baseAmount === null
+        ? missing() : String(row.baseAmount) + " " + (row.baseCurrency ?? missing())}</span>,
+    },
+    {
       id: "subject", labelKey: copyKey("sf.u10.queue.subject"), align: "start",
       widthPolicy: { kind: "flex", minPx: 160, weight: 2 },
       render: (row) => <span>{display(row.subject)}</span>,

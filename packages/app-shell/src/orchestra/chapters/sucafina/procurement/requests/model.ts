@@ -21,6 +21,7 @@ export type SfRequestCommand = "create" | "save-pr" | "save-po" | "submit_pr" |
 export type SfRequestsRead = Readonly<{
   kind: "ready"
   records: readonly SfRequest[]
+  suppliers?: Extract<ReadBody, { status: "ok" }>["value"]["data"]["suppliers"]
   versions: Readonly<Record<string, { readonly version: number; readonly by: string }>>
   actionIds: readonly string[]
 }> | Readonly<{ kind: "denied" | "unauthenticated" | "unavailable" | "stale" | "invalid" }>
@@ -40,7 +41,7 @@ export function decodeRequestsPage(value: ReadBody, expected: SfContextStamp): S
   const page = value.value
   if (page.capabilityId !== "CAP25" || !Array.isArray(page.data.requests) ||
       !Array.isArray(page.allowedActionIds) || !page.versions) return { kind: "invalid" }
-  return { kind: "ready", records: page.data.requests, versions: page.versions, actionIds: page.allowedActionIds }
+  return { kind: "ready", records: page.data.requests, suppliers: page.data.suppliers, versions: page.versions, actionIds: page.allowedActionIds }
 }
 export function requestRef(row: SfRequest): SfRef | undefined {
   return typeof row.number === "string" && row.number ? row.number as SfRef : undefined

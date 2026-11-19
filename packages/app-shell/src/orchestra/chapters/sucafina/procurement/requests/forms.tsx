@@ -30,6 +30,7 @@ type PrProps = Readonly<{
 type PoProps = Readonly<{
   value: SfPoEdit
   disabled: boolean
+  errors?: readonly { field: string; message: string }[]
   onEdit: (updated: SfPoEdit) => void
 }>
 function useCopy() {
@@ -104,6 +105,17 @@ export function SfRequisitionForm(props: PrProps) {
 
 export function SfPurchaseOrderForm(props: PoProps) {
   const copy = useCopy()
+  const errorPrefix = createUniqueId()
+  let fields: HTMLFieldSetElement | undefined
+  const errorFor = (field: string) => props.errors?.find((item) => item.field === field)
+  createEffect(() => {
+    const error = props.errors?.find((item) => item.field.startsWith("po."))
+    if (!error || props.disabled) return
+    queueMicrotask(() => {
+      const control = fields?.querySelector(`[name=${JSON.stringify(error.field)}]`)
+      if (control instanceof HTMLElement && control.isConnected && !props.disabled && props.errors?.includes(error)) control.focus()
+    })
+  })
   const edit = (key: PoField, value: SfPoEdit[PoField]) =>
     !props.disabled && props.onEdit({ ...props.value, [key]: value })
   const updateLine = (lineIndex: number, field: (typeof lineFields)[number], value: string | null) => {
@@ -124,24 +136,32 @@ export function SfPurchaseOrderForm(props: PoProps) {
     if (props.disabled || !props.value.lines) return
     props.onEdit({ ...props.value, lines: props.value.lines.filter((_, at) => at !== index).map(postedPoLine) })
   }
-  return <fieldset class="sf-u11-fieldset" disabled={props.disabled} data-sf-po-fields>
+  return <fieldset ref={fields} class="sf-u11-fieldset" disabled={props.disabled} data-sf-po-fields>
     <legend>{copy("sf.u11.remaining.po")}</legend>
     <div class="sf-u11-fields">
-      <For each={poFields}>{(field) =>
-        <label class="sf-u11-field" data-field={field}>
+      <For each={poFields}>{(field) => {
+        const name = "po." + field
+        const error = () => errorFor(name)
+        const id = errorPrefix + "-" + field
+        return <label class="sf-u11-field" data-field={field}>
           <span>{copy(tKey("sf.u11.remaining.field." + field))}</span>
           <Show when={field === "description" || field === "deliveryConditions" ||
             field === "acceptance" || field === "warranty" || field === "notes" ||
             field === "billingAddress" || field === "deliveryAddress"} fallback={
-            <input type={field === "deliveryDate" ? "date" : "text"}
+            <input name={name} type={field === "deliveryDate" ? "date" : "text"}
+              aria-invalid={error() ? "true" : undefined} aria-describedby={error() ? id : undefined}
+              aria-label={copy(tKey("sf.u11.remaining.field." + field))}
               value={textValue(props.value[field])}
               onInput={(event) => edit(field, event.currentTarget.value)} />
           }>
-            <textarea rows={3} value={textValue(props.value[field])}
+            <textarea name={name} rows={3} value={textValue(props.value[field])}
+              aria-invalid={error() ? "true" : undefined} aria-describedby={error() ? id : undefined}
+              aria-label={copy(tKey("sf.u11.remaining.field." + field))}
               onInput={(event) => edit(field, event.currentTarget.value)} />
           </Show>
+          <Show when={error()}>{(current) => <span id={id} data-field-error={name}>{current().message}</span>}</Show>
         </label>
-      }</For>
+      }}</For>
     </div>
     <section aria-label={copy("sf.u11.remaining.field.lines")} data-sf-po-lines>
       <h3>{copy("sf.u11.remaining.field.lines")}</h3>
@@ -155,6 +175,7 @@ export function SfPurchaseOrderForm(props: PoProps) {
                 <label class="sf-u11-field" data-field={field}>
                   <span>{copy(tKey("sf.u11.remaining.field." + field))}</span>
                   <input
+                    name={"po.lines." + index() + "." + field}
                     type={field === "qty" || field === "unitPrice" ? "number" : "text"}
                     step={field === "qty" || field === "unitPrice" ? "any" : undefined}
                     value={textValue(line[field])}

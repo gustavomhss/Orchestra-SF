@@ -319,7 +319,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     }
   }
   const editPo = (next: SfPoEdit) => {
-    if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
+    if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) {
+      poDraft()?.edit(next)
+      setView("fieldErrors", [])
+    }
   }
   const stageAllowed = (action: SfRequestCommand, inCurrentDispatch = false) => {
     if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown ||
@@ -777,7 +780,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       : current?.status === "sourcing" || current?.status === "src_rejected" ? "quote"
       : current?.status === "po_approved" || current?.status === "po_issued" ? "signed-po"
       : undefined
-    return <article class="sf-u11-detail" data-sf-request-ref={ref ?? undefined}>
+    return <article class="sf-u11-detail" data-sf-request-ref={ref ?? undefined} data-source-version={currentVersion}>
       <header class="sf-u11-detail-head">
         <h2>{creating() ? t("sf.u11.remaining.new") : current?.pr?.title ?? ref}</h2>
         <Show when={!creating() && ref}>
@@ -900,15 +903,18 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         </section>
       </Show>
       <Show when={current && stage() === "po"}>
-        <section class="sf-u11-stage" data-stage="po">
+        <section class="sf-u11-stage" data-stage="po" data-draft-version={activePo()?.baseVersion ?? currentVersion}>
           <h3>{t("sf.u11.remaining.po")}</h3>
           <Show when={poConflict()}>
             <div data-draft-conflict="po"><p role="alert">{language.t("sf.common.conflict")}</p>
               <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || poPending()}
                 onClick={() => discardConflict("po")}>{t("sf.u11.remaining.discard")}</button></div>
           </Show>
-          <Show when={canPo() && activePo()} fallback={<p>{t("sf.u11.remaining.readonly")}</p>}>
-            <SfPurchaseOrderForm value={activePo()!.value}
+          <Show when={canPo() && activePo()} fallback={<>
+            <p>{t("sf.u11.remaining.readonly")}</p>
+            <SfPurchaseOrderForm value={poFromRecord(current!)} disabled={true} onEdit={() => undefined} />
+          </>}>
+            <SfPurchaseOrderForm value={activePo()!.value} errors={view.fieldErrors}
               disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
               onEdit={editPo} />
             <div class="sf-u11-actions">
@@ -925,6 +931,18 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
             </div>
           </Show>
           <Show when={current?.po?.supplierId}><p>{t("sf.u11.remaining.field.supplierId")}: {current!.po?.supplierId}</p></Show>
+          <Show when={view.read?.suppliers?.find((supplier) => supplier.id === current?.po?.supplierId)}>{(supplier) =>
+            <section aria-label={t("sf.u11.remaining.poSources")} data-sf-po-supplier-source={supplier().id}>
+              <h4>{t("sf.u11.remaining.poSources")}</h4>
+              <p>{t("sf.u11.remaining.currentSources")}</p>
+              <table>
+                <thead><tr><th>{t("sf.u11.remaining.conflictField")}</th><th>{t("sf.u11.remaining.supplierSource")}</th><th>{t("sf.u11.remaining.po")}</th></tr></thead>
+                <tbody><tr><th>{t("sf.u11.remaining.field.paymentTerms")}</th>
+                  <td>{supplier().paymentTerms ?? t("sf.u11.remaining.noSource")}</td>
+                  <td>{current?.po?.paymentTerms ?? t("sf.u11.remaining.noSource")}</td></tr></tbody>
+              </table>
+            </section>
+          }</Show>
           <Show when={current?.po?.contractRef}><p>{t("sf.u11.remaining.field.contractRef")}: {current!.po?.contractRef}</p></Show>
           <Show when={current?.po?.quoteRef}><p>{t("sf.u11.remaining.selectedQuote")}: {current!.po?.quoteRef}</p></Show>
           <Show when={stageAllowed("issue")}>

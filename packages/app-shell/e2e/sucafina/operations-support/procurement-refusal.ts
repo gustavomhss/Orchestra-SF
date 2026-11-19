@@ -19,6 +19,8 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await page.getByRole("textbox", { name: "Evaluator", exact: true }).fill("Synthetic Operations evaluator")
   await page.getByRole("textbox", { name: "Fewer quotations justification", exact: true }).fill("Isolated quotation for an unavailable FX refusal")
   await page.getByRole("textbox", { name: "Selection justification", exact: true }).fill("Selected quotation still requires a configured FX rate")
+  const quotations = page.locator("fieldset.sf-u12-quote")
+  if (await quotations.count() === 0) await page.getByRole("button", { name: "Add quotation", exact: true }).click()
   const quote = page.locator("fieldset.sf-u12-quote").first()
   await quote.getByRole("textbox", { name: "Supplier", exact: true }).fill("Journey registered supplier")
   await quote.getByRole("combobox", { name: "Registered supplier", exact: true }).selectOption(supplier)
@@ -45,7 +47,7 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(cells.nth(6)).toHaveText("Unavailable")
   await expect(cells.nth(7)).toHaveText("Unavailable")
   await expect(cells.nth(8)).toHaveText("Unavailable")
-  await expect(cells.nth(9)).toHaveText("")
+  await expect(cells.nth(9)).toHaveText("Unavailable")
   await expect(cells.nth(10)).toHaveText("Monetary issue: fx-missing")
   await expect(comparison.getByRole("status", { name: "Comparison is limited: fewer than two proposals are eligible.", exact: true })).toBeVisible()
   const winning = comparison.getByRole("combobox", { name: "Selected quotation", exact: true })
@@ -132,6 +134,7 @@ async function approveRequest(page: Page, account: Account, id: string) {
   expect(response.status()).toBe(200)
   expect(await response.json()).toMatchObject({ ok: true })
   expect(response.request().postDataJSON()).toMatchObject({ page: "My approvals", action: "approve", id, values: { comment: "Operations missing FX approval" } })
+  await expect(page.getByText("The producer acknowledged the command. No receipt was returned.", { exact: true })).toBeVisible()
 }
 
 async function confirmCommand(page: Page, account: Account, action: string, id: string | undefined, openReview: Locator, confirmName: string) {

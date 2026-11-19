@@ -48,6 +48,7 @@ export const SF_U36_COPY = {
   "sf.u36.matrixOption": "matrix",
   "sf.u36.error": "Invalid matrix or currencies",
   "sf.u36.resetUnavailable": "Restore baseline unavailable without the authorized default-settings projection",
+  "sf.u36.resetPreview": "The producer does not publish default values before reset. Review the authorized result after confirmation.",
   "sf.u36.outcome": "Checking the outcome…"
 } as const
 
@@ -98,5 +99,6 @@ export const SF_U36_COPY_BR = {
   "sf.u36.matrixOption": "matrix",
   "sf.u36.error": "Invalid matrix or currencies",
   "sf.u36.resetUnavailable": "Restore baseline unavailable without the authorized default-settings projection",
+  "sf.u36.resetPreview": "O produtor não publica os valores padrão antes da restauração. Revise o resultado autorizado após a confirmação.",
   "sf.u36.outcome": "Checking the outcome…"
 } as const

@@ -718,17 +718,17 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         getRowKey={(quote)=>(quote.id??"") as SfRef}
         columns={[
           {id:"supplier",labelKey:k("sf.u12.quoteSupplier"),align:"start",widthPolicy:{kind:"flex",minPx:120,weight:2},render:(quote)=><>{quote.supplier??""}</>},
-          {id:"eligibility",labelKey:k("sf.u12.eligibility"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:240},render:(quote)=><>{fxRow(quote)?.eligibility??""}</>},
+          {id:"eligibility",labelKey:k("sf.u12.eligibility"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:240},render:(quote)=><>{fxRow(quote)?.eligibility??t("sf.u12.missing")}</>},
           {id:"currency",labelKey:k("sf.u12.quoteCurrency"),align:"start",widthPolicy:{kind:"content",minPx:60,maxPx:120},render:(quote)=><>{quote.currency??""}</>},
           {id:"total",labelKey:k("sf.u12.quoteTotal"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:170},render:(quote)=><>{asString(quote.total)||t("sf.u12.missing")}</>},
           {id:"baseFx",labelKey:k("sf.u12.baseFx"),align:"end",widthPolicy:{kind:"content",minPx:220,maxPx:360},render:(quote)=><>{fxRow(quote)?.baseFxText??t("sf.u12.missing")}</>},
-          {id:"technical",labelKey:k("sf.u12.technical"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.technicalText??""}</>},
-          {id:"price",labelKey:k("sf.u12.price"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.priceText??""}</>},
-          {id:"commercial",labelKey:k("sf.u12.commercial"),align:"end",widthPolicy:{kind:"content",minPx:88,maxPx:140},render:(quote)=><>{fxRow(quote)?.commercialText??""}</>},
-          {id:"overall",labelKey:k("sf.u12.overall"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.overallText??""}</>},
+          {id:"technical",labelKey:k("sf.u12.technical"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.technicalText??t("sf.u12.missing")}</>},
+          {id:"price",labelKey:k("sf.u12.price"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.priceText??t("sf.u12.missing")}</>},
+          {id:"commercial",labelKey:k("sf.u12.commercial"),align:"end",widthPolicy:{kind:"content",minPx:88,maxPx:140},render:(quote)=><>{fxRow(quote)?.commercialText??t("sf.u12.missing")}</>},
+          {id:"overall",labelKey:k("sf.u12.overall"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.overallText??t("sf.u12.missing")}</>},
           {id:"rank",labelKey:k("sf.u12.rank"),align:"end",widthPolicy:{kind:"content",minPx:56,maxPx:88},render:(quote)=>{
             const rank=fxRow(quote)?.rank
-            return <>{typeof rank==="number"?String(rank):""}</>
+            return <>{typeof rank==="number"?String(rank):t("sf.u12.missing")}</>
           }},
           {id:"excluded",labelKey:k("sf.u12.excludedReason"),align:"start",widthPolicy:{kind:"content",minPx:140,maxPx:360},render:(quote)=>{
             const reason=fxRow(quote)?.excludedReason
@@ -759,6 +759,12 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       <Show when={fx}><dl>{Object.entries(fx??{}).map(([currency,rate])=>
         <div><dt>{currency}</dt><dd>{rate===null?t("sf.u12.missing"):asString(rate)}</dd></div>)}</dl></Show>
       <p>{t("sf.u12.selectedSaved")}</p>
+      <Show when={row.sourcing?.selectedId}>
+        <p data-sf-recorded-selection>
+          {t("sf.u12.selectId")}: {recorded.find((quote)=>quote.id===row.sourcing?.selectedId)?.supplier??row.sourcing?.selectedId}.
+          {" "}{t("sf.u12.selectionJustification")}: {row.sourcing?.selectionJustification??t("sf.u12.missing")}
+        </p>
+      </Show>
       <p>{t("sf.u12.noManualApproval")}</p>
       <label>{t("sf.u12.selectId")}
         <select value={ui.quoteChoice} onChange={(event)=>setUi("quoteChoice",event.currentTarget.value)}>
@@ -806,7 +812,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           </section>
         </Show>
         <Show when={request()}>
-          <header class="sf-u12-heading">
+          <header class="sf-u12-heading" data-source-version={sourceVersion() ?? undefined}>
             <h2>{request()?.pr?.title??t("sf.u12.requestTitle")}</h2>
             <p>{t("sf.u12.stage")}: {request()?.status} · {t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
             <Show when={request()?.requestSummary}>
@@ -825,6 +831,12 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
                   </label>
                   <label>{t("sf.u12.quoteCurrency")}
                     <input type="text" value={request()?.po?.currency??""} disabled/>
+                  </label>
+                  <label>{t("sf.u12.quoteSupplierId")}
+                    <input type="text" value={request()?.po?.supplierId??""} disabled/>
+                  </label>
+                  <label>{t("sf.u12.quoteQty")}
+                    <input type="number" step="any" value={asString(request()?.po?.lines?.[0]?.qty)} disabled/>
                   </label>
                   <label>{t("sf.u12.quotePrice")}
                     <input type="number" step="any" value={asString(request()?.po?.lines?.[0]?.unitPrice)} disabled/>
