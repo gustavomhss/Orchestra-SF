@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: b1ee33ef4ec0d1b047a2ff31431f47caaf7979af (código; o commit deste documento é posterior)
+SHA: a2ec3e7648f088a310461ec2fe3e9df6a21af03b (código; o commit deste documento é posterior)
 Data: 2026-11-19
 Estado: partial
 
@@ -24,13 +24,17 @@ Estado: partial
 
 ## Pendente
 
-- Lista CAP23 — packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx:100 e :617 — ingresso16/run44591584962 resolveu o ciclo F01, mas ainda falhou na linha criada após ctx.context200 e CAP23GET200. O integrador está extraindo o DOM para distinguir filtro/estado/rota; nenhuma correção especulativa foi aplicada. Primeiro POST e logout já têm prova.
-- WP03 — packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts:61 — primeira linha criada ausente no run44589451235; ingresso16 retirou o ciclo F01, mas a folha ainda precisa de diagnóstico. Restantes fluxos mensais/CAPEX/oficiais aguardam essa lista.
+- Editor CAP23 — packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx:416–469 — ingresso17/run44593983417 passou ano2027, linha/ID, visibilidade, clique e URL de detalhe, mas name permaneceu disabled. a2ec3e7 corrige draft/ editable capturados antes da aquisição do draft: agora são accessors reativos, com todos os mesmos guards. Aguardar ingresso18 do integrador; enabled não foi enfraquecido.
+- WP03 — packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts:61 — primeira linha criada ausente no run44589451235; ingresso17 qualificou o ano/linha/abertura, mas o editor ainda dependia da reatividade corrigida em a2ec3e7. Restantes fluxos mensais/CAPEX/oficiais aguardam essa lista.
 - BI — packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts:512 — mesma parada na linha autorizada criada, run44589446724. BI browser/specs/U22 e UI34 agora pertencem a WP5; não sobrescrever seus deltas.
 - WP2 — packages/app-shell/e2e/sucafina/dashboard-installed/support.ts:120; records-signals-history.spec.ts:40; confirmation-access.spec.ts:34 — run44589435199 falhou2. Records não abriu o editor após New topic; requalificar com F01 estável e identificar o primeiro ponto remanescente de confirmação/acesso.
-- WP10 — packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:427 — catch reemite locator.click timeout10s no run44590617991. Log confirmado: o controle Choose project não apareceu durante o ingresso, antes de todos os cenários de negócio; o integrador está extraindo o DOM. Não aumentar timeout. extended-flows.ts:23 e review-revocation.ts:1 dependem desse gate real.
+- WP10 — packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:427 — catch reemite locator.click timeout10s no run44590617991. Log confirmado: Choose project não apareceu no ingresso, antes do negócio. Em f0ab564, o viewport1440x900 já declarado passou a ser configurado ANTES do helper de ingresso; não havia viewport no contexto CDP. Ainda aguarda gate; não afirmar que a causa foi provada pelo artifact, que não continha snapshot da página. extended-flows.ts:23 e review-revocation.ts:1 dependem desse gate real.
 - Unitário WP10 — modules/sucafina/Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts:25 — qualificado no run44592494338:3 passed/0 failed/46 expect. Falta integrar o teste d86 junto à correção original dd0ab93 do integrador, que tira recordOptions do comando agenda.section e o conserva como metadado irmão; o shape público nativo continua igual.
 - Integração, demais fixtures legados descobertos pela auditoria, guards, pacote e sf-ci final continuam sob coordenação do integrador. Esta branch não foi mergeada.
+
+- BI instalado/cost-waterfall — modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts:126 e installed-bi-closure/fixture.ts:123 — deadlines foram localizados em comparison.persist/dispatch/exact-threshold, não em HTML morto. Há investigação CPU isolada na snapshotcc7bd5371df5ec5fd2024c44a8164cfe7cb9e81d. Nenhum producer foi otimizado sem evidência. O inventário [with-case-consumers-44594789225.md](./with-case-consumers-44594789225.md) documenta por que NÃO se removeu cases.read do binding global.
+- C12 — modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts:72 e :197 — o consumer ainda renderiza decisionApplyForms/Script, que não fornece Retry same application nem Recover recorded receipt. É necessário portar as2 provas ao capítulo nativo e conservar interrupção após commit, reenvio idêntico409, recibo único, novo contexto e SQLite reaberto. Não apagar os unitários antes da prova equivalente passar.
+- UI39 — packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx:236 e :450 — ainda exige coverage complete e oferece recover só no estado local outcomeUnknown, incompatíveis com o caso C12 original de campo autorizado com total pendente e recuperação após reload. Posse liberada por WP5; alterações devem usar o contrato original, sem fabricar coverage/receipt. Ainda não editado.
 
 ## Decisões e asserções removidas ou remapeadas
 
@@ -39,6 +43,7 @@ Estado: partial
 - CAP04.save-entry não publica previewRef/read-preview. Sua revisão nativa é explícita e não escreve. Após perda real da entrega, GET CAP04 comprova os valores persistidos sem segunda escrita; outcome-unknown não vira receipt inventado. A leitura tardia retida, logout204, Refresh access401 e negação do comando mantêm o isolamento.
 - CAP01 signal.date representa vencimento/renovação, não mês da observação. Foi retirado o filtro cliente que eliminava sinais autorizados por mês/ano. Elegibilidade continua do produtor. Totais financeiros só renderizam quando o ano da projeção corresponde à seleção.
 - WP10 não reutiliza o checkbox legado de novo registro. A UI48 prepara uma revisão nova, UI47 exige Review selected sections e Confirm preservation e só então emite1preserve com previousReviewRef original. O teste mantém disponibilidade inicialfalse, posteriortrue, novoID/predecessor, seção/período/nota e snapshot antigo imutável.
+- Ano CAP23: native-ui/planner.ts54 usa2026 quando a query não fornece year; runtime/planner.ts1626 cria o primeiro fiscal com ano(environment.at)+1, que é2027 neste run. daf5379 navega ao ano da ÚNICA versão da leitura autorizada, sem atribuir identidade ao POST. WP03 mantém2027 nos4retornos posteriores à sua edição explícita. O ingresso17 provou a correção de ano/linha.
 - O gráfico CAP03 recebe séries efetiva e referência plana já calculadas pelo produtor. Escala geométrica do SVG não recalcula fatos financeiros. Procurement mantém Quantity e Unit price separados, como o produtor publica; não multiplica componentes para recriar uma célula legada.
 - A leitura HTML/script do unitário WP10 foi remapeada ao factory original de projection.review. A comparação estrita de5 campos obsoletos agora exige os8 campos publicados, incluindo recordRefs/recordOptions; o payload do comando exclui metadata de apresentação e preserva os refs originais.
 - Nenhuma asserção foi apagada sem substituição documentada. Sem skip, timeout aumentado, baseline/coverage/digest/GO fabricado. runtime/application.ts não foi editado, console morto não foi recriado e navegador não visitou :4110.
@@ -47,9 +52,9 @@ Estado: partial
 
 ## Como retomar
 
-1. Branch finish-ingress-20261119, código b1ee33ef4ec0d1b047a2ff31431f47caaf7979af. Usar os deltas de posse; não copiar a branch inteira sobre os novos arquivos compartilhados do integrador/WP5.
-2. Ler o DOM do ingresso16/run44591584962 que o integrador está extraindo. O ciclo de contexto foi resolvido por5bd79; agora diagnosticar a folha CAP23 sem novo gate só de diagnóstico. Depois executar WP03/BI/WP2 e corrigir o primeiro erro real de cada cenário.
-3. WP10 primeiro snapshot incluía até8f3111f. Na próxima composição incluir ac742f9 e b1ee33e (seletores originais), além do código atual de Reports/Bindings/BI. Preservar answer.tsx e produtores de Reviews do integrador, UI34/U22/BI specs de WP5.
+1. Branch finish-ingress-20261119, código a2ec3e7648f088a310461ec2fe3e9df6a21af03b. Usar os deltas de posse; não copiar a branch inteira sobre os novos arquivos compartilhados do integrador/WP5.
+2. Aguardar ingresso18 com a2ec3e7. O ingresso17/run44593983417 já qualificou o ano e a linha da versão; a próxima prova é o campo editável e reload. Depois executar WP03/BI/WP2, mantendo as asserções originais.
+3. WP10 primeiro snapshot incluía até8f3111f. Na próxima composição incluir ac742f9/b1ee33e (seletores originais), f0ab564 (viewport antes do ingresso), daf5379 (ano autorizado) e a2ec3e7 (draft reativo), além do código atual de Reports/Bindings/BI. Preservar answer.tsx e produtores de Reviews do integrador, UI34/U22/BI specs de WP5.
 4. Gate unitário atual: código composto072631b22d4d61ca27f813d8695a34fe746cc92b, parent assembly5 3692251bbe560b15dab4829e6607b9e3dce37940, dois blobs dd0ab93 e teste d86. Snapshot e98a896677238bc06384335651a51b9ad16a7a8b, branch ci-run-linux-wp10-native-unit-20261119, run44592494338. Qualificado: run44592494338 SUCCESS, job135801909567/cleanup135802956371,3 passed/0 failed/46 expect,5.48s. Integrar somente o teste junto aos dois produtores dd0, sem substituir a composição inteira.
 5. Criar primeiro árvore/commit não referenciado com .ci-run.json e só depois a branch ci-run-linux no SHA configurado, evitando execução inicial sem config. Playwright usa package=app e config=e2e/playwright.production.config.ts; o unitário usa package=sucafina,runner=bun e apenas o caminho do arquivo.
 6. Root integra, qualifica os guards e faz o pacote/final. Este agente não fez merge/push em sf-join-four ou branch proibida.
@@ -75,6 +80,8 @@ Estado: partial
 | [44587034870](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44587034870) | ingresso14 / aeaa5539 | failure no typecheck SF E2E; CLI/app passaram. Corrigido somente Schema.toType no planner-mounted em f5f4859. |
 | [44589423843](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589423843) | ingresso15 / c2959674 | **failure, 1 failed / 1 passed**. CLI/app/SF E2E passaram. Logout/revogação passou. Primeiro POST concluiu200; GET autorizou o ID criado. Navegação posterior repetiu ctx.context200 e não estabilizou a lista. Correção5bd79 aguardando ingresso16. |
 | [44591584962](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44591584962) | ingresso16 / correção5bd79 | failure,1 failed/1 passed. O ciclo de contexto foi resolvido: ctx.context200 seguido de CAP23GET200. A linha criada ainda não apareceu; DOM em extração. |
+| [44593983417](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44593983417) | ingresso17 / daf5379 | failure,1 failed/1 passed. Ano real, linha exata, visibilidade, clique e URL de detalhe passaram. Falhou name disabled em installed-planner-ingress.spec.ts:177; corrigido reatividade em a2ec3e7, ainda sem gate. |
+| [44594789225](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44594789225) | auditoria d727a38 | success somente de leitura: inventário de consumidores withCase, não qualificação de negócio. |
 | [44589446724](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589446724) | BI1 composto | failure, 2 failed; tipos passaram. Primeira falha installed-fixture.ts:512: ID criado e lido por GET, linha nativa ausente. |
 | [44589451235](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589451235) | Planner1 composto | failure, linha do ID criado ausente em planner-mounted.spec.ts:61; tipos passaram. |
 | [44589435199](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589435199) | WP2 composto | failure, 2 failed; tipos passaram. Records parou no editor após New topic, support.ts:120; relação com o ciclo F01 ainda deve ser confirmada no novo gate. |
