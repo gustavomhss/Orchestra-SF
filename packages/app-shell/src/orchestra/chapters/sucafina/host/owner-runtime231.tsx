@@ -257,7 +257,10 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const location = useLocation()
   const navigate = useNavigate()
   const platform = usePlatform()
-  const fetcher = platform.fetch ?? globalThis.fetch
+  // A native browser fetch must retain its Window receiver when the transport
+  // invokes the injected function through its options object.
+  const fetcher: typeof globalThis.fetch = (input, init) =>
+    platform.fetch ? platform.fetch(input, init) : globalThis.fetch(input, init)
   const source = createSfInstalledOwnerSource231(props.server, fetcher)
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
   const [view, setView] = createStore<View>({ status: "resolving" })
