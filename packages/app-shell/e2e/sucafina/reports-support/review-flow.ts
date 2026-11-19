@@ -339,12 +339,19 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
-  await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id) + "/present")
+  await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id))
   const response = await pending
   expect(response.status()).toBe(200)
   expect(object(await response.json()).value).toEqual(saved)
   const article = page.locator('[data-sf-surface="UI48"]').locator('article[data-review-ref="' + saved.id + '"]')
   await expect(article).toHaveAttribute("data-review-version", String(saved.version))
+  const surface = page.locator('[data-sf-surface="UI48"]')
+  await expect(surface).toHaveAttribute("data-sf-presentation", "false")
+  const present = page.getByRole("button", { name: /^(Present review|Apresentar revisão)$/ })
+  await expect(present).toBeVisible()
+  await expect(present).toBeEnabled()
+  await present.click()
+  await expect(surface).toHaveAttribute("data-sf-presentation", "true")
   const meeting = article.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting).toHaveCount(1)
   await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
@@ -354,6 +361,7 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   const reopened = await reload
   expect(reopened.status()).toBe(200)
   expect(object(await reopened.json()).value).toEqual(saved)
+  await expect(surface).toHaveAttribute("data-sf-presentation", "false")
   await expect(article).toHaveAttribute("data-review-version", String(saved.version))
   await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
   expect(page.url()).toBe(url)
