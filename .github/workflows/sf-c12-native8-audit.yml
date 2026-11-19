@@ -1,0 +1,88 @@
+name: sf-c12-native8-original-screenshot
+on:
+  push:
+    branches: [audit-c12-native8-screen-20261119]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read original completed C12 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14580395699/zip > "$RUNNER_TEMP/c12.zip"
+      - name: Preserve the original failure screenshot without alteration
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, pathlib, zipfile
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          with zipfile.ZipFile(root / "c12.zip") as archive:
+              matches = [name for name in archive.namelist() if name.endswith("/test-failed-1.png")]
+              assert len(matches) == 1, "Expected exactly the original C12 failure screenshot"
+              raw = archive.read(matches[0])
+              assert raw.startswith(b"\x89PNG\r\n\x1a\n"), "Original attachment is not PNG"
+          payload = {"message":"docs(sf): retain C12 native8 original screenshot","branch":"audit-c12-native8-screen-20261119","content":base64.b64encode(raw).decode()}
+          (root / "c12-screen.json").write_text(json.dumps(payload))
+          print("Original screenshot retained; no UI rerun or image transformation.")
+          PY
+      - name: Persist original screenshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/c12-native8-original.png --input "$RUNNER_TEMP/c12-screen.json" > /dev/null
+      - name: Extract original producer observations and page text
+        run: |
+          python3 - <<'PY'
+          import base64, io, json, os, pathlib, re, zipfile
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          lines = ["# C12 native8 original timeline", "", "Read-only source run44626328510, artifact14580395699, snapshot095f6f6293489b2bc5ed3330efb454453d19fa4d. No rerun.", ""]
+          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|idempotency[-_]?key|[?&](?:code|token|key)=", re.I)
+          def clean(value):
+              if isinstance(value, dict):
+                  return {key: "[redacted]" if sensitive.search(key) else clean(item) for key, item in value.items()}
+              if isinstance(value, list): return [clean(item) for item in value]
+              if isinstance(value, str):
+                  return "\n".join("[redacted]" if sensitive.search(line) else line for line in value.splitlines())
+              return value
+          seen = set()
+          def bounded(value):
+              if isinstance(value, dict):
+                  return {key: bounded(item) for key, item in value.items() if key not in ["attachments", "stdout", "stderr", "body"]}
+              if isinstance(value, list): return [bounded(item) for item in value]
+              if isinstance(value, str): return value[:4000]
+              return value
+          def visit(value):
+              if isinstance(value, list):
+                  for item in value: visit(item)
+              elif isinstance(value, dict):
+                  title = value.get("title", "")
+                  if isinstance(title, str) and title.startswith("C12 native UI recovers the original receipt"):
+                      rendered = json.dumps(clean(bounded(value)), ensure_ascii=False, indent=2)
+                      if rendered not in seen:
+                          seen.add(rendered)
+                          lines.extend(["## Original C12 report", "", "```json", rendered, "```", ""])
+                  for key, item in value.items():
+                      if key != "attachments" and isinstance(item, (dict, list)): visit(item)
+          with zipfile.ZipFile(root / "c12.zip") as archive:
+              for name in archive.namelist():
+                  if not name.endswith("/playwright-report/index.html"): continue
+                  html = archive.read(name).decode("utf-8", "replace")
+                  payloads = re.findall(r"data:application/zip;base64,([A-Za-z0-9+/=]+)", html)
+                  lines.extend(["Embedded payloads: " + str(len(payloads)), ""])
+                  for payload in payloads[:1]:
+                      with zipfile.ZipFile(io.BytesIO(base64.b64decode(payload))) as embedded:
+                          for member in embedded.namelist():
+                              if member.endswith(".json"): visit(json.loads(embedded.read(member)))
+          text = "\n".join(lines) + "\n"
+          if not seen: raise RuntimeError("No original C12 report found")
+          if len(text) > 600000: raise RuntimeError("Original observation exceeds bounded audit limit")
+          payload = {"message": "docs(sf): retain original C12 native8 timeline", "branch": "audit-c12-native8-screen-20261119", "content": base64.b64encode(text.encode()).decode()}
+          (root / "proposal-payload.json").write_text(json.dumps(payload))
+          print("Read " + str(len(seen)) + " original observations; redacted credential fields only.")
+          PY
+      - name: Persist original observation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-c12-timeline-44626328510.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
