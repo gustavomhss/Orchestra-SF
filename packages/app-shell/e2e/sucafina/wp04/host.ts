@@ -127,8 +127,13 @@ active.handle = async (request) => {
   if (identity) return identity
   const url = new URL(request.url)
   const surface = url.pathname.slice(account.mount.length + 1)
-  if (request.method !== "POST" && (surface === "dashboard" || surface === "planner" || surface === "procurement") && !url.searchParams.has("download") && !url.searchParams.has("sf") && !url.searchParams.has("asset") && !url.searchParams.has("asset-link")) {
-    const rendered = await renderInstalledConsole(request, surface, account.services)
+  const consoleSurface = surface === "dashboard" || surface === "planner" || surface === "procurement" ? surface : undefined
+  if (consoleSurface && url.searchParams.has("sf")) {
+    const product = await account.services.product(request, consoleSurface)
+    if (product) return product
+  }
+  if (request.method !== "POST" && consoleSurface && !url.searchParams.has("download") && !url.searchParams.has("sf") && !url.searchParams.has("asset") && !url.searchParams.has("asset-link")) {
+    const rendered = await renderInstalledConsole(request, consoleSurface, account.services)
     if (rendered) return rendered
   }
   return await account.application(request) ?? new Response("Not found", { status: 404 })

@@ -1,7 +1,8 @@
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+import { assetLink } from "../../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import type { Application } from "../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
-import type { Actor } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
-import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import type { Actor, Environment, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { object, rows } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { publicSfData } from "../../../../modules/sucafina/Sucafinav1/product/integration/public-state.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../../../../modules/sucafina/Sucafinav1/src/nav.ts"
 import { documentHtml, esc, pageMain } from "../../../../modules/sucafina/Sucafinav1/src/screen-shell.ts"
@@ -71,14 +72,15 @@ export async function renderInstalledConsole(request: Request, surface: string, 
       const view = contribution?.domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
       if (!view || !contribution) return { commit: false, value: undefined }
       const query = Object.fromEntries(filters.filter((key) => url.searchParams.has(key)).map((key) => [key, url.searchParams.get(key)]))
-      const content = contribution.render(page, { ...publicSfData(view.data), ...query, sidebarYear: year ?? 2026, ...productView?.data }, {
+      const rendered = contribution.render(page, { ...publicSfData(view.data), ...query, sidebarYear: year ?? 2026, ...productView?.data }, {
         actor,
         year: year ?? Math.min(2027, Math.max(2024, now.getUTCFullYear())),
         month: monthParam ? Number(monthParam) : now.getUTCMonth() + 1,
         at: environment.at,
         versions: view.versions,
       })
-      if (content === undefined) return { commit: false, value: text("Page implementation unavailable", 503) }
+      if (rendered === undefined) return { commit: false, value: text("Page implementation unavailable", 503) }
+      const content = rendered + supplierEvidenceLinks(snapshot, actor, environment, application, named, page)
       const nav = allowed.map((key, index) => `<a data-index="${index}" href="?page=${encodeURIComponent(key)}">${esc(key)}</a>`).join("")
       const title = named === "dashboard" ? "CIO Dashboard" : named === "planner" ? "IT Budget Planner" : "IT Procurement"
       const html = documentHtml(title, named, nav, pageMain({ drawn: true, key: page, index: allowed.indexOf(page) }, content), "")
@@ -93,6 +95,18 @@ export async function renderInstalledConsole(request: Request, surface: string, 
   } finally {
     productView?.finish()
   }
+}
+
+function supplierEvidenceLinks(snapshot: Snapshot, actor: Actor, environment: Environment, application: Application, surface: string, page: string) {
+  if (surface !== "procurement" || page !== "Suppliers" || !application.assets) return ""
+  const links: string[] = []
+  for (const asset of rows(snapshot.data.assets)) {
+    if (asset.kind !== "supplier" || typeof asset.id !== "string" || typeof asset.name !== "string" || !asset.name) continue
+    const link = assetLink(snapshot, actor, environment, application.assets.services, asset.id)
+    if (!link.ok || !("query" in link)) continue
+    links.push(`<a href="?${esc(link.query)}&amp;page=${encodeURIComponent(page)}">${esc(asset.name)}</a>`)
+  }
+  return links.join("")
 }
 
 function yearParam(value: string | null): number | null | undefined {
