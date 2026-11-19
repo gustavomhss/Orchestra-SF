@@ -85,7 +85,7 @@ export const SfOperationExtensions = Object.freeze({
   "reviews.report.prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"review-report"},"maxRequestBytes":65536},
 } as const satisfies Readonly<Partial<Record<SfOperationId, SfNativeOperationRoute>>>)
 
-export const SfOperationRegistry = Object.freeze({
+const SfFrozenOperationRoutes = Object.freeze({
   "bi.bi-data": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"bi-data"}},
   "bi.bi-decision": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"bi-decision"}},
   "bi.bi-options": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"bi-options"}},
@@ -393,5 +393,11 @@ export const SfOperationRegistry = Object.freeze({
   "views.open": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"open"},"maxRequestBytes":65536},
   "views.remove": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"remove"},"maxRequestBytes":65536},
   "views.save": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"save"},"maxRequestBytes":65536},
+} as const satisfies Readonly<Partial<Record<SfOperationId, SfNativeOperationRoute>>>)
+
+// Compose source-backed adapter overrides separately from the frozen catalog.
+// This preserves exact route literal types without duplicate property diagnostics.
+export const SfOperationRegistry = Object.freeze({
+  ...SfFrozenOperationRoutes,
   ...SfOperationExtensions,
 } as const satisfies Readonly<Record<SfOperationId, SfNativeOperationRoute>>)
