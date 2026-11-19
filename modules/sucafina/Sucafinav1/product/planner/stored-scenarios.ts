@@ -35,6 +35,16 @@ export function createStoredPlannerScenarioHost(input: {
     const cases = input.cases
     const readCase = cases.read
     const sameCaseReader = () => input.cases === cases && cases.read === readCase
+    // A case observation never leaves this invocation. Each later phase reads
+    // and clones again; sibling envelopes only reuse its private expected digest.
+    const caseDigests = new WeakMap<DecisionCase, string>()
+    const privateCaseDigest = (value: DecisionCase) => {
+      const known = caseDigests.get(value)
+      if (known !== undefined) return known
+      const digest = digestSfValue(value)
+      caseDigests.set(value, digest)
+      return digest
+    }
     const observeCase = async (stored: StoredScenario, observations: Map<string, CaseObservation>): Promise<CaseObservation> => {
       if (!sameCaseReader()) return { status: "denied", reason: "case-reader-changed" }
       // The live-case read identifies id/incarnation, not the producer's older
@@ -45,7 +55,10 @@ export function createStoredPlannerScenarioHost(input: {
         if (!sameCaseReader()) return { status: "denied", reason: "case-reader-changed" }
         observations.set(caseRef, structuredClone(current))
       }
-      return structuredClone(observations.get(caseRef)!)
+      const observed = observations.get(caseRef)!
+      // Only this function's internal checks receive the case graph. All
+      // callbacks and returned results receive separate copies below.
+      return observed.status === "ok" ? observed : structuredClone(observed)
     }
     // Group only this phase's C08 envelopes. Every occurrence still receives
     // its own result/source checks, including repeated refs and scalar facades.
@@ -58,7 +71,7 @@ export function createStoredPlannerScenarioHost(input: {
       const current = await observeCase(entry.value, initialCases)
       if (current.status !== "ok") { prepared.push(current); continue }
       if (current.value.case.id !== entry.value.caseRef.id || current.value.case.incarnation !== entry.value.caseRef.incarnation || current.value.case.version < entry.value.caseRef.version) { prepared.push({ status: "stale", reason: "case-changed" }); continue }
-      const caseDigest = digestSfValue(current.value.case)
+      const caseDigest = privateCaseDigest(current.value.case)
       const alternatives = current.value.case.alternatives.filter((alternative) => digestSfValue(alternative.scenario) === entry.value.requestDigest && digestSfValue(alternative.result) === entry.value.resultDigest)
       if (alternatives.length !== 1) { prepared.push({ status: "unavailable", reason: "scenario-not-current-case-alternative" }); continue }
       const alternative = alternatives[0]!
@@ -66,7 +79,7 @@ export function createStoredPlannerScenarioHost(input: {
       if (bases.length !== 1) { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
       const coverageRef = input.coverageRefFor({ ...entry.value.caseRef, version: current.value.case.version }, structuredClone(alternative))
       if (!coverageRef.trim()) { prepared.push({ status: "unavailable", reason: "scenario-coverage-unavailable" }); continue }
-      if (input.external?.supports(alternative.scenario)) {
+      if (input.external?.supports(structuredClone(alternative.scenario))) {
         // The external producer replays its own calculator and current source; no forecast is fabricated.
         const external = structuredClone(await input.external.resolve(structuredClone(alternative), structuredClone(bases[0]!), context))
         if (external.status !== "ok") { prepared.push(external); continue }
@@ -99,7 +112,7 @@ export function createStoredPlannerScenarioHost(input: {
       if (current.status !== "ok") { result.push(current); continue }
       // Preparation owns a separate deep clone for every occurrence. No callback
       // receives it, so the final observation can transfer it without another copy.
-      result.push(digestSfValue(current.value.case) === entry.value.caseDigest ? { status: "ok", value: entry.value.value } : { status: "stale", reason: "case-changed" })
+      result.push(privateCaseDigest(current.value.case) === entry.value.caseDigest ? { status: "ok", value: entry.value.value } : { status: "stale", reason: "case-changed" })
     }
     // A borrowed read may replace its producer while being cloned, or a
     // cached observation may resume after another async callback. Fence the

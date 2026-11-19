@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
 import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
@@ -41,7 +42,7 @@ async function history() {
   } catch (error) { await f.cleanup(); throw error }
 }
 
-function observe(f: Awaited<ReturnType<typeof history>>, fault: Fault) {
+function observe(f: Awaited<ReturnType<typeof history>>, fault: Fault, supports?: (request: ScenarioRequest) => boolean) {
   const counts = { caseReads: 0, forecasts: 0, replacementCalls: 0 }
   let changed = false
   const verify = createPlannerOperationVerifier({ host: f.host, planner: f.planner, sources: f.sources,
@@ -124,6 +125,7 @@ function observe(f: Awaited<ReturnType<typeof history>>, fault: Fault) {
       return result
     } },
     coverageRefFor: (reference, alternative) => decisionCoverageRef(reference, alternative.id, alternative.version),
+    ...(supports ? { external: { supports, resolve: async () => { throw new Error("The selector declined external calculation") } } } : {}),
   }
   const scenarios = createStoredPlannerScenarioHost(input)
   if (!scenarios.resolveMany) throw new Error("Scenario batch unavailable")
@@ -205,3 +207,35 @@ for (const singleton of [false, true]) {
     } finally { await f.cleanup() }
   }, 30_000)
 }
+
+test("a retained external selector cannot mutate a private case shared by sibling observations", async () => {
+  const f = await history()
+  try {
+    const expected = [f.baselineScenario, f.scenario, f.baselineScenario]
+    const retained: ScenarioRequest[] = []
+    const measured = observe(f, "none", (request) => {
+      expect(request).toEqual(expected[retained.length])
+      expect(retained).not.toContain(request)
+      retained.push(request)
+      // The selector may retain and mutate every earlier argument while later
+      // siblings are being prepared. It never receives the private case graph.
+      for (const prior of retained) {
+        Object.assign(prior, { baseRef: "changed-by-external-selector" })
+        Array.prototype.push.call(prior.operations, { kind: "replace", targetRef: "unrelated", amount: 999, currency: "USD" })
+      }
+      return false
+    })
+    const result = await measured.read([f.baselineRef, f.newer.resultRef, f.baselineRef], f.context)
+    expect(retained).toHaveLength(3)
+    expect(result.map((entry) => entry.status)).toEqual(["ok", "ok", "ok"])
+    expect(result.flatMap((entry) => entry.status === "ok" ? [entry.value.result] : []))
+      .toEqual([f.baselineResult, f.selectedResult, f.baselineResult])
+    expect(result.flatMap((entry) => entry.status === "ok" ? [entry.value.coverageRef] : []))
+      .toEqual([decisionCoverageRef(f.nextCaseRef, "baseline", 1), decisionCoverageRef(f.nextCaseRef, "selected", 1), decisionCoverageRef(f.nextCaseRef, "baseline", 1)])
+    expect(measured.counts).toEqual({ caseReads: 2, forecasts: 3, replacementCalls: 0 })
+    const current = await f.state.read(f.request, "cases", (state) => state.cases[f.caseRef.id])
+    if (current.status !== "ok" || !current.value) throw new Error("Current case unavailable after selector mutations")
+    expect(current.value.alternatives.map((entry) => entry.scenario))
+      .toEqual([f.baselineScenario, f.scenario])
+  } finally { await f.cleanup() }
+}, 30_000)
