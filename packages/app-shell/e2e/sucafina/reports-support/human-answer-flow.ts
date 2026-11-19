@@ -102,7 +102,7 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   })
   expectMutation(confirmed.payload.mutation, beforeConfirmation)
   const receipt = await expectConfirmedReviewAnswer(api, answer, confirmed.value)
-  await expect(discussion.getByRole("status")).toHaveText("Answer confirmed against the inspected preserved source.")
+  await expect(discussion.getByRole("status")).toHaveText(`Answer confirmed. Receipt ${answer.answerRef} · preserved source version ${answer.observedSourceVersion}`)
   await expectConfirmedAnswerVisible(page, answer)
   await info.attach("human-answer-confirmation", { body: JSON.stringify({
     questionId: question.id, messageId: message.id, incarnation: message.incarnation, version: message.version,
