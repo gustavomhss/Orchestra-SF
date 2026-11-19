@@ -5,17 +5,18 @@ import { useLanguage } from "@/context/language"
 import { SfPageFrame, type SfCopyKey } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { useSfCase } from "../cases/model"
+import { useSfCase, sfOperationReady } from "../cases/model"
+import { SfCaseSourcesEditor } from "./sources"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
 
 const k = (value: string) => value as SfCopyKey
 
-/** UI34: source-backed intent. No invented update endpoint for case basics. */
+/** UI34: source-backed intent and original, case-CAS source attachment. */
 export function SfIntentView(props: SfSurfaceProps): JSX.Element {
   const language = useLanguage()
-  const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
-  const [ui, setUi] = createStore({ reviewing: false })
+  const t = (value: string, params?: Record<string, string | number>) => language.t(value as Parameters<typeof language.t>[0], params)
+  const [ui, setUi] = createStore({ reviewing: false, editing: false })
   const valid = () => props.surfaceId === "UI34"
   const source = () => {
     if (props.surfaceId !== "UI34") return undefined
@@ -41,10 +42,14 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
       }}
       secondaryActions={[{
         id: "refresh-intent", labelKey: k("sf.ui34.reload"), tone: "secondary",
-        disabled: caseData.read.state === "loading", busy: false, onInvoke: () => caseData.reload(),
+        disabled: caseData.read.state === "loading", busy: false, onInvoke: () => { setUi("editing", false); caseData.reload() },
+      }, {
+        id: "edit-case-sources", labelKey: k("sf.ui34.edit"), tone: "secondary",
+        disabled: !data() || !caseData.owner.ready() || !sfOperationReady(caseData.owner.ready()!.context, "decisions.decision-edit"),
+        busy: false, onInvoke: () => setUi("editing", true),
       }]}
     >
-      <div class="sf-n24">
+      <div class="sf-n24" data-sf-surface="UI34" data-sf-case-ref={source()} data-sf-case-version={data()?.version}>
         <Show when={route() && back()}>
           <A class="mx-btn" href={back()!}>{t("sf.ui33.return")}</A>
         </Show>
@@ -57,12 +62,19 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
         }>
           {(record) =>
             <>
+              <Show when={ui.editing && caseData.read.projection}>{(projection) =>
+                <SfCaseSourcesEditor projection={projection()} onSaved={() => { setUi("editing", false); caseData.reload() }} />
+              }</Show>
               <div class="sf-n24-metadata">
                 <span>{t("sf.ui34.current")}: {record().version}</span>
                 <span>{t("sf.ui34.state")}: <bdi>{record().state}</bdi></span>
                 <span>{t("sf.ui34.period")}: <time>{record().horizon.start}</time> – <time>{record().horizon.end}</time></span>
                 <span><bdi>{record().currency}</bdi></span>
               </div>
+              <section class="mx-card sf-n24-section" aria-label={t("sf.ui34.records")}>
+                <Show when={!record().alternatives.length}><p>{t("sf.ui34.noAlternatives")}</p></Show>
+                <Show when={!record().preparedChanges.length}><p>{t("sf.ui34.noChanges")}</p></Show>
+              </section>
               <div class="sf-n24-grid">
                 <section class="mx-card sf-n24-section" aria-labelledby="sf-case-question">
                   <h2 id="sf-case-question">{t("sf.ui34.question")}</h2>
@@ -116,6 +128,7 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
               <Show when={ui.reviewing}>
                 <section class="mx-card sf-n24-section" aria-labelledby="sf-case-events">
                   <h2 id="sf-case-events">{t("sf.ui34.event")}</h2>
+                  <p>{t("sf.ui34.sourceCounts", { sources: record().sourceRefs.length, receipts: record().receipts.length })}</p>
                   <ol class="sf-n24-list">
                     <For each={caseData.read.projection?.events ?? []}>
                       {(event) => <li><strong><bdi>{event.kind}</bdi></strong> · <time>{event.at}</time><p><bdi>{event.rationale}</bdi></p></li>}

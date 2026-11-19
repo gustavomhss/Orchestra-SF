@@ -3,8 +3,8 @@
 // Keep the original executable contracts until the same authenticated native
 // host can produce an equivalent observation; a route/200 is not parity.
 import { expect, test } from "@playwright/test"
-import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase, withInstallation } from "./decisions-support/journey"
-import { loseCreationResponse } from "./decisions-support/lost-response"
+import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, withInstallation } from "./decisions-support/journey"
+import { caseLifecycleJourney, lostCreationJourney } from "./decisions-support/case-lifecycle"
 import { initialAlternativesJourney } from "./decisions-support/initial-alternatives"
 import { choiceHistoryJourney } from "./decisions-support/choice-history"
 import { procurementClosureJourney } from "./decisions-support/procurement-closure"
@@ -38,56 +38,10 @@ test("CI-UI-DECISIONS — require a real Procurement proposal and approval befor
 // The append-only coverage receipt identifies the C10/C12/critique/C17 stages that
 // cannot yet be reached through this head's real UI; these tests do not accept them.
 
-test("CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench", async ({ page }, info) => {
+test("CI-UI-DECISIONS — create, edit and reopen the same durable case through native Decisions", async ({ page }, info) => {
   test.setTimeout(180_000)
-  info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — UI33/UI34 em U16 verifica lista e preview de criacao, nao a sequencia confirmada create/edit/reopen e versao persistida na mesma instalacao autenticada." })
   await withInstallation(page, info, async (installation, observations) => {
-    await test.step("enter the installed Workbench from the dashboard", async () => {
-      await enterWorkbench(page, installation.origin)
-    })
-    const form = await fillDecision(page, draft.objective)
-    const sent = page.waitForRequest((request) => isCommand(request, "workbench-command"))
-    const created = await test.step("submit one explicit human intention", async () => {
-      const result = await clickCommand(page, form.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
-      const request = await sent
-      expect(request.postDataJSON()).toEqual({ operation: "sf_case_draft", input: draft })
-      expect(request.headers()["idempotency-key"]).toMatch(/^[a-f0-9-]{36}$/)
-      expect(typeof result.outputRef).toBe("string")
-      caseIdentity(result.outputRef as string)
-      return result.outputRef as string
-    })
-    await test.step("read the exact saved case and preserve its identity after reload", async () => {
-      const decision = await assertCase(page, created, draft.objective, 1)
-      await decision.getByText("History and sources", { exact: true }).click()
-      await expect(decision.getByText("0 source references · 0 receipts", { exact: true })).toBeVisible()
-      await page.reload()
-      await assertCase(page, created, draft.objective, 1)
-      await reopenCase(page, created, draft.objective)
-      await assertCase(page, created, draft.objective, 1)
-      observations.push({ stage: "case-reopened", caseRef: created, version: 1, financialApplication: false })
-    })
-    await test.step("save a new human revision and reopen the persisted current version", async () => {
-      await page.getByText("Edit decision", { exact: true }).click()
-      const editor = page.locator("form[data-decision-edit]")
-      await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
-      const context = asRecord(JSON.parse((await editor.getAttribute("data-context"))!))
-      const objective = `${draft.objective} — revised by the operator`
-      await editor.getByLabel("Decision objective", { exact: true }).fill(objective)
-      const sent = page.waitForRequest((request) => isCommand(request, "decision-edit"))
-      const saved = await clickCommand(page, editor.getByRole("button", { name: "Save decision", exact: true }), "decision-edit", observations)
-      expect((await sent).postDataJSON()).toEqual({ caseRef: { ...caseIdentity(created), version: 1 }, objective,
-        horizon: draft.horizon, currency: draft.currency, sourceRefs: [],
-        criteria: (context.criteria as { id: string; required: boolean }[]).map((criterion, index) => ({ ...criterion, description: draft.criteria[index] })) })
-      expect(saved.value).toEqual({ caseRef: { ...caseIdentity(created), version: 2 } })
-      const decision = await assertCase(page, created, objective, 2)
-      await decision.getByText("History and sources", { exact: true }).click()
-      await expect(decision.getByText("0 source references · 0 receipts", { exact: true })).toBeVisible()
-      await page.reload()
-      await assertCase(page, created, objective, 2)
-      await reopenCase(page, created, objective)
-      await assertCase(page, created, objective, 2)
-      observations.push({ stage: "case-edited-and-reopened", caseRef: created, version: 2, financialApplication: false })
-    })
+    await caseLifecycleJourney(page, installation, observations)
   })
 })
 
@@ -142,48 +96,8 @@ test("CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalo
 
 test("CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting", async ({ page }, info) => {
   test.setTimeout(180_000)
-  info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — U16 nao prova perda de response em create nativo, leitura autorizada de mesmo caseRef e zero resubmissions." })
   info.annotations.push({ type: "proof-limit", description: "Creation confirmation C09 only; not a financial Apply receipt/retry proof under C12 or AM04" })
   await withInstallation(page, info, async (installation, observations) => {
-    await enterWorkbench(page, installation.origin)
-    const objective = `${draft.objective} — lost response`
-    const form = await fillDecision(page, objective)
-    const requests: string[] = []
-    page.on("request", (request) => { if (isCommand(request, "workbench-command")) requests.push(request.postData() ?? "") })
-    const interruption = await loseCreationResponse(page, installation.origin)
-    try {
-      // CDP pauses the original browser response, after the real handler committed.
-      // It neither issues an APIRequest/route.fetch nor supplies a synthetic response.
-      const failed = page.waitForEvent("requestfailed", { predicate: (request) => isCommand(request, "workbench-command") })
-      const observed = Promise.all([interruption.completed, failed])
-      await form.getByRole("button", { name: "Create decision", exact: true }).click()
-      const [lost] = await observed
-      observations.push({ stage: "creation-response-dropped", httpStatus: lost.httpStatus, contentType: lost.contentType })
-      expect(lost.httpStatus).toBe(200)
-      expect(lost.contentType).toContain("application/json")
-      expect(lost.payload).toEqual({ operation: "sf_case_draft", input: { ...draft, objective } })
-      const saved = asRecord(lost.body)
-      expect(saved.status).toBe("ok")
-      expect(typeof saved.outputRef).toBe("string")
-      const reference = saved.outputRef as string
-      caseIdentity(reference)
-      await expect(form.getByRole("status")).toHaveText("Creation is unconfirmed. Your entries are locked to the original request; retry the same request to reconcile it.")
-      await expect(form.getByLabel("Decision objective", { exact: true })).toHaveValue(objective)
-      await expect(form.getByLabel("Decision objective", { exact: true })).toBeDisabled()
-      await expect(form.getByLabel("Criteria, one per line", { exact: true })).toHaveValue(draft.criteria.join("\n"))
-      await expect(form.getByLabel("Criteria, one per line", { exact: true })).toBeDisabled()
-      await expect(form.getByRole("button", { name: "Retry same creation", exact: true })).toBeEnabled()
-      observations.push({ stage: "lost-response-draft-preserved", caseRef: reference, creationSubmits: requests.length })
-      expect(requests).toHaveLength(1)
-      // Leave the uncertain form and reconcile by authorized reads, not another mutation.
-      page.once("dialog", (dialog) => dialog.accept())
-      await reopenCase(page, reference, objective)
-      await assertCase(page, reference, objective, 1)
-      await page.reload()
-      await assertCase(page, reference, objective, 1)
-      expect(requests).toHaveLength(1)
-      observations.push({ stage: "lost-response-reconciled", caseRef: reference, creationSubmits: requests.length })
-    } finally { await interruption.close() }
+    await lostCreationJourney(page, installation, observations)
   })
 })
-
