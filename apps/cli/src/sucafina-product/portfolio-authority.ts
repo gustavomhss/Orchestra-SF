@@ -16,6 +16,17 @@ import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
 import { createSfConditionedCriterionMetric } from "./portfolio-criterion-observation.ts"
 
+// CI-only marker encoding: status 1=ok, 2=denied, 3=stale, 4=unavailable, 5=needs-input, 6=preview.
+function metricObservationProbe(phase: string, values: Record<string, unknown>) {
+  if (process.env.SF_REPORTS_TRACE !== "1") return
+  const statuses: Record<string, number> = { ok: 1, denied: 2, stale: 3, unavailable: 4, "needs-input": 5, preview: 6 }
+  const fields = Object.entries(values).map(([key, value]) => {
+    const numeric = typeof value === "boolean" ? Number(value) : typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.round(value)) : typeof value === "string" ? statuses[value] ?? 0 : 0
+    return key.toUpperCase() + "_" + numeric
+  }).join("__")
+  console.info("SF_REPORTS_TRACE_CRITERION_METRIC_" + phase.toUpperCase().replace(/[^A-Z0-9_]/g, "_") + "__" + fields)
+}
+
 /** Private host callbacks supplement, never replace, the producer's C08 and C17 checks. */
 export function createSfPortfolioAuthority(input: {
   authority: ReturnType<typeof createSfProductAuthority>
@@ -39,26 +50,33 @@ export function createSfPortfolioAuthority(input: {
   }
   const observedMetric = createSfConditionedCriterionMetric({ authority, business })
   const readMetric: Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"] = async (request, call) => {
+    const started = performance.now()
+    const probe = (phase: string, values: Record<string, unknown> = {}) => metricObservationProbe(phase, { elapsedMs: performance.now() - started, ...values })
+    probe("begin")
     if (!scenarios || request.metricRef !== "planner:known-subtotal-difference" || !request.baselineRef)
       return { status: "unavailable", reason: "criterion-metric-producer-unavailable" }
     const captured = structuredClone(request)
     const source = host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])
     const stored = await business.results.readHistoricalScenario({ resultRef: captured.scenarioRef }, call)
+    probe("historical-read", { status: stored.status })
     if (stored.status !== "ok") return stored
     if (stored.value.kind !== "scenario" || stored.value.caseRef.id !== captured.caseRef.id || stored.value.caseRef.incarnation !== captured.caseRef.incarnation || stored.value.caseRef.version > captured.caseRef.version)
       return { status: "denied", reason: "criterion-scenario-scope-mismatch" }
     const fromObservation = await observedMetric(request, call, stored.value)
+    probe("observation-returned", { consumed: fromObservation?.status === "ok", handled: !!fromObservation, status: fromObservation?.status, fallback: !fromObservation })
     if (fromObservation) return fromObservation
     // Observe only this invocation's real producer reads. The public comparator
     // reopens both scenarios and validates these final snapshots before return.
     // No observation serves a resolve call or survives this metric invocation.
+    probe("full-comparison-begin")
     const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
     const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
       const observation = structuredClone(await scenarios.resolve(reference, context))
       observed.set(reference, observation)
       return observation
     } } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
+    probe("full-comparison-returned", { status: result.status })
     if (result.status !== "ok") return result
     const baseline = observed.get(captured.baselineRef!)
     const candidate = observed.get(captured.scenarioRef)
@@ -70,6 +88,7 @@ export function createSfPortfolioAuthority(input: {
       binding !== digestSfValue([call.kind, call.binding]) || digestSfValue(request) !== digestSfValue(captured)) return { status: "stale", reason: "criterion-metric-changed" }
     const evidenceRefs = [...baseline.value.result.sourceRefs, ...candidate.value.result.sourceRefs]
       .filter((ref, index, all) => all.findIndex((entry) => entry.refDigest === ref.refDigest) === index)
+    probe("full-producer-complete")
     return { status: "ok", value: { ...captured, value: result.value.knownDifference, unit: candidate.value.result.currency,
       period: candidate.value.result.horizon, evidenceRefs, state: result.value.comparisonStatus === "complete" ? "confirmed" : "conditioned",
       engineVersion: candidate.value.projection.engineVersion } }

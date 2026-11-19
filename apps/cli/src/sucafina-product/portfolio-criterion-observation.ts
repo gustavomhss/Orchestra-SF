@@ -15,6 +15,17 @@ import type { createSfBusinessServices } from "./business-services.ts"
 type MetricRequest = Pick<CriterionMetric, "caseRef" | "criterionId" | "ruleRef" | "ruleVersion" | "metricRef" | "scenarioRef" | "baselineRef">
 type Selection = { decision: DecisionCase | undefined; results: readonly (StoredDecisionResult | undefined)[]; rule: unknown }
 
+// CI-only diagnostics: fixed stage labels, booleans, counts and durations; no authority or source data.
+function criterionObservationProbe(phase: string, values: Record<string, unknown> = {}) {
+  if (process.env.SF_REPORTS_TRACE !== "1") return
+  const statuses: Record<string, number> = { ok: 1, denied: 2, stale: 3, unavailable: 4, "needs-input": 5, preview: 6 }
+  const fields = Object.entries(values).map(([key, value]) => {
+    const numeric = typeof value === "boolean" ? Number(value) : typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.round(value)) : typeof value === "string" ? statuses[value] ?? 0 : 0
+    return key.toUpperCase() + "_" + numeric
+  }).join("__")
+  console.info("SF_REPORTS_TRACE_CRITERION_OBSERVER_" + phase.toUpperCase().replace(/[^A-Z0-9_]/g, "_") + "__" + fields)
+}
+
 /** The private comparator supplies a calculation, never C08 or source authority.
  * Both state observations and both granular source/coverage observations remain
  * real. Unsupported dependency kinds continue through the full metric producer. */
@@ -41,10 +52,18 @@ export function createSfConditionedCriterionMetric(input: {
   const pinned = methods.map(([object, key]) => own(object, key))
   const containers = fields.map(([object, key]) => own(object, key))
   const supported = pinned.every((value) => typeof value === "function") && containers.every((value) => !!value && typeof value === "object")
+  criterionObservationProbe("factory", { supported, methodCount: pinned.length, functionCount: pinned.filter((value) => typeof value === "function").length,
+    missingMethodBits: pinned.reduce((bits, value, index) => bits | (typeof value === "function" ? 0 : 1 << index), 0),
+    containerCount: containers.length, objectCount: containers.filter((value) => !!value && typeof value === "object").length,
+    missingContainerBits: containers.reduce((bits, value, index) => bits | (value && typeof value === "object" ? 0 : 1 << index), 0) })
   const current = () => supported && methods.every(([object, key], index) => own(object, key) === pinned[index]) &&
     fields.every(([object, key], index) => own(object, key) === containers[index])
   const observe = createPlannerCriterionObservationReader(compare, current)
   return async (request: MetricRequest, call: TrustedDomainContext, stored: StoredDecisionResult) => {
+    const started = performance.now()
+    const probe = (phase: string, values: Record<string, unknown> = {}) => criterionObservationProbe(phase, { elapsedMs: performance.now() - started, ...values })
+    let samplePass = 0, sourcePass = 0
+    probe("begin")
     const captured = structuredClone(request), storedDigest = digestSfValue(stored)
     const result = await observe(request, call, async (observation, ownerCurrent) => {
       const transport = host.requestFor(call)
@@ -52,8 +71,11 @@ export function createSfConditionedCriterionMetric(input: {
         digestSfValue(request) === digestSfValue(captured) && digestSfValue(stored) === storedDigest && current() && ownerCurrent()
       if (!transport || !unchanged()) return false
       const sample = async () => {
+        const sampleStarted = performance.now(), pass = ++samplePass
+        probe("sample-begin", { pass })
         if (!unchanged() || !await host.revalidate(call) || !unchanged()) return undefined
         const selected = await business.selectedCase(call)
+        probe("sample-selection", { pass, durationMs: performance.now() - sampleStarted, status: selected.status })
         if (selected.status !== "ok" || !same(selected.value, captured.caseRef) || !unchanged()) return undefined
         let expected: string | undefined
         let expectedSupported: boolean | undefined
@@ -73,6 +95,7 @@ export function createSfConditionedCriterionMetric(input: {
           const selection: Selection = { decision: snapshot.cases[captured.caseRef.id],
             results: observation.scenarioRefs.map((reference) => snapshot.decisionResults?.[reference]), rule: rule.value }
           const proof = inspect(selection, captured, observation, storedDigest, call)
+          probe("sample-inspected", { pass, recognized: !!proof, supported: proof?.supported })
           if (!proof) return undefined
           expectedSupported = proof.supported
           const caseCopy = structuredClone(selection.decision!)
@@ -83,33 +106,45 @@ export function createSfConditionedCriterionMetric(input: {
           borrowed = { selection, actor, fences, revision: snapshot.revision, incarnation: snapshot.incarnation, versions: snapshot.versions }
           expected = digestSfValue(borrowed)
           const allowed = await host.revalidate(call)
+          probe("sample-final-authority", { pass, allowed })
           // The final authority check runs while C08 still holds its snapshot.
           // Only synchronous identity/digest checks follow it in this callback.
           return allowed && unchanged() && expected === digestSfValue(borrowed) && same(fences, business.lockedSourceFences())
             ? { digest: expected, supported: proof.supported } : undefined
         })
+        probe("sample-state-returned", { pass, durationMs: performance.now() - sampleStarted, status: found.status })
         return found.status === "ok" && found.value && expected === found.value.digest && expectedSupported === found.value.supported && expected === digestSfValue(borrowed) && unchanged()
           ? { ...found.value, unchanged: () => expected === digestSfValue(borrowed) } : undefined
       }
       const before = await sample()
+      probe("first-sample", { available: !!before, supported: before?.supported })
       if (!before || !unchanged()) return false
-      if (!before.supported) return "unsupported"
+      if (!before.supported) { probe("dependency-fallback"); return "unsupported" }
       const sourceObservation = async () => {
+        const pass = ++sourcePass, sourcePassStarted = performance.now()
+        probe("source-pass-begin", { pass })
         for (const [index, source] of observation.sources.entries()) {
+          const sourceStarted = performance.now()
           const actual = structuredClone(await sources.resolveForecastSource(source.refId, call))
+          probe("source-read", { pass, position: index + 1, durationMs: performance.now() - sourceStarted, status: actual.status })
           if (actual.status !== "ok" || !same(actual.value.evidence, source) || !unchanged() || !before.unchanged()) return false
+          const coverageStarted = performance.now()
           const coverage = structuredClone(await sources.resolveForecastCoverage(observation.coverage[index]!.coverageRef, call))
+          probe("coverage-read", { pass, position: index + 1, durationMs: performance.now() - coverageStarted, status: coverage.status })
           const expected = observation.coverage[index]!
           if (coverage.status !== "ok" || coverage.value.coverageRef !== expected.coverageRef ||
             digestSfValue(coverage.value.basis) !== expected.basisDigest || digestSfValue(coverage.value.assessment) !== expected.assessmentDigest ||
             !unchanged() || !before.unchanged()) return false
         }
+        probe("source-pass-complete", { pass, durationMs: performance.now() - sourcePassStarted })
         return true
       }
       if (!await sourceObservation() || !await host.revalidate(call) || !unchanged() || !before.unchanged() || !await sourceObservation()) return false
       const after = await sample()
+      probe("final-sample", { available: !!after, supported: after?.supported })
       return !!after && after.supported && before.digest === after.digest && before.unchanged() && after.unchanged() && unchanged()
     })
+    probe("returned", { handled: !!result, consumed: result?.status === "ok", status: result?.status })
     if (!result || result.status !== "ok") return result
     return current() && digestSfValue(request) === digestSfValue(captured) && digestSfValue(stored) === storedDigest
       ? { status: "ok" as const, value: { ...captured, ...result.value } }
@@ -152,9 +187,13 @@ function inspect(selection: Selection, request: MetricRequest, observation: Plan
       ...alternative.result.costCoverage.evaluatedSourceRefs,
       ...alternative.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs))
   }
+  const dependenciesSupported = supported
   supported &&= references.length > 0 && references.every((reference) => reference.kind === "record" &&
     reference.target.surface === "planner" && reference.target.recordType === "planner-version" &&
     observation.sources.some((source) => same(source, reference)))
+  criterionObservationProbe("eligibility", { supported, dependenciesSupported, sensitivity: !!rule.sensitivity, assumptions: decision.assumptions.length,
+    choices: decision.choices.length, preparedChanges: decision.preparedChanges.length, receipts: decision.receipts.length,
+    questions: decision.questions.length, ledger: decision.ledger.length, referenceCount: references.length })
   return { supported }
 }
 function same(left: unknown, right: unknown) { return digestSfValue(left) === digestSfValue(right) }
