@@ -40,7 +40,11 @@ export async function localNative() {
     if (!cookie) throw new Error("LOCAL_NATIVE_SESSION_MISSING")
     const installed = installation
     const read = (pathname: string) => installed.handler(new Request(origin + pathname, { headers: { Cookie: cookie, Origin: origin } }))
-    return { read, dispose }
+    const post = (pathname: string, body: Record<string, unknown>) => installed.handler(new Request(origin + pathname, {
+      method: "POST", headers: { Cookie: cookie, Origin: origin, "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }))
+    return { read, post, dispose }
   } catch (error) {
     await dispose()
     throw error
