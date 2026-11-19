@@ -2,7 +2,7 @@
 
 SHA de código: 064b28c8cc0ea3ea299f600c264d41687e401176
 Data: 2026-11-19
-Estado: partial
+Estado: complete
 
 ## Feito
 - modules/sucafina/Sucafinav1/test/local-bootstrap.test.ts:82 usa o contrato original de origem explícita: HTTP loopback em3000 é aceito; host externo, HTTPS e path na origem são recusados.
@@ -14,11 +14,11 @@ Estado: partial
 - A nova expectativa positiva de3000 e três negativas concretas preservam a fronteira real. Nenhum teste foi pulado e nenhum timeout foi alterado.
 
 ## Pendente
-- modules/sucafina/Sucafinav1/test/local-bootstrap.test.ts:82: gate estreito pendente. Não qualifica browser nem endpoints.
+- Nenhum unbound dentro deste WP. O gate cobre configuração/isolamento/role bootstrap; browser e endpoints têm gates próprios.
 
 ## Como retomar
 Runner bun, package sucafina, args ["Sucafinav1/test/local-bootstrap.test.ts"] em ci-run-linux. Registrar resultado terminal; só então integrar os dois arquivos.
 
 ## Runs e resultado
 - Auditoria original44585817131 identificou a expectativa obsoleta emlocal-bootstrap.test.ts:88. Não é prova do código atual.
-- Gate deste checkpoint: pendente.
+- [44627141486](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627141486): SUCCESS,6pass/0fail/46expect em236ms. Snapshot1859992432a63be0db167ce72e80f14186f23631. Test job135923861786 e cleanup135924982470 SUCCESS.
