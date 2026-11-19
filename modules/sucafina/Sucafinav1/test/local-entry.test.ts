@@ -130,8 +130,10 @@ test("enrolled operator authenticates when the serving process cannot resolve th
       body: JSON.stringify({ page: "Budget Overview", action: "save", version: 0, values: { year: 2026, budget: 10, actual: 4 } }),
     }))
     expect(saved?.status).toBe(200)
-    const snapshot = await installation.store.read("dashboard")
-    expect(snapshot.audit.at(-1)?.name).toBe(name)
+    await f.store.transaction("dashboard", async (snapshot) => {
+      expect(snapshot.audit.at(-1)?.name).toBe(name)
+      return { commit: false, value: undefined }
+    })
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 
