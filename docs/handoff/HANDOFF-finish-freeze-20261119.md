@@ -1,8 +1,8 @@
 # Handoff — finish-freeze-20261119
 
-SHA: base 6b7df3be538aa84d48a7f20f2ffac2bf46cbcd7f; composição observada 713d5565663b01baec641e89b7ba57b713026125; proposta de revisão11 neste commit.
+SHA: código 5c089f0fbabb191b70dc7440fb312a1ae49d00db; snapshot CI 6380aa5145d9785c8fa1ba8fbcb4ae9f39ef4e36; composição d16495f11a63cd1012ec79b2826c9548d81b7c3f.
 Data: 2026-11-19
-Estado: partial
+Estado: complete
 
 ## Feito
 - Reconciliada a revisão11 dos pins de bytes com observação real44596050041. O manifesto conserva todas as38 entradas, os17contratos,5perfis,18skills,8packs,39operações, provas AM01–AM06 e o contrato normativo aprovado.
@@ -11,7 +11,7 @@ Estado: partial
 - O teste mantém a igualdade estrita de todos os bytes e todas as outras asserções. Só a revisão literal passou10→11 para nomear a reconciliação explícita.
 
 ## Pendente
-- modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts:13–20: gate estreito da revisão11 pendente; os hashes dos documentos restaurados ainda precisam coincidir com os pins históricos no teste original.
+- Nenhuma pendência da revisão11 verificada: os38 pins, inclusive os10 históricos restaurados, coincidiram no teste original.
 - Integração dos produtores/consumidores da composiçãod16495f11a63cd1012ec79b2826c9548d81b7c3f antes de afirmar que o pin identifica a branch de integração final.
 
 ## Decisões e justificativas
@@ -21,10 +21,10 @@ Estado: partial
 - Esta revisão é reconciliação documental e de contrato, sem nova alegação de baseline, coverage, GO ou autorização de produção.
 
 ## Como retomar
-Executar test-ci package=sucafina runner=bun no contract-freeze.test.ts sobre a composiçãod16495f11a63cd1012ec79b2826c9548d81b7c3f com estes arquivos. Em caso de digest divergente, conferir o blob histórico ou a origem atual; não atualizar o esperado para esconder a falha. Registrar o run terminal e integrar somente com os produtores correspondentes.
+Integrar junto dos produtores correspondentes à composiçãod16495f11a63cd1012ec79b2826c9548d81b7c3f; o gate estreito dessa composição já está registrado abaixo. Em caso de digest divergente, conferir o blob histórico ou a origem atual; não atualizar o esperado para esconder a falha. Registrar o run terminal e integrar somente com os produtores correspondentes.
 
 ## Comandos e resultados
 - Auditoria44585817131: FAILURE no pin antigo de decisions.ts.
 - Observação44595632264: FAILURE de diagnóstico ao encontrar baseline-decisions.md ausente.
 - [44596050041](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44596050041): SUCCESS de observação somente;21de38pins coincidiram,10arquivos estavam ausentes,7divergiam. Não é o resultado do teste de freeze.
-- Teste da revisão11: pendente.
+- [44597803524](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44597803524): SUCCESS; 5 pass, 0 fail, 913 expect, 1 arquivo,174ms. Jobs135820718424 e135822361507 SUCCESS. O teste manteve igualdade exata de bytes e todas as verificações dos contratos.
