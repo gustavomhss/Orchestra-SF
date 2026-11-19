@@ -1,9 +1,19 @@
-import { test } from "@playwright/test"
+import { expect, test, type Page } from "@playwright/test"
 import { procurementComparison } from "./operations-support/procurement-comparison"
 import { sourcingSnapshot } from "./operations-support/procurement-snapshot"
 import { missingFxRefusal } from "./operations-support/procurement-refusal"
 import { importJourney } from "./operations-support/imports"
 import { documentJourney } from "./operations-support/documents"
+
+const procurementCreate = "domain.command.CAP25.create"
+
+async function openProcurementCreate(page: Page) {
+  const opened = await page.goto("/orchestra/sf-procurement/requests/new")
+  expect(opened?.status(), procurementCreate).toBe(200)
+  const control = page.locator('[data-sf-command="domain.command.CAP25.create"]')
+  await expect(control, procurementCreate).toBeEnabled()
+  await expect(control).toHaveAccessibleName("Create request")
+}
 
 // Each annotation identifies a criterion slice, not a claim of complete or executed acceptance.
 // Full coverage, source pins and unresolved C06/host dependencies live in final-e2e/operations/.
@@ -12,16 +22,19 @@ test.describe("CI-UI-OPERATIONS", () => {
 
   test("OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02" })
+    await openProcurementCreate(page)
     await procurementComparison(page, info)
   })
 
   test("OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02" })
+    await openProcurementCreate(page)
     await sourcingSnapshot(page, info)
   })
 
   test("OP-PROC-03 missing FX stays unavailable and refuses submission without a new version", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02" })
+    await openProcurementCreate(page)
     await missingFxRefusal(page, info)
   })
 

@@ -1,5 +1,6 @@
 /**
- * Mission 231: installed F01 owner composition for UI29 / UI33 / UI34.
+ * Mission 231: installed F01 owner composition for UI29 / UI33 / UI34
+ * and the chapter commands CAP23.save, CAP25.create, and CAP04.save-entry.
  *
  * This is the real chapter body consumed by chapter-route's inert callsite,
  * NOT a provider that manufactures context or an independent login/session.
@@ -29,8 +30,14 @@ import type { SfContextDependencies, SfContextHandle, SfDraftRevalidationInput,
 import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
+import { SfPlannerVersionsView } from "../planner/versions"
+import { SfRequestView } from "../procurement/requests/page"
+import { SfDashboardOpexView } from "../dashboard/opex"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
 import { confirmSfOwnerExit } from "./native-chapter-entry"
+import { parsePlannerRouteQuery, plannerRouteAvailable } from "./planner-route"
+import { parseProcurementRouteQuery, procurementRouteAvailable } from "./procurement-route"
+import { parseDashboardRouteQuery, dashboardRouteAvailable } from "./dashboard-route"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -195,6 +202,15 @@ function MountedSurface(props: Readonly<{
       <Match when={props.view().status === "ready" && current()?.surfaceId === "UI34"}>
         <SfIntentView surfaceId="UI34" route={current() as SfSurfaceProps<"UI34">["route"]} />
       </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP23"}>
+        <SfPlannerVersionsView surfaceId="CAP23" route={current() as SfSurfaceProps<"CAP23">["route"]} />
+      </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP25"}>
+        <SfRequestView surfaceId="CAP25" route={current() as SfSurfaceProps<"CAP25">["route"]} />
+      </Match>
+      <Match when={props.view().status === "ready" && current()?.surfaceId === "CAP04"}>
+        <SfDashboardOpexView surfaceId="CAP04" route={current() as SfSurfaceProps<"CAP04">["route"]} />
+      </Match>
     </Switch>
   )
 }
@@ -341,11 +357,15 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       if ([...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)))
         return { status: "invalid-link" }
       const candidate = matchSfNativeRoutePath(url.pathname)
-      if (!candidate || !(
-        candidate.surfaceId === "UI29" && candidate.kind === "entry" ||
-        candidate.surfaceId === "UI33" && candidate.kind === "entry" ||
-        candidate.surfaceId === "UI34" && candidate.kind === "entry"
-      )) return { status: "invalid-link" }
+      const commandQuery = candidate?.surfaceId === "CAP23" ? parsePlannerRouteQuery(url.searchParams, candidate)
+        : candidate?.surfaceId === "CAP25" ? parseProcurementRouteQuery(url.searchParams, candidate)
+        : candidate?.surfaceId === "CAP04" ? parseDashboardRouteQuery(url.searchParams, candidate)
+        : undefined
+      const commandRoute = candidate?.surfaceId === "CAP23" || candidate?.surfaceId === "CAP25" || candidate?.surfaceId === "CAP04"
+      const legacy = candidate?.surfaceId === "UI29" && candidate.kind === "entry" ||
+        candidate?.surfaceId === "UI33" && candidate.kind === "entry" ||
+        candidate?.surfaceId === "UI34" && candidate.kind === "entry"
+      if (!candidate || (commandRoute && !commandQuery) || (!commandRoute && !legacy)) return { status: "invalid-link" }
       const found = await source.listByIds(selected, signal)
       if (signal.aborted || !found) return { status: "unavailable" }
       if (found.installations.length !== 1) return { status: "denied" }
@@ -360,11 +380,15 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       if (stamp.projectId !== binding.projectId ||
         stamp.installationId !== binding.installationId || stamp.hostId !== binding.hostId)
         return { status: "denied" }
-      const requiredOperation = candidate.surfaceId === "UI29" ? "projection.home"
-        : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case"
-      if (!context.value.availability.some((resource) => resource.operations.some((operation) =>
-        operation.operationId === requiredOperation && operation.state === "ready" && operation.operational)))
-        return { status: "denied" }
+      const admitted = commandRoute
+        ? candidate.surfaceId === "CAP23" ? plannerRouteAvailable(context.value, candidate)
+          : candidate.surfaceId === "CAP25" ? procurementRouteAvailable(context.value, candidate)
+          : dashboardRouteAvailable(context.value, candidate)
+        : context.value.availability.some((resource) => resource.operations.some((operation) =>
+          operation.operationId === (candidate.surfaceId === "UI29" ? "projection.home"
+            : candidate.surfaceId === "UI33" ? "projection.cases" : "projection.case") &&
+          operation.state === "ready" && operation.operational))
+      if (!admitted) return { status: "denied" }
       // UI34 data admission remains at original useSfCase. When returning from
       // UI29, the exact 227 resume port alone performs BOTH original case reads
       // (preflight and pre-commit), not a third implicit prefetch here.
@@ -379,7 +403,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       const route = {
         surfaceId: candidate.surfaceId, kind: candidate.kind,
         params: candidate.parameters, ownerSelection: selected,
-        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: {},
+        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: commandQuery ?? {},
       } as SfResolvedRoute
       return { status: "authorized", route, ownerKey }
     },

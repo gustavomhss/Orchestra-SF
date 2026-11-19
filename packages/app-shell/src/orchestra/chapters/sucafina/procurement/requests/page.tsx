@@ -697,7 +697,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
             onEdit={editPr} />
           <div class="sf-u11-actions">
             <Show when={creating() && stageAllowed("create")}>
-              <button type="button" class="mx-btn primary" onClick={() => reviewAction("create")}>
+              <button type="button" class="mx-btn primary" data-sf-command="domain.command.CAP25.create" onClick={() => reviewAction("create")}>
                 {t("sf.u11.remaining.new")}
               </button>
             </Show>

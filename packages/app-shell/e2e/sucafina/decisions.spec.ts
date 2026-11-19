@@ -2,7 +2,7 @@
 // U16/U17/U18 do not yet prove all historical C10/C12 contracts end-to-end.
 // Keep the original executable contracts until the same authenticated native
 // host can produce an equivalent observation; a route/200 is not parity.
-import { expect, test } from "@playwright/test"
+import { expect, test, type Page } from "@playwright/test"
 import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase, withInstallation } from "./decisions-support/journey"
 import { loseCreationResponse } from "./decisions-support/lost-response"
 import { initialAlternativesJourney } from "./decisions-support/initial-alternatives"
@@ -13,11 +13,31 @@ import { procurementClosureJourney } from "./decisions-support/procurement-closu
 test.use({ trace: "off" })
 test.describe.configure({ retries: 0 })
 
+const plannerSave = "domain.command.CAP23.save"
+const procurementCreate = "domain.command.CAP25.create"
+
+async function openPlannerSave(page: Page, origin: string) {
+  const opened = await page.goto(`${origin}/orchestra/sf-planner/versions/new`)
+  expect(opened?.status(), plannerSave).toBe(200)
+  const control = page.locator('[data-sf-surface="CAP23"] [data-sf-command="domain.command.CAP23.save"]')
+  await expect(control, plannerSave).toBeEnabled()
+  await expect(control).toHaveAccessibleName("Create first version")
+}
+
+async function openProcurementCreate(page: Page, origin: string) {
+  const opened = await page.goto(`${origin}/orchestra/sf-procurement/requests/new`)
+  expect(opened?.status(), procurementCreate).toBe(200)
+  const control = page.locator('[data-sf-command="domain.command.CAP25.create"]')
+  await expect(control, procurementCreate).toBeEnabled()
+  await expect(control).toHaveAccessibleName("Create request")
+}
+
 test("CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change", async ({ page }, info) => {
   test.setTimeout(180_000)
   info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — SEM EQUIVALENTE de contrato completo. Native UI35/UI38/UI40 (U17/U18) cobrem superficies parciais, nao attachment da evidencia + duas alternativas + escolha humana apos source change sob o mesmo owner." })
   info.annotations.push({ type: "proof-limit", description: "Human choice and historical C10 coverage with pending costs; this path has no executable Procurement operation and does not accept financial approval, C12 Apply, native model or AM proofs" })
   await withInstallation(page, info, async (installation, observations) => {
+    await openPlannerSave(page, installation.origin)
     const selection = await initialAlternativesJourney(page, installation, observations)
     await choiceHistoryJourney(page, installation, selection, observations)
   })
@@ -29,6 +49,7 @@ test("CI-UI-DECISIONS — require a real Procurement proposal and approval befor
   info.annotations.push({ type: "dependency", description: "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them." })
   info.annotations.push({ type: "proof-limit", description: "Consumes the published C12 Apply and recovery; selection and confirmation alone do not prove financial approval, native provider/critique or restart." })
   await withInstallation(page, info, async (installation, observations) => {
+    await openProcurementCreate(page, installation.origin)
     await procurementClosureJourney(page, installation, observations)
   })
 })

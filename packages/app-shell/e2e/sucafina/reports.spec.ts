@@ -2,7 +2,7 @@
 // currently committed U32/U33 proof does not replace RPT-01 Office bytes or
 // RPT-02 C05 historical human-answer selectors. Preserve the four red/green
 // contracts until the native issuer and same-owner installed browser prove them.
-import { expect } from "@playwright/test"
+import { expect, type Page } from "@playwright/test"
 import { reportsTest } from "./reports-support/fixture.ts"
 import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
 import { expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
@@ -20,12 +20,24 @@ import { reconcilePrivateDraftsAfterReadLoss } from "./reports-support/read-reco
 // content receipts and downloaded reports remain the evidence.
 reportsTest.use({ trace: "off", video: "off", screenshot: "off" })
 
+const januarySave = "domain.command.CAP04.save-entry"
+
+async function openJanuarySave(page: Page, origin: string) {
+  const line = "r_" + btoa("reports-opex").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "")
+  const opened = await page.goto(`${origin}/orchestra/sf-dashboard/opex/${line}`)
+  expect(opened?.status(), januarySave).toBe(200)
+  const control = page.locator('[data-sf-budget="CAP04"] tr[data-sf-month="1"] [data-sf-command="domain.command.CAP04.save-entry"]')
+  await expect(control, januarySave).toBeVisible()
+  await expect(control).toHaveAccessibleName("Save month")
+}
+
 reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest.describe.configure({ retries: 0, timeout: 180_000 })
 
   reportsTest("RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source", async ({ page, reports }, info) => {
     info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — UI48/UI50 U32/U33 exibem review preservado e 25 registros; U33 exige download Office indisponivel. Falta prova de DOCX/PPTX de bytes originais e follow do source versionado." })
     const { app, corpus } = reports
+    await openJanuarySave(page, new URL(app.dashboardURL).origin)
     const { saved } = await reportsTest.step("Prepare and explicitly preserve the authorized dossier", () => prepareReview(page, app, corpus, info))
     await reportsTest.step("Edit the real January source once without refreshing the capture", () => changeForecast(page, app, corpus))
     expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
@@ -41,6 +53,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest("RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version", async ({ page, reports }, info) => {
     info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — UI48 confirmations/resumo nao provam a resposta humana C05 exata, reuso sem nova escrita, rejeicao do seletor apos edit e historia intacta." })
     const { app, corpus } = reports
+    await openJanuarySave(page, new URL(app.dashboardURL).origin)
     const { saved } = await prepareReview(page, app, corpus, info)
     await changeForecast(page, app, corpus)
     await openAndReopenMeeting(page, app, saved)
@@ -107,6 +120,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest("RPT-03 removes one authorized record without editing its source and creates only an explicit new revision", async ({ page, reports }, info) => {
     info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — native UI48/U32 nao demonstra a exclusao da selecao (24/25), source imutavel e nova revisao apos edicao de previsao." })
     const { app, corpus } = reports
+    await openJanuarySave(page, new URL(app.dashboardURL).origin)
     const source = await readSourceData(page.request, app)
     const { saved } = await prepareReview(page, app, corpus, info, { removeOne: true })
     expect(await readSourceData(page.request, app)).toEqual(source)
@@ -123,6 +137,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest("RPT-04 revokes the real session and clears cached meeting data, export and answer access", async ({ browser, page, reports }, info) => {
     info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — falta prova nativa de revogacao real e invalidacao dos caches de meeting, Office e resposta C05 para principal anterior, mais controle positivo com novo owner." })
     const { app, corpus } = reports
+    await openJanuarySave(page, new URL(app.dashboardURL).origin)
     const { saved } = await prepareReview(page, app, corpus, info)
     const artifact = await exportReview(page, app, saved, corpus, "docx", info)
     await openAndReopenMeeting(page, app, saved)

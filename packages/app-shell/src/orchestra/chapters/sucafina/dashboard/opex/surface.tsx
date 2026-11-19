@@ -573,7 +573,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         <td>{deviation?.flag === undefined ? t(key("missing")) : deviation.flag || t(key("missing"))}</td>
         <td><bdi>{deviation?.text ?? t(key("missing"))}</bdi></td>
         <td class="sf-budget-row-actions">
-          <button type="button" class="mx-btn" disabled={!allowed("save-entry") || view.busy} onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
+          <button type="button" class="mx-btn" data-sf-command={"domain.command." + props.capability + ".save-entry"} disabled={!allowed("save-entry") || view.busy} onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
           <button type="button" class="mx-btn" disabled={!allowed("save-deviation") || view.busy} onClick={() => startEdit("save-deviation", owner, month)}>{t(key("saveDeviation"))}</button>
         </td>
       </tr>

@@ -599,7 +599,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                         </>
                       }>
                       <p>{copy.t(key("sf.u46.firstDescription"))}</p>
-                      <button class="mx-btn primary" type="button" disabled={!allowed(null, "save", true)}
+                      <button class="mx-btn primary" type="button" data-sf-command={op.save} disabled={!allowed(null, "save", true)}
                         onClick={() => begin("save", null, true)}>
                         {copy.t(key("sf.u46.createFirst"))}
                       </button>
