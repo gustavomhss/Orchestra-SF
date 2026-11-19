@@ -14,6 +14,7 @@ const key = (value: Key): SfCopyKey => value as SfCopyKey
 const draftInput = SfDomain.operations["dashboard.dashboard-hot-topic-draft"].input
 type Draft = typeof draftInput.Type
 type Fields = Draft["fields"]
+type EditableFields = { -readonly [Field in keyof Fields]: Fields[Field] }
 type CaseRef = Draft["caseRef"]
 const names = ["action", "owner", "due", "priority", "notes"] as const
 const empty: Fields = { action: "", owner: "", due: "", priority: "normal", notes: "" }
@@ -56,7 +57,7 @@ export function SfHotTopicPrivateDraft(props: {
   const [base, setBase] = createSignal<Fields>()
   const [currentDraft, setCurrentDraft] = createSignal<Draft>()
   const [sourceFields, setSourceFields] = createSignal<Fields>()
-  const [values, setValues] = createStore<Fields>({ ...empty })
+  const [values, setValues] = createStore<EditableFields>({ ...empty })
   const [dirty, setDirty] = createSignal(false)
   const [reviewed, setReviewed] = createSignal(false)
   const [needsCurrent, setNeedsCurrent] = createSignal(false)

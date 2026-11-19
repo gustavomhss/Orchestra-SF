@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA: 7c25f0b4138dee75c777f1cbd08bb330f1adb104 (instalação; este commit acrescenta 3 cenários de navegador e a distinção entre retirada de escrita/leitura)
+SHA: 77a407c2a26d4fa3b0f7036b635c356fb4e33828 (3 cenários; este commit corrige a mutabilidade do estado local do Solid)
 Data: 2026-11-19
 Estado: partial
 
@@ -39,7 +39,8 @@ Estado: partial
 3. Corrigir somente os erros concretos, registrar SHA/run/resultado; depois completar/remapear as jornadas legadas restantes. O gate de transporte não substitui o navegador.
 
 ## Comandos e resultados
-- `bun run typecheck`: não rodado neste checkpoint.
+- Typegate composto [44605860232](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44605860232): CLI/SF E2E/Sucafina SUCCESS; app-shell FAILURE em draft.tsx:242-243 porque Fields readonly do Schema foi usado no createStore. Corrigido por tipo local mapeado removendo apenas readonly; contrato e validação preservados.
 - `bun run check:guards --base origin/dev`: não rodado neste checkpoint.
 - Fronteira F02/codec: [44604361124](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44604361124) SUCCESS, 19 pass / 0 fail / 380 expect. Snapshot `9a541ff36821c6952aa2f5b7d0a26fef260f3ccd`, parent `f5760ad992f59d258406aa52679e469c512294e5`; essa prova cobre transporte/codec, não C08/UI.
-- Gate de navegador: não rodado neste checkpoint. Auditoria original [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131) falhou nos redirects do console descomissionado; essa evidência não é um gate da alteração atual.
+- Primeiro pedido de navegador [44606254001](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606254001): FAILURE antes de executar produto, TEST_PACKAGE_NOT_FOUND:app-shell. O pacote atual é `app`, config `e2e/playwright.production.config.ts`; briefing estava desatualizado nesse campo. Cleanup SUCCESS. Nenhuma evidência de navegador nessa tentativa.
+- Gate de navegador com pedido corrigido: pendente. Auditoria original [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131) falhou nos redirects do console descomissionado; essa evidência não é um gate da alteração atual.
