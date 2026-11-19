@@ -49,3 +49,11 @@ export function procurementMonetaryFacts(record: Record<string, unknown>, baseCu
   const fxDependency = { ...currencyDependency, frozen, submittedBase: frozen ? submittedBase ?? null : null, rate: rate ?? null }
   return { original, explicitCurrency, currency, validRate, baseAmount, submittedCurrency, submittedAmount, submittedFxRate, monetaryState, moneyEvidence, fxSource: validRate == null ? null : !explicitCurrency ? "base-default" : currency === baseCurrency ? "base" : frozen ? "submitted" : "current", amountInput, currencyDependency, fxDependency, submittedDependency: { amount: submittedApproval.amount ?? null, fxRate: submittedApproval.fxRate ?? null, submittedCurrency, snapshot: snapshot ?? null } }
 }
+
+/** The request money sentence already used by the procurement page. Callers publish this string; the browser does not assemble it. */
+export function procurementMoneySentence(facts: ReturnType<typeof procurementMonetaryFacts>, baseCurrency: string) {
+  const current = facts.original == null || !facts.currency ? "Unavailable" : `${facts.original} ${facts.currency}`
+  const base = facts.baseAmount == null || !/^[A-Z]{3}$/.test(baseCurrency) ? "Unavailable" : `${Number(facts.baseAmount.toPrecision(15))} ${baseCurrency}`
+  const fx = facts.validRate == null ? "Unavailable" : `${facts.validRate} (${facts.fxSource ?? "unavailable"})`
+  return `Current request value: ${current}; base value: ${base}; FX: ${fx}.`
+}

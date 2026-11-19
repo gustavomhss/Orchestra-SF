@@ -101,6 +101,13 @@ function namedOwner(url: URL): { kind: "absent" } | { kind: "invalid" } | { kind
   } }
 }
 
+function requestHashAdmitted(url: URL): boolean {
+  if (!url.hash) return true
+  const requested = url.searchParams.getAll("request")
+  if (requested.length !== 1 || !requested[0]) return false
+  try { return decodeURIComponent(url.hash.slice(1)) === requested[0] } catch { return false }
+}
+
 function publishedHref(url: URL, keepOwner: boolean): string {
   const params = new URLSearchParams(url.search)
   if (!keepOwner) for (const key of ownerKeys) params.delete(key)
@@ -346,7 +353,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       let url: URL
       try {
         url = new URL(href, window.location.origin)
-        if (url.origin !== window.location.origin || url.hash || url.username || url.password)
+        if (url.origin !== window.location.origin || url.username || url.password || !requestHashAdmitted(url))
           return { status: "invalid-link" }
       } catch { return { status: "invalid-link" } }
       if (!sfMountedPathAdmitted(url.pathname, url.searchParams)) return { status: "invalid-link" }

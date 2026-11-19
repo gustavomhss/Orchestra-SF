@@ -263,6 +263,17 @@ export function createProcurementCollectionRegistry(input: { host: DomainPortHos
   }
 }
 
+/** sourceRef and sourceDigest are the scoped identity, not a browser hash of the row. */
+export function procurementRowSourceIdentity(snapshot: Snapshot, recordId: string) {
+  const scopes = snapshot.sfSources?.scopes
+  if (!scopes || !recordId.trim()) return undefined
+  const matches = Object.values(scopes).filter((entry) => entry.alive && entry.scope.recordType === "procurement-request" && entry.scope.recordId === recordId)
+  if (matches.length !== 1) return undefined
+  const identity = sfScopedSourceIdentity(snapshot, matches[0]!.scope)
+  if (!identity) return undefined
+  return { sourceRef: identity.incarnation, sourceDigest: identity.inputDigest }
+}
+
 export function digestProcurementSource(value: unknown, settings: unknown, kind?: "request" | "supplier") {
   const record = object(value)
   const setting = object(settings)

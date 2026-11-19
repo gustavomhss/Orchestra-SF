@@ -1,4 +1,4 @@
-import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
+import type { SfContext, SfRef, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
 import { Option, Schema } from "effect"
 import { SfProcurementSchemas } from "@orchestra/schema/sucafina/procurement"
 import type { SfNativeRouteCandidate } from "../route-registry"
@@ -19,18 +19,22 @@ export function isProcurementSurface(id: string): boolean {
 export function parseProcurementRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-procurement" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length ||
-      keys.some((key) => !["server", "project", "installation", "year", "month"].includes(key))) return
+  const allowed = ["server", "project", "installation", "year", "month", ...(candidate.surfaceId === "CAP25" ? ["request"] : [])]
+  if (new Set(keys).size !== keys.length || keys.some((key) => !allowed.includes(key))) return
   const selectors = ["server", "project", "installation"].map((key) => params.get(key))
   if (selectors.some((item) => item !== null) && !selectors.every((item) => !!item)) return
   const year = params.get("year")
   const month = params.get("month")
+  const request = params.get("request")
   if (candidate.surfaceId !== "CAP24" && candidate.surfaceId !== "CAP28" && (year !== null || month !== null)) return
+  if (request !== null && candidate.surfaceId !== "CAP25") return
   if (year !== null && !/^202[4-7]$/.test(year)) return
   if (month !== null && !/^(?:[1-9]|1[0-2])$/.test(month)) return
+  if (request !== null && !request) return
   const input = {
     ...(year === null ? {} : { year: Number(year) }),
     ...(month === null ? {} : { month: Number(month) }),
+    ...(request === null ? {} : { request: request as SfRef }),
   }
   if (Option.isNone(Schema.decodeUnknownOption(SfProcurementSchemas.pageSelection, { onExcessProperty: "error" })(input))) return
   return input
