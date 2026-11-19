@@ -34,6 +34,7 @@ import type { TrustedDomainContext, TrustedUiContext } from "../../../product/co
 import type { SfDomainValidation } from "../../../product/contracts/runtime.ts"
 import type { RoutinePublicationHost } from "../../../product/routines/publication.ts"
 import { createSfRoutineNativePhaseComposition } from "../../../../../../apps/cli/src/sucafina-product/routine-native-phase-composition.ts"
+import { sfNativeLocationRef } from "../../../../../../apps/cli/src/sucafina-product/native-identity.ts"
 import { createSfRoutineNativeGovernance } from "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts"
 import { createSfRoutineNativeRecords } from "../../../../../../apps/cli/src/sucafina-product/routine-native-records.ts"
 import { createSfRoutineNativeOwnerRegistry } from "../../../../../../apps/cli/src/sucafina-product/routine-native-registry.ts"
@@ -158,7 +159,7 @@ const setup = Effect.fn("PhaseFixture.setup")(function* (directory: string, prep
   const sessions = yield* SessionV2.Service, execution = yield* SessionExecution.Service
   const database = yield* Database.Service, events = yield* EventV2.Service, store = yield* SessionStore.Service
   const locations = yield* LocationServiceMap.Service
-  const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
+  const location = sfNativeLocationRef({ directory: AbsolutePath.make(directory) })
   const opened = yield* locations.contextEffect(location)
   const nativeLocation = Context.get(opened, Location.Service), registry = Context.get(opened, ToolRegistry.Service)
   // Nonexecuting names are NOT native governance evidence. The deterministic provider calls only real core Task.
