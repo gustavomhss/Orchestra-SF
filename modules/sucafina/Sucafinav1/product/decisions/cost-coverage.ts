@@ -1,6 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { requiredSfCostCategories } from "../contracts/coverage-inventory.ts"
-import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
+import type { BusinessEvidenceResolution } from "../contracts/business-context.ts"
 import type { Period, ProjectionComponent } from "../contracts/context.ts"
 import type { CostCoverageAssessment, CostCoverageBasis, CostCoverageEntry } from "../contracts/decisions.ts"
 
