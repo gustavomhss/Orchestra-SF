@@ -93,8 +93,10 @@ import { createSfProductContribution, createSfProductDispatch } from "./contribu
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
-import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
+import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth, observeSfReviewAgendaHealth } from "./native-ui/report-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
+import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
+import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
 import type { SfStoppedRun } from "./native-execution.ts"
@@ -972,11 +974,55 @@ export const createSfHostRuntimeWithRoutineNative = async (
               return { producer: productHttp, dependencies: [authority, authority.ui, authority.state, dashboardHttp,
                 business.dashboardServices, business.dashboardServices.readReview, input.persistence, input.persistence.resolveScopedSource] }
             }
+            if (operationId === "reviews.review-source" || operationId === "reviews.review-update" || operationId === "reviews.review-read") {
+              if (services.productHttp !== productHttp || !extended.reviews) return undefined
+              return { producer: productHttp, dependencies: [extended.productHttp, extended.reviews, extended.reviews.reviews,
+                extended.reviews.reviews.read, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
+                input.persistence, input.persistence.resolveScopedSource] }
+            }
             if (!nativeReviewProjection || services.nativeReviewProjection !== nativeReviewProjection || !extended.reviews) return undefined
             return { producer: nativeReviewProjection, dependencies: [authority, authority.ui, authority.state, nativeReviewProjection.handle,
               extended.reviews, extended.reviews.reviews, extended.reviews.reviews.read, business.dashboardServices,
               business.dashboardServices.discover, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
               input.persistence, input.persistence.resolveScopedSource] }
+          } }, request, stamp),
+        observeSfReviewAgendaHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions,
+          source: (operationId) => {
+            if (services.productHttp !== productHttp) return undefined
+            if (operationId === "dashboard.dashboard-agenda" || operationId === "dashboard.dashboard-review-preserve")
+              return { producer: productHttp, dependencies: [dashboardHttp, business.dashboardServices,
+                business.dashboardServices.agenda, business.dashboardServices.preserveReview,
+                business.dashboardSources, business.dashboardSources.resolveDashboardSource, input.persistence] }
+            if (!extended.reviews?.agenda) return undefined
+            return { producer: productHttp, dependencies: [extended.productHttp, extended.reviewAgenda,
+              extended.reviewAgenda.discover, extended.reviews, extended.reviews.http, extended.reviews.agenda,
+              extended.reviews.agenda.create, extended.reviews.human, extended.reviews.human.preserve, input.persistence] }
+          } }, request, stamp),
+        observeSfDecisionIntentHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions, source: (operationId) => {
+            if (services.productHttp !== productHttp || !identity()) return undefined
+            if (operationId === "decisions.command.sf_case_draft") {
+              const draft = descriptors.filter((entry) => entry.id === "sf_case_draft")
+              if (draft.length !== 1 || draft[0]?.handlerExport !== "draftCase") return undefined
+              return { producer: productHttp, dependencies: [services.dispatch, draft[0], business.cases, business.cases.draft, input.persistence] }
+            }
+            if (operationId === "decisions.decision-edit" || operationId === "decisions.controls.read")
+              return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain, decisionDomain.management,
+                decisionDomain.management.edit, business.withCase, business.cases, input.persistence] }
+            return { producer: productHttp, dependencies: [extended.productHttp, extended.bi, extended.bi.descriptor,
+              extended.bi.source, extended.bi.source.read, extended.bi.source.revalidate, business.plannerProduct,
+              business.plannerProduct.versions, business.plannerProduct.issueSource, input.persistence] }
+          } }, request, stamp),
+        observeSfDecisionApplicationHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions, source: (operationId) => {
+            if (services.productHttp !== productHttp || !identity()) return undefined
+            const producer = business.procurementDecisions
+            const operation = operationId === "decisions.decision-review" ? producer.reviewChange :
+              operationId === "decisions.decision-apply" ? producer.apply : producer.recover
+            return { producer: productHttp, dependencies: [authority, authority.ui, authority.state,
+              operationId === "decisions.decision-review" ? portfolioHttp : procurementDecisionHttp,
+              producer, operation, business.withCase, business.cases, input.persistence] }
           } }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])
