@@ -7,6 +7,9 @@ export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string;
   const { page, origin, testInfo } = input
   const facts: Record<string, string | number | boolean> = {}
   const query = (mode: "bi" | "review", extra: Record<string, string>) => {
+    if (mode === "review" && extra.sectionId) {
+      throw new Error("UNBOUND WP4: UI48 has no native sectionId deep-link binding; a whole-review URL cannot qualify the selected section.")
+    }
     const reference = text(mode === "bi" ? extra.viewId : extra.reviewRef)
     return (mode === "bi" ? "/orchestra/sf-bi/" : "/orchestra/sf-reviews/reviews/") +
       "r_" + Buffer.from(reference, "utf8").toString("base64url")

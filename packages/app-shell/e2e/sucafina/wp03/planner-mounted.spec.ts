@@ -25,6 +25,8 @@ test("real mounted Planner preserves monthly edits, filters and official-version
       await page.goto(planner("Versions"))
       await expect(page).toHaveURL(/\/orchestra\/sf-planner\/versions$/)
       await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
+      // UNBOUND: retain the sign-out contract until its native account control is verified.
+      await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
     })
 
     await page.goto("/orchestra/sf-planner/versions/new")
