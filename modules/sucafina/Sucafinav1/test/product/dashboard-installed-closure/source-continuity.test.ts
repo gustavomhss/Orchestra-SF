@@ -46,8 +46,10 @@ test("WP02 F04 retains read continuity when writing is withdrawn, with no domain
     const rejected = await f.command({ page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { action: "Forbidden write" } })
     expect(rejected.status).toBe(403)
     expect(await business(f)).toEqual(before)
-    const page = await f.page("Hot Topics & Actions")
+    expect((await f.page("Hot Topics & Actions")).status).toBe(404)
+    const page = await f.exportJson()
     expect(page.status).toBe(200)
+    expect(page.headers.get("content-type")).toContain("application/json")
     expect(await page.text()).toContain("Original action")
   } finally { await f.close() }
 })
@@ -147,8 +149,9 @@ test("WP02 private read fence rejects late source mutation and logout without re
       expect(denied.status).toBe("denied")
       expect(JSON.stringify(denied)).not.toContain("Changed after the observation")
     })
-    const other = await f.page("Hot Topics & Actions", "other")
+    const other = await f.exportJson("other")
     expect(other.status).toBe(200)
+    expect(other.headers.get("content-type")).toContain("application/json")
     expect(await other.text()).toContain("Unrelated action")
   } finally { await f.close() }
 })
@@ -174,7 +177,7 @@ test("WP02 interrupted requests and unavailable SQLite are recoverable reads, wh
       expect(denied.status).toBe("denied")
       expect(JSON.stringify(denied)).not.toContain("Private operator context")
     })
-    const revoked = await f.page("Hot Topics & Actions")
+    const revoked = await f.exportJson()
     expect(revoked.status).toBe(401)
     expect(await revoked.text()).not.toContain("Private operator context")
   } finally { await f.close() }
