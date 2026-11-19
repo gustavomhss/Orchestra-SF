@@ -10,6 +10,7 @@ import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase, sfContextUiState, sfFailureUiState, sfOperationReady } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
+import { SfInitialAlternative } from "./initial"
 import "../cases/n24.css"
 
 type ChoiceEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.choice.read"]["output"]>
@@ -66,14 +67,14 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const choicesForRoute = () => {
     if (ui.choicesState !== "ready" || ui.choicesCase !== routeCase()) return undefined
     const selected = ui.choices?.selected
-    if (!selected || selected.caseRef.id !== routeCase()) return undefined
+    if (!selected || !sameRouteCase(routeCase(), selected.caseRef.id, selected.caseRef.incarnation)) return undefined
     return selected
   }
   const choicePanelState = (): SfUiState => {
     if (ui.choicesState !== "ready") return ui.choicesState
     if (ui.choicesCase !== routeCase()) return "stale"
     const selected = ui.choices?.selected
-    if (selected && selected.caseRef.id !== routeCase()) return "stale"
+    if (selected && !sameRouteCase(routeCase(), selected.caseRef.id, selected.caseRef.incarnation)) return "stale"
     return selected ? "ready" : "empty"
   }
   createEffect(() => {
@@ -131,11 +132,11 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const prepare = async (choiceId: string) => {
     const requestedCase = routeCase()
     const selected = ui.choicesCase === requestedCase ? ui.choices?.selected : undefined
-    const current = selected?.caseRef.id === requestedCase
+    const current = selected && sameRouteCase(requestedCase, selected.caseRef.id, selected.caseRef.incarnation)
       ? selected.choices.find((item) => item.id === choiceId)
       : undefined
     const active = caseData.owner.ready()
-    if (!current?.request || current.request.caseRef.id !== requestedCase || !active ||
+    if (!current?.request || !sameRouteCase(requestedCase, current.request.caseRef.id, current.request.caseRef.incarnation) || !active ||
       !sfOperationReady(active.context, "decisions.current-choice-prepare") ||
       ui.reviewState === "loading" || ui.reviewState === "outcome-unknown") return
     const ticket = caseData.owner.generation()
@@ -181,7 +182,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const canReview = () => {
     const active = caseData.owner.ready()
     const selected = choicesForRoute()
-    return !!active && !!selected?.choices.some((choice) => choice.request?.caseRef.id === routeCase()) &&
+    return !!active && !!selected?.choices.some((choice) => choice.request && sameRouteCase(routeCase(), choice.request.caseRef.id, choice.request.caseRef.incarnation)) &&
       sfOperationReady(active.context, "decisions.current-choice-prepare")
   }
   return (
@@ -214,8 +215,8 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
             onRetryRead={() => caseData.reload()} />
         }>
           {(record) => <>
-            <Show when={route()?.kind === "new"}>
-              <p role="status" class="sf-n24-status">{t("sf.ui35.newUnavailable")}</p>
+            <Show when={route()?.kind !== "detail"}>
+              <SfInitialAlternative owner={caseData.owner} record={record()} caseRef={sourceRef()} onReload={() => caseData.reload()} />
             </Show>
             <Show when={ui.reviewState !== "session-expired" && ui.choicesState !== "session-expired"} fallback={
               <SfStatePanel state="session-expired" messageKey={k("sf.common.loginAgain")} />
@@ -226,7 +227,8 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                   {(alternative) => {
                     const result = alternative.result
                     const chosen = () => ui.selection.includes(alternative.id)
-                    return <article class="sf-n24-compare-card" aria-current={chosen() ? "true" : undefined}>
+                    return <article class="sf-n24-compare-card" data-sf-alternative-ref={alternative.id}
+                      data-sf-alternative-version={alternative.version} aria-current={chosen() ? "true" : undefined}>
                       <h2><bdi>{alternative.title}</bdi></h2>
                       <p>{t("sf.ui35.version")}: {alternative.version}</p>
                       <button class="mx-btn" type="button" aria-pressed={chosen()}
@@ -258,15 +260,15 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                         <h3>{t("sf.ui35.restrictions")}</h3>
                         <ul class="sf-n24-list"><For each={result.restrictions}>{(value) => <li><bdi>{value}</bdi></li>}</For></ul>
                       </Show>
-                      <details>
-                        <summary>{t("sf.ui35.sources")}</summary>
+                      <section aria-label={t("sf.ui35.sources")}>
+                        <h3>{t("sf.ui35.sources")}</h3>
                         <ul class="sf-n24-list"><For each={result.sourceRefs}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>
-                      </details>
-                      <details>
-                        <summary>{t("sf.ui35.assumptions")}</summary>
+                      </section>
+                      <section aria-label={t("sf.ui35.assumptions")}>
+                        <h3>{t("sf.ui35.assumptions")}</h3>
                         <ul class="sf-n24-list"><For each={alternative.scenario.assumptions}>{(assumption) =>
                           <li><bdi>{assumption.id}</bdi>: <bdi>{assumption.value === null ? t("sf.ui35.missing") : String(assumption.value)}</bdi> · <bdi>{assumption.state}</bdi></li>}</For></ul>
-                      </details>
+                      </section>
                     </article>
                   }}
                 </For>
@@ -297,7 +299,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                   </For>
                 </div>}
               </Show>
-              <Show when={ui.reviewState === "ready" && ui.choiceReview?.promotion.caseRef.id === routeCase() ? ui.choiceReview : undefined}>
+              <Show when={ui.reviewState === "ready" && ui.choiceReview && sameRouteCase(routeCase(), ui.choiceReview.promotion.caseRef.id, ui.choiceReview.promotion.caseRef.incarnation) ? ui.choiceReview : undefined}>
                 {(review) => <section class="sf-n24-review" aria-live="polite">
                   <h3>{t("sf.ui35.prepareReview")}</h3>
                   <p>{t("sf.ui35.prepared")}</p>
