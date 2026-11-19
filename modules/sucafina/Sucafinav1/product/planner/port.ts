@@ -142,7 +142,8 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
 export function buildPlannerFinancialProjection(input: { projection: Record<string, unknown>; ref: Extract<BusinessEvidenceRef, { kind: "record" }>; period: ForecastCompareRequest["period"]; binding: TrustedDomainContext; at: string }): DomainProjection {
   const start = /^(\d{4})-(\d{2})-01$/.exec(input.period.start)!
   const end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(input.period.end)!
-  const sourceRef = { surface: "planner" as const, type: input.ref.target.recordType, id: input.ref.target.recordId, incarnation: input.ref.target.incarnation, version: input.ref.target.version, fields: input.ref.target.fields, period: input.period, observedAt: input.at }
+  // The immutable source identity covers its admitted record period; the projection below selects the requested months.
+  const sourceRef = { surface: "planner" as const, type: input.ref.target.recordType, id: input.ref.target.recordId, incarnation: input.ref.target.incarnation, version: input.ref.target.version, fields: input.ref.target.fields, period: input.ref.target.period ?? input.period, observedAt: input.at }
   const summary = object(input.projection.summary)
   const lines = rows(summary.lines)
   const missing: DomainProjection["missing"][number][] = []

@@ -61,6 +61,7 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
       if (!preparedReview.ok) throw new Error("WP07 did not return its admitted review preview")
       expect(preparedReview.value.sectionRefs).toEqual(sectionRefs)
       expect(preparedReview.value.sourceRefs.length).toBeGreaterThan(0)
+      expect(preparedReview.value.sourceRefs.every((ref) => digestSfValue(ref.period) === digestSfValue(caseHorizon))).toBe(true)
 
       const executive: Preparation = { request: missionRequest(context, "sf-preparar-revisao-executiva", caseRef),
         selection: { selectionRef, sectionRefs, decisionRefs: [caseRef], period: reviewPeriod, includeConfirmations: false, includeRoutineResults: false } }
