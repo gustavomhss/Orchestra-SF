@@ -1,0 +1,38 @@
+name: sf-wp4-original-screens
+on:
+  push:
+    branches: [audit-wp4-screens-20261119]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read completed WP4 screenshots
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14569559143/zip > "$RUNNER_TEMP/wp4.zip"
+      - name: Retain the exact two synthetic corpus screenshots
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, pathlib, zipfile
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          names = ["dashboard-budget-failed-png-", "procurement-requests-failed-png-"]
+          with zipfile.ZipFile(root / "wp4.zip") as archive:
+              for index, prefix in enumerate(names):
+                  matches = [item for item in archive.infolist() if pathlib.PurePosixPath(item.filename).name.startswith(prefix) and item.filename.endswith(".png")]
+                  if len(matches) != 1: raise RuntimeError("Expected one original screenshot for " + prefix)
+                  payload = {"message":"docs(sf): retain original synthetic WP10 screenshot","branch":"audit-wp4-screens-20261119","content":base64.b64encode(archive.read(matches[0])).decode()}
+                  (root / ("wp4-screen-" + str(index) + ".json")).write_text(json.dumps(payload))
+                  print(prefix + ": original bytes=" + str(matches[0].file_size))
+          PY
+      - name: Persist original Budget screenshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/evidence/wp4-budget-original-20261119.png --input "$RUNNER_TEMP/wp4-screen-0.json" > /dev/null
+      - name: Persist original Requests screenshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/evidence/wp4-requests-original-20261119.png --input "$RUNNER_TEMP/wp4-screen-1.json" > /dev/null
