@@ -359,6 +359,7 @@ export async function createConfiguredInstallation(
       if (nativeResponse) return nativeResponse
       const response = await business(request)
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
+      if (operator && request.method === "GET" && response?.ok && response.headers.get("content-type")?.split(";")[0]?.trim().toLowerCase() === "text/html") return localChrome(response)
       return response
 
     },
@@ -372,7 +373,9 @@ function recordedOperator(operator: { installationId: string; uid: number; buyer
 }
 
 function localChrome(response: Response) {
-    return response.text().then((body) => {
+    return response.clone().text().then((body) => {
+      // Fragment endpoints keep their original response and bytes; local controls belong to a full document.
+      if (!/^\s*<!doctype html>/i.test(body)) return response
       const html = body.replace('<div id="content" class="content">', '<div id="content" class="content"><p role="status" class="environment-banner">Homologação local · ' + esc(operator!.name) + ' · Microsoft 365 desativado neste perfil</p>')
         .replace('<!--local-tools-->', `<a href="${config.mount}/backups">Backups</a><details data-notifications="${config.mount}/notifications"><summary>Notifications <span class="notification-count" data-notification-count></span></summary><div class="notification-popover" data-notification-items><p>Loading notifications…</p></div></details>`)
       const headers = new Headers(response.headers)
