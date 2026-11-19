@@ -205,7 +205,7 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         if (!validPerson(person) || person.id !== current.value.person.id) return
         if (!await session(request)) return
         const value: Session = { ...current.value, person, tokens: { ...refreshed, refreshToken: refreshed.refreshToken ?? current.value.tokens.refreshToken, idToken: refreshed.idToken ?? current.value.tokens.idToken } }
-        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt)
+        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt, now())
         // Keep the durable marker authoritative even when logout wins between the check and put.
         if (!await session(request)) await options.secrets.remove(slot("session", current.handle))
       })().finally(() => refreshing.delete(current.handle))

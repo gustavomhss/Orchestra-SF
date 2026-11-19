@@ -17,7 +17,7 @@ export type Drawn = {
   aside: { key: string; page: false }[]
 }
 
-type PressResult = { ok: true; value?: unknown } | { ok: false; status?: 409; stored?: unknown; by?: string } | null
+type PressResult = { ok: true; value?: unknown } | { ok: false; status?: 409; stored?: unknown; by?: string; currentVersionCAS?: number } | null
 
 const SCRIPT = `
 const unsaved = ${JSON.stringify(UNSAVED)}
@@ -487,7 +487,7 @@ export function press(
 ):
   | { saved: true; value?: unknown }
   | { saved: false; notice: string }
-  | { saved: false; status?: 409; stored?: unknown; by?: string } {
+  | { saved: false; status?: 409; stored?: unknown; by?: string; currentVersionCAS?: number } {
   let result: PressResult
   try {
     result = action()
@@ -495,7 +495,7 @@ export function press(
     return { saved: false, notice: UNSAVED }
   }
   if (!result) return { saved: false, notice: UNSAVED }
-  if (!result.ok && result.status === 409) return { saved: false, status: 409, stored: result.stored, by: result.by }
+  if (!result.ok && result.status === 409) return { saved: false, status: 409, stored: result.stored, by: result.by, ...(typeof result.currentVersionCAS === "number" ? { currentVersionCAS: result.currentVersionCAS } : {}) }
   if (!result.ok) return { saved: false }
   return { saved: true, value: result.value }
 }

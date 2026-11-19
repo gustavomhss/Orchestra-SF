@@ -37,7 +37,8 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     await persistence.initializeSources("dashboard")
     await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "admin" }]; snapshot.data.hotTopics = [{ id: "topic", status: "open" }]; return { commit: true, value: undefined } })
     const session = { active: true, approved: true }
-    const host: DomainPortHost = { persistence, authenticate: async (request, context) => request.headers.get("authorization") === "alice" ? resolve("alice", [...context!.roleMap], (group) => session.active && group === "admins") : null, environment: async () => ({ at, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: "alice" } }), revalidate: async () => session.active && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
+    const admitted = new Request("https://example.test", { headers: { authorization: "alice" } })
+    const host: DomainPortHost = { persistence, authenticate: async (request, context) => request.headers.get("authorization") === "alice" ? resolve("alice", [...context!.roleMap], (group) => session.active && group === "admins") : null, environment: async () => ({ at, id: randomUUID, directory: [] }), requestFor: () => admitted, revalidate: async () => session.active && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
     const records = createDashboardRecordEvidenceHost({ host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: persistence }) })
     const issued = await records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: "topic", fields: ["status"], period }, call)
     expect(issued.status).toBe("ok")
@@ -215,7 +216,8 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     for (const mutation of ["cancel", "period"] as const) {
       const controller = new AbortController()
       const wantedPeriod = structuredClone(period)
-      const requestHost = { ...host, requestFor: () => new Request("https://example.test", { headers: { authorization: "alice" }, signal: controller.signal }) }
+      const admittedRequest = new Request("https://example.test", { headers: { authorization: "alice" }, signal: controller.signal })
+      const requestHost = { ...host, requestFor: () => admittedRequest }
       const race = finalRevalidation(requestHost, 5, () => {
         if (mutation === "cancel") controller.abort()
         if (mutation === "period") wantedPeriod.end = "2026-11-14"

@@ -17,11 +17,43 @@ function fixture() {
 }
 const options = () => ({ signal: new AbortController().signal, idempotencyKey: uuid })
 
+const sourceBoundFileOperations = [
+  "files.import-targets",
+  "files.import-reference",
+  "files.import-detail",
+  "files.import-admit",
+  "files.import-preview",
+  "files.import-apply",
+  "files.document-requests",
+  "files.document-search",
+  "files.document-open",
+  "files.document-schemas",
+  "files.document-schema",
+  "files.document-sources",
+  "files.document-admit",
+  "files.document-extract",
+  "files.document-confirm",
+  "files.document-candidates",
+  "files.document-scenario-targets",
+  "files.document-scenario-preview",
+  "files.asset.link",
+  "files.asset.download",
+  "files.asset.upload",
+  "files.export.xlsx",
+  "files.export.po",
+  "files.export.suppliers",
+  "files.export.register",
+  "files.export.json",
+  "files.export.members",
+  "files.export.review",
+] as const
+
 describe("A06 source-bound files contracts (component-only; NOT installed E2E)", () => {
-  test("each of 27 source-bound operation names is literal and unique", () => {
+  test("each source-bound file operation name is literal and unique", () => {
     const ids = Object.keys(SfFiles.operations)
-    expect(ids).toHaveLength(27)
-    expect(new Set(ids).size).toBe(27)
+    expect(ids).toEqual([...sourceBoundFileOperations])
+    expect(ids).toHaveLength(sourceBoundFileOperations.length)
+    expect(new Set(ids).size).toBe(sourceBoundFileOperations.length)
     expect(ids.every((id) => id.startsWith("files."))).toBe(true)
     for (const id of ids) {
       expect<string>(SfFiles.operations[id as keyof typeof SfFiles.operations].operationId).toBe(id)
