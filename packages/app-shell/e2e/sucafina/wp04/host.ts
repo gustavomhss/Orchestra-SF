@@ -36,9 +36,14 @@ Object.assign(process.env, {
   XDG_STATE_HOME: path.join(directory, "host-state"),
 })
 // These imports capture host configuration, so load them after private setup.
-const [{ createEmbeddedRoutes }, { createOperationsInstallation }] = await Promise.all([
+const [{ createEmbeddedRoutes }, { createOperationsInstallation },
+  { AppNodeBuilder }, { LayerNode }, { PermissionSaved }, { ClaudeCodeAccount }] = await Promise.all([
   import("../../../../server/src/routes.ts"),
   import("../operations-support/installation.ts"),
+  import("@orchestra/core/effect/app-node-builder"),
+  import("@orchestra/core/effect/layer-node"),
+  import("@orchestra/core/permission/saved"),
+  import("@orchestra/core/claude-code-account"),
 ])
 const at = "2026-11-13T12:00:00Z"
 const driver = await openLocalStore(directory)
@@ -109,7 +114,13 @@ const installation = await createOperationsInstallation({
 const embedded = HttpRouter.toWebHandler(createEmbeddedRoutes({
   host: installation.host,
   sucafinaInstallations: installation.discovery,
-}).pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true })
+}).pipe(
+  // Same request services as the canonical sdk-next embedded composition.
+  HttpRouter.provideRequest(AppNodeBuilder.build(LayerNode.group([
+    PermissionSaved.node, ClaudeCodeAccount.node,
+  ]))),
+  Layer.provide(HttpServer.layerServices),
+), { disableLogger: true })
 const health = await embedded.handler(new Request(origin + "/api/health"))
 if (health.status !== 200 || !installation.identity()) throw new Error("OPERATIONS_REAL_HOST_NOT_READY")
 const records = await store.transaction("procurement", async (snapshot) => {
