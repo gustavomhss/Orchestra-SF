@@ -6,7 +6,7 @@ import { createConnection } from "node:net"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { Workbook } from "exceljs"
-import { createOperationsInstallation } from "../../../../../../packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+import { createPrivateAdmissionInstallation } from "./private-installation.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { scanLocalFile } from "../../../runtime/local-scanner.ts"
@@ -63,7 +63,7 @@ async function fixture(scanner: ReturnType<typeof endpoint>) {
     secrets: persistence.secrets, key: randomBytes(32),
   })
   const bankKey = randomBytes(32)
-  const installation = createOperationsInstallation({
+  const installation = createPrivateAdmissionInstallation({
     installationId, directory, origin, mount, principalRef, readOnly: false, persistence,
     authenticate: identity.authenticate,
     environment: async () => ({ at, id: randomUUID, directory: [{ id: principalRef, name: "Private admission operator" }], bankKey }),

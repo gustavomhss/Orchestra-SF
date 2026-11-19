@@ -81,7 +81,7 @@ export async function sourceFixture(options: { role?: Role; handoffGrant?: boole
     const topicHost = createCollaborationHotTopicHost({ host: authority.host, state: authority.state, evidence, creationTarget: authority.creationTarget, mutationFence,
       authorizeMutation: async (context) => {
         const active = admitted.get(context)
-        if (options.revokeBeforeCommit) authority.human.finish(context)
+        if (options.revokeBeforeCommit && context.kind === "ui") authority.human.finish(context)
         return !!active && authority.human.authorize(context, active.action, active.payload)
       } })
     const topics = createHotTopicPort(options.atomicCreate === false ? { transact: topicHost.transact } : topicHost)

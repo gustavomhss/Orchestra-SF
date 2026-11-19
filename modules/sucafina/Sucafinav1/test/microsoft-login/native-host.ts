@@ -25,7 +25,7 @@ export async function microsoftNativeHost(
     environment: Pick<Awaited<ReturnType<typeof privateFixture>>["environment"],
       "ORCHESTRA_DB" | "ORCHESTRA_INHERIT_CREDENTIALS" | "ORCHESTRA_CONFIG_DIR" | "ORCHESTRA_CREDENTIAL_KEY_FILE">
   },
-  installation: SfInstallation,
+  installation: Pick<SfInstallation, "host" | "discovery" | "transport">,
 ) {
   const data = path.join(disk.directory, "host-data")
   const locations = {

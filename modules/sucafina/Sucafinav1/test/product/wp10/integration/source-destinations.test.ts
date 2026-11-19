@@ -56,7 +56,9 @@ test("authorized monthly source links select the native chapter and producer wit
       expect(destination.pathname).toBe(item.path)
       expect(Object.fromEntries(destination.searchParams)).toEqual({ year: item.year, month: item.month })
       expect(matchSfNativeRoutePath(destination.pathname)).toMatchObject({ surfaceId: item.cap, kind: "entry" })
-      expect(evidence.authorizedProjection?.context.period).toEqual(period)
+      const projection = evidence.authorizedProjection
+      if (!projection || !("context" in projection)) throw new Error("Native source context unavailable")
+      expect(projection.context.period).toEqual(period)
       const handler = handlers.find((entry) => entry.operationId === `domain.page.${item.cap}`)
       expect(handler, `The real ${item.page} native producer must be mounted`).toBeDefined()
       if (!handler) throw new Error("Native source producer unavailable")
