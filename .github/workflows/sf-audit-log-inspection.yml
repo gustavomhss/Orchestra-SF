@@ -1,0 +1,54 @@
+name: sf-reports-read-inspection
+on:
+  push:
+    branches: [audit-reports10-20261119]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read completed Reports artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14573848222/zip > "$RUNNER_TEMP/reports10.zip"
+      - name: Extract original failure screen and bounded steps
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, pathlib, re, zipfile
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          lines = ["# Reports native read observation", "", "Original run 44613459367, artifact 14573848222. Read-only diagnostic, no rerun and no product assertion changed.", ""]
+          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
+          with zipfile.ZipFile(root / "reports10.zip") as archive:
+              names = archive.namelist()
+              for member in [p for p in names if p.endswith("/error-context.md")]:
+                  lines += [f"## {member}", ""]
+                  for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:400]:
+                      if not sensitive.search(line): lines.append(line[:1200])
+                  lines.append("")
+              for member in [p for p in names if p.endswith(".json") and "playwright-runtime" in p]:
+                  value = json.loads(archive.read(member))
+                  found = []
+                  def visit(value):
+                      if isinstance(value, list):
+                          for item in value: visit(item)
+                      elif isinstance(value, dict):
+                          if "title" in value and "duration" in value:
+                              title = value.get("title", "")
+                              if isinstance(title, str) and not sensitive.search(title):
+                                  found.append({k: value[k] for k in ["title", "duration", "status", "category"] if k in value})
+                          for key, item in value.items():
+                              if key != "attachments" and isinstance(item, (dict, list)): visit(item)
+                  visit(value)
+                  lines += ["## Bounded step outcomes", json.dumps(found[-120:], ensure_ascii=False), ""]
+          text = "\n".join(lines) + "\n"
+          payload = {"message": "docs(sf): retain original Reports read failure observation", "branch": "audit-reports10-20261119", "content": base64.b64encode(text.encode()).decode()}
+          (root / "reports-payload.json").write_text(json.dumps(payload))
+          print("Extracted original failure screens and bounded step names, excluding sensitive lines.")
+          PY
+      - name: Persist original observation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-reports-read-44613459367.md --input "$RUNNER_TEMP/reports-payload.json" > /dev/null
