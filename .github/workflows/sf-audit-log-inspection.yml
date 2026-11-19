@@ -13,13 +13,13 @@ jobs:
       - name: Read completed proposal artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14578835200/zip > "$RUNNER_TEMP/proposals6.zip"
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14578598211/zip > "$RUNNER_TEMP/proposals7.zip"
       - name: Extract original producer observations and page text
         run: |
           python3 - <<'PY'
           import base64, io, json, os, pathlib, re, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          lines = ["# Proposal gate6 original observations", "", "Read-only source run44621582202, artifact14578835200, snapshot7098d64ae0df041d5780b54e7ed047db1ff544d5. No rerun.", ""]
+          lines = ["# Proposal gate7 original observations", "", "Read-only source run44623930895, artifact14578598211, snapshotfc566a0a339b674f71166119eac4563551315287. No rerun.", ""]
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|idempotency[-_]?key|[?&](?:code|token|key)=", re.I)
           def clean(value):
               if isinstance(value, dict):
@@ -30,7 +30,7 @@ jobs:
               return value
           seen = set()
           def attachment(item):
-              if not isinstance(item, dict) or item.get("name") != "proposal-original-observation.json": return
+              if not isinstance(item, dict) or item.get("name") not in ["proposal-original-observation.json", "proposal-host.log"]: return
               body = item.get("body")
               if not isinstance(body, str):
                   lines.extend(["Original attachment without inline body: " + json.dumps({key:item[key] for key in ["name","contentType","path"] if key in item}), ""])
@@ -39,6 +39,9 @@ jobs:
               except Exception: decoded = body
               if decoded in seen: return
               seen.add(decoded)
+              if item.get("name") == "proposal-host.log":
+                  lines.extend(["## Original host log", "", "```text", *clean(decoded).splitlines()[-100:], "```", ""])
+                  return
               observation = json.loads(decoded)
               lines.extend(["## Original journey observation " + str(len(seen)), "", "```json"])
               lines.extend(json.dumps(clean(observation), ensure_ascii=False, indent=2).splitlines())
@@ -50,7 +53,7 @@ jobs:
                   for item in value.get("attachments", []): attachment(item)
                   for key, item in value.items():
                       if key != "attachments" and isinstance(item, (dict, list)): visit(item)
-          with zipfile.ZipFile(root / "proposals6.zip") as archive:
+          with zipfile.ZipFile(root / "proposals7.zip") as archive:
               for name in archive.namelist():
                   if not name.endswith("/playwright-report/index.html"): continue
                   html = archive.read(name).decode("utf-8", "replace")
@@ -63,11 +66,11 @@ jobs:
           text = "\n".join(lines) + "\n"
           if not seen: raise RuntimeError("No original observation attachments found")
           if len(text) > 600000: raise RuntimeError("Original observation exceeds bounded audit limit")
-          payload = {"message": "docs(sf): retain original proposal gate6 producer observations", "branch": "audit-proposal-screens-20261119", "content": base64.b64encode(text.encode()).decode()}
+          payload = {"message": "docs(sf): retain original proposal gate7 producer observations", "branch": "audit-proposal-screens-20261119", "content": base64.b64encode(text.encode()).decode()}
           (root / "proposal-payload.json").write_text(json.dumps(payload))
           print("Read " + str(len(seen)) + " original observations; redacted credential fields only.")
           PY
       - name: Persist original observation
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-proposal-original-44621582202.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-proposal-original-44623930895.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
