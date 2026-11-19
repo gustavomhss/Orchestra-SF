@@ -26,7 +26,7 @@ test("installed Dashboard confirms exact monthly changes and purges late results
   page.on("request", countApplications)
   try {
     await test.step("create real fiscal lines and cancel a preview without changing saved months", async () => {
-      await page.context().addCookies([installation.cookie])
+      await installation.signIn(page)
       await page.goto(url)
       owner = await addOwner(page, "M67 Installed operating line", "1200")
       unrelated = await addOwner(page, "M67 Installed unrelated line", "2400")

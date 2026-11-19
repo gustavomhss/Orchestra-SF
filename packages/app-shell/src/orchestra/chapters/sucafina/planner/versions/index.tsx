@@ -244,7 +244,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
       }
       const client = createSfPlannerClient(ready.transport)
       const options = { signal: abort.signal, idempotencyKey: request.idempotencyKey }
-      const command = { page: "Versions" as const, id: request.versionId || undefined,
+      const command = { page: "Versions" as const, ...(request.versionId ? { id: request.versionId } : {}),
         version: request.expected, confirmed: true }
       // Each case is a source-locked catalog operation; never a generic action dispatcher.
       const result = request.action === "save"
@@ -263,6 +263,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                 ? await client["domain.command.CAP23.unlock"]({ ...command, action: "unlock", values: {} }, options)
                 : await client["domain.command.CAP23.delete"]({ ...command, action: "delete", values: {} }, options)
       if (abort.signal.aborted || model.owner.generation() !== generation || screen.review?.ref !== request.ref) return
+      if (commandAbort === abort) commandAbort = undefined
       if (result.kind !== "response") {
         setScreen({ outcome: result.reason === "outcome-unknown" ? "unknown" : "failed", busy: false, error: result.reason })
         if (request.action === "save" && !request.first)
@@ -281,15 +282,11 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
           error: result.body.errors?.join("; ") ?? String(result.body.status) })
         return
       }
-      // Creation/copy must return an exact source-assigned identity. Another
-      // writer increasing the count is not proof of this command.
+      // Some producers return an identity; the mounted application deliberately
+      // returns only ok/warnings. Identity then comes from the authorized list.
       const createdRef = request.first || request.action === "copy"
         ? typeof result.body.value === "string" && result.body.value ? result.body.value : undefined
         : undefined
-      if ((request.first || request.action === "copy") && !createdRef) {
-        setScreen({ busy: false, outcome: "unknown", error: "missing-created-reference" })
-        return
-      }
       // Do not allow a second command while the authorized readback is pending.
       setScreen({ busy: true, outcome: "succeeded", error: undefined,
         verified: { ref: request.ref, action: request.action, versionId: request.versionId,
@@ -308,6 +305,14 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
     const current = page()
     if (!verified || !current || model.view.loadedRequest < verified.requestNumber ||
         (model.view.state !== "ready" && model.view.state !== "empty")) return
+    if ((verified.action === "copy" || !verified.versionId) && !verified.createdRef) {
+      // Do not attribute another writer's record to this command. The original
+      // POST confirmed its effect; select a record from the fresh authorized list.
+      const selectedYear = verified.action === "copy" ? screen.review?.version?.year : undefined
+      setScreen({ verified: undefined, review: undefined, outcome: "idle", error: undefined, copyName: "", busy: false })
+      go("versions", selectedYear === undefined ? {} : { year: selectedYear })
+      return
+    }
     const projected = current.data.versions.find((version) => version.id === verified.versionId)
     const revision = projected && current.versions["versions:" + projected.id]?.version
     const created = current.data.versions.find((version) => version.id === verified.createdRef)

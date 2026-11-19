@@ -9,16 +9,17 @@
  * Requires the exact 227 context/navigation leaves and 228 adapter postimages.
  */
 import { useLocation, useNavigate } from "@solidjs/router"
-import { createEffect, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
+import { createEffect, createSignal, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { usePlatform } from "@/context/platform"
+import { useLanguage } from "@/context/language"
 import { ServerConnection } from "@/context/server"
 import { pathKey } from "@/utils/path-key"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
-import { createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
+import { createSfAuthActions, createSfTransport, type SfTransport, type SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfDraft } from "../shared/draft"
@@ -151,7 +152,7 @@ function explicitSelection(query: string): { kind: "none" } | { kind: "invalid" 
 /** Only the selected registered Orchestra connection may discover its installed SF. */
 export function createSfInstalledOwnerSource231(
   server: ServerConnection.Any,
-  fetcher: typeof globalThis.fetch,
+  fetcher: SfTransportFetch,
 ) {
   const key = ServerConnection.key(server)
   const endpoint = (() => {
@@ -219,15 +220,57 @@ function MountedSurface(props: Readonly<{
   view: () => View
   gate: () => boolean
   bind: (handle: SfContextHandle | undefined) => void
-  status: (status: string, generation: number) => void
+  status: (status: string, generation: number, reason?: string) => void
 }>): JSX.Element {
   const handle = useSfContext()
+  const language = useLanguage()
+  const [authBusy, setAuthBusy] = createSignal(false)
+  const [authFailed, setAuthFailed] = createSignal(false)
+  const signOut = async () => {
+    const state = handle.state(), ready = handle.ready(), generation = handle.generation()
+    if (state.status !== "ready" || !ready || authBusy()) return
+    setAuthBusy(true); setAuthFailed(false)
+    try {
+      await createSfAuthActions({
+        binding: state.binding, transport: ready.transport,
+        navigate: (url) => window.location.assign(url),
+      }).logout()
+      if (handle.generation() === generation && handle.ready()?.transport === ready.transport) {
+        handle.invalidate("logout")
+        await handle.reload()
+      }
+    } catch (error) {
+      console.warn("Sucafina sign-out failed", error instanceof Error && /^SF_NATIVE_[A-Z_]+$/.test(error.message)
+        ? error.message : error instanceof Error ? error.name : "unknown")
+      setAuthFailed(true)
+    } finally { setAuthBusy(false) }
+  }
+  const message = () => {
+    const state = handle.state().status
+    return language.t(state === "resolving" ? "sf.ui67.loading" :
+      state === "unauthenticated" ? "sf.ui67.unauthenticated" :
+      state === "denied" ? "sf.ui67.denied" :
+      state === "context-mismatch" ? "sf.ui67.mismatch" : "sf.ui67.unavailable")
+  }
   props.bind(handle)
-  createEffect(() => props.status(handle.state().status, handle.generation()))
+  createEffect(() => {
+    const state = handle.state()
+    props.status(state.status, handle.generation(), "reason" in state ? state.reason : undefined)
+  })
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
   return (
-    <Show when={props.gate()} fallback={<p role="status" data-sf-f01="resolving">Resolving installed Sucafina</p>}>
+    <>
+    <div class="flex flex-wrap gap-2" role="toolbar" aria-label={language.t("sf.ui67.title")}>
+      <button type="button" class="mx-btn" disabled={authBusy()}
+        onClick={() => { void handle.reload() }}>{language.t("sf.ui67.refreshAccess")}</button>
+      <Show when={handle.state().status === "ready"}>
+        <button type="button" class="mx-btn" disabled={authBusy()}
+          onClick={() => { void signOut() }}>{language.t("sf.ui67.signOut")}</button>
+      </Show>
+    </div>
+    <Show when={authFailed()}><p role="alert">{language.t("sf.ui67.signOutFailed")}</p></Show>
+    <Show when={props.gate()} fallback={<p role="status" data-sf-f01={handle.state().status}>{message()}</p>}>
       <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
         <Match when={current()?.surfaceId === "UI29"}>
           <SfTodayView surfaceId="UI29" route={current() as SfSurfaceProps<"UI29">["route"]} />
@@ -243,6 +286,7 @@ function MountedSurface(props: Readonly<{
         </Match>
       </Switch>
     </Show>
+    </>
   )
 }
 
@@ -254,12 +298,16 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const location = useLocation()
   const navigate = useNavigate()
   const platform = usePlatform()
-  const fetcher = platform.fetch ?? globalThis.fetch
+  // A native browser fetch must retain its Window receiver when the transport
+  // invokes the injected function through its options object.
+  const fetcher: SfTransportFetch = (input, init) =>
+    platform.fetch ? platform.fetch(input, init) : globalThis.fetch(input, init)
   const source = createSfInstalledOwnerSource231(props.server, fetcher)
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
   const [view, setView] = createStore<View>({ status: "resolving" })
-  const [provider, setProvider] = createStore({ status: "unmounted", generation: -1 })
+  const [provider, setProvider] = createStore({ status: "unmounted", generation: -1, reason: undefined as string | undefined })
   let mounted: SfContextHandle | undefined
+  let authenticatedTransport: Readonly<{ binding: SfInstallationDescriptor; generation: number; transport: SfTransport }> | undefined
   let explicitOwner: SfOwnerSelection | undefined
   let ownerEpoch = 0
   let disposed = false
@@ -293,26 +341,47 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     binding, generation, currentGeneration, fetch: fetcher, operations: SfNativeOperationBindings,
   })
   const readContext = async (binding: SfInstallationDescriptor, signal: AbortSignal,
-    generation: number, currentGeneration: () => number) => {
-    const transport = newTransport(binding, generation, currentGeneration)
+    generation: number, currentGeneration: () => number,
+    transport = newTransport(binding, generation, currentGeneration)) => {
     const answer = await createSfContextClient(transport)["ctx.context"]({
       installationId: binding.installationId, projectId: binding.projectId,
       hostId: binding.hostId,
     }, { signal })
+    if (answer.kind !== "response") console.warn("Sucafina context transport failed", JSON.stringify({
+      reason: answer.reason, generation, currentGeneration: currentGeneration(),
+      sameOrigin: typeof window !== "undefined" && window.location.origin === binding.publicOrigin,
+      authMode: binding.authMode, publicOrigin: binding.publicOrigin,
+    }))
     return answer.kind === "response"
       ? answer.body
       : { status: "unavailable" as const, reason: "host-unavailable" as const }
   }
   const dependencies: SfContextDependencies = {
     listInstallations: async (selected, signal) => {
+      authenticatedTransport = undefined
       ownerEpoch += 1 // invalidate all old transport generations before the next load
       const found = await source.listByIds(selected, signal)
       return found ?? { installations: [] }
     },
-    loadContext: (binding, signal) => readContext(binding, signal, ownerEpoch, () => ownerEpoch),
-    createTransport: (binding, generation) => newTransport(
-      binding, generation, () => mounted?.generation() ?? generation,
-    ),
+    loadContext: async (binding, signal) => {
+      const handle = mounted
+      if (!handle) return { status: "unavailable", reason: "host-unavailable" }
+      const generation = handle.generation()
+      const currentGeneration = () => !disposed && mounted === handle ? handle.generation() : -1
+      const transport = newTransport(binding, generation, currentGeneration)
+      const result = await readContext(binding, signal, generation, currentGeneration, transport)
+      if (result.status === "ok" && !signal.aborted && currentGeneration() === generation)
+        authenticatedTransport = { binding, generation, transport }
+      return result
+    },
+    createTransport: (binding, generation) => {
+      const authenticated = authenticatedTransport
+      authenticatedTransport = undefined
+      if (!authenticated || authenticated.binding !== binding || authenticated.generation !== generation ||
+          mounted?.generation() !== generation || disposed)
+        throw new Error("SF_NATIVE_CONTEXT_TRANSPORT_NOT_CURRENT")
+      return authenticated.transport
+    },
     resolveTransportIdentity: (selected) => sameServer(selected) ? source.transportIdentity : "",
     createDraft: createSfDraft,
     revalidateDraft: revalidateSfNativeDraft,
@@ -449,7 +518,13 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const query = location.search
     const directory = props.directory
     const actualServerKey = ServerConnection.key(props.server)
-    const parsed = explicitSelection(query)
+    const params = new URLSearchParams(query)
+    // Admit the complete family query before extracting the exact owner triplet.
+    // No unknown, repeated or partial selector can reach discovery.
+    const parsed = sfMountedPathAdmitted(location.pathname, params)
+      ? explicitSelection(new URLSearchParams([...params].filter(([key]) =>
+          ownerKeys.some((ownerKey) => ownerKey === key))).toString())
+      : { kind: "invalid" as const }
     const epoch = ++discoveryAttempt
     if (parsed.kind === "invalid") {
       explicitOwner = undefined
@@ -528,6 +603,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   })
   onCleanup(() => {
     disposed = true
+    authenticatedTransport = undefined
     ownerEpoch += 1
     releaseChapter()
     navigation.dispose()
@@ -537,6 +613,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
 
   return (
     <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
+      data-sf-discovery-state={discovery.status} data-sf-provider-state={provider.status} data-sf-provider-reason={provider.reason}
+      data-sf-view-state={view.status}
       onFocusIn={(event) => {
         if (event.target instanceof HTMLElement &&
           event.target.matches("input, textarea, select, [contenteditable='true']"))
@@ -556,7 +634,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         >
           <MountedSurface view={() => view} gate={() => provider.status === "ready" && provider.generation >= 0}
             bind={(handle) => { mounted = handle }}
-            status={(status, generation) => setProvider({ status, generation })} />
+            status={(status, generation, reason) => setProvider({ status, generation, reason })} />
         </SfTodayBoundOwnerProvider>
       </Show>
     </div>

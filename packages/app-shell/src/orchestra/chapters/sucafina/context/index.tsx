@@ -190,9 +190,9 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
          current.context.stamp.policyVersion !== fresh.stamp.policyVersion)
       const requiresRevalidation = current !== undefined && (current.drafts.state() === "quarantined" || changedAccess)
       if (changedAccess) current?.drafts.quarantine()
-      const transport = current && !requiresRevalidation && ownerKey === renewedKey
-        ? current.transport
-        : props.dependencies.createTransport(binding, generation)
+      // Every load fences the previous generation, even for an unchanged owner.
+      // Use the transport authenticated by this load's original ctx.context read.
+      const transport = props.dependencies.createTransport(binding, generation)
       if (requiresRevalidation && current) {
         epoch += 1
         const transferredIdentity = { ...renewedIdentity, authEpoch: epoch }
@@ -324,8 +324,10 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     discardDrafts: () => (store.state.status === "ready" || current?.drafts.state() === "quarantined") &&
       current?.drafts.discardAll() === true,
     ready: () => {
-      if (store.state.status !== "ready" || !store.active) return undefined
-      return { context: store.active.context, transport: store.active.transport, drafts: store.active.drafts.registry }
+      if (store.state.status !== "ready" || !store.active || !current) return undefined
+      // The transport is an opaque instance registered in a private WeakMap.
+      // Preserve its identity instead of returning a Solid store proxy.
+      return { context: store.active.context, transport: current.transport, drafts: current.drafts.registry }
     },
     reload: () => load(props.selection()),
     invalidate,

@@ -29,7 +29,7 @@ type LoadedSfInstallation = Awaited<ReturnType<typeof loadSfInstallation>>
 const SHUTDOWN_GRACE_MS = 2_000
 
 export default Runtime.handler(Commands.commands.serve, (input) =>
-  serveForever({ ...input, allowedHosts: input["allowed-host"] }),
+  serveForever({ ...input, allowedHosts: input["allowed-host"], publicOrigin: input["public-origin"] }),
 )
 
 export type ServeInput = {
@@ -37,6 +37,7 @@ export type ServeInput = {
   readonly port: Option.Option<number>
   readonly register: boolean
   readonly installation?: Option.Option<string>
+  readonly publicOrigin?: Option.Option<string>
   readonly cors?: ReadonlyArray<string>
   readonly allowedHosts?: ReadonlyArray<string>
   /** Runs once the server answers, with the address it bound. */
@@ -81,12 +82,16 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
         )
         // Validate the private installation and isolation before daemon or host database effects.
         const installationFile = input.installation && Option.isSome(input.installation) ? input.installation.value : undefined
+        const publicOrigin = input.publicOrigin && Option.getOrUndefined(input.publicOrigin)
+        if (publicOrigin && (!installationFile || !URL.canParse(publicOrigin) ||
+            new URL(publicOrigin).origin !== publicOrigin || !/^https?:$/.test(new URL(publicOrigin).protocol)))
+          return yield* Effect.fail(new Error("An explicit public origin requires an installation and a canonical HTTP(S) origin"))
         const installation = installationFile
           ? yield* Effect.tryPromise({ try: async () => {
               const port = Option.getOrUndefined(input.port)
               if (port === undefined) throw new Error("An explicit installation requires an explicit port")
               const { loadSfInstallation } = await import("../../sucafina-product/installation")
-              return loadSfInstallation(installationFile, `http://${input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname}:${port}`)
+              return loadSfInstallation(installationFile, publicOrigin ?? `http://${input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname}:${port}`)
             }, catch: (error) => error instanceof Error ? error : new Error("Installation unavailable") })
           : undefined
         if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))

@@ -109,6 +109,15 @@ const decisionCondition = Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text
  evidence:recordEvidence,fields:Schema.Array(text),period,criterionId:text,recipientRef:text,destination:text,label:text})
 const decisionCoverage = Schema.Struct({caseRef:SfDecisionCaseRef,source:recordEvidence,basis:SfSourceCostCoverageBasis,entries:Schema.Array(coverageEntry),expectedVersion:nonnegative})
 const prepareChanges = Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,operations:SfSourceInput_sf_change_prepare.fields.operations})
+const decisionEdit = Schema.Struct({
+ caseRef:SfDecisionCaseRef, objective:text,
+ criteria:Schema.Array(Schema.Struct({id:text,description:text,required:Schema.Boolean})).check(Schema.isMinLength(1)).check(Schema.isMaxLength(100)),
+ sourceRefs:Schema.Array(SfSourceEvidenceInput).check(Schema.isMaxLength(100)),
+ horizon:Schema.optionalKey(period), currency:Schema.optionalKey(Schema.String.check(Schema.isPattern(/^[A-Z]{3}$/))),
+ assumptions:Schema.optionalKey(Schema.Array(Schema.Struct({
+   id:text,text,state:Schema.Literals(["open","confirmed","rejected"]),evidenceRefs:Schema.Array(SfSourceEvidenceInput),
+ })).check(Schema.isMaxLength(100))),
+})
 const decisionReview = Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,changeId:text})
 const decisionRecover = Schema.Union([
  Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,changeId:text,reviewDigest:digest}),
@@ -152,6 +161,9 @@ export const SfDecisionsCurrentChoicePromote = {operationId:"decisions.current-c
 
 /** format=json; case/source/scenario/baseline/parameter query; catalog decision-controls */
 export const SfDecisionsControlsRead = {operationId:"decisions.controls.read",input:controlsQuery,output:portResult(controlsValue),method:"GET",pathTemplate:"{mount}/{surface}",effect:"read",responseMode:"json",fixedQuery:{"sf":"decision-controls","format":"json"}} as const
+
+/** Original decision-domain-http validEdit and case-management.edit; returns the committed case CAS. */
+export const SfDecisionsDecisionEdit = {operationId:"decisions.decision-edit",input:decisionEdit,output:portResult(Schema.Struct({caseRef:SfDecisionCaseRef})),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-edit"},maxRequestBytes:262144} as const
 
 /** valid(payload,mode=decision-coverage); catalog decision-controls */
 export const SfDecisionsDecisionCoverage = {operationId:"decisions.decision-coverage",input:decisionCoverage,output:portResult(Schema.Struct({coverageRef:text,version})),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-coverage"}} as const
@@ -199,6 +211,7 @@ export const SfDecisions = {operations:{
   "decisions.current-choice-prepare":SfDecisionsCurrentChoicePrepare,
   "decisions.current-choice-promote":SfDecisionsCurrentChoicePromote,
   "decisions.controls.read":SfDecisionsControlsRead,
+  "decisions.decision-edit":SfDecisionsDecisionEdit,
   "decisions.decision-coverage":SfDecisionsDecisionCoverage,
   "decisions.decision-criteria":SfDecisionsDecisionCriteria,
   "decisions.decision-select-portfolio":SfDecisionsDecisionSelectPortfolio,

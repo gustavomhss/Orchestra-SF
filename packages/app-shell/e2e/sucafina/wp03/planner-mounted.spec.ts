@@ -21,7 +21,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
   const versionRow = (id: string) => page.locator('tr[data-sf-row="' + id + '"]')
   try {
     await test.step("enroll through the production local identity and create the fiscal version", async () => {
-      await page.context().addCookies([installation.cookie])
+      await installation.signIn(page)
       await page.goto(planner("Versions"))
       await expect(page).toHaveURL(/\/orchestra\/sf-planner\/versions$/)
       await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()

@@ -136,8 +136,8 @@ export async function writeBudgetPage(
     case "save": {
       const values = { name: form.name, budget: amount(form.budget), versions }
       return capability === "CAP04"
-        ? client["domain.command.CAP04.save"]({ id, version, values }, options)
-        : client["domain.command.CAP05.save"]({ id, version, values }, options)
+        ? client["domain.command.CAP04.save"]({ ...(id === undefined ? {} : { id }), version, values }, options)
+        : client["domain.command.CAP05.save"]({ ...(id === undefined ? {} : { id }), version, values }, options)
     }
     case "delete": {
       const values = { versions }
@@ -152,8 +152,8 @@ export async function writeBudgetPage(
         actual: amount(form.actual), forecast: amount(form.forecast), versions,
       }
       return capability === "CAP04"
-        ? client["domain.command.CAP04.save-entry"]({ id, version, values: { ...common, ownerId: input.parentId } }, options)
-        : client["domain.command.CAP05.save-entry"]({ id, version, values: { ...common, projId: input.parentId } }, options)
+        ? client["domain.command.CAP04.save-entry"]({ ...(id === undefined ? {} : { id }), version, values: { ...common, ownerId: input.parentId } }, options)
+        : client["domain.command.CAP05.save-entry"]({ ...(id === undefined ? {} : { id }), version, values: { ...common, projId: input.parentId } }, options)
     }
     case "save-deviation": {
       const values = { year, month: form.month, flag: form.flag, text: form.text, versions }

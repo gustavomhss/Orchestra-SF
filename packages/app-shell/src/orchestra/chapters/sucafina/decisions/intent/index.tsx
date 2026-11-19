@@ -5,17 +5,18 @@ import { useLanguage } from "@/context/language"
 import { SfPageFrame, type SfCopyKey } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { useSfCase } from "../cases/model"
+import { useSfCase, sfOperationReady } from "../cases/model"
+import { SfCaseSourcesEditor } from "./sources"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
 
 const k = (value: string) => value as SfCopyKey
 
-/** UI34: source-backed intent. No invented update endpoint for case basics. */
+/** UI34: source-backed intent and original, case-CAS source attachment. */
 export function SfIntentView(props: SfSurfaceProps): JSX.Element {
   const language = useLanguage()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
-  const [ui, setUi] = createStore({ reviewing: false })
+  const [ui, setUi] = createStore({ reviewing: false, editing: false })
   const valid = () => props.surfaceId === "UI34"
   const source = () => {
     if (props.surfaceId !== "UI34") return undefined
@@ -41,7 +42,11 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
       }}
       secondaryActions={[{
         id: "refresh-intent", labelKey: k("sf.ui34.reload"), tone: "secondary",
-        disabled: caseData.read.state === "loading", busy: false, onInvoke: () => caseData.reload(),
+        disabled: caseData.read.state === "loading", busy: false, onInvoke: () => { setUi("editing", false); caseData.reload() },
+      }, {
+        id: "edit-case-sources", labelKey: k("sf.ui34.edit"), tone: "secondary",
+        disabled: !data() || !caseData.owner.ready() || !sfOperationReady(caseData.owner.ready()!.context, "decisions.decision-edit"),
+        busy: false, onInvoke: () => setUi("editing", true),
       }]}
     >
       <div class="sf-n24">
@@ -57,6 +62,9 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
         }>
           {(record) =>
             <>
+              <Show when={ui.editing && caseData.read.projection}>{(projection) =>
+                <SfCaseSourcesEditor projection={projection()} onSaved={() => { setUi("editing", false); caseData.reload() }} />
+              }</Show>
               <div class="sf-n24-metadata">
                 <span>{t("sf.ui34.current")}: {record().version}</span>
                 <span>{t("sf.ui34.state")}: <bdi>{record().state}</bdi></span>

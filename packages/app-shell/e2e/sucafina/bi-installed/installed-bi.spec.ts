@@ -17,7 +17,7 @@ test("BI62 installed BI09 and BI10 preserve the literal training quote, real sou
   page.on("pageerror", (error) => errors.push(error.message))
   let completed = false
   try {
-    await page.context().addCookies([installation.cookie])
+    await installation.signIn(page)
     const corpus = await test.step("save real Planner inputs and canonical scenarios, comparisons and portfolio", () => prepareInstalledBi(page, installation, observations))
 
     await test.step("show the omitted-training gap without changing it into a complete total or zero", async () => {

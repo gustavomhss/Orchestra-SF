@@ -1,7 +1,9 @@
 import { expect, type Locator, type Page, type Request, type Response } from "@playwright/test"
 import { randomUUID } from "node:crypto"
+import { Schema } from "effect"
+import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord, caseIdentity, clickCommand, enterWorkbench, fillDecision } from "../decisions-support/journey"
+import { asRecord, caseIdentity } from "../decisions-support/journey"
 
 export const horizon = { start: "2027-01-01", end: "2027-12-31" }
 export const objective = "BI62 · renewal versus transition with separately quoted training"
@@ -48,20 +50,46 @@ export async function prepareInstalledBi(page: Page, installation: { origin: str
 
 async function preparePair(page: Page, installation: { origin: string; actorId: string }, plans: { baseline: Plan; candidate: Plan }, trainingState: "missing" | "resolved", observations: Record<string, unknown>[]) {
   const caseObjective = `${objective} · ${trainingState}`
-  if (new URL(installation.origin).port === "4110")
-    throw new Error("UNBOUND: decisions-support/enterWorkbench still navigates to the retired installed console; bind the native Decisions chapter before preparing BI cases.")
-  await enterWorkbench(page, installation.origin)
-  const create = await fillDecision(page, caseObjective)
+  if (new URL(installation.origin).port !== "3000")
+    throw new Error("The native Decisions chapter requires the configured public shell origin")
+  await page.goto("/orchestra/sf-decisions/new")
+  const create = page.locator(".sf-n24-create")
+  await expect(create).toBeVisible()
+  await create.getByLabel("Decision objective", { exact: true }).fill(caseObjective)
+  await create.getByLabel("Start", { exact: true }).fill(horizon.start)
+  await create.getByLabel("End", { exact: true }).fill(horizon.end)
+  await create.getByLabel("Currency", { exact: true }).fill("USD")
   await create.getByLabel("Criteria, one per line", { exact: true }).fill(criterion)
-  const created = await clickCommand(page, create.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
+  await create.getByRole("button", { name: "Review creation", exact: true }).click()
+  const reviewed = create.getByRole("group", { name: "Review creation", exact: true })
+  await expect(reviewed).toContainText(caseObjective)
+  await expect(reviewed).toContainText(criterion)
+  const creating = page.waitForResponse((response) => {
+    const target = new URL(response.url())
+    return response.request().method() === "POST" && target.origin === installation.origin &&
+      target.pathname === "/sucafina/dashboard" && target.searchParams.get("sf") === "workbench-command" &&
+      response.request().postDataJSON()?.operation === "sf_case_draft"
+  })
+  await create.getByRole("button", { name: "Confirm this decision creation", exact: true }).click()
+  const createdResponse = await creating
+  expect(createdResponse.status()).toBe(200)
+  expect(createdResponse.request().postDataJSON()).toEqual({
+    operation: "sf_case_draft", input: { objective: caseObjective, horizon, currency: "USD", criteria: [criterion], sourceRefs: [] },
+  })
+  const created = asRecord(await createdResponse.json())
+  expect(created.status).toBe("ok")
   expect(typeof created.outputRef).toBe("string")
   const caseSelector = created.outputRef as string
   const identity = caseIdentity(caseSelector)
-  await expect(page.getByRole("region", { name: "Decision", exact: true }).getByRole("heading", { name: caseObjective, exact: true })).toBeVisible()
+  observations.push({ stage: "native-decision-created", httpStatus: createdResponse.status(), caseSelector })
+  await create.getByRole("link", { name: "Open decision", exact: true }).click()
+  await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-decisions/" + encodeSfRouteRef(caseSelector))
+  await expect(page.getByRole("heading", { name: "Case summary", exact: true, level: 1 })).toBeVisible()
+  await expect(page.getByRole("region", { name: "Question", exact: true })).toContainText(caseObjective)
 
-  await page.getByText("Edit decision", { exact: true }).click()
-  const edit = page.locator("form[data-decision-edit]")
-  await expect(edit).toHaveAttribute("data-sf-edit-ready", "true")
+  await page.getByRole("button", { name: "Edit decision", exact: true }).click()
+  const edit = page.locator("[data-sf-decision-editor]")
+  await expect(edit).toBeVisible()
   await edit.getByRole("button", { name: "Find Planner sources", exact: true }).click()
   const sourceChoice = edit.getByLabel("Planner source", { exact: true })
   for (const [index, plan] of Object.values(plans).entries()) {
@@ -69,19 +97,37 @@ async function preparePair(page: Page, installation: { origin: string; actorId: 
     await expect(option).toHaveCount(1)
     await sourceChoice.selectOption({ label: (await option.textContent())!.trim() })
     await edit.getByRole("button", { name: "Inspect selected source", exact: true }).click()
-    await expect(edit.locator("[data-source-preview]")).toHaveAttribute("data-state", "ready")
-    await expect(edit.locator("[data-source-preview]")).toContainText(plan.name)
-    await expect(edit.locator("[data-source-preview]")).toContainText("USD")
+    await expect(edit.locator("[data-sf-source-preview]")).toHaveAttribute("data-state", "ready")
+    await expect(edit.locator("[data-sf-source-preview]")).toContainText(plan.name)
+    await expect(edit.locator("[data-sf-source-preview]")).toContainText("USD")
     await edit.getByRole("button", { name: "Attach source to draft", exact: true }).click()
-    await expect(edit.locator("[data-decision-sources] > li")).toHaveCount(index + 1)
+    await expect(edit.locator("[data-sf-decision-sources] > li")).toHaveCount(index + 1)
   }
-  const attached = await clickCommand(page, edit.getByRole("button", { name: "Save decision", exact: true }), "decision-edit", observations)
+  await edit.getByRole("button", { name: "Review source attachments", exact: true }).click()
+  const attachmentReview = edit.getByRole("group", { name: "Review source attachments", exact: true })
+  await expect(attachmentReview.getByRole("listitem")).toHaveCount(2)
+  const attaching = page.waitForResponse((response) => {
+    const target = new URL(response.url())
+    return response.request().method() === "POST" && target.origin === installation.origin &&
+      target.pathname === "/sucafina/dashboard" && target.searchParams.get("sf") === "decision-edit"
+  })
+  await attachmentReview.getByRole("button", { name: "Save decision", exact: true }).click()
+  const attachedResponse = await attaching
+  expect(attachedResponse.status()).toBe(200)
+  const attached = asRecord(await attachedResponse.json())
+  expect(attached.status).toBe("ok")
   let caseRef = readCaseRef(asRecord(attached.value).caseRef)
   expect(caseRef).toEqual({ ...identity, version: 2 })
+  await expect(edit).toHaveCount(0)
+  observations.push({ stage: "native-decision-sources-attached", httpStatus: attachedResponse.status(), caseRef })
 
   const controls = await readControls(page, installation.origin, caseSelector)
   const selected = asRecord(controls.selected)
   const decision = asRecord(selected.decision)
+  expect(decision.objective).toBe(caseObjective)
+  expect(decision.horizon).toEqual(horizon)
+  expect(decision.currency).toBe("USD")
+  expect(records(decision.criteria).map((entry) => entry.description)).toEqual([criterion])
   const sources = records(selected.forecasts).map((entry) => asRecord(entry.source))
   expect(sources).toHaveLength(2)
   const bases = records(decision.costCoverageBases).filter((basis) => basis.decisionType === "renewal-transition-v1")
@@ -216,9 +262,9 @@ async function preparePlanner(page: Page, installation: { origin: string; actorI
   await page.goto("/orchestra/sf-planner/versions/new")
   const created = await plannerCommand(page, page.getByRole("button", { name: "Create first version", exact: true }),
     "save", observations, installation.origin)
-  expect(typeof created.value).toBe("string")
-  expect(String(created.value)).toMatch(/\S+/)
-  const baseline: Plan = { id: String(created.value), name: names.baseline, lines: {} }
+  if (!created.createdVersion) throw new Error("The created version was not supplied by the authorized Planner read")
+  expect(created.createdVersion.id).toMatch(/\S+/)
+  const baseline: Plan = { id: created.createdVersion.id, name: names.baseline, lines: {} }
   await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions/" + encodeSfRouteRef(baseline.id))
   await expect(page.locator("#sf-u46-name")).toBeEnabled()
   await page.locator("#sf-u46-name").fill(baseline.name)
@@ -236,8 +282,8 @@ async function preparePlanner(page: Page, installation: { origin: string; actorI
     await expect(row).toHaveCount(1)
     const copied = await plannerCommand(page, row.getByRole("button", { name: "copy", exact: true }),
       "copy", observations, installation.origin, source.id)
-    expect(typeof copied.value).toBe("string")
-    const id = String(copied.value)
+    if (!copied.createdVersion) throw new Error("The copied version was not supplied by the authorized Planner read")
+    const id = copied.createdVersion.id
     expect(id).toMatch(/\S+/)
     expect(id).not.toBe(source.id)
     await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions/" + encodeSfRouteRef(id))
@@ -277,41 +323,68 @@ async function preparePlanner(page: Page, installation: { origin: string; actorI
  * Clipboard paste is the existing human bulk-edit interaction, not DOM mutation.
  */
 async function explicitForecast(page: Page, amounts: Record<string, number>) {
-  // UNBOUND: the legacy bulk editor is not bound to the native grid; retain all twelve-month assertions.
-  const monthly = page.locator("section").filter({ has: page.getByRole("heading", { name: "Edit monthly values together", exact: true }) })
+  const monthly = page.locator('[data-sf-surface="CAP18"] section.sf-s02')
   await expect(monthly).toHaveCount(1)
-  await monthly.getByRole("combobox", { name: "Measure", exact: true }).selectOption("forecast")
-  const labels = (await monthly.getByRole("rowheader").allTextContents()).map((label) => label.trim())
+  const grid = monthly.getByRole("grid", { name: "Monthly values", exact: true })
+  const rows = grid.locator(".sf-s02-row")
+  await expect(rows).toHaveCount(Object.keys(amounts).length)
+  const labels = await rows.evaluateAll((elements) => elements.map((row) =>
+    row.querySelector('[role="rowheader"]')?.textContent?.trim() ?? ""))
   expect(labels.slice().sort()).toEqual(Object.keys(amounts).map((name) => `licenses · ${name}`).sort())
   const matrix = labels.map((label) => Array.from({ length: 12 }, (_, month) => month === 10 ? amounts[label.slice("licenses · ".length)] : 0))
+  const tsv = matrix.map((row) => row.join("\t")).join("\n")
+  // Select the real Forecast cell; the grid owns its 0-based coordinate. Pasting
+  // invokes the original producer preview and does not persist monthly values.
+  const firstForecast = rows.first().getByRole("gridcell").first()
+    .locator(".sf-s02-measure").filter({ has: page.getByText("Forecast", { exact: true }) })
+  await expect(firstForecast).toHaveCount(1)
+  await firstForecast.click()
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin: new URL(page.url()).origin })
-  await page.evaluate((text) => navigator.clipboard.writeText(text), matrix.map((row) => row.join("\t")).join("\n"))
-  await monthly.getByRole("textbox", { name: `${labels[0]} forecast month 1`, exact: true }).focus()
+  await page.evaluate((text) => navigator.clipboard.writeText(text), tsv)
+  const previewPending = page.waitForResponse((response) => response.request().method() === "POST" &&
+    new URL(response.url()).searchParams.get("sf") === "workbench-planner" && response.request().postDataJSON()?.action === "preview")
+  await grid.focus()
   await page.keyboard.press("Control+V")
-  for (const [index, label] of labels.entries()) {
-    await expect(monthly.getByRole("textbox", { name: `${label} forecast month 1`, exact: true })).toHaveValue("0")
-    await expect(monthly.getByRole("textbox", { name: `${label} forecast month 11`, exact: true })).toHaveValue(String(matrix[index]![10]))
-    await expect(monthly.getByRole("textbox", { name: `${label} forecast month 12`, exact: true })).toHaveValue("0")
+  const previewResponse = await previewPending
+  expect(previewResponse.status()).toBe(200)
+  const preview = asRecord(await previewResponse.json())
+  expect(preview.status).toBe("ok")
+  const previewRows = records(asRecord(preview.value).rows)
+  expect(previewRows).toHaveLength(labels.length)
+  const reviewedRows = monthly.locator(".sf-s02-preview-row")
+  await expect(reviewedRows).toHaveCount(labels.length)
+  for (let row = 0; row < labels.length; row++) {
+    await expect(reviewedRows.nth(row)).toHaveAttribute("data-result", "ready")
+    await expect(reviewedRows.nth(row).locator("code")).toHaveText(matrix[row]!.map(String))
   }
-  for (const [label, action] of [["Preview changes", "preview"], ["Save changes", "apply"]] as const) {
-    const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "workbench-planner" && response.request().postDataJSON()?.action === action)
-    await monthly.getByRole("button", { name: label, exact: true }).click()
-    const response = await pending
-    expect(response.status()).toBe(200)
-    const result = asRecord(await response.json())
-    expect(result.status).toBe("ok")
-    const rows = records(asRecord(result.value).rows)
-    expect(rows).toHaveLength(labels.length)
-    if (action === "apply") for (const row of rows) {
-      expect(row.errors).toEqual([])
-      expect(asRecord(row.result).ok).toBe(true)
-    }
-    await expect(monthly.getByRole("status")).toContainText(action === "preview" ? "Preview complete" : "Changes saved")
+  const applying = page.waitForResponse((response) => response.request().method() === "POST" &&
+    new URL(response.url()).searchParams.get("sf") === "workbench-planner" && response.request().postDataJSON()?.action === "apply")
+  await monthly.getByRole("button", { name: "Apply reviewed rows", exact: true }).click()
+  const response = await applying
+  expect(response.status()).toBe(200)
+  const result = asRecord(await response.json())
+  expect(result.status).toBe("ok")
+  const appliedRows = records(asRecord(result.value).rows)
+  expect(appliedRows).toHaveLength(labels.length)
+  for (const row of appliedRows) {
+    expect(row.errors).toEqual([])
+    expect(asRecord(row.result).ok).toBe(true)
   }
+  await expect(monthly.getByRole("status")).toContainText("The producer confirmed the applied rows.")
   await page.reload()
-  await monthly.getByRole("combobox", { name: "Measure", exact: true }).selectOption("forecast")
-  for (const [index, label] of labels.entries()) for (let month = 1; month <= 12; month++)
-    await expect(monthly.getByRole("textbox", { name: `${label} forecast month ${month}`, exact: true })).toHaveValue(String(matrix[index]![month - 1]))
+  await expect(rows).toHaveCount(labels.length)
+  expect(await rows.evaluateAll((elements) => elements.map((row) =>
+    row.querySelector('[role="rowheader"]')?.textContent?.trim() ?? ""))).toEqual(labels)
+  for (const [row, label] of labels.entries()) for (let month = 1; month <= 12; month++) {
+    const cell = rows.nth(row).getByRole("gridcell").nth(month - 1)
+      .locator(".sf-s02-measure").filter({ has: page.getByText("Forecast", { exact: true }) })
+    await expect(cell, `${label} forecast month ${month}`).toHaveCount(1)
+    await expect(cell.locator(".sf-s02-cell-amount")).toHaveText(new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2, maximumFractionDigits: 2,
+    }).format(matrix[row]![month - 1]!))
+    await expect(cell.locator(".sf-s02-cell-unit")).toHaveText("USD")
+    await expect(cell.locator(".sf-s02-cell-source")).toHaveCount(0)
+  }
 }
 
 async function lineId(page: Page, name: string) {
@@ -416,7 +489,37 @@ async function plannerCommand(page: Page, button: Locator, action: string, obser
     expect(body.ok).toBe(true)
     await expect(review).toHaveCount(0)
     observations.push({ stage: "planner-command", action, httpStatus: response.status() })
-    return body
+    if (capability === "CAP23" && (action === "copy" || action === "save" && !record)) {
+      // The application deliberately returns only ok/warnings. Preserve the
+      // producer's identity through the original authorized read and row action.
+      const beforeIds = records(data.versions).map((entry) => {
+        expect(typeof entry.id).toBe("string")
+        return String(entry.id)
+      })
+      const refreshed = await page.request.get(origin + "/sucafina/api/ui/pages/CAP23" + (query.size ? "?" + query : ""))
+      expect(refreshed.status()).toBe(200)
+      const readback = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await refreshed.json())
+      if (readback.status !== "ok") throw new Error("The saved Planner versions were unavailable")
+      expect(readback.value.data.versions).toHaveLength(beforeIds.length + 1)
+      const added = readback.value.data.versions.filter((entry) => !beforeIds.includes(entry.id))
+      expect(added).toHaveLength(1)
+      const createdVersion = added[0]!
+      expect(createdVersion.id).toMatch(/\S+/)
+      expect(createdVersion.name).toMatch(/\S+/)
+      expect(Number.isInteger(createdVersion.year) && createdVersion.year > 2000 && createdVersion.year < 2100).toBe(true)
+      await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions")
+      const row = page.locator('tr[data-sf-row="' + createdVersion.id + '"]')
+      await expect(row).toHaveCount(1)
+      await expect(row).toContainText(createdVersion.name)
+      await expect(row).toContainText(String(createdVersion.year))
+      await row.locator('button[data-sf-action="select"]').click()
+      await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions/" + encodeSfRouteRef(createdVersion.id))
+      await expect(page.locator("#sf-u46-name")).toHaveValue(createdVersion.name)
+      await expect(page.locator("#sf-u46-year")).toHaveValue(String(createdVersion.year))
+      observations.push({ stage: "planner-authorized-created-record", action, id: createdVersion.id, year: createdVersion.year })
+      return { response: body, createdVersion }
+    }
+    return { response: body }
   } finally {
     page.off("request", onRequest)
     page.off("response", onResponse)

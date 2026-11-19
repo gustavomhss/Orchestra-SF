@@ -23,7 +23,7 @@ export type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 
 export type SfCallOptions = Readonly<{ signal: AbortSignal; idempotencyKey?: string }>
 /** Browser fetch the transport actually invokes. Callers must not substitute a CORS workaround. */
-export type SfTransportFetch = typeof globalThis.fetch
+export type SfTransportFetch = (...args: Parameters<typeof globalThis.fetch>) => ReturnType<typeof globalThis.fetch>
 export type SfTransport = Readonly<{
   execute<Input, Output>(
     operation: SfOperation<Input, Output>,
@@ -114,7 +114,7 @@ export type SfDesktopCapability = Readonly<{
 // Browser-safe, per-transport ephemeral authority; never placed in URL/storage.
 type SfInternal = Readonly<{
   binding: SfInstallationDescriptor
-  fetch: typeof globalThis.fetch
+  fetch: SfTransportFetch
   current: () => boolean
   clear: () => void
 }>
@@ -136,7 +136,7 @@ export function createSfTransport(options: Readonly<{
   binding: SfInstallationDescriptor
   generation: number
   currentGeneration: () => number
-  fetch: typeof globalThis.fetch
+  fetch: SfTransportFetch
   operations: SfOperationBindings
   desktop?: SfDesktopCapability
   desktopBinding?: SfDesktopBinding
@@ -894,7 +894,7 @@ async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
  * Server producers separately reauthenticate record/export access at egress.
  */
 async function refreshSfFileAuthority(options: Readonly<{
-  binding: SfInstallationDescriptor; fetch: typeof globalThis.fetch;
+  binding: SfInstallationDescriptor; fetch: SfTransportFetch;
   operations: SfOperationBindings;
 }>, expected: SfContextStamp, operationId: SfOperationId): Promise<boolean> {
   const meta = cataloguedRoute("ctx.context")
