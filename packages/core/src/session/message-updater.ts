@@ -1,6 +1,8 @@
 import { castDraft, current, produce, type WritableDraft } from "immer"
 import { isDeepStrictEqual } from "node:util"
 import { Effect, Option, Schema } from "effect"
+import { AgentTerminal } from "../tool/agent-terminal"
+import { SessionContextEpoch } from "./context-epoch"
 import { SessionEvent } from "./event"
 import { SessionMessage } from "./message"
 import { SessionSchema } from "./schema"
@@ -259,15 +261,38 @@ export function update(adapter: Adapter, event: SessionEvent.Event) {
         )
       },
       "session.next.prompt.admitted": () => Effect.void,
-      "session.next.context.updated": (event) =>
-        adapter.appendMessage(
-          SessionMessage.System.make({
-            id: event.data.messageID,
-            type: "system",
-            text: event.data.text,
-            time: { created: event.data.timestamp },
-          }),
-        ),
+      "session.next.context.updated": (event) => {
+        const split = SessionContextEpoch.splitUntrusted(event.data.text)
+        if (!split.data)
+          return adapter.appendMessage(
+            SessionMessage.System.make({
+              id: event.data.messageID,
+              type: "system",
+              text: event.data.text,
+              time: { created: event.data.timestamp },
+            }),
+          )
+        return Effect.gen(function* () {
+          if (split.privileged)
+            yield* adapter.appendMessage(
+              SessionMessage.System.make({
+                id: event.data.messageID,
+                type: "system",
+                text: split.privileged,
+                time: { created: event.data.timestamp },
+              }),
+            )
+          yield* adapter.appendMessage(
+            SessionMessage.Synthetic.make({
+              sessionID: event.data.sessionID,
+              id: split.privileged ? SessionMessage.ID.make(`${event.data.messageID}_data`) : event.data.messageID,
+              type: "synthetic",
+              text: split.data,
+              time: { created: event.data.timestamp },
+            }),
+          )
+        })
+      },
       "session.next.synthetic": (event) => {
         return adapter.appendMessage(
           SessionMessage.Synthetic.make({
@@ -299,7 +324,7 @@ export function update(adapter: Adapter, event: SessionEvent.Event) {
           if (currentShell) {
             yield* adapter.updateShell(
               produce(currentShell, (draft) => {
-                draft.output = event.data.output
+                draft.output = AgentTerminal.sanitize(event.data.output)
                 draft.time.completed = event.data.timestamp
               }),
             )

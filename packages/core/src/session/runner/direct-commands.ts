@@ -13,6 +13,7 @@ import { PermissionV2 } from "../../permission"
 import { QuestionV2 } from "../../question"
 import type { AppProcess } from "../../process"
 import { SkillV2 } from "../../skill"
+import { AgentTerminal } from "../../tool/agent-terminal"
 import { BashTool } from "../../tool/bash"
 import type { ReadToolFileSystem } from "../../tool/read-filesystem"
 import { SkillTool } from "../../tool/skill"
@@ -121,17 +122,17 @@ export const shell = Effect.fn("SessionRunner.shell")(function* (
         sessionID: input.sessionID,
         timestamp: yield* DateTime.now,
         callID,
-        output,
+        output: AgentTerminal.sanitize(output),
       })
     })
   yield* deps.appProcess.run(command, { combineOutput: true, maxOutputBytes: SHELL_OUTPUT_BYTES }).pipe(
     Effect.map((result) => {
-      const output = (result.output ?? result.stdout).toString("utf8")
+      const output = AgentTerminal.sanitize((result.output ?? result.stdout).toString("utf8"))
       const truncated = result.outputTruncated ? "\n[output truncated]" : ""
       const exit = result.exitCode === 0 ? "" : `\n[exit code ${result.exitCode}]`
       return `${output}${truncated}${exit}`
     }),
-    Effect.catchTag("AppProcessError", (error) => Effect.succeed(error.message)),
+    Effect.catchTag("AppProcessError", (error) => Effect.succeed(AgentTerminal.sanitize(error.message))),
     Effect.onInterrupt(() => ended("User aborted the command")),
     Effect.flatMap(ended),
   )
