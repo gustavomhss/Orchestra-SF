@@ -40,7 +40,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
   }, input.transport)
   const section = document.createElement("select"), source = document.createElement("select"), recipient = document.createElement("select")
   section.setAttribute("aria-label", "Review section"); source.setAttribute("aria-label", "Review source"); recipient.setAttribute("aria-label", "Recipient")
-  input.review.sections.forEach((entry) => section.append(new Option(entry.title, entry.id)))
+  input.review.sections.forEach((entry) => section.append(option(entry.title, entry.id)))
   const question = document.createElement("textarea")
   question.setAttribute("aria-label", "Question")
   const selected = () => input.review.sections.find((entry) => entry.id === section.value)
@@ -50,7 +50,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
     return [...new Map(refs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record").map((ref) => [ref.refId, ref])).values()]
   }
   const chooseSources = () => {
-    source.replaceChildren(...references().map((ref) => new Option(`${ref.target.surface} · ${ref.target.recordId} · version ${ref.target.version}`, ref.refId)))
+    source.replaceChildren(...references().map((ref) => option(`${ref.target.surface} · ${ref.target.recordId} · version ${ref.target.version}`, ref.refId)))
   }
   section.addEventListener("change", () => { question.value = ""; chooseSources() })
   source.addEventListener("change", () => { question.value = "" })
@@ -416,7 +416,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
     live()
     const chosen = recipient.value
     if (chosen && !people.some((person) => person.id === chosen)) return changedScope()
-    recipient.replaceChildren(...people.map((person) => new Option(person.name, person.id)))
+    recipient.replaceChildren(...people.map((person) => option(person.name, person.id)))
     if (people.some((person) => person.id === chosen)) recipient.value = chosen
     lockDrafts()
     if (!people.length) status.textContent = "No authorized recipient is available."
@@ -466,6 +466,10 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
   return { element: root, refresh, dispose }
 }
 
+function option(text: string, value: string) {
+  const element = document.createElement("option"); element.textContent = text; element.value = value
+  return element
+}
 function region(name: string) { const element = document.createElement("section"); element.setAttribute("aria-label", name); return element }
 function heading(text: string) { const element = document.createElement("h3"); element.textContent = text; return element }
 function paragraph(text: string) { const element = document.createElement("p"); element.textContent = text; return element }

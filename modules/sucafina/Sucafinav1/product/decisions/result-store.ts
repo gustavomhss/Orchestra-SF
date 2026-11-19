@@ -63,10 +63,10 @@ export function createSfDecisionResultStore(input: {
   createId: () => string
   now: () => string
 }) {
-  const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => {
+  const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext, privateExpected?: (value: DecisionCase) => string) => {
     try {
       const candidate = structuredClone(value)
-      const expected = digestSfValue(candidate)
+      const expected = privateExpected ? privateExpected(value) : digestSfValue(candidate)
       return await input.authorizeCase(candidate, context) && digestSfValue(candidate) === expected
     } catch { return false }
   }
@@ -159,6 +159,20 @@ export function createSfDecisionResultStore(input: {
     const first = await observe()
     if (first.status !== "ok") return failRemaining({ status: first.status === "preview" ? "unavailable" : first.status, reason: "result-unavailable" })
     const values = structuredClone(first.value)
+    // These observations are private clones. External callbacks receive another
+    // distinct clone; only the expected digest may be shared by sibling cases.
+    const observationCaseDigest = () => {
+      const digests = new WeakMap<object, string>()
+      return (value: unknown) => {
+        if (!value || typeof value !== "object") return digestSfValue(value)
+        const prior = digests.get(value)
+        if (prior !== undefined) return prior
+        const digest = digestSfValue(value)
+        digests.set(value, digest)
+        return digest
+      }
+    }
+    const firstCaseDigest = observationCaseDigest()
     for (const [index, reference] of references.entries()) {
       if (failures[index]) continue
       const value = values?.[index]
@@ -166,13 +180,14 @@ export function createSfDecisionResultStore(input: {
         failures[index] = unavailable()
         continue
       }
-      if (!allowedCase(value.current, value.stored.caseRef, context, true) || !await authorizeCase(value.current!, context).catch(() => false) || !await verifySources(value.stored, value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) failures[index] = denied()
+      if (!allowedCase(value.current, value.stored.caseRef, context, true) || !await authorizeCase(value.current!, context, firstCaseDigest).catch(() => false) || !await verifySources(value.stored, value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) failures[index] = denied()
     }
     if (!remaining()) return failRemaining(denied())
     // This is a second C08 snapshot, after every initial per-result callback.
     const again = await observe()
     if (again.status !== "ok") return failRemaining(unavailable())
     const latest = structuredClone(again.value)
+    const latestCaseDigest = observationCaseDigest()
     const latestDigests: (string | undefined)[] = []
     for (const index of references.keys()) {
       if (failures[index]) continue
@@ -183,7 +198,7 @@ export function createSfDecisionResultStore(input: {
         continue
       }
       latestDigests[index] = digestSfValue(current.stored)
-      if (latestDigests[index] !== digestSfValue(value.stored) || !await authorizeCase(current.current!, context).catch(() => false) || !await verifySources(current.stored, current.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) {
+      if (latestDigests[index] !== digestSfValue(value.stored) || !await authorizeCase(current.current!, context, latestCaseDigest).catch(() => false) || !await verifySources(current.stored, current.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) {
         failures[index] = denied()
         continue
       }
@@ -198,24 +213,16 @@ export function createSfDecisionResultStore(input: {
     if (final.status !== "ok") return failRemaining(unavailable())
     const observed = structuredClone(final.value)
     if (!sameRequest()) return failRemaining(denied())
-    // Siblings may share a case inside each private cloned observation. Hash
-    // each object only when its final comparison is reached; never join phases.
-    const caseDigests = new WeakMap<object, string>()
-    const caseDigest = (value: unknown) => {
-      if (!value || typeof value !== "object") return digestSfValue(value)
-      const prior = caseDigests.get(value)
-      if (prior !== undefined) return prior
-      const digest = digestSfValue(value)
-      caseDigests.set(value, digest)
-      return digest
-    }
+    // The independent final observation always gets its own current digest.
+    // Its expected case remains the unexposed second observation above.
+    const finalCaseDigest = observationCaseDigest()
     return references.map((_, index): PortResult<StoredDecisionResult> => {
       const failure = failures[index]
       if (failure) return failure
       const value = values?.[index]
       const previous = latest?.[index]
       const current = observed?.[index]
-      if (!value || !previous || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || caseDigest(current.current) !== caseDigest(previous.current) || digestSfValue(current.stored) !== latestDigests[index]) return denied()
+      if (!value || !previous || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || finalCaseDigest(current.current) !== latestCaseDigest(previous.current) || digestSfValue(current.stored) !== latestDigests[index]) return denied()
       return { status: "ok", value: structuredClone(current.stored) }
     })
   }

@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { object } from "../../../runtime/contract.ts"
 import { refreshDashboardReviewAgenda } from "../../../product/reviews/agenda-refresh.ts"
+import { reviewAgendaDiscoveryUrl } from "../../../product/reviews/agenda-picker.ts"
 import type { ReviewAgendaCatalog, ReviewAgendaDiscovery } from "../../../product/reviews/agenda-picker.ts"
 import type { ReviewAgendaItem, ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
 import { createSfExtendedAssets } from "../../../../../../apps/cli/src/sucafina-product/extended-assets.ts"
@@ -317,14 +318,31 @@ test("explicit Reports refresh retains the exact selected records and preserves 
     })
     expect((await post("review-agenda", { items: selected })).status).toBe(409)
     let catalog: ReviewAgendaCatalog | undefined
+    const discoveries: URL[] = []
     const discover: ReviewAgendaDiscovery = async (query) => {
-      const response = await f.send(new URLSearchParams({ sf: "review-agenda", domain: "dashboard",
-        start: query.period.start, end: query.period.end }))
+      expect(query).toEqual({ domain: "dashboard", period, dashboardTopics: ["budget", "projects"] })
+      const url = reviewAgendaDiscoveryUrl("https://example.test/dashboard?page=Budget+Overview&download=docx&year=2026&topic=Budget+Overview&sf=old&dashboardTopics=old#discard", query)
+      expect(url.origin).toBe("https://example.test")
+      expect(url.pathname).toBe("/dashboard")
+      expect(url.hash).toBe("")
+      expect([...url.searchParams.keys()].sort()).toEqual(["dashboardTopics", "domain", "end", "sf", "start"])
+      expect(url.searchParams.getAll("dashboardTopics")).toEqual(['["budget","projects"]'])
+      expect(Object.fromEntries(url.searchParams)).toEqual({ sf: "review-agenda", domain: "dashboard",
+        start: period.start, end: period.end, dashboardTopics: '["budget","projects"]' })
+      discoveries.push(url)
+      const response = await f.send(url.searchParams)
       const result: Awaited<ReturnType<ReviewAgendaDiscovery>> = await response.json()
-      if (result.status === "ok") catalog = structuredClone(result.value)
+      if (result.status === "ok") {
+        expect(result.value.options.map((option) => ({ domain: option.domain, kind: option.item.kind,
+          topic: option.item.kind === "dashboard" ? option.item.topic : undefined, period: option.item.period })))
+          .toEqual([{ domain: "dashboard", kind: "dashboard", topic: "budget", period },
+            { domain: "dashboard", kind: "dashboard", topic: "projects", period }])
+        catalog = structuredClone(result.value)
+      }
       return result
     }
     const refreshed = await refreshDashboardReviewAgenda(selected, discover)
+    expect(discoveries).toHaveLength(1)
     expect(refreshed.status).toBe("ok")
     if (refreshed.status !== "ok") throw new Error(refreshed.reason)
     expect(selected).toEqual(capturedItems)
@@ -356,5 +374,6 @@ test("explicit Reports refresh retains the exact selected records and preserves 
     }
     f.fixture.active.value = false
     expect((await refreshDashboardReviewAgenda(selected, discover)).status).toBe("denied")
+    expect(discoveries).toHaveLength(2)
   } finally { await f.dispose() }
 }, 60_000)
