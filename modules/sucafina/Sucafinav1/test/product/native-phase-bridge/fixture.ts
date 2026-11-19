@@ -34,6 +34,7 @@ import type { TrustedDomainContext, TrustedUiContext } from "../../../product/co
 import type { SfDomainValidation } from "../../../product/contracts/runtime.ts"
 import type { RoutinePublicationHost } from "../../../product/routines/publication.ts"
 import { createSfRoutineNativePhaseComposition } from "../../../../../../apps/cli/src/sucafina-product/routine-native-phase-composition.ts"
+import { sfNativeLocationRef } from "../../../../../../apps/cli/src/sucafina-product/native-identity.ts"
 import { createSfRoutineNativeGovernance } from "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts"
 import { createSfRoutineNativeRecords } from "../../../../../../apps/cli/src/sucafina-product/routine-native-records.ts"
 import { createSfRoutineNativeOwnerRegistry } from "../../../../../../apps/cli/src/sucafina-product/routine-native-registry.ts"
@@ -145,7 +146,8 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
     }) }
     const application = AppNodeBuilder.build(LayerNode.group([
       Database.node, EventV2.node, SessionStore.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node,
-    ]), [[SessionExecution.node, SessionExecutionLocal.node], [ToolSafety.node, safety], [TaskGovernance.node, governance],
+    ]), [[Database.node, Database.layerFromPath(path.join(temporary.path, "phase.db"))],
+      [SessionExecution.node, SessionExecutionLocal.node], [ToolSafety.node, safety], [TaskGovernance.node, governance],
       ...(prepared.bridge.contribution.replacements ?? []),
       [LayerNodePlatform.llmClient, Layer.succeed(LLMClient.Service, client)], [Snapshot.node, Snapshot.noopLayer],
       [Global.node, Global.layerWith({ home: temporary.path, config: path.join(temporary.path, ".global"), data: path.join(temporary.path, ".data") })]],
@@ -158,7 +160,7 @@ const setup = Effect.fn("PhaseFixture.setup")(function* (directory: string, prep
   const sessions = yield* SessionV2.Service, execution = yield* SessionExecution.Service
   const database = yield* Database.Service, events = yield* EventV2.Service, store = yield* SessionStore.Service
   const locations = yield* LocationServiceMap.Service
-  const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
+  const location = sfNativeLocationRef({ directory: AbsolutePath.make(directory) })
   const opened = yield* locations.contextEffect(location)
   const nativeLocation = Context.get(opened, Location.Service), registry = Context.get(opened, ToolRegistry.Service)
   // Nonexecuting names are NOT native governance evidence. The deterministic provider calls only real core Task.
