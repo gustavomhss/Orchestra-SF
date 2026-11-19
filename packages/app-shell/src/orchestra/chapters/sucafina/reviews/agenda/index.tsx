@@ -350,9 +350,10 @@ export function SfAgendaEditor(props: {
                 <p>{t("sf.u25.sectionRef")}: {section.id}</p>
                 <span> {t("sf.u25.count")}: {section.recordCount}</span>
                 <span> {t("sf.u25.period")}: <PeriodText start={section.period.start} end={section.period.end} /></span>
-                <For each={section.projection.context.sourceRefs}>{(source) => <p>
-                  {t("sf.u25.sourceRef")}: {source.surface} · {source.type} · {source.id} · {t("sf.u25.sourceVersion")} {source.version} · {t("sf.u25.incarnation")} {source.incarnation}
-                </p>}</For>
+                <For each={section.projection.context.sourceRefs}>{(source) => <>
+                  <p>{t("sf.u25.sourceRef")}: {source.surface} · {source.type} · {source.id} · {t("sf.u25.sourceVersion")} {source.version} · {t("sf.u25.incarnation")} {source.incarnation}</p>
+                  <p>{t("sf.u25.observedAt")}: <time dateTime={source.observedAt}>{source.observedAt}</time></p>
+                </>}</For>
                 <Show when={section.recordCount === 0}><p>{t("sf.u25.noRecords")}</p></Show>
                 <table aria-label={section.title + " · " + t("sf.u25.values")}>
                   <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th><th>{t("sf.u25.evidence")}</th></tr></thead>
