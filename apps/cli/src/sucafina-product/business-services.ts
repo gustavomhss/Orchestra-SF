@@ -287,6 +287,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     const historical = observed !== undefined && observed > captured.version
     if (!historical) {
       const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
+      // Preserve a proven source outage without admitting an inaccessible selection.
+      if (current.status === "unavailable" && current.reason === "case-evidence-unavailable") return current
       if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version))
         return { status: "denied", reason: "case-selection-unavailable" }
     }
