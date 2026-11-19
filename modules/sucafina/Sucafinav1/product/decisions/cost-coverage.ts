@@ -97,7 +97,7 @@ export async function reassessScenarioCoverage(incoming: {
     }
     if (input.baseline.basisId !== input.basis.id || input.baseline.basisVersion !== input.basis.version) return undefined
     const refs = [...input.basis.sourceRefs, ...input.scenario.sourceRefs, ...input.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
-    const evidence = orderBasisCoverageEvidence(orderBaselineCoverageEvidence(captureCoverageEvidence(await input.resolveEvidence(structuredClone(refs))), input.baseline.evaluatedSourceRefs), input.basis.sourceRefs)
+    const evidence = orderBaselineCoverageEvidence(orderBasisCoverageEvidence(captureCoverageEvidence(await input.resolveEvidence(structuredClone(refs))), input.basis.sourceRefs), input.baseline.evaluatedSourceRefs)
     if (evidence.length !== refs.length || refs.some((ref) => !evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))) return undefined
     // A baseline's generated missing-category row is still an omitted input, not a newly supplied answer.
     const derivedMissingCategories = new Set<string>(input.baseline.derivedMissingCategoryIds)
