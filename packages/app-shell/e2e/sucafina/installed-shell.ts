@@ -54,7 +54,9 @@ export async function connectInstalledShell(page: Page, installation: {
   const add = page.getByRole("dialog", { name: "Add server", exact: true })
   await add.getByLabel("Server address", { exact: true }).fill(installation.origin)
   await add.getByLabel("Username (optional)", { exact: true }).fill("orchestra")
-  await add.getByLabel("Password (optional)", { exact: true }).fill(password)
+  const credential = add.getByLabel("Password (optional)", { exact: true })
+  await expect(credential).toBeEditable()
+  await credential.fill(password).catch(() => { throw new Error("Could not enter the isolated host credential") })
   await add.getByRole("button", { name: "Add server", exact: true }).click()
   await expect(add).toHaveCount(0)
 

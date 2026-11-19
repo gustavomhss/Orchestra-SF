@@ -9,7 +9,8 @@ const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
 // declared real Procurement fixture; it changes no grep, selector or CI allowlist.
 const wp04 = wp04BrowserSelected(process.argv.slice(2)) && !process.argv.includes("--list")
 const sfNative = nativeSpecSelected(process.argv.slice(2))
-const sfInstalled = process.argv.slice(2).some((argument) => /(?:^|[\\/])sucafina(?:[\\/]|$)/.test(argument))
+const sfInstalled = process.argv.slice(2).some((argument) =>
+  argument.replaceAll("[\\\\/]", "/").replaceAll("\\", "/").includes("e2e/sucafina/"))
 // I00 starts the real host before collection; no synthetic webServer or legacy WP04 substitution.
 if (sfNative && (process.env.GITHUB_ACTIONS !== "true" ||
     !process.env.SF_NATIVE_INSTALLED_MANIFEST || !process.env.SF_NATIVE_CANDIDATE_SHA)) {

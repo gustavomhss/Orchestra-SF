@@ -102,7 +102,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
     await expect(row.locator("h3")).toHaveText(section.title)
     await expect(row).toContainText(String(section.count))
   }
-  await info.attach("preserved-selection", { body: JSON.stringify({ selectionRef, sectionRefs: sectionIds, saved, removeOne: options.removeOne === true }, null, 2), contentType: "application/json" })
+  await info.attach("preserved-selection", { body: JSON.stringify({ selectionRef, sectionRefs: sectionIds, saved, removeOne: options.removeOne ?? false }, null, 2), contentType: "application/json" })
   return { preparation, saved }
 }
 

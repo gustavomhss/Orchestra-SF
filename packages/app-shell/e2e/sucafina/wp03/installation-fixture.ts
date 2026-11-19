@@ -87,6 +87,8 @@ export async function startPlannerInstallation(info: TestInfo) {
       try {
         const response = await fetch(`${origin}/sucafina/status`, { signal: AbortSignal.timeout(1_000) })
         if (!response.ok) return `HTTP ${response.status}`
+        const contentType = response.headers.get("content-type") ?? ""
+        if (!contentType.includes("application/json")) return `Unexpected status content type: ${contentType}`
         const body = await response.json() as { login?: string }
         return body.login
       } catch { return "not-listening" }
