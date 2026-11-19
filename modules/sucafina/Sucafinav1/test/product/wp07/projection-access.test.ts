@@ -14,6 +14,7 @@ const identity = { installationId: "installation", projectId: "project", princip
 const context = { kind: "ui", binding: identity } as unknown as TrustedDomainContext
 
 function fixture() {
+  const admittedRequest = new Request("https://example.test")
   const source = (id: string): SourceRef => ({ surface: "dashboard", type: "projects", id, incarnation: id + "-original", version: 1, fields: ["amount"], period, observedAt: "2026-11-14T00:00:00Z" })
   const evidence = (id: string): BusinessEvidenceRef => {
     const ref: BusinessEvidenceRef = { schema: "sf-evidence-v1", refId: id, installationId: identity.installationId, projectId: identity.projectId, refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "projects", recordId: id, incarnation: id + "-original", version: 1, fields: ["amount"], period, projectionDigest: id } }
@@ -30,7 +31,7 @@ function fixture() {
   const storage = testPersistence()
   const state = createSfProductState({ persistence: storage.persistence, createId: () => "state", resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async () => identity })
   const port = createReviewPort({
-    state, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, now: () => "2026-11-14T00:00:00Z", requestFor: () => new Request("https://example.test"),
+    state, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, now: () => "2026-11-14T00:00:00Z", requestFor: () => admittedRequest,
     select: async () => ({ status: "ok", value: [section] }),
     authorizeSections: async () => true, authorizeComments: async () => true, authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSensitivity: async () => true,
     revalidate: async (_context, refs) => refs.every((ref) => !denied.has(ref.id)),
