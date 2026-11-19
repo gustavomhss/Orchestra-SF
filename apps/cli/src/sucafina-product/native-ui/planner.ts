@@ -172,6 +172,7 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
         ...(string(original.entity) !== undefined ? { entity: original.entity } : {}),
         ...(string(original.alloc) !== undefined ? { alloc: original.alloc } : {}),
         ...(string(original.proj) !== undefined ? { proj: original.proj } : {}),
+        ...(money(original.annual) !== null ? { annual: money(original.annual) } : {}),
         synthetic: row.synthetic,
       }
     })
@@ -191,7 +192,14 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
         ? object(lists[el]).split === true : ["licenses", "services", "hwo", "te"].includes(el),
       revision: revision(view, versionId + ":lists:" + el),
     }))
-    return { ...base, ...(grid ? { grid } : {}), lines, split }
+    const directory = rows(view.data.directory).flatMap((person) => {
+      const personId = id(person.id)
+      if (!personId) return []
+      return [{ id: personId, name: text(person.name) || personId }]
+    })
+    const currencies = ["USD", ...rows(current?.fx).map((rate) => text(rate.cur).trim().toUpperCase())]
+      .filter((code, index, all) => /^[A-Z]{3}$/.test(code) && all.indexOf(code) === index)
+    return { ...base, ...(grid ? { grid } : {}), lines, split, directory, currencies }
   }
   if (cap === "CAP20") {
     const versionId = id(current?.id), hc = object(current?.hc), summary = object(current?.summary)
