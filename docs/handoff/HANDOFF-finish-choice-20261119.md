@@ -1,6 +1,6 @@
 # Handoff — finish-choice-20261119
 
-SHA: bd310bfffc4b17733a2077e902f0d12b9f80bc88 (código; este documento é um checkpoint posterior)
+SHA: b7c1cb40e8b5ee3e1a501c3aabbb842c9a0ef1d9 (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
@@ -29,7 +29,7 @@ Estado: partial
 
 - packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/record.tsx:109, :169 e :270 — comparação, registro de regra e escolha nativos implementados, ainda sem typecheck ou gate de navegador nesta fatia. A leitura do produtor fundamenta os campos; não substitui qualificação de execução.
 - packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts:15, :198 e :221 — controles e URL legados ainda ativos. Devem ser migrados preservando os componentes mensais 100/200, subtotais 1200/2400, coverage pendente com 9 categorias, par explícito e perda/retry do mesmo Promote.
-- packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts:43–78 — portar a prova ainda legada para os controles nativos: perda de resposta, reload, mesmo body/key, dois POSTs e uma escolha. A recuperação da folha está implementada neste checkpoint e depende do F02 separado 175d8d2; ainda falta qualificação nativa. Não remover reload/contagem nem contornar o transporte.
+- packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts:22–174 e comparison-rule.ts:8–67 — portados para UI38 e projeção original tipada, mas ainda não executados. A prova conserva perda de resposta, reload, mesmo corpo/chave, dois POSTs/uma escolha, regra humana 2000 e comparação/histórico exatos. O pré-requisito initial-alternatives ainda dirige controles legados e impede o cenário completo.
 - modules/sucafina/Sucafinav1/product/ui/decision-choice.ts:9–25, :73 e :292–319 — consumidor original persiste intenção fechada por scope em sessionStorage, conserva body/key antes do POST e restaura estado desconhecido após reload. Isso não é autoridade nem receipt. O port nativo deste checkpoint conserva a intenção como dado não confiável, acrescenta a prova GET atual e ainda aguarda o gate instalado.
 - packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:1 — C12 permanece sob coordenação com WP2; não fabricar escolha, proposta, aprovação ou receipt para atingir o caminho.
 - apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts:28–30 e apps/cli/src/sucafina-product/host-context.ts:1021–1033 — nova disponibilidade aguarda typecheck/execução sobre a composição. O gate do codec não qualifica esse código.
@@ -42,6 +42,15 @@ Estado: partial
 - F02 permanece em branch separada. A folha usa a exportação pública SfRecordedChoiceIntent e inspectRecordedChoice do código 175d8d2. SessionStorage nunca restaura lease, grant, receipt ou stamp ativo; guarda apenas a intenção que a leitura atual precisa provar. Nenhum envio automático foi adicionado.
 - modules/sucafina/Sucafinav1/runtime/application.ts permanece sem edição. Nenhum novo sf-ci foi disparado e não há declaração de GO.
 - O UI35 separado em finish-decisions@14464dbf7ddb85e4018154985c17de493b9a49cd copia os inputs originais via structuredClone(unwrap(...)); esse delta não pertence a esta branch nem ao core UI33/34 já qualificado.
+
+## Remapeamento das observações de UI38
+
+- O DOM data-context legado foi substituído pela projeção original tipada de case, mantendo as verificações de identidade, versão, principal, critérios, evidências e histórico completo. readCase passa a reutilizar readCaseProjection sem alterar sua resposta pública.
+- O evento domcontentloaded após o replay foi substituído pela resposta GET original da mesma projeção e pelos controles novamente editáveis; a UI nativa atualiza sua projeção sem recarregar o documento. O reload explícito ANTES do retry foi preservado.
+- A observação do botão legado desabilitado "Prepare changes from this choice" foi remapeada para preparedChanges:[] no produtor, scenario.operations:[], mensagem nativa explícita de nenhuma operação, ausência de Apply e zero outros POSTs Dashboard durante a prova. Não foi criado um botão sem operação original apenas para repetir o console.
+- As antigas ausências de "Total:" e "Difference:" são agora afirmações explícitas de "Complete total: Unavailable" e "Complete difference: Unavailable", publicadas pelo registro original com null. Subtotal 2400 e diferença conhecida1200 permanecem exatos; após fonte3600, o registro completo deve permanecer idêntico.
+- O capítulo renderiza o estado/versão/período/moeda atuais e a revisão da regra recebida do POST; não calcula métricas. Rota UI38 e links usam o catálogo e o codec opaco existentes.
+- Não foram removidas provas de negócio, perda/retry, contagens ou valores. Não há skip, aumento de timeout ou POST de fixture.
 
 ## Como retomar
 
@@ -59,3 +68,9 @@ Estado: partial
 - Prova independente Operations: [44618682048](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44618682048) SUCCESS 2/2 para PR/Supplier nativos com reload; não qualifica Decisions. O gate completo Operations6 [44619924653](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44619924653) terminou FAILURE, 1 passed / 4 failed, na composição Assembly30 + 2 blobs de 877f8d, separado desta branch. Aprovação/arquivos/observação de resposta estão sendo corrigidos em branches próprias; nenhum desses resultados qualifica UI38.
 
 - Recorded-choice boundary: run 44627326343 SUCCESS, test job 135924505197, cleanup135925839162 SUCCESS; primeiro gate44626583090 falhou por exigir maxRequestBytes ausente no metadata original, corrigido sem relaxar limite publicado. Nenhum desses testes sintéticos declara efeito C08 instalado.
+
+## Checkpoint de port nativo b7c1cb4
+
+- Oito arquivos de produto/helpers: cases/route.ts, intent/index.tsx, choice/index.tsx, choice/record.tsx, sf-u18.ts, journey.ts, comparison-rule.ts e choice-history.ts.
+- F02/health não são sobrescritos por este commit. Dependências separadas175d8d2 (F02) e07862279 (readiness UI38) ainda precisam composição preservando os callbacks atuais do host.
+- Typechecks e cenário nativo desta fatia: ainda não executados. O PASS44627326343 continua limitado ao boundary do transporte.
