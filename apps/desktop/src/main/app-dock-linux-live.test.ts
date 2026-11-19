@@ -108,7 +108,7 @@ async function parent() {
               if (mutation === "callback-frame") {
                 build.onLoad({ filter: /app-dock\.ts$/ }, async args => {
                   const text = await Bun.file(args.path).text()
-                  const before = 'listen("will-frame-navigate", details => {\n      if (externalURL(details.url)) details.preventDefault()\n    })'
+                  const before = 'listen("will-frame-navigate", details => {\n      if (externalURL(details.url)) {\n        details.preventDefault()\n        return\n      }\n      if (details.isMainFrame) return\n      if (URL.canParse(details.url) && new URL(details.url).protocol === "https:") return\n      details.preventDefault()\n    })'
                   assert.equal(text.split(before).length, 2)
                   return { contents: text.replace(before, "undefined"), loader: "ts" }
                 })

@@ -1,4 +1,4 @@
-/** Strips credentials from log text before it leaves the machine in a debug export. */
+/** Strips credentials from log text before a live write and before a debug export. */
 export function redactLog(text: string) {
   return text
     .replace(/(auth_token=)[^&\s"'\\]+/gi, "$1[redacted]")

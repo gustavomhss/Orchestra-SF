@@ -22,6 +22,10 @@ export const getLogger = () => logger
 
 export function initLogging() {
   initRunDirectory()
+  log.hooks.push((message) => {
+    message.data = message.data.map(redactLogged) as typeof message.data
+    return message
+  })
   log.transports.file.maxSize = 5 * 1024 * 1024
   log.transports.file.resolvePathFn = (_vars, message) =>
     join(
@@ -34,7 +38,7 @@ export function initLogging() {
       const win = BrowserWindow.fromWebContents(contents)
       // Remote views can log credentials. Only the owner renderer's main frame is trusted.
       if (!win || win.webContents !== contents || event.frame !== contents.mainFrame) return
-      log.scope("renderer")[event.level === "warning" ? "warn" : event.level](event.message)
+      log.scope("renderer")[event.level === "warning" ? "warn" : event.level](redactLog(event.message))
     })
   })
   initConsoleTransport()
@@ -89,11 +93,12 @@ export function write(
 ) {
   if (!run) return
   const scoped = log.scope(safeLogName(name))
+  const clean = redactLog(message)
   if (extra !== undefined) {
-    scoped[level](message, extra)
+    scoped[level](clean, redactLogged(extra))
     return
   }
-  scoped[level](message)
+  scoped[level](clean)
 }
 
 export function tail(): string {
@@ -218,4 +223,19 @@ function initConsoleTransport() {
 
 function isBrokenPipe(err: unknown) {
   return typeof err === "object" && err !== null && "code" in err && err.code === "EPIPE"
+}
+
+function redactLogged(value: unknown): unknown {
+  if (typeof value === "string") return redactLog(value)
+  if (value instanceof Error) {
+    const copy = new Error(redactLog(value.message))
+    copy.name = value.name
+    if (value.stack) copy.stack = redactLog(value.stack)
+    return copy
+  }
+  if (Array.isArray(value)) return value.map(redactLogged)
+  if (typeof value === "object" && value !== null && Object.getPrototypeOf(value) === Object.prototype) {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, redactLogged(item)]))
+  }
+  return value
 }
