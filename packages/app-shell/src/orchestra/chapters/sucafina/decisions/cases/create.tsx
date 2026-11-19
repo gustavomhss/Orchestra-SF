@@ -174,9 +174,10 @@ export function SfCreateCase(props: Readonly<{
       if (result.kind === "response" && result.body.status !== "ok") {
         // A 409/400 is not authoritative proof that an earlier creation
         // could not commit. Retain the same original correlation for review.
+        const denied = result.status === 401 || result.status === 403 || result.body.status === "denied"
         setForm({
           phase: "unknown", hasPending: true,
-          message: result.body.status === "denied" ? "sf.ui33.createDenied" : "sf.ui33.createConflict",
+          message: denied ? "sf.ui33.createDenied" : "sf.ui33.createConflict",
         })
         return
       }
