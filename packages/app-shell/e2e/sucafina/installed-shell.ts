@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test"
+import { expect, type Locator, type Page } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult, SfInstallationList } from "@orchestra/schema/sucafina/context"
 import { lstat, readFile } from "node:fs/promises"
@@ -52,27 +52,43 @@ export async function connectInstalledShell(page: Page, installation: {
     hostId: binding.hostId, principalRef: installation.actorId })
 
   console.info("[sf-installed] Selecting the issued server credential in the shell")
-  await page.goto(installation.origin + "/")
-  await page.getByRole("button", { name: "Status", exact: true }).click()
-  await page.getByRole("button", { name: "Manage servers", exact: true }).click()
-  const servers = page.getByRole("dialog", { name: "Servers", exact: true })
-  await servers.getByRole("button", { name: "Add server", exact: true }).click()
-  const add = page.getByRole("dialog", { name: "Add server", exact: true })
-  await add.getByLabel("Server address", { exact: true }).fill(installation.origin)
-  await add.getByLabel("Username (optional)", { exact: true }).fill("orchestra")
+  await page.goto(installation.origin + "/", { waitUntil: "domcontentloaded", timeout: 10_000 })
+  console.info("[sf-installed] The shell document is loaded")
+  const status = page.getByRole("button", { name: "Status", exact: true })
+  const recovery = page.getByRole("region", { name: "Servers", exact: true })
+  await expect(status.or(recovery)).toBeVisible({ timeout: 10_000 })
+  let add: Locator
+  let submit: string
+  if (await recovery.isVisible()) {
+    // A fresh browser has no admitted server yet. Use the existing startup
+    // recovery form; its health check verifies the issued host credential.
+    await recovery.getByRole("button", { name: "Add server", exact: true }).click({ timeout: 10_000 })
+    add = recovery.locator("form")
+    submit = "Save"
+  } else {
+    await status.click({ timeout: 10_000 })
+    await page.getByRole("button", { name: "Manage servers", exact: true }).click({ timeout: 10_000 })
+    const servers = page.getByRole("dialog", { name: "Servers", exact: true })
+    await servers.getByRole("button", { name: "Add server", exact: true }).click({ timeout: 10_000 })
+    add = page.getByRole("dialog", { name: "Add server", exact: true })
+    submit = "Add server"
+  }
+  console.info("[sf-installed] The server credential form is open")
+  await add.getByLabel("Server address", { exact: true }).fill(installation.origin, { timeout: 10_000 })
+  await add.getByLabel("Username (optional)", { exact: true }).fill("orchestra", { timeout: 10_000 })
   const credential = add.getByLabel("Password (optional)", { exact: true })
-  await expect(credential).toBeEditable()
-  await credential.fill(password).catch(() => { throw new Error("Could not enter the isolated host credential") })
-  await add.getByRole("button", { name: "Add server", exact: true }).click()
-  await expect(add).toHaveCount(0)
+  await expect(credential).toBeEditable({ timeout: 10_000 })
+  await credential.fill(password, { timeout: 10_000 }).catch(() => { throw new Error("Could not enter the isolated host credential") })
+  await add.getByRole("button", { name: submit, exact: true }).click({ timeout: 10_000 })
+  await expect(add).toHaveCount(0, { timeout: 10_000 })
 
   console.info("[sf-installed] Selecting the installation project in the shell")
   const profile = page.getByRole("button", { name: "Choose project", exact: true })
-  await profile.click()
-  await page.locator('[data-component="orchestra-profile-picker"]').getByRole("menuitem", { name: "Add project", exact: true }).click()
+  await profile.click({ timeout: 10_000 })
+  await page.locator('[data-component="orchestra-profile-picker"]').getByRole("menuitem", { name: "Add project", exact: true }).click({ timeout: 10_000 })
   const folders = page.getByRole("dialog")
-  await folders.getByPlaceholder("Search folders", { exact: true }).fill(installation.root)
-  await folders.locator(`[data-directory-path=${JSON.stringify(installation.root)}]`).click()
-  await expect(profile.locator("small")).toHaveAttribute("title", installation.root)
+  await folders.getByPlaceholder("Search folders", { exact: true }).fill(installation.root, { timeout: 10_000 })
+  await folders.locator(`[data-directory-path=${JSON.stringify(installation.root)}]`).click({ timeout: 10_000 })
+  await expect(profile.locator("small")).toHaveAttribute("title", installation.root, { timeout: 10_000 })
   return { binding, context: context.value }
 }

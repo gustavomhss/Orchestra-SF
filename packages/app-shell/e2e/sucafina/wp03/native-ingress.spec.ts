@@ -13,6 +13,8 @@ test("the real installed operator reaches native CAP23 through the shell origin"
     expect(live.context.stamp.principalRef).toBe(installation.actorId)
     await page.reload()
     await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
+    await page.goto("/orchestra/sf-planner/versions?year=2026")
+    await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
   } finally {
     await installation.stop()
   }
