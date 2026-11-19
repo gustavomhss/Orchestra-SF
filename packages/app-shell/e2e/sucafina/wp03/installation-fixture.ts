@@ -1,4 +1,4 @@
-import { expect, type TestInfo } from "@playwright/test"
+import { expect, type Page, type TestInfo } from "@playwright/test"
 import { spawn, execFile } from "node:child_process"
 import { chmod, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { createServer } from "node:net"
@@ -7,15 +7,16 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { promisify } from "node:util"
 import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
+import { connectInstalledShell, installedShellOrigin } from "../installed-shell"
 
 const run = promisify(execFile)
 const here = path.dirname(fileURLToPath(import.meta.url))
 const repository = path.resolve(here, "../../../../..")
-const origin = "http://localhost:4110"
+const origin = installedShellOrigin()
 
 /** Launch the distributed CLI and installation factory; no alternate application or route handler. */
 export async function startPlannerInstallation(info: TestInfo) {
-  // The production local profile deliberately fixes this port. Refuse to borrow an
+  // The fixture owns this private upstream listener. Refuse to borrow an
   // existing service, and never terminate a process the fixture did not create.
   const reservation = createServer()
   await new Promise<void>((resolve, reject) => {
@@ -43,7 +44,7 @@ export async function startPlannerInstallation(info: TestInfo) {
     XDG_STATE_HOME: path.join(directory, "host-state"),
   }
   try {
-    await run("bun", ["run", path.join(here, "installation-setup.ts"), directory], {
+    await run("bun", ["run", path.join(here, "installation-setup.ts"), directory, origin], {
       cwd: repository, env: environment, timeout: 30_000, encoding: "utf8",
     })
   } catch (error) {
@@ -51,7 +52,7 @@ export async function startPlannerInstallation(info: TestInfo) {
     throw new Error(redactDiagnostics(error instanceof Error ? error.message : String(error)))
   }
   const child = spawn("bun", ["run", path.join(repository, "apps/cli/src/index.ts"), "serve", "--hostname", "localhost", "--port", "4110",
-    "--installation", path.join(repository, "modules/sucafina/Sucafinav1/local/entry.ts")], {
+    "--public-origin", origin, "--installation", path.join(repository, "modules/sucafina/Sucafinav1/local/entry.ts")], {
     cwd: directory, env: environment, stdio: ["ignore", "pipe", "pipe"],
   })
   const state = { log: "", error: undefined as Error | undefined, stopped: false, secrets: [] as string[] }
@@ -103,9 +104,15 @@ export async function startPlannerInstallation(info: TestInfo) {
     const admitted = await fetch(enrollment, { redirect: "manual", signal: AbortSignal.timeout(10_000) })
     if (admitted.status !== 303 || admitted.headers.get("location") !== "/")
       throw new Error(`Production local enrollment failed with HTTP ${admitted.status}`)
-    const cookie = readOperatorSessionCookie(admitted.headers)
+    const cookie = readOperatorSessionCookie(admitted.headers, origin)
     state.secrets.push(cookie.value)
-    return { origin, cookie, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, stop }
+    const actorId = `macos:${config.localOperator.installationId}:${config.localOperator.uid}`
+    return { origin, cookie, actorId, stop,
+      signIn: async (page: Page) => {
+        await page.context().addCookies([cookie])
+        return connectInstalledShell(page, { root: directory, origin, mount: "/sucafina", actorId })
+      },
+    }
   } catch (error) {
     await stop()
     throw error

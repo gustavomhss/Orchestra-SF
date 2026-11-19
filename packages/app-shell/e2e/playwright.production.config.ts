@@ -9,6 +9,7 @@ const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
 // declared real Procurement fixture; it changes no grep, selector or CI allowlist.
 const wp04 = wp04BrowserSelected(process.argv.slice(2)) && !process.argv.includes("--list")
 const sfNative = nativeSpecSelected(process.argv.slice(2))
+const sfInstalled = process.argv.slice(2).some((argument) => /(?:^|[\\/])sucafina(?:[\\/]|$)/.test(argument))
 // I00 starts the real host before collection; no synthetic webServer or legacy WP04 substitution.
 if (sfNative && (process.env.GITHUB_ACTIONS !== "true" ||
     !process.env.SF_NATIVE_INSTALLED_MANIFEST || !process.env.SF_NATIVE_CANDIDATE_SHA)) {
@@ -34,6 +35,10 @@ export default defineConfig({
     cwd: path.resolve(import.meta.dirname, "../../../apps/web"),
     command: `bun run build && bun run serve -- --host 0.0.0.0 --port ${port} --strictPort`,
     reuseExistingServer: false,
+    ...(sfInstalled ? { env: {
+      VITE_ORCHESTRA_SERVER_HOST: "", VITE_ORCHESTRA_SERVER_PORT: "",
+      ORCHESTRA_SF_E2E_UPSTREAM: wp04 ? "http://127.0.0.1:4174" : "http://localhost:4110",
+    } } : {}),
   }, ...(wp04 ? [{
     command: "bun e2e/sucafina/wp04/host.ts",
     cwd: path.resolve(import.meta.dirname, ".."),
