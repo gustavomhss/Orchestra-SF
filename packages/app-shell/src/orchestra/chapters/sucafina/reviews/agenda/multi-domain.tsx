@@ -1,5 +1,5 @@
 import { For, Show, createEffect, createUniqueId, onCleanup, untrack } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import type { Schema } from "effect"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
 import { SfReviewsReviewAgenda, SfReviewsReviewAgendaOptions, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
@@ -84,7 +84,7 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
     commandAbort?.abort()
     const abort = new AbortController(); commandAbort = abort
     const generation = owner.generation(), ownerKey = state.ownerKey
-    const items = store.selected.map((option) => option.item)
+    const items = store.selected.map((option) => unwrap(option.item))
     setStore({ phase: "loading", preview: undefined, sectionRefs: [], message: "" })
     try {
       const result = await createSfReviewsClient(access.transport)["reviews.review-agenda"]({ items }, { signal: abort.signal })
