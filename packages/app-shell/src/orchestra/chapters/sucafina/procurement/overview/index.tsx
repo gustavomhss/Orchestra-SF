@@ -122,6 +122,12 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
   const state = (): SfUiState =>
     currentProjection() && view.statusFilter && filtered().length === 0 ? "filtered-empty" : view.state
   const currency = () => currentProjection()?.value.data.formSettings.currency ?? ""
+  const count = (value: number | null | undefined): JSX.Element =>
+    value === null || value === undefined || !Number.isInteger(value)
+      ? <span class="sf-n21-unknown">{t(sfCommonKey("sf.common.unknown"))}</span>
+      : <span class="sf-n21-number">{new Intl.NumberFormat(language.intl(), {
+          maximumFractionDigits: 0,
+        }).format(value)}</span>
   const money = (value: number | null | undefined): JSX.Element =>
     value === null || value === undefined || !Number.isFinite(value)
       ? <span class="sf-n21-unknown">{t(sfCommonKey("sf.common.unknown"))}</span>
@@ -145,11 +151,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
       context={[]}
       tabs={[]}
       activeTab={null}
-      primaryAction={{
-        id: "open-requests", labelKey: key("sf.cap24.primary"), tone: "primary",
-        disabled: true, reasonKey: sfCommonKey("sf.common.unavailable"),
-        busy: false, onInvoke: () => undefined,
-      }}
+      primaryAction={undefined}
       secondaryActions={[]}
       density="comfortable"
       layout="work"
@@ -191,7 +193,10 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
                   </Show>
                 </section>
                 <dl class="sf-n21-metrics">
-                  {metric("sf.n21.open", projection().value.data.metrics.open)}
+                  <div class="mx-card sf-n21-metric">
+                    <dt>{t(key("sf.n21.open"))}</dt>
+                    <dd>{count(filtered().length)}</dd>
+                  </div>
                   {metric("sf.n21.approvedOpex", projection().value.data.metrics.approved.OPEX,
                     projection().value.data.metrics.unavailable.length > 0)}
                   {metric("sf.n21.approvedCapex", projection().value.data.metrics.approved.CAPEX,

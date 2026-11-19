@@ -525,9 +525,10 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                       <h3>{t("sf.u15.documents")}</h3>
                       <Show when={assetTarget()} fallback={<p>{t("sf.u15.noDocuments")}</p>}>
                         {(target) => <SfBoundAssets surface="dashboard" page="Vendor Contracts"
-                          uploadKind="contract" recordRef={target().ref} recordVersion={target().version}
+                          uploadKind={actionAllowed("save") ? "contract" : undefined}
+                          recordRef={target().ref} recordVersion={target().version}
                           assets={target().row.docs ?? []}
-                          disabled={view.sending || view.outcomeUnknown || !!view.reviewing || !sourceAvailable()}
+                          disabled={view.sending || view.outcomeUnknown || !!view.reviewing || !sourceAvailable() || !actionAllowed("save")}
                           onReconcile={refresh} />}
                       </Show>
                     </section>
