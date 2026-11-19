@@ -14,7 +14,7 @@ jobs:
       - name: Checkout exact candidate
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: 540df5210f1771b00c3418c0fb1926a8e289e260
+          ref: db03e97d3a2d1dce72d6accd9c1cdae4b8c97803
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
       - name: Canonical module typecheck
