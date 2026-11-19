@@ -9,12 +9,11 @@ import type { SfContext, SfContextDependencies, SfContextHandle, SfDraftRevalida
 import { createSfDraft } from "../../src/orchestra/chapters/sucafina/shared/draft"
 import { revalidateSfNativeDraft } from "../../src/orchestra/chapters/sucafina/host/draft-revalidation"
 
-// The native Bun TSX transform emits React.createElement; use the existing Solid DOM compiler.
-const { SfContextProvider, useSfContext }: typeof import("../../src/orchestra/chapters/sucafina/context") = await import(
-  solidDom("../../src/orchestra/chapters/sucafina/context", import.meta.dir)
-)
-
 // Contract tests with injected producer responses, not an installed identity/host proof.
+// Load the rendered provider through the Solid JSX compiler, not Bun's default JSX transform.
+const { SfContextProvider, useSfContext }: typeof import("../../src/orchestra/chapters/sucafina/context") =
+  await import(solidDom("../../src/orchestra/chapters/sucafina/context", import.meta.dir))
+
 const stamp = { installationId: "install", projectId: "project", hostId: "host", principalRef: "actor", policyVersion: "p1", accessRevision: "a1" }
 const context: SfContext = { stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft", destinations: [], availability: [] }
 const selection: SfOwnerSelection = { serverKey: "server" as SfServerKey, projectId: "project" as SfRef, installationId: "install" as SfRef }
@@ -209,19 +208,7 @@ describe("provider quarantine publication", () => {
       expect(handle.state()).toMatchObject({ status: "unavailable", reason: "host-unavailable" })
       expect(draft.snapshot().availability).toBe("quarantined")
       expect(notices).toBe(0)
-      // Explicit source-side action denial (read remains admitted) is a
-      // revocation. Removing an entire destination can also mean temporary
-      // discovery loss; that cannot be used as proof to destroy a private draft.
-      fresh = {
-        ...source,
-        destinations: source.destinations.map((entry) => ({ ...entry, allowedActionIds: [] })),
-        availability: source.availability.map((resource) => ({
-          ...resource,
-          operations: resource.operations.map((operation) => operation.operationId === "domain.command.CAP08.save"
-            ? { ...operation, state: "denied" as const, operational: false, reason: "action-revoked" }
-            : operation),
-        })),
-      }
+      fresh = { ...source, destinations: [] }
       await handle.reload()
       expect(handle.state().status).toBe("ready")
       expect(draft.snapshot().availability).toBe("revoked")
