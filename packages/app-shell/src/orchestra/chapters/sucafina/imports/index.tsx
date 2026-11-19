@@ -660,7 +660,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   }} />
               </label>
               <button type="submit" class="mx-btn primary"
-                disabled={state.busy || !state.historyRef.trim()}>{t("sf.u23.reconcile")}</button>
+                disabled={state.busy || !state.historyRef.trim() ||
+                  !permitted("files.import-reference") || !permitted("files.import-detail")}>{t("sf.u23.reconcile")}</button>
             </form>
           </Show>
           <Show when={isReference()}>

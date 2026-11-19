@@ -158,13 +158,13 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
       default: return key("sf.common.unavailable")
     }
   }
-  const showNumber = (value: number | null | undefined, money = true) => {
+  const showNumber = (value: number | null | undefined, currency = true) => {
     if (value === undefined || value === null) return copy.t(key("sf.u46.noValue"))
-    const text = new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(value)
-    return money ? text + " unspecified" : text
+    return new Intl.NumberFormat(copy.locale(), currency
+      ? { style: "currency", currency: "USD" } : { maximumFractionDigits: 2 }).format(value)
   }
   const metricRows = () => [
-    { id: "budget", label: "sf.u06.budget" as const, left: left()?.total, right: right()?.total },
+    { id: "budget", label: "sf.u06.totalBudget" as const, left: left()?.total, right: right()?.total },
     { id: "actual", label: "sf.u06.actualYtd" as const, left: left()?.actualYTD, right: right()?.actualYTD },
     { id: "outlook", label: "sf.u06.outlook" as const, left: left()?.fullYear, right: right()?.fullYear },
     { id: "hr", label: "sf.u06.hrStaff" as const, left: left()?.hrTotal, right: right()?.hrTotal },
@@ -267,10 +267,10 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                         </tbody>
                       </table>
                     </div>
-                    <p>{copy.t(key("sf.u06.budget"))}</p>
+                    <p>{copy.t(key("sf.u06.budgetExplanation"), { year: year() ?? "" })}</p>
                     <div class="sf-u46-compare-scroll">
                       <table class="sf-u46-monthly">
-                        <caption>{copy.t(key("sf.u06.budget"))}</caption>
+                        <caption>{copy.t(key("sf.u06.monthly"))}</caption>
                         <thead>
                           <tr>
                             <th rowSpan={2} scope="col">{copy.t(key("sf.u06.month"))}</th>

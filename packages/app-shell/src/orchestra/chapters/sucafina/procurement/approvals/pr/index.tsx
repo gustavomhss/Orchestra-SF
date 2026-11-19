@@ -541,7 +541,8 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
           onInvoke: () => beginReview("approve"),
         } : undefined}
         secondaryActions={review.actions.includes("reject") && !ui.pending ? [{
-          id: "reject", labelKey: key("sf.u13.reject"), tone: "danger", disabled: false,
+          id: "reject", labelKey: key("sf.u13.reject"), tone: "danger",
+          disabled: !review.actions.includes("reject") || ui.phase === "submitting",
           busy: actionBusy, onInvoke: () => beginReview("reject"),
         }] : []}
         sourceActions={[]}

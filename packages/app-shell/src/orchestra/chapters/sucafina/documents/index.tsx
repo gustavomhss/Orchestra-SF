@@ -624,7 +624,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 </select>
               </label>
               <button type="button" class="mx-btn primary"
-                disabled={!state.sourceSelectionRef || state.busy} onClick={() => { void admit() }}>
+                disabled={!state.sourceSelectionRef || state.busy || !permitted("files.document-admit")} onClick={() => { void admit() }}>
                 {t("sf.u24.openDocument")}
               </button>
             </div>
@@ -729,7 +729,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               </label>
               <button type="submit" class="mx-btn primary"
                 disabled={!state.documentRef || !state.fieldId.trim() || state.busy ||
-                  state.phase === "unknown"}>{t("sf.u24.extract")}</button>
+                  state.phase === "unknown" || !permitted("files.document-schema") ||
+                  !permitted("files.document-extract")}>{t("sf.u24.extract")}</button>
             </form>
             <Show when={evidence() && selected()?.status === "extracted" && state.phase === "confirm-review"}>
               <section class="sf-files-section" data-sf-confirmation="review">
