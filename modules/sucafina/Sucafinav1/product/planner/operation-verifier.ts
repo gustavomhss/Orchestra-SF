@@ -7,10 +7,10 @@ import { projectionDigest } from "./scenario-comparison-port.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import { roleMap } from "../../runtime/admin.ts"
-import { object } from "../../runtime/contract.ts"
-import type { Actor } from "../../runtime/contract.ts"
+import type { Snapshot } from "../../runtime/contract.ts"
+import type { DomainProjection } from "../contracts/context.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
-import { projectPlannerSource } from "./port.ts"
+import { buildPlannerFinancialProjection, plannerSourceActor, projectPlannerSource } from "./port.ts"
 import { simulatePlannerOperations } from "./scenario.ts"
 
 /** Resolve a single operation only after the Planner has verified its target and replacement. */
@@ -38,18 +38,48 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
     const parsed = decodeSfOperationInput("sf_scenario_simulate", incoming)
     if (!parsed.ok) return false
     const scenario = parsed.value
-    const request = input.host.requestFor(context)
-    if (!request || request.signal.aborted || !await input.host.revalidate(context) || !scenario || !Array.isArray(scenario.operations)) return false
+    const request = input.host.requestFor(context), lease = context.lease
+    const original = digestSfValue(incoming), binding = digestSfValue([context.kind, context.binding])
+    const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+    const current = () => !!request && !request.signal.aborted && input.host.requestFor(context) === request && context.lease === lease &&
+      digestSfValue(incoming) === original && digestSfValue([context.kind, context.binding]) === binding &&
+      digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
+    if (!current() || !await input.host.revalidate(context) || !current()) return false
     const source = structuredClone(await input.sources.resolveForecastSource(scenario.baseRef, context))
-    if (source.status !== "ok" || !source.value.evidence.target.period) return false
-    const compare = () => input.planner.compareForecast({ baseRef: scenario.baseRef, candidateRef: scenario.baseRef, period: source.value.evidence.target.period!, currency: "USD" }, context)
-    const projection = await compare()
-    if (projection.status !== "ok" || !projection.value.sourceRefs.some((ref) => ref.refDigest === source.value.evidence.refDigest)) return false
-    const values = projection.value.baseline
+    if (!current() || source.status !== "ok") return false
+    const ref = source.value.evidence, period = ref.target.period
+    if (!period || ref.refId !== scenario.baseRef || ref.refDigest !== digestSfEvidenceRef(ref) ||
+      ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId ||
+      ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || ref.target.recordId !== source.value.versionId) return false
+    const start = /^(\d{4})-(\d{2})-01$/.exec(period.start), end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(period.end)
+    if (!start || !end || start[1] !== end[1] || Number(start[2]) < 1 || Number(end[2]) > 12 || Number(start[2]) > Number(end[2]) ||
+      Number(end[3]) !== new Date(Date.UTC(Number(end[1]), Number(end[2]), 0)).getUTCDate()) return false
+    const environment = await input.host.environment(request!)
+    if (!current()) return false
+    const observe = async (snapshot: Snapshot) => {
+      const principal = await input.host.authenticate(request!, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+      const actor = plannerSourceActor(snapshot, principal, context.binding.principalRef)
+      if (!actor || !current()) return undefined
+      const projection = projectPlannerSource(snapshot, actor, source.value.versionId)
+      if (!projection || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...ref.target.fields].sort()) ||
+        digestSfValue({ versionId: source.value.versionId, projection }) !== ref.target.projectionDigest || projection.year !== Number(start[1])) return undefined
+      return { actor, projection }
+    }
+    // Selector admission needs the real actor-filtered domain body, not a
+    // self-comparison that recursively reopens case coverage. These observations
+    // remain independent on either side of the actual domain simulation below.
+    const read = () => input.host.persistence.transaction<DomainProjection | undefined>("planner", async (snapshot) => {
+      const observed = await observe(snapshot)
+      if (!observed) return { commit: false, value: undefined }
+      const value = buildPlannerFinancialProjection({ projection: observed.projection, ref, period, binding: context, at: environment.at })
+      return { commit: false, value: new Set(value.values.map((entry) => entry.id)).size === value.values.length ? value : undefined }
+    }, { signal: request!.signal }).catch(() => undefined)
+    const values = await read()
+    if (!values || !current()) return false
     const references = scenario.operations.flatMap((operation) => operation.replacementRef ? [operation.replacementRef] : [])
     const resolve = () => Promise.all(references.map((reference) => input.scenarioInputs.resolveAmount(reference, context)))
     const resolved = structuredClone(await resolve())
-    if (resolved.some((entry) => entry.status !== "ok" || entry.value.evidence.refDigest !== digestSfEvidenceRef(entry.value.evidence) || entry.value.evidence.installationId !== context.binding.installationId || entry.value.evidence.projectId !== context.binding.projectId)) return false
+    if (!current() || resolved.some((entry) => entry.status !== "ok" || entry.value.evidence.refDigest !== digestSfEvidenceRef(entry.value.evidence) || entry.value.evidence.installationId !== context.binding.installationId || entry.value.evidence.projectId !== context.binding.projectId)) return false
     if (scenario.operations.some((operation) => {
       const targets = values.components.filter((component) => component.id === operation.targetRef)
       if (targets.length !== 1 || !["replace", "include", "exclude", "defer"].includes(operation.kind)) return true
@@ -71,26 +101,24 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
       }
       return typeof operation.amount !== "number" || !Number.isFinite(operation.amount)
     })) return false
-    const environment = await input.host.environment(request)
     const accepted = await input.host.persistence.transaction("planner", async (snapshot) => {
-      const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
-      if (!principal || principal.id !== context.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: false }
-      const roles = principal.roles.filter((entry) => entry.surface === "planner").map((entry) => entry.role)
-      const access = object(object(snapshot.data.access)[principal.id])
-      const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
-      const current = projectPlannerSource(snapshot, actor, source.value.versionId)
-      if (!current || digestSfValue({ versionId: source.value.versionId, projection: current }) !== source.value.evidence.target.projectionDigest) return { commit: false, value: false }
+      const observed = await observe(snapshot)
+      if (!observed) return { commit: false, value: false }
       const operations = scenario.operations.map((operation) => {
         const replacement = operation.replacementRef ? resolved[references.indexOf(operation.replacementRef)] : undefined
         return replacement?.status === "ok" ? { ...operation, replacementRef: undefined, amount: replacement.value.amount, currency: replacement.value.currency, period: replacement.value.period } : operation
       })
-      return { commit: false, value: simulatePlannerOperations(snapshot, actor, environment, source.value.versionId, operations).status === "ok" }
-    }, { signal: request.signal }).catch(() => false)
-    if (!accepted) return false
-    const again = await compare()
-    const sourceAgain = await input.sources.resolveForecastSource(scenario.baseRef, context)
-    const resolvedAgain = await resolve()
+      return { commit: false, value: simulatePlannerOperations(snapshot, observed.actor, environment, source.value.versionId, operations).status === "ok" }
+    }, { signal: request!.signal }).catch(() => false)
+    if (!accepted || !current()) return false
+    const again = await read()
+    if (!again || !current()) return false
+    const sourceAgain = structuredClone(await input.sources.resolveForecastSource(scenario.baseRef, context))
+    const resolvedAgain = structuredClone(await resolve())
     const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? digestSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : digestSfValue(entry)
-    return again.status === "ok" && projectionDigest(again.value.baseline) === projectionDigest(values) && sourceAgain.status === "ok" && sourceAgain.value.evidence.refDigest === source.value.evidence.refDigest && resolvedAgain.length === resolved.length && resolvedAgain.every((entry, index) => stable(entry) === stable(resolved[index]!)) && !request.signal.aborted && await input.host.revalidate(context)
+    if (!current() || projectionDigest(again) !== projectionDigest(values) || sourceAgain.status !== "ok" ||
+      digestSfValue(sourceAgain.value) !== digestSfValue(source.value) || resolvedAgain.length !== resolved.length ||
+      resolvedAgain.some((entry, index) => stable(entry) !== stable(resolved[index]!)) || !await input.host.revalidate(context)) return false
+    return current()
   }
 }

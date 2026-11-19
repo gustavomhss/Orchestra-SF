@@ -54,6 +54,51 @@ test("operation proof uses the same domain admission for closed, include, duplic
     expect(await run([valid, valid])).toBe(false)
     expect(await run([{ kind: "defer", targetRef: "line:11", period: { start: "2027-12-01", end: "2027-12-31" } }])).toBe(true)
     expect(await database.transactionAll!(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))).toEqual(before)
+    // A completed domain observation cannot authorize a different call or
+    // caller-owned input changed by the last asynchronous authority callback.
+    for (const fault of ["input", "request", "headers", "lease", "binding"] as const) {
+      const incoming = { baseRef: source.value.evidence.refId, operations: [structuredClone(valid)], assumptions: [] }
+      const originalLease = context.lease, originalPolicy = context.binding.policyVersion
+      let currentRequest = http, validations = 0, injected = false
+      const guardedHost: DomainPortHost = { ...host, requestFor: () => currentRequest, revalidate: async (trusted) => {
+        const allowed = await host.revalidate(trusted)
+        if (++validations === 2) {
+          injected = true
+          if (fault === "input") incoming.operations[0]!.amount = 43
+          if (fault === "request") currentRequest = new Request(http)
+          if (fault === "headers") http.headers.set("authorization", "another-principal")
+          if (fault === "lease") Object.assign(context, { lease: {} })
+          if (fault === "binding") Object.assign(context.binding, { policyVersion: "changed" })
+        }
+        return allowed
+      } }
+      try {
+        expect(await createPlannerOperationVerifier({ ...input, host: guardedHost })(incoming, context)).toBe(false)
+        expect(injected).toBe(true)
+      } finally {
+        http.headers.set("authorization", "finance")
+        Object.assign(context, { lease: originalLease })
+        Object.assign(context.binding, { policyVersion: originalPolicy })
+      }
+    }
+
+    // Mutate the actual persisted source after simulation. The independent
+    // final raw observation must refuse the previously admitted selector.
+    let observations = 0, sourceChanged = false
+    const changingHost: DomainPortHost = { ...host, persistence: { ...persistence, transaction: async (surface, work, options) => {
+      const result = await persistence.transaction(surface, work, options)
+      if (surface === "planner" && ++observations === 2) {
+        await persistence.transaction("planner", async (snapshot) => {
+          const versions = snapshot.data.versions as { lines: { f: number[] }[] }[]
+          versions[0]!.lines[0]!.f[10] = 31
+          return { commit: true, value: undefined }
+        })
+        sourceChanged = true
+      }
+      return result
+    } } }
+    expect(await createPlannerOperationVerifier({ ...input, host: changingHost })({ baseRef: source.value.evidence.refId, operations: [valid], assumptions: [] }, context)).toBe(false)
+    expect(sourceChanged).toBe(true)
     access.allowed = false
     expect(await run([valid])).toBe(false)
   } finally { await database.dispose(); await rm(directory, { recursive: true, force: true }) }
