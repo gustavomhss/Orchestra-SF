@@ -22,10 +22,11 @@ interface Prepared {
 
 export function initialize(
   db: DatabaseService,
+  events: EventV2.Interface,
   context: Effect.Effect<SystemContext.SystemContext>,
   sessionID: SessionSchema.ID,
 ) {
-  return initializeOnce(db, context, sessionID).pipe(Effect.withSpan("SessionContextEpoch.initialize"))
+  return initializeOnce(db, events, context, sessionID).pipe(Effect.withSpan("SessionContextEpoch.initialize"))
 }
 
 export function prepare(
@@ -106,11 +107,11 @@ const prepareOnce = Effect.fnUntraced(function* (
 
 const initializeOnce = Effect.fnUntraced(function* (
   db: DatabaseService,
+  events: EventV2.Interface,
   context: Effect.Effect<SystemContext.SystemContext>,
   sessionID: SessionSchema.ID,
 ) {
   if (yield* exists(db, sessionID)) return
-  const events = yield* EventV2.Service
   const generation = yield* context.pipe(Effect.flatMap(SystemContext.initialize))
   return yield* admit(db, events, sessionID, generation)
 })

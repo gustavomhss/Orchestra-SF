@@ -91,11 +91,11 @@ test("explicit local operator enrollment enters Orchestra and HTML console faces
     const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
     for (const surface of ["dashboard", "planner", "procurement"]) {
       const response = await installation.handler(new Request(`${origin}/sucafina/${surface}`, { headers: { cookie } }))
-      expect(response?.status).toBe(200)
-      expect(response?.headers.get("content-type")).toContain("text/html")
-      expect(await response!.text()).toContain("data-page=")
+      expect(response?.status).toBe(404)
+      expect(response?.headers.get("content-type")).toContain("text/plain")
+      expect(await response!.text()).toBe("legacy console decommissioned — use /")
       const head = await installation.handler(new Request(`${origin}/sucafina/${surface}`, { method: "HEAD", headers: { cookie } }))
-      expect(head?.status).toBe(200)
+      expect(head?.status).toBe(404)
       expect(await head!.text()).toBe("")
     }
     const status = await installation.handler(new Request(`${origin}/sucafina/status`))

@@ -127,17 +127,17 @@ test("HTTP request boundaries retain host routes and retire console HTML GET/HEA
   const app = fixture()
   expect(await app.handler(new Request("https://installation.example/api/session"))).toBeUndefined()
   const response = await app.handler(new Request("https://installation.example/sucafina/dashboard?page=IT%20Risks"))
-  expect(response?.status).toBe(200)
+  expect(response?.status).toBe(404)
   expect(response?.headers.get("cache-control")).toBe("no-store")
-  expect(response?.headers.get("content-type")).toContain("text/html")
-  expect(await response?.text()).toContain('data-page="IT Risks"')
+  expect(response?.headers.get("content-type")).toContain("text/plain")
+  expect(await response?.text()).toBe("legacy console decommissioned — use /")
   const head = await app.handler(
     new Request("https://installation.example/sucafina/dashboard?page=IT%20Risks", { method: "HEAD" }),
   )
-  expect(head?.status).toBe(200)
+  expect(head?.status).toBe(404)
   expect(await head?.text()).toBe("")
   for (const surface of ["planner", "procurement"])
-    expect((await app.handler(new Request(`https://installation.example/sucafina/${surface}`)))?.status).toBe(403)
+    expect((await app.handler(new Request(`https://installation.example/sucafina/${surface}`)))?.status).toBe(404)
   app.identity.principal = null
   // Export is still an authorized data operation, not an HTML route.
   expect((await app.handler(new Request("https://installation.example/sucafina/dashboard?download=json")))?.status).toBe(401)

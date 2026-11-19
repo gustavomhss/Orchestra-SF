@@ -167,7 +167,7 @@ const layer = Layer.effect(
         ...(yield* store.permissions(session.id)),
         ...agentRules.filter((rule) => rule.effect === "deny"),
       ]
-      const initialized = yield* SessionContextEpoch.initialize(db, loadSystemContext(session.id, agent), session.id)
+      const initialized = yield* SessionContextEpoch.initialize(db, events, loadSystemContext(session.id, agent), session.id)
       const toolFibers = yield* FiberSet.make<void, ToolOutputStore.Error>()
       let needsContinuation = false
       let currentStep = step

@@ -28,9 +28,8 @@ test("first authorized C02 JSON projection is empty and cannot resurrect the ret
     const before = await fixture.material()
     expect(before.store).toBeUndefined()
     const dashboard = await fixture.get("requester", undefined)
-    expect(dashboard.response.status).toBe(200)
-    expect(dashboard.response.headers.get("content-type")).toContain("text/html")
-    expect(dashboard.body).toContain("data-page=")
+    expect(dashboard.response.status).toBe(404)
+    expect(dashboard.body).toBe("legacy console decommissioned — use /")
 
     const first = await fixture.get("requester", "Requests")
     expect(first.response.status).toBe(200)

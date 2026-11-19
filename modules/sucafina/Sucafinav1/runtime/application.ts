@@ -2,7 +2,6 @@ import { configure, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
-import { documentHtml, links, listed, pageMain } from "../src/screen-shell.ts"
 import { visibleRequests } from "../src/requests.ts"
 import type { Actor, Command, Domain, Environment, Persistence, Result, Snapshot } from "./contract.ts"
 import { object, rows, text } from "./contract.ts"
@@ -56,6 +55,10 @@ export function createApplication(mount: string, application: Application) {
     if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement") return reply("Not found", 404)
     if (!["GET", "HEAD", "POST"].includes(request.method))
       return reply("Method not allowed", 405, { Allow: "GET, HEAD, POST" })
+    // Old document pages are no longer a product interface. API/export/asset dispatch stays below.
+    const decommissioned = () => reply(request.method === "HEAD" ? null : "legacy console decommissioned — use /", 404, {
+      "Content-Type": "text/plain; charset=utf-8",
+    })
     const origin = request.headers.get("origin")
     if (
       request.method === "POST" &&
@@ -74,6 +77,7 @@ export function createApplication(mount: string, application: Application) {
     const product = await application.product?.(request, surface)
     if (product) {
       // Product JSON and native operations keep their existing authorization and behavior.
+      if (request.method !== "POST" && product.headers.get("content-type")?.toLowerCase().includes("text/html")) return decommissioned()
       return product
     }
     const parsed =
@@ -86,6 +90,9 @@ export function createApplication(mount: string, application: Application) {
         : application.persistence.transaction(surface, work, { signal: request.signal })
     if (request.method !== "POST" && url.searchParams.has("download"))
       return serveDownload(request, surface, application, transaction, environment)
+    // Native projections were dispatched by the installation; retain authorized asset GETs.
+    if (request.method !== "POST" && !queueProjection && !url.searchParams.has("asset") && !url.searchParams.has("asset-link"))
+      return decommissioned()
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
     if (preparedUpload instanceof Response) return preparedUpload
     const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
@@ -372,13 +379,7 @@ export function createApplication(mount: string, application: Application) {
           return { commit: false, value: json({ status: "unavailable", reason: "procurement-queue-unavailable" }, 503) }
         return { commit: false, value: json({ status: "ok", value: queue }, 200) }
       }
-      return { commit: false, value: consolePage(surface, actor, page, summaries, contribution.render(page, snapshot.data, {
-        actor,
-        year: Number(environment.at.slice(0, 4)),
-        month: Number(environment.at.slice(5, 7)),
-        at: environment.at,
-        versions: snapshot.versions,
-      }) ?? "") }
+      return { commit: false, value: decommissioned() }
     }).finally(() => productView?.finish())
     return request.method === "HEAD"
       ? new Response(null, {
@@ -469,15 +470,6 @@ function json(value: unknown, status: number) {
   return reply(JSON.stringify(value), status, {
     "Content-Type": "application/json; charset=utf-8",
   })
-}
-function consolePage(surface: Surface, actor: Actor, page: string, summaries: readonly string[], body: string) {
-  const keys = surface === "dashboard" ? dashboardPages(actor, summaries) : surface === "planner" ? plannerKeys(actor) : procurementKeys(actor)
-  const nav = listed(keys, surface)
-  const active = nav.find((item) => item.key === page) ?? nav[0]
-  if (!active) return reply("Access denied", 403)
-  const title = surface === "dashboard" ? "CIO Dashboard" : surface === "planner" ? "IT Budget Planner" : "Procurement"
-  const html = documentHtml(title, surface, links(nav), pageMain({ drawn: true, key: active.key, index: active.index }, body), "")
-  return reply(html, 200, { "Content-Type": "text/html; charset=utf-8", "Content-Security-Policy": htmlPolicy(html) })
 }
 function reply(body: string | null, status: number, headers: Record<string, string> = {}) {
   return new Response(body, {

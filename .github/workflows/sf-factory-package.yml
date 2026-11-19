@@ -44,9 +44,6 @@ jobs:
           # Pin the actual PR head so the checkout and source receipt are identical.
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-          # Pointers left by the default skip-smudge checkout show up as tracked
-          # modifications once git-lfs clean runs in `git status`.
-          lfs: true
       - name: Setup Node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
