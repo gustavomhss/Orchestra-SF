@@ -60,11 +60,11 @@ export async function microsoftNativeHost(
     Layer.provide(HttpServer.layerServices),
   ), { disableLogger: true })
   try {
-    const origin = installation.transport?.ingressOrigin
+    const selected = await installation.discovery?.current(new AbortController().signal)
+    const origin = installation.transport?.ingressOrigin ?? selected?.publicOrigin
     if (!origin || !installation.host?.length || !installation.discovery) throw new Error("MICROSOFT_NATIVE_INSTALLATION_REQUIRED")
     const health = await router.handler(new Request(origin + "/api/health"))
     if (health.status !== 200) throw new Error("MICROSOFT_NATIVE_HOST_UNAVAILABLE:" + health.status)
-    const selected = await installation.discovery.current(new AbortController().signal)
     if (!selected?.identity()) throw new Error("MICROSOFT_NATIVE_IDENTITY_UNAVAILABLE")
     return { dispose: async () => { try { await router.dispose() } finally { restore() } } }
   } catch (error) {
