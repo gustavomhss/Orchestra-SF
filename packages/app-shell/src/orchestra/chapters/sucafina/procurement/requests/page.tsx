@@ -133,6 +133,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     sending: false,
     outcomeUnknown: false,
     notice: undefined as Key | undefined,
+    fieldErrors: [] as readonly { field: string; message: string }[],
     newIntentRef: crypto.randomUUID() as SfIntentRef,
   })
   let inFlight: AbortController | undefined
@@ -181,7 +182,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const epoch = sf.generation()
     const targetRef = routeRef()
     void view.refresh
-    setView({ read: undefined, state: "loading", reviewing: undefined, sending: false, notice: undefined })
+    setView({ read: undefined, state: "loading", reviewing: undefined, sending: false, notice: undefined, fieldErrors: [] })
     if (owner.status !== "ready" || !ready) {
       setView("state", owner.status === "denied" ? "denied" :
         owner.status === "unauthenticated" ? "session-expired" : "unavailable")
@@ -288,7 +289,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const prPending = () => { const state = prDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
   const poPending = () => { const state = poDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
   const editPr = (next: SfPrEdit) => {
-    if (activePr() && !view.sending && !view.reviewing && !view.outcomeUnknown) prDraft()?.edit(next)
+    if (activePr() && !view.sending && !view.reviewing && !view.outcomeUnknown) {
+      prDraft()?.edit(next)
+      setView("fieldErrors", [])
+    }
   }
   const editPo = (next: SfPoEdit) => {
     if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
@@ -328,7 +332,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       intentRef: crypto.randomUUID() as SfIntentRef,
       idempotencyKey: crypto.randomUUID(),
     }
-    setView({ reviewing: review, notice: undefined })
+    setView({ reviewing: review, notice: undefined, fieldErrors: [] })
     if (pr) prDraft()?.setPhase("reviewing")
     if (po) poDraft()?.setPhase("reviewing")
   }
@@ -514,7 +518,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       if (result.status === 422 && !result.body.ok && result.body.status === 422) {
         prController?.rejectSave({ status: 422, operation: pending })
         poController?.rejectSave({ status: 422, operation: pending })
-        setView({ sending: false, reviewing: undefined, notice: po ? "sf.u11.remaining.invalidPo" : "sf.u11.remaining.invalidPr" })
+        setView({ sending: false, reviewing: undefined, fieldErrors: result.body.fieldErrors ?? [],
+          notice: po ? "sf.u11.remaining.invalidPo" : "sf.u11.remaining.invalidPr" })
         return
       }
       if (result.status < 200 || result.status >= 300 || result.body.ok !== true) {
@@ -546,7 +551,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           kind: "projected", operationRef: review.operationRef,
           baseVersion: updatedVersion, value: poFromRecord(updated),
         })
-        setView({ selected: review.ref, creating: false, notice: "sf.u11.remaining.saved" })
+        setView({ selected: review.ref, creating: false, notice: "sf.u11.remaining.saved", fieldErrors: [] })
       } else {
         // A successful command may not carry a canonical newly created ID.
         // Missing from the list is not enough to claim a deleted record.
@@ -731,7 +736,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
             {/* The W19 title editor is a separate source-locked intent/draft. */}
             <SfRequestTitleEdit {...props} requestRef={selectedRef()} onConfirmed={refresh} />
           </Show>
-          <SfRequisitionForm value={activePr()!.value} creating={creating()}
+          <SfRequisitionForm value={activePr()!.value} creating={creating()} errors={view.fieldErrors}
             disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
             onEdit={editPr} />
           <div class="sf-u11-actions">
@@ -758,8 +763,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         </section>
       </Show>
       <Show when={current && stage() === "pr" && !canPr()}>
-        <section class="sf-u11-stage"><h3>{t("sf.u11.remaining.pr")}</h3>
-          <p>{current?.pr?.description ?? t("sf.u11.remaining.readonly")}</p>
+        <section class="sf-u11-stage" data-stage="pr-readonly"><h3>{t("sf.u11.remaining.pr")}</h3>
+          <p>{t("sf.u11.remaining.readonly")}</p>
+          <SfRequisitionForm value={prFromRecord(current!)} creating={false} disabled={true} onEdit={() => undefined} />
         </section>
       </Show>
       <Show when={current && stage() === "po"}>
@@ -846,7 +852,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         id: "create", labelKey: copyKey("sf.u11.remaining.new"), tone: "primary",
         disabled: view.sending || view.outcomeUnknown, busy: view.sending,
         onInvoke: () => setView({ creating: true, selected: undefined,
-          newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined }),
+          newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined, fieldErrors: [] }),
       } : undefined}
       secondaryActions={[]} density="comfortable"
       layout={view.layoutMode === "single" ? "reading" : "split"}
@@ -868,7 +874,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
             <SfDataTable rows={rows()} getRowKey={(record) => requestRef(record)!}
               columns={columns} selectedKey={selectedRef()} sort={view.sort}
               page={{ kind: "none", total: rows().length }} onSort={(sort) => setView("sort", sort)}
-              onPage={() => undefined} onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined })}
+              onPage={() => undefined} onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined, fieldErrors: [] })}
               rowActions={() => []} onRowAction={() => undefined}
               captionKey={tableKey("sf.u11.remaining.list")} density="comfortable"
               state={rows().length ? "ready" : view.read?.records.length ? "filtered-empty" : "empty"}
