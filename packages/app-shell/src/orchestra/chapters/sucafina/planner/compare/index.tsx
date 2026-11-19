@@ -19,7 +19,8 @@ type Summary = NonNullable<OverviewPage["data"]["summary"]>
 const key = (value: keyof typeof SF_U46_COPY | keyof typeof SF_U06_COPY |
   "sf.common.loading" | "sf.common.empty" | "sf.common.unavailable" |
   "sf.common.noAccess" | "sf.common.loginAgain" | "sf.common.invalidLink" |
-  "sf.common.partial" | "sf.common.stale" | "sf.common.filterEmpty" | "sf.common.removed"): SfCopyKey => value as SfCopyKey
+  "sf.common.partial" | "sf.common.stale" | "sf.common.filterEmpty" | "sf.common.removed" |
+  "sf.u02.noCurrency"): SfCopyKey => value as SfCopyKey
 const data = (text: string) => ({ kind: "data" as const, text })
 const months = Array.from({ length: 12 }, (_, index) => String(index + 1))
 
@@ -158,13 +159,13 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
       default: return key("sf.common.unavailable")
     }
   }
-  const showNumber = (value: number | null | undefined, currency = true) => {
+  const showNumber = (value: number | null | undefined, money = true) => {
     if (value === undefined || value === null) return copy.t(key("sf.u46.noValue"))
-    return new Intl.NumberFormat(copy.locale(), currency
-      ? { style: "currency", currency: "USD" } : { maximumFractionDigits: 2 }).format(value)
+    const text = new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(value)
+    return money ? text + " " + copy.t(key("sf.u02.noCurrency")) : text
   }
   const metricRows = () => [
-    { id: "budget", label: "sf.u06.totalBudget" as const, left: left()?.total, right: right()?.total },
+    { id: "budget", label: "sf.u06.budget" as const, left: left()?.total, right: right()?.total },
     { id: "actual", label: "sf.u06.actualYtd" as const, left: left()?.actualYTD, right: right()?.actualYTD },
     { id: "outlook", label: "sf.u06.outlook" as const, left: left()?.fullYear, right: right()?.fullYear },
     { id: "hr", label: "sf.u06.hrStaff" as const, left: left()?.hrTotal, right: right()?.hrTotal },
@@ -267,10 +268,9 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                         </tbody>
                       </table>
                     </div>
-                    <p>{copy.t(key("sf.u06.budgetExplanation"), { year: year() ?? "" })}</p>
                     <div class="sf-u46-compare-scroll">
                       <table class="sf-u46-monthly">
-                        <caption>{copy.t(key("sf.u06.monthly"))}</caption>
+                        <caption>{copy.t(key("sf.u06.budget"))}</caption>
                         <thead>
                           <tr>
                             <th rowSpan={2} scope="col">{copy.t(key("sf.u06.month"))}</th>
