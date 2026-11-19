@@ -1,7 +1,8 @@
-name: sf-reports-read-inspection
+name: sf-ops-console-inspection
 on:
   push:
-    branches: [audit-logs-20261119]
+    branches: [audit-ops-console-20261119]
+    paths: [.github/workflows/sf-audit-log-inspection.yml]
 permissions:
   actions: read
   contents: write
@@ -10,45 +11,82 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read completed Reports artifact
+      - name: Read original completed Operations artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14570277425/zip > "$RUNNER_TEMP/reports8.zip"
-      - name: Extract original failure screen and bounded steps
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14565396740/zip > "$RUNNER_TEMP/operations4.zip"
+      - name: Extract only closed console classifications
         run: |
           python3 - <<'PY'
-          import base64, json, os, pathlib, re, zipfile
+          import base64, io, json, os, pathlib, re, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          lines = ["# Reports native read observation", "", "Original run 44601697015, artifact 14570277425. Read-only diagnostic, no rerun and no product assertion changed.", ""]
-          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
-          with zipfile.ZipFile(root / "reports8.zip") as archive:
-              names = archive.namelist()
-              for member in [p for p in names if p.endswith("/error-context.md")]:
-                  lines += [f"## {member}", ""]
-                  for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:400]:
-                      if not sensitive.search(line): lines.append(line[:1200])
-                  lines.append("")
-              for member in [p for p in names if p.endswith(".json") and "playwright-runtime" in p]:
-                  value = json.loads(archive.read(member))
-                  found = []
-                  def visit(value):
-                      if isinstance(value, list):
-                          for item in value: visit(item)
-                      elif isinstance(value, dict):
-                          if "title" in value and "duration" in value:
-                              title = value.get("title", "")
-                              if isinstance(title, str) and not sensitive.search(title):
-                                  found.append({k: value[k] for k in ["title", "duration", "status", "category"] if k in value})
-                          for key, item in value.items():
-                              if key != "attachments" and isinstance(item, (dict, list)): visit(item)
-                  visit(value)
-                  lines += ["## Bounded step outcomes", json.dumps(found[-120:], ensure_ascii=False), ""]
+          wanted = ("048f9", "3344d", "a3b16", "b41a7", "baa3d")
+          names = ("TypeError", "SyntaxError", "RangeError", "ReferenceError", "AbortError", "DataCloneError", "SecurityError", "InvalidStateError", "Error")
+          reasons = ("contract-mismatch", "contract-unavailable", "network", "aborted", "invalid-response", "outcome-unknown")
+          class_pattern = re.compile(r"\b(" + "|".join(names) + r")\b")
+          observations = []
+          with zipfile.ZipFile(root / "operations4.zip") as outer:
+              for member in outer.namelist():
+                  if not member.endswith("/trace.zip") or not any(code in member for code in wanted):
+                      continue
+                  codes = set()
+                  classes = set()
+                  original = 0
+                  bounded = 0
+                  page_errors = 0
+                  with zipfile.ZipFile(io.BytesIO(outer.read(member))) as trace:
+                      for filename in trace.namelist():
+                          if not filename.endswith(".trace"):
+                              continue
+                          for line in trace.read(filename).decode("utf-8", errors="replace").splitlines():
+                              try:
+                                  event = json.loads(line)
+                              except json.JSONDecodeError:
+                                  continue
+                              if not isinstance(event, dict):
+                                  continue
+                              kind = event.get("type")
+                              page_error = kind == "event" and event.get("method") in ("pageError", "pageerror")
+                              if kind != "console" and not page_error:
+                                  continue
+                              # Inspect in memory only. Never publish text, args, bodies or headers.
+                              encoded = json.dumps(event, ensure_ascii=False)
+                              is_original = kind == "console" and "CAP25 unknown command result" in encoded
+                              is_bounded = kind == "console" and "SF_PROCUREMENT_COMMAND_BOUNDARY " in encoded
+                              if not (is_original or is_bounded or page_error):
+                                  continue
+                              original += int(is_original)
+                              bounded += int(is_bounded)
+                              page_errors += int(page_error)
+                              classes.update(class_pattern.findall(encoded))
+                              if is_bounded:
+                                  codes.update(code for code in reasons if code in encoded)
+                  observations.append({
+                      "trace": member,
+                      "original_cap25_exception_events": original,
+                      "bounded_command_events": bounded,
+                      "page_error_events": page_errors,
+                      "exception_classes": sorted(classes),
+                      "transport_codes": sorted(codes),
+                  })
+          if len(observations) != 5:
+              raise SystemExit("Expected exactly five original Operations traces")
+          lines = ["# Operations console classification", "",
+              "Original run 44594105701, artifact 14565396740. Read-only inspection; no test rerun.",
+              "Only closed exception classes and transport reason codes are published. No console text, arguments, request/response bodies, headers, credentials or cookies.", "",
+              "A zero event count is not proof that no exception occurred. The original Supplier catch did not log its exception.", ""]
+          for item in observations:
+              lines += ["## " + item["trace"], "", json.dumps({key: value for key, value in item.items() if key != "trace"}, sort_keys=True), ""]
           text = "\n".join(lines) + "\n"
-          payload = {"message": "docs(sf): retain original Reports read failure observation", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
-          (root / "reports-payload.json").write_text(json.dumps(payload))
-          print("Extracted original failure screens and bounded step names, excluding sensitive lines.")
+          payload = {
+              "message": "docs(sf): retain bounded original Operations exception classifications",
+              "branch": "audit-ops-console-20261119",
+              "content": base64.b64encode(text.encode()).decode(),
+          }
+          (root / "ops-console-payload.json").write_text(json.dumps(payload))
+          print("Classified five original traces using closed class/code lists only.")
           PY
-      - name: Persist original observation
+      - name: Persist bounded original observation
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-reports-read-44601697015.md --input "$RUNNER_TEMP/reports-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-operations-console-44594105701.md --input "$RUNNER_TEMP/ops-console-payload.json" > /dev/null
