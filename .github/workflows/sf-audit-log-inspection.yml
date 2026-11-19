@@ -14,49 +14,72 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14574791796/zip > "$RUNNER_TEMP/proposals5.zip"
-      - name: Extract original failure screen and bounded steps
+      - name: Read inline host attachments from original report
         run: |
           python3 - <<'PY'
-          import base64, json, os, pathlib, re, zipfile
+          import base64, io, json, os, pathlib, re, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          lines = ["# Proposal native read observation", "", "Original run 44615301691, artifact 14574791796. Read-only diagnostic, no rerun and no product assertion changed.", ""]
+          lines = ["# Proposal gate5 original inline attachments", "", "Read-only source run44615301691, artifact14574791796. No rerun.", ""]
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|idempotency[-_]key|[?&](?:code|token|key)=", re.I)
+          def add_text(value, limit=180):
+              for line in str(value).splitlines()[:limit]:
+                  clean = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", line)
+                  if not sensitive.search(clean): lines.append(clean[:1200])
           with zipfile.ZipFile(root / "proposals5.zip") as archive:
-              names = archive.namelist()
-              lines += ["## Original archive members", *[name for name in names if not sensitive.search(name)], ""]
-              for member in [p for p in names if p.endswith("/error-context.md")]:
-                  lines += [f"## {member}", ""]
-                  for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:400]:
-                      if not sensitive.search(line): lines.append(line[:1200])
-                  lines.append("")
-              for member in [p for p in names if p.endswith((".txt", ".log"))]:
-                  lines += [f"## Original text attachment: {member}", ""]
-                  content = archive.read(member).decode("utf-8", errors="replace").splitlines()
-                  for line in content[-160:]:
-                      clean = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", line)
-                      if not sensitive.search(clean): lines.append(clean[:1200])
-                  lines.append("")
-              for member in [p for p in names if p.endswith(".json") and "playwright-runtime" in p]:
-                  value = json.loads(archive.read(member))
-                  found = []
-                  def visit(value):
-                      if isinstance(value, list):
-                          for item in value: visit(item)
-                      elif isinstance(value, dict):
-                          if "title" in value and "duration" in value:
-                              title = value.get("title", "")
-                              if isinstance(title, str) and not sensitive.search(title):
-                                  found.append({k: value[k] for k in ["title", "duration", "status", "category"] if k in value})
-                          for key, item in value.items():
-                              if key != "attachments" and isinstance(item, (dict, list)): visit(item)
-                  visit(value)
-                  lines += ["## Bounded step outcomes", json.dumps(found[-120:], ensure_ascii=False), ""]
+              contexts = [p for p in archive.namelist() if p.endswith("/error-context.md")]
+              lines += ["Original error-context DOM sections: " + str(sum("# Page snapshot" in archive.read(p).decode("utf-8", "replace") for p in contexts)), ""]
+              htmls = [p for p in archive.namelist() if p.endswith("/playwright-report/index.html")]
+              for name in htmls:
+                  html = archive.read(name).decode("utf-8", "replace")
+                  payloads = re.findall(r"data:application/zip;base64,([A-Za-z0-9+/=]+)", html)
+                  lines += ["Embedded zip payloads: " + str(len(payloads)), ""]
+                  for payload in payloads[:1]:
+                      with zipfile.ZipFile(io.BytesIO(base64.b64decode(payload))) as embedded:
+                          lines += ["## Embedded report members", *embedded.namelist(), ""]
+                          count = [0]
+                          def visit(value):
+                              if isinstance(value, list):
+                                  for item in value: visit(item)
+                              elif isinstance(value, dict):
+                                  attachments = value.get("attachments")
+                                  if isinstance(attachments, list):
+                                      for item in attachments:
+                                          if not isinstance(item, dict): continue
+                                          label = item.get("name", "")
+                                          if sensitive.search(str(label)): continue
+                                          lines.extend(["## Original attachment: " + str(label), ""])
+                                          body = item.get("body")
+                                          if isinstance(body, str):
+                                              try:
+                                                  decoded = base64.b64decode(body, validate=True).decode("utf-8")
+                                              except Exception:
+                                                  decoded = body
+                                              add_text(decoded)
+                                          else:
+                                              add_text({key:item[key] for key in ["name","contentType","path"] if key in item}, 5)
+                                          lines.append("")
+                                  errors = value.get("errors")
+                                  if isinstance(errors, list):
+                                      for error in errors:
+                                          if count[0] >= 20: break
+                                          count[0] += 1
+                                          lines.extend(["## Original reported error", ""])
+                                          if isinstance(error, dict):
+                                              for field in ["message","value","snippet"]:
+                                                  if isinstance(error.get(field), str): add_text(error[field], 90)
+                                          else: add_text(error, 90)
+                                          lines.append("")
+                                  for key, item in value.items():
+                                      if key not in ["attachments", "errors"] and isinstance(item, (dict, list)): visit(item)
+                          for member in embedded.namelist():
+                              if member.endswith(".json"):
+                                  visit(json.loads(embedded.read(member)))
           text = "\n".join(lines) + "\n"
-          payload = {"message": "docs(sf): retain original proposal read failure observation", "branch": "audit-proposal-screens-20261119", "content": base64.b64encode(text.encode()).decode()}
+          payload = {"message": "docs(sf): retain original proposal gate5 inline attachments", "branch": "audit-proposal-screens-20261119", "content": base64.b64encode(text.encode()).decode()}
           (root / "proposal-payload.json").write_text(json.dumps(payload))
-          print("Extracted original screens, text attachments and bounded step names, excluding sensitive lines.")
+          print("Read original embedded attachments and error metadata with sensitive-line filtering.")
           PY
       - name: Persist original observation
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-proposal-read-44615301691.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-proposal-host-44615301691.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
