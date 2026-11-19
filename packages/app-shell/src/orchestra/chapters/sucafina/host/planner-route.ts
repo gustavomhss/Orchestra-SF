@@ -4,6 +4,9 @@ import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/cont
 import type { SfNativeRouteCandidate } from "../route-registry"
 
 const selectorKeys = ["server", "project", "installation"] as const
+export function isPlannerRouteSurface(id: string): boolean {
+  return id === "CAP17" || id === "CAP23"
+}
 
 /** Strict selectors are hints only; this parser never authorizes a destination. */
 export function parsePlannerRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {

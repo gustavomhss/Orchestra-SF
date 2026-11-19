@@ -7,6 +7,10 @@ import type { SfNativeRouteCandidate } from "../route-registry"
 const selectors = ["server", "project", "installation"] as const
 const schemas = { CAP01: SfDomainPageCap01.input, CAP02: SfDomainPageCap02.input,
   CAP03: SfDomainPageCap03.input, CAP04: SfDomainPageCap04.input, CAP05: SfDomainPageCap05.input } as const
+const surfaces = ["CAP01", "CAP02", "CAP03", "CAP04", "CAP05", "UI54"] as const
+export function isDashboardSurface(id: string): boolean {
+  return surfaces.some((item) => item === id)
+}
 
 /** Syntax and producer input validation only; no authority is created here. */
 export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
