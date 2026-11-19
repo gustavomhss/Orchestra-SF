@@ -223,3 +223,9 @@ Toda verificação foi executada em GitHub Actions. Nenhum resultado foi fabrica
 - Código 14a2bae4121e60196770760094125d1438338d15, decisions-support/c12-recovery.ts125–132/148–155: arma e aguarda o GET original /sucafina/api/ui/projections/case do mesmo caseRef antes de verificar Recover, tanto no reload quanto na navegação da nova composição. O contrato original projection.case (schema/decisions.ts130/142) exige esse query; UI39 envia o mesmo caseRef em changes/index.tsx98–99. Exige HTTP200 e conserva o expect do botão; não envia leitura adicional e não aumenta timeout.
 - Nenhuma asserção removida. Seed09c2, os guards exatos +1 de29c0, CAS, 2POST/1efeito, mesmo body/key, perda real, novo processo/SQLite/browser, ausência de estado privado e releituras imutáveis permanecem obrigatórios. O segundo journey continua exigindo Apply200 perdido, receipt único e um só efeito.
 - Estado partial. Pendente/unbound: decisions-support/c12-recovery.ts155–202 (recuperação/repetição/CAS após freshprocess) e :207–238 (segundo journey); decisions-native-recovery.spec.ts7/12 ainda não qualificados por inteiro. Os dois Bun UI antigos não são removidos antes da equivalência. Como retomar: compor c12-host09c2, UI39 guard29c0 e somente este helper sobre Assembly32; executar apenas decisions-native-recovery.spec.ts, registrar run/resultados e não repetir sem causa nova.
+
+
+## Gate aberto — C12 native9
+
+- Run [44629501930](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44629501930); composição875d100c55d4c5953356b6939bf78e2facf63c4e; snapshot84d397702236b6f4aa0c85d792fbdea5f78e55b6; branch efêmeraci-run-linux-c12-native9-20261119. Specs: `e2e/sucafina/decisions-native-recovery.spec.ts`.
+- Última consulta: in_progress, resultado terminal ainda não observado. Estado permanece partial e os itens unbound acima continuam abertos. Este registro não declara sucesso de UI; aguardar o resultado deste run, sem duplicá-lo.
