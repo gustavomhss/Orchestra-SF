@@ -1,33 +1,39 @@
 # Handoff — audit-ops-console-20261119
 
-SHA base: 2e044d89cc6a511c9d80ee94ccd8a0b10feee6bc
+SHA de código: 9a22b4311b65ce74ba773d794325656dfd0eae0c
+SHA da observação publicada: c0aad177992d91fd87596410a7ff9a923f2cd118
 Data: 2026-11-19
-Estado: partial
+Estado: complete (inspeção read-only; não qualifica Operations)
 
 ## Feito
 
-- Preparada inspeção read-only do artifact original 14565396740, run 44594105701.
-- O workflow lê exatamente os cinco traces Operations e publica somente contagens, classes de exceção de uma lista fechada e códigos F02 de lista fechada.
-- Não publica console text/args, headers, cookies, credenciais ou bodies; não executa teste nem modifica produto.
+- Inspecionado o artifact original 14565396740, run 44594105701, sem rerun dos testes.
+- O workflow leu exatamente cinco traces e publicou somente contagens, classes de exceção de lista fechada e códigos F02 de lista fechada.
+- Nenhum dos cinco traces continha evento console correspondente a CAP25 unknown command result, ao novo prefixo de diagnóstico, ou pageerror reconhecido pelo parser.
+- Observação em docs/handoff/observed-operations-console-44594105701.md.
+- Não foram publicados console text/args, headers, cookies, credenciais, request bodies ou response bodies.
 
 ## Pendente
 
-- .github/workflows/sf-audit-log-inspection.yml:10: aguardar o workflow e registrar SHA/run/resultado.
-- docs/handoff/observed-operations-console-44594105701.md: arquivo será criado pelo workflow se a extração concluir.
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx:600 e suppliers/index.tsx:582 no código Operations anterior: o motivo F02 ainda não foi identificado pela evidência antiga.
+- O gate Operations5 44606780612 tem diagnóstico limitado e deve ser acompanhado pelo integrador. Não pertence ao resultado desta inspeção.
 
 ## Decisões e justificativas
 
-- Nenhuma asserção ou timeout de produto foi alterado.
-- CAP25 já logava a exceção com prefixo fixo; Supplier catch era silencioso. Ausência de evento não prova ausência de exceção.
-- A classificação não substitui o gate Operations5 e não infere causa por falta de POST.
+- Nenhuma asserção, timeout de teste ou produto foi alterado.
+- CAP25 já registrava exceções com prefixo fixo; o catch de Supplier era silencioso. Zero eventos não prova ausência de exceção ou causa específica.
+- A classificação não substitui o gate Operations5 nem transforma ausência de POST em diagnóstico de código.
+- O filtro de paths limita o workflow ao arquivo de workflow; atualizar este handoff não dispara uma nova inspeção.
 
 ## Como retomar
 
-1. Aguardar a execução desta branch; não rerodar os testes originais.
-2. Ler apenas o documento sanitizado e comparar com Operations5.
-3. Registrar resultado terminal e encaminhar ao integrador.
+1. Ler o documento sanitizado e preservar a distinção entre ausência de evento e ausência de erro.
+2. Correlacionar os códigos SF_PROCUREMENT_COMMAND_BOUNDARY do gate Operations5 com os três traces que não emitiram POST.
+3. Corrigir somente a causa identificada; não alterar matcher, timeout ou fence por hipótese.
 
 ## Comandos e resultados
 
-- Workflow de inspeção: ainda não executado neste checkpoint.
+- [44607628918](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44607628918) SUCCESS, job135855440889; workflow SHA9a22b4311b65ce74ba773d794325656dfd0eae0c.
+- Resultado: cinco traces inspecionados, zero eventos correspondentes publicados, artefato de observação commitadoc0aad177992d91fd87596410a7ff9a923f2cd118.
 - Verificação local: não executada. Nenhum shell ou acesso à máquina do dono.
+- Nenhum sf-ci, rerun de teste ou declaração de GO.
