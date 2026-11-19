@@ -19,7 +19,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await page.goto(`/orchestra/sf-dashboard/budget?${new URLSearchParams({ year: String(corpus.year) })}`)
   const reportsEntry = page.getByRole("link", { name: "Reports and backup", exact: true })
   await expect(reportsEntry).toBeVisible()
-  await expect(reportsEntry).toHaveAttribute("href", "/orchestra/sf-reviews/agenda")
+  await expect(reportsEntry).toHaveAttribute("href", `/orchestra/sf-reviews/agenda?year=${corpus.year}`)
   await reportsEntry.click()
   const agenda = page.locator('[data-sf-surface="UI47"]')
   await expect(agenda).toBeVisible()
