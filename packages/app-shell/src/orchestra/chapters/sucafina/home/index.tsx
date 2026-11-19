@@ -121,13 +121,16 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
         setScreen({ status: "unavailable", data: null })
         return
       }
-      if (result.body.status === "ok") {
+      if (result.status === 401 || result.status === 403 || result.body.status === "denied") {
+        setScreen({ status: "denied", data: null })
+        return
+      }
+      if (result.status === 200 && result.body.status === "ok") {
         setScreen({ status: "ready", data: result.body.value })
         return
       }
       const status: SfUiState =
-        result.body.status === "denied" ? "denied"
-        : result.body.status === "stale" ? "stale"
+        result.body.status === "stale" ? "stale"
         : result.body.status === "conflict" ? "conflict"
         : result.body.status === "invalid" || result.body.status === "needs-input" ? "invalid"
         : "unavailable"
@@ -184,37 +187,43 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
         { topicStatus: "" }, { signal: abort.signal },
       ).then((response) => {
         if (!current()) return
-        if (response.kind === "response" && response.body.status === "ok" &&
+        if (response.kind === "response" && response.status === 200 && response.body.status === "ok" &&
             response.body.value.capabilityId === "CAP02" &&
             stampEqual(response.body.context, stamp)) {
           const rows = response.body.value.data.hotTopics
           setAttention({ topicState: rows.length ? "ready" : "empty", topics: rows })
-        } else setAttention({ topicState: readState(response), topics: [] })
+          return
+        }
+        setAttention({ topicState: response.kind === "response" && (response.status === 401 || response.status === 403) ? "denied" : readState(response), topics: [] })
       }).catch(() => { if (current()) setAttention({ topicState: "unavailable", topics: [] }) })
     } else setAttention({ topicState: "unavailable", topics: [] })
     if (admitted("CAP13", "domain.page.CAP13")) {
       void createSfDomainClient(ready.transport)["domain.page.CAP13"]({}, { signal: abort.signal })
         .then((response) => {
           if (!current()) return
-          if (response.kind === "response" && response.body.status === "ok" &&
+          if (response.kind === "response" && response.status === 200 && response.body.status === "ok" &&
               response.body.value.capabilityId === "CAP13" &&
               stampEqual(response.body.context, stamp)) {
             const rows = response.body.value.data.risks
             setAttention({ riskState: !rows ? "unavailable" : rows.length ? "ready" : "empty",
               risks: rows ?? [] })
-          } else setAttention({ riskState: readState(response), risks: [] })
+            return
+          }
+          setAttention({ riskState: response.kind === "response" && (response.status === 401 || response.status === 403) ? "denied" : readState(response), risks: [] })
         }).catch(() => { if (current()) setAttention({ riskState: "unavailable", risks: [] }) })
     } else setAttention({ riskState: "unavailable", risks: [] })
     if (admitted("CAP01", "domain.page.CAP01")) {
       void createSfDomainClient(ready.transport)["domain.page.CAP01"]({}, { signal: abort.signal })
         .then((response) => {
           if (!current()) return
-          if (response.kind === "response" && response.body.status === "ok" &&
+          if (response.kind === "response" && response.status === 200 && response.body.status === "ok" &&
               response.body.value.capabilityId === "CAP01" &&
               stampEqual(response.body.context, stamp)) {
             const totals = response.body.value.data.totals
             setAttention({ forecastState: totals ? "ready" : "unavailable", totals })
-          } else setAttention({ forecastState: readState(response), totals: undefined })
+            return
+          }
+          setAttention({ forecastState: response.kind === "response" && (response.status === 401 || response.status === 403) ? "denied" : readState(response), totals: undefined })
         }).catch(() => { if (current()) setAttention({ forecastState: "unavailable", totals: undefined }) })
     } else setAttention({ forecastState: "unavailable", totals: undefined })
     onCleanup(() => abort.abort())

@@ -28,6 +28,14 @@ export function encodeSfRouteRef(original: string): string {
   return "r_" + btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "")
 }
 
+function sfHrefPathname(href: string): string | undefined {
+  try {
+    return new URL(href, "http://orchestra.invalid").pathname
+  } catch {
+    return undefined
+  }
+}
+
 export function decodeSfRouteRef(encoded: string): SfRef | undefined {
   if (!/^r_[A-Za-z0-9_-]+$/.test(encoded)) return undefined
   try {
@@ -167,7 +175,11 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
       }
       const outgoing = deps.currentOwnerKey()
       const changingOwner = outgoing !== undefined && outgoing !== resolved.ownerKey
-      if (changingOwner && deps.hasDirtyDrafts()) {
+      const currentPath = sfHrefPathname(deps.currentHref())
+      const nextPath = sfHrefPathname(String(resolved.route.href))
+      const chapterChanged = !currentPath || !nextPath || currentPath !== nextPath
+      let admitted = resolved
+      if (deps.hasDirtyDrafts() && (changingOwner || chapterChanged)) {
         const discard = await deps.confirmDiscard()
         if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
         if (!discard) return { status: "kept-editing" }
@@ -176,6 +188,18 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
           if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
           if (!fresh) return { status: "denied" }
         }
+        const again = await deps.resolveAuthorizedRoute(href, selected.selection, abort.signal).catch(() => {
+          if (!abort.signal.aborted) console.error("Sucafina route resolution failed")
+          return { status: "unavailable" as const }
+        })
+        if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
+        if (again.status !== "authorized" || again.ownerKey !== resolved.ownerKey ||
+            again.route.href !== resolved.route.href ||
+            again.route.ownerSelection.serverKey !== selected.selection.serverKey ||
+            again.route.ownerSelection.projectId !== selected.selection.projectId ||
+            again.route.ownerSelection.installationId !== selected.selection.installationId)
+          return { status: again.status === "authorized" ? "denied" : again.status }
+        admitted = again
       }
       // A denied/stale reply or a changed owner may never commit after preflight.
       if (abort.signal.aborted || epoch !== generation ||
@@ -183,9 +207,9 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
           (changingOwner && deps.currentOwnerKey() !== outgoing) ||
           (options?.expectedOwnerKey && (
             deps.currentOwnerKey() !== options.expectedOwnerKey ||
-            resolved.ownerKey !== options.expectedOwnerKey
+            admitted.ownerKey !== options.expectedOwnerKey
           )) ||
-          (options?.admit && !options.admit(resolved.route))) return { status: "aborted" }
+          (options?.admit && !options.admit(admitted.route))) return { status: "aborted" }
       if (deps.finishPreflight && !deps.finishPreflight(abort.signal, true)) return { status: "aborted" }
       if (changingOwner) {
         deps.invalidateOwner("owner-changed")
@@ -193,8 +217,8 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
         returns.clear()
         resumeFocus = undefined
       }
-      batch(() => deps.commit({ route: resolved.route, selection: selected.selection, ownerKey: resolved.ownerKey, cause }))
-      return { status: "committed", route: resolved.route }
+      batch(() => deps.commit({ route: admitted.route, selection: selected.selection, ownerKey: admitted.ownerKey, cause }))
+      return { status: "committed", route: admitted.route }
     } finally {
       deps.finishPreflight?.(abort.signal, false)
       options?.signal?.removeEventListener("abort", cancel)

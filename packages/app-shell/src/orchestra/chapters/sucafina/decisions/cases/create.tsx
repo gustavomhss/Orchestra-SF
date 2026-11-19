@@ -157,7 +157,11 @@ export function SfCreateCase(props: Readonly<{
         setForm({ phase: "unknown", message: "sf.ui33.createDenied" })
         return
       }
-      if (result.kind === "response" && result.body.status === "ok"
+      if (result.kind === "response" && (result.status === 401 || result.status === 403)) {
+        setForm({ phase: "unknown", hasPending: true, message: "sf.ui33.createDenied" })
+        return
+      }
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok"
         && result.body.outputRef && /^case:[^:]+:[^:]+$/.test(result.body.outputRef)) {
         // Only source returned outputRef is authoritative for a new case.
         try { localStorage.removeItem(slot) } catch (error) {

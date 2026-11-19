@@ -178,11 +178,11 @@ export function createSfOwnerDrafts(
         read: entry.read,
       }, context, transport, signal)).catch(() => undefined) // Source failure retains the quarantine for retry.
       if (signal.aborted || state !== "quarantined") return false
-      if (!proof || proof.status === "unavailable") continue
-      if (proof.status === "denied") {
+      if (accessDeniedProof(proof)) {
         revoke("access-revoked")
         return false
       }
+      if (!proof || proof.status === "unavailable") continue
       if (proof.status !== "authorized" || proof.authority !== "unchanged" || !proof.stamp ||
           proof.stamp.installationId !== context.stamp.installationId ||
           proof.stamp.projectId !== context.stamp.projectId ||
@@ -214,4 +214,13 @@ export function createSfOwnerDrafts(
   })
   return Object.freeze({ registry, discardAll, quarantine, revoke, revalidate, dirty, sameAuthority,
     owner: () => owner, state: () => state, revocationReason: () => revocationReason })
+}
+
+function accessDeniedProof(proof: SfDraftRevalidation | undefined): boolean {
+  if (!proof) return false
+  if (proof.status === "denied") return true
+  if (proof.status !== "unavailable") return false
+  const detail = proof as { httpStatus?: unknown; reason?: unknown }
+  return detail.httpStatus === 401 || detail.httpStatus === 403
+    || detail.reason === "denied" || detail.reason === "unauthenticated"
 }
