@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: 09c2e35aa0e35226d9e8c6a13738658817fc2637 (código; este documento é o commit seguinte)
+SHA: 14a2bae4121e60196770760094125d1438338d15 (código; este documento é o commit seguinte)
 Data: 2026-11-19
 Estado: partial
 
@@ -213,3 +213,13 @@ Toda verificação foi executada em GitHub Actions. Nenhum resultado foi fabrica
 - Asserções removidas: nenhuma. Exatamente2POST/1efeito, retry explícito, perda após receiptcommit, edição concorrente, reload/freshprocess com mesmoSQLite e CAS continuam nos dois journeys originais.
 - Estado partial. Pendente/unbound: decisions-support/c12-recovery.ts22–211 e decisions-native-recovery.spec.ts7/12 (qualificar Apply, retry e recuperação reais depois da revisão); o remapeamento dos dois Bun UI antigos permanece dependente dessa prova.
 - Como retomar: compor c12-host09c2 e somente as duas linhas UI39 deste checkpoint sobre Assembly32; executar apenas decisions-native-recovery.spec.ts. Não repetir sem causa terminal nem declarar o boundary F02 como prova de C08/SQLite.
+
+
+## C12 native8 — receipt real, retry e nova composição SQLite; espera da projeção
+
+- Run [44626328510](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44626328510), snapshot095f6f6293489b2bc5ed3330efb454453d19fa4d, composição2de16b11ecd57c3ab80170caa71449856cbbd216, job135921017413: FAILURE,1failed/1didnotrun; três typechecks e cleanup135924064852 passaram.
+- O primeiro journey passou Review200, Apply com resposta503 perdida depois do receiptcommit real, edição concorrente, choices inalteradas, exatamente2POST Apply com mesmo corpo/key, retry409 terminal e observação SQLite imutável. Passou o reload inicial (Recover habilitado após9971ms), abriu novo processo/composição SQLite e confirmou observação igual ao commit; o browser novo tinha armazenamento vazio. Falhou somente no expect Recover após o goto do novo processo, antes da recuperação e da segunda jornada.
+- Auditoria [44627902959](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627902959): SUCCESS somente extração do artefato14580395699. Screenshot `audit-c12-native8-screen-20261119/docs/handoff/c12-native8-original.png` já mostra Recover e UI39 admitida; timeline em observed-c12-timeline-44626328510.md mostra o expect de10001ms. Não é prova de negação F01 nem falha da seed.
+- Código 14a2bae4121e60196770760094125d1438338d15, decisions-support/c12-recovery.ts125–132/148–155: arma e aguarda o GET original /sucafina/api/ui/projections/case do mesmo caseRef antes de verificar Recover, tanto no reload quanto na navegação da nova composição. O contrato original projection.case (schema/decisions.ts130/142) exige esse query; UI39 envia o mesmo caseRef em changes/index.tsx98–99. Exige HTTP200 e conserva o expect do botão; não envia leitura adicional e não aumenta timeout.
+- Nenhuma asserção removida. Seed09c2, os guards exatos +1 de29c0, CAS, 2POST/1efeito, mesmo body/key, perda real, novo processo/SQLite/browser, ausência de estado privado e releituras imutáveis permanecem obrigatórios. O segundo journey continua exigindo Apply200 perdido, receipt único e um só efeito.
+- Estado partial. Pendente/unbound: decisions-support/c12-recovery.ts155–202 (recuperação/repetição/CAS após freshprocess) e :207–238 (segundo journey); decisions-native-recovery.spec.ts7/12 ainda não qualificados por inteiro. Os dois Bun UI antigos não são removidos antes da equivalência. Como retomar: compor c12-host09c2, UI39 guard29c0 e somente este helper sobre Assembly32; executar apenas decisions-native-recovery.spec.ts, registrar run/resultados e não repetir sem causa nova.
