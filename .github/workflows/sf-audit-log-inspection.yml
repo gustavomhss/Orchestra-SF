@@ -10,30 +10,28 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read the two original Playwright artifacts
+      - name: Read the completed Planner detail artifact
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14562244092/zip > "$RUNNER_TEMP/ingress16.zip"
-          gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14563577838/zip > "$RUNNER_TEMP/wp10native1.zip"
+          gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14565536261/zip > "$RUNNER_TEMP/ingress17.zip"
       - name: Extract only bounded screen context
         run: |
           python3 - <<'PY'
           import base64, json, os, pathlib, re, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
           output = ["# Original native screen observations", "", "Read-only extraction from already completed Actions; no tests rerun.", ""]
-          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token", re.I)
-          for name, run, artifact in [("ingress16", 44591584962, 14562244092), ("wp10native1", 44590617991, 14563577838)]:
+          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
+          for name, run, artifact in [("ingress17", 44593983417, 14565536261)]:
               output += [f"## Run {run}; artifact {artifact}", ""]
               with zipfile.ZipFile(root / f"{name}.zip") as archive:
                   members = [item for item in archive.namelist() if item.endswith("/error-context.md")]
                   output += [f"Screen context files: {len(members)}", ""]
                   for member in members:
                       output += [f"### {member}", ""]
-                      for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:250]:
+                      for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:420]:
                           if sensitive.search(line):
                               continue
-                          line = re.sub(r"([?&](?:code|token|key)=)[^&#\\s\\\"'<>]*", r"\\1[redacted]", line, flags=re.I)
                           output.append(line[:1200])
                       output.append("")
           text = "\n".join(output) + "\n"
@@ -44,4 +42,4 @@ jobs:
       - name: Persist the observed screen context
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-screens-44591584962.md --input "$RUNNER_TEMP/screen-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-screens-44593983417.md --input "$RUNNER_TEMP/screen-payload.json" > /dev/null
