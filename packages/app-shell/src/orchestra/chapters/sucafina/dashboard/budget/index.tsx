@@ -1,4 +1,4 @@
-import { createSignal, For, Show } from "solid-js"
+import { For, Show } from "solid-js"
 import type { JSX } from "solid-js"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { SfDomainPageData } from "@orchestra/schema/sucafina/domain"
@@ -129,57 +129,15 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
         <Show when={!admitted("save-month") && !admitted("save-revenue")}>
           <p role="status">{t(sfCommonKey("sf.common.readOnly"))}</p>
         </Show>
-        <SfBudgetReportEntry year={year()} />
+        <SfBudgetReportLink />
       </SfStatePanel>
     </div>
   </SfPageFrame>
 }
 
-function SfBudgetReportEntry(props: { year: number | undefined }) {
-  const pages = ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"] as const
-  const [open, setOpen] = createSignal(false)
-  const [format, setFormat] = createSignal("docx")
-  const [year, setYear] = createSignal(String(props.year ?? ""))
-  const [title, setTitle] = createSignal("")
-  const [selected, setSelected] = createSignal<string[]>([])
-  const [prepared, setPrepared] = createSignal(false)
-  const toggle = (page: string, checked: boolean) => {
-    setSelected((current) => checked ? [...current.filter((item) => item !== page), page] : current.filter((item) => item !== page))
-  }
-  return <>
-    <button type="button" onClick={() => setOpen(true)}>Reports and backup</button>
-    <Show when={open()}>
-      <form class="report-form" onSubmit={(event) => { event.preventDefault(); setPrepared(true) }}>
-        <label>Format
-          <select value={format()} onChange={(event) => setFormat(event.currentTarget.value)}>
-            <option value="docx">docx</option>
-            <option value="pptx">pptx</option>
-          </select>
-        </label>
-        <label>Year
-          <select value={year()} onChange={(event) => setYear(event.currentTarget.value)}>
-            <For each={[2024, 2025, 2026, 2027]}>{(item) => <option value={String(item)}>{item}</option>}</For>
-          </select>
-        </label>
-        <label>Title
-          <input value={title()} onInput={(event) => setTitle(event.currentTarget.value)} />
-        </label>
-        <For each={pages}>{(page) =>
-          <label>
-            <input type="checkbox" aria-label={page} checked={selected().includes(page)}
-              onChange={(event) => toggle(page, event.currentTarget.checked)} />
-            {page}
-          </label>
-        }</For>
-        <button type="submit">Generate Report</button>
-      </form>
-      <Show when={prepared()}>
-        <section aria-label="Prepare review">
-          <button type="button">Load selection</button>
-        </section>
-      </Show>
-    </Show>
-  </>
+/** Reports and backup is the real reviews chapter, never a local form stub. */
+function SfBudgetReportLink() {
+  return <p><a href="/orchestra/sf-reviews/agenda">Reports and backup</a></p>
 }
 
 export { SfBudgetOverview as SfDashboardBudgetView }
