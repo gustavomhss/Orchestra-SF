@@ -482,7 +482,19 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
   await expect(open).toHaveCount(1)
   await expect(open).toHaveAttribute("href", destination.toString())
+  const currentBudget = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.pathname === app.mount + "/api/ui/pages/CAP03" &&
+      url.searchParams.get("year") === String(corpus.year)
+  })
   await open.click()
+  const currentResponse = await currentBudget
+  expect(currentResponse.status()).toBe(200)
+  const current = object(await currentResponse.json())
+  expect(current.status).toBe("ok")
+  const selectedBudget = object(current.value)
+  expect(object(selectedBudget.selection).year).toBe(corpus.year)
+  expect(object(object(selectedBudget.data).totals).totalForecast).toBe(corpus.after)
   await expect(page).toHaveURL(destination.toString())
   const dashboard = page.locator('[data-sf-surface="CAP03"]')
   await expect(dashboard).toBeVisible()
@@ -491,7 +503,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   expect(target.pathname).toBe("/orchestra/sf-dashboard/budget")
   expect(target.searchParams.get("year")).toBe(String(corpus.year))
   await expect(dashboard.locator('[data-sf-metric="forecast"] dd'),
-    "UNBOUND WP1: the native year-selected forecast must expose the producer total instead of an unscoped warning").toHaveText(String(corpus.after))
+    "UNBOUND WP1: the native year-selected forecast must expose the producer total instead of an unscoped warning").toHaveText(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(corpus.after))
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
 }
 
