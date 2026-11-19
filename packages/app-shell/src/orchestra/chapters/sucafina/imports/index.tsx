@@ -353,7 +353,16 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const outcome = unpack(reply)
     if (outcome.kind === "failure") {
       // Do not infer that a mutation failed after a lost response; reconcile by read.
-      failure({ state: outcome.state === "unavailable" ? "outcome-unknown" : outcome.state }, true)
+      const unknown = outcome.state === "unavailable" || outcome.state === "outcome-unknown"
+      failure({ state: unknown ? "outcome-unknown" : outcome.state }, true)
+      if (unknown) {
+        setState("busy", true)
+        const recovered = await refreshReference(intent.id, source, token)
+        if (!current(token)) return
+        if (recovered?.receipt) setState({ phase: "receipt", status: "ready", error: undefined, busy: false })
+        else if (recovered) setState({ phase: "unknown", status: "outcome-unknown", busy: false })
+        else setState("busy", false)
+      }
       return
     }
     if (outcome.value.id !== intent.id || outcome.value.state !== "applied" ||
@@ -578,7 +587,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())}
-          onRetryRead={() => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
+          onRetryRead={() => { if (state.phase === "unknown" && state.manifest) void reconcile(); else if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
               if (state.exportKind === "po") setState("poRefresh", state.poRefresh + 1)
               else void download()
             } }}
@@ -588,7 +597,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           <Show when={isImport()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
-                <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
+                <select aria-label={t("sf.u23.source")} value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
                 </select>
               </label>
@@ -608,7 +617,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 </p>
               </Show>
               <label>{t("sf.u23.destination")}
-                <select value={state.selectionRef} disabled={editLocked() || !state.targets.length}
+                <select aria-label={t("sf.u23.destination")} value={state.selectionRef} disabled={editLocked() || !state.targets.length}
                   onChange={(e) => { change(); setState("selectionRef", e.currentTarget.value) }}>
                   <option value="">{t("sf.u23.destinationEmpty")}</option>
                   <For each={state.targets}>{(target) =>
@@ -645,7 +654,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             <form class="sf-files-fields" data-sf-history="authorized-reference"
               onSubmit={(event) => { event.preventDefault(); void loadHistory() }}>
               <label>{t("sf.u23.source")}
-                <select value={state.surface} disabled={editLocked()}
+                <select aria-label={t("sf.u23.source")} value={state.surface} disabled={editLocked()}
                   onChange={(event) => newSource(event.currentTarget.value as ImportSurface)}>
                   <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
                 </select>
@@ -667,7 +676,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           <Show when={isReference()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
-                <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
+                <select aria-label={t("sf.u23.source")} value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
                 </select>
               </label>
@@ -676,6 +685,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </div>
           </Show>
           <Show when={(isImport() || isReference() || isHistory()) && state.manifest && matchedSurface()}>
+            <Show when={state.phase === "reviewing" && state.manifest!.state === "preview"}>
+              <p role="status" class="sf-files-note">{t("sf.u23.previewReview")}</p>
+            </Show>
             <section class="sf-files-section" aria-label={t("sf.u23.context")}>
               <h2>{state.manifest!.domainApplied ? t("sf.u23.confirmed") : t("sf.u23.simulation")}</h2>
               <p>{state.manifest!.context.period.start} – {state.manifest!.context.period.end} · {state.manifest!.context.currency}</p>
@@ -708,11 +720,11 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             <section class="sf-files-section" aria-label={t("sf.u23.changes")}>
               <h2>{t("sf.u23.changes")}</h2>
               <For each={["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const}>
-                {(kind) => <details>
-                  <summary>{t("sf.u23." + kind)} ({changeSummary(kind).length})</summary>
+                {(kind) => <section>
+                  <h3>{t("sf.u23." + kind)} ({changeSummary(kind).length})</h3>
                   <Show when={changeSummary(kind).length === 0}><p>{t("sf.u23.noImpact")}</p></Show>
                   <For each={changeSummary(kind)}>{(entry) => <article class="sf-files-change">
-                    <h3>{entry.path}</h3>
+                    <h4>{entry.path}</h4>
                     <p>{displayValue(entry.before)} → {displayValue(entry.after)}</p>
                     <p>{entry.source.kind === "file"
                       ? entry.source.sheet + " · " + t("sf.u23.row") + " " + entry.source.row +
@@ -721,15 +733,18 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                     <Show when={entry.reason}><p>{entry.reason}</p></Show>
                     <Show when={kind === "ignored" || kind === "rejected"}><p>{t("sf.u23.notApplied")}</p></Show>
                   </article>}</For>
-                </details>}
+                </section>}
               </For>
             </section>
             <Show when={state.reference?.receipt}>
               {(receipt) => <section class="sf-files-section" data-sf-receipt="producer">
                 <h2>{receipt().outcome === "rejected" ? t("sf.u23.rejectedReceipt") : t("sf.u23.recorded")}</h2>
-                <p>{receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
-                <For each={state.manifest!.receipts}>{(item) =>
-                  <p>{item.id} · {item.at} · {item.status} · {item.version}</p>}</For>
+                <p>{t("sf.u23.receipt")}: {receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
+                <p>{t("sf.u23.manifest")}: {receipt().manifestId}</p>
+                <For each={state.manifest!.receipts}>{(item) => <>
+                  <p>{item.id} · {item.at} · {item.status}</p>
+                  <p>{t("sf.u23.actor")}: {item.principalRef} · {t("sf.u23.version")}: {item.version}</p>
+                </>}</For>
               </section>}
             </Show>
             <div class="sf-files-actions">
