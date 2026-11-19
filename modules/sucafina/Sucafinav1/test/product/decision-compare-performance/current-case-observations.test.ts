@@ -8,7 +8,7 @@ import { rows } from "../../../runtime/contract.ts"
 import { createWp13PortfolioFixture } from "../wp13/sensitivity-fixture.ts"
 
 type Fixture = Awaited<ReturnType<typeof createWp13PortfolioFixture>>
-type Fault = "none" | "case" | "source" | "revoke" | "method" | "port" | "read-return" | "borrowed"
+type Fault = "none" | "case" | "source" | "revoke" | "method" | "port" | "read-return" | "read-return-getter" | "borrowed"
 
 // Real SQLite/C08 writes and Planner results. Authentication and evidence
 // admission retain the fixture's declared boundary; this is no installed UI
@@ -70,6 +70,15 @@ function observe(f: Awaited<ReturnType<typeof history>>, fault: Fault) {
     const current = await port.read(...args)
     borrowed.push(current)
     if (fault === "read-return" && !changed) { changed = true; input.cases.read = replacement }
+    if (fault === "read-return-getter" && counts.caseReads === 2 && current.status === "ok") {
+      const value = current.value
+      // The real read already finished. Substitute only its borrowed wrapper
+      // so the swap happens during the consumer's structuredClone.
+      return { status: "ok" as const, get value() {
+        changed = true; input.cases.read = replacement
+        return value
+      } }
+    }
     return current
   } }
   const change = async () => {
@@ -111,7 +120,7 @@ function observe(f: Awaited<ReturnType<typeof history>>, fault: Fault) {
       const result = await f.planner.compareForecast(...args)
       counts.forecasts++
       const at = fault === "method" || fault === "port" || fault === "borrowed" ? 1 : 2
-      if (!changed && fault !== "none" && fault !== "read-return" && counts.forecasts === at) await change()
+      if (!changed && fault !== "none" && fault !== "read-return" && fault !== "read-return-getter" && counts.forecasts === at) await change()
       return result
     } },
     coverageRefFor: (reference, alternative) => decisionCoverageRef(reference, alternative.id, alternative.version),
@@ -175,3 +184,19 @@ test("an earlier borrowed case cannot mutate the private per-phase observation",
     expect(measured.counts.caseReads).toBe(2)
   } finally { await f.cleanup() }
 }, 30_000)
+
+for (const singleton of [false, true]) {
+  test("the final borrowed getter cannot replace the case reader at egress" + (singleton ? " for one result" : " for siblings"), async () => {
+    const f = await history()
+    try {
+      const measured = observe(f, "read-return-getter")
+      const references = singleton ? [f.newer.resultRef] : [f.baselineRef, f.newer.resultRef]
+      const result = await measured.read(references, f.context)
+      expect(measured.changed()).toBe(true)
+      expect(measured.counts.caseReads).toBe(2)
+      expect(measured.counts.replacementCalls).toBe(0)
+      expect(result.map((entry) => entry.status)).toEqual(references.map(() => "denied"))
+      expect(result.every((entry) => !Object.hasOwn(entry, "value"))).toBe(true)
+    } finally { await f.cleanup() }
+  }, 30_000)
+}

@@ -99,6 +99,10 @@ export function createStoredPlannerScenarioHost(input: {
       if (current.status !== "ok") { result.push(current); continue }
       result.push(digestSfValue(current.value.case) === entry.value.caseDigest ? { status: "ok", value: structuredClone(entry.value.value) } : { status: "stale", reason: "case-changed" })
     }
+    // A borrowed read may replace its producer while being cloned, or a
+    // cached observation may resume after another async callback. Fence the
+    // complete batch synchronously at egress, after every clone and await.
+    if (!sameCaseReader()) return references.map(() => ({ status: "denied", reason: "case-reader-changed" }))
     return result
   }
   return { resolveMany, resolve: async (reference, context) => (await resolveMany([reference], context))[0]! }
