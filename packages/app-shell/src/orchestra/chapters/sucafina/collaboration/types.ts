@@ -63,6 +63,7 @@ export type SfThreadProps = Readonly<{
   messages: readonly SfThreadMessage[]
   draft: string
   state: SfUiState
+  canSubmit?: boolean
   onEditDraft: (text: string) => void
   onPost: (request: Readonly<{ threadRef: SfRef; incarnation: string; expectedVersion: number; text: string }>) => void
   onReconcileRead: (threadRef: SfRef) => void

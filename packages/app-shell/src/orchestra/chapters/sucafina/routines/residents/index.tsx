@@ -10,6 +10,7 @@ import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import type { SfUiState } from "../../shared/frame"
 import { n29ContextState, n29Key, n29Permitted, n29ResponseState, n29SameAuthority, n29StateKey, useN29Copy } from "../catalog/ui"
+import { StatusText, WhenText } from "../../reviews/labels"
 import "./residents.css"
 
 type Profile = (typeof SfResidentCatalog)["Type"]["profiles"][number]
@@ -394,9 +395,9 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
                           <dl>
                             <dt>{t("sf.u35.runRef")}</dt><dd><bdi>{run().runRef}</bdi></dd>
                             <dt>{t("sf.u35.skill")}</dt><dd><bdi>{run().skillId}</bdi></dd>
-                            <dt>{t("sf.u35.status")}</dt><dd><bdi>{run().state}</bdi></dd>
+                            <dt>{t("sf.u35.status")}</dt><dd><StatusText value={run().state} /></dd>
                             <dt>{t("sf.u35.version")}</dt><dd>{run().version}</dd>
-                            <dt>{t("sf.u35.observedAt")}</dt><dd><time>{run().updatedAt}</time></dd>
+                            <dt>{t("sf.u35.observedAt")}</dt><dd><WhenText iso={run().updatedAt} /></dd>
                           </dl>
                         </>}
                       </Show>
@@ -409,7 +410,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
                           <p><strong>{t("sf.u35.choiceRef")}:</strong> <bdi>{choice().id}</bdi></p>
                           <p><strong>{t("sf.u35.alternative")}:</strong> <bdi>{choice().alternativeId}</bdi></p>
                           <p><strong>{t("sf.u35.decisionBy")}:</strong> <bdi>{choice().principalRef}</bdi></p>
-                          <p><strong>{t("sf.u35.observedAt")}:</strong> <time>{choice().at}</time></p>
+                          <p><strong>{t("sf.u35.observedAt")}:</strong> <WhenText iso={choice().at} /></p>
                           <p><strong>{t("sf.u35.rationale")}:</strong> <bdi>{choice().reason}</bdi></p>
                         </>}
                       </Show>

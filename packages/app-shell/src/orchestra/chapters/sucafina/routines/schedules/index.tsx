@@ -11,6 +11,7 @@ import {
   n29ContextState, n29Key, n29Permitted, n29ResponseState,
   n29SameAuthority, n29StateKey, useN29Copy,
 } from "../catalog/ui"
+import { StatusText } from "../../reviews/labels"
 import "./schedules.css"
 
 type ListBody = (typeof SfRoutines.operations["schedules.list"]["output"])["Type"]
@@ -333,7 +334,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                     {(row) => (
                       <article class="mx-card">
                         <h3><bdi>{row.scheduleRef}</bdi></h3>
-                        <p>{t("sf.u34.state")}: <bdi>{row.state}</bdi></p>
+                        <p>{t("sf.u34.state")}: <StatusText value={row.state} /></p>
                         <p>{t("sf.u34.version")}: {row.version}</p>
                         <button type="button" class="mx-btn" aria-pressed={view.selected === row.scheduleRef}
                           onClick={() => choose(row.scheduleRef)}>{t("sf.ui66.primary")}</button>
@@ -384,14 +385,24 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                 }>
                   <div class="sf-n29-review" role="group" aria-label={t("sf.u34.submitReview")}>
                     <p>{t("sf.u34.reviewWarning")}</p>
-                    <dl>
-                      <For each={[
-                        ["conditionRef", "sf.u34.condition"], ["recipeRef", "sf.u34.recipe"],
-                        ["recurrence", "sf.u34.recurrence"], ["timezone", "sf.u34.timezone"],
-                      ] as const}>
-                        {([field, label]) => <div><dt>{t(label)}</dt><dd><bdi>{view.change[field]}</bdi></dd></div>}
-                      </For>
-                    </dl>
+                    <Show when={view.mode === "create"}>
+                      <dl>
+                        <For each={[
+                          ["conditionRef", "sf.u34.condition"], ["recipeRef", "sf.u34.recipe"],
+                          ["recurrence", "sf.u34.recurrence"], ["timezone", "sf.u34.timezone"],
+                        ] as const}>
+                          {([field, label]) => <div><dt>{t(label)}</dt><dd><bdi>{view.change[field]}</bdi></dd></div>}
+                        </For>
+                      </dl>
+                    </Show>
+                    <Show when={view.mode === "update" ? liveDetail() : undefined}>
+                      {(detail) => <dl>
+                        <div><dt>{t("sf.u34.version")}</dt><dd>{detail().version}</dd></div>
+                        <div><dt>{t("sf.u34.details")}</dt><dd><bdi>{detail().scheduleRef}</bdi></dd></div>
+                        <div><dt>{t("sf.u34.recurrence")}</dt><dd><bdi>{view.change.recurrence}</bdi></dd></div>
+                        <div><dt>{t("sf.u34.timezone")}</dt><dd><bdi>{view.change.timezone}</bdi></dd></div>
+                      </dl>}
+                    </Show>
                     <button type="button" class="mx-btn primary" disabled={!reviewValid() || busy()}
                       onClick={() => { void command() }}>{t("sf.u34.confirm")}</button>
                     <button type="button" class="mx-btn" onClick={revise}>{t("sf.u34.cancelReview")}</button>
@@ -422,7 +433,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                   {(row) => (
                     <>
                       <p>{t("sf.u34.version")}: {row().version}</p>
-                      <p>{t("sf.u34.state")}: <bdi>{row().state}</bdi></p>
+                      <p>{t("sf.u34.state")}: <StatusText value={row().state} /></p>
                       <Show when={liveDetail()} fallback={
                         <p role="status">{t("sf.u34.noDetail")}</p>
                       }>
@@ -456,7 +467,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
               <Show when={view.runState === "ready" && view.run}>
                 <dl>
                   <div><dt>{t("sf.u34.runRef")}</dt><dd><bdi>{view.run?.runRef}</bdi></dd></div>
-                  <div><dt>{t("sf.u34.state")}</dt><dd><bdi>{view.run?.admission}</bdi></dd></div>
+                  <div><dt>{t("sf.u34.state")}</dt><dd><StatusText value={view.run?.admission ?? ""} /></dd></div>
                   <div><dt>{t("sf.u34.result")}</dt><dd><bdi>{view.run?.resultRef ?? t("sf.u27.noResult")}</bdi></dd></div>
                 </dl>
                 <ul><For each={view.run?.pending ?? []}>{(reason) => <li><bdi>{reason}</bdi></li>}</For></ul>

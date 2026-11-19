@@ -8,6 +8,7 @@ import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
+import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
 import "./preserved.css"
 
 const key = (value: string) => value as SfCopyKey
@@ -133,7 +134,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                 <dl>
                   <div><dt>{t("sf.u32.ref")}</dt><dd>{review().id}</dd></div>
                   <div><dt>{t("sf.u32.version")}</dt><dd>{review().version}</dd></div>
-                  <div><dt>{t("sf.u32.created")}</dt><dd><time dateTime={review().createdAt}>{review().createdAt}</time></dd></div>
+                  <div><dt>{t("sf.u32.created")}</dt><dd><WhenText iso={review().createdAt} /></dd></div>
                 </dl>
               </header>
               <section class="sf-n28-section" aria-label={t("sf.u32.sections")}>
@@ -142,7 +143,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   <For each={review().sections}>
                     {(section) => <li class="mx-card" data-section-id={section.id}>
                       <h3>{section.title}</h3>
-                      <p>{t("sf.u32.period")}: {section.period.start} – {section.period.end}</p>
+                      <p>{t("sf.u32.period")}: <PeriodText start={section.period.start} end={section.period.end} /></p>
                       <p>{t("sf.u32.records")}: {section.count}</p>
                       <Show when={readPreservedProjection(section.content)}
                         fallback={<p role="status">{t("sf.u32.materialUnavailable")}</p>}>
@@ -153,10 +154,10 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                               {(value) => <div>
                                 <dt>{value.id}</dt>
                                 <dd>
-                                  <span>{value.value === null ? t("sf.u32.missing") : String(value.value)}</span>
+                                  <span>{value.value === null ? t("sf.u32.missing") : <AmountText value={value.value} currency={value.currency} />}</span>
                                   <Show when={value.unit}><span> {value.unit}</span></Show>
                                   <Show when={value.currency}><span> {value.currency}</span></Show>
-                                  <small> {t("sf.u32.evidence")}: {value.evidenceState}</small>
+                                  <small> {t("sf.u32.evidence")}: <StatusText value={value.evidenceState} /></small>
                                 </dd>
                               </div>}
                             </For>
@@ -170,7 +171,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                             <For each={section.sourceRefs}>{(source) => <li>
                               <span>{source.surface} / {source.type} / {source.id}</span>
                               <span> · {t("sf.u32.sourceVersion")}: {source.version}</span>
-                              <span> · {t("sf.u32.observed")}: <time dateTime={source.observedAt}>{source.observedAt}</time></span>
+                              <span> · {t("sf.u32.observed")}: <WhenText iso={source.observedAt} /></span>
                             </li>}</For>
                           </ul>
                         </section>
@@ -185,7 +186,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   <ol class="sf-n28-items">
                     <For each={review().comments}>{(comment) => <li class="mx-card">
                       <p>{comment.content}</p>
-                      <small>{comment.authorRef} · <time dateTime={comment.createdAt}>{comment.createdAt}</time></small>
+                      <small>{comment.authorRef} · <WhenText iso={comment.createdAt} /></small>
                     </li>}</For>
                   </ol>
                 </Show>

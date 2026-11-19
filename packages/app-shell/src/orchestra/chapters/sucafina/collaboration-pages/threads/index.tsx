@@ -8,6 +8,7 @@ import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfThread, type SfThreadMessage } from "../../collaboration"
+import { operationGranted, PeriodText } from "../../reviews/labels"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
 import "./threads.css"
@@ -124,7 +125,7 @@ export function SfThreadView(props: SfSurfaceProps<"UI52">) {
   })
   const write = async (request: { threadRef: SfRef; incarnation: string; expectedVersion: number; text: string }) => {
     const s = snapshot(), thread = projection(), version = storageVersion()
-    if (!s || !thread || version === undefined || !!pending() || state() !== "ready" && state() !== "empty" ||
+    if (!s || !thread || version === undefined || !!pending() || !operationGranted(owner.ready()?.context, "collaboration.thread-reply") || state() !== "ready" && state() !== "empty" ||
         request.threadRef !== ref() || request.incarnation !== thread.sourceIncarnation ||
         request.expectedVersion !== version || !request.text.trim() || draft() !== request.text ||
         thread.state !== "open") return
@@ -146,8 +147,10 @@ export function SfThreadView(props: SfSurfaceProps<"UI52">) {
       const response = result.body.value
       if (response.id !== ref()) { setState("invalid"); return }
       const receipt = "mutationReceipt" in response ? response.mutationReceipt : undefined
-      if (receipt && (receipt.action !== "reply" || receipt.idempotencyKey !== idempotencyKey ||
-          receipt.threadId !== ref() || receipt.sourceIncarnation !== thread.sourceIncarnation)) {
+      const principal = owner.ready()?.context.stamp.principalRef
+      if (!receipt || receipt.action !== "reply" || receipt.idempotencyKey !== idempotencyKey ||
+          receipt.threadId !== ref() || receipt.sourceIncarnation !== thread.sourceIncarnation ||
+          !principal || receipt.principalRef !== principal) {
         setPending({ ...submission, status: "unknown" }); setState("outcome-unknown"); return
       }
       setDraft(""); setPending(undefined)
@@ -189,6 +192,7 @@ export function SfThreadView(props: SfSurfaceProps<"UI52">) {
                   messages={messages()}
                   draft={draft()}
                   state={effectiveState()}
+                  canSubmit={operationGranted(owner.ready()?.context, "collaboration.thread-reply")}
                   onEditDraft={setDraft}
                   onPost={(request) => void write(request)}
                   onReconcileRead={(reference) => { if (reference === ref()) void load(reference) }}
@@ -204,7 +208,7 @@ export function SfThreadView(props: SfSurfaceProps<"UI52">) {
                       <div><dt>{t("sf.u44.sourceRef")}</dt><dd><code>{thread().sourceRef}</code></dd></div>
                       <div><dt>{t("sf.u44.incarnation")}</dt><dd><code>{thread().sourceIncarnation}</code></dd></div>
                       <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{thread().observedVersion}</dd></div>
-                      <div><dt>{t("sf.u44.period")}</dt><dd>{thread().period.start} – {thread().period.end}</dd></div>
+                      <div><dt>{t("sf.u44.period")}</dt><dd><PeriodText start={thread().period.start} end={thread().period.end} /></dd></div>
                     </dl>
                     <ul><For each={thread().evidenceRefs}>{(evidence) => <li><code>{evidence.refId}</code></li>}</For></ul>
                   </section>

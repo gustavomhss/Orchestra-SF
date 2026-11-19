@@ -9,6 +9,7 @@ import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import type { Schema } from "effect"
+import { operationGranted, PeriodText } from "../labels"
 import "./agenda.css"
 
 type Section = Schema.Schema.Type<typeof SfReviewUpdate>["items"][number]
@@ -37,7 +38,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [store, setStore] = createStore({
     ownerKey: "",
-    sourcePage: "Budget Overview",
+    sourcePage: "",
     filter: "",
     available: [] as Section[],
     selected: [] as Section[],
@@ -50,10 +51,9 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   let sourceAbort: AbortController | undefined
   let commandAbort: AbortController | undefined
   const ready = () => owner.ready()
-  const authorized = (operationId: string) => ready()?.context.availability.some((resource) =>
-    resource.family === "reviews" && resource.resource === "agenda" &&
-    resource.operations.some((operation) => operation.operationId === operationId && operation.state === "ready")) ?? false
-  const mayPreserve = () => !!ready() && authorized("dashboard.dashboard-review-preserve")
+  const authorized = (operationId: string) => operationGranted(ready()?.context, operationId, { family: "reviews", resource: "agenda" })
+  const mayPreview = () => authorized("dashboard.dashboard-agenda")
+  const mayPreserve = () => authorized("dashboard.dashboard-review-preserve")
   const current = (generation: number, ownerKey: string) => {
     const state = owner.state()
     return owner.generation() === generation && state.status === "ready" && state.ownerKey === ownerKey
@@ -93,15 +93,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
           issue("unavailable", "sf.u25.error")
           return
         }
-        // The installed report producer uses "report:<page>" as its agenda
-        // section identity to distinguish the same dashboard slot across pages.
-        // Reuse that documented identity pattern; the selectionRef, period and
-        // recordRefs remain untouched producer-supplied authorization inputs.
-        const candidates = result.body.value.items.filter((item) => item.kind === "dashboard")
-        const sections = candidates.map((item) => ({
-          ...item, id: candidates.length === 1 ? "report:" + page.trim() :
-            "report:" + page.trim() + ":" + item.id,
-        }))
+        const sections = result.body.value.items.filter((item) => item.kind === "dashboard")
         // Refresh never strips already-selected sections merely because this read
         // is unavailable. Only an authoritative owner revocation clears them.
         setStore({ available: sections, status: sections.length ? "ready" : "empty", message: "", sourcePage: page })
@@ -122,7 +114,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       sourceAbort?.abort()
       commandAbort?.abort()
       setStore({
-        ownerKey: "", available: [], selected: [], preview: undefined, preserved: undefined,
+        ownerKey: "", sourcePage: "", available: [], selected: [], preview: undefined, preserved: undefined,
         phase: "selecting", status: state.status === "denied" ? "denied"
           : state.status === "unauthenticated" ? "session-expired"
           : state.status === "context-mismatch" ? "invalid"
@@ -131,10 +123,11 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       return
     }
     if (store.ownerKey !== state.ownerKey) {
-      setStore({ ownerKey: state.ownerKey, selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting" })
+      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting" })
+      return
     }
     const source = untrack(() => store.sourcePage)
-    void discover(source)
+    if (source.trim()) void discover(source)
     onCleanup(() => {
       if (owner.generation() !== generation) {
         sourceAbort?.abort()
@@ -165,7 +158,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   }
   const preview = async () => {
     const access = ready(), state = owner.state()
-    if (!access || state.status !== "ready" || store.selected.length === 0 || store.selected.length > 30 ||
+    if (!access || state.status !== "ready" || !mayPreview() || store.selected.length === 0 || store.selected.length > 30 ||
       store.phase === "submitting" || store.phase === "outcome-unknown") return
     const sections = store.selected.map((item) => ({
       id: item.id, title: item.topic, topic: item.topic, selectionRef: item.selectionRef,
@@ -225,6 +218,12 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       )
       if (!current(generation, ownerKey)) return
       if (result.kind === "response" && result.body.status === "ok") {
+        const requested = prepared.sections.map((section) => section.id)
+        const returned = result.body.value.sections.map((section) => section.id)
+        if (!result.body.value.id || returned.length !== requested.length || returned.some((id, index) => id !== requested[index])) {
+          setStore({ phase: "selecting", status: "stale", message: "sf.u25.changed", preserved: undefined })
+          return
+        }
         setStore({
           status: "ready", phase: "confirmed", message: "sf.u25.created",
           preserved: { id: result.body.value.id, version: result.body.value.version, createdAt: result.body.value.createdAt },
@@ -252,7 +251,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       onLayoutMode={() => undefined}
       primaryAction={{
         id: "preview", labelKey: key("sf.u25.preview"), tone: "primary",
-        disabled: !mayPreserve() || !store.selected.length || store.phase === "submitting" ||
+        disabled: !mayPreview() || !store.selected.length || store.phase === "submitting" ||
           store.phase === "outcome-unknown" || store.phase === "previewing" || store.phase === "confirmed",
         busy: store.phase === "previewing", onInvoke: () => { void preview() },
       }}
@@ -281,7 +280,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
               <For each={store.available.filter((item) => item.topic.toLocaleLowerCase().includes(store.filter.toLocaleLowerCase()))}>
                 {(item) => <li class="mx-card">
                   <strong>{item.topic}</strong>
-                  <span>{t("sf.u25.period")}: {item.period.start} – {item.period.end}</span>
+                  <span>{t("sf.u25.period")}: <PeriodText start={item.period.start} end={item.period.end} /></span>
                   <button class="mx-btn" type="button" onClick={() => add(item)}
                     disabled={store.selected.length >= 30 || store.selected.some((selected) => selected.id === item.id) ||
                       store.phase === "submitting" || store.phase === "outcome-unknown"}>{t("sf.u25.add")}</button>
@@ -300,7 +299,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
             <ol class="sf-n28-items" data-sf-agenda-order>
               <For each={store.selected}>{(item, index) => <li class="mx-card" data-section-id={item.id}>
                 <strong>{item.topic}</strong>
-                <p>{t("sf.u25.period")}: <time>{item.period.start}</time> – <time>{item.period.end}</time></p>
+                <p>{t("sf.u25.period")}: <PeriodText start={item.period.start} end={item.period.end} /></p>
                 <div class="sf-n28-actions">
                   <button type="button" class="mx-btn" disabled={index() === 0 || store.phase === "submitting" || store.phase === "outcome-unknown"}
                     onClick={() => reorder(item.id, -1)} aria-label={t("sf.u25.up") + ": " + item.topic}>{t("sf.u25.up")}</button>
@@ -322,7 +321,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
               <For each={store.preview?.sections}>{(section) => <li>
                 <strong>{section.title}</strong>
                 <span> {t("sf.u25.count")}: {section.recordCount}</span>
-                <span> {t("sf.u25.period")}: {section.period.start} – {section.period.end}</span>
+                <span> {t("sf.u25.period")}: <PeriodText start={section.period.start} end={section.period.end} /></span>
               </li>}</For>
             </ol>
             <p>{t("sf.u25.coverage")}</p>
