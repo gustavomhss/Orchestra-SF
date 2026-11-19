@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: deff10482b4d2846ca838bb3e8e6f0e205f81f56 (recibo original e limpeza antes da releitura explícita; aguardando gate9)
+SHA de código: deff10482b4d2846ca838bb3e8e6f0e205f81f56 (recibo original e limpeza antes da releitura explícita; gate9 em execução)
 Data: 2026-11-19
 Estado: partial
 
@@ -141,3 +141,9 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 - Revisão concreta do root: o acknowledgement fica fora do SfStatePanel e poderia sobreviver a uma releitura negativa se o owner não mudasse. O botão Refresh source agora limpa applicationResult **antes** de bump e da leitura original; dados privados do recibo anterior não permanecem após a releitura.
 - `proposals/index.tsx:451`: nenhuma mudança de autorização, resultado do Apply ou produtor. O bloqueio de nova aplicação continua pelo estado original/review=null. Root autorizou o gate9 após este ajuste.
 - Código `deff10482b4d2846ca838bb3e8e6f0e205f81f56`; único delta sobre092c6d é a limpeza do acknowledgement. Mantidas221 chamadas expect, leitura final independente e timeouts originais.
+
+## Gate9 solicitado e registro permanente da migração
+- Run [44630358847](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44630358847): **IN_PROGRESS**, ainda sem resultado de produto neste checkpoint. Job135935026633. Código composto `1a8b23cef45c721b012078ed71f17460bc59ccf6`, snapshot `1db9f18a623cc1331e07f582d989e5150d636da3`, branch `ci-run-linux-proposals9-20261119`.
+- Sobre o código do gate8 `3cfe8242dde39aa5e5fefa3629b6c3acf900275c`, somente proposals/index.tsx, sf-u38.ts, proposals.spec.ts e este handoff foram sobrepostos. Pedido app/Playwright/productionconfig restrito ao spec; nenhum sf-ci adicional.
+- Os cinco legados continuam intactos, mesmo se este gate passar, até root compor código e registro permanente em `sf/ci/suites.json`. Um run isolado não substitui a seleção futura no CI. Os dois units puros de host-workbench ficam preservados; a extração preparada confere ambos os corpos idênticos, sem commit de remoção.
+- Nenhuma baseline, contagem de inventário, digest ou GO foi inferido deste gate. Estado permanece partial.
