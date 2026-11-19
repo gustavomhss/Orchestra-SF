@@ -130,6 +130,7 @@ const selectionPayload = { purpose: "work-selection", period: { start: "2026-01-
 const selectionDigest = digestSfValue(selectionPayload)
 const selectionCall = await authority.ui.admit(request(), "sf_work_list", selectionDigest)
 if (selectionCall.status !== "ok") throw new Error("C12_ORIGINAL_SELECTION_ADMISSION_FAILED")
+let selectionRef = ""
 try {
   if (!await authority.ui.validate(selectionCall.value, "sf_work_list", selectionDigest))
     throw new Error("C12_ORIGINAL_SELECTION_AUTHORITY_CHANGED")
@@ -137,6 +138,7 @@ try {
   if (!selection || selection.status !== "ok" || !selection.value.selectionRef ||
       digestSfValue(selection.value.period) !== digestSfValue(selectionPayload.period))
     throw new Error("C12_ORIGINAL_SELECTION_UNAVAILABLE")
+  selectionRef = selection.value.selectionRef
 } finally {
   authority.ui.finish(selectionCall.value)
 }
@@ -170,14 +172,35 @@ if (!retained) {
     throw new Error("C12_RECORD_EVIDENCE_REQUIRED")
   // C02 identifies the row through its collection scope. C12 requires the
   // producer's individual, persisted selector, as the canonical fixture does.
-  const sourceInput = { requestRef: rowEvidence.refId }
+  const workInput = { selectionRef, period: selectionPayload.period }
+  const workCall = await authority.ui.admit(request(), "sf_work_list", digestSfValue(workInput))
+  if (workCall.status !== "ok") throw new Error("C12_ORIGINAL_WORK_ADMISSION_FAILED")
+  const sourceInput = await (async () => {
+    try {
+      // queue-page.finish releases C02's child selectors. Reopen the retained
+      // original work selection instead of reusing a disposed page reference.
+      const result = await authority.dispatch("sf_work_list", workInput, workCall.value)
+      if (result.status !== "ok") throw new Error("C12_ORIGINAL_WORK_READ_FAILED status=" + result.status + " reason=" + result.reason)
+      const listed = decodeSfOperationOutput("sf_work_list", result.result)
+      if (!listed.ok) throw new Error("C12_ORIGINAL_WORK_PROJECTION_INVALID")
+      const candidates = listed.value.items.flatMap((item) => item.sourceRefs.flatMap((ref) =>
+        ref.kind === "record" && ref.target.surface === "procurement" &&
+        ref.target.recordType === "procurement-request" && ref.target.recordId === rowEvidence.target.recordId ? [ref] : []))
+      const refs = [...new Map(candidates.map((ref) => [ref.refDigest, ref])).values()]
+      if (refs.length !== 1 || !await authority.ui.revalidate(workCall.value))
+        throw new Error("C12_ORIGINAL_WORK_SOURCE_AMBIGUOUS")
+      return { requestRef: refs[0]!.refId }
+    } finally {
+      authority.ui.finish(workCall.value)
+    }
+  })()
   const sourceCall = await authority.ui.admit(request(), "sf_request_read", digestSfValue(sourceInput))
   if (sourceCall.status !== "ok") throw new Error("C12_ORIGINAL_SOURCE_ADMISSION_FAILED")
   const evidence = await (async () => {
     try {
       if (!await authority.ui.revalidate(sourceCall.value)) throw new Error("C12_ORIGINAL_SOURCE_AUTHORITY_CHANGED")
       const read = await authority.dispatch("sf_request_read", sourceInput, sourceCall.value)
-      if (read.status !== "ok") throw new Error("C12_ORIGINAL_SOURCE_READ_FAILED status=" + read.status)
+      if (read.status !== "ok") throw new Error("C12_ORIGINAL_SOURCE_READ_FAILED status=" + read.status + " reason=" + read.reason)
       const projection = decodeSfOperationOutput("sf_request_read", read.result)
       if (!projection.ok) throw new Error("C12_ORIGINAL_SOURCE_PROJECTION_INVALID")
       const individual = createProcurementSourceResolver({
