@@ -1,0 +1,433 @@
+{
+  "schema": "sf-demo-flamengo-org-v1",
+  "fixture": "FLA-DEMO-2026",
+  "synthetic": true,
+  "realData": false,
+  "referenceDate": "2026-11-16",
+  "fiscalYear": 2026,
+  "presentationCurrency": "BRL",
+  "plannerBaseCurrency": "USD",
+  "locale": "pt-BR",
+  "timezone": "America/Sao_Paulo",
+  "name": "Flamengo — organização sintética de demonstração",
+  "notAffiliated": true,
+  "club": {
+    "id": "FLA",
+    "label": "Flamengo (DEMO)",
+    "type": "organization"
+  },
+  "directorates": [
+    {
+      "id": "DIR-SPORT",
+      "parent": "FLA",
+      "name": "Diretoria de Futebol"
+    },
+    {
+      "id": "DIR-BUSINESS",
+      "parent": "FLA",
+      "name": "Diretoria de Negócios"
+    },
+    {
+      "id": "DIR-INFRA",
+      "parent": "FLA",
+      "name": "Diretoria de Infraestrutura e Operações"
+    }
+  ],
+  "departments": [
+    {
+      "id": "DEPT-FUT-PRO",
+      "parent": "DIR-SPORT",
+      "name": "Futebol Profissional",
+      "annualBudgetBRL": 24000000,
+      "annualForecastBRL": 25680000,
+      "monthBudgetBRL": [
+        2000000,
+        2000000,
+        2000000,
+        2000000,
+        2000000,
+        2000000,
+        2000000,
+        2000000,
+        2000000,
+        2000000,
+        2000000,
+        2000000
+      ],
+      "monthForecastBRL": [
+        2140000,
+        2140000,
+        2140000,
+        2140000,
+        2140000,
+        2140000,
+        2140000,
+        2140000,
+        2140000,
+        2140000,
+        2140000,
+        2140000
+      ]
+    },
+    {
+      "id": "DEPT-FUT-BASE",
+      "parent": "DIR-SPORT",
+      "name": "Categorias de Base",
+      "annualBudgetBRL": 11000000,
+      "annualForecastBRL": 11330000,
+      "monthBudgetBRL": [
+        916666,
+        916666,
+        916666,
+        916666,
+        916666,
+        916666,
+        916666,
+        916666,
+        916666,
+        916666,
+        916666,
+        916674
+      ],
+      "monthForecastBRL": [
+        944166,
+        944166,
+        944166,
+        944166,
+        944166,
+        944166,
+        944166,
+        944166,
+        944166,
+        944166,
+        944166,
+        944174
+      ]
+    },
+    {
+      "id": "DEPT-MKT",
+      "parent": "DIR-BUSINESS",
+      "name": "Marketing",
+      "annualBudgetBRL": 14500000,
+      "annualForecastBRL": 16240000,
+      "monthBudgetBRL": [
+        1208333,
+        1208333,
+        1208333,
+        1208333,
+        1208333,
+        1208333,
+        1208333,
+        1208333,
+        1208333,
+        1208333,
+        1208333,
+        1208337
+      ],
+      "monthForecastBRL": [
+        1353333,
+        1353333,
+        1353333,
+        1353333,
+        1353333,
+        1353333,
+        1353333,
+        1353333,
+        1353333,
+        1353333,
+        1353333,
+        1353337
+      ]
+    },
+    {
+      "id": "DEPT-OPS",
+      "parent": "DIR-INFRA",
+      "name": "Operações/Estádio",
+      "annualBudgetBRL": 18500000,
+      "annualForecastBRL": 19980000,
+      "monthBudgetBRL": [
+        1541666,
+        1541666,
+        1541666,
+        1541666,
+        1541666,
+        1541666,
+        1541666,
+        1541666,
+        1541666,
+        1541666,
+        1541666,
+        1541674
+      ],
+      "monthForecastBRL": [
+        1665000,
+        1665000,
+        1665000,
+        1665000,
+        1665000,
+        1665000,
+        1665000,
+        1665000,
+        1665000,
+        1665000,
+        1665000,
+        1665000
+      ]
+    },
+    {
+      "id": "DEPT-TEC",
+      "parent": "DIR-INFRA",
+      "name": "Tecnologia",
+      "annualBudgetBRL": 9500000,
+      "annualForecastBRL": 10450000,
+      "monthBudgetBRL": [
+        791666,
+        791666,
+        791666,
+        791666,
+        791666,
+        791666,
+        791666,
+        791666,
+        791666,
+        791666,
+        791666,
+        791674
+      ],
+      "monthForecastBRL": [
+        870833,
+        870833,
+        870833,
+        870833,
+        870833,
+        870833,
+        870833,
+        870833,
+        870833,
+        870833,
+        870833,
+        870837
+      ]
+    },
+    {
+      "id": "DEPT-LOG",
+      "parent": "DIR-BUSINESS",
+      "name": "Logística",
+      "annualBudgetBRL": 6800000,
+      "annualForecastBRL": 7412000,
+      "monthBudgetBRL": [
+        566666,
+        566666,
+        566666,
+        566666,
+        566666,
+        566666,
+        566666,
+        566666,
+        566666,
+        566666,
+        566666,
+        566674
+      ],
+      "monthForecastBRL": [
+        617666,
+        617666,
+        617666,
+        617666,
+        617666,
+        617666,
+        617666,
+        617666,
+        617666,
+        617666,
+        617666,
+        617674
+      ]
+    }
+  ],
+  "costCenters": [
+    {
+      "id": "FLA-FUT-PRO-01",
+      "department": "DEPT-FUT-PRO",
+      "label": "Futebol Profissional · operação",
+      "annualBudgetBRL": 16800000,
+      "annualForecastBRL": 17976000
+    },
+    {
+      "id": "FLA-FUT-PRO-02",
+      "department": "DEPT-FUT-PRO",
+      "label": "Futebol Profissional · projetos",
+      "annualBudgetBRL": 7200000,
+      "annualForecastBRL": 7704000
+    },
+    {
+      "id": "FLA-FUT-BASE-01",
+      "department": "DEPT-FUT-BASE",
+      "label": "Categorias de Base · operação",
+      "annualBudgetBRL": 7700000,
+      "annualForecastBRL": 7931000
+    },
+    {
+      "id": "FLA-FUT-BASE-02",
+      "department": "DEPT-FUT-BASE",
+      "label": "Categorias de Base · projetos",
+      "annualBudgetBRL": 3300000,
+      "annualForecastBRL": 3399000
+    },
+    {
+      "id": "FLA-MKT-01",
+      "department": "DEPT-MKT",
+      "label": "Marketing · operação",
+      "annualBudgetBRL": 10150000,
+      "annualForecastBRL": 11368000
+    },
+    {
+      "id": "FLA-MKT-02",
+      "department": "DEPT-MKT",
+      "label": "Marketing · projetos",
+      "annualBudgetBRL": 4350000,
+      "annualForecastBRL": 4872000
+    },
+    {
+      "id": "FLA-OPS-01",
+      "department": "DEPT-OPS",
+      "label": "Operações/Estádio · operação",
+      "annualBudgetBRL": 12950000,
+      "annualForecastBRL": 13986000
+    },
+    {
+      "id": "FLA-OPS-02",
+      "department": "DEPT-OPS",
+      "label": "Operações/Estádio · projetos",
+      "annualBudgetBRL": 5550000,
+      "annualForecastBRL": 5994000
+    },
+    {
+      "id": "FLA-TEC-01",
+      "department": "DEPT-TEC",
+      "label": "Tecnologia · operação",
+      "annualBudgetBRL": 6650000,
+      "annualForecastBRL": 7315000
+    },
+    {
+      "id": "FLA-TEC-02",
+      "department": "DEPT-TEC",
+      "label": "Tecnologia · projetos",
+      "annualBudgetBRL": 2850000,
+      "annualForecastBRL": 3135000
+    },
+    {
+      "id": "FLA-LOG-01",
+      "department": "DEPT-LOG",
+      "label": "Logística · operação",
+      "annualBudgetBRL": 4760000,
+      "annualForecastBRL": 5188400
+    },
+    {
+      "id": "FLA-LOG-02",
+      "department": "DEPT-LOG",
+      "label": "Logística · projetos",
+      "annualBudgetBRL": 2040000,
+      "annualForecastBRL": 2223600
+    }
+  ],
+  "actors": [
+    {
+      "key": "Daniel",
+      "displayName": "Daniel",
+      "tenantPrincipalRef": null,
+      "roleBySurface": {
+        "dashboard": [
+          "admin"
+        ],
+        "planner": [
+          "admin"
+        ],
+        "procurement": [
+          "admin"
+        ]
+      },
+      "expected": "authorized",
+      "identitySource": "real-tenant-session"
+    },
+    {
+      "key": "Caio",
+      "displayName": "Caio",
+      "tenantPrincipalRef": null,
+      "roleBySurface": {
+        "dashboard": [
+          "contributor"
+        ],
+        "planner": [],
+        "procurement": [
+          "requester"
+        ]
+      },
+      "expected": "scoped",
+      "identitySource": "real-tenant-session"
+    },
+    {
+      "key": "Pedro",
+      "displayName": "Pedro",
+      "tenantPrincipalRef": null,
+      "roleBySurface": {
+        "dashboard": [],
+        "planner": [],
+        "procurement": [
+          "buyer"
+        ]
+      },
+      "expected": "scoped",
+      "identitySource": "real-tenant-session"
+    },
+    {
+      "key": "Gabriel",
+      "displayName": "Gabriel",
+      "tenantPrincipalRef": null,
+      "roleBySurface": {
+        "dashboard": [],
+        "planner": [],
+        "procurement": [
+          "approver"
+        ]
+      },
+      "expected": "scoped",
+      "identitySource": "real-tenant-session"
+    },
+    {
+      "key": "Sofie",
+      "displayName": "Sofie",
+      "tenantPrincipalRef": null,
+      "roleBySurface": {
+        "dashboard": [
+          "viewer"
+        ],
+        "planner": [
+          "finance"
+        ],
+        "procurement": []
+      },
+      "expected": "scoped",
+      "identitySource": "real-tenant-session"
+    },
+    {
+      "key": "Zico",
+      "displayName": "Zico",
+      "tenantPrincipalRef": null,
+      "roleBySurface": {
+        "dashboard": [],
+        "planner": [],
+        "procurement": []
+      },
+      "expected": "denied-403-authenticated",
+      "identitySource": "real-tenant-session"
+    }
+  ],
+  "identityRule": "Names here are labels, NOT principal claims; resolve actual tenant subjects and verified group membership through authenticated sessions. Never mint IDs or impersonate.",
+  "sourcePins": {
+    "baseCandidate": "42d344a0efc4d85187388f149c54acac2db171da",
+    "planner": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+    "procurement": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+    "access": "modules/sucafina/Sucafinav1/runtime/application.ts"
+  }
+}

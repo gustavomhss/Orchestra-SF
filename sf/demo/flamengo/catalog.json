@@ -1,0 +1,394 @@
+{
+  "schema": "sf-demo-flamengo-catalog-v1",
+  "fixture": "FLA-DEMO-2026",
+  "synthetic": true,
+  "categories": [
+    {
+      "id": "SPORT",
+      "name": "Material esportivo"
+    },
+    {
+      "id": "NUTRI",
+      "name": "Nutrição"
+    },
+    {
+      "id": "LOG",
+      "name": "Logística"
+    },
+    {
+      "id": "TECH",
+      "name": "Tecnologia"
+    },
+    {
+      "id": "STAD",
+      "name": "Serviços de estádio"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": "FLA-SUP-SPORT-01",
+      "legalName": "Uniformes e kits Rubro Sintético 1 (DEMO)",
+      "tradingName": "Uniformes e kits Rubro Sintético 1 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Material esportivo"
+      ],
+      "categoryCode": "SPORT",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-SPORT-1"
+    },
+    {
+      "id": "FLA-SUP-SPORT-02",
+      "legalName": "Equipamentos de treino Rubro Sintético 2 (DEMO)",
+      "tradingName": "Equipamentos de treino Rubro Sintético 2 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Material esportivo"
+      ],
+      "categoryCode": "SPORT",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-SPORT-2"
+    },
+    {
+      "id": "FLA-SUP-NUTRI-01",
+      "legalName": "Alimentação esportiva Rubro Sintético 1 (DEMO)",
+      "tradingName": "Alimentação esportiva Rubro Sintético 1 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Nutrição"
+      ],
+      "categoryCode": "NUTRI",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-NUTRI-1"
+    },
+    {
+      "id": "FLA-SUP-NUTRI-02",
+      "legalName": "Insumos de recuperação Rubro Sintético 2 (DEMO)",
+      "tradingName": "Insumos de recuperação Rubro Sintético 2 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Nutrição"
+      ],
+      "categoryCode": "NUTRI",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-NUTRI-2"
+    },
+    {
+      "id": "FLA-SUP-LOG-01",
+      "legalName": "Transporte de cargas Rubro Sintético 1 (DEMO)",
+      "tradingName": "Transporte de cargas Rubro Sintético 1 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Logística"
+      ],
+      "categoryCode": "LOG",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-LOG-1"
+    },
+    {
+      "id": "FLA-SUP-LOG-02",
+      "legalName": "Serviços de viagens Rubro Sintético 2 (DEMO)",
+      "tradingName": "Serviços de viagens Rubro Sintético 2 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Logística"
+      ],
+      "categoryCode": "LOG",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-LOG-2"
+    },
+    {
+      "id": "FLA-SUP-TECH-01",
+      "legalName": "Licenciamento de software Rubro Sintético 1 (DEMO)",
+      "tradingName": "Licenciamento de software Rubro Sintético 1 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Tecnologia"
+      ],
+      "categoryCode": "TECH",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-TECH-1"
+    },
+    {
+      "id": "FLA-SUP-TECH-02",
+      "legalName": "Infraestrutura de redes Rubro Sintético 2 (DEMO)",
+      "tradingName": "Infraestrutura de redes Rubro Sintético 2 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "USD",
+      "categories": [
+        "Tecnologia"
+      ],
+      "categoryCode": "TECH",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-TECH-2"
+    },
+    {
+      "id": "FLA-SUP-STAD-01",
+      "legalName": "Limpeza e manutenção Rubro Sintético 1 (DEMO)",
+      "tradingName": "Limpeza e manutenção Rubro Sintético 1 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Serviços de estádio"
+      ],
+      "categoryCode": "STAD",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-STAD-1"
+    },
+    {
+      "id": "FLA-SUP-STAD-02",
+      "legalName": "Controle de acesso Rubro Sintético 2 (DEMO)",
+      "tradingName": "Controle de acesso Rubro Sintético 2 (DEMO)",
+      "type": "service",
+      "country": "BR",
+      "currency": "BRL",
+      "categories": [
+        "Serviços de estádio"
+      ],
+      "categoryCode": "STAD",
+      "statusTarget": "pending",
+      "registeredTaxId": null,
+      "notRealEntity": true,
+      "contactEmail": null,
+      "bankDetails": null,
+      "contractId": "FLA-CTR-STAD-2"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "FLA-CTR-SPORT-1",
+      "supplierId": "FLA-SUP-SPORT-01",
+      "categoryCode": "SPORT",
+      "start": "2026-01-01",
+      "end": "2027-12-31",
+      "currency": "BRL",
+      "ceiling": 1200000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-SPORT-2",
+      "supplierId": "FLA-SUP-SPORT-02",
+      "categoryCode": "SPORT",
+      "start": "2026-01-01",
+      "end": "2026-12-31",
+      "currency": "BRL",
+      "ceiling": 1500000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-NUTRI-1",
+      "supplierId": "FLA-SUP-NUTRI-01",
+      "categoryCode": "NUTRI",
+      "start": "2026-01-01",
+      "end": "2027-12-31",
+      "currency": "BRL",
+      "ceiling": 1450000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-NUTRI-2",
+      "supplierId": "FLA-SUP-NUTRI-02",
+      "categoryCode": "NUTRI",
+      "start": "2026-01-01",
+      "end": "2026-12-31",
+      "currency": "BRL",
+      "ceiling": 1750000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-LOG-1",
+      "supplierId": "FLA-SUP-LOG-01",
+      "categoryCode": "LOG",
+      "start": "2026-01-01",
+      "end": "2027-12-31",
+      "currency": "BRL",
+      "ceiling": 1700000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-LOG-2",
+      "supplierId": "FLA-SUP-LOG-02",
+      "categoryCode": "LOG",
+      "start": "2026-01-01",
+      "end": "2026-12-31",
+      "currency": "BRL",
+      "ceiling": 2000000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-TECH-1",
+      "supplierId": "FLA-SUP-TECH-01",
+      "categoryCode": "TECH",
+      "start": "2026-01-01",
+      "end": "2027-12-31",
+      "currency": "BRL",
+      "ceiling": 1950000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-TECH-2",
+      "supplierId": "FLA-SUP-TECH-02",
+      "categoryCode": "TECH",
+      "start": "2026-01-01",
+      "end": "2026-12-31",
+      "currency": "USD",
+      "ceiling": 180000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-STAD-1",
+      "supplierId": "FLA-SUP-STAD-01",
+      "categoryCode": "STAD",
+      "start": "2026-01-01",
+      "end": "2027-12-31",
+      "currency": "BRL",
+      "ceiling": 2200000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    },
+    {
+      "id": "FLA-CTR-STAD-2",
+      "supplierId": "FLA-SUP-STAD-02",
+      "categoryCode": "STAD",
+      "start": "2026-01-01",
+      "end": "2026-12-31",
+      "currency": "BRL",
+      "ceiling": 2500000,
+      "status": "synthetic-reference-not-uploaded",
+      "terms": "Prazo 30 dias; renovação sujeita à decisão humana",
+      "proof": "catalog-only; create a governed contract in the product before claiming an attached contract"
+    }
+  ],
+  "fxRates": {
+    "asOf": "2026-11-16",
+    "baseCurrency": "USD",
+    "known": [
+      {
+        "currency": "BRL",
+        "usdPerUnit": 0.2,
+        "source": "synthetic-assumption-not-market-rate"
+      }
+    ],
+    "pending": [
+      {
+        "currency": "EUR",
+        "reason": "intentionally-unavailable-not-zero",
+        "source": "none"
+      }
+    ]
+  },
+  "quoteCollections": [
+    {
+      "id": "QUOTES-MKT",
+      "requestScenario": "PR-SOURCING",
+      "currency": "BRL",
+      "quotes": [
+        {
+          "id": "Q-MKT-01",
+          "supplierId": "FLA-SUP-SPORT-01",
+          "amount": 260000,
+          "techScore": 8.5,
+          "commScore": 7.5
+        },
+        {
+          "id": "Q-MKT-02",
+          "supplierId": "FLA-SUP-SPORT-02",
+          "amount": 242000,
+          "techScore": 8.1,
+          "commScore": 8.8
+        }
+      ]
+    },
+    {
+      "id": "QUOTES-TECH",
+      "requestScenario": "PR-FX-MISSING",
+      "currency": "EUR",
+      "quotes": [
+        {
+          "id": "Q-TECH-01",
+          "supplierId": "FLA-SUP-TECH-01",
+          "amount": 83000,
+          "techScore": 8.9,
+          "commScore": 8.2
+        },
+        {
+          "id": "Q-TECH-02",
+          "supplierId": "FLA-SUP-TECH-02",
+          "amount": 79500,
+          "techScore": 9.1,
+          "commScore": 8.9
+        }
+      ]
+    }
+  ],
+  "caveat": "Catalog contracts are business demo inputs; supplier master/API do not imply approved contracts or actual KYC."
+}
