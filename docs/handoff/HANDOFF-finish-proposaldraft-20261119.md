@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA: 071f99fbf0e0005ad4127051b307d23f37ee1e1f (contratos; este commit acrescenta o editor nativo)
+SHA: 6bc409c0e2731cbfbe43009ab106ed672c730043 (editor; este checkpoint acrescenta instalação nativa e ajustes de retenção)
 Data: 2026-11-19
 Estado: partial
 
@@ -12,14 +12,17 @@ Estado: partial
 - Falha transitória pausa a escrita e preserva valores; negação real apaga valores. Alteração de identidade do dono limpa o estado; mudança da geração exige nova leitura.
 - A recuperação do primeiro save usa somente seu idempotencyKey original e a rota original de outcome, sem replay. O botão permanece dependente da ligação F02 estrita e da disponibilidade real.
 - CAP02 oferece entrada para uma nova proposta privada; esse botão navega para UI54 e não escreve o registro CAP02.
+- Instalação de testes em `proposals-support/host.ts` usa o factory original Operations, C08 e SQLite reais, sessão cifrada e rotas nativas. Os controles privados apenas retiram autoridade ou observam estado original.
+- Releitura da mesma base não exige nova confirmação; mudança de fonte/proposta exige confirmação. Retirada de escrita desabilita campos sem descartar valores.
 - O código de produtor e runtime/application.ts permanecem intocados.
 
 ## Pendente
 - UI54: `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/draft.tsx:1` implementado, ainda sem typecheck/gate; revisar tipos e comportamento no composto com o health original.
-- F02: `packages/client/src/sucafina/transport.ts:238` ainda recusa chave em POST de leitura. A recuperação de primeiro save requer somente no novo ID a chave original; WP5 prepara a exceção estrita com negativos. Até lá, resultado desconhecido permanece bloqueado.
-- Disponibilidade: `apps/cli/src/sucafina-product/native-ui/live-context.ts:54` precisa indexar os leitores e observar o handler/C08 original; root cuida do health e nativeReadBinding, sem readiness inventada.
+- Composição F02: WP5 publicou `f5760ad992f59d258406aa52679e469c512294e5`, com exceção fechada para a chave original de outcome. Copiar seu common/registry composto, preservando os adapters; os 4 blobs domain/client são idênticos aos desta branch.
+- Composição de disponibilidade: root publicou `56de64aba20f85804c4ae584e3940e187e011c47` com health original e os 2 IDs em 3 resources. Seu selector de namespace precisa incluir preferences/receipts; root coordena esse ajuste e os bindings C12.
 - Fixture/browser: `test/product/wp02/host-workbench.test.ts:147` e `test/product/dashboard-installed-closure/consumer-read.test.ts:64` ainda navegam no console404. Migrar para instalação nativa3000 conservando todos os fatos e negativos.
-- Contratos e UI ainda sem gate. Não há qualificação de UI ou integração afirmada.
+- `packages/app-shell/e2e/sucafina/proposals-support/host.ts:1` e `installation.ts:1`: fixture publicada; faltam os 2 cenários consumer-read e gate Playwright3000. Portar também o assert de preservar registro para o controle nativo real, sem substituí-lo por permissões JSON.
+- UI ainda sem gate. Não há qualificação de UI ou integração afirmada.
 
 ## Decisões e justificativas
 - Asserções removidas: nenhuma. Os testes legados não foram apagados ou enfraquecidos.
@@ -36,4 +39,5 @@ Estado: partial
 ## Comandos e resultados
 - `bun run typecheck`: não rodado neste checkpoint.
 - `bun run check:guards --base origin/dev`: não rodado neste checkpoint.
-- test-ci: não rodado neste checkpoint. Auditoria original [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131) falhou nos redirects do console descomissionado; essa evidência não é um gate da alteração atual.
+- Fronteira F02/codec: [44604361124](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44604361124) SUCCESS, 19 pass / 0 fail / 380 expect. Snapshot `9a541ff36821c6952aa2f5b7d0a26fef260f3ccd`, parent `f5760ad992f59d258406aa52679e469c512294e5`; essa prova cobre transporte/codec, não C08/UI.
+- Gate de navegador: não rodado neste checkpoint. Auditoria original [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131) falhou nos redirects do console descomissionado; essa evidência não é um gate da alteração atual.

@@ -177,6 +177,7 @@ export function SfHotTopicPrivateDraft(props: {
         setState("unavailable"); return
       }
       setCurrentDraft(candidate); setSourceFields(sourceOnly.fields)
+      setNeedsCurrent(!same(candidate, retained))
       setCanWrite(object(value.permissions)?.draft === true); setState("current")
     } catch { if (live()) setState("unavailable") }
     finally { if (sequence === ticket) setBusy(false) }
@@ -242,7 +243,7 @@ export function SfHotTopicPrivateDraft(props: {
     } else setValues(field, value)
     setDirty(true)
   }
-  return <section class="sf-u38-section" data-sf-private-proposal aria-label={t(key("sf.u38.privateProposal"))}>
+  return <section class="sf-u38-section" data-sf-private-proposal data-dirty={dirty()} aria-label={t(key("sf.u38.privateProposal"))}>
     <h2>{t(key("sf.u38.privateProposal"))}</h2>
     <Show when={state() !== "denied"} fallback={<p role="alert">{t(key("sf.u38.privateReadDenied"))}</p>}>
       <Show when={props.reference === "new" && !selection()}>
@@ -258,11 +259,11 @@ export function SfHotTopicPrivateDraft(props: {
       <Show when={selection()}>
         <div class="sf-u38-fields">
           <For each={names}>{(field) => <label>{t(key(("sf.u38." + field) as Key))}
-            <Show when={field !== "priority"} fallback={<select value={values.priority} disabled={busy() || state() === "unknown"} onChange={(event) => edit(field, event.currentTarget.value)}>
+            <Show when={field !== "priority"} fallback={<select value={values.priority} disabled={busy() || state() === "unknown" || !canWrite()} onChange={(event) => edit(field, event.currentTarget.value)}>
               <For each={["normal", "high", "critical"] as const}>{(value) => <option value={value}>{t(key(("sf.u38." + value) as Key))}</option>}</For>
             </select>}>
-              <Show when={field !== "notes"} fallback={<textarea value={values.notes} disabled={busy() || state() === "unknown"} onInput={(event) => edit(field, event.currentTarget.value)} />}>
-                <input type={field === "due" ? "date" : "text"} value={values[field]} disabled={busy() || state() === "unknown"} onInput={(event) => edit(field, event.currentTarget.value)} />
+              <Show when={field !== "notes"} fallback={<textarea value={values.notes} disabled={busy() || state() === "unknown" || !canWrite()} onInput={(event) => edit(field, event.currentTarget.value)} />}>
+                <input type={field === "due" ? "date" : "text"} value={values[field]} disabled={busy() || state() === "unknown" || !canWrite()} onInput={(event) => edit(field, event.currentTarget.value)} />
               </Show>
             </Show>
           </label>}</For>
@@ -282,10 +283,10 @@ export function SfHotTopicPrivateDraft(props: {
               <thead><tr><th>{t(key("sf.u38.field"))}</th><th>{t(key("sf.u38.currentSource"))}</th></tr></thead>
               <tbody><For each={names}>{(field) => <tr><td>{t(key(("sf.u38." + field) as Key))}</td><td>{sourceFields()?.[field]}</td></tr>}</For></tbody>
             </table>
-            <label><input type="checkbox" checked={reviewed()} disabled={busy() || state() !== "current"} onChange={(event) => setReviewed(event.currentTarget.checked)} />{t(key("sf.u38.acceptProposalBase"))}</label>
+            <label><input type="checkbox" checked={reviewed()} disabled={busy() || state() !== "current" || !needsCurrent()} onChange={(event) => setReviewed(event.currentTarget.checked)} />{t(key("sf.u38.acceptProposalBase"))}</label>
           </div>
         </Show>
-        <Show when={state() === "current"}><p role="status">{t(key("sf.u38.proposalCurrentLoaded"))}</p></Show>
+        <Show when={state() === "current"}><p role="status">{t(key(needsCurrent() ? "sf.u38.proposalCurrentLoaded" : "sf.u38.proposalEditsRetained"))}</p></Show>
         <Show when={!canWrite() && state() === "current"}><p role="status">{t(key("sf.u38.privateWriteUnavailable"))}</p></Show>
         <Show when={state() === "unavailable"}><p role="status">{t(key("sf.u38.privateReadUnavailable"))}</p></Show>
         <Show when={state() === "conflict"}><p role="alert">{t(key("sf.u38.sourceChanged"))}</p></Show>
