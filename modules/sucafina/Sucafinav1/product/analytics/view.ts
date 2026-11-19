@@ -452,6 +452,9 @@ export function restoreBiFocus(container: HTMLElement, selection: BiSelection | 
   const origin = typeof selection === "string" ? undefined : "reference" in selection ? selection.reference?.refDigest : selection.originDigest
   const values = Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId)
   const candidates = [
+    // Returning from a chosen source restores the visible value mark first.
+    // Table origin controls remain the fallback when that mark is not present.
+    ...values.filter((element) => element instanceof SVGElement && element.getAttribute("role") === "button"),
     ...(origin ? values.filter((element) => element.getAttribute("data-bi-origin") === origin) : []),
     ...values,
     ...Array.from(container.querySelectorAll("[data-bi-focus-fallback]")),
