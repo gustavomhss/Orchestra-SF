@@ -77,6 +77,20 @@ export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof
       url.pathname = destination
       url.search = new URLSearchParams({ ...(year ? { year } : {}), ...(month ? { month } : {}) }).toString()
     }
+    if (target.surface === "planner") {
+      url.pathname = "/orchestra/sf-planner/overview"
+      url.searchParams.delete("page")
+    } else if (target.surface === "procurement") {
+      // CAP25/CAP27 admit no year/month filter. Keep the authorized entity;
+      // its evidence period remains in the source label, never a fabricated UI filter.
+      url.search = ""
+      if (target.recordType.includes("supplier")) {
+        url.pathname = "/orchestra/sf-procurement/suppliers/r_" + Buffer.from(target.recordId, "utf8").toString("base64url")
+      } else {
+        url.pathname = "/orchestra/sf-procurement/requests"
+        if (target.recordType !== "procurement-request-selection") url.searchParams.set("request", target.recordId)
+      }
+    }
     links.push({ label: `${target.surface} · ${target.recordId} · v${target.version}${target.period ? ` · ${target.period.start} a ${target.period.end}` : ""}`, url: url.href })
   }
   return await input.business.host.revalidate(input.call) ? [...new Map(links.map((link) => [link.url, link])).values()] : []
