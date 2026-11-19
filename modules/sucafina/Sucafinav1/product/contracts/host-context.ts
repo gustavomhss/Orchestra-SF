@@ -118,6 +118,7 @@ export type CreateSfHostRuntime = (input: {
     | "dashboard.dashboard-agenda" | "dashboard.dashboard-review-preserve"
     | "reviews.review-agenda-options" | "reviews.review-agenda" | "reviews.review-preserve"
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"
+    | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
     | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision",
     producer: object) => object | undefined
   nativeActions?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp,

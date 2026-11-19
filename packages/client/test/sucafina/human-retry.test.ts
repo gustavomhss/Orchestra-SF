@@ -25,6 +25,7 @@ const key = "human-intent-0001"
 const mutation = { expectedStorageVersion: 3, idempotencyKey: key }
 const period = { start: "2027-01-01", end: "2027-12-31" }
 const caseRef = { id: "case", incarnation: "case-incarnation", version: 2 }
+const application = { caseRef, choiceId: "choice", changeId: "change", reviewDigest: "a".repeat(64) }
 const reply = { id: "thread", body: "Exact reviewed reply", mutation }
 const confirmed = {
   questionId: "question", answerRef: "answer",
@@ -93,6 +94,8 @@ const probes: ReadonlyArray<{
       comparison: { scenarioRefs: ["baseline", "candidate"], criteria: ["criterion"] },
       criteria: ["criterion"], reason: "Reviewed human choice",
     }, options) },
+  { name: "decisions.decision-apply", invoke: (transport, options) =>
+    createSfDecisionsClient(transport)["decisions.decision-apply"](application, options) },
   { name: "collaboration.thread-create", invoke: (transport, options) =>
     createSfCollaborationClient(transport)["collaboration.thread-create"]({
       draft: { kind: "review", sourceRef: "source", sourceIncarnation: "incarnation",
@@ -287,7 +290,7 @@ test("a newer intent and a terminal refusal each remove the older retry opportun
   expect(fixture.requests).toHaveLength(3)
 })
 
-test("the six native JSON commands use the verified dashboard adapter and exact original body", async () => {
+test("the seven native JSON commands retain their verified adapter and exact original body", async () => {
   const previous = Object.getOwnPropertyDescriptor(globalThis, "window")
   Object.defineProperty(globalThis, "window", {
     configurable: true, value: { location: { origin: descriptor.publicOrigin } },
@@ -319,7 +322,8 @@ test("the six native JSON commands use the verified dashboard adapter and exact 
         ? "collaboration-" + probe.name.slice("collaboration.".length)
         : probe.name.slice("decisions.".length)
       for (const request of calls) {
-        expect(request.url).toBe(descriptor.publicOrigin + "/sucafina/dashboard?sf=" + mode)
+        const surface = probe.name === "decisions.decision-apply" ? "procurement" : "dashboard"
+        expect(request.url).toBe(descriptor.publicOrigin + "/sucafina/" + surface + "?sf=" + mode)
         expect(request.init?.method).toBe("POST")
         expect(request.init?.credentials).toBe("same-origin")
         expect(request.init?.cache).toBe("no-store")
@@ -337,4 +341,39 @@ test("the six native JSON commands use the verified dashboard adapter and exact 
     if (previous) Object.defineProperty(globalThis, "window", previous)
     else Reflect.deleteProperty(globalThis, "window")
   }
+})
+
+test("C12 retry retains the reviewed application and settles the original CAS refusal", async () => {
+  const fixture = boundary()
+  await fixture.refresh()
+  const client = createSfDecisionsClient(fixture.transport)
+  expect(await client["decisions.decision-apply"](application, call())).toEqual(unknown)
+  expect(await client["decisions.decision-apply"]({
+    ...application, reviewDigest: "b".repeat(64),
+  }, retry())).toEqual(mismatch)
+  expect(await client["decisions.decision-apply"]({
+    ...application, caseRef: { ...application.caseRef, version: 3 },
+  }, retry())).toEqual(mismatch)
+  expect(await client["decisions.decision-apply"](application, {
+    ...retry(), idempotencyKey: "different-application",
+  })).toEqual(mismatch)
+  expect(fixture.requests).toHaveLength(1)
+  fixture.state.reply = async () => ({ kind: "json-response", status: 409,
+    headers: { "content-type": "application/json" },
+    body: { status: "conflict", reason: "original-case-version-changed" } })
+  const refused = await client["decisions.decision-apply"](application, retry())
+  expect(refused).toEqual({ kind: "response", status: 409,
+    headers: { "content-type": "application/json" },
+    body: { status: "conflict", reason: "original-case-version-changed" } })
+  expect(fixture.requests).toHaveLength(2)
+  for (const request of fixture.requests) {
+    if (request.kind !== "request") throw new Error("Original application request required")
+    expect(request.operationId).toBe("decisions.decision-apply")
+    expect(request.input).toEqual(application)
+    expect(request.idempotencyKey).toBe(key)
+    expect(request.bindingHandle).toBe("binding")
+    expect(request.generation).toBe(1)
+  }
+  expect(await client["decisions.decision-apply"](application, retry())).toEqual(mismatch)
+  expect(fixture.requests).toHaveLength(2)
 })

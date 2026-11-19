@@ -96,6 +96,7 @@ import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth, observeSfReviewAgendaHealth } from "./native-ui/report-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
+import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
 import type { SfStoppedRun } from "./native-execution.ts"
@@ -1012,6 +1013,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
             return { producer: productHttp, dependencies: [extended.productHttp, extended.bi, extended.bi.descriptor,
               extended.bi.source, extended.bi.source.read, extended.bi.source.revalidate, business.plannerProduct,
               business.plannerProduct.versions, business.plannerProduct.issueSource, input.persistence] }
+          } }, request, stamp),
+        observeSfDecisionApplicationHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions, source: (operationId) => {
+            if (services.productHttp !== productHttp || !identity()) return undefined
+            const producer = business.procurementDecisions
+            const operation = operationId === "decisions.decision-review" ? producer.reviewChange :
+              operationId === "decisions.decision-apply" ? producer.apply : producer.recover
+            return { producer: productHttp, dependencies: [authority, authority.ui, authority.state,
+              operationId === "decisions.decision-review" ? portfolioHttp : procurementDecisionHttp,
+              producer, operation, business.withCase, business.cases, input.persistence] }
           } }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])

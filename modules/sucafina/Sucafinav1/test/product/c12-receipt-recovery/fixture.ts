@@ -227,7 +227,10 @@ export async function createC12Fixture(scenario: string, origin: string, retaine
   }
 }
 
-export async function prepareC12Change(fixture: Awaited<ReturnType<typeof createC12Fixture>>) {
+export async function prepareC12Change(
+  fixture: Pick<Awaited<ReturnType<typeof createC12Fixture>>, "storedCase" | "evidence" | "authority" | "request" | "http" | "material">,
+  actor: { principalRef: string; participants: readonly string[] } = { principalRef: "alice", participants: ["alice", "bob"] },
+) {
   const current = await fixture.storedCase()
   const ref = fixture.evidence
   const operation: ScenarioOperation = { kind: "replace", targetRef: ref.refId, amount: 150, currency: "USD", period }
@@ -235,8 +238,8 @@ export async function prepareC12Change(fixture: Awaited<ReturnType<typeof create
   // Persisted decision fixture with explicit pending coverage. No model, Session or
   // SkillLoadReceipt is fabricated; all preparation/review/apply consumers below are real.
   const result: ScenarioResult = { id: "fixture-result", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [ref], unresolvedConditions: ["Coverage pending in seeded decision"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 150, total: null, costCoverage: { basisId: basis.id, basisVersion: basis.version, alternativeId: "fixture-alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: ["Coverage pending"], evaluatedSourceRefs: [ref], coverageState: "pending", entries: [{ status: "pending", categoryId: "purchase", reason: "Fixture has no complete cost assertion" }], derivedMissingCategoryIds: ["purchase"] } }
-  const seeded: DecisionCase = { ...current.value, version: current.value.version + 1, state: "chosen", participants: ["alice", "bob"], alternatives: [{ id: "fixture-alternative", version: 1, title: "Explicit amount replacement", scenario: { baseRef: ref.refId, operations: [operation], assumptions: [] }, result }], costCoverageBases: [basis] }
-  const choice = createChoiceSnapshot({ case: seeded, alternativeId: "fixture-alternative", alternativeVersion: 1, comparison: { baselineResultRef: "fixture-baseline", alternativeResultRef: result.id, costCoverageRefs: [], criterionResults: [], unresolvedConditions: result.unresolvedConditions, comparisonStatus: "conditioned", knownDifference: 50, completeDifference: null }, criteria: seeded.criteria.map((criterion) => criterion.id), values: [], evidenceRefs: [ref], id: "fixture-choice", principalRef: "alice", reason: "Review and apply explicit persisted choice", at: initialAt })
+  const seeded: DecisionCase = { ...current.value, version: current.value.version + 1, state: "chosen", participants: actor.participants, alternatives: [{ id: "fixture-alternative", version: 1, title: "Explicit amount replacement", scenario: { baseRef: ref.refId, operations: [operation], assumptions: [] }, result }], costCoverageBases: [basis] }
+  const choice = createChoiceSnapshot({ case: seeded, alternativeId: "fixture-alternative", alternativeVersion: 1, comparison: { baselineResultRef: "fixture-baseline", alternativeResultRef: result.id, costCoverageRefs: [], criterionResults: [], unresolvedConditions: result.unresolvedConditions, comparisonStatus: "conditioned", knownDifference: 50, completeDifference: null }, criteria: seeded.criteria.map((criterion) => criterion.id), values: [], evidenceRefs: [ref], id: "fixture-choice", principalRef: actor.principalRef, reason: "Review and apply explicit persisted choice", at: initialAt })
   if (choice.status !== "ok") throw new Error(`typed choice fixture invalid: ${choice.reason}`)
   const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: seeded.id, targetIncarnation: seeded.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue({ seeded, choice: choice.choice }) }, async (state) => { state.cases[seeded.id] = { ...seeded, choices: [choice.choice] }; return { commit: true, value: true } })
   if (saved.status !== "ok") throw new Error(`decision fixture persistence unavailable: ${saved.status}`)

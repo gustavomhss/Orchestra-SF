@@ -16,6 +16,7 @@ import {
 } from "../../shared/change-review"
 import { SfReceiptView, type SfReceipt } from "../../shared/receipt"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { sfOperationReady } from "../cases/model"
 import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/context"
 import type { SF_U18_COPY } from "@/i18n/orchestra-chapters/sf-u18"
@@ -51,6 +52,12 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
   let writeAbort: AbortController | undefined
   let serial = 0
   let mutationFence = 0
+  let applyIntent: {
+    input: Parameters<ReturnType<typeof createSfDecisionsClient>["decisions.decision-apply"]>[0]
+    key: string
+    generation: number
+    transport: SfTransport
+  } | undefined
 
   const initialChangeRef = () => props.route.kind === "entry" ? props.route.params.changeRef : null
   const selected = () => view.caseData?.preparedChanges.find((item) => item.id ===
@@ -65,6 +72,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     readAbort?.abort()
     writeAbort?.abort()
     mutationFence++
+    applyIntent = undefined
     setView({
       state, caseData: null, selectedChangeId: null, review: null,
       reviewIntent: null, busy: false, applyOutcome: null,
@@ -219,8 +227,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
       change.caseVersion === data.version &&
       review.expectedVersion === change.expectedVersion &&
       review.changeId === change.id && review.choiceId === change.choiceId &&
-      !review.receipt && !view.busy && !view.outcomeUnknown && active() === "ready" &&
-      change.preview.costCoverage.coverageState === "complete")
+      !review.receipt && !view.busy && !view.outcomeUnknown && active() === "ready")
   }
   const coverage = (): SfCoverage => selected() ? u18Coverage(selected()!.preview.costCoverage) :
     { state: "unavailable", summary: u18Message("sf.u18.choice.coverage"), reasons: [], knownCount: null, expectedCount: null }
@@ -247,34 +254,49 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     }]
   }
 
-  const apply = async () => {
+  const apply = async (retry = false) => {
     const r = view.review
     const change = selected()
     const data = view.caseData
     const ready = owner.ready()
-    if (!reviewAllowed() || !r || !change || !data || !ready || !operationGranted("decisions.decision-apply")) return
+    if (!ready || view.busy || privateState() || !operationGranted("decisions.decision-apply")) return
+    if (retry) {
+      if (!view.outcomeUnknown || !applyIntent || applyIntent.transport !== ready.transport ||
+        applyIntent.generation !== owner.generation()) return
+    } else {
+      if (!reviewAllowed() || !r || !change || !data) return
+      applyIntent = {
+        input: { caseRef: { id: data.id, incarnation: data.incarnation, version: data.version },
+          choiceId: r.choiceId, changeId: r.changeId, reviewDigest: r.reviewDigest },
+        key: crypto.randomUUID(), generation: owner.generation(), transport: ready.transport,
+      }
+    }
+    const intent = applyIntent
+    if (!intent) return
     const controller = new AbortController()
     writeAbort = controller
     const fence = ++mutationFence
     const generation = owner.generation()
-    const operationRef = crypto.randomUUID()
-    setView({ busy: true, operationRef })
+    setView({ busy: true, operationRef: intent.key })
     try {
       const result = await createSfDecisionsClient(ready.transport)["decisions.decision-apply"](
-        { caseRef: { id: data.id, incarnation: data.incarnation, version: data.version },
-          choiceId: r.choiceId, changeId: r.changeId, reviewDigest: r.reviewDigest },
-        { signal: controller.signal, idempotencyKey: operationRef },
+        intent.input,
+        { signal: controller.signal, idempotencyKey: intent.key, ...(retry ? { retry: "same-intent" as const } : {}) },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
         const value = result.body.value
+        applyIntent = undefined
         setView({
-          applyOutcome: value, review: null,
+          applyOutcome: value, review: null, outcomeUnknown: false,
           state: value.outcome === "applied" ? "ready" : value.outcome === "conflict" ? "conflict" : "partial",
         })
       } else if (result.kind === "response") {
         if (result.status >= 500) setView({ outcomeUnknown: true, state: "outcome-unknown" })
-        else setView({ state: u18PortState(result), review: null })
+        else {
+          applyIntent = undefined
+          setView({ state: u18PortState(result), review: null, outcomeUnknown: false })
+        }
       } else {
         console.error("N25 UI39 apply unconfirmed", result.reason)
         setView({ outcomeUnknown: true, state: u18TransportState(result) })
@@ -309,8 +331,10 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
-        setView({ applyOutcome: result.body.value, outcomeUnknown: false,
+        applyIntent = undefined
+        setView({ applyOutcome: result.body.value, outcomeUnknown: false, review: null,
           state: result.body.value.outcome === "applied" ? "ready" : result.body.value.outcome === "conflict" ? "conflict" : "partial" })
+        await read()
       } else if (result.kind === "response") {
         const state = u18PortState(result)
         if (state === "denied" || state === "session-expired") clearPrivate(state)
@@ -447,11 +471,19 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
         </>}
       </Show>
     </SfStatePanel>
-    <Show when={view.outcomeUnknown && active() === "outcome-unknown"}>
+    <Show when={view.outcomeUnknown && applyIntent && !privateState()}>
+      <button type="button" class="mx-btn"
+        disabled={view.busy || !operationGranted("decisions.decision-apply") ||
+          applyIntent?.transport !== owner.ready()?.transport || applyIntent?.generation !== owner.generation()}
+        onClick={() => void apply(true)}>
+        {t("sf.u18.changes.retry")}
+      </button>
+    </Show>
+    <Show when={selected() && view.caseData && !privateState()}>
       <button type="button" class="mx-btn"
         disabled={view.busy || !operationGranted("decisions.decision-recover")}
         onClick={() => void reconcile()}>
-        decisions.decision-recover
+        {t("sf.u18.changes.recover")}
       </button>
     </Show>
   </SfPageFrame>
