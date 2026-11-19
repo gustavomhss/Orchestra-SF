@@ -972,7 +972,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
           humanActions: authority.humanActions, source: (operationId) => {
             const assets = input.assets
             if (services.productHttp !== productHttp || !identity() || !documents || !assets ||
-              assets.persistence !== input.persistence || assets.services.signingKey.byteLength < 32) return undefined
+              !Object.is(assets.persistence, input.persistence) || assets.services.signingKey.byteLength < 32) return undefined
             const source = documents.documents
             const operation = operationId === "files.document-requests" ? documents.discoverRequests :
               operationId === "files.document-sources" ? documents.discover :
@@ -995,7 +995,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
           humanActions: authority.humanActions, source: () => {
             const assets = input.assets
             if (services.productHttp !== productHttp || !identity() || !imports || !assets ||
-              assets.persistence !== input.persistence || typeof assets.services.scan !== "function") return undefined
+              !Object.is(assets.persistence, input.persistence) || typeof assets.services.scan !== "function") return undefined
             return { producer: productHttp, service: imports, scan: assets.services.scan, dependencies: [importHttp, imports, imports.imports,
               imports.discover, imports.prepareTarget, imports.dispatch, imports.imports.admit, imports.imports.preview,
               imports.imports.readPreviewReference, imports.imports.detail, imports.imports.apply,
