@@ -694,6 +694,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           {id:"currency",labelKey:k("sf.u12.quoteCurrency"),align:"start",widthPolicy:{kind:"content",minPx:60,maxPx:120},render:(quote)=><>{quote.currency??""}</>},
           {id:"total",labelKey:k("sf.u12.quoteTotal"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:170},render:(quote)=><>{asString(quote.total)||t("sf.u12.missing")}</>},
           {id:"baseFx",labelKey:k("sf.u12.baseFx"),align:"end",widthPolicy:{kind:"content",minPx:220,maxPx:360},render:(quote)=><>{fxRow(quote)?.baseFxText??t("sf.u12.missing")}</>},
+          {id:"rank",labelKey:k("sf.u12.rank"),align:"end",widthPolicy:{kind:"content",minPx:56,maxPx:88},render:(quote)=>{
+            const rank=fxRow(quote)?.rank
+            return <>{typeof rank==="number"?String(rank):""}</>
+          }},
+          {id:"excluded",labelKey:k("sf.u12.excludedReason"),align:"start",widthPolicy:{kind:"content",minPx:140,maxPx:360},render:(quote)=>{
+            const reason=fxRow(quote)?.excludedReason
+            return <>{typeof reason==="string"?reason:""}</>
+          }},
           {id:"qty",labelKey:k("sf.u12.quoteQty"),align:"end",widthPolicy:{kind:"content",minPx:85,maxPx:140},render:(quote)=><>{asString(quote.qty)||t("sf.u12.missing")}</>},
           {id:"unitPrice",labelKey:k("sf.u12.quotePrice"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:160},render:(quote)=><>{asString(quote.unitPrice)||t("sf.u12.missing")}</>},
           {id:"scores",labelKey:k("sf.u12.quoteScores"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:260},render:(quote)=><>{scoreCopy(quote,"scores")}</>},
