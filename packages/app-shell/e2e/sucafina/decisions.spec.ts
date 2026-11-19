@@ -177,7 +177,7 @@ test("CI-UI-DECISIONS — recover a lost creation response by reading the same c
       expect(requests).toHaveLength(1)
       // Leave the uncertain form and reconcile by authorized reads, not another mutation.
       page.once("dialog", (dialog) => dialog.accept())
-      await reconcileCreationByRead(page, reference)
+      await reconcileCreationByRead(page, reference, observations)
       await reopenCase(page, reference, objective)
       await assertCase(page, reference, objective, 1)
       await page.reload()
