@@ -180,3 +180,5 @@ Estado: partial
 - [44627042253](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627042253): SUCCESS da extração somente leitura do artifact14577399208. Confirma mensagem de fonte indisponível; artifact não contém traceZIP (0arquivos), portanto não permite concluir qual campo divergiu.
 - Pendente: packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx:56 (causa da cobertura), review-flow.ts:302 (readback/CAS ainda não alcançados), review-flow.ts:332 (Office real/GETdownload não qualificado). Asserções removidas: nenhuma. Timeouts inalterados.
 - Retomar com reports.spec.ts na composição que contém estes2arquivos. Registrar resultado e diagnóstico antes de mudar qualquer guard de acesso.
+
+- Ajuste de observação no código4605a2df080381164707ae1e9408a9cfcb83c261: parser do diagnóstico não impede entrega da resposta original; leitura inválida limpa o stamp observado e registra indisponibilidade do diagnóstico. As verificações funcionais continuam consumindo os bytes originais e falham normalmente.
