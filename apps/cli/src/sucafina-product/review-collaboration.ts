@@ -1,4 +1,4 @@
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { canonicalSfValue, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -144,11 +144,12 @@ export function createSfReviewCollaboration(input: {
 
 /** Scope boundary, not an authorization substitute: actual reviews.read above
  * still reopens every source and C08 receipt under the current request. */
-function localRecordReview(review: PreservedReview) {
+export function localRecordReview(review: PreservedReview) {
   const sourceTypes = ["dashboard-page", "hotTopics", "opexOwners", "capexProjects", "members", "leaders", "projects", "opsTickets",
     "secKpi", "risks", "contracts", "stakeholders", "itperf-item"]
   if (!review.sourceRefs.length || review.comments.length || review.sourceRefs.some((source) => source.surface !== "dashboard" || !sourceTypes.includes(source.type))) return false
   let budget = 20_000
+  const evidence = new Map<string, number>()
   const visit = (value: unknown, depth = 0): boolean => {
     if (--budget < 0 || depth > 24) return false
     if (!value || typeof value !== "object") return true
@@ -158,7 +159,15 @@ function localRecordReview(review: PreservedReview) {
       "sensitivity" in value && value.sensitivity !== undefined) return false
     if ("schema" in value && value.schema === "sf-evidence-v1" && (!("kind" in value) || value.kind !== "record" ||
       !("target" in value) || object(value.target).surface !== "dashboard" || !sourceTypes.includes(String(object(value.target).recordType)))) return false
-    return Object.values(value).every((entry) => visit(entry, depth + 1))
+    // Repeated cells/charts carry copies of the same complete record evidence.
+    // Reuse only a successful structural visit in this invocation, at an equal
+    // or deeper placement. A deeper occurrence must still prove the depth cap.
+    // Every occurrence above spends budget; source/receipt authority is separate.
+    const canonical = "schema" in value && value.schema === "sf-evidence-v1" ? canonicalSfValue(value) : undefined
+    if (canonical !== undefined && (evidence.get(canonical) ?? -1) >= depth) return true
+    const accepted = Object.values(value).every((entry) => visit(entry, depth + 1))
+    if (accepted && canonical !== undefined) evidence.set(canonical, depth)
+    return accepted
   }
   return visit(review)
 }

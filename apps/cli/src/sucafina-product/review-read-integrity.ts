@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { canonicalSfValue, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -185,9 +185,10 @@ export function protectSfReviewReads(input: {
 }
 
 /** External/native outcomes, comments and document readers retain the full producer path. */
-function snapshotBoundReview(review: PreservedReview) {
+export function snapshotBoundReview(review: PreservedReview) {
   if (review.comments.length) return false
   let remaining = 20_000
+  const evidence = new Map<string, number>()
   const visit = (value: unknown, depth = 0): boolean => {
     if (depth > 24 || --remaining < 0) return false
     if (!value || typeof value !== "object") return true
@@ -200,7 +201,15 @@ function snapshotBoundReview(review: PreservedReview) {
     if ("schema" in value && value.schema === "sf-evidence-v1" &&
       (!("kind" in value) || value.kind !== "record" || !("target" in value) || !value.target || typeof value.target !== "object" ||
        !("surface" in value.target) || !["dashboard", "planner", "procurement"].includes(String(value.target.surface)))) return false
-    return Object.values(value).every((entry) => visit(entry, depth + 1))
+    // Repeated cells/charts carry copies of the same complete record evidence.
+    // Reuse only a successful structural visit in this invocation, at an equal
+    // or deeper placement. A deeper occurrence must still prove the depth cap.
+    // Every occurrence above spends budget; source/receipt authority is separate.
+    const canonical = "schema" in value && value.schema === "sf-evidence-v1" ? canonicalSfValue(value) : undefined
+    if (canonical !== undefined && (evidence.get(canonical) ?? -1) >= depth) return true
+    const accepted = Object.values(value).every((entry) => visit(entry, depth + 1))
+    if (accepted && canonical !== undefined) evidence.set(canonical, depth)
+    return accepted
   }
   return visit(review)
 }
