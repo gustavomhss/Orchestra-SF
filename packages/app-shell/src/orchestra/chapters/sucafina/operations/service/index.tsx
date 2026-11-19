@@ -620,11 +620,11 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       ] : []}
       tabs={[]}
       activeTab={null}
-      primaryAction={can("save-tickets") ? {
+      primaryAction={{
         id: "update-month", labelKey: sourceKey("primary"), tone: "primary",
-        disabled: state.submitting, busy: state.submitting,
+        disabled: !can("save-tickets") || state.submitting, busy: state.submitting,
         onInvoke: () => openEditor("save-tickets"),
-      } : undefined}
+      }}
       secondaryActions={[]}
       density="comfortable"
       layout="work"
@@ -679,8 +679,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                 </thead>
                 <tbody>
                   <For each={(state.page!.data.opsTickets ?? []).filter(
-                    (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
-                  )}>
+                    (row) => row.year === state.page!.selection.year,
+                  ).slice().sort((a, b) => Number(a.month) - Number(b.month))}>
                     {(row) => (
                       <tr><th scope="row">{serviceString(row.month)}</th>
                         <For each={serviceTicketKeys(state.page!)}>{(key) => (
@@ -692,11 +692,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                 </tbody>
               </table>
             </div>
-            <Show when={(state.page!.data.opsTickets ?? []).filter(
-              (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
-            ).length === 0}>
-              <p>{t((state.page!.data.opsTickets ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
-            </Show>
+            <Show when={(state.page!.data.opsTickets ?? []).length === 0}><p>{t(commonKey("empty"))}</p></Show>
             <h3>{t(sourceKey("section.openedClosed"))}</h3>
             <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.openedClosed"))} tabindex="0">
               <table>
@@ -706,21 +702,21 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   <th scope="col">{t(sourceKey("table.closed"))}</th>
                 </tr></thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">{state.page!.selection.month}</th>
-                    <td>{state.page!.data.display?.opened[state.page!.selection.month - 1] == null
-                      ? t(sourceKey("table.noData")) : String(state.page!.data.display!.opened[state.page!.selection.month - 1])}</td>
-                    <td>{state.page!.data.display?.closed[state.page!.selection.month - 1] == null
-                      ? t(sourceKey("table.noData")) : String(state.page!.data.display!.closed[state.page!.selection.month - 1])}</td>
-                  </tr>
+                  <For each={SERVICE_MONTHS}>{(month) => (
+                    <tr>
+                      <th scope="row">{month}</th>
+                      <td>{state.page!.data.display?.opened[month - 1] == null
+                        ? t(sourceKey("table.noData")) : String(state.page!.data.display!.opened[month - 1])}</td>
+                      <td>{state.page!.data.display?.closed[month - 1] == null
+                        ? t(sourceKey("table.noData")) : String(state.page!.data.display!.closed[month - 1])}</td>
+                    </tr>
+                  )}</For>
                 </tbody>
               </table>
             </div>
-            <Show when={can("save-tickets")}>
-              <button type="button" onClick={() => openEditor("save-tickets")}>
-                {t(sourceKey("action.save-tickets"))}
-              </button>
-            </Show>
+            <button type="button" disabled={!can("save-tickets")} onClick={() => openEditor("save-tickets")}>
+              {t(sourceKey("action.save-tickets"))}
+            </button>
           </section>
 
           <section aria-labelledby="sf-cap11-sla-title">
@@ -734,8 +730,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                 </tr></thead>
                 <tbody>
                   <For each={(state.page!.data.opsSLA ?? []).filter(
-                    (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
-                  )}>
+                    (row) => row.year === state.page!.selection.year,
+                  ).slice().sort((a, b) => Number(a.month) - Number(b.month))}>
                     {(row) => <tr><th scope="row">{serviceString(row.month)}</th>
                       <For each={SERVICE_SLA_FIELDS}>{(key) =>
                         <td>{row[key] == null ? t(sourceKey("table.noData")) : String(row[key])}</td>}
@@ -755,7 +751,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   <th scope="col">{t(sourceKey("table.availability"))}</th>
                 </tr></thead>
                 <tbody>
-                  <For each={[state.page!.selection.month]}>{(month) => {
+                  <For each={SERVICE_MONTHS}>{(month) => {
                     const row = (state.page!.data.opsSLA ?? []).find((source) =>
                       source.year === state.page!.selection.year && source.month === month)
                     return <tr>
@@ -768,11 +764,9 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                 </tbody>
               </table>
             </div>
-            <Show when={can("save-sla")}>
-              <button type="button" onClick={() => openEditor("save-sla")}>
-                {t(sourceKey("action.save-sla"))}
-              </button>
-            </Show>
+            <button type="button" disabled={!can("save-sla")} onClick={() => openEditor("save-sla")}>
+              {t(sourceKey("action.save-sla"))}
+            </button>
           </section>
 
           <section aria-labelledby="sf-cap11-heat-title">
@@ -780,20 +774,22 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.heatmap"))} tabindex="0">
               <table>
                 <thead><tr><th>{t(sourceKey("table.item"))}</th>
-                  <th scope="col">{state.page!.selection.month}</th>
+                  <For each={SERVICE_MONTHS}>{(month) => <th scope="col">{month}</th>}</For>
                 </tr></thead>
                 <tbody>
                   <For each={serviceItems(state.page!)}>{(item) => (
                     <tr><th scope="row">{item}</th>
-                      <td>{(() => {
+                      <For each={SERVICE_MONTHS}>{(month) => {
                         const row = (state.page!.data.opsHeatmap ?? []).find(
                           (candidate) => candidate.year === state.page!.selection.year &&
-                            candidate.month === state.page!.selection.month && candidate.item === item,
+                            candidate.month === month && candidate.item === item,
                         )
-                        if (!row) return t(sourceKey("table.noData"))
-                        const figures = [row.p1 ?? "", row.p2 ?? "", row.tickets ?? ""].join("/")
-                        return row.comments ? <span title={serviceString(row.comments)}>{figures}</span> : <span>{figures}</span>
-                      })()}</td>
+                        return <td>{row ? (
+                          <span title={serviceString(row.comments)}>
+                            {[row.p1 ?? "", row.p2 ?? "", row.tickets ?? ""].join("/")}
+                          </span>
+                        ) : t(sourceKey("table.noData"))}</td>
+                      }}</For>
                     </tr>
                   )}</For>
                 </tbody>
@@ -801,11 +797,9 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             </div>
             <div class="sf-ops-actions">
               <For each={serviceItems(state.page!)}>{(item) => (
-                <Show when={can("save-heatmap")}>
-                  <button type="button" onClick={() => openEditor("save-heatmap", item)}>
-                    {t(sourceKey("action.save-heatmap"))} — {item}
-                  </button>
-                </Show>
+                <button type="button" disabled={!can("save-heatmap")} onClick={() => openEditor("save-heatmap", item)}>
+                  {t(sourceKey("action.save-heatmap"))} — {item}
+                </button>
               )}</For>
             </div>
           </section>
@@ -817,26 +811,20 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
               <dt>{t(sourceKey("field.opsHmItems.label"))}</dt>
               <dd>{serviceItems(state.page!).join(", ")}</dd></dl>
             <div class="sf-ops-actions">
-              <Show when={can("save-categories")}>
-                <button type="button" onClick={() => openEditor("save-categories")}>
-                  {t(sourceKey("action.save-categories"))} — {t(sourceKey("field.opsCats.label"))}
-                </button>
-              </Show>
-              <Show when={can("save-items")}>
-                <button type="button" onClick={() => openEditor("save-items")}>
-                  {t(sourceKey("action.save-items"))} — {t(sourceKey("field.opsHmItems.label"))}
-                </button>
-              </Show>
+              <button type="button" disabled={!can("save-categories")} onClick={() => openEditor("save-categories")}>
+                {t(sourceKey("action.save-categories"))} — {t(sourceKey("field.opsCats.label"))}
+              </button>
+              <button type="button" disabled={!can("save-items")} onClick={() => openEditor("save-items")}>
+                {t(sourceKey("action.save-items"))} — {t(sourceKey("field.opsHmItems.label"))}
+              </button>
             </div>
           </section>
 
           <section aria-labelledby="sf-cap11-import-title">
             <h2 id="sf-cap11-import-title">{t(sourceKey("section.import"))}</h2>
-            <Show when={can("import-month")}>
-              <button type="button" onClick={() => openEditor("import-month")}>
-                {t(sourceKey("action.import-month"))}
-              </button>
-            </Show>
+            <button type="button" disabled={!can("import-month")} onClick={() => openEditor("import-month")}>
+              {t(sourceKey("action.import-month"))}
+            </button>
           </section>
 
           <Show when={state.operationState === "conflict"}>

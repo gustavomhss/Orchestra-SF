@@ -46,36 +46,17 @@ export function securityKpi(page: SfSecurityPage) {
   return (page.data.secKpi ?? []).find((row) =>
     row.year === page.selection.year && row.month === page.selection.month)
 }
-function periodStamp(year: number, month: number) {
-  return year * 12 + month
-}
-function yearMonth(value: string | null | undefined) {
-  if (typeof value !== "string") return null
-  const match = /^(\d{4})-(\d{2})-\d{2}$/.exec(value)
-  if (!match) return null
-  const year = Number(match[1])
-  const month = Number(match[2])
-  return month >= 1 && month <= 12 ? periodStamp(year, month) : null
-}
 export function securityActions(page: SfSecurityPage) {
-  // Action rows have no period field. Callers must not present them as the selected month.
+  // These are the producer's current action records, not a selected-year archive.
   return page.data.secActions ?? []
 }
 export function securityIncidents(page: SfSecurityPage) {
-  const prefix = String(page.selection.year) + "-" + String(page.selection.month).padStart(2, "0")
   return (page.data.secIncidents ?? []).filter((row) =>
-    typeof row.date === "string" && row.date.startsWith(prefix))
+    typeof row.date === "string" && row.date.startsWith(String(page.selection.year)))
 }
 export function securityCampaigns(page: SfSecurityPage) {
-  const stamp = periodStamp(page.selection.year, page.selection.month)
-  return (page.data.secPhishing ?? []).filter((row) => {
-    const start = yearMonth(row.start)
-    const end = yearMonth(row.end)
-    if (start === null && end === null) return false
-    const from = start ?? end!
-    const to = end ?? start!
-    return from <= stamp && stamp <= to
-  })
+  // Campaign records are current, not a fabricated snapshot for the KPI year.
+  return page.data.secPhishing ?? []
 }
 export function securityRow(page: SfSecurityPage, kind: SecurityEntity, id: string) {
   if (kind === "kpi")

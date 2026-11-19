@@ -16,7 +16,7 @@ import {
   SECURITY_CAMPAIGN_FIELDS, SECURITY_CONSEQUENCES,
   SECURITY_DEPARTMENT_FIELDS, SECURITY_INCIDENT_FLAGS, SECURITY_KPI_FIELDS,
   SECURITY_MONTHS, SECURITY_OPERATION_IDS, SECURITY_YEARS,
-  securityCampaigns, securityIncidents, securityKpi,
+  securityActions, securityCampaigns, securityIncidents, securityKpi,
   securityRow, securityString, securityVersion,
 } from "./model"
 import type { SfSecurityPage, SecurityCommand, SecurityEntity } from "./model"
@@ -166,8 +166,9 @@ function securityReadState(page: SfSecurityPage): "ready" | "empty" | "filtered-
     ...(page.data.secIncidents ?? []), ...(page.data.secPhishing ?? []),
   ]
   if (records.length === 0) return "empty"
-  if ((page.data.secKpi ?? []).some((row) => row.year === page.selection.year && row.month === page.selection.month) ||
-    securityIncidents(page).length || securityCampaigns(page).length) return "ready"
+  if ((page.data.secActions ?? []).length || (page.data.secPhishing ?? []).length ||
+    (page.data.secKpi ?? []).some((row) => row.year === page.selection.year) ||
+    (page.data.secIncidents ?? []).some((row) => row.date?.startsWith(String(page.selection.year)))) return "ready"
   return "filtered-empty"
 }
 
@@ -191,13 +192,6 @@ function formFields(editor: SecurityEditor, value: FormValues): SfReviewField[] 
 export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const language = useLanguage()
   const t = (copy: SfCopyKey) => language.t(copy as Parameters<typeof language.t>[0])
-  const shownDate = (value: string) => {
-    const iso = value.slice(0, 10)
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
-    const date = new Date(iso + "T00:00:00Z")
-    if (!Number.isFinite(date.getTime())) return value
-    return new Intl.DateTimeFormat(language.intl(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
-  }
   const owner = useSfContext()
   const [state, setState] = createStore<SecurityView>({
     state: "loading", page: undefined,
@@ -693,12 +687,12 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       ] : []}
       tabs={[]}
       activeTab={null}
-      primaryAction={can("save-kpi") ? {
+      primaryAction={{
         id: "security-reference", labelKey: key("primary"),
         tone: "primary", busy: state.submitting,
-        disabled: state.submitting,
+        disabled: !can("save-kpi") || state.submitting,
         onInvoke: () => openEditor("kpi", rowId(state.page ? securityKpi(state.page) : undefined)),
-      } : undefined}
+      }}
       secondaryActions={[]}
       density="comfortable"
       layout="work"
@@ -764,7 +758,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                         <th scope="col">{t(key("field." + name + ".label"))}</th>}
                       </For>
                     </tr></thead>
-                    <tbody><For each={[state.page!.selection.month]}>{(month) => {
+                    <tbody><For each={SECURITY_MONTHS}>{(month) => {
                       const source = (state.page!.data.secKpi ?? []).find((row) =>
                         row.year === state.page!.selection.year && row.month === month)
                       return <tr>
@@ -785,8 +779,8 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                 </tr></thead>
                 <tbody>
                   <For each={(state.page!.data.secKpi ?? []).filter(
-                    (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
-                  )}>
+                    (row) => row.year === state.page!.selection.year,
+                  ).slice().sort((a, b) => Number(a.month) - Number(b.month))}>
                     {(row) => <tr><th scope="row">{securityString(row.month)}</th>
                       <For each={SECURITY_KPI_FIELDS}>{(name) =>
                         <td>{row[name] == null ? t(key("table.noData")) : String(row[name])}</td>
@@ -796,19 +790,17 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                 </tbody>
               </table>
             </div>
-            <Show when={(state.page!.data.secKpi ?? []).filter(
-              (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
-            ).length === 0}>
-              <p>{t((state.page!.data.secKpi ?? []).length === 0 ? common("empty") : common("filterEmpty"))}</p>
+            <Show when={(state.page!.data.secKpi ?? []).length === 0}>
+              <p>{t(common("empty"))}</p>
             </Show>
             <div class="sf-security-actions">
-              <Show when={can("save-kpi")}>
-                <button type="button" onClick={() => openEditor("kpi", rowId(securityKpi(state.page!)))}>
-                  {t(key("action.save-kpi"))}
-                </button>
-              </Show>
-              <Show when={securityKpi(state.page!) && can("delete-kpi")}>
-                <button type="button" onClick={() => openEditor("kpi", rowId(securityKpi(state.page!)), true)}>
+              <button type="button" disabled={!can("save-kpi")}
+                onClick={() => openEditor("kpi", rowId(securityKpi(state.page!)))}>
+                {t(key("action.save-kpi"))}
+              </button>
+              <Show when={securityKpi(state.page!)}>
+                <button type="button" disabled={!can("delete-kpi")}
+                  onClick={() => openEditor("kpi", rowId(securityKpi(state.page!)), true)}>
                   {t(key("action.delete-kpi"))}
                 </button>
               </Show>
@@ -846,85 +838,86 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                     )}</For></tbody>
                   </table>
                 </div>
-                <Show when={can("save-campaign") || can("delete-campaign")}>
-                  <div class="sf-security-actions">
-                    <Show when={can("save-campaign")}>
-                      <button type="button" onClick={() => openEditor("campaign", rowId(campaign))}>
-                        {t(common("edit"))}
-                      </button>
-                    </Show>
-                    <Show when={can("delete-campaign")}>
-                      <button type="button" onClick={() => openEditor("campaign", rowId(campaign), true)}>
-                        {t(key("action.delete-campaign"))}
-                      </button>
-                    </Show>
-                  </div>
-                </Show>
+                <div class="sf-security-actions">
+                  <button type="button" disabled={!can("save-campaign")}
+                    onClick={() => openEditor("campaign", rowId(campaign))}>
+                    {t(common("edit"))}
+                  </button>
+                  <button type="button" disabled={!can("delete-campaign")}
+                    onClick={() => openEditor("campaign", rowId(campaign), true)}>
+                    {t(key("action.delete-campaign"))}
+                  </button>
+                </div>
               </article>
             )}</For>
-            <Show when={securityCampaigns(state.page!).length === 0}>
-              <p>{t((state.page!.data.secPhishing ?? []).length === 0 ? common("empty") : common("filterEmpty"))}</p>
-            </Show>
-            <Show when={can("save-campaign")}>
-              <button type="button" onClick={() => openEditor("campaign")}>
-                {t(key("action.add-campaign"))}
-              </button>
-            </Show>
+            <Show when={securityCampaigns(state.page!).length === 0}><p>{t(common("empty"))}</p></Show>
+            <button type="button" disabled={!can("save-campaign")} onClick={() => openEditor("campaign")}>
+              {t(key("action.add-campaign"))}
+            </button>
           </section>
 
           <section aria-labelledby="sf-cap12-incidents">
             <h2 id="sf-cap12-incidents">{t(key("section.incidents"))}</h2>
-            <p>{t(key("table.openIncidents"))}: {securityIncidents(state.page!).filter((incident) =>
-              !(incident.contained && incident.remediated && incident.rootCause)).length}</p>
+            <Show when={state.page!.data.display?.openIncidents != null}>
+              <p>{t(key("table.openIncidents"))}: {state.page!.data.display!.openIncidents}</p>
+            </Show>
             <div class="sf-security-table" role="region" aria-label={t(key("section.incidents"))} tabindex="0">
               <table><thead><tr>
                 <th>{t(key("field.title.label"))}</th>
                 <th>{t(key("field.date.label"))}</th>
                 <th>{t(key("table.status"))}</th>
                 <th>{t(key("table.impact"))}</th>
-                <Show when={can("save-incident") || can("delete-incident")}>
-                  <th>{t(common("edit"))}</th>
-                </Show>
+                <th>{t(common("edit"))}</th>
               </tr></thead><tbody>
                 <For each={securityIncidents(state.page!)}>{(incident) => (
                   <tr><th scope="row">{securityString(incident.title)}</th>
-                    <td><time dateTime={securityString(incident.date)}>{shownDate(securityString(incident.date))}</time></td>
+                    <td><time dateTime={securityString(incident.date)}>{securityString(incident.date)}</time></td>
                     <td>{incident.contained && incident.remediated && incident.rootCause ?
                       t(key("table.done")) : t(key("table.open"))}</td>
                     <td>{securityString(incident.impact)}</td>
-                    <Show when={can("save-incident") || can("delete-incident")}>
-                      <td><div class="sf-security-actions">
-                        <Show when={can("save-incident")}>
-                          <button type="button" onClick={() => openEditor("incident", rowId(incident))}>{t(common("edit"))}</button>
-                        </Show>
-                        <Show when={can("delete-incident")}>
-                          <button type="button" onClick={() => openEditor("incident", rowId(incident), true)}>
-                            {t(key("action.delete-incident"))}</button>
-                        </Show>
-                      </div></td>
-                    </Show>
+                    <td><div class="sf-security-actions">
+                      <button type="button" disabled={!can("save-incident")}
+                        onClick={() => openEditor("incident", rowId(incident))}>{t(common("edit"))}</button>
+                      <button type="button" disabled={!can("delete-incident")}
+                        onClick={() => openEditor("incident", rowId(incident), true)}>
+                        {t(key("action.delete-incident"))}</button>
+                    </div></td>
                   </tr>
                 )}</For>
               </tbody></table>
             </div>
-            <Show when={securityIncidents(state.page!).length === 0}>
-              <p>{t((state.page!.data.secIncidents ?? []).length === 0 ? common("empty") : common("filterEmpty"))}</p>
-            </Show>
-            <Show when={can("save-incident")}>
-              <button type="button" onClick={() => openEditor("incident")}>
-                {t(key("action.add-incident"))}
-              </button>
-            </Show>
+            <Show when={securityIncidents(state.page!).length === 0}><p>{t(common("empty"))}</p></Show>
+            <button type="button" disabled={!can("save-incident")} onClick={() => openEditor("incident")}>
+              {t(key("action.add-incident"))}
+            </button>
           </section>
 
           <section aria-labelledby="sf-cap12-actions">
             <h2 id="sf-cap12-actions">{t(key("section.actions"))}</h2>
-            <p role="status">{t(("sf.u02.sourceWarning") as SfCopyKey)}</p>
-            <Show when={can("save-action")}>
-              <button type="button" onClick={() => openEditor("action")}>
-                {t(key("action.add-action"))}
-              </button>
-            </Show>
+            <div class="sf-security-table" role="region" aria-label={t(key("section.actions"))} tabindex="0">
+              <table><thead><tr>
+                <th>{t(key("table.action"))}</th>
+                <th>{t(key("table.status"))}</th>
+                <th>{t(common("edit"))}</th>
+              </tr></thead><tbody>
+                <For each={securityActions(state.page!)}>{(action) => (
+                  <tr><th scope="row">{securityString(action.text)}</th>
+                    <td>{action.done === true ? t(key("table.done")) : t(key("table.open"))}</td>
+                    <td><div class="sf-security-actions">
+                      <button type="button" disabled={!can("save-action")}
+                        onClick={() => openEditor("action", rowId(action))}>{t(common("edit"))}</button>
+                      <button type="button" disabled={!can("delete-action")}
+                        onClick={() => openEditor("action", rowId(action), true)}>
+                        {t(key("action.delete-action"))}</button>
+                    </div></td>
+                  </tr>
+                )}</For>
+              </tbody></table>
+            </div>
+            <Show when={securityActions(state.page!).length === 0}><p>{t(common("empty"))}</p></Show>
+            <button type="button" disabled={!can("save-action")} onClick={() => openEditor("action")}>
+              {t(key("action.add-action"))}
+            </button>
           </section>
 
           <Show when={state.operationState === "conflict"}>
