@@ -17,11 +17,12 @@ test.beforeAll(async ({ browser }, info) => {
   test.setTimeout(180_000)
   const host = await startPlannerInstallation(info)
   installation = host
-  const context = await browser.newContext()
+  const context = await browser.newContext({ baseURL: host.origin })
   const observations: Record<string, unknown>[] = []
   try {
-    await context.addCookies([host.cookie])
-    corpus = await prepareInstalledBi(await context.newPage(), host, observations)
+    const page = await context.newPage()
+    await host.signIn(page)
+    corpus = await prepareInstalledBi(page, host, observations)
   } catch (error) {
     await host.stop()
     installation = undefined
@@ -44,7 +45,7 @@ test("BI62 external browser proposal preserves the human date crop across a real
   const host = installation!
   const observations: Record<string, unknown>[] = []
   try {
-    await page.context().addCookies([host.cookie])
+    await host.signIn(page)
     const result = await showScenario(page, host.origin, corpus, "resolved", "BI10")
     const projection = asRecord(result.projection)
     const items = records(asRecord(asRecord(result.presentation).timeline).items)
@@ -86,7 +87,7 @@ test("BI62 external timeline proposal lets the keyboard choose between both real
   const host = installation!
   const observations: Record<string, unknown>[] = []
   try {
-    await page.context().addCookies([host.cookie])
+    await host.signIn(page)
     const result = await showScenario(page, host.origin, corpus, "resolved", "BI10")
     const values = records(asRecord(result.projection).values)
     const items = records(asRecord(asRecord(result.presentation).timeline).items)

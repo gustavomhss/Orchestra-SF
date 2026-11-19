@@ -21,7 +21,8 @@ test("relations and contextual threads persist, retry and hide after access revo
   const open = async () => {
     const store = await openLocalStore(directory)
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc-A" }), authorize: async () => ({ principalRef: "person-A", policyVersion: "policy", accessRevision: "access" }) })
-    const host = { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }
+    const request = new Request("https://example.test/")
+    const host = { requestFor: () => request, revalidate: async () => true }
     const common = { state, host, mutationFence: createCollaborationMutationFence({ persistence: store }), human: { authorize: async () => access.allowed }, checkRecipientAtCommit: () => access.allowed, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" }
     return { store, relations: createRelationPort({ ...common, handoffPermit: Symbol("test"), authorizePair: async () => access.allowed, creationTarget: { ref: "line-A", incarnation: "inc-A" } }), threads: createThreadPort({ ...common, creationTarget: { ref: "line-A", incarnation: "inc-A" }, authorize: async () => access.allowed }) }
   }
@@ -46,8 +47,8 @@ test("relations and contextual threads persist, retry and hide after access revo
     const reopened = await open()
     expect((await reopened.threads.read(thread.value.id, context)).status).toBe("ok")
     access.allowed = false
-    expect((await reopened.threads.read(thread.value.id, context)).status).toBe("unavailable")
-    expect((await createQuestionSource(reopened.threads)(thread.value.id, context)).status).toBe("unavailable")
+    expect(await reopened.threads.read(thread.value.id, context)).toEqual({ status: "denied", reason: "thread-access-unavailable" })
+    expect(await createQuestionSource(reopened.threads)(thread.value.id, context)).toEqual({ status: "denied", reason: "thread-access-unavailable" })
     expect(await reopened.relations.read(["line-A"], context)).toEqual({ status: "ok", value: { relations: [] } })
     await reopened.store.dispose()
   } finally {

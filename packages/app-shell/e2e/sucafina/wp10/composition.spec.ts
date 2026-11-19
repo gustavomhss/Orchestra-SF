@@ -8,8 +8,10 @@ import { fileURLToPath } from "node:url"
 import type { UiCorpusReceipt } from "../wp00/flows.ts"
 import { qualifyWp10ExtendedUi } from "./extended-flows.ts"
 import { prepareWp10ReviewRevocation } from "./review-revocation.ts"
+import { connectInstalledShell, installedShellOrigin } from "../installed-shell"
+import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
 
-const origin = "http://localhost:4110"
+const origin = installedShellOrigin()
 const flowNames = ["dashboard-budget", "workbench-create-reopen", "procurement-requests", "bi-table", "extended-ui", "bi-revocation"] as const
 type Flow = typeof flowNames[number]
 type Observation = {
@@ -73,7 +75,7 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
       const product = /^parent ([a-f0-9]{40})$/m.exec(revisions.stdout.toString("utf8"))?.[1]
       if (snapshot !== process.env.GITHUB_SHA || !product) throw new Error("Cannot bind this observation to its test-ci snapshot and product parent")
       state.productSha = product
-      const prepared = yield* processService.run(ChildProcess.make("bun", [path.join(root, "packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts"), directory], { cwd: root, env: environment }), { timeout: "60 seconds" })
+      const prepared = yield* processService.run(ChildProcess.make("bun", [path.join(root, "packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts"), directory, origin], { cwd: root, env: environment }), { timeout: "60 seconds" })
       logs.push(prepared.stdout.toString("utf8"), prepared.stderr.toString("utf8"))
       yield* Effect.promise(async () => {
         expect(prepared.exitCode, "WP00 installation preparation failed; see wp10-server.log").toBe(0)
@@ -83,7 +85,7 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         expect(state.corpus.counts).toEqual({ financialLines: 1000, purchaseOrders: 200, projects: 100 })
       })
       state.stage = "start-existing-cli"
-      const server = yield* processService.spawn(ChildProcess.make("bun", ["run", path.join(root, "apps/cli/src/index.ts"), "serve", "--hostname", "localhost", "--port", "4110", "--installation", path.join(root, "modules/sucafina/Sucafinav1/local/entry.ts")], {
+      const server = yield* processService.spawn(ChildProcess.make("bun", ["run", path.join(root, "apps/cli/src/index.ts"), "serve", "--hostname", "localhost", "--port", "4110", "--public-origin", origin, "--installation", path.join(root, "modules/sucafina/Sucafinav1/local/entry.ts")], {
         cwd: directory, env: environment, stdin: "ignore", stdout: "pipe", stderr: "pipe",
       }))
       yield* Effect.forkScoped(Stream.runForEach(server.stdout, (chunk) => Effect.sync(() => logs.push(Buffer.from(chunk).toString("utf8")))))
@@ -127,9 +129,11 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         if (typeof enrollment !== "string" || !enrollment.startsWith(origin + "/sucafina/auth/local?code=")) throw new Error("Invalid local enrollment destination")
         const authenticated = await fetch(enrollment, { redirect: "manual", signal: AbortSignal.timeout(10000) }).catch(() => { throw new Error("Local enrollment request failed") })
         expect(authenticated.status).toBe(303)
-        const cookie = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=(\/sucafina);/.exec(authenticated.headers.get("set-cookie") ?? "")
-        if (!cookie) throw new Error("Local enrollment did not issue the expected scoped operator cookie")
-        await context.addCookies([{ name: cookie[1]!, value: cookie[2]!, domain: "localhost", path: cookie[3]!, httpOnly: true, secure: false, sameSite: "Lax" }])
+        const cookie = readOperatorSessionCookie(authenticated.headers, origin)
+        await context.addCookies([cookie])
+        const profile = JSON.parse(await readFile(environment.SUCAFINA_LOCAL_CONFIG!, "utf8")) as { localOperator: { installationId: string; uid: number } }
+        await connectInstalledShell(page, { root: directory, origin, mount: "/sucafina",
+          actorId: `macos:${profile.localOperator.installationId}:${profile.localOperator.uid}` })
         await page.setViewportSize({ width: 1440, height: 900 })
         const corpus = state.corpus
         if (!corpus) throw new Error("Published synthetic corpus receipt is missing")

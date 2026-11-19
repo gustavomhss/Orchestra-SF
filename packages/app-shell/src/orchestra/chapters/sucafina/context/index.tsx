@@ -190,9 +190,9 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
          current.context.stamp.policyVersion !== fresh.stamp.policyVersion)
       const requiresRevalidation = current !== undefined && (current.drafts.state() === "quarantined" || changedAccess)
       if (changedAccess) current?.drafts.quarantine()
-      const transport = current && !requiresRevalidation && ownerKey === renewedKey
-        ? current.transport
-        : props.dependencies.createTransport(binding, generation)
+      // Every load fences the previous generation, even for an unchanged owner.
+      // Use the transport authenticated by this load's original ctx.context read.
+      const transport = props.dependencies.createTransport(binding, generation)
       if (requiresRevalidation && current) {
         epoch += 1
         const transferredIdentity = { ...renewedIdentity, authEpoch: epoch }

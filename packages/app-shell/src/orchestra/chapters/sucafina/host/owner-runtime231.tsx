@@ -9,16 +9,17 @@
  * Requires the exact 227 context/navigation leaves and 228 adapter postimages.
  */
 import { useLocation, useNavigate } from "@solidjs/router"
-import { createEffect, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
+import { createEffect, createSignal, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { usePlatform } from "@/context/platform"
+import { useLanguage } from "@/context/language"
 import { ServerConnection } from "@/context/server"
 import { pathKey } from "@/utils/path-key"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
-import { createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
+import { createSfAuthActions, createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfDraft } from "../shared/draft"
@@ -222,6 +223,32 @@ function MountedSurface(props: Readonly<{
   status: (status: string, generation: number, reason?: string) => void
 }>): JSX.Element {
   const handle = useSfContext()
+  const language = useLanguage()
+  const [authBusy, setAuthBusy] = createSignal(false)
+  const [authFailed, setAuthFailed] = createSignal(false)
+  const signOut = async () => {
+    const state = handle.state(), ready = handle.ready(), generation = handle.generation()
+    if (state.status !== "ready" || !ready || authBusy()) return
+    setAuthBusy(true); setAuthFailed(false)
+    try {
+      await createSfAuthActions({
+        binding: state.binding, transport: ready.transport,
+        navigate: (url) => window.location.assign(url),
+      }).logout()
+      if (handle.generation() === generation && handle.ready()?.transport === ready.transport) {
+        handle.invalidate("logout")
+        await handle.reload()
+      }
+    } catch { setAuthFailed(true) }
+    finally { setAuthBusy(false) }
+  }
+  const message = () => {
+    const state = handle.state().status
+    return language.t(state === "resolving" ? "sf.ui67.loading" :
+      state === "unauthenticated" ? "sf.ui67.unauthenticated" :
+      state === "denied" ? "sf.ui67.denied" :
+      state === "context-mismatch" ? "sf.ui67.mismatch" : "sf.ui67.unavailable")
+  }
   props.bind(handle)
   createEffect(() => {
     const state = handle.state()
@@ -230,7 +257,17 @@ function MountedSurface(props: Readonly<{
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
   return (
-    <Show when={props.gate()} fallback={<p role="status" data-sf-f01={handle.state().status}>Resolving installed Sucafina</p>}>
+    <>
+    <div class="flex flex-wrap gap-2" role="toolbar" aria-label={language.t("sf.ui67.title")}>
+      <button type="button" class="mx-btn" disabled={authBusy()}
+        onClick={() => { void handle.reload() }}>{language.t("sf.ui67.refreshAccess")}</button>
+      <Show when={handle.state().status === "ready"}>
+        <button type="button" class="mx-btn" disabled={authBusy()}
+          onClick={() => { void signOut() }}>{language.t("sf.ui67.signOut")}</button>
+      </Show>
+    </div>
+    <Show when={authFailed()}><p role="alert">{language.t("sf.ui67.signOutFailed")}</p></Show>
+    <Show when={props.gate()} fallback={<p role="status" data-sf-f01={handle.state().status}>{message()}</p>}>
       <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
         <Match when={current()?.surfaceId === "UI29"}>
           <SfTodayView surfaceId="UI29" route={current() as SfSurfaceProps<"UI29">["route"]} />
@@ -246,6 +283,7 @@ function MountedSurface(props: Readonly<{
         </Match>
       </Switch>
     </Show>
+    </>
   )
 }
 
@@ -266,6 +304,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const [view, setView] = createStore<View>({ status: "resolving" })
   const [provider, setProvider] = createStore({ status: "unmounted", generation: -1, reason: undefined as string | undefined })
   let mounted: SfContextHandle | undefined
+  let authenticatedTransport: Readonly<{ binding: SfInstallationDescriptor; generation: number; transport: SfTransport }> | undefined
   let explicitOwner: SfOwnerSelection | undefined
   let ownerEpoch = 0
   let disposed = false
@@ -299,8 +338,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     binding, generation, currentGeneration, fetch: fetcher, operations: SfNativeOperationBindings,
   })
   const readContext = async (binding: SfInstallationDescriptor, signal: AbortSignal,
-    generation: number, currentGeneration: () => number) => {
-    const transport = newTransport(binding, generation, currentGeneration)
+    generation: number, currentGeneration: () => number,
+    transport = newTransport(binding, generation, currentGeneration)) => {
     const answer = await createSfContextClient(transport)["ctx.context"]({
       installationId: binding.installationId, projectId: binding.projectId,
       hostId: binding.hostId,
@@ -316,14 +355,30 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   }
   const dependencies: SfContextDependencies = {
     listInstallations: async (selected, signal) => {
+      authenticatedTransport = undefined
       ownerEpoch += 1 // invalidate all old transport generations before the next load
       const found = await source.listByIds(selected, signal)
       return found ?? { installations: [] }
     },
-    loadContext: (binding, signal) => readContext(binding, signal, ownerEpoch, () => ownerEpoch),
-    createTransport: (binding, generation) => newTransport(
-      binding, generation, () => mounted?.generation() ?? generation,
-    ),
+    loadContext: async (binding, signal) => {
+      const handle = mounted
+      if (!handle) return { status: "unavailable", reason: "host-unavailable" }
+      const generation = handle.generation()
+      const currentGeneration = () => !disposed && mounted === handle ? handle.generation() : -1
+      const transport = newTransport(binding, generation, currentGeneration)
+      const result = await readContext(binding, signal, generation, currentGeneration, transport)
+      if (result.status === "ok" && !signal.aborted && currentGeneration() === generation)
+        authenticatedTransport = { binding, generation, transport }
+      return result
+    },
+    createTransport: (binding, generation) => {
+      const authenticated = authenticatedTransport
+      authenticatedTransport = undefined
+      if (!authenticated || authenticated.binding !== binding || authenticated.generation !== generation ||
+          mounted?.generation() !== generation || disposed)
+        throw new Error("SF_NATIVE_CONTEXT_TRANSPORT_NOT_CURRENT")
+      return authenticated.transport
+    },
     resolveTransportIdentity: (selected) => sameServer(selected) ? source.transportIdentity : "",
     createDraft: createSfDraft,
     revalidateDraft: revalidateSfNativeDraft,
@@ -545,6 +600,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   })
   onCleanup(() => {
     disposed = true
+    authenticatedTransport = undefined
     ownerEpoch += 1
     releaseChapter()
     navigation.dispose()

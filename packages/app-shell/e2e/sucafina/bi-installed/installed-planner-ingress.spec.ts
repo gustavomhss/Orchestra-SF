@@ -74,7 +74,7 @@ test("BI62 installed Planner first save exposes its real HTTP outcome before BI 
   page.on("pageerror", (error) => observations.push({ event: "page-error", elapsedMs: Date.now() - began, message: redact(error.message) }))
 
   try {
-    await page.context().addCookies([installation.cookie])
+    await installation.signIn(page)
     await test.step("open the real empty Planner and submit Create first version once", async () => {
       const opened = await page.goto(url)
       expect(opened?.status()).toBe(200)

@@ -45,6 +45,26 @@ test("the real installed operator reaches native CAP23 through the shell origin"
     await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
     await page.goto("/orchestra/sf-planner/versions?year=2026")
     await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
+    const refreshed = page.waitForResponse((response) =>
+      new URL(response.url()).pathname === "/sucafina/api/ui/context" && response.request().method() === "GET")
+    await page.getByRole("button", { name: "Refresh access", exact: true }).click()
+    expect((await refreshed).status()).toBe(200)
+    await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
+    const logout = page.waitForResponse((response) =>
+      new URL(response.url()).pathname === "/sucafina/auth/logout" && response.request().method() === "POST")
+    const revoked = page.waitForResponse((response) =>
+      new URL(response.url()).pathname === "/sucafina/api/ui/context" && response.status() === 401)
+    await page.getByRole("button", { name: "Sign out", exact: true }).click()
+    expect((await logout).status()).toBe(204)
+    expect((await revoked).status()).toBe(401)
+    await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-provider-state", "unauthenticated")
+    await expect(page.locator('[data-sf-surface="CAP23"]')).toHaveCount(0)
+    await expect(page.getByRole("button", { name: "Sign out", exact: true })).toHaveCount(0)
+    const deniedReload = page.waitForResponse((response) =>
+      new URL(response.url()).pathname === "/sucafina/api/ui/context" && response.status() === 401)
+    await page.getByRole("button", { name: "Refresh access", exact: true }).click()
+    expect((await deniedReload).status()).toBe(401)
+    await expect(page.locator('[data-sf-surface="CAP23"]')).toHaveCount(0)
   } catch (error) {
     console.log("INSTALLED_NATIVE_RENDER", JSON.stringify({
       path: new URL(page.url()).pathname,

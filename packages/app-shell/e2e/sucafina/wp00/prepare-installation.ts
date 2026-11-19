@@ -14,7 +14,7 @@ import type { UiCorpusReceipt } from "./flows.ts"
 if (process.env.GITHUB_ACTIONS !== "true") throw new Error("WP00 browser qualification runs only in GitHub Actions")
 const directory = process.argv[2]
 if (!directory || !path.isAbsolute(directory)) throw new Error("An absolute private fixture directory is required")
-const config = await prepareLocalConfiguration(directory)
+const config = await prepareLocalConfiguration(directory, process.argv[3])
 const volume = createVolumeCorpus()
 const projects = volume.projects.map((project, index) => ({ ...project, name: `WP00 project ${String(index + 1).padStart(3, "0")} END` }))
 const dashboard = {

@@ -22,7 +22,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
   let topic = "", unrelated = ""
   try {
     await test.step("create durable Hot Topics through the mounted Dashboard", async () => {
-      await page.context().addCookies([installation.cookie])
+      await installation.signIn(page)
       await page.goto(topics)
       await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
       topic = await addTopic(page, original, "2000-01-01")
