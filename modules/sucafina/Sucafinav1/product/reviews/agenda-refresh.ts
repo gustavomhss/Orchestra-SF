@@ -8,6 +8,16 @@ export async function refreshDashboardReviewAgenda(items: readonly ReviewAgendaI
   const selected = structuredClone([...items])
   if (!selected.length || selected.some((item) => item.kind !== "dashboard" || item.recordRefs === undefined))
     return { status: "needs-input", reason: "agenda-refresh-requires-explicit-records" }
+  // Capture the complete selected topic set before the first discovery. A
+  // catalog reused for a period must cover every retained topic in that period.
+  const topicsByPeriod = new Map<string, string[]>()
+  for (const item of selected) {
+    if (item.kind !== "dashboard") return { status: "needs-input", reason: "agenda-refresh-source-unavailable" }
+    const key = item.period.start + ":" + item.period.end
+    const topics = topicsByPeriod.get(key) ?? []
+    if (!topics.includes(item.topic)) topics.push(item.topic)
+    topicsByPeriod.set(key, topics)
+  }
   const catalogs = new Map<string, ReviewAgendaCatalog>()
   const refreshed: Extract<ReviewAgendaItem, { kind: "dashboard" }>[] = []
   for (const item of selected) {
@@ -15,7 +25,7 @@ export async function refreshDashboardReviewAgenda(items: readonly ReviewAgendaI
     const key = item.period.start + ":" + item.period.end
     let catalog = catalogs.get(key)
     if (!catalog) {
-      const result = await discover({ domain: "dashboard", period: { ...item.period } })
+      const result = await discover({ domain: "dashboard", period: { ...item.period }, dashboardTopics: [...topicsByPeriod.get(key)!] })
       if (result.status !== "ok") return result
       catalog = result.value
       catalogs.set(key, catalog)

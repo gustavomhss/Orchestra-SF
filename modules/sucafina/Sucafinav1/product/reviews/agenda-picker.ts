@@ -4,7 +4,7 @@ import { isSfPeriod } from "../contracts/validation.ts"
 import type { ReviewAgendaItem } from "./selection.ts"
 
 export type ReviewAgendaDomain = "dashboard" | "planner" | "procurement"
-export type ReviewAgendaDiscoveryQuery = { period: Period; domain?: ReviewAgendaDomain }
+export type ReviewAgendaDiscoveryQuery = { period: Period; domain?: ReviewAgendaDomain; dashboardTopics?: readonly string[] }
 export type ReviewAgendaOption = { key: string; label: string; domain: ReviewAgendaDomain; item: ReviewAgendaItem }
 export type ReviewAgendaCatalog = { options: readonly ReviewAgendaOption[] }
 export type ReviewAgendaDiscovery = (query: ReviewAgendaDiscoveryQuery) => Promise<PortResult<ReviewAgendaCatalog>>
@@ -13,10 +13,7 @@ export type ReviewAgendaDiscovery = (query: ReviewAgendaDiscoveryQuery) => Promi
 export function createReviewAgendaDiscoveryBrowser(): ReviewAgendaDiscovery {
   return async (query) => {
     if (!isSfPeriod(query.period)) return { status: "needs-input", reason: "invalid-agenda-period" }
-    const url = new URL(window.location.href)
-    url.search = new URLSearchParams({ sf: "review-agenda", start: query.period.start, end: query.period.end,
-      ...(query.domain ? { domain: query.domain } : {}) }).toString()
-    url.hash = ""
+    const url = reviewAgendaDiscoveryUrl(window.location.href, query)
     const response = await fetch(url, { credentials: "same-origin", cache: "no-store" }).catch(() => undefined)
     if (!response) return { status: "unavailable", reason: "agenda-discovery-unavailable" }
     const destination = new URL(response.url || url.toString(), url)
@@ -32,6 +29,15 @@ export function createReviewAgendaDiscoveryBrowser(): ReviewAgendaDiscovery {
     if (!response.ok || !("value" in result) || !validCatalog(result.value)) return { status: "unavailable", reason: "agenda-catalog-invalid" }
     return { status: "ok", value: result.value }
   }
+}
+
+export function reviewAgendaDiscoveryUrl(href: string, query: ReviewAgendaDiscoveryQuery) {
+  const url = new URL(href)
+  url.search = new URLSearchParams({ sf: "review-agenda", start: query.period.start, end: query.period.end,
+    ...(query.domain ? { domain: query.domain } : {}),
+    ...(query.dashboardTopics !== undefined ? { dashboardTopics: JSON.stringify(query.dashboardTopics) } : {}) }).toString()
+  url.hash = ""
+  return url
 }
 
 /** No discovery result is automatically selected, including after a period or source change. */
