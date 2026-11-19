@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: a9b4e29a810c7d1884e9641b9898e2606941c269 (checkpoint causal após gate5 e revisão de identidade; ainda não qualificado)
+SHA de código: 4a6593f2bc832bcc73e1126eecb27a6b5355ac55 (comparação estrutural e retenção readonly após gate6; ainda não qualificado)
 Data: 2026-11-19
 Estado: partial
 
@@ -87,3 +87,17 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 - `proposals.spec.ts:134` e `capture.tsx:1`: ainda unbound de qualificação dos cinco fluxos, até o gate no checkpoint composto terminal. Os testes legados continuam mantidos. Nenhuma alegação de integração ou GO.
 
 - Revisão do root acrescentou igualdade explícita current.draftRef === original.draftRef no revalidador (a9b4e29), além da comparação integral no consumo. O leitor de edição pode retornar uma versão ativa mais nova; o portador de confirmação não restaura esse resultado como se fosse o mesmo draftRef.
+
+## Gate6 e evidência original
+- Pedido `ci-run-proposals6-20261119`: [44621479411](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44621479411) FAILURE de infraestrutura antes de checkout/install/tipos/browser; `test-ci.yml:30-36` exige `ci-run-linux-*`. Cleanup135904146287 SUCCESS. Não é resultado de UI.
+- Após esse terminal, o mesmo snapshot `7098d64ae0df041d5780b54e7ed047db1ff544d5`, parent assembly32 `b75cd49fc53701209c116511fc6643693b09c2d7`, foi publicado em `ci-run-linux-proposals6-20261119`.
+- Run [44621582202](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44621582202): FAILURE, 5 failed / 0 passed; CLI/host, app-shell e SF E2E typechecks SUCCESS. Job135904364765; cleanup135908575519 SUCCESS. Nenhum teste paralelo ou sf-ci adicional.
+- Progresso observado: caso2 passou a interrupção/releitura e Retained inicial, depois falhou na mensagem após retirada de escrita. Caso5 passou por pauta, captura, histórico e imutabilidade e chegou ao save privado. Casos1/4/5 falharam apenas na mensagem Saved nessa etapa.
+- Audit somente de leitura [44623086336](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44623086336), SUCCESS, extraiu os cinco attachments `proposal-original-observation.json` do artifact14578835200. Fonte arquivada em `audit-proposal-screens-20261119:docs/handoff/observed-proposal-original-44621582202.md`. Corpos/status e texto do DOM são os originais, com campos de credencial filtrados; nenhum replay/reteste.
+
+## Correção causal após gate6 (4a6593f)
+- O DOM original confirma UI54 admitida na rota do draft salvo, com campos persistidos; não é uma rejeição de rota.
+- Nos corpos dos casos1/4, a evidência da seleção e a evidência persistida têm mesmos tipos, chaves, valores, refId/refDigest/incarnation e arrays. A ordem de refDigest em relação a installationId/projectId é diferente. O helper local `same` agora compara todos os valores de DTO JSON estruturalmente, mantendo conjuntos exatos de chaves e ordem dos arrays. Não classifica diferenças de digest/ref/incarnation como iguais; também distingue ausência de propriedade de undefined.
+- Sob retirada de escrita, o produtor realmente emite nova incarnation/refId/refDigest da fonte, embora os campos materiais permaneçam iguais. `needsCurrent` continua true; comparação e aviso de mudança continuam visíveis; salvar continua bloqueado. A UI acrescenta a informação factual de que a edição local foi retida, junto ao aviso da autoridade de escrita.
+- Apenas `proposals/draft.tsx` foi alterado neste delta. Nenhuma asserção, timeout, workflow de produto, F01 global ou produtor foi modificado. As 211 chamadas expect permanecem.
+- Estado continua partial; `proposals.spec.ts:134,241,383,438,529` e `capture.tsx:1` aguardam gate7 no próximo snapshot composto. Os cinco testes legados continuam preservados até equivalência qualificada.
