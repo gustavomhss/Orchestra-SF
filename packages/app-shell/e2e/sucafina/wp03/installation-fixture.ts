@@ -56,16 +56,18 @@ export async function startPlannerInstallation(info: TestInfo) {
     cwd: directory, env: environment, stdio: ["ignore", "pipe", "pipe"],
   })
   const state = { log: "", error: undefined as Error | undefined, stopped: false, secrets: [] as string[] }
-  let auditTracePending = ""
-  const capture = (chunk: Buffer) => {
-    const value = chunk.toString("utf8")
-    state.log = (state.log + value).slice(-64_000)
-    const lines = (auditTracePending + value).split("\n")
-    auditTracePending = (lines.pop() ?? "").slice(-64_000)
-    for (const line of lines) for (const marker of line.match(/\bSF_REPORTS_TRACE_[A-Z0-9_]+\b/g) ?? []) console.info(marker)
+  const capture = () => {
+    let auditTracePending = ""
+    return (chunk: Buffer) => {
+      const value = chunk.toString("utf8")
+      state.log = (state.log + value).slice(-64_000)
+      const lines = (auditTracePending + value).split("\n")
+      auditTracePending = (lines.pop() ?? "").slice(-64_000)
+      for (const line of lines) for (const marker of line.match(/\bSF_REPORTS_TRACE_[A-Z0-9_]+\b/g) ?? []) console.info(marker)
+    }
   }
-  child.stdout.on("data", capture)
-  child.stderr.on("data", capture)
+  child.stdout.on("data", capture())
+  child.stderr.on("data", capture())
   child.once("error", (error) => { state.error = error })
   const exited = () => child.exitCode !== null || child.signalCode !== null || !!state.error
   const stop = async () => {
