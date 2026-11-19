@@ -285,7 +285,7 @@ export function createSfTransport(options: Readonly<{
             !last.owner || !stamp || !equalContextStamp(last.owner, stamp) ||
             !previous && !last.confirmed))
           return failure("contract-mismatch")
-        if (!humanRetry && last?.key === key) {
+        if (!humanRetry && last && last.key === key) {
           if (last.digest !== digest || !last.owner || !stamp || !equalContextStamp(last.owner, stamp))
             return failure("contract-mismatch")
           return failure("outcome-unknown")
@@ -492,7 +492,7 @@ export function createSfTransport(options: Readonly<{
       if (mutating) {
         pending.delete(key!)
         const intent = retained.get(operation.operationId)
-        if (intent?.key === key) {
+        if (intent && intent.key === key) {
           const result = parsedOutput.value
           if (response.status >= 200 && response.status < 300 &&
               typeof result === "object" && result !== null && "status" in result && result.status === "ok")
