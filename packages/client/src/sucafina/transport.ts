@@ -229,9 +229,10 @@ export function createSfTransport(options: Readonly<{
         : undefined
       if (metadata.method === "POST" && (!key || !KEY.test(key))) return failure("contract-mismatch")
       if (metadata.method === "GET" && call.idempotencyKey !== undefined) return failure("contract-mismatch")
+      const documentConfirm = operation.operationId === "files.document-confirm" ? asJsonObject(wireInput) : undefined
       const bodyValue = metadata.method === "POST"
-        ? operation.operationId === "files.document-confirm" && asJsonObject(wireInput)
-          ? asJsonObject(wireInput)?.evidence
+        ? documentConfirm && !("action" in documentConfirm)
+          ? documentConfirm.evidence
           : operationBody(metadata, wireInput)
         : undefined
       if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")
@@ -313,9 +314,13 @@ export function createSfTransport(options: Readonly<{
         call.signal.addEventListener("abort", cancel, { once: true })
         try {
           dispatched = true
+          const routedInput = operation.operationId === "collaboration.recipients" ||
+            operation.operationId === "collaboration.selection-version"
+            ? { ...(asJsonObject(wireInput) ?? {}), surface: "dashboard" }
+            : wireInput
           const result = await options.desktop.invoke({
             kind: "request", ...owner, requestId, operationId: operation.operationId,
-            input: wireInput, ...(key ? { idempotencyKey: key } : {}),
+            input: routedInput, ...(key ? { idempotencyKey: key } : {}),
             ...(upload ? { upload } : {}),
           })
           if ("status" in result && (result.status === 401 || result.status === 403)) stamp = undefined
@@ -417,7 +422,7 @@ export function createSfTransport(options: Readonly<{
       if (mutating && response.status >= 500) return failure("outcome-unknown")
       const uncertain = mutating && response.status !== 401 && response.status !== 403
       if (isBytes) {
-        if (response.status !== 200 || !(response.body instanceof Uint8Array))
+        if (response.status !== 200 || !(response.body instanceof Uint8Array) || response.body.byteLength < 1)
           return failure("invalid-response")
         const parsedBytes = Schema.decodeUnknownOption(Schema.toType(operation.output))(response.body)
         if (Option.isNone(parsedBytes)) return failure("invalid-response")
@@ -430,6 +435,8 @@ export function createSfTransport(options: Readonly<{
       if (wireDecoded.status !== "ok") return failure(uncertain ? "outcome-unknown" : "invalid-response")
       const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
+      if (deniedAnalysisOrReview(operation.operationId, parsedOutput.value))
+        return failure("invalid-response")
       if (operation.operationId.startsWith("files.") && stamp && !options.desktop &&
           !await refreshSfFileAuthority(options, stamp, operation.operationId))
         return failure(mutating ? "outcome-unknown" : "contract-unavailable")
@@ -650,6 +657,20 @@ export function createSfAuthActions(options: Readonly<{
   }
 }
 
+const deniedIsNotData = new Set<string>([
+  "intelligence.analysis.cancel", "intelligence.analysis.choices", "intelligence.analysis.list",
+  "intelligence.analysis.output", "intelligence.analysis.prepare", "intelligence.analysis.read",
+  "intelligence.analysis.start", "projection.residents",
+  "dashboard.dashboard-agenda", "dashboard.dashboard-capture", "dashboard.dashboard-history",
+  "dashboard.dashboard-review", "dashboard.dashboard-review-preserve", "projection.review",
+  "reviews.report.prepare", "reviews.review-source", "reviews.review-update",
+])
+
+function deniedAnalysisOrReview(operationId: string, body: unknown): boolean {
+  return deniedIsNotData.has(operationId) && !!body && typeof body === "object" &&
+    !Array.isArray(body) && "status" in body && body.status === "denied"
+}
+
 function equalContextStamp(a: SfContextStamp, b: SfContextStamp) {
   return a.installationId === b.installationId && a.projectId === b.projectId &&
     a.hostId === b.hostId && a.principalRef === b.principalRef &&
@@ -671,7 +692,10 @@ function operationUrl(
 ): string | undefined {
   if (!meta.pathTemplate.startsWith("/") && !meta.pathTemplate.startsWith("{mount}/")) return undefined
   const source = asJsonObject(input)
-  const surface = source?.surface
+  const surface = source?.surface ?? (
+    operationId === "collaboration.recipients" || operationId === "collaboration.selection-version"
+      ? "dashboard" : undefined
+  )
   const path = meta.pathTemplate
     .replaceAll("{mount}", binding.mount)
     .replaceAll("{surface}", typeof surface === "string" && SURFACES.has(surface) ? surface : "__unbound__")
