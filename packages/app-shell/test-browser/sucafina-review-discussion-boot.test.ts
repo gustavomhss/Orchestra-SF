@@ -77,6 +77,12 @@ test("an empty discussion boots with recipients only; explicit refresh still che
   const state = fixture()
   await settled(state.view)
   expect(state.modes()).toEqual(["collaboration-recipients"])
+  expect([...state.view.element.querySelectorAll("select")].map((select) => ({ label: select.getAttribute("aria-label"), value: select.value,
+    selectedIndex: select.selectedIndex, options: [...select.options].map((option) => ({ text: option.textContent, value: option.value, defaultSelected: option.defaultSelected })) }))).toEqual([
+    { label: "Review section", value: "budget", selectedIndex: 0, options: [{ text: "Budget", value: "budget", defaultSelected: false }] },
+    { label: "Review source", value: "render-source", selectedIndex: 0, options: [{ text: "dashboard · Budget Overview · version 1", value: "render-source", defaultSelected: false }] },
+    { label: "Recipient", value: "person", selectedIndex: 0, options: [{ text: "Person", value: "person", defaultSelected: false }] },
+  ])
   expect(state.button("Ask about this review").disabled).toBe(false)
   const draft = state.enterQuestion()
   await state.view.refresh()
