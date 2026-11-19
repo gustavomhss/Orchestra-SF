@@ -3,6 +3,8 @@ import { createStore, unwrap } from "solid-js/store"
 import { Schema } from "effect"
 import type { JSX } from "solid-js"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
+import type { SfEditScopeKey, SfRef } from "@orchestra/schema/sucafina/context"
+import type { SfDraftRegistry } from "../../../context/contracts"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { useSfContext } from "../../../context"
 import { useSfPresentation } from "../../../shared/frame/presentation"
@@ -16,6 +18,12 @@ type Draft = typeof draftInput.Type
 type Fields = Draft["fields"]
 type EditableFields = { -readonly [Field in keyof Fields]: Fields[Field] }
 type CaseRef = Draft["caseRef"]
+type SaveResult = Readonly<{ draftRef: string; version: number }>
+type SavedProposal = Readonly<{ input: Draft; result: SaveResult }>
+const savedSelection = (reference: string) => ({ surfaceId: "UI54" as const,
+  identity: { kind: "record" as const, recordRef: reference as SfRef },
+  editScopeKey: "hot-topic-proposal:save-result" as SfEditScopeKey,
+})
 const names = ["action", "owner", "due", "priority", "notes"] as const
 const empty: Fields = { action: "", owner: "", due: "", priority: "normal", notes: "" }
 const object = (value: unknown): Record<string, unknown> | undefined =>
@@ -33,7 +41,11 @@ function draftFor(value: unknown, selected?: CaseRef): Draft | undefined {
     fields: row.fields, sourceRefs: row.sourceRefs ?? [row.targetEvidence],
     expectedVersion: row.version ?? 0, ...(typeof row.draftRef === "string" ? { draftRef: row.draftRef } : {}),
   }
-  return validDraft(candidate) ? candidate : undefined
+  if (!validDraft(candidate)) return
+  // Discovery and the exact private read construct these same fields in different
+  // orders. Keep every value/property; order alone is not a changed proposal.
+  const { action, owner, due, priority, notes, ...remaining } = candidate.fields
+  return { ...candidate, fields: { action, owner, due, priority, notes, ...remaining } }
 }
 
 /** Private C08 proposal editing. Domain records remain untouched until UI54's separate C12 apply. */
@@ -127,6 +139,16 @@ export function SfHotTopicPrivateDraft(props: {
     const input = draftFor(item)
     if (!input) return
     opened = reference; setSelection(input); setBase(input.fields); setValues({ ...input.fields })
+    const saved = current.drafts.peek<SavedProposal>(savedSelection(reference))?.snapshot()
+    if (saved?.availability === "active") {
+      // Only a retained command/outcome result can show Saved. A discovery read
+      // without that result merely opens the authorized private proposal.
+      const expected = draftFor({ ...saved.value.input, draftRef: saved.value.result.draftRef,
+        version: saved.value.result.version })
+      if (saved.value.result.draftRef === reference && saved.baseVersion === input.expectedVersion &&
+        expected && same(input, expected)) setState("saved")
+      current.drafts.discard(savedSelection(reference))
+    }
     setCanWrite(object(object(discovered)?.decisions)?.permissions !== undefined &&
       object(object(object(discovered)?.decisions)?.permissions)?.draft === true)
   })
@@ -192,6 +214,14 @@ export function SfHotTopicPrivateDraft(props: {
   const saveAllowed = () => !!candidate() && canWrite() && admitted("dashboard.dashboard-hot-topic-draft") &&
     !busy() && state() !== "unknown" && state() !== "denied" && state() !== "unavailable" &&
     !!values.action.trim() && !!values.owner.trim() && !!values.due.trim() && values.notes.length <= 16384
+  function rememberSave(registry: SfDraftRegistry, input: Draft, result: SaveResult) {
+    const value: SavedProposal = { input, result }
+    registry.acquire({ ...savedSelection(result.draftRef), baseVersion: result.version, base: value, value,
+      revalidation: { operationId: "dashboard.dashboard-draft-read",
+        input: { caseRef: input.caseRef, targetEvidence: input.targetEvidence, draftRef: result.draftRef },
+        fieldPaths: [], actionIds: [] },
+    })
+  }
   async function save() {
     const input = candidate(), current = ready()
     if (!input || !current || !saveAllowed() || !validDraft(input)) return
@@ -212,9 +242,10 @@ export function SfHotTopicPrivateDraft(props: {
         firstSave = undefined; setNeedsCurrent(true); setReviewed(false); setState("conflict"); return
       }
       const saved = object(result.body.value)
-      if (typeof saved?.draftRef !== "string" || saved.version !== input.expectedVersion + 1) { setState("unknown"); setCanWrite(false); return }
+      if (typeof saved?.draftRef !== "string" || typeof saved.version !== "number" || saved.version !== input.expectedVersion + 1) { setState("unknown"); setCanWrite(false); return }
+      rememberSave(current.drafts, input, { draftRef: saved.draftRef, version: saved.version })
       firstSave = undefined
-      setSelection({ ...input, draftRef: saved.draftRef, expectedVersion: Number(saved.version) })
+      setSelection({ ...input, draftRef: saved.draftRef, expectedVersion: saved.version })
       setBase({ ...values }); setCurrentDraft(undefined); setSourceFields(undefined)
       setDirty(false); setNeedsCurrent(false); setReviewed(false); setState("saved")
       props.onSaved(saved.draftRef)
@@ -235,6 +266,7 @@ export function SfHotTopicPrivateDraft(props: {
       if (outcome.kind !== "response" || outcome.body.status !== "ok") return
       const saved = object(outcome.body.value)
       if (typeof saved?.draftRef !== "string" || saved.version !== 1) return
+      rememberSave(current.drafts, retained.input, { draftRef: saved.draftRef, version: saved.version })
       firstSave = undefined; setSelection({ ...retained.input, draftRef: saved.draftRef, expectedVersion: 1 })
       setBase(retained.input.fields); setDirty(false); setNeedsCurrent(false); setState("saved")
       props.onSaved(saved.draftRef)
