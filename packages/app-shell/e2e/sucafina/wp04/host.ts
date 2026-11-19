@@ -13,6 +13,7 @@ import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucaf
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
 import { createOperationsInstallation } from "../operations-support/installation.ts"
+import { requestsRouteDocument, requestsRouteKind, requestsViewDocument } from "../../../../../modules/sucafina/Sucafinav1/runtime/requests-page.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
 // The fixture serves the real authenticated application, C02 queue, Planner, import/document services, renderer and shell.
@@ -118,7 +119,38 @@ const records = await store.transaction("procurement", async (snapshot) => {
   return { commit: true, value: { supplier: supplierId, comparison } }
 })
 active.handle = async (request) => {
-  const pathname = new URL(request.url).pathname
+  const url = new URL(request.url)
+  const pathname = url.pathname
+  const requestsKind = requestsRouteKind(pathname)
+  if (requestsKind) {
+    const admitted = (await Promise.all(accounts.map(async (account) => {
+      const person = await account.identity.authenticate(request, { surface: "procurement", roleMap: [] })
+      return person ? { account, person } : undefined
+    }))).find((item) => item)
+    if (request.method === "POST") {
+      if (!admitted) return Response.json({ ok: false }, { status: 401 })
+      const forwarded = new Request(new URL(admitted.account.mount + "/procurement", url.origin), {
+        method: "POST",
+        headers: request.headers,
+        body: await request.arrayBuffer(),
+      })
+      return await admitted.account.application(forwarded) ?? new Response("Not found", { status: 404 })
+    }
+    if (request.method !== "GET" && request.method !== "HEAD") return new Response(null, { status: 405 })
+    const html = admitted
+      ? await store.transaction("procurement", async (snapshot) => {
+          const context = await environment()
+          const actor = admitted.account.key === "viewer"
+            ? { id: admitted.person.id, canWrite: false, roles: ["viewer"] }
+            : { id: admitted.person.id, canWrite: true, roles: ["admin", "requester", "buyer"] }
+          return { commit: false, value: requestsViewDocument(requestsKind, snapshot, actor, context) }
+        })
+      : requestsRouteDocument(requestsKind)
+    return new Response(request.method === "HEAD" ? null : html, {
+      status: 200,
+      headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
+    })
+  }
   const account = accounts.find((item) => pathname === item.mount || pathname.startsWith(item.mount + "/"))
   if (!account) return new Response("Not found", { status: 404 })
   await account.identity.prepare(request)

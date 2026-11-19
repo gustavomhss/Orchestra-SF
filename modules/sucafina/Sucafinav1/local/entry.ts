@@ -21,6 +21,7 @@ import { startAuthMaintenance } from "../runtime/auth-maintenance.ts"
 import { createEntraClient } from "../runtime/entra-client.ts"
 import { createOperatorIdentity } from "../runtime/operator-identity.ts"
 import { documentHtml, esc, pageMain } from "../src/screen-shell.ts"
+import { requestsRouteDocument, requestsRouteKind, requestsViewDocument } from "../runtime/requests-page.ts"
 import { htmlPolicy } from "../runtime/application.ts"
 import { fields, form, table } from "../runtime/ui.ts"
 import { object } from "../runtime/contract.ts"
@@ -276,6 +277,35 @@ export async function createConfiguredInstallation(
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
+      const requestsKind = requestsRouteKind(url.pathname)
+      if (requestsKind && ["GET", "HEAD", "POST"].includes(request.method)) {
+        if (request.method === "POST" && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site"))
+          return new Response("Access denied", { status: 403 })
+        if (request.method === "POST") {
+          const forwarded = new Request(new URL(config.mount + "/procurement", config.origin), {
+            method: "POST",
+            headers: request.headers,
+            body: await request.arrayBuffer(),
+          })
+          return (await business(forwarded)) ?? new Response("Not found", { status: 404 })
+        }
+        const person = await identity.authenticate(request, { surface: "procurement", roleMap: [] })
+        const html = person
+          ? await store.transaction("procurement", async (snapshot) => {
+              const environment = await requestEnvironment(request)
+              const actor = {
+                id: person.id,
+                canWrite: person.canWrite,
+                roles: person.roles.filter((row) => row.surface === "procurement").map((row) => row.role),
+              }
+              return { commit: false, value: requestsViewDocument(requestsKind, snapshot, actor, environment, config.mount + "/procurement") }
+            })
+          : requestsRouteDocument(requestsKind, { postTo: config.mount + "/procurement" })
+        return new Response(request.method === "HEAD" ? null : html, {
+          status: 200,
+          headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+        })
+      }
       if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) {
         const frame = Bun.file(path.join(import.meta.dir, "../../../../apps/web/index.html"))
         if (await frame.exists()) return new Response(request.method === "HEAD" ? null : await frame.bytes(), { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })

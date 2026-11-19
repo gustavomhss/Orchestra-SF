@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "@solidjs/router"
+import { Navigate, useLocation, useParams } from "@solidjs/router"
 import { createMemo, lazy, Show, Suspense, type Component, type ParentProps } from "solid-js"
 import { Dynamic } from "solid-js/web"
 import { useGlobal } from "@/context/global"
@@ -12,6 +12,7 @@ import { ModelsProvider } from "@/context/models"
 import { showWip } from "@/orchestra/navigation"
 import { pathKey } from "@/utils/path-key"
 import { SfOwnerRuntime231 } from "./chapters/sucafina/host/owner-runtime231"
+import { SfRequestsCreateForm } from "./chapters/sucafina/procurement/requests/create-form"
 import { isSfNativeChapter, sfNativeRouteSpecs } from "./chapters/sucafina/route-registry"
 
 export type ChapterPageProps = { server: ServerConnection.Any; directory: string }
@@ -71,6 +72,7 @@ function ChapterBoundary(props: ParentProps<{ chapter: string }>) {
 
 export function OrchestraChapterRoute() {
   const params = useParams<{ chapter: string }>()
+  const location = useLocation()
   const layout = useLayout()
   const global = useGlobal()
   const language = useLanguage()
@@ -98,13 +100,16 @@ export function OrchestraChapterRoute() {
           data-chapter={params.chapter}
           class="orchestra-chapter orchestra-glass flex min-h-0 flex-1 flex-col self-stretch overflow-hidden max-md:m-2 max-md:rounded-[10px] max-md:bg-v2-background-bg-base max-md:shadow-[var(--v2-elevation-raised)]"
         >
-          <Show when={showWip(params.chapter)}>
+          <Show when={params.chapter === "sf-procurement" && location.pathname === "/orchestra/sf-procurement/requests/new"}>
+            <SfRequestsCreateForm />
+          </Show>
+          <Show when={!(params.chapter === "sf-procurement" && location.pathname === "/orchestra/sf-procurement/requests/new") && showWip(params.chapter)}>
             <p class="orchestra-wip-mark" data-slot="orchestra-wip">
               {language.t("orchestra.shell.wip.page")}
             </p>
           </Show>
           {/* The selected profile comes from async storage. Until it has loaded, "no profile" is not yet true. */}
-          <Show when={layout.ready()}>
+          <Show when={layout.ready() && !(params.chapter === "sf-procurement" && location.pathname === "/orchestra/sf-procurement/requests/new")}>
             <Show
               when={owner()}
               keyed
