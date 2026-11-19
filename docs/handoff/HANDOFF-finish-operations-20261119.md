@@ -1,6 +1,6 @@
 # Handoff — finish-operations-20261119
 
-SHA: 87708d9dd1e5c4d9a2a182e508a2b98a6b696802 (código; este documento é um checkpoint posterior)
+SHA: e53b49cd23c3af5d72a761d2a46f9658940847a0 (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
@@ -21,6 +21,9 @@ Estado: partial
 - Settings envia domain.command.CAP28.reset original. A revisão informa o efeito conhecido e a ausência de valores futuros publicados; defaults só são verificados após resposta e nova leitura autorizada. Um 422 terminal libera a mesma intenção pendente, conserva entradas e não avança a versão.
 - procurement-snapshot/refusal usam Add quotation real quando o produtor não trouxe cotações; esperam o reconhecimento do produtor antes de navegar após aprovação. queueIdentity verifica o drilldown nativo e conserva os asserts de identidade/digest/versão.
 - wp04/native-ingress.spec.ts seleciona OP-PROC-01 reutilizando o helper integral; o runner aceita nomes exatos de spec, não --grep.
+
+- Os builders de PR, PO e sourcing e o id opcional de Suppliers agora omitem somente os campos ausentes. Preservam null/0/false/strings e o codec original estrito; não há sanitização global.
+- OP-IMP-01 não presume um ID em POST body.value: comprova exatamente um ID novo na projeção CAP23 original, igualdade da linha nativa e identidade no editor aberto pelo botão select real, além do nome/ano/reload já existentes.
 
 ## Pendente
 
@@ -44,9 +47,11 @@ Estado: partial
 - modules/sucafina/Sucafinav1/runtime/application.ts permanece sem edição. Não foram fabricados descriptor, contexto, Session, receipt, readiness, digest ou resultado de execução.
 - Não há declaração de GO.
 
+- A comparação de created.body.value com o ID do Planner foi substituída pela diferença exata dos IDs antes/depois no GET CAP23, linha nativa e identidade do editor. runtime/application.ts:367–371 responde somente ok/warnings; o campo anterior nunca foi transmitido. Nenhuma identidade é derivada do payload enviado.
+
 ## Como retomar
 
-1. Continuar em finish-operations-20261119, código 87708d9dd1e5c4d9a2a182e508a2b98a6b696802.
+1. Continuar em finish-operations-20261119, código e53b49cd23c3af5d72a761d2a46f9658940847a0.
 2. Obter do WP de ingresso o SHA qualificado para GET e POST/revogação. O run 44573615311 passou 1/1 para leitura CAP23/reload/year com receiver corrigido; a escrita ainda era um gate separado neste checkpoint.
 3. Compor um snapshot com este código e a infraestrutura compartilhada qualificada, preservando a origem de cada arquivo. Executar .ci-run.json com package app, runner playwright, config e2e/playwright.production.config.ts e args [e2e/sucafina/wp04/native-ingress.spec.ts].
 4. Depois do ingresso, executar procurement.spec.ts e operations.spec.ts em gates separados: o fixture usa códigos de enrollment de cenário de uso único; não misturar as suites no mesmo host.
@@ -62,6 +67,6 @@ Estado: partial
 - [44566864715](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44566864715), job 135710895916: FAILURE, 1 teste falhou. Snapshot 037fd52d30704799719d2943a8ff9ca0446e2395. Typecheck/build passaram; health/enrollment303/discovery200/context200/Choose project passaram; CAP25 Requests ausente. Artifact 14552173829 é evidência do teste, não package digest.
 - [44568624223](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44568624223), job 135717219345: FAILURE, 1 teste falhou. Snapshot 46c0c668c28b21efdecd2251b63e8d1446fcced3. Typecheck/build passaram. Diagnóstico real em /orchestra/sf-procurement/requests/new: data-sf-host=owner-runtime231, owner=resolving, serverUnavailable=0, Requests=0, status Resolving installed Sucafina.
 - Os quatro gates usaram: {"package":"app","runner":"playwright","config":"e2e/playwright.production.config.ts","args":["e2e/sucafina/wp04/native-ingress.spec.ts"]}.
-- 87708d9dd1e5c4d9a2a182e508a2b98a6b696802: ainda sem gate próprio neste checkpoint.
-- Dependência compartilhada, sem qualificar Operations: ingresso [44573615311](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44573615311) SUCCESS 1/1 para CAP23/reload/year; ingresso [44575467126](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44575467126) FAILURE 2/2, com primeiro POST bloqueado pelo codec opcional undefined e waiter de logout a corrigir. Aguardando novo gate; nenhum gate Operations foi disparado sobre essa falha conhecida.
+- e53b49cd23c3af5d72a761d2a46f9658940847a0: ainda sem gate próprio neste checkpoint.
+- Dependência compartilhada, sem qualificar Operations: ingresso [44573615311](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44573615311) SUCCESS 1/1 para CAP23/reload/year; ingresso [44575467126](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44575467126) FAILURE 2/2, com primeiro POST bloqueado pelo codec opcional undefined e waiter de logout a corrigir. O ingresso9 [44579042477](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44579042477) confirmou POST real200/ok, mas falhou em um assert body.value inexistente e no logout por perda do transporte original. O ingresso10 [44580949588](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44580949588) ainda estava em andamento neste checkpoint; nenhum gate Operations foi disparado sobre uma dependência sabidamente falha.
 - guards: não executados nesta branch. sf-ci: nenhum novo dispatch, rerun ou cancelamento por este WP.

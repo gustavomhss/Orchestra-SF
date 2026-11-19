@@ -4,9 +4,8 @@ import { startPlannerInstallation } from "../wp03/installation-fixture"
 import { horizon, prepareInstalledBi, records, type InstalledBiCorpus } from "./installed-fixture"
 import { biReply, dataRow, expectValue, responseFor, showScenario } from "./browser"
 
-// These are the acceptance probes for the two inert proposals handed to the
-// owners of extended-bi-browser.ts and milestones.ts. They are ordinary tests,
-// with no expected-failure annotation, skipped assertions or replacement host.
+// Native BI acceptance probes preserve the human display crop and the exact
+// producer-issued source choices across reload and keyboard navigation.
 test.use({ trace: "off", video: "off" })
 test.describe.configure({ retries: 0 })
 
@@ -17,7 +16,7 @@ test.beforeAll(async ({ browser }, info) => {
   test.setTimeout(180_000)
   const host = await startPlannerInstallation(info)
   installation = host
-  const context = await browser.newContext({ baseURL: host.origin })
+  const context = await browser.newContext()
   const observations: Record<string, unknown>[] = []
   try {
     const page = await context.newPage()
@@ -40,7 +39,7 @@ test.afterAll(async () => {
   if (installation) { await installation.stop(); installation = undefined }
 })
 
-test("BI62 external browser proposal preserves the human date crop across a real reload", async ({ page }, info) => {
+test("BI62 native chapter preserves the human date crop across a real reload", async ({ page }, info) => {
   test.setTimeout(180_000)
   const host = installation!
   const observations: Record<string, unknown>[] = []
@@ -54,12 +53,12 @@ test("BI62 external browser proposal preserves the human date crop across a real
       typeof value.value === "string" && value.value >= "2027-11-01" && value.value <= "2027-11-30"))
     expect(visible.length).toBeGreaterThan(0)
     expect(visible.length).toBeLessThan(items.length)
-    const panel = page.locator("[data-sf-bi]")
-    await panel.getByLabel("Início do período", { exact: true }).fill("2027-11-01")
-    await panel.getByLabel("Fim do período", { exact: true }).fill("2027-11-30")
-    await panel.getByRole("button", { name: "Aplicar filtro", exact: true }).click()
-    await expect(panel.getByRole("list", { name: "Marcos com data", exact: true }).getByRole("listitem")).toHaveCount(visible.length)
-    const selectionRef = await page.getByLabel("Dados para visualizar", { exact: true }).inputValue()
+    const panel = page.locator('[data-sf-catalog="UI46"]')
+    await panel.getByLabel("Display start date", { exact: true }).fill("2027-11-01")
+    await panel.getByLabel("Display end date", { exact: true }).fill("2027-11-30")
+    await panel.getByRole("button", { name: "Apply display filter", exact: true }).click()
+    await expect(panel.getByRole("list", { name: "Dated milestones", exact: true }).getByRole("listitem")).toHaveCount(visible.length)
+    const selectionRef = await page.locator('[data-sf-field="selection"]').inputValue()
     const pending = page.waitForResponse(responseFor("bi-data", "BI10"))
     await page.reload()
     const reloaded = await biReply(await pending)
@@ -67,11 +66,11 @@ test("BI62 external browser proposal preserves the human date crop across a real
     expect(asRecord(reloaded.projection).decision).toEqual(projection.decision)
     observations.push({ stage: "real-reload", selectionRef, authorizedPeriod: horizon,
       requestedVisualPeriod: { start: "2027-11-01", end: "2027-11-30" },
-      observedVisualPeriod: { start: await panel.getByLabel("Início do período", { exact: true }).inputValue(),
-        end: await panel.getByLabel("Fim do período", { exact: true }).inputValue() } })
-    await expect(panel.getByLabel("Início do período", { exact: true })).toHaveValue("2027-11-01")
-    await expect(panel.getByLabel("Fim do período", { exact: true })).toHaveValue("2027-11-30")
-    await expect(panel.getByRole("list", { name: "Marcos com data", exact: true }).getByRole("listitem")).toHaveCount(visible.length)
+      observedVisualPeriod: { start: await panel.getByLabel("Display start date", { exact: true }).inputValue(),
+        end: await panel.getByLabel("Display end date", { exact: true }).inputValue() } })
+    await expect(panel.getByLabel("Display start date", { exact: true })).toHaveValue("2027-11-01")
+    await expect(panel.getByLabel("Display end date", { exact: true })).toHaveValue("2027-11-30")
+    await expect(panel.getByRole("list", { name: "Dated milestones", exact: true }).getByRole("listitem")).toHaveCount(visible.length)
     for (const item of visible) await expect(dataRow(page, String(item.dateValueId))).toBeVisible()
     for (const item of items.filter((item) => !visible.includes(item))) await expect(dataRow(page, String(item.dateValueId))).toHaveCount(0)
     await expectValue(page, "scenario:candidate-known-subtotal", "250000")
@@ -82,7 +81,7 @@ test("BI62 external browser proposal preserves the human date crop across a real
   }
 })
 
-test("BI62 external timeline proposal lets the keyboard choose between both real source versions", async ({ page }, info) => {
+test("BI62 native timeline lets the keyboard choose between both real source versions", async ({ page }, info) => {
   test.setTimeout(180_000)
   const host = installation!
   const observations: Record<string, unknown>[] = []
@@ -105,7 +104,7 @@ test("BI62 external timeline proposal lets the keyboard choose between both real
     expect(refs.length).toBeGreaterThan(1)
     const selected = refs.filter((ref) => ref.kind === "record" && asRecord(ref.target).recordId === corpus.plans.resolved.id)
     expect(selected).toHaveLength(1)
-    const chart = page.getByRole("group", { name: "Marcos no horizonte; a lista informa estado, data e origem", exact: true })
+    const chart = page.getByRole("group", { name: "Milestones in the horizon; the list provides state, date and source", exact: true })
     const mark = chart.locator(`[data-bi-focus="${String(item.dateValueId)}"]`)
     observations.push({ stage: "multi-source-milestone", valueId: value.id, date: value.value,
       sourceDigests: refs.map((ref) => ref.refDigest), accessibleMarkCount: await mark.count() })
@@ -115,10 +114,10 @@ test("BI62 external timeline proposal lets the keyboard choose between both real
     await mark.focus()
     await expect(mark).toBeFocused()
     await mark.press("Enter")
-    const chooser = page.getByRole("group", { name: `Escolher origem de ${String(item.label)}`, exact: true })
+    const chooser = page.getByRole("group", { name: `Choose a source for ${String(item.label)}`, exact: true })
     await expect(chooser).toBeVisible()
     await expect(chooser.locator("button[data-bi-origin]")).toHaveCount(refs.length)
-    await chooser.getByRole("button", { name: "Cancelar escolha de origem", exact: true }).press("Escape")
+    await chooser.getByRole("button", { name: "Cancel source selection", exact: true }).press("Escape")
     await expect(chooser).toBeHidden()
     await expect(mark).toBeFocused()
     await mark.press("Space")
@@ -133,12 +132,13 @@ test("BI62 external timeline proposal lets the keyboard choose between both real
       return url.pathname === "/sucafina/planner" && url.searchParams.get("version") === corpus.plans.resolved.id
     })
     expect(destinations).toHaveLength(1)
-    const nav = page.getByRole("navigation", { name: "Origens autorizadas do valor", exact: true })
+    const nav = page.getByRole("navigation", { name: "Authorized source links", exact: true })
     const destination = nav.getByRole("link", { name: String(destinations[0]!.label), exact: true })
     await expect(destination).toBeVisible()
     await destination.press("Enter")
-    await expect(page).toHaveURL((url) => url.pathname === "/sucafina/planner" && url.searchParams.get("version") === corpus.plans.resolved.id)
-    await expect(page.getByRole("heading", { name: "Overview", exact: true, level: 1 })).toBeVisible()
+    await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-planner/overview" && url.searchParams.get("version") === corpus.plans.resolved.id)
+    await expect(page.locator('[data-sf-surface="CAP17"]')).toBeVisible()
+      await expect(page.getByRole("heading", { name: "Overview", exact: true, level: 1 })).toBeVisible()
     observations.push({ stage: "chosen-source-opened", versionId: corpus.plans.resolved.id, action: "keyboard" })
   } finally {
     await info.attach("bi62-timeline-origins-observations.json", { body: JSON.stringify(observations, null, 2), contentType: "application/json" })

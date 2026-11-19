@@ -56,7 +56,7 @@ export function SfCaseSourcesEditor(props: Readonly<{
     props.projection.case.id === record.id && props.projection.case.incarnation === record.incarnation &&
     props.projection.case.version === record.version
   const payload = (record: SfCaseRecord, sources: Sources | readonly unknown[]) =>
-    Schema.decodeUnknownOption(SfDecisions.operations["decisions.decision-edit"].input, { onExcessProperty: "error" })({
+    Schema.decodeUnknownOption(Schema.toType(SfDecisions.operations["decisions.decision-edit"].input), { onExcessProperty: "error" })({
       caseRef: { id: record.id, incarnation: record.incarnation, version: record.version },
       objective: record.objective,
       criteria: record.criteria.map(({ id, description, required }) => ({ id, description, required })),
