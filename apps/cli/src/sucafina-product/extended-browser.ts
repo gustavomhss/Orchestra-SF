@@ -8,16 +8,11 @@ import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/p
 import type { PreservedReview, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { SfReviewUpdate } from "./extended-review-cycle.ts"
+import { sfReviewNavigationUrl } from "./extended-review-navigation.ts"
 
 const root = document.querySelector<HTMLElement>("[data-sf-review-workspace]")
 const bootstrap = document.querySelector<HTMLScriptElement>("script[data-sf-review-bootstrap]")
-const reviewUrl = (reviewRef: string, sectionId?: string) => {
-  const url = new URL(location.href)
-  url.searchParams.set("sf", "review"); url.searchParams.set("reviewRef", reviewRef)
-  url.searchParams.delete("previousReviewRef"); url.searchParams.delete("sectionId")
-  if (sectionId) url.searchParams.set("sectionId", sectionId)
-  return url
-}
+const reviewUrl = (reviewRef: string, sectionId?: string) => sfReviewNavigationUrl(location.href, { reviewRef, ...(sectionId ? { sectionId } : {}) })
 if (root && bootstrap) {
   const value = JSON.parse(bootstrap.textContent ?? "null")
   bootstrap.remove()
@@ -136,8 +131,7 @@ if (root && bootstrap) {
       },
       requestUpdate: (reference) => {
         if (closed) return
-        const url = new URL(location.href); url.searchParams.delete("reviewRef"); url.searchParams.delete("sectionId"); url.searchParams.set("previousReviewRef", reference)
-        location.assign(url)
+        location.assign(sfReviewNavigationUrl(location.href, { previousReviewRef: reference }))
       },
       openSource, openReviewSection: (reference, sectionId) => { if (!closed) location.assign(reviewUrl(reference, sectionId)) },
     })

@@ -37,7 +37,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await expect(preparation, "Generate Report opens the installed ReviewPreparationView").toBeVisible()
   const load = preparation.getByRole("button", { name: "Load selection", exact: true })
   await expect(load).toBeEnabled()
-  const transport = observeAgendaTransport(page, app)
+  const transport = observeReviewTransport(page, app)
   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
   const selected = await (async () => {
     try {
@@ -231,9 +231,14 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
   await expect(button).toBeEnabled()
   await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+  const transport = observeReviewTransport(page, app, "review-report")
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
-  await button.click()
-  const response = await pending
+  const response = await (async () => {
+    try {
+      const [, response] = await Promise.all([button.click(), Promise.race([pending, transport.failed])])
+      return response
+    } finally { await transport.finish(info) }
+  })()
   expect(response.status()).toBe(200)
   expect(response.request().postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
   const body = object(await response.json())
@@ -351,7 +356,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
 }
 
 /** Observe transport only: never serialize headers, bodies, cookies or query values. */
-function observeAgendaTransport(page: Page, app: ReportsInstallation) {
+function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "review-agenda" | "review-report" = "review-agenda") {
   const expected = new URL(app.dashboardURL)
   const started = Date.now()
   const entries: Record<string, unknown>[] = []
@@ -375,7 +380,7 @@ function observeAgendaTransport(page: Page, app: ReportsInstallation) {
   }
   const matching = (request: Request) => {
     const route = destination(request.url())
-    return route.sameOrigin && route.samePath && route.mode === "review-agenda" && request.method() === "POST"
+    return route.sameOrigin && route.samePath && route.mode === mode && request.method() === "POST"
   }
   const relevant = (request: Request) => request.method() === "POST" || destination(request.url()).mode.startsWith("review")
   const causes = (value: string) => ({
@@ -403,7 +408,7 @@ function observeAgendaTransport(page: Page, app: ReportsInstallation) {
   const requestfailed = (value: Request) => {
     const failure = causes(value.failure()?.errorText ?? "")
     if (relevant(value)) add("requestfailed", { ...destination(value.url()), method: value.method(), ...failure })
-    if (matching(value)) rejectFailure(new Error("Actual review-agenda POST transport failed: " +
+    if (matching(value)) rejectFailure(new Error("Actual " + mode + " POST transport failed: " +
       [...failure.codes, ...failure.categories].join(", ")))
   }
   const pageerror = (value: Error) => add("pageerror", {
@@ -420,10 +425,15 @@ function observeAgendaTransport(page: Page, app: ReportsInstallation) {
     finish: async (info: TestInfo) => {
       page.off("request", request); page.off("response", response); page.off("requestfailed", requestfailed)
       page.off("pageerror", pageerror); page.off("console", consoleEvent)
-      await info.attach("reports-agenda-transport", { contentType: "application/json", body: JSON.stringify({
-        before, after: destination(page.url()), expected: { method: "POST", mode: "review-agenda" },
+      const observation = {
+        before, after: destination(page.url()), expected: { method: "POST", mode },
         elapsedMs: Date.now() - started, entries, dropped, cli: app.diagnostics?.() ?? "diagnostics-unavailable",
-      }, null, 2) }).catch(() => undefined)
+      }
+      if (entries.some((entry) => entry.kind === "requestfailed"))
+        console.info("SF_REPORTS_TRANSPORT_FAILURE", JSON.stringify(observation))
+      await info.attach(`reports-${mode.slice("review-".length)}-transport`, {
+        contentType: "application/json", body: JSON.stringify(observation, null, 2),
+      }).catch(() => undefined)
     },
   }
 }

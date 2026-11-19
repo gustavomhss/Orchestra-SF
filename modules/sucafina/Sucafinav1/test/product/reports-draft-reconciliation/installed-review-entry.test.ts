@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { object } from "../../../runtime/contract.ts"
 import { createSfExtendedAssets } from "../../../../../../apps/cli/src/sucafina-product/extended-assets.ts"
+import { sfReviewNavigationUrl } from "../../../../../../apps/cli/src/sucafina-product/extended-review-navigation.ts"
 import { createSfExtendedBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts"
 import { financialCompositionFixture } from "../wp10/integration/financial-composition-fixture.ts"
 
@@ -124,6 +125,22 @@ test("an actual preserved review keeps update and successor focus recoverable wh
     })
     const saved = await post("review-preserve", { selectionRef: agenda.selectionRef, sectionRefs })
     if (typeof saved.id !== "string") throw new Error("The actual review and receipt were not preserved")
+    // Navigation leaves the Reports form selection behind and retains only the
+    // destination's preserved identity. Each URL still passes the real router.
+    const reportsLocation = new URL("https://example.test/dashboard?page=Budget+Overview&download=docx&year=2026&topic=Budget+Overview&topic=Portfolio+Dashboard#old-selection")
+    for (const destination of [
+      { reviewRef: saved.id },
+      { reviewRef: saved.id, sectionId: sectionRefs[0]! },
+      { previousReviewRef: saved.id },
+    ]) {
+      const next = sfReviewNavigationUrl(reportsLocation.href, destination)
+      expect(next.origin).toBe(reportsLocation.origin)
+      expect(next.pathname).toBe(reportsLocation.pathname)
+      expect(next.hash).toBe("")
+      expect(Object.fromEntries(next.searchParams)).toEqual({ sf: "review", ...destination })
+      expect([...next.searchParams.keys()]).toHaveLength(1 + Object.keys(destination).length)
+      expect((await f.send(next.searchParams)).status).toBe(200)
+    }
     const reviews = f.extended.reviews
     if (!reviews) throw new Error("The installed canonical review producer is missing")
     const read = reviews.reviews.read
