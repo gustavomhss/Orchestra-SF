@@ -2,13 +2,14 @@ import { readFile, writeFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
 import type { APIRequestContext, Page, TestInfo, Request, Response, ConsoleMessage } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
-import type { ReviewAgendaPreview } from "../../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
+import { Schema } from "effect"
+import { SfDashboardDashboardAgenda } from "@orchestra/schema/sucafina/reviews"
 import type { ReportsInstallation } from "./production-installation.ts"
 import type { ReportsCorpus } from "./corpus.ts"
-import { agendaResult, object, projection, readReview, responseFor, review, text } from "./model.ts"
+import { object, projection, readReview, responseFor, review, text } from "./model.ts"
 import { inspectReport, officePackageText } from "./ooxml.ts"
 
-const reportPages = ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"] as const
+const reportPages = ["Portfolio Dashboard", "Budget Overview", "Hot Topics & Actions"] as const
 const reportPageTopics = {
   "Budget Overview": "budget",
   "Portfolio Dashboard": "projects",
@@ -23,9 +24,6 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await reportsEntry.click()
   const agenda = page.locator('[data-sf-surface="UI47"]')
   await expect(agenda).toBeVisible()
-  if (options.removeOne) {
-    throw new Error("UNBOUND WP1: UI47 can remove a section, but has no control to remove one authorized record (reviews/agenda/index.tsx:308).")
-  }
   for (const pageName of reportPages) {
     await agenda.getByLabel(/Source dashboard page|Página de origem do dashboard/).fill(pageName)
     const found = page.waitForResponse((response) => {
@@ -54,26 +52,22 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   const sectionIds = (await selectedRows.evaluateAll((items) => items.map((item) => item.getAttribute("data-section-id"))))
     .filter((id): id is string => typeof id === "string" && id.length > 0)
   expect(sectionIds).toHaveLength(reportPages.length)
+  expect(new Set(sectionIds).size).toBe(reportPages.length)
   const preview = page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ })
   await expect(preview).toBeEnabled()
   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
   await preview.click()
-  const agendaResponse = await pendingAgenda
-  expect(agendaResponse.status()).toBe(200)
-  const agendaBody = object(await agendaResponse.json())
-  expect(agendaBody.status).toBe("ok")
-  const agendaValue = object(agendaBody.value)
-  const selectionRef = text(agendaValue.selectionRef)
-  expect(Array.isArray(agendaValue.sections)).toBe(true)
-  const previewSections = (agendaValue.sections as unknown[]).map(object)
-  expect(previewSections.map((section) => text(section.id))).toEqual(sectionIds)
-  const counts = previewSections.map((section) => section.recordCount)
-  expect(counts[reportPages.indexOf("Portfolio Dashboard")]).toBe(25)
-  expect(counts[reportPages.indexOf("Hot Topics & Actions")]).toBe(0)
+  let selected = await readNativeAgenda(await pendingAgenda)
+  expect(selected.preview.sections.map((section) => section.id)).toEqual(sectionIds)
+  expect(selected.preview.sections[reportPages.indexOf("Portfolio Dashboard")]!.recordCount).toBe(25)
+  expect(selected.preview.sections[reportPages.indexOf("Hot Topics & Actions")]!.recordCount).toBe(0)
   const shown = agenda.locator("[data-sf-agenda-preview]")
   await expect(shown).toBeVisible()
   await expect(shown.locator("li").nth(reportPages.indexOf("Portfolio Dashboard"))).toContainText(/Authorized records: 25|Registros autorizados: 25/)
   await expect(shown.locator("li").nth(reportPages.indexOf("Hot Topics & Actions"))).toContainText(/Authorized records: 0|Registros autorizados: 0/)
+  if (options.removeOne) selected = await removeOneProject(page, app, selected)
+  const selectionRef = selected.preview.selectionRef
+  const counts = selected.preview.sections.map((section) => section.recordCount)
   const confirm = agenda.getByRole("button", { name: /Confirm preservation|Confirmar preservação/ })
   await expect(confirm).toBeEnabled()
   const pendingPreserve = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review-preserve", "POST"))
@@ -86,7 +80,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   const saved = review(body.value)
   expect(saved.sections.map((section) => section.id)).toEqual(sectionIds)
   expect(saved.sections.map((section) => section.count)).toEqual(counts)
-  expect(saved.sections[reportPages.indexOf("Portfolio Dashboard")]!.count).toBe(25)
+  expect(saved.sections[reportPages.indexOf("Portfolio Dashboard")]!.count).toBe(options.removeOne ? 24 : 25)
   const confirmed = agenda.locator("[data-sf-preserved-confirmed]")
   await expect(confirmed).toBeVisible()
   await expect(confirmed.locator("dd").first()).toHaveText(saved.id)
@@ -106,25 +100,33 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   return { preparation, saved }
 }
 
-// UNBOUND: UI47 currently removes whole sections only; retain the record-level contract.
-async function removeOneProject(page: Page, app: ReportsInstallation, selected: ReviewAgendaPreview) {
-  const section = selected.sections.filter((entry) => entry.title === "Projects")
+async function readNativeAgenda(response: Response) {
+  expect(response.status(), "The installed dashboard agenda must succeed").toBe(200)
+  const body = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.output)(await response.json())
+  expect(body.status).toBe("ok")
+  if (body.status !== "ok") throw new Error("The authorized agenda was not available")
+  const request = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.input)(response.request().postDataJSON())
+  expect(body.value.sections.map((section) => section.id)).toEqual(request.sections.map((section) => section.id))
+  return { request, preview: body.value }
+}
+
+async function removeOneProject(page: Page, app: ReportsInstallation, selected: Awaited<ReturnType<typeof readNativeAgenda>>) {
+  const section = selected.preview.sections.filter((entry) => entry.title === "Projects")
   expect(section).toHaveLength(1)
-  const choices = selected.sectionRecordRefs.filter((entry) => entry.sectionRef === section[0]!.id)
+  const choices = selected.request.sections.filter((entry) => entry.id === section[0]!.id)
   expect(choices).toHaveLength(1)
-  expect(choices[0]!.recordRefs).toHaveLength(25)
-  expect(new Set(choices[0]!.recordRefs).size).toBe(25)
-  // The opaque identity comes from the actual authorized selector. Do not invent
-  // a ref encoding or pretend the page-level evidence identifies one project.
-  const reference = choices[0]!.recordRefs[0]!
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
+  const recordRefs = choices[0]!.recordRefs ?? []
+  expect(recordRefs).toHaveLength(25)
+  expect(new Set(recordRefs).size).toBe(25)
+  const reference = recordRefs[0]!
+  const preparation = page.locator('[data-sf-surface="UI47"]')
   await preparation.getByRole("button", { name: `Remove record ${reference}`, exact: true }).click()
-  const retained = await agendaResult(await pending)
-  expect(retained.sectionRecordRefs.filter((entry) => entry.sectionRef === section[0]!.id)).toEqual([
-    { sectionRef: section[0]!.id, recordRefs: choices[0]!.recordRefs.filter((entry) => entry !== reference) },
-  ])
-  const after = retained.sections.filter((entry) => entry.id === section[0]!.id)
+  const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
+  await page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ }).click()
+  const retained = await readNativeAgenda(await pending)
+  expect(retained.request.sections.filter((entry) => entry.id === section[0]!.id).map((entry) => entry.recordRefs))
+    .toEqual([recordRefs.filter((entry) => entry !== reference)])
+  const after = retained.preview.sections.filter((entry) => entry.id === section[0]!.id)
   expect(after).toHaveLength(1)
   expect(after[0]!.recordCount).toBe(24)
   const beforeIds = section[0]!.projection.values.filter((value) => /^projects\[id:[^\]]+\]\.id$/.test(value.id))
@@ -138,7 +140,8 @@ async function removeOneProject(page: Page, app: ReportsInstallation, selected: 
     section[0]!.projection.values.filter((value) => !value.id.startsWith(prefix))
       .map((value) => ({ id: value.id, value: value.value, period: value.period })),
   )
-  await expect(preparation.getByRole("status")).toHaveText("Selection refreshed from the authorized sources. Check the new counts and values before preserving.")
+  await expect(preparation).toHaveAttribute("data-phase", "reviewing")
+  await expect(preparation.locator("[data-sf-agenda-preview]")).toContainText(/Authorized records: 24|Registros autorizados: 24/)
   return retained
 }
 
@@ -150,20 +153,35 @@ export async function readSourceData(request: APIRequestContext, app: ReportsIns
   return { projects: data.projects, opexOwners: data.opexOwners, opexEntries: data.opexEntries, hotTopics: data.hotTopics }
 }
 
-// UNBOUND: UI48 reads successor availability, but does not create/preserve a revision.
 export async function preserveNewRevision(page: Page, app: ReportsInstallation, prior: PreservedReview, corpus: ReportsCorpus) {
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  const load = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
-  await preparation.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
-  const selected = await agendaResult(await load)
-  expect(selected.sections.flatMap((section) => section.projection.values).filter((value) => value.id === corpus.forecastField))
+  const update = page.waitForResponse(responseFor(app.dashboardURL, "review-update", "GET"))
+  await page.getByRole("button", { name: "Check for updates", exact: true }).click()
+  const updated = await update
+  expect(updated.status()).toBe(200)
+  const updateBody = object(await updated.json())
+  expect(updateBody.status).toBe("ok")
+  expect(object(updateBody.value)).toMatchObject({ previousReviewRef: prior.id, available: true, unavailableSections: [] })
+  await page.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
+  const preparation = page.locator('[data-sf-surface="UI47"]')
+  await expect(preparation).toBeVisible()
+  const load = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
+  await page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ }).click()
+  const all = await readNativeAgenda(await load)
+  const selected = await removeOneProject(page, app, all)
+  expect(selected.preview.sections.flatMap((section) => section.projection.values).filter((value) => value.id === corpus.forecastField))
     .toMatchObject([{ value: corpus.after, period: corpus.annual }])
-  expect(selected.sections.filter((section) => section.title === "Projects").map((section) => section.recordCount)).toEqual([24])
-  const preserve = page.waitForResponse(responseFor(app.dashboardURL, "review-preserve", "POST"))
-  await preparation.getByRole("button", { name: "Preserve this review", exact: true }).click()
+  expect(selected.preview.sections.filter((section) => section.title === "Projects").map((section) => section.recordCount)).toEqual([24])
+  const previousProjects = prior.sections.filter((section) => section.title === "Projects")
+  expect(previousProjects).toHaveLength(1)
+  expect(selected.preview.sections.filter((section) => section.title === "Projects")[0]!.projection.values
+    .filter((value) => /^projects\[id:[^\]]+\]\.id$/.test(value.id)).map((value) => ({ id: value.id, value: value.value })))
+    .toEqual(projection(previousProjects[0]!.content).values.filter((value) => /^projects\[id:[^\]]+\]\.id$/.test(value.id))
+      .map((value) => ({ id: value.id, value: value.value })))
+  const preserve = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review-preserve", "POST"))
+  await preparation.getByRole("button", { name: /Confirm preservation|Confirmar preservação/ }).click()
   const response = await preserve
   expect(response.status()).toBe(200)
-  expect(response.request().postDataJSON()).toMatchObject({ previousReviewRef: prior.id, selectionRef: selected.selectionRef })
+  expect(response.request().postDataJSON()).toMatchObject({ previousReviewRef: prior.id, selectionRef: selected.preview.selectionRef })
   const body = object(await response.json())
   expect(body.status).toBe("ok")
   const next = review(body.value)
@@ -173,10 +191,17 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
   expect(next.sections.map((section) => section.count)).toEqual(prior.sections.map((section) => section.count))
   expect(projection(next.sections[1]!.content).values.filter((value) => value.id === corpus.forecastField))
     .toMatchObject([{ value: corpus.after, period: corpus.annual }])
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
-  await expect(preparation.getByRole("table", { name: "Budget · selected source values", exact: true })
-    .getByRole("row").filter({ has: page.getByRole("cell", { name: corpus.forecastField, exact: true }) }).getByRole("cell"))
-    .toHaveText([corpus.forecastField, `${corpus.after} unspecified`, `${corpus.annual.start} – ${corpus.annual.end}`])
+  await expect(preparation).toHaveAttribute("data-phase", "confirmed")
+  await expect(preparation.locator("[data-sf-preserved-confirmed] dd").first()).toHaveText(next.id)
+  await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(next.id))
+  const preserved = page.locator('[data-sf-surface="UI48"]').locator(`[data-review-ref="${next.id}"]`)
+  const budget = preserved.locator("[data-section-id]").filter({ has: page.getByRole("heading", { name: "Budget", exact: true }) })
+  await expect(budget).toHaveCount(1)
+  const forecast = budget.locator("dl.sf-n28-values > div").filter({ has: page.locator("dt").filter({ hasText: new RegExp("^" + corpus.forecastField.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$") }) })
+  await expect(forecast.locator("dt")).toHaveText(corpus.forecastField)
+  await expect(forecast.locator("dd")).toContainText(String(corpus.after))
+  await expect(budget).toContainText(corpus.annual.start)
+  await expect(budget).toContainText(corpus.annual.end)
   expect(await readReview(page.request, app.dashboardURL, prior.id)).toEqual(prior)
   expect(await readReview(page.request, app.dashboardURL, next.id)).toEqual(next)
   return next
