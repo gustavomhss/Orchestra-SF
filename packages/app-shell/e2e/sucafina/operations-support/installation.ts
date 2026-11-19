@@ -32,6 +32,7 @@ export async function createOperationsInstallation(input: {
   origin: string
   mount: string
   operators: readonly { principalRef: string; readOnly: boolean }[]
+  grants?: Parameters<CreateSfHostRuntime>[0]["grants"]
   persistence: LocalStore & SfScopedSourcePort
   authenticate: Application["authenticate"]
   isAuthenticated: (request: Request) => Promise<boolean>
@@ -67,7 +68,7 @@ export async function createOperationsInstallation(input: {
       ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
     // Preserve the installation policy from the original Operations fixture.
     // Domain roles still come exclusively from the authenticated operator session.
-    grants: input.operators.map((operator): NonNullable<Parameters<CreateSfHostRuntime>[0]["grants"]>[number] => ({
+    grants: input.grants ?? input.operators.map((operator): NonNullable<Parameters<CreateSfHostRuntime>[0]["grants"]>[number] => ({
       principalRef: operator.principalRef,
       namespaces: ["documents", "receipts"],
       operations: ["sf_request_read", "sf_import_preview", "sf_document_extract", "sf_knowledge_search", "sf_evidence_get"],
@@ -150,6 +151,7 @@ export async function createOperationsInstallation(input: {
     host: runtime.contributions,
     discovery,
     identity: runtime.identity,
+    services: runtime.services,
     application: async (request: Request) => await native(request) ?? await business(request),
   }
 }
